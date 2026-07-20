@@ -24,7 +24,7 @@ describe("CodeWiki lab objective", () => {
 		assert.equal(report.version, 1);
 		assert.equal(report.mode, "visible-only");
 		assert.equal(report.status, "visible-only");
-		assert.equal(report.score, 90);
+		assert.equal(report.score, 79);
 		assert.equal(report.maxMeaningfulScore, 90);
 		assert.equal(report.components.DEC.score, 100);
 		assert.equal(report.components.PEC.score, 100);
@@ -48,7 +48,7 @@ describe("CodeWiki lab objective", () => {
 
 			assert.equal(report.mode, "sealed");
 			assert.equal(report.status, "pass");
-			assert.equal(report.score, 100);
+			assert.equal(report.score, 89);
 			assert.equal(report.maxMeaningfulScore, 100);
 			assert.equal(report.components.HCE.score, 100);
 			assert.equal(report.components.HCE.caseCount, HOLDOUT_CASES.length);

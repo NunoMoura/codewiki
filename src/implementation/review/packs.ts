@@ -1,4 +1,4 @@
-import type { DecisionEvidencePolicy } from "../../decision/policy-profiles.ts";
+import type { ImplementationEvidencePolicy } from "../evidence-policy.ts";
 import type {
 	LanguageReviewPack,
 	LanguageReviewPackSkipSummary,
@@ -85,7 +85,7 @@ export function reviewPackSelectionForPolicy(
 	policy: ReviewPackPolicy = {},
 	changedPaths: string[] = [],
 	options: ReviewPackFactoryOptions = {},
-	evidencePolicy?: DecisionEvidencePolicy,
+	evidencePolicy?: ImplementationEvidencePolicy,
 ): ReviewPackSelection {
 	const mergedPolicy = mergeReviewPackPolicyWithEvidencePolicy(
 		policy,
@@ -146,7 +146,7 @@ export function reviewPackSelectionForPolicy(
 
 export function mergeReviewPackPolicyWithEvidencePolicy(
 	policy: ReviewPackPolicy = {},
-	evidencePolicy?: DecisionEvidencePolicy,
+	evidencePolicy?: ImplementationEvidencePolicy,
 ): ReviewPackPolicy {
 	if (!evidencePolicy) return policy;
 	const requiredPacks = unique([

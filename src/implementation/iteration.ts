@@ -55,8 +55,7 @@ import type {
 
 export interface ImplementationIterationInput {
 	traceId: string;
-	planningEvents?: TraceEvent[];
-	decisionEvents?: TraceEvent[];
+	planningEvents: TraceEvent[];
 	changes?: ImplementationChange[];
 	changeInputs?: ImplementationChangeInput[];
 	workerResults?: ImplementationWorkerResultInput[];
@@ -100,10 +99,7 @@ export function runImplementationIteration(
 	input: ImplementationIterationInput,
 ): ImplementationIterationResult {
 	const createdAt = input.createdAt || new Date().toISOString();
-	const routeSourceEvents = [
-		...(input.planningEvents || []),
-		...(input.decisionEvents || []),
-	];
+	const routeSourceEvents = input.planningEvents;
 	const planningRefs = planningRefsFromEvents(routeSourceEvents);
 	const acceptanceRequirements =
 		acceptanceRequirementsFromPlanningEvents(routeSourceEvents);
@@ -211,10 +207,7 @@ export async function runImplementationIterationWithRunner(
 	input: ImplementationIterationInput,
 ): Promise<ImplementationIterationResult> {
 	const createdAt = input.createdAt || new Date().toISOString();
-	const routeSourceEvents = [
-		...(input.planningEvents || []),
-		...(input.decisionEvents || []),
-	];
+	const routeSourceEvents = input.planningEvents;
 	const planningRefs = planningRefsFromEvents(routeSourceEvents);
 	const acceptanceRequirements =
 		acceptanceRequirementsFromPlanningEvents(routeSourceEvents);
@@ -467,11 +460,7 @@ function archiveDispositionRefList(
 	disposition?: ImplementationArchiveDisposition,
 ): string[] {
 	if (!disposition) return [];
-	return [
-		disposition.traceId,
-		disposition.gitRestoreRef,
-		...disposition.refs,
-	]
+	return [disposition.traceId, disposition.gitRestoreRef, ...disposition.refs]
 		.map((ref) => String(ref || "").trim())
 		.filter(Boolean);
 }

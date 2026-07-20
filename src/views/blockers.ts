@@ -38,7 +38,7 @@ function resolutionBlockers(records: TraceRecord[]): BlockerView[] {
 					resolutionBlocker({
 						event,
 						kind,
-						decisionRef: text(resolution.decisionRef) || event.id,
+						changeRef: text(resolution.changeRef) || event.id,
 						owner: text(resolution.owner),
 						trigger: text(resolution.trigger),
 						rationale: text(resolution.rationale),
@@ -53,14 +53,14 @@ function resolutionBlockers(records: TraceRecord[]): BlockerView[] {
 function resolutionBlocker(input: {
 	event: TraceEvent;
 	kind: string;
-	decisionRef: string;
+	changeRef: string;
 	owner?: string;
 	trigger?: string;
 	rationale?: string;
 	refs?: string[];
 }): BlockerView {
 	const owner =
-		input.owner || text(input.event.data?.owner) || input.decisionRef;
+		input.owner || text(input.event.data?.owner) || input.changeRef;
 	const trigger = input.trigger || text(input.event.data?.trigger);
 	const rationale = input.rationale || text(input.event.data?.rationale);
 	const refs = unique([
@@ -69,14 +69,14 @@ function resolutionBlocker(input: {
 		...(input.refs || []),
 	]);
 	return {
-		id: `${input.event.id}:${input.kind}:${input.decisionRef}`,
+		id: `${input.event.id}:${input.kind}:${input.changeRef}`,
 		ownerRef: owner,
-		routeBack: trigger || rationale || input.decisionRef,
+		routeBack: trigger || rationale || input.changeRef,
 		kind: input.kind === "route-back" ? "route-back" : "deferred",
 		message:
 			rationale ||
 			trigger ||
-			`Planning decision ${input.decisionRef} is ${input.kind}.`,
+			`Planning decision ${input.changeRef} is ${input.kind}.`,
 		traceRefs: refs,
 		sourceEventId: input.event.id,
 	};

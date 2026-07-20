@@ -394,17 +394,18 @@ function decisionChangeRefsForPath(
 ): string[] {
 	if (event.loop !== "decision") return [];
 	const output = objectRecord(event.data?.output);
-	return [
-		...objectList(output.approvedChanges),
-		...objectList(output.rejectedRows),
-		...objectList(output.deferredRows),
-	]
-		.filter((change) =>
-			refsTouchPath(stringList(change.sourceRefs), target, owner),
-		)
-		.map(
-			(change) => `trace:${event.id}#change:${text(change.id) || "unknown"}`,
-		);
+	const changeRecord = objectRecord(output.changeRecord);
+	const change = objectRecord(changeRecord.change);
+	if (!text(change.id)) return [];
+	const evidence = objectRecord(change.evidence);
+	const classification = objectRecord(change.classification);
+	const refs = [
+		...stringList(evidence.sourceRefs),
+		...stringList(classification.targetRefs),
+	];
+	return refsTouchPath(refs, target, owner)
+		? [`change:${text(change.id)}`]
+		: [];
 }
 
 function planningWorkRefsForPath(

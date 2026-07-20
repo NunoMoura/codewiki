@@ -47,6 +47,7 @@ import { pathToFileURL } from "node:url";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
 	buildWikiState,
+	buildWorkState,
 	runWikiConfig,
 } from "@nunomoura/codewiki";
 
@@ -71,6 +72,8 @@ assert.equal(packageJson.pi.skills, undefined);
 assert.deepEqual(Object.keys(packageJson.exports).sort(), [".", "./package.json"]);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
+assert.deepEqual(buildWorkState({ records: [] }).changeIds, []);
+assert.match(buildWorkState({ records: [] }).snapshotDigest, /^sha256:[a-f0-9]{64}$/);
 assert.equal(runWikiConfig({}).config.project, "codewiki");
 
 for (const dependency of Object.keys(packageJson.dependencies || {})) {
@@ -108,6 +111,16 @@ for (const path of filesUnder(packageRoot)) {
 	}
 }
 assert.equal(readdirSync(join(packageRoot, "dist")).includes("pi"), true);
+assert.equal(existsSync(join(packageRoot, "dist", "preview", "evidence.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace-store.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "git-ref-store.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-migration.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-ref-reader.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projector.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "prompt", "index.js"), "utf8").includes("lab/"), false);
 
@@ -202,7 +215,8 @@ assert.deepEqual(commands, [
 const injected = await promptHook.handler({ systemPrompt: "base" }, { cwd: process.cwd() });
 assert.match(injected.systemPrompt, /CodeWiki Pi guidance/);
 assert.equal(injected.systemPrompt.includes("wiki_state"), true);
-assert.equal(injected.systemPrompt.includes("wiki_decide"), true);
+assert.equal(injected.systemPrompt.includes("runtimeReaction"), true);
+assert.equal(injected.systemPrompt.includes("wiki_decide"), false);
 assert.equal(
 	injected.systemPrompt.includes("open the Work Pipeline dashboard automatically"),
 	true,

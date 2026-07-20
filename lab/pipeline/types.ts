@@ -14,7 +14,7 @@ export interface PipelineDecisionArtifact {
 
 export interface PipelinePlanningWorkItemArtifact {
 	id: string;
-	decisionRefs: string[];
+	changeRefs: string[];
 	pathScopes: string[];
 	acceptanceCriteria: string[];
 	facts: string[];

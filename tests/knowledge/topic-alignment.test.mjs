@@ -21,17 +21,18 @@ function decisionRecord(baseline) {
 		traceId: "TRACE-alignment",
 		sequence: 1,
 		loop: "decision",
-		event: "changes_approved",
+		event: "change_approved",
 		refs: [ref],
 		createdAt: "2026-07-16T00:00:00.000Z",
 		data: {
 			output: {
-				sprintBoundary: {
-					accountableGoal: "Keep topic alignment honest.",
-					knowledgeTopics: [ref],
-					dependencies: [],
-					rollbackBoundary: "Revert alignment projection.",
+				changeRecord: {
+					change: {
+						id: "CHG-alignment",
+						knowledge: { topicRefs: [ref], propagationRefs: [ref] },
+					},
 				},
+				decision: { disposition: "approve" },
 				knowledgeAlignmentBaseline: baseline,
 			},
 		},

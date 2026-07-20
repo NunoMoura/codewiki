@@ -56,7 +56,7 @@ function narrateEvent(
 			return context.title ? narrateClaim(context) : undefined;
 		case "runtime.work_unit.claim.released":
 			return context.title ? narrateRelease(context) : undefined;
-		case "changes_approved":
+		case "change_approved":
 			return narrateDecision(context);
 		case "work_units_created":
 			return narratePlan(context);
@@ -126,15 +126,13 @@ function incompleteRelease(
 }
 
 function narrateDecision(context: NarrationContext): ActivityFeedItem {
-	const count = objects(record(context.data?.output)?.approvedChanges).length;
 	return {
 		...context.base,
 		headline: "Decision approved",
-		detail: count
-			? `${count} approved change${count === 1 ? "" : "s"} can now be planned.`
-			: "Approved intent can now be planned.",
+		detail: "Approved Change revision can now be planned.",
 		impact: "Product and system direction is settled for this iteration.",
-		nextAction: "Planning will turn the approved change into executable Work Items.",
+		nextAction:
+			"Planning will turn the approved change into executable Work Items.",
 		status: "success",
 	};
 }
@@ -147,8 +145,10 @@ function narratePlan(context: NarrationContext): ActivityFeedItem {
 		detail: count
 			? `${count} Work Item${count === 1 ? " is" : "s are"} ready for dependency-aware execution.`
 			: "Executable Work Items were created.",
-		impact: "Workers can now claim ready work without overlapping path ownership.",
-		nextAction: "Start ready Work Items and report meaningful worker milestones.",
+		impact:
+			"Workers can now claim ready work without overlapping path ownership.",
+		nextAction:
+			"Start ready Work Items and report meaningful worker milestones.",
 		status: "success",
 	};
 }
@@ -157,9 +157,12 @@ function narrateImplementation(context: NarrationContext): ActivityFeedItem {
 	return {
 		...context.base,
 		headline: "Implementation evidence accepted",
-		detail: "Changed paths, checks, acceptance evidence, and content proof passed review.",
-		impact: "Verified work can count toward aggregate Implementation completion.",
-		nextAction: "Continue remaining Work Items or close the trace when all work is covered.",
+		detail:
+			"Changed paths, checks, acceptance evidence, and content proof passed review.",
+		impact:
+			"Verified work can count toward aggregate Implementation completion.",
+		nextAction:
+			"Continue remaining Work Items or close the trace when all work is covered.",
 		status: "success",
 	};
 }
@@ -179,7 +182,11 @@ function coalesce(items: ActivityFeedItem[]): ActivityFeedItem[] {
 	const result: ActivityFeedItem[] = [];
 	for (const item of items) {
 		const previous = result.at(-1);
-		if (previous && previous.headline === item.headline && previous.status === item.status) {
+		if (
+			previous &&
+			previous.headline === item.headline &&
+			previous.status === item.status
+		) {
 			result[result.length - 1] = item;
 		} else result.push(item);
 	}
@@ -194,7 +201,9 @@ function record(value: unknown): Record<string, unknown> | undefined {
 
 function objects(value: unknown): Record<string, unknown>[] {
 	return Array.isArray(value)
-		? value.filter((item): item is Record<string, unknown> => Boolean(record(item)))
+		? value.filter((item): item is Record<string, unknown> =>
+				Boolean(record(item)),
+			)
 		: [];
 }
 

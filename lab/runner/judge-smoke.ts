@@ -85,20 +85,22 @@ const SMOKE_LOOPS: SmokeLoopSpec[] = [
 		graphVersion: "smoke",
 		judgeInput: {
 			loop: "decision",
-			approvedChanges: [
-				{
+			changeRecord: {
+				change: {
 					id: "CHG-smoke",
-					currentState:
-						"Decision standards need semantic review after deterministic fields pass.",
-					desiredState:
-						"A judge receives loop evidence and returns per-standard verdicts.",
-					rationale:
-						"This smoke packet validates provider protocol without private holdout data.",
-					effort: "low",
-					workScale: "small",
-					risk: "low",
+					intent: {
+						currentState:
+							"Decision standards need semantic review after deterministic fields pass.",
+						desiredState:
+							"A judge receives loop evidence and returns per-standard verdicts.",
+						rationale:
+							"This smoke packet validates provider protocol without private holdout data.",
+					},
+					safety: { risk: "low" },
+					estimates: { effort: "low", workScale: "small" },
 				},
-			],
+			},
+			decision: { disposition: "approve" },
 		},
 		standards: [
 			{

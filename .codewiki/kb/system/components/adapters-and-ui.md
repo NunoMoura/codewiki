@@ -20,7 +20,8 @@ Pi adapters and the local dashboard translate host commands, tools, and trace-ba
 ## Owned paths
 
 - `src/pi/**` owns Pi host integration plus tool, command, prompt, and TUI registration.
-- `src/dashboard/**` owns the unified Work Pipeline and Configuration browser projections, transport, and fail-closed command adapter.
+- `src/dashboard/**` owns the unified Work Pipeline, Configuration, and Preview browser projections, transport, and fail-closed command adapter.
+- `src/preview/**` owns loopback browser adapter boundaries shared by the installed extension and standalone dashboard development harness.
 - `src/cli/**` remains a temporary development harness, not a product adapter.
 
 ## Contracts
@@ -30,6 +31,8 @@ Pi adapters and the local dashboard translate host commands, tools, and trace-ba
 - Allowed Change, configuration, and supervised runtime-session mutations must call guarded CodeWiki APIs with exact same-origin capabilities, optimistic state or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction.
 - Resume, Change, and Resolve Blocker may cross an optional in-process Pi bridge only as allowlisted trace-scoped user messages delivered through `pi.sendUserMessage()`. The bridge follows `session_start`/`session_shutdown`, uses steering while busy, and fails closed when stale or absent.
 - Dashboard actions never create SDK/RPC sessions, accept arbitrary prompts, approve semantic output, or append trace truth directly.
+- Approved frontend preview bindings may activate an extension-side Preview Coordinator when a Sprint reaches Implementation. The dashboard projects and controls that coordinator but does not own its lifecycle or infer process authority from changed files.
+- Preview runners and browser adapters accept only structured commands, approved profile digests, bounded loopback URLs, isolated session identifiers, and lifecycle cleanup. Visual artifacts remain implementation evidence rather than semantic approval.
 - Change actions create or reinforce mutable intent; only exact validation and accepted Decision authority may create amendment lineage.
 - Configuration UI compiles grouped bounded form values to the existing allowlisted patch and cannot raise automation, agency, model, tool, host, or budget ceilings.
 - The dashboard cannot gain shell, direct source-write, trace-append, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority.
@@ -39,6 +42,7 @@ Pi adapters and the local dashboard translate host commands, tools, and trace-ba
 
 - [Resume context boundary](../flows/resume-context-boundary.md)
 - [Artifact claim wait/heartbeat](../flows/artifact-claim-wait-heartbeat.md)
+- [Live Preview Runtime](preview-runtime.md)
 
 ## Related docs
 

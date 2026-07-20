@@ -26,6 +26,8 @@ function feedback(overrides = {}) {
 		proofRefs: ["tests/runtime/execution-policy.test.mjs"],
 		userImpact: "Operators understand why execution stopped.",
 		maintainerImpact: "Budget regressions have exact evidence.",
+		knowledgeTopicRefs: ["kb:system/components/runtime.md"],
+		evidenceExpectations: ["Runtime policy and supervisor tests pass."],
 		risk: "low",
 		failureModes: ["Attribution may identify the wrong exhausted limit."],
 		successSignal: "Budget tests report the exact exhausted limit.",
@@ -55,7 +57,9 @@ describe("feedback Change intake", () => {
 			const reinforced = await intakeChangeFeedback({
 				repoRoot: root,
 				expectedHead: created.head,
-				feedback: feedback({ proofRefs: ["tests/runtime/trace-host-supervisor.test.mjs"] }),
+				feedback: feedback({
+					proofRefs: ["tests/runtime/trace-host-supervisor.test.mjs"],
+				}),
 				now: () => new Date("2026-07-14T10:31:00.000Z"),
 			});
 			assert.equal(reinforced.action, "reinforced");
@@ -69,7 +73,9 @@ describe("feedback Change intake", () => {
 	});
 
 	it("rejects private, secret-bearing, oversized, and authority-expanding input", async () => {
-		const root = await mkdtemp(join(tmpdir(), "codewiki-change-intake-private-"));
+		const root = await mkdtemp(
+			join(tmpdir(), "codewiki-change-intake-private-"),
+		);
 		try {
 			execFileSync("git", ["init", "-q"], { cwd: root });
 			for (const invalid of [
@@ -79,7 +85,11 @@ describe("feedback Change intake", () => {
 				feedback({ action: "accept" }),
 			]) {
 				await assert.rejects(
-					intakeChangeFeedback({ repoRoot: root, expectedHead: null, feedback: invalid }),
+					intakeChangeFeedback({
+						repoRoot: root,
+						expectedHead: null,
+						feedback: invalid,
+					}),
 					/unsupported|sensitive|exceed/i,
 				);
 			}

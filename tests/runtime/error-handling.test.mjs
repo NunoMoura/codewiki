@@ -86,7 +86,12 @@ describe("shared error handling", () => {
 		await assert.rejects(
 			() =>
 				runWikiDecide({
-					traceId: "TRACE-api-error",
+					changeId: "CHG-api-error",
+					expectedRevision: 1,
+					expectedChangeDigest: `sha256:${"0".repeat(64)}`,
+					expectedWorkStateDigest: `sha256:${"1".repeat(64)}`,
+					disposition: "approve",
+					rationale: "Test invalid append guard.",
 					mode: "append",
 					repoRoot: ".",
 					expectedBytes: -1,

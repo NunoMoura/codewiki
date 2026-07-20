@@ -30,16 +30,26 @@ export interface TraceOrigin {
 export interface TraceHead {
 	type: "trace_head";
 	traceId: string;
+	/** Stable Change identity when this trace records a persisted Change journey. */
+	changeId?: string;
 	title: string;
 	createdAt: IsoTimestamp;
 	origin?: TraceOrigin;
 }
 
 export type DecisionTraceEventName =
-	| "changes_approved"
+	| "change_received"
+	| "change_revised"
+	| "change_approved"
+	| "change_deferred"
+	| "change_rejected"
+	| "change_withdrawn"
 	| "user_input_required"
 	| "decision_blocked";
 export type PlanningTraceEventName =
+	| "change_planned"
+	| "change_replanned"
+	| "change_resolved"
 	| "work_units_created"
 	| "decisions_resolved"
 	| "route_back_requested"

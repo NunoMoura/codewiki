@@ -277,8 +277,7 @@ function resumableWorkerExecutionPolicy(
 	status: RuntimeDisposableWorkerStatus,
 ): WorkerExecutionPolicySnapshot {
 	const persisted = status.executionPolicy;
-	const current =
-		input.currentExecutionPoliciesByWorkUnit?.[status.workUnitId];
+	const current = input.currentExecutionPoliciesByWorkUnit?.[status.workUnitId];
 	if (!persisted || !current) {
 		throw new Error(
 			`Worker ${status.workUnitId} cannot resume without persisted and current execution policy.`,

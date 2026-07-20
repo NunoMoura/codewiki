@@ -2,7 +2,7 @@ import { changeContentDigest } from "../changes/digest.ts";
 import { parseChange } from "../changes/schema.ts";
 import type { Change } from "../changes/types.ts";
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import { GitRefChangeStore } from "../changes/git-ref-store.ts";
+import { ChangeTraceStore } from "../changes/trace-store.ts";
 import {
 	addChangeEvidence,
 	createChangeRecord,
@@ -17,6 +17,7 @@ import {
 import {
 	ChangeStoreConflictError,
 	type ChangeQuery,
+	type ChangeStore,
 	type ChangeStoreSnapshot,
 } from "../changes/store.ts";
 import { resolveCodewikiProjectRoot } from "../project/root.ts";
@@ -136,7 +137,7 @@ export async function runWikiChange(
 	assertInput(input);
 	const operation = input.operation as WikiChangeOperation;
 	const repoRoot = await resolveCodewikiProjectRoot(input.repoRoot);
-	const store = new GitRefChangeStore({ repoRoot });
+	const store = new ChangeTraceStore({ repoRoot });
 	if (operation === "list") return listChanges(store, input);
 	if (operation === "get") return getChange(store, input);
 	if (operation === "validate") return validateChange(store, input);
@@ -153,7 +154,7 @@ export async function runWikiChange(
 }
 
 async function listChanges(
-	store: GitRefChangeStore,
+	store: ChangeStore,
 	input: RunWikiChangeInput,
 ): Promise<RunWikiChangeResult> {
 	const limit = normalizedLimit(input.limit);
@@ -170,7 +171,7 @@ async function listChanges(
 }
 
 async function getChange(
-	store: GitRefChangeStore,
+	store: ChangeStore,
 	input: RunWikiChangeInput,
 ): Promise<RunWikiChangeResult> {
 	const changeId = requiredChangeId(input.changeId);
@@ -182,7 +183,7 @@ async function getChange(
 }
 
 async function validateChange(
-	store: GitRefChangeStore,
+	store: ChangeStore,
 	input: RunWikiChangeInput,
 ): Promise<RunWikiChangeResult> {
 	const changeId = requiredChangeId(input.changeId);
@@ -200,7 +201,7 @@ async function validateChange(
 
 async function mutateChanges(args: {
 	operation: WikiChangeOperation;
-	store: GitRefChangeStore;
+	store: ChangeStore;
 	snapshot: ChangeStoreSnapshot;
 	input: RunWikiChangeInput;
 	actor: string;

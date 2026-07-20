@@ -7,7 +7,7 @@ import {
 	rmSync,
 	writeFileSync,
 } from "node:fs";
-import { mkdir, stat, writeFile } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -73,39 +73,8 @@ async function executeTool(tool, input, ctx, id = tool.name) {
 	);
 }
 
-function traceHead(traceId, title, createdAt) {
-	return `${JSON.stringify({ type: "trace_head", traceId, title, createdAt })}\n`;
-}
-
 async function expectedBytes(tracePath) {
 	return (await stat(tracePath)).size;
-}
-
-function planningQuality(overrides = {}) {
-	return {
-		technicalRequirements: [
-			"Install the packed CodeWiki package into an isolated external project.",
-			"Exercise runtime host failure paths through installed package artifacts.",
-			"Assert release/remediation behavior for terminal worker and worktree outcomes.",
-		],
-		verification: ["npm run test:external-failures"],
-		workerProfile: "package-smoke",
-		planningAssessment: {
-			stance: "worker_ready",
-			workUnitSize: "right_sized",
-			rightSizing:
-				"One smoke covers terminal failure modes without enabling unattended automation.",
-			independence: "Each scenario owns a fresh temp project and trace state.",
-			implementationReadiness:
-				"Failure modes, expected routes, and verification command are explicit.",
-			uncertainties: [],
-			uncertaintyOwner: "none",
-			uncertaintyResolution: "No unresolved planning uncertainty remains.",
-			rationale:
-				"Installed package failure handling is a readiness gate, not a semantic loop change.",
-		},
-		...overrides,
-	};
 }
 
 function implementationQuality(overrides = {}) {
@@ -138,31 +107,6 @@ function implementationQuality(overrides = {}) {
 	};
 }
 
-function workItemInput(decisionRef, workUnitId, options = {}) {
-	const pathScope = options.pathScope ?? "src/**";
-	const verification =
-		options.verification ?? "tests/external-feature.test.mjs";
-	return {
-		id: workUnitId,
-		title: "Exercise installed package runtime failure handling",
-		decisionRefs: [decisionRef],
-		outcome:
-			"Terminal runtime outcomes route to retry, planning, or user remediation without false implementation success.",
-		...planningQuality({
-			acceptance: [
-				"Missing output files route to retry remediation.",
-				"Malformed output files route to retry remediation.",
-				"Blocked reports route back to planning.",
-				"Mixed worker outcomes preserve completed evidence while releasing failed work.",
-				"Worktree prepare and cleanup failures route to user remediation.",
-			],
-			componentRefs: ["source"],
-			pathScopes: [pathScope],
-			verification: [verification],
-		}),
-	};
-}
-
 function implementationChange(planningRef, checkCommand, options = {}) {
 	const codePath = options.codePath ?? "src/external-feature.js";
 	const testPath = options.testPath ?? "tests/external-feature.test.mjs";
@@ -177,41 +121,25 @@ function implementationChange(planningRef, checkCommand, options = {}) {
 				command: checkCommand,
 				status: "pass",
 				phase: "verify",
-				criterionId: "AC-001",
+				criterionId: `AC-${planningRef.split("#work:").at(-1)}-1`,
 				outputRef: testPath,
 				summary: "External fixture test passed.",
 			},
 		],
 		acceptanceEvidenceItems: [
-			"AC-001",
-			"AC-002",
-			"AC-003",
-			"AC-004",
-			"AC-005",
-		].map((criterionId) => ({
-			criterionId,
-			summary:
-				"Completed worker evidence stayed scoped to existing source and test paths.",
-			evidenceRefs: [testPath],
-		})),
+			{
+				criterionId: `AC-${planningRef.split("#work:").at(-1)}-1`,
+				summary:
+					"Completed worker evidence stayed scoped to existing source and test paths.",
+				evidenceRefs: [testPath],
+			},
+		],
 		...implementationQuality(),
 	};
 }
 
-function approvedDecisionRef(decided) {
-	const iteration = decided.loopResult.traceEvents.find(
-		(event) => event.loop === "decision",
-	);
-	const change = iteration?.data?.output?.approvedChanges?.[0];
-	assert.ok(iteration);
-	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
-}
-
-function planningWorkRef(planned) {
-	const iteration = planned.loopResult.traceEvents.find(
-		(event) => event.loop === "planning",
-	);
+function planningWorkRef(events) {
+	const iteration = events.find((event) => event.loop === "planning");
 	const work = iteration?.data?.output?.workItems?.[0];
 	assert.ok(iteration);
 	assert.ok(work);
@@ -444,23 +372,20 @@ function writeExternalFeature(projectRoot, suffix) {
 	return { codePath, testPath };
 }
 
-async function createReadyTrace(project, traceId, workUnitId, options = {}) {
+async function createReadyTrace(
+	project,
+	requestedTraceId,
+	workUnitId,
+	options = {},
+) {
+	const suffix = requestedTraceId.replace(/^TRACE-(?:CHG-)?/, "");
+	const changeId = `CHG-${suffix}`;
+	const traceId = `TRACE-${changeId}`;
 	const tracePath = join(
 		project.projectRoot,
 		".codewiki",
 		"traces",
 		`${traceId}.jsonl`,
-	);
-	await mkdir(join(project.projectRoot, ".codewiki", "traces"), {
-		recursive: true,
-	});
-	await writeFile(
-		tracePath,
-		traceHead(
-			traceId,
-			`${traceId} failure scenario`,
-			"2026-06-18T11:00:00.000Z",
-		),
 	);
 	const snapshot = assertToolResult(
 		await project.tools.change.execute(
@@ -473,7 +398,7 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 		/wiki_change: completed list operation\./,
 	);
 	const change = acceptedChangeFixture({
-		id: `CHG-${traceId}`,
+		id: changeId,
 		kind: "harden",
 		currentState: "Installed-package failure behavior needs proof.",
 		desiredState: "Runtime failures produce deterministic remediation.",
@@ -487,9 +412,10 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 		negativeTestPlan:
 			"Exercise every terminal scenario through the installed runtime.",
 		sourceRefs: ["README.md", ".codewiki/kb/system/components/runtime.md"],
+		targetRefs: [`src/${suffix}`],
 		proofRefs: ["tests/external-feature.test.mjs"],
 	});
-	const created = assertToolResult(
+	assertToolResult(
 		await project.tools.change.execute(
 			`${traceId}-change-create`,
 			{
@@ -508,93 +434,118 @@ async function createReadyTrace(project, traceId, workUnitId, options = {}) {
 		),
 		/wiki_change: completed create operation\./,
 	);
-	const changeAcceptance = {
-		expectedHead: created.head,
-		selections: [
-			{
-				changeId: change.id,
-				revision: change.revision,
-				recordRevision: created.record.recordRevision,
-				contentDigest: change.validation.validatedDigest,
-			},
-		],
-		acceptedBy: "external-package-failures-smoke",
-		acceptedAt: "2026-06-18T11:00:01.000Z",
-	};
-	const sprintBoundary = {
-		accountableGoal: change.intent.desiredState,
-		knowledgeTopics: [".codewiki/kb/system/components/runtime.md"],
-		dependencies: [],
-		rollbackBoundary: "Revert this failure scenario as one boundary.",
-		assessment: {
-			stance: "coherent",
-			rationale: "One validated Change serves one failure-handling goal.",
+	const beforeDecision = await project.tools.state.execute(
+		`${traceId}-before-decision`,
+		{},
+		undefined,
+		undefined,
+		project.ctx,
+	);
+	const decisionInput = {
+		changeId,
+		expectedRevision: change.revision,
+		expectedChangeDigest: change.validation.validatedDigest,
+		expectedWorkStateDigest:
+			beforeDecision.details.result.workState.snapshotDigest,
+		disposition: "approve",
+		rationale: "Approve exact failure-handling Change.",
+		authority: {
+			kind: "user",
+			actor: "external-package-failures-smoke",
+			ref: "approval:user:external-package-failures-smoke",
 		},
+		occurredAt: "2026-06-18T11:00:01.000Z",
 	};
-	const preview = assertToolResult(
+	assertToolResult(
 		await executeTool(
 			project.tools.decide,
-			{
-				traceId,
-				mode: "preview",
-				allowNonProjectInstall: true,
-				changeAcceptance,
-				sprintBoundary,
-			},
+			{ ...decisionInput, mode: "preview", allowNonProjectInstall: true },
 			project.ctx,
 			`${traceId}-decide-preview`,
 		),
 		/wiki_decide: completed preview run\./,
 	);
-	const decided = assertToolResult(
+	assertToolResult(
 		await executeTool(
 			project.tools.decide,
 			{
-				traceId,
+				...decisionInput,
 				mode: "append",
 				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
-				nextSequence: 1,
-				changeAcceptance,
-				sprintBoundary,
-				sprintProposalApproval: {
-					approved: true,
-					renderedProposalDigest: preview.renderedSprintProposal.digest,
-					approvedBy: "external-package-failures-smoke",
-					approvedAt: "2026-06-18T11:00:01.000Z",
-				},
 			},
 			project.ctx,
 			`${traceId}-decide`,
 		),
 		/wiki_decide: completed append run\./,
 	);
-	const decisionRef = approvedDecisionRef(decided);
+	const beforePlanning = await project.tools.state.execute(
+		`${traceId}-before-planning`,
+		{},
+		undefined,
+		undefined,
+		project.ctx,
+	);
+	const sprintId = `SPR-${suffix}`;
+	const pathScope = options.pathScope ?? "src/**";
+	const verification =
+		options.verification ?? "tests/external-feature.test.mjs";
 	const planned = assertToolResult(
 		await executeTool(
 			project.tools.plan,
 			{
-				traceId,
 				mode: "append",
 				allowNonProjectInstall: true,
-				expectedBytes: await expectedBytes(tracePath),
-				nextSequence: 2,
+				expectedWorkStateDigest:
+					beforePlanning.details.result.workState.snapshotDigest,
+				expectedChangeIds: [changeId],
+				expectedBytesByChangeId: {
+					[changeId]: await expectedBytes(tracePath),
+				},
+				actor: "agent:external-package-failures-smoke",
+				rationale: "Plan exact approved failure-handling Change.",
 				createdAt: "2026-06-18T11:00:02.000Z",
-				decisionEvents: decided.loopResult.traceEvents,
-				parentId: `${traceId}:decision:checkpoint:1`,
-				workItemInputs: [workItemInput(decisionRef, workUnitId, options)],
+				sprints: [
+					{
+						id: sprintId,
+						goal: "Exercise installed package runtime failure handling.",
+						participatingChangeIds: [changeId],
+						workItemIds: [workUnitId],
+						rollbackBoundary: "Revert Sprint work as one boundary.",
+						dependsOn: [],
+						integrationRefs: [],
+					},
+				],
+				workItems: [
+					{
+						id: workUnitId,
+						sprintId,
+						owningChangeId: changeId,
+						contributingChangeIds: [],
+						title: "Exercise installed package runtime failure handling",
+						outcome: "Runtime failures produce deterministic remediation.",
+						technicalRequirements: ["Preserve Change Trace authority."],
+						acceptanceCriteria: ["Failure routes remain deterministic."],
+						componentRefs: ["source"],
+						pathScopes: [pathScope],
+						verification: [verification],
+						workerProfile: "implementation",
+						dependsOn: [],
+					},
+				],
 			},
 			project.ctx,
 			`${traceId}-plan`,
 		),
 		/wiki_plan: completed append run\./,
 	);
+	const planningEvents = Object.values(planned.events);
 	return {
 		traceId,
 		workUnitId,
 		tracePath,
-		planningEvents: planned.loopResult.traceEvents,
-		planningRef: planningWorkRef(planned),
+		planningEvents,
+		planningRef: planningWorkRef(planningEvents),
 	};
 }
 
@@ -650,7 +601,7 @@ async function runMissingOutput(installed, root) {
 			config: { runtime: { automation: "assist", maxWorkers: 1 } },
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
-			nextSequenceByTrace: { [ready.traceId]: 3 },
+			nextSequenceByTrace: { [ready.traceId]: 4 },
 			expectedBytesByTrace: {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
@@ -687,7 +638,7 @@ async function runMalformedOutput(installed, root) {
 			config: { runtime: { automation: "assist", maxWorkers: 1 } },
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
-			nextSequenceByTrace: { [ready.traceId]: 3 },
+			nextSequenceByTrace: { [ready.traceId]: 4 },
 			expectedBytesByTrace: {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
@@ -719,7 +670,7 @@ async function runMalformedOutput(installed, root) {
 		result.workers[0].outputFile.startsWith(
 			join(
 				project.projectRoot,
-				".codewiki/runtime/tmp/TRACE-external-malformed-output/runtime/pi-workers",
+				`.codewiki/runtime/tmp/${ready.traceId}/runtime/pi-workers`,
 			),
 		),
 		true,
@@ -746,7 +697,7 @@ async function runBlockedOutput(installed, root) {
 			config: { runtime: { automation: "assist", maxWorkers: 1 } },
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
-			nextSequenceByTrace: { [ready.traceId]: 3 },
+			nextSequenceByTrace: { [ready.traceId]: 4 },
 			expectedBytesByTrace: {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
@@ -803,8 +754,8 @@ async function runMixedOutputs(installed, root) {
 			),
 			workerIdPrefix: "external-worker",
 			nextSequenceByTrace: {
-				[first.traceId]: 3,
-				[second.traceId]: 3,
+				[first.traceId]: 4,
+				[second.traceId]: 4,
 			},
 			expectedBytesByTrace: {
 				[first.traceId]: await expectedBytes(first.tracePath),
@@ -816,7 +767,7 @@ async function runMixedOutputs(installed, root) {
 				repoRoot: project.projectRoot,
 				traceId: first.traceId,
 				planningEvents: first.planningEvents,
-				nextSequence: 4,
+				nextSequence: 5,
 				createdAt: "2026-06-18T11:00:04.000Z",
 			},
 		],
@@ -885,7 +836,7 @@ async function runWorktreePrepareFailure(installed, root) {
 				},
 			},
 			queue: await board(project, ready.traceId),
-			nextSequenceByTrace: { [ready.traceId]: 3 },
+			nextSequenceByTrace: { [ready.traceId]: 4 },
 			expectedBytesByTrace: {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
@@ -926,7 +877,7 @@ async function runWorktreeCleanupFailure(installed, root) {
 			},
 			queue: await board(project, ready.traceId),
 			workerIdPrefix: "external-worker",
-			nextSequenceByTrace: { [ready.traceId]: 3 },
+			nextSequenceByTrace: { [ready.traceId]: 4 },
 			expectedBytesByTrace: {
 				[ready.traceId]: await expectedBytes(ready.tracePath),
 			},
@@ -936,7 +887,7 @@ async function runWorktreeCleanupFailure(installed, root) {
 				repoRoot: project.projectRoot,
 				traceId: ready.traceId,
 				planningEvents: ready.planningEvents,
-				nextSequence: 4,
+				nextSequence: 5,
 				createdAt: "2026-06-18T11:00:04.000Z",
 			},
 		],

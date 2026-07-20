@@ -115,7 +115,7 @@ function planningRefIssues(
 	input: PipelineCaseInput,
 ): PipelineEvaluationIssue[] {
 	return input.planning.workItems.flatMap((workItem) =>
-		workItem.decisionRefs.includes(input.decision.changeId)
+		workItem.changeRefs.includes(input.decision.changeId)
 			? []
 			: [
 					{

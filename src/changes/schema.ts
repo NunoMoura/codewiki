@@ -42,13 +42,19 @@ function assertChangeShape(value: unknown): void {
 		"intent",
 		"classification",
 		"impact",
+		"knowledge",
+		"outcome",
+		"delivery",
 		"evidence",
 		"safety",
 		"validation",
 		"estimates",
 		"provenance",
 	]);
-	integer(change.schemaVersion, "change.schemaVersion", 1);
+	integer(change.schemaVersion, "change.schemaVersion", CHANGE_SCHEMA_VERSION);
+	if (change.schemaVersion !== CHANGE_SCHEMA_VERSION) {
+		fail(`change.schemaVersion must be ${CHANGE_SCHEMA_VERSION}`);
+	}
 	string(change.id, "change.id");
 	integer(change.revision, "change.revision", 1);
 	string(change.status, "change.status");
@@ -59,9 +65,8 @@ function assertChangeShape(value: unknown): void {
 		"currentState",
 		"desiredState",
 		"rationale",
-		"currentPain",
-		"desiredOutcome",
 		"nonGoals",
+		"alternatives",
 	]);
 	requiredStrings(intent, "change.intent", [
 		"question",
@@ -69,13 +74,10 @@ function assertChangeShape(value: unknown): void {
 		"desiredState",
 		"rationale",
 	]);
-	optionalStrings(intent, "change.intent", ["currentPain", "desiredOutcome"]);
 	strings(intent.nonGoals, "change.intent.nonGoals");
+	strings(intent.alternatives, "change.intent.alternatives");
 
-	const classification = record(
-		change.classification,
-		"change.classification",
-	);
+	const classification = record(change.classification, "change.classification");
 	keys(classification, "change.classification", [
 		"kind",
 		"type",
@@ -88,13 +90,36 @@ function assertChangeShape(value: unknown): void {
 		"type",
 		"scope",
 	]);
-	strings(classification.affectedLayers, "change.classification.affectedLayers");
+	strings(
+		classification.affectedLayers,
+		"change.classification.affectedLayers",
+	);
 	strings(classification.targetRefs, "change.classification.targetRefs");
 
 	const impact = record(change.impact, "change.impact");
 	keys(impact, "change.impact", ["user", "maintainer", "compatibility"]);
 	requiredStrings(impact, "change.impact", ["user", "maintainer"]);
 	optionalStrings(impact, "change.impact", ["compatibility"]);
+
+	const knowledge = record(change.knowledge, "change.knowledge");
+	keys(knowledge, "change.knowledge", [
+		"topicRefs",
+		"propagationRefs",
+		"noImpactRationale",
+	]);
+	strings(knowledge.topicRefs, "change.knowledge.topicRefs");
+	strings(knowledge.propagationRefs, "change.knowledge.propagationRefs");
+	optionalStrings(knowledge, "change.knowledge", ["noImpactRationale"]);
+
+	const outcome = record(change.outcome, "change.outcome");
+	keys(outcome, "change.outcome", ["successSignals", "evidenceExpectations"]);
+	strings(outcome.successSignals, "change.outcome.successSignals");
+	strings(outcome.evidenceExpectations, "change.outcome.evidenceExpectations");
+
+	const delivery = record(change.delivery, "change.delivery");
+	keys(delivery, "change.delivery", ["constraints", "planningQuestions"]);
+	strings(delivery.constraints, "change.delivery.constraints");
+	strings(delivery.planningQuestions, "change.delivery.planningQuestions");
 
 	const evidence = record(change.evidence, "change.evidence");
 	keys(evidence, "change.evidence", [
@@ -117,19 +142,21 @@ function assertChangeShape(value: unknown): void {
 	const safety = record(change.safety, "change.safety");
 	keys(safety, "change.safety", [
 		"risk",
-		"invariant",
+		"invariants",
 		"safetyBoundary",
 		"failureModes",
 		"rollbackPlan",
 		"negativeTestPlan",
+		"regressionPlan",
 	]);
 	string(safety.risk, "change.safety.risk");
+	strings(safety.invariants, "change.safety.invariants");
 	strings(safety.failureModes, "change.safety.failureModes");
 	optionalStrings(safety, "change.safety", [
-		"invariant",
 		"safetyBoundary",
 		"rollbackPlan",
 		"negativeTestPlan",
+		"regressionPlan",
 	]);
 
 	const validation = record(change.validation, "change.validation");
@@ -138,8 +165,6 @@ function assertChangeShape(value: unknown): void {
 		"issues",
 		"assessments",
 		"recommendations",
-		"successSignal",
-		"regressionPlan",
 		"validatorVersion",
 		"validatedRevision",
 		"validatedDigest",
@@ -152,18 +177,22 @@ function assertChangeShape(value: unknown): void {
 		(entry, index) =>
 			assertAssessment(entry, `change.validation.assessments[${index}]`),
 	);
-	array(validation.recommendations, "change.validation.recommendations").forEach(
-		(entry, index) =>
-			assertRecommendation(entry, `change.validation.recommendations[${index}]`),
+	array(
+		validation.recommendations,
+		"change.validation.recommendations",
+	).forEach((entry, index) =>
+		assertRecommendation(entry, `change.validation.recommendations[${index}]`),
 	);
 	optionalStrings(validation, "change.validation", [
-		"successSignal",
-		"regressionPlan",
 		"validatorVersion",
 		"validatedDigest",
 	]);
 	if (validation.validatedRevision !== undefined) {
-		integer(validation.validatedRevision, "change.validation.validatedRevision", 1);
+		integer(
+			validation.validatedRevision,
+			"change.validation.validatedRevision",
+			1,
+		);
 	}
 
 	const estimates = record(change.estimates, "change.estimates");
@@ -215,7 +244,8 @@ function assertIdentitySemantics(change: Change): void {
 	if (change.schemaVersion !== CHANGE_SCHEMA_VERSION) {
 		fail(`change.schemaVersion must be ${CHANGE_SCHEMA_VERSION}`);
 	}
-	if (!CHANGE_ID_PATTERN.test(change.id)) fail("change.id must use CHG- prefix");
+	if (!CHANGE_ID_PATTERN.test(change.id))
+		fail("change.id must use CHG- prefix");
 	member(change.status, CHANGE_STATUS_VALUES, "change.status");
 }
 
@@ -240,7 +270,11 @@ function assertClassificationSemantics(change: Change): void {
 
 function assertEstimateSemantics(change: Change): void {
 	if (change.estimates.effort !== undefined) {
-		member(change.estimates.effort, CHANGE_EFFORT_VALUES, "change.estimates.effort");
+		member(
+			change.estimates.effort,
+			CHANGE_EFFORT_VALUES,
+			"change.estimates.effort",
+		);
 	}
 	if (change.estimates.workScale !== undefined) {
 		member(
@@ -252,7 +286,11 @@ function assertEstimateSemantics(change: Change): void {
 }
 
 function assertProvenanceSemantics(change: Change): void {
-	member(change.provenance.origin, CHANGE_ORIGIN_VALUES, "change.provenance.origin");
+	member(
+		change.provenance.origin,
+		CHANGE_ORIGIN_VALUES,
+		"change.provenance.origin",
+	);
 	iso(change.provenance.createdAt, "change.provenance.createdAt");
 	iso(change.provenance.updatedAt, "change.provenance.updatedAt");
 }
@@ -275,13 +313,24 @@ function assertValidationSemantics(
 		}
 	}
 	if (change.validation.validatedDigest !== undefined) {
-		digest(change.validation.validatedDigest, "change.validation.validatedDigest");
+		digest(
+			change.validation.validatedDigest,
+			"change.validation.validatedDigest",
+		);
 	}
 	for (const issue of change.validation.issues) {
-		member(issue.severity, CHANGE_VALIDATION_SEVERITY_VALUES, "validation issue severity");
+		member(
+			issue.severity,
+			CHANGE_VALIDATION_SEVERITY_VALUES,
+			"validation issue severity",
+		);
 	}
 	for (const assessment of change.validation.assessments) {
-		member(assessment.stance, CHANGE_ASSESSMENT_STANCE_VALUES, "assessment stance");
+		member(
+			assessment.stance,
+			CHANGE_ASSESSMENT_STANCE_VALUES,
+			"assessment stance",
+		);
 	}
 	for (const recommendation of change.validation.recommendations) {
 		member(
@@ -295,7 +344,10 @@ function assertValidationSemantics(
 function assertStatusSemantics(change: Change, contentDigest: string): void {
 	const transition = change.lastStatusTransition;
 	if (transition) {
-		if (transition.changeId !== change.id || transition.revision !== change.revision) {
+		if (
+			transition.changeId !== change.id ||
+			transition.revision !== change.revision
+		) {
 			fail("status transition must target the current Change revision");
 		}
 		if (transition.contentDigest !== contentDigest) {
@@ -362,7 +414,13 @@ function assertIssue(value: unknown, path: string): void {
 
 function assertAssessment(value: unknown, path: string): void {
 	const assessment = record(value, path);
-	keys(assessment, path, ["actor", "stance", "rationale", "concerns", "evidenceRefs"]);
+	keys(assessment, path, [
+		"actor",
+		"stance",
+		"rationale",
+		"concerns",
+		"evidenceRefs",
+	]);
 	requiredStrings(assessment, path, ["actor", "stance", "rationale"]);
 	strings(assessment.concerns, `${path}.concerns`);
 	strings(assessment.evidenceRefs, `${path}.evidenceRefs`);
@@ -388,7 +446,9 @@ function array(value: unknown, path: string): unknown[] {
 }
 
 function strings(value: unknown, path: string): void {
-	array(value, path).forEach((entry, index) => string(entry, `${path}[${index}]`));
+	array(value, path).forEach((entry, index) =>
+		string(entry, `${path}[${index}]`),
+	);
 }
 
 function requiredStrings(
@@ -410,7 +470,8 @@ function optionalStrings(
 }
 
 function string(value: unknown, path: string): asserts value is string {
-	if (typeof value !== "string" || !value.trim()) fail(`${path} must be non-empty text`);
+	if (typeof value !== "string" || !value.trim())
+		fail(`${path} must be non-empty text`);
 }
 
 function integer(value: unknown, path: string, minimum: number): void {
@@ -419,7 +480,11 @@ function integer(value: unknown, path: string, minimum: number): void {
 	}
 }
 
-function keys(value: Record<string, unknown>, path: string, allowed: string[]): void {
+function keys(
+	value: Record<string, unknown>,
+	path: string,
+	allowed: string[],
+): void {
 	const allowedSet = new Set(allowed);
 	for (const key of Object.keys(value)) {
 		if (!allowedSet.has(key)) fail(`${path} contains unknown field ${key}`);

@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Planning Loop
-description: The planning loop owns executable Work Item shaping and Sprints Queue health. It turns accepted Decisions into parallel-safe Work Items, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting Decisions enter planning; tiny/small low-risk Decisions may bypass planning only when the Decision loop records a safe direct implementation route.
+description: The Planning loop continuously turns the relevant portfolio of approved Changes into globally coherent Sprints, Work Items, dependencies, resolutions, and execution constraints.
 tags:
   - codewiki
   - system
   - planning
   - loop
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-08-01T00:00:00Z
 codewiki_component: planning
 codewiki_components:
   - planning
@@ -17,7 +17,9 @@ codewiki_test_patterns:
   - tests/planning/**
   - tests/helpers/planning-work.mjs
 codewiki_trace_events:
-  - planning.work_units_created
+  - planning.change_planned
+  - planning.change_replanned
+  - planning.change_resolved
 codewiki_generated_views:
   - .codewiki/views/work-plan.json
   - .codewiki/views/work-queue.json
@@ -37,146 +39,212 @@ codewiki_source_map:
       - .codewiki/views/triggers.json
       - .codewiki/views/quality.json
     trace_events:
-      - planning.work_units_created
+      - planning.change_planned
+      - planning.change_replanned
+      - planning.change_resolved
     role: semantic_loop
 ---
 # Planning Loop
 
-The planning loop owns executable Work Item shaping and Sprints Queue health. It turns accepted Decisions into parallel-safe Work Items, ordering, conflicts, path scopes, component refs, and acceptance criteria that implementation and runtime can trust. Most accepted project-affecting Decisions enter planning; tiny/small low-risk Decisions may bypass planning only when the Decision loop records a safe direct implementation route.
+Planning is the project-wide execution optimizer. It continuously observes a bounded horizon of approved Changes and active work, then creates or revises Sprints, Work Items, dependencies, resolutions, integration constraints, and execution order that Implementation and runtime can trust.
 
-Compatibility wording: the planning loop owns executable work shaping and trace-queue health; in current product UX, this means Planning owns Sprints Queue health and Work Item shaping.
+Planning owns Sprint creation. A Sprint is an execution grouping, not a Decision artifact and not a trace. One Change may require several Sprints; one Sprint may coordinate several Changes.
 
 ## Loop authority
 
-The planning loop owns:
+Planning owns:
 
-- Work Item materialization from approved Decisions;
-- dependency ordering;
-- Sprints Queue ordering, conflict, starvation, deferral, and route-back policy;
-- path scopes and conflict strategy;
-- component refs and test strategy;
-- acceptance criteria ids;
-- planning depth (`micro` or `standard`) for each work item;
-- implementation handoff;
-- triggers for recurring schedules, event triggers, hooks, and manual heartbeat handoff;
-- runtime scheduling readiness;
-- replanning answers from implementation.
+- selecting the relevant approved-Change planning horizon;
+- grouping approved Changes into Sprints;
+- splitting one Change across Sprints when rollback, dependency, integration, or capacity boundaries require it;
+- stable Sprint and Work Item identities;
+- one owning Change for every Work Item and explicit additional Change contribution refs;
+- executable technical requirements and acceptance criteria;
+- dependency and ordering constraints across Changes and Sprints;
+- component refs, path scopes, test strategy, and integration targets;
+- conflict, starvation, deferral, supersession, and route-back policy;
+- worker profiles and safe concurrency constraints;
+- recurring schedules, event triggers, hooks, and manual triggers;
+- replanning after implementation, Git, KB, policy, or capacity changes.
 
-The planning loop does not own product decisions, code changes, worker execution, or final content proof.
+Planning does not approve Change meaning, edit source, execute workers, accept implementation evidence, or mutate approved Change revisions.
+
+## Planning horizon
+
+Planning sees the entirety of relevant work, not only one Change Trace. A bounded horizon includes:
+
+- newly approved or superseded Changes needing coverage;
+- their semantic and technical dependencies;
+- overlapping Knowledge topics, UI refs, components, and path scopes;
+- active Sprints and claimed Work Items that constrain replanning;
+- current integration/worktree state;
+- worker capacity, budgets, policy, and preview targets;
+- explicit priority, deadline, trigger, and rollback constraints.
+
+Planning need not reconsider unrelated closed history on every trigger. Horizon selection is deterministic, impact-based, and recorded in the planning epoch.
+
+## Optimization order
+
+Planning optimizes lexicographically rather than hiding authority inside one score:
+
+1. preserve approved meaning, authority, and safety;
+2. satisfy semantic and technical dependencies;
+3. preserve coherent rollback and integration boundaries;
+4. avoid component/path/worktree conflicts;
+5. keep Work Items independently claimable and acceptance-testable;
+6. maximize safe parallelism;
+7. batch shared setup, verification, integration, and preview work;
+8. reduce latency, model use, token cost, and repeated checks.
+
+Efficiency can never override correctness, approval, or evidence requirements.
+
+## Loop input
+
+Planning input includes:
+
+- exact approved Change refs and approval digests;
+- relevant WorkState planning horizon and digest;
+- current Sprint, Work Item, Assignment, integration, and conflict projections;
+- source ownership and test contracts;
+- prior accepted planning output refs and revisions;
+- trigger, actor, policy, capacity, and budget refs;
+- route-back evidence when Implementation requests replanning.
+
+The core loads canonical Decision-loop output, traces, ownership, policy, and current state. Callers submit proposed plans or planning observations, not replacement repository truth.
 
 ## Loop cycle
 
-One planning cycle does this work:
-
 ```text
-observe accepted decision output + KB/source/trace refs + active trace queue
-map Decisions and questions to executable Work Items
-assign component refs, path scopes, dependencies, and acceptance criteria
-identify Sprints Queue conflicts, stale Decisions, deferrals, starvation risk, route-back needs, and runtime scheduling constraints
-update planning output
-check planning exit conditions
-append planning.work_units_created
+refresh relevant WorkState planning horizon
+select approved Changes needing new or revised coverage
+shape globally coherent Sprints
+create or revise owned Work Items, criteria, dependencies, paths, tests, and triggers
+check active claims, conflicts, integration state, and execution capacity
+record explicit deferrals, resolutions, and route-backs
+run Planning quality standards
+append per-Change slices of one planning epoch
 continue, exit, route back, or block
 ```
 
-Planning should refine or split work until implementation can proceed without guessing scope or acceptance. For tiny or small low-risk Decisions that still route to Planning, planning may emit a micro-plan: one self-contained Work Item with explicit acceptance criteria, path scopes, and verification, but no dependency graph ceremony.
-
-Planning does not need to create mandatory to-do lists or micro-steps inside each Work Item. A Work Item is the claimable unit; if a step needs separate ownership or scheduling, Planning should make it a Work Item instead of a private checklist item.
+Planning should refine or split work until Implementation can proceed without guessing accepted behavior, scope, ownership, acceptance, or integration order.
 
 ## Loop output
 
-Planning loop output is the high-signal packet implementation and runtime need:
+One accepted Planning iteration emits a planning epoch:
 
-- Work Items with stable ids;
-- Decision refs each Work Item covers;
-- concrete technical requirements for implementation;
-- acceptance criteria with stable ids;
-- component refs from the source map;
-- code/docs/test path scopes;
-- dependencies and ordering constraints;
-- optional trigger (`id`, `kind`, `runMode`, `concurrency`, `runKeyTemplate`, `owner`, `trigger`, and canonical refs) for recurring schedule, event trigger, hook, or manual heartbeat work;
-- conflict notes and scheduling holds;
-- verification strategy;
-- planning depth (`micro` for compact one-Work Item handoff or `standard` for normal planning);
-- worker profile and agent assessment of independence, implementation readiness, right sizing, and uncertainty resolution;
-- resolutions using known kinds: work-unit, deferred, already-implemented, route-back, knowledge-only, or non-executable;
-- deferrals with owner, trigger, rationale, and evidence when allowed;
-- route-back resolutions with owner, trigger, rationale, and evidence when decision authority is missing;
-- canonical refs proving the output.
+```ts
+interface PlanningEpoch {
+  planningEpochId: string;
+  digest: string;
+  observedWorkStateDigest: string;
+  participantChanges: ParticipantChange[];
+  sprints: SprintPlan[];
+  workItems: WorkItem[];
+  changeCoverage: ChangePlanningCoverage[];
+  dependencies: PlanningDependency[];
+  resolutions: ChangePlanningResolution[];
+  qualityStandards: QualityStandardResult[];
+}
+```
 
-Planning output should not include code changes, test results, planner-authored to-do lists, or worker-local execution evidence. Implementation workers may use private scratchpads/checklists later, but those are not Sprint Plan truth.
+Sprint plans contain:
 
-A micro-plan is still a planning artifact. It must cover exactly one accepted Decision ref, have no dependencies, stay low-risk by Decision classification, and carry enough acceptance/verification detail for implementation to proceed immediately. If planning discovers ambiguity, dependencies, broader path scope, or a need to split work, it must promote the work to standard planning or route back to Decision. If planning needs user clarification or validation, it routes to the Decision loop rather than blocking directly.
+- stable id and accountable execution goal;
+- participating approved Change ids;
+- rollback and integration boundary;
+- dependency and ordering refs;
+- canonical Knowledge/UI/preview targets when affected;
+- policy and target digests that execution must freeze;
+- Work Item refs.
 
-## Loop quality standards
+Every Work Item contains:
 
-The planning loop can exit only when loop-owned quality standards are met or explicitly routed back/blocked with authority:
+- stable id and Sprint id;
+- exactly one `owningChangeId`;
+- optional `contributingChangeIds`;
+- concrete technical requirements;
+- stable acceptance criteria;
+- components, path scopes, and verification;
+- dependencies and worker profile;
+- trigger when applicable;
+- uncertainty and readiness assessment.
 
-| Quality standard | Mode | Required signal |
-| --- | --- | --- |
-| decision_coverage_complete | deterministic | Every accepted Decision ref is covered by a Work Item or explicit resolution. |
-| worker_units_self_contained | deterministic | Work Items have stable ids, Decision refs, outcome, acceptance criteria, and bounded path scopes. |
-| technical_requirements_complete | deterministic | Each Work Item breaks Decision intent into concrete implementation requirements. |
-| acceptance_and_verification_testable | deterministic | Acceptance criteria have stable ids/text and verification refs or commands are present. |
-| planning_depth_accounted | deterministic | Work Items declare micro or standard planning depth; micro-plans cover one Decision and have no dependencies. |
-| worker_assignment_ready | agent | Agent assesses the Work Item as independent and implementation-ready, and a worker profile is declared. |
-| uncertainty_resolved | agent | No unresolved planning uncertainty remains; Decision or user authority is routed instead of leaking into implementation. |
-| work_unit_right_sized | agent | Work Item is neither Sprint-sized nor tiny busywork; Sprint remains the accountable grouping. |
-| source_ownership_aligned | deterministic | Component refs exist in the source map and cover declared paths/tests. |
-| dependency_order_clear | deterministic | Dependencies exist, are acyclic, and order overlapping path scopes. |
-| triggers_valid | deterministic | Triggers use known kinds (`schedule`, `trigger`, `hook`, `manual`), `runMode: new_trace`, valid concurrency (`skip_if_active`, `queue`, `replace`), run key template, owner, trigger source, and canonical refs. |
-| resolutions_accounted | deterministic | Resolutions use known kinds and carry required evidence; route-back resolutions carry evidence and return to decision authority before implementation. |
-| traceability_refs_canonical | deterministic | Planning refs are canonical trace, KB, Git, digest, source, or test refs. |
+Planning output excludes source edits, test results, worker-local checklists, implementation evidence, and product decisions made during decomposition.
+
+## Replanning rules
+
+- Unclaimed Work Items may be superseded by a later accepted planning revision.
+- Claimed Work Items remain bound to exact plan, Change revision, policy, and source-base refs.
+- Changing claimed scope requires explicit release, cancellation, or migration.
+- Integrated work cannot disappear through silent replanning.
+- Product meaning, outcome, Knowledge semantics, or material risk changes route to Decision.
+- Planning may regroup unclaimed approved work across Sprints when global execution improves without violating accepted constraints.
+
+## Multi-trace append
+
+Planning runs once over its horizon, then runtime appends deterministic per-Change output slices to affected Change Traces. Each slice carries planning epoch id, participant set, observed WorkState digest, Sprint descriptor digests, and base planning revisions.
+
+A partial multi-trace write is not accepted Sprint state. WorkState exposes `incomplete_commit`, and runtime retries deterministic missing events before downstream claim selection.
+
+## Quality standards
+
+| Quality standard | Required signal |
+| --- | --- |
+| approved_change_coverage_complete | Every selected approved Change is covered by Work Items or explicit resolution. |
+| sprint_boundaries_coherent | Sprint goals, participants, rollback, integration, and dependencies form safe execution groups. |
+| work_items_self_contained | Work Items have stable ids, one owner, outcome, requirements, criteria, and bounded paths. |
+| cross_change_contribution_explicit | Additional Change coverage is declared without duplicating ownership. |
+| technical_requirements_complete | Implementation requirements are concrete and preserve accepted meaning. |
+| acceptance_and_verification_testable | Stable criteria and verification evidence are executable. |
+| source_ownership_aligned | Components and path/test scopes match OKF ownership. |
+| dependency_order_clear | Dependencies exist, are acyclic, and order overlapping work. |
+| claimed_work_stable | Replanning does not silently mutate active Assignments. |
+| integration_plan_safe | Worktree, merge, shared preview, and rollback constraints are explicit where needed. |
+| worker_assignment_ready | Work is independent, right-sized, and has an eligible worker profile. |
+| uncertainty_resolved | Planning uncertainty is repaired or routed to Decision. |
+| triggers_valid | Recurring/event/hook/manual triggers have bounded run and concurrency policy. |
+| resolutions_accounted | Deferral, already-realized, knowledge-only, non-executable, superseded, or route-back facts carry evidence. |
+| traceability_refs_canonical | Change, trace, KB, Git, digest, source, and test refs are canonical. |
 
 ## Exit statuses
 
-- `continue`: same planning loop can split work, add criteria, fix deps, resolve conflicts, or improve verification strategy.
-- `exit`: planning output is accepted; implementation/runtime can consume it.
-- `route_back`: decision authority is needed for requirements, product behavior, risk, or scope.
-- `blocked`: external approval/resource or unresolved upstream state prevents planning progress.
+- `continue`: same planning horizon can be repaired or optimized further.
+- `exit`: every selected approved Change has accepted executable coverage or explicit resolution.
+- `route_back`: Decision authority is needed for meaning, outcome, Knowledge, risk, or approval.
+- `blocked`: external capacity, policy, integration conflict, or upstream state prevents a safe plan.
 
 ## Work queue relationship
 
-Planning output is not a roadmap file. It is trace truth. Generated views project it:
-
 ```text
-planning.work_units_created output -> work-plan view -> work-queue view -> runtime scheduling
+approved Planning epoch
+-> per-Change trace facts
+-> WorkState
+-> Sprint/work-plan views
+-> work queue
+-> runtime Assignment selection
 ```
 
-The work-plan view is per-trace detail. The Sprints Queue is the product concept for cross-trace ordering, health, Sprint Traces, and blockers. The work-queue view is the runtime claim projection over Planning-approved ready Work Items.
+Runtime never invents Work Items from raw approved Changes. It selects only accepted Planning-owned Work Items whose owning Change, plan revision, dependencies, integration state, and policy remain current.
 
-A trace that remains `needs_planning` is a Planning-owned queue condition, not runtime truth to resolve heuristically. Planning must cover the Decision refs with Work Items, defer them with rationale, route them back to Decision or the user, or record why they are non-executable. Runtime and hosts may surface the condition, but they must not invent semantic work from raw Decisions. Compatibility wording: runtime and hosts must not invent semantic work from the raw proposed changes.
-
-## Trace iteration data
-
-Planning iterations should record compact facts:
+## Trace output
 
 ```json
 {
-  "event": "work_units_created",
+  "event": "change_planned",
   "loop": "planning",
   "data": {
-    "iteration": 1,
-    "trigger": "decision_exit",
+    "iteration": 2,
+    "trigger": "approved_change_portfolio_changed",
+    "observedWorkStateDigest": "sha256:...",
     "output": {
-      "workItems": [
-        {
-          "trigger": {
-            "id": "TRG-example",
-            "kind": "schedule",
-            "runMode": "new_trace",
-            "concurrency": "skip_if_active",
-            "runKeyTemplate": "example:${run}",
-            "owner": "implementation",
-            "trigger": "cron:0 9 * * 1",
-            "refs": ["kb:system/components/runtime.md"]
-          }
-        }
-      ],
+      "planningEpochId": "PE-42",
+      "digest": "sha256:...",
+      "participantChanges": [],
+      "sprints": [],
+      "workItems": [],
+      "changeCoverage": [],
       "resolutions": [],
-      "qualityStandards": [],
-      "dependencies": [],
-      "conflicts": []
+      "qualityStandards": []
     },
     "exit": {
       "status": "exit",
@@ -188,18 +256,11 @@ Planning iterations should record compact facts:
 }
 ```
 
-## Route-back handling
-
-When implementation routes back to planning, the new planning iteration should:
-
-1. cite the implementation route-back ref;
-2. update work-unit scope, acceptance, dependencies, path scopes, or verification strategy;
-3. route to decision if the issue is product/system authority rather than planning authority;
-4. emit a new planning output that implementation can consume.
-
 ## Related docs
 
+- [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
+- [Loop Contracts](loop-contracts.md)
 - [Decision Loop](decision-loop.md)
 - [Implementation Loop](implementation-loop.md)
 - [Runtime](runtime.md)

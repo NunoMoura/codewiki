@@ -20,8 +20,8 @@ describe("CodeWiki lab loop exit scores", () => {
 		assert.equal(scores.decision.metric, "DEC");
 		assert.equal(scores.planning.metric, "PEC");
 		assert.equal(scores.implementation.metric, "IEC");
-		assert.equal(scores.decision.caseCount, 5);
-		assert.equal(scores.planning.caseCount, 5);
+		assert.equal(scores.decision.caseCount, 4);
+		assert.equal(scores.planning.caseCount, 4);
 		assert.equal(scores.implementation.caseCount, 5);
 	});
 

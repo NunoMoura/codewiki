@@ -1,4 +1,3 @@
-import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import { loopOutputEvents, traceRefs } from "../traces/queries.ts";
 import { replayTrace } from "../traces/replay.ts";
 import type { TraceLoop, TraceRecord } from "../traces/types.ts";
@@ -83,33 +82,28 @@ function nextLoop(
 	records: TraceRecord[],
 	options: { allWorkDone: boolean },
 ): TraceLoop | null {
-	const decisions = decisionRefs(records);
+	const decisions = changeRefs(records);
 	if (decisions.length === 0) return "decision";
 	const workUnits = planningWorkItems(records);
-	const directRefs = new Set(
-		directImplementationDecisionRefsForStatus(records),
-	);
 	const planningCoverage = new Set(
-		workUnits.flatMap((item) => item.decisionRefs),
+		workUnits.flatMap((item) => item.changeRefs),
 	);
 	const resolvedDecisions = new Set(planningResolutions(records));
 	if (
 		decisions.some(
 			(decision) =>
-				!planningCoverage.has(decision) &&
-				!directRefs.has(decision) &&
-				!resolvedDecisions.has(decision),
+				!planningCoverage.has(decision) && !resolvedDecisions.has(decision),
 		)
 	) {
 		return "planning";
 	}
-	if (workUnits.length === 0 && directRefs.size === 0) return null;
+	if (workUnits.length === 0) return null;
 	if (!options.allWorkDone) return "implementation";
 	return null;
 }
 
 function decisionCount(records: TraceRecord[]): number {
-	return decisionRefs(records).length;
+	return changeRefs(records).length;
 }
 
 function implementationChangeCount(records: TraceRecord[]): number {
@@ -120,33 +114,40 @@ function implementationChangeCount(records: TraceRecord[]): number {
 	);
 }
 
-function decisionRefs(records: TraceRecord[]): string[] {
+function changeRefs(records: TraceRecord[]): string[] {
 	return loopOutputEvents(records, "decision")
 		.filter(loopIterationQualityComplete)
-		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).approvedChanges).map((change) =>
-				iterationSubref(event, "change", text(change.id)),
-			),
-		);
-}
-
-function directImplementationDecisionRefsForStatus(
-	records: TraceRecord[],
-): string[] {
-	return directImplementationDecisionsFromRecords(records).map(
-		(change) => change.ref,
-	);
+		.flatMap((event) => {
+			const output = objectRecord(event.data?.output);
+			const decision = objectRecord(output.decision);
+			const changeRecord = objectRecord(output.changeRecord);
+			const change = objectRecord(changeRecord.change);
+			if (text(decision.disposition) === "approve" && text(change.id)) {
+				return [`change:${text(change.id)}`];
+			}
+			return [];
+		});
 }
 
 function planningWorkItems(
 	records: TraceRecord[],
-): Array<{ decisionRefs: string[] }> {
+): Array<{ changeRefs: string[] }> {
 	return loopOutputEvents(records, "planning")
 		.filter(planningIterationClaimable)
 		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).workItems).map((item) => ({
-				decisionRefs: stringList(item.decisionRefs),
-			})),
+			objectList(objectRecord(event.data?.output).workItems).map((item) => {
+				const owningChangeRef = text(item.owningChangeId)
+					? `change:${text(item.owningChangeId)}`
+					: "";
+				return {
+					changeRefs: unique([
+						...(owningChangeRef ? [owningChangeRef] : []),
+						...stringList(item.contributingChangeIds).map(
+							(changeId) => `change:${changeId}`,
+						),
+					]),
+				};
+			}),
 		);
 }
 
@@ -155,17 +156,9 @@ function planningResolutions(records: TraceRecord[]): string[] {
 		.filter(planningIterationClaimable)
 		.flatMap((event) =>
 			objectList(objectRecord(event.data?.output).resolutions).map(
-				(resolution) => text(resolution.decisionRef),
+				(resolution) => text(resolution.changeRef),
 			),
 		);
-}
-
-function iterationSubref(
-	event: { id: string },
-	kind: string,
-	id: string,
-): string {
-	return `trace:${event.id}#${kind}:${id || event.id}`;
 }
 
 function objectRecord(value: unknown): Record<string, unknown> {
@@ -191,6 +184,10 @@ function stringList(value: unknown): string[] {
 
 function text(value: unknown): string {
 	return String(value || "").trim();
+}
+
+function unique(values: string[]): string[] {
+	return [...new Set(values)];
 }
 
 function statusHealth(input: {

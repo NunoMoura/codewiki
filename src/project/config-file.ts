@@ -80,6 +80,7 @@ export function configFileToPartialWikiConfig(
 	const stopConditions = stringList(agency.stop_gates);
 	return {
 		project: text(record.project) || text(record.project_name) || undefined,
+		preview: objectRecord(record.preview),
 		runtime: {
 			...runtime,
 			...(number(parallelism.max_sessions) !== undefined &&
@@ -104,6 +105,7 @@ function validateConfigFileKeys(value: unknown): Record<string, unknown> {
 	const record = requiredObjectRecord(value, WIKI_CONFIG_PATH);
 	assertKnownKeys(record, WIKI_CONFIG_PATH, [
 		"project",
+		"preview",
 		"runtime",
 		"retention",
 		"hosts",

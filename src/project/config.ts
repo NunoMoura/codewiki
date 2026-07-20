@@ -1,5 +1,11 @@
 import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
 import {
+	DEFAULT_WIKI_PREVIEW_CONFIG,
+	type PartialWikiPreviewConfig,
+	resolveWikiPreviewConfig,
+	type WikiPreviewConfig,
+} from "../preview/profile.ts";
+import {
 	DEFAULT_MODEL_ROUTING_CONFIG,
 	type PartialWikiModelRoutingConfig,
 	resolveWikiModelRoutingConfig,
@@ -96,6 +102,7 @@ export interface WikiQualityConfig {
 
 export interface WikiConfig {
 	project: string;
+	preview: WikiPreviewConfig;
 	runtime: WikiRuntimeConfig;
 	retention: WikiRetentionConfig;
 	hosts: WikiHostConfig;
@@ -114,6 +121,7 @@ export interface RunWikiConfigResult {
 
 export type PartialWikiConfig = {
 	project?: string;
+	preview?: PartialWikiPreviewConfig;
 	runtime?: PartialRuntimeConfig;
 	retention?: Partial<WikiRetentionConfig>;
 	hosts?: PartialHostConfig;
@@ -140,6 +148,7 @@ export type PartialQualityConfig = {
 
 export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 	project: "codewiki",
+	preview: DEFAULT_WIKI_PREVIEW_CONFIG,
 	runtime: {
 		maxWorkers: 1,
 		worktreeIsolation: "none",
@@ -231,6 +240,7 @@ export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
 	validatePartialWikiConfigKeys(input, "wiki_config");
 	const config: WikiConfig = {
 		project: text(input.project) || DEFAULT_WIKI_CONFIG.project,
+		preview: resolveWikiPreviewConfig(input.preview),
 		runtime: {
 			...DEFAULT_WIKI_CONFIG.runtime,
 			...(input.runtime || {}),
@@ -346,8 +356,10 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 	);
 	validateHosts(config.hosts);
 	validateQuality(config.quality);
+	const preview = resolveWikiPreviewConfig(config.preview);
 	return {
 		project: config.project.trim(),
+		preview,
 		runtime: {
 			...config.runtime,
 			budgets: cleanBudgets(config.runtime.budgets),
@@ -385,6 +397,7 @@ function mergeWikiConfigPatch(
 ): PartialWikiConfig {
 	return {
 		project: patch.project ?? current.project,
+		preview: patch.preview ?? current.preview,
 		runtime: {
 			...current.runtime,
 			...(patch.runtime || {}),
@@ -675,11 +688,15 @@ function validatePartialWikiConfigKeys(value: unknown, path: string): void {
 	const config = assertConfigObject(value, path);
 	assertKnownKeys(config, path, [
 		"project",
+		"preview",
 		"runtime",
 		"retention",
 		"hosts",
 		"quality",
 	]);
+	if (config.preview !== undefined) {
+		resolveWikiPreviewConfig(config.preview as PartialWikiPreviewConfig);
+	}
 	const runtime = optionalConfigObject(config.runtime, `${path}.runtime`);
 	if (runtime) {
 		assertKnownKeys(runtime, `${path}.runtime`, [

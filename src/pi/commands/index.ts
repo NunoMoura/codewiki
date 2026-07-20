@@ -19,6 +19,7 @@ import {
 	startCodewikiDashboardServer,
 } from "../../dashboard/index.ts";
 import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
+import { piPreviewControl } from "../preview-runtime.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
 import {
 	renderBootstrapCommand,
@@ -129,6 +130,7 @@ async function startDashboard(
 		inProcess: true,
 		persistent: false,
 		sessionActionControl: createPiDashboardSessionActionControl(pi, ctx),
+		previewControl: piPreviewControl(root),
 	});
 	return {
 		command: "dashboard",

@@ -44,8 +44,7 @@ function packStandard<TInput>(standard: LabStandard<TInput>) {
 		repairTarget: standard.repairTarget || "trace",
 		weight: standard.weight,
 		cost: standard.cost || standard.weight,
-		gate:
-			standard.hardGate || standard.layer === "hard_gate" ? "hard" : "soft",
+		gate: standard.hardGate || standard.layer === "hard_gate" ? "hard" : "soft",
 		timeoutMs: 50,
 		dependsOn: [],
 		evaluatorId: evaluatorId(method),

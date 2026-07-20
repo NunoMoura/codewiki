@@ -9,6 +9,7 @@ import {
 	resolveCodewikiExtensionIdentity,
 	type CodewikiExtensionIdentity,
 } from "../identity.ts";
+import { closePiPreviewRuntime, piPreviewControl } from "../preview-runtime.ts";
 import type {
 	CodewikiExtensionApi,
 	CodewikiExtensionContext,
@@ -27,6 +28,7 @@ export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 			await closeInProcessCodewikiDashboardServer(projectRoot).catch(
 				() => undefined,
 			);
+			await closePiPreviewRuntime(projectRoot).catch(() => undefined);
 		}
 	});
 	pi.on("session_start", async (event, ctx) => {
@@ -51,6 +53,7 @@ export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 						ctx,
 						() => generation === sessionGeneration,
 					),
+					previewControl: piPreviewControl(projectRoot),
 				}).catch(() => undefined),
 			);
 		}

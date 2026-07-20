@@ -8,6 +8,7 @@ export const sourceLayout = {
 		"dashboard",
 		"traces",
 		"views",
+		"work-state",
 		"knowledge",
 		"git",
 		"cli",

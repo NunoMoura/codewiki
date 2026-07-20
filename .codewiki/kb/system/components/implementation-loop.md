@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Implementation Loop
-description: The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Work Items, or an eligible direct implementation Decision, into verified project changes.
+description: The Implementation loop continuously receives planned Work Items and worker results, then accepts Change realization only after scoped integration, checks, evidence, and content proof pass.
 tags:
   - codewiki
   - system
   - implementation
   - loop
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-08-01T00:00:00Z
 codewiki_components:
   - git
   - implementation
@@ -21,6 +21,7 @@ codewiki_test_patterns:
   - tests/helpers/implementation-change.mjs
 codewiki_trace_events:
   - implementation.evidence_accepted
+  - implementation.evidence_rejected
 codewiki_roles:
   - content_proof
   - semantic_loop
@@ -41,172 +42,199 @@ codewiki_source_map:
       - tests/helpers/implementation-change.mjs
     trace_events:
       - implementation.evidence_accepted
+      - implementation.evidence_rejected
     role: semantic_loop
 ---
 # Implementation Loop
 
-The implementation loop owns code, docs, tests, checks, worker evidence, acceptance proof, and final content proof. It turns accepted Planning Work Items, or an eligible direct implementation Decision, into verified project changes.
+Implementation is the continuous realization service for approved, planned Changes. It receives ready Work Items and worker results across active Sprints, integrates candidate output, runs scoped and aggregate checks, and appends accepted or rejected evidence to each owning Change Trace.
+
+Workers execute Assignment attempts. They do not own an Implementation loop and cannot mark semantic success. The Implementation loop alone decides whether planned intent is realized.
 
 ## Loop authority
 
-The implementation loop owns:
+Implementation owns:
 
-- repo payload edits in `src/`, `tests/`, package files, README, and product docs;
-- local TDD execution when required;
-- worker result aggregation;
-- runtime claim correlation;
-- check results;
-- acceptance evidence;
-- component/path alignment proof;
-- aggregate content proof;
-- residual issue coverage;
-- publication readiness when configured;
-- archive disposition when post-commit trace cleanup is required.
+- source, test, package, README, and product-document edits inside accepted Work Item scope;
+- local TDD when required;
+- worker result normalization and active-Assignment correlation;
+- integration and conflict handling within Planning authority;
+- check and review evidence;
+- acceptance-criterion coverage;
+- component/path/test alignment;
+- Change realization evidence;
+- aggregate content proof over integrated output;
+- residual issue disposition;
+- publication readiness and archive disposition when configured;
+- route-back questions for Planning or Decision.
 
-The implementation loop does not own new product decisions, planning scope changes, `.codewiki/kb/**` meaning changes, `.codewiki/traces/**` append authority, config-policy writes, or generated `.codewiki/views/**` projections. It routes back instead.
+Implementation does not own new Change meaning, Knowledge semantics, approval, Sprint/Work Item design, trace append authority, execution-policy mutation, or generated views.
+
+## Two implementation levels
+
+One semantic Implementation loop has two bounded levels:
+
+1. **Work Item realization** receives one or more Assignment results, validates local scope and checks, and produces candidate realization evidence for the owning Change.
+2. **Integration and exit review** evaluates merged output, shared dependencies, aggregate checks, cross-Change acceptance, preview evidence, and content proof before accepting Change realization.
+
+These are phases inside one semantic loop, not separate loops.
+
+## Loop input
+
+Implementation input includes:
+
+- owning approved Change ref and current realization state;
+- exact accepted Work Item and acceptance-criterion refs;
+- relevant Sprint, dependency, Assignment, and integration projections;
+- normalized worker results and claim/session provenance;
+- current source/test/Git snapshot and content proof;
+- source ownership and review policy;
+- relevant WorkState slice and digest;
+- prior implementation output refs;
+- trigger and route-back context.
+
+Core facades load canonical Planning events, source ownership, existing paths, policy, trace tails, and Git state. Callers submit worker results or explicit evidence they own, not replacement repository facts.
 
 ## Loop cycle
 
-One implementation cycle does this work:
-
 ```text
-observe accepted Planning Work Item output or direct implementation Decision + source/test/Git/runtime refs
-claim or receive worker work when needed
-change code/docs/tests inside assigned Work Item scope
-run checks and collect evidence
-aggregate worker outputs and final content proof
-update implementation output
-check implementation exit conditions
-append implementation.evidence_accepted
+receive ready Work Item or worker result
+refresh owning Change and integration WorkState
+validate Assignment, plan revision, source base, path scope, and dependencies
+integrate candidate source/docs/tests
+run required checks and review adapters
+map evidence to acceptance criteria and Change outcome
+create aggregate content proof
+run Implementation quality standards
+append accepted/rejected evidence to owning Change Trace
 continue, exit, route back, or block
 ```
 
-Implementation should keep noisy logs and scratch under runtime temp or external tool output. Workers may use private scratchpads or checklists inside the assigned Work Item, but those are execution aids, not Planning truth or runtime-claimable units. The loop output should contain only the evidence required to prove exit conditions.
+Noisy logs, model output, diffs, screenshots, and tool streams remain bounded runtime or evidence artifacts. Trace output retains only required summaries, refs, and digests.
 
 ## Loop output
 
-Implementation loop output is the high-signal packet needed to close or publish the trace:
+Implementation output contains:
 
-- covered Planning Work Item refs or direct implementation Decision refs;
-- changed code/docs/test paths;
-- check results with commands, status, phases, criterion ids when relevant, and package pack verification for package/dependency changes;
-- acceptance evidence mapped to planning acceptance criterion ids;
-- TDD red/green proof when policy requires it;
-- trigger enablement or consumption proof when planning includes recurring schedules, event triggers, hooks, or manual heartbeats;
-- worker result summaries and claim/session provenance;
-- normalized worker proof digests, changed-path sets, validation refs, and conflict findings;
-- component/path alignment evidence;
-- final aggregate content proof for worker or parallel outputs;
-- residual issue coverage or explicit blockers;
-- publication refs and approval refs when configured;
-- archive disposition, either a post-commit compact plan or an explicit retained-hot reason when cleanup policy requires one;
-- agent production-quality assessment for maintainability, simplicity, style, error handling, sensitive surfaces, and uncertainty resolution;
-- route-back questions for planning or decision when authority is missing;
-- canonical refs proving the output.
+- owning Change ref and covered Work Item refs;
+- optional additional contributed-to Change refs;
+- changed source/docs/test paths;
+- structured checks with command, phase, criterion id, and status;
+- acceptance evidence mapped to stable criterion ids;
+- TDD red/green proof when required;
+- worker result and Assignment provenance;
+- normalized worker proof and conflict findings;
+- component/path/test alignment evidence;
+- integration state and shared Sprint refs;
+- UI preview/capture evidence when Planning requires it;
+- aggregate content proof over merged output;
+- residual issue and outcome-disposition evidence;
+- publication/archive refs when configured;
+- production-quality assessment;
+- route-back questions and canonical refs.
 
-Implementation output should not include full logs, private scratch, unbounded diffs, or product Decisions made during coding. If local decomposition shows that the assigned Work Item is too broad, overlapping, or underspecified, implementation routes back to Planning instead of creating new Sprint Plan truth.
+Implementation output excludes full logs, private scratch, unbounded diffs, planner-authored replacements, and new product meaning decided during coding.
 
-## Loop quality standards
+## Cross-Change realization
 
-The implementation loop can exit only when loop-owned quality standards are met or explicitly routed back/blocked with authority:
+Every Work Item has one owning Change. Its implementation event is canonical in that Change Trace. If work contributes to other Changes, output carries `contributingChangeIds` and evidence refs. Other Change views resolve that coverage without duplicating the implementation result.
 
-| Quality standard | Mode | Required signal |
-| --- | --- | --- |
-| planning_coverage_complete | deterministic | Every planned work ref or direct implementation decision ref is covered by implementation evidence and no unknown refs are introduced. |
-| scope_controlled | deterministic | Changed paths stay inside planned component/path scope and existing repo paths. |
-| acceptance_evidence_complete | deterministic | Every planned acceptance criterion is covered by structured evidence refs. |
-| verification_passed | deterministic | Required checks are structured, present, passing, cover planned verification refs/commands, and package/dependency changes include pack verification. |
-| tdd_evidence_valid | deterministic | Required red/green proof maps to planned acceptance criteria. |
-| content_proof_recorded | deterministic | Change-level proof, worker proof verdict/conflict checks, and aggregate content proof exist when required. |
-| worker_claims_correlated | deterministic | Worker-produced evidence ties to active runtime claims and completed worker results. |
-| source_ownership_aligned | deterministic | Changed source/test paths align with OKF source ownership and component test coverage. |
-| production_quality_reviewed | agent | Agent assesses maintainability, simplicity, project style, and error handling as production-ready. |
-| archive_disposition_ready | deterministic | When policy requires cleanup, implementation output records either a post-commit trace compact plan or an explicit retained-hot reason. |
-| uncertainty_resolved | agent | No unresolved implementation uncertainty remains; planning, decision, or user authority is routed instead of drifting. |
-| security_privacy_reviewed | agent, conditional | Security/privacy-sensitive changes include explicit review evidence. |
-| accessibility_ui_reviewed | agent, conditional | UI/page changes include accessibility review evidence. |
-| dependency_risk_controlled | agent, conditional | Dependency-surface changes include risk review evidence. |
-| release_safety_approved | user, conditional | Release, publication, destructive, or externally visible refs require explicit user approval. |
-| traceability_refs_canonical | deterministic | Implementation refs are canonical trace, KB, Git, digest, source, or test refs. |
+A shared Sprint or integration check may provide one content-addressed evidence artifact referenced by several Change Traces. Each Change still receives its own quality-governed realization decision against its approved outcome and acceptance coverage.
+
+## Quality standards
+
+| Quality standard | Required signal |
+| --- | --- |
+| approved_change_coverage_complete | Accepted implementation evidence covers current approved Change requirements. |
+| planning_coverage_complete | Every claimed/selected Work Item ref is known and dispositioned. |
+| scope_controlled | Changed paths remain inside accepted component/path scope and source base. |
+| acceptance_evidence_complete | Every required criterion maps to structured evidence. |
+| verification_passed | Required scoped and aggregate checks are present and passing. |
+| tdd_evidence_valid | Required red/green proof maps to acceptance criteria. |
+| worker_claims_correlated | Worker evidence binds active Assignment, worker, session, Work Item, plan, and source base. |
+| integration_conflicts_resolved | Merged output contains no unresolved path, base, ownership, or semantic conflict. |
+| content_proof_recorded | Local provenance and final aggregate integrated proof exist where required. |
+| source_ownership_aligned | Source/test changes fit OKF ownership and component test policy. |
+| production_quality_reviewed | Maintainability, simplicity, style, and error handling are production-ready. |
+| outcome_realization_accounted | Delivery, experience, and externally observable outcome dimensions have evidence or explicit disposition. |
+| archive_disposition_ready | Required post-commit retention action or retain-hot rationale exists. |
+| uncertainty_resolved | Remaining ambiguity is repaired or routed to Planning/Decision. |
+| security_privacy_reviewed | Sensitive changes carry explicit review evidence. |
+| accessibility_ui_reviewed | UI changes carry accessibility and required live-preview evidence. |
+| dependency_risk_controlled | Dependency-surface changes carry risk and package evidence. |
+| release_safety_approved | External, destructive, release, or publication action has exact user authority. |
+| traceability_refs_canonical | Change, trace, KB, Git, digest, source, and test refs are canonical. |
+
+External tools are evidence sensors. CodeWiki-owned quality standards retain pass/fail authority.
 
 ## Exit statuses
 
-- `continue`: same implementation loop can add code/tests/evidence, rerun checks, collect proof, or resolve worker issues.
-- `exit`: implementation output is accepted and the trace can close or publish according to policy.
-- `route_back`: planning or decision authority is needed.
-- `blocked`: external resource, runtime worker, merge conflict, or policy wait prevents progress. User clarification/validation routes to Decision first.
+- `continue`: same Implementation loop can edit, integrate, test, collect evidence, or repair local issues.
+- `exit`: owning Change's current planned realization is accepted and its outcome disposition permits closure or observation wait.
+- `route_back`: Planning or Decision authority is required.
+- `blocked`: worker, integration, environment, policy, resource, or external capability prevents progress.
 
-## Route-back rules
-
-Implementation routes back to planning when:
-
-- triggers are missing, incomplete, unsafe, or not implementable as planned;
-- acceptance criteria are insufficient;
-- path scopes are wrong or too narrow;
-- dependency order is wrong;
-- test strategy is missing or infeasible;
-- work must split/merge.
-
-Implementation routes back to decision when:
-
-- product/API behavior is ambiguous;
-- risk or migration impact changes;
-- user approval is required;
-- implementation reveals a conflicting requirement;
-- KB/system target needs a decision-level change.
+Implementation routes to Planning for Work Item, path, dependency, ordering, verification, Sprint, or integration-plan changes. It routes to Decision for product behavior, Knowledge meaning, outcome, risk, compatibility, or approval changes.
 
 ## Runtime and workers
 
-Runtime coordinates implementation work but does not own implementation evidence.
-
 ```text
-work-queue -> runtime claim -> worker session -> worker result -> implementation output
+WorkState work queue
+-> runtime Assignment
+-> worker attempt
+-> candidate result
+-> Implementation realization review
+-> accepted Change Trace evidence
 ```
 
-Worker-local proof is provenance normalized by the implementation loop: changed paths are deduplicated, validation refs and checks are summarized, proof digests are stable, and overlap/base conflicts block aggregate closure. The implementation loop still needs final aggregate content proof after merging worker outputs.
+Runtime may schedule many Work Items across Changes. Claims remain trace-owned by the Work Item's owning Change. Worker completion is transport evidence only. Release does not imply semantic acceptance.
 
-There is one semantic Implementation Loop per Sprint Trace, not one loop per worker. A worker runs a Work Item Assignment attempt with local edits, TDD/checks, and evidence. Worker completion contributes candidate evidence. The trace-level Implementation Loop alone decides whether all Planning Work Items are covered, worker claims correlate, overlapping changes are resolved, aggregate acceptance and quality pass, and merged content proof exists.
+Planning-approved shared integration workspaces combine selected worker outputs. The dashboard and Live Preview must identify which Changes are integrated and visible, which remain isolated, and which conflict. Conceptual association alone cannot make isolated work appear in one preview.
 
-The dashboard reflects this authority model with two distinct Implementation areas. Worker Attempts show Work Item-first execution, current bounded activity, freshness, progress, local status, and retries. Integration and Exit Review shows result collection, conflicts, acceptance readiness, quality standards, and the aggregate loop status. Direct implementation remains valid and does not create a fake worker row.
+## Repository and content proof
 
-## Repository snapshot and content proof
+Implementation derives current repo facts through core helpers:
 
-Implementation callers should provide two repo-derived facts when evaluating exit conditions:
+- active existing paths;
+- changed paths and source ownership;
+- current Git base and dirty state;
+- deterministic working-tree or integration-tree digest;
+- final aggregate content proof;
+- package, review, and acceptance evidence.
 
-- `existingPaths`: a project snapshot of active source/doc/test/package paths;
-- `aggregateContentProof`: a deterministic digest or Git ref for the merged working tree content being accepted.
+Proof covers accepted changed/evidence paths and excludes runtime temp and generated views. Worker-local proof is provenance; merged parallel work requires final integrated proof.
 
-Core helpers provide these facts without making Git history or generated views truth:
+## Outcome disposition
 
-- `collectProjectSnapshot()` lists normalized active repo paths for path-existence checks;
-- `createWorkingTreeDigest()` hashes selected file contents deterministically;
-- `createWorkingTreeContentProof()` wraps the digest as implementation content proof;
-- `createImplementationMergeContentProof()` derives final merged proof paths from changes plus worker proof metadata and hashes the merged working tree unless a host supplies an explicit Git/content proof;
-- `runWikiImplement()` combines snapshot, merge proof, implementation loop output, exit evaluation, optional archive-disposition enforcement, and optional append into one core facade.
+Experience evidence such as live interaction and screenshots may prove realization of a UI behavior but cannot automatically prove product or business outcome. Before Change Trace closure, Implementation records one bounded disposition:
 
-Archive disposition is pre-commit evidence, not the archive mutation itself. Implementation may state `post_commit_compact` with `afterCommit: true` before a commit hash exists. The post-commit pipeline then runs `wiki_archive` with a Git restore ref so completed traces close and compact without unrecoverable deletion. If a completed trace must remain hot, implementation must record an explicit `retain_hot` reason instead of silently skipping cleanup.
+- outcome observed;
+- observation scheduled;
+- not externally observable with rationale;
+- deferred under authority;
+- failed or abandoned.
 
-The digest should cover changed paths and evidence paths, not runtime temp or stored generated views. Direct local changes without per-change proof may receive the generated working-tree proof. Worker-local proof remains provenance; worker/parallel implementations still require final aggregate content proof over the merged output.
+Long-running observation may leave a delivered Change dormant but open under retention policy. A later materially different follow-up creates a linked Change.
 
-## Trace iteration data
-
-Implementation iterations should record compact facts:
+## Trace output
 
 ```json
 {
   "event": "evidence_accepted",
   "loop": "implementation",
   "data": {
-    "iteration": 1,
-    "trigger": "planning_exit",
+    "iteration": 4,
+    "trigger": "worker_results",
+    "observedWorkStateDigest": "sha256:...",
     "output": {
+      "owningChangeId": "CHG-example",
+      "contributingChangeIds": [],
+      "coveredWorkItemRefs": [],
       "changes": [],
       "checks": [],
       "acceptanceEvidence": [],
-      "workerResults": [],
-      "workerProofs": [],
-      "workerProofConflicts": [],
-      "aggregateContentProof": null,
+      "aggregateContentProof": {},
+      "outcomeDisposition": {},
       "qualityStandards": []
     },
     "exit": {
@@ -221,7 +249,9 @@ Implementation iterations should record compact facts:
 
 ## Related docs
 
+- [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
+- [Loop Contracts](loop-contracts.md)
 - [Planning Loop](planning-loop.md)
 - [Runtime](runtime.md)
 - [Traces](traces.md)

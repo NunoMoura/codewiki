@@ -248,8 +248,8 @@ function stringList(value: unknown, field: string): string[] {
 	if (!Array.isArray(value) || value.length === 0 || value.length > 32) {
 		throw new Error(`Worker execution ${field} is invalid.`);
 	}
-	return [...new Set(value.map((item) => identifier(item, field)))].sort((left, right) =>
-		left.localeCompare(right),
+	return [...new Set(value.map((item) => identifier(item, field)))].sort(
+		(left, right) => left.localeCompare(right),
 	);
 }
 

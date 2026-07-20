@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
+import packageJson from "../../package.json" with { type: "json" };
 import { runWikiOkf } from "../../src/api/wiki-okf.ts";
 import { parseOkfDocument } from "../../src/knowledge/okf-frontmatter.ts";
 import {
@@ -34,12 +35,12 @@ describe("OKF export compatibility API", () => {
 		assert.equal(validation.okfVersion, "0.1");
 		assert.equal(validation.scope, "codewiki-kb");
 		assert.deepEqual(validation.validation.issues, []);
-		assert.equal(validation.validation.conceptCount, 42);
+		assert.equal(validation.validation.conceptCount, 45);
 		assert.equal(validation.validation.reservedCount, 10);
 		assert.equal(exported.action, "export");
 		assert.equal(exported.okfVersion, "0.1");
 		assert.deepEqual(exported.validation.issues, []);
-		assert.equal(exported.files.length, 52);
+		assert.equal(exported.files.length, 55);
 		assert.equal(
 			exported.files.some((file) => file.path === "index.md"),
 			true,
@@ -124,7 +125,6 @@ Imported body.
 	});
 
 	it("does not add Google runtime dependencies for OKF compatibility", () => {
-		const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
 		const dependencyNames = [
 			...Object.keys(packageJson.dependencies || {}),
 			...Object.keys(packageJson.devDependencies || {}),

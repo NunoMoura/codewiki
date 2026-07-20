@@ -1,4 +1,3 @@
-import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import { planningConflicts } from "../planning/conflicts.ts";
 import type {
 	AcceptanceCriterion,
@@ -74,7 +73,7 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 				runtimeRefs,
 			}),
 			traceRefs: itemTraceRefs,
-			decisionRefs: [...item.decisionRefs],
+			changeRefs: [...item.changeRefs],
 			componentRefs: [...item.componentRefs],
 			pathScopes: [...item.pathScopes],
 			planningDepth: item.planningDepth,
@@ -106,103 +105,79 @@ function acceptedPlanningWorkItemsFromTrace(
 	records: TraceRecord[],
 ): TracePlanningWorkItem[] {
 	const plannedItems = activePlanningEvents(records).flatMap((event) => {
-			const quality = loopQualityReadiness(event);
-			return objectList(objectRecord(event.data?.output).workItems).map(
-				(item) => {
-					const id = text(item.id) || `${event.id}:work-item`;
-					const acceptance = stringList(item.acceptance);
-					return {
-						id,
-						traceEventId: iterationSubref(event, "work", id),
-						title: text(item.title) || id,
-						decisionRefs: stringList(item.decisionRefs),
-						outcome: text(item.outcome),
-						technicalRequirements: stringList(item.technicalRequirements),
-						acceptance,
-						acceptanceCriteria: acceptanceCriteriaList(
-							item.acceptanceCriteria,
-							acceptance,
-						),
-						componentRefs: stringList(item.componentRefs),
-						pathScopes: stringList(item.pathScopes),
-						planningDepth: planningDepth(item.planningDepth),
-						verification: stringList(item.verification),
-						workerProfile: text(item.workerProfile),
-						planningAssessment: planningAssessment(item.planningAssessment),
-						dependsOn: stringList(item.dependsOn),
-						...triggerProperty(item.trigger),
-						qualityStandards: quality.standards,
-						qualityBlockers: quality.blockers,
-					};
-				},
-			);
-		});
-	return [
-		...plannedItems,
-		...directImplementationDecisionsFromRecords(records).map(directWorkItem),
-	];
-}
-
-function directWorkItem(
-	direct: ReturnType<typeof directImplementationDecisionsFromRecords>[number],
-): TracePlanningWorkItem {
-	return {
-		id: direct.id,
-		traceEventId: direct.ref,
-		title: direct.title,
-		decisionRefs: direct.decisionRefs,
-		outcome: direct.routeRationale,
-		technicalRequirements: direct.verification,
-		acceptance: direct.acceptance,
-		acceptanceCriteria: direct.acceptanceCriteria,
-		componentRefs: direct.componentRefs,
-		pathScopes: direct.pathScopes,
-		planningDepth: "micro",
-		verification: direct.verification,
-		workerProfile: "implementation_worker",
-		planningAssessment: {
-			stance: "worker_ready",
-			workUnitSize: "right_sized",
-			rightSizing: "Proposed change is approved for direct implementation.",
-			independence: "Direct implementation is bounded by the proposed change.",
-			implementationReadiness: direct.routeRationale,
-			uncertainties: [],
-			concerns: [],
-			uncertaintyOwner: "none",
-			uncertaintyResolution: "No planning loop required for this direct route.",
-			rationale: direct.routeRationale,
-		},
-		dependsOn: [],
-		qualityStandards: [],
-		qualityBlockers: [],
-	};
+		const quality = loopQualityReadiness(event);
+		return objectList(objectRecord(event.data?.output).workItems).map(
+			(item) => {
+				const id = text(item.id) || `${event.id}:work-item`;
+				const acceptanceCriteria = acceptanceCriteriaList(
+					item.acceptanceCriteria,
+					[],
+				);
+				const acceptance = acceptanceCriteria.map(
+					(criterion) => criterion.text,
+				);
+				const owningChangeRef = text(item.owningChangeId)
+					? `change:${text(item.owningChangeId)}`
+					: "";
+				const changeRefs = unique([
+					...(owningChangeRef ? [owningChangeRef] : []),
+					...stringList(item.contributingChangeIds).map(
+						(changeId) => `change:${changeId}`,
+					),
+				]);
+				return {
+					id,
+					traceEventId: iterationSubref(event, "work", id),
+					title: text(item.title) || id,
+					changeRefs,
+					outcome: text(item.outcome),
+					technicalRequirements: stringList(item.technicalRequirements),
+					acceptance,
+					acceptanceCriteria,
+					componentRefs: stringList(item.componentRefs),
+					pathScopes: stringList(item.pathScopes),
+					planningDepth: planningDepth(item.planningDepth),
+					verification: stringList(item.verification),
+					workerProfile: text(item.workerProfile),
+					planningAssessment: planningAssessment(item.planningAssessment),
+					dependsOn: stringList(item.dependsOn),
+					...triggerProperty(item.trigger),
+					qualityStandards: quality.standards,
+					qualityBlockers: quality.blockers,
+				};
+			},
+		);
+	});
+	return plannedItems;
 }
 
 function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
 	const events = loopOutputEvents(records, "planning").filter(
 		planningIterationExited,
 	);
-	const latestByDecisionRef = new Map<string, TraceEvent>();
+	const latestByChangeRef = new Map<string, TraceEvent>();
 	for (const event of events) {
-		for (const decisionRef of planningDecisionRefs(event)) {
-			latestByDecisionRef.set(decisionRef, event);
+		for (const changeRef of planningChangeRefs(event)) {
+			latestByChangeRef.set(changeRef, event);
 		}
 	}
 	const activeEventIds = new Set(
-		[...latestByDecisionRef.values()].map((event) => event.id),
+		[...latestByChangeRef.values()].map((event) => event.id),
 	);
 	return events.filter((event) => activeEventIds.has(event.id));
 }
 
-function planningDecisionRefs(event: TraceEvent): string[] {
-	return unique([
-		...objectList(objectRecord(event.data?.output).workItems).flatMap((item) =>
-			stringList(item.decisionRefs),
-		),
-		...objectList(objectRecord(event.data?.output).resolutions).map(
-			(resolution) => text(resolution.decisionRef),
-		),
-	]).filter(Boolean);
+function planningChangeRefs(event: TraceEvent): string[] {
+	return unique(
+		objectList(objectRecord(event.data?.output).workItems).flatMap((item) => [
+			...(text(item.owningChangeId)
+				? [`change:${text(item.owningChangeId)}`]
+				: []),
+			...stringList(item.contributingChangeIds).map(
+				(changeId) => `change:${changeId}`,
+			),
+		]),
+	).filter(Boolean);
 }
 
 function planningIterationExited(event: TraceEvent): boolean {
@@ -275,7 +250,7 @@ function traceRefsForWorkItem(item: TracePlanningWorkItem): string[] {
 	return unique([
 		item.traceEventId,
 		item.id,
-		...item.decisionRefs,
+		...item.changeRefs,
 		...item.pathScopes,
 	]);
 }
@@ -286,7 +261,7 @@ function normalizeCard(card: WorkPlanCard): WorkPlanCard {
 		title: card.title,
 		status: card.status,
 		traceRefs: [...card.traceRefs],
-		decisionRefs: [...(card.decisionRefs || [])],
+		changeRefs: [...(card.changeRefs || [])],
 		componentRefs: [...(card.componentRefs || [])],
 		pathScopes: [...(card.pathScopes || [])],
 		planningDepth: planningDepth(card.planningDepth),

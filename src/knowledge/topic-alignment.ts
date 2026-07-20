@@ -76,8 +76,10 @@ export function knowledgeTopicRefsFromRecords(
 			if (record.type !== "trace_event" || record.loop !== "decision")
 				return [];
 			const output = objectRecord(record.data?.output);
-			const boundary = objectRecord(output?.sprintBoundary);
-			return stringList(boundary?.knowledgeTopics).filter(isKnowledgeTopicRef);
+			const changeRecord = objectRecord(output?.changeRecord);
+			const change = objectRecord(changeRecord?.change);
+			const knowledge = objectRecord(change?.knowledge);
+			return stringList(knowledge?.topicRefs).filter(isKnowledgeTopicRef);
 		}),
 	);
 }
@@ -224,14 +226,18 @@ function groundedFindings(records: TraceRecord[]): KnowledgeAlignmentFinding[] {
 function knowledgeTopicPath(repoRoot: string, ref: string): string | undefined {
 	if (!isKnowledgeTopicRef(ref)) return undefined;
 	const root = resolve(repoRoot, ".codewiki", "kb");
-	const path = resolve(repoRoot, ref);
+	const relativePath = ref.startsWith("kb:")
+		? `.codewiki/kb/${ref.slice("kb:".length)}`
+		: ref;
+	const path = resolve(repoRoot, relativePath);
 	return path.startsWith(`${root}${sep}`) ? path : undefined;
 }
 
 function isKnowledgeTopicRef(value: string): boolean {
 	return (
-		/^\.codewiki\/kb\/(?:product|system)\/[A-Za-z0-9._/-]+\.md$/.test(value) &&
-		!value.split("/").includes("..")
+		/^(?:\.codewiki\/kb\/|kb:)(?:product|system)\/[A-Za-z0-9._/-]+\.md$/.test(
+			value,
+		) && !value.split("/").includes("..")
 	);
 }
 

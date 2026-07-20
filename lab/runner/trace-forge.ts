@@ -124,18 +124,15 @@ function reducedLoopInput(event: TraceEvent & { loop: LabLoop }): unknown {
 	if (event.loop === "decision") {
 		return {
 			prompt: text(output.summary) || text(data.trigger),
-			sprintProposal: {
-				id: `${event.id}:decision-proposal`,
-				sourceRefs: event.refs,
-				changes: arrayValue(output.approvedChanges),
-			},
+			changeRecord: objectRecord(output.changeRecord),
+			decision: objectRecord(output.decision),
 		};
 	}
 	if (event.loop === "planning") {
 		return {
-			decisions: stringList(output.decisionRefs).map((id) => ({ id })),
+			decisions: stringList(output.changeRefs).map((id) => ({ id })),
 			plan: {
-				decisionRefs: stringList(output.decisionRefs),
+				changeRefs: stringList(output.changeRefs),
 				workItems: arrayValue(output.workItems),
 				resolutions: arrayValue(output.resolutions),
 			},

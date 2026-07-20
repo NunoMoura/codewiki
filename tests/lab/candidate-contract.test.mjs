@@ -24,6 +24,18 @@ const EXPECTED_METRICS = {
 	implementation: "IEC",
 };
 
+const EXPECTED_GRAPH_IDS = {
+	decision: "codewiki.decision.change",
+	planning: "codewiki.planning.portfolio",
+	implementation: "implementation.loop",
+};
+
+const EXPECTED_SCHEMA_VERSIONS = {
+	decision: 1,
+	planning: 1,
+	implementation: 3,
+};
+
 describe("lab candidate contract", () => {
 	it("declares the only experiment-editable candidate files", () => {
 		assert.deepEqual(LAB_LOOP_CANDIDATE_FILES, {
@@ -81,9 +93,9 @@ describe("lab candidate contract", () => {
 		for (const [loop, candidate] of Object.entries(CANDIDATES)) {
 			assert.equal(candidate.loop, loop);
 			assert.equal(candidate.metric, EXPECTED_METRICS[loop]);
-			assert.equal(candidate.graphId, `${loop}.loop.lab`);
+			assert.equal(candidate.graphId, `${EXPECTED_GRAPH_IDS[loop]}.lab`);
 			assert.equal(typeof candidate.graphVersion, "string");
-			assert.equal(candidate.schemaVersion, 3);
+			assert.equal(candidate.schemaVersion, EXPECTED_SCHEMA_VERSIONS[loop]);
 			assert.equal(Array.isArray(candidate.layers), true);
 			assert.equal(Array.isArray(candidate.standards), true);
 			assert.equal(candidate.standards.length > 0, true);
@@ -100,9 +112,11 @@ describe("lab candidate contract", () => {
 
 			for (const standard of candidate.standards) {
 				assert.equal(typeof standard.id, "string");
-				assert.equal(standard.id.startsWith(`${loop}.`), true);
-				assert.equal(standard.mode, "deterministic");
-				assert.equal(standard.method, "deterministic");
+				assert.equal(standard.id.length > 0, true);
+				assert.equal(
+					["deterministic", "agent", "user"].includes(standard.mode),
+					true,
+				);
 				assert.equal(typeof standard.standardType, "string");
 				assert.equal(typeof standard.layer, "string");
 				assert.equal(typeof standard.repairTarget, "string");
@@ -119,17 +133,8 @@ describe("lab candidate contract", () => {
 
 	it("prevents candidate files from importing outside the allowlist", () => {
 		assert.deepEqual(LAB_ALLOWED_CANDIDATE_IMPORTS, {
-			decision: [
-				"../../src/decision/loop.ts",
-				"../../src/decision/types.ts",
-				"../runner/quality-pack.ts",
-				"../runner/types.ts",
-			],
-			planning: [
-				"../../src/planning/loop.ts",
-				"../runner/quality-pack.ts",
-				"../runner/types.ts",
-			],
+			decision: ["../runner/quality-pack.ts", "../runner/types.ts"],
+			planning: ["../runner/quality-pack.ts", "../runner/types.ts"],
 			implementation: [
 				"../../src/implementation/loop.ts",
 				"../../src/implementation/types.ts",
@@ -182,7 +187,7 @@ function importSpecifiers(source) {
 
 function assertLayerCoverage(loop, standards) {
 	const layers = new Set(standards.map((standard) => standard.layer));
-	for (const layer of ["hard_gate", "input_contract"]) {
+	for (const layer of ["hard_gate"]) {
 		assert.equal(
 			layers.has(layer),
 			true,

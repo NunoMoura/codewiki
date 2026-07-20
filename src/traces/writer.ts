@@ -9,6 +9,7 @@ import type {
 
 export interface CreateTraceHeadInput {
 	traceId: string;
+	changeId?: string;
 	title: string;
 	createdAt?: string;
 	origin?: TraceOriginInput;
@@ -51,6 +52,7 @@ export function createTraceHead(input: CreateTraceHeadInput): TraceHead {
 	return {
 		type: "trace_head",
 		traceId: input.traceId.trim(),
+		...(input.changeId ? { changeId: input.changeId.trim() } : {}),
 		title: input.title.trim(),
 		createdAt: input.createdAt || new Date().toISOString(),
 		...traceOriginProperty(input.origin),
@@ -99,9 +101,7 @@ function traceOriginProperty(input: TraceOriginInput | undefined): {
 		...(input.triggerId ? { triggerId: input.triggerId.trim() } : {}),
 		...(input.planningRef ? { planningRef: input.planningRef.trim() } : {}),
 		...(input.sourceRef ? { sourceRef: input.sourceRef.trim() } : {}),
-		...(input.runKey
-			? { runKey: input.runKey.trim() }
-			: {}),
+		...(input.runKey ? { runKey: input.runKey.trim() } : {}),
 		refs: normalizeTraceRefs(input.refs || []),
 	};
 	return { origin };

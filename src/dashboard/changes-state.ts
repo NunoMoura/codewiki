@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { GitRefChangeStore } from "../changes/git-ref-store.ts";
+import { ChangeTraceStore } from "../changes/trace-store.ts";
 import {
 	buildChangeValidationCard,
 	type ChangeValidationCard,
@@ -44,13 +44,7 @@ interface DashboardChangeFilters {
 export async function loadDashboardChangesState(
 	repoRoot: string,
 ): Promise<DashboardChangesState> {
-	let snapshot;
-	try {
-		snapshot = await new GitRefChangeStore({ repoRoot }).read();
-	} catch (error) {
-		if (!String(error).includes("not a git repository")) throw error;
-		return unavailableChangesState();
-	}
+	const snapshot = await new ChangeTraceStore({ repoRoot }).read();
 	const sortedRecords = [...snapshot.records].sort((left, right) =>
 		left.change.id.localeCompare(right.change.id),
 	);
@@ -59,7 +53,10 @@ export async function loadDashboardChangesState(
 	for (const record of sortedRecords.slice(0, MAX_DASHBOARD_CHANGES)) {
 		const card = buildChangeValidationCard(record);
 		const cardBytes = Buffer.byteLength(JSON.stringify(card), "utf8");
-		if (records.length > 0 && retainedBytes + cardBytes > MAX_DASHBOARD_STATE_BYTES) {
+		if (
+			records.length > 0 &&
+			retainedBytes + cardBytes > MAX_DASHBOARD_STATE_BYTES
+		) {
 			break;
 		}
 		records.push(card);
@@ -74,20 +71,6 @@ export async function loadDashboardChangesState(
 		records,
 		summary: changesSummary(sortedRecords),
 		truncated: sortedRecords.length > records.length,
-	};
-}
-
-function unavailableChangesState(): DashboardChangesState {
-	const records: ChangeValidationCard[] = [];
-	return {
-		generatedAt: new Date().toISOString(),
-		available: false,
-		blockers: ["Changes Backlog requires a Git repository."],
-		head: null,
-		stateDigest: stateDigest(null, records),
-		records,
-		summary: changesSummary([]),
-		truncated: false,
 	};
 }
 

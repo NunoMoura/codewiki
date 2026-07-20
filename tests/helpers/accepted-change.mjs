@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { changeContentDigest } from "../../src/changes/digest.ts";
-import { GitRefChangeStore } from "../../src/changes/git-ref-store.ts";
+import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
 import { createChangeRecord } from "../../src/changes/records.ts";
 import { CHANGE_SCHEMA_VERSION } from "../../src/changes/types.ts";
 
@@ -28,6 +28,7 @@ export function acceptedChangeFixture(overrides = {}) {
 			nonGoals: overrides.nonGoals || [
 				"Do not widen scope beyond this Change.",
 			],
+			alternatives: overrides.alternatives || ["Keep current behavior."],
 		},
 		classification: {
 			kind: overrides.kind || "introduce",
@@ -47,6 +48,28 @@ export function acceptedChangeFixture(overrides = {}) {
 			maintainer:
 				overrides.maintainerImpact || "Trace input remains replayable.",
 		},
+		knowledge: {
+			topicRefs: overrides.knowledgeTopicRefs || [
+				"kb:system/components/decision-loop.md",
+			],
+			propagationRefs: overrides.knowledgePropagationRefs || [
+				"kb:system/components/decision-loop.md",
+			],
+			noImpactRationale: overrides.knowledgeNoImpactRationale,
+		},
+		outcome: {
+			successSignals: [
+				overrides.successSignal ||
+					"Trace event contains the exact approved Change digest.",
+			],
+			evidenceExpectations: overrides.evidenceExpectations || [
+				"Decision and trace replay tests pass.",
+			],
+		},
+		delivery: {
+			constraints: overrides.deliveryConstraints || [],
+			planningQuestions: overrides.planningQuestions || [],
+		},
 		evidence: {
 			sourceRefs: overrides.sourceRefs || [
 				"kb:system/components/decision-loop.md",
@@ -55,23 +78,36 @@ export function acceptedChangeFixture(overrides = {}) {
 		},
 		safety: {
 			risk: overrides.risk || "low",
+			invariants: overrides.invariants || ["Keep Change identity stable."],
 			safetyBoundary: overrides.safetyBoundary,
 			failureModes: overrides.failureModes || [
 				"A stale revision could be accepted.",
 			],
 			negativeTestPlan: overrides.negativeTestPlan,
 			rollbackPlan: overrides.rollbackPlan,
+			regressionPlan:
+				overrides.regressionPlan || "Run Decision and trace replay tests.",
 		},
 		validation: {
 			state: "draft",
 			issues: [],
-			assessments: [],
-			recommendations: [],
-			successSignal:
-				overrides.successSignal ||
-				"Trace event contains the accepted bundle digest.",
-			regressionPlan:
-				overrides.regressionPlan || "Run Decision and trace replay tests.",
+			assessments: overrides.assessments || [
+				{
+					actor: "agent:test",
+					stance: "aligned",
+					rationale: "Change serves stated user value.",
+					concerns: [],
+					evidenceRefs: ["tests/helpers/accepted-change.mjs"],
+				},
+			],
+			recommendations: overrides.recommendations || [
+				{
+					actor: "agent:test",
+					value: "accept",
+					rationale: "Validated Change is ready for approval.",
+					evidenceRefs: ["tests/helpers/accepted-change.mjs"],
+				},
+			],
 		},
 		estimates: {
 			effort: overrides.effort || "low",
@@ -99,7 +135,7 @@ export async function seedChangeAcceptance(repoRoot, options = {}) {
 	await ensureGitRepository(repoRoot);
 	const change = acceptedChangeFixture(options);
 	const record = createChangeRecord(change);
-	const store = new GitRefChangeStore({ repoRoot });
+	const store = new ChangeTraceStore({ repoRoot });
 	const seeded = await store.write({
 		expectedHead: null,
 		records: [record],
@@ -107,40 +143,7 @@ export async function seedChangeAcceptance(repoRoot, options = {}) {
 		actor: options.acceptedBy || "user",
 		createdAt: change.provenance.createdAt,
 	});
-	return {
-		store,
-		record,
-		sprintBoundary: options.sprintBoundary || {
-			accountableGoal: change.intent.desiredState,
-			knowledgeTopics: options.knowledgeTopics || [
-				".codewiki/kb/system/components/decision-loop.md",
-			],
-			dependencies: options.dependencies || [],
-			rollbackBoundary:
-				options.sprintRollbackBoundary ||
-				change.safety.rollbackPlan ||
-				"Revert the accepted Decision and its scoped implementation together.",
-			assessment: {
-				stance: "coherent",
-				rationale:
-					options.sprintAssessmentRationale ||
-					"One validated Change serves one accountable Sprint goal.",
-			},
-		},
-		changeAcceptance: {
-			expectedHead: seeded.head,
-			selections: [
-				{
-					changeId: change.id,
-					revision: change.revision,
-					recordRevision: record.recordRevision,
-					contentDigest: changeContentDigest(change),
-				},
-			],
-			acceptedBy: options.acceptedBy || "user",
-			acceptedAt: options.acceptedAt || "2026-06-25T00:00:02.000Z",
-		},
-	};
+	return { store, record, head: seeded.head };
 }
 
 async function ensureGitRepository(repoRoot) {

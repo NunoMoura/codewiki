@@ -3,9 +3,9 @@ import { describe, it } from "node:test";
 import { buildWikiState } from "../../src/api/state.ts";
 import { InMemoryReviewEvidenceCache } from "../../src/implementation/review/index.ts";
 import { createTraceCloseRecord } from "../../src/traces/retention.ts";
-import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createSprintProposal } from "../../src/decision/proposal.ts";
-import { runPlanningIteration } from "../../src/planning/iteration.ts";
+import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
+import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
 import { createTraceHead } from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
@@ -16,10 +16,10 @@ function nextSequence(events) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.approvedChanges?.[0];
+	const change = iteration?.data?.output?.changeRecord?.change;
 	assert.ok(iteration);
 	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
+	return `change:${change.id}`;
 }
 
 function traceRecords(traceId = "TRACE-state") {
@@ -28,7 +28,7 @@ function traceRecords(traceId = "TRACE-state") {
 		title: "Read wiki state from traces",
 		createdAt: "2026-06-11T00:00:00.000Z",
 	});
-	const proposal = createSprintProposal({
+	const changeInput = canonicalChangeInput({
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-11T00:00:01.000Z",
 		updatedAt: "2026-06-11T00:00:01.000Z",
@@ -47,10 +47,10 @@ function traceRecords(traceId = "TRACE-state") {
 	});
 	const decision = runDecisionIteration({
 		traceId,
-		proposal,
+		changeInput,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	});
-	const decisionRef = approvedDecisionRef(decision.traceEvents);
+	const changeRef = approvedDecisionRef(decision.traceEvents);
 	const plan = runPlanningIteration({
 		traceId,
 		decisionEvents: decision.traceEvents,
@@ -60,7 +60,7 @@ function traceRecords(traceId = "TRACE-state") {
 			{
 				id: "WU-state",
 				title: "Create wiki_state facade",
-				decisionRefs: [decisionRef],
+				changeRefs: [changeRef],
 				outcome: "wiki_state returns derived projections.",
 				...planningQualityFields(),
 				acceptance: ["State derives from trace records."],
@@ -89,7 +89,7 @@ describe("wiki_state core facade", () => {
 			"Implement planned work unit WU-state.",
 		);
 		assert.equal(state.workPlan?.cards[0].id, "WU-state");
-		assert.equal(state.quality?.summary.planning.met, 16);
+		assert.equal(state.quality?.summary.planning.met, 12);
 		assert.equal(state.workQueue.summary.ready, 1);
 		assert.equal(state.traceBoard.summary.needs_implementation, 1);
 		assert.equal(state.traceBoard.traces[0].status, "needs_implementation");
@@ -122,7 +122,7 @@ describe("wiki_state core facade", () => {
 			(record) => record.type === "trace_event" && record.loop === "planning",
 		);
 		assert.ok(planning);
-		const blockedPlanning = JSON.parse(JSON.stringify(planning));
+		const blockedPlanning = structuredClone(planning);
 		blockedPlanning.id = `${planning.id}-blocked`;
 		blockedPlanning.sequence = planning.sequence + 1;
 		blockedPlanning.event = "planning_blocked";
@@ -157,7 +157,7 @@ describe("wiki_state core facade", () => {
 		);
 		assert.ok(planning);
 		const nonPlanningRecords = records.filter((record) => record !== planning);
-		const blockedPlanning = JSON.parse(JSON.stringify(planning));
+		const blockedPlanning = structuredClone(planning);
 		blockedPlanning.id = `${planning.id}-blocked`;
 		blockedPlanning.sequence = planning.sequence;
 		blockedPlanning.event = "planning_blocked";
@@ -170,7 +170,7 @@ describe("wiki_state core facade", () => {
 				refs: ["WU-state"],
 			},
 		];
-		const acceptedPlanning = JSON.parse(JSON.stringify(planning));
+		const acceptedPlanning = structuredClone(planning);
 		acceptedPlanning.id = `${planning.id}-accepted`;
 		acceptedPlanning.sequence = planning.sequence + 1;
 

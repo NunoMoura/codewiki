@@ -23,7 +23,7 @@ This audit records the current migration state after the pivot to runtime outer 
 | --- | ---: | ---: | --- | --- |
 | Pi adapter and commands | 36 files | 13 files | Package metadata enabled / direct command smokes | `src/pi/**` exposes tools, direct `/wiki-*` commands, prompt/TUI seams, process/session worker transport, and package install/RPC smoke coverage without importing the Pi SDK into core source. |
 | Agency | 5 files | 0 files | Intentionally dropped for now | Role/agency scheduling is not a target concept during the rebuild. Runtime scheduling uses work-queue projections and claims. |
-| Public API facade | 2 files | 8 files | Core facades complete | Reduced core facades exist for model-facing `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`, and `wiki_config`; runtime remains a host/backend facade; the Pi wrapper is package-installable while MCP remains deferred. |
+| Public API facade | 2 files | 8 files | Core facades complete | Core facades remain testable; Pi normally exposes state, Change, and config while runtime activates at most one selected semantic host. Archive stays backend-only, and MCP remains deferred. |
 | Audit/checks | 8 files | 0 files | Partially replaced | Deterministic checks move into semantic loop exit conditions where relevant. Packaged audit tooling is not migrated. |
 | Output artifacts | 7 old files | semantic loop internals | Replaced | Loop output and runtime-temp scratch replace the old artifact model. Historical artifact files are not target truth. |
 | Decision | 5 files | 6 files | Migrated core | Sprint proposal, iteration runner, exit evaluation, propagation, and approval helpers exist in target source. |
@@ -38,7 +38,7 @@ This audit records the current migration state after the pivot to runtime outer 
 | Shared utilities | 4 files | 5 files | Partial | Small source utilities exist. Historical lock/ports helpers are not migrated wholesale. |
 | State/graph/resume | 21 files | traces + views | Replaced core, Pi surface active | JSONL traces and generated views replace graph/state roots. State/resume projections are exposed through core facades and direct `/wiki-*` commands. |
 | Telemetry/lifecycle | 3 files | trace events | Replaced conceptually | Trace events/checkpoints/close records carry lifecycle facts. Historical telemetry roots are not target truth. |
-| Workflow composite tool | 1 file | core facades complete | Core facades exist for model-facing `wiki_state`, `wiki_decide`, `wiki_plan`, `wiki_implement`, `wiki_archive`, and `wiki_config`; runtime coordination remains a backend facade. CLI wrapper exists as a temporary development harness; Pi wrapper is package-installable; MCP remains deferred. Standalone split-output and split-evaluation tools should not return as normal tools. |
+| Workflow composite tool | 1 file | runtime-routed facades | No workflow mega-tool exists. Runtime selects one semantic host from WorkState; state, Change, and config remain bounded active capabilities. CLI is a temporary harness, Pi is package-installable, and MCP remains deferred. |
 
 ## Stabilized target spine
 

@@ -19,9 +19,8 @@ function draftChange() {
 			currentState: "Change intent is mixed with Decision fields.",
 			desiredState: "Change intent has its own lifecycle schema.",
 			rationale: "Loop boundaries become explicit.",
-			currentPain: "Mutable Changes are difficult to manage.",
-			desiredOutcome: "Changes remain mutable until acceptance.",
 			nonGoals: ["Do not add a fourth semantic loop."],
+			alternatives: ["Keep Decision-shaped proposal state."],
 		},
 		classification: {
 			kind: "migrate",
@@ -35,6 +34,15 @@ function draftChange() {
 			maintainer: "Maintainers get one canonical schema.",
 			compatibility: "Active proposal APIs intentionally break.",
 		},
+		knowledge: {
+			topicRefs: ["kb:system/components/decision-loop.md"],
+			propagationRefs: ["kb:system/components/decision-loop.md"],
+		},
+		outcome: {
+			successSignals: ["The lifecycle is deterministic."],
+			evidenceExpectations: ["Change domain tests pass."],
+		},
+		delivery: { constraints: [], planningQuestions: [] },
 		evidence: {
 			sourceRefs: ["kb:system/components/decision-loop.md"],
 			proofRefs: ["tests/changes/change-domain.test.mjs"],
@@ -43,18 +51,18 @@ function draftChange() {
 		},
 		safety: {
 			risk: "medium",
-			invariant: "Only accepted Changes start Sprint Traces.",
+			invariants: ["Only approved Changes enter Planning."],
 			safetyBoundary: "Agents cannot accept Changes.",
 			failureModes: ["A stale revision is accepted."],
 			rollbackPlan: "Keep the pinned controller active.",
 			negativeTestPlan: "Reject stale revisions and invalid transitions.",
+			regressionPlan: "Run Change lifecycle tests.",
 		},
 		validation: {
 			state: "draft",
 			issues: [],
 			assessments: [],
 			recommendations: [],
-			successSignal: "The lifecycle is deterministic.",
 		},
 		estimates: {
 			effort: "medium",
@@ -137,7 +145,10 @@ describe("Change domain", () => {
 			"kb:system/components/decision-loop.md",
 		];
 		const normalized = normalizeChange(input);
-		assert.equal(normalized.intent.question, "Should the Change domain be canonical?");
+		assert.equal(
+			normalized.intent.question,
+			"Should the Change domain be canonical?",
+		);
 		assert.deepEqual(normalized.intent.nonGoals, ["Keep three loops."]);
 		assert.deepEqual(normalized.evidence.sourceRefs, [
 			"kb:system/components/decision-loop.md",
@@ -155,9 +166,18 @@ describe("Change domain", () => {
 
 	it("keeps validation readiness independent from Change status", () => {
 		assert.equal(parseChange(validChange()).status, "pending");
-		assert.equal(parseChange(transitionedChange("deferred")).validation.state, "valid");
-		assert.equal(parseChange(transitionedChange("deferred", "stale")).status, "deferred");
-		assert.equal(parseChange(transitionedChange("rejected", "invalid")).status, "rejected");
+		assert.equal(
+			parseChange(transitionedChange("deferred")).validation.state,
+			"valid",
+		);
+		assert.equal(
+			parseChange(transitionedChange("deferred", "stale")).status,
+			"deferred",
+		);
+		assert.equal(
+			parseChange(transitionedChange("rejected", "invalid")).status,
+			"rejected",
+		);
 	});
 
 	it("binds status transitions to the exact Change revision and digest", () => {

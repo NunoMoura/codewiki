@@ -168,15 +168,14 @@ function shadowChange(createdAt) {
 async function seedAcceptedChange(packageRoot, shadowRoot, createdAt) {
 	const [
 		{ changeContentDigest },
-		{ GitRefChangeStore },
+		{ ChangeTraceStore },
 		{ createChangeRecord },
 	] = await Promise.all([
 		import(
 			pathToFileURL(join(packageRoot, "dist", "changes", "digest.js")).href
 		),
 		import(
-			pathToFileURL(join(packageRoot, "dist", "changes", "git-ref-store.js"))
-				.href
+			pathToFileURL(join(packageRoot, "dist", "changes", "trace-store.js")).href
 		),
 		import(
 			pathToFileURL(join(packageRoot, "dist", "changes", "records.js")).href
@@ -192,7 +191,7 @@ async function seedAcceptedChange(packageRoot, shadowRoot, createdAt) {
 		validatorVersion: "self-dogfood-shadow.v1",
 	};
 	const record = createChangeRecord(change);
-	const store = new GitRefChangeStore({ repoRoot: shadowRoot });
+	const store = new ChangeTraceStore({ repoRoot: shadowRoot });
 	const seeded = await store.write({
 		expectedHead: null,
 		records: [record],
@@ -255,12 +254,7 @@ try {
 		],
 		{ cwd: shadowRoot },
 	);
-	const packageRoot = join(
-		piNpmRoot,
-		"node_modules",
-		"@nunomoura",
-		"codewiki",
-	);
+	const packageRoot = join(piNpmRoot, "node_modules", "@nunomoura", "codewiki");
 	const packageJson = JSON.parse(
 		readFileSync(join(packageRoot, "package.json"), "utf8"),
 	);

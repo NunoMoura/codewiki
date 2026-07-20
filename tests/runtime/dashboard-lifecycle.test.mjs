@@ -57,13 +57,19 @@ describe("dashboard runtime health", () => {
 				commit: "a".repeat(40),
 				packageSha256: "1".repeat(64),
 			});
-			assert.equal(dashboardRuntimeIdentityHealth(loaded, root).status, "current");
+			assert.equal(
+				dashboardRuntimeIdentityHealth(loaded, root).status,
+				"current",
+			);
 
 			await writeFile(
 				join(root, ".pi", "codewiki-controller.json"),
 				pin("b".repeat(40), "2".repeat(64)),
 			);
-			assert.equal(dashboardRuntimeIdentityHealth(loaded, root).status, "mismatch");
+			assert.equal(
+				dashboardRuntimeIdentityHealth(loaded, root).status,
+				"mismatch",
+			);
 			assert.throws(
 				() => assertDashboardRuntimeCurrent(loaded, root),
 				/Fully exit and restart Pi; \/reload is not sufficient/,
@@ -86,7 +92,7 @@ describe("dashboard runtime health", () => {
 					traceId: "TRACE-invalid",
 					sequence: 1,
 					loop: "decision",
-					event: "changes_approved",
+					event: "change_approved",
 					refs: [],
 					createdAt: "2026-07-12T00:00:00.000Z",
 					data: {},

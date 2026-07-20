@@ -5,8 +5,8 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiArchive } from "../../src/api/wiki-archive.ts";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
-import { runDecisionIterationWithRunner } from "../../src/decision/iteration.ts";
-import { runWikiPlan } from "../../src/api/wiki-plan.ts";
+import { runDecisionIterationWithRunner } from "../helpers/canonical-loop-events.mjs";
+import { runPlanningIterationWithRunner } from "../helpers/canonical-loop-events.mjs";
 import { appendTraceRecords } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { replayTrace } from "../../src/traces/replay.ts";
@@ -20,7 +20,7 @@ async function runDecisionFixture(input) {
 	return {
 		loopResult: await runDecisionIterationWithRunner({
 			traceId: input.traceId,
-			proposalInput: input.proposalInput,
+			changeInput: input.changeInput,
 			createdAt: input.createdAt,
 			startSequence: input.nextSequence,
 		}),
@@ -36,7 +36,7 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 	const decision = await runDecisionFixture({
 		traceId,
 		createdAt: "2026-06-11T00:00:01.000Z",
-		proposalInput: {
+		changeInput: {
 			id: "DT-archive",
 			createdAt: "2026-06-11T00:00:01.000Z",
 			updatedAt: "2026-06-11T00:00:01.000Z",
@@ -54,27 +54,29 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 		},
 	});
 	const decisionEvent = decision.loopResult.traceEvents[0];
-	const decisionRow = decisionEvent.data.output.approvedChanges[0];
-	const decisionRef = `trace:${decisionEvent.id}#change:${decisionRow.id}`;
-	const planning = await runWikiPlan({
-		traceId,
-		decisionEvents: decision.loopResult.traceEvents,
-		nextSequence: 2,
-		createdAt: "2026-06-11T00:00:02.000Z",
-		workItemInputs: [
-			{
-				id: "WU-archive",
-				title: "Preview archive retention refs",
-				decisionRefs: [decisionRef],
-				outcome: "wiki_archive previews retention refs.",
-				...planningQualityFields(),
-				acceptance: ["Retention refs are previewed and close is guarded."],
-				componentRefs: ["traces"],
-				pathScopes: ["src/traces"],
-				verification: ["tests/traces/wiki-archive.test.mjs"],
-			},
-		],
-	});
+	const decisionRow = decisionEvent.data.output.changeRecord.change;
+	const changeRef = `change:${decisionRow.id}`;
+	const planning = {
+		loopResult: await runPlanningIterationWithRunner({
+			traceId,
+			decisionEvents: decision.loopResult.traceEvents,
+			startSequence: 2,
+			createdAt: "2026-06-11T00:00:02.000Z",
+			workItemInputs: [
+				{
+					id: "WU-archive",
+					title: "Preview archive retention refs",
+					changeRefs: [changeRef],
+					outcome: "wiki_archive previews retention refs.",
+					...planningQualityFields(),
+					acceptance: ["Retention refs are previewed and close is guarded."],
+					componentRefs: ["traces"],
+					pathScopes: ["src/traces"],
+					verification: ["tests/traces/wiki-archive.test.mjs"],
+				},
+			],
+		}),
+	};
 	const planningEvent = planning.loopResult.traceEvents[0];
 	const workItem = planningEvent.data.output.workItems[0];
 	const planningRef = `trace:${planningEvent.id}#work:${workItem.id}`;
@@ -155,7 +157,7 @@ describe("wiki_archive core facade", () => {
 		const decision = await runDecisionFixture({
 			traceId: head.traceId,
 			createdAt: "2026-06-11T00:00:01.000Z",
-			proposalInput: {
+			changeInput: {
 				id: "DT-archive-incomplete",
 				createdAt: "2026-06-11T00:00:01.000Z",
 				updatedAt: "2026-06-11T00:00:01.000Z",
@@ -285,7 +287,9 @@ describe("wiki_archive core facade", () => {
 	});
 
 	it("compacts already closed traces with a fresh Git restore ref", async () => {
-		const root = await mkdtemp(join(tmpdir(), "codewiki-archive-closed-compact-"));
+		const root = await mkdtemp(
+			join(tmpdir(), "codewiki-archive-closed-compact-"),
+		);
 		try {
 			const records = await archiveRecords("TRACE-wiki-archive-closed-compact");
 			const close = await runWikiArchive({
@@ -342,7 +346,7 @@ describe("wiki_archive core facade", () => {
 		const decision = await runDecisionFixture({
 			traceId: head.traceId,
 			createdAt: "2026-06-11T00:00:01.000Z",
-			proposalInput: {
+			changeInput: {
 				id: "DT-archive-compact-incomplete",
 				createdAt: "2026-06-11T00:00:01.000Z",
 				updatedAt: "2026-06-11T00:00:01.000Z",

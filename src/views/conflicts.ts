@@ -44,7 +44,14 @@ function planningWorkItemsForConflicts(
 					({
 						id: text(item.id) || event.id,
 						title: text(item.title) || text(item.id) || event.id,
-						decisionRefs: stringList(item.decisionRefs),
+						changeRefs: unique([
+							...(text(item.owningChangeId)
+								? [`change:${text(item.owningChangeId)}`]
+								: []),
+							...stringList(item.contributingChangeIds).map(
+								(changeId) => `change:${changeId}`,
+							),
+						]),
 						outcome: text(item.outcome),
 						technicalRequirements: stringList(item.technicalRequirements),
 						acceptance: stringList(item.acceptance),
@@ -119,4 +126,8 @@ function stringList(value: unknown): string[] {
 
 function text(value: unknown): string {
 	return String(value || "").trim();
+}
+
+function unique(values: string[]): string[] {
+	return [...new Set(values)];
 }

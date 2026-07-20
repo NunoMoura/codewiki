@@ -68,6 +68,10 @@ export function isTraceId(value: unknown): value is string {
 	return typeof value === "string" && /^TRACE-[A-Za-z0-9._-]+$/.test(value);
 }
 
+export function isChangeId(value: unknown): value is string {
+	return typeof value === "string" && /^CHG-[A-Za-z0-9._-]+$/.test(value);
+}
+
 export function validateTraceRecord(
 	value: unknown,
 ): TraceValidationResult<TraceRecord> {
@@ -109,6 +113,13 @@ function validateTraceHead(
 	value: Partial<TraceHead>,
 ): void {
 	requireTraceId(issues, value.traceId, "$.traceId");
+	if (value.changeId !== undefined && !isChangeId(value.changeId)) {
+		issue(
+			issues,
+			"$.changeId",
+			"Change id must start with CHG- and be path-safe.",
+		);
+	}
 	requireString(issues, value.title, "$.title");
 	requireString(issues, value.createdAt, "$.createdAt");
 	if (value.origin !== undefined) {

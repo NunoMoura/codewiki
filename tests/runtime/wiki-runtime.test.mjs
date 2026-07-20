@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
 import {
 	appendTraceRecord,
@@ -35,7 +35,7 @@ function triggers() {
 				traceTitle: "CI trigger",
 				workUnitId: "WU-ci",
 				planningRef: "trace:TRACE-trigger:planning:iteration:1#work:WU-ci",
-				decisionRefs: ["trace:TRACE-trigger:decision:iteration:1#change:CHG-ci"],
+				changeRefs: ["trace:TRACE-trigger:decision:iteration:1#change:CHG-ci"],
 				pathScopes: ["src/runtime"],
 				trigger: {
 					id: "TRG-ci",
@@ -120,7 +120,7 @@ function queue() {
 				traceId: "TRACE-runtime",
 				title: "Runtime A",
 				traceRefs: ["TRACE-runtime:planning:work:1"],
-				decisionRefs: ["TRACE-runtime:decision:change:1"],
+				changeRefs: ["TRACE-runtime:decision:change:1"],
 				planningRefs: ["TRACE-runtime:planning:work:1"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/a.ts"],
@@ -137,7 +137,7 @@ function queue() {
 				traceId: "TRACE-runtime",
 				title: "Runtime B",
 				traceRefs: ["TRACE-runtime:planning:work:2"],
-				decisionRefs: ["TRACE-runtime:decision:change:1"],
+				changeRefs: ["TRACE-runtime:decision:change:1"],
 				planningRefs: ["TRACE-runtime:planning:work:2"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/b.ts"],
@@ -181,7 +181,7 @@ describe("wiki_runtime core facade", () => {
 			traceId: "TRACE-runtime",
 			title: "Raw decision should go through planning",
 			traceRefs: ["TRACE-runtime:decision:iteration:1"],
-			decisionRefs: ["TRACE-runtime:decision:iteration:1#change:CHG-runtime"],
+			changeRefs: ["TRACE-runtime:decision:iteration:1#change:CHG-runtime"],
 			planningRefs: [],
 			componentRefs: [],
 			pathScopes: ["src/runtime/raw-decision.ts"],

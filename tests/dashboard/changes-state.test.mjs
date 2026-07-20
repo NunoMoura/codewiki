@@ -29,7 +29,7 @@ describe("dashboard Changes Backlog state", () => {
 				}),
 			);
 			await seeded.store.write({
-				expectedHead: seeded.changeAcceptance.expectedHead,
+				expectedHead: seeded.head,
 				records: [beta],
 				message: "Seed beta",
 				actor: "test",

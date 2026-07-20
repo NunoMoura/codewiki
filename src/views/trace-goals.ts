@@ -1,4 +1,3 @@
-import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import { foldProjectTraceRecords } from "../traces/project.ts";
 import { loopOutputEvents } from "../traces/queries.ts";
 import { replayTrace } from "../traces/replay.ts";
@@ -33,13 +32,13 @@ interface DecisionProjection {
 interface WorkProjection {
 	id: string;
 	ref: string;
-	decisionRefs: string[];
+	changeRefs: string[];
 	pathScopes: string[];
 	implemented: boolean;
 }
 
 interface ResolutionProjection {
-	decisionRef: string;
+	changeRef: string;
 	kind: string;
 	workUnitIds: string[];
 	evidenceRefs: string[];
@@ -89,13 +88,13 @@ function traceGoalViewFromRecords(
 	const decisions = decisionChanges(records);
 	const workUnits = workUnitsFromTrace(records);
 	const resolutions = resolutionsFromTrace(records);
-	const decisionRefs = decisions.map((decision) => decision.ref);
-	const decisionCoverage = decisionCoverageByRef(workUnits, resolutions);
-	const unresolvedDecisionRefs = decisionRefs.filter(
-		(decisionRef) => !decisionCoverage.has(decisionRef),
+	const changeRefs = decisions.map((decision) => decision.ref);
+	const changeCoverage = changeCoverageByRef(workUnits, resolutions);
+	const unresolvedChangeRefs = changeRefs.filter(
+		(changeRef) => !changeCoverage.has(changeRef),
 	);
-	const deferredDecisionRefs = decisionRefs.filter((decisionRef) =>
-		resolutionStatuses(resolutions, decisionRef).includes("deferred"),
+	const deferredChangeRefs = changeRefs.filter((changeRef) =>
+		resolutionStatuses(resolutions, changeRef).includes("deferred"),
 	);
 	const incompleteWorkUnitRefs = workUnits
 		.filter((workUnit) => !workUnit.implemented)
@@ -107,10 +106,10 @@ function traceGoalViewFromRecords(
 		(blocker) => blocker.kind !== "deferred",
 	);
 	const baseStatus = traceGoalStatus({
-		decisionRefs,
-		unresolvedDecisionRefs,
+		changeRefs,
+		unresolvedChangeRefs,
 		incompleteWorkUnitRefs,
-		deferredDecisionRefs,
+		deferredChangeRefs,
 		activeBlockers: activeBlockers.map((blocker) => blocker.message),
 	});
 	const status = state.closed
@@ -120,8 +119,8 @@ function traceGoalViewFromRecords(
 		: baseStatus;
 	const blockers = unique([
 		...activeBlockers.map((blocker) => blocker.message),
-		...unresolvedDecisionRefs.map(
-			(decisionRef) => `Decision ${decisionRef} needs planning coverage.`,
+		...unresolvedChangeRefs.map(
+			(changeRef) => `Decision ${changeRef} needs planning coverage.`,
 		),
 		...incompleteWorkUnitRefs.map(
 			(workUnitRef) =>
@@ -143,10 +142,10 @@ function traceGoalViewFromRecords(
 					closeReason: state.close.reason,
 				}
 			: {}),
-		decisionRefs,
-		plannedDecisionRefs: unique([...decisionCoverage.keys()]),
-		unresolvedDecisionRefs,
-		deferredDecisionRefs,
+		changeRefs,
+		plannedChangeRefs: unique([...changeCoverage.keys()]),
+		unresolvedChangeRefs,
+		deferredChangeRefs,
 		workUnitRefs: workUnits.map((workUnit) => workUnit.ref),
 		incompleteWorkUnitRefs,
 		pathScopes,
@@ -156,86 +155,89 @@ function traceGoalViewFromRecords(
 }
 
 function traceGoalStatus(input: {
-	decisionRefs: string[];
-	unresolvedDecisionRefs: string[];
+	changeRefs: string[];
+	unresolvedChangeRefs: string[];
 	incompleteWorkUnitRefs: string[];
-	deferredDecisionRefs: string[];
+	deferredChangeRefs: string[];
 	activeBlockers: string[];
 }): TraceGoalResolutionStatus {
 	if (input.activeBlockers.length > 0) return "blocked";
-	if (input.decisionRefs.length === 0) return "needs_decision";
-	if (input.unresolvedDecisionRefs.length > 0) return "needs_planning";
+	if (input.changeRefs.length === 0) return "needs_decision";
+	if (input.unresolvedChangeRefs.length > 0) return "needs_planning";
 	if (input.incompleteWorkUnitRefs.length > 0) return "needs_implementation";
-	if (input.deferredDecisionRefs.length > 0) return "deferred";
+	if (input.deferredChangeRefs.length > 0) return "deferred";
 	return "finished";
 }
 
 function decisionChanges(records: TraceRecord[]): DecisionProjection[] {
 	return loopOutputEvents(records, "decision")
 		.filter(loopIterationQualityComplete)
-		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).approvedChanges).map((change) => {
-				const id = text(change.id) || event.id;
-				return {
-					id,
-					ref: iterationSubref(event, "change", id),
-					title: text(change.desiredState) || text(change.question) || id,
-					sourceRefs: unique([
-						...stringList(change.currentStateRefs),
-						...stringList(change.sourceRefs),
-						...stringList(change.targetRefs),
-						...event.refs,
-					]),
-				};
-			}),
-		);
+		.flatMap((event) => {
+			const output = objectRecord(event.data?.output);
+			const decision = objectRecord(output.decision);
+			const record = objectRecord(output.changeRecord);
+			const canonicalChange = objectRecord(record.change);
+			if (
+				text(decision.disposition) === "approve" &&
+				text(canonicalChange.id)
+			) {
+				const id = text(canonicalChange.id);
+				const intent = objectRecord(canonicalChange.intent);
+				const classification = objectRecord(canonicalChange.classification);
+				const evidence = objectRecord(canonicalChange.evidence);
+				return [
+					{
+						id,
+						ref: `change:${id}`,
+						title: text(intent.desiredState) || text(intent.question) || id,
+						sourceRefs: unique([
+							...stringList(classification.targetRefs),
+							...stringList(evidence.sourceRefs),
+							...event.refs,
+						]),
+					},
+				];
+			}
+			return [];
+		});
 }
 
 function workUnitsFromTrace(records: TraceRecord[]): WorkProjection[] {
 	const implementationRefs = implementedPlanningRefs(records);
 	const planned = activePlanningEvents(records).flatMap((event) =>
-			objectList(objectRecord(event.data?.output).workItems).map((item) => {
-				const id = text(item.id) || event.id;
-				const ref = iterationSubref(event, "work", id);
-				return {
-					id,
-					ref,
-					decisionRefs: stringList(item.decisionRefs),
-					pathScopes: stringList(item.pathScopes),
-					implemented: implementationRefs.has(ref),
-				};
-			}),
-		);
-	return [
-		...planned,
-		...directImplementationDecisionsFromRecords(records).map((direct) => ({
-			id: direct.id,
-			ref: direct.ref,
-			decisionRefs: direct.decisionRefs,
-			pathScopes: direct.pathScopes,
-			implemented: implementationRefs.has(direct.ref),
-		})),
-	];
+		objectList(objectRecord(event.data?.output).workItems).map((item) => {
+			const id = text(item.id) || event.id;
+			const ref = iterationSubref(event, "work", id);
+			return {
+				id,
+				ref,
+				changeRefs: workItemChangeRefs(item),
+				pathScopes: stringList(item.pathScopes),
+				implemented: implementationRefs.has(ref),
+			};
+		}),
+	);
+	return planned;
 }
 
 function resolutionsFromTrace(records: TraceRecord[]): ResolutionProjection[] {
 	return activePlanningEvents(records).flatMap((event) =>
-			objectList(objectRecord(event.data?.output).resolutions).map(
-				(resolution) => ({
-					decisionRef: text(resolution.decisionRef),
-					kind: text(resolution.kind),
-					workUnitIds: stringList(resolution.workUnitIds),
-					evidenceRefs: stringList(resolution.evidenceRefs),
-					...(text(resolution.owner) ? { owner: text(resolution.owner) } : {}),
-					...(text(resolution.trigger)
-						? { trigger: text(resolution.trigger) }
-						: {}),
-					...(text(resolution.rationale)
-						? { rationale: text(resolution.rationale) }
-						: {}),
-				}),
-			),
-		);
+		objectList(objectRecord(event.data?.output).resolutions).map(
+			(resolution) => ({
+				changeRef: text(resolution.changeRef),
+				kind: text(resolution.kind),
+				workUnitIds: stringList(resolution.workUnitIds),
+				evidenceRefs: stringList(resolution.evidenceRefs),
+				...(text(resolution.owner) ? { owner: text(resolution.owner) } : {}),
+				...(text(resolution.trigger)
+					? { trigger: text(resolution.trigger) }
+					: {}),
+				...(text(resolution.rationale)
+					? { rationale: text(resolution.rationale) }
+					: {}),
+			}),
+		),
+	);
 }
 
 function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
@@ -244,8 +246,8 @@ function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
 	);
 	const latestByDecisionRef = new Map<string, TraceEvent>();
 	for (const event of events) {
-		for (const decisionRef of planningDecisionRefs(event)) {
-			latestByDecisionRef.set(decisionRef, event);
+		for (const changeRef of planningDecisionRefs(event)) {
+			latestByDecisionRef.set(changeRef, event);
 		}
 	}
 	const activeEventIds = new Set(
@@ -256,37 +258,49 @@ function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
 
 function planningDecisionRefs(event: TraceEvent): string[] {
 	return unique([
-		...objectList(objectRecord(event.data?.output).workItems).flatMap((item) =>
-			stringList(item.decisionRefs),
+		...objectList(objectRecord(event.data?.output).workItems).flatMap(
+			workItemChangeRefs,
 		),
 		...objectList(objectRecord(event.data?.output).resolutions).map(
-			(resolution) => text(resolution.decisionRef),
+			(resolution) => text(resolution.changeRef),
 		),
 	]).filter(Boolean);
 }
 
-function decisionCoverageByRef(
+function workItemChangeRefs(item: Record<string, unknown>): string[] {
+	const owningChangeRef = text(item.owningChangeId)
+		? `change:${text(item.owningChangeId)}`
+		: "";
+	return unique([
+		...(owningChangeRef ? [owningChangeRef] : []),
+		...stringList(item.contributingChangeIds).map(
+			(changeId) => `change:${changeId}`,
+		),
+	]);
+}
+
+function changeCoverageByRef(
 	workUnits: WorkProjection[],
 	resolutions: ResolutionProjection[],
 ): Map<string, string[]> {
 	const coverage = new Map<string, string[]>();
 	for (const workUnit of workUnits) {
-		for (const decisionRef of workUnit.decisionRefs) {
-			coverage.set(decisionRef, [
-				...(coverage.get(decisionRef) || []),
+		for (const changeRef of workUnit.changeRefs) {
+			coverage.set(changeRef, [
+				...(coverage.get(changeRef) || []),
 				workUnit.ref,
 			]);
 		}
 	}
 	for (const resolution of resolutions) {
-		if (!resolution.decisionRef) continue;
+		if (!resolution.changeRef) continue;
 		if (resolution.kind === "route-back") continue;
 		if (
 			DEFERRED_RESOLUTION_KINDS.has(resolution.kind) ||
 			RESOLVED_RESOLUTION_KINDS.has(resolution.kind)
 		) {
-			coverage.set(resolution.decisionRef, [
-				...(coverage.get(resolution.decisionRef) || []),
+			coverage.set(resolution.changeRef, [
+				...(coverage.get(resolution.changeRef) || []),
 				resolution.kind,
 			]);
 		}
@@ -296,10 +310,10 @@ function decisionCoverageByRef(
 
 function resolutionStatuses(
 	resolutions: ResolutionProjection[],
-	decisionRef: string,
+	changeRef: string,
 ): string[] {
 	return resolutions
-		.filter((resolution) => resolution.decisionRef === decisionRef)
+		.filter((resolution) => resolution.changeRef === changeRef)
 		.map((resolution) => resolution.kind);
 }
 

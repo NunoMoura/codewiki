@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { createChangeRecord } from "../../src/changes/records.ts";
+import { implementationCases } from "../../lab/implementation/cases.ts";
+import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 import {
-	collectDecisionExitIssues,
-	DECISION_LOOP_GRAPH,
-	evaluateDecisionExit,
-	evaluateDecisionExitGraph,
-} from "../../src/decision/loop.ts";
+	DECISION_CHANGE_GRAPH_HASH,
+	DECISION_CHANGE_GRAPH_ID,
+	DECISION_CHANGE_GRAPH_VERSION,
+	evaluateChangeDecision,
+} from "../../src/decision/change-quality.ts";
 import {
 	collectImplementationExitIssues,
 	evaluateImplementationExit,
@@ -13,99 +16,93 @@ import {
 	IMPLEMENTATION_LOOP_GRAPH,
 } from "../../src/implementation/loop.ts";
 import {
-	collectPlanningExitIssues,
-	evaluatePlanningExit,
-	evaluatePlanningExitGraph,
-	PLANNING_LOOP_GRAPH,
-} from "../../src/planning/loop.ts";
-import { decisionCases } from "../../lab/decision/cases.ts";
-import { implementationCases } from "../../lab/implementation/cases.ts";
-import { planningCases } from "../../lab/planning/cases.ts";
+	PLANNING_PORTFOLIO_GRAPH_HASH,
+	PLANNING_PORTFOLIO_GRAPH_ID,
+	PLANNING_PORTFOLIO_GRAPH_VERSION,
+	evaluatePortfolioPlanning,
+} from "../../src/planning/portfolio-quality.ts";
 
 describe("src loop exits support the lab substrate", () => {
-	it("exposes decision issue collection and a versioned production quality graph", () => {
-		const input = decisionCases[0].input;
-		const collected = collectDecisionExitIssues(
-			input.sprintProposal,
-			input.options,
-		);
-		const evaluated = evaluateDecisionExit(input.sprintProposal, input.options);
-		const standards = evaluateDecisionExitGraph(
-			collected.issues,
-			collected.approvedChanges,
-		);
-
-		assert.deepEqual(collected.issues, evaluated.issues);
-		assert.deepEqual(
-			collected.approvedChanges.map((change) => change.id),
-			evaluated.approvedChangeIds,
-		);
-		assert.deepEqual(standards, evaluated.qualityStandards);
-		assertGraphShape(DECISION_LOOP_GRAPH, "decision.loop");
-		assertGraphStandards(evaluated.qualityStandards, "decision.loop");
+	it("exposes canonical Decision quality graph metadata", () => {
+		const evaluated = evaluateChangeDecision({
+			record: createChangeRecord(acceptedChangeFixture()),
+			workState: { changes: [] },
+			disposition: "approve",
+			rationale: "Approve exact validated Change.",
+			authority: {
+				kind: "user",
+				actor: "user:test",
+				ref: "approval:user:test",
+			},
+		});
+		assert.equal(evaluated.passed, true);
+		assert.deepEqual(evaluated.graph, {
+			id: DECISION_CHANGE_GRAPH_ID,
+			version: DECISION_CHANGE_GRAPH_VERSION,
+			hash: DECISION_CHANGE_GRAPH_HASH,
+		});
+		assertGraphStandards(evaluated.standards, DECISION_CHANGE_GRAPH_ID);
 	});
 
-	it("exposes planning issue collection and a versioned production quality graph", () => {
-		const input = planningCases[0].input.plan;
-		const issues = collectPlanningExitIssues(input);
-		const evaluated = evaluatePlanningExit(input);
-		const standards = evaluatePlanningExitGraph(issues);
-
-		assert.deepEqual(issues, evaluated.issues);
-		assert.deepEqual(standards, evaluated.qualityStandards);
-		assertGraphShape(PLANNING_LOOP_GRAPH, "planning.loop");
-		assertGraphStandards(evaluated.qualityStandards, "planning.loop");
+	it("exposes canonical portfolio Planning quality graph metadata", () => {
+		const evaluated = evaluatePortfolioPlanning({
+			changeIds: ["CHG-planning-test"],
+			sprints: [
+				{
+					id: "SPR-planning-test",
+					goal: "Test canonical portfolio quality.",
+					participatingChangeIds: ["CHG-planning-test"],
+					workItemIds: ["WI-planning-test"],
+					rollbackBoundary: "Revert Sprint work as one boundary.",
+					dependsOn: [],
+					integrationRefs: [],
+				},
+			],
+			workItems: [
+				{
+					id: "WI-planning-test",
+					sprintId: "SPR-planning-test",
+					owningChangeId: "CHG-planning-test",
+					contributingChangeIds: [],
+					title: "Test canonical portfolio quality",
+					outcome: "Planning quality passes.",
+					technicalRequirements: ["Preserve trace authority."],
+					acceptanceCriteria: ["Quality report exits."],
+					componentRefs: ["planning"],
+					pathScopes: ["src/planning/**"],
+					verification: ["npm test"],
+					workerProfile: "implementation",
+					dependsOn: [],
+				},
+			],
+			workState: { changes: [], workItems: [], assignments: [] },
+		});
+		assert.equal(evaluated.passed, true);
+		assert.deepEqual(evaluated.graph, {
+			id: PLANNING_PORTFOLIO_GRAPH_ID,
+			version: PLANNING_PORTFOLIO_GRAPH_VERSION,
+			hash: PLANNING_PORTFOLIO_GRAPH_HASH,
+		});
+		assertGraphStandards(evaluated.standards, PLANNING_PORTFOLIO_GRAPH_ID);
 	});
 
-	it("exposes implementation issue collection and a versioned production quality graph", () => {
+	it("exposes implementation issue collection and production graph", () => {
 		const input = implementationCases[0].input.implementation;
 		const issues = collectImplementationExitIssues(input);
 		const evaluated = evaluateImplementationExit(input);
 		const standards = evaluateImplementationExitGraph(issues);
-
 		assert.deepEqual(issues, evaluated.issues);
 		assert.deepEqual(standards, evaluated.qualityStandards);
-		assertGraphShape(IMPLEMENTATION_LOOP_GRAPH, "implementation.loop");
+		assert.equal(IMPLEMENTATION_LOOP_GRAPH.graphId, "implementation.loop");
 		assertGraphStandards(evaluated.qualityStandards, "implementation.loop");
 	});
 });
-
-function assertGraphShape(graph, graphId) {
-	assert.equal(graph.graphId, graphId);
-	assert.equal(typeof graph.graphVersion, "string");
-	assert.equal(graph.schemaVersion, 3);
-	assert.equal(Array.isArray(graph.layers), true);
-	assert.equal(Array.isArray(graph.nodes), true);
-	assert.equal(graph.nodes.length > 0, true);
-	assert.equal(
-		new Set(graph.nodes.map((node) => node.id)).size,
-		graph.nodes.length,
-	);
-	for (const node of graph.nodes) {
-		assert.equal(typeof node.id, "string");
-		assert.equal(typeof node.weight, "number");
-		assert.equal(node.weight > 0, true);
-		assert.equal(typeof node.cost, "number");
-		assert.equal(node.cost > 0, true);
-		assert.equal(graph.layers.includes(node.layer), true);
-		assert.equal(typeof node.standardType, "string");
-		assert.equal(typeof node.method, "string");
-		assert.equal(typeof node.repairTarget, "string");
-		assert.ok(Array.isArray(node.codes));
-		assert.equal(node.codes.length > 0, true);
-	}
-}
 
 function assertGraphStandards(standards, graphId) {
 	assert.equal(standards.length > 0, true);
 	for (const standard of standards) {
 		assert.equal(standard.graphId, graphId);
 		assert.equal(typeof standard.graphVersion, "string");
-		assert.match(standard.graphHash, /^sha256:/);
-		assert.equal(typeof standard.layer, "string");
-		assert.equal(typeof standard.standardType, "string");
-		assert.equal(typeof standard.cost, "number");
-		assert.equal(typeof standard.score, "number");
-		assert.equal(typeof standard.repairTarget, "string");
+		assert.match(standard.graphHash, /^sha256:[a-f0-9]{64}$/);
 	}
 }

@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Decision Loop
-description: The decision loop consumes exact validated Change revisions from the Changes Backlog and turns them into binding, trace-backed Decisions that Planning can trust.
+description: The Decision loop receives and refines persisted Changes, validates exact revisions against current WorkState, and appends binding approval or terminal disposition facts to each Change Trace.
 tags:
   - codewiki
   - system
   - decision
   - loop
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-08-01T00:00:00Z
 codewiki_component: decision
 codewiki_components:
   - decision
@@ -18,9 +18,14 @@ codewiki_test_patterns:
   - tests/decision/**
   - tests/changes/**
   - tests/helpers/accepted-change.mjs
+  - tests/helpers/canonical-loop-events.mjs
   - tests/helpers/proposed-change.mjs
 codewiki_trace_events:
-  - decision.changes_approved
+  - decision.change_received
+  - decision.change_revised
+  - decision.change_approved
+  - decision.change_deferred
+  - decision.change_rejected
 codewiki_role: semantic_loop
 codewiki_source_map:
   - id: decision
@@ -31,142 +36,176 @@ codewiki_source_map:
       - tests/decision/**
       - tests/changes/**
       - tests/helpers/accepted-change.mjs
+      - tests/helpers/canonical-loop-events.mjs
       - tests/helpers/proposed-change.mjs
     trace_events:
-      - decision.changes_approved
+      - decision.change_received
+      - decision.change_revised
+      - decision.change_approved
+      - decision.change_deferred
+      - decision.change_rejected
     role: semantic_loop
 ---
 # Decision Loop
 
-The main CodeWiki session owns the user-agent conversation that shapes mutable Changes. The decision loop does not author a separate proposal domain. It consumes exact validated Change revisions from the Changes Backlog and turns them into binding, trace-backed Decisions that Planning can trust.
+The Decision loop owns the journey from explicitly persisted intent to an exact approved, rejected, deferred, or withdrawn Change revision. Decision is a process and semantic authority, not a domain entity. Its successful executable result is an approved Change.
+
+```text
+persisted Change
+-> refinement and current-state grounding
+-> quality and authority evaluation
+-> exact approved Change revision and receipt
+```
+
+The first persisted Change creates its append-only Change Trace. Later Decision iterations append revisions, validation, approval, route-back answers, or terminal disposition to that same trace.
 
 ## Loop authority
 
-The decision loop owns:
+The Decision loop owns:
 
-- binding interpretation of user intent and exact approval evidence;
-- canonical Change kind, type, and scope classification;
-- work scale classification (`tiny`, `small`, `normal`, or `large`), planning depth (`micro` or `standard`), and route target;
-- requirements and non-goals;
-- product/system tradeoffs;
-- risk tier and approval needs;
-- current-state baseline refs;
-- KB and diagram propagation decisions;
-- questions that planning must answer;
-- route-back answers from planning or implementation.
+- receiving and normalizing user, agent, runtime, lab, or worker-proposed intent;
+- stable Change identity and semantic revision boundaries;
+- current and desired state, rationale, non-goals, and outcome contract;
+- Change kind, type, scope, affected layers, and target refs;
+- user, maintainer, compatibility, and safety impact;
+- evidence sufficiency and current-state grounding;
+- Product/System Knowledge impacts and accepted Knowledge propagation;
+- risks, alternatives, invariants, rollback, and negative-test boundaries;
+- exact approval, rejection, deferral, or withdrawal authority;
+- route-back answers from Planning or Implementation;
+- delivery constraints Planning must respect.
 
-The decision loop does not own implementation details, Work Item scheduling, worker start, or code evidence.
+Decision does not own Sprint creation, Work Item design, scheduling, worker execution, code evidence, or final implementation acceptance.
+
+## Change revision
+
+The Change revision is the semantic carrier. Before approval, the Decision loop may produce a complete next revision rather than a generic patch. A revision should contain enough accepted meaning that Planning does not need a separate flattened Decision object:
+
+- intent and observable desired outcome;
+- classification and affected boundaries;
+- Knowledge impacts;
+- acceptance/success signals;
+- safety and compatibility constraints;
+- evidence and provenance;
+- bounded planning constraints when required.
+
+Workflow status, validation status, Sprint membership, Assignments, and implementation results belong to trace events and generated Change views, not the content digest of the semantic Change revision.
+
+Every approved revision is immutable. A route-back may append a later superseding revision while the accountable outcome remains stable. A material new outcome creates a linked Change.
+
+## Loop input
+
+Decision input includes:
+
+- persisted or proposed Change revision;
+- relevant WorkState slice;
+- exact current trace tail and prior revision refs;
+- current KB, source, test, Git, and active-work refs;
+- actor and trigger;
+- approval or other authority refs when supplied;
+- route-back question and originating refs when applicable.
+
+The facade loads repository facts itself. Callers should not replace current KB, trace, source ownership, policy, or Git state with arbitrary submitted snapshots.
 
 ## Loop cycle
 
-One decision cycle does this work:
-
 ```text
-load exact validated Change revisions from the Changes Backlog
-verify revision, digest, validation state, evidence, safety, and user approval
-interpret requirements, risks, alternatives, and knowledge impact
-render the exact Decision proposal for final approval
-check Decision exit conditions
-create the trace and append decision.changes_approved through the guarded runtime boundary
+receive or reload one Change Trace
+observe relevant WorkState and canonical sources
+refine the next semantic Change revision
+assess intent, user value, outcome, evidence, Knowledge impact, risk, and alternatives
+render the exact revision and approval receipt candidate
+run Decision quality standards
+append the iteration through runtime
 continue, exit, route back, or block
 ```
 
-The main session may create, revise, merge, split, defer, reject, or withdraw mutable Changes through `wiki_change`. `wiki_decide` accepts only an exact validated Change snapshot and digest; it must not silently read a mutable latest revision. The rendered Decision proposal remains preview state until the user approves that exact rendering and runtime creates the trace-backed Decision. After this boundary, the frozen Change snapshot embedded in the trace is self-contained and immutable.
-
-The agent should ask the user when required authority is missing, risk is high, or ambiguity would otherwise leak into planning.
-
-## Changes Backlog validation boundary
-
-The Changes Backlog presents each record through one shared validation card projection used by Pi and the dashboard. The projection preserves Current state, Proposed change, and Agent opinion while exposing content revision, record revision, content digest, lifecycle status, and validation state as independent facts. Cards are bounded, escaped, redacted, and explicitly non-authoritative; a valid card does not imply acceptance.
-
-Dashboard Change controls can draft, revise, validate, and withdraw under capability, same-origin, exact head/record CAS, idempotency, and receipt checks. They cannot accept Changes, append Decisions, create traces or Work Items, launch workers, edit source, publish, or advance controllers. Acceptance and the exact rendered Decision approval remain main-session authority.
-
-Bounded user, runtime, or lab feedback may reinforce a deterministic pending match or create a pending unvalidated Change. Intake stores only allowlisted canonical fields and rejects prompts, reasoning, credential-like data, raw private fields, unrestricted refs, and oversized output. Intake is pre-Decision capture, not approval or execution.
+Persisting a draft is explicit. Casual chat remains chat until the user or agent asks CodeWiki to retain a Change.
 
 ## Loop output
 
-Decision loop output is the high-signal packet planning needs:
+Decision output contains:
 
-- Decisions bound to exact user-validated Change revisions and digests;
-- requirement ids;
-- current-state baseline refs;
-- affected product/system areas;
-- KB and diagram refs changed or explicitly not impacted;
-- alternatives considered and rejection rationale;
-- risk tier and approval evidence;
-- assumptions and non-goals;
-- downstream planning questions;
-- planning-depth handoff guidance (`micro` or `standard`) and route metadata (`planning` by default, or direct `implementation` for eligible tiny/small low-risk changes);
-- route-back answers;
-- canonical refs proving the output.
+- complete normalized Change revision and digest;
+- validation findings and recommendations;
+- current-state baseline refs and digest;
+- Knowledge impacts and propagation refs or explicit no-impact rationale;
+- outcome contract and success signals;
+- risks, alternatives, invariants, compatibility, rollback, and non-goals;
+- delivery constraints and planning questions;
+- exact approval receipt when authority accepts the revision;
+- terminal disposition when rejected, deferred, or withdrawn;
+- quality-standard results and canonical refs.
 
-Decision output should not include Work Item breakdowns, implementation plans, or worker instructions. It may include a direct implementation scope only for tiny/small low-risk changes that explicitly skip Planning; that scope is a bounded acceptance/verification packet, not a Work Item plan.
+Approval receipt includes at least:
 
-The accepted Change snapshot carries canonical `ChangeKind`, `ChangeType`, and `ChangeScope` classification. Kind captures semantic intent (`fix`, `improve`, `harden`, `migrate`, `introduce`, or `remove`). Type captures the governed pipeline category, such as behavior, architecture, workflow, incident, security, documentation, dependency, or release change. Scope captures the primary product, system, source, documentation, configuration, or runtime boundary. Classification selects package-owned quality, evidence, escalation, and forbidden-skip policy; it never creates another semantic loop.
+```ts
+interface ChangeApproval {
+  changeRevision: number;
+  changeDigest: string;
+  approvedBy: string;
+  approvalRef: string;
+  observedWorkStateDigest: string;
+  qualityRef: string;
+  approvedAt: string;
+}
+```
 
-Change classification describes intent and affected boundary, not size. Size and routing remain separate Decision fields:
+`ChangeApproval` is an event fact, not another entity. Batch approval is a guarded command that appends one exact approval fact to each participating Change Trace; it does not create a bundled Decision object or Sprint.
 
-| Field | Values | Meaning |
-| --- | --- | --- |
-| `workScale` | `tiny`, `small`, `normal`, `large` | The estimated amount of work and review surface. |
-| `planningDepth` | `micro`, `standard` | Whether planning should emit a compact one-unit micro-plan or a full standard plan. |
-| `routeTarget` | `planning`, `implementation` | The next loop if the decision exits. Defaults to `planning`. |
-| `implementationMode` | `tdd`, `targeted_checks` | Required only for direct implementation changes. |
+## Knowledge timing
 
-Micro planning is allowed only for low-risk `tiny` or `small` decisions. Direct implementation is narrower: it also requires explicit route rationale, implementation mode, `directImplementationScope.pathScopes`, acceptance criteria, and verification. `normal`, `large`, medium-risk, high-risk, ambiguous, destructive, dependency, API/product, security/privacy, release, or multi-component work must use standard planning.
+Decision owns accepted Product/System Knowledge meaning changes. Before approval, it compares proposed intent against current KB and implementation state. It exits only when each affected concept has an accepted update, explicit no-impact rationale, or grounded route/defer result.
 
-## Loop quality standards
+KB may describe accepted future intent before source realizes it. WorkState must therefore distinguish expected realization pending from unexplained semantic drift.
 
-The decision loop can exit only when loop-owned quality standards are met. Research, uncertainty handling, and blind-spot review are not separate top-level concepts; they are evidence for these standards.
+## Quality standards
+
+Decision can approve only when active standards are met:
 
 | Quality standard | Required signal |
 | --- | --- |
-| sprint_proposal_ready | Decision loop output has at least one Decision, approval state is explicit, and Decision ids are stable. |
-| intention_understood | Decisions state the user intention as current state, desired state, and rationale. |
-| user_value_clear | Decisions explain how the intention benefits users or improves user outcomes. |
-| cost_understood | Decisions expose maintainer impact and a bounded effort estimate. |
-| recommendation_justified | The agent gives a clear approve/reject/defer/ask-user recommendation and explains why Decisions should proceed. |
-| intention_validated | The agent judges that the user's good-faith intention is aligned with real user value and the project's long-term interests. This is an agent-judgment standard, not a deterministic fact. |
-| approval_safety | High-risk Decisions have explicit user approval authority and a canonical approval ref. |
-| current_state_grounded | Current KB/source/trace/Git/test baseline refs are present and canonical. |
-| evidence_sufficient | Source/proof refs are enough for planning to trust the intention. High-risk Decisions need explicit proof refs for research, prior art, validation, or user guidance. |
-| risks_and_alternatives_considered | Decisions declare a low/medium/high risk tier; high-risk intentions identify affected layers and at least one viable alternative before planning. |
-| knowledge_impact_accounted | Required KB/diagram changes are made, or no-impact rationale is recorded. |
-| work_routing_classified | Decisions classify work scale and planning depth; micro planning is limited to tiny or small low-risk work. |
-| loop_route_safe | Decisions choose a safe next loop; direct implementation is limited to scoped, low-risk Decisions with validation. |
-| change_kind_classified | Decisions classify the Change kind so kind-specific quality can apply inside the decision loop. |
-| debug_decision_focused | Debug Decisions include target, hypothesis, invariant, probe, expected safe behavior, and stop condition. |
-| fix_decision_reproducible | Fix Decisions include reproduction, expected behavior, and regression coverage. |
-| harden_decision_boundary | Hardening Decisions include safety boundary, failure modes, negative tests, and compatibility impact. |
-| improve_decision_outcome | Improvement Decisions include current pain, desired outcome, success signal, and non-goals. |
-| migrate_decision_equivalent | Migration Decisions include source/target behavior, preserved invariants, equivalence proof, and rollback strategy. |
+| change_revision_ready | One stable, complete Change revision and digest are present. |
+| intention_understood | Current state, desired state, rationale, and non-goals are explicit. |
+| user_value_clear | User or project outcome is concrete and observable where possible. |
+| outcome_contract_complete | Desired outcome, success signal, and evidence expectations are bounded. |
+| current_state_grounded | Canonical KB/source/test/trace/Git refs ground current state. |
+| evidence_sufficient | Evidence supports the claim and risk level. |
+| recommendation_justified | Agent recommendation and rationale are explicit. |
+| intention_validated | Agent assessment protects user value and long-term project interest. |
+| approval_safety | Required human authority binds the exact revision and digest. |
+| risks_and_alternatives_considered | Risk, failure modes, alternatives, invariants, and rollback are proportional. |
+| knowledge_impact_accounted | KB changes or explicit no-impact rationale are complete. |
+| change_kind_classified | Kind-specific quality policy can activate. |
+| delivery_constraints_safe | Planning constraints do not smuggle Work Item design or unsafe bypasses. |
+| active_change_overlap_accounted | Duplicate, contradictory, overlapping, or superseding active Changes are resolved or ordered. |
 
-Deterministic standards stay fast and repeatable. Agent-judgment standards are used when structural checks are not enough to protect user/project alignment. User-approval standards are reserved for high-risk decisions where UX cost is justified.
+Kind-specific standards continue to enforce reproducibility for fixes, safety boundaries for hardening, observable outcomes for improvements, and preserved invariants/equivalence for migrations.
 
 ## Exit statuses
 
-- `continue`: same decision loop can add missing decisions, refs, KB propagation, or risk analysis.
-- `exit`: decision output is accepted and planning can consume it.
-- `route_back`: rare; used only when prior trace/source state needs observation before decision can continue.
-- `blocked`: user approval, product authority, or external context is missing.
+- `continue`: same Decision loop can refine Change meaning, evidence, Knowledge propagation, risk, or approval packet.
+- `exit`: exact revision is approved or receives an explicit terminal disposition.
+- `route_back`: current project observation is insufficient and must be refreshed before Decision can continue.
+- `blocked`: user/product authority, external evidence, or policy capability is missing.
 
-## Trace iteration data
+Planning consumes only exact approved Change revisions. Rejected, withdrawn, deferred, blocked, or non-exited revisions remain visible accountability facts but cannot create executable work.
 
-Decision iterations should record compact facts:
+## Trace output
 
 ```json
 {
-  "event": "changes_approved",
+  "event": "change_approved",
   "loop": "decision",
   "data": {
-    "iteration": 1,
-    "trigger": "user_request",
+    "iteration": 3,
+    "trigger": "user_approval",
+    "observedWorkStateDigest": "sha256:...",
     "output": {
-      "decisions": [],
-      "requirements": [],
-      "qualityStandards": [],
-      "kbPropagation": [],
-      "planningQuestions": []
+      "changeRevision": {},
+      "approval": {},
+      "knowledgeImpacts": [],
+      "qualityStandards": []
     },
     "exit": {
       "status": "exit",
@@ -178,19 +217,15 @@ Decision iterations should record compact facts:
 }
 ```
 
-## Route-back handling
+## Route-back
 
-When implementation or planning routes back to decision, the new decision iteration should:
-
-1. cite the route-back iteration ref;
-2. answer the exact question;
-3. update KB/decision facts if the answer changes intent;
-4. emit a new decision output;
-5. allow planning to revise work from the new accepted decision output.
+Planning or Implementation route-back cites the exact originating event and unmet authority. Decision appends a new iteration to the same Change Trace, preserves prior approved revisions, and either confirms existing intent, emits a superseding approved revision, blocks, or creates/recommends a linked new Change when accountable outcome changed materially.
 
 ## Related docs
 
+- [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
+- [Loop Contracts](loop-contracts.md)
 - [Planning Loop](planning-loop.md)
 - [Traces](traces.md)
 - [Knowledge](knowledge.md)

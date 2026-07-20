@@ -4,7 +4,7 @@ import {
 	buildCodewikiImplementationReview,
 	buildCodewikiWorkerAttempts,
 	isCommittedDashboardTrace,
-	projectSprintBoundary,
+	projectSprintPlan,
 } from "../../src/dashboard/state.ts";
 import { createWorkerObservation } from "../../src/runtime/worker-observation.ts";
 
@@ -37,8 +37,8 @@ const item = {
 };
 
 describe("dashboard lifecycle projection", () => {
-	it("projects the latest declared Sprint Knowledge boundary", () => {
-		const boundary = projectSprintBoundary([
+	it("projects the latest declared Sprint plan", () => {
+		const plan = projectSprintPlan([
 			{
 				type: "trace_event",
 				id: "decision-1",
@@ -46,25 +46,57 @@ describe("dashboard lifecycle projection", () => {
 				traceId: "TRACE-topics",
 				sequence: 1,
 				loop: "decision",
-				event: "changes_approved",
+				event: "change_approved",
 				refs: [".codewiki/kb/product/overview.md"],
 				createdAt: "2026-07-15T00:00:00.000Z",
 				data: {
 					output: {
-						sprintBoundary: {
-							accountableGoal: "Make Sprint Knowledge scope visible.",
-							knowledgeTopics: [
-								".codewiki/kb/product/overview.md",
-								".codewiki/kb/system/components/traces.md",
-							],
-							dependencies: ["CHG-next"],
-							rollbackBoundary: "Revert projection and contract together.",
+						changeRecord: {
+							change: {
+								knowledge: {
+									topicRefs: [
+										".codewiki/kb/product/overview.md",
+										".codewiki/kb/product/DESIGN.md",
+										".codewiki/kb/system/components/traces.md",
+									],
+								},
+							},
 						},
 					},
 				},
 			},
+			{
+				type: "trace_event",
+				id: "planning-1",
+				parentId: "decision-1",
+				traceId: "TRACE-topics",
+				sequence: 2,
+				loop: "planning",
+				event: "work_units_created",
+				refs: [],
+				createdAt: "2026-07-15T00:01:00.000Z",
+				data: {
+					output: {
+						sprints: [
+							{
+								goal: "Make Sprint Knowledge scope visible.",
+								preview: {
+									profileId: "web",
+									profileDigest: `sha256:${"a".repeat(64)}`,
+									required: true,
+									activation: "implementation",
+									autoOpen: "once_per_trace",
+									evidenceViewports: ["desktop", "mobile"],
+								},
+								dependsOn: ["CHG-next"],
+								rollbackBoundary: "Revert projection and contract together.",
+							},
+						],
+					},
+				},
+			},
 		]);
-		assert.deepEqual(boundary, {
+		assert.deepEqual(plan, {
 			accountableGoal: "Make Sprint Knowledge scope visible.",
 			knowledgeTopics: [
 				{
@@ -73,11 +105,24 @@ describe("dashboard lifecycle projection", () => {
 					label: "Overview",
 				},
 				{
+					ref: ".codewiki/kb/product/DESIGN.md",
+					category: "product",
+					label: "DESIGN",
+				},
+				{
 					ref: ".codewiki/kb/system/components/traces.md",
 					category: "system",
 					label: "Components / Traces",
 				},
 			],
+			preview: {
+				profileId: "web",
+				profileDigest: `sha256:${"a".repeat(64)}`,
+				required: true,
+				activation: "implementation",
+				autoOpen: "once_per_trace",
+				evidenceViewports: ["desktop", "mobile"],
+			},
 			dependencies: ["CHG-next"],
 			rollbackBoundary: "Revert projection and contract together.",
 		});

@@ -3,8 +3,8 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createSprintProposal } from "../../src/decision/proposal.ts";
+import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
 import { invalidTraceRefs } from "../../src/traces/refs.ts";
 import {
 	TraceAppendConflictError,
@@ -18,6 +18,7 @@ import {
 	createTraceHead,
 	formatTraceText,
 	parseTraceText,
+	readLastTraceRecord,
 	readTrace,
 	replayTrace,
 	traceFilePath,
@@ -42,7 +43,7 @@ function sampleRecords() {
 		traceId: head.traceId,
 		sequence: 1,
 		loop: "decision",
-		event: "changes_approved",
+		event: "change_approved",
 		refs: ["kb:system/components/traces.md", "src/traces/schema.ts"],
 		createdAt: "2026-06-11T00:00:01.000Z",
 		data: { changeId: "CHG-001" },
@@ -138,7 +139,7 @@ describe("trace JSONL core", () => {
 			"kb:system/components/traces.md",
 			"src/traces/schema.ts",
 		]);
-		assert.equal(traceHasEvent(records, "changes_approved"), true);
+		assert.equal(traceHasEvent(records, "change_approved"), true);
 		assert.deepEqual(traceRefs(records), [
 			"kb:system/components/traces.md",
 			"src/traces/schema.ts",
@@ -216,6 +217,10 @@ describe("trace JSONL core", () => {
 			assert.equal(first.previousBytes, 0);
 			assert.equal(second.previousBytes, first.nextBytes);
 			assert.equal(readBack.records.length, 2);
+			assert.deepEqual(
+				await readLastTraceRecord(join(root, traceFilePath(head.traceId))),
+				event,
+			);
 			await assert.rejects(
 				() => appendTraceRecord(root, event, first.nextBytes),
 				TraceAppendConflictError,
@@ -255,7 +260,7 @@ describe("trace JSONL core", () => {
 				createdAt: "2026-06-11T00:00:00.000Z",
 			});
 			const first = await appendTraceRecord(root, head, 0);
-			const proposal = createSprintProposal({
+			const changeInput = canonicalChangeInput({
 				id: "SP-loop-append",
 				createdAt: "2026-06-11T00:00:01.000Z",
 				updatedAt: "2026-06-11T00:00:01.000Z",
@@ -281,7 +286,7 @@ describe("trace JSONL core", () => {
 				run: ({ startSequence }) =>
 					runDecisionIteration({
 						traceId: head.traceId,
-						proposal,
+						changeInput,
 						startSequence,
 						createdAt: "2026-06-11T00:00:01.000Z",
 					}),
@@ -289,7 +294,7 @@ describe("trace JSONL core", () => {
 			const readBack = await readTrace(join(root, traceFilePath(head.traceId)));
 			const state = replayTrace(readBack.records);
 
-			assert.equal(result.iterationEvent.event, "changes_approved");
+			assert.equal(result.iterationEvent.event, "change_approved");
 			assert.equal(result.iterationEvent.sequence, 1);
 			assert.equal(result.append.records.length, 2);
 			assert.equal(state.events.at(-1)?.id, result.iterationEvent.id);
@@ -306,7 +311,7 @@ describe("trace JSONL core", () => {
 						run: ({ startSequence }) =>
 							runDecisionIteration({
 								traceId: head.traceId,
-								proposal,
+								changeInput,
 								startSequence,
 								createdAt: "2026-06-11T00:00:02.000Z",
 							}),

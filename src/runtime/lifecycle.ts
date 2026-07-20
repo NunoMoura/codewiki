@@ -545,8 +545,8 @@ function statusRefs(status: StatusView): string[] {
 function traceGoalRefs(trace: TraceGoalView): string[] {
 	return normalizeTraceRefs([
 		trace.traceId,
-		...trace.decisionRefs,
-		...trace.plannedDecisionRefs,
+		...trace.changeRefs,
+		...trace.plannedChangeRefs,
 		...trace.workUnitRefs,
 		...trace.pathScopes,
 		...(trace.lastEventId ? [trace.lastEventId] : []),

@@ -34,11 +34,20 @@ export function createLabChangeFeedback(
 		sourceRefs: input.evidenceRefs,
 		proofRefs: input.evidenceRefs,
 		userImpact: "Reviewed quality behavior may become more reliable.",
-		maintainerImpact: "Maintainers receive bounded candidate evidence for review.",
+		maintainerImpact:
+			"Maintainers receive bounded candidate evidence for review.",
+		knowledgeTopicRefs: [`kb:system/components/${input.loop}-loop.md`],
+		evidenceExpectations: [
+			"Independent confirmation and sealed quality gates pass.",
+		],
 		risk: "medium",
-		failureModes: ["Candidate evidence may not generalize beyond measured cases."],
-		successSignal: "Independent confirmation proves the reviewed behavior improvement.",
-		regressionPlan: "Run train, validation, confirmation, and sealed quality gates.",
+		failureModes: [
+			"Candidate evidence may not generalize beyond measured cases.",
+		],
+		successSignal:
+			"Independent confirmation proves the reviewed behavior improvement.",
+		regressionPlan:
+			"Run train, validation, confirmation, and sealed quality gates.",
 		effort: "medium",
 		workScale: "small",
 	};

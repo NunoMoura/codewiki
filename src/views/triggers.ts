@@ -22,7 +22,7 @@ interface TriggerProjection {
 	traceTitle?: string;
 	workUnitId: string;
 	planningRef: string;
-	decisionRefs: string[];
+	changeRefs: string[];
 	pathScopes: string[];
 	trigger: PlanningTrigger;
 	qualityBlockers: string[];
@@ -75,7 +75,14 @@ function triggerProjections(records: TraceRecord[]): TriggerProjection[] {
 						traceTitle: state.head.title,
 						workUnitId,
 						planningRef: iterationSubref(event, "work", workUnitId),
-						decisionRefs: stringList(item.decisionRefs),
+						changeRefs: unique([
+							...(text(item.owningChangeId)
+								? [`change:${text(item.owningChangeId)}`]
+								: []),
+							...stringList(item.contributingChangeIds).map(
+								(changeId) => `change:${changeId}`,
+							),
+						]),
 						pathScopes: stringList(item.pathScopes),
 						trigger,
 						qualityBlockers: readiness.ready ? [] : readiness.blockers,
@@ -150,7 +157,7 @@ function triggerView(
 		...(projection.traceTitle ? { traceTitle: projection.traceTitle } : {}),
 		workUnitId: projection.workUnitId,
 		planningRef: projection.planningRef,
-		decisionRefs: [...projection.decisionRefs],
+		changeRefs: [...projection.changeRefs],
 		pathScopes: [...projection.pathScopes],
 		trigger: projection.trigger,
 		enabledBy: enablement.refs,
@@ -161,7 +168,7 @@ function triggerView(
 		refs: unique([
 			projection.traceId,
 			projection.planningRef,
-			...projection.decisionRefs,
+			...projection.changeRefs,
 			...projection.pathScopes,
 			...projection.trigger.refs,
 			...enablement.refs,

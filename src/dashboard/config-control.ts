@@ -286,9 +286,7 @@ function assertOperationalBounds(config: WikiConfig): void {
 			`Dashboard configuration routes cannot exceed ${DASHBOARD_CONFIG_MODEL_MAXIMA.maxRoutes}.`,
 		);
 	}
-	if (
-		routing.maxEscalations > DASHBOARD_CONFIG_MODEL_MAXIMA.maxEscalations
-	) {
+	if (routing.maxEscalations > DASHBOARD_CONFIG_MODEL_MAXIMA.maxEscalations) {
 		throw badRequest(
 			`Dashboard configuration maxEscalations cannot exceed ${DASHBOARD_CONFIG_MODEL_MAXIMA.maxEscalations}.`,
 		);

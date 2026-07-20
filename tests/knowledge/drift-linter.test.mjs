@@ -81,7 +81,7 @@ describe("knowledge drift linter", () => {
 		const issues = lintKnowledgeDrift([
 			{
 				path: ".codewiki/kb/system/components/traces.md",
-				content: '{ "loop": "decision", "event": "decision.changes_approved" }',
+				content: '{ "loop": "decision", "event": "decision.change_approved" }',
 				scopes: ["product_documentation"],
 			},
 		]);

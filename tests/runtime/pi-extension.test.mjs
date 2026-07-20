@@ -34,10 +34,12 @@ import {
 	renderBootstrapCommand,
 } from "../../src/pi/tui/index.ts";
 import { shouldOpenAutomaticDashboard } from "../../src/pi/tui/footer.ts";
+import { changeTraceId } from "../../src/changes/change-trace.ts";
+import { changeContentDigest } from "../../src/changes/digest.ts";
+import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
+import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
-import { implementationQualityFields } from "../helpers/implementation-change.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function toolByName(pi, name) {
 	return pi.tools.find((candidate) => candidate.name === name);
@@ -122,89 +124,13 @@ async function fixture() {
 			"codewiki_generated_views:",
 			"  - .codewiki/views/status.json",
 			"codewiki_trace_events:",
-			"  - decision.changes_approved",
+			"  - decision.change_approved",
 			"---",
 			"# API",
 			"",
 		].join("\n"),
 	);
 	return root;
-}
-
-async function writeImplementationFixtureFiles(root) {
-	await mkdir(join(root, "src"), { recursive: true });
-	await mkdir(join(root, "tests"), { recursive: true });
-	await writeFile(
-		join(root, "src", "feature.ts"),
-		"export const feature = true;\n",
-	);
-	await writeFile(
-		join(root, "tests", "feature.test.mjs"),
-		"assert.ok(true);\n",
-	);
-}
-
-function nextSequence(events) {
-	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
-}
-
-function approvedDecisionRef(events) {
-	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.approvedChanges?.[0];
-	assert.ok(iteration);
-	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
-}
-
-function planningWorkRef(events, workUnitId = "WU-pi-preview") {
-	const iteration = events.find((event) => event.loop === "planning");
-	const item = iteration?.data?.output?.workItems?.find(
-		(candidate) => candidate.id === workUnitId,
-	);
-	assert.ok(iteration);
-	assert.ok(item);
-	return `trace:${iteration.id}#work:${item.id}`;
-}
-
-function workItemInput(decisionRef) {
-	return {
-		id: "WU-pi-preview",
-		title: "Preview Pi tool facade",
-		decisionRefs: [decisionRef],
-		outcome: "Pi tools preview semantic loop facades safely.",
-		...planningQualityFields(),
-		acceptance: ["Mocked Pi preview tests pass."],
-		componentRefs: ["pi"],
-		pathScopes: ["src/feature.ts"],
-		verification: ["tests/feature.test.mjs"],
-	};
-}
-
-function changeInput(planningRef) {
-	return {
-		id: "CH-pi-preview",
-		planningRefs: [planningRef],
-		codePaths: ["src/feature.ts"],
-		testPaths: ["tests/feature.test.mjs"],
-		checks: ["node --test tests/feature.test.mjs"],
-		checkResults: [
-			{
-				command: "node --test tests/feature.test.mjs",
-				status: "pass",
-				phase: "green",
-				criterionId: "AC-001",
-				outputRef: "tests/feature.test.mjs",
-			},
-		],
-		acceptanceEvidenceItems: [
-			{
-				criterionId: "AC-001",
-				summary: "Feature test passes.",
-				evidenceRefs: ["tests/feature.test.mjs"],
-			},
-		],
-		...implementationQualityFields(),
-	};
 }
 
 function assertToolResult(result, messagePattern) {
@@ -455,7 +381,11 @@ describe("Pi extension adapter", () => {
 		assert.match(result.systemPrompt, /base prompt/);
 		assert.match(result.systemPrompt, /CodeWiki Pi guidance/);
 		assert.match(result.systemPrompt, /wiki_state/);
-		assert.match(result.systemPrompt, /wiki_decide/);
+		assert.match(result.systemPrompt, /runtimeReaction/);
+		assert.doesNotMatch(
+			result.systemPrompt,
+			/wiki_decide|wiki_plan|wiki_implement/,
+		);
 		assert.match(result.systemPrompt, /\/wiki/);
 		assert.match(result.systemPrompt, new RegExp(CODEWIKI_PROMPT_MARKER));
 
@@ -560,17 +490,13 @@ describe("Pi extension adapter", () => {
 					toolByName(pi, "wiki_plan").execute(
 						"tool-call-plan-append",
 						{
-							input: {
-								traceId: "TRACE-pi",
-								mode: "append",
-								expectedBytes: 0,
-							},
+							input: { mode: "append" },
 						},
 						undefined,
 						undefined,
 						{ cwd: root },
 					),
-				/wiki_plan append mode requires nextSequence >= 1\./,
+				/wiki_plan append mode requires expectedBytesByChangeId\./,
 			);
 			await assert.rejects(
 				() =>
@@ -588,33 +514,40 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("runs valid Pi tool previews without mutating trace files", async () => {
+	it("runs exact Change Decision preview without mutating trace files", async () => {
 		const root = await fixture();
 		try {
-			await writeImplementationFixtureFiles(root);
-			const tracePath = join(root, ".codewiki", "traces", "TRACE-pi.jsonl");
-			const before = await readFile(tracePath, "utf8");
 			const pi = mockPi();
 			codewikiExtension(pi.api);
 			const ctx = { cwd: join(root, "src") };
-
-			const decideTool = toolByName(pi, "wiki_decide");
-			const { changeAcceptance, sprintBoundary } = await seedChangeAcceptance(
+			const { record } = await seedChangeAcceptance(root, {
+				id: "CHG-pi-preview",
+			});
+			const changeTracePath = join(
 				root,
-				{
-					id: "CHG-pi-preview",
-					acceptedAt: "2026-06-17T00:00:01.000Z",
-				},
+				traceFilePath(changeTraceId(record.change.id)),
 			);
-			const decidedResult = await decideTool.execute(
+			const before = await readFile(changeTracePath, "utf8");
+			const workState = await buildProjectWorkState({ repoRoot: root });
+			const decidedResult = await toolByName(pi, "wiki_decide").execute(
 				"tool-call-decide-preview",
 				{
 					input: {
-						traceId: "TRACE-pi-preview",
+						repoRoot: root,
 						mode: "preview",
-						nextSequence: 1,
-						changeAcceptance,
-						sprintBoundary,
+						changeId: record.change.id,
+						expectedRevision: record.change.revision,
+						expectedChangeDigest: changeContentDigest(record.change),
+						expectedWorkStateDigest: workState.snapshotDigest,
+						expectedBytes: (await stat(changeTracePath)).size,
+						disposition: "approve",
+						rationale: "Approve exact Pi preview Change.",
+						authority: {
+							kind: "user",
+							actor: "user",
+							ref: "approval:user:pi-preview",
+						},
+						occurredAt: "2026-06-17T00:00:01.000Z",
 					},
 				},
 				undefined,
@@ -625,116 +558,11 @@ describe("Pi extension adapter", () => {
 				decidedResult,
 				/wiki_decide: completed preview run\./,
 			);
-			assert.equal(decided.iterationEvent.event, "changes_approved");
+			assert.equal(decided.report.exit.status, "exit");
+			assert.equal(decided.report.approval.changeId, undefined);
+			assert.equal(decided.event.event, "change_approved");
 			assert.equal(decided.append, undefined);
-
-			const decisionRef = approvedDecisionRef(decided.loopResult.traceEvents);
-			const planTool = toolByName(pi, "wiki_plan");
-			const plannedResult = await planTool.execute(
-				"tool-call-plan-preview",
-				{
-					input: {
-						traceId: "TRACE-pi-preview",
-						mode: "preview",
-						decisionEvents: decided.loopResult.traceEvents,
-						nextSequence: nextSequence(decided.loopResult.traceEvents),
-						createdAt: "2026-06-17T00:00:02.000Z",
-						workItemInputs: [workItemInput(decisionRef)],
-					},
-				},
-				undefined,
-				undefined,
-				ctx,
-			);
-			const planned = assertToolResult(
-				plannedResult,
-				/wiki_plan: completed preview run\./,
-			);
-			assert.equal(planned.iterationEvent.event, "work_units_created");
-			assert.equal(planned.append, undefined);
-
-			const resolvedPlanResult = await planTool.execute(
-				"tool-call-plan-resolution-preview",
-				{
-					input: {
-						traceId: "TRACE-pi-preview",
-						mode: "preview",
-						decisionEvents: decided.loopResult.traceEvents,
-						nextSequence: nextSequence(decided.loopResult.traceEvents),
-						createdAt: "2026-06-17T00:00:02.000Z",
-						resolutionInputs: [
-							{
-								decisionRef,
-								kind: "non-executable",
-								evidenceRefs: [decisionRef, "tests/feature.test.mjs"],
-								rationale: "Preview-only UX validation needs no work unit.",
-							},
-						],
-					},
-				},
-				undefined,
-				undefined,
-				ctx,
-			);
-			const resolvedPlan = assertToolResult(
-				resolvedPlanResult,
-				/wiki_plan: completed preview run\./,
-			);
-			assert.equal(resolvedPlan.loopResult.exit.route, "close");
-
-			const planningRef = planningWorkRef(planned.loopResult.traceEvents);
-			const implementTool = toolByName(pi, "wiki_implement");
-			const implementedResult = await implementTool.execute(
-				"tool-call-implement-preview",
-				{
-					input: {
-						traceId: "TRACE-pi-preview",
-						mode: "preview",
-						planningEvents: planned.loopResult.traceEvents,
-						nextSequence: nextSequence(planned.loopResult.traceEvents),
-						createdAt: "2026-06-17T00:00:03.000Z",
-						changeInputs: [changeInput(planningRef)],
-					},
-				},
-				undefined,
-				undefined,
-				ctx,
-			);
-			const implemented = assertToolResult(
-				implementedResult,
-				/wiki_implement: completed preview run\./,
-			);
-			assert.equal(implemented.iterationEvent.event, "evidence_accepted");
-			assert.equal(implemented.append, undefined);
-			assert.equal(implemented.snapshot.root, root);
-
-			const archiveTool = toolByName(pi, "wiki_archive");
-			const archiveResult = await archiveTool.execute(
-				"tool-call-archive-preview",
-				{
-					input: {
-						records: [
-							createTraceHead({
-								traceId: "TRACE-pi-preview",
-								title: "Pi preview trace",
-								createdAt: "2026-06-17T00:00:00.000Z",
-							}),
-							...decided.loopResult.traceRecords,
-						],
-						gitRestoreRef: "refs/codewiki/archive/TRACE-pi-preview",
-					},
-				},
-				undefined,
-				undefined,
-				ctx,
-			);
-			const archive = assertToolResult(
-				archiveResult,
-				/wiki_archive: completed preview run\./,
-			);
-			assert.equal(archive.stub.traceId, "TRACE-pi-preview");
-			assert.equal(archive.append, undefined);
-			assert.equal(await readFile(tracePath, "utf8"), before);
+			assert.equal(await readFile(changeTracePath, "utf8"), before);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}
@@ -1113,12 +941,18 @@ describe("Pi extension adapter", () => {
 						traceId: "TRACE-pi",
 						sequence: 1,
 						loop: "decision",
-						event: "changes_approved",
+						event: "change_approved",
 						refs: ["src/api/index.ts"],
 						createdAt: "2026-06-17T00:00:01.000Z",
 						data: {
 							output: {
-								approvedChanges: [{ id: "CHG-live-dashboard" }],
+								changeRecord: {
+									change: {
+										id: "CHG-live-dashboard",
+										intent: { desiredState: "Refresh dashboard state." },
+									},
+								},
+								decision: { disposition: "approve" },
 							},
 							exit: { status: "exit" },
 						},
@@ -1265,6 +1099,7 @@ describe("Pi extension adapter", () => {
 			assert.match(result.content[0].text, /wiki_state: all view/);
 			assert.match(result.content[0].text, /active work item/);
 			assert.deepEqual(result.details.result.traceIds, ["TRACE-pi"]);
+			assert.equal(result.details.result.runtimeReaction.status, "quiescent");
 			assert.equal(result.details.result.sourceOwners, undefined);
 
 			const focused = await tool.execute(
@@ -1277,6 +1112,7 @@ describe("Pi extension adapter", () => {
 			const focusedPayload = JSON.parse(
 				focused.content[0].text.split("\n").at(-1),
 			);
+			assert.equal(focusedPayload.runtimeReaction.status, "quiescent");
 			assert.equal(focusedPayload.traceId, "TRACE-pi");
 			assert.equal(focusedPayload.trace.traceId, "TRACE-pi");
 			assert.equal(typeof focusedPayload.append.expectedBytes, "number");

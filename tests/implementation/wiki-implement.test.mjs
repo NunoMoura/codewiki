@@ -5,9 +5,9 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
 import { collectPiWorkerResults } from "../../src/pi/worker-results.ts";
-import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createSprintProposal } from "../../src/decision/proposal.ts";
-import { runPlanningIteration } from "../../src/planning/iteration.ts";
+import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
+import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
 import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/work-unit-claims.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
@@ -22,10 +22,10 @@ import { implementationQualityFields } from "../helpers/implementation-change.mj
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.approvedChanges?.[0];
+	const change = iteration?.data?.output?.changeRecord?.change;
 	assert.ok(iteration);
 	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
+	return `change:${change.id}`;
 }
 
 function planningWorkRef(events, workUnitId = "WU-implement") {
@@ -55,7 +55,7 @@ async function fixture() {
 }
 
 function planningEvents(traceId) {
-	const proposal = createSprintProposal({
+	const changeInput = canonicalChangeInput({
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-11T00:00:01.000Z",
 		updatedAt: "2026-06-11T00:00:01.000Z",
@@ -73,10 +73,10 @@ function planningEvents(traceId) {
 	});
 	const decision = runDecisionIteration({
 		traceId,
-		proposal,
+		changeInput,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	});
-	const decisionRef = approvedDecisionRef(decision.traceEvents);
+	const changeRef = approvedDecisionRef(decision.traceEvents);
 	return runPlanningIteration({
 		traceId,
 		decisionEvents: decision.traceEvents,
@@ -86,7 +86,7 @@ function planningEvents(traceId) {
 			{
 				id: "WU-implement",
 				title: "Run wiki_implement",
-				decisionRefs: [decisionRef],
+				changeRefs: [changeRef],
 				outcome: "Implementation facade runs and appends safely.",
 				...planningQualityFields(),
 				acceptance: ["wiki_implement appends implementation iteration."],
@@ -134,69 +134,8 @@ describe("wiki_implement core facade", () => {
 		);
 		await assert.rejects(
 			() => runWikiImplement({ repoRoot: "/tmp", traceId: "TRACE-bad" }),
-			/requires planningEvents or direct implementation decisionEvents/,
+			/requires runtime-selected planningEvents/,
 		);
-	});
-
-	it("previews implementation directly from an approved decision route", async () => {
-		const root = await fixture();
-		try {
-			const traceId = "TRACE-wiki-implement-direct";
-			const proposal = createSprintProposal({
-				id: `${traceId}-DT`,
-				createdAt: "2026-06-11T00:00:01.000Z",
-				updatedAt: "2026-06-11T00:00:01.000Z",
-				changes: [
-					{
-						id: "CHG-implement-direct",
-						currentState:
-							"Small implementation fixes currently require planning.",
-						desiredState:
-							"Small scoped implementation fixes can skip planning safely.",
-						rationale:
-							"The direct route preserves traceability with lower ceremony.",
-						...decisionQualityFields(),
-						approval: "approved",
-						routeTarget: "implementation",
-						routeRationale:
-							"The change is low-risk, source-scoped, and has targeted checks.",
-						implementationMode: "targeted_checks",
-						directImplementationScope: {
-							pathScopes: ["src/feature.ts"],
-							verification: ["node --test tests/feature.test.mjs"],
-							acceptanceCriteria: [
-								{
-									id: "AC-001",
-									text: "Direct implementation evidence covers the decision.",
-								},
-							],
-						},
-						sourceRefs: ["kb:system/components/implementation-loop.md"],
-					},
-				],
-			});
-			const decision = runDecisionIteration({
-				traceId,
-				proposal,
-				createdAt: "2026-06-11T00:00:01.000Z",
-			});
-			const directRef = approvedDecisionRef(decision.traceEvents);
-			const result = await runWikiImplement({
-				repoRoot: root,
-				mode: "preview",
-				traceId,
-				decisionEvents: decision.traceEvents,
-				nextSequence: 5,
-				createdAt: "2026-06-11T00:00:02.000Z",
-				changeInputs: [changeInput(directRef)],
-			});
-
-			assert.equal(result.iterationEvent.event, "evidence_accepted");
-			assert.equal(result.loopResult.planningRefs[0], directRef);
-			assert.equal(result.loopResult.readyForClosure, true);
-		} finally {
-			await rm(root, { recursive: true, force: true });
-		}
 	});
 
 	it("routes implementation uncertainty back to decision", async () => {

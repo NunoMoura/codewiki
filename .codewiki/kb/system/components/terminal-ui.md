@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Pi Terminal and Dashboard UX
-description: CodeWiki uses the main Pi session for Change conversation while an automatically opened Work Pipeline dashboard projects lifecycle-first Change and Sprint Trace cards.
+description: CodeWiki uses the main Pi session for Change conversation while an automatically opened dashboard projects Change journeys, Planning-created Sprints, Work Items, Assignments, evidence, and guarded controls from WorkState.
 tags:
   - codewiki
   - system
@@ -13,7 +13,7 @@ timestamp: 2026-07-01T00:00:00Z
 
 CodeWiki keeps the main Pi session focused on user-agent communication. The conversation itself is the interaction workspace: the user and agent brainstorm possible Changes, persist useful candidates through `wiki_change`, validate exact revisions, and invoke `wiki_decide` without a persistent terminal widget competing for screen space. There is no separate Ideas Workspace.
 
-An eligible Pi TUI session automatically starts the local dashboard and opens its browser view once on initial process startup. The primary Work Pipeline projects mutable Backlog Changes and independently executing Sprint Traces through one shared Pipeline Card shell; this visual continuity never merges Change Store truth with trace truth. Configuration remains a secondary area exposing effective model, budget, autonomy, isolation, and runtime policy. The dashboard is a projection and guarded command surface over core APIs; it never owns workflow truth or writes source directly.
+An eligible Pi TUI session automatically starts the local dashboard and opens its browser view once on initial process startup. The primary Work Pipeline projects one card per Change journey, with attached Decision, Sprint, Work Item, Assignment, Implementation, Knowledge, file, preview, and outcome detail derived from WorkState. Configuration remains secondary. The dashboard is a projection and guarded command surface over core APIs; it never owns workflow truth or writes source directly.
 
 ## Automatic and command-triggered surfaces
 
@@ -29,13 +29,13 @@ Active command direction is intentionally small. Each command has one direct sla
 
 There is no separate public status command or state alias. `wiki_state` remains an internal agent read tool. The user-facing state surface is the automatically opened dashboard; `/wiki-dashboard` remains a reopen/recovery action rather than a prerequisite. Closing a browser tab leaves workflow truth untouched, the dashboard Close action or `/wiki-dashboard --stop` stops the local host, and a later `/wiki-dashboard` starts and reopens it. Allowed mutations still pass through guarded core capabilities rather than browser-owned state. `/wiki-resume` remains the high-frequency user continuation command.
 
-## Change-to-trace lifecycle
+## Change-to-outcome lifecycle
 
-The main session creates or refines mutable Changes in the Changes Backlog. Validation binds an exact Change revision and digest without creating a trace. When the user approves the exact Decision proposal and Decision Ready Checks pass, `wiki_decide` freezes the Change snapshot, creates the trace, and appends `decision.changes_approved` through the guarded runtime boundary.
+The main session explicitly persists useful intent through `wiki_change`. First persistence creates one Change Trace. Decision-loop iterations refine and validate complete semantic revisions in that trace. Exact user approval appends `decision.change_approved`; it does not create a Decision entity, Sprint, or second trace.
 
-Before acceptance, a proposed Change appears as a Backlog Pipeline Card. The resulting Sprint Trace replaces its linked Change card in the Work Pipeline and becomes independent from the main conversation; exact Change ids remain visible as lineage rather than duplicate cards. A trace-scoped runner performs Planning, coordinates parallel-safe Work Items and workers, integrates results, and runs authoritative Implementation validation. The user can continue brainstorming other Changes while one or more traces execute within configured concurrency, budget, isolation, and supervision limits.
+Before approval, the Change appears in the Changes Backlog view. After approval, the same Pipeline Card and Change identity continue through Planning and Implementation. Planning observes the relevant approved-Change portfolio and creates Sprints and Work Items. Runtime grants Assignments, coordinates workers/integration, and asks Implementation to accept or reject realization evidence. The main session may continue discussing other Changes while runtime remains supervised and event-driven.
 
-A Pipeline Card is a shared visual shell backed by either one mutable Change projection or one trace projection. It foregrounds the questions users ask most often:
+A Pipeline Card is one Change Journey projection. It foregrounds the questions users ask most often:
 
 - What is currently active?
 - How much work appears to remain?
@@ -43,21 +43,21 @@ A Pipeline Card is a shared visual shell backed by either one mutable Change pro
 - What are workers doing?
 - What is blocked?
 
-The parent progress rail contains five equal independent bars: Change orange, Decision yellow, Planning green, Implementation blue, and Committed teal. Each bar preserves its stage color and fills left-to-right from its own deterministic bounded progress. Unfilled space remains grey. A Sprint is complete only when all five bars are full. Red never replaces stage identity.
+The parent progress rail contains five equal independent bars: Change orange, Decision yellow, Planning green, Implementation blue, and Committed teal. Each bar preserves its stage color and fills left-to-right from bounded Change-level progress. Unfilled space remains grey. A Change journey is complete only when all required stages and outcome disposition are complete. Sprint progress remains an attached Planning/execution projection. Red never replaces stage identity.
 
 Stage text is visually hidden on the rail. Every bar exposes its name, state, and progress through hover/focus tooltip and accessible name. Started stages are interactive; future stages are disabled. Selecting a stage opens one attached detail container whose tag and outline use that stage color. Ready Checks live inside the selected stage. Overview, Knowledge Base, and Files remain Sprint-level panels outside stage ownership.
 
-Collapsed cards contain title, vertical-dot options, a current action line, the Sprint `+` primary action, and the parent rail. Non-zero active worker and Work Item facts may join the action line. Blocked work renders only as `✕ Blocked — reason`; it does not turn a stage red. Open detail, focus, filters, and controls survive periodic state refreshes.
+Collapsed cards contain title, vertical-dot options, a current action line, the Change `+` primary action, and the parent rail. Non-zero active Sprint, Work Item, and worker facts may join the action line. Blocked work renders only as `✕ Blocked — reason`; it does not turn a stage red. Open detail, focus, filters, and controls survive refreshes.
 
-Expanding a Sprint opens Trace Detail. Trace Detail shows title, current action, workers, Work Items, blockers, paths, Decision refs, Planning refs, work-unit refs, and bounded execution outcomes. The Sprint `+` action exposes exactly Resume, Change, and Resolve Blocker. When the optional in-process Pi bridge is attached, the dashboard submits an allowlisted trace-scoped user message to that same active session through `pi.sendUserMessage()`, using steering delivery while busy. It never creates an SDK or RPC session, never submits arbitrary prompts, and never treats delivery as semantic approval. Missing or stale bridges disable actions with an explanation.
+Expanding a Change opens Trace Detail. Trace Detail shows revisions, exact approval, Sprint memberships, Work Items, Assignments, blockers, paths, loop refs, evidence, outcome disposition, and current action. The Change `+` action exposes exactly Resume, Change, and Resolve Blocker. With the optional in-process Pi bridge, the dashboard submits an allowlisted Change-scoped user message to the same active session through `pi.sendUserMessage()`. It never creates another session, submits arbitrary prompts, or treats delivery as semantic approval.
 
-Change creates or reinforces a mutable Change linked to the Sprint. Only exact validation and accepted Decision authority may create a child amendment Sprint with `origin.kind: "amendment"` and `parentTraceId`. Retries, route-backs, and blocker remediation remain branches inside the original trace event tree.
+Change creates or reinforces intent in the current journey when accountable outcome remains stable; materially new intent creates a linked Change Trace. Retries, route-backs, and blocker remediation remain branches inside the original Change event tree.
 
-Each Sprint also exposes a generated topic-scoped Knowledge alignment state: Aligned, Review Needed, Misaligned, or Unknown. A relevant topic digest change yields Review Needed only. Misaligned requires an explicit grounded contradiction containing affected layer, source-of-truth refs, rationale, and recommended next semantic loop. Legacy or insufficiently grounded Sprints report Unknown. Topic filters and Sprint detail consume the same projection.
+Each Change exposes generated topic-scoped Knowledge alignment: Aligned, Review Needed, Misaligned, or Unknown. Digest change yields Review Needed only. Misaligned requires a grounded contradiction naming affected layer, source refs, rationale, and recommended loop. Topic filters, Change detail, and related Sprint views consume the same projection.
 
 ## Local dashboard host
 
-Initial Pi TUI `session_start` starts a local HTTP server bound to `127.0.0.1` with a random URL token and opens the browser once. Reload and session replacement restore the same endpoint without opening duplicate tabs. `/wiki-dashboard` uses the same start/reuse path for explicit reopen; an explicit Pi command may stop the host, but dashboard settings do not own host shutdown. The server exposes static browser assets, state and event streams for live refresh, and a narrow guarded command plane for allowed Change, configuration, supervised runtime-session, and same-session action delivery. It watches `.codewiki/traces` and the Changes Backlog ref, then rebuilds dashboard projections from core APIs.
+Initial Pi TUI `session_start` starts a local HTTP server bound to `127.0.0.1` with a random URL token and opens the browser once. Reload and session replacement restore the same endpoint without opening duplicate tabs. `/wiki-dashboard` uses the same start/reuse path for explicit reopen; an explicit Pi command may stop the host, but dashboard settings do not own host shutdown. The server exposes static browser assets, state and event streams for live refresh, and a narrow guarded command plane for allowed Change, configuration, supervised runtime-session, and same-session action delivery. It watches `.codewiki/traces`, relevant KB/config/source/Git signals, and runtime observations, then rebuilds WorkState-backed dashboard projections through core APIs.
 
 Security boundaries:
 
@@ -67,7 +67,7 @@ Security boundaries:
 - route any Change validation, configuration, or runtime-session command through guarded core APIs with exact same-origin capability checks, optimistic revision/digest or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction. Mutation requests must carry an exact `Origin`; when the dashboard's `no-referrer` response policy causes Chromium to omit `Origin`, the server accepts only the browser fallback pair of exact loopback `Host` and `Sec-Fetch-Site: same-origin`. Missing, foreign, or contradictory authority metadata fails closed;
 - do not enable CORS;
 - never grant dashboard shell, direct source-write, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority;
-- keep final Decision approval explicit and bound to the exact rendered proposal.
+- keep final Change approval explicit and bound to the exact rendered revision and digest.
 
 The visual style should be retro console inspired rather than pure ASCII: monospace layout, high-contrast neutral cards, branded stage color, and low-noise horizontal bars. The compact header has no title or filter-tile row: it vertically centers the logo beside one bounded-width persistent search field, an integrated lifecycle/topic scope picker with a smaller midpoint-teal count, a solid dark logo-blue Add Change CTA, and one settings control. Add Change and Sprint `+` use the same primary-action component. The control group is optically centered with equal visual gutters. Search applies only within the selected lifecycle or Product/System Knowledge topic scope, and `/` focuses the same field.
 
@@ -80,13 +80,14 @@ Bootstrap keeps rich command rendering because it runs before a project has usef
 The durable user-facing path is state-boundary driven:
 
 ```text
-main conversation -> wiki_change -> Backlog Pipeline Card
-validated Change -> wiki_decide -> linked Sprint Trace card
-trace append -> derived view -> stage rail / Trace Detail
-successful trace_close + Git restore ref -> Committed card
+main conversation -> wiki_change -> Change Trace + Backlog view
+exact Change approval -> same Change Journey advances
+Planning epoch -> Sprint and Work Item views
+Assignment/Implementation append -> realization progress
+successful trace_close + Git restore ref -> Committed Change
 ```
 
-Preview results are agent-private validation drafts. Only appended trace records should update post-bootstrap user observability.
+Semantic loop preview results are agent-private validation drafts. Only appended trace records should update post-bootstrap lifecycle observability. Live frontend preview is a separate operational browser capability: it may project health and explicitly captured implementation evidence, but it cannot grant semantic approval or append trace truth directly.
 
 `src/pi/tui/index.ts` is a pure renderer facade for command renderers plus the CodeWiki footer status and legacy card renderers. It may be imported by commands/tests without writing state or depending on the Pi SDK. The active progress surface is the dashboard; no terminal widget state may become workflow truth.
 

@@ -24,6 +24,8 @@ import {
 	type ReviewEvidenceSummary,
 } from "../implementation/review/index.ts";
 import type { TraceRecord } from "../traces/types.ts";
+import { buildWorkState } from "../work-state/projector.ts";
+import type { WorkState } from "../work-state/types.ts";
 import type {
 	TriggersView,
 	BlockersView,
@@ -88,6 +90,7 @@ export interface WikiStateReviewEvidenceView {
 
 export interface WikiStateSnapshot {
 	generatedAt?: string;
+	workState: WorkState;
 	traceIds: string[];
 	selectedTraceId?: string;
 	status?: StatusView;
@@ -107,6 +110,10 @@ export interface WikiStateSnapshot {
 }
 
 export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
+	const workState = buildWorkState({
+		records: input.records,
+		...(input.generatedAt ? { generatedAt: input.generatedAt } : {}),
+	});
 	const fold = foldProjectTraceRecords(input.records);
 	const selectedTraceId = selectTraceId(fold.traceIds, input.traceId);
 	const selectedRecords = selectedTraceId
@@ -147,6 +154,7 @@ export function buildWikiState(input: WikiStateInput): WikiStateSnapshot {
 	});
 	return {
 		generatedAt: input.generatedAt,
+		workState,
 		traceIds: fold.traceIds,
 		...(selectedTraceId ? { selectedTraceId } : {}),
 		...selected,

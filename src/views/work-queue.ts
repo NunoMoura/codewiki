@@ -1,4 +1,3 @@
-import { directImplementationDecisionsFromRecords } from "../decision/direct-implementation.ts";
 import type { PlanningTrigger } from "../planning/types.ts";
 import { foldProjectTraceRecords } from "../traces/project.ts";
 import { loopOutputEvents } from "../traces/queries.ts";
@@ -54,7 +53,7 @@ interface WorkUnitProjection {
 	traceId: string;
 	title: string;
 	traceRefs: string[];
-	decisionRefs: string[];
+	changeRefs: string[];
 	planningRefs: string[];
 	componentRefs: string[];
 	pathScopes: string[];
@@ -69,8 +68,8 @@ function decisionQueueItems(
 	records: TraceRecord[],
 	blockers: BlockerView[],
 ): WorkQueueItem[] {
-	const planningCoverage = plannedDecisionRefs(records);
-	return approvedChanges(records).flatMap((decision) => {
+	const planningCoverage = plannedChangeRefs(records);
+	return approvedChangeProjections(records).flatMap((decision) => {
 		const itemBlockers = blockersForRefs(blockers, decision.traceRefs);
 		if (
 			planningCoverage.has(decision.sourceEventId) &&
@@ -86,7 +85,7 @@ function decisionQueueItems(
 				traceId: decision.traceId,
 				title: decision.title,
 				traceRefs: decision.traceRefs,
-				decisionRefs: [decision.sourceEventId],
+				changeRefs: [decision.sourceEventId],
 				planningRefs: [],
 				componentRefs: [],
 				pathScopes: [],
@@ -134,7 +133,7 @@ function workUnitQueueItems(
 			traceId: item.traceId,
 			title: item.title,
 			traceRefs: item.traceRefs,
-			decisionRefs: item.decisionRefs,
+			changeRefs: item.changeRefs,
 			planningRefs: item.planningRefs,
 			componentRefs: item.componentRefs,
 			pathScopes: item.pathScopes,
@@ -185,22 +184,19 @@ function workUnitStatus(input: {
 	return "ready";
 }
 
-function plannedDecisionRefs(records: TraceRecord[]): Set<string> {
-	return new Set([
-		...loopOutputEvents(records, "planning")
+function plannedChangeRefs(records: TraceRecord[]): Set<string> {
+	return new Set(
+		loopOutputEvents(records, "planning")
 			.filter(planningIterationClaimable)
 			.flatMap((event) => [
 				...objectList(objectRecord(event.data?.output).workItems).flatMap(
-					(item) => stringList(item.decisionRefs),
+					workItemChangeRefs,
 				),
 				...objectList(objectRecord(event.data?.output).resolutions).map(
-					(resolution) => text(resolution.decisionRef),
+					(resolution) => text(resolution.changeRef),
 				),
 			]),
-		...directImplementationDecisionsFromRecords(records).map(
-			(direct) => direct.ref,
-		),
-	]);
+	);
 }
 
 function implementationRefsByPlanningRef(
@@ -335,22 +331,35 @@ function blockersForRefs(
 	);
 }
 
-function approvedChanges(records: TraceRecord[]): DecisionProjection[] {
+function approvedChangeProjections(
+	records: TraceRecord[],
+): DecisionProjection[] {
 	return loopOutputEvents(records, "decision")
 		.filter(loopIterationQualityComplete)
-		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).approvedChanges).map((change) => {
-				const id = text(change.id) || event.id;
-				const sourceEventId = iterationSubref(event, "change", id);
-				return {
-					id,
-					traceId: event.traceId,
-					title: text(change.desiredState) || text(change.question) || id,
-					traceRefs: unique([sourceEventId, event.id, ...event.refs]),
-					sourceEventId,
-				};
-			}),
-		);
+		.flatMap((event) => {
+			const output = objectRecord(event.data?.output);
+			const decision = objectRecord(output.decision);
+			const record = objectRecord(output.changeRecord);
+			const canonicalChange = objectRecord(record.change);
+			if (
+				text(decision.disposition) === "approve" &&
+				text(canonicalChange.id)
+			) {
+				const id = text(canonicalChange.id);
+				const intent = objectRecord(canonicalChange.intent);
+				const sourceEventId = `change:${id}`;
+				return [
+					{
+						id,
+						traceId: event.traceId,
+						title: text(intent.desiredState) || text(intent.question) || id,
+						traceRefs: unique([sourceEventId, event.id, ...event.refs]),
+						sourceEventId,
+					},
+				];
+			}
+			return [];
+		});
 }
 
 function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
@@ -362,7 +371,7 @@ function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
 				(item) => {
 					const id = text(item.id) || event.id;
 					const sourceEventId = iterationSubref(event, "work", id);
-					const decisionRefs = stringList(item.decisionRefs);
+					const changeRefs = workItemChangeRefs(item);
 					const pathScopes = stringList(item.pathScopes);
 					return {
 						id,
@@ -372,10 +381,10 @@ function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
 							sourceEventId,
 							event.id,
 							id,
-							...decisionRefs,
+							...changeRefs,
 							...pathScopes,
 						]),
-						decisionRefs,
+						changeRefs,
 						planningRefs: [sourceEventId],
 						componentRefs: stringList(item.componentRefs),
 						pathScopes,
@@ -388,27 +397,19 @@ function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
 				},
 			);
 		});
-	return [
-		...planned,
-		...directImplementationDecisionsFromRecords(records).map((direct) => ({
-			id: direct.id,
-			traceId: direct.traceId,
-			title: direct.title,
-			traceRefs: unique([
-				direct.ref,
-				direct.sourceEventId,
-				...direct.pathScopes,
-			]),
-			decisionRefs: direct.decisionRefs,
-			planningRefs: [direct.ref],
-			componentRefs: direct.componentRefs,
-			pathScopes: direct.pathScopes,
-			dependsOn: [],
-			qualityStandards: [],
-			qualityBlockers: [],
-			sourceEventId: direct.ref,
-		})),
-	];
+	return planned;
+}
+
+function workItemChangeRefs(item: Record<string, unknown>): string[] {
+	const owningChangeRef = text(item.owningChangeId)
+		? `change:${text(item.owningChangeId)}`
+		: "";
+	return unique([
+		...(owningChangeRef ? [owningChangeRef] : []),
+		...stringList(item.contributingChangeIds).map(
+			(changeId) => `change:${changeId}`,
+		),
+	]);
 }
 
 function planningIterationExited(event: TraceEvent): boolean {

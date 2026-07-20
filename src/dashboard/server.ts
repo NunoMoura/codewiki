@@ -36,6 +36,12 @@ import {
 	knowledgeTopicRefsFromRecords,
 	readKnowledgeTopicDigests,
 } from "../knowledge/topic-alignment.ts";
+import { openSystemBrowser } from "../preview/browser-adapter.ts";
+import {
+	parseDashboardPreviewCommand,
+	type DashboardPreviewControl,
+	unavailableDashboardPreviewControl,
+} from "../preview/dashboard-control.ts";
 import { readDevLog } from "../runtime/dev-log.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
 import {
@@ -74,6 +80,7 @@ export interface CodewikiDashboardServerOptions {
 	changeControl?: DashboardChangeControl;
 	configControl?: DashboardConfigControl;
 	sessionActionControl?: DashboardSessionActionControl;
+	previewControl?: DashboardPreviewControl;
 }
 
 export interface CodewikiDashboardServerHandle {
@@ -99,6 +106,7 @@ interface DashboardRuntime {
 	changeControl: DashboardChangeControl;
 	configControl: DashboardConfigControl;
 	sessionActionControl: DashboardSessionActionControl;
+	previewControl: DashboardPreviewControl;
 	lastSupervisedAt: number;
 	opened: boolean;
 	close(): Promise<void>;
@@ -442,6 +450,7 @@ async function startInProcessDashboardServer(
 		options.changeControl,
 		options.configControl,
 		options.sessionActionControl,
+		options.previewControl,
 	);
 	dashboards.set(options.repoRoot, runtime);
 	if (!(await dashboardEndpointServesState(runtime))) {
@@ -457,10 +466,7 @@ async function readDashboardEndpoint(
 	repoRoot: string,
 ): Promise<DashboardEndpoint | undefined> {
 	try {
-		const raw = await readFileWithLegacyFallback(
-			dashboardEndpointPath(repoRoot),
-			legacyDashboardEndpointPath(repoRoot),
-		);
+		const raw = await readFile(dashboardEndpointPath(repoRoot), "utf8");
 		const data = JSON.parse(raw) as Record<string, unknown>;
 		if (data.repoRoot !== repoRoot) return undefined;
 		if (typeof data.origin !== "string") return undefined;
@@ -477,18 +483,6 @@ async function readDashboardEndpoint(
 	} catch (error) {
 		if (isNotFound(error)) return undefined;
 		return undefined;
-	}
-}
-
-async function readFileWithLegacyFallback(
-	path: string,
-	legacyPath: string,
-): Promise<string> {
-	try {
-		return await readFile(path, "utf8");
-	} catch (error) {
-		if (!isNotFound(error)) throw error;
-		return await readFile(legacyPath, "utf8");
 	}
 }
 
@@ -513,10 +507,7 @@ async function ensurePrivateDashboardEndpointDirectory(): Promise<void> {
 }
 
 async function removeDashboardEndpoint(repoRoot: string): Promise<void> {
-	await Promise.all([
-		rm(dashboardEndpointPath(repoRoot), { force: true }),
-		rm(legacyDashboardEndpointPath(repoRoot), { force: true }),
-	]);
+	await rm(dashboardEndpointPath(repoRoot), { force: true });
 }
 
 function dashboardEndpoint(
@@ -548,11 +539,6 @@ function stableTmpDirectory(): string {
 function dashboardEndpointPath(repoRoot: string): string {
 	const key = createHash("sha256").update(repoRoot).digest("hex").slice(0, 32);
 	return join(dashboardEndpointDirectory(), `${key}.json`);
-}
-
-function legacyDashboardEndpointPath(repoRoot: string): string {
-	const key = createHash("sha256").update(repoRoot).digest("hex").slice(0, 32);
-	return join(tmpdir(), "codewiki-dashboard", `${key}.json`);
 }
 
 async function dashboardEndpointIsCurrent(
@@ -632,6 +618,7 @@ async function createDashboardRuntime(
 	providedChangeControl?: DashboardChangeControl,
 	providedConfigControl?: DashboardConfigControl,
 	providedSessionActionControl?: DashboardSessionActionControl,
+	providedPreviewControl?: DashboardPreviewControl,
 ): Promise<DashboardRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
@@ -668,6 +655,8 @@ async function createDashboardRuntime(
 			unavailableReason:
 				"Sprint actions require an active in-process Pi session bridge.",
 		});
+	const previewControl =
+		providedPreviewControl || unavailableDashboardPreviewControl();
 	runtime = {
 		repoRoot,
 		server,
@@ -679,6 +668,7 @@ async function createDashboardRuntime(
 		changeControl,
 		configControl,
 		sessionActionControl,
+		previewControl,
 		lastSupervisedAt: Date.now(),
 		opened: false,
 		close: () => closeRuntime(runtime),
@@ -774,6 +764,15 @@ async function routeAuthorizedGet(
 		writeJson(response, 200, await runtime.configControl.status());
 		return true;
 	}
+	if (url.pathname === "/api/previews") {
+		const traceFiles = await readProjectTraceFiles(runtime.repoRoot);
+		writeJson(
+			response,
+			200,
+			await runtime.previewControl.status(traceFiles.records),
+		);
+		return true;
+	}
 	if (url.pathname === "/api/trace-hosts") {
 		runtime.lastSupervisedAt = Date.now();
 		writeJson(response, 200, await runtime.traceHostControl.status());
@@ -810,6 +809,7 @@ async function routeAuthorizedPost(
 		url.pathname !== "/api/changes/commands" &&
 		url.pathname !== "/api/configuration/commands" &&
 		url.pathname !== "/api/session-actions/commands" &&
+		url.pathname !== "/api/previews/commands" &&
 		url.pathname !== "/api/shutdown"
 	) {
 		return false;
@@ -836,6 +836,19 @@ async function routeAuthorizedPost(
 			response,
 			200,
 			await runtime.sessionActionControl.execute(command),
+		);
+		scheduleBroadcast(runtime);
+		return true;
+	}
+	if (url.pathname === "/api/previews/commands") {
+		const traceFiles = await readProjectTraceFiles(runtime.repoRoot);
+		writeJson(
+			response,
+			200,
+			await runtime.previewControl.execute(
+				parseDashboardPreviewCommand(command),
+				traceFiles.records,
+			),
 		);
 		scheduleBroadcast(runtime);
 		return true;
@@ -941,12 +954,14 @@ async function readDashboardState(
 		),
 	]);
 	const devLogByTrace = new Map(devLogEntries);
+	const previews = await runtime.previewControl.status(traceFiles.records);
 	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {
 		devLogByTrace,
 		knowledgeTopicDigests,
 		changes: await runtime.changeControl.status(),
 		configuration: await runtime.configControl.status(),
 		sessionActions: runtime.sessionActionControl.status(),
+		previews: [...previews],
 	});
 }
 
@@ -1065,28 +1080,7 @@ function dashboardHandle(
 }
 
 function openBrowser(url: string): boolean {
-	const command = browserCommand(url);
-	if (!command) return false;
-	try {
-		const child = spawn(command.command, command.args, {
-			detached: true,
-			stdio: "ignore",
-		});
-		child.unref();
-		return true;
-	} catch {
-		return false;
-	}
-}
-
-function browserCommand(
-	url: string,
-): { command: string; args: string[] } | undefined {
-	if (process.platform === "darwin") return { command: "open", args: [url] };
-	if (process.platform === "win32") {
-		return { command: "cmd", args: ["/c", "start", "", url] };
-	}
-	return { command: "xdg-open", args: [url] };
+	return openSystemBrowser(url);
 }
 
 function isAddressInUse(error: unknown): boolean {

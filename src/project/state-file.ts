@@ -1,11 +1,11 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { buildWikiState, type WikiStateSnapshot } from "../api/state.ts";
 import {
 	defaultReviewEvidenceCache,
 	type ReviewEvidenceCacheReader,
 } from "../implementation/review/index.ts";
-import { parseTraceText } from "../traces/reader.ts";
+import { readTraceFileSnapshot } from "../traces/reader.ts";
 import { isTraceId } from "../traces/schema.ts";
 import type { TraceRecord } from "../traces/types.ts";
 
@@ -37,7 +37,8 @@ export async function buildProjectWikiState(
 export async function readProjectTraceRecords(
 	repoRoot: string,
 ): Promise<TraceRecord[]> {
-	return (await readProjectTraceFiles(repoRoot)).records;
+	const snapshot = await readProjectTraceFiles(repoRoot);
+	return snapshot.records;
 }
 
 export interface ProjectTraceFiles {
@@ -60,13 +61,12 @@ export async function readProjectTraceFiles(
 		files
 			.filter((file) => file.endsWith(".jsonl"))
 			.filter((file) => isTraceId(file.slice(0, -".jsonl".length)))
-			.sort()
+			.sort((left, right) => left.localeCompare(right))
 			.map(async (file) => {
-				const text = await readFile(join(tracesDir, file), "utf8");
-				const records = parseTraceText(text);
+				const snapshot = await readTraceFileSnapshot(join(tracesDir, file));
 				return {
-					records,
-					expectedBytes: Buffer.byteLength(text, "utf8"),
+					records: snapshot.records,
+					expectedBytes: snapshot.bytes,
 				};
 			}),
 	);

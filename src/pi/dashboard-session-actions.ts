@@ -25,6 +25,6 @@ export function createPiDashboardSessionActionControl(
 			},
 		},
 		unavailableReason:
-			"Sprint actions require an active in-process Pi session with sendUserMessage support.",
+			"Change actions require an active in-process Pi session with sendUserMessage support.",
 	});
 }

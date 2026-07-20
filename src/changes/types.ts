@@ -1,4 +1,4 @@
-export const CHANGE_SCHEMA_VERSION = 1;
+export const CHANGE_SCHEMA_VERSION = 2;
 
 export const CHANGE_STATUS_VALUES = [
 	"pending",
@@ -96,9 +96,8 @@ export interface ChangeIntent {
 	currentState: string;
 	desiredState: string;
 	rationale: string;
-	currentPain?: string;
-	desiredOutcome?: string;
 	nonGoals: string[];
+	alternatives: string[];
 }
 
 export interface ChangeClassification {
@@ -124,13 +123,30 @@ export interface ChangeEvidence {
 	targetBehavior?: string;
 }
 
+export interface ChangeKnowledgeImpact {
+	topicRefs: string[];
+	propagationRefs: string[];
+	noImpactRationale?: string;
+}
+
+export interface ChangeOutcomeContract {
+	successSignals: string[];
+	evidenceExpectations: string[];
+}
+
+export interface ChangeDeliveryConstraints {
+	constraints: string[];
+	planningQuestions: string[];
+}
+
 export interface ChangeSafety {
 	risk: ChangeRisk;
-	invariant?: string;
+	invariants: string[];
 	safetyBoundary?: string;
 	failureModes: string[];
 	rollbackPlan?: string;
 	negativeTestPlan?: string;
+	regressionPlan?: string;
 }
 
 export interface ChangeValidationIssue {
@@ -160,8 +176,6 @@ export interface ChangeValidation {
 	issues: ChangeValidationIssue[];
 	assessments: ChangeAssessment[];
 	recommendations: ChangeRecommendation[];
-	successSignal?: string;
-	regressionPlan?: string;
 	validatorVersion?: string;
 	validatedRevision?: number;
 	validatedDigest?: string;
@@ -207,6 +221,9 @@ export interface Change {
 	intent: ChangeIntent;
 	classification: ChangeClassification;
 	impact: ChangeImpact;
+	knowledge: ChangeKnowledgeImpact;
+	outcome: ChangeOutcomeContract;
+	delivery: ChangeDeliveryConstraints;
 	evidence: ChangeEvidence;
 	safety: ChangeSafety;
 	validation: ChangeValidation;

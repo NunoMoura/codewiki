@@ -26,13 +26,14 @@ export function buildPipelineTrace(
 		iteration: 1,
 		trigger: input.userIntent,
 		output: {
-			approvedChanges: [
-				{
+			changeRecord: {
+				change: {
 					id: input.decision.changeId,
-					refs: input.decision.refs,
+					evidence: { sourceRefs: input.decision.refs },
 					facts: input.decision.facts,
 				},
-			],
+			},
+			decision: { disposition: "approve" },
 		},
 		exit: {
 			status: "exit",
@@ -61,7 +62,7 @@ export function buildPipelineTrace(
 		output: {
 			workItems: input.planning.workItems.map((workItem) => ({
 				id: workItem.id,
-				decisionRefs: workItem.decisionRefs,
+				changeRefs: workItem.changeRefs,
 				pathScopes: workItem.pathScopes,
 				acceptanceCriteria: workItem.acceptanceCriteria,
 				facts: workItem.facts,

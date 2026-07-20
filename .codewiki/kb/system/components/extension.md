@@ -51,11 +51,11 @@ The CodeWiki package exposes a future Pi extension for external package installs
 
 Target Pi integration lives under `src/pi/**` and exposes terminal-first commands, tools, prompt assets, and TUI views through thin adapter registrations over the core facades. Pi is the primary host adapter, not the CodeWiki core; core source must not import the Pi SDK directly.
 
-The target CodeWiki OS still needs a small internal model-facing `wiki_*` tool set: `wiki_state`, `wiki_config`, `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive`. Runtime coordination is host/backend plumbing over core APIs, not a normal agent tool. The user-facing slash surface is direct `/wiki-*` commands: `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi TUI session starts and opens the Work Pipeline dashboard automatically once; `/wiki-dashboard` reopens or recovers it, and `/wiki-dashboard --stop` stops its local host. The older grouped namespace command and former state alias are removed from public UX. The CLI may remain a temporary development/test harness, but normal agents should use Pi-owned tools and commands once enabled.
+The target CodeWiki OS keeps `wiki_state`, `wiki_change`, and `wiki_config` normally active. Decision, Planning, and Implementation adapters remain registered semantic hosts, but `RuntimeReactor` derives WorkState and uses Pi active-tool routing to expose at most the selected loop. Archive and runtime coordination remain backend capabilities, not normal model-active tools. The user-facing slash surface is `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi TUI session starts and opens the Work Pipeline dashboard automatically once; `/wiki-dashboard` reopens or recovers it, and `/wiki-dashboard --stop` stops its local host. No grouped namespace command or former state alias exists. The CLI remains a temporary development/test harness.
 
 CodeWiki is not published to the npm registry yet. Its selected registry identity is `@nunomoura/codewiki`, while package metadata keeps `"private": true` so npm refuses publication during stabilization. Distribution testing packs the candidate and installs it only into disposable external projects with isolated Pi settings. The source checkout contains canonical KB, source, tests, and Git history but no active dogfood trace or Changes state. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default in consuming projects; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
 
-Mocked extension tests cover the intended package surface: the small `wiki_*` tool set, direct `/wiki-*` slash commands, pure TUI renderers, and a prompt-guidance hook. Prompt guidance is additive system-prompt context only; it must not create workflow truth or replace explicit tool/trace evidence.
+Mocked extension tests cover registered capabilities, runtime-selected active-tool routing, direct `/wiki-*` slash commands, pure TUI renderers, and prompt guidance. Prompt guidance is additive context only; it must not choose a semantic loop, create workflow truth, or replace explicit trace evidence.
 
 `npm run test:pi-install` is the reproducible install smoke. It packs CodeWiki, installs the tarball into a temp npm prefix, installs that package through Pi with temp `PI_CODING_AGENT_DIR`/session dirs, and verifies Pi can resolve the package without writing repo-local or global Pi settings.
 
@@ -90,8 +90,7 @@ failure paths through installed package artifacts.
 
 ## Production readiness gates
 
-Supported now: project-local packed/local package installs and supervised `/wiki-*` and model-facing `wiki_*` flows in disposable external test projects, guarded expected-byte/sequence mutation, and external sandbox compatibility. Runtime backend APIs support host coordination but are not exposed
-as a normal agent tool. Gated before production automation: public npm publish,
+Supported now: project-local packed/local package installs, runtime-routed semantic adapters in disposable external test projects, guarded expected-byte/sequence mutation, and external sandbox compatibility. Runtime backend APIs support host coordination but are not exposed as a normal agent tool. Gated before production automation: public npm publish,
 unattended runtime worker start, auto-merge, auto-publish, global/user installs
 for normal mutation, and treating worker completion as truth without implementation preview.
 

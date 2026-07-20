@@ -3,10 +3,10 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createSprintProposal } from "../../src/decision/proposal.ts";
-import { runPlanningIteration } from "../../src/planning/iteration.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
+import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { createPiProcessSessionFactory } from "../../src/pi/process-session.ts";
 import { readDevLog } from "../../src/runtime/dev-log.ts";
 import {
@@ -85,8 +85,7 @@ function withWorkerExecutionConfig(config = {}) {
 		...config,
 		runtime: {
 			...(config.runtime || {}),
-			modelRouting:
-				config.runtime?.modelRouting || TEST_WORKER_MODEL_ROUTING,
+			modelRouting: config.runtime?.modelRouting || TEST_WORKER_MODEL_ROUTING,
 			budgets: {
 				maxSeconds: 120,
 				maxIterations: 1,
@@ -129,7 +128,7 @@ function queue(pathScope = "src/runtime/a.ts") {
 				traceId: "TRACE-host-runner",
 				title: "Host runner work",
 				traceRefs: ["TRACE-host-runner:planning:work:1"],
-				decisionRefs: ["TRACE-host-runner:decision:change:1"],
+				changeRefs: ["TRACE-host-runner:decision:change:1"],
 				planningRefs: ["TRACE-host-runner:planning:work:1"],
 				componentRefs: ["runtime"],
 				pathScopes: [pathScope],
@@ -253,7 +252,7 @@ function planningEventsForHostOnce(traceId, options = {}) {
 	const workUnitId = options.workUnitId || "WU-host-once";
 	const sourcePath = options.sourcePath || "src/feature.ts";
 	const testPath = options.testPath || "tests/feature.test.mjs";
-	const proposal = createSprintProposal({
+	const changeInput = canonicalChangeInput({
 		id: `${traceId}-DT`,
 		createdAt: "2026-06-15T00:00:01.000Z",
 		updatedAt: "2026-06-15T00:00:01.000Z",
@@ -271,10 +270,10 @@ function planningEventsForHostOnce(traceId, options = {}) {
 	});
 	const decision = runDecisionIteration({
 		traceId,
-		proposal,
+		changeInput,
 		createdAt: "2026-06-15T00:00:01.000Z",
 	});
-	const decisionRef = approvedDecisionRef(decision.traceEvents);
+	const changeRef = approvedDecisionRef(decision.traceEvents);
 	return runPlanningIteration({
 		traceId,
 		decisionEvents: decision.traceEvents,
@@ -284,7 +283,7 @@ function planningEventsForHostOnce(traceId, options = {}) {
 			{
 				id: workUnitId,
 				title: "Run host once",
-				decisionRefs: [decisionRef],
+				changeRefs: [changeRef],
 				outcome: "Host one-shot starts worker and previews release readiness.",
 				...planningQualityFields(),
 				acceptance: [
@@ -300,10 +299,10 @@ function planningEventsForHostOnce(traceId, options = {}) {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.approvedChanges?.[0];
+	const change = iteration?.data?.output?.changeRecord?.change;
 	assert.ok(iteration);
 	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
+	return `change:${change.id}`;
 }
 
 function planningWorkRef(events, workUnitId = "WU-host-once") {
@@ -788,8 +787,8 @@ describe("runtime host one-shot execution", () => {
 				/execution policy changed/,
 			);
 			assert.equal(
-				(await readTrace(join(fixture.root, traceFilePath(fixture.traceId)))).records
-					.length,
+				(await readTrace(join(fixture.root, traceFilePath(fixture.traceId))))
+					.records.length,
 				1,
 			);
 		} finally {

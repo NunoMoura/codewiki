@@ -1,11 +1,15 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
 import { runWikiDecide } from "../../src/api/wiki-decide.ts";
+import { changeTraceId } from "../../src/changes/change-trace.ts";
+import { changeContentDigest } from "../../src/changes/digest.ts";
+import { traceFilePath } from "../../src/traces/schema.ts";
+import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import {
 	LOOP_QUALITY_JUDGE_PROMPT_VERSION,
 	buildLoopQualityJudgePrompt,
@@ -40,7 +44,14 @@ async function withJudgeServer(handler, run) {
 			body += chunk;
 		});
 		request.on("end", () => {
-			const payload = JSON.parse(body || "{}");
+			let payload;
+			try {
+				payload = JSON.parse(body || "{}");
+			} catch {
+				response.writeHead(400, { "content-type": "application/json" });
+				response.end(JSON.stringify({ error: "invalid JSON" }));
+				return;
+			}
 			calls.push(payload);
 			const result = handler(payload);
 			response.writeHead(200, { "content-type": "application/json" });
@@ -114,68 +125,46 @@ describe("loop quality judge provider", () => {
 		assert.match(prompt.user, /scoreThreshold/);
 	});
 
-	it("injects env-configured judge into production wiki_decide attempts", async () => {
+	it("keeps exact Change approval deterministic without a judge transport call", async () => {
 		await withJudgeServer(
-			(payload) => ({
-				verdicts: payload.requests.map((request) => ({
-					standardId: request.standardId,
-					status:
-						request.standardId === "intention_validated" ? "fail" : "pass",
-					message: `judge verdict for ${request.standardId}`,
-					repair: "Strengthen the agent assessment evidence.",
-					confidence: 0.8,
-					score: request.standardId === "intention_validated" ? 41 : 95,
-				})),
-			}),
+			() => ({ verdicts: [] }),
 			async ({ endpoint, calls }) => {
 				process.env.CODEWIKI_LOOP_QUALITY_JUDGE_URL = endpoint;
-				process.env.CODEWIKI_LOOP_QUALITY_JUDGE_PROMPT_VERSION =
-					"judge.test.v1";
 				const root = await mkdtemp(join(tmpdir(), "codewiki-judge-provider-"));
-				const { changeAcceptance, sprintBoundary } = await seedChangeAcceptance(
-					root,
-					{
-						id: "CHG-judge-provider",
-						currentState: "Decision loop judge provider is not configured.",
-						desiredState:
-							"Decision loop judge provider can independently review agent assessment.",
-						rationale:
-							"Independent review reduces false-pass risk without requiring a model by default.",
-						sourceRefs: ["kb:system/components/loop-contracts.md"],
-					},
-				);
+				const { record } = await seedChangeAcceptance(root, {
+					id: "CHG-judge-provider",
+					currentState:
+						"Decision approval could require a redundant judge call.",
+					desiredState:
+						"Exact Change evidence drives deterministic approval quality.",
+					rationale:
+						"Avoiding redundant judge calls reduces latency and token use.",
+					sourceRefs: ["kb:system/components/loop-contracts.md"],
+				});
+				const workState = await buildProjectWorkState({ repoRoot: root });
 				const result = await runWikiDecide({
 					repoRoot: root,
 					mode: "preview",
-					traceId: "TRACE-judge-provider",
-					nextSequence: 1,
-					changeAcceptance,
-					sprintBoundary,
+					changeId: record.change.id,
+					expectedRevision: record.change.revision,
+					expectedChangeDigest: changeContentDigest(record.change),
+					expectedWorkStateDigest: workState.snapshotDigest,
+					expectedBytes: (
+						await stat(
+							join(root, traceFilePath(changeTraceId(record.change.id))),
+						)
+					).size,
+					disposition: "approve",
+					rationale: "Approve exact validated Change revision.",
+					authority: {
+						kind: "user",
+						actor: "user",
+						ref: "approval:user:judge-provider",
+					},
 				});
 
-				assert.equal(
-					calls.length,
-					1,
-					JSON.stringify(result.loopResult.exit.issues),
-				);
-				assert.match(calls[0].prompt.user, /CHG-judge-provider/);
-				assert.deepEqual(
-					calls[0].requests.map((request) => request.standardId),
-					[
-						"intention_validated",
-						"decision_semantically_sufficient",
-						"cost_tradeoff_plausible",
-						"risk_tier_plausible",
-					],
-				);
-				assert.equal(result.loopResult.exit.verdict, "fail");
-				assert.equal(result.loopResult.readyForPlanning, false);
-				const node = result.loopResult.exit.qualityRunner.nodes.find(
-					(candidate) => candidate.id === "intention_validated",
-				);
-				assert.equal(node.judge.status, "fail");
-				assert.equal(node.judge.promptVersion, "judge.test.v1");
-				assert.equal(node.judge.score, 41);
+				assert.equal(calls.length, 0);
+				assert.equal(result.report.exit.status, "exit");
 				await rm(root, { recursive: true, force: true });
 			},
 		);

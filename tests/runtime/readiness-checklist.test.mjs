@@ -2,10 +2,16 @@ import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { DECISION_LOOP_QUALITY_PACK } from "../../src/decision/loop.ts";
+import {
+	DECISION_CHANGE_GRAPH_HASH,
+	DECISION_CHANGE_QUALITY_STANDARDS,
+} from "../../src/decision/change-quality.ts";
 import { IMPLEMENTATION_LOOP_QUALITY_PACK } from "../../src/implementation/loop.ts";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../../src/index.ts";
-import { PLANNING_LOOP_QUALITY_PACK } from "../../src/planning/loop.ts";
+import {
+	PLANNING_PORTFOLIO_GRAPH_HASH,
+	PLANNING_PORTFOLIO_QUALITY_STANDARDS,
+} from "../../src/planning/portfolio-quality.ts";
 import { assertValidTraceRecord } from "../../src/traces/schema.ts";
 import {
 	formatKnowledgeDriftIssues,
@@ -146,9 +152,9 @@ describe("install readiness checklist", () => {
 		assert.equal(CODEWIKI_PROMPT_GUIDELINES.length <= 4, true);
 		assert.equal(prompt.length < 900, true);
 		assert.match(prompt, /internal wiki_state/);
-		assert.match(prompt, /wiki_decide/);
-		assert.match(prompt, /wiki_plan/);
-		assert.match(prompt, /wiki_implement/);
+		assert.match(prompt, /runtimeReaction/);
+		assert.doesNotMatch(prompt, /wiki_decide|wiki_plan|wiki_implement/);
+		assert.match(prompt, /\.codewiki\/kb\/product\/DESIGN\.md/);
 		assert.doesNotMatch(prompt, /wiki_runtime/);
 		assert.doesNotMatch(prompt, /wiki_config/);
 		assert.doesNotMatch(prompt, /wiki_archive/);
@@ -175,12 +181,12 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("keeps production quality packs immutable and documents lab authority", () => {
-		for (const pack of [
-			DECISION_LOOP_QUALITY_PACK,
-			PLANNING_LOOP_QUALITY_PACK,
-			IMPLEMENTATION_LOOP_QUALITY_PACK,
-		]) {
+	it("keeps production quality definitions immutable and documents lab authority", () => {
+		assert.match(DECISION_CHANGE_GRAPH_HASH, /^sha256:[a-f0-9]{64}$/);
+		assert.match(PLANNING_PORTFOLIO_GRAPH_HASH, /^sha256:[a-f0-9]{64}$/);
+		assert.equal(DECISION_CHANGE_QUALITY_STANDARDS.length > 0, true);
+		assert.equal(PLANNING_PORTFOLIO_QUALITY_STANDARDS.length > 0, true);
+		for (const pack of [IMPLEMENTATION_LOOP_QUALITY_PACK]) {
 			assert.equal(pack.authority, "kernel");
 			assert.equal(pack.rollout, "enforce");
 			assert.equal(pack.id.startsWith("codewiki."), true);
@@ -302,11 +308,11 @@ describe("install readiness checklist", () => {
 		assert.match(knowledgeDoc, /OKF v0\.1 markdown\/frontmatter bundle/);
 		assert.match(
 			knowledgeDoc,
-			/trace JSONL under `\.codewiki\/traces\/TRACE-\*\.jsonl`/,
+			/durable workflow truth remains JSONL under `\.codewiki\/traces\/TRACE-\*\.jsonl`/,
 		);
 		assert.match(
 			knowledgeDoc,
-			/Sprints Queue and Sprint Trace output is a read-only projection/,
+			/Sprint, Work Pipeline, queue, and Change Journey screens are WorkState-backed projections/,
 		);
 		assert.match(
 			knowledgeDoc,
@@ -391,7 +397,7 @@ describe("install readiness checklist", () => {
 			assert.match(content, /new explicit .*decision/i);
 			assert.match(content, /historical .*grant no authority/i);
 		}
-		assert.match(loopContracts, /fast edit feedback is never enough/);
+		assert.match(loopContracts, /fast edit feedback is never enough/i);
 		assert.match(loopContracts, /Pi-tool autoload uses only/);
 	});
 
@@ -416,27 +422,24 @@ describe("install readiness checklist", () => {
 			".codewiki/kb/system/components/implementation-loop.md",
 			"utf8",
 		);
-		assert.match(loopContracts, /Planning .*trace-queue/i);
-		assert.match(loopContracts, /Runtime .*does not own semantic truth/i);
+		assert.match(loopContracts, /Planning .*WorkState horizon/i);
+		assert.match(loopContracts, /Runtime is the outer control loop/i);
 		assert.match(loopContracts, /Write authority is surface-specific/i);
-		assert.match(runtimeDoc, /does not invent accepted requirements/i);
-		assert.match(runtimeDoc, /ignores raw decision items/i);
+		assert.match(runtimeDoc, /does not.*approve Change meaning/is);
+		assert.match(runtimeDoc, /does not.*create Sprint or Work Item truth/is);
 		assert.match(
 			planningDoc,
-			/planning loop owns executable work shaping and trace-queue health/i,
+			/Planning is the project-wide execution optimizer/i,
 		);
-		assert.match(
-			planningDoc,
-			/must not invent semantic work from the raw proposed changes/i,
-		);
-		assert.match(tracesDoc, /trace-queue.*product concept/i);
-		assert.match(tracesDoc, /one Sprint Trace per accountable trace/i);
-		assert.match(tracesDoc, /post-commit archive pipeline|Git restore ref/i);
-		assert.match(tracesDoc, /compact hot stubs|compact.*stub/i);
-		assert.match(implementationDoc, /does not own .*\.codewiki\/kb/i);
+		assert.match(planningDoc, /Planning owns Sprint creation/i);
+		assert.match(tracesDoc, /one Change owns one Change Trace/i);
+		assert.match(tracesDoc, /Sprint state is a generated view/i);
+		assert.match(tracesDoc, /Git restore ref/i);
+		assert.match(tracesDoc, /compact hot stub/i);
+		assert.match(implementationDoc, /does not own new Change meaning/i);
 		assert.match(implementationDoc, /archive_disposition_ready/i);
-		assert.match(implementationDoc, /post_commit_compact/i);
-		assert.match(implementationDoc, /retain_hot/i);
+		assert.match(implementationDoc, /outcome disposition/i);
+		assert.match(implementationDoc, /retain[-_]hot/i);
 		assert.doesNotMatch(
 			runtimeDoc,
 			/choose next semantic loop or coordination action/,

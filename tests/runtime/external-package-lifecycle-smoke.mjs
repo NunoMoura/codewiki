@@ -9,7 +9,7 @@ import {
 	writeFileSync,
 	readFileSync,
 } from "node:fs";
-import { mkdir, stat, writeFile } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -75,10 +75,6 @@ async function executeTool(tool, input, ctx, id = tool.name) {
 	);
 }
 
-function traceHead(traceId, title, createdAt) {
-	return `${JSON.stringify({ type: "trace_head", traceId, title, createdAt })}\n`;
-}
-
 function readTraceRecords(tracePath) {
 	return readFileSync(tracePath, "utf8")
 		.split(/\r?\n/)
@@ -96,34 +92,6 @@ function readTraceRecords(tracePath) {
 
 async function expectedBytes(tracePath) {
 	return (await stat(tracePath)).size;
-}
-
-function planningQuality(overrides = {}) {
-	return {
-		technicalRequirements: [
-			"Install the packed CodeWiki package into an isolated external project.",
-			"Drive /wiki-bootstrap plus guarded wiki_* lifecycle mutation through the installed extension.",
-			"Run runtime host completion through a real worker output file.",
-		],
-		verification: ["npm run test:external-lifecycle"],
-		workerProfile: "package-smoke",
-		planningAssessment: {
-			stance: "worker_ready",
-			workUnitSize: "right_sized",
-			rightSizing:
-				"One smoke covers the package lifecycle without adding unattended automation.",
-			independence:
-				"The smoke owns its temp project and does not depend on repo-local CodeWiki state.",
-			implementationReadiness:
-				"Inputs, expected trace guards, and verification command are explicit.",
-			uncertainties: [],
-			uncertaintyOwner: "none",
-			uncertaintyResolution: "No unresolved planning uncertainty remains.",
-			rationale:
-				"A package-installed lifecycle smoke is the next safe readiness gate.",
-		},
-		...overrides,
-	};
 }
 
 function implementationQuality(overrides = {}) {
@@ -156,24 +124,45 @@ function implementationQuality(overrides = {}) {
 	};
 }
 
-function workItemInput(decisionRef) {
+function planningInput(workStateDigest, expectedBytesByChangeId) {
 	return {
-		id: "WU-external-package-lifecycle",
-		title: "Exercise the installed package lifecycle in a fresh project",
-		decisionRefs: [decisionRef],
-		outcome:
-			"A fresh external project can bootstrap CodeWiki, append guarded lifecycle records, collect a worker output file, release the claim, and close the trace.",
-		...planningQuality({
-			acceptance: [
-				"Installed internal wiki_state fails before bootstrap and /wiki-dashboard serves the Sprints Queue after bootstrap.",
-				"Decision, planning, runtime, implementation, release, and archive writes use expected byte/sequence guards.",
-				"Runtime host completion collects a real worker output file under project-local .codewiki/runtime/tmp.",
-				"The final trace is closed and the work queue marks the work done before close.",
-			],
-			componentRefs: ["source"],
-			pathScopes: ["src/**"],
-			verification: ["tests/external-feature.test.mjs"],
-		}),
+		mode: "append",
+		expectedWorkStateDigest: workStateDigest,
+		expectedChangeIds: ["CHG-external-package-lifecycle"],
+		expectedBytesByChangeId,
+		actor: "agent:external-package-lifecycle-smoke",
+		rationale: "Plan exact approved external lifecycle Change.",
+		createdAt: "2026-06-18T09:00:02.000Z",
+		sprints: [
+			{
+				id: "SPR-external-package-lifecycle",
+				goal: "Prove packed CodeWiki lifecycle in an isolated project.",
+				participatingChangeIds: ["CHG-external-package-lifecycle"],
+				workItemIds: ["WU-external-package-lifecycle"],
+				rollbackBoundary: "Revert Sprint work as one boundary.",
+				dependsOn: [],
+				integrationRefs: [],
+			},
+		],
+		workItems: [
+			{
+				id: "WU-external-package-lifecycle",
+				sprintId: "SPR-external-package-lifecycle",
+				owningChangeId: "CHG-external-package-lifecycle",
+				contributingChangeIds: [],
+				title: "Exercise installed package lifecycle",
+				outcome: "Fresh external project completes guarded CodeWiki lifecycle.",
+				technicalRequirements: ["Preserve Change Trace authority."],
+				acceptanceCriteria: [
+					"Installed package lifecycle completes with guarded writes.",
+				],
+				componentRefs: ["source"],
+				pathScopes: ["src/**"],
+				verification: ["tests/external-feature.test.mjs"],
+				workerProfile: "implementation",
+				dependsOn: [],
+			},
+		],
 	};
 }
 
@@ -189,54 +178,24 @@ function implementationChange(planningRef, checkCommand) {
 				command: checkCommand,
 				status: "pass",
 				phase: "verify",
-				criterionId: "AC-001",
+				criterionId: "AC-WU-external-package-lifecycle-1",
 				outputRef: "tests/external-feature.test.mjs",
 				summary: "External fixture test passed.",
 			},
 		],
 		acceptanceEvidenceItems: [
 			{
-				criterionId: "AC-001",
-				summary:
-					"Installed state command failed before bootstrap and succeeded after bootstrap.",
+				criterionId: "AC-WU-external-package-lifecycle-1",
+				summary: "Installed package lifecycle completed with guarded writes.",
 				evidenceRefs: ["tests/external-feature.test.mjs"],
-			},
-			{
-				criterionId: "AC-002",
-				summary:
-					"All mutation appends used expected bytes and sequence checks.",
-				evidenceRefs: ["TRACE-external-package-lifecycle"],
-			},
-			{
-				criterionId: "AC-003",
-				summary:
-					"Runtime host completion collected the process-session output file.",
-				evidenceRefs: ["TRACE-external-package-lifecycle"],
-			},
-			{
-				criterionId: "AC-004",
-				summary: "Work queue marked the work done before archive close.",
-				evidenceRefs: ["TRACE-external-package-lifecycle"],
 			},
 		],
 		...implementationQuality(),
 	};
 }
 
-function approvedDecisionRef(decided) {
-	const iteration = decided.loopResult.traceEvents.find(
-		(event) => event.loop === "decision",
-	);
-	const change = iteration?.data?.output?.approvedChanges?.[0];
-	assert.ok(iteration);
-	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
-}
-
-function planningWorkRef(planned) {
-	const iteration = planned.loopResult.traceEvents.find(
-		(event) => event.loop === "planning",
-	);
+function planningWorkRef(events) {
+	const iteration = events.find((event) => event.loop === "planning");
 	const work = iteration?.data?.output?.workItems?.[0];
 	assert.ok(iteration);
 	assert.ok(work);
@@ -401,23 +360,6 @@ try {
 	assert.equal(dashboard.command, "dashboard");
 	assert.match(dashboard.url, /^http:\/\/127\.0\.0\.1:/);
 
-	const traceId = "TRACE-external-package-lifecycle";
-	const tracePath = join(
-		projectRoot,
-		".codewiki",
-		"traces",
-		`${traceId}.jsonl`,
-	);
-	await mkdir(join(projectRoot, ".codewiki", "traces"), { recursive: true });
-	await writeFile(
-		tracePath,
-		traceHead(
-			traceId,
-			"External package lifecycle lifecycle",
-			"2026-06-18T09:00:00.000Z",
-		),
-	);
-
 	run("git", ["init", "-q"], { cwd: projectRoot });
 	const change = acceptedChangeFixture({
 		id: "CHG-external-package-lifecycle",
@@ -439,7 +381,7 @@ try {
 		proofRefs: ["tests/runtime/external-package-lifecycle-smoke.mjs"],
 		acceptedBy: "external-package-lifecycle-smoke",
 	});
-	const created = assertToolResult(
+	assertToolResult(
 		await changeTool.execute(
 			"external-lifecycle-change-create",
 			{
@@ -458,41 +400,40 @@ try {
 		),
 		/wiki_change: completed create operation\./,
 	);
-	const changeAcceptance = {
-		expectedHead: created.head,
-		selections: [
-			{
-				changeId: change.id,
-				revision: change.revision,
-				recordRevision: created.record.recordRevision,
-				contentDigest: change.validation.validatedDigest,
-			},
-		],
-		acceptedBy: "external-package-lifecycle-smoke",
-		acceptedAt: "2026-06-18T09:00:01.000Z",
-	};
-
-	const sprintBoundary = {
-		accountableGoal: change.intent.desiredState,
-		knowledgeTopics: [".codewiki/kb/system/components/runtime.md"],
-		dependencies: [],
-		rollbackBoundary: "Revert external lifecycle changes together.",
-		assessment: {
-			stance: "coherent",
-			rationale: "One validated Change serves one external lifecycle goal.",
+	const traceId = `TRACE-${change.id}`;
+	const tracePath = join(
+		projectRoot,
+		".codewiki",
+		"traces",
+		`${traceId}.jsonl`,
+	);
+	const beforeDecision = await stateTool.execute(
+		"before-decision",
+		{},
+		undefined,
+		undefined,
+		ctx,
+	);
+	const decisionInput = {
+		changeId: change.id,
+		expectedRevision: change.revision,
+		expectedChangeDigest: change.validation.validatedDigest,
+		expectedWorkStateDigest:
+			beforeDecision.details.result.workState.snapshotDigest,
+		disposition: "approve",
+		rationale: "Approve exact external lifecycle Change.",
+		authority: {
+			kind: "user",
+			actor: "external-package-lifecycle-smoke",
+			ref: "approval:user:external-package-lifecycle-smoke",
 		},
+		occurredAt: "2026-06-18T09:00:01.000Z",
 	};
 
 	const preview = assertToolResult(
 		await executeTool(
 			decideTool,
-			{
-				traceId,
-				mode: "preview",
-				allowNonProjectInstall: true,
-				changeAcceptance,
-				sprintBoundary,
-			},
+			{ ...decisionInput, mode: "preview", allowNonProjectInstall: true },
 			ctx,
 			"decide-preview",
 		),
@@ -502,59 +443,43 @@ try {
 		await executeTool(
 			decideTool,
 			{
-				traceId,
+				...decisionInput,
 				mode: "append",
 				allowNonProjectInstall: true,
 				expectedBytes: await expectedBytes(tracePath),
-				nextSequence: 1,
-				changeAcceptance,
-				sprintBoundary,
-				sprintProposalApproval: {
-					approved: true,
-					renderedProposalDigest: preview.renderedSprintProposal.digest,
-					approvedBy: "external-package-lifecycle-smoke",
-					approvedAt: "2026-06-18T09:00:01.000Z",
-				},
 			},
 			ctx,
 			"decide",
 		),
 		/wiki_decide: completed append run\./,
 	);
-	assert.equal(decided.loopResult.exit.passed, true);
-	assert.deepEqual(
-		decided.loopResult.output.knowledgeAlignmentBaseline.topics.map(
-			(topic) => topic.ref,
-		),
-		sprintBoundary.knowledgeTopics,
+	assert.equal(preview.report.exit.status, "exit");
+	assert.equal(decided.report.exit.status, "exit");
+	const beforePlanning = await stateTool.execute(
+		"before-planning",
+		{},
+		undefined,
+		undefined,
+		ctx,
 	);
-	assert.match(
-		decided.loopResult.output.knowledgeAlignmentBaseline.topics[0].digest,
-		/^sha256:[a-f0-9]{64}$/,
-	);
-	const decisionRef = approvedDecisionRef(decided);
-
 	const planned = assertToolResult(
 		await executeTool(
 			planTool,
 			{
-				traceId,
-				mode: "append",
+				...planningInput(
+					beforePlanning.details.result.workState.snapshotDigest,
+					{ [change.id]: await expectedBytes(tracePath) },
+				),
 				allowNonProjectInstall: true,
-				expectedBytes: await expectedBytes(tracePath),
-				nextSequence: 2,
-				createdAt: "2026-06-18T09:00:02.000Z",
-				decisionEvents: decided.loopResult.traceEvents,
-				parentId: `${traceId}:decision:checkpoint:1`,
-				workItemInputs: [workItemInput(decisionRef)],
 			},
 			ctx,
 			"plan",
 		),
 		/wiki_plan: completed append run\./,
 	);
-	assert.equal(planned.loopResult.exit.passed, true);
-	const planningRef = planningWorkRef(planned);
+	assert.equal(planned.report.exit.status, "exit");
+	const planningEvents = Object.values(planned.events);
+	const planningRef = planningWorkRef(planningEvents);
 
 	const board = await stateTool.execute(
 		"ready-board",
@@ -593,15 +518,15 @@ try {
 			config: workerRuntimeConfig(),
 			queue: board.details.result.data.workQueue,
 			workerIdPrefix: "external-worker",
-			nextSequenceByTrace: { [traceId]: 3 },
+			nextSequenceByTrace: { [traceId]: 4 },
 			expectedBytesByTrace: { [traceId]: await expectedBytes(tracePath) },
 		},
 		implementationInputs: [
 			{
 				repoRoot: projectRoot,
 				traceId,
-				planningEvents: planned.loopResult.traceEvents,
-				nextSequence: 4,
+				planningEvents,
+				nextSequence: 5,
 				createdAt: "2026-06-18T09:00:04.000Z",
 			},
 		],
@@ -626,10 +551,7 @@ try {
 	assert.equal(hostResult.releaseAppend.events.length, 1);
 	assert.equal(
 		hostResult.workers[0].outputFile.startsWith(
-			join(
-				projectRoot,
-				".codewiki/runtime/tmp/TRACE-external-package-lifecycle/runtime/pi-workers",
-			),
+			join(projectRoot, `.codewiki/runtime/tmp/${traceId}/runtime/pi-workers`),
 		),
 		true,
 	);
@@ -652,11 +574,11 @@ try {
 				allowNonProjectInstall: true,
 				records: recordsBeforeClose,
 				expectedBytes: await expectedBytes(tracePath),
-				gitRestoreRef: "refs/codewiki/archive/TRACE-external-package-lifecycle",
+				gitRestoreRef: `refs/codewiki/archive/${traceId}`,
 				headRef: traceId,
-				parentId: `${traceId}:implementation:checkpoint:4`,
+				parentId: recordsBeforeClose.at(-1)?.id,
 				reason: "External package lifecycle lifecycle completed.",
-				refs: [traceId, decisionRef, planningRef],
+				refs: [traceId, decided.event.id, planningRef],
 				createdAt: "2026-06-18T09:00:06.000Z",
 			},
 			ctx,

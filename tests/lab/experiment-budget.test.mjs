@@ -15,8 +15,8 @@ import { runBudgetedAutoExperiment } from "../../lab/runner/experiment-budget.ts
 const tempRoots = [];
 
 const PRODUCTION_LOOP_FILES = [
-	"src/decision/loop.ts",
-	"src/planning/loop.ts",
+	"src/decision/change-quality.ts",
+	"src/planning/portfolio-quality.ts",
 	"src/implementation/loop.ts",
 ];
 
@@ -152,7 +152,7 @@ describe("budgeted auto experiment harness", () => {
 	it("rejects non-candidate paths and does not mutate production loop graphs", async () => {
 		const before = productionLoopContents();
 		const root = candidateDir("malicious", {
-			"src/decision/loop.ts": "export const bad = true;\n",
+			"src/decision/change-quality.ts": "export const bad = true;\n",
 		});
 		let calls = 0;
 
@@ -169,7 +169,7 @@ describe("budgeted auto experiment harness", () => {
 		assert.equal(report.runs[0].status, "skipped");
 		assert.match(
 			report.runs[0].blockers[0],
-			/unexpected: src\/decision\/loop\.ts/,
+			/unexpected: src\/decision\/change-quality\.ts/,
 		);
 		assert.equal(report.productionGraphMutation.changed, false);
 		assert.deepEqual(productionLoopContents(), before);

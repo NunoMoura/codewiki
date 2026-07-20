@@ -18,14 +18,12 @@ Status: package readiness is evaluated through packed installs in disposable ext
 
 - Public Pi command surface is bounded to `/wiki-dashboard`, `/wiki-resume`,
   `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`.
-- Model-facing tool surface is bounded to `wiki_state`, `wiki_config`,
-  `wiki_decide`, `wiki_plan`, `wiki_implement`, and `wiki_archive`.
-- No runtime model-facing tool is exposed; runtime coordination remains
-  backend/host plumbing.
+- Normally active model capabilities are bounded to `wiki_state`, `wiki_change`, and `wiki_config`; runtime may activate at most one registered Decision, Planning, or Implementation host adapter from current WorkState.
+- Archive and runtime coordination remain backend/host plumbing rather than model-active tools.
 - `lab/**` is outside package files and Pi extension registration.
 - Package metadata keeps `private: true`; public npm publish remains gated.
 - Trace append paths use expected byte/sequence checks in mutation smokes.
-- Production loop quality graphs live in `src/<loop>/loop.ts` as immutable enforcing kernel quality packs and persist graph identity in semantic events and tail checkpoints. Compatibility projections preserve the pre-migration graph ids, versions, nodes, routes, diagnostics, and hashes.
+- Production loop quality graphs live in `src/<loop>/loop.ts` as immutable enforcing kernel quality packs and persist current graph identity in semantic events and tail checkpoints. Pre-release contracts have no compatibility projection.
 - Lab candidates use the same strict pack schema with `authority: lab` and `rollout: observe`; graph reports expose pack identity while locked tests prevent candidate-owned evaluator authority.
 - `.pi/settings.json` loads pi-lens only. No CodeWiki controller pin, local package registration, project-local CodeWiki skills, Changes Backlog ref, or dogfood trace state is active in this source checkout.
 - Packed candidate artifacts are installed only into disposable external projects with isolated Pi settings. Install, RPC, guarded mutation, lifecycle, failure, dashboard, and cleanup smokes exercise extension behavior without granting candidate code authority over its own source.
@@ -124,9 +122,9 @@ npm audit --omit=dev
 git diff --check
 ```
 
-Quality-pack equivalence evidence:
+Quality-pack identity evidence:
 
-- Production Decision, Planning, and Implementation graph hashes remain byte-for-byte equivalent to their pre-migration identities.
+- Production Decision, Planning, and Implementation graph hashes match current reviewed contracts; stale pre-release identities are rejected rather than projected.
 - Public facade suites, strict kernel-override tests, all lab tests, package/Pi/readiness gates, and typecheck must pass before any release review.
 - Rollback remains a normal Git revert of production or lab migration commits followed by the same external package gates; no source migration may silently replace an already reviewed release artifact.
 

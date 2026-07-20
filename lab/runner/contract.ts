@@ -38,17 +38,8 @@ export const LAB_LOCKED_EVALUATOR_FILES = [
 
 export const LAB_ALLOWED_CANDIDATE_IMPORTS: Record<LabLoop, readonly string[]> =
 	{
-		decision: [
-			"../../src/decision/loop.ts",
-			"../../src/decision/types.ts",
-			"../runner/quality-pack.ts",
-			"../runner/types.ts",
-		],
-		planning: [
-			"../../src/planning/loop.ts",
-			"../runner/quality-pack.ts",
-			"../runner/types.ts",
-		],
+		decision: ["../runner/quality-pack.ts", "../runner/types.ts"],
+		planning: ["../runner/quality-pack.ts", "../runner/types.ts"],
 		implementation: [
 			"../../src/implementation/loop.ts",
 			"../../src/implementation/types.ts",

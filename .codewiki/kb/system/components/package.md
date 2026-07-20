@@ -16,7 +16,7 @@ codewiki_source_patterns:
   - tsconfig.build.json
   - src/index.ts
 codewiki_test_patterns:
-  - tests/scaffold.test.mjs
+  - tests/scaffold-core.test.mjs
   - tests/runtime/package-install-smoke.mjs
   - tests/runtime/project-local-install-smoke.mjs
   - tests/runtime/external-package-lifecycle-smoke.mjs
@@ -33,7 +33,7 @@ codewiki_source_map:
       - tsconfig.build.json
       - src/index.ts
     test_patterns:
-      - tests/scaffold.test.mjs
+      - tests/scaffold-core.test.mjs
       - tests/runtime/package-install-smoke.mjs
       - tests/runtime/project-local-install-smoke.mjs
       - tests/runtime/external-package-lifecycle-smoke.mjs

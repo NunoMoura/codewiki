@@ -48,13 +48,13 @@ describe("Activity Feed narration", () => {
 
 	it("coalesces repeated semantic updates and omits unknown raw events", () => {
 		const feed = buildActivityFeed([
-			event("decision-1", "changes_approved", {
-				output: { approvedChanges: [{ id: "A" }] },
+			event("decision-1", "change_approved", {
+				output: { decision: { disposition: "approve" } },
 			}),
 			event(
 				"decision-2",
-				"changes_approved",
-				{ output: { approvedChanges: [{ id: "B" }] } },
+				"change_approved",
+				{ output: { decision: { disposition: "approve" } } },
 				2,
 			),
 			event("raw-3", "internal.unrecognized", { raw: "dry payload" }, 3),

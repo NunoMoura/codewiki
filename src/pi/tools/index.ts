@@ -15,6 +15,8 @@ import {
 	type RunWikiPlanInput,
 } from "../../api/index.ts";
 import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
+import { runtimeReactorFor } from "../../runtime/project-reactors.ts";
+import type { RuntimeReaction } from "../../runtime/reactor.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
 	intakeChangeFeedback,
@@ -24,8 +26,10 @@ import { buildChangeValidationCard } from "../../changes/validation-view.ts";
 import {
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
+	type WikiConfigFileResult,
 } from "../../project/config-file.ts";
 import { findCodewikiProjectRoot } from "../../project/root.ts";
+import { previewProfileDigest } from "../../preview/profile.ts";
 import { buildProjectWikiState } from "../../project/state-file.ts";
 import {
 	assertProjectLocalMutationAllowed,
@@ -139,11 +143,11 @@ function wikiStateTool(): CodewikiToolDefinition {
 		name: WIKI_STATE_TOOL_NAME,
 		label: "CodeWiki State",
 		description:
-			"Internal agent read of CodeWiki trace-backed status, Sprint Traces, blockers, and quality views for the current project.",
+			"Internal agent read of bounded WorkState-backed Change, Sprint, Work Item, Assignment, blocker, and quality projections for the current project.",
 		promptSnippet:
-			"Read internal CodeWiki state for the current repository from active trace records.",
+			"Read internal CodeWiki WorkState views for the current repository.",
 		promptGuidelines: [
-			"Use internal wiki_state before CodeWiki decision, planning, implementation, archive, or coordination-sensitive work to inspect current trace-backed state.",
+			"Use internal wiki_state before Decision, Planning, Implementation, archive, or coordination-sensitive work to inspect current Change-trace-backed state.",
 			"wiki_state does not write files and is not a user command; users see the automatically opened Work Pipeline dashboard instead.",
 		],
 		executionMode: "parallel",
@@ -189,21 +193,33 @@ function wikiStateTool(): CodewikiToolDefinition {
 			assertOptionalStateView(WIKI_STATE_TOOL_NAME, input, "view");
 			assertOptionalString(WIKI_STATE_TOOL_NAME, input, "traceId");
 			assertOptionalString(WIKI_STATE_TOOL_NAME, input, "generatedAt");
+			const traceId = optionalString(input.traceId);
+			const generatedAt = optionalString(input.generatedAt);
+			const observed = await runtimeReactorFor(root).observe({
+				kind: "manual_resume",
+				...(generatedAt ? { occurredAt: generatedAt } : {}),
+				...(traceId ? { refs: [`trace:${traceId}`] } : {}),
+			});
 			const snapshot = await buildProjectWikiState({
 				repoRoot: root,
-				traceId: optionalString(input.traceId),
-				generatedAt: optionalString(input.generatedAt),
+				traceId,
+				generatedAt,
+				traceFiles: {
+					records: observed.records,
+					expectedBytesByTrace: observed.expectedBytesByTrace,
+				},
 			});
 			const view = optionalStateView(input.view);
+			const runtimeReaction = observed.reaction;
 			const activeWorkItems = snapshot.workQueue.items.filter(
 				(item) => item.status !== "done",
 			).length;
 			const reviewBlockers = snapshot.reviewEvidence?.blockers.length || 0;
 			return toolResult(
 				`wiki_state: ${view || "all"} view, ${snapshot.traceIds.length} trace(s), ${activeWorkItems} active work item(s), ${reviewBlockers} review blocker(s).`,
-				stateToolPayload(snapshot, view),
+				stateToolPayload(snapshot, view, runtimeReaction),
 				warning,
-				stateToolModelPayload(snapshot, view),
+				stateToolModelPayload(snapshot, view, runtimeReaction),
 			);
 		},
 	};
@@ -218,7 +234,7 @@ function wikiConfigTool(): CodewikiToolDefinition {
 		promptSnippet:
 			"Resolve or write CodeWiki config for the current repository.",
 		promptGuidelines: [
-			"Use wiki_config to inspect CodeWiki automation, runtime, retention, and host policy before acting.",
+			"Use wiki_config to inspect CodeWiki automation, runtime, retention, preview-profile digests, and host policy before acting.",
 			"wiki_config writes only when its write parameter is true; otherwise it is read-only.",
 		],
 		executionMode: "sequential",
@@ -281,7 +297,13 @@ function wikiConfigTool(): CodewikiToolDefinition {
 					: runWikiConfig(input);
 			return toolResult(
 				"wiki_config: resolved CodeWiki configuration.",
-				result,
+				{
+					...result,
+					previewProfiles: result.config.preview.profiles.map((profile) => ({
+						...profile,
+						digest: previewProfileDigest(profile),
+					})),
+				},
 				warning,
 			);
 		},
@@ -293,14 +315,14 @@ function wikiChangeTool(): CodewikiToolDefinition {
 		name: "wiki_change",
 		label: "CodeWiki Change",
 		description:
-			"Query or manage mutable pre-Decision Changes in the current project's Changes Backlog.",
+			"Persist, query, or refine Change revisions in canonical JSONL Change Traces; the Changes Backlog is a generated view.",
 		promptSnippet:
-			"Use the Changes Backlog to capture and refine out-of-scope Changes without widening the active Work Item.",
+			"Capture and refine intent in the owning Change Trace without widening the active Work Item.",
 		promptGuidelines: [
 			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
 			"Use operation intake only for bounded user, runtime, or lab feedback; it creates or reinforces pending unvalidated Changes.",
-			"wiki_change cannot accept Changes, create Sprint Traces or Work Items, launch workers, edit source, publish, or advance controllers.",
-			"Mutations require exact Changes Backlog head and record revision guards; list, get, and validate are read-only.",
+			"wiki_change cannot approve Changes, create Planning-owned Sprints or Work Items, launch workers, edit source, publish, or advance controllers.",
+			"Mutations require exact Change Trace store-head and record-revision guards; list, get, and validate are read-only.",
 		],
 		executionMode: "sequential",
 		parameters: Type.Object(
@@ -479,7 +501,7 @@ async function requireCodewikiRoot(
 async function writeConfig(
 	root: string | undefined,
 	input: RunWikiConfigInput,
-): Promise<unknown> {
+): Promise<WikiConfigFileResult> {
 	if (!root) {
 		throw new Error(
 			"wiki_config write requires an existing CodeWiki project. Run /wiki-bootstrap first.",
@@ -576,9 +598,30 @@ function assertAppendContract(
 			`${toolName} append mode requires a discovered CodeWiki project root.`,
 		);
 	}
+	if (toolName === "wiki_plan") {
+		assertExpectedBytesByChangeId(input.expectedBytesByChangeId);
+		return;
+	}
 	assertIntegerField(toolName, input, "expectedBytes", 0);
-	if (toolName !== "wiki_archive") {
+	if (toolName === "wiki_implement") {
 		assertIntegerField(toolName, input, "nextSequence", 1);
+	}
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function assertExpectedBytesByChangeId(value: unknown): void {
+	if (!isRecord(value) || Object.keys(value).length === 0) {
+		throw new Error("wiki_plan append mode requires expectedBytesByChangeId.");
+	}
+	for (const bytes of Object.values(value)) {
+		if (!Number.isSafeInteger(bytes) || (bytes as number) < 0) {
+			throw new Error(
+				"wiki_plan append mode requires non-negative expected bytes for every Change.",
+			);
+		}
 	}
 }
 
@@ -603,6 +646,7 @@ function optionalStateView(value: unknown): WikiStateToolView | undefined {
 function stateToolModelPayload(
 	snapshot: WikiStateSnapshot,
 	view: WikiStateToolView | undefined,
+	runtimeReaction: RuntimeReaction,
 ): unknown {
 	const traceId = snapshot.selectedTraceId;
 	if (traceId) {
@@ -611,7 +655,11 @@ function stateToolModelPayload(
 		);
 		return {
 			view: view || "all",
+			runtimeReaction,
 			traceId,
+			change: snapshot.workState.changes.find(
+				(candidate) => candidate.traceId === traceId,
+			),
 			trace,
 			append: snapshot.append?.byTrace[traceId],
 			status: snapshot.status
@@ -627,6 +675,9 @@ function stateToolModelPayload(
 	}
 	return {
 		view: view || "all",
+		runtimeReaction,
+		changeCount: snapshot.workState.changeIds.length,
+		sprintCount: snapshot.workState.sprintIds.length,
 		traceCount: snapshot.traceIds.length,
 		traceSummary: snapshot.traceBoard.summary,
 		workQueueSummary: snapshot.workQueue.summary,
@@ -638,10 +689,12 @@ function stateToolModelPayload(
 function stateToolPayload(
 	snapshot: WikiStateSnapshot,
 	view: WikiStateToolView | undefined,
+	runtimeReaction: RuntimeReaction,
 ): unknown {
-	if (!view) return snapshot;
+	if (!view) return { ...snapshot, runtimeReaction };
 	return {
 		view,
+		runtimeReaction,
 		data: stateToolViewData(snapshot, view),
 	};
 }
@@ -652,6 +705,13 @@ function stateToolViewData(
 ): unknown {
 	if (view === "summary") {
 		return {
+			workState: {
+				snapshotDigest: snapshot.workState.snapshotDigest,
+				changeIds: snapshot.workState.changeIds,
+				sprintIds: snapshot.workState.sprintIds,
+				workItemIds: snapshot.workState.workItemIds,
+				assignmentIds: snapshot.workState.assignmentIds,
+			},
 			traceIds: snapshot.traceIds,
 			status: snapshot.status,
 			resume: snapshot.resume,
@@ -663,6 +723,10 @@ function stateToolViewData(
 	}
 	if (view === "board") {
 		return {
+			changes: snapshot.workState.changes,
+			sprints: snapshot.workState.sprints,
+			workItems: snapshot.workState.workItems,
+			assignments: snapshot.workState.assignments,
 			workPlan: snapshot.workPlan,
 			workQueue: snapshot.workQueue,
 			runtimeBoard: snapshot.runtimeBoard,

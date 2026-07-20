@@ -3,7 +3,15 @@ import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { buildLabGraphReport } from "../../lab/runner/graph.ts";
 
-const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
+const packageJson = parseJsonFile("package.json");
+
+function parseJsonFile(path) {
+	try {
+		return JSON.parse(readFileSync(path, "utf8"));
+	} catch (error) {
+		throw new Error(`Invalid JSON in ${path}.`, { cause: error });
+	}
+}
 
 describe("lab graph introspection", () => {
 	it("exposes the lab graph command", () => {
@@ -21,9 +29,17 @@ describe("lab graph introspection", () => {
 			report.loops.map((loop) => loop.loop),
 			["decision", "planning", "implementation"],
 		);
+		const graphIds = {
+			decision: "codewiki.decision.change",
+			planning: "codewiki.planning.portfolio",
+			implementation: "implementation.loop",
+		};
 		for (const loopReport of report.loops) {
-			assert.equal(loopReport.production.graphId, `${loopReport.loop}.loop`);
-			assert.equal(loopReport.candidate.graphId, `${loopReport.loop}.loop.lab`);
+			assert.equal(loopReport.production.graphId, graphIds[loopReport.loop]);
+			assert.equal(
+				loopReport.candidate.graphId,
+				`${graphIds[loopReport.loop]}.lab`,
+			);
 			assert.match(loopReport.production.hash, /^sha256:/);
 			assert.match(loopReport.candidate.hash, /^sha256:/);
 			assert.equal(loopReport.production.nodeCount > 0, true);

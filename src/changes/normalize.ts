@@ -20,9 +20,8 @@ export function normalizeChange(change: Change): Change {
 			currentState: text(change.intent.currentState),
 			desiredState: text(change.intent.desiredState),
 			rationale: text(change.intent.rationale),
-			currentPain: optionalText(change.intent.currentPain),
-			desiredOutcome: optionalText(change.intent.desiredOutcome),
 			nonGoals: stringList(change.intent.nonGoals),
+			alternatives: stringList(change.intent.alternatives),
 		},
 		classification: {
 			kind: change.classification.kind,
@@ -36,6 +35,19 @@ export function normalizeChange(change: Change): Change {
 			maintainer: text(change.impact.maintainer),
 			compatibility: optionalText(change.impact.compatibility),
 		},
+		knowledge: {
+			topicRefs: stringList(change.knowledge.topicRefs),
+			propagationRefs: stringList(change.knowledge.propagationRefs),
+			noImpactRationale: optionalText(change.knowledge.noImpactRationale),
+		},
+		outcome: {
+			successSignals: stringList(change.outcome.successSignals),
+			evidenceExpectations: stringList(change.outcome.evidenceExpectations),
+		},
+		delivery: {
+			constraints: stringList(change.delivery.constraints),
+			planningQuestions: stringList(change.delivery.planningQuestions),
+		},
 		evidence: {
 			sourceRefs: stringList(change.evidence.sourceRefs),
 			proofRefs: stringList(change.evidence.proofRefs),
@@ -46,11 +58,12 @@ export function normalizeChange(change: Change): Change {
 		},
 		safety: {
 			risk: change.safety.risk,
-			invariant: optionalText(change.safety.invariant),
+			invariants: stringList(change.safety.invariants),
 			safetyBoundary: optionalText(change.safety.safetyBoundary),
 			failureModes: stringList(change.safety.failureModes),
 			rollbackPlan: optionalText(change.safety.rollbackPlan),
 			negativeTestPlan: optionalText(change.safety.negativeTestPlan),
+			regressionPlan: optionalText(change.safety.regressionPlan),
 		},
 		validation: {
 			state: change.validation.state,
@@ -59,8 +72,6 @@ export function normalizeChange(change: Change): Change {
 			recommendations: change.validation.recommendations.map(
 				normalizeRecommendation,
 			),
-			successSignal: optionalText(change.validation.successSignal),
-			regressionPlan: optionalText(change.validation.regressionPlan),
 			validatorVersion: optionalText(change.validation.validatorVersion),
 			validatedRevision: change.validation.validatedRevision,
 			validatedDigest: optionalText(change.validation.validatedDigest),
@@ -76,9 +87,7 @@ export function normalizeChange(change: Change): Change {
 			updatedAt: text(change.provenance.updatedAt),
 			discoveredWhile: change.provenance.discoveredWhile
 				? {
-						traceId: optionalText(
-							change.provenance.discoveredWhile.traceId,
-						),
+						traceId: optionalText(change.provenance.discoveredWhile.traceId),
 						taskId: optionalText(change.provenance.discoveredWhile.taskId),
 					}
 				: undefined,

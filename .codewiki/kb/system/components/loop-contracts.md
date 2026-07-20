@@ -34,27 +34,38 @@ codewiki_source_map:
 ---
 # Loop Contracts
 
-CodeWiki has exactly three semantic loops: decision, planning, and implementation. There is no fourth knowledge, validation, runtime, publication, roadmap, graph, or recovery loop.
+CodeWiki has exactly three semantic loops: Decision, Planning, and Implementation. There is no fourth knowledge, validation, runtime, publication, roadmap, graph, state, or recovery loop.
 
-Each semantic loop is defined by:
+Runtime is the outer control loop. The three semantic loops are inner project capabilities governed by loop-owned quality networks. Quality networks determine loop exit; they are not loops themselves.
 
-1. loop cycle;
-2. loop output;
-3. exit conditions.
+Each semantic loop has:
 
-Runtime is the outer control loop. It coordinates traces, scheduling, claims, workers, budgets, retention, and host integration, but it does not own semantic truth. Hosts such as Pi display state, collect user input, and invoke CodeWiki APIs; host UI state is never workflow truth.
+1. a typed loop input;
+2. a loop cycle;
+3. a typed loop output;
+4. quality standards and exit conditions.
 
-Before Decision, the main session shapes mutable validated Changes into a user-confirmed Sprint Map. The map declares one accountable goal, canonical Product/System Knowledge Base topics or an explicit no-impact rationale, cross-Sprint dependencies, and one rollback boundary. This shaping is part of Change intake, not a semantic loop or a new truth store. Decision must reject an absent map for multi-Change bundles, invalid topic or dependency references, oversized bundles, incoherent boundaries, and maps that leak Planning-level Work Items.
+Change is the accountable semantic carrier. Decision receives, refines, validates, and approves exact Change revisions; Decision is not another domain entity. One persisted Change owns one append-only JSONL Change Trace. Planning observes a project-wide WorkState horizon and creates Sprints and Work Items from approved Changes. Runtime grants bounded Assignments. Implementation records realization against each Work Item's owning Change.
 
-The user-facing hierarchy is `Change → Sprint → Work Item → Assignment`. One Sprint equals one trace lifecycle. Planning creates Work Items only after Decision exits; internal work-unit names remain compatible trace data.
+Relationships are many-to-many where execution requires them:
+
+```text
+Change * <-> * Sprint
+Sprint 1 -> * Work Item
+Work Item 1 -> * Assignment attempt
+```
+
+A Sprint is a Planning-created execution group and generated view, not a trace. One Change may span several Sprints, and one Sprint may coordinate several Changes. Each Work Item has exactly one owning Change and may contribute explicitly to others.
+
+WorkState is the shared disposable projection over Change Traces, KB, source ownership, source/tests/Git, configuration, and bounded runtime observations. It is not a truth store. Runtime and all loop facades derive bounded inputs from the same WorkState semantics rather than asking callers to marshal repository truth.
 
 ## Loop responsibilities
 
-| Loop | Loop cycle | Loop output | Exit condition focus |
+| Loop | Loop input | Loop output | Exit-condition focus |
 | --- | --- | --- | --- |
-| Decision | Observe a user-confirmed Sprint Map, exact Change revisions, current KB/source/trace/Git refs, risks, alternatives, work scale, planning depth, route target, and route-back questions. | Accepted Sprint boundary and decision facts, requirements, KB/diagram propagation, risks, non-goals, assumptions, planning-depth guidance, route metadata, and planning questions. | Sprint coherence, accountable goal, canonical Knowledge topics, dependencies, rollback boundary, intent quality, current-state grounding, KB impact, risk/approval, and safe routing readiness. |
-| Planning | Observe accepted Decision output and trace-queue state, then shape executable work. | Work Items (internal work units) or micro-plans, acceptance criteria, dependencies, component refs, path scopes, verification strategy, trace-queue ordering/conflict decisions, deferrals, and optional triggers for recurring schedules, events, or hooks. | Decision coverage, acceptance clarity, planning-depth validity, dependency/path/component validity, trace-queue health, trigger validity, and implementation/runtime readiness. |
-| Implementation | Observe accepted planning output and change code/docs/tests. | Changed paths, checks, acceptance evidence, worker provenance, aggregate content proof, residual ownership, archive disposition, and publication refs when needed. | Planning coverage, checks, AC evidence, TDD proof, component/path alignment, worker claim correlation, content proof, archive-disposition readiness, and closure readiness. |
+| Decision | Persisted/proposed Change revision, relevant WorkState, canonical current-state refs, authority, and route-back context. | Complete normalized Change revision, validation, Knowledge impacts, outcome contract, risks, delivery constraints, and exact approval or terminal disposition fact. | Intent and outcome quality, current-state grounding, Knowledge impact, evidence, risk, overlap, exact authority, and safe downstream constraints. |
+| Planning | Relevant portfolio of approved Changes, WorkState planning horizon, active Sprints/Assignments/integration state, ownership, policy, and prior plan revisions. | Planning epoch containing Sprints, owned Work Items, acceptance criteria, dependencies, path scopes, verification, triggers, resolutions, and per-Change coverage. | Approved-Change coverage, Sprint coherence, work ownership, acceptance clarity, dependency/path/component validity, claimed-work stability, integration safety, and execution readiness. |
+| Implementation | Owning approved Change, accepted Work Items, Assignments/worker results, integration state, source ownership, source/tests/Git, policy, and prior evidence. | Change realization, changed paths, checks, acceptance evidence, worker provenance, integration proof, aggregate content proof, outcome disposition, and route-back questions. | Change/plan coverage, scope, checks, acceptance/TDD evidence, claim correlation, integration, ownership, content proof, outcome disposition, and closure readiness. |
 
 ## Implementation review and tool evidence
 
@@ -86,29 +97,23 @@ Code-bearing repo edits route to Implementation review. KB, trace, decision, and
 
 Write authority is surface-specific. Implementation owns repo payload writes such as `src/`, `tests/`, package files, README, and product docs. Decision owns `.codewiki/kb/**` meaning changes. The guarded runtime append boundary owns `.codewiki/traces/**`. `wiki_config` owns config writes with decision approval when policy or behavior changes. `.codewiki/views/**` is disposable projection output and must not become active truth.
 
-For the CodeWiki source checkout itself, fast edit feedback is never enough to make a change registered. The pinned-baseline, disposable shadow, and reproducible installer gates have passed; repo-local Pi-tool autoload uses only the reviewed controller under `.pi/npm`. Every subsequent repo source/test/README/KB mutation must be covered by a durable decision/planning/implementation trace record or an explicit direct-implementation decision record, with current content proof, expected-byte/sequence guards, and guarded append evidence. Normal Git and tests remain mandatory verification. Changes to quality evaluation must be governed by the pinned baseline while the candidate evaluator remains non-authoritative.
+The CodeWiki source checkout does not load or dogfood its own extension during stabilization. Repo-local Pi-tool autoload uses only pi-lens; source development uses Pi-native tools, KB/source/tests, diagnostics, and Git. Packed candidates exercise Change Traces and loop mutation only in disposable external repositories. Fast edit feedback is never enough to grant semantic approval.
 
 ## Knowledge propagation timing
 
-Knowledge updates are part of the decision loop. CodeWiki does not add a separate knowledge-update loop between decision and planning.
+Knowledge updates are part of Decision. CodeWiki does not add a separate Knowledge loop.
 
-The decision loop reads the current KB, source refs, active trace/work-queue facts, and Git/content refs, then records a compact current-state baseline in decision loop output. That baseline is the observed actual/pending state used to compare the user's desired state against reality.
+Decision reads current KB, source refs, active WorkState, and Git/content refs, then records a compact current-state baseline in the Change Trace. It cannot approve a Change revision unless every semantic impact has updated KB/diagram refs, explicit no-impact rationale, or grounded deferral/route-back.
 
-The decision loop cannot exit unless every accepted proposed change has current-state refs and one of:
+Planning consumes exact approved Change revisions. It may create several Sprints for one Change or combine compatible approved Changes in one Sprint. Tiny or small low-risk Changes may route directly to Implementation only when their approved revision carries explicit direct scope, rationale, path boundaries, acceptance criteria, and verification. Larger, ambiguous, higher-risk, multi-component, product/API, security/privacy, release, or dependency work requires Planning.
 
-- updated KB refs and diagram refs;
-- explicit no-KB-impact and/or no-diagram-impact rationale;
-- route-back or deferral with owner, trigger, rationale, and evidence.
+If an approved Change needs recurrence, an event trigger, or a hook, Planning owns the trigger. Planning records schedule/event source, concurrency, run mode, run key, owner, and criteria. Implementation proves enablement or consumption; runtime only coordinates due work.
 
-Planning starts only from an exited decision iteration. This keeps planning grounded in current semantic truth without adding another prompt-heavy loop. User-approved sprint proposals that change product/system behavior must be captured as `decision.changes_approved`. The default route is planning. Tiny or small low-risk changes may route directly to implementation only when the proposed change carries explicit `routeTarget: "implementation"`, route rationale, implementation mode, path scopes, acceptance criteria, and verification. Larger, ambiguous, higher-risk, multi-component, product/API, security/privacy, release, or dependency work still routes to planning.
-
-If an accepted decision needs recurrence, an event trigger, or a hook, planning owns the trigger. Planning records the schedule or event source, concurrency policy, run mode, run key template, owner, and acceptance criteria. Implementation proves that the trigger was enabled or consumed; runtime coordination code only processes heartbeats and starts runs from planned triggers.
-
-KB truth during an active trace means accepted product/system intent, not implementation completion. Source/tests/Git prove implementation truth; traces state where work currently stands.
+KB truth during an active Change Trace means accepted product/system intent, not implementation completion. Source/tests/Git prove implementation truth; Change Traces state where work and outcome realization stand.
 
 ## Loop output and exit
 
-A loop output is not durable truth until its iteration exits successfully and runtime appends it to the trace. Failed, blocked, or route-back iterations record compact provenance and next actions, but downstream loops consume only exited upstream outputs.
+A semantic loop output is not downstream-authoritative until its quality-governed iteration exits successfully and runtime appends it to affected Change Trace(s). Continue, blocked, and route-back iterations remain durable accountability and next-action evidence, but downstream loops consume only exited upstream output revisions.
 
 A loop output should separate:
 
@@ -171,7 +176,7 @@ pure in-process callers.
 
 Production and lab standards use one strict `qualityPack.schemaVersion = 1` declaration. A pack declares a stable pack id and version, authority (`kernel`, `official`, `project`, or `lab`), rollout (`observe`, `warn`, or `enforce`), one known semantic-loop graph, and standards with closed evaluator and evidence-adapter identifiers. Unknown fields, arbitrary evaluators, arbitrary evidence adapters, graph mismatches, duplicate ids, missing dependencies, dependency cycles, and attempts to replace protected kernel standards fail before execution.
 
-CodeWiki owns all kernel standards. The Decision, Planning, and Implementation built-ins are immutable `kernel` packs in `enforce` mode. Their compatibility projections preserve the pre-migration graph ids, versions, node semantics, diagnostics, routes, and hashes, so existing `wiki_decide`, `wiki_plan`, and `wiki_implement` output contracts remain unchanged. The generic runner composes packs deterministically before the compatibility projection.
+CodeWiki owns all kernel standards. The Decision, Planning, and Implementation built-ins are immutable `kernel` packs in `enforce` mode. Graph identities and output contracts version with current semantic-loop contracts; pre-release contracts receive no compatibility projection. The generic runner composes current packs deterministically and fails closed on stale graph or contract identities.
 
 Lab candidates use the same schema with `authority: "lab"` and `rollout: "observe"`. Lab packs report candidate identity but cannot enforce production exits, grade themselves with arbitrary code, or advance a production controller. `observe` records findings without changing verdicts; `warn` may surface non-blocking diagnostics; `enforce` may affect exit only for CodeWiki-authorized packs. Project policy composition and a Quality Designer remain deferred; this migration does not permit project-owned kernel overrides, custom semantic loops, JavaScript evaluators, shell evaluators, automatic merge, or automatic publication.
 
@@ -296,18 +301,11 @@ Hard gates are binary semantic contracts. They are cheap, deterministic or
 human-authority backed, and must not be averaged away or delayed behind model
 judgment.
 
-Decision hard gates cover proposal readiness, coherent Sprint boundaries, accountable goals, canonical Knowledge topics, dependencies, rollback boundaries, understood intent, route safety,
-planning depth, approval authority, current-state grounding, trace evidence,
-risk classification, active trace conflicts, and Change-kind classification.
+Decision hard gates cover Change-revision readiness, understood intent, accountable outcome, canonical Knowledge impacts, approval authority, current-state grounding, evidence, risk classification, active Change overlap, route safety, delivery constraints, and Change-kind classification.
 
-Planning hard gates cover decision coverage, self-contained worker units,
-acceptance/verification, planning depth, source ownership, dependency ordering,
-trigger validity, resolution validity, and canonical refs.
+Planning hard gates cover approved-Change coverage, coherent Sprint grouping, one owning Change per Work Item, cross-Change contribution, acceptance/verification, source ownership, dependency ordering, claimed-work stability, integration safety, trigger validity, resolution validity, and canonical refs.
 
-Implementation hard gates cover planning/direct-decision coverage, scope control,
-acceptance evidence, verification results, required TDD proof, content proof,
-worker claim correlation, source ownership, archive disposition when post-commit
-cleanup is required, release approval, and canonical refs.
+Implementation hard gates cover approved-Change and Planning coverage, scope control, acceptance evidence, verification results, required TDD proof, integration and content proof, worker-Assignment correlation, source ownership, outcome disposition, archive readiness, release approval, and canonical refs.
 
 Softer agent-assessment standards still fail the loop when unmet, but they are
 not hard-gate fail-fast blockers because they may need richer repair guidance or
@@ -317,7 +315,7 @@ future model-judge batching.
 
 Every loop should enforce cheap structural invariants before deeper semantic checks:
 
-- stable unique ids for decision facts, work units, acceptance criteria, and implementation changes;
+- stable unique ids for Change revisions, approvals, Sprints, Work Items, Assignments, acceptance criteria, and realization evidence;
 - canonical refs for KB, trace, Git, digest, source, and test evidence;
 - no unknown dependencies or dependency cycles;
 - path-scope conflict detection across exact and hierarchical overlaps;
@@ -336,10 +334,10 @@ Planning assigns stable acceptance criterion ids to every executable work unit, 
 
 The implementation loop owns final trust and aggregate coverage. Worker-local success is never enough to exit implementation.
 
-Implementation evidence must map back to planned acceptance criterion ids:
+Implementation evidence must map back to approved Change and planned acceptance-criterion ids:
 
 ```text
-CHG -> WU -> AC -> red check -> green check -> acceptance evidence -> changed paths -> local content proof -> aggregate content proof
+approved Change -> Sprint -> Work Item -> AC -> red check -> green check -> acceptance evidence -> changed paths -> local content proof -> aggregate content proof
 ```
 
 When TDD proof is required by policy, red checks must fail before implementation and green checks must pass after implementation. Red check failures are accepted only when explicitly marked with `phase: "red"`; other failed checks block exit. TDD checks should carry `criterionId` so exit conditions can prove red/green coverage for each planned acceptance criterion.
@@ -362,25 +360,25 @@ Implementation exit conditions validate the aggregate output against the compone
 
 Component ids are trace data, not trace refs. Trace `refs` continue to carry only canonical artifacts: KB paths, source/test paths, trace ids, Git refs, and content digests.
 
-## Trace goal closure and runtime work queue
+## Change closure and runtime work queue
 
-A trace represents one accountable goal. The trace may close only when that goal is satisfied by the CHG → WU → implementation evidence chain, or when remaining work is explicitly deferred/scheduled with owner, trigger, rationale, and evidence. Proposed changes covered only by documentation updates do not satisfy a source-bearing goal unless the decision itself is docs-only or planning records a non-executable/knowledge-only resolution.
+A Change Trace represents one accountable intent-to-outcome journey. It may close only when the current approved Change revision is fully dispositioned through Planning and Implementation, required realization evidence exists, and outcome disposition is explicit. Documentation-only proof cannot satisfy a source-bearing Change unless its approved scope is knowledge-only or Planning records a grounded non-executable resolution.
 
-Recurring or triggered work closes through a trigger trace plus independent run traces. The trigger trace proves the standing decision and trigger. Each run trace proves one due execution and links back through lineage refs; it is not a sub-trace.
+One Change may receive planning coverage from several Sprints. One Sprint may include Work Items owned by several Change Traces. Sprint completion is a generated view over its Work Items; Change completion is a generated view over its approved requirements, planning coverage, realization evidence, and outcome disposition.
 
-The archive close path must block incomplete goals. Derived views may surface `needs_decision`, `needs_planning`, `needs_implementation`, `blocked`, `deferred`, `finished`, `closed_complete`, or `closed_incomplete`; those statuses are view calculations, not workflow truth.
+The archive close path must block incomplete Change journeys and incomplete multi-trace planning batches. Derived views may surface `needs_decision`, `needs_planning`, `needs_implementation`, `observing_outcome`, `blocked`, `deferred`, `finished`, `closed_complete`, or `closed_incomplete`; those statuses are calculations, not workflow truth.
 
-Completed traces leave hot state through a post-commit archive pipeline: the full completed trace is first preserved by a Git restore ref, then `wiki_archive` may close and compact the hot file into `trace_head` + retention checkpoint + `trace_close`. Hydration restores the full trace body from Git and validates the stub before use; compacting must not be an unrecoverable delete.
+Completed Change Traces leave hot state through a post-commit archive pipeline: full history is first preserved by a Git restore ref, then `wiki_archive` may close and compact the hot file into `trace_head` + retention checkpoint + `trace_close`. Hydration restores and validates full history; compaction cannot be an unrecoverable delete.
 
-The decision loop must check active trace goals before approving a new proposed change. Semantic overlap with an active trace should be merged, superseded, deferred, ordered by dependency, or explicitly justified as non-conflicting before planning starts. Runtime/main-host checks may detect cheap operational overlap such as path conflicts, but semantic contradiction remains a decision quality-standard concern.
+Decision checks active Change journeys before approving a revision. Semantic overlap should be merged, linked, superseded, deferred, ordered, or explicitly justified before Planning. Planning owns execution grouping and conflict-aware ordering; runtime may detect cheap operational overlap but cannot resolve semantic contradiction.
 
-The current state of work is not stored in a separate roadmap board. The `work-queue` and trace-board views derive it from hot trace files.
+Current work is not stored in a separate roadmap or Sprint board. WorkState and generated views derive it from Change Traces and current project truth.
 
 ```text
-all TRACE-*.jsonl -> work-queue view -> runtime work-unit claim selection -> work-unit claim trace events -> host worker start
+all Change Traces + current project truth -> WorkState -> work queue -> runtime Assignment selection -> claim events -> worker start
 ```
 
-The work queue classifies accepted decisions and planning work units as backlog, waiting, ready, claimed, blocked, or done. Planning dependencies decide waiting vs ready. Runtime claim events or live leases decide claimed. Claim expiry or release returns work to ready unless another active blocker exists. Implementation exit decides done. Path conflicts are claim-selection constraints, not durable workflow truth by themselves.
+The work queue classifies Planning-owned Work Items as backlog, waiting, ready, claimed, blocked, or done. Planning dependencies decide waiting versus ready. Runtime claims or live leases decide claimed. Claim expiry or release returns work to ready unless another blocker exists. Implementation acceptance decides done. Path conflicts are selection constraints, not semantic truth by themselves.
 
 ## Trace write contract
 
@@ -402,10 +400,10 @@ A resume agent should be able to replay a trace and answer:
 6. Which KB/source/test/Git refs prove the current state?
 7. What is the next safe action?
 
-Accepted loop outputs provide vertical alignment:
+Accepted loop outputs provide Change-rooted vertical alignment:
 
 ```text
-user intent -> decision output -> planning output -> implementation output -> Git/content proof
+Change intent -> exact approval -> Sprint/Work Item coverage -> Change realization -> Git/content proof -> outcome disposition
 ```
 
 Exit-condition findings and checkpoints provide recovery alignment after errors, failed iterations, context loss, or agent replacement.
@@ -418,6 +416,7 @@ Preview results are validation drafts for the agent. Append only meaningful trac
 
 ## Related docs
 
+- [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)

@@ -5,7 +5,7 @@ import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { describe, it } from "node:test";
 import { runCodewikiCli } from "../../src/cli/index.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 
 const cliPath = resolve("src/cli/index.ts");
@@ -170,7 +170,7 @@ describe("CLI adapter", () => {
 							traceId: "TRACE-cli",
 							title: "Runtime append",
 							traceRefs: [planningRef],
-							decisionRefs: [],
+							changeRefs: [],
 							planningRefs: [planningRef],
 							componentRefs: ["runtime"],
 							pathScopes: ["src/runtime"],
@@ -211,10 +211,6 @@ describe("CLI adapter", () => {
 				createdAt: "2026-06-12T00:00:00.000Z",
 			});
 			const commandInputs = {
-				plan: {
-					traceId: "TRACE-cli-command",
-					decisionEvents: [],
-				},
 				implement: {
 					repoRoot: root,
 					traceId: "TRACE-cli-command",

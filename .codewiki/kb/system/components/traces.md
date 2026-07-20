@@ -1,12 +1,12 @@
 ---
 type: Concept
 title: Traces
-description: CodeWiki traces are durable workflow truth and independent execution units for accepted software changes.
+description: CodeWiki stores one append-only JSONL Change Trace for each persisted Change journey from intake through approval, planning, implementation, outcome disposition, and retention.
 tags:
   - codewiki
   - system
   - traces
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-08-01T00:00:00Z
 codewiki_components:
   - traces
   - views
@@ -73,136 +73,127 @@ codewiki_source_map:
 
 ## Responsibility
 
-CodeWiki traces are the durable workflow and state record for software work in projects where the released extension is installed. In product language, one trace is the Sprint Record for one accountable change journey from a frozen Decision through planning, implementation, runtime coordination, content evidence, and retention. The CodeWiki source repository keeps no active dogfood trace instances during stabilization; its trace files are exercised in disposable external test projects.
+A CodeWiki Change Trace is the durable, transparent journey of one persisted Change. It begins when the user or agent explicitly persists intent and follows that same accountable Change through Decision iterations, exact approval, Planning-created Sprint membership and Work Items, runtime Assignments, Implementation evidence, route-backs, outcome disposition, and retention.
 
-A trace is also the independent execution unit. Before `wiki_decide`, the main session shapes exact validated Change revisions into a user-confirmed Sprint Map with one accountable goal, canonical Product/System Knowledge Base topics or an explicit no-impact rationale, cross-Sprint dependencies, and one rollback boundary. Decision verifies this boundary before creating the Sprint trace; it does not invent Planning-level Work Items. A trace-scoped runner can then execute Planning and Implementation without occupying the main user conversation. Each trace has isolated lifecycle, policy, budget, lease, worktree, worker, retry, cancellation, and validation state. Cross-trace scheduling may be concurrent, but one trace cannot satisfy or overwrite another trace's semantic exits.
+```text
+Change intent
+-> Decision-loop refinement and approval
+-> Planning coverage across one or more Sprints
+-> Work Items and Assignments
+-> implementation and integration evidence
+-> outcome disposition
+-> close and retention
+```
 
-Dashboard Change actions create or reinforce mutable intent and never create traces directly. Only an exact validated Change and accepted Decision may create an amendment Sprint. When every accepted Change in a new Sprint identifies one unique parent through `provenance.discoveredWhile.traceId`, guarded Decision append creates the trace head with `origin.kind: "amendment"` and that `parentTraceId`. Mixed or missing parent provenance does not infer amendment authority. Retries, route-backs, blocker remediation, and alternative attempts remain inside the original trace event tree.
+One Change owns one Change Trace. A Change Trace is not a Sprint Record. A Change may require several Sprints, and one Sprint may coordinate several Changes. Sprint state is a generated view over Planning facts in participating Change Traces.
 
-A trace is append-only. Old lines are never rewritten. Runtime is the sole trace writer: semantic loops report appendable loop output and exit results to runtime, and runtime validates sequence/byte safety before appending trace records. Current Sprints Queue and Sprint Trace status is exposed through generated views that derive their calculations from traces, compact checkpoints, KB/source refs, and Git refs.
+The trace gives humans and agents accountability, recovery, historical explanation, and reusable learning. It must show what changed, why it was approved, how execution was planned, what evidence was accepted or rejected, where authority routed back, and what outcome was observed or explicitly left unresolved.
+
+The CodeWiki source repository keeps no active dogfood Change Traces during stabilization. Packed candidates exercise trace behavior only in disposable external projects.
 
 ## Canonical storage
 
-Hot trace files live under:
+Hot Change Trace files live under:
 
 ```text
 .codewiki/traces/TRACE-*.jsonl
 ```
 
-Each line is one JSON object with a `type` field. The first line is always `trace_head`. Later lines are ordered trace events, checkpoints, or a final close record.
+Each line is one JSON object. The first line is always `trace_head`. Later lines are ordered semantic iterations, runtime coordination events, checkpoints, or one final close record.
 
 ```text
 trace_head
-trace_event          # semantic loop iteration or runtime coordination
+trace_event          # Decision, Planning, or Implementation iteration
+trace_event          # runtime coordination fact
 tail_checkpoint
-trace_event
-tail_checkpoint
-trace_close          # optional final lifecycle record
+trace_close          # terminal lifecycle record
 ```
 
-The trace file is its own hot catalog entry. The `.codewiki/traces/` directory is the active working set: hot files are active or recently closing traces, and project state loaders only read files matching `TRACE-*.jsonl`. Completed traces are closed and compacted only after implementation evidence exits and the full trace body is preserved by a Git restore ref. Closed detail can be replaced by compact hot stubs after required evidence is committed. Closed traces are terminal and do not receive append handles. Cold retention keeps a compact trace stub plus Git restore refs. There is no separate canonical telemetry catalog, central `.codewiki/traces.jsonl`, or trace-index truth file.
+There is no separate Change journal, hidden Change Git ref, Sprint trace store, central trace catalog, or canonical WorkState file. The Change Trace is the Change ledger. The Changes Backlog, approved-Change portfolio, Sprint views, work queue, Change Journey, and Work Pipeline are rebuildable views.
 
-## OKF boundary
+CodeWiki has no hidden Git-ref Change store, legacy reader, or compatibility importer. Pre-release development history remains recoverable through normal Git history; runtime supports only Change Trace storage.
 
-Open Knowledge Format applies to `.codewiki/kb/**/*.md` only. Trace files under `.codewiki/traces/TRACE-*.jsonl` are outside OKF even when an OKF export or validator scans the repository. They are JSONL workflow truth, not Markdown concepts, not OKF `index.md` or `log.md`, and never YAML-frontmatter documents.
+## Change identity
 
-OKF export and validation must filter repository inputs through the CodeWiki boundary rule before calling OKF parsers:
+A Change Trace head binds one stable `changeId`. Trace identity may use a path-safe technical `traceId`, but the binding is one-to-one and immutable.
 
-```text
-include: .codewiki/kb/**/*.md
-exclude: .codewiki/traces/TRACE-*.jsonl
+```json
+{
+  "type": "trace_head",
+  "traceId": "TRACE-CHG-dashboard-search",
+  "changeId": "CHG-dashboard-search",
+  "title": "Search Changes and active work together",
+  "createdAt": "2026-08-01T00:00:00.000Z",
+  "origin": {
+    "kind": "user",
+    "refs": ["kb:product/uis/terminal.md"]
+  }
+}
 ```
 
-Trace append, compaction, and hydration keep using the trace schema and Git restore refs described here. OKF import/export can cite trace refs as evidence strings, but it must not parse, rewrite, compact, hydrate, or otherwise own trace JSONL. Product concepts such as Sprints Queue, Sprint Trace, Trace Detail, and Work Item are defined in OKF KB docs; actual Sprint instances and progress remain the append-only trace line stream plus retained stubs and Git restore refs.
+A material new accountable outcome creates a new linked Change Trace. Refinement or route-back may produce a later Change revision in the same trace only while the stable accountable outcome remains recognizable. Every approved revision remains immutable and replayable even when a later revision explicitly supersedes it.
 
 ## Record types
 
 ### `trace_head`
 
-Stable identity and top-level scope. `origin` is optional. Manual traces can omit it. Recurring, triggered, hook-based, amendment, retry, or route-back traces should include origin lineage refs rather than becoming sub-traces.
-
-```json
-{
-  "type": "trace_head",
-  "traceId": "TRACE-20260611-example",
-  "title": "Short accountable change title",
-  "createdAt": "2026-06-11T00:00:00.000Z",
-  "origin": {
-    "kind": "trigger_run",
-    "parentTraceId": "TRACE-20260611-trigger",
-    "triggerTraceId": "TRACE-20260611-trigger",
-    "triggerId": "TRG-example",
-    "planningRef": "trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-example",
-    "runKey": "example:2026-W24",
-    "refs": ["TRACE-20260611-trigger", "trace:TRACE-20260611-trigger:planning:iteration:1#work:WU-example"]
-  }
-}
-```
+Stable Change and trace identity, title, creation time, and optional provenance. A persisted Change starts its trace before approval so refinement, validation, rejection, deferral, and withdrawal remain explainable.
 
 ### `trace_event`
 
-Ordered durable event written by runtime. Semantic-loop events use one event per loop iteration and include `loop`. Runtime coordination events use explicit `runtime.*` event names and omit `loop` because runtime is not a semantic loop.
+One ordered durable fact. Semantic events include `loop: decision`, `planning`, or `implementation`. Runtime coordination events use `runtime.*` names and omit `loop` because runtime is not a semantic loop.
+
+One semantic iteration records:
+
+- typed loop input refs or observed-state digest;
+- loop-specific high-signal output;
+- loop-owned quality-standard results;
+- exit status and route;
+- progress signals;
+- canonical refs.
 
 ```json
 {
   "type": "trace_event",
-  "id": "evt-0001",
-  "parentId": null,
-  "traceId": "TRACE-20260611-example",
-  "sequence": 1,
+  "id": "evt-decision-0003",
+  "parentId": "evt-decision-0002",
+  "traceId": "TRACE-CHG-dashboard-search",
+  "sequence": 3,
   "loop": "decision",
-  "event": "changes_approved",
-  "refs": ["kb:system/components/loop-model.md"],
-  "createdAt": "2026-06-11T00:00:00.000Z",
+  "event": "change_approved",
+  "refs": ["sha256:...", "kb:product/uis/terminal.md"],
+  "createdAt": "2026-08-01T00:03:00.000Z",
   "data": {
-    "iteration": 1,
-    "trigger": "user_request",
-    "output": {},
+    "iteration": 3,
+    "trigger": "user_approval",
+    "observedWorkStateDigest": "sha256:...",
+    "output": {
+      "changeRevision": {},
+      "approval": {}
+    },
     "exit": {
       "status": "exit",
       "conditions": [],
-      "nextAction": "Start planning."
+      "nextAction": "Include this approved Change in the next planning horizon."
     },
     "progress": {}
   }
 }
 ```
 
+Trace events store accepted facts or bounded snapshots, not generic JSON Patch operations. Reducers derive current state from semantically named events. A loop may emit a complete replacement for its bounded output revision with explicit base and superseded refs; old output remains history.
+
 ### `tail_checkpoint`
 
-Derived compact state for fast resume and view generation. Replay from `trace_head` remains authoritative.
-
-```json
-{
-  "type": "tail_checkpoint",
-  "id": "tail-0001",
-  "parentId": "evt-0001",
-  "traceId": "TRACE-20260611-example",
-  "firstKeptRecordId": "evt-0001",
-  "summary": "Decision exited; planning is next.",
-  "createdAt": "2026-06-11T00:00:00.000Z"
-}
-```
+A derived compact replay checkpoint. It may accelerate resume and retention but cannot override event history. Checkpoint data must identify the source tail and enough digests to detect stale or incompatible replay.
 
 ### `trace_close`
 
-Final lifecycle record for retention. In a full hot trace it is appended after completion; in a compact hot stub it is kept with the `trace_head` and a retention `tail_checkpoint` while the full pre-compact records remain recoverable from Git. It records the restore ref and close reason used to hydrate cold trace detail later. After `trace_close`, the trace is terminal: append helpers reject further records, status/resume views report the trace as closed, and work-queue projections exclude the trace from claimable work. Archive close/compact should only run when the trace goal is finished or explicitly deferred and a Git restore ref is available; trace-board/status views flag historical or bypassed closes as `closed_incomplete` when CHG/WU/implementation coverage is missing.
+Terminal retention record. Close requires implementation realization plus explicit outcome disposition: observed, observation scheduled, not externally observable with rationale, deferred, failed, or abandoned under authority. Long-running outcome observation may keep a trace dormant but open under bounded policy.
 
-```json
-{
-  "type": "trace_close",
-  "id": "TRACE-20260611-example:archive:close:4",
-  "parentId": "tail-0001",
-  "traceId": "TRACE-20260611-example",
-  "reason": "Trace finished and retained.",
-  "gitRestoreRef": "refs/codewiki/archive/TRACE-20260611-example",
-  "headRef": "TRACE-20260611-example",
-  "refs": ["TRACE-20260611-example", "refs/codewiki/archive/TRACE-20260611-example"],
-  "createdAt": "2026-06-11T00:00:00.000Z"
-}
-```
+After `trace_close`, append helpers reject new records. A materially new regression, follow-up, or changed outcome creates a linked Change Trace instead of reopening history.
 
-## Semantic loop iterations
+## Semantic loops
 
 There are exactly three semantic loops:
 
@@ -212,148 +203,131 @@ planning
 implementation
 ```
 
-Each semantic loop produces one appendable semantic report as the durable boundary. Runtime appends that report as a trace event after validation. The trace event stores `loop` as the semantic authority and `event` as the specific fact, read conceptually as `loop.event`, such as `decision.changes_approved`, `planning.work_units_created`, or `implementation.evidence_accepted`. Loop-specific Decisions, Work Items, and implementation changes live inside the event output and are referenced with technical subrefs such as `trace:<event-id>#change:<id>`, `trace:<event-id>#work:<id>`, and `trace:<event-id>#change:<id>`.
+Decision is a loop, not a domain entity. Its binding success fact is approval of an exact Change revision and digest. Planning consumes approved Changes and creates Sprint membership, Work Items, dependencies, and resolutions. Implementation consumes accepted Work Items or an explicitly approved direct scope and records Change realization.
 
-`appendSemanticLoopReport()` is the runtime-owned append helper for this boundary. It validates one target semantic output event and a final tail checkpoint, then appends the batch with expected-byte compare-and-swap. Low-level append helpers also validate every record against the current trace schema before writing, so stale generic event names such as `decision.iteration` are rejected before they can corrupt hot traces.
-
-A semantic loop iteration records:
-
-- loop name;
-- iteration number;
-- trigger;
-- high-signal loop output;
-- exit status;
-- exit condition results;
-- progress signals;
-- next safe action;
-- canonical refs.
-
-Exit statuses are:
+A semantic event is read as `loop.event`, for example:
 
 ```text
-continue
-exit
-route_back
-blocked
+decision.change_received
+decision.change_revised
+decision.change_approved
+planning.change_planned
+planning.change_replanned
+implementation.evidence_accepted
+implementation.evidence_rejected
 ```
 
-Example route-back history:
+The precise event vocabulary is versioned by the trace schema. Loop outputs, not event-name proliferation, carry detailed bounded facts.
+
+## Runtime coordination
+
+Runtime is the outer control loop and sole trace writer. Runtime events include meaningful coordination facts such as:
 
 ```text
-line 10: implementation.evidence_accepted -> route_back decision
-line 11: decision.changes_approved -> exit
-line 12: planning.work_units_created -> exit
-line 13: implementation.evidence_accepted -> exit
-```
-
-No line is rewritten. Route-back creates a new iteration in the target loop.
-
-## Event tree and trace lineage
-
-Inside a trace, `id` and `parentId` form a tree like Pi session entries. The active path can branch through route-backs, retries, and alternative implementation attempts without creating another trace identity. Views may render this event tree for review and resume, but the trace still represents one accountable goal.
-
-Across traces, CodeWiki uses `trace_head.origin` lineage metadata rather than sub-traces. Recurring, triggered, hook-based, amendment, or retry work creates an independent trace with origin refs to the trigger/source trace. The run trace closes independently and cites the trigger id, trigger trace id, planning work ref, and run key when available. This preserves trace closure while keeping provenance discoverable.
-
-## Runtime coordination events
-
-Runtime is the outer control loop and may append coordination events between semantic iterations. Runtime events do not create a fourth semantic loop and do not carry `loop`.
-
-Examples:
-
-```text
-runtime.work_unit.claimed
-runtime.work_unit.claim.released
-runtime.work_unit.claim.expired
-runtime.work_unit.claim.cancelled
+runtime.work_item.claimed
+runtime.work_item.claim.released
+runtime.work_item.claim.expired
+runtime.work_item.claim.cancelled
 runtime.host.observed
 runtime.host.blocked
 runtime.host.stopped
 ```
 
-Runtime events store worker ids, claim ids, expiry, and scheduling details in `data`. `refs` carry only canonical planning refs, source/test paths, trace refs, Git refs, or digests.
+Runtime events may advance Assignment and operational projections but cannot approve a Change, invent a Sprint or Work Item, or accept implementation evidence.
 
-## Generated views
+## Global Planning and multi-trace batches
 
-Generated views are disposable projections over traces, KB, source/tests, and Git refs:
+Planning observes a project-wide WorkState horizon and may produce one planning epoch affecting several Changes. Runtime slices accepted output by owning Change and appends it to affected Change Traces.
+
+Every multi-trace planning batch carries:
+
+- deterministic planning epoch id;
+- observed WorkState digest;
+- participant Change refs;
+- Sprint descriptor digests;
+- per-Change base planning revisions;
+- deterministic event ids.
+
+Runtime preflights every affected trace before writing. Filesystem writes cannot provide true multi-file atomicity, so partial commit is explicit and recoverable. A surviving participant identifies the expected batch; WorkState marks missing participants as `incomplete_commit`; runtime retries missing deterministic events idempotently. Partial state must never appear as a fully accepted Sprint view.
+
+Each Work Item has one owning Change Trace. Cross-Change contribution uses refs rather than duplicate implementation results.
+
+## Event tree and lineage
+
+Inside one Change Trace, `id` and `parentId` form an event tree. Route-backs, retries, and alternative attempts branch without changing Change identity.
+
+Across Change Traces, origin and explicit Change links express amendment, regression, duplicate, split, merge, discovery, or follow-up lineage. Lineage never grants approval authority and never lets one Change silently satisfy another.
+
+## WorkState and generated views
+
+WorkState folds all relevant Change Traces with current KB, source ownership, source/tests, Git, configuration, and runtime observations. Generated views include:
 
 ```text
-.codewiki/views/status.json
-.codewiki/views/resume.json
-.codewiki/views/work-plan.json
-.codewiki/views/work-queue.json
-.codewiki/views/trace-board.json
-.codewiki/views/triggers.json
-.codewiki/views/runtime-board.json
-.codewiki/views/quality.json
-.codewiki/views/blockers.json
-.codewiki/views/conflicts.json
+Changes Backlog
+approved Changes
+Change Journey
+Sprint views
+Work Pipeline
+work plan
+work queue
+runtime board
+quality
+blockers
+conflicts
+alignment and outcome realization
 ```
 
-Views answer questions quickly and own the disposable calculations needed for status, resume, quality, work-plan, trace-board, triggers, runtime-board, and work-queue projections. They do not own truth and must be rebuildable from traces and sources.
+Views expose current accepted or active revisions while retaining links to superseded and rejected history. They do not own truth and must label incomplete cross-trace batches, stale source versions, and inferred relationships.
 
-View projections show active work, not every historical repair attempt. A later semantic-loop iteration for the same trace and loop supersedes previous non-exit blockers, decision queues ignore non-exited decision attempts, accepted planning work excludes non-exited planning attempts from work-plan/work-queue, and conflict projections ignore work units already completed by implementation evidence.
+## Refs
 
-`work-plan` is the per-trace planning projection. `trace-queue` is the internal generated view for the Sprints Queue product concept: one Sprint Trace per accountable trace with Decision subitems, current status, blockers, and next semantic loop. `trace-board` remains a compatibility renderer/projection for Sprint goal status. `work-queue` is the runtime claim selection projection over Planning-approved Work Items, not raw Decisions. `triggers` derives scheduled/event/hook/manual trigger state from Planning Work Items, implementation enablement evidence, run trace lineage, and due schedule slots. `runtime-board` combines Sprints Queue-compatible state, work-queue, triggers, and optional runtime previews for operator visibility; it never owns truth or writes traces. `quality` summarizes decision, planning, and implementation Ready Checks for internal tools and future TUI surfaces. A dashboard, terminal board, or kanban display renders Sprints Queue views; it is not its own truth root.
+Trace `refs` contain canonical artifact identity only:
 
-## Trace data and refs
+- `change:<id>@<revision>` refs;
+- Change Trace and event refs;
+- KB refs;
+- source and test paths;
+- Git commits, trees, and restore refs;
+- content, policy, profile, target, and evidence digests.
 
-A trace line is one durable recovery fact, not full chat, scratch state, or a full artifact dump.
-
-`refs` must contain canonical artifact refs only:
-
-- KB paths;
-- source/test paths;
-- trace event ids;
-- Git commits/trees/restore refs;
-- content digests.
-
-Commands, prose summaries, acceptance text, exit condition details, remediation, route-back questions, and loop output facts belong in `data`, not `refs`.
+Commands, summaries, acceptance text, remediation, and quality detail belong in `data`, not `refs`.
 
 ## Temporary data
 
-Temporary working data belongs under:
+Scratch belongs under:
 
 ```text
-.codewiki/runtime/tmp/<trace-id>/<loop>/
+.codewiki/runtime/tmp/<change-trace-id>/<loop>/
 ```
 
-Active loop temp may include scratch artifacts such as:
-
-```text
-output.json
-exit.json
-worker-results.json
-logs/
-```
-
-Runtime temp is not truth.
-
-- `exit` deletes loop temp after durable trace, KB, source, test, or Git refs exist.
-- `continue`, `blocked`, or `route_back` may preserve loop temp for remediation.
-- A superseding same-loop iteration deletes or replaces stale temp.
-- Trace close deletes all remaining trace temp.
+Runtime temp may contain proposed output, quality drafts, worker results, bounded logs, or multi-trace write-ahead recovery packets. It is not truth. Durable trace append, Git/content proof, or another canonical ref must exist before cleanup removes evidence needed for recovery.
 
 ## Retention
 
-Closed traces can be compacted only after required evidence is committed and no active policy depends on the full hot record. Retention keeps enough hot information to discover the trace and enough Git restore refs to hydrate cold detail on demand.
+Closed traces may be compacted only after full history is preserved by a Git restore ref and no active Sprint, Assignment, scheduled observation, or policy depends on hot detail. A compact hot stub retains Change identity, a verified checkpoint, close metadata, lineage, and restore refs. Hydration verifies restored records before use.
 
-`wiki_archive` supports retention stubs, trace-close records, hydrate plans, and release-note summaries derived from `trace_close` plus implementation evidence. Close accepts a guarded trace id and resolves its records inside the facade, avoiding raw trace JSONL in agent context or tool arguments. It appends a `trace_close` record with expected-byte compare-and-swap. Release notes are derived output, not truth: they summarize close metadata, changed paths, checks, and evidence refs already present in the trace. Hydrate verifies archived records against the retained stub and returns the records and restore refs needed to restore hot detail.
+Rejected, withdrawn, deferred, failed, and abandoned Changes remain eligible for compact retention because their reasoning prevents duplicate work and preserves learning.
 
-The retention model avoids separate canonical catalogs. The hot trace file or retained trace stub plus Git history is the catalog. Hydration restores the exact trace records from retained refs when cold detail must become hot again.
+## OKF boundary
+
+OKF applies to `.codewiki/kb/**/*.md`, not trace JSONL. OKF tools may cite trace refs but must not parse, rewrite, compact, hydrate, or own `.codewiki/traces/TRACE-*.jsonl`.
 
 ## Non-goals
 
-- No graph as target product concept.
-- No canonical `.codewiki/traces/catalog.json`, `.codewiki/traces.jsonl`, or trace-index file.
-- No standalone validation loop.
-- No durable state in generated views.
-- No full Pi transcript storage inside CodeWiki traces.
-- No role-based runtime scheduling axis.
-- No canonical artifact-output or validation roots outside traces.
+- No separate Change journal, hidden Git-ref store, or legacy Change importer.
+- No one-Sprint-one-trace invariant.
+- No central trace catalog.
+- No canonical generated view.
+- No fourth semantic loop.
+- No full chat transcript, private reasoning, raw logs, or unbounded artifacts.
+- No generic mutation patches over a monolithic project object.
+- No automatic semantic approval from replay state.
 
 ## Related docs
 
+- [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
+- [Loop Contracts](loop-contracts.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)

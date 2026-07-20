@@ -1,208 +1,218 @@
 ---
 type: Concept
 title: Loop Model
-description: CodeWiki is a trace-backed software-development OS built around loops.
+description: CodeWiki is a Change-trace-backed software-development OS with one runtime outer loop and exactly three quality-governed semantic loops.
 tags:
   - codewiki
   - system
   - loop
   - model
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-08-01T00:00:00Z
 ---
 # Loop Model
 
-CodeWiki is a trace-backed software-development OS built around loops.
-
-The target product vocabulary is:
+CodeWiki is a Change-trace-backed software-development OS. One supervised runtime outer loop continuously restores project invariants by invoking exactly three semantic loops: Decision, Planning, and Implementation.
 
 ```text
 runtime outer loop
-semantic loop
-loop cycle
-loop output
-exit conditions
-trace iteration
+├── Decision semantic loop
+├── Planning semantic loop
+└── Implementation semantic loop
 ```
 
-Older migration vocabulary is not part of the desired-state model and must not define product concepts or source layout.
+Each semantic loop owns typed inputs, typed outputs, loop-specific quality standards, and exit conditions. Quality networks govern loop exit; they are not additional loops.
+
+## Change as semantic carrier
+
+Change is the stable accountable carrier of user or agent intent and the delta CodeWiki tries to close. Decision is not another entity. Decision is the semantic loop that receives, refines, validates, and approves an exact Change revision.
+
+Planning creates Sprints and Work Items from approved Changes. Runtime grants Assignments. Implementation realizes planned intent and records evidence against the owning Change. One Change may span several Sprints, and one Sprint may coordinate several Changes.
+
+```text
+Change intent
+-> exact approved Change revision
+-> Sprint and Work Item coverage
+-> Assignment attempts
+-> implementation realization
+-> outcome disposition
+```
+
+One append-only JSONL Change Trace records this journey. Backlog, Sprint, Work Pipeline, and Change Journey screens are views.
 
 ## Runtime outer loop
 
-Runtime is the outer control loop. It is not a semantic loop and it does not own semantic truth. Runtime is the sole trace writer: semantic loops produce appendable reports, and runtime validates and appends them.
+Runtime is logically always available and physically quiescent when no eligible work exists. It is not a semantic loop and does not own semantic truth.
 
 ```text
-while project has active traces:
-  read traces and derived views
-  inspect current state and exit conditions
-  choose next semantic loop or runtime coordination action
-  run one semantic loop iteration and append its report, or append one runtime coordination event
-  repeat
+receive user, agent, worker, Git, KB, schedule, or preview trigger
+refresh WorkState
+identify an unmet project invariant
+select its owning semantic loop or permitted mechanical action
+build bounded typed input
+run one semantic iteration
+validate output and exit through loop-owned quality standards
+guarded append to affected Change Trace(s)
+schedule permitted effects
+repeat until quiescent, blocked, or budget exhausted
 ```
 
-Runtime coordinates claims, scheduling, worker start, temporary data, budgets, stop conditions, retention, heartbeat/watch policies, worker liveness, and host integration. Accepted product/system truth remains in KB, source, tests, Git, and traces.
+Runtime coordinates trace writes, scheduling, claims, workers, integration, temporary data, budgets, supervision, retention, and host adapters. It cannot approve Change meaning, create Planning truth, or accept Implementation evidence.
 
-## Semantic loops
+Always available does not mean uncontrolled automation. Runtime stops when authority is missing, supervision disappears, policy blocks execution, a guarded source changes, conflict requires semantic resolution, budget is exhausted, or no eligible work remains.
 
-There are exactly three semantic loops:
+## WorkState
 
-1. Decision
-2. Planning
-3. Implementation
-
-Each semantic loop is defined by the same three sections:
-
-1. **Loop cycle** — what the agent repeats while inside the loop.
-2. **Loop output** — the high-signal packet the loop is trying to produce.
-3. **Exit conditions** — the conditions that decide whether the loop can exit, must continue, must route back, or is blocked.
-
-## Loop cycle
-
-A loop cycle is the agent's repeated work inside one semantic loop:
+WorkState is the shared disposable projection used by runtime and all loops:
 
 ```text
-observe durable refs
-act inside loop authority
-update loop output
-check exit conditions
-report appendable iteration to runtime
+Change Traces
++ Knowledge Base
++ source ownership
++ source/tests/Git
++ config and policy
++ bounded runtime observations
+= WorkState
+```
+
+Each loop receives only the relevant WorkState slice plus exact source versions and authority refs. Callers should provide intent, evidence, or explicit observations they own; they should not marshal repository facts the core can load itself.
+
+## Semantic loop cycle
+
+Every semantic loop repeats the same control shape while preserving loop-specific semantics:
+
+```text
+receive typed loop input
+observe bounded WorkState
+act within loop authority
+produce typed loop output
+evaluate loop-owned quality standards
 continue, exit, route back, or block
 ```
 
-The loop cycle is where noisy work happens: reading, comparing, editing, testing, asking questions, and resolving findings. Worker start belongs to host integration coordinated by runtime. Noise belongs in chat, tools, or runtime temp. It should not become durable truth unless distilled into loop output or compact route-back provenance.
+Noisy reading, editing, testing, model interaction, or worker execution stays in tools, sessions, or runtime temp until distilled into high-signal output and canonical refs.
 
-## Loop output
+## Loop inputs
 
-Loop output is the high-signal handoff packet produced by a semantic loop. It must be small enough for the next loop to consume without transcript replay, but structured enough for trace replay and recovery.
+Loop inputs state:
 
-A good loop output contains:
+- trigger and actor;
+- target Change or approved Change set;
+- relevant WorkState slice;
+- exact Change revisions, trace tails, KB/Git/policy digests, and plan revisions observed;
+- user or external authority refs;
+- submitted facts that the loop owns interpreting.
 
-- accepted facts;
-- canonical refs;
+Inputs are loop-specific. A generic infrastructure envelope may carry routing and concurrency metadata, but it must not replace `DecisionLoopInput`, `PlanningLoopInput`, or `ImplementationLoopInput` as domain contracts.
+
+## Loop outputs
+
+A loop output is the bounded high-signal result needed by downstream work and trace replay.
+
+Good outputs contain:
+
+- accepted facts and stable ids;
+- canonical refs and source versions;
 - coverage maps;
-- risks and blockers;
-- unresolved questions;
-- authority boundaries;
-- next-loop context;
-- evidence required by exit conditions.
+- risks, blockers, and unresolved authority;
+- quality-standard results;
+- route and next safe action.
 
-A loop output must not contain:
+Outputs exclude full chat, private reasoning, raw logs, stale views, unbounded diffs, and duplicate repository facts.
 
-- full chat transcript;
-- private scratch reasoning;
-- full logs;
-- duplicate prose;
-- stale generated views;
-- raw tool spam;
-- non-canonical refs in `refs`.
+A loop output is not downstream-authoritative until its quality-governed iteration exits successfully and runtime appends it. Continue, route-back, and blocked iterations remain durable accountability and remediation evidence but cannot masquerade as accepted upstream output.
 
-The loop output is high-signal because exit conditions force it to be high-signal. If required signal is missing, the loop continues or routes back.
+## Quality networks and exit
 
-## Loop quality network
-
-Exit conditions are the loop's quality and safety contract. In source, they are
-represented as a loop-owned quality network made of quality-standard nodes. They
-answer:
+Each loop owns one versioned quality network. Quality-standard nodes answer:
 
 ```text
-Can this loop safely exit?
-Can the next loop trust this output?
-If not, what exact condition is unmet?
+Can this bounded iteration exit?
+Can downstream work trust its output?
+If not, which authority or repair owns the gap?
 ```
 
-Quality-standard nodes should be deterministic when possible. Deterministic
-nodes may be binary or numeric. Deterministic nodes expose 0-100 repair scores
-without changing their fail-closed route status. Non-deterministic nodes use
-specialized judge nodes that score one standard from supplied evidence and return
-ref-linked feedback; passes below threshold or without a score fail closed.
-User-approval standards are allowed only when authority genuinely belongs to the
-project owner or another human authority.
-
-Loop exit results use four statuses:
+Exit statuses are:
 
 | Status | Meaning |
 | --- | --- |
-| `continue` | Same loop can remediate unmet conditions. |
-| `exit` | Conditions are met; loop output is accepted for downstream use. |
-| `route_back` | Earlier loop authority is required. |
-| `blocked` | External user, resource, policy, or runtime wait is required. |
+| `continue` | Same semantic loop can repair unmet conditions. |
+| `exit` | Output is accepted for downstream use. |
+| `route_back` | Earlier semantic authority is required. |
+| `blocked` | External user, resource, policy, capability, or supervision wait is required. |
 
-Semantic uncertainty becomes an explicit unmet quality standard, route-back, or user-approval block, not hidden confidence.
+Quality networks are evaluation machinery inside semantic loops, not inner quality loops or another product lifecycle.
 
-Implementation quality networks consume normalized review evidence, not raw tool authority. Fast edit feedback and Implementation exit review may reuse the same adapters, but they run with different budgets and different authority. Fast feedback is an agent-repair accelerator. Exit review is the trace-backed quality-network decision. Common language-agnostic nodes keep review portable across projects; language-specific nodes add deeper evidence only when their pack or underlying tool is available.
+## Loop responsibilities
 
-## Progress boundaries
+### Decision
 
-Loop systems need more than max-iteration caps. Every iteration should capture progress signals that help runtime detect useful motion versus churn:
+Maintains the invariant that every approved Change revision is coherent, grounded, outcome-oriented, knowledge-accounted, risk-classified, and approved by exact authority. It may continue refining the same Change, reject or defer it, or exit with an immutable approval receipt.
 
-- newly met exit conditions;
+### Planning
+
+Maintains the invariant that every selected approved Change is covered by a feasible global execution plan or explicit resolution. It observes a bounded project planning horizon, creates Sprints and Work Items, assigns one owning Change per Work Item, declares cross-Change contribution and dependencies, and optimizes safe execution across active work.
+
+### Implementation
+
+Maintains the invariant that every accepted Work Item and approved direct scope is realized, integrated, tested, evidenced, and aligned with the owning Change. Workers produce candidate evidence; the Implementation loop alone accepts semantic realization.
+
+## Progress and churn control
+
+Each iteration records progress signals:
+
+- newly met standards;
 - changed canonical refs;
+- superseded output refs;
 - repeated failure signatures;
 - unchanged state digests;
-- budget spent without new evidence;
+- budget spent;
 - next safe action.
 
-Runtime may stop, block, or ask for user approval when iterations consume budget without moving conditions toward exit.
+Runtime may quiesce, block, or ask for authority when repeated iterations consume budget without moving the relevant invariant.
 
-## Trace iterations
+## Route-back
 
-A semantic loop iteration is the durable trace boundary. The semantic loop produces the iteration report; runtime appends it. JSONL trace files are append-only; old iterations are never rewritten.
+Workflow is not a one-way pipeline:
 
-```text
-line 10: implementation.evidence_accepted -> route_back decision
-line 11: decision.changes_approved -> exit
-line 12: planning.work_units_created -> exit
-line 13: implementation.evidence_accepted -> exit
-```
+- Implementation routes to Planning for scope, ordering, dependency, path, verification, or Work Item changes.
+- Implementation routes to Decision when accepted intent, product behavior, risk, Knowledge meaning, or user authority must change.
+- Planning routes to Decision when approved Change meaning is insufficient or contradictory.
+- Decision may observe current project state before continuing but cannot delegate approval authority downstream.
 
-Current state is exposed through trace-derived views that select the latest relevant accepted or active iteration plus runtime coordination events. The calculation belongs to the view builder; it is not a separate product concept or durable state layer.
+Route-back appends a later iteration to the same Change Trace. Approved revisions remain immutable. If accountable outcome changes materially, runtime creates a linked new Change Trace rather than silently rewriting identity.
 
-## Iteration event shape
+## Trace iteration
 
-Target trace iteration events follow this conceptual shape:
+One semantic iteration is one append-only durable trace boundary:
 
 ```json
 {
-  "type": "trace_event",
   "loop": "implementation",
   "event": "evidence_accepted",
   "refs": ["src/example.ts", "tests/example.test.ts", "sha256:..."],
   "data": {
     "iteration": 4,
     "trigger": "worker_results",
+    "observedWorkStateDigest": "sha256:...",
     "output": {},
     "exit": {
       "status": "continue",
       "conditions": [],
-      "targetLoop": null,
-      "nextAction": "Collect final aggregate content proof."
+      "nextAction": "Collect aggregate integration proof."
     },
-    "progress": {
-      "changedRefs": [],
-      "newlyMetConditions": [],
-      "repeatedFailures": []
-    }
+    "progress": {}
   }
 }
 ```
 
-`refs` contain canonical artifact refs only. Loop output, exit condition results, remediation, commands, summaries, and progress details belong in `data`.
-
-## Route-back rules
-
-The workflow is not a straight pipeline. Later loops can route back when authority belongs earlier:
-
-- implementation can route back to planning for scope/order/path/test strategy changes;
-- implementation can route back to decision for ambiguity, product/API contract changes, risk, or user approval;
-- planning can route back to decision for under-specified requirements or conflicting intent;
-- decision cannot be bypassed when a new product/system decision is needed.
-
-Route-back appends a new iteration in the target loop. It never mutates an old iteration.
+Runtime coordination facts may appear between semantic iterations but never create a fourth loop.
 
 ## Related docs
 
+- [WorkState](work-state.md)
+- [Loop Contracts](loop-contracts.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)
 - [Traces](traces.md)
 - [Runtime](runtime.md)
-- [API Tool Surface](api-tools.md)

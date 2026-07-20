@@ -62,7 +62,10 @@ function readControllerIdentity(
 ): DashboardRuntimeIdentity | undefined {
 	try {
 		const value = JSON.parse(
-			readFileSync(join(projectRoot, ".pi", "codewiki-controller.json"), "utf8"),
+			readFileSync(
+				join(projectRoot, ".pi", "codewiki-controller.json"),
+				"utf8",
+			),
 		) as Record<string, unknown>;
 		const source = record(value.source);
 		const packageValue = record(value.package);

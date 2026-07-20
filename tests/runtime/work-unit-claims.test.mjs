@@ -7,7 +7,7 @@ import {
 	appendRuntimeWorkUnitClaims,
 	createRuntimeWorkUnitClaimEvents,
 } from "../../src/runtime/work-unit-claims.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { selectRuntimeWorkUnitClaims } from "../../src/runtime/work-unit-claim-selection.ts";
 import {
 	TraceAppendConflictError,
@@ -20,7 +20,7 @@ import {
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 
 function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {
-	const decisionRef = `trace:${traceId}:decision:iteration:1#change:CHG-${workUnitId}`;
+	const changeRef = `trace:${traceId}:decision:iteration:1#change:CHG-${workUnitId}`;
 	return {
 		type: "trace_event",
 		id: `${traceId}:planning:iteration:${sequence}`,
@@ -29,7 +29,7 @@ function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {
 		sequence,
 		loop: "planning",
 		event: "work_units_created",
-		refs: [decisionRef, pathScope],
+		refs: [changeRef, pathScope],
 		createdAt: "2026-06-11T00:00:01.000Z",
 		data: {
 			exit: { status: "exit", targetLoop: "implementation" },
@@ -39,7 +39,7 @@ function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {
 					{
 						id: workUnitId,
 						title: `Work ${workUnitId}`,
-						decisionRefs: [decisionRef],
+						changeRefs: [changeRef],
 						componentRefs: ["component.runtime"],
 						pathScopes: [pathScope],
 						dependsOn: [],
@@ -140,7 +140,7 @@ describe("runtime work-unit claim helper claim batch", () => {
 		);
 		blocked.data.output.qualityStandards =
 			blocked.data.output.qualityStandards.map((standard) =>
-				standard.id === "uncertainty_resolved"
+				standard.id === "acceptance_clarity"
 					? {
 							...standard,
 							status: "blocked",

@@ -1,4 +1,4 @@
-import { mkdir, appendFile, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, appendFile, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import {
 	CodewikiTraceError,
@@ -6,7 +6,7 @@ import {
 	TraceClosedAppendError,
 } from "../error-handling/trace-errors.ts";
 import type { TraceClose, TraceRecord } from "./types.ts";
-import { parseTraceText } from "./reader.ts";
+import { parseTraceText, readLastTraceRecord } from "./reader.ts";
 import { assertValidTraceRecord, traceFilePath } from "./schema.ts";
 import { formatTraceLine, formatTraceText } from "./writer.ts";
 
@@ -209,9 +209,9 @@ async function assertTraceOpenForAppend(
 	previousBytes: number,
 ): Promise<void> {
 	if (previousBytes === 0) return;
-	const close = parseTraceText(await readFile(path, "utf8")).find(
-		(record): record is TraceClose => record.type === "trace_close",
-	);
+	const lastRecord = await readLastTraceRecord(path);
+	const close: TraceClose | undefined =
+		lastRecord?.type === "trace_close" ? lastRecord : undefined;
 	if (!close) return;
 	throw new TraceClosedAppendError(path, close.traceId, close.id);
 }

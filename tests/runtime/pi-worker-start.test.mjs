@@ -8,7 +8,7 @@ import {
 	startPiRuntimeWorkers,
 	startPiWorkers,
 } from "../../src/pi/worker-start.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { createRuntimeWorkUnitClaimEvents } from "../../src/runtime/work-unit-claims.ts";
 import { selectRuntimeWorkUnitClaims } from "../../src/runtime/work-unit-claim-selection.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
@@ -18,7 +18,7 @@ import { createTraceHead } from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 
 function planningEvent(traceId, workUnitId, pathScope) {
-	const decisionRef = `trace:${traceId}:decision:iteration:1#change:CHG-${workUnitId}`;
+	const changeRef = `trace:${traceId}:decision:iteration:1#change:CHG-${workUnitId}`;
 	return {
 		type: "trace_event",
 		id: `${traceId}:planning:iteration:1`,
@@ -27,7 +27,7 @@ function planningEvent(traceId, workUnitId, pathScope) {
 		sequence: 1,
 		loop: "planning",
 		event: "work_units_created",
-		refs: [decisionRef, pathScope],
+		refs: [changeRef, pathScope],
 		createdAt: "2026-06-11T00:00:01.000Z",
 		data: {
 			exit: { status: "exit", targetLoop: "implementation" },
@@ -37,7 +37,7 @@ function planningEvent(traceId, workUnitId, pathScope) {
 					{
 						id: workUnitId,
 						title: `Work ${workUnitId}`,
-						decisionRefs: [decisionRef],
+						changeRefs: [changeRef],
 						componentRefs: ["component.runtime"],
 						pathScopes: [pathScope],
 						dependsOn: [],

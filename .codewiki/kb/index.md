@@ -9,5 +9,5 @@ okf_version: "0.1"
 
 ## Directories
 
-* [Product](product/) - 11 concepts under `product/`.
-* [System](system/) - 30 concepts under `system/`.
+* [Product](product/) - 12 concepts under `product/`.
+* [System](system/) - 32 concepts under `system/`.

@@ -16,11 +16,6 @@ export * from "./wiki-runtime.ts";
 export { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../index.ts";
 export type { SourceLayout } from "../index.ts";
 export type {
-	ApprovedChangePolicyProfile,
-	CurrentStatePacket,
-	KnowledgeDelta,
-} from "../decision/types.ts";
-export type {
 	ImplementationChange,
 	ImplementationChangeInput,
 	ImplementationWorkerClaim,
@@ -31,12 +26,6 @@ export type {
 	ImplementationWorkerProofConflict,
 	ImplementationWorkerProofInput,
 } from "../implementation/worker-proof.ts";
-export type {
-	PlanningDecisionResolution,
-	PlanningDecisionResolutionInput,
-	PlanningWorkItem,
-	PlanningWorkItemInput,
-} from "../planning/types.ts";
 export type {
 	SourceMapComponent,
 	SourceMapContract,
@@ -51,18 +40,16 @@ export type {
 	Change,
 	ChangeAssessment,
 	ChangeClassification,
+	ChangeDeliveryConstraints,
 	ChangeEvidence,
 	ChangeIntent,
+	ChangeKnowledgeImpact,
+	ChangeOutcomeContract,
 	ChangeRecommendation,
 	ChangeStatus,
 	ChangeStatusTransition,
 	ChangeValidation,
 } from "../changes/types.ts";
-export type {
-	AcceptedChangeBundle,
-	AcceptedChangeSelection,
-	AcceptedChangeSnapshot,
-} from "../changes/accepted-bundle.ts";
 export type { ChangeRecord } from "../changes/records.ts";
 export type {
 	ChangeQuery,
@@ -102,6 +89,16 @@ export type {
 	TraceReleaseNoteCheck,
 } from "../traces/release-notes.ts";
 export type { TraceEvent, TraceRecord } from "../traces/types.ts";
+export { buildProjectWorkState } from "../work-state/project.ts";
+export { buildWorkState } from "../work-state/projector.ts";
+export type {
+	WorkState,
+	WorkStateAssignment,
+	WorkStateBlocker,
+	WorkStateChange,
+	WorkStateSprint,
+	WorkStateWorkItem,
+} from "../work-state/types.ts";
 export type {
 	BlockersView,
 	ConflictsView,

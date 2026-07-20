@@ -12,6 +12,7 @@ import { join, relative } from "node:path";
 import { describe, it } from "node:test";
 import { bootstrapCodewiki } from "../../src/project/bootstrap.ts";
 import { loadWikiConfigFile } from "../../src/project/config-file.ts";
+import { parseOkfDocument } from "../../src/knowledge/okf-frontmatter.ts";
 import { validateOkfBundle } from "../../src/knowledge/okf-validation.ts";
 import { sourceOwnershipMapFromOkfBundle } from "../../src/knowledge/source-ownership.ts";
 import {
@@ -85,6 +86,7 @@ describe("project bootstrap", () => {
 			assert.ok(result.preserved.includes(".codewiki/kb"));
 			assert.ok(result.preserved.includes(".codewiki/traces"));
 			assert.ok(result.skipped.includes(".codewiki/kb/lexicon.md"));
+			assert.ok(result.created.includes(".codewiki/kb/product/DESIGN.md"));
 			assert.equal(
 				await readFile(join(root, ".codewiki", "kb", "lexicon.md"), "utf8"),
 				existingKb,
@@ -116,6 +118,22 @@ describe("project bootstrap", () => {
 			assert.equal(result.project, "bootstrap-fixture");
 			assert.equal(result.brownfield, true);
 			assert.ok(result.created.includes(".codewiki/config.json"));
+			assert.ok(result.created.includes(".codewiki/kb/product/DESIGN.md"));
+			const design = parseOkfDocument(
+				"product/DESIGN.md",
+				await readFile(join(root, ".codewiki/kb/product/DESIGN.md"), "utf8"),
+			);
+			assert.equal(design.frontmatter.version, "alpha");
+			assert.equal(design.frontmatter.name, "bootstrap-fixture");
+			assert.equal(design.frontmatter.type, "Concept");
+			assert.equal(design.frontmatter.title, "bootstrap-fixture Design System");
+			assert.equal(design.frontmatter.colors.tertiary, "#0F766E");
+			assert.equal(
+				design.frontmatter.typography["body-md"].fontFamily,
+				"system-ui",
+			);
+			assert.match(design.body, /## Iconography/);
+			assert.match(design.body, /## Visual References/);
 			assert.equal(
 				result.created.includes(".codewiki/kb/system/source-map.yaml"),
 				false,
@@ -188,6 +206,7 @@ describe("project bootstrap", () => {
 			const second = await bootstrapCodewiki(root);
 			assert.equal(second.updated.length, 0);
 			assert.ok(second.skipped.includes(".codewiki/config.json"));
+			assert.ok(second.skipped.includes(".codewiki/kb/product/DESIGN.md"));
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

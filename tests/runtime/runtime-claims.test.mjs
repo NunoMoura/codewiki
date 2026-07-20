@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import {
 	createRuntimeClaimEvent,
 	createRuntimeClaimReleaseEvent,
@@ -47,7 +47,7 @@ function planningEvent() {
 					{
 						id: "WU-runtime",
 						title: "Schedule runtime work",
-						decisionRefs: [
+						changeRefs: [
 							"trace:TRACE-runtime:decision:iteration:1#change:CHG-runtime",
 						],
 						componentRefs: ["component.runtime"],

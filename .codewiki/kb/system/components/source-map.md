@@ -15,7 +15,7 @@ codewiki_source_patterns:
   - src/project/**
   - src/utils/**
 codewiki_test_patterns:
-  - tests/scaffold.test.mjs
+  - tests/scaffold-core.test.mjs
   - tests/project/**
   - tests/implementation/repo-proof.test.mjs
   - tests/runtime/wiki-config.test.mjs
@@ -29,7 +29,7 @@ codewiki_source_map:
     source_patterns:
       - src/project/**
     test_patterns:
-      - tests/scaffold.test.mjs
+      - tests/scaffold-core.test.mjs
       - tests/project/**
       - tests/implementation/repo-proof.test.mjs
       - tests/runtime/wiki-config.test.mjs

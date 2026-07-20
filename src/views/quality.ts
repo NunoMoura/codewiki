@@ -1,9 +1,7 @@
-import { DECISION_LOOP_GRAPH } from "../decision/loop.ts";
-import { decisionQualityStandards } from "../decision/quality-standards.ts";
+import { DECISION_CHANGE_QUALITY_STANDARDS } from "../decision/change-quality.ts";
 import { IMPLEMENTATION_LOOP_GRAPH } from "../implementation/loop.ts";
 import { implementationQualityStandards } from "../implementation/quality-standards.ts";
-import { PLANNING_LOOP_GRAPH } from "../planning/loop.ts";
-import { planningQualityStandards } from "../planning/quality-standards.ts";
+import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../planning/portfolio-quality.ts";
 import type { LoopQualityGraphNode } from "../loops/graph.ts";
 import { loopOutputEvents } from "../traces/queries.ts";
 import type {
@@ -29,26 +27,52 @@ interface QualityStandardGraphMetadata {
 }
 
 const QUALITY_GRAPH_METADATA_BY_LOOP = {
-	decision: qualityGraphMetadataById(DECISION_LOOP_GRAPH.nodes),
-	planning: qualityGraphMetadataById(PLANNING_LOOP_GRAPH.nodes),
+	decision: new Map<string, QualityStandardGraphMetadata>(),
+	planning: new Map<string, QualityStandardGraphMetadata>(),
 	implementation: qualityGraphMetadataById(IMPLEMENTATION_LOOP_GRAPH.nodes),
 } satisfies Record<TraceLoop, Map<string, QualityStandardGraphMetadata>>;
 
+const CURRENT_DECISION_STANDARDS = currentStandards(
+	DECISION_CHANGE_QUALITY_STANDARDS,
+);
+const CURRENT_PLANNING_STANDARDS = currentStandards(
+	PLANNING_PORTFOLIO_QUALITY_STANDARDS,
+);
+
 const REQUIRED_QUALITY_STANDARDS: Record<TraceLoop, QualityStandardSummary[]> =
 	{
-		decision: normalizeStandards(
-			decisionQualityStandards([], []),
-			QUALITY_GRAPH_METADATA_BY_LOOP.decision,
-		),
-		planning: normalizeStandards(
-			planningQualityStandards([]),
-			QUALITY_GRAPH_METADATA_BY_LOOP.planning,
-		),
+		decision: CURRENT_DECISION_STANDARDS,
+		planning: CURRENT_PLANNING_STANDARDS,
 		implementation: normalizeStandards(
 			implementationQualityStandards([]),
 			QUALITY_GRAPH_METADATA_BY_LOOP.implementation,
 		),
 	};
+
+function currentStandards(
+	definitions: Array<{
+		id: string;
+		description: string;
+		mode: LoopQualityStandardResult["mode"];
+	}>,
+): QualityStandardSummary[] {
+	return definitions.map((definition) => ({
+		id: definition.id,
+		status: "missing",
+		mode: definition.mode,
+		description: definition.description,
+		gate: "hard",
+		scoreThreshold: 100,
+		refs: [],
+	}));
+}
+
+function requiredStandards(
+	_event: TraceEvent,
+	loop: TraceLoop,
+): QualityStandardSummary[] {
+	return REQUIRED_QUALITY_STANDARDS[loop];
+}
 
 export interface LoopQualityReadiness {
 	loop: TraceLoop;
@@ -107,7 +131,7 @@ export function loopQualityReadiness(event: TraceEvent): LoopQualityReadiness {
 	const loop = semanticLoop(event);
 	const provided = qualityStandardsFromEvent(event);
 	const byId = new Map(provided.map((standard) => [standard.id, standard]));
-	const required = REQUIRED_QUALITY_STANDARDS[loop].map((requiredStandard) => {
+	const required = requiredStandards(event, loop).map((requiredStandard) => {
 		const standard = byId.get(requiredStandard.id);
 		if (!standard) {
 			return {

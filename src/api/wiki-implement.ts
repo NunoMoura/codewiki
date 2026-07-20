@@ -1,5 +1,5 @@
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import type { DecisionEvidencePolicy } from "../decision/policy-profiles.ts";
+import type { ImplementationEvidencePolicy } from "../implementation/evidence-policy.ts";
 import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
 import { uniqueStrings } from "../loops/quality-standards.ts";
 import {
@@ -60,8 +60,7 @@ export type WikiImplementMode = "preview" | "append";
 export interface RunWikiImplementInput {
 	repoRoot: string;
 	traceId: string;
-	planningEvents?: TraceEvent[];
-	decisionEvents?: TraceEvent[];
+	planningEvents: TraceEvent[];
 	changes?: ImplementationChange[];
 	changeInputs?: ImplementationChangeInput[];
 	workerResults?: ImplementationWorkerResultInput[];
@@ -71,7 +70,7 @@ export interface RunWikiImplementInput {
 	archiveDisposition?: ImplementationArchiveDisposition;
 	archiveDispositionInput?: ImplementationArchiveDispositionInput;
 	requireArchiveDisposition?: boolean;
-	evidencePolicy?: DecisionEvidencePolicy;
+	evidencePolicy?: ImplementationEvidencePolicy;
 	includeCachedReviewEvidence?: boolean;
 	autoReviewEvidence?: boolean;
 	reviewTimeoutMs?: number;
@@ -137,7 +136,6 @@ const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"repoRoot",
 	"traceId",
 	"planningEvents",
-	"decisionEvents",
 	"changes",
 	"changeInputs",
 	"workerResults",
@@ -182,16 +180,12 @@ export async function runWikiImplement(
 		"traceId",
 		input.traceId,
 	);
-	if (
-		!Array.isArray(input.planningEvents) &&
-		!Array.isArray(input.decisionEvents)
-	) {
+	if (!Array.isArray(input.planningEvents)) {
 		throw createCodewikiApiError({
 			operation: "wiki_implement",
 			code: "invalid_input",
 			field: "planningEvents",
-			message:
-				"wiki_implement requires planningEvents or direct implementation decisionEvents.",
+			message: "wiki_implement requires runtime-selected planningEvents.",
 		});
 	}
 	const mode = input.mode || "preview";
@@ -459,7 +453,7 @@ function shouldIncludeCachedReviewEvidence(
 function reviewPackSelectionForConfig(
 	reviewConfig: WikiQualityReviewConfig,
 	changedPaths: string[],
-	evidencePolicy?: DecisionEvidencePolicy,
+	evidencePolicy?: ImplementationEvidencePolicy,
 ): ReviewPackSelection {
 	return reviewPackSelectionForPolicy(
 		reviewConfig,
@@ -542,7 +536,6 @@ function implementationIterationInput(
 	return {
 		traceId: input.traceId,
 		planningEvents: input.planningEvents,
-		decisionEvents: input.decisionEvents,
 		changes: prepared.changes,
 		workerResults: input.workerResults,
 		workerClaims: input.workerClaims,

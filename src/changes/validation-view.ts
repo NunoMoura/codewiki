@@ -171,11 +171,6 @@ export function buildChangeValidationCard(
 					record.change.intent.currentState,
 					context,
 				),
-				currentPain: optionalBoundedText(
-					"Current pain",
-					record.change.intent.currentPain,
-					context,
-				),
 			},
 			proposedChange: {
 				text: boundedText(
@@ -186,11 +181,6 @@ export function buildChangeValidationCard(
 				rationale: boundedText(
 					"Change rationale",
 					record.change.intent.rationale,
-					context,
-				),
-				desiredOutcome: optionalBoundedText(
-					"Desired outcome",
-					record.change.intent.desiredOutcome,
 					context,
 				),
 				nonGoals: boundedTextList(
@@ -223,12 +213,12 @@ export function buildChangeValidationCard(
 			})),
 			successSignal: optionalBoundedText(
 				"success signal",
-				record.change.validation.successSignal,
+				record.change.outcome.successSignals[0],
 				context,
 			),
 			regressionPlan: optionalBoundedText(
 				"regression plan",
-				record.change.validation.regressionPlan,
+				record.change.safety.regressionPlan,
 				context,
 			),
 			validatorVersion: optionalBoundedText(

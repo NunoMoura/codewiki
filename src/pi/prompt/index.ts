@@ -4,10 +4,10 @@ export const codewikiPromptHooksAvailable = true as const;
 export const CODEWIKI_PROMPT_MARKER = "<!-- codewiki-prompt-v1 -->";
 
 export const CODEWIKI_PROMPT_GUIDELINES = [
-	"CodeWiki OS truth: .codewiki/kb/** is design truth; .codewiki/traces/TRACE-*.jsonl is workflow/state truth; generated views and renderers are disposable.",
-	"Use internal wiki_state for trace-backed context, then wiki_decide, wiki_plan, or wiki_implement for semantic loop work; do not shell out to the transitional source CLI.",
-	"There are exactly three semantic loops: decision, planning, and implementation. Runtime is backend/host coordination only, not a fourth loop or normal agent tool.",
-	"User-facing progress is pipeline-first: eligible Pi TUI sessions open the Work Pipeline dashboard automatically; /wiki-dashboard reopens or stops it, and legacy grouped /codewiki namespaces are not public UX.",
+	".codewiki/kb/** owns design; one JSONL Change Trace owns each Change; source/tests/Git own implementation proof; WorkState/views are disposable. Frontend Changes read .codewiki/kb/product/DESIGN.md and declare Knowledge/UI refs.",
+	"Use internal wiki_state and obey its runtimeReaction; runtime selects the loop. Never choose from caller state or shell out to the CLI.",
+	"Exactly three semantic loops exist: Decision approves Change revisions, Planning creates Sprints and owned Work Items across approved Changes, and Implementation accepts realization. Runtime is their supervised outer loop, not a fourth semantic loop or agent mega-tool.",
+	"Eligible Pi TUI sessions open the Work Pipeline dashboard automatically; /wiki-dashboard reopens or stops it. Legacy grouped /codewiki namespaces are not public UX.",
 ] as const;
 
 export function renderCodewikiPromptInstructions(): string {

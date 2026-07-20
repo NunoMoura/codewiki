@@ -20,7 +20,7 @@ function queue(items) {
 			traceId: item.traceId || `TRACE-${item.id}`,
 			title: item.title || item.id,
 			traceRefs: item.traceRefs || [`TRACE-${item.id}:planning:${item.id}`],
-			decisionRefs: item.decisionRefs || [],
+			changeRefs: item.changeRefs || [],
 			planningRefs: item.planningRefs || [
 				`TRACE-${item.id}:planning:${item.id}`,
 			],

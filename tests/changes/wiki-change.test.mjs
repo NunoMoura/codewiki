@@ -31,6 +31,7 @@ function change(id = "CHG-api-test") {
 			desiredState: "Changes have one guarded API.",
 			rationale: "Adapters need one semantic contract.",
 			nonGoals: ["Do not accept Changes."],
+			alternatives: ["Keep Changes conversational only."],
 		},
 		classification: {
 			kind: "introduce",
@@ -43,13 +44,25 @@ function change(id = "CHG-api-test") {
 			user: "Agents can retain out-of-scope improvements.",
 			maintainer: "Mutations use exact revision guards.",
 		},
+		knowledge: {
+			topicRefs: [],
+			propagationRefs: [],
+			noImpactRationale: "API-only fixture.",
+		},
+		outcome: {
+			successSignals: ["Guarded Change API tests pass."],
+			evidenceExpectations: ["Change API test evidence."],
+		},
+		delivery: { constraints: [], planningQuestions: [] },
 		evidence: {
 			sourceRefs: ["src/api/wiki-change.ts"],
 			proofRefs: [],
 		},
 		safety: {
 			risk: "low",
+			invariants: ["Stale records remain immutable."],
 			failureModes: ["An agent mutates a stale record."],
+			regressionPlan: "Run Change API tests.",
 		},
 		validation: {
 			state: "draft",

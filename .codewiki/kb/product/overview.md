@@ -15,26 +15,27 @@ CodeWiki exists to keep repository intent fresh, explicit, actionable, and recov
 For the current architecture wave, CodeWiki is backend-first. The active product focus is:
 
 - hot knowledge in `.codewiki/kb/**`;
-- a durable Changes Backlog for mutable pre-Decision Changes;
-- append-only JSONL traces as workflow/state truth;
-- independent trace execution coordinated by the runtime outer loop;
-- decision, planning, and implementation semantic loops;
+- a Google DESIGN.md-compatible `.codewiki/kb/product/DESIGN.md` for normative visual identity, tokens, typography, iconography, component rules, and durable visual references;
+- one durable append-only JSONL Change Trace for every explicitly persisted Change journey;
+- Changes Backlog, Sprint, queue, and journey views derived from Change Traces and WorkState;
+- an event-driven supervised runtime outer loop that remains available and quiesces safely;
+- Decision, Planning, and Implementation semantic loops;
 - loop outputs and exit conditions;
 - generated status/resume/work views;
 - Git-backed content proof and retention;
 - package APIs and future host adapters.
 
-Product docs own user definitions, user stories, value, workflows, and non-goals. They define only the active Pi session and local dashboard surfaces retained for this wave.
+Product docs own user definitions, user stories, value, workflows, non-goals, branding, and visual identity. `product/DESIGN.md` is the canonical design-system contract and combines Google DESIGN.md tokens with CodeWiki-compatible OKF metadata. Product UI docs define behavior and information architecture; DESIGN.md defines visual rationale and normative token values.
 
 ## UI position
 
 Previous status panels, status docks, Board, Map, Product/System navigation panels, write-capable browser Control Room concepts, and persistent terminal card widgets are deprecated for now.
 
-The retained UI direction is a focused Pi conversation plus a local retro dashboard that opens automatically once when an eligible Pi TUI session starts. The Pi conversation is the main user session: the user and agent brainstorm, create and refine Changes, validate exact revisions, and supervise active work there. There is no separate Ideas Workspace product or domain. Mutable Change records are durable in the Changes Backlog so conversation compaction or restart does not lose proposed work. Before Decision, the user confirms a Sprint Map that groups exact validated Change revisions under one accountable goal, canonical Product/System Knowledge Base topics or an explicit no-impact rationale, cross-Sprint dependencies, and one rollback boundary. Sprint shaping remains mutable Change work in the main session; it is not a fourth semantic loop or a new truth store. `/wiki-dashboard` remains the explicit reopen/recovery action and can stop the local host with `--stop`.
+The retained UI direction is a focused Pi conversation plus a local retro dashboard that opens automatically once when an eligible Pi TUI session starts. The Pi conversation is the main user session: the user and agent brainstorm, explicitly persist Changes, refine exact revisions through Decision, approve them, and supervise active work. There is no separate Ideas Workspace or hidden Change store. First persistence creates the Change Trace, so conversation compaction or restart cannot lose retained intent. `/wiki-dashboard` remains the explicit reopen/recovery action and can stop the local host with `--stop`.
 
-The product hierarchy is `Change → Sprint → Work Item → Assignment`. One Sprint always equals one trace-backed lifecycle. Planning creates Work Items inside that Sprint, and runtime grants bounded Assignments for those Work Items. Internal trace and work-unit identifiers remain valid implementation details but should not replace this vocabulary in user-facing views.
+Change is the accountable product carrier. Decision is the loop that approves an exact Change revision, not another entity. Planning creates Sprints and Work Items from the relevant portfolio of approved Changes; runtime grants bounded Assignments. Relationships are `Change * ↔ * Sprint`, `Sprint → Work Item`, and `Work Item → Assignment attempts`. Each Work Item has one owning Change and may contribute to others.
 
-Once `wiki_decide` consumes a user-confirmed Sprint Map and its validated Changes, then creates the Decision-backed trace, that trace becomes an independent unit of work. A trace-scoped runner can plan, coordinate workers, integrate results, and validate implementation while the main session continues discussing other Changes. The dashboard projects one Work Pipeline with shared Pipeline Card visuals over tagged Change and Sprint Trace projections, plus secondary Configuration. It never merges canonical stores, owns truth, or writes source directly. Trace JSONL, Change records, KB, and Git evidence remain authoritative.
+One Change owns one JSONL Change Trace from intake through outcome disposition. A Sprint is a Planning-created execution grouping and generated view across one or more Change Traces, not a trace lifecycle. Runtime can coordinate global Planning, parallel workers, integration, and Implementation while the main session continues discussing other Changes. The dashboard projects one Change-rooted Work Pipeline plus Sprint, Work Item, Assignment, preview, and Configuration views. It never owns truth or writes source directly. Change Traces, KB, source/tests, Git evidence, and bounded config remain authoritative.
 
 Pi TUI support remains for focused command output and source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Backend state and continuation remain available through internal tools and APIs such as `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. `/wiki-dashboard` is the only public state/dashboard command; the former state alias is removed. No separate status command is planned. Renderer output is never canonical truth.
 
@@ -48,7 +49,8 @@ CodeWiki should optimize for the best achievable code quality with the least use
 
 ## Success signals
 
-- User intent is captured before implementation expands.
+- User intent is captured in one accountable Change Trace before implementation expands.
+- Approved Changes receive globally coherent Planning coverage across Sprints without losing per-Change accountability.
 - Product stories map to semantic loops and system components without duplicating technical design.
 - Backend state is inspectable through `wiki_state` and generated views.
 - Loop outputs are high-signal enough for downstream loops without chat archaeology.
@@ -59,6 +61,7 @@ CodeWiki should optimize for the best achievable code quality with the least use
 
 ## Related docs
 
+- [CodeWiki Design System](DESIGN.md)
 - [Maintainers](users/maintainers.md)
 - [Agents](users/agents.md)
 - [Extension and Workflow Authors](users/package-authors.md)

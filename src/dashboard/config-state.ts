@@ -1,5 +1,9 @@
 import { createHash } from "node:crypto";
 import {
+	previewProfileDigest,
+	type PreviewProfile,
+} from "../preview/profile.ts";
+import {
 	loadWikiConfigFile,
 	WIKI_CONFIG_PATH,
 } from "../project/config-file.ts";
@@ -56,6 +60,10 @@ export interface DashboardConfigLimits {
 	allowedTools: string[];
 }
 
+export interface DashboardPreviewProfile extends PreviewProfile {
+	digest: string;
+}
+
 export interface DashboardConfigState {
 	generatedAt: string;
 	sourcePath: string;
@@ -66,6 +74,7 @@ export interface DashboardConfigState {
 	restartRequired: boolean;
 	restartReasons: string[];
 	restartGuidance: string;
+	previewProfiles: DashboardPreviewProfile[];
 	editable: DashboardEditableConfig;
 	limits: DashboardConfigLimits;
 }
@@ -97,6 +106,10 @@ export async function loadDashboardConfigState(
 		restartGuidance: restartRequired
 			? "Fully exit and restart Pi; /reload is not sufficient. Running sessions keep their immutable start policy."
 			: "No restart required.",
+		previewProfiles: config.preview.profiles.map((profile) => ({
+			...structuredClone(profile),
+			digest: previewProfileDigest(profile),
+		})),
 		editable: editableConfig(config),
 		limits: {
 			maxWorkers: DASHBOARD_CONFIG_MAX_WORKERS,
@@ -136,4 +149,3 @@ function editableConfig(config: WikiConfig): DashboardEditableConfig {
 		hosts: { pi: { enabled: config.hosts.pi.enabled } },
 	};
 }
-

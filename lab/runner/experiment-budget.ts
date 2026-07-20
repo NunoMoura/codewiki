@@ -141,8 +141,8 @@ const DEFAULT_MAX_RUNS = 1;
 const DEFAULT_MAX_CANDIDATE_FILES = 3;
 const DEFAULT_MAX_DIFF_BYTES = 120_000;
 const PRODUCTION_LOOP_FILES = [
-	"src/decision/loop.ts",
-	"src/planning/loop.ts",
+	"src/decision/change-quality.ts",
+	"src/planning/portfolio-quality.ts",
 	"src/implementation/loop.ts",
 ] as const;
 const DEFAULT_AUTO_COMMANDS: LabExperimentCommandName[] = [

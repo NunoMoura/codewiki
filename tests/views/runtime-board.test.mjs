@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { buildRuntimeBoard } from "../../src/api/views.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 
 function workItem(id, status, overrides = {}) {
 	return {
@@ -11,7 +11,7 @@ function workItem(id, status, overrides = {}) {
 		traceId: overrides.traceId || "TRACE-runtime-board",
 		title: overrides.title || id,
 		traceRefs: overrides.traceRefs || [`trace:${id}`],
-		decisionRefs: overrides.decisionRefs || ["trace:decision#change:CHG-board"],
+		changeRefs: overrides.changeRefs || ["trace:decision#change:CHG-board"],
 		planningRefs: overrides.planningRefs || [`trace:planning#work:${id}`],
 		componentRefs: overrides.componentRefs || ["runtime"],
 		pathScopes: overrides.pathScopes || [`src/${id}.ts`],
@@ -76,10 +76,10 @@ function traceBoard() {
 				status: "needs_implementation",
 				closable: false,
 				closed: false,
-				decisionRefs: [],
-				plannedDecisionRefs: [],
-				unresolvedDecisionRefs: [],
-				deferredDecisionRefs: [],
+				changeRefs: [],
+				plannedChangeRefs: [],
+				unresolvedChangeRefs: [],
+				deferredChangeRefs: [],
 				workUnitRefs: ["trace:planning#work:WU-ready-a"],
 				incompleteWorkUnitRefs: ["trace:planning#work:WU-ready-a"],
 				pathScopes: ["src/a.ts"],
@@ -117,7 +117,7 @@ function triggers() {
 				traceId: "TRACE-runtime-board",
 				workUnitId: "WU-ready-a",
 				planningRef: "trace:planning#work:WU-ready-a",
-				decisionRefs: [],
+				changeRefs: [],
 				pathScopes: ["src/a.ts"],
 				trigger: {
 					id: "TRG-board",

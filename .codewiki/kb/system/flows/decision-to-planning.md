@@ -16,7 +16,7 @@ timestamp: 2026-06-30T00:00:00Z
 Planning may start only from a decision iteration whose exit status is `exit`.
 
 ```text
-decision.changes_approved(exit) -> planning.work_units_created
+decision.change_approved(exit) -> planning.work_units_created
 ```
 
 Decision output gives planning:

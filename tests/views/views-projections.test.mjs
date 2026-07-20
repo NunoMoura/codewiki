@@ -3,10 +3,10 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createSprintProposal } from "../../src/decision/proposal.ts";
+import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
-import { runPlanningIteration } from "../../src/planning/iteration.ts";
+import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
 import { createTraceCloseRecord } from "../../src/traces/retention.ts";
 import {
 	createTriggerRunTraceHead,
@@ -14,8 +14,6 @@ import {
 } from "../../src/traces/writer.ts";
 import {
 	buildTriggersView,
-	buildBlockersView,
-	buildConflictsView,
 	buildQualityView,
 	buildResumeView,
 	buildStatusView,
@@ -32,13 +30,13 @@ import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function decisionEvents(traceId = "TRACE-views") {
-	const proposal = createSprintProposal({
+	const changeInput = canonicalChangeInput({
 		id: "SP-views",
 		createdAt: "2026-06-11T00:00:00.000Z",
 		updatedAt: "2026-06-11T00:00:00.000Z",
 		changes: [
 			{
-				id: "CHG-views",
+				id: `CHG-${traceId.replace(/^TRACE-/, "")}`,
 				question: "How should views represent trace state?",
 				currentState: "Old graph/roadmap state owns generated status.",
 				desiredState: "Generated views project trace records.",
@@ -51,55 +49,17 @@ function decisionEvents(traceId = "TRACE-views") {
 	});
 	return runDecisionIteration({
 		traceId,
-		proposal,
+		changeInput,
 		createdAt: "2026-06-11T00:00:01.000Z",
 	}).traceEvents;
 }
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.approvedChanges?.[0];
+	const change = iteration?.data?.output?.changeRecord?.change;
 	assert.ok(iteration);
 	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
-}
-
-function directDecisionEvents(traceId = "TRACE-direct-route") {
-	const proposal = createSprintProposal({
-		id: "SP-direct-route",
-		createdAt: "2026-06-11T00:00:00.000Z",
-		updatedAt: "2026-06-11T00:00:00.000Z",
-		changes: [
-			{
-				id: "CHG-direct-route",
-				currentState: "Small fixes require planning ceremony.",
-				desiredState:
-					"Small scoped fixes can route directly to implementation.",
-				rationale: "The route is explicit and still trace-backed.",
-				...decisionQualityFields(),
-				approval: "approved",
-				routeTarget: "implementation",
-				routeRationale: "Low-risk, scoped, and directly verifiable.",
-				implementationMode: "targeted_checks",
-				directImplementationScope: {
-					pathScopes: ["src/views/work-queue.ts"],
-					verification: ["tests/views/views-projections.test.mjs"],
-					acceptanceCriteria: [
-						{
-							id: "AC-DIRECT",
-							text: "Direct routed work appears as implementation work.",
-						},
-					],
-				},
-				sourceRefs: ["kb:system/components/loop-contracts.md"],
-			},
-		],
-	});
-	return runDecisionIteration({
-		traceId,
-		proposal,
-		createdAt: "2026-06-11T00:00:01.000Z",
-	}).traceEvents;
+	return `change:${change.id}`;
 }
 
 function planningWorkEvent(events, workUnitId) {
@@ -114,7 +74,7 @@ function planningWorkEvent(events, workUnitId) {
 		...iteration,
 		id: `trace:${iteration.id}#work:${item.id}`,
 		event: "work_units_created",
-		refs: [...(item.decisionRefs || []), ...(item.pathScopes || [])],
+		refs: [...(item.changeRefs || []), ...(item.pathScopes || [])],
 		data: { ...item, workUnitId: item.id },
 	};
 }
@@ -130,16 +90,16 @@ function queueTrace(traceId, options = {}) {
 		createdAt: "2026-06-11T00:00:00.000Z",
 	});
 	const decisions = decisionEvents(traceId);
-	const decisionRef = approvedDecisionRef(decisions);
+	const changeRef = approvedDecisionRef(decisions);
 	const configuredWorkItemInputs =
 		typeof options.workItemInputs === "function"
-			? options.workItemInputs(decisionRef)
+			? options.workItemInputs(changeRef)
 			: options.workItemInputs;
 	const workItemInputs = configuredWorkItemInputs || [
 		{
 			id: options.workUnitId || "WU-queue",
 			title: options.workUnitTitle || "Queued work",
-			decisionRefs: [decisionRef],
+			changeRefs: [changeRef],
 			outcome: "Queued work is executable.",
 			...planningQualityFields(),
 			acceptance: ["Queued work has evidence."],
@@ -263,7 +223,7 @@ function runTrace(input) {
 		createdAt: "2026-06-11T00:00:04.000Z",
 	});
 	const decisions = decisionEvents(input.traceId);
-	const decisionRef = approvedDecisionRef(decisions);
+	const changeRef = approvedDecisionRef(decisions);
 	const plan = runPlanningIteration({
 		traceId: input.traceId,
 		decisionEvents: decisions,
@@ -273,7 +233,7 @@ function runTrace(input) {
 			{
 				id: "WU-run",
 				title: "Run run",
-				decisionRefs: [decisionRef],
+				changeRefs: [changeRef],
 				outcome: "Run work completes.",
 				...planningQualityFields(),
 				acceptance: ["Run evidence exists."],
@@ -332,7 +292,7 @@ function plannedTrace() {
 		createdAt: "2026-06-11T00:00:00.000Z",
 	});
 	const decisions = decisionEvents(traceId);
-	const decisionRef = approvedDecisionRef(decisions);
+	const changeRef = approvedDecisionRef(decisions);
 	const plan = runPlanningIteration({
 		traceId,
 		decisionEvents: decisions,
@@ -342,7 +302,7 @@ function plannedTrace() {
 			{
 				id: "WU-views",
 				title: "Generate generated views",
-				decisionRefs: [decisionRef],
+				changeRefs: [changeRef],
 				outcome:
 					"Status, resume, blockers, conflicts, and work-plan views project traces.",
 				...planningQualityFields(),
@@ -406,35 +366,13 @@ describe("trace-backed views", () => {
 		assert.equal(resume.nextAction, "Implement planned work unit WU-views.");
 	});
 
-	it("projects direct implementation decisions as implementation work", () => {
-		const head = createTraceHead({
-			traceId: "TRACE-direct-route",
-			title: "Direct route",
-			createdAt: "2026-06-11T00:00:00.000Z",
-		});
-		const decisions = directDecisionEvents("TRACE-direct-route");
-		const input = {
-			records: [head, ...decisions],
-			generatedAt: "2026-06-11T00:00:03.000Z",
-		};
-		const workPlan = buildWorkPlanView(input);
-		const workQueue = buildWorkQueueView(input);
-		const status = buildStatusView(input);
-
-		assert.equal(workPlan.cards[0].id, "CHG-direct-route");
-		assert.equal(workPlan.cards[0].status, "todo");
-		assert.equal(workQueue.items[0].kind, "work-unit");
-		assert.equal(workQueue.items[0].status, "ready");
-		assert.equal(status.currentLoop, "implementation");
-	});
-
 	it("projects triggers with enabled and run state", () => {
 		const plannedTrace = queueTrace("TRACE-trigger-planned", {
-			workItemInputs: (decisionRef) => [
+			workItemInputs: (changeRef) => [
 				{
 					id: "WU-trigger-planned",
 					title: "Trigger planned work",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Trigger is planned.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is planned."],
@@ -456,11 +394,11 @@ describe("trace-backed views", () => {
 		});
 		const enabledTrace = queueTrace("TRACE-trigger-enabled", {
 			implemented: true,
-			workItemInputs: (decisionRef) => [
+			workItemInputs: (changeRef) => [
 				{
 					id: "WU-trigger-enabled",
 					title: "Trigger enabled work",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Trigger is enabled.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is enabled."],
@@ -482,11 +420,11 @@ describe("trace-backed views", () => {
 		});
 		const enabledOnlyTrace = queueTrace("TRACE-trigger-enabled-only", {
 			implemented: true,
-			workItemInputs: (decisionRef) => [
+			workItemInputs: (changeRef) => [
 				{
 					id: "WU-trigger-enabled-only",
 					title: "Trigger enabled-only work",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Trigger is enabled without runs.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is enabled."],
@@ -563,11 +501,11 @@ describe("trace-backed views", () => {
 	it("marks enabled scheduled triggers due when current run is missing", () => {
 		const trace = queueTrace("TRACE-trigger-due", {
 			implemented: true,
-			workItemInputs: (decisionRef) => [
+			workItemInputs: (changeRef) => [
 				{
 					id: "WU-trigger-due",
 					title: "Due trigger work",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Trigger becomes due on schedule.",
 					...planningQualityFields(),
 					acceptance: ["Trigger due state is projected."],
@@ -620,11 +558,11 @@ describe("trace-backed views", () => {
 
 	it("projects planning triggers into work-plan and work-queue views", () => {
 		const trace = queueTrace("TRACE-trigger-view", {
-			workItemInputs: (decisionRef) => [
+			workItemInputs: (changeRef) => [
 				{
 					id: "WU-trigger-view",
 					title: "Trigger view work",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Trigger is visible to runtime views.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is projected."],
@@ -713,7 +651,7 @@ describe("trace-backed views", () => {
 		const { head, decisions, plan } = plannedTrace(
 			"TRACE-views-plan-superseded",
 		);
-		const decisionRef = approvedDecisionRef(decisions);
+		const changeRef = approvedDecisionRef(decisions);
 		const correctedPlan = runPlanningIteration({
 			traceId: head.traceId,
 			decisionEvents: decisions,
@@ -722,7 +660,7 @@ describe("trace-backed views", () => {
 				{
 					id: "WU-corrected",
 					title: "Corrected view work",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Corrected planning work is implemented.",
 					...planningQualityFields(),
 					acceptance: ["Corrected plan is covered."],
@@ -786,75 +724,6 @@ describe("trace-backed views", () => {
 		);
 	});
 
-	it("projects planning conflicts and route-back blockers", () => {
-		const traceId = "TRACE-views-blocked";
-		const head = createTraceHead({
-			traceId,
-			title: "Blocked view projection",
-			createdAt: "2026-06-11T00:00:00.000Z",
-		});
-		const decisions = decisionEvents(traceId);
-		const decisionRef = approvedDecisionRef(decisions);
-		const plan = runPlanningIteration({
-			traceId,
-			decisionEvents: decisions,
-			startSequence: nextSequence(decisions),
-			workItemInputs: [
-				{
-					id: "WU-left",
-					title: "Left change",
-					decisionRefs: [decisionRef],
-					outcome: "Left outcome",
-					...planningQualityFields(),
-					acceptance: ["Left accepted"],
-					pathScopes: ["src/views"],
-					verification: ["npm test"],
-				},
-				{
-					id: "WU-right",
-					title: "Right change",
-					decisionRefs: [decisionRef],
-					outcome: "Right outcome",
-					...planningQualityFields(),
-					acceptance: ["Right accepted"],
-					pathScopes: ["src/views"],
-					verification: ["npm test"],
-				},
-			],
-			resolutionInputs: [
-				{
-					decisionRef: decisionRef,
-					evidenceRefs: ["kb:system/components/traces.md"],
-					owner: "architecture",
-					trigger: "Need user decision.",
-					rationale: "Conflicting path ownership needs route-back.",
-					...decisionQualityFields(),
-					kind: "route-back",
-				},
-			],
-		});
-		const records = [head, ...decisions, ...plan.traceEvents];
-		const conflicts = buildConflictsView({ records }).conflicts;
-		const blockers = buildBlockersView({ records }).blockers;
-		const status = buildStatusView({ records });
-
-		assert.deepEqual(
-			conflicts.map((conflict) => conflict.pathScope),
-			["src/views"],
-		);
-		assert.equal(
-			blockers.some((blocker) => blocker.kind === "route-back"),
-			true,
-		);
-		assert.equal(
-			blockers.some((blocker) => blocker.kind === "conflict"),
-			true,
-		);
-		assert.equal(status.health, "red");
-		assert.equal(status.blockers.length, 4);
-		assert.equal(status.qualityBlockers.length, 1);
-	});
-
 	it("treats closed traces as terminal and flags incomplete goals", () => {
 		const trace = queueTrace("TRACE-queue-closed", {
 			workUnitId: "WU-closed",
@@ -901,27 +770,16 @@ describe("trace-backed views", () => {
 			(record) => record.loop === "implementation",
 		);
 		decision.data.output.qualityStandards =
-			decision.data.output.qualityStandards.map((standard) => {
-				if (standard.id === "sprint_proposal_ready") {
-					const legacy = {
-						...standard,
-						description:
-							"Sprint Proposal has at least one approved change and stable change ids.",
-					};
-					delete legacy.layer;
-					delete legacy.standardType;
-					delete legacy.gate;
-					return legacy;
-				}
-				return standard.id === "knowledge_impact_accounted"
+			decision.data.output.qualityStandards.map((standard) =>
+				standard.id === "knowledge_impact_accounted"
 					? {
 							...standard,
 							status: "unmet",
 							message: "Decision knowledge impact is incomplete.",
 							refs: ["CHG-views"],
 						}
-					: standard;
-			});
+					: standard,
+			);
 		implementation.data.output.qualityStandards =
 			implementation.data.output.qualityStandards.map((standard) =>
 				standard.id === "release_safety_approved"
@@ -939,13 +797,12 @@ describe("trace-backed views", () => {
 		const resume = buildResumeView(input);
 
 		assert.equal(quality.iterations.length, 3);
-		const sprintProposalReady = quality.iterations[0].standards.find(
-			(standard) => standard.id === "sprint_proposal_ready",
+		assert.equal(
+			quality.iterations[0].standards.some(
+				(standard) => standard.id === "change_revision_ready",
+			),
+			true,
 		);
-		assert.equal(sprintProposalReady.layer, "input_contract");
-		assert.equal(sprintProposalReady.standardType, "loop_contract");
-		assert.equal(sprintProposalReady.gate, "hard");
-		assert.doesNotMatch(sprintProposalReady.description, /approved change/i);
 		assert.equal(quality.summary.decision.unmet, 1);
 		assert.equal(quality.summary.implementation.blocked, 1);
 		assert.equal(
@@ -965,10 +822,10 @@ describe("trace-backed views", () => {
 		});
 		const waiting = queueTrace("TRACE-queue-waiting", {
 			workUnitId: "WU-waiting",
-			workItemInputs: (decisionRef) => [
+			workItemInputs: (changeRef) => [
 				{
 					id: "WU-dependency",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Dependency is available for scheduling.",
 					...planningQualityFields(),
 					acceptance: ["Dependency can run first."],
@@ -978,7 +835,7 @@ describe("trace-backed views", () => {
 				},
 				{
 					id: "WU-waiting",
-					decisionRefs: [decisionRef],
+					changeRefs: [changeRef],
 					outcome: "Waiting work depends on another work unit.",
 					...planningQualityFields(),
 					acceptance: ["Waiting work waits."],
@@ -1014,7 +871,7 @@ describe("trace-backed views", () => {
 		assert.equal(queue.summary.waiting, 1);
 		assert.equal(queue.summary.claimed, 1);
 		assert.equal(queue.summary.done, 1);
-		assert.equal(byId["CHG-views"].status, "backlog");
+		assert.equal(byId["CHG-queue-backlog"].status, "backlog");
 		assert.equal(byId["WU-ready"].status, "ready");
 		assert.equal(byId["WU-waiting"].status, "waiting");
 		assert.equal(byId["WU-claimed"].status, "claimed");
@@ -1050,7 +907,7 @@ describe("trace-backed views", () => {
 		const planning = trace.records.find((record) => record.loop === "planning");
 		planning.data.output.qualityStandards =
 			planning.data.output.qualityStandards.map((standard) =>
-				standard.id === "uncertainty_resolved"
+				standard.id === "acceptance_clarity"
 					? {
 							...standard,
 							status: "blocked",

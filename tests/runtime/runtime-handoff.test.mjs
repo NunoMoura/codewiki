@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
-import { planningQualityStandards } from "../../src/planning/quality-standards.ts";
+import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { createRuntimeHandoffManifest } from "../../src/runtime/handoff.ts";
 
 function queue() {
@@ -23,7 +23,7 @@ function queue() {
 				traceId: "TRACE-handoff",
 				title: "Handoff A",
 				traceRefs: ["TRACE-handoff:planning:work:1"],
-				decisionRefs: ["TRACE-handoff:decision:change:1"],
+				changeRefs: ["TRACE-handoff:decision:change:1"],
 				planningRefs: ["TRACE-handoff:planning:work:1"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/a.ts"],
@@ -40,7 +40,7 @@ function queue() {
 				traceId: "TRACE-handoff",
 				title: "Handoff B",
 				traceRefs: ["TRACE-handoff:planning:work:2"],
-				decisionRefs: ["TRACE-handoff:decision:change:1"],
+				changeRefs: ["TRACE-handoff:decision:change:1"],
 				planningRefs: ["TRACE-handoff:planning:work:2"],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/runtime/b.ts"],

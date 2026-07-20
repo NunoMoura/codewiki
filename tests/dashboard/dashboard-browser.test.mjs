@@ -37,7 +37,7 @@ describe("dashboard browser observability", () => {
 		assert.match(script, /filter\.startsWith\('topic:'\)/);
 		assert.match(script, /className = 'scope-group'/);
 		assert.match(script, /topic\.category\.localeCompare/);
-		assert.match(script, /declared Sprint topics/);
+		assert.match(script, /declared Change topics/);
 		assert.match(script, /function traceStateText/);
 		assert.match(script, /function renderTraceOptions/);
 		assert.match(script, /function openPipelineStage/);
@@ -83,7 +83,7 @@ describe("dashboard browser observability", () => {
 		assert.match(CODEWIKI_DASHBOARD_HTML, /function renderSearchFilter/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /state\.summary\.backlog/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /state\.summary\.committed/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Five-stage Sprint progress/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Five-stage Change journey progress/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /aria-disabled/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /✕ Blocked —/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Execution configuration/);
@@ -115,6 +115,19 @@ describe("dashboard browser observability", () => {
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Resume execution/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /does not grant semantic approval/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Semantic approvals remain separate/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /dashboardDevMode/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /reloadChangedDashboardAssets/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /renderLivePreview/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /renderPreviewEvidence/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /\/api\/previews\/commands/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /Capture evidence/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /CLI unavailable/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /browser not opened/);
+		assert.match(
+			CODEWIKI_DASHBOARD_HTML,
+			/Evidence never grants semantic approval/,
+		);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /__CODEWIKI_ASSET_DIGEST__/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Approval required:/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /resume session/);
 	});

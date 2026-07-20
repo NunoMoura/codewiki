@@ -1,293 +1,230 @@
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
-import { promisify } from "node:util";
+import { afterEach, describe, it } from "node:test";
+
 import { runWikiDecide } from "../../src/api/wiki-decide.ts";
-import { prepareAcceptedChangeBundle } from "../../src/changes/accepted-bundle.ts";
+import { changeTraceId } from "../../src/changes/change-trace.ts";
 import { changeContentDigest } from "../../src/changes/digest.ts";
-import { GitRefChangeStore } from "../../src/changes/git-ref-store.ts";
 import { createChangeRecord } from "../../src/changes/records.ts";
-import { CHANGE_SCHEMA_VERSION } from "../../src/changes/types.ts";
+import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
+import { buildProjectWorkState } from "../../src/work-state/project.ts";
+import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
-const run = promisify(execFile);
+const roots = [];
+const AUTHORITY = {
+	kind: "user",
+	actor: "user:maintainer",
+	ref: "approval:user:decision-v1",
+};
+const OCCURRED_AT = "2026-08-05T00:01:00.000Z";
+const RATIONALE = "Approve exact validated Change revision.";
 
-function acceptedChange(
-	id = "CHG-accepted-wiki-decide",
-	parentTraceId,
-) {
-	const change = {
-		schemaVersion: CHANGE_SCHEMA_VERSION,
-		id,
-		revision: 1,
-		status: "pending",
-		intent: {
-			question: "Should this validated Change become trace work?",
-			currentState: "Decision input can be mutable.",
-			desiredState: "Decision embeds an exact accepted Change bundle.",
-			rationale: "Independent traces need immutable input.",
-			nonGoals: ["Do not widen scope beyond this Change."],
-		},
-		classification: {
-			kind: "introduce",
-			type: "workflow_change",
-			scope: "system",
-			affectedLayers: ["changes", "decision", "traces"],
-			targetRefs: ["src/api/wiki-decide.ts"],
-		},
-		impact: {
-			user: "The main session can continue after acceptance.",
-			maintainer: "Trace input is replayable.",
-		},
-		evidence: {
-			sourceRefs: ["kb:system/components/decision-loop.md"],
-			proofRefs: ["tests/decision/wiki-decide.test.mjs"],
-		},
-		safety: {
-			risk: "low",
-			failureModes: ["A stale revision is accepted."],
-		},
-		validation: {
-			state: "draft",
-			issues: [],
-			assessments: [],
-			recommendations: [],
-			successSignal: "Trace event contains the accepted bundle digest.",
-			regressionPlan: "Run decision and trace replay tests.",
-		},
-		estimates: { effort: "low", workScale: "small" },
-		provenance: {
-			origin: "user",
-			createdBy: "user",
-			createdAt: "2026-06-11T00:00:01.000Z",
-			updatedAt: "2026-06-11T00:00:01.000Z",
-			...(parentTraceId
-				? { discoveredWhile: { traceId: parentTraceId } }
-				: {}),
-		},
-	};
-	const digest = changeContentDigest(change);
-	change.validation = {
-		...change.validation,
-		state: "valid",
-		validatedRevision: change.revision,
-		validatedDigest: digest,
-		validatorVersion: "test-v1",
-	};
-	return change;
+afterEach(async () => {
+	await Promise.all(
+		roots.splice(0).map((root) => rm(root, { recursive: true, force: true })),
+	);
+});
+
+async function setup(overrides = {}) {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-decide-v2-"));
+	roots.push(root);
+	const record = createChangeRecord(
+		acceptedChangeFixture({ id: "CHG-wiki-decide-v2", ...overrides }),
+	);
+	const store = new ChangeTraceStore({ repoRoot: root });
+	await store.write({
+		expectedHead: null,
+		records: [record],
+		message: "Persist Change",
+		actor: "user:maintainer",
+		createdAt: "2026-08-05T00:00:00.000Z",
+	});
+	return { root, record, store };
 }
 
-describe("wiki_decide core facade", () => {
-	it("rejects natural-language shortcut input instead of silently producing empty output", async () => {
-		await assert.rejects(
-			() =>
-				runWikiDecide({
-					intent: "Build a benchmark app",
-					decision: "Proceed",
-				}),
-			/wiki_decide received unsupported input field intent/,
+async function decisionInput(root, record, overrides = {}) {
+	const traceId = changeTraceId(record.change.id);
+	const path = join(root, traceFilePath(traceId));
+	const workState = await buildProjectWorkState({ repoRoot: root });
+	return {
+		repoRoot: root,
+		changeId: record.change.id,
+		expectedRevision: record.change.revision,
+		expectedChangeDigest: changeContentDigest(record.change),
+		expectedWorkStateDigest: workState.snapshotDigest,
+		expectedBytes: (await stat(path)).size,
+		disposition: "approve",
+		rationale: RATIONALE,
+		authority: AUTHORITY,
+		occurredAt: OCCURRED_AT,
+		...overrides,
+	};
+}
+
+describe("wiki_decide Change-revision facade", () => {
+	it("previews one exact approval without mutating its Change Trace", async () => {
+		const { root, record } = await setup();
+		const traceId = changeTraceId(record.change.id);
+		const path = join(root, traceFilePath(traceId));
+		const before = await readTrace(path);
+		const result = await runWikiDecide({
+			...(await decisionInput(root, record)),
+			mode: "preview",
+		});
+		const after = await readTrace(path);
+
+		assert.equal(result.mode, "preview");
+		assert.equal(result.traceId, traceId);
+		assert.equal(result.report.exit.status, "exit");
+		assert.equal(result.report.exit.nextLoop, "planning");
+		assert.equal(result.report.approval.changeRevision, record.change.revision);
+		assert.equal(
+			result.report.approval.changeDigest,
+			changeContentDigest(record.change),
 		);
-		await assert.rejects(
-			() =>
-				runWikiDecide({
-					traceId: "TRACE-legacy-proposal-input",
-					proposalInput: { changes: [] },
-				}),
-			/unsupported input field proposalInput/,
+		assert.equal(result.report.approval.authorityRef, AUTHORITY.ref);
+		assert.equal(result.event.event, "change_approved");
+		assert.equal(result.append, undefined);
+		assert.deepEqual(after.records, before.records);
+		assert.equal(
+			result.report.qualityStandards.every(
+				(standard) => standard.status === "met",
+			),
+			true,
 		);
 	});
 
-	it("binds accepted Change records into a recoverable trace input", async () => {
-		const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-decide-change-"));
-		try {
-			await run("git", ["init", "-q"], { cwd: root });
-			await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
-				recursive: true,
-			});
-			await writeFile(
-				join(
-					root,
-					".codewiki",
-					"kb",
-					"system",
-					"components",
-					"decision-loop.md",
-				),
-				"# Decision Loop\n",
-				"utf8",
-			);
-			const store = new GitRefChangeStore({ repoRoot: root });
-			const record = createChangeRecord(
-				acceptedChange(
-					"CHG-accepted-wiki-decide",
-					"TRACE-parent-sprint",
-				),
-			);
-			const seeded = await store.write({
-				expectedHead: null,
-				records: [record],
-				message: "Seed validated Change",
-				actor: "user",
-				createdAt: "2026-06-11T00:00:01.000Z",
-			});
-			const traceId = "TRACE-wiki-decide-accepted-change";
-			const changeAcceptance = {
-				expectedHead: seeded.head,
-				selections: [
-					{
-						changeId: record.change.id,
-						revision: record.change.revision,
-						recordRevision: record.recordRevision,
-						contentDigest: changeContentDigest(record.change),
-					},
-				],
-				acceptedBy: "user",
-				acceptedAt: "2026-06-11T00:00:02.000Z",
-			};
-			const sprintBoundary = {
-				accountableGoal: "Freeze one accepted Change into one Sprint.",
-				knowledgeTopics: [".codewiki/kb/system/components/decision-loop.md"],
-				dependencies: [],
-				rollbackBoundary: "Revert Decision contract and trace input together.",
-				assessment: {
-					stance: "coherent",
-					rationale: "One Change serves one trace-backed lifecycle goal.",
-				},
-			};
-			await assert.rejects(
-				() =>
-					runWikiDecide({
-						repoRoot: root,
-						mode: "preview",
-						traceId,
-						nextSequence: 1,
-						changeAcceptance,
-					}),
-				/requires sprintBoundary input/,
-			);
-			await assert.rejects(
-				() =>
-					runWikiDecide({
-						repoRoot: root,
-						mode: "preview",
-						traceId,
-						nextSequence: 1,
-						changeAcceptance,
-						sprintBoundary: { ...sprintBoundary, workItems: [] },
-					}),
-				/unsupported input field workItems/,
-			);
-			const preview = await runWikiDecide({
-				repoRoot: root,
-				mode: "preview",
-				traceId,
-				nextSequence: 1,
-				changeAcceptance,
-				sprintBoundary,
-			});
-			assert.equal(
-				preview.iterationEvent.data.output.acceptedChangeBundle.digest,
-				preview.changeAcceptance.bundle.digest,
-			);
-			assert.match(
-				preview.renderedSprintProposal.markdown,
-				new RegExp(preview.changeAcceptance.bundle.digest),
-			);
-			assert.equal(
-				preview.loopResult.output.sprintBoundary.accountableGoal,
-				sprintBoundary.accountableGoal,
-			);
-			assert.deepEqual(
-				preview.loopResult.output.knowledgeAlignmentBaseline.topics.map(
-					(topic) => topic.ref,
-				),
-				sprintBoundary.knowledgeTopics,
-			);
-			assert.match(
-				preview.loopResult.output.knowledgeAlignmentBaseline.topics[0].digest,
-				/^sha256:[a-f0-9]{64}$/,
-			);
-			assert.match(
-				preview.renderedSprintProposal.markdown,
-				/Knowledge topics:/,
-			);
-			assert.equal(
-				(await store.get(record.change.id)).change.status,
-				"pending",
-			);
+	it("appends approval and quality to the same Change Trace", async () => {
+		const { root, record, store } = await setup();
+		const result = await runWikiDecide({
+			...(await decisionInput(root, record)),
+			mode: "append",
+		});
+		const trace = await readTrace(
+			join(root, traceFilePath(changeTraceId(record.change.id))),
+		);
+		const snapshot = await store.read();
+		const workState = await buildProjectWorkState({ repoRoot: root });
 
-			const appendInput = {
-				repoRoot: root,
-				mode: "append",
-				expectedBytes: 0,
-				traceId,
-				nextSequence: 1,
-				changeAcceptance,
-				sprintBoundary,
-				sprintProposalApproval: {
-					approved: true,
-					renderedProposalDigest: preview.renderedSprintProposal.digest,
-					approvedBy: changeAcceptance.acceptedBy,
-					approvedAt: changeAcceptance.acceptedAt,
-				},
-			};
-			await assert.rejects(
-				() =>
-					runWikiDecide({
-						...appendInput,
-						sprintProposalApproval: {
-							...appendInput.sprintProposalApproval,
-							approvedBy: "other-user",
-						},
-					}),
-				/authority and timestamp/,
-			);
-			await assert.rejects(
-				() =>
-					runWikiDecide({
-						...appendInput,
-						expectedTraceId: "TRACE-wrong-boundary",
-					}),
-				/expected trace .* got/,
-			);
-			assert.equal(
-				(await store.get(record.change.id)).change.status,
-				"pending",
-			);
-			const interrupted = prepareAcceptedChangeBundle({
-				traceId,
-				expectedHead: seeded.head,
-				snapshot: await store.read(),
-				selections: changeAcceptance.selections,
-				acceptedBy: changeAcceptance.acceptedBy,
-				acceptedAt: changeAcceptance.acceptedAt,
-			});
-			await store.write({
-				expectedHead: seeded.head,
-				records: interrupted.records,
-				message: "Simulate acceptance before interrupted trace append",
-				actor: changeAcceptance.acceptedBy,
-				createdAt: changeAcceptance.acceptedAt,
-			});
+		assert.equal(result.append.records.length, 1);
+		assert.equal(result.record.change.status, "accepted");
+		assert.equal(trace.records.length, 3);
+		assert.equal(trace.records.at(-1).id, result.event.id);
+		assert.equal(
+			trace.records.at(-1).data.output.decision.approval.approvalRef,
+			result.event.id,
+		);
+		assert.equal(
+			trace.records.at(-1).data.output.acceptedChangeBundle,
+			undefined,
+		);
+		assert.equal(snapshot.records[0].change.status, "accepted");
+		assert.equal(workState.changes[0].approval.status, "approved");
+		assert.equal(workState.changes[0].currentLoop, "planning");
+		assert.deepEqual(
+			(await readdir(join(root, ".codewiki", "traces"))).filter((file) =>
+				file.endsWith(".jsonl"),
+			),
+			[`${changeTraceId(record.change.id)}.jsonl`],
+		);
+	});
 
-			const result = await runWikiDecide(appendInput);
-			assert.equal(result.changeAcceptance.recoveredAcceptance, true);
-			const trace = await readTrace(join(root, traceFilePath(traceId)));
-			assert.equal(trace.records[0].origin.kind, "amendment");
-			assert.equal(
-				trace.records[0].origin.parentTraceId,
-				"TRACE-parent-sprint",
-			);
-			assert.equal(
-				trace.records[1].data.output.acceptedChangeBundle.digest,
-				preview.changeAcceptance.bundle.digest,
-			);
-		} finally {
-			await rm(root, { recursive: true, force: true });
-		}
+	it("fails closed when Decision quality is incomplete", async () => {
+		const { root, record } = await setup({
+			knowledgeTopicRefs: [],
+			knowledgePropagationRefs: [],
+			knowledgeNoImpactRationale: undefined,
+			recommendations: [],
+		});
+		const input = await decisionInput(root, record);
+		const preview = await runWikiDecide({ ...input, mode: "preview" });
+
+		assert.equal(preview.report.exit.status, "continue");
+		assert.deepEqual(
+			preview.report.qualityStandards
+				.filter((standard) => standard.status !== "met")
+				.map((standard) => standard.id),
+			["recommendation_justified", "knowledge_impact_accounted"],
+		);
+		await assert.rejects(
+			runWikiDecide({ ...input, mode: "append" }),
+			/Decision quality did not exit/,
+		);
+	});
+
+	it("rejects stale Change, WorkState, and trace-tail guards", async () => {
+		const { root, record } = await setup();
+		const input = await decisionInput(root, record);
+		await assert.rejects(
+			runWikiDecide({ ...input, expectedRevision: 2 }),
+			/Change revision changed/,
+		);
+		await assert.rejects(
+			runWikiDecide({
+				...input,
+				expectedChangeDigest: `sha256:${"0".repeat(64)}`,
+			}),
+			/Change digest changed/,
+		);
+		await assert.rejects(
+			runWikiDecide({
+				...input,
+				expectedWorkStateDigest: `sha256:${"1".repeat(64)}`,
+			}),
+			/WorkState changed/,
+		);
+		await assert.rejects(
+			runWikiDecide({ ...input, mode: "append", expectedBytes: 0 }),
+			/trace bytes changed/,
+		);
+	});
+
+	it("recovers an already-appended exact approval idempotently", async () => {
+		const { root, record } = await setup();
+		await runWikiDecide({
+			...(await decisionInput(root, record)),
+			mode: "append",
+		});
+		const store = new ChangeTraceStore({ repoRoot: root });
+		const accepted = (await store.read()).records[0];
+		const retry = await runWikiDecide({
+			...(await decisionInput(root, accepted)),
+			mode: "append",
+		});
+
+		assert.equal(retry.recovered, true);
+		assert.equal(retry.append, undefined);
+		assert.equal(retry.record.change.status, "accepted");
+		assert.equal(retry.report.approval.approvalRef, retry.event.id);
+	});
+
+	it("records terminal rejection without creating Planning eligibility", async () => {
+		const { root, record } = await setup({
+			recommendations: [
+				{
+					actor: "agent:test",
+					value: "reject",
+					rationale: "Outcome does not justify implementation.",
+					evidenceRefs: ["tests/decision/wiki-decide.test.mjs"],
+				},
+			],
+		});
+		const result = await runWikiDecide({
+			...(await decisionInput(root, record)),
+			disposition: "reject",
+			rationale: "Reject exact Change revision.",
+			mode: "append",
+		});
+		const workState = await buildProjectWorkState({ repoRoot: root });
+
+		assert.equal(result.record.change.status, "rejected");
+		assert.equal(result.report.terminalDisposition.kind, "reject");
+		assert.equal(result.event.event, "change_rejected");
+		assert.equal(workState.changes[0].approval.status, "rejected");
+		assert.equal(workState.changes[0].currentLoop, undefined);
 	});
 });

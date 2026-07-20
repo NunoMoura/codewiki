@@ -4,6 +4,7 @@ import {
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
+	readFileSync,
 	rmSync,
 	writeFileSync,
 } from "node:fs";
@@ -130,6 +131,21 @@ try {
 	);
 	await bootstrapCommand.handler("--json", ctx);
 	assert.equal(existsSync(join(projectRoot, ".codewiki", "config.json")), true);
+	const designPath = join(
+		projectRoot,
+		".codewiki",
+		"kb",
+		"product",
+		"DESIGN.md",
+	);
+	assert.equal(existsSync(designPath), true);
+	const designSource = readFileSync(designPath, "utf8");
+	assert.match(designSource, /^version: alpha$/m);
+	assert.match(designSource, /^name: codewiki-project-local-install$/m);
+	assert.match(designSource, /^colors:$/m);
+	assert.match(designSource, /^typography:$/m);
+	assert.match(designSource, /^## Iconography$/m);
+	assert.match(designSource, /^## Visual References$/m);
 	assert.equal(
 		notifications.some((notice) => notice.level === "warning"),
 		false,
@@ -147,13 +163,6 @@ try {
 	);
 	assert.equal(config.config.project, "project-local-install");
 
-	const traceId = "TRACE-project-local-install-smoke";
-	const tracePath = join(
-		projectRoot,
-		".codewiki",
-		"traces",
-		`${traceId}.jsonl`,
-	);
 	run("git", ["init", "-q"], { cwd: projectRoot });
 	const change = acceptedChangeFixture({
 		id: "CHG-project-local-install-smoke",
@@ -174,7 +183,7 @@ try {
 		sourceRefs: ["README.md"],
 		createdAt: "2026-06-18T14:00:00.000Z",
 	});
-	const created = assertToolResult(
+	assertToolResult(
 		await changeTool.execute(
 			"change-create",
 			{
@@ -192,39 +201,40 @@ try {
 		),
 		/wiki_change: completed create operation\./,
 	);
-	const changeAcceptance = {
-		expectedHead: created.head,
-		selections: [
-			{
-				changeId: change.id,
-				revision: change.revision,
-				recordRevision: created.record.recordRevision,
-				contentDigest: change.validation.validatedDigest,
-			},
-		],
-		acceptedBy: "project-local-install-smoke",
-		acceptedAt: "2026-06-18T14:00:01.000Z",
-	};
-	const sprintBoundary = {
-		accountableGoal: change.intent.desiredState,
-		knowledgeTopics: [".codewiki/kb/system/components/api-tools.md"],
-		dependencies: [],
-		rollbackBoundary: "Revert installed Decision and implementation together.",
-		assessment: {
-			stance: "coherent",
-			rationale: "One validated Change serves one package lifecycle goal.",
+	const traceId = `TRACE-${change.id}`;
+	const tracePath = join(
+		projectRoot,
+		".codewiki",
+		"traces",
+		`${traceId}.jsonl`,
+	);
+	const beforeDecision = await stateTool.execute(
+		"pre-decision-state",
+		{},
+		undefined,
+		undefined,
+		ctx,
+	);
+	const decisionInput = {
+		changeId: change.id,
+		expectedRevision: change.revision,
+		expectedChangeDigest: change.validation.validatedDigest,
+		expectedWorkStateDigest:
+			beforeDecision.details.result.workState.snapshotDigest,
+		disposition: "approve",
+		rationale: "Approve exact project-local install Change.",
+		authority: {
+			kind: "user",
+			actor: "project-local-install-smoke",
+			ref: "approval:user:project-local-install-smoke",
 		},
+		occurredAt: "2026-06-18T14:00:01.000Z",
 	};
 	const preview = assertToolResult(
 		await decideTool.execute(
 			"decide-preview",
 			{
-				input: {
-					traceId,
-					mode: "preview",
-					changeAcceptance,
-					sprintBoundary,
-				},
+				input: { ...decisionInput, mode: "preview" },
 			},
 			undefined,
 			undefined,
@@ -237,18 +247,9 @@ try {
 			"decide-append",
 			{
 				input: {
-					traceId,
+					...decisionInput,
 					mode: "append",
-					expectedBytes: 0,
-					nextSequence: 1,
-					changeAcceptance,
-					sprintBoundary,
-					sprintProposalApproval: {
-						approved: true,
-						renderedProposalDigest: preview.renderedSprintProposal.digest,
-						approvedBy: "project-local-install-smoke",
-						approvedAt: "2026-06-18T14:00:01.000Z",
-					},
+					expectedBytes: (await stat(tracePath)).size,
 				},
 			},
 			undefined,
@@ -257,8 +258,9 @@ try {
 		),
 		/wiki_decide: completed append run\./,
 	);
-	assert.equal(decided.loopResult.exit.passed, true);
-	assert.equal(decided.iterationEvent.data.exit.status, "exit");
+	assert.equal(preview.report.exit.status, "exit");
+	assert.equal(decided.report.exit.status, "exit");
+	assert.equal(decided.event.data.exit.status, "exit");
 	assert.equal((await stat(tracePath)).size > 0, true);
 	const state = await stateTool.execute(
 		"post-decision-state",

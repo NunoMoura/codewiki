@@ -24,7 +24,8 @@ export function findFeedbackDuplicate(
 					record.change.provenance.createdBy === candidate.provenance.createdBy,
 			)
 		: undefined;
-	if (sameReporter) return { record: sameReporter, method: "source_ref", score: 1 };
+	if (sameReporter)
+		return { record: sameReporter, method: "source_ref", score: 1 };
 	const candidateSources = new Set(
 		candidate.evidence.sourceRefs.filter(isExactSourceRef),
 	);
@@ -44,7 +45,10 @@ export function findFeedbackDuplicate(
 				targetRefs.has(ref),
 			),
 		}))
-		.filter((match) => match.score >= 0.72 && (match.targetOverlap || match.score >= 0.9))
+		.filter(
+			(match) =>
+				match.score >= 0.72 && (match.targetOverlap || match.score >= 0.9),
+		)
 		.sort(
 			(left, right) =>
 				right.score - left.score ||
@@ -57,7 +61,11 @@ export function findFeedbackDuplicate(
 }
 
 function isExactSourceRef(ref: string): boolean {
-	return ref.startsWith("trace:") || ref.startsWith("git:") || ref.startsWith("sha256:");
+	return (
+		ref.startsWith("trace:") ||
+		ref.startsWith("git:") ||
+		ref.startsWith("sha256:")
+	);
 }
 
 function semanticTokens(change: Change): Set<string> {

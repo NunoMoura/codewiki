@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { runDecisionIteration } from "../../src/decision/iteration.ts";
-import { createSprintProposal } from "../../src/decision/proposal.ts";
+import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import {
 	createRuntimeClaimEvent,
@@ -12,13 +12,13 @@ import {
 	normalizeImplementationChanges,
 } from "../../src/implementation/evidence.ts";
 import { evaluateImplementationExit } from "../../src/implementation/loop.ts";
-import { runPlanningIteration } from "../../src/planning/iteration.ts";
+import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
 
 function planningEvents() {
-	const proposal = createSprintProposal({
+	const changeInput = canonicalChangeInput({
 		id: "SP-implementation",
 		createdAt: "2026-06-11T00:00:00.000Z",
 		updatedAt: "2026-06-11T00:00:00.000Z",
@@ -37,9 +37,9 @@ function planningEvents() {
 	});
 	const decisionTraceEvents = runDecisionIteration({
 		traceId: "TRACE-implementation",
-		proposal,
+		changeInput,
 	}).traceEvents;
-	const decisionRef = approvedDecisionRef(decisionTraceEvents);
+	const changeRef = approvedDecisionRef(decisionTraceEvents);
 	const plan = runPlanningIteration({
 		traceId: "TRACE-implementation",
 		decisionEvents: decisionTraceEvents,
@@ -48,7 +48,7 @@ function planningEvents() {
 			{
 				id: "WU-001",
 				title: "Implement trace-backed evidence",
-				decisionRefs: [decisionRef],
+				changeRefs: [changeRef],
 				outcome: "Implementation evidence emits trace events.",
 				...planningQualityFields(),
 				acceptance: ["Changed paths, checks, and proof refs are recorded."],
@@ -65,10 +65,10 @@ function planningEvents() {
 
 function approvedDecisionRef(events) {
 	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.approvedChanges?.[0];
+	const change = iteration?.data?.output?.changeRecord?.change;
 	assert.ok(iteration);
 	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
+	return `change:${change.id}`;
 }
 
 function planningWorkEvent(events, workUnitId = "WU-001") {
@@ -82,7 +82,7 @@ function planningWorkEvent(events, workUnitId = "WU-001") {
 		...iteration,
 		id: `trace:${iteration.id}#work:${item.id}`,
 		event: "work_units_created",
-		refs: [...(item.decisionRefs || []), ...(item.pathScopes || [])],
+		refs: [...(item.changeRefs || []), ...(item.pathScopes || [])],
 		data: item,
 	};
 }

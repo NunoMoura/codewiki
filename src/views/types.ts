@@ -105,7 +105,7 @@ export interface WorkPlanCard {
 	title: string;
 	status: WorkPlanCardStatus;
 	traceRefs: string[];
-	decisionRefs: string[];
+	changeRefs: string[];
 	componentRefs: string[];
 	pathScopes: string[];
 	planningDepth: string;
@@ -131,7 +131,7 @@ export interface WorkQueueItem {
 	traceId: string;
 	title: string;
 	traceRefs: string[];
-	decisionRefs: string[];
+	changeRefs: string[];
 	planningRefs: string[];
 	componentRefs: string[];
 	pathScopes: string[];
@@ -157,7 +157,7 @@ export interface TraceQueueItem {
 	kind: WorkQueueItemKind;
 	status: WorkQueueItemStatus;
 	title: string;
-	decisionRefs: string[];
+	changeRefs: string[];
 	planningRefs: string[];
 	pathScopes: string[];
 	blockers: string[];
@@ -168,10 +168,10 @@ export interface TraceQueueCard {
 	title: string;
 	status: TraceGoalStatus;
 	closed: boolean;
-	decisionRefs: string[];
+	changeRefs: string[];
 	rowCount: number;
-	plannedDecisionRefs: string[];
-	unresolvedDecisionRefs: string[];
+	plannedChangeRefs: string[];
+	unresolvedChangeRefs: string[];
 	workUnitRefs: string[];
 	pathScopes: string[];
 	blockers: string[];
@@ -216,7 +216,7 @@ export interface TriggerView {
 	traceTitle?: string;
 	workUnitId: string;
 	planningRef: string;
-	decisionRefs: string[];
+	changeRefs: string[];
 	pathScopes: string[];
 	trigger: PlanningTrigger;
 	enabledBy: string[];
@@ -245,10 +245,10 @@ export interface TraceGoalView {
 	closed: boolean;
 	closedAt?: string;
 	closeReason?: string;
-	decisionRefs: string[];
-	plannedDecisionRefs: string[];
-	unresolvedDecisionRefs: string[];
-	deferredDecisionRefs: string[];
+	changeRefs: string[];
+	plannedChangeRefs: string[];
+	unresolvedChangeRefs: string[];
+	deferredChangeRefs: string[];
 	workUnitRefs: string[];
 	incompleteWorkUnitRefs: string[];
 	pathScopes: string[];

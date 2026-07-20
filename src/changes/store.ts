@@ -1,7 +1,7 @@
 import type { ChangeStatus, ChangeType } from "./types.ts";
 import type { ChangeRecord } from "./records.ts";
 
-export const DEFAULT_CHANGE_REF = "refs/codewiki/changes";
+export const CHANGE_TRACE_SOURCE_REF = ".codewiki/traces";
 
 export interface ChangeStoreSnapshot {
 	head: string | null;

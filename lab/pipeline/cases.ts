@@ -39,7 +39,7 @@ export const pipelineCases: PipelineCase[] = [
 				workItems: [
 					{
 						id: "WU-package-boundary-guard",
-						decisionRefs: ["DEC-package-boundary"],
+						changeRefs: ["DEC-package-boundary"],
 						pathScopes: [
 							"tests/runtime/package-install-smoke.mjs",
 							"package.json",
@@ -112,7 +112,7 @@ export const pipelineCases: PipelineCase[] = [
 				workItems: [
 					{
 						id: "WU-weighted-standards",
-						decisionRefs: ["DEC-weighted-standards"],
+						changeRefs: ["DEC-weighted-standards"],
 						pathScopes: ["lab/runner/types.ts", "lab/runner/score.ts"],
 						acceptanceCriteria: ["AC-standard-weights", "AC-loss-weights"],
 						facts: ["fact-standard-weights", "fact-loss-weights"],
@@ -162,7 +162,7 @@ export const pipelineCases: PipelineCase[] = [
 				workItems: [
 					{
 						id: "WU-runtime-board",
-						decisionRefs: ["DEC-runtime-board"],
+						changeRefs: ["DEC-runtime-board"],
 						pathScopes: ["src/runtime/board.ts", "src/api/state.ts"],
 						acceptanceCriteria: ["AC-board-from-trace", "AC-board-command"],
 						facts: ["fact-board-source", "fact-board-command"],

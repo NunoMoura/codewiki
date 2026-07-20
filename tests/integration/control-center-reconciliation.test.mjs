@@ -8,15 +8,18 @@ const criterionEvidence = {
 		criteria: ["foundation-evidence", "obsolete-meaning", "remaining-gaps"],
 		source: [
 			"src/changes/types.ts",
-			"src/changes/git-ref-store.ts",
-			"src/changes/accepted-bundle.ts",
+			"src/changes/change-trace.ts",
+			"src/changes/trace-store.ts",
+			"src/work-state/projector.ts",
+			"src/decision/change-quality.ts",
 			"src/api/wiki-change.ts",
 			"src/api/wiki-decide.ts",
 			"src/runtime/execution-policy.ts",
 		],
 		tests: [
 			"tests/changes/change-domain.test.mjs",
-			"tests/changes/git-ref-store.test.mjs",
+			"tests/changes/change-trace-store.test.mjs",
+			"tests/work-state/work-state.test.mjs",
 			"tests/decision/wiki-decide.test.mjs",
 			"tests/runtime/execution-policy.test.mjs",
 		],
@@ -157,14 +160,13 @@ describe("control-center reconciliation integration", () => {
 		assert.match(readme, /## Changes Backlog and control center/);
 		assert.match(readme, /pending unvalidated Change/);
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
-		assert.match(decision, /shared validation card projection/);
-		assert.match(decision, /cannot accept Changes/);
-		assert.match(tools, /feedback intake/);
-		assert.match(tools, /pending unvalidated Change/);
+		assert.match(decision, /Decision is a process.*not a domain entity/i);
+		assert.match(decision, /exact approved Change revision/i);
+		assert.match(tools, /First explicit persistence creates a Change Trace/i);
 		assert.match(tools, /Configuration renders a grouped form/i);
-		assert.match(runtime, /resolves worker policy before claim append/);
-		assert.match(runtime, /policy digest/);
-		assert.match(runtime, /usage telemetry/);
+		assert.match(runtime, /WorkState refresh/i);
+		assert.match(runtime, /policy snapshot and lease/i);
+		assert.match(runtime, /supervised event-driven outer control loop/i);
 	});
 
 	it("keeps active shipped surfaces on canonical Change vocabulary", () => {

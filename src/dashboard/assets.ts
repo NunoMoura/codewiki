@@ -43,6 +43,7 @@ export const CODEWIKI_DASHBOARD_HTML = String.raw`<!doctype html>
 	--logo-blue-hover: #397375;
 	--interactive: #4a9293;
 	--interactive-hover: #58aaa7;
+	--danger: #d94848;
 	--progress-inactive: #353b3b;
 	--stage-change: var(--logo-orange);
 	--stage-decision: var(--logo-yellow);
@@ -582,6 +583,25 @@ button { color: inherit; }
 .execution-button.stop { border-color: var(--danger); background: #1b0d0d; }
 .execution-button:disabled { border-color: var(--line); color: var(--dim); background: #080808; cursor: not-allowed; }
 .execution-note { color: var(--muted); font-size: 12px; line-height: 1.5; }
+.preview-control { display: grid; gap: 10px; }
+.preview-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.preview-title { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 900; }
+.preview-state { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+.preview-state::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 50%; background: var(--dim); box-shadow: 0 0 0 2px rgba(255,255,255,.04); }
+.preview-state.ready::before { background: var(--check-passed); }
+.preview-state.starting::before { background: var(--decision); }
+.preview-state.blocked::before, .preview-state.failed::before { background: var(--danger); }
+.preview-url { color: var(--interactive-hover); overflow-wrap: anywhere; }
+.preview-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+.preview-evidence { display: grid; gap: 8px; }
+.preview-evidence-item { border-left: 2px solid var(--stage-implementation); background: #080808; padding: 9px 10px; min-width: 0; }
+.preview-evidence-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.preview-evidence-title { color: var(--text); font-weight: 900; }
+.preview-evidence-time { color: var(--dim); font-size: 11px; }
+.preview-evidence-detail { margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.preview-evidence-artifacts { display: grid; gap: 4px; margin-top: 7px; }
+.preview-evidence-artifact { border: 1px dotted rgba(255,255,255,.18); padding: 6px 7px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.preview-log { max-height: 180px; overflow: auto; margin: 0; padding: 10px; background: var(--bg); color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 11px; line-height: 1.5; }
 .detail-section {
 	border: 1px solid var(--line);
 	border-radius: 0;
@@ -799,6 +819,8 @@ details.terminal-block > .terminal-block-body { margin-top: 7px; }
 const fragmentToken = new URLSearchParams(window.location.hash.slice(1)).get('token');
 if (fragmentToken) sessionStorage.setItem('codewiki.dashboard.token', fragmentToken);
 const token = fragmentToken || sessionStorage.getItem('codewiki.dashboard.token') || '';
+const dashboardAssetDigest = '__CODEWIKI_ASSET_DIGEST__';
+const dashboardDevMode = new URLSearchParams(window.location.search).get('dev') === '1';
 if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search);
 let state = null;
 let traceHostState = null;
@@ -833,7 +855,7 @@ function pipelineEntries() {
 	const traces = state?.sprintsQueue || [];
 	const linkedChangeIds = new Set(traces.flatMap(function(trace) { return trace.changeIds || []; }));
 	const changes = (state?.changes?.records || []).filter(function(card) {
-		return isBacklogChange(card) || (card.identity.status === 'accepted' && !linkedChangeIds.has(card.identity.changeId));
+		return !linkedChangeIds.has(card.identity.changeId) && (isBacklogChange(card) || card.identity.status === 'accepted');
 	});
 	const entries = changes.map(function(card, index) {
 		const stage = card.identity.status === 'accepted' ? 'decision' : 'change';
@@ -844,7 +866,7 @@ function pipelineEntries() {
 		};
 	}).concat(traces.map(function(trace, index) {
 		const stage = trace.stage || (trace.committed ? 'committed' : trace.loop === 'archived' ? 'committed' : trace.loop);
-		const topicMetadata = trace.sprintBoundary?.knowledgeTopics || [];
+		const topicMetadata = trace.sprintPlan?.knowledgeTopics || [];
 		const topics = topicMetadata.map(function(topic) { return topic.ref; });
 		return {
 			kind: 'trace', id: 'trace:' + trace.traceId, stage: stage, trace: trace, sourceIndex: index,
@@ -880,7 +902,7 @@ function render() {
 function renderSearchFilter() {
 	const topicCounts = new Map();
 	(state.sprintsQueue || []).forEach(function(trace) {
-		(trace.sprintBoundary?.knowledgeTopics || []).forEach(function(topic) {
+		(trace.sprintPlan?.knowledgeTopics || []).forEach(function(topic) {
 			const current = topicCounts.get(topic.ref);
 			topicCounts.set(topic.ref, { topic: topic, count: (current?.count || 0) + 1 });
 		});
@@ -956,12 +978,12 @@ function renderTracePipelineCard(entry, index) {
 	const row = document.createElement('article');
 	preparePipelineCard(row, entry, index);
 	const head = document.createElement('div'); head.className = 'trace-head';
-	const title = document.createElement('button'); title.type = 'button'; title.className = 'trace-title-button'; text(title, trace.title && trace.title !== trace.traceId ? trace.title : 'Untitled Sprint Trace');
+	const title = document.createElement('button'); title.type = 'button'; title.className = 'trace-title-button'; text(title, trace.title && trace.title !== trace.traceId ? trace.title : 'Untitled Change');
 	title.onclick = function() { openEntryOverview(entry, index); };
 	const headActions = document.createElement('div'); headActions.className = 'trace-head-actions'; headActions.append(renderSprintActions(entry), renderTraceOptions(entry, index));
 	head.append(title, headActions); row.append(head);
 	const now = document.createElement('div'); now.className = 'trace-now'; text(now, traceStateText(entry)); row.append(now);
-	if (trace.sprintBoundary?.knowledgeTopics?.length) row.append(renderKnowledgeTopics(trace.sprintBoundary.knowledgeTopics));
+	if (trace.sprintPlan?.knowledgeTopics?.length) row.append(renderKnowledgeTopics(trace.sprintPlan.knowledgeTopics));
 	row.append(renderKnowledgeAlignment(trace.knowledgeAlignment));
 	row.append(renderPipelineRail(trace.segments || [], entry, index));
 	if (expandedEntryId === entry.id) row.append(renderDetail(trace));
@@ -981,7 +1003,7 @@ function renderChangePipelineCard(entry, index) {
 	return row;
 }
 function renderKnowledgeTopics(topics) {
-	const wrap = document.createElement('div'); wrap.className = 'knowledge-topics'; wrap.setAttribute('aria-label', 'Sprint Knowledge topics');
+	const wrap = document.createElement('div'); wrap.className = 'knowledge-topics'; wrap.setAttribute('aria-label', 'Change Knowledge topics');
 	topics.forEach(function(topic) {
 		const button = document.createElement('button'); button.type = 'button'; button.className = 'knowledge-topic'; button.title = topic.ref; text(button, knowledgeTopicLabel(topic));
 		button.onclick = function(event) { event.preventDefault(); event.stopPropagation(); filter = 'topic:' + topic.ref; selected = 0; render(); };
@@ -1003,7 +1025,7 @@ function openEntryOverview(entry, index) {
 }
 function renderSprintActions(entry) {
 	const details = document.createElement('details'); details.className = 'card-options sprint-actions';
-	const summary = document.createElement('summary'); summary.setAttribute('aria-label', 'Sprint actions'); summary.title = 'Sprint actions'; text(summary, '+');
+	const summary = document.createElement('summary'); summary.setAttribute('aria-label', 'Change actions'); summary.title = 'Change actions'; text(summary, '+');
 	const panel = document.createElement('div'); panel.className = 'card-options-panel';
 	const actions = document.createElement('div'); actions.className = 'options-actions';
 	const actionState = state && state.sessionActions;
@@ -1019,14 +1041,14 @@ function renderSprintActions(entry) {
 		actions.append(button);
 	});
 	const note = document.createElement('div'); note.className = 'change-authority';
-	text(note, actionState?.available ? 'Actions send one allowlisted trace-scoped user message to this active Pi session. Delivery is not approval or trace mutation.' : actionState?.unavailableReason || 'Open this dashboard from the active Pi TUI session to use Sprint actions.');
+	text(note, actionState?.available ? 'Actions send one allowlisted Change-scoped user message to this active Pi session. Delivery is not approval or trace mutation.' : actionState?.unavailableReason || 'Open this dashboard from the active Pi TUI session to use Change actions.');
 	panel.append(actions, note); details.append(summary, panel); return details;
 }
 async function executeSessionAction(action, traceId) {
 	const actionState = state && state.sessionActions;
 	if (!actionState?.available) return;
 	const command = { commandId: 'dashboard-session-' + crypto.randomUUID(), traceId: traceId, action: action, expectedStateDigest: actionState.stateDigest };
-	text(els.status, 'delivering Sprint action');
+	text(els.status, 'delivering Change action');
 	try {
 		const response = await fetch('/api/session-actions/commands?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command) });
 		const result = await response.json();
@@ -1035,7 +1057,34 @@ async function executeSessionAction(action, traceId) {
 		text(els.status, 'delivered to Pi · ' + result.receipt.receiptId.slice(0, 19));
 		render();
 	} catch (error) {
-		text(els.status, 'Sprint action rejected · ' + (error && error.message ? error.message : String(error)));
+		text(els.status, 'Change action rejected · ' + (error && error.message ? error.message : String(error)));
+		await load();
+	}
+}
+async function executePreviewAction(action, trace) {
+	const preview = trace.preview;
+	const binding = trace.sprintPlan && trace.sprintPlan.preview;
+	if (!binding) return;
+	const command = {
+		action: action,
+		profileId: binding.profileId,
+		expectedProfileDigest: preview?.profileDigest || binding.profileDigest,
+	};
+	if (action === 'capture') command.traceId = trace.traceId;
+	text(els.status, 'preview ' + action + ' pending');
+	try {
+		const response = await fetch('/api/previews/commands?token=' + encodeURIComponent(token), {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(command),
+		});
+		const result = await response.json();
+		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
+		state.previews = result;
+		text(els.status, 'preview ' + action + ' completed');
+		await load();
+	} catch (error) {
+		text(els.status, 'preview ' + action + ' rejected · ' + (error && error.message ? error.message : String(error)));
 		await load();
 	}
 }
@@ -1081,7 +1130,7 @@ function traceStateText(entry) {
 	return action + (facts.length ? ' · ' + facts.join(' · ') : '');
 }
 function changeCurrentAction(card) {
-	if (card.identity.status === 'accepted') return 'Decision accepted; waiting for linked Sprint Trace.';
+	if (card.identity.status === 'accepted') return 'Change approved; waiting for Planning coverage.';
 	if (card.identity.validationState === 'valid') return 'Validated proposal awaiting explicit Decision approval.';
 	if (card.identity.validationState === 'stale') return 'Proposal changed; validate current revision.';
 	if (card.identity.status === 'deferred') return 'Deferred in Changes Backlog.';
@@ -1098,7 +1147,7 @@ function changePipelineSegments(stage, card) {
 	];
 }
 function renderPipelineRail(segments, entry, index) {
-	const rail = document.createElement('div'); rail.className = 'pipeline-rail'; rail.setAttribute('aria-label', 'Five-stage Sprint progress');
+	const rail = document.createElement('div'); rail.className = 'pipeline-rail'; rail.setAttribute('aria-label', 'Five-stage Change journey progress');
 	segments.forEach(function(segment) {
 		const node = document.createElement('button'); node.type = 'button'; node.className = 'pipeline-segment ' + badgeClass(segment.phase) + ' ' + badgeClass(segment.state);
 		const progress = Math.max(0, Math.min(1, Number.isFinite(segment.progress) ? segment.progress : segment.state === 'done' ? 1 : 0));
@@ -1205,7 +1254,7 @@ function renderConfiguration() {
 	const status = document.createElement('div'); status.className = 'configuration-status';
 	text(status, 'Source: ' + configuration.sourcePath + '\nDigest: ' + configuration.configDigest + '\nValidation: ' + configuration.validation + '\n' + configuration.restartGuidance);
 	const form = document.createElement('form'); form.className = 'configuration-form'; form.id = 'configuration-form'; form.onsubmit = executeConfigCommand;
-	form.append(renderExecutionConfigGroup(configuration), renderBudgetConfigGroup(configuration), renderModelConfigGroup(configuration), renderHostConfigGroup(configuration));
+	form.append(renderExecutionConfigGroup(configuration), renderBudgetConfigGroup(configuration), renderModelConfigGroup(configuration), renderHostConfigGroup(configuration), renderPreviewConfigGroup(configuration));
 	const actions = document.createElement('div'); actions.className = 'config-actions';
 	const save = document.createElement('button'); save.type = 'submit'; save.className = 'options-action config-save'; text(save, 'Save configuration');
 	const validation = document.createElement('span'); validation.id = 'config-validation'; validation.className = 'config-validation'; text(validation, 'Changes stay below active authority ceilings and require a full Pi restart when execution policy changes.');
@@ -1220,6 +1269,29 @@ function configGroup(titleValue, noteValue) {
 	return group;
 }
 function configGrid() { const grid = document.createElement('div'); grid.className = 'config-grid'; return grid; }
+function renderPreviewConfigGroup(configuration) {
+	const group = configGroup('Live Preview profiles', 'Profiles are file/API configuration. Planning must freeze exact profile and canonical UI-target digests before execution.');
+	const profiles = configuration.previewProfiles || [];
+	if (!profiles.length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No preview profiles configured.'); group.append(empty); return group; }
+	profiles.forEach(function(profile) {
+		const card = document.createElement('section'); card.className = 'execution-control';
+		const title = document.createElement('div'); title.className = 'preview-title'; text(title, profile.id + ' · ' + profile.runner.kind + ':' + profile.runner.script);
+		const grid = document.createElement('div'); grid.className = 'execution-control-grid';
+		[
+			['URL', profile.url + profile.readyPath],
+			['browser', profile.browser],
+			['auto open', profile.autoOpen ? 'enabled' : 'disabled'],
+			['digest', profile.digest],
+		].forEach(function(entry) {
+			const item = document.createElement('div'); item.className = 'execution-control-item';
+			const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
+			const value = document.createElement('div'); value.className = 'execution-control-value'; text(value, entry[1]);
+			item.append(label, value); grid.append(item);
+		});
+		card.append(title, grid); group.append(card);
+	});
+	return group;
+}
 function configControl(labelValue, input, hintValue) {
 	const label = document.createElement('label'); label.className = 'config-control';
 	const caption = document.createElement('span'); text(caption, labelValue); label.append(caption, input);
@@ -1416,7 +1488,7 @@ function detailTabEntries(trace, sections) {
 		};
 	})).concat([
 		{ id: 'committed', label: 'committed', render: function() { return renderCommittedDetail(trace); } },
-		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true, (trace.sprintBoundary?.knowledgeTopics || []).map(function(topic) { return topic.ref; }), trace.knowledgeAlignment); } },
+		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true, (trace.sprintPlan?.knowledgeTopics || []).map(function(topic) { return topic.ref; }), trace.knowledgeAlignment); } },
 		{ id: 'files', label: 'Files', render: function() { return renderTouchedFilesSection(trace.touchedFiles || {}, true); } },
 	]);
 }
@@ -1438,7 +1510,7 @@ function renderTraceOverview(trace) {
 		const blockers = document.createElement('div'); blockers.className = 'feed-feedback'; text(blockers, '✕ Blocked — ' + trace.blockers[0]); body.append(blockers);
 	}
 	const alignment = document.createElement('div'); alignment.className = 'feed-detail'; text(alignment, 'Knowledge alignment: ' + (trace.knowledgeAlignment?.label || 'Unknown') + ' — ' + (trace.knowledgeAlignment?.rationale || 'No evidence.')); body.append(alignment);
-	return renderTerminalSection('Sprint overview', body, trace.committed ? 'committed' : readableStatus(trace.status || 'active'));
+	return renderTerminalSection('Change overview', body, trace.committed ? 'committed' : readableStatus(trace.status || 'active'));
 }
 function renderTraceLineage(trace) {
 	const body = document.createElement('div'); body.className = 'section-body';
@@ -1569,6 +1641,8 @@ function renderImplementationPanel(trace, section) {
 	const node = document.createElement('section');
 	node.className = 'loop-panel loop-section ' + section.state;
 	const stack = document.createElement('div'); stack.className = 'section-body observability-stack';
+	const preview = renderLivePreview(trace);
+	if (preview) stack.append(preview);
 	stack.append(
 		renderTerminalBlock('activity feed', renderNarrativeFeed(trace.activityFeed || []), (trace.activityFeed || []).length + ' meaningful update(s)'),
 		renderTerminalBlock('worker attempts', renderWorkerAttempts(trace.workerAttempts || []), (trace.workerAttempts || []).length + ' attempt(s)'),
@@ -1578,6 +1652,90 @@ function renderImplementationPanel(trace, section) {
 	);
 	node.append(stack);
 	return node;
+}
+function renderLivePreview(trace) {
+	const binding = trace.sprintPlan && trace.sprintPlan.preview;
+	if (!binding) return null;
+	const preview = trace.preview;
+	const box = document.createElement('div'); box.className = 'preview-control';
+	const head = document.createElement('div'); head.className = 'preview-head';
+	const title = document.createElement('div'); title.className = 'preview-title'; text(title, 'Live Preview · ' + binding.profileId);
+	const status = document.createElement('div'); status.className = 'preview-state ' + (preview?.state || 'stopped'); text(status, readableStatus(preview?.state || 'waiting'));
+	head.append(title, status); box.append(head);
+	if (preview?.url) { const url = document.createElement('div'); url.className = 'preview-url'; text(url, preview.url); box.append(url); }
+	const meta = document.createElement('div'); meta.className = 'preview-meta';
+	[
+		['process', preview ? (preview.managed ? 'managed' : 'attached') : 'not started'],
+		['browser', preview?.browser || 'pending'],
+		['browser capability', previewBrowserCapabilityLabel(preview)],
+		['started', preview?.startedAt ? shortTime(preview.startedAt) : 'waiting'],
+		['evidence', (binding.evidenceViewports || []).join(', ') || 'not declared'],
+	].forEach(function(entry) {
+		const item = document.createElement('div'); item.className = 'execution-control-item';
+		const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
+		const value = document.createElement('div'); value.className = 'execution-control-value'; text(value, entry[1]);
+		item.append(label, value); meta.append(item);
+	});
+	box.append(meta);
+	if (preview?.failure) { const failure = document.createElement('div'); failure.className = 'feed-feedback'; text(failure, preview.failure); box.append(failure); }
+	const capability = preview?.browserCapability;
+	if (preview?.browser === 'playwright' && capability?.reason) {
+		const capabilityNote = document.createElement('div'); capabilityNote.className = capability.cliState === 'unavailable' || capability.sessionState === 'failed' ? 'feed-feedback' : 'execution-note'; text(capabilityNote, capability.reason); box.append(capabilityNote);
+	}
+	if (preview?.browser === 'playwright' && capability?.installHint) { const install = document.createElement('div'); install.className = 'execution-note'; text(install, capability.installHint); box.append(install); }
+	const actions = document.createElement('div'); actions.className = 'execution-actions';
+	const browserUnavailable = capability?.cliState === 'unavailable' || capability?.cliState === 'checking' || capability?.cliState === 'not_checked';
+	const browserAlreadyOpen = capability?.sessionState === 'ready';
+	const open = document.createElement('button'); open.type = 'button'; open.className = 'execution-button'; text(open, 'Open preview'); open.disabled = preview?.state !== 'ready' || preview?.browser === 'none' || browserUnavailable || browserAlreadyOpen; open.title = capability?.installHint || capability?.reason || (preview?.browser === 'none' ? 'This profile has no browser adapter.' : 'Open the ready preview browser.'); open.onclick = function() { void executePreviewAction('open', trace); };
+	const capture = document.createElement('button'); capture.type = 'button'; capture.className = 'execution-button'; text(capture, 'Capture evidence'); capture.disabled = preview?.state !== 'ready' || !capability?.captureAvailable; capture.title = capability?.captureAvailable ? 'Capture declared viewports, console messages, and network requests.' : capability?.installHint || capability?.reason || 'Capture requires a verified Playwright browser session.'; capture.onclick = function() { void executePreviewAction('capture', trace); };
+	const restart = document.createElement('button'); restart.type = 'button'; restart.className = 'execution-button'; text(restart, preview ? 'Restart preview' : 'Start preview'); restart.disabled = preview?.state === 'blocked' && /digest changed|not configured/i.test(preview.failure || ''); restart.onclick = function() { void executePreviewAction(preview ? 'restart' : 'start', trace); };
+	const stop = document.createElement('button'); stop.type = 'button'; stop.className = 'execution-button stop'; text(stop, 'Stop preview'); stop.disabled = !preview || !['starting', 'ready', 'failed'].includes(preview.state); stop.onclick = function() { void executePreviewAction('stop', trace); };
+	actions.append(open, capture, restart, stop); box.append(actions);
+	const note = document.createElement('div'); note.className = 'execution-note'; text(note, 'Capture writes bounded operational artifacts under .codewiki/runtime. Evidence never grants semantic approval.'); box.append(note);
+	const traceCaptures = (preview?.captures || []).filter(function(capture) { return capture.traceId === trace.traceId; });
+	if (traceCaptures.length) box.append(renderPreviewEvidence(traceCaptures));
+	if ((preview?.logs || []).length) {
+		const logs = document.createElement('pre'); logs.className = 'preview-log'; text(logs, preview.logs.join('\n'));
+		box.append(renderCollapsibleTerminalBlock('preview logs', logs, preview.logs.length + ' bounded line(s)'));
+	}
+	return renderTerminalBlock('live preview', box, preview ? readableStatus(preview.state) : 'waiting');
+}
+function previewBrowserCapabilityLabel(preview) {
+	if (!preview) return 'waiting';
+	const capability = preview.browserCapability;
+	if (!capability) return preview.browser === 'playwright' ? 'unknown' : 'not required';
+	if (preview.browser !== 'playwright') return capability.sessionState === 'ready' ? 'browser opened' : 'not required';
+	if (capability.cliState === 'checking') return 'checking CLI';
+	if (capability.cliState === 'not_checked') return 'not checked';
+	if (capability.cliState === 'unavailable') return 'CLI unavailable';
+	if (capability.sessionState === 'ready') return 'CLI + browser ready';
+	if (capability.sessionState === 'failed') return 'browser unavailable';
+	return 'CLI ready · browser not opened';
+}
+function renderPreviewEvidence(captures) {
+	const list = document.createElement('div'); list.className = 'preview-evidence';
+	captures.slice().reverse().forEach(function(capture) {
+		const item = document.createElement('article'); item.className = 'preview-evidence-item';
+		const head = document.createElement('div'); head.className = 'preview-evidence-head';
+		const title = document.createElement('div'); title.className = 'preview-evidence-title'; text(title, capture.id || 'preview capture');
+		const time = document.createElement('div'); time.className = 'preview-evidence-time'; text(time, capture.capturedAt ? shortTime(capture.capturedAt) : 'captured');
+		head.append(title, time); item.append(head);
+		const correlation = document.createElement('div'); correlation.className = 'preview-evidence-detail';
+		const iteration = capture.implementationIterationId || 'before first Implementation iteration';
+		text(correlation, 'trace ' + capture.traceId + ' · ' + iteration + ' · git ' + String(capture.gitHead || '').slice(0, 12) + (capture.gitDirty ? ' + dirty worktree' : '') + ' · manifest ' + String(capture.manifestDigest || '').slice(0, 19));
+		item.append(correlation);
+		const observations = document.createElement('div'); observations.className = 'preview-evidence-detail';
+		text(observations, 'console ' + (capture.console?.count || 0) + ' line(s) · network ' + (capture.network?.count || 0) + ' line(s) · ' + capture.manifestPath);
+		item.append(observations);
+		const artifacts = document.createElement('div'); artifacts.className = 'preview-evidence-artifacts';
+		(capture.screenshots || []).forEach(function(screenshot) {
+			const artifact = document.createElement('div'); artifact.className = 'preview-evidence-artifact';
+			text(artifact, screenshot.viewport + ' ' + screenshot.width + '×' + screenshot.height + ' · ' + screenshot.path + ' · ' + String(screenshot.digest || '').slice(0, 19));
+			artifacts.append(artifact);
+		});
+		item.append(artifacts); list.append(item);
+	});
+	return renderCollapsibleTerminalBlock('captured evidence', list, captures.length + ' capture(s)');
 }
 function renderNarrativeFeed(feed) {
 	const box = document.createElement('div'); box.className = 'feed';
@@ -1832,7 +1990,7 @@ function qualityCheckWithFallback(check) {
 }
 function canonicalQualityText(value) {
 	return String(value || '')
-		.replace(/Sprint Proposal has at least one approved (?:row|change) and stable (?:row|change) ids\./gi, 'Decision loop output has at least one Decision and stable Decision ids.')
+		.replace(/Sprint Proposal has at least one approved (?:row|change) and stable (?:row|change) ids\./gi, 'Decision loop output approves one exact Change revision and digest.')
 		.replace(/Approved rows\b/g, 'Decisions')
 		.replace(/approved rows\b/g, 'Decisions')
 		.replace(/Approved changes\b/g, 'Decisions')
@@ -1957,7 +2115,7 @@ function renderFeed(feed, includeLoop) {
 }
 function renderKnowledgeSection(files, open, topics, alignment) {
 	const node = renderFileSection('knowledge base refs', [
-		['declared Sprint topics', topics || []],
+		['declared Change topics', topics || []],
 		['changed product knowledge', files.kbProduct || []],
 		['changed system knowledge', files.kbSystem || []],
 	], open);
@@ -1994,6 +2152,15 @@ function renderFileSection(label, groups, open) {
 	const node = document.createElement('details'); node.className = 'detail-section';
 	const summary = document.createElement('summary'); const title = document.createElement('span'); text(title, label); const state = document.createElement('span'); state.className = 'section-state'; text(state, fileCount + ' files'); summary.append(title, state);
 	node.append(summary, body); return node;
+}
+async function reloadChangedDashboardAssets() {
+	if (!dashboardDevMode || dashboardStopped) return;
+	try {
+		const response = await fetch('/api/meta?token=' + encodeURIComponent(token));
+		if (!response.ok) return;
+		const meta = await response.json();
+		if (meta.assetDigest && meta.assetDigest !== dashboardAssetDigest) window.location.reload();
+	} catch {}
 }
 async function load() {
 	if (loading || dashboardStopped) return;
@@ -2062,6 +2229,7 @@ try {
 	eventStream.onerror = function() { if (!dashboardStopped) { text(els.status, 'reconnecting'); load(); } };
 } catch { load(); }
 setInterval(load, 1000);
+if (dashboardDevMode) setInterval(reloadChangedDashboardAssets, 500);
 load();
 </script>
 </body>

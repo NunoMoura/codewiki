@@ -3,13 +3,23 @@ import { createHash } from "node:crypto";
 import { decisionLoopCandidate } from "../decision/loop.ts";
 import { implementationLoopCandidate } from "../implementation/loop.ts";
 import { planningLoopCandidate } from "../planning/loop.ts";
-import { DECISION_LOOP_GRAPH } from "../../src/decision/loop.ts";
+import {
+	DECISION_CHANGE_GRAPH_HASH,
+	DECISION_CHANGE_GRAPH_ID,
+	DECISION_CHANGE_GRAPH_VERSION,
+	DECISION_CHANGE_QUALITY_STANDARDS,
+} from "../../src/decision/change-quality.ts";
 import { IMPLEMENTATION_LOOP_GRAPH } from "../../src/implementation/loop.ts";
 import {
 	loopQualityGraphRef,
 	type LoopQualityGraph,
 } from "../../src/loops/graph.ts";
-import { PLANNING_LOOP_GRAPH } from "../../src/planning/loop.ts";
+import {
+	PLANNING_PORTFOLIO_GRAPH_HASH,
+	PLANNING_PORTFOLIO_GRAPH_ID,
+	PLANNING_PORTFOLIO_GRAPH_VERSION,
+	PLANNING_PORTFOLIO_QUALITY_STANDARDS,
+} from "../../src/planning/portfolio-quality.ts";
 import type { LabLoop } from "./types.ts";
 
 export interface LabGraphNodeSummary {
@@ -74,6 +84,7 @@ export interface LabGraphReport {
 
 interface GraphLike {
 	graphId: string;
+	hash?: string;
 	graphVersion: string;
 	schemaVersion: number;
 	layers: string[];
@@ -95,6 +106,40 @@ interface GraphNodeLike {
 	description?: string;
 }
 
+const DECISION_CHANGE_GRAPH: GraphLike = {
+	graphId: DECISION_CHANGE_GRAPH_ID,
+	graphVersion: DECISION_CHANGE_GRAPH_VERSION,
+	schemaVersion: 1,
+	hash: DECISION_CHANGE_GRAPH_HASH,
+	layers: ["hard_gate"],
+	nodes: DECISION_CHANGE_QUALITY_STANDARDS.map((standard) => ({
+		...standard,
+		layer: "hard_gate",
+		standardType: "loop_contract",
+		weight: 10,
+		cost: 10,
+		repairTarget: "decision",
+		hardGate: true,
+	})),
+};
+
+const PLANNING_PORTFOLIO_GRAPH: GraphLike = {
+	graphId: PLANNING_PORTFOLIO_GRAPH_ID,
+	graphVersion: PLANNING_PORTFOLIO_GRAPH_VERSION,
+	schemaVersion: 1,
+	hash: PLANNING_PORTFOLIO_GRAPH_HASH,
+	layers: ["hard_gate"],
+	nodes: PLANNING_PORTFOLIO_QUALITY_STANDARDS.map((standard) => ({
+		...standard,
+		layer: "hard_gate",
+		standardType: "loop_contract",
+		weight: 10,
+		cost: 10,
+		repairTarget: "planning",
+		hardGate: true,
+	})),
+};
+
 const LOOP_GRAPHS: Array<{
 	loop: LabLoop;
 	production: GraphLike;
@@ -102,12 +147,12 @@ const LOOP_GRAPHS: Array<{
 }> = [
 	{
 		loop: "decision",
-		production: DECISION_LOOP_GRAPH,
+		production: DECISION_CHANGE_GRAPH,
 		candidate: candidateGraph(decisionLoopCandidate),
 	},
 	{
 		loop: "planning",
-		production: PLANNING_LOOP_GRAPH,
+		production: PLANNING_PORTFOLIO_GRAPH,
 		candidate: candidateGraph(planningLoopCandidate),
 	},
 	{
@@ -238,6 +283,7 @@ function diffGraphs(
 }
 
 function graphHash(graph: GraphLike, kind: "production" | "candidate"): string {
+	if (graph.hash) return graph.hash;
 	if (kind === "production") {
 		return loopQualityGraphRef(graph as unknown as LoopQualityGraph<string>)
 			.hash;

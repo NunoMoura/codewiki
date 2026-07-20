@@ -27,14 +27,14 @@ const sourceMap = {
 			sourcePatterns: ["src/decision/**"],
 			testPatterns: ["tests/decision/**"],
 			generatedViews: [],
-			traceEvents: ["decision.changes_approved"],
+			traceEvents: ["decision.change_approved"],
 			role: "semantic_loop",
 		},
 		{
 			id: "api",
 			doc: ".codewiki/kb/system/components/api.md",
 			sourcePatterns: ["src/api/**"],
-			testPatterns: ["tests/scaffold.test.mjs"],
+			testPatterns: ["tests/scaffold-core.test.mjs"],
 			generatedViews: [],
 			traceEvents: [],
 			role: "public_facade",
@@ -80,7 +80,7 @@ describe("OKF source ownership extension generation", () => {
 		assert.deepEqual(decision?.codewiki_components, ["decision"]);
 		assert.deepEqual(decision?.codewiki_source_patterns, ["src/decision/**"]);
 		assert.deepEqual(decision?.codewiki_trace_events, [
-			"decision.changes_approved",
+			"decision.change_approved",
 		]);
 
 		const api = okfSourceMapExtensionForDoc(

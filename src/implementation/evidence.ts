@@ -1,8 +1,4 @@
 import type { ContentProof } from "../git/content-proof.ts";
-import {
-	directImplementationDecisionsFromRecords,
-	type DirectImplementationDecisionProjection,
-} from "../decision/direct-implementation.ts";
 import type { TraceEvent } from "../traces/types.ts";
 import type {
 	AcceptanceEvidenceInput,
@@ -116,52 +112,27 @@ export function acceptanceRequirementsFromPlanningEvents(
 				}),
 			),
 		),
-		...directImplementationDecisionsFromRecords(events).flatMap((direct) =>
-			direct.acceptanceCriteria.map((criterion) => ({
-				planningRef: direct.ref,
-				criterionId: criterion.id,
-				text: criterion.text,
-			})),
-		),
 	];
 }
 
 export function planningRefsFromEvents(events: TraceEvent[]): string[] {
-	return unique([
-		...planningWorkItemsFromIterationEvents(events).map(
+	return unique(
+		planningWorkItemsFromIterationEvents(events).map(
 			(item) => item.planningRef,
 		),
-		...directImplementationDecisionsFromRecords(events).map((item) => item.ref),
-	]);
+	);
 }
 
 export function planningScopesFromEvents(
 	events: TraceEvent[],
 ): PlanningImplementationScope[] {
-	return [
-		...planningWorkItemsFromIterationEvents(events).map((item) => ({
-			planningRef: item.planningRef,
-			workUnitId: item.id,
-			componentRefs: stringList(item.componentRefs),
-			pathScopes: stringList(item.pathScopes),
-			verification: stringList(item.verification),
-		})),
-		...directImplementationDecisionsFromRecords(events).map((direct) =>
-			directImplementationScope(direct),
-		),
-	];
-}
-
-function directImplementationScope(
-	direct: DirectImplementationDecisionProjection,
-): PlanningImplementationScope {
-	return {
-		planningRef: direct.ref,
-		workUnitId: direct.id,
-		componentRefs: direct.componentRefs,
-		pathScopes: direct.pathScopes,
-		verification: direct.verification,
-	};
+	return planningWorkItemsFromIterationEvents(events).map((item) => ({
+		planningRef: item.planningRef,
+		workUnitId: item.id,
+		componentRefs: stringList(item.componentRefs),
+		pathScopes: stringList(item.pathScopes),
+		verification: stringList(item.verification),
+	}));
 }
 
 export function implementationEvidenceRefs(

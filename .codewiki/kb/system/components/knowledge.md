@@ -15,7 +15,7 @@ codewiki_source_patterns:
   - .codewiki/kb/**
 codewiki_test_patterns:
   - tests/knowledge/**
-  - tests/scaffold.test.mjs
+  - tests/scaffold-core.test.mjs
 codewiki_role: hot_knowledge
 codewiki_source_map:
   - id: knowledge
@@ -24,7 +24,7 @@ codewiki_source_map:
       - .codewiki/kb/**
     test_patterns:
       - tests/knowledge/**
-      - tests/scaffold.test.mjs
+      - tests/scaffold-core.test.mjs
     role: hot_knowledge
 ---
 # Knowledge
@@ -48,12 +48,13 @@ Product knowledge defines users, user stories, product behavior, and visual user
 ```text
 .codewiki/kb/product/
   overview.md
+  DESIGN.md
   users/
   stories/
   uis/
 ```
 
-Product docs should avoid technical implementation detail unless it affects user value, user constraints, UI behavior, or a system constraint that changes what users can expect.
+Product docs should avoid technical implementation detail unless it affects user value, user constraints, UI behavior, or a system constraint that changes what users can expect. `product/DESIGN.md` follows Google's DESIGN.md alpha format while retaining CodeWiki OKF concept fields in the same extensible YAML frontmatter. Its machine-readable tokens are normative; prose explains branding, visual rationale, fonts, iconography, layout, components, accessibility guardrails, and durable visual-reference URLs or repository paths.
 
 ## System structure
 
@@ -84,9 +85,9 @@ A change can originate in any layer:
 - implementation discoveries can route back to planning or decision;
 - source drift can create a decision question.
 
-The decision loop records accepted intent, KB impact, and diagram impact in decision output. It cannot exit unless required KB/diagram updates are made, explicitly not needed, blocked, or routed with owner and rationale.
+Decision records accepted Change intent, KB impact, and diagram impact in the Change Trace. It cannot approve a revision unless required KB/diagram updates are made, explicitly unnecessary, blocked, or routed with owner and rationale.
 
-Planning starts only from exited decision output and current KB refs.
+Planning starts only from exact approved Change revisions and current KB refs.
 
 ## Links and generated relationships
 
@@ -96,22 +97,13 @@ Generated views derive machine relationships from explicit refs, curated Markdow
 
 CodeWiki hot knowledge is an OKF v0.1 markdown/frontmatter bundle under `.codewiki/kb`. OKF concept frontmatter is the active KB-code-test ownership source; no separate source-map YAML file is active truth. Conceptual diagram relationships belong in diagram YAML files. Loop outputs and implementation evidence carry trace-local refs. Reusable drift lint rules live in source so readiness checks, future commands, and tests share one terminology contract instead of duplicating stale-wording scans.
 
-## OKF and Sprint workflow boundary
+## OKF and workflow boundary
 
-CodeWiki product concepts such as Sprint Proposal, Decision, Sprint,
-Sprint Record, Sprints Queue, Sprint Trace, Trace Detail, Work Item, Assignment,
-Ready Checks, and Needs Review are defined in `.codewiki/kb/**/*.md` as
-OKF-compatible knowledge.
+CodeWiki concepts such as Change, Change Trace, Decision loop, approval, Sprint, WorkState, Work Item, Assignment, Ready Checks, and Needs Review are defined in `.codewiki/kb/**/*.md` as OKF-compatible knowledge.
 
-Actual Sprint instances are not KB documents. Their durable workflow truth
-remains trace JSONL under `.codewiki/traces/TRACE-*.jsonl`. Generated
-Sprints Queue and Sprint Trace output is a read-only projection over traces,
-work queues, source refs, and Git proof; it must not become a second state root.
+Actual Change and Sprint instances are not KB documents. One Change's durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Sprint, Work Pipeline, queue, and Change Journey screens are WorkState-backed projections over Change Traces, current KB/source/Git, and runtime observations; they must not become another state root.
 
-A Sprint Record is the product-facing bridge to trace persistence. Use
-Sprint/Sprint Record in product-facing docs and renderers, but keep `trace`,
-trace event ids, change ids, work item ids, and claim ids where storage, recovery,
-tests, or runtime coordination require exact technical refs.
+Use Change/Sprint/Work Item/Assignment in product-facing views. Keep trace ids, event ids, Change revision refs, Work Item ids, Assignment ids, and digests where storage, recovery, tests, or runtime coordination require exact technical identity.
 
 ## Rules
 
@@ -128,6 +120,7 @@ tests, or runtime coordination require exact technical refs.
 ## Related docs
 
 - [Product](../../product/overview.md)
+- [Design System](../../product/DESIGN.md)
 - [Loop Model](loop-model.md)
 - [Decision Loop](decision-loop.md)
 - [Traces](traces.md)

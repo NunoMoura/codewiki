@@ -10,14 +10,15 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
+import { changeTraceId } from "../../src/changes/change-trace.ts";
+import { changeContentDigest } from "../../src/changes/digest.ts";
 import codewikiExtension from "../../src/pi/extension.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
-import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
+import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
 
 function mockPi() {
 	const tools = [];
@@ -43,14 +44,6 @@ function toolByName(pi, name) {
 	return tool;
 }
 
-function approvedDecisionRef(events) {
-	const iteration = events.find((event) => event.loop === "decision");
-	const change = iteration?.data?.output?.approvedChanges?.[0];
-	assert.ok(iteration);
-	assert.ok(change);
-	return `trace:${iteration.id}#change:${change.id}`;
-}
-
 function planningWorkRef(events, workUnitId = "WU-pi-mutation-smoke") {
 	const iteration = events.find((event) => event.loop === "planning");
 	const item = iteration?.data?.output?.workItems?.find(
@@ -59,25 +52,6 @@ function planningWorkRef(events, workUnitId = "WU-pi-mutation-smoke") {
 	assert.ok(iteration);
 	assert.ok(item);
 	return `trace:${iteration.id}#work:${item.id}`;
-}
-
-function workItemInput(decisionRef) {
-	return {
-		id: "WU-pi-mutation-smoke",
-		title: "Exercise guarded Pi loop mutation",
-		decisionRefs: [decisionRef],
-		outcome:
-			"Decision, planning, implementation, and archive append through Pi tools are guarded and observable.",
-		...planningQualityFields(),
-		acceptance: [
-			"Preview does not mutate the trace.",
-			"Append uses expected byte and sequence checks.",
-			"State reflects implementation closure before archive close.",
-		],
-		componentRefs: ["pi"],
-		pathScopes: ["src/pi/**"],
-		verification: ["tests/runtime/pi-tool-mutation-smoke.mjs"],
-	};
 }
 
 function changeInput(planningRef) {
@@ -93,25 +67,15 @@ function changeInput(planningRef) {
 				command: "npm run test:pi-mutation",
 				status: "pass",
 				phase: "verify",
-				criterionId: "AC-001",
+				criterionId: "AC-WU-pi-mutation-smoke-1",
 				outputRef: "tests/runtime/pi-tool-mutation-smoke.mjs",
 				summary: "Guarded Pi mutation smoke passed in the temp project.",
 			},
 		],
 		acceptanceEvidenceItems: [
 			{
-				criterionId: "AC-001",
-				summary: "Preview did not mutate trace bytes before append.",
-				evidenceRefs: ["tests/runtime/pi-tool-mutation-smoke.mjs"],
-			},
-			{
-				criterionId: "AC-002",
-				summary: "Append used expected byte and sequence checks.",
-				evidenceRefs: ["tests/runtime/pi-tool-mutation-smoke.mjs"],
-			},
-			{
-				criterionId: "AC-003",
-				summary: "State reflected implementation closure before archive close.",
+				criterionId: "AC-WU-pi-mutation-smoke-1",
+				summary: "Guarded Pi mutation behavior is verified end to end.",
 				evidenceRefs: ["tests/runtime/pi-tool-mutation-smoke.mjs"],
 			},
 		],
@@ -146,7 +110,7 @@ async function writeFixtureFiles(root) {
 			"codewiki_test_patterns:",
 			"  - tests/runtime/pi-*.mjs",
 			"codewiki_trace_events:",
-			"  - decision.changes_approved",
+			"  - decision.change_approved",
 			"  - planning.work_units_created",
 			"  - implementation.evidence_accepted",
 			"---",
@@ -170,20 +134,20 @@ async function expectedBytes(path) {
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-pi-tool-mutation-"));
 try {
-	const traceId = "TRACE-pi-tool-mutation-smoke";
-	await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
 	await mkdir(join(root, ".codewiki", "kb", "system"), { recursive: true });
 	await writeFixtureFiles(root);
+	const { record } = await seedChangeAcceptance(root, {
+		id: "CHG-pi-mutation-smoke",
+		currentState:
+			"Pi tools are mutation-capable but need guarded append smoke coverage.",
+		desiredState:
+			"Pi tool append proves guarded mutation across semantic loops.",
+		rationale: "External smoke must prove safe Change Trace writes.",
+		sourceRefs: [".codewiki/kb/system/components/api-tools.md"],
+	});
+	const traceId = changeTraceId(record.change.id);
 	const tracePath = join(root, traceFilePath(traceId));
-	const headText = formatTraceText([
-		createTraceHead({
-			traceId,
-			title: "Pi tool mutation smoke",
-			createdAt: "2026-06-17T00:00:00.000Z",
-		}),
-	]);
-	await writeFile(tracePath, headText);
-
+	const initialText = await readFile(tracePath, "utf8");
 	const pi = mockPi();
 	codewikiExtension(pi.api);
 	const decideTool = toolByName(pi, "wiki_decide");
@@ -192,34 +156,26 @@ try {
 	const archiveTool = toolByName(pi, "wiki_archive");
 	const stateTool = toolByName(pi, "wiki_state");
 	const ctx = { cwd: root, ui: { notify() {} } };
-	const { changeAcceptance, sprintBoundary } = await seedChangeAcceptance(
-		root,
-		{
-			id: "CHG-pi-mutation-smoke",
-			currentState:
-				"Pi tools are mutation-capable but need guarded append smoke coverage.",
-			desiredState:
-				"Pi tool append proves guarded mutation across semantic loops.",
-			rationale:
-				"Dogfooding must prove safe trace writes before broader mutation use.",
-			sourceRefs: [".codewiki/kb/system/components/api-tools.md"],
-			acceptedBy: "pi-tool-mutation-smoke",
-			acceptedAt: "2026-06-17T00:00:01.000Z",
+	const decisionState = await buildProjectWorkState({ repoRoot: root });
+	const decisionInput = {
+		repoRoot: root,
+		changeId: record.change.id,
+		expectedRevision: record.change.revision,
+		expectedChangeDigest: changeContentDigest(record.change),
+		expectedWorkStateDigest: decisionState.snapshotDigest,
+		disposition: "approve",
+		rationale: "Approve exact Pi mutation Change.",
+		authority: {
+			kind: "user",
+			actor: "pi-tool-mutation-smoke",
+			ref: "approval:user:pi-tool-mutation-smoke",
 		},
-	);
-
+		occurredAt: "2026-06-17T00:00:01.000Z",
+	};
 	const preview = assertToolResult(
 		await decideTool.execute(
 			"tool-call-mutation-preview",
-			{
-				input: {
-					traceId,
-					mode: "preview",
-					nextSequence: 1,
-					changeAcceptance,
-					sprintBoundary,
-				},
-			},
+			{ input: { ...decisionInput, mode: "preview" } },
 			undefined,
 			undefined,
 			ctx,
@@ -227,44 +183,26 @@ try {
 		/wiki_decide: completed preview run\./,
 	);
 	assert.equal(preview.append, undefined);
-	assert.equal(await readFile(tracePath, "utf8"), headText);
-
+	assert.equal(await readFile(tracePath, "utf8"), initialText);
 	await assert.rejects(
 		() =>
 			decideTool.execute(
 				"tool-call-mutation-unguarded",
-				{
-					input: {
-						traceId,
-						mode: "append",
-						nextSequence: 1,
-						changeAcceptance,
-					},
-				},
+				{ input: { ...decisionInput, mode: "append" } },
 				undefined,
 				undefined,
 				ctx,
 			),
 		/wiki_decide append mode requires expectedBytes >= 0\./,
 	);
-
 	const decided = assertToolResult(
 		await decideTool.execute(
 			"tool-call-mutation-append-decision",
 			{
 				input: {
-					traceId,
+					...decisionInput,
 					mode: "append",
 					expectedBytes: await expectedBytes(tracePath),
-					nextSequence: 1,
-					changeAcceptance,
-					sprintBoundary,
-					sprintProposalApproval: {
-						approved: true,
-						renderedProposalDigest: preview.renderedSprintProposal.digest,
-						approvedBy: "pi-tool-mutation-smoke",
-						approvedAt: "2026-06-17T00:00:01.000Z",
-					},
 				},
 			},
 			undefined,
@@ -273,22 +211,51 @@ try {
 		),
 		/wiki_decide: completed append run\./,
 	);
-	assert.equal(decided.append.records.length, 2);
-
-	const decisionRef = approvedDecisionRef(decided.loopResult.traceEvents);
+	assert.equal(decided.append.records.length, 1);
+	const planningState = await buildProjectWorkState({ repoRoot: root });
 	const planned = assertToolResult(
 		await planTool.execute(
 			"tool-call-mutation-append-plan",
 			{
 				input: {
-					traceId,
+					repoRoot: root,
 					mode: "append",
-					expectedBytes: await expectedBytes(tracePath),
-					nextSequence: 2,
+					expectedWorkStateDigest: planningState.snapshotDigest,
+					expectedChangeIds: [record.change.id],
+					expectedBytesByChangeId: {
+						[record.change.id]: await expectedBytes(tracePath),
+					},
+					actor: "agent:planner",
+					rationale: "Plan exact approved Pi mutation Change.",
 					createdAt: "2026-06-17T00:00:02.000Z",
-					decisionEvents: decided.loopResult.traceEvents,
-					parentId: `${traceId}:decision:checkpoint:1`,
-					workItemInputs: [workItemInput(decisionRef)],
+					sprints: [
+						{
+							id: "SPR-pi-mutation-smoke",
+							goal: "Exercise guarded Pi loop mutation.",
+							participatingChangeIds: [record.change.id],
+							workItemIds: ["WU-pi-mutation-smoke"],
+							rollbackBoundary: "Revert Sprint work as one boundary.",
+							dependsOn: [],
+							integrationRefs: [],
+						},
+					],
+					workItems: [
+						{
+							id: "WU-pi-mutation-smoke",
+							sprintId: "SPR-pi-mutation-smoke",
+							owningChangeId: record.change.id,
+							contributingChangeIds: [],
+							title: "Exercise guarded Pi loop mutation",
+							outcome: "Pi semantic loop writes are guarded and observable.",
+							technicalRequirements: ["Preserve Change Trace authority."],
+							acceptanceCriteria: ["Pi mutation smoke passes."],
+							componentRefs: ["pi"],
+							pathScopes: ["src/pi"],
+							verification: ["tests/runtime/pi-tool-mutation-smoke.mjs"],
+							workerProfile: "implementation",
+							dependsOn: [],
+						},
+					],
 				},
 			},
 			undefined,
@@ -297,9 +264,16 @@ try {
 		),
 		/wiki_plan: completed append run\./,
 	);
-	assert.equal(planned.loopResult.exit.passed, true);
-
+	assert.equal(planned.report.exit.status, "exit");
+	const planningEvents = Object.values(planned.events);
 	const afterPlan = await readTrace(tracePath);
+	const runtimeNextSequence =
+		Math.max(
+			0,
+			...afterPlan.records
+				.filter((entry) => entry.type === "trace_event")
+				.map((entry) => entry.sequence),
+		) + 1;
 	const runtimeQueue = buildWorkQueueView({
 		records: afterPlan.records,
 		generatedAt: "2026-06-17T00:00:02.500Z",
@@ -319,7 +293,7 @@ try {
 		queue: runtimeQueue,
 		workerIdPrefix: "mutation-worker",
 		dirtyPaths: ["src/pi/tool.ts"],
-		nextSequenceByTrace: { [traceId]: 3 },
+		nextSequenceByTrace: { [traceId]: runtimeNextSequence },
 	});
 	assert.equal(runtimePreview.append, undefined);
 	assert.equal(runtimePreview.policy.worktrees[0].required, true);
@@ -329,7 +303,7 @@ try {
 	);
 	assert.equal(
 		runtimePreview.batch.events[0].data.worktree.branch,
-		"codewiki/TRACE-pi-tool-mutation-smoke/WU-pi-mutation-smoke/mutation-worker-001",
+		`codewiki/${traceId}/WU-pi-mutation-smoke/mutation-worker-001`,
 	);
 	assert.equal(await readFile(tracePath, "utf8"), beforeRuntimePreview);
 
@@ -339,7 +313,7 @@ try {
 				mode: "append",
 				config: runtimeConfig,
 				queue: runtimeQueue,
-				nextSequenceByTrace: { [traceId]: 3 },
+				nextSequenceByTrace: { [traceId]: runtimeNextSequence },
 				repoRoot: root,
 			}),
 		/wiki_runtime append blocked by policy: Missing expected trace bytes/i,
@@ -352,7 +326,7 @@ try {
 		createdAt: "2026-06-17T00:00:03.000Z",
 		workerIdPrefix: "mutation-worker",
 		dirtyPaths: ["src/pi/tool.ts"],
-		nextSequenceByTrace: { [traceId]: 3 },
+		nextSequenceByTrace: { [traceId]: runtimeNextSequence },
 		expectedBytesByTrace: {
 			[traceId]: await expectedBytes(tracePath),
 		},
@@ -360,8 +334,11 @@ try {
 	});
 	const claimEvent = runtime.append.events[0];
 	assert.equal(claimEvent.event, "runtime.work_unit.claimed");
-	assert.equal(claimEvent.sequence, 3);
-	assert.equal(runtime.batch.nextSequenceByTrace[traceId], 4);
+	assert.equal(claimEvent.sequence, runtimeNextSequence);
+	assert.equal(
+		runtime.batch.nextSequenceByTrace[traceId],
+		runtimeNextSequence + 1,
+	);
 	const claimedState = assertToolResult(
 		await stateTool.execute(
 			"tool-call-mutation-state-claimed",
@@ -374,7 +351,7 @@ try {
 	);
 	assert.equal(claimedState.data.workQueue.summary.claimed, 1);
 
-	const planningRef = planningWorkRef(planned.loopResult.traceEvents);
+	const planningRef = planningWorkRef(planningEvents);
 	const implemented = assertToolResult(
 		await implementTool.execute(
 			"tool-call-mutation-append-implement",
@@ -385,7 +362,7 @@ try {
 					expectedBytes: await expectedBytes(tracePath),
 					nextSequence: runtime.batch.nextSequenceByTrace[traceId],
 					createdAt: "2026-06-17T00:00:04.000Z",
-					planningEvents: planned.loopResult.traceEvents,
+					planningEvents,
 					claimEvents: runtime.append.events,
 					parentId: claimEvent.id,
 					changeInputs: [changeInput(planningRef)],
@@ -424,11 +401,11 @@ try {
 					mode: "append",
 					records: beforeClose.records,
 					expectedBytes: await expectedBytes(tracePath),
-					gitRestoreRef: "refs/codewiki/archive/TRACE-pi-tool-mutation-smoke",
+					gitRestoreRef: `refs/codewiki/archive/${traceId}`,
 					headRef: traceId,
-					parentId: `${traceId}:implementation:checkpoint:4`,
+					parentId: beforeClose.records.at(-1)?.id,
 					reason: "Pi tool guarded mutation smoke completed.",
-					refs: [traceId, decisionRef, planningRef, claimEvent.id],
+					refs: [traceId, decided.event.id, planningRef, claimEvent.id],
 					createdAt: "2026-06-17T00:00:05.000Z",
 				},
 			},
@@ -482,7 +459,10 @@ try {
 				ok: true,
 				traceId,
 				decisionAppendRecords: decided.append.records.length,
-				planningAppendRecords: planned.append.records.length,
+				planningAppendRecords: Object.values(planned.append).reduce(
+					(total, entry) => total + entry.records.length,
+					0,
+				),
 				runtimeAppendRecords: runtime.append.events.length,
 				implementationAppendRecords: implemented.append.records.length,
 				closed: state.data.resume.closed,

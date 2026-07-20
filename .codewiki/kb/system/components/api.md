@@ -14,7 +14,7 @@ codewiki_source_patterns:
   - src/api/**
   - src/cli/**
 codewiki_test_patterns:
-  - tests/scaffold.test.mjs
+  - tests/scaffold-core.test.mjs
   - tests/views/wiki-state.test.mjs
   - tests/decision/wiki-decide.test.mjs
   - tests/planning/wiki-plan.test.mjs
@@ -32,7 +32,7 @@ codewiki_source_map:
     source_patterns:
       - src/api/**
     test_patterns:
-      - tests/scaffold.test.mjs
+      - tests/scaffold-core.test.mjs
       - tests/views/wiki-state.test.mjs
       - tests/decision/wiki-decide.test.mjs
       - tests/planning/wiki-plan.test.mjs
@@ -67,9 +67,9 @@ Target facade roots:
 - `src/api/traces.ts`
 - `src/api/views.ts`
 
-The API layer must not recreate old graph, telemetry, agency, roadmap, artifact, or validation roots. Read-only state is exposed as `src/api/state.ts`, which folds active trace records into view-shaped projections without treating stored views as truth. Project-backed state adds append handles (`expectedBytes` and `nextSequence`) and a compact `next` action hint so agents can call the right semantic loop tool safely. Source-map/path explanation belongs in explain/source-map APIs, not `wiki_state`.
+The API layer must not recreate old graph, telemetry, agency, roadmap, artifact, Change-store, or validation roots. `buildWorkState()` folds Change Traces with current KB, ownership, source/tests/Git, config, and bounded runtime observations. `src/api/state.ts` exposes bounded views without treating generated output as truth. Project-backed state adds per-Change append handles and compact next-action hints. Source/path explanation belongs in explain/source-map APIs, not `wiki_state`.
 
-The API exposes reduced core facades for the target model-facing `wiki_*` surface: `buildWikiState()`, `runWikiDecide()`, `runWikiPlan()`, `runWikiImplement()`, `runWikiArchive()`, and `runWikiConfig()`. Decision, planning, and implementation facades preview or append one semantic loop iteration safely. `runWikiRuntime()` remains a backend/host facade for coordination claim events, lease expiry, and Run trace starts; it is not a fourth semantic loop and is not a normal agent tool. Archive previews retention stubs, appends `trace_close` lifecycle records, and plans hydrate/restore from retained trace refs. Config resolution lives in `src/project/config.ts` and is exposed through the API facade; config file load/save lives in `src/project/config-file.ts` for host adapters.
+The API exposes reduced core facades for `buildWorkState()`, `buildWikiState()`, `runWikiChange()`, `runWikiDecide()`, `runWikiPlan()`, `runWikiImplement()`, `runWikiArchive()`, and `runWikiConfig()`. Decision, Planning, and Implementation facades accept loop-specific typed inputs, load repository context themselves, and preview or append one quality-governed iteration safely. `runWikiRuntime()` remains backend outer-loop coordination, not a fourth semantic loop or normal agent mega-tool. Archive handles Change Trace closure, retention stubs, and hydrate/restore. Config resolution lives in `src/project/config.ts`; host file load/save remains in `src/project/config-file.ts`.
 
 `runWikiOkf()` is a format-compatibility facade, not a workflow loop. `validate` and `export` actions default to CodeWiki KB scope and only include `.codewiki/kb/**/*.md`. `consume` defaults to generic OKF bundle scope and preserves unknown producer frontmatter fields when callers round-trip imported OKF markdown. The facade does not use BigQuery, Gemini, Google Cloud Knowledge Catalog, or the Google OKF reference agent.
 

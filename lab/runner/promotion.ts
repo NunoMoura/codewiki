@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
-import { DECISION_LOOP_GRAPH } from "../../src/decision/loop.ts";
+import {
+	DECISION_CHANGE_GRAPH_HASH,
+	DECISION_CHANGE_GRAPH_ID,
+	DECISION_CHANGE_GRAPH_VERSION,
+} from "../../src/decision/change-quality.ts";
 import {
 	createHttpLoopQualityJudge,
 	resolveLoopQualityJudgeProviderConfig,
@@ -8,7 +12,11 @@ import {
 import type { LoopQualityJudge } from "../../src/loops/judge.ts";
 import { IMPLEMENTATION_LOOP_GRAPH } from "../../src/implementation/loop.ts";
 import { loopQualityGraphHash } from "../../src/loops/graph.ts";
-import { PLANNING_LOOP_GRAPH } from "../../src/planning/loop.ts";
+import {
+	PLANNING_PORTFOLIO_GRAPH_HASH,
+	PLANNING_PORTFOLIO_GRAPH_ID,
+	PLANNING_PORTFOLIO_GRAPH_VERSION,
+} from "../../src/planning/portfolio-quality.ts";
 import { decisionLoopCandidate } from "../decision/loop.ts";
 import { implementationLoopCandidate } from "../implementation/loop.ts";
 import { scorePipeline } from "../pipeline/score.ts";
@@ -270,15 +278,23 @@ export function buildPromotionGraphDiff(): LabPromotionGraphDiffEntry[] {
 	return [
 		promotionGraphDiffEntry({
 			loop: "decision",
-			productionGraph: DECISION_LOOP_GRAPH,
-			productionPath: "src/decision/loop.ts",
+			productionGraph: {
+				graphId: DECISION_CHANGE_GRAPH_ID,
+				graphVersion: DECISION_CHANGE_GRAPH_VERSION,
+				hash: DECISION_CHANGE_GRAPH_HASH,
+			},
+			productionPath: "src/decision/change-quality.ts",
 			candidate: decisionLoopCandidate,
 			candidatePath: "lab/decision/loop.ts",
 		}),
 		promotionGraphDiffEntry({
 			loop: "planning",
-			productionGraph: PLANNING_LOOP_GRAPH,
-			productionPath: "src/planning/loop.ts",
+			productionGraph: {
+				graphId: PLANNING_PORTFOLIO_GRAPH_ID,
+				graphVersion: PLANNING_PORTFOLIO_GRAPH_VERSION,
+				hash: PLANNING_PORTFOLIO_GRAPH_HASH,
+			},
+			productionPath: "src/planning/portfolio-quality.ts",
 			candidate: planningLoopCandidate,
 			candidatePath: "lab/planning/loop.ts",
 		}),
@@ -297,12 +313,15 @@ function promotionGraphDiffEntry(input: {
 	productionGraph: {
 		graphId: string;
 		graphVersion: string;
+		hash?: string;
 	};
 	productionPath: string;
 	candidate: LabCandidateStandards<unknown>;
 	candidatePath: string;
 }): LabPromotionGraphDiffEntry {
-	const productionHash = loopQualityGraphHash(input.productionGraph as never);
+	const productionHash =
+		input.productionGraph.hash ||
+		loopQualityGraphHash(input.productionGraph as never);
 	const candidateHash = candidateHashFor(input.candidate);
 	return {
 		loop: input.loop,

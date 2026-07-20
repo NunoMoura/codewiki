@@ -255,12 +255,15 @@ function starterFiles(
 		".codewiki/kb/system/components/package.md": packageDoc(project),
 		".codewiki/kb/system/components/source-map.md": sourceMapDoc(),
 	};
-	const conceptFiles = Object.fromEntries(
-		Object.entries(conceptBodies).map(([path, body]) => [
-			path,
-			starterOkfConcept(path, body, sourceMap),
-		]),
-	);
+	const conceptFiles = {
+		...Object.fromEntries(
+			Object.entries(conceptBodies).map(([path, body]) => [
+				path,
+				starterOkfConcept(path, body, sourceMap),
+			]),
+		),
+		".codewiki/kb/product/DESIGN.md": starterDesignDoc(project),
+	};
 	const navigationFiles = {
 		".codewiki/kb/system/diagrams/index.md": systemDiagramsIndexDoc(),
 	};
@@ -377,6 +380,126 @@ function productOverviewDoc(project: string): string {
 	return `# Product Overview\n\n${project} uses CodeWiki to keep product intent, system design, and work evidence source-backed. The KB explains intended behavior. Trace records explain workflow history. Source and tests remain implementation truth.\n`;
 }
 
+function starterDesignDoc(project: string): string {
+	return serializeOkfDocument({
+		frontmatter: {
+			version: "alpha",
+			name: project,
+			description: `Starter visual identity and design-system contract for ${project}.`,
+			colors: {
+				primary: "#111827",
+				secondary: "#475569",
+				tertiary: "#0F766E",
+				neutral: "#F8FAFC",
+				surface: "#FFFFFF",
+				"on-surface": "#111827",
+				error: "#B42318",
+			},
+			typography: {
+				"headline-lg": {
+					fontFamily: "system-ui",
+					fontSize: "32px",
+					fontWeight: 700,
+					lineHeight: 1.2,
+					letterSpacing: "-0.02em",
+				},
+				"body-md": {
+					fontFamily: "system-ui",
+					fontSize: "16px",
+					fontWeight: 400,
+					lineHeight: 1.5,
+				},
+				"label-md": {
+					fontFamily: "ui-monospace",
+					fontSize: "12px",
+					fontWeight: 600,
+					lineHeight: 1.3,
+					letterSpacing: "0.04em",
+				},
+			},
+			rounded: { sm: "4px", md: "8px", lg: "12px", full: "9999px" },
+			spacing: {
+				xs: "4px",
+				sm: "8px",
+				md: "16px",
+				lg: "24px",
+				xl: "32px",
+			},
+			components: {
+				page: {
+					backgroundColor: "{colors.neutral}",
+					textColor: "{colors.on-surface}",
+				},
+				"button-primary": {
+					backgroundColor: "{colors.tertiary}",
+					textColor: "{colors.surface}",
+					typography: "{typography.label-md}",
+					rounded: "{rounded.md}",
+					padding: "{spacing.md}",
+				},
+				card: {
+					backgroundColor: "{colors.surface}",
+					textColor: "{colors.on-surface}",
+					rounded: "{rounded.lg}",
+					padding: "{spacing.lg}",
+				},
+			},
+			type: "Concept",
+			title: `${project} Design System`,
+			tags: ["codewiki", "product", "design-system", "visual-identity"],
+			timestamp: OKF_BOOTSTRAP_TIMESTAMP,
+		},
+		body: `# Design System: ${project}
+
+## Overview
+
+This file is the canonical visual-identity contract for ${project}. The initial values are a deliberately neutral, accessible baseline. Replace them with observed and approved brand choices as the product develops; do not silently infer permanent brand rules from framework defaults.
+
+This document follows Google's open [DESIGN.md alpha specification](https://github.com/google-labs-code/design.md/blob/main/docs/spec.md). Machine-readable tokens are normative; prose explains why they exist and how agents should apply them.
+
+## Colors
+
+Primary ink and neutral surfaces provide the default hierarchy. Tertiary teal is the single interaction accent. Record every added color as a token with one functional role, and preserve WCAG AA contrast for text and controls.
+
+## Typography
+
+The starter uses the local system sans-serif stack for interface text and the local monospace stack for technical labels. Document licensed font family names, weights, fallback stacks, loading paths, and usage rules here before introducing external font dependencies.
+
+## Layout
+
+Use a mobile-first responsive grid, an 8px spacing rhythm with a 4px micro-step, bounded readable content widths, and no horizontal overflow. Record intentional density, breakpoints, and exceptional compositions instead of relying on implicit framework defaults.
+
+## Elevation & Depth
+
+Prefer borders, tonal surfaces, and restrained shadows. Elevation must communicate hierarchy or interaction state; decorative glow is not a substitute for structure.
+
+## Shapes
+
+Use the rounded token scale consistently. Touch targets must remain at least 44px even when visible controls are compact.
+
+## Components
+
+Primary buttons use the tertiary interaction color. Cards use the surface and on-surface pair. Add component tokens and prose together whenever a reusable visual rule becomes established.
+
+## Iconography
+
+Use one coherent SVG icon family with consistent view boxes, stroke weight, optical size, and filled-versus-outline rules. Prefer repository-relative asset paths. Do not use emoji as product iconography. Record icon package names, license links, and custom asset directories here.
+
+## Visual References
+
+Record durable HTTPS URLs or repository-relative paths to approved mood boards, screenshots, logos, illustrations, and prototypes. No visual references were established during bootstrap.
+
+## Do's and Don'ts
+
+- Do update tokens and rationale together.
+- Do preserve accessible contrast, focus visibility, responsive behavior, and reduced-motion support.
+- Do cite exact font, icon, image, and logo sources.
+- Don't treat generated mockups, temporary files, or framework defaults as approved brand truth.
+- Don't introduce a second competing design-token source without an explicit migration.
+`,
+	});
+}
+
 function systemOverviewDoc(
 	project: string,
 	boundaries: BootstrapBoundary[],
@@ -396,7 +519,7 @@ function loopDoc(title: string, body: string): string {
 }
 
 function tracesDoc(): string {
-	return `# Traces\n\nTrace files live at \`.codewiki/traces/TRACE-*.jsonl\`. Records are append-only. Semantic events include \`loop\` plus a specific event such as \`changes_approved\`, \`work_units_created\`, or \`evidence_accepted\`. Runtime events coordinate claims and omit \`loop\`; they are not semantic loop truth.\n`;
+	return `# Traces\n\nTrace files live at \`.codewiki/traces/TRACE-*.jsonl\`. Records are append-only. Semantic events include \`loop\` plus a specific event such as \`change_approved\`, \`work_units_created\`, or \`evidence_accepted\`. Runtime events coordinate claims and omit \`loop\`; they are not semantic loop truth.\n`;
 }
 
 function apiDoc(): string {

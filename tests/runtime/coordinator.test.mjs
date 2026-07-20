@@ -40,7 +40,7 @@ function trigger(overrides = {}) {
 		traceTitle: "CI trigger",
 		workUnitId: "WU-ci",
 		planningRef: "trace:TRACE-trigger:planning:iteration:1#work:WU-ci",
-		decisionRefs: ["trace:TRACE-trigger:decision:iteration:1#change:CHG-ci"],
+		changeRefs: ["trace:TRACE-trigger:decision:iteration:1#change:CHG-ci"],
 		pathScopes: ["src/runtime/coordinator"],
 		trigger: {
 			id: "TRG-ci",
