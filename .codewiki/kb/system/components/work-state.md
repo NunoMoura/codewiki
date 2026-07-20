@@ -102,7 +102,7 @@ A Change view may expose:
 - Knowledge impacts and outcome disposition;
 - blockers, current loop, and next safe action.
 
-A Sprint view joins matching Planning facts from participating Change Traces. It is a generated execution-group projection, not a separate Sprint trace or truth file.
+A Sprint view joins matching Planning facts from participating Change Traces, including canonical `uiPreviewTargets[]` bindings and their exact target/profile digests when UI realization is in scope. It is a generated execution-group projection, not a separate Sprint trace or truth file.
 
 ## Runtime use
 

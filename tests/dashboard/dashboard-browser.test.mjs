@@ -118,6 +118,12 @@ describe("dashboard browser observability", () => {
 		assert.match(CODEWIKI_DASHBOARD_HTML, /dashboardDevMode/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /reloadChangedDashboardAssets/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /renderLivePreview/);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /LIVE PREVIEW TARGETS/i);
+		assert.match(CODEWIKI_DASHBOARD_HTML, /expectedTargetDigest/);
+		assert.match(
+			CODEWIKI_DASHBOARD_HTML,
+			/Profile processes are shared across targets/,
+		);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /renderPreviewEvidence/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /\/api\/previews\/commands/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /Capture evidence/);

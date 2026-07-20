@@ -12,7 +12,10 @@ import {
 	type PreviewBrowserCapability,
 	type PreviewBrowserHandle,
 } from "./browser-adapter.ts";
-import { tracePreviewBindings, type TracePreviewBinding } from "./binding.ts";
+import {
+	traceUiPreviewTargetBindings,
+	type TraceUiPreviewTargetBinding,
+} from "./binding.ts";
 import {
 	capturePreviewEvidence,
 	type PreviewEvidenceCapture,
@@ -23,7 +26,18 @@ import {
 	previewProfileDigest,
 	type PreviewPackageScriptRunner,
 	type PreviewProfile,
+	type WikiPreviewConfig,
 } from "./profile.ts";
+import {
+	readPreviewIntegrationState,
+	type PreviewIntegrationState,
+} from "./integration.ts";
+import {
+	previewTargetUrl,
+	uiPreviewTargetById,
+	uiPreviewTargetDigest,
+	type UiPreviewTarget,
+} from "./target.ts";
 
 export type PreviewRuntimeState =
 	| "starting"
@@ -33,15 +47,24 @@ export type PreviewRuntimeState =
 	| "stopped";
 
 export interface PreviewRuntimeStatus {
+	targetId: string;
+	targetDigest?: string;
+	uiRef?: string;
+	scenario?: string;
 	profileId: string;
 	profileDigest?: string;
 	traceIds: string[];
+	changeIds: string[];
+	sprintIds: string[];
+	workItemIds: string[];
+	viewports: string[];
 	state: PreviewRuntimeState;
 	url?: string;
 	readyUrl?: string;
 	managed: boolean;
 	browser: PreviewProfile["browser"];
 	browserCapability: PreviewBrowserCapability;
+	integration?: PreviewIntegrationState;
 	startedAt?: string;
 	readyAt?: string;
 	failure?: string;
@@ -53,30 +76,35 @@ export interface PreviewCoordinator {
 	reconcile(records: TraceRecord[]): Promise<PreviewRuntimeStatus[]>;
 	status(): PreviewRuntimeStatus[];
 	start(
-		profileId: string,
+		targetId: string,
 		records: TraceRecord[],
 	): Promise<PreviewRuntimeStatus[]>;
-	open(profileId: string): Promise<PreviewRuntimeStatus[]>;
+	open(targetId: string): Promise<PreviewRuntimeStatus[]>;
 	capture(
-		profileId: string,
-		traceId: string,
+		targetId: string,
 		records: TraceRecord[],
 	): Promise<PreviewRuntimeStatus[]>;
-	stop(profileId: string): Promise<PreviewRuntimeStatus[]>;
+	stop(targetId: string): Promise<PreviewRuntimeStatus[]>;
 	restart(
-		profileId: string,
+		targetId: string,
 		records: TraceRecord[],
 	): Promise<PreviewRuntimeStatus[]>;
 	close(): Promise<void>;
 }
 
+interface ResolvedPreviewTarget {
+	binding: TraceUiPreviewTargetBinding;
+	target: UiPreviewTarget;
+	integration: PreviewIntegrationState;
+}
+
 interface RuntimeEntry {
 	profile: PreviewProfile;
-	traceIds: string[];
+	targets: ResolvedPreviewTarget[];
 	state: PreviewRuntimeState;
 	managed: boolean;
 	child?: ChildProcess;
-	browserHandle?: PreviewBrowserHandle;
+	browserHandles: Map<string, PreviewBrowserHandle>;
 	browserCapability: PreviewBrowserCapability;
 	startedAt?: string;
 	readyAt?: string;
@@ -89,6 +117,7 @@ export interface PreviewCoordinatorOptions {
 	captureEvidence?: typeof capturePreviewEvidence;
 	detectBrowserCapability?: typeof detectPreviewBrowserCapability;
 	openBrowser?: typeof openPreviewBrowser;
+	readIntegrationState?: typeof readPreviewIntegrationState;
 }
 
 interface PackageScriptCommand {
@@ -107,11 +136,13 @@ export function createPreviewCoordinator(
 	const detectBrowserCapability =
 		options.detectBrowserCapability || detectPreviewBrowserCapability;
 	const openBrowser = options.openBrowser || openPreviewBrowser;
+	const readIntegrationState =
+		options.readIntegrationState || readPreviewIntegrationState;
 	const runtimes = new Map<string, RuntimeEntry>();
 	const blocked = new Map<string, PreviewRuntimeStatus>();
-	const capturesByProfile = new Map<string, PreviewEvidenceCapture[]>();
+	const capturesByTarget = new Map<string, PreviewEvidenceCapture[]>();
 	const capabilitiesByProfile = new Map<string, PreviewBrowserCapability>();
-	const suppressed = new Set<string>();
+	const suppressedProfiles = new Set<string>();
 	let closed = false;
 	let sequence = Promise.resolve<PreviewRuntimeStatus[]>([]);
 
@@ -124,7 +155,10 @@ export function createPreviewCoordinator(
 	}
 
 	function statuses(): PreviewRuntimeStatus[] {
-		return [...[...runtimes.values()].map(runtimeStatus), ...blocked.values()];
+		return [
+			...[...runtimes.values()].flatMap(runtimeStatuses),
+			...blocked.values(),
+		].sort((left, right) => left.targetId.localeCompare(right.targetId));
 	}
 
 	function reconcile(records: TraceRecord[]): Promise<PreviewRuntimeStatus[]> {
@@ -137,100 +171,111 @@ export function createPreviewCoordinator(
 		assertOpen();
 		blocked.clear();
 		const config = await loadWikiConfigFile(repoRoot);
-		const activeBindings = tracePreviewBindings(records).filter((binding) =>
-			tracePreviewIsActive(records, binding.traceId),
+		const activeBindings = traceUiPreviewTargetBindings(records).filter(
+			(binding) =>
+				binding.traceIds.some((traceId) =>
+					tracePreviewIsActive(records, traceId),
+				),
 		);
-		const byProfile = bindingsByProfile(activeBindings);
+		const resolvedByProfile = await resolveActivePreviewTargets({
+			repoRoot,
+			config: config.preview,
+			bindings: activeBindings,
+			readIntegrationState,
+			blocked,
+			capturesByTarget,
+			capabilitiesByProfile,
+		});
 
-		for (const [profileId, bindings] of byProfile) {
+		for (const [profileId, targets] of resolvedByProfile) {
 			const profile = previewProfileById(config.preview, profileId);
-			const traceIds = bindings
-				.map((binding) => binding.traceId)
-				.sort((left, right) => left.localeCompare(right));
-			if (!profile) {
-				await stopExistingRuntime(profileId);
-				blocked.set(
-					profileId,
-					blockedStatus({
-						profileId,
-						traceIds,
-						failure: "Preview profile is not configured.",
-						browser: "none",
-						captures: capturesByProfile.get(profileId),
-					}),
-				);
-				continue;
-			}
-			const digest = previewProfileDigest(profile);
-			const mismatch = bindings.find(
-				(binding) => binding.profileDigest !== digest,
-			);
-			if (mismatch) {
-				await stopExistingRuntime(profileId);
-				blocked.set(
-					profileId,
-					blockedStatus({
-						profileId,
-						traceIds,
-						failure: `Preview profile digest changed; expected ${mismatch.profileDigest}.`,
-						profileDigest: digest,
-						browser: profile.browser,
-						browserCapability:
-							capabilitiesByProfile.get(profileId) ||
-							uncheckedPreviewBrowserCapability(profile.browser),
-						captures: capturesByProfile.get(profileId),
-					}),
-				);
-				continue;
-			}
+			if (!profile) continue;
 			const existing = runtimes.get(profileId);
-			if (existing) {
-				existing.traceIds = traceIds;
-				continue;
+			if (
+				existing &&
+				previewProfileDigest(existing.profile) !== previewProfileDigest(profile)
+			) {
+				await stopRuntime(existing);
+				runtimes.delete(profileId);
 			}
-			if (suppressed.has(profileId)) {
-				blocked.set(
-					profileId,
-					blockedStatus({
-						profileId,
-						traceIds,
-						failure: "Preview was stopped for this Pi session.",
-						profileDigest: digest,
-						browser: profile.browser,
-						browserCapability:
-							capabilitiesByProfile.get(profileId) ||
-							uncheckedPreviewBrowserCapability(profile.browser),
-						captures: capturesByProfile.get(profileId),
-					}),
+			const current = runtimes.get(profileId);
+			if (current) {
+				const nextById = new Map(
+					targets.map((entry) => [entry.target.id, entry] as const),
 				);
+				for (const previous of current.targets) {
+					const next = nextById.get(previous.target.id);
+					if (
+						next &&
+						next.binding.targetDigest === previous.binding.targetDigest
+					) {
+						continue;
+					}
+					await current.browserHandles
+						.get(previous.target.id)
+						?.close()
+						.catch(() => undefined);
+					current.browserHandles.delete(previous.target.id);
+				}
+				if (
+					current.browserHandles.size === 0 &&
+					current.profile.browser !== "none"
+				) {
+					setRuntimeBrowserCapability(current, {
+						...current.browserCapability,
+						sessionState: "not_open",
+						captureAvailable: false,
+					});
+				}
+				current.targets = targets;
 				continue;
 			}
-			void startRuntime(profile, traceIds, bindings);
+			if (suppressedProfiles.has(profileId)) {
+				for (const entry of targets) {
+					blocked.set(
+						entry.target.id,
+						blockedTargetStatus({
+							binding: entry.binding,
+							target: entry.target,
+							profile,
+							failure: "Preview was stopped for this Pi session.",
+							browserCapability:
+								capabilitiesByProfile.get(profileId) ||
+								uncheckedPreviewBrowserCapability(profile.browser),
+							captures: capturesByTarget.get(entry.target.id),
+						}),
+					);
+				}
+				continue;
+			}
+			void startRuntime(profile, targets);
 		}
 
 		for (const [profileId, runtime] of [...runtimes]) {
-			if (byProfile.has(profileId)) continue;
+			if (resolvedByProfile.has(profileId)) continue;
 			await stopRuntime(runtime);
 			runtimes.delete(profileId);
-			suppressed.delete(profileId);
+			suppressedProfiles.delete(profileId);
 		}
 		return statuses();
 	}
 
 	async function startRuntime(
 		profile: PreviewProfile,
-		traceIds: string[],
-		bindings: TracePreviewBinding[],
+		targets: ResolvedPreviewTarget[],
 	): Promise<void> {
 		const runtime: RuntimeEntry = {
 			profile,
-			traceIds,
+			targets,
 			state: "starting",
 			managed: false,
+			browserHandles: new Map(),
 			browserCapability: checkingPreviewBrowserCapability(profile.browser),
 			startedAt: new Date().toISOString(),
 			logs: [],
-			captures: [...(capturesByProfile.get(profile.id) || [])],
+			captures: targets.flatMap(
+				(entry) => capturesByTarget.get(entry.target.id) || [],
+			),
 		};
 		runtimes.set(profile.id, runtime);
 		const readyUrl = previewReadyUrl(profile);
@@ -261,11 +306,13 @@ export function createPreviewCoordinator(
 			if (runtime.state === "stopped") return;
 			runtime.state = "ready";
 			runtime.readyAt = new Date().toISOString();
-			const autoOpen =
-				profile.autoOpen &&
-				bindings.some((binding) => binding.autoOpen === "once_per_trace");
-			if (autoOpen && profile.browser !== "none")
-				await openRuntimeBrowser(runtime);
+			if (profile.autoOpen && profile.browser !== "none") {
+				for (const entry of targets) {
+					if (entry.binding.autoOpen === "once_per_target") {
+						await openRuntimeBrowser(runtime, entry.target.id);
+					}
+				}
+			}
 		} catch (error) {
 			if (runtime.state === "stopped") return;
 			runtime.state = "failed";
@@ -277,8 +324,15 @@ export function createPreviewCoordinator(
 		}
 	}
 
-	async function openRuntimeBrowser(runtime: RuntimeEntry): Promise<boolean> {
-		if (runtime.browserHandle?.opened) return true;
+	async function openRuntimeBrowser(
+		runtime: RuntimeEntry,
+		targetId: string,
+	): Promise<boolean> {
+		if (runtime.browserHandles.get(targetId)?.opened) return true;
+		const entry = runtime.targets.find(
+			(candidate) => candidate.target.id === targetId,
+		);
+		if (!entry) throw new Error(`Preview target ${targetId} is not active.`);
 		if (
 			runtime.profile.browser === "playwright" &&
 			runtime.browserCapability.cliState !== "available"
@@ -290,19 +344,13 @@ export function createPreviewCoordinator(
 			return false;
 		}
 		try {
-			runtime.browserHandle = await openBrowser({
+			const handle = await openBrowser({
 				adapter: runtime.profile.browser,
-				url: runtime.profile.url,
-				sessionId: runtimeSessionId(runtime.profile.id, repoRoot),
+				url: previewTargetUrl(runtime.profile.url, entry.target),
+				sessionId: runtimeSessionId(runtime.profile.id, targetId, repoRoot),
 			});
-			if (!runtime.browserHandle.opened) return false;
-			setRuntimeBrowserCapability(runtime, {
-				...runtime.browserCapability,
-				sessionState: "ready",
-				captureAvailable: runtime.profile.browser === "playwright",
-				reason: undefined,
-				installHint: undefined,
-			});
+			if (!handle.opened) return false;
+			runtime.browserHandles.set(targetId, handle);
 			return true;
 		} catch (error) {
 			const reason = `Browser open failed: ${message(error)}`;
@@ -331,16 +379,11 @@ export function createPreviewCoordinator(
 		capabilitiesByProfile.set(runtime.profile.id, { ...capability });
 	}
 
-	async function stopExistingRuntime(profileId: string): Promise<void> {
-		const runtime = runtimes.get(profileId);
-		if (!runtime) return;
-		await stopRuntime(runtime);
-		runtimes.delete(profileId);
-	}
-
 	async function stopRuntime(runtime: RuntimeEntry): Promise<void> {
-		await runtime.browserHandle?.close().catch(() => undefined);
-		runtime.browserHandle = undefined;
+		for (const handle of runtime.browserHandles.values()) {
+			await handle.close().catch(() => undefined);
+		}
+		runtime.browserHandles.clear();
 		setRuntimeBrowserCapability(runtime, {
 			...runtime.browserCapability,
 			sessionState:
@@ -357,6 +400,12 @@ export function createPreviewCoordinator(
 		runtime.state = "stopped";
 	}
 
+	function runtimeForTarget(targetId: string): RuntimeEntry | undefined {
+		return [...runtimes.values()].find((runtime) =>
+			runtime.targets.some((entry) => entry.target.id === targetId),
+		);
+	}
+
 	function assertOpen(): void {
 		if (closed) throw new Error("Preview coordinator is closed.");
 	}
@@ -364,68 +413,79 @@ export function createPreviewCoordinator(
 	return {
 		reconcile,
 		status: statuses,
-		start(profileId, records) {
-			suppressed.delete(profileId);
+		start(targetId, records) {
+			const blockedTarget = blocked.get(targetId);
+			if (blockedTarget) suppressedProfiles.delete(blockedTarget.profileId);
+			const runtime = runtimeForTarget(targetId);
+			if (runtime) suppressedProfiles.delete(runtime.profile.id);
 			return reconcile(records);
 		},
-		open(profileId) {
+		open(targetId) {
 			return serialized(async () => {
 				assertOpen();
-				const runtime = runtimes.get(profileId);
+				const runtime = runtimeForTarget(targetId);
 				if (!runtime || runtime.state !== "ready") {
-					throw new Error(`Preview profile ${profileId} is not ready.`);
+					throw new Error(`Preview target ${targetId} is not ready.`);
 				}
-				if (!(await openRuntimeBrowser(runtime))) {
+				if (!(await openRuntimeBrowser(runtime, targetId))) {
 					throw new Error(
 						runtime.browserCapability.reason ||
-							`Preview browser for ${profileId} is unavailable.`,
+							`Preview browser for ${targetId} is unavailable.`,
 					);
 				}
 				return statuses();
 			});
 		},
-		capture(profileId, traceId, records) {
+		capture(targetId, records) {
 			return serialized(async () => {
 				assertOpen();
-				const runtime = runtimes.get(profileId);
+				const runtime = runtimeForTarget(targetId);
 				if (!runtime || runtime.state !== "ready") {
-					throw new Error(`Preview profile ${profileId} is not ready.`);
+					throw new Error(`Preview target ${targetId} is not ready.`);
 				}
-				if (!runtime.traceIds.includes(traceId)) {
-					throw new Error(
-						`Preview profile ${profileId} is not bound to ${traceId}.`,
-					);
-				}
+				const entry = runtime.targets.find(
+					(candidate) => candidate.target.id === targetId,
+				);
+				if (!entry)
+					throw new Error(`Preview target ${targetId} is unavailable.`);
 				if (runtime.profile.browser !== "playwright") {
 					throw new Error(
 						"Preview evidence capture requires the Playwright browser adapter.",
 					);
 				}
-				const binding = tracePreviewBindings(records).find(
-					(candidate) =>
-						candidate.traceId === traceId && candidate.profileId === profileId,
-				);
-				if (!binding) {
-					throw new Error(`Preview binding for ${traceId} is unavailable.`);
-				}
-				if (!runtime.browserCapability.captureAvailable) {
+				if (runtime.browserCapability.cliState !== "available") {
 					throw new Error(
 						runtime.browserCapability.reason ||
-							"Open preview before capturing Playwright evidence.",
+							"Playwright CLI is unavailable.",
+					);
+				}
+				if (!runtime.browserHandles.get(targetId)?.opened) {
+					throw new Error(
+						"Open this preview target before capturing Playwright evidence.",
 					);
 				}
 				try {
+					entry.integration = await readIntegrationState({
+						repoRoot,
+						binding: entry.binding,
+					});
 					const capture = await captureEvidence({
 						repoRoot,
 						profile: runtime.profile,
-						traceId,
+						target: entry.target,
+						binding: entry.binding,
+						integration: entry.integration,
 						records,
-						viewports: binding.evidenceViewports,
-						sessionId: runtimeSessionId(profileId, repoRoot),
+						sessionId: runtimeSessionId(runtime.profile.id, targetId, repoRoot),
 					});
 					runtime.captures.push(capture);
-					runtime.captures = runtime.captures.slice(-10);
-					capturesByProfile.set(profileId, [...runtime.captures]);
+					runtime.captures = runtime.captures.slice(-20);
+					capturesByTarget.set(
+						targetId,
+						runtime.captures.filter(
+							(candidate) => candidate.targetId === targetId,
+						),
+					);
 					return statuses();
 				} catch (error) {
 					appendLog(runtime, `Evidence capture failed: ${message(error)}`);
@@ -433,37 +493,44 @@ export function createPreviewCoordinator(
 				}
 			});
 		},
-		stop(profileId) {
+		stop(targetId) {
 			return serialized(async () => {
 				assertOpen();
-				suppressed.add(profileId);
-				const runtime = runtimes.get(profileId);
-				if (runtime) {
-					await stopRuntime(runtime);
-					runtimes.delete(profileId);
+				const runtime = runtimeForTarget(targetId);
+				if (!runtime) return statuses();
+				suppressedProfiles.add(runtime.profile.id);
+				await stopRuntime(runtime);
+				runtimes.delete(runtime.profile.id);
+				for (const entry of runtime.targets) {
 					blocked.set(
-						profileId,
-						blockedStatus({
-							profileId,
-							traceIds: runtime.traceIds,
+						entry.target.id,
+						blockedTargetStatus({
+							binding: entry.binding,
+							target: entry.target,
+							profile: runtime.profile,
 							failure: "Preview was stopped for this Pi session.",
-							profileDigest: previewProfileDigest(runtime.profile),
-							browser: runtime.profile.browser,
 							browserCapability: runtime.browserCapability,
-							captures: runtime.captures,
+							captures: runtime.captures.filter(
+								(capture) => capture.targetId === entry.target.id,
+							),
 						}),
 					);
 				}
 				return statuses();
 			});
 		},
-		restart(profileId, records) {
+		restart(targetId, records) {
 			return serialized(async () => {
 				assertOpen();
-				const runtime = runtimes.get(profileId);
-				if (runtime) await stopRuntime(runtime);
-				runtimes.delete(profileId);
-				suppressed.delete(profileId);
+				const runtime = runtimeForTarget(targetId);
+				if (runtime) {
+					await stopRuntime(runtime);
+					runtimes.delete(runtime.profile.id);
+					suppressedProfiles.delete(runtime.profile.id);
+				} else {
+					const blockedTarget = blocked.get(targetId);
+					if (blockedTarget) suppressedProfiles.delete(blockedTarget.profileId);
+				}
 				return reconcileNow(records);
 			});
 		},
@@ -493,15 +560,13 @@ export function tracePreviewIsActive(
 	);
 	const latest = semantic.at(-1);
 	if (!latest) return false;
-	if (latest.loop === "implementation") return true;
 	return (
-		latest.loop === "planning" &&
-		(latest.event === "work_units_created" ||
-			latest.event === "decisions_resolved")
+		latest.loop === "implementation" ||
+		(latest.loop === "planning" && latest.event === "work_units_created")
 	);
 }
 
-export async function packageScriptCommand(
+async function packageScriptCommand(
 	repoRoot: string,
 	runner: PreviewPackageScriptRunner,
 ): Promise<PackageScriptCommand> {
@@ -571,59 +636,208 @@ async function detectPackageManager(
 	return "npm";
 }
 
-function bindingsByProfile(
-	bindings: TracePreviewBinding[],
-): Map<string, TracePreviewBinding[]> {
-	const result = new Map<string, TracePreviewBinding[]>();
-	for (const binding of bindings) {
-		const current = result.get(binding.profileId) || [];
-		current.push(binding);
-		result.set(binding.profileId, current);
+async function resolveActivePreviewTargets(input: {
+	repoRoot: string;
+	config: WikiPreviewConfig;
+	bindings: TraceUiPreviewTargetBinding[];
+	readIntegrationState: typeof readPreviewIntegrationState;
+	blocked: Map<string, PreviewRuntimeStatus>;
+	capturesByTarget: Map<string, PreviewEvidenceCapture[]>;
+	capabilitiesByProfile: Map<string, PreviewBrowserCapability>;
+}): Promise<Map<string, ResolvedPreviewTarget[]>> {
+	const conflictedTargetIds = conflictingTargetIds(input.bindings);
+	const resolvedByProfile = new Map<string, ResolvedPreviewTarget[]>();
+	for (const binding of input.bindings) {
+		const profile = previewProfileById(input.config, binding.profileId);
+		const target = uiPreviewTargetById(
+			input.config.uiPreviewTargets,
+			binding.targetId,
+		);
+		const failure = previewBindingFailure({
+			binding,
+			profile,
+			target,
+			conflicted: conflictedTargetIds.has(binding.targetId),
+		});
+		if (failure || !profile || !target) {
+			input.blocked.set(
+				binding.targetId,
+				blockedTargetStatus({
+					binding,
+					target,
+					profile,
+					failure: failure || "Preview target is unavailable.",
+					browserCapability:
+						input.capabilitiesByProfile.get(binding.profileId) ||
+						uncheckedPreviewBrowserCapability(profile?.browser || "none"),
+					captures: input.capturesByTarget.get(binding.targetId),
+				}),
+			);
+			continue;
+		}
+		try {
+			const integration = await input.readIntegrationState({
+				repoRoot: input.repoRoot,
+				binding,
+			});
+			const entries = resolvedByProfile.get(profile.id) || [];
+			entries.push({ binding, target, integration });
+			resolvedByProfile.set(profile.id, entries);
+		} catch (error) {
+			input.blocked.set(
+				binding.targetId,
+				blockedTargetStatus({
+					binding,
+					target,
+					profile,
+					failure: `Integration checkout unavailable: ${message(error)}`,
+					browserCapability:
+						input.capabilitiesByProfile.get(profile.id) ||
+						uncheckedPreviewBrowserCapability(profile.browser),
+					captures: input.capturesByTarget.get(binding.targetId),
+				}),
+			);
+		}
 	}
-	return result;
+	return resolvedByProfile;
 }
 
-function blockedStatus(input: {
-	profileId: string;
-	traceIds: string[];
+function conflictingTargetIds(
+	bindings: TraceUiPreviewTargetBinding[],
+): Set<string> {
+	const signatures = new Map<string, Set<string>>();
+	for (const binding of bindings) {
+		const values = signatures.get(binding.targetId) || new Set<string>();
+		values.add(
+			[
+				binding.targetDigest,
+				binding.profileId,
+				binding.profileDigest,
+				String(binding.required),
+				binding.activation,
+				binding.autoOpen,
+			].join("\0"),
+		);
+		signatures.set(binding.targetId, values);
+	}
+	return new Set(
+		[...signatures].flatMap(([targetId, values]) =>
+			values.size > 1 ? [targetId] : [],
+		),
+	);
+}
+
+function previewBindingFailure(input: {
+	binding: TraceUiPreviewTargetBinding;
+	profile?: PreviewProfile;
+	target?: UiPreviewTarget;
+	conflicted: boolean;
+}): string | undefined {
+	if (input.conflicted) {
+		return `Preview target ${input.binding.targetId} has conflicting active digests.`;
+	}
+	if (!input.target) return "Preview target is not configured.";
+	if (!input.profile) return "Preview profile is not configured.";
+	const targetDigest = uiPreviewTargetDigest(input.target);
+	if (targetDigest !== input.binding.targetDigest) {
+		return `Preview target digest changed; expected ${input.binding.targetDigest}.`;
+	}
+	if (input.target.profileId !== input.binding.profileId) {
+		return `Preview target ${input.target.id} changed profile ownership.`;
+	}
+	const profileDigest = previewProfileDigest(input.profile);
+	if (profileDigest !== input.binding.profileDigest) {
+		return `Preview profile digest changed; expected ${input.binding.profileDigest}.`;
+	}
+	return undefined;
+}
+
+function blockedTargetStatus(input: {
+	binding: TraceUiPreviewTargetBinding;
+	target?: UiPreviewTarget;
+	profile?: PreviewProfile;
 	failure: string;
-	profileDigest?: string;
-	browser: PreviewProfile["browser"];
 	browserCapability?: PreviewBrowserCapability;
 	captures?: PreviewEvidenceCapture[];
 }): PreviewRuntimeStatus {
+	const browser = input.profile?.browser || "none";
 	return {
-		profileId: input.profileId,
-		...(input.profileDigest ? { profileDigest: input.profileDigest } : {}),
-		traceIds: input.traceIds,
+		targetId: input.binding.targetId,
+		targetDigest: input.binding.targetDigest,
+		...(input.target ? { uiRef: input.target.uiRef } : {}),
+		...(input.target?.scenario ? { scenario: input.target.scenario } : {}),
+		profileId: input.binding.profileId,
+		profileDigest: input.binding.profileDigest,
+		traceIds: [...input.binding.traceIds],
+		changeIds: [...input.binding.contributingChangeIds],
+		sprintIds: [...input.binding.sprintIds],
+		workItemIds: [...input.binding.workItemIds],
+		viewports: [...(input.target?.viewports || [])],
 		state: "blocked",
 		managed: false,
-		browser: input.browser,
+		browser,
 		browserCapability:
-			input.browserCapability ||
-			uncheckedPreviewBrowserCapability(input.browser),
+			input.browserCapability || uncheckedPreviewBrowserCapability(browser),
 		failure: input.failure,
 		logs: [],
 		captures: (input.captures || []).map(copyEvidenceCapture),
 	};
 }
 
-function runtimeStatus(runtime: RuntimeEntry): PreviewRuntimeStatus {
-	return {
+function runtimeStatuses(runtime: RuntimeEntry): PreviewRuntimeStatus[] {
+	return runtime.targets.map((entry) => ({
+		targetId: entry.target.id,
+		targetDigest: entry.binding.targetDigest,
+		uiRef: entry.target.uiRef,
+		...(entry.target.scenario ? { scenario: entry.target.scenario } : {}),
 		profileId: runtime.profile.id,
 		profileDigest: previewProfileDigest(runtime.profile),
-		traceIds: [...runtime.traceIds],
+		traceIds: [...entry.binding.traceIds],
+		changeIds: [...entry.binding.contributingChangeIds],
+		sprintIds: [...entry.binding.sprintIds],
+		workItemIds: [...entry.binding.workItemIds],
+		viewports: [...entry.target.viewports],
 		state: runtime.state,
-		url: runtime.profile.url,
+		url: previewTargetUrl(runtime.profile.url, entry.target),
 		readyUrl: previewReadyUrl(runtime.profile),
 		managed: runtime.managed,
 		browser: runtime.profile.browser,
-		browserCapability: { ...runtime.browserCapability },
+		browserCapability: targetBrowserCapability(runtime, entry.target.id),
+		integration: copyIntegrationState(entry.integration),
 		...(runtime.startedAt ? { startedAt: runtime.startedAt } : {}),
 		...(runtime.readyAt ? { readyAt: runtime.readyAt } : {}),
 		...(runtime.failure ? { failure: runtime.failure } : {}),
 		logs: [...runtime.logs],
-		captures: runtime.captures.map(copyEvidenceCapture),
+		captures: runtime.captures.flatMap((capture) =>
+			capture.targetId === entry.target.id
+				? [copyEvidenceCapture(capture)]
+				: [],
+		),
+	}));
+}
+
+function targetBrowserCapability(
+	runtime: RuntimeEntry,
+	targetId: string,
+): PreviewBrowserCapability {
+	if (!runtime.browserHandles.get(targetId)?.opened) {
+		return {
+			...runtime.browserCapability,
+			...(runtime.profile.browser === "none" ||
+			runtime.browserCapability.sessionState === "failed"
+				? {}
+				: {
+						sessionState: "not_open" as const,
+						captureAvailable: false,
+					}),
+		};
+	}
+	return {
+		...runtime.browserCapability,
+		sessionState: "ready",
+		captureAvailable: runtime.profile.browser === "playwright",
+		reason: undefined,
+		installHint: undefined,
 	};
 }
 
@@ -632,9 +846,28 @@ function copyEvidenceCapture(
 ): PreviewEvidenceCapture {
 	return {
 		...capture,
+		traceIds: [...capture.traceIds],
+		changeIds: [...capture.changeIds],
+		sprintIds: [...capture.sprintIds],
+		workItemIds: [...capture.workItemIds],
+		implementation: capture.implementation.map((entry) => ({ ...entry })),
+		integration: copyIntegrationState(capture.integration),
 		screenshots: capture.screenshots.map((screenshot) => ({ ...screenshot })),
 		console: { ...capture.console, lines: [...capture.console.lines] },
 		network: { ...capture.network, lines: [...capture.network.lines] },
+	};
+}
+
+function copyIntegrationState(
+	integration: PreviewIntegrationState,
+): PreviewIntegrationState {
+	return {
+		...integration,
+		dirtyPaths: [...integration.dirtyPaths],
+		visibleChangeIds: [...integration.visibleChangeIds],
+		conflictingChangeIds: [...integration.conflictingChangeIds],
+		sprintIds: [...integration.sprintIds],
+		workItemIds: [...integration.workItemIds],
 	};
 }
 
@@ -742,9 +975,13 @@ async function waitForExit(child: ChildProcess): Promise<void> {
 	await new Promise<void>((resolve) => child.once("exit", () => resolve()));
 }
 
-function runtimeSessionId(profileId: string, repoRoot: string): string {
+function runtimeSessionId(
+	profileId: string,
+	targetId: string,
+	repoRoot: string,
+): string {
 	return normalizePreviewSessionId(
-		`codewiki-${profileId}-${digestRoot(repoRoot)}`,
+		`codewiki-${profileId}-${targetId}-${digestRoot(repoRoot)}`,
 	);
 }
 

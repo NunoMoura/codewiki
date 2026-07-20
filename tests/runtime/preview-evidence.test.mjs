@@ -7,8 +7,10 @@ import { describe, it } from "node:test";
 import { capturePreviewEvidence } from "../../src/preview/evidence.ts";
 import {
 	previewPackageScriptDigest,
+	previewProfileDigest,
 	resolveWikiPreviewConfig,
 } from "../../src/preview/profile.ts";
+import { uiPreviewTargetDigest } from "../../src/preview/target.ts";
 
 function profile(browser = "playwright") {
 	return resolveWikiPreviewConfig({
@@ -29,6 +31,44 @@ function profile(browser = "playwright") {
 		],
 	}).profiles[0];
 }
+
+const configuredTarget = {
+	id: "dashboard-detail",
+	uiRef: ".codewiki/kb/product/uis/terminal.md#live-preview",
+	profileId: "web",
+	route: "/dashboard",
+	viewports: ["desktop", "mobile"],
+};
+
+function binding(configuredProfile) {
+	return {
+		targetId: configuredTarget.id,
+		targetDigest: uiPreviewTargetDigest(configuredTarget),
+		profileId: configuredProfile.id,
+		profileDigest: previewProfileDigest(configuredProfile),
+		workItemIds: ["WU-capture"],
+		contributingChangeIds: ["CHG-capture"],
+		required: true,
+		activation: "implementation",
+		autoOpen: "manual",
+		traceIds: ["TRACE-capture"],
+		sprintIds: ["SPR-capture"],
+	};
+}
+
+const integration = {
+	root: ".",
+	gitHead: "a".repeat(40),
+	gitTree: "b".repeat(40),
+	workingTreeDigest: `sha256:${"c".repeat(64)}`,
+	dirty: false,
+	dirtyPaths: [],
+	visibility: "integrated",
+	visibleChangeIds: ["CHG-capture"],
+	conflictingChangeIds: [],
+	sprintIds: ["SPR-capture"],
+	workItemIds: ["WU-capture"],
+};
 
 const records = [
 	{
@@ -66,12 +106,14 @@ describe("preview evidence capture", () => {
 			git(root, "config", "user.email", "codewiki@example.invalid");
 			git(root, "add", "README.md");
 			git(root, "commit", "-qm", "fixture");
+			const configuredProfile = profile();
 			const capture = await capturePreviewEvidence({
 				repoRoot: root,
-				profile: profile(),
-				traceId: "TRACE-capture",
+				profile: configuredProfile,
+				target: configuredTarget,
+				binding: binding(configuredProfile),
+				integration,
 				records,
-				viewports: ["desktop", "mobile", "desktop"],
 				sessionId: "codewiki-capture-test",
 				now: () => new Date("2026-07-19T10:02:03.004Z"),
 				async commandRunner(args) {
@@ -99,14 +141,15 @@ describe("preview evidence capture", () => {
 				},
 			});
 
-			assert.equal(capture.traceId, "TRACE-capture");
+			assert.equal(capture.targetId, "dashboard-detail");
+			assert.deepEqual(capture.traceIds, ["TRACE-capture"]);
 			assert.equal(
-				capture.implementationIterationId,
+				capture.implementation[0].implementationIterationId,
 				"TRACE-capture:implementation:iteration:3",
 			);
-			assert.equal(capture.implementationIteration, 3);
-			assert.equal(capture.gitDirty, false);
-			assert.match(capture.gitHead, /^[a-f0-9]{40}$/);
+			assert.equal(capture.implementation[0].implementationIteration, 3);
+			assert.equal(capture.integration.dirty, false);
+			assert.match(capture.integration.gitHead, /^[a-f0-9]{40}$/);
 			assert.match(capture.manifestDigest, /^sha256:[a-f0-9]{64}$/);
 			assert.deepEqual(
 				capture.screenshots.map((item) => [
@@ -146,9 +189,10 @@ describe("preview evidence capture", () => {
 			capturePreviewEvidence({
 				repoRoot: "/tmp/not-used",
 				profile: profile("system"),
-				traceId: "TRACE-capture",
+				target: configuredTarget,
+				binding: binding(profile("system")),
+				integration,
 				records,
-				viewports: ["desktop"],
 				sessionId: "codewiki-capture-test",
 			}),
 			/requires the Playwright browser adapter/,

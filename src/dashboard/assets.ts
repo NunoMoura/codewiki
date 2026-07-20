@@ -1061,16 +1061,14 @@ async function executeSessionAction(action, traceId) {
 		await load();
 	}
 }
-async function executePreviewAction(action, trace) {
-	const preview = trace.preview;
-	const binding = trace.sprintPlan && trace.sprintPlan.preview;
+async function executePreviewAction(action, binding, preview) {
 	if (!binding) return;
 	const command = {
 		action: action,
-		profileId: binding.profileId,
+		targetId: binding.targetId,
+		expectedTargetDigest: preview?.targetDigest || binding.targetDigest,
 		expectedProfileDigest: preview?.profileDigest || binding.profileDigest,
 	};
-	if (action === 'capture') command.traceId = trace.traceId;
 	text(els.status, 'preview ' + action + ' pending');
 	try {
 		const response = await fetch('/api/previews/commands?token=' + encodeURIComponent(token), {
@@ -1272,7 +1270,7 @@ function configGrid() { const grid = document.createElement('div'); grid.classNa
 function renderPreviewConfigGroup(configuration) {
 	const group = configGroup('Live Preview profiles', 'Profiles are file/API configuration. Planning must freeze exact profile and canonical UI-target digests before execution.');
 	const profiles = configuration.previewProfiles || [];
-	if (!profiles.length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No preview profiles configured.'); group.append(empty); return group; }
+	if (!profiles.length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No preview profiles configured.'); group.append(empty); }
 	profiles.forEach(function(profile) {
 		const card = document.createElement('section'); card.className = 'execution-control';
 		const title = document.createElement('div'); title.className = 'preview-title'; text(title, profile.id + ' · ' + profile.runner.kind + ':' + profile.runner.script);
@@ -1282,6 +1280,26 @@ function renderPreviewConfigGroup(configuration) {
 			['browser', profile.browser],
 			['auto open', profile.autoOpen ? 'enabled' : 'disabled'],
 			['digest', profile.digest],
+		].forEach(function(entry) {
+			const item = document.createElement('div'); item.className = 'execution-control-item';
+			const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
+			const value = document.createElement('div'); value.className = 'execution-control-value'; text(value, entry[1]);
+			item.append(label, value); grid.append(item);
+		});
+		card.append(title, grid); group.append(card);
+	});
+	const targets = configuration.uiPreviewTargets || [];
+	if (!targets.length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No canonical UI preview targets configured.'); group.append(empty); }
+	targets.forEach(function(target) {
+		const card = document.createElement('section'); card.className = 'execution-control';
+		const title = document.createElement('div'); title.className = 'preview-title'; text(title, target.uiRef + ' · ' + target.id);
+		const grid = document.createElement('div'); grid.className = 'execution-control-grid';
+		[
+			['profile', target.profileId],
+			['route', target.route],
+			['viewports', (target.viewports || []).join(', ')],
+			['scenario', target.scenario || 'default'],
+			['digest', target.digest],
 		].forEach(function(entry) {
 			const item = document.createElement('div'); item.className = 'execution-control-item';
 			const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
@@ -1654,22 +1672,36 @@ function renderImplementationPanel(trace, section) {
 	return node;
 }
 function renderLivePreview(trace) {
-	const binding = trace.sprintPlan && trace.sprintPlan.preview;
-	if (!binding) return null;
-	const preview = trace.preview;
+	const bindings = trace.sprintPlan && trace.sprintPlan.uiPreviewTargets;
+	if (!bindings || !bindings.length) return null;
+	const group = document.createElement('div'); group.className = 'observability-stack';
+	bindings.forEach(function(binding) {
+		const preview = (trace.previews || []).find(function(candidate) { return candidate.targetId === binding.targetId; });
+		group.append(renderLivePreviewTarget(binding, preview));
+	});
+	return renderTerminalBlock('live preview targets', group, bindings.length + ' target(s)');
+}
+function renderLivePreviewTarget(binding, preview) {
 	const box = document.createElement('div'); box.className = 'preview-control';
 	const head = document.createElement('div'); head.className = 'preview-head';
-	const title = document.createElement('div'); title.className = 'preview-title'; text(title, 'Live Preview · ' + binding.profileId);
+	const title = document.createElement('div'); title.className = 'preview-title'; text(title, (preview?.uiRef || binding.targetId) + ' · ' + binding.profileId);
 	const status = document.createElement('div'); status.className = 'preview-state ' + (preview?.state || 'stopped'); text(status, readableStatus(preview?.state || 'waiting'));
 	head.append(title, status); box.append(head);
 	if (preview?.url) { const url = document.createElement('div'); url.className = 'preview-url'; text(url, preview.url); box.append(url); }
+	const integration = preview?.integration;
 	const meta = document.createElement('div'); meta.className = 'preview-meta';
 	[
+		['target', binding.targetId],
+		['scenario', preview?.scenario || 'default'],
 		['process', preview ? (preview.managed ? 'managed' : 'attached') : 'not started'],
 		['browser', preview?.browser || 'pending'],
 		['browser capability', previewBrowserCapabilityLabel(preview)],
-		['started', preview?.startedAt ? shortTime(preview.startedAt) : 'waiting'],
-		['evidence', (binding.evidenceViewports || []).join(', ') || 'not declared'],
+		['viewports', (preview?.viewports || []).join(', ') || 'pending'],
+		['Changes', (preview?.changeIds || binding.contributingChangeIds || []).join(', ') || 'not correlated'],
+		['Sprint', (preview?.sprintIds || []).join(', ') || 'pending'],
+		['Work Items', (preview?.workItemIds || binding.workItemIds || []).join(', ') || 'not correlated'],
+		['integration', integration ? integration.visibility + ' · ' + String(integration.workingTreeDigest || '').slice(0, 19) : 'not observed'],
+		['checkout', integration ? String(integration.gitHead || '').slice(0, 12) + (integration.dirty ? ' + dirty' : ' + clean') : 'pending'],
 	].forEach(function(entry) {
 		const item = document.createElement('div'); item.className = 'execution-control-item';
 		const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
@@ -1686,19 +1718,18 @@ function renderLivePreview(trace) {
 	const actions = document.createElement('div'); actions.className = 'execution-actions';
 	const browserUnavailable = capability?.cliState === 'unavailable' || capability?.cliState === 'checking' || capability?.cliState === 'not_checked';
 	const browserAlreadyOpen = capability?.sessionState === 'ready';
-	const open = document.createElement('button'); open.type = 'button'; open.className = 'execution-button'; text(open, 'Open preview'); open.disabled = preview?.state !== 'ready' || preview?.browser === 'none' || browserUnavailable || browserAlreadyOpen; open.title = capability?.installHint || capability?.reason || (preview?.browser === 'none' ? 'This profile has no browser adapter.' : 'Open the ready preview browser.'); open.onclick = function() { void executePreviewAction('open', trace); };
-	const capture = document.createElement('button'); capture.type = 'button'; capture.className = 'execution-button'; text(capture, 'Capture evidence'); capture.disabled = preview?.state !== 'ready' || !capability?.captureAvailable; capture.title = capability?.captureAvailable ? 'Capture declared viewports, console messages, and network requests.' : capability?.installHint || capability?.reason || 'Capture requires a verified Playwright browser session.'; capture.onclick = function() { void executePreviewAction('capture', trace); };
-	const restart = document.createElement('button'); restart.type = 'button'; restart.className = 'execution-button'; text(restart, preview ? 'Restart preview' : 'Start preview'); restart.disabled = preview?.state === 'blocked' && /digest changed|not configured/i.test(preview.failure || ''); restart.onclick = function() { void executePreviewAction(preview ? 'restart' : 'start', trace); };
-	const stop = document.createElement('button'); stop.type = 'button'; stop.className = 'execution-button stop'; text(stop, 'Stop preview'); stop.disabled = !preview || !['starting', 'ready', 'failed'].includes(preview.state); stop.onclick = function() { void executePreviewAction('stop', trace); };
+	const open = document.createElement('button'); open.type = 'button'; open.className = 'execution-button'; text(open, 'Open target'); open.disabled = preview?.state !== 'ready' || preview?.browser === 'none' || browserUnavailable || browserAlreadyOpen; open.title = capability?.installHint || capability?.reason || (preview?.browser === 'none' ? 'This profile has no browser adapter.' : 'Open this canonical UI target.'); open.onclick = function() { void executePreviewAction('open', binding, preview); };
+	const capture = document.createElement('button'); capture.type = 'button'; capture.className = 'execution-button'; text(capture, 'Capture evidence'); capture.disabled = preview?.state !== 'ready' || !capability?.captureAvailable; capture.title = capability?.captureAvailable ? 'Capture target viewports, console messages, network requests, and exact integration state.' : capability?.installHint || capability?.reason || 'Capture requires a verified Playwright browser session.'; capture.onclick = function() { void executePreviewAction('capture', binding, preview); };
+	const restart = document.createElement('button'); restart.type = 'button'; restart.className = 'execution-button'; text(restart, preview ? 'Restart profile' : 'Start profile'); restart.disabled = preview?.state === 'blocked' && /digest changed|not configured|conflicting/i.test(preview.failure || ''); restart.onclick = function() { void executePreviewAction(preview ? 'restart' : 'start', binding, preview); };
+	const stop = document.createElement('button'); stop.type = 'button'; stop.className = 'execution-button stop'; text(stop, 'Stop profile'); stop.disabled = !preview || !['starting', 'ready', 'failed'].includes(preview.state); stop.onclick = function() { void executePreviewAction('stop', binding, preview); };
 	actions.append(open, capture, restart, stop); box.append(actions);
-	const note = document.createElement('div'); note.className = 'execution-note'; text(note, 'Capture writes bounded operational artifacts under .codewiki/runtime. Evidence never grants semantic approval.'); box.append(note);
-	const traceCaptures = (preview?.captures || []).filter(function(capture) { return capture.traceId === trace.traceId; });
-	if (traceCaptures.length) box.append(renderPreviewEvidence(traceCaptures));
+	const note = document.createElement('div'); note.className = 'execution-note'; text(note, 'Profile processes are shared across targets. Capture remains target-specific. Evidence never grants semantic approval.'); box.append(note);
+	if ((preview?.captures || []).length) box.append(renderPreviewEvidence(preview.captures));
 	if ((preview?.logs || []).length) {
 		const logs = document.createElement('pre'); logs.className = 'preview-log'; text(logs, preview.logs.join('\n'));
 		box.append(renderCollapsibleTerminalBlock('preview logs', logs, preview.logs.length + ' bounded line(s)'));
 	}
-	return renderTerminalBlock('live preview', box, preview ? readableStatus(preview.state) : 'waiting');
+	return box;
 }
 function previewBrowserCapabilityLabel(preview) {
 	if (!preview) return 'waiting';
@@ -1721,8 +1752,9 @@ function renderPreviewEvidence(captures) {
 		const time = document.createElement('div'); time.className = 'preview-evidence-time'; text(time, capture.capturedAt ? shortTime(capture.capturedAt) : 'captured');
 		head.append(title, time); item.append(head);
 		const correlation = document.createElement('div'); correlation.className = 'preview-evidence-detail';
-		const iteration = capture.implementationIterationId || 'before first Implementation iteration';
-		text(correlation, 'trace ' + capture.traceId + ' · ' + iteration + ' · git ' + String(capture.gitHead || '').slice(0, 12) + (capture.gitDirty ? ' + dirty worktree' : '') + ' · manifest ' + String(capture.manifestDigest || '').slice(0, 19));
+		const integration = capture.integration || {};
+		const iterations = (capture.implementation || []).map(function(entry) { return entry.implementationIterationId || entry.traceEventId || entry.traceId; }).join(', ') || 'before first Implementation iteration';
+		text(correlation, 'target ' + capture.targetId + ' · Changes ' + (capture.changeIds || []).join(', ') + ' · Sprint ' + (capture.sprintIds || []).join(', ') + ' · ' + iterations + ' · git ' + String(integration.gitHead || '').slice(0, 12) + (integration.dirty ? ' + dirty worktree' : '') + ' · manifest ' + String(capture.manifestDigest || '').slice(0, 19));
 		item.append(correlation);
 		const observations = document.createElement('div'); observations.className = 'preview-evidence-detail';
 		text(observations, 'console ' + (capture.console?.count || 0) + ' line(s) · network ' + (capture.network?.count || 0) + ' line(s) · ' + capture.manifestPath);

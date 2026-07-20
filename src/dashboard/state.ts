@@ -5,9 +5,9 @@ import {
 	type KnowledgeAlignmentProjection,
 } from "../knowledge/topic-alignment.ts";
 import {
-	normalizePreviewBinding,
-	previewBindingValidationIssues,
-	type PreviewBinding,
+	normalizeUiPreviewTargetBinding,
+	uiPreviewTargetBindingValidationIssues,
+	type UiPreviewTargetBinding,
 } from "../preview/binding.ts";
 import type { PreviewRuntimeStatus } from "../preview/coordinator.ts";
 import type { DevLogEntry } from "../runtime/dev-log.ts";
@@ -181,7 +181,7 @@ export interface CodewikiSprintKnowledgeTopic {
 export interface CodewikiSprintPlan {
 	accountableGoal: string;
 	knowledgeTopics: CodewikiSprintKnowledgeTopic[];
-	preview?: PreviewBinding;
+	uiPreviewTargets: UiPreviewTargetBinding[];
 	noKnowledgeImpactReason?: string;
 	dependencies: string[];
 	rollbackBoundary: string;
@@ -222,7 +222,7 @@ export interface CodewikiSprintTrace {
 	changeIds: string[];
 	sprintIds: string[];
 	sprintPlan?: CodewikiSprintPlan;
-	preview?: PreviewRuntimeStatus;
+	previews?: PreviewRuntimeStatus[];
 	knowledgeAlignment: KnowledgeAlignmentProjection;
 	pathScopes: string[];
 	blockers: string[];
@@ -369,7 +369,7 @@ function buildSprintTrace(
 	);
 	const primaryQualitySummary = sprintTraceQualitySummary(primaryQualityChecks);
 	const sprintPlan = projectSprintPlan(records);
-	const preview = context.previews?.find((status) =>
+	const previews = context.previews?.filter((status) =>
 		status.traceIds.includes(card.traceId),
 	);
 	const knowledgeAlignment = projectKnowledgeAlignment({
@@ -417,7 +417,7 @@ function buildSprintTrace(
 		workUnitRefs: workUnitRefs(card, items),
 		changeIds: sprintTraceChangeIds(records),
 		...(sprintPlan ? { sprintPlan } : {}),
-		...(preview ? { preview } : {}),
+		...(previews?.length ? { previews } : {}),
 		knowledgeAlignment,
 		pathScopes: unique([
 			...card.pathScopes,
@@ -1463,25 +1463,29 @@ export function projectSprintPlan(
 		const output = objectRecord(event.data?.output);
 		const sprint = objectList(output?.sprints)[0];
 		if (!sprint) continue;
-		const previewObject = objectRecord(sprint.preview);
-		const preview = previewObject
-			? normalizePreviewBinding({
-					profileId: stringValue(previewObject.profileId),
-					profileDigest: stringValue(previewObject.profileDigest),
-					required: previewObject.required !== false,
-					activation: stringValue(previewObject.activation),
-					autoOpen: stringValue(previewObject.autoOpen),
-					evidenceViewports: stringValues(previewObject.evidenceViewports),
-				})
-			: undefined;
+		const uiPreviewTargets = objectList(sprint.uiPreviewTargets)
+			.map((target) =>
+				normalizeUiPreviewTargetBinding({
+					targetId: stringValue(target.targetId),
+					targetDigest: stringValue(target.targetDigest),
+					profileId: stringValue(target.profileId),
+					profileDigest: stringValue(target.profileDigest),
+					workItemIds: stringValues(target.workItemIds),
+					contributingChangeIds: stringValues(target.contributingChangeIds),
+					required: target.required !== false,
+					activation: stringValue(target.activation),
+					autoOpen: stringValue(target.autoOpen),
+				}),
+			)
+			.filter(
+				(target) => uiPreviewTargetBindingValidationIssues(target).length === 0,
+			);
 		return {
 			accountableGoal: stringValue(sprint.goal),
 			knowledgeTopics: unique(knowledgeTopics).flatMap(
 				projectSprintKnowledgeTopic,
 			),
-			...(preview && previewBindingValidationIssues(preview).length === 0
-				? { preview }
-				: {}),
+			uiPreviewTargets,
 			dependencies: unique(stringValues(sprint.dependsOn)),
 			rollbackBoundary: stringValue(sprint.rollbackBoundary),
 		};

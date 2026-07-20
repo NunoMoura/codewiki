@@ -19,6 +19,7 @@ codewiki_test_patterns:
   - tests/runtime/preview-profile.test.mjs
   - tests/runtime/preview-coordinator.test.mjs
   - tests/runtime/preview-evidence.test.mjs
+  - tests/runtime/preview-integration.test.mjs
   - tests/runtime/dashboard-preview-control.test.mjs
   - tests/runtime/dashboard-dev-harness.test.mjs
 codewiki_role: operational_preview
@@ -31,6 +32,7 @@ codewiki_source_map:
       - tests/runtime/preview-profile.test.mjs
       - tests/runtime/preview-coordinator.test.mjs
       - tests/runtime/preview-evidence.test.mjs
+      - tests/runtime/preview-integration.test.mjs
       - tests/runtime/dashboard-preview-control.test.mjs
       - tests/runtime/dashboard-dev-harness.test.mjs
     role: operational_preview
@@ -39,11 +41,11 @@ codewiki_source_map:
 
 ## Responsibility
 
-The Live Preview Runtime creates an automatic, explicit relationship between frontend-impact work and its visual result. It starts or attaches to a project-owned development server, waits for a loopback readiness endpoint, opens one browser session, and projects health and controls through the CodeWiki dashboard. It does not render an application, replace the project's native development server or HMR, infer semantic approval from pixels, or create another CodeWiki loop.
+The Live Preview Runtime creates an automatic, explicit relationship between frontend-impact work and its visual result. It starts or attaches to one project-owned development server per profile/integration root, waits for a loopback readiness endpoint, opens isolated browser sessions per canonical UI target, and projects health and controls through the CodeWiki dashboard. It does not render an application, replace the project's native development server or HMR, infer semantic approval from pixels, or create another CodeWiki loop.
 
 ## Implementation status
 
-Structured profiles, deterministic profile digests, legacy single-Sprint binding, Implementation-stage coordination, package-script supervision, readiness, browser adapters, side-effect-free Playwright preflight, cleanup, dashboard controls, source-only harness, and explicit evidence capture are implemented. Change-rooted UI targets, profile-level server deduplication across routes, contributor aggregation, and integration-workspace state are approved target architecture and remain migration work; legacy Sprint binding must not define the final contract.
+Structured profiles, canonical `uiPreviewTargets[]`, deterministic profile/target digests, Planning-owned target bindings, Implementation-stage coordination, profile-level server deduplication across routes, package-script supervision, exact integration checkout state, contributor aggregation, readiness, browser adapters, side-effect-free Playwright preflight, cleanup, dashboard controls, source-only harness, and explicit target evidence capture are implemented. Legacy single-Sprint `preview` binding is removed.
 
 Capture automates the accepted desktop/mobile viewports, records bounded redacted console and network observations, hashes each screenshot, and writes a correlated manifest under `.codewiki/runtime/preview-evidence/`. Capture remains operational evidence and does not append semantic trace truth or grant approval.
 
@@ -68,6 +70,16 @@ A preview profile is project configuration. Version 1 accepts only a structured 
         "browser": "system",
         "autoOpen": true
       }
+    ],
+    "uiPreviewTargets": [
+      {
+        "id": "dashboard-detail",
+        "uiRef": ".codewiki/kb/product/uis/terminal.md#live-preview",
+        "profileId": "web",
+        "route": "/dashboard",
+        "viewports": ["desktop", "mobile"],
+        "scenario": "implemented-change"
+      }
     ]
   }
 }
@@ -81,7 +93,7 @@ Decision-approved Changes declare affected UI refs and visual outcome requiremen
 
 ## Lifecycle
 
-When a target has integrated contributing Work Items in Implementation, Preview Coordinator first checks profile readiness. A ready server is attached without ownership. Otherwise CodeWiki detects declared package manager, starts exact package script without shell, waits within timeout, and owns process group. Coordinator deduplicates server processes by profile/integration root while managing browser routes and evidence by UI target.
+When a target's Change Trace reaches Implementation, Preview Coordinator validates its Planning binding against current target/profile digests and captures exact integration-root Git HEAD, committed tree, working-tree digest, dirty paths, and Change/Sprint/Work Item correlation before checking profile readiness. Disposable `.codewiki/runtime/**` artifacts and canonical `.codewiki/traces/**` workflow records are excluded from product-tree dirtiness because they belong to separate authority boundaries. A ready server is attached without ownership. Otherwise CodeWiki detects declared package manager, starts exact package script without shell, waits within timeout, and owns process group. Coordinator deduplicates server processes by profile/integration root while managing browser routes and evidence by UI target. Conflicting active bindings for one target id fail closed.
 
 Dashboard groups preview state by canonical UI target and displays profile/target identity and digests, URL/route, integration root, process ownership, browser capability, contributing Changes and Sprints, visibility/conflict state, viewports, failures, logs, and captures. Open, Capture, Restart, and Stop use guarded same-origin operational APIs. Capture requires ready Playwright profile, successful preflight, verified browser, and exact accepted target binding. Stop suppresses automatic restart for Pi session until explicit restart. Closing dashboard does not stop active preview; no-longer-needed target/profile usage, Pi shutdown, or explicit Stop cleans managed resources. Capture summaries survive restart/Stop for coordinator session.
 

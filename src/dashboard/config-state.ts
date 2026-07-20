@@ -4,6 +4,10 @@ import {
 	type PreviewProfile,
 } from "../preview/profile.ts";
 import {
+	uiPreviewTargetDigest,
+	type UiPreviewTarget,
+} from "../preview/target.ts";
+import {
 	loadWikiConfigFile,
 	WIKI_CONFIG_PATH,
 } from "../project/config-file.ts";
@@ -64,6 +68,10 @@ export interface DashboardPreviewProfile extends PreviewProfile {
 	digest: string;
 }
 
+export interface DashboardUiPreviewTarget extends UiPreviewTarget {
+	digest: string;
+}
+
 export interface DashboardConfigState {
 	generatedAt: string;
 	sourcePath: string;
@@ -75,6 +83,7 @@ export interface DashboardConfigState {
 	restartReasons: string[];
 	restartGuidance: string;
 	previewProfiles: DashboardPreviewProfile[];
+	uiPreviewTargets: DashboardUiPreviewTarget[];
 	editable: DashboardEditableConfig;
 	limits: DashboardConfigLimits;
 }
@@ -109,6 +118,10 @@ export async function loadDashboardConfigState(
 		previewProfiles: config.preview.profiles.map((profile) => ({
 			...structuredClone(profile),
 			digest: previewProfileDigest(profile),
+		})),
+		uiPreviewTargets: config.preview.uiPreviewTargets.map((target) => ({
+			...structuredClone(target),
+			digest: uiPreviewTargetDigest(target),
 		})),
 		editable: editableConfig(config),
 		limits: {

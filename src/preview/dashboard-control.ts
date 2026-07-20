@@ -13,8 +13,8 @@ export type DashboardPreviewAction =
 
 export interface DashboardPreviewCommand {
 	action: DashboardPreviewAction;
-	profileId: string;
-	traceId?: string;
+	targetId: string;
+	expectedTargetDigest?: string;
 	expectedProfileDigest?: string;
 }
 
@@ -35,20 +35,18 @@ export function createDashboardPreviewControl(
 			const current = await coordinator.reconcile(records);
 			assertExpectedDigest(current, command);
 			if (command.action === "start") {
-				return coordinator.start(command.profileId, records);
+				return coordinator.start(command.targetId, records);
 			}
 			if (command.action === "open") {
-				return coordinator.open(command.profileId);
+				return coordinator.open(command.targetId);
 			}
 			if (command.action === "capture") {
-				if (!command.traceId)
-					throw new Error("Preview capture requires traceId.");
-				return coordinator.capture(command.profileId, command.traceId, records);
+				return coordinator.capture(command.targetId, records);
 			}
 			if (command.action === "restart") {
-				return coordinator.restart(command.profileId, records);
+				return coordinator.restart(command.targetId, records);
 			}
-			return coordinator.stop(command.profileId);
+			return coordinator.stop(command.targetId);
 		},
 	};
 }
@@ -72,8 +70,8 @@ export function parseDashboardPreviewCommand(
 	if (!isRecord(value)) throw new Error("Preview command must be an object.");
 	assertKnownKeys(value, [
 		"action",
-		"profileId",
-		"traceId",
+		"targetId",
+		"expectedTargetDigest",
 		"expectedProfileDigest",
 	]);
 	const action = value.action;
@@ -88,17 +86,19 @@ export function parseDashboardPreviewCommand(
 			"Preview action must be start, open, capture, restart, or stop.",
 		);
 	}
-	const profileId = identifier(value.profileId, "profileId");
-	const traceId =
-		action === "capture" ? identifier(value.traceId, "traceId") : undefined;
-	if (action !== "capture" && value.traceId !== undefined) {
-		throw new Error("Preview traceId is supported only for capture.");
-	}
-	const expectedProfileDigest = optionalDigest(value.expectedProfileDigest);
+	const targetId = identifier(value.targetId, "targetId");
+	const expectedTargetDigest = optionalDigest(
+		value.expectedTargetDigest,
+		"expectedTargetDigest",
+	);
+	const expectedProfileDigest = optionalDigest(
+		value.expectedProfileDigest,
+		"expectedProfileDigest",
+	);
 	return {
 		action,
-		profileId,
-		...(traceId ? { traceId } : {}),
+		targetId,
+		...(expectedTargetDigest ? { expectedTargetDigest } : {}),
 		...(expectedProfileDigest ? { expectedProfileDigest } : {}),
 	};
 }
@@ -107,12 +107,25 @@ function assertExpectedDigest(
 	statuses: PreviewRuntimeStatus[],
 	command: DashboardPreviewCommand,
 ): void {
-	if (!command.expectedProfileDigest) return;
+	if (!command.expectedTargetDigest && !command.expectedProfileDigest) return;
 	const status = statuses.find(
-		(candidate) => candidate.profileId === command.profileId,
+		(candidate) => candidate.targetId === command.targetId,
 	);
+	if (!status) {
+		throw new Error(
+			"Preview target changed; refresh the dashboard before retrying.",
+		);
+	}
 	if (
-		!status?.profileDigest ||
+		command.expectedTargetDigest &&
+		status.targetDigest !== command.expectedTargetDigest
+	) {
+		throw new Error(
+			"Preview target changed; refresh the dashboard before retrying.",
+		);
+	}
+	if (
+		command.expectedProfileDigest &&
 		status.profileDigest !== command.expectedProfileDigest
 	) {
 		throw new Error(
@@ -121,7 +134,7 @@ function assertExpectedDigest(
 	}
 }
 
-function identifier(value: unknown, field: "profileId" | "traceId"): string {
+function identifier(value: unknown, field: "targetId"): string {
 	if (
 		typeof value !== "string" ||
 		!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,79}$/.test(value.trim())
@@ -131,14 +144,15 @@ function identifier(value: unknown, field: "profileId" | "traceId"): string {
 	return value.trim();
 }
 
-function optionalDigest(value: unknown): string | undefined {
+function optionalDigest(
+	value: unknown,
+	field: "expectedTargetDigest" | "expectedProfileDigest",
+): string | undefined {
 	if (value === undefined) return undefined;
 	if (typeof value === "string" && /^sha256:[a-f0-9]{64}$/.test(value)) {
 		return value;
 	}
-	throw new Error(
-		"Preview expectedProfileDigest must be an exact sha256 digest.",
-	);
+	throw new Error(`Preview ${field} must be an exact sha256 digest.`);
 }
 
 function assertKnownKeys(

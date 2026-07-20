@@ -1,4 +1,5 @@
 import type { ChangeRecord } from "../changes/records.ts";
+import type { UiPreviewTargetBinding } from "../preview/binding.ts";
 import type { TraceLoop } from "../traces/types.ts";
 
 export const WORK_STATE_SCHEMA_VERSION = 1;
@@ -65,6 +66,7 @@ export interface WorkStateSprint {
 	workItemIds: string[];
 	dependencyIds: string[];
 	integrationRefs: string[];
+	uiPreviewTargets: UiPreviewTargetBinding[];
 	complete: boolean;
 	blockers: string[];
 }

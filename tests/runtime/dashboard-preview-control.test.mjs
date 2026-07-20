@@ -7,14 +7,21 @@ import { startCodewikiDashboardServer } from "../../src/dashboard/server.ts";
 import { parseDashboardPreviewCommand } from "../../src/preview/dashboard-control.ts";
 
 const digest = `sha256:${"a".repeat(64)}`;
+const targetDigest = `sha256:${"b".repeat(64)}`;
 
 function fakePreviewControl() {
 	const commands = [];
 	const statuses = [
 		{
+			targetId: "dashboard-detail",
+			targetDigest,
 			profileId: "web",
 			profileDigest: digest,
 			traceIds: ["TRACE-preview"],
+			changeIds: ["CHG-preview"],
+			sprintIds: ["SPR-preview"],
+			workItemIds: ["WU-preview"],
+			viewports: ["desktop"],
 			state: "ready",
 			url: "http://127.0.0.1:4173",
 			readyUrl: "http://127.0.0.1:4173/ready",
@@ -40,47 +47,49 @@ describe("dashboard preview control", () => {
 		assert.deepEqual(
 			parseDashboardPreviewCommand({
 				action: "restart",
-				profileId: "web",
+				targetId: "dashboard-detail",
+				expectedTargetDigest: targetDigest,
 				expectedProfileDigest: digest,
 			}),
-			{ action: "restart", profileId: "web", expectedProfileDigest: digest },
+			{
+				action: "restart",
+				targetId: "dashboard-detail",
+				expectedTargetDigest: targetDigest,
+				expectedProfileDigest: digest,
+			},
 		);
 		assert.deepEqual(
 			parseDashboardPreviewCommand({
 				action: "capture",
-				profileId: "web",
-				traceId: "TRACE-preview",
+				targetId: "dashboard-detail",
+				expectedTargetDigest: targetDigest,
 				expectedProfileDigest: digest,
 			}),
 			{
 				action: "capture",
-				profileId: "web",
-				traceId: "TRACE-preview",
+				targetId: "dashboard-detail",
+				expectedTargetDigest: targetDigest,
 				expectedProfileDigest: digest,
 			},
 		);
 		assert.throws(
-			() => parseDashboardPreviewCommand({ action: "shell", profileId: "web" }),
+			() =>
+				parseDashboardPreviewCommand({
+					action: "shell",
+					targetId: "dashboard-detail",
+				}),
 			/start, open, capture, restart, or stop/,
 		);
 		assert.throws(
 			() =>
-				parseDashboardPreviewCommand({ action: "stop", profileId: "../web" }),
+				parseDashboardPreviewCommand({ action: "stop", targetId: "../web" }),
 			/safe identifier/,
 		);
 		assert.throws(
 			() =>
 				parseDashboardPreviewCommand({
-					action: "capture",
-					profileId: "web",
-				}),
-			/traceId/,
-		);
-		assert.throws(
-			() =>
-				parseDashboardPreviewCommand({
 					action: "stop",
-					profileId: "web",
+					targetId: "dashboard-detail",
 					command: "rm",
 				}),
 			/not supported/,
@@ -118,7 +127,8 @@ describe("dashboard preview control", () => {
 					},
 					body: JSON.stringify({
 						action: "restart",
-						profileId: "web",
+						targetId: "dashboard-detail",
+						expectedTargetDigest: targetDigest,
 						expectedProfileDigest: digest,
 					}),
 				},
@@ -137,8 +147,8 @@ describe("dashboard preview control", () => {
 					},
 					body: JSON.stringify({
 						action: "capture",
-						profileId: "web",
-						traceId: "TRACE-preview",
+						targetId: "dashboard-detail",
+						expectedTargetDigest: targetDigest,
 						expectedProfileDigest: digest,
 					}),
 				},
@@ -147,8 +157,8 @@ describe("dashboard preview control", () => {
 			assert.equal(previewControl.commands.length, 2);
 			assert.deepEqual(previewControl.commands[1], {
 				action: "capture",
-				profileId: "web",
-				traceId: "TRACE-preview",
+				targetId: "dashboard-detail",
+				expectedTargetDigest: targetDigest,
 				expectedProfileDigest: digest,
 			});
 		} finally {

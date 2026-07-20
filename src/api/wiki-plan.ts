@@ -20,6 +20,7 @@ import {
 	type PortfolioWorkItemInput,
 	type SprintPlanInput,
 } from "../planning/portfolio-quality.ts";
+import { normalizeUiPreviewTargetBinding } from "../preview/binding.ts";
 import { selectRuntimeReaction } from "../runtime/reactor.ts";
 import { buildProjectWorkState } from "../work-state/project.ts";
 import type { WorkState } from "../work-state/types.ts";
@@ -228,6 +229,12 @@ function planningEvent(
 				(change) => `change:${change.changeId}@${change.changeRevision}`,
 			),
 			...report.sprints.map((sprint) => `sprint:${sprint.id}`),
+			...report.sprints.flatMap((sprint) =>
+				(sprint.uiPreviewTargets || []).map(
+					(target) =>
+						`ui-preview-target:${target.targetId}@${target.targetDigest}`,
+				),
+			),
 			...report.workItems.map((item) => `work:${item.id}`),
 		],
 		createdAt,
@@ -247,6 +254,12 @@ function planningEvent(
 		progress: {
 			changedRefs: [
 				...report.sprints.map((sprint) => `sprint:${sprint.id}`),
+				...report.sprints.flatMap((sprint) =>
+					(sprint.uiPreviewTargets || []).map(
+						(target) =>
+							`ui-preview-target:${target.targetId}@${target.targetDigest}`,
+					),
+				),
 				...report.workItems.map((item) => `work:${item.id}`),
 			],
 		},
@@ -355,6 +368,13 @@ function normalizedSprints(values: SprintPlanInput[]): SprintPlanInput[] {
 			value.integrationRefs,
 			"sprints.integrationRefs",
 		),
+		...((value.uiPreviewTargets || []).length > 0
+			? {
+					uiPreviewTargets: value.uiPreviewTargets?.map((target) =>
+						normalizeUiPreviewTargetBinding(target),
+					),
+				}
+			: {}),
 	}));
 	assertUnique(
 		sprints.map((sprint) => sprint.id),

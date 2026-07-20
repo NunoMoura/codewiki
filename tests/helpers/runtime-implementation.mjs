@@ -188,6 +188,9 @@ export async function seedRuntimeImplementation(root, options = {}) {
 				rollbackBoundary: "Revert implementation test changes together.",
 				dependsOn: [],
 				integrationRefs: [],
+				...(options.uiPreviewTargets
+					? { uiPreviewTargets: options.uiPreviewTargets }
+					: {}),
 			},
 		],
 		workItems: [

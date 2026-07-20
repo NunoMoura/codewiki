@@ -80,14 +80,19 @@ describe("dashboard lifecycle projection", () => {
 						sprints: [
 							{
 								goal: "Make Sprint Knowledge scope visible.",
-								preview: {
-									profileId: "web",
-									profileDigest: `sha256:${"a".repeat(64)}`,
-									required: true,
-									activation: "implementation",
-									autoOpen: "once_per_trace",
-									evidenceViewports: ["desktop", "mobile"],
-								},
+								uiPreviewTargets: [
+									{
+										targetId: "dashboard-detail",
+										targetDigest: `sha256:${"b".repeat(64)}`,
+										profileId: "web",
+										profileDigest: `sha256:${"a".repeat(64)}`,
+										workItemIds: ["WU-dashboard"],
+										contributingChangeIds: ["CHG-dashboard"],
+										required: true,
+										activation: "implementation",
+										autoOpen: "once_per_target",
+									},
+								],
 								dependsOn: ["CHG-next"],
 								rollbackBoundary: "Revert projection and contract together.",
 							},
@@ -115,14 +120,19 @@ describe("dashboard lifecycle projection", () => {
 					label: "Components / Traces",
 				},
 			],
-			preview: {
-				profileId: "web",
-				profileDigest: `sha256:${"a".repeat(64)}`,
-				required: true,
-				activation: "implementation",
-				autoOpen: "once_per_trace",
-				evidenceViewports: ["desktop", "mobile"],
-			},
+			uiPreviewTargets: [
+				{
+					targetId: "dashboard-detail",
+					targetDigest: `sha256:${"b".repeat(64)}`,
+					profileId: "web",
+					profileDigest: `sha256:${"a".repeat(64)}`,
+					workItemIds: ["WU-dashboard"],
+					contributingChangeIds: ["CHG-dashboard"],
+					required: true,
+					activation: "implementation",
+					autoOpen: "once_per_target",
+				},
+			],
 			dependencies: ["CHG-next"],
 			rollbackBoundary: "Revert projection and contract together.",
 		});

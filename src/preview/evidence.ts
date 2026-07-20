@@ -1,11 +1,18 @@
-import { createHash, randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
+import { createHash, randomUUID } from "node:crypto";
 import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import type { TraceRecord } from "../traces/types.ts";
-import type { PreviewEvidenceViewport } from "./binding.ts";
+import type { TraceUiPreviewTargetBinding } from "./binding.ts";
 import { normalizePreviewSessionId } from "./browser-adapter.ts";
+import type { PreviewIntegrationState } from "./integration.ts";
 import { previewProfileDigest, type PreviewProfile } from "./profile.ts";
+import {
+	previewTargetUrl,
+	type PreviewEvidenceViewport,
+	type UiPreviewTarget,
+	uiPreviewTargetDigest,
+} from "./target.ts";
 
 export interface PreviewEvidenceObservation {
 	count: number;
@@ -22,17 +29,29 @@ export interface PreviewEvidenceScreenshot {
 	digest: string;
 }
 
-export interface PreviewEvidenceCapture {
-	id: string;
+export interface PreviewImplementationCorrelation {
 	traceId: string;
 	traceEventId?: string;
 	implementationIterationId?: string;
 	implementationIteration?: number;
-	gitHead: string;
-	gitDirty: boolean;
+}
+
+export interface PreviewEvidenceCapture {
+	id: string;
+	targetId: string;
+	targetDigest: string;
+	uiRef: string;
 	profileId: string;
 	profileDigest: string;
+	route: string;
+	scenario?: string;
 	url: string;
+	traceIds: string[];
+	changeIds: string[];
+	sprintIds: string[];
+	workItemIds: string[];
+	implementation: PreviewImplementationCorrelation[];
+	integration: PreviewIntegrationState;
 	capturedAt: string;
 	screenshots: PreviewEvidenceScreenshot[];
 	console: PreviewEvidenceObservation;
@@ -44,9 +63,10 @@ export interface PreviewEvidenceCapture {
 export interface PreviewEvidenceCaptureInput {
 	repoRoot: string;
 	profile: PreviewProfile;
-	traceId: string;
+	target: UiPreviewTarget;
+	binding: TraceUiPreviewTargetBinding;
+	integration: PreviewIntegrationState;
 	records: TraceRecord[];
-	viewports: PreviewEvidenceViewport[];
 	sessionId: string;
 	now?: () => Date;
 	commandRunner?: PreviewEvidenceCommandRunner;
@@ -77,7 +97,19 @@ export async function capturePreviewEvidence(
 			"Preview evidence capture requires the Playwright browser adapter.",
 		);
 	}
-	const viewports = uniqueViewports(input.viewports);
+	const targetDigest = uiPreviewTargetDigest(input.target);
+	if (targetDigest !== input.binding.targetDigest) {
+		throw new Error(
+			`Preview target ${input.target.id} changed before evidence capture.`,
+		);
+	}
+	const profileDigest = previewProfileDigest(input.profile);
+	if (profileDigest !== input.binding.profileDigest) {
+		throw new Error(
+			`Preview profile ${input.profile.id} changed before evidence capture.`,
+		);
+	}
+	const viewports = uniqueViewports(input.target.viewports);
 	if (viewports.length === 0) {
 		throw new Error("Preview evidence capture requires at least one viewport.");
 	}
@@ -88,32 +120,17 @@ export async function capturePreviewEvidence(
 		".codewiki",
 		"runtime",
 		"preview-evidence",
-		safeSegment(input.traceId),
+		safeSegment(input.target.id),
 		safeSegment(input.profile.id),
 		id,
 	);
 	const runner = input.commandRunner || runPlaywrightCli;
 	const session = normalizePreviewSessionId(input.sessionId);
+	const url = previewTargetUrl(input.profile.url, input.target);
 	await mkdir(captureDir, { recursive: true, mode: 0o700 });
 	await chmod(captureDir, 0o700);
 	try {
-		const gitHeadOutput = await runGit(input.repoRoot, ["rev-parse", "HEAD"]);
-		const gitHead = gitHeadOutput.trim();
-		if (!/^[a-f0-9]{40,64}$/i.test(gitHead)) {
-			throw new Error(
-				"Preview evidence capture could not resolve an exact Git HEAD.",
-			);
-		}
-		const gitStatusOutput = await runGit(input.repoRoot, [
-			"status",
-			"--porcelain",
-			"--untracked-files=normal",
-			"--",
-			".",
-			":(exclude).codewiki/runtime/**",
-		]);
-		const gitDirty = Boolean(gitStatusOutput.trim());
-		await runner([`-s=${session}`, "goto", input.profile.url], input.repoRoot);
+		await runner([`-s=${session}`, "goto", url], input.repoRoot);
 		const screenshots: PreviewEvidenceScreenshot[] = [];
 		for (const viewport of viewports) {
 			const dimensions = VIEWPORTS[viewport];
@@ -148,17 +165,26 @@ export async function capturePreviewEvidence(
 			[`-s=${session}`, "--raw", "requests"],
 			input.repoRoot,
 		);
-		const correlation = traceCorrelation(input.records, input.traceId);
 		const manifestPath = join(captureDir, "manifest.json");
 		const manifest = {
 			id,
-			traceId: input.traceId,
-			...correlation,
-			gitHead,
-			gitDirty,
+			targetId: input.target.id,
+			targetDigest,
+			uiRef: input.target.uiRef,
 			profileId: input.profile.id,
-			profileDigest: previewProfileDigest(input.profile),
-			url: input.profile.url,
+			profileDigest,
+			route: input.target.route,
+			...(input.target.scenario ? { scenario: input.target.scenario } : {}),
+			url,
+			traceIds: [...input.binding.traceIds],
+			changeIds: [...input.binding.contributingChangeIds],
+			sprintIds: [...input.binding.sprintIds],
+			workItemIds: [...input.binding.workItemIds],
+			implementation: implementationCorrelations(
+				input.records,
+				input.binding.traceIds,
+			),
+			integration: input.integration,
 			capturedAt,
 			screenshots,
 			console: boundedObservation(consoleResult.stdout, input.repoRoot),
@@ -185,37 +211,42 @@ function uniqueViewports(
 	);
 }
 
-function traceCorrelation(
+function implementationCorrelations(
 	records: TraceRecord[],
-	traceId: string,
-): {
-	traceEventId?: string;
-	implementationIterationId?: string;
-	implementationIteration?: number;
-} {
-	const events = records
-		.filter(
-			(record): record is Extract<TraceRecord, { type: "trace_event" }> =>
-				record.type === "trace_event" && record.traceId === traceId,
-		)
-		.sort((left, right) => left.sequence - right.sequence);
-	const latest = events.at(-1);
-	const implementation = events
-		.filter((event) => event.loop === "implementation")
-		.at(-1);
-	const dataIteration = implementation?.data?.iteration;
-	const idIteration = implementation?.id.match(/:iteration:(\d+)(?:$|:)/)?.[1];
-	let iteration: number | undefined;
-	if (typeof dataIteration === "number" && Number.isInteger(dataIteration)) {
-		iteration = dataIteration;
-	} else if (idIteration) {
-		iteration = Number(idIteration);
-	}
-	return {
-		...(latest ? { traceEventId: latest.id } : {}),
-		...(implementation ? { implementationIterationId: implementation.id } : {}),
-		...(iteration !== undefined ? { implementationIteration: iteration } : {}),
-	};
+	traceIds: string[],
+): PreviewImplementationCorrelation[] {
+	return traceIds.map((traceId) => {
+		const events = records
+			.filter(
+				(record): record is Extract<TraceRecord, { type: "trace_event" }> =>
+					record.type === "trace_event" && record.traceId === traceId,
+			)
+			.sort((left, right) => left.sequence - right.sequence);
+		const latest = events.at(-1);
+		const implementation = events
+			.filter((event) => event.loop === "implementation")
+			.at(-1);
+		const dataIteration = implementation?.data?.iteration;
+		const idIteration = implementation?.id.match(
+			/:iteration:(\d+)(?:$|:)/,
+		)?.[1];
+		let iteration: number | undefined;
+		if (typeof dataIteration === "number" && Number.isInteger(dataIteration)) {
+			iteration = dataIteration;
+		} else if (idIteration) {
+			iteration = Number(idIteration);
+		}
+		return {
+			traceId,
+			...(latest ? { traceEventId: latest.id } : {}),
+			...(implementation
+				? { implementationIterationId: implementation.id }
+				: {}),
+			...(iteration !== undefined
+				? { implementationIteration: iteration }
+				: {}),
+		};
+	});
 }
 
 function boundedObservation(
@@ -269,11 +300,6 @@ async function runPlaywrightCli(
 	cwd: string,
 ): Promise<{ stdout: string; stderr: string }> {
 	return runCommand("playwright-cli", args, cwd);
-}
-
-async function runGit(cwd: string, args: string[]): Promise<string> {
-	const result = await runCommand("git", args, cwd);
-	return result.stdout;
 }
 
 async function runCommand(

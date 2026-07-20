@@ -133,6 +133,19 @@ async function planningInput(root, overrides = {}) {
 				rollbackBoundary: "Revert Sprint work as one boundary.",
 				dependsOn: [],
 				integrationRefs: ["integration:main"],
+				uiPreviewTargets: [
+					{
+						targetId: "shared-runtime-dashboard",
+						targetDigest: `sha256:${"a".repeat(64)}`,
+						profileId: "web",
+						profileDigest: `sha256:${"b".repeat(64)}`,
+						workItemIds: ["WI-shared-runtime"],
+						contributingChangeIds: changeIds,
+						required: true,
+						activation: "implementation",
+						autoOpen: "once_per_target",
+					},
+				],
 			},
 		],
 		workItems: [
@@ -199,6 +212,19 @@ describe("wiki_plan portfolio facade", () => {
 			input.expectedChangeIds,
 		);
 		assert.equal(workState.sprints[0].complete, false);
+		assert.deepEqual(workState.sprints[0].uiPreviewTargets, [
+			{
+				targetId: "shared-runtime-dashboard",
+				targetDigest: `sha256:${"a".repeat(64)}`,
+				profileId: "web",
+				profileDigest: `sha256:${"b".repeat(64)}`,
+				workItemIds: ["WI-shared-runtime"],
+				contributingChangeIds: [...input.expectedChangeIds].sort(),
+				required: true,
+				activation: "implementation",
+				autoOpen: "once_per_target",
+			},
+		]);
 		assert.equal(workState.workItems.length, 1);
 		assert.equal(
 			workState.workItems[0].owningChangeId,
@@ -231,6 +257,20 @@ describe("wiki_plan portfolio facade", () => {
 		await assert.rejects(
 			runWikiPlan({ ...input, mode: "append" }),
 			/Planning quality did not exit/,
+		);
+	});
+
+	it("rejects UI preview target correlation outside Sprint authority", async () => {
+		const { root } = await setupApprovedPortfolio();
+		const input = await planningInput(root);
+		input.sprints[0].uiPreviewTargets[0].workItemIds = ["WI-other"];
+		const preview = await runWikiPlan({ ...input, mode: "preview" });
+		assert.equal(preview.report.exit.status, "continue");
+		assert.deepEqual(
+			preview.report.qualityStandards
+				.filter((standard) => standard.status !== "met")
+				.map((standard) => standard.id),
+			["ui_preview_targets_valid"],
 		);
 	});
 

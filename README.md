@@ -86,9 +86,9 @@ Validate one with the official tool when available:
 npx @google/design.md lint .codewiki/kb/product/DESIGN.md
 ```
 
-## Live Preview profiles
+## Live Preview targets and profiles
 
-Declare profiles in `.codewiki/config.json`:
+Declare project-native server profiles and canonical UI targets in `.codewiki/config.json`:
 
 ```json
 {
@@ -107,12 +107,22 @@ Declare profiles in `.codewiki/config.json`:
         "browser": "system",
         "autoOpen": true
       }
+    ],
+    "uiPreviewTargets": [
+      {
+        "id": "dashboard-detail",
+        "uiRef": ".codewiki/kb/product/uis/terminal.md#live-preview",
+        "profileId": "web",
+        "route": "/dashboard",
+        "viewports": ["desktop", "mobile"],
+        "scenario": "implemented-change"
+      }
     ]
   }
 }
 ```
 
-`wiki_config` and dashboard settings expose computed profile digests. Target architecture separates profiles (how one native development server runs) from canonical KB UI targets (which route, scenario, and viewports are shown). Decision-approved frontend Changes declare affected UI refs; Planning freezes exact target/profile digests for implementation. Several targets may share one profile, and several integrated Changes may contribute to one UI route. `runner.scriptDigest` remains SHA-256 of exact `package.json` script text and is rechecked before managed start. Current single-Sprint binding is a compatibility implementation pending this Change-rooted target migration.
+`wiki_config` and dashboard settings expose computed profile and target digests. Profiles define how one native development server runs; canonical UI targets define which route, scenario, and viewports are shown. Decision-approved frontend Changes declare affected UI refs. Planning freezes exact target/profile digests plus contributing Change, Sprint, and Work Item refs before Implementation. Several targets may share one profile process, and several integrated Changes may contribute to one target. `runner.scriptDigest` remains SHA-256 of exact `package.json` script text and is rechecked before managed start.
 
 Profiles that explicitly select `"browser": "playwright"` also expose a guarded Capture action after readiness. CodeWiki first probes `playwright-cli --version` without a shell, update check, or install side effect. The CLI is a soft CodeWiki dependency but a hard dependency for automated Capture. Capture stays disabled until Open verifies the browser session. If the CLI or browser is unavailable, the dashboard keeps the development server ready and shows explicit installation guidance; Restart reruns the probe.
 

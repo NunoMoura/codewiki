@@ -6,6 +6,11 @@ import {
 	previewProfileDigest,
 	resolveWikiPreviewConfig,
 } from "../../src/preview/profile.ts";
+import {
+	previewTargetUrl,
+	uiPreviewTargetById,
+	uiPreviewTargetDigest,
+} from "../../src/preview/target.ts";
 
 function profile(overrides = {}) {
 	return {
@@ -27,7 +32,10 @@ function profile(overrides = {}) {
 describe("preview profiles", () => {
 	it("normalizes bounded structured package-script profiles", () => {
 		const config = resolveWikiPreviewConfig({ profiles: [profile()] });
-		assert.deepEqual(config, { profiles: [profile()] });
+		assert.deepEqual(config, {
+			profiles: [profile()],
+			uiPreviewTargets: [],
+		});
 		assert.equal(previewProfileById(config, "web")?.runner.script, "dev");
 		assert.match(
 			previewProfileDigest(config.profiles[0]),
@@ -96,6 +104,73 @@ describe("preview profiles", () => {
 					profiles: [profile({ readyPath: "//evil.test" })],
 				}),
 			/origin-relative path/,
+		);
+	});
+
+	it("normalizes canonical UI targets independently from server profiles", () => {
+		const config = resolveWikiPreviewConfig({
+			profiles: [profile()],
+			uiPreviewTargets: [
+				{
+					id: "dashboard-detail",
+					uiRef: ".codewiki/kb/product/uis/terminal.md#live-preview",
+					profileId: "web",
+					route: "/changes/CHG-preview",
+					viewports: ["desktop", "mobile", "desktop"],
+					scenario: "implemented-change",
+				},
+			],
+		});
+		const target = uiPreviewTargetById(
+			config.uiPreviewTargets,
+			"dashboard-detail",
+		);
+		assert.deepEqual(target, {
+			id: "dashboard-detail",
+			uiRef: ".codewiki/kb/product/uis/terminal.md#live-preview",
+			profileId: "web",
+			route: "/changes/CHG-preview",
+			viewports: ["desktop", "mobile"],
+			scenario: "implemented-change",
+		});
+		assert.match(uiPreviewTargetDigest(target), /^sha256:[a-f0-9]{64}$/);
+		assert.equal(
+			previewTargetUrl(config.profiles[0].url, target),
+			"http://127.0.0.1:4173/changes/CHG-preview",
+		);
+	});
+
+	it("rejects unsafe, duplicate, or unbound UI targets", () => {
+		const target = {
+			id: "dashboard",
+			uiRef: ".codewiki/kb/product/uis/terminal.md",
+			profileId: "web",
+			route: "/dashboard",
+			viewports: ["desktop"],
+		};
+		assert.throws(
+			() =>
+				resolveWikiPreviewConfig({
+					profiles: [profile()],
+					uiPreviewTargets: [target, target],
+				}),
+			/target id dashboard is duplicated/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiPreviewConfig({
+					profiles: [profile()],
+					uiPreviewTargets: [{ ...target, profileId: "missing" }],
+				}),
+			/unknown profile missing/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiPreviewConfig({
+					profiles: [profile()],
+					uiPreviewTargets: [{ ...target, route: "/dashboard?token=secret" }],
+				}),
+			/query, or fragment/,
 		);
 	});
 

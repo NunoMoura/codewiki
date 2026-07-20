@@ -1,5 +1,9 @@
 import { createHash } from "node:crypto";
 import type { LoopQualityStandardResult } from "../traces/types.ts";
+import {
+	uiPreviewTargetBindingValidationIssues,
+	type UiPreviewTargetBinding,
+} from "../preview/binding.ts";
 import type { WorkState } from "../work-state/types.ts";
 
 export const PLANNING_PORTFOLIO_GRAPH_ID = "codewiki.planning.portfolio";
@@ -13,6 +17,7 @@ export interface SprintPlanInput {
 	rollbackBoundary: string;
 	dependsOn: string[];
 	integrationRefs: string[];
+	uiPreviewTargets?: UiPreviewTargetBinding[];
 }
 
 export interface PortfolioWorkItemInput {
@@ -138,6 +143,11 @@ const DEFINITIONS: StandardDefinition[] = [
 		"integration_safe",
 		"Shared Sprints declare integration refs.",
 		integrationQuality,
+	),
+	definition(
+		"ui_preview_targets_valid",
+		"UI preview targets freeze canonical target/profile digests and accountable work.",
+		previewTargetQuality,
 	),
 ];
 
@@ -312,6 +322,34 @@ function claimedWorkQuality(input: EvaluatePortfolioPlanningInput) {
 		: unmet(
 				`Planning cannot replace claimed Work Items: ${collisions.map((item) => item.id).join(", ")}.`,
 			);
+}
+
+function previewTargetQuality(input: EvaluatePortfolioPlanningInput) {
+	for (const sprint of input.sprints) {
+		for (const target of sprint.uiPreviewTargets || []) {
+			if (uiPreviewTargetBindingValidationIssues(target).length > 0) {
+				return unmet(`Sprint ${sprint.id} has an invalid UI preview target.`);
+			}
+			if (
+				target.workItemIds.some((id) => !sprint.workItemIds.includes(id)) ||
+				target.contributingChangeIds.some(
+					(id) => !sprint.participatingChangeIds.includes(id),
+				)
+			) {
+				return unmet(
+					`Sprint ${sprint.id} UI preview target correlation is outside Sprint authority.`,
+				);
+			}
+		}
+	}
+	return met(
+		input.sprints.flatMap((sprint) =>
+			(sprint.uiPreviewTargets || []).map(
+				(target) =>
+					`ui-preview-target:${target.targetId}@${target.targetDigest}`,
+			),
+		),
+	);
 }
 
 function integrationQuality(input: EvaluatePortfolioPlanningInput) {

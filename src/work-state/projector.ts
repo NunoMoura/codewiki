@@ -6,6 +6,11 @@ import {
 } from "../changes/change-trace.ts";
 import { changeContentDigest, stableJson } from "../changes/digest.ts";
 import type { ChangeRecord } from "../changes/records.ts";
+import {
+	normalizeUiPreviewTargetBinding,
+	uiPreviewTargetBindingValidationIssues,
+	type UiPreviewTargetBinding,
+} from "../preview/binding.ts";
 import type { TraceEvent, TraceHead, TraceRecord } from "../traces/types.ts";
 import {
 	WORK_STATE_SCHEMA_VERSION,
@@ -263,10 +268,8 @@ function projectPlanningGroup(input: {
 				participatingChangeIds: planParticipants,
 				workItemIds: stringList(plan.workItemIds),
 				dependencyIds: stringList(plan.dependsOn),
-				integrationRefs: unique([
-					...stringList(plan.integrationRefs),
-					...stringList(plan.previewTargetRefs),
-				]),
+				integrationRefs: stringList(plan.integrationRefs),
+				uiPreviewTargets: projectedUiPreviewTargets(plan.uiPreviewTargets),
 				complete: false,
 				blockers: [],
 			});
@@ -704,6 +707,10 @@ function mergeSprint(
 			...current.integrationRefs,
 			...next.integrationRefs,
 		]),
+		uiPreviewTargets: uniquePreviewTargets([
+			...current.uiPreviewTargets,
+			...next.uiPreviewTargets,
+		]),
 		blockers: unique([...current.blockers, ...next.blockers]),
 	});
 }
@@ -777,6 +784,40 @@ function isOutcomeStatus(
 		"failed",
 		"abandoned",
 	].includes(value || "");
+}
+
+function projectedUiPreviewTargets(value: unknown): UiPreviewTargetBinding[] {
+	return objectList(value)
+		.map((target) =>
+			normalizeUiPreviewTargetBinding({
+				targetId: text(target.targetId),
+				targetDigest: text(target.targetDigest),
+				profileId: text(target.profileId),
+				profileDigest: text(target.profileDigest),
+				workItemIds: stringList(target.workItemIds),
+				contributingChangeIds: stringList(target.contributingChangeIds),
+				required:
+					typeof target.required === "boolean" ? target.required : undefined,
+				activation: text(target.activation),
+				autoOpen: text(target.autoOpen),
+			}),
+		)
+		.filter(
+			(target) => uiPreviewTargetBindingValidationIssues(target).length === 0,
+		);
+}
+
+function uniquePreviewTargets(
+	targets: UiPreviewTargetBinding[],
+): UiPreviewTargetBinding[] {
+	return [
+		...new Map(
+			targets.map((target) => [
+				`${target.targetId}\0${target.targetDigest}`,
+				target,
+			]),
+		).values(),
+	].sort((left, right) => left.targetId.localeCompare(right.targetId));
 }
 
 function objectValue(value: unknown): Record<string, unknown> | undefined {

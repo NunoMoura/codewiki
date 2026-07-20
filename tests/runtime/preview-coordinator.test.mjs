@@ -15,6 +15,7 @@ import {
 	previewProfileDigest,
 	resolveWikiPreviewConfig,
 } from "../../src/preview/profile.ts";
+import { uiPreviewTargetDigest } from "../../src/preview/target.ts";
 
 function profile(port, overrides = {}) {
 	return resolveWikiPreviewConfig({
@@ -37,7 +38,29 @@ function profile(port, overrides = {}) {
 	}).profiles[0];
 }
 
-function records(digest) {
+function target(overrides = {}) {
+	return {
+		id: "dashboard-detail",
+		uiRef: ".codewiki/kb/product/uis/terminal.md#live-preview",
+		profileId: "web",
+		route: "/dashboard",
+		viewports: ["desktop", "mobile"],
+		...overrides,
+	};
+}
+
+function previewConfig(configured, configuredTargets = [target()]) {
+	return resolveWikiPreviewConfig({
+		profiles: [configured],
+		uiPreviewTargets: configuredTargets,
+	});
+}
+
+function records(
+	profileDigest,
+	targetDigest = uiPreviewTargetDigest(target()),
+	targetBindings,
+) {
 	return [
 		{
 			type: "trace_event",
@@ -54,20 +77,64 @@ function records(digest) {
 					sprints: [
 						{
 							id: "SPR-preview",
-							preview: {
-								profileId: "web",
-								profileDigest: digest,
-								required: true,
-								activation: "implementation",
-								autoOpen: "once_per_trace",
-								evidenceViewports: ["desktop", "mobile"],
-							},
+							participatingChangeIds: ["CHG-preview"],
+							workItemIds: ["WU-preview"],
+							uiPreviewTargets: targetBindings || [
+								{
+									targetId: "dashboard-detail",
+									targetDigest,
+									profileId: "web",
+									profileDigest,
+									workItemIds: ["WU-preview"],
+									contributingChangeIds: ["CHG-preview"],
+									required: true,
+									activation: "implementation",
+									autoOpen: "once_per_target",
+								},
+							],
 						},
 					],
 				},
 			},
 		},
+		{
+			type: "trace_event",
+			id: "TRACE-preview:implementation:iteration:1",
+			parentId: "TRACE-preview:planning:1",
+			traceId: "TRACE-preview",
+			sequence: 2,
+			loop: "implementation",
+			event: "evidence_rejected",
+			refs: ["work:WU-preview"],
+			createdAt: "2026-07-18T12:02:00.000Z",
+			data: { iteration: 1 },
+		},
 	];
+}
+
+function integrationState(binding) {
+	return {
+		root: ".",
+		gitHead: "a".repeat(40),
+		gitTree: "b".repeat(40),
+		workingTreeDigest: `sha256:${"c".repeat(64)}`,
+		dirty: false,
+		dirtyPaths: [],
+		visibility: "integrated",
+		visibleChangeIds: [...binding.contributingChangeIds],
+		conflictingChangeIds: [],
+		sprintIds: [...binding.sprintIds],
+		workItemIds: [...binding.workItemIds],
+	};
+}
+
+function coordinatorOptions(overrides = {}) {
+	return {
+		async readIntegrationState({ binding }) {
+			return integrationState(binding);
+		},
+		...overrides,
+	};
 }
 
 describe("preview coordinator", () => {
@@ -75,7 +142,7 @@ describe("preview coordinator", () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-preview-managed-"));
 		const port = await availablePort();
 		const configured = profile(port);
-		const coordinator = createPreviewCoordinator(root);
+		const coordinator = createPreviewCoordinator(root, coordinatorOptions());
 		try {
 			await writeFile(
 				join(root, "package.json"),
@@ -96,7 +163,7 @@ describe("preview coordinator", () => {
 			);
 			await writeWikiConfigFile(
 				root,
-				resolveWikiConfig({ preview: { profiles: [configured] } }),
+				resolveWikiConfig({ preview: previewConfig(configured) }),
 			);
 			const starting = await coordinator.reconcile(
 				records(previewProfileDigest(configured)),
@@ -111,8 +178,7 @@ describe("preview coordinator", () => {
 			assert.equal(readyResponse.status, 204);
 			await assert.rejects(
 				coordinator.capture(
-					"web",
-					"TRACE-preview",
+					"dashboard-detail",
 					records(previewProfileDigest(configured)),
 				),
 				/requires the Playwright browser adapter/,
@@ -132,7 +198,7 @@ describe("preview coordinator", () => {
 				)}\n`,
 			);
 			await coordinator.restart(
-				"web",
+				"dashboard-detail",
 				records(previewProfileDigest(configured)),
 			);
 			await waitFor(async () => coordinator.status()[0]?.state === "failed");
@@ -141,7 +207,79 @@ describe("preview coordinator", () => {
 				/package script dev changed/,
 			);
 
-			await coordinator.stop("web");
+			await coordinator.stop("dashboard-detail");
+			await waitFor(async () => !(await reachable(`${configured.url}/ready`)));
+		} finally {
+			await coordinator.close();
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("deduplicates one profile process across multiple canonical UI targets", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-preview-dedup-"));
+		const port = await availablePort();
+		const configured = profile(port);
+		const targets = [
+			target(),
+			target({
+				id: "dashboard-settings",
+				uiRef: ".codewiki/kb/product/uis/terminal.md#settings",
+				route: "/settings",
+				viewports: ["desktop"],
+			}),
+		];
+		const bindings = targets.map((configuredTarget) => ({
+			targetId: configuredTarget.id,
+			targetDigest: uiPreviewTargetDigest(configuredTarget),
+			profileId: "web",
+			profileDigest: previewProfileDigest(configured),
+			workItemIds: ["WU-preview"],
+			contributingChangeIds: ["CHG-preview"],
+			required: true,
+			activation: "implementation",
+			autoOpen: "manual",
+		}));
+		const coordinator = createPreviewCoordinator(root, coordinatorOptions());
+		try {
+			await writeFile(
+				join(root, "package.json"),
+				`${JSON.stringify(
+					{
+						name: "preview-dedup-fixture",
+						private: true,
+						type: "module",
+						scripts: { dev: "node server.mjs" },
+					},
+					null,
+					2,
+				)}\n`,
+			);
+			await writeFile(
+				join(root, "server.mjs"),
+				`import { createServer } from "node:http";\nconst server = createServer((_request, response) => { response.writeHead(204); response.end(); });\nserver.listen(${port}, "127.0.0.1");\nprocess.on("SIGTERM", () => server.close(() => process.exit(0)));\n`,
+			);
+			await writeWikiConfigFile(
+				root,
+				resolveWikiConfig({ preview: previewConfig(configured, targets) }),
+			);
+			await coordinator.reconcile(
+				records(
+					previewProfileDigest(configured),
+					uiPreviewTargetDigest(targets[0]),
+					bindings,
+				),
+			);
+			await waitFor(async () =>
+				coordinator.status().every((status) => status.state === "ready"),
+			);
+			const statuses = coordinator.status();
+			assert.equal(statuses.length, 2);
+			assert.deepEqual(
+				statuses.map((status) => status.targetId),
+				["dashboard-detail", "dashboard-settings"],
+			);
+			assert.ok(statuses.every((status) => status.managed));
+			await coordinator.stop("dashboard-settings");
 			await waitFor(async () => !(await reachable(`${configured.url}/ready`)));
 		} finally {
 			await coordinator.close();
@@ -159,11 +297,11 @@ describe("preview coordinator", () => {
 		const address = server.address();
 		assert.ok(address && typeof address !== "string");
 		const configured = profile(address.port);
-		const coordinator = createPreviewCoordinator(root);
+		const coordinator = createPreviewCoordinator(root, coordinatorOptions());
 		try {
 			await writeWikiConfigFile(
 				root,
-				resolveWikiConfig({ preview: { profiles: [configured] } }),
+				resolveWikiConfig({ preview: previewConfig(configured) }),
 			);
 			const stale = await coordinator.reconcile(
 				records(`sha256:${"0".repeat(64)}`),
@@ -198,53 +336,63 @@ describe("preview coordinator", () => {
 		});
 		let browserOpened = 0;
 		let captured;
-		const coordinator = createPreviewCoordinator(root, {
-			async detectBrowserCapability() {
-				return {
-					cliState: "available",
-					sessionState: "not_open",
-					captureAvailable: false,
-					reason: "Open preview to verify the browser and enable Capture.",
-				};
-			},
-			async openBrowser() {
-				browserOpened += 1;
-				if (browserOpened > 1) throw new Error("browser executable missing");
-				return { adapter: "playwright", opened: true, async close() {} };
-			},
-			async captureEvidence(input) {
-				captured = input;
-				return {
-					id: "capture-test",
-					traceId: input.traceId,
-					gitHead: "a".repeat(40),
-					gitDirty: true,
-					profileId: input.profile.id,
-					profileDigest: previewProfileDigest(input.profile),
-					url: input.profile.url,
-					capturedAt: "2026-07-18T12:02:00.000Z",
-					screenshots: [],
-					console: {
-						count: 0,
-						lines: [],
-						truncated: false,
-						digest: `sha256:${"b".repeat(64)}`,
-					},
-					network: {
-						count: 0,
-						lines: [],
-						truncated: false,
-						digest: `sha256:${"c".repeat(64)}`,
-					},
-					manifestPath: ".codewiki/runtime/preview-evidence/manifest.json",
-					manifestDigest: `sha256:${"d".repeat(64)}`,
-				};
-			},
-		});
+		const coordinator = createPreviewCoordinator(
+			root,
+			coordinatorOptions({
+				async detectBrowserCapability() {
+					return {
+						cliState: "available",
+						sessionState: "not_open",
+						captureAvailable: false,
+						reason: "Open preview to verify the browser and enable Capture.",
+					};
+				},
+				async openBrowser() {
+					browserOpened += 1;
+					if (browserOpened > 1) throw new Error("browser executable missing");
+					return { adapter: "playwright", opened: true, async close() {} };
+				},
+				async captureEvidence(input) {
+					captured = input;
+					return {
+						id: "capture-test",
+						targetId: input.target.id,
+						targetDigest: input.binding.targetDigest,
+						uiRef: input.target.uiRef,
+						profileId: input.profile.id,
+						profileDigest: previewProfileDigest(input.profile),
+						route: input.target.route,
+						url: input.profile.url,
+						traceIds: [...input.binding.traceIds],
+						changeIds: [...input.binding.contributingChangeIds],
+						sprintIds: [...input.binding.sprintIds],
+						workItemIds: [...input.binding.workItemIds],
+						implementation: [],
+						integration: input.integration,
+						capturedAt: "2026-07-18T12:02:00.000Z",
+						screenshots: [],
+						console: {
+							count: 0,
+							lines: [],
+							truncated: false,
+							digest: `sha256:${"b".repeat(64)}`,
+						},
+						network: {
+							count: 0,
+							lines: [],
+							truncated: false,
+							digest: `sha256:${"c".repeat(64)}`,
+						},
+						manifestPath: ".codewiki/runtime/preview-evidence/manifest.json",
+						manifestDigest: `sha256:${"d".repeat(64)}`,
+					};
+				},
+			}),
+		);
 		try {
 			await writeWikiConfigFile(
 				root,
-				resolveWikiConfig({ preview: { profiles: [configured] } }),
+				resolveWikiConfig({ preview: previewConfig(configured) }),
 			);
 			const traceRecords = records(previewProfileDigest(configured));
 			await coordinator.reconcile(traceRecords);
@@ -253,29 +401,28 @@ describe("preview coordinator", () => {
 				coordinator.status()[0].browserCapability.captureAvailable,
 				false,
 			);
-			await coordinator.open("web");
+			await coordinator.open("dashboard-detail");
 			assert.equal(
 				coordinator.status()[0].browserCapability.captureAvailable,
 				true,
 			);
 			const statuses = await coordinator.capture(
-				"web",
-				"TRACE-preview",
+				"dashboard-detail",
 				traceRecords,
 			);
 			assert.equal(browserOpened, 1);
-			assert.equal(captured.traceId, "TRACE-preview");
-			assert.deepEqual(captured.viewports, ["desktop", "mobile"]);
+			assert.deepEqual(captured.binding.traceIds, ["TRACE-preview"]);
+			assert.deepEqual(captured.target.viewports, ["desktop", "mobile"]);
 			assert.equal(statuses[0].captures[0].id, "capture-test");
 			await assert.rejects(
-				coordinator.capture("web", "TRACE-other", traceRecords),
-				/not bound/,
+				coordinator.capture("missing-target", traceRecords),
+				/not ready/,
 			);
-			await coordinator.restart("web", traceRecords);
+			await coordinator.restart("dashboard-detail", traceRecords);
 			await waitFor(async () => coordinator.status()[0]?.state === "ready");
 			assert.equal(coordinator.status()[0].captures[0].id, "capture-test");
 			await assert.rejects(
-				coordinator.open("web"),
+				coordinator.open("dashboard-detail"),
 				/browser executable missing/,
 			);
 			assert.equal(
@@ -286,7 +433,7 @@ describe("preview coordinator", () => {
 				coordinator.status()[0].browserCapability.installHint,
 				/install-browser/,
 			);
-			const stopped = await coordinator.stop("web");
+			const stopped = await coordinator.stop("dashboard-detail");
 			assert.equal(stopped[0].captures[0].id, "capture-test");
 		} finally {
 			await coordinator.close();
@@ -309,25 +456,28 @@ describe("preview coordinator", () => {
 			autoOpen: false,
 		});
 		let browserOpenCalls = 0;
-		const coordinator = createPreviewCoordinator(root, {
-			async detectBrowserCapability() {
-				return {
-					cliState: "unavailable",
-					sessionState: "not_open",
-					captureAvailable: false,
-					reason: "playwright-cli is not available on PATH.",
-					installHint: "Install Playwright explicitly.",
-				};
-			},
-			async openBrowser() {
-				browserOpenCalls += 1;
-				return { adapter: "playwright", opened: true, async close() {} };
-			},
-		});
+		const coordinator = createPreviewCoordinator(
+			root,
+			coordinatorOptions({
+				async detectBrowserCapability() {
+					return {
+						cliState: "unavailable",
+						sessionState: "not_open",
+						captureAvailable: false,
+						reason: "playwright-cli is not available on PATH.",
+						installHint: "Install Playwright explicitly.",
+					};
+				},
+				async openBrowser() {
+					browserOpenCalls += 1;
+					return { adapter: "playwright", opened: true, async close() {} };
+				},
+			}),
+		);
 		try {
 			await writeWikiConfigFile(
 				root,
-				resolveWikiConfig({ preview: { profiles: [configured] } }),
+				resolveWikiConfig({ preview: previewConfig(configured) }),
 			);
 			const traceRecords = records(previewProfileDigest(configured));
 			await coordinator.reconcile(traceRecords);
@@ -335,9 +485,12 @@ describe("preview coordinator", () => {
 			const status = coordinator.status()[0];
 			assert.equal(status.browserCapability.cliState, "unavailable");
 			assert.equal(status.browserCapability.captureAvailable, false);
-			await assert.rejects(coordinator.open("web"), /not available on PATH/);
 			await assert.rejects(
-				coordinator.capture("web", "TRACE-preview", traceRecords),
+				coordinator.open("dashboard-detail"),
+				/not available on PATH/,
+			);
+			await assert.rejects(
+				coordinator.capture("dashboard-detail", traceRecords),
 				/not available on PATH/,
 			);
 			assert.equal(browserOpenCalls, 0);
@@ -352,6 +505,10 @@ describe("preview coordinator", () => {
 	it("activates only after planning reaches implementation handoff", async () => {
 		const digest = `sha256:${"a".repeat(64)}`;
 		assert.equal(tracePreviewIsActive([], "TRACE-preview"), false);
+		assert.equal(
+			tracePreviewIsActive(records(digest).slice(0, 1), "TRACE-preview"),
+			true,
+		);
 		assert.equal(tracePreviewIsActive(records(digest), "TRACE-preview"), true);
 	});
 });

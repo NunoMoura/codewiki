@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
 import { assertLoopbackPreviewUrl } from "./browser-adapter.ts";
+import { resolveUiPreviewTarget, type UiPreviewTarget } from "./target.ts";
 
 export type PreviewProfileBrowser = "none" | "system" | "playwright";
 
@@ -22,32 +23,64 @@ export interface PreviewProfile {
 
 export interface WikiPreviewConfig {
 	profiles: PreviewProfile[];
+	uiPreviewTargets: UiPreviewTarget[];
 }
 
 export interface PartialWikiPreviewConfig {
 	profiles?: unknown[];
+	uiPreviewTargets?: unknown[];
 }
 
-export const DEFAULT_WIKI_PREVIEW_CONFIG: WikiPreviewConfig = { profiles: [] };
+export const DEFAULT_WIKI_PREVIEW_CONFIG: WikiPreviewConfig = {
+	profiles: [],
+	uiPreviewTargets: [],
+};
 
 export function resolveWikiPreviewConfig(
 	input: PartialWikiPreviewConfig | undefined = undefined,
 ): WikiPreviewConfig {
-	const profiles = (input?.profiles || []).map((profile, index) =>
+	const preview = objectRecord(input || {}, "preview");
+	assertKnownKeys(preview, "preview", ["profiles", "uiPreviewTargets"]);
+	const profileValues = configArray(preview.profiles, "preview.profiles");
+	const profiles = profileValues.map((profile, index) =>
 		resolvePreviewProfile(profile, `preview.profiles[${index}]`),
 	);
-	const ids = new Set<string>();
+	const profileIds = new Set<string>();
 	for (const profile of profiles) {
-		if (ids.has(profile.id)) {
+		if (profileIds.has(profile.id)) {
 			throw configError(
 				"preview.profiles",
 				`Preview profile id ${profile.id} is duplicated.`,
 				profile.id,
 			);
 		}
-		ids.add(profile.id);
+		profileIds.add(profile.id);
 	}
-	return { profiles };
+	const uiPreviewTargets = configArray(
+		preview.uiPreviewTargets,
+		"preview.uiPreviewTargets",
+	).map((target, index) =>
+		resolveUiPreviewTarget(target, `preview.uiPreviewTargets[${index}]`),
+	);
+	const targetIds = new Set<string>();
+	for (const target of uiPreviewTargets) {
+		if (targetIds.has(target.id)) {
+			throw configError(
+				"preview.uiPreviewTargets",
+				`Preview target id ${target.id} is duplicated.`,
+				target.id,
+			);
+		}
+		if (!profileIds.has(target.profileId)) {
+			throw configError(
+				`preview.uiPreviewTargets.${target.id}.profileId`,
+				`Preview target ${target.id} references unknown profile ${target.profileId}.`,
+				target.profileId,
+			);
+		}
+		targetIds.add(target.id);
+	}
+	return { profiles, uiPreviewTargets };
 }
 
 export function previewProfileDigest(profile: PreviewProfile): string {
@@ -259,6 +292,12 @@ function booleanValue(
 	if (value === undefined) return fallback;
 	if (typeof value === "boolean") return value;
 	throw configError(path, "Preview value must be boolean.", value);
+}
+
+function configArray(value: unknown, path: string): unknown[] {
+	if (value === undefined) return [];
+	if (Array.isArray(value)) return value;
+	throw configError(path, `${path} must be an array.`, value);
 }
 
 function objectRecord(value: unknown, path: string): Record<string, unknown> {

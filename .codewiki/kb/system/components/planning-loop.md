@@ -154,6 +154,7 @@ Sprint plans contain:
 - rollback and integration boundary;
 - dependency and ordering refs;
 - canonical Knowledge/UI/preview targets when affected;
+- `uiPreviewTargets[]` bindings with exact target/profile digests, contributing Change ids, and covered Work Item ids;
 - policy and target digests that execution must freeze;
 - Work Item refs.
 
@@ -200,6 +201,7 @@ A partial multi-trace write is not accepted Sprint state. WorkState exposes `inc
 | dependency_order_clear | Dependencies exist, are acyclic, and order overlapping work. |
 | claimed_work_stable | Replanning does not silently mutate active Assignments. |
 | integration_plan_safe | Worktree, merge, shared preview, and rollback constraints are explicit where needed. |
+| ui_preview_targets_valid | Every preview binding freezes canonical target/profile digests and stays within Sprint Change/Work Item authority. |
 | worker_assignment_ready | Work is independent, right-sized, and has an eligible worker profile. |
 | uncertainty_resolved | Planning uncertainty is repaired or routed to Decision. |
 | triggers_valid | Recurring/event/hook/manual triggers have bounded run and concurrency policy. |
