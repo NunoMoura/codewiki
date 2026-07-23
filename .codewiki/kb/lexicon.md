@@ -182,7 +182,7 @@ Assignment and Claim are related but not interchangeable: Assignment says what o
 
 Private runtime serialization of an Assignment used to hand work to a process or container adapter and recover it after coordinator replacement. Runtime writes the packet before appending the Claim, then records its digest in the Claim. The packet becomes executable only when packet digest, deterministic worker job identity, and active Claim all match.
 
-Assignment packets are restartable operational scratch, not project truth. A copied, edited, orphaned, or stale packet grants no execution authority.
+Assignment packets are restartable operational scratch, not project truth. A copied, edited, orphaned, or stale packet grants no execution authority. Runtime preserves packets matching active Claims and may remove pre-Claim or terminal unsuccessful packet scratch idempotently; completed or ambiguous packet evidence remains until integration proof authorizes cleanup.
 
 ## Worker report
 
@@ -190,7 +190,7 @@ Immutable normalized report written by the worker adapter for one exact Assignme
 
 Runtime must match the report digest, identity, Assignment, and active Claim before using it. A completed report becomes candidate evidence for Implementation review. A blocked, failed, or cancelled report supports guarded claim release and repair routing. The report remains the same object through persistence, recovery, and review; no separate Worker receipt or Worker result exists.
 
-A Worker report proves only what the adapter observed about that attempt. It never marks a Work Item implemented or semantically accepted by itself. Implementation acceptance remains a separate canonical fact.
+A Worker report proves only what the adapter observed about that attempt. It never marks a Work Item implemented or semantically accepted by itself. Implementation acceptance remains a separate canonical fact. Active-Claim and completed reports are retained during artifact sanitation; terminal unsuccessful orphan reports may be removed after guarded Claim handling.
 
 ## Aggregate content proof
 

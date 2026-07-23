@@ -1,12 +1,4 @@
 import { createHash } from "node:crypto";
-import {
-	lstat,
-	mkdir,
-	readFile,
-	readdir,
-	rename,
-	writeFile,
-} from "node:fs/promises";
 import { join } from "node:path";
 
 import {
@@ -31,6 +23,13 @@ import { buildWorkQueueView } from "../views/work-queue.ts";
 import type { WorkState } from "../work-state/types.ts";
 import { createRuntimeHandoffManifest } from "./handoff.ts";
 import {
+	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
+	cleanupImplementationWorkerArtifacts,
+	readImplementationWorkerDispatchPackets,
+	writeImplementationWorkerDispatchPacket,
+	type ImplementationWorkerDispatchPacket,
+} from "./implementation-worker-artifacts.ts";
+import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
 	assertImplementationWorkerReport,
@@ -44,9 +43,6 @@ import { implementationWorkerClaimReleaseJob } from "./implementation-worker-rev
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./work-unit-claims.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
-
-const DISPATCH_PACKET_SCHEMA_VERSION = 1 as const;
-const MAX_PACKET_BYTES = 256 * 1024;
 
 export interface ImplementationWorkerDispatchResult {
 	status: "held" | "quiescent" | "scheduled";
@@ -72,13 +68,6 @@ export interface ImplementationWorkerDispatcherOptions {
 	collectGitStatus?: (repoRoot: string) => Promise<GitStatusSnapshot>;
 	now?: () => string;
 	beforeAppend?: () => void | Promise<void>;
-}
-
-interface ImplementationWorkerDispatchPacket {
-	schemaVersion: typeof DISPATCH_PACKET_SCHEMA_VERSION;
-	claimEventId: string;
-	assignment: ImplementationWorkerAssignment;
-	worktreePlan: RuntimeWorktreePlan;
 }
 
 interface RecoveredImplementationWorker {
@@ -143,6 +132,24 @@ export class ImplementationWorkerDispatcher {
 				return event ? [[assignment.id, event] as const] : [];
 			}),
 		);
+		const activeClaimIds = new Set(
+			activeAssignments.map((assignment) => assignment.id),
+		);
+		const canonicalClaimEventIds = new Set(
+			observation.records.flatMap((record) =>
+				record.type === "trace_event" &&
+				record.event === "runtime.work_unit.claimed"
+					? [record.id]
+					: [],
+			),
+		);
+		await this.options.beforeAppend?.();
+		const cleanup = await cleanupImplementationWorkerArtifacts({
+			repoRoot: this.options.repoRoot,
+			activeClaimIds,
+			canonicalClaimEventIds,
+			worktreeRunner: this.options.worktreeRunner,
+		});
 		const createdAt = (this.options.now || (() => new Date().toISOString()))();
 		const queue = buildWorkQueueView({
 			records: observation.records,
@@ -186,6 +193,10 @@ export class ImplementationWorkerDispatcher {
 				),
 				workerReports,
 			);
+
+		if (cleanup.blockers.length > 0) {
+			return complete("held", resumedJobIds, cleanup.blockers);
+		}
 
 		if (!this.options.coordinator.snapshot().executionPermitted) {
 			return complete("held", resumedJobIds, [
@@ -262,7 +273,7 @@ export class ImplementationWorkerDispatcher {
 		);
 		await Promise.all(
 			packets.map((packet) =>
-				writeDispatchPacket(this.options.repoRoot, packet),
+				writeImplementationWorkerDispatchPacket(this.options.repoRoot, packet),
 			),
 		);
 		const claimBatch = authorizedClaimBatch(preview, packets);
@@ -281,7 +292,9 @@ export class ImplementationWorkerDispatcher {
 		jobIds: string[];
 		recovered: RecoveredImplementationWorker[];
 	}> {
-		const packets = await readDispatchPackets(this.options.repoRoot);
+		const packets = await readImplementationWorkerDispatchPackets(
+			this.options.repoRoot,
+		);
 		const active = packets.flatMap((packet) => {
 			const claimEvent = activeClaims.get(packet.assignment.claimId);
 			return claimEvent && packetMatchesClaim(packet, claimEvent)
@@ -422,7 +435,7 @@ function createDispatchPackets(
 		};
 		assertImplementationWorkerAssignment(assignment);
 		return {
-			schemaVersion: DISPATCH_PACKET_SCHEMA_VERSION,
+			schemaVersion: IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 			claimEventId: claim.id,
 			assignment,
 			worktreePlan: plan,
@@ -505,76 +518,6 @@ function preparedAdapter(
 			return adapter.execute(assignment, signal);
 		},
 	};
-}
-
-async function writeDispatchPacket(
-	repoRoot: string,
-	packet: ImplementationWorkerDispatchPacket,
-): Promise<void> {
-	const directory = dispatchPacketDirectory(repoRoot);
-	await mkdir(directory, { recursive: true, mode: 0o700 });
-	const path = dispatchPacketPath(repoRoot, packet.assignment.claimId);
-	const temporary = `${path}.${process.pid}.tmp`;
-	await writeFile(temporary, `${JSON.stringify(packet)}\n`, {
-		encoding: "utf8",
-		mode: 0o600,
-	});
-	await rename(temporary, path);
-}
-
-async function readDispatchPackets(
-	repoRoot: string,
-): Promise<ImplementationWorkerDispatchPacket[]> {
-	const directory = dispatchPacketDirectory(repoRoot);
-	let names: string[];
-	try {
-		names = await readdir(directory);
-	} catch (error) {
-		if (isNotFound(error)) return [];
-		throw error;
-	}
-	const packets: ImplementationWorkerDispatchPacket[] = [];
-	for (const name of names
-		.filter((entry) => entry.endsWith(".json"))
-		.sort(compareText)) {
-		const path = join(directory, name);
-		const metadata = await lstat(path);
-		if (
-			!metadata.isFile() ||
-			metadata.isSymbolicLink() ||
-			metadata.size > MAX_PACKET_BYTES
-		) {
-			continue;
-		}
-		try {
-			const value = JSON.parse(
-				await readFile(path, "utf8"),
-			) as ImplementationWorkerDispatchPacket;
-			if (value.schemaVersion !== DISPATCH_PACKET_SCHEMA_VERSION) continue;
-			assertImplementationWorkerAssignment(value.assignment);
-			if (
-				value.assignment.repoRoot !== repoRoot ||
-				!value.claimEventId?.trim()
-			) {
-				continue;
-			}
-			packets.push(value);
-		} catch (error) {
-			void error;
-		}
-	}
-	return packets;
-}
-
-function dispatchPacketDirectory(repoRoot: string): string {
-	return join(repoRoot, ".codewiki", "runtime", "worker-assignments");
-}
-
-function dispatchPacketPath(repoRoot: string, claimId: string): string {
-	return join(
-		dispatchPacketDirectory(repoRoot),
-		`${digest(claimId).slice(7)}.json`,
-	);
 }
 
 function assertStableClaims(
@@ -700,13 +643,4 @@ function text(value: unknown): string {
 
 function compareText(left: string, right: string): number {
 	return left.localeCompare(right);
-}
-
-function isNotFound(error: unknown): boolean {
-	return Boolean(
-		error &&
-			typeof error === "object" &&
-			"code" in error &&
-			(error as { code?: string }).code === "ENOENT",
-	);
 }

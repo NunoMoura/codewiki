@@ -46,6 +46,8 @@ from worker TDD phases (`red`, `green`, `refactor`).
 
 Hosts can call the read-only Git status helper before runtime claim selection to collect `dirtyPaths`, `baseRef`, and `baseSha` for `worktreeIsolation: "auto"`. The helper runs only read-only Git commands (`rev-parse` and `status --porcelain`) and supports an injected runner for tests or custom hosts.
 
+The elected worker reconciler owns idempotent cleanup for generated worktrees under `.codewiki/runtime/tmp/**`. It never deletes a worktree associated with an active canonical Claim. A packet written before Claim append, or a released failed, blocked, or cancelled attempt, may be cleaned by removing the runtime-local directory and running structured `git worktree prune` through the injected runner. Completed and ambiguous attempts remain preserved until exact integration and Git proof authorize deletion. Paths outside the runtime temp root fail closed and require explicit host remediation.
+
 Target constraints:
 
 - Trace events own worker claims and releases.
