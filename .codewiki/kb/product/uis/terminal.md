@@ -48,6 +48,7 @@ The dashboard has four primary destinations:
 - **Product**
   - Users
   - Stories
+  - Dictionary
 - **System**
   - canonical diagram selector
 - **Design**
@@ -126,7 +127,9 @@ The dossier may summarize current runtime activity, but it does not own stage co
 
 ## Product, System, and Design
 
-Product renders Users and Stories from canonical Markdown. User selection shows explicit Stories, UIs, System realization, and active Changes. Missing audience or coverage remains visibly unknown rather than inferred.
+Product renders Users, Stories, and Dictionary from canonical Markdown. User selection shows explicit Stories, UIs, System realization, and active Changes. Missing audience or coverage remains visibly unknown rather than inferred.
+
+Dictionary renders `.codewiki/kb/lexicon.md` directly with exact-term search, alphabetical navigation, stable anchors, aliases, deprecated-term replacement guidance, and related terms. Contextual explanations in Work inspectors and Change dossiers link to exact Dictionary entries. Short excerpts may aid orientation, but dashboard state never becomes a second vocabulary authority.
 
 System renders each canonical YAML diagram using a topology-specific composition. Diagram node detail loads linked System Markdown, Product responsibility, source ownership, tests, and active work.
 

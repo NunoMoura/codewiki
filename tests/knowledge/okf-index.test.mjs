@@ -48,7 +48,7 @@ describe("OKF index and log navigation", () => {
 			root.content,
 			/\* \[Lexicon\]\(lexicon\.md\) - This file is CodeWiki's active vocabulary contract\./,
 		);
-		assert.match(root.content, /\* \[Product\]\(product\/\) - 12 concepts/);
+		assert.match(root.content, /\* \[Product\]\(product\/\) - 13 concepts/);
 		assert.match(root.content, /\* \[System\]\(system\/\) - 32 concepts/);
 
 		assert.equal(product.path, "product/index.md");
@@ -103,7 +103,7 @@ describe("OKF index and log navigation", () => {
 		);
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 45);
+		assert.equal(result.conceptCount, 46);
 		assert.equal(result.reservedCount, 10);
 		assert.deepEqual(documentsByPath.get("index.md")?.frontmatter, {
 			okf_version: "0.1",

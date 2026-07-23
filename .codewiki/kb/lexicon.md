@@ -133,7 +133,10 @@ user-facing terminal rendering.
 | Implementation workspace | Execution view over Work Items, Assignments, workers, isolation, integration, checks, evidence, and Git proof. | Generated WorkState plus bounded runtime observations. |
 | Change dossier | Cross-cutting accountable detail for one Change: intent, authority, impact, Planning coverage, realization, proof, route-backs, and history. It does not own a private pipeline. | Generated Change Trace and current-project projection. |
 | Work Item | Planning-created, parallel-safe, assignable execution unit with exactly one owning Change and optional explicit contribution to others. | Planning output in the owning Change Trace. |
-| Assignment | Runtime claim of one Planning-approved Work Item by one worker/session attempt. | Runtime claim event in the owning Change Trace. |
+| Claim | Canonical, temporary reservation that grants one exact worker attempt the right to execute one Work Item while preventing unsafe overlap. A claim grants bounded execution authority, not semantic acceptance. | `runtime.work_unit.claimed` event in the owning Change Trace. |
+| Assignment | Runtime-derived binding of one Planning-approved Work Item, one worker attempt, exact context, scope, isolation, and result contract. An Assignment becomes executable only while its matching canonical Claim is active. | Canonical Claim plus runtime-derived Assignment contract and WorkState projection. |
+| Assignment packet | Private serialized handoff containing the exact Assignment details needed by an execution adapter. A packet is operational scratch and grants no authority unless its digest and job identity match the active canonical Claim. | Digest-bound file under `.codewiki/runtime/worker-assignments/**`. |
+| Worker receipt | Private normalized record that an execution adapter completed, blocked, failed, or cancelled one exact Assignment attempt. It supports restart recovery without rerunning the worker, but is not semantic truth. | Digest-bound operational file under `.codewiki/runtime/workers/**`. |
 | WorkState | Disposable typed project-wide projection used by runtime and all loops to reason from the same current facts. | Fold over Change Traces, KB, source/tests/Git, configuration, ownership, and runtime observations. |
 | Ready Checks | User-facing name for loop quality standards and exit conditions that must pass before output becomes downstream-authoritative. | Quality-network and exit-result internals. |
 | Needs Review | User-facing status when earlier semantic authority is required. | `route_back` exit status. |
@@ -148,7 +151,7 @@ Implementation workers may use private scratchpads or checklists inside an
 assigned Work Item. These are execution aids, not Planning truth, work-queue items,
 or runtime-claimable units.
 
-Host/session terms such as semantic session, SDK session, worker process, container worker, session reference, and runtime claim are technical architecture terms. They should appear in runtime or adapter docs only when topology matters. Session identity is operational metadata, never canonical authority.
+Host/session terms such as semantic session, SDK session, worker process, container worker, session reference, Assignment packet, and worker receipt are technical architecture terms. They should appear in user-facing views when needed to explain exact activity, recovery, failure, or authority, not as unexplained implementation jargon. Session identity and private runtime files are operational metadata, never canonical authority.
 
 ## Route-back
 
@@ -161,15 +164,35 @@ ambiguous product/API behavior or user validation.
 
 A loop iteration status indicating that external user input, resource availability, policy, host capability, or runtime wait is required.
 
-## Runtime claim
+## Claim
 
-Trace-owned coordination event that grants a worker or session a bounded Work Item
-Assignment. Claims prevent unsafe overlap but do not replace trace truth,
-source/tests, or Git proof.
+A trace-owned coordination fact that reserves one Work Item for one exact worker attempt. The Claim binds worker identity, Work Item, Planning references, runtime job identity, and the digest of the private Assignment packet. Claims prevent unsafe overlap but do not replace source, tests, Git proof, or Implementation acceptance.
+
+A Claim remains active while the worker runs and while a completed result awaits Implementation review. A terminal claim-release event ends the reservation after accepted completion, failure, blocking, cancellation, or expiry. Release means that the reservation ended; it does not mean that implementation succeeded.
+
+`Runtime claim` is acceptable in System documentation when needed to distinguish this fact from other uses of the word claim. Product UI and ordinary explanations should use **Claim**.
+
+## Assignment
+
+The exact execution contract for one worker attempt on one Work Item. It binds the worker, Claim, Change Trace, Planning references, source base, WorkState and context digests, component and path scopes, prompt, result path, execution policy, and required isolation.
+
+Assignment and Claim are related but not interchangeable: Assignment says what one worker attempt must do and under which bounds; Claim is the canonical fact that temporarily authorizes that exact Assignment to run.
+
+## Assignment packet
+
+Private runtime serialization of an Assignment used to hand work to a process or container adapter and recover it after coordinator replacement. Runtime writes the packet before appending the Claim, then records its digest in the Claim. The packet becomes executable only when packet digest, deterministic worker job identity, and active Claim all match.
+
+Assignment packets are restartable operational scratch, not project truth. A copied, edited, orphaned, or stale packet grants no execution authority.
+
+## Worker receipt
+
+Private normalized completion record written by the worker adapter for one exact Assignment attempt. A receipt records outcome status and bounded references needed to recover a settled worker job without invoking the worker again.
+
+A receipt proves only what the adapter observed about that attempt. Runtime must match it to the active Assignment and Claim. Completed receipts become Worker Results for Implementation review; failed, blocked, or cancelled receipts support guarded release and repair routing. A receipt never marks a Work Item implemented by itself.
 
 ## Worker result
 
-Structured implementation evidence returned by a worker. It must reference an active runtime claim and becomes part of implementation loop output only after aggregation and exit-condition evaluation.
+Structured candidate implementation evidence derived from one exact matched worker receipt. It must reference an active Claim and becomes part of Implementation-loop output only after runtime selection, aggregation, and exit-condition evaluation.
 
 ## Aggregate content proof
 

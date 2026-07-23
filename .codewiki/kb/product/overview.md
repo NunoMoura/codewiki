@@ -19,7 +19,7 @@ The runtime owns the work pipeline. Individual Changes do not. A Change is the d
 The dashboard has four primary destinations:
 
 - **Work** presents Backlog, Planning, and Implementation as separate purpose-built operational workspaces.
-- **Product** presents Users and Stories from canonical Product Markdown.
+- **Product** presents Users, Stories, and Dictionary from canonical Product Markdown. Dictionary renders the root Lexicon as the single vocabulary contract.
 - **System** renders canonical System diagrams with topology-specific views.
 - **Design** presents Guidelines and UIs from the canonical design system and UI concepts.
 
@@ -55,7 +55,7 @@ Sessions are replaceable operational context. They never become canonical truth,
 
 CodeWiki renders and edits the same canonical files that agents consume. Product, System, and Design editing uses typed operations over Markdown or YAML, expected source digests, previewed diffs, format validation, and guarded Change workflows. The dashboard never writes a hidden content database or silently infers relationships.
 
-OKF supplies portable concept documents and standard links. CodeWiki adds explicit typed relationships where workflow, ownership, dependency, or impact semantics require more than OKF's untyped links. Generated graph and search indexes remain disposable.
+OKF supplies portable concept documents and standard links. CodeWiki adds explicit typed relationships where workflow, ownership, dependency, or impact semantics require more than OKF's untyped links. Product / Dictionary renders `.codewiki/kb/lexicon.md` directly, with stable term links and search, so unfamiliar runtime vocabulary is explainable without a copied glossary. Generated graph and search indexes remain disposable.
 
 ## Product boundaries
 
@@ -89,5 +89,6 @@ The CodeWiki source repository does not load or dogfood its own extension during
 - [Maintain Fresh Intent](stories/intent.md)
 - [Use Loop-Governed Automation](stories/automation.md)
 - [Low-Token Navigation](stories/navigation.md)
+- [Dictionary](dictionary.md)
 - [Lexicon](../lexicon.md)
 - [System Overview](../system/components/overview.md)

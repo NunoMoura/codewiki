@@ -57,7 +57,7 @@ One Pi conversation may connect or disconnect without becoming project runtime o
 - **Work / Backlog** renders proposal provenance, Decision state, exact authority, overlap, missing information, and approval receipts.
 - **Work / Planning** renders the bounded approved-Change planning horizon, Sprints, Work Items, typed dependency/conflict/contribution edges, and ready parallel frontier.
 - **Work / Implementation** renders Assignments, worker sessions, isolation, live bounded activity, integration, verification, acceptance, and Git proof.
-- **Product / Users and Stories** renders and edits canonical Product Markdown.
+- **Product / Users, Stories, and Dictionary** renders and edits canonical Product Markdown. Dictionary projects `.codewiki/kb/lexicon.md` directly and links exact terms from runtime explanations without creating another vocabulary store.
 - **System** renders and edits canonical topology YAML and linked System Markdown.
 - **Design / Guidelines and UIs** renders and edits the canonical design system and UI concepts.
 - Change detail is a cross-cutting dossier rather than a private pipeline.

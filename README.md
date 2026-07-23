@@ -18,7 +18,7 @@ The approved target is one CodeWiki project control plane with a local dashboard
 
 ## Work and project control plane
 
-CodeWiki's approved product architecture has four dashboard destinations: Work, Product, System, and Design. Work contains separate Backlog, Planning, and Implementation workspaces. Runtime owns the portfolio pipeline; a Change remains the durable accountable carrier of one intended product or system delta and opens as a cross-cutting dossier rather than owning a private pipeline.
+CodeWiki's approved product architecture has four dashboard destinations: Work, Product, System, and Design. Work contains separate Backlog, Planning, and Implementation workspaces. Product contains Users, Stories, and Dictionary; Dictionary renders the canonical `.codewiki/kb/lexicon.md` rather than copying vocabulary into dashboard state. Runtime owns the portfolio pipeline; a Change remains the durable accountable carrier of one intended product or system delta and opens as a cross-cutting dossier rather than owning a private pipeline.
 
 Backlog is a generated and guarded intake surface over persisted pending Change revisions. `wiki_change` can draft, revise, validate, link, split, merge, defer, reject, withdraw, and query revisions under exact Change-Trace-store guards. Submission grants no semantic approval or execution authority. CodeWiki has no hidden Git-ref Change store or backwards-compatibility importer; pre-release history remains available through Git.
 

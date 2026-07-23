@@ -208,7 +208,7 @@ CodeWiki is a project-management application, not a marketing site, terminal tra
 The four primary destinations are:
 
 - **Work**, containing Backlog, Planning, and Implementation;
-- **Product**, containing Users and Stories;
+- **Product**, containing Users, Stories, and Dictionary;
 - **System**, containing canonical diagram views;
 - **Design**, containing Guidelines and UIs.
 
@@ -286,7 +286,7 @@ The sticky header has three spatially independent anchors:
 
 The full sticky block remains opaque so scrolling content disappears cleanly beneath it. No blur-heavy glass.
 
-The visual destination title is a selected-value control listing Work, Product, System, and Design. A destination-specific secondary control selects Backlog/Planning/Implementation, Users/Stories, a System diagram, or Guidelines/UIs. Both controls support pointer, touch, keyboard navigation, typeahead where useful, assistive semantics, and focus return.
+The visual destination title is a selected-value control listing Work, Product, System, and Design. A destination-specific secondary control selects Backlog/Planning/Implementation, Users/Stories/Dictionary, a System diagram, or Guidelines/UIs. Both controls support pointer, touch, keyboard navigation, typeahead where useful, assistive semantics, and focus return.
 
 Selection replaces the complete workspace context and preserves deep-linkable routes. Search and filters act only on the visible workspace. Each workspace remembers its prior selection and filters without writing canonical truth.
 
@@ -367,13 +367,15 @@ Parallelism is visible through concurrent lanes, not animated agent avatars, van
 
 ## Product
 
-Product has Users and Stories workspaces.
+Product has Users, Stories, and Dictionary workspaces.
 
 Users uses a persistent user rail on desktop and a labeled selector on mobile. Selected User content presents canonical purpose, needs, Stories, UIs, System realization, and active Changes. Use explicit relationships only. Unassociated concepts appear in an honest maintenance state.
 
 Stories uses a browsable story collection organized around user promise, acceptance signals, audience, related UIs, System realization, and active Changes. Story detail expands inside the same workspace and restores prior scroll and focus on Back.
 
-Product Markdown remains source truth. Dashboard editing proposes deterministic canonical patches; it does not duplicate descriptions or infer audience from prose.
+Dictionary renders `.codewiki/kb/lexicon.md` as the canonical vocabulary reference. It provides exact-term search, alphabetical navigation, stable anchors, deprecated-term redirects, technical backing, and related terms without copying definitions into dashboard state. Runtime inspectors and contextual help link unfamiliar qualified terms such as Assignment packet or Worker receipt to their exact entry. Unknown terms remain undefined rather than receiving model-generated authority.
+
+Product Markdown remains source truth. Dashboard editing proposes deterministic canonical patches; it does not duplicate descriptions, infer audience from prose, or create a second glossary.
 
 ## System
 
