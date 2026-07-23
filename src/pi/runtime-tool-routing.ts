@@ -48,6 +48,7 @@ export function registerRuntimeToolRouting(
 			applyReaction(pi, undefined);
 			return;
 		}
+		startEventSubscription(root, ctx);
 		try {
 			const remoteTrigger = {
 				kind: trigger.kind,
@@ -69,6 +70,57 @@ export function registerRuntimeToolRouting(
 			applyReaction(pi, undefined);
 		}
 	};
+	const subscriptions = new Map<
+		string,
+		{ stopped: boolean; cursor: number; generationId?: string }
+	>();
+	const startEventSubscription = (
+		root: string,
+		ctx: Partial<CodewikiExtensionContext>,
+	): void => {
+		if (subscriptions.has(root)) return;
+		const subscription = { stopped: false, cursor: 0 } as {
+			stopped: boolean;
+			cursor: number;
+			generationId?: string;
+		};
+		subscriptions.set(root, subscription);
+		void (async () => {
+			while (!subscription.stopped) {
+				try {
+					const batch = await projectServices.events(
+						root,
+						ctx,
+						subscription.cursor,
+						{ maxEvents: 64, waitMs: 2_000 },
+					);
+					if (subscription.stopped) return;
+					const generationChanged =
+						subscription.generationId !== undefined &&
+						subscription.generationId !== batch.generationId;
+					subscription.generationId = batch.generationId;
+					if (generationChanged || batch.resetRequired) {
+						subscription.cursor = batch.cursor;
+						await route(ctx, { kind: "timer_due" });
+						continue;
+					}
+					subscription.cursor = batch.cursor;
+					if (
+						batch.events.some(
+							(event) =>
+								event.state === "job_completed" ||
+								event.state === "job_recovered" ||
+								event.state === "execution_policy_changed",
+						)
+					) {
+						await route(ctx, { kind: "timer_due" });
+					}
+				} catch {
+					if (!subscription.stopped) await delay(100);
+				}
+			}
+		})();
+	};
 
 	pi.on("session_start", (_event, ctx) =>
 		route(ctx, { kind: "session_started" }),
@@ -88,6 +140,11 @@ export function registerRuntimeToolRouting(
 	});
 	pi.on("session_shutdown", async (_event, ctx) => {
 		const root = ctx.cwd ? await findCodewikiProjectRoot(ctx.cwd) : undefined;
+		if (root) {
+			const subscription = subscriptions.get(root);
+			if (subscription) subscription.stopped = true;
+			subscriptions.delete(root);
+		}
 		await projectServices.disconnect(root);
 	});
 }
@@ -105,6 +162,10 @@ function applyReaction(
 		.filter((name) => !RUNTIME_MANAGED_TOOLS.has(name));
 	if (selected) active.push(selected);
 	pi.setActiveTools([...new Set(active)]);
+}
+
+function delay(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function text(value: unknown): string {

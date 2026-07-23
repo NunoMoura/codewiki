@@ -5,6 +5,10 @@ import { realpathSync } from "node:fs";
 import type { Server } from "node:http";
 
 import {
+	ProjectCoordinatorEventJournal,
+	type ProjectCoordinatorEventBatch,
+} from "./project-coordinator-events.ts";
+import {
 	ProjectCoordinator,
 	type ProjectCoordinatorClientConnection,
 	type ProjectCoordinatorClientInput,
@@ -65,6 +69,7 @@ export interface ProjectCoordinatorServiceOptions
 	maxReactions?: number;
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
+	maxEventHistory?: number;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
@@ -105,6 +110,10 @@ export interface ProjectCoordinatorRemoteClient {
 		trigger: ProjectCoordinatorRemoteTrigger,
 		mode?: RuntimeSemanticMode,
 	): Promise<RuntimeReactionJobReceipt[]>;
+	events(
+		afterCursor: number,
+		options?: { maxEvents?: number; waitMs?: number },
+	): Promise<ProjectCoordinatorEventBatch>;
 	heartbeat(): Promise<void>;
 	disconnect(): Promise<void>;
 }
@@ -125,6 +134,7 @@ interface ServiceRuntime {
 	endpoint: ProjectCoordinatorEndpoint;
 	ownership: ProjectCoordinatorOwnership;
 	coordinator: ProjectCoordinator;
+	eventJournal: ProjectCoordinatorEventJournal;
 	reactor: RuntimeReactor;
 	semanticAdapters?: RuntimeSemanticAdapters;
 	maxReactions?: number;
@@ -147,13 +157,21 @@ export async function startProjectCoordinatorService(
 		requiredOptionalText(options.generationId, "generationId") ||
 		`coordinator:${randomUUID()}`;
 	const startedAt = (options.now || (() => new Date().toISOString()))();
+	const eventJournal = new ProjectCoordinatorEventJournal(
+		generationId,
+		boundedOptionalInteger(options.maxEventHistory, 16, 4_096, "maxEventHistory") ||
+			512,
+	);
 	const coordinator = new ProjectCoordinator(canonicalRoot, {
 		generationId,
 		executionPolicy: options.executionPolicy,
 		maxConcurrentJobs: options.maxConcurrentJobs,
 		maxCompletedJobs: options.maxCompletedJobs,
 		now: options.now,
-		onEvent: options.onEvent,
+		onEvent: (event) => {
+			eventJournal.append(event);
+			options.onEvent?.(event);
+		},
 	});
 	let ownership: ProjectCoordinatorOwnership | undefined;
 	let server: Server | undefined;
@@ -190,6 +208,7 @@ export async function startProjectCoordinatorService(
 			endpoint,
 			ownership,
 			coordinator,
+			eventJournal,
 			reactor: new RuntimeReactor(canonicalRoot),
 			semanticAdapters: options.semanticAdapters,
 			maxReactions: boundedOptionalInteger(
@@ -231,15 +250,19 @@ export async function startProjectCoordinatorService(
 			closed = true;
 			runtime.closing = true;
 			clearInterval(sweep);
-			await closeServer(server as Server);
+			eventJournal.close();
 			for (const lease of clients.values()) lease.connection.disconnect();
 			clients.clear();
+			const serverClosed = closeServer(server as Server);
+			(server as Server).closeAllConnections();
+			await serverClosed;
 			coordinator.close();
 			await releaseProjectCoordinatorOwnership(ownership as ProjectCoordinatorOwnership);
 		};
 		runtime.shutdown = close;
 		return { endpoint, coordinator, close };
 	} catch (error) {
+		eventJournal.close();
 		if (server) await closeServer(server).catch(() => undefined);
 		try {
 			coordinator.close();
@@ -324,6 +347,26 @@ export async function connectProjectCoordinatorClient(
 						options.timeoutMs || 0,
 						180_000,
 					),
+				},
+			);
+		},
+		events(afterCursor, eventOptions = {}) {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			const waitMs = eventOptions.waitMs ?? 0;
+			return requestCoordinatorJson<ProjectCoordinatorEventBatch>(
+				endpoint,
+				"/v1/events/poll",
+				{
+					method: "POST",
+					body: {
+						connectionId: response.connectionId,
+						afterCursor,
+						...(eventOptions.maxEvents === undefined
+							? {}
+							: { maxEvents: eventOptions.maxEvents }),
+						...(eventOptions.waitMs === undefined ? {} : { waitMs }),
+					},
+					timeoutMs: Math.max(5_000, waitMs + 2_000),
 				},
 			);
 		},
@@ -467,6 +510,10 @@ async function routeServiceRequest(
 		});
 		return;
 	}
+	if (method === "POST" && url.pathname === "/v1/events/poll") {
+		await handleEventPoll(runtime, request, response);
+		return;
+	}
 	if (method === "POST" && url.pathname === "/v1/runtime/inspect") {
 		await handleRuntimeInspection(runtime, request, response);
 		return;
@@ -500,6 +547,31 @@ async function routeServiceRequest(
 	writeJson(response, 404, { error: "not_found" });
 }
 
+async function handleEventPoll(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+): Promise<void> {
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, ["connectionId", "afterCursor", "maxEvents", "waitMs"]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	lease.activeRequests += 1;
+	try {
+		const batch = await runtime.eventJournal.poll({
+			afterCursor: eventInteger(body.afterCursor, 0, Number.MAX_SAFE_INTEGER, "afterCursor"),
+			...(body.maxEvents === undefined
+				? {}
+				: { maxEvents: eventInteger(body.maxEvents, 1, 256, "maxEvents") }),
+			...(body.waitMs === undefined
+				? {}
+				: { waitMs: eventInteger(body.waitMs, 0, 25_000, "waitMs") }),
+		});
+		writeJson(response, 200, batch);
+	} finally {
+		extendLease(runtime, lease);
+	}
+}
+
 async function handleRuntimeInspection(
 	runtime: ServiceRuntime,
 	request: IncomingMessage,
@@ -511,7 +583,19 @@ async function handleRuntimeInspection(
 	const trigger = runtimeTrigger(body.trigger, runtime.clock());
 	lease.activeRequests += 1;
 	try {
-		writeJson(response, 200, await runtime.reactor.inspect(trigger));
+		const reaction = await runtime.reactor.inspect(trigger);
+		if (
+			trigger.kind === "change_trace_appended" ||
+			trigger.kind === "project_truth_changed"
+		) {
+			runtime.eventJournal.append({
+				generationId: runtime.endpoint.generationId,
+				state: "work_state_observed",
+				observedAt: new Date(runtime.clock()).toISOString(),
+				workStateDigest: reaction.observedWorkStateDigest,
+			});
+		}
+		writeJson(response, 200, reaction);
 	} finally {
 		extendLease(runtime, lease);
 	}
@@ -777,6 +861,18 @@ function objectBody(value: unknown): Record<string, unknown> {
 		throw new HttpError(400, "json_object_required");
 	}
 	return value as Record<string, unknown>;
+}
+
+function eventInteger(
+	value: unknown,
+	minimum: number,
+	maximum: number,
+	field: string,
+): number {
+	if (!Number.isSafeInteger(value) || Number(value) < minimum || Number(value) > maximum) {
+		throw new HttpError(400, `${field}_invalid`);
+	}
+	return Number(value);
 }
 
 function runtimeTrigger(value: unknown, observedAt: number): RuntimeTrigger {

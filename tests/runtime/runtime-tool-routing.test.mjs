@@ -29,6 +29,13 @@ async function project() {
 	return root;
 }
 
+async function waitForLength(values, length, deadline) {
+	if (values.length >= length) return;
+	if (Date.now() >= deadline) throw new Error("Timed out waiting for routed event.");
+	await new Promise((resolve) => setTimeout(resolve, 10));
+	return waitForLength(values, length, deadline);
+}
+
 function projectServices() {
 	return {
 		async connect() {},
@@ -40,6 +47,9 @@ function projectServices() {
 		},
 		async react() {
 			throw new Error("autonomous semantic execution is not expected");
+		},
+		events() {
+			return new Promise(() => undefined);
 		},
 		async submitCandidate() {
 			throw new Error("candidate submission is not expected");
@@ -164,6 +174,9 @@ describe("runtime tool routing", () => {
 					triggers.push(trigger);
 					return [];
 				},
+				events() {
+					return new Promise(() => undefined);
+				},
 				async submitCandidate() {
 					throw new Error("candidate submission is not expected");
 				},
@@ -174,6 +187,67 @@ describe("runtime tool routing", () => {
 		await handlers.get("before_agent_start")({}, { cwd: root });
 		assert.deepEqual(activeTools, ["read", "wiki_state", "wiki_change"]);
 		assert.deepEqual(triggers, [{ kind: "manual_resume" }]);
+	});
+
+	it("refreshes routing after event replay reset without trusting event payloads", async () => {
+		const root = await project();
+		const handlers = new Map();
+		const inspected = [];
+		let releaseEvents;
+		const firstEvents = new Promise((resolve) => {
+			releaseEvents = resolve;
+		});
+		let eventCalls = 0;
+		registerRuntimeToolRouting(
+			{
+				on(name, handler) {
+					handlers.set(name, handler);
+				},
+				getActiveTools() {
+					return ["read", "wiki_state"];
+				},
+				setActiveTools() {},
+			},
+			{
+				async connect() {},
+				async inspect(_root, _ctx, trigger) {
+					inspected.push(trigger.kind);
+					return {
+						schemaVersion: 1,
+						status: "quiescent",
+						trigger,
+						observedWorkStateDigest: "digest:event-refresh",
+					};
+				},
+				async semanticExecution() {
+					return "service";
+				},
+				async react() {
+					return [];
+				},
+				events() {
+					eventCalls += 1;
+					if (eventCalls === 1) return firstEvents;
+					return new Promise(() => undefined);
+				},
+				async submitCandidate() {
+					throw new Error("candidate submission is not expected");
+				},
+				async disconnect() {},
+			},
+		);
+		await handlers.get("session_start")({}, { cwd: root });
+		releaseEvents({
+			schemaVersion: 1,
+			generationId: "generation:replacement",
+			latestCursor: 7,
+			cursor: 7,
+			resetRequired: true,
+			events: [],
+		});
+		await waitForLength(inspected, 2, Date.now() + 1_000);
+		assert.deepEqual(inspected, ["session_started", "timer_due"]);
+		await handlers.get("session_shutdown")({}, { cwd: root });
 	});
 
 	it("fails closed outside a CodeWiki project", async () => {

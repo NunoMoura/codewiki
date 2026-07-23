@@ -101,6 +101,7 @@ async function waitUntil(read, timeoutMs, message) {
 const root = mkdtempSync(join(tmpdir(), "codewiki-pi-multiprocess-"));
 const clients = [];
 let coordinator;
+let eventClient;
 let projectRoot;
 try {
 	const packRoot = join(root, "pack");
@@ -179,8 +180,26 @@ try {
 	assert.equal(endpoint.generationId, shared.generationId);
 	const health = await coordinator.requestProjectCoordinatorHealth(endpoint);
 	assert.equal(health.semanticExecution, "service");
+	eventClient = await coordinator.connectProjectCoordinatorClient(projectRoot, {
+		clientId: "test:multiprocess-events",
+		kind: "test",
+		supervision: "observer",
+	});
+	const initialEvents = await eventClient.events(0);
 
 	await stopPi(second);
+	const deliveredEvents = await eventClient.events(initialEvents.latestCursor, {
+		waitMs: 5_000,
+	});
+	assert.equal(
+		deliveredEvents.events.some(
+			(event) =>
+				event.state === "client_disconnected" && event.clientKind === "pi",
+		),
+		true,
+	);
+	await eventClient.disconnect();
+	eventClient = undefined;
 	const afterOneExit = await waitUntil(
 		async () => {
 			const state = await coordinator.readProjectCoordinatorServiceState(projectRoot);
@@ -211,6 +230,7 @@ try {
 				sharedClients: shared.clientCount,
 				supervisors: shared.supervisorCount,
 				semanticExecution: health.semanticExecution,
+				eventDelivery: true,
 				pausedAfterExit: !unsupervised.executionPermitted,
 			},
 			null,
@@ -218,6 +238,7 @@ try {
 		),
 	);
 } finally {
+	if (eventClient) await eventClient.disconnect().catch(() => undefined);
 	await Promise.all(clients.map((client) => stopPi(client)));
 	if (coordinator && projectRoot) {
 		await coordinator

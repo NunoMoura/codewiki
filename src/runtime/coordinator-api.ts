@@ -28,6 +28,13 @@ export {
 	type ProjectCoordinatorDaemonHandle,
 } from "./project-coordinator-daemon.ts";
 export {
+	PROJECT_COORDINATOR_EVENT_STREAM_SCHEMA_VERSION,
+	ProjectCoordinatorEventJournal,
+	type ProjectCoordinatorEventBatch,
+	type ProjectCoordinatorEventPoll,
+	type ProjectCoordinatorStreamEvent,
+} from "./project-coordinator-events.ts";
+export {
 	connectProjectCoordinatorClient,
 	readProjectCoordinatorServiceState,
 	requestProjectCoordinatorHealth,

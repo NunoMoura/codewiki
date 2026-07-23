@@ -86,9 +86,9 @@ Generated search, relationship, and graph indexes are disposable. Standard OKF l
 
 ## Live updates
 
-The control plane observes durable append boundaries, Knowledge/source/Git changes, claims, worker lifecycle, integration, preview state, and client supervision. Filesystem notifications trigger a canonical rescan; notification payloads are never trusted as truth.
+The current control plane streams coordinator lifecycle and runtime-confirmed WorkState observations. Semantic completion events follow durable append boundaries, while explicit client truth-change notifications cause runtime reinspection and publish the resulting WorkState digest. Future filesystem watchers will extend the same rescan contract to Knowledge/source/Git, claims, integration, preview, and worker state; notification payloads themselves will never be trusted as truth.
 
-State streams are bounded, redacted, reconnectable, and generation-aware. Missed events cause snapshot refresh. Raw prompts, private reasoning, credentials, unbounded logs, and raw source content are never broadcast.
+State streams use bounded generation-scoped replay with monotonic cursors. They are redacted, reconnectable, and generation-aware. Retention gaps and generation replacement cause canonical snapshot refresh. Raw prompts, private reasoning, credentials, unbounded logs, and raw source content are never broadcast.
 
 ## Local security
 

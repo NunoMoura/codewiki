@@ -3,6 +3,7 @@ import {
 	connectEnsuredProjectCoordinatorClient,
 	type EnsureProjectCoordinatorServiceOptions,
 } from "../runtime/project-coordinator-process.ts";
+import type { ProjectCoordinatorEventBatch } from "../runtime/project-coordinator-events.ts";
 import type {
 	ProjectCoordinatorCandidateResult,
 	ProjectCoordinatorRemoteClient,
@@ -39,6 +40,12 @@ export interface PiProjectServiceClientProvider {
 		trigger: RemoteTrigger,
 		mode?: RuntimeSemanticMode,
 	): Promise<RuntimeReactionJobReceipt[]>;
+	events(
+		repoRoot: string,
+		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
+		afterCursor: number,
+		options?: { maxEvents?: number; waitMs?: number },
+	): Promise<ProjectCoordinatorEventBatch>;
 	submitCandidate(
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
@@ -64,14 +71,20 @@ export function createPiProjectServiceClients(
 	const instanceId = randomUUID();
 	const clients = new Map<string, ClientEntry>();
 
+	const detach = (
+		repoRoot: string,
+		entry: ClientEntry,
+	): Promise<void> | undefined => {
+		if (clients.get(repoRoot) !== entry) return undefined;
+		clients.delete(repoRoot);
+		clearInterval(entry.heartbeat);
+		return entry.client.disconnect().catch(() => undefined);
+	};
 	const remove = async (
 		repoRoot: string,
 		entry: ClientEntry,
 	): Promise<void> => {
-		if (clients.get(repoRoot) !== entry) return;
-		clients.delete(repoRoot);
-		clearInterval(entry.heartbeat);
-		await entry.client.disconnect().catch(() => undefined);
+		await detach(repoRoot, entry);
 	};
 
 	const clientFor = async (
@@ -115,7 +128,7 @@ export function createPiProjectServiceClients(
 			if (!entry || entry.client !== client || !retryableClientError(error)) {
 				throw error;
 			}
-			await remove(repoRoot, entry);
+			void detach(repoRoot, entry);
 			client = await clientFor(repoRoot, ctx);
 			return run(client);
 		}
@@ -133,6 +146,11 @@ export function createPiProjectServiceClients(
 		},
 		react(repoRoot, ctx, trigger, mode = "append") {
 			return invoke(repoRoot, ctx, (client) => client.react(trigger, mode));
+		},
+		events(repoRoot, ctx, afterCursor, eventOptions) {
+			return invoke(repoRoot, ctx, (client) =>
+				client.events(afterCursor, eventOptions),
+			);
 		},
 		submitCandidate(repoRoot, ctx, trigger, loop, candidate, mode) {
 			return invoke(repoRoot, ctx, (client) =>

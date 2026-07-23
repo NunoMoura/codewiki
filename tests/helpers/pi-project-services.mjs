@@ -23,6 +23,9 @@ export function testPiProjectServices() {
 		async react() {
 			throw new Error("autonomous semantic execution is not expected");
 		},
+		events() {
+			return new Promise(() => undefined);
+		},
 		async submitCandidate(root, _ctx, trigger, loop, candidate, mode) {
 			const reactor = reactorFor(root);
 			const reaction = await reactor.inspect(trigger);

@@ -56,6 +56,7 @@ export type ProjectCoordinatorEventState =
 	| "client_connected"
 	| "client_disconnected"
 	| "execution_policy_changed"
+	| "work_state_observed"
 	| "job_recovering"
 	| "job_queued"
 	| "job_started"
@@ -71,6 +72,7 @@ export interface ProjectCoordinatorEvent {
 	clientKind?: ProjectCoordinatorClientKind;
 	idempotencyKey?: string;
 	lane?: ProjectCoordinatorLane["kind"];
+	workStateDigest?: string;
 	message?: string;
 }
 

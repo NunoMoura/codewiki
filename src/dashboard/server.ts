@@ -43,6 +43,7 @@ import {
 	unavailableDashboardPreviewControl,
 } from "../preview/dashboard-control.ts";
 import { readDevLog } from "../runtime/dev-log.ts";
+import type { ProjectCoordinatorClientInput } from "../runtime/project-coordinator.ts";
 import { connectEnsuredProjectCoordinatorClient } from "../runtime/project-coordinator-process.ts";
 import type { ProjectCoordinatorRemoteClient } from "../runtime/project-coordinator-service.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
@@ -84,6 +85,10 @@ export interface CodewikiDashboardServerOptions {
 	sessionActionControl?: DashboardSessionActionControl;
 	previewControl?: DashboardPreviewControl;
 	projectCoordinatorClient?: boolean;
+	projectCoordinatorConnector?: (
+		repoRoot: string,
+		input: ProjectCoordinatorClientInput,
+	) => Promise<ProjectCoordinatorRemoteClient>;
 }
 
 export interface CodewikiDashboardServerHandle {
@@ -107,6 +112,11 @@ interface DashboardRuntime {
 	traceHostTimer?: NodeJS.Timeout;
 	coordinatorHeartbeatTimer?: NodeJS.Timeout;
 	coordinatorClient?: ProjectCoordinatorRemoteClient;
+	coordinatorConnector: (
+		repoRoot: string,
+		input: ProjectCoordinatorClientInput,
+	) => Promise<ProjectCoordinatorRemoteClient>;
+	coordinatorEventsClosed: boolean;
 	traceHostControl: DashboardTraceHostControl;
 	changeControl: DashboardChangeControl;
 	configControl: DashboardConfigControl;
@@ -456,7 +466,12 @@ async function startInProcessDashboardServer(
 		options.configControl,
 		options.sessionActionControl,
 		options.previewControl,
-		{ connectCoordinator: options.projectCoordinatorClient ?? false },
+		{
+			connectCoordinator: options.projectCoordinatorClient ?? false,
+			coordinatorConnector:
+				options.projectCoordinatorConnector ||
+				connectEnsuredProjectCoordinatorClient,
+		},
 	);
 	dashboards.set(options.repoRoot, runtime);
 	if (!(await dashboardEndpointServesState(runtime))) {
@@ -625,7 +640,13 @@ async function createDashboardRuntime(
 	providedConfigControl?: DashboardConfigControl,
 	providedSessionActionControl?: DashboardSessionActionControl,
 	providedPreviewControl?: DashboardPreviewControl,
-	options: { connectCoordinator?: boolean } = {},
+	options: {
+		connectCoordinator?: boolean;
+		coordinatorConnector?: (
+			repoRoot: string,
+			input: ProjectCoordinatorClientInput,
+		) => Promise<ProjectCoordinatorRemoteClient>;
+	} = {},
 ): Promise<DashboardRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
@@ -664,8 +685,10 @@ async function createDashboardRuntime(
 		});
 	const previewControl =
 		providedPreviewControl || unavailableDashboardPreviewControl();
+	const coordinatorConnector =
+		options.coordinatorConnector || connectEnsuredProjectCoordinatorClient;
 	const coordinatorClient = options.connectCoordinator
-		? await connectEnsuredProjectCoordinatorClient(repoRoot, {
+		? await coordinatorConnector(repoRoot, {
 				clientId: `dashboard:${process.pid}:${address.port}`,
 				kind: "dashboard",
 				supervision: "observer",
@@ -679,6 +702,8 @@ async function createDashboardRuntime(
 		token,
 		clients,
 		coordinatorClient,
+		coordinatorConnector,
+		coordinatorEventsClosed: false,
 		traceHostControl,
 		changeControl,
 		configControl,
@@ -699,9 +724,10 @@ async function createDashboardRuntime(
 	runtime.traceHostTimer.unref();
 	if (coordinatorClient) {
 		runtime.coordinatorHeartbeatTimer = setInterval(() => {
-			void coordinatorClient.heartbeat().catch(() => undefined);
+			void runtime.coordinatorClient?.heartbeat().catch(() => undefined);
 		}, 10_000);
 		runtime.coordinatorHeartbeatTimer.unref();
+		if (keepAlive) void watchCoordinatorEvents(runtime);
 	}
 	return runtime;
 }
@@ -845,11 +871,13 @@ async function routeAuthorizedPost(
 	if (url.pathname === "/api/changes/commands") {
 		writeJson(response, 200, await runtime.changeControl.execute(command));
 		scheduleBroadcast(runtime);
+		scheduleCoordinatorObservation(runtime);
 		return true;
 	}
 	if (url.pathname === "/api/configuration/commands") {
 		writeJson(response, 200, await runtime.configControl.execute(command));
 		scheduleBroadcast(runtime);
+		scheduleCoordinatorObservation(runtime);
 		return true;
 	}
 	if (url.pathname === "/api/session-actions/commands") {
@@ -859,6 +887,7 @@ async function routeAuthorizedPost(
 			await runtime.sessionActionControl.execute(command),
 		);
 		scheduleBroadcast(runtime);
+		scheduleCoordinatorObservation(runtime);
 		return true;
 	}
 	if (url.pathname === "/api/previews/commands") {
@@ -872,10 +901,12 @@ async function routeAuthorizedPost(
 			),
 		);
 		scheduleBroadcast(runtime);
+		scheduleCoordinatorObservation(runtime);
 		return true;
 	}
 	runtime.lastSupervisedAt = Date.now();
 	writeJson(response, 200, await runtime.traceHostControl.execute(command));
+	scheduleCoordinatorObservation(runtime);
 	return true;
 }
 
@@ -1003,6 +1034,53 @@ async function attachEventStream(
 	writeEvent(response, state);
 }
 
+function scheduleCoordinatorObservation(runtime: DashboardRuntime): void {
+	void runtime.coordinatorClient
+		?.inspect({ kind: "project_truth_changed" })
+		.catch(() => undefined);
+}
+
+async function watchCoordinatorEvents(runtime: DashboardRuntime): Promise<void> {
+	let cursor = 0;
+	let generationId: string | undefined;
+	while (!runtime.coordinatorEventsClosed) {
+		try {
+			const client = runtime.coordinatorClient;
+			if (!client) return;
+			const batch = await client.events(cursor, { maxEvents: 64, waitMs: 5_000 });
+			if (runtime.coordinatorEventsClosed) return;
+			const generationChanged =
+				generationId !== undefined && generationId !== batch.generationId;
+			generationId = batch.generationId;
+			if (generationChanged || batch.resetRequired) {
+				cursor = batch.cursor;
+				scheduleBroadcast(runtime);
+				continue;
+			}
+			cursor = batch.cursor;
+			if (batch.events.length > 0) scheduleBroadcast(runtime);
+		} catch {
+			if (runtime.coordinatorEventsClosed) return;
+			void runtime.coordinatorClient?.disconnect().catch(() => undefined);
+			try {
+				runtime.coordinatorClient = await runtime.coordinatorConnector(
+					runtime.repoRoot,
+					{
+						clientId: `dashboard:${process.pid}:${new URL(runtime.origin).port}`,
+						kind: "dashboard",
+						supervision: "observer",
+					},
+				);
+				cursor = 0;
+				generationId = undefined;
+				scheduleBroadcast(runtime);
+			} catch {
+				await delay(250);
+			}
+		}
+	}
+}
+
 function scheduleBroadcast(runtime: DashboardRuntime): void {
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
 	runtime.broadcastTimer = setTimeout(() => {
@@ -1076,6 +1154,7 @@ function writeServerError(response: ServerResponse, error: unknown): void {
 
 async function closeRuntime(runtime: DashboardRuntime): Promise<void> {
 	dashboards.delete(runtime.repoRoot);
+	runtime.coordinatorEventsClosed = true;
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
 	if (runtime.traceHostTimer) clearInterval(runtime.traceHostTimer);
 	if (runtime.coordinatorHeartbeatTimer) {

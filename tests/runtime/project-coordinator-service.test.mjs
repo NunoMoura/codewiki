@@ -270,6 +270,52 @@ test("coordinator client leases expire unless heartbeat extends them", async () 
 	}
 });
 
+test("coordinator service provides leased bounded event replay and long polling", async () => {
+	const root = mkdtempSync(join(tmpdir(), "codewiki-coordinator-events-"));
+	let service;
+	let first;
+	let second;
+	try {
+		service = await startProjectCoordinatorService(root, {
+			generationId: "generation:event-service",
+		});
+		first = await connectProjectCoordinatorClient(root, {
+			clientId: "pi:event-reader",
+			kind: "pi",
+			supervision: "approved",
+		});
+		const initial = await first.events(0);
+		assert.equal(initial.generationId, "generation:event-service");
+		assert.equal(initial.resetRequired, false);
+		assert.deepEqual(initial.events.map((event) => event.state), [
+			"client_connected",
+		]);
+		const inspected = await first.inspect({ kind: "project_truth_changed" });
+		const observed = await first.events(initial.latestCursor);
+		assert.equal(observed.events[0].state, "work_state_observed");
+		assert.equal(
+			observed.events[0].workStateDigest,
+			inspected.observedWorkStateDigest,
+		);
+		const pending = first.events(observed.latestCursor, { waitMs: 1_000 });
+		second = await connectProjectCoordinatorClient(root, {
+			clientId: "dashboard:event-source",
+			kind: "dashboard",
+			supervision: "observer",
+		});
+		const delivered = await pending;
+		assert.deepEqual(delivered.events.map((event) => event.state), [
+			"client_connected",
+		]);
+		assert.equal(delivered.events[0].clientId, "dashboard:event-source");
+	} finally {
+		if (second) await second.disconnect().catch(() => undefined);
+		if (first) await first.disconnect().catch(() => undefined);
+		if (service) await service.close().catch(() => undefined);
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("coordinator ownership rejects a second live generation and fences stale owners", async () => {
 	const root = mkdtempSync(join(tmpdir(), "codewiki-coordinator-fence-"));
 	let service;
