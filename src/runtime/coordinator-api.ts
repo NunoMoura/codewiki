@@ -28,6 +28,21 @@ export {
 	type ProjectCoordinatorDaemonHandle,
 } from "./project-coordinator-daemon.ts";
 export {
+	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
+	assertImplementationWorkerAssignment,
+	assertImplementationWorkerResult,
+	implementationWorkerJobId,
+	type ImplementationWorkerAdapter,
+	type ImplementationWorkerAssignment,
+	type ImplementationWorkerExecutionResult,
+} from "./implementation-worker-adapter.ts";
+export {
+	scheduleImplementationWorkerAssignment,
+	scheduleImplementationWorkerAssignments,
+	type ImplementationWorkerJobReceipt,
+	type ScheduleImplementationWorkerAssignmentsInput,
+} from "./implementation-worker-jobs.ts";
+export {
 	PROJECT_COORDINATOR_EVENT_STREAM_SCHEMA_VERSION,
 	ProjectCoordinatorEventJournal,
 	type ProjectCoordinatorEventBatch,

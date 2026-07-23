@@ -74,13 +74,17 @@ Pi authentication and model configuration remain inside the Pi adapter. Core run
 
 ## Implementation worker adapter
 
-Implementation workers use a separate adapter and stronger isolation boundary. The target order is:
+Implementation workers now use a harness-neutral Assignment adapter contract. Each exact input binds repository, Assignment, worker, claim, Work Item, Change Trace, Planning refs, path/component scopes, WorkState digest, source base, context digest, prompt digest, result path, execution policy, and explicit isolation identity. Deterministic coordinator jobs use the per-Work-Item Assignment lane, write-effect recovery probes, and hierarchical path conflict checks. Independent assignments run concurrently; overlapping paths serialize.
+
+The Pi daemon installs a compatibility process adapter over the existing worker process/session path. It requires explicit Git-worktree isolation, rejects result paths outside `.codewiki/runtime/**` or through symlinks, normalizes worker output, and atomically persists a digest-bound private recovery receipt. A replacement coordinator can recover that receipt without reinvoking the worker. Worker output remains candidate evidence and never appends semantic facts.
+
+The target adapter order remains:
 
 1. process workers in isolated Git worktrees;
 2. container workers when project policy or risk requires filesystem/process isolation;
 3. future harness implementations behind the same worker contract.
 
-Workers may receive scoped mutation tools required by one Assignment. They cannot append semantic facts, approve Changes, revise Planning, integrate outside exact authority, commit outside policy, publish, or relax configuration. Worktrees reduce collision but are not a security sandbox; stronger isolation requires a process sandbox or container policy.
+Automatic WorkState-to-claim-to-Assignment construction inside the daemon, process cancellation after start, the crash window before receipt persistence, integration scheduling, and container enforcement remain open. Workers may receive scoped mutation tools required by one Assignment. They cannot approve Changes, revise Planning, integrate outside exact authority, commit outside policy, publish, or relax configuration. Worktrees reduce collision but are not a security sandbox; stronger isolation requires a process sandbox or container policy.
 
 ## Always-ready behavior
 

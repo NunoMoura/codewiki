@@ -160,7 +160,7 @@ Quiescence is healthy state, not failure. Durable Change Traces and WorkState re
 | Worker | Narrow Assignment attempt for one Planning-owned Work Item in a process or container isolation boundary. It returns candidate evidence only. |
 | Integrator | Serialized mechanical host for one exact integration target and source base under Planning and runtime authority. |
 
-The target Pi semantic adapter embeds Pi SDK sessions. The target worker adapter starts process or container workers. Harness-neutral runtime contracts own inputs, outputs, capabilities, cancellation, and observations; Pi SDK types remain inside `src/pi/**`.
+The Pi semantic adapter embeds Pi SDK sessions. A harness-neutral worker contract now schedules exact Assignment jobs through coordinator lanes, conflicts, supervision, idempotency, and durable receipt recovery. The Pi compatibility adapter runs workers as foreground child processes in explicit Git worktrees; a future adapter will provide container isolation. Pi types remain inside `src/pi/**`.
 
 One process may perform several roles over time, but capabilities and authority remain explicit. Session identity is operational metadata, never a lane, claim, canonical entity, or proof. User-facing UX shows Changes, Sprints, Work Items, Assignments, blockers, evidence, and held reasons before internal host topology.
 
@@ -200,7 +200,7 @@ A detached project daemon now owns this service independently of Pi session life
 
 The service now publishes a bounded generation-scoped event journal over authenticated leased long polls. Monotonic cursors replay coordinator lifecycle events and exact `work_state_observed` digests; overflow or generation replacement requires a canonical snapshot refresh rather than trusting a gap. Events are operational invalidations, not durable truth: Change Traces and other canonical project sources remain authoritative. Pi clients reconnect, compare generation, refresh routing after reset, and continue completed semantic work toward quiescence. Dashboard observers reconnect under a replacement generation and bridge coordinator invalidations into their existing browser state stream.
 
-External real-model/auth proof for autonomous sessions, implementation-worker scheduling, full dashboard-service consolidation, and cancellation-aware draining of active semantic jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
+External real-model/auth proof for autonomous sessions, automatic WorkState-to-claim-to-Assignment dispatch, process cancellation and crash-window hardening, container workers, integration scheduling, full dashboard-service consolidation, and cancellation-aware draining of active semantic jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
 
 Agents, clients, and adapters never choose semantic routing. Runtime injects exact Change, Planning horizon, Sprint, Work Item, Assignment, context slice, WorkState, and append authority. Semantic sessions return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, source ownership, lane ownership, or runtime routing as replacement facts.
 

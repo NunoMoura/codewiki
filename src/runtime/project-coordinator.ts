@@ -354,7 +354,7 @@ export class ProjectCoordinator {
 			.sort((left, right) => left.sequence - right.sequence);
 		for (const entry of queued) {
 			if (activeCount >= this.maxConcurrentJobs) break;
-			if (entry.lockRefs.some((ref) => this.activeLocks.has(ref))) continue;
+			if (entry.lockRefs.some((ref) => activeResourceConflict(ref, this.activeLocks))) continue;
 			entry.state = "active";
 			for (const ref of entry.lockRefs) {
 				this.activeLocks.set(ref, entry.job.idempotencyKey);
@@ -642,6 +642,58 @@ function laneLockRefs(lane: ProjectCoordinatorLane): string[] {
 		case "effect":
 			return [`effect:${lane.targetRef}`, `target-writer:${lane.targetRef}`];
 	}
+}
+
+function activeResourceConflict(
+	candidate: string,
+	active: Map<string, string>,
+): boolean {
+	for (const occupied of active.keys()) {
+		if (candidate === occupied) return true;
+		const candidatePath = resourcePathScope(candidate);
+		const occupiedPath = resourcePathScope(occupied);
+		if (
+			candidatePath !== undefined &&
+			occupiedPath !== undefined &&
+			pathScopesOverlap(candidatePath, occupiedPath)
+		) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function resourcePathScope(ref: string): string | undefined {
+	if (ref.startsWith("conflict:path:")) return ref.slice("conflict:path:".length);
+	if (ref.startsWith("path:")) return ref.slice("path:".length);
+	return undefined;
+}
+
+function pathScopesOverlap(left: string, right: string): boolean {
+	const normalizedLeft = normalizePathScope(left);
+	const normalizedRight = normalizePathScope(right);
+	if (normalizedLeft === normalizedRight) return true;
+	if (normalizedLeft.includes("*") || normalizedRight.includes("*")) {
+		const leftRoot = normalizedLeft.split("*")[0]?.replace(/\/$/, "") || ".";
+		const rightRoot = normalizedRight.split("*")[0]?.replace(/\/$/, "") || ".";
+		return (
+			leftRoot === rightRoot ||
+			leftRoot.startsWith(`${rightRoot}/`) ||
+			rightRoot.startsWith(`${leftRoot}/`)
+		);
+	}
+	return (
+		normalizedLeft.startsWith(`${normalizedRight}/`) ||
+		normalizedRight.startsWith(`${normalizedLeft}/`)
+	);
+}
+
+function normalizePathScope(value: string): string {
+	return value
+		.trim()
+		.replace(/^\.\//, "")
+		.replace(/\\/g, "/")
+		.replace(/\/+$/, "");
 }
 
 function uniqueSorted(values: string[]): string[] {

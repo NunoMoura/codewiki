@@ -74,7 +74,7 @@ Clients cannot select semantic loops, create arbitrary model sessions, submit ar
 
 The target semantic adapter embeds Pi through its SDK. Each Decision, Planning, or Implementation-review job receives one runtime-built bounded context and read-only tool set. A closed candidate-submission tool returns typed output to runtime. Runtime validates freshness, quality, identity, and append authority before any durable write.
 
-Implementation uses a separate worker adapter. Initial workers run as Pi child processes in isolated worktrees. Container workers become available where project risk or policy requires stronger process/filesystem isolation. Core runtime depends on adapter contracts, not Pi SDK types.
+Implementation uses a separate harness-neutral worker adapter. Exact Assignment jobs now run through coordinator lanes; the Pi compatibility adapter starts foreground child processes only in explicit isolated worktrees and persists bounded recovery receipts. Container workers remain the next isolation adapter where project risk or policy requires stronger process/filesystem boundaries. Automatic Assignment derivation and integration remain pending. Core runtime depends on adapter contracts, not Pi types.
 
 Main Pi conversations remain user-facing clients. They do not double as hidden Planning or worker sessions.
 

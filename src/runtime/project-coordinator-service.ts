@@ -4,6 +4,14 @@ import type { AddressInfo } from "node:net";
 import { realpathSync } from "node:fs";
 import type { Server } from "node:http";
 
+import type {
+	ImplementationWorkerAdapter,
+	ImplementationWorkerAssignment,
+} from "./implementation-worker-adapter.ts";
+import {
+	scheduleImplementationWorkerAssignments,
+	type ImplementationWorkerJobReceipt,
+} from "./implementation-worker-jobs.ts";
 import {
 	ProjectCoordinatorEventJournal,
 	type ProjectCoordinatorEventBatch,
@@ -70,12 +78,16 @@ export interface ProjectCoordinatorServiceOptions
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
 	maxEventHistory?: number;
+	workerAdapter?: ImplementationWorkerAdapter;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
 export interface ProjectCoordinatorServiceHandle {
 	endpoint: ProjectCoordinatorEndpoint;
 	coordinator: ProjectCoordinator;
+	scheduleWorkerAssignments(
+		assignments: ImplementationWorkerAssignment[],
+	): Promise<ImplementationWorkerJobReceipt[]>;
 	close(): Promise<void>;
 }
 
@@ -260,7 +272,22 @@ export async function startProjectCoordinatorService(
 			await releaseProjectCoordinatorOwnership(ownership as ProjectCoordinatorOwnership);
 		};
 		runtime.shutdown = close;
-		return { endpoint, coordinator, close };
+		return {
+			endpoint,
+			coordinator,
+			async scheduleWorkerAssignments(assignments) {
+				await assertCurrentGeneration(runtime);
+				if (!options.workerAdapter) {
+					throw new Error("Implementation worker adapter is unavailable.");
+				}
+				return scheduleImplementationWorkerAssignments({
+					coordinator,
+					adapter: options.workerAdapter,
+					assignments,
+				});
+			},
+			close,
+		};
 	} catch (error) {
 		eventJournal.close();
 		if (server) await closeServer(server).catch(() => undefined);

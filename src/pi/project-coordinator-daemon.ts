@@ -6,7 +6,9 @@ import {
 	type ProjectCoordinatorDaemonHandle,
 } from "../runtime/project-coordinator-daemon.ts";
 import { spawnProjectCoordinatorDaemon } from "../runtime/project-coordinator-process.ts";
+import type { ImplementationWorkerAdapter } from "../runtime/implementation-worker-adapter.ts";
 import type { RuntimeSemanticAdapters } from "../runtime/semantic-executor.ts";
+import { createPiProcessImplementationWorkerAdapter } from "./process-worker-adapter.ts";
 
 export type PiSemanticAdapterLoader = (
 	repoRoot: string,
@@ -14,6 +16,7 @@ export type PiSemanticAdapterLoader = (
 
 export interface PiProjectCoordinatorDaemonOptions {
 	loadSemanticAdapters?: PiSemanticAdapterLoader;
+	workerAdapter?: ImplementationWorkerAdapter;
 }
 
 const PI_SDK_MODULE_URL_ENV = "CODEWIKI_PI_SDK_MODULE_URL";
@@ -55,6 +58,8 @@ export async function startPiProjectCoordinatorDaemon(
 	)(canonicalRoot);
 	return startProjectCoordinatorDaemon(canonicalRoot, {
 		...(semanticAdapters ? { semanticAdapters } : {}),
+		workerAdapter:
+			options.workerAdapter || createPiProcessImplementationWorkerAdapter(),
 	});
 }
 

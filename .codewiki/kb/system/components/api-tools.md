@@ -106,6 +106,7 @@ The core reduced-tool facade shape now exists for the current tool set:
 - `runWikiPlan()` evaluates a runtime-prepared bounded global Planning candidate and previews or appends deterministic per-Change slices of one accepted Planning epoch.
 - `runWikiImplement()` accepts only a WorkState freshness guard plus worker results or explicit evidence. It resolves the runtime-selected Sprint, Work Items, owning Change, Planning events, Assignments, source ownership, sequence, parent, and byte offset internally before evaluating or appending realization.
 - Exact coordinator reaction jobs own production semantic selection, invocation, append authority, CAS reruns, route-back stops, deterministic job identity, and restart recovery. `runRuntimeSemanticExecutor()` remains a singular compatibility primitive.
+- Exact implementation-worker jobs bind Assignment, claim, Work Item, source base, WorkState/context digests, path/component scopes, isolation, prompt digest, and result path. Coordinator Assignment lanes serialize one Work Item and overlapping paths while compatible work runs concurrently. Adapter output remains candidate evidence.
 - `runWikiArchive()` previews trace retention stubs, appends `trace_close` records with byte preflight, and plans hydrate/restore from archived records.
 - `runWikiConfig()` resolves and patches typed CodeWiki project config for automation, agency, approvals, budgets, worktree isolation, retention, and host adapters.
 

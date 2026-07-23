@@ -149,7 +149,7 @@ export async function startPiWorkers(
 	return Promise.all(
 		plan.selected.map((item) => {
 			const metadata = claimMetadata.get(item.workUnitId);
-			return startPiWorker({
+			return startPiWorkerAssignment({
 				item: {
 					...item,
 					...(metadata?.worktree ? { worktree: metadata.worktree } : {}),
@@ -238,13 +238,18 @@ export function createPiWorkerPrompt(
 		.join("\n");
 }
 
-async function startPiWorker(input: {
+export interface PiWorkerAssignmentStartInput {
 	item: RuntimeWorkUnitClaimCandidate;
 	workerId: string;
+	prompt?: string;
 	claimId?: string;
 	options: PiWorkerStartOptions;
-}): Promise<PiWorkerStartResult> {
-	const prompt = createPiWorkerPrompt(input.item, input.options);
+}
+
+export async function startPiWorkerAssignment(
+	input: PiWorkerAssignmentStartInput,
+): Promise<PiWorkerStartResult> {
+	const prompt = input.prompt || createPiWorkerPrompt(input.item, input.options);
 	let session: PiWorkerSession | undefined;
 	try {
 		session = await input.options.sessionFactory.create({

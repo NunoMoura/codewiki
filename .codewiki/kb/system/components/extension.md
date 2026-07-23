@@ -19,6 +19,7 @@ codewiki_test_patterns:
   - tests/runtime/pi-install-smoke.mjs
   - tests/runtime/pi-install-scope.test.mjs
   - tests/runtime/pi-process-session.test.mjs
+  - tests/runtime/process-worker-adapter.test.mjs
   - tests/runtime/pi-project-service-client.test.mjs
   - tests/runtime/pi-project-coordinator-daemon.test.mjs
   - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
@@ -41,6 +42,7 @@ codewiki_source_map:
       - tests/runtime/pi-install-smoke.mjs
       - tests/runtime/pi-install-scope.test.mjs
       - tests/runtime/pi-process-session.test.mjs
+      - tests/runtime/process-worker-adapter.test.mjs
       - tests/runtime/pi-project-service-client.test.mjs
       - tests/runtime/pi-project-coordinator-daemon.test.mjs
       - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
@@ -59,7 +61,7 @@ The CodeWiki package exposes its Pi extension for external package installs thro
 
 Pi integration lives under `src/pi/**` and has two distinct roles. The extension is a thin conversational client of one project-scoped CodeWiki control plane. The Pi execution adapter creates bounded agent sessions on runtime request. Pi remains the primary execution engine, not the CodeWiki core; harness-neutral runtime code must not import Pi SDK types.
 
-The target CodeWiki OS keeps bounded state, Change, and configuration capabilities available to clients while the project control plane owns semantic selection and scheduling. Decision, Planning, and Implementation-review sessions are created through an embedded Pi SDK adapter with read-only repository tools and a closed candidate-submission tool. Implementation workers use a separate process or container adapter. Runtime supplies exact context, freshness, budgets, and append authority; sessions return judgment or evidence only.
+The target CodeWiki OS keeps bounded state, Change, and configuration capabilities available to clients while the project control plane owns semantic selection and scheduling. Decision, Planning, and Implementation-review sessions are created through an embedded Pi SDK adapter with read-only repository tools and a closed candidate-submission tool. Implementation Assignments use a separate harness-neutral worker contract; the current Pi adapter executes foreground child processes in explicit worktrees, while container isolation remains future work. Runtime supplies exact context, freshness, budgets, and append authority; sessions return judgment or evidence only.
 
 The user-facing slash surface remains `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi session ensures or connects to the detached local project service and may open its dashboard once. `/wiki-dashboard` reopens, discovers, or explicitly stops the dashboard and coordinator service according to policy. No grouped namespace command or former state alias exists. The CLI remains a temporary development/test client.
 
@@ -102,7 +104,7 @@ failure paths through installed package artifacts.
 
 ## Production readiness gates
 
-Supported now: project-local packed/local package installs, guarded expected-byte/sequence mutation, process worker primitives, external sandbox compatibility, and a detached elected project coordinator service with authenticated loopback clients. Pi sessions use leased service clients for runtime inspection and bounded trigger submission; when the optional Pi SDK peer is available, the daemon owns semantic-session dispatch and removes semantic candidate tools from the main conversation. Peer-absent installs retain only the runtime-selected candidate fallback. Dashboard runtimes register separate observers. Runtime selects exact invariants, schedules typed jobs, binds successful writes to deterministic job ids in canonical Change Trace events, rechecks generation ownership before append, and recovers completion evidence after restart without reinvoking adapters. Bounded cursor-based event replay carries coordinator transitions and runtime-confirmed WorkState digests; Pi and dashboard clients resubscribe after generation loss and refresh canonical snapshots after gaps. A packed external spike proves two real Pi RPC processes plus one dashboard share one generation, receive cross-process events, and pause supervision after both Pi clients exit. External real model/auth execution, implementation-worker scheduling, dashboard-service consolidation, and process/container worker isolation still require external gates before production use. Public npm publish, unattended worker start, auto-merge, auto-publish, global/user installs for normal mutation, and treating worker completion as truth without Implementation acceptance remain gated.
+Supported now: project-local packed/local package installs, guarded expected-byte/sequence mutation, process worker primitives, external sandbox compatibility, and a detached elected project coordinator service with authenticated loopback clients. Pi sessions use leased service clients for runtime inspection and bounded trigger submission; when the optional Pi SDK peer is available, the daemon owns semantic-session dispatch and removes semantic candidate tools from the main conversation. Peer-absent installs retain only the runtime-selected candidate fallback. Dashboard runtimes register separate observers. Runtime selects exact invariants, schedules typed jobs, binds successful writes to deterministic job ids in canonical Change Trace events, rechecks generation ownership before append, and recovers completion evidence after restart without reinvoking adapters. Bounded cursor-based event replay carries coordinator transitions and runtime-confirmed WorkState digests; Pi and dashboard clients resubscribe after generation loss and refresh canonical snapshots after gaps. A packed external spike proves two real Pi RPC processes plus one dashboard share one generation, receive cross-process events, and pause supervision after both Pi clients exit. The elected service can now schedule exact worker Assignments through typed lanes, path conflicts, supervision, idempotency, and recovery; the Pi daemon installs the worktree-only process adapter. Automatic WorkState claim/Assignment dispatch, cancellation and crash-window hardening, dashboard-service consolidation, and container worker isolation still require external gates before production use. Public npm publish, unattended worker start, auto-merge, auto-publish, global/user installs for normal mutation, and treating worker completion as truth without Implementation acceptance remain gated.
 
 Before enabling unattended worker start or auto-merge, require multiple successful
 external package lifecycle smokes, passing package failure-path smokes, no project-root
