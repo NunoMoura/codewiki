@@ -4,6 +4,7 @@ import type { RuntimeReaction } from "./reactor.ts";
 export function runtimeSemanticJobId(
 	reaction: RuntimeReaction,
 	mode: "append" | "preview" = "append",
+	contextDigest?: string,
 ): string {
 	const digest = createHash("sha256")
 		.update(
@@ -12,6 +13,7 @@ export function runtimeSemanticJobId(
 				mode,
 				observedWorkStateDigest: reaction.observedWorkStateDigest,
 				selection: reaction.selection,
+				contextDigest,
 			}),
 		)
 		.digest("hex");

@@ -40,7 +40,14 @@ export {
 	ImplementationWorkerDispatcher,
 	type ImplementationWorkerDispatcherOptions,
 	type ImplementationWorkerDispatchResult,
+	type ImplementationWorkerRuntimeReconciliation,
 } from "./implementation-worker-dispatch.ts";
+export {
+	implementationWorkerClaimReleaseJob,
+	scheduleImplementationWorkerClaimRelease,
+	type ImplementationWorkerClaimReleaseInput,
+	type ImplementationWorkerClaimReleaseReceipt,
+} from "./implementation-worker-review.ts";
 export {
 	scheduleImplementationWorkerAssignment,
 	scheduleImplementationWorkerAssignments,

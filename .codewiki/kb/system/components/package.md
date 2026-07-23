@@ -15,10 +15,11 @@ codewiki_source_patterns:
   - tsconfig.json
   - tsconfig.build.json
   - src/index.ts
-  - src/runtime/coordinator-api.ts
+  - src/runtime/coordinator-entrypoint.ts
   - src/runtime/implementation-worker-adapter.ts
   - src/runtime/implementation-worker-dispatch.ts
   - src/runtime/implementation-worker-jobs.ts
+  - src/runtime/implementation-worker-review.ts
   - src/runtime/project-coordinator-daemon.ts
   - src/runtime/project-coordinator-events.ts
   - src/runtime/project-coordinator-process.ts
@@ -54,10 +55,11 @@ codewiki_source_map:
       - tsconfig.json
       - tsconfig.build.json
       - src/index.ts
-      - src/runtime/coordinator-api.ts
+      - src/runtime/coordinator-entrypoint.ts
       - src/runtime/implementation-worker-adapter.ts
       - src/runtime/implementation-worker-dispatch.ts
       - src/runtime/implementation-worker-jobs.ts
+      - src/runtime/implementation-worker-review.ts
       - src/runtime/project-coordinator-daemon.ts
       - src/runtime/project-coordinator-events.ts
       - src/runtime/project-coordinator-process.ts
@@ -92,7 +94,7 @@ while preserving `README.md` as the human package entrypoint.
 
 The package component owns the npm manifest, lockfile, TypeScript entrypoints, README distribution guidance, optional execution-adapter peers, and install/readiness smoke coverage.
 
-The root entrypoint remains harness-neutral and exports the transport-neutral `ProjectCoordinator` kernel. `./coordinator` exposes the detached project-service host/client boundary: daemon ensure/start/stop, exclusive election, private endpoint discovery, authenticated loopback transport, leased client registration, bounded generation-scoped event replay, remote inspection, capability-advertised semantic execution, candidate fallback, exact Assignment-worker scheduling through harness-neutral adapters, generation fencing, exact semantic reaction scheduling, and trace-backed restart recovery. `src/runtime/project-coordinator-daemon.ts` owns harness-neutral daemon lifecycle; `src/pi/project-coordinator-daemon.ts` is the executable launcher that dynamically loads `./pi-sdk` when its optional peer is available and installs the worktree-isolated Pi process worker adapter. During the architecture spike, `@earendil-works/pi-coding-agent` remains an optional peer and development dependency rather than a production dependency. Peer-absent packed installs start the coordinator without semantic adapters instead of silently pulling a second Pi runtime.
+The root entrypoint remains harness-neutral and exports the transport-neutral `ProjectCoordinator` kernel. `src/runtime/coordinator-entrypoint.ts` is the explicit package-export facade for `./coordinator`, which exposes the detached project-service host/client boundary: daemon ensure/start/stop, exclusive election, private endpoint discovery, authenticated loopback transport, leased client registration, bounded generation-scoped event replay, remote inspection, capability-advertised semantic execution, candidate fallback, exact Assignment-worker scheduling through harness-neutral adapters, generation fencing, exact semantic reaction scheduling, and trace-backed restart recovery. `src/runtime/project-coordinator-daemon.ts` owns harness-neutral daemon lifecycle; `src/pi/project-coordinator-daemon.ts` is the executable launcher that dynamically loads `./pi-sdk` when its optional peer is available and installs the worktree-isolated Pi process worker adapter. During the architecture spike, `@earendil-works/pi-coding-agent` remains an optional peer and development dependency rather than a production dependency. Peer-absent packed installs start the coordinator without semantic adapters instead of silently pulling a second Pi runtime.
 
 The Pi SDK subpath requires Node.js 22.19 or newer even while the harness-neutral core retains its broader engine range. Promotion to a production dependency or separate adapter package requires clean security audit, package-size review, external install proof, model/auth proof, cancellation and cleanup proof, and no duplicate-host resolution ambiguity.
 

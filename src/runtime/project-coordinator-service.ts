@@ -762,8 +762,8 @@ async function handleRuntimeReaction(
 	}
 	lease.activeRequests += 1;
 	try {
-		const workerDispatch = await runtime.workerDispatcher
-			?.reconcile(trigger)
+		const workerReconciliation = await runtime.workerDispatcher
+			?.reconcileRuntime(trigger)
 			.catch(() => undefined);
 		const receipts = await scheduleRuntimeReactions({
 			repoRoot: runtime.endpoint.repoRoot,
@@ -775,7 +775,9 @@ async function handleRuntimeReaction(
 			maxReactions: runtime.maxReactions,
 			maxPlanningChanges: runtime.maxPlanningChanges,
 			maxCasRetries: runtime.maxCasRetries,
-			blockedImplementationWorkItemIds: workerDispatch?.pendingWorkItemIds,
+			blockedImplementationWorkItemIds:
+				workerReconciliation?.dispatch.pendingWorkItemIds,
+			implementationWorkerResults: workerReconciliation?.workerResults,
 			beforeAppend: () => assertCurrentGeneration(runtime),
 		});
 		writeJson(response, 200, receipts);

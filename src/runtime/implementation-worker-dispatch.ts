@@ -1,8 +1,18 @@
 import { createHash } from "node:crypto";
-import { lstat, mkdir, readFile, readdir, rename, writeFile } from "node:fs/promises";
+import {
+	lstat,
+	mkdir,
+	readFile,
+	readdir,
+	rename,
+	writeFile,
+} from "node:fs/promises";
 import { join } from "node:path";
 
-import { runWikiRuntime, type RunWikiRuntimeInput } from "../api/wiki-runtime.ts";
+import {
+	runWikiRuntime,
+	type RunWikiRuntimeInput,
+} from "../api/wiki-runtime.ts";
 import {
 	collectGitStatusSnapshot,
 	runtimeWorktreeInputsFromGitStatus,
@@ -13,6 +23,7 @@ import {
 	type RuntimeWorktreePlan,
 	type WorktreeCommandRunner,
 } from "../git/worktrees.ts";
+import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
 import { loadWikiConfigFile } from "../project/config-file.ts";
 import type { WikiConfig } from "../project/config.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
@@ -22,11 +33,14 @@ import { createRuntimeHandoffManifest } from "./handoff.ts";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
+	assertImplementationWorkerResult,
 	implementationWorkerJobId,
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
+	type ImplementationWorkerExecutionResult,
 } from "./implementation-worker-adapter.ts";
 import { scheduleImplementationWorkerAssignment } from "./implementation-worker-jobs.ts";
+import { implementationWorkerClaimReleaseJob } from "./implementation-worker-review.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./work-unit-claims.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
@@ -38,8 +52,14 @@ export interface ImplementationWorkerDispatchResult {
 	status: "held" | "quiescent" | "scheduled";
 	workStateDigest: string;
 	pendingWorkItemIds: string[];
+	reviewReadyWorkItemIds: string[];
 	scheduledJobIds: string[];
 	blockers: string[];
+}
+
+export interface ImplementationWorkerRuntimeReconciliation {
+	dispatch: ImplementationWorkerDispatchResult;
+	workerResults: ImplementationWorkerResultInput[];
 }
 
 export interface ImplementationWorkerDispatcherOptions {
@@ -61,6 +81,13 @@ interface ImplementationWorkerDispatchPacket {
 	worktreePlan: RuntimeWorktreePlan;
 }
 
+interface RecoveredImplementationWorker {
+	packet: ImplementationWorkerDispatchPacket;
+	claimEvent: TraceEvent;
+	result: ImplementationWorkerExecutionResult;
+	workerResult: ImplementationWorkerResultInput;
+}
+
 /**
  * Serializes WorkState-to-claim reconciliation for one elected service, then
  * hands exact Assignment jobs to coordinator lanes without awaiting workers.
@@ -73,7 +100,21 @@ export class ImplementationWorkerDispatcher {
 		this.options = options;
 	}
 
-	reconcile(trigger: RuntimeTrigger): Promise<ImplementationWorkerDispatchResult> {
+	reconcile(
+		trigger: RuntimeTrigger,
+	): Promise<ImplementationWorkerDispatchResult> {
+		return this.enqueue(trigger).then((result) => result.dispatch);
+	}
+
+	reconcileRuntime(
+		trigger: RuntimeTrigger,
+	): Promise<ImplementationWorkerRuntimeReconciliation> {
+		return this.enqueue(trigger);
+	}
+
+	private enqueue(
+		trigger: RuntimeTrigger,
+	): Promise<ImplementationWorkerRuntimeReconciliation> {
 		const run = this.reconcileTail.then(() => this.reconcileOnce(trigger));
 		this.reconcileTail = run.then(
 			() => undefined,
@@ -84,7 +125,7 @@ export class ImplementationWorkerDispatcher {
 
 	private async reconcileOnce(
 		trigger: RuntimeTrigger,
-	): Promise<ImplementationWorkerDispatchResult> {
+	): Promise<ImplementationWorkerRuntimeReconciliation> {
 		const observation = await this.options.reactor.observe(trigger);
 		const activeAssignments = observation.workState.assignments.filter(
 			(assignment) => assignment.status === "claimed",
@@ -102,14 +143,52 @@ export class ImplementationWorkerDispatcher {
 				return event ? [[assignment.id, event] as const] : [];
 			}),
 		);
-		const activeWorkItemIds = activeAssignments.map(
-			(assignment) => assignment.workItemId,
+		const createdAt = (this.options.now || (() => new Date().toISOString()))();
+		const queue = buildWorkQueueView({
+			records: observation.records,
+			generatedAt: trigger.occurredAt,
+		});
+		const workerRequiredWorkItemIds = queue.items.flatMap((item) =>
+			item.kind === "work-unit" &&
+			(item.status === "ready" || item.status === "claimed")
+				? [item.id]
+				: [],
 		);
 		const resumed = await this.resumePackets(activeClaims);
-		const pending = new Set([...activeWorkItemIds, ...resumed.workItemIds]);
+		const releaseable = resumed.recovered.filter((worker) =>
+			workerResultCanRelease(worker, observation.workState),
+		);
+		const releasingClaims = new Set(
+			releaseable.map((worker) => worker.packet.assignment.claimId),
+		);
+		const workerResults = resumed.recovered
+			.filter(
+				(worker) => !releasingClaims.has(worker.packet.assignment.claimId),
+			)
+			.map((worker) => worker.workerResult);
+		const releaseJobIds = this.scheduleReleases(releaseable, createdAt);
+		const resumedJobIds = [...resumed.jobIds, ...releaseJobIds];
+		const pending = new Set(workerRequiredWorkItemIds);
+		for (const result of workerResults) pending.delete(result.workUnitId);
+		const complete = (
+			status: ImplementationWorkerDispatchResult["status"],
+			jobIds: string[],
+			blockers: string[],
+		): ImplementationWorkerRuntimeReconciliation =>
+			runtimeReconciliation(
+				dispatchResult(
+					status,
+					observation.workState,
+					pending,
+					workerResults,
+					jobIds,
+					blockers,
+				),
+				workerResults,
+			);
 
 		if (!this.options.coordinator.snapshot().executionPermitted) {
-			return dispatchResult("held", observation.workState, pending, resumed.jobIds, [
+			return complete("held", resumedJobIds, [
 				"coordinator_execution_not_permitted",
 			]);
 		}
@@ -117,65 +196,61 @@ export class ImplementationWorkerDispatcher {
 		const config = await (this.options.loadConfig || loadWikiConfigFile)(
 			this.options.repoRoot,
 		);
-		const gitStatus = await (
-			this.options.collectGitStatus || defaultGitStatus
-		)(this.options.repoRoot);
+		const gitStatus = await (this.options.collectGitStatus || defaultGitStatus)(
+			this.options.repoRoot,
+		);
 		if (!gitStatus.isGitRepository || !gitStatus.baseSha) {
-			return dispatchResult("held", observation.workState, pending, resumed.jobIds, [
+			return complete("held", resumedJobIds, [
 				"implementation_worker_git_base_unavailable",
 				...gitStatus.errors,
 			]);
 		}
 
-		const createdAt = (this.options.now || (() => new Date().toISOString()))();
 		const runtimeInput: RunWikiRuntimeInput = {
 			action: "work-unit-claims",
 			mode: "preview",
-			queue: buildWorkQueueView({
-				records: observation.records,
-				generatedAt: trigger.occurredAt,
-			}),
+			queue,
 			config,
 			maxWorkers: config.runtime.maxWorkers,
 			createdAt,
 			nextSequenceByTrace: nextSequenceByTrace(observation.records),
 			expectedBytesByTrace: observation.expectedBytesByTrace,
 			repoRoot: this.options.repoRoot,
-			workerIdPrefix: dispatchPrefix("worker", observation.workState.snapshotDigest),
-			claimIdPrefix: dispatchPrefix("claim", observation.workState.snapshotDigest),
+			workerIdPrefix: dispatchPrefix(
+				"worker",
+				observation.workState.snapshotDigest,
+			),
+			claimIdPrefix: dispatchPrefix(
+				"claim",
+				observation.workState.snapshotDigest,
+			),
 			...runtimeWorktreeInputsFromGitStatus(gitStatus),
 		};
 		const preview = await runWikiRuntime(runtimeInput);
 		if (!preview.policy.appendAllowed) {
-			return dispatchResult(
-				"held",
-				observation.workState,
-				pending,
-				resumed.jobIds,
-				preview.policy.blockers,
-			);
+			return complete("held", resumedJobIds, preview.policy.blockers);
 		}
 		if (preview.plan.selected.length === 0) {
-			return dispatchResult(
-				resumed.jobIds.length > 0 ? "scheduled" : "quiescent",
-				observation.workState,
-				pending,
-				resumed.jobIds,
+			return complete(
+				resumedJobIds.length > 0 ? "scheduled" : "quiescent",
+				resumedJobIds,
 				[],
 			);
 		}
 		const unsupported = preview.policy.worktrees.filter(
-			(plan) => !plan.worktree || !adapterSupportsWorktree(this.options.adapter),
+			(plan) =>
+				!plan.worktree || !adapterSupportsWorktree(this.options.adapter),
 		);
 		if (unsupported.length > 0) {
-			return dispatchResult("held", observation.workState, pending, resumed.jobIds, [
+			return complete("held", resumedJobIds, [
 				...unsupported.map(
-					(plan) => `implementation_worker_isolation_unavailable:${plan.workUnitId}`,
+					(plan) =>
+						`implementation_worker_isolation_unavailable:${plan.workUnitId}`,
 				),
 			]);
 		}
 		if (!this.options.worktreeRunner) {
-			return dispatchResult("held", observation.workState, pending, resumed.jobIds, [
+			return complete("held", resumedJobIds, [
 				"implementation_worker_worktree_runner_unavailable",
 			]);
 		}
@@ -199,31 +274,67 @@ export class ImplementationWorkerDispatcher {
 		assertStableClaims(packets, appended.events);
 		const scheduled = this.schedulePackets(packets);
 		for (const packet of packets) pending.add(packet.assignment.workItemId);
-		return dispatchResult(
-			"scheduled",
-			observation.workState,
-			pending,
-			[...resumed.jobIds, ...scheduled],
-			[],
-		);
+		return complete("scheduled", [...resumedJobIds, ...scheduled], []);
 	}
 
 	private async resumePackets(activeClaims: Map<string, TraceEvent>): Promise<{
 		jobIds: string[];
-		workItemIds: string[];
+		recovered: RecoveredImplementationWorker[];
 	}> {
 		const packets = await readDispatchPackets(this.options.repoRoot);
-		const active = packets.filter((packet) => {
-			const claim = activeClaims.get(packet.assignment.claimId);
-			return claim ? packetMatchesClaim(packet, claim) : false;
+		const active = packets.flatMap((packet) => {
+			const claimEvent = activeClaims.get(packet.assignment.claimId);
+			return claimEvent && packetMatchesClaim(packet, claimEvent)
+				? [{ packet, claimEvent }]
+				: [];
 		});
+		const recovered = await Promise.all(
+			active.map(async ({ packet, claimEvent }) => {
+				try {
+					const result = await this.options.adapter.recover(packet.assignment);
+					if (!result) return undefined;
+					assertImplementationWorkerResult(packet.assignment, result);
 		return {
-			jobIds: this.schedulePackets(active),
-			workItemIds: active.map((packet) => packet.assignment.workItemId),
+						packet,
+						claimEvent,
+						result,
+						workerResult: reviewWorkerResult(packet.assignment, result),
+					};
+				} catch {
+					return undefined;
+				}
+			}),
+		);
+		return {
+			jobIds: this.schedulePackets(active.map(({ packet }) => packet)),
+			recovered: recovered.filter(
+				(result): result is RecoveredImplementationWorker => Boolean(result),
+			),
 		};
 	}
 
-	private schedulePackets(packets: ImplementationWorkerDispatchPacket[]): string[] {
+	private scheduleReleases(
+		workers: RecoveredImplementationWorker[],
+		createdAt: string,
+	): string[] {
+		return workers.map((worker) => {
+			const job = implementationWorkerClaimReleaseJob({
+				repoRoot: this.options.repoRoot,
+				reactor: this.options.reactor,
+				assignment: worker.packet.assignment,
+				result: worker.result,
+				claimEvent: worker.claimEvent,
+				createdAt,
+				beforeAppend: this.options.beforeAppend,
+			});
+			void this.options.coordinator.schedule(job).catch(() => undefined);
+			return job.idempotencyKey;
+		});
+	}
+
+	private schedulePackets(
+		packets: ImplementationWorkerDispatchPacket[],
+	): string[] {
 		return packets.map((packet) => {
 			const jobId = implementationWorkerJobId(packet.assignment);
 			void scheduleImplementationWorkerAssignment({
@@ -273,7 +384,10 @@ function createDispatchPackets(
 			traceRefs: candidate.traceRefs,
 			prompt: worker.sessionInput.prompt,
 		});
-		const resultKey = digest({ claimId: worker.claimId, contextDigest }).slice(7, 39);
+		const resultKey = digest({ claimId: worker.claimId, contextDigest }).slice(
+			7,
+			39,
+		);
 		const assignment: ImplementationWorkerAssignment = {
 			schemaVersion: IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 			repoRoot,
@@ -378,7 +492,9 @@ function preparedAdapter(
 		async execute(assignment, signal) {
 			signal.throwIfAborted();
 			if (!runner) {
-				throw new Error("Implementation worker worktree runner is unavailable.");
+				throw new Error(
+					"Implementation worker worktree runner is unavailable.",
+				);
 			}
 			await executeRuntimeWorktreeCommands(plan, {
 				dryRun: false,
@@ -418,10 +534,16 @@ async function readDispatchPackets(
 		throw error;
 	}
 	const packets: ImplementationWorkerDispatchPacket[] = [];
-	for (const name of names.filter((entry) => entry.endsWith(".json")).sort(compareText)) {
+	for (const name of names
+		.filter((entry) => entry.endsWith(".json"))
+		.sort(compareText)) {
 		const path = join(directory, name);
 		const metadata = await lstat(path);
-		if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > MAX_PACKET_BYTES) {
+		if (
+			!metadata.isFile() ||
+			metadata.isSymbolicLink() ||
+			metadata.size > MAX_PACKET_BYTES
+		) {
 			continue;
 		}
 		try {
@@ -449,17 +571,24 @@ function dispatchPacketDirectory(repoRoot: string): string {
 }
 
 function dispatchPacketPath(repoRoot: string, claimId: string): string {
-	return join(dispatchPacketDirectory(repoRoot), `${digest(claimId).slice(7)}.json`);
+	return join(
+		dispatchPacketDirectory(repoRoot),
+		`${digest(claimId).slice(7)}.json`,
+	);
 }
 
 function assertStableClaims(
 	packets: ImplementationWorkerDispatchPacket[],
 	appended: TraceEvent[],
 ): void {
-	const expected = packets.map((packet) => packet.claimEventId).sort(compareText);
+	const expected = packets
+		.map((packet) => packet.claimEventId)
+		.sort(compareText);
 	const actual = appended.map((event) => event.id).sort(compareText);
 	if (JSON.stringify(expected) !== JSON.stringify(actual)) {
-		throw new Error("Implementation worker claim selection changed before append.");
+		throw new Error(
+			"Implementation worker claim selection changed before append.",
+		);
 	}
 }
 
@@ -467,23 +596,70 @@ function nextSequenceByTrace(records: TraceRecord[]): Record<string, number> {
 	const next: Record<string, number> = {};
 	for (const record of records) {
 		if (record.type !== "trace_event") continue;
-		next[record.traceId] = Math.max(next[record.traceId] || 1, record.sequence + 1);
+		next[record.traceId] = Math.max(
+			next[record.traceId] || 1,
+			record.sequence + 1,
+		);
 	}
 	return next;
 }
 
-function dispatchPrefix(kind: "claim" | "worker", workStateDigest: string): string {
+function dispatchPrefix(
+	kind: "claim" | "worker",
+	workStateDigest: string,
+): string {
 	return `${kind}-${digest(workStateDigest).slice(7, 19)}`;
 }
 
-function adapterSupportsWorktree(adapter: ImplementationWorkerAdapter): boolean {
+function adapterSupportsWorktree(
+	adapter: ImplementationWorkerAdapter,
+): boolean {
 	return !adapter.isolationKinds || adapter.isolationKinds.includes("worktree");
+}
+
+function workerResultCanRelease(
+	worker: RecoveredImplementationWorker,
+	workState: WorkState,
+): boolean {
+	if (worker.result.status !== "completed") return true;
+	return Boolean(
+		workState.workItems.find(
+			(item) => item.id === worker.packet.assignment.workItemId,
+		)?.implemented,
+	);
+}
+
+function reviewWorkerResult(
+	assignment: ImplementationWorkerAssignment,
+	result: ImplementationWorkerExecutionResult,
+): ImplementationWorkerResultInput {
+	const workerResult = result.workerResult;
+	return {
+		...(workerResult || {}),
+		workerId: assignment.workerId,
+		workUnitId: assignment.workItemId,
+		claimId: assignment.claimId,
+		planningRefs: [...assignment.planningRefs],
+		status: result.status,
+		refs: [...new Set([...(workerResult?.refs || []), result.receiptRef])],
+		...(result.sessionId ? { sessionId: result.sessionId } : {}),
+		...(result.sessionFile ? { sessionFile: result.sessionFile } : {}),
+		...(result.error ? { message: result.error } : {}),
+	};
+}
+
+function runtimeReconciliation(
+	dispatch: ImplementationWorkerDispatchResult,
+	workerResults: ImplementationWorkerResultInput[],
+): ImplementationWorkerRuntimeReconciliation {
+	return { dispatch, workerResults };
 }
 
 function dispatchResult(
 	status: ImplementationWorkerDispatchResult["status"],
 	workState: WorkState,
 	pendingWorkItemIds: Set<string>,
+	workerResults: ImplementationWorkerResultInput[],
 	scheduledJobIds: string[],
 	blockers: string[],
 ): ImplementationWorkerDispatchResult {
@@ -491,6 +667,9 @@ function dispatchResult(
 		status,
 		workStateDigest: workState.snapshotDigest,
 		pendingWorkItemIds: [...pendingWorkItemIds].sort(compareText),
+		reviewReadyWorkItemIds: workerResults
+			.map((result) => result.workUnitId)
+			.sort(compareText),
 		scheduledJobIds: [...new Set(scheduledJobIds)].sort(compareText),
 		blockers: [...new Set(blockers)].sort(compareText),
 	};

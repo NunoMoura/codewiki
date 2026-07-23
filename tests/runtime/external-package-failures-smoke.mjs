@@ -926,7 +926,7 @@ try {
 		"codewiki",
 		"dist",
 		"runtime",
-		"coordinator-api.js",
+		"coordinator-entrypoint.js",
 	);
 	if (existsSync(coordinatorApi)) {
 		const { stopProjectCoordinatorService } = await import(

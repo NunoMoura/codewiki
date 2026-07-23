@@ -14,6 +14,7 @@ import {
 	type RunWikiPlanResult,
 } from "../api/wiki-plan.ts";
 import { TraceAppendConflictError } from "../error-handling/trace-errors.ts";
+import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
 import type {
 	WorkStateAssignment,
 	WorkStateChange,
@@ -54,7 +55,11 @@ export type RuntimePlanningCandidate = Omit<
 
 export type RuntimeImplementationCandidate = Omit<
 	RunWikiImplementInput,
-	"repoRoot" | "expectedWorkStateDigest" | "runtimeJobId" | "mode"
+	| "repoRoot"
+	| "expectedWorkStateDigest"
+	| "workerResults"
+	| "runtimeJobId"
+	| "mode"
 >;
 
 export interface RuntimeDecisionInvocation {
@@ -75,6 +80,7 @@ export interface RuntimeImplementationInvocation {
 	sprint: WorkStateSprint;
 	workItems: WorkStateWorkItem[];
 	assignments: WorkStateAssignment[];
+	workerResults: ImplementationWorkerResultInput[];
 }
 
 export interface RuntimeSemanticAdapters {
@@ -123,6 +129,7 @@ export interface RunRuntimeSelectedSemanticReactionInput {
 	maxCasRetries?: number;
 	reactor?: RuntimeReactor;
 	signal?: AbortSignal;
+	implementationWorkerResults?: ImplementationWorkerResultInput[];
 	beforeAppend?: () => void | Promise<void>;
 }
 
@@ -162,6 +169,7 @@ export async function runRuntimeSelectedSemanticReaction(
 				input.adapters,
 				input.runtimeJobId,
 				input.beforeAppend,
+				input.implementationWorkerResults,
 			);
 			if (mode === "preview") {
 				return {
@@ -318,6 +326,7 @@ async function executeSelectedSemanticWork(
 	adapters: RuntimeSemanticAdapters,
 	runtimeJobId?: string,
 	beforeAppend?: () => void | Promise<void>,
+	implementationWorkerResults: ImplementationWorkerResultInput[] = [],
 ): Promise<RuntimeSemanticOutcome> {
 	const selection = observation.reaction.selection;
 	if (!selection) throw new Error("Runtime ready reaction has no selection.");
@@ -433,16 +442,23 @@ async function executeSelectedSemanticWork(
 	const assignments = observation.workState.assignments.filter((assignment) =>
 		selectedIds.has(assignment.workItemId),
 	);
+	const selectedWorkerResults = runtimeSelectedWorkerResults(
+		selection.workItemIds,
+		assignments,
+		implementationWorkerResults,
+	);
 	const candidate = await adapters.implementation({
 		loop: "implementation",
 		observedWorkStateDigest: observation.workState.snapshotDigest,
 		sprint,
 		workItems,
 		assignments,
+		workerResults: selectedWorkerResults,
 	});
 	assertNoRuntimeAuthority("implementation", candidate, [
 		"repoRoot",
 		"expectedWorkStateDigest",
+		"workerResults",
 		"runtimeJobId",
 		"traceId",
 		"planningEvents",
@@ -464,6 +480,7 @@ async function executeSelectedSemanticWork(
 				...candidate,
 				repoRoot,
 				expectedWorkStateDigest: observation.workState.snapshotDigest,
+				workerResults: selectedWorkerResults,
 				runtimeJobId,
 				mode,
 			},
@@ -482,6 +499,44 @@ function requiredChange(
 	);
 	if (!change) throw new Error(`Runtime Change ${changeId} was not found.`);
 	return change;
+}
+
+function runtimeSelectedWorkerResults(
+	workItemIds: string[],
+	assignments: WorkStateAssignment[],
+	workerResults: ImplementationWorkerResultInput[],
+): ImplementationWorkerResultInput[] {
+	if (workerResults.length === 0) return [];
+	const selected = new Set(workItemIds);
+	const seen = new Set<string>();
+	for (const result of workerResults) {
+		if (!selected.has(result.workUnitId) || seen.has(result.workUnitId)) {
+			throw new Error(
+				`Runtime Implementation worker result ${result.workUnitId} is not an exact selected Work Item.`,
+			);
+		}
+		seen.add(result.workUnitId);
+		const assignment = assignments.find(
+			(candidate) =>
+				candidate.status === "claimed" &&
+				candidate.workItemId === result.workUnitId &&
+				candidate.id === result.claimId &&
+				candidate.workerId === result.workerId,
+		);
+		if (!assignment) {
+			throw new Error(
+				`Runtime Implementation worker result ${result.workUnitId} does not match its active Assignment.`,
+			);
+		}
+	}
+	for (const workItemId of selected) {
+		if (!seen.has(workItemId)) {
+			throw new Error(
+				`Runtime Implementation worker result is missing for ${workItemId}.`,
+			);
+		}
+	}
+	return workerResults;
 }
 
 function requiredTraceBytes(

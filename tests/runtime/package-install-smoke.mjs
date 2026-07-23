@@ -62,6 +62,7 @@ import {
 	ImplementationWorkerDispatcher,
 	connectProjectCoordinatorClient,
 	ensureProjectCoordinatorService,
+	scheduleImplementationWorkerClaimRelease,
 	scheduleImplementationWorkerAssignments,
 	scheduleRuntimeReactions,
 	startProjectCoordinatorService,
@@ -93,8 +94,8 @@ assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 	"./pi-sdk",
 ]);
 assert.deepEqual(packageJson.exports["./coordinator"], {
-	types: "./dist/runtime/coordinator-api.d.ts",
-	import: "./dist/runtime/coordinator-api.js",
+	types: "./dist/runtime/coordinator-entrypoint.d.ts",
+	import: "./dist/runtime/coordinator-entrypoint.js",
 });
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
 \ttypes: "./dist/pi/sdk-semantic-session.d.ts",
@@ -115,6 +116,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-j
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "process-worker-adapter.js")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 const coordinator = new ProjectCoordinator(process.cwd(), {
@@ -141,6 +143,7 @@ assert.equal((await remoteClient.events(0)).events[0].state, "client_connected")
 assert.equal(remoteClient.semanticExecution, "client_candidate");
 assert.equal(typeof scheduleRuntimeReactions, "function");
 assert.equal(typeof scheduleImplementationWorkerAssignments, "function");
+assert.equal(typeof scheduleImplementationWorkerClaimRelease, "function");
 assert.equal(typeof ImplementationWorkerDispatcher, "function");
 assert.equal(IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION, 1);
 assert.equal(typeof ensureProjectCoordinatorService, "function");
@@ -208,7 +211,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projector.js"))
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator-api.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator-entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-process.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-daemon.js")), true);

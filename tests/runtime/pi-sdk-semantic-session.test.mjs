@@ -128,7 +128,7 @@ test("Pi SDK semantic adapter maps implementation to a review role", async () =>
 		sessionFactory: async (input) => ({
 			async prompt() {
 				observedRole = input.role;
-				input.submitCandidate({ workerResults: [] });
+				input.submitCandidate({ evidence: [] });
 			},
 			dispose() {},
 		}),
@@ -141,8 +141,15 @@ test("Pi SDK semantic adapter maps implementation to a review role", async () =>
 			sprint: { id: "SPR-sdk" },
 			workItems: [],
 			assignments: [],
+			workerResults: [
+				{
+					workerId: "worker:sdk",
+					workUnitId: "WU-sdk",
+					status: "completed",
+				},
+			],
 		}),
-		{ workerResults: [] },
+		{ evidence: [] },
 	);
 	assert.equal(observedRole, "implementation_review");
 });

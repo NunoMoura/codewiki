@@ -15,7 +15,10 @@ import {
 	startProjectCoordinatorService,
 } from "../../src/runtime/project-coordinator-service.ts";
 import { RuntimeReactor } from "../../src/runtime/reactor.ts";
-import { scheduleRuntimeReactionJob } from "../../src/runtime/runtime-reaction-jobs.ts";
+import {
+	runtimeReactionJob,
+	scheduleRuntimeReactionJob,
+} from "../../src/runtime/runtime-reaction-jobs.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
 async function fixture(id) {
@@ -62,6 +65,62 @@ function approvedCoordinator(root, generationId) {
 	});
 	return coordinator;
 }
+
+test("Implementation reaction identity includes stable exact worker-result context", () => {
+	const reaction = {
+		schemaVersion: 1,
+		status: "ready",
+		trigger: { kind: "timer_due", occurredAt: "2026-08-09T00:00:00.000Z" },
+		observedWorkStateDigest: "sha256:worker-result-context",
+		selection: {
+			loop: "implementation",
+			sprintId: "SPR-worker-result-context",
+			workItemIds: ["WU-worker-result-context"],
+			changeIds: ["CHG-worker-result-context"],
+			pathScopes: ["src/worker-result.ts"],
+			componentRefs: ["runtime"],
+		},
+	};
+	const workerResult = {
+		workerId: "worker:context",
+		workUnitId: "WU-worker-result-context",
+		claimId: "claim:context",
+		planningRefs: ["trace:planning#work:WU-worker-result-context"],
+		status: "completed",
+		refs: ["runtime-worker-receipt:context"],
+	};
+	const first = runtimeReactionJob({
+		repoRoot: "/tmp/codewiki-worker-result-context",
+		reaction,
+		adapters: {},
+		implementationWorkerResults: [workerResult],
+	});
+	const reordered = runtimeReactionJob({
+		repoRoot: "/tmp/codewiki-worker-result-context",
+		reaction,
+		adapters: {},
+		implementationWorkerResults: [
+			{
+				refs: workerResult.refs,
+				status: workerResult.status,
+				planningRefs: workerResult.planningRefs,
+				claimId: workerResult.claimId,
+				workUnitId: workerResult.workUnitId,
+				workerId: workerResult.workerId,
+			},
+		],
+	});
+	const changed = runtimeReactionJob({
+		repoRoot: "/tmp/codewiki-worker-result-context",
+		reaction,
+		adapters: {},
+		implementationWorkerResults: [
+			{ ...workerResult, refs: ["runtime-worker-receipt:changed"] },
+		],
+	});
+	assert.equal(first.idempotencyKey, reordered.idempotencyKey);
+	assert.notEqual(first.idempotencyKey, changed.idempotencyKey);
+});
 
 test("runtime reaction job binds exact trace evidence and recovers after restart", async () => {
 	const { root } = await fixture("CHG-coordinator-recovery");

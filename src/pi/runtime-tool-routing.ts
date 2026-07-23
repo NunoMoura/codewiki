@@ -126,9 +126,12 @@ export function registerRuntimeToolRouting(
 					if (
 						batch.events.some(
 							(event) =>
-								event.state === "job_completed" ||
-								event.state === "job_recovered" ||
-								event.state === "execution_policy_changed",
+								event.state === "execution_policy_changed" ||
+								((event.state === "job_completed" ||
+									event.state === "job_recovered") &&
+									!event.idempotencyKey?.startsWith(
+										"implementation-worker-release:",
+									)),
 						)
 					) {
 						await route(ctx, { kind: "timer_due" });

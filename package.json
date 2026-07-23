@@ -17,8 +17,8 @@
 			"import": "./dist/index.js"
 		},
 		"./coordinator": {
-			"types": "./dist/runtime/coordinator-api.d.ts",
-			"import": "./dist/runtime/coordinator-api.js"
+			"types": "./dist/runtime/coordinator-entrypoint.d.ts",
+			"import": "./dist/runtime/coordinator-entrypoint.js"
 		},
 		"./pi-sdk": {
 			"types": "./dist/pi/sdk-semantic-session.d.ts",
@@ -101,7 +101,7 @@
 			"src/api/index.ts",
 			"src/pi/extension.ts",
 			"src/pi/sdk-semantic-session.ts",
-			"src/runtime/coordinator-api.ts",
+			"src/runtime/coordinator-entrypoint.ts",
 			"src/pi/rendering/command-renderers.ts",
 			"tests/**/*.mjs"
 		],

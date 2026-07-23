@@ -1,5 +1,8 @@
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { changeTraceId } from "../changes/change-trace.ts";
+import { stableJson } from "../changes/digest.ts";
+import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
 import { readTraceFile } from "../traces/reader.ts";
 import { traceFilePath } from "../traces/schema.ts";
 import type { TraceEvent } from "../traces/types.ts";
@@ -44,6 +47,7 @@ export interface RuntimeReactionJobInput {
 	adapters: RuntimeSemanticAdapters;
 	mode?: RuntimeSemanticMode;
 	maxCasRetries?: number;
+	implementationWorkerResults?: ImplementationWorkerResultInput[];
 	beforeAppend?: () => void | Promise<void>;
 	onExecution?: (result: RunRuntimeSelectedSemanticReactionResult) => void;
 }
@@ -59,6 +63,7 @@ export interface ScheduleRuntimeReactionsInput {
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
 	blockedImplementationWorkItemIds?: string[];
+	implementationWorkerResults?: ImplementationWorkerResultInput[];
 	beforeAppend?: () => void | Promise<void>;
 }
 
@@ -88,11 +93,38 @@ export async function scheduleRuntimeReactions(
 				reaction,
 				adapters: input.adapters,
 				mode: input.mode,
+				implementationWorkerResults: workerResultsForReaction(
+					reaction,
+					input.implementationWorkerResults || [],
+				),
 				maxCasRetries: input.maxCasRetries,
 				beforeAppend: input.beforeAppend,
 			}),
 		),
 	);
+}
+
+function workerResultsForReaction(
+	reaction: RuntimeReaction,
+	workerResults: ImplementationWorkerResultInput[],
+): ImplementationWorkerResultInput[] {
+	const selection = reaction.selection;
+	if (selection?.loop !== "implementation") return [];
+	const selected = new Set(selection.workItemIds);
+	return workerResults
+		.filter((result) => selected.has(result.workUnitId))
+		.sort((left, right) =>
+			`${left.workUnitId}:${left.workerId}`.localeCompare(
+				`${right.workUnitId}:${right.workerId}`,
+			),
+		);
+}
+
+function workerResultContextDigest(
+	workerResults: ImplementationWorkerResultInput[],
+): string | undefined {
+	if (workerResults.length === 0) return undefined;
+	return createHash("sha256").update(stableJson(workerResults)).digest("hex");
 }
 
 function blockedImplementationReaction(
@@ -113,10 +145,16 @@ export function runtimeReactionJob(
 ): ProjectCoordinatorJob<RuntimeReactionJobReceipt> {
 	const selection = input.reaction.selection;
 	if (input.reaction.status !== "ready" || !selection) {
-		throw new Error("Runtime coordinator cannot schedule a quiescent reaction.");
+		throw new Error(
+			"Runtime coordinator cannot schedule a quiescent reaction.",
+		);
 	}
 	const mode = input.mode || "append";
-	const jobId = runtimeSemanticJobId(input.reaction, mode);
+	const jobId = runtimeSemanticJobId(
+		input.reaction,
+		mode,
+		workerResultContextDigest(input.implementationWorkerResults || []),
+	);
 	const job: ProjectCoordinatorJob<RuntimeReactionJobReceipt> = {
 		idempotencyKey: jobId,
 		lane: reactionLane(input.reaction),
@@ -132,6 +170,7 @@ export function runtimeReactionJob(
 				maxCasRetries: input.maxCasRetries,
 				reactor: input.reactor,
 				signal,
+				implementationWorkerResults: input.implementationWorkerResults,
 				beforeAppend: input.beforeAppend,
 			});
 			try {
@@ -185,12 +224,12 @@ async function persistedRuntimeJobEvents(
 ): Promise<TraceEvent[]> {
 	const events: TraceEvent[] = [];
 	for (const traceId of reactionTraceIds(reaction)) {
-		const records = await readTraceFile(join(repoRoot, traceFilePath(traceId))).catch(
-			(error: unknown) => {
-				if (isNotFound(error)) return [];
-				throw error;
-			},
-		);
+		const records = await readTraceFile(
+			join(repoRoot, traceFilePath(traceId)),
+		).catch((error: unknown) => {
+			if (isNotFound(error)) return [];
+			throw error;
+		});
 		for (const record of records) {
 			if (
 				record.type === "trace_event" &&
