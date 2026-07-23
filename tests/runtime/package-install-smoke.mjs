@@ -57,6 +57,10 @@ import {
 	buildWorkState,
 	runWikiConfig,
 } from "@nunomoura/codewiki";
+import {
+	connectProjectCoordinatorClient,
+	startProjectCoordinatorService,
+} from "@nunomoura/codewiki/coordinator";
 
 function filesUnder(root) {
 	const files = [];
@@ -76,7 +80,16 @@ assert.equal(packageJson.bin, undefined);
 assert.equal(packageJson.publishConfig, undefined);
 assert.deepEqual(packageJson.pi, { extensions: ["dist/pi/extension.js"] });
 assert.equal(packageJson.pi.skills, undefined);
-assert.deepEqual(Object.keys(packageJson.exports).sort(), [".", "./package.json", "./pi-sdk"]);
+assert.deepEqual(Object.keys(packageJson.exports).sort(), [
+	".",
+	"./coordinator",
+	"./package.json",
+	"./pi-sdk",
+]);
+assert.deepEqual(packageJson.exports["./coordinator"], {
+	types: "./dist/runtime/coordinator-api.d.ts",
+	import: "./dist/runtime/coordinator-api.js",
+});
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
 \ttypes: "./dist/pi/sdk-semantic-session.d.ts",
 \timport: "./dist/pi/sdk-semantic-session.js",
@@ -98,6 +111,17 @@ const coordinator = new ProjectCoordinator(process.cwd(), {
 });
 assert.equal(coordinator.snapshot().generationId, "packed:coordinator");
 coordinator.close();
+const service = await startProjectCoordinatorService(process.cwd(), {
+	generationId: "packed:service",
+});
+const remoteClient = await connectProjectCoordinatorClient(process.cwd(), {
+	clientId: "packed:client",
+	kind: "test",
+	supervision: "approved",
+});
+assert.equal((await remoteClient.state()).supervisorCount, 1);
+await remoteClient.disconnect();
+await service.close();
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
 assert.deepEqual(buildWorkState({ records: [] }).changeIds, []);
 assert.match(buildWorkState({ records: [] }).snapshotDigest, /^sha256:[a-f0-9]{64}$/);
@@ -150,6 +174,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projector.js"))
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator-api.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);

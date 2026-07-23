@@ -45,7 +45,9 @@ A session is not a lane. Reusing, replacing, resuming, or losing a session canno
 
 The current `ProjectCoordinator` kernel implements these admission rules inside one elected generation. It registers multiple Pi, dashboard, CLI/test, or future clients; separates observer presence from approved supervision; holds new execution when supervised policy has no approved supervisor; and supports explicit unattended policy. Typed Decision, Planning, Assignment, Implementation-review, Integration, and external-effect lanes plus normalized resource conflict refs determine compatibility. Write jobs must provide a durable recovery probe before admission, so generation restart can return exact persisted completion instead of repeating a canonical append.
 
-The kernel is transport-neutral and intentionally not a cross-process singleton by itself. A later project service must own election, authentication, loopback transport, endpoint discovery, stale-generation fencing, and process lifecycle around this kernel.
+The project service now owns cross-process election and client transport around the kernel. It binds only to `127.0.0.1`, writes endpoint metadata and bearer capability with current-user permissions, requires the exact coordinator generation on every request, rechecks the exclusive ownership record before serving, and gives each remote registration a bounded lease. Query parameters never carry the token. Live owners reject contenders; dead-owner takeover creates a new generation; stale owners return a fenced response instead of accepting work.
+
+This transport does not make client identity an authority source. The service token is a local control-plane capability and must never enter traces, prompts, URLs, logs, Git, or external proposal payloads. Approved supervision remains explicit registration metadata from an authenticated local adapter. Exact semantic scheduling and worker lifecycle still need to move behind this service before Pi and dashboard clients stop using process-local paths.
 
 ## Semantic session adapter
 
