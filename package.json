@@ -1,7 +1,7 @@
 {
 	"name": "@nunomoura/codewiki",
 	"version": "0.3.0",
-	"description": "Pi-native CodeWiki runtime with Change Traces, WorkState, semantic loops, and a Work Pipeline dashboard.",
+	"description": "Project-scoped development control plane with Change Traces, global Planning, parallel Implementation, canonical Knowledge, and Pi execution adapters.",
 	"keywords": [
 		"documentation",
 		"wiki",
@@ -15,6 +15,10 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
+		},
+		"./pi-sdk": {
+			"types": "./dist/pi/sdk-semantic-session.d.ts",
+			"import": "./dist/pi/sdk-semantic-session.js"
 		},
 		"./package.json": "./package.json"
 	},
@@ -30,6 +34,8 @@
 		"test:pi-install": "node tests/runtime/pi-install-smoke.mjs",
 		"test:pi-rpc": "node tests/runtime/pi-rpc-smoke.mjs",
 		"test:pi-mutation": "node --experimental-strip-types tests/runtime/pi-tool-mutation-smoke.mjs",
+		"test:pi-sdk": "node --experimental-strip-types --test tests/runtime/pi-sdk-semantic-session.test.mjs",
+		"test:pi-sdk-package": "node tests/runtime/pi-sdk-package-smoke.mjs",
 		"test:project-local-install": "node tests/runtime/project-local-install-smoke.mjs",
 		"test:external-lifecycle": "node tests/runtime/external-package-lifecycle-smoke.mjs",
 		"test:external-failures": "node tests/runtime/external-package-failures-smoke.mjs",
@@ -54,7 +60,7 @@
 		"lab:sealed-check": "node --experimental-strip-types lab/runner/sealed-check.ts",
 		"lab:experiment": "node --experimental-strip-types lab/runner/experiment-runner.ts",
 		"lab:auto-experiment": "node --experimental-strip-types lab/runner/experiment-budget.ts",
-		"audit:codewiki": "npm test && npm run test:pack && npm run test:pi-install && npm run test:pi-rpc && npm run test:pi-mutation && npm run test:project-local-install && npm run test:external-lifecycle && npm run test:external-failures && npm run test:readiness && npm audit --omit=dev && git diff --check",
+		"audit:codewiki": "npm test && npm run test:pack && npm run test:pi-install && npm run test:pi-rpc && npm run test:pi-mutation && npm run test:pi-sdk && npm run test:pi-sdk-package && npm run test:project-local-install && npm run test:external-lifecycle && npm run test:external-failures && npm run test:readiness && npm audit --omit=dev && git diff --check",
 		"typecheck": "tsc --noEmit"
 	},
 	"license": "MIT",
@@ -75,8 +81,9 @@
 		"package.json"
 	],
 	"devDependencies": {
+		"@earendil-works/pi-coding-agent": "^0.81.1",
 		"@types/node": "*",
-		"typebox": "^1.2.14",
+		"typebox": "^1.3.6",
 		"typescript": "^5.9.3"
 	},
 	"engines": {
@@ -87,6 +94,7 @@
 			"src/index.ts",
 			"src/api/index.ts",
 			"src/pi/extension.ts",
+			"src/pi/sdk-semantic-session.ts",
 			"src/pi/rendering/command-renderers.ts",
 			"tests/**/*.mjs"
 		],
@@ -102,10 +110,16 @@
 		]
 	},
 	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": ">=0.80.10 <0.82.0",
 		"typebox": "*"
 	},
 	"dependencies": {
 		"yaml": "^2.9.0"
 	},
-	"private": true
+	"private": true,
+	"peerDependenciesMeta": {
+		"@earendil-works/pi-coding-agent": {
+			"optional": true
+		}
+	}
 }

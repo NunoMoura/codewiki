@@ -2,4 +2,4 @@
 
 ## Concepts
 
-* [Pi Session and Retro Dashboard UI](terminal.md) - CodeWiki keeps the Pi session focused on conversation and automatically opens a retro local browser dashboard for lifecycle-first pipeline observability.
+* [Project Dashboard and Pi Client](terminal.md) - CodeWiki combines a project-scoped local dashboard with conversational Pi clients while the control plane owns Backlog, Planning, Implementation, and execution sessions.

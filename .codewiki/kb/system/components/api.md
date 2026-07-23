@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: API
-description: "`src/api/**` is the stable package/source facade. Root exports include the core `wiki_*` facades, OKF compatibility facade, and stable types. `src/pi/**` contains the Pi-native tool/command adapter exposed by package metadata for external installs; repo-local dogfooding is currently disabled. `src/cli/index.ts` remains a temporary development/test harness, not the normal product surface."
+description: "`src/api/**` is the stable harness-neutral facade used by the project control plane and clients; Pi client/execution adapters remain entrypoint-isolated and source-checkout dogfooding stays disabled."
 tags:
   - codewiki
   - system
@@ -51,7 +51,7 @@ codewiki_source_map:
 ---
 # API
 
-`src/api/**` is the stable package/source facade. Root exports include the core `wiki_*` facades, OKF compatibility facade, and stable types. `src/pi/**` contains the Pi-native tool/command adapter exposed by package metadata for packed external installs; repo-local dogfooding is currently disabled. `src/cli/index.ts` remains a temporary development/test harness, not the normal product surface.
+`src/api/**` is the stable harness-neutral package/source facade used by the project control plane, dashboard, Pi clients, tests, and future adapters. Root exports include core `wiki_*` facades, OKF compatibility, runtime contracts, and stable types. `src/pi/**` contains entrypoint-isolated Pi conversational and execution adapters for packed external installs; repo-local dogfooding remains disabled. `src/cli/index.ts` remains a temporary development/test client.
 
 Target facade roots:
 
@@ -67,13 +67,13 @@ Target facade roots:
 - `src/api/traces.ts`
 - `src/api/views.ts`
 
-The API layer must not recreate old graph, telemetry, agency, roadmap, artifact, Change-store, or validation roots. `buildWorkState()` folds Change Traces with current KB, ownership, source/tests/Git, config, and bounded runtime observations. `src/api/state.ts` exposes bounded views without treating generated output as truth. Project-backed state adds per-Change append handles and compact next-action hints. Source/path explanation belongs in explain/source-map APIs, not `wiki_state`.
+The API layer must not recreate old graph, telemetry, agency, roadmap, artifact, Change-store, or validation roots. `buildWorkState()` folds Change Traces with current KB, ownership, source/tests/Git, config, integration state, and bounded runtime observations. `src/api/state.ts` exposes bounded Backlog, Planning, Implementation, Change, quality, and blocker projections without treating output as truth. Project-backed state adds per-Change append handles and compact next-action hints. Source/path explanation belongs in explain/source-map APIs, not `wiki_state`.
 
 The API exposes reduced core facades for `buildWorkState()`, `buildWikiState()`, `runWikiChange()`, `runWikiDecide()`, `runWikiPlan()`, `runWikiImplement()`, `runWikiArchive()`, and `runWikiConfig()`. Decision, Planning, and Implementation facades accept loop-specific typed inputs, load repository context themselves, and preview or append one quality-governed iteration safely. `runWikiRuntime()` remains backend outer-loop coordination, not a fourth semantic loop or normal agent mega-tool. Archive handles Change Trace closure, retention stubs, and hydrate/restore. Config resolution lives in `src/project/config.ts`; host file load/save remains in `src/project/config-file.ts`.
 
 `runWikiOkf()` is a format-compatibility facade, not a workflow loop. `validate` and `export` actions default to CodeWiki KB scope and only include `.codewiki/kb/**/*.md`. `consume` defaults to generic OKF bundle scope and preserves unknown producer frontmatter fields when callers round-trip imported OKF markdown. The facade does not use BigQuery, Gemini, Google Cloud Knowledge Catalog, or the Google OKF reference agent.
 
-Pi extension package metadata is now present for external installs. The extension entry is covered by mocks, isolated Pi install smoke tests, external Pi RPC smoke tests, and repo-local read-only command smoke.
+Pi extension package metadata is present for external installs. The current extension entry is covered by mocks, isolated Pi install smoke tests, external Pi RPC smoke tests, and repo-local read-only command smoke. Target package architecture adds a project-service entrypoint and a Pi SDK execution entrypoint while preserving the existing core facade and source-checkout boundary.
 
 ## Related docs
 

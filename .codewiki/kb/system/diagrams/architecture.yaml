@@ -2,49 +2,75 @@ schema_version: 1
 id: spec.system.diagrams.architecture
 title: CodeWiki System Architecture
 kind: architecture_map
-purpose: "Show the target CodeWiki architecture during the rebuild: runtime outer loop, semantic loops, KB truth, JSONL trace truth, generated views, host adapters, and Git evidence."
+purpose: "Show the target project-scoped control plane, concurrent clients, semantic and worker execution adapters, canonical truth, and generated projections."
 source_docs:
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/loop-model.md
-  - .codewiki/kb/system/components/decision-loop.md
-  - .codewiki/kb/system/components/planning-loop.md
-  - .codewiki/kb/system/components/implementation-loop.md
-  - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
-  - .codewiki/kb/system/components/api-tools.md
+  - .codewiki/kb/system/components/session-coordination.md
+  - .codewiki/kb/system/components/adapters-and-ui.md
+  - .codewiki/kb/system/components/work-state.md
+  - .codewiki/kb/system/components/traces.md
 renderer:
   preferred: layered_projection
   fallback: mermaid_flowchart
   layout: top_down
   stable_ids: true
 groups:
-  - id: surfaces
-    label: User and host surfaces
-  - id: runtime
-    label: Runtime outer loop
+  - id: clients
+    label: Project clients
+  - id: control
+    label: Project control plane
+  - id: execution
+    label: Execution adapters
   - id: loops
     label: Semantic loops
   - id: truth
-    label: Durable truth
+    label: Canonical truth
   - id: generated
-    label: Generated views
-  - id: evidence
-    label: Content evidence
+    label: Disposable projections
+  - id: proof
+    label: Executable proof
 nodes:
-  - id: user
-    label: User / agent intent
-    group: surfaces
+  - id: user_agent
+    label: User / agent / bounded integration
+    group: clients
     kind: actor
-  - id: host_tools
-    label: CLI / Pi / MCP adapters
-    group: surfaces
-    kind: host_adapter
-    source: .codewiki/kb/system/components/api-tools.md
-  - id: runtime
-    label: Runtime outer loop
-    group: runtime
+  - id: dashboard
+    label: Work / Product / System / Design dashboard
+    group: clients
+    kind: client
+    source: .codewiki/kb/product/uis/terminal.md
+  - id: pi_client
+    label: Pi conversational client
+    group: clients
+    kind: client_adapter
+    source: .codewiki/kb/system/components/extension.md
+  - id: future_clients
+    label: CLI / MCP / editor / CI clients
+    group: clients
+    kind: client_adapter
+    source: .codewiki/kb/system/components/adapters-and-ui.md
+  - id: control_plane
+    label: Project control plane
+    group: control
     kind: coordination
     source: .codewiki/kb/system/components/runtime.md
+  - id: work_state
+    label: WorkState projector
+    group: control
+    kind: generated_projection
+    source: .codewiki/kb/system/components/work-state.md
+  - id: semantic_adapter
+    label: Embedded Pi SDK semantic sessions
+    group: execution
+    kind: execution_adapter
+    source: .codewiki/kb/system/components/session-coordination.md
+  - id: worker_adapter
+    label: Process / container workers
+    group: execution
+    kind: execution_adapter
+    source: .codewiki/kb/system/components/session-coordination.md
   - id: decision
     label: Decision loop
     group: loops
@@ -61,67 +87,91 @@ nodes:
     kind: semantic_loop
     source: .codewiki/kb/system/components/implementation-loop.md
   - id: kb
-    label: Hot knowledge base
+    label: OKF Product / System / Design Knowledge
     group: truth
     kind: durable_truth
     source: .codewiki/kb/system/components/knowledge.md
   - id: traces
-    label: JSONL traces
+    label: JSONL Change Traces
     group: truth
     kind: durable_truth
     source: .codewiki/kb/system/components/traces.md
   - id: views
-    label: Generated views
+    label: Dashboard / search / graph / activity projections
     group: generated
     kind: generated_projection
-    source: .codewiki/kb/system/components/source-map.md
-  - id: git
-    label: Git commits / trees / restore refs
-    group: evidence
+    source: .codewiki/kb/system/components/adapters-and-ui.md
+  - id: source_git
+    label: Source / tests / Git / restore refs
+    group: proof
     kind: executable_truth
 edges:
-  - from: user
-    to: host_tools
-    label: invokes
-  - from: host_tools
-    to: runtime
-    label: asks for next action or loop iteration
-  - from: runtime
+  - from: user_agent
+    to: dashboard
+    label: manages project
+  - from: user_agent
+    to: pi_client
+    label: discusses and submits intent
+  - from: dashboard
+    to: control_plane
+    label: bounded local client requests
+  - from: pi_client
+    to: control_plane
+    label: intent, authority, supervision, reads
+  - from: future_clients
+    to: control_plane
+    label: bounded client protocol
+  - from: control_plane
+    to: work_state
+    label: refreshes canonical projection
+  - from: control_plane
+    to: semantic_adapter
+    label: schedules bounded read-only jobs
+  - from: control_plane
+    to: worker_adapter
+    label: starts claimed isolated Assignments
+  - from: semantic_adapter
     to: decision
-    label: runs decision iteration
-  - from: runtime
+    label: submits Decision candidate
+  - from: semantic_adapter
     to: planning
-    label: runs planning iteration
-  - from: runtime
+    label: submits Planning candidate
+  - from: semantic_adapter
     to: implementation
-    label: runs implementation iteration or starts workers
+    label: submits review candidate
+  - from: worker_adapter
+    to: implementation
+    label: returns candidate realization evidence
   - from: decision
     to: kb
-    label: updates hot knowledge intent
+    label: applies accepted intent updates
   - from: decision
     to: traces
-    label: appends iteration output
+    label: accepted append through control plane
   - from: planning
     to: traces
-    label: appends iteration output
+    label: accepted epoch slices through control plane
   - from: implementation
     to: traces
-    label: appends iteration output
-  - from: runtime
-    to: traces
-    label: appends coordination events
+    label: accepted realization through control plane
   - from: implementation
-    to: git
-    label: produces content proof
-  - from: traces
-    to: views
-    label: projects state
+    to: source_git
+    label: verifies integrated content proof
   - from: kb
+    to: work_state
+    label: canonical context
+  - from: traces
+    to: work_state
+    label: workflow and coordination facts
+  - from: source_git
+    to: work_state
+    label: current implementation and proof
+  - from: work_state
     to: views
-    label: enriches projections
-  - from: git
-    to: views
-    label: proves implementation state
+    label: projects current state
   - from: views
-    to: host_tools
-    label: state/resume reads
+    to: dashboard
+    label: state snapshots and events
+  - from: views
+    to: pi_client
+    label: compact state and notifications

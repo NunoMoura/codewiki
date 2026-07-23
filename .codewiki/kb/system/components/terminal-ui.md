@@ -1,124 +1,140 @@
 ---
 type: Concept
-title: Pi Terminal and Dashboard UX
-description: CodeWiki uses the main Pi session for Change conversation while an automatically opened dashboard projects Change journeys, Planning-created Sprints, Work Items, Assignments, evidence, and guarded controls from WorkState.
+title: Project Dashboard and Pi Client Architecture
+description: The dashboard and Pi extension are concurrent clients of one local CodeWiki project control plane that owns Work scheduling, execution sessions, guarded writes, and projections.
 tags:
   - codewiki
   - system
-  - terminal
-  - ui
+  - dashboard
+  - pi
+  - client
 timestamp: 2026-07-01T00:00:00Z
 ---
-# Pi Terminal and Dashboard UX
+# Project Dashboard and Pi Client Architecture
 
-CodeWiki keeps the main Pi session focused on user-agent communication. The conversation itself is the interaction workspace: the user and agent brainstorm possible Changes, persist useful candidates through `wiki_change`, validate exact revisions, and invoke `wiki_decide` without a persistent terminal widget competing for screen space. There is no separate Ideas Workspace.
+The dashboard and Pi extension are clients of one project-scoped CodeWiki control plane. The control plane owns runtime lifetime, WorkState, scheduling, session creation, worker supervision, integration, guarded writes, and event projection. No active Pi conversation owns the project pipeline.
 
-An eligible Pi TUI session automatically starts the local dashboard and opens its browser view once on initial process startup. The primary Work Pipeline projects one card per Change journey, with attached Decision, Sprint, Work Item, Assignment, Implementation, Knowledge, file, preview, and outcome detail derived from WorkState. Configuration remains secondary. The dashboard is a projection and guarded command surface over core APIs; it never owns workflow truth or writes source directly.
+## Client surfaces
 
-## Automatic and command-triggered surfaces
+| Client | Responsibility |
+| --- | --- |
+| Dashboard | Primary Work, Product, System, and Design management interface. |
+| Pi extension | Conversational Change intake, authority, explanation, supervision presence, and dashboard launch/reopen. |
+| CLI/test client | Temporary development, CI, and external-install verification. |
+| Future adapter | Same bounded control-plane protocol without changing core semantics. |
 
-Active command direction is intentionally small. Each command has one direct slash form for Pi discovery; the older grouped namespace command is deprecated:
+Several clients may connect concurrently. Each request carries project identity, capability, idempotency, and expected state where mutation is possible.
+
+## Dashboard routes
+
+```text
+/work/backlog
+/work/planning
+/work/implementation
+/product/users
+/product/stories
+/system/:diagram
+/design/guidelines
+/design/uis
+/changes/:changeId
+```
+
+Work pages use distinct projections:
+
+- Backlog joins pending Change revisions, proposal provenance, Decision state, overlap, authority, and intervention.
+- Planning joins approved Changes, Planning epochs, Sprints, Work Items, dependencies, contribution, conflicts, integration boundaries, and readiness.
+- Implementation joins claims, Assignments, session observations, workers, isolation, integration, checks, evidence, Git proof, and remediation.
+
+Product, System, and Design routes render canonical Knowledge. Change detail is a cross-cutting dossier and never owns another copy of the runtime pipeline.
+
+## Project service lifecycle
+
+A local project service has one elected writer/coordinator generation. It binds only to loopback or a user-private local socket and stores user-only endpoint metadata under runtime scratch. Clients may ensure, discover, health-check, and connect to it.
+
+Closing one client does not stop the service or mutate truth. Under supervised policy, loss of all approved supervision prevents new semantic-session and worker starts. Existing work follows explicit grace/cancellation policy. Intake, read projections, and recovery may remain available. Unattended continuation requires separate explicit project policy.
+
+The service may quiesce or stop after policy-defined idleness because canonical truth permits deterministic rebuild. “Always available” means recoverable project capability, not mandatory permanent process residency.
+
+## Runtime protocol
+
+The local protocol exposes bounded capability groups:
+
+- state snapshot and event stream;
+- proposal and Change operations;
+- exact authority responses;
+- source-backed Product/System/Design edit proposals;
+- runtime pause/resume/cancel controls allowed by policy;
+- configuration below active authority ceilings;
+- preview and browser lifecycle controls;
+- diagnostics and bounded audit receipts.
+
+Clients cannot select semantic loops, create arbitrary model sessions, submit arbitrary shell strings, append trace records, write source directly, merge, commit, publish, or relax policy. Runtime converts eligible canonical invariants into semantic and worker jobs.
+
+## Pi execution
+
+The target semantic adapter embeds Pi through its SDK. Each Decision, Planning, or Implementation-review job receives one runtime-built bounded context and read-only tool set. A closed candidate-submission tool returns typed output to runtime. Runtime validates freshness, quality, identity, and append authority before any durable write.
+
+Implementation uses a separate worker adapter. Initial workers run as Pi child processes in isolated worktrees. Container workers become available where project risk or policy requires stronger process/filesystem isolation. Core runtime depends on adapter contracts, not Pi SDK types.
+
+Main Pi conversations remain user-facing clients. They do not double as hidden Planning or worker sessions.
+
+## Source-backed editing
+
+Dashboard editors generate deterministic patches against exact Markdown/YAML digests. The service validates OKF or diagram schema, presents the diff, creates or revises a Change, and applies accepted edits only through guarded workflow authority. Unknown frontmatter and unsupported Markdown must survive round trips.
+
+Generated search, relationship, and graph indexes are disposable. Standard OKF links remain untyped; CodeWiki relationship metadata and canonical diagram edges carry typed workflow/ownership semantics.
+
+## Live updates
+
+The control plane observes durable append boundaries, Knowledge/source/Git changes, claims, worker lifecycle, integration, preview state, and client supervision. Filesystem notifications trigger a canonical rescan; notification payloads are never trusted as truth.
+
+State streams are bounded, redacted, reconnectable, and generation-aware. Missed events cause snapshot refresh. Raw prompts, private reasoning, credentials, unbounded logs, and raw source content are never broadcast.
+
+## Local security
+
+- Bind only to loopback or equivalent private local transport.
+- Keep endpoint metadata and capabilities user-readable only.
+- Require exact `Origin` or an explicitly validated browser same-origin fallback for mutations.
+- Disable CORS and public tunnels by default.
+- Deny framing, referrer leakage, external resource connections, and arbitrary browser profiles.
+- Use closed schemas, input bounds, idempotency keys, freshness guards, audit receipts, and secret redaction.
+- Treat proposal text and imported Knowledge as untrusted data, never execution authority.
+- Do not imply that worktrees provide a security sandbox.
+
+## Pi commands
+
+The compact command surface remains:
 
 | Command | Purpose |
 | --- | --- |
-| `/wiki-dashboard [--no-open] [--json] [--stop]` | Reopen/reuse the automatic Work Pipeline dashboard, return its URL without opening, or stop its local host. |
-| `/wiki-resume` | Continue from the trace-derived resume view, latest loop outputs, unmet Ready Checks, and source refs. |
-| `/wiki-explain [target]` | Explain the whole project, a component, a flow, or a path from KB, OKF source ownership, mapped tests, trace refs, and quality summaries. |
-| `/wiki-bootstrap` | Start CodeWiki in a greenfield or brownfield repository through explicit backend setup/bootstrap calls, then render a human ready summary. |
-| `/wiki-config` | Inspect CodeWiki preferences/configuration; writes require explicit confirmation. |
+| `/wiki-dashboard [--no-open] [--json] [--stop]` | Ensure, discover, reopen, inspect, or explicitly stop the local project service according to policy. |
+| `/wiki-resume` | Continue from current WorkState and exact intervention or next safe action. |
+| `/wiki-explain [target]` | Explain project, concept, component, flow, or source path from canonical Knowledge and refs. |
+| `/wiki-bootstrap` | Initialize an external project through explicit guarded setup. |
+| `/wiki-config` | Inspect or propose bounded configuration changes. |
 
-There is no separate public status command or state alias. `wiki_state` remains an internal agent read tool. The user-facing state surface is the automatically opened dashboard; `/wiki-dashboard` remains a reopen/recovery action rather than a prerequisite. Closing a browser tab leaves workflow truth untouched, the dashboard Close action or `/wiki-dashboard --stop` stops the local host, and a later `/wiki-dashboard` starts and reopens it. Allowed mutations still pass through guarded core capabilities rather than browser-owned state. `/wiki-resume` remains the high-frequency user continuation command.
+`wiki_state` remains an internal agent read capability. Semantic candidate submission may move from active tools in the main conversation to closed tools inside runtime-created embedded sessions. Archive and runtime coordination remain backend capabilities.
 
-## Change-to-outcome lifecycle
+## Rendering and accessibility
 
-The main session explicitly persists useful intent through `wiki_change`. First persistence creates one Change Trace. Decision-loop iterations refine and validate complete semantic revisions in that trace. Exact user approval appends `decision.change_approved`; it does not create a Decision entity, Sprint, or second trace.
+Browser rendering is a projection over WorkState and canonical inputs. It never creates UI-owned lifecycle state. Every graph has a structured list/table equivalent. Custom controls implement pointer, touch, keyboard, focus return, assistive semantics, zoom, high contrast, and reduced motion.
 
-Before approval, the Change appears in the Changes Backlog view. After approval, the same Pipeline Card and Change identity continue through Planning and Implementation. Planning observes the relevant approved-Change portfolio and creates Sprints and Work Items. Runtime grants Assignments, coordinates workers/integration, and asks Implementation to accept or reject realization evidence. The main session may continue discussing other Changes while runtime remains supervised and event-driven.
-
-A Pipeline Card is one Change Journey projection. It foregrounds the questions users ask most often:
-
-- What is currently active?
-- How much work appears to remain?
-- Which loop is running now?
-- What are workers doing?
-- What is blocked?
-
-The parent progress rail contains five equal independent bars: Change orange, Decision yellow, Planning green, Implementation blue, and Committed teal. Each bar preserves its stage color and fills left-to-right from bounded Change-level progress. Unfilled space remains grey. A Change journey is complete only when all required stages and outcome disposition are complete. Sprint progress remains an attached Planning/execution projection. Red never replaces stage identity.
-
-Stage text is visually hidden on the rail. Every bar exposes its name, state, and progress through hover/focus tooltip and accessible name. Started stages are interactive; future stages are disabled. Selecting a stage opens one attached detail container whose tag and outline use that stage color. Ready Checks live inside the selected stage. Overview, Knowledge Base, and Files remain Sprint-level panels outside stage ownership.
-
-Collapsed cards contain title, vertical-dot options, a current action line, the Change `+` primary action, and the parent rail. Non-zero active Sprint, Work Item, and worker facts may join the action line. Blocked work renders only as `✕ Blocked — reason`; it does not turn a stage red. Open detail, focus, filters, and controls survive refreshes.
-
-Expanding a Change opens Trace Detail. Trace Detail shows revisions, exact approval, Sprint memberships, Work Items, Assignments, blockers, paths, loop refs, evidence, outcome disposition, and current action. The Change `+` action exposes exactly Resume, Change, and Resolve Blocker. With the optional in-process Pi bridge, the dashboard submits an allowlisted Change-scoped user message to the same active session through `pi.sendUserMessage()`. It never creates another session, submits arbitrary prompts, or treats delivery as semantic approval.
-
-Change creates or reinforces intent in the current journey when accountable outcome remains stable; materially new intent creates a linked Change Trace. Retries, route-backs, and blocker remediation remain branches inside the original Change event tree.
-
-Each Change exposes generated topic-scoped Knowledge alignment: Aligned, Review Needed, Misaligned, or Unknown. Digest change yields Review Needed only. Misaligned requires a grounded contradiction naming affected layer, source refs, rationale, and recommended loop. Topic filters, Change detail, and related Sprint views consume the same projection.
-
-## Local dashboard host
-
-Initial Pi TUI `session_start` starts a local HTTP server bound to `127.0.0.1` with a random URL token and opens the browser once. Reload and session replacement restore the same endpoint without opening duplicate tabs. `/wiki-dashboard` uses the same start/reuse path for explicit reopen; an explicit Pi command may stop the host, but dashboard settings do not own host shutdown. The server exposes static browser assets, state and event streams for live refresh, and a narrow guarded command plane for allowed Change, configuration, supervised runtime-session, and same-session action delivery. It watches `.codewiki/traces`, relevant KB/config/source/Git signals, and runtime observations, then rebuilds WorkState-backed dashboard projections through core APIs.
-
-Security boundaries:
-
-- bind only to loopback;
-- include a random token in API URLs;
-- keep reads public only within the tokenized same-origin session;
-- route any Change validation, configuration, or runtime-session command through guarded core APIs with exact same-origin capability checks, optimistic revision/digest or session guards, bounded input, idempotency, audit receipts, stale-state lockout, and secret redaction. Mutation requests must carry an exact `Origin`; when the dashboard's `no-referrer` response policy causes Chromium to omit `Origin`, the server accepts only the browser fallback pair of exact loopback `Host` and `Sec-Fetch-Site: same-origin`. Missing, foreign, or contradictory authority metadata fails closed;
-- do not enable CORS;
-- never grant dashboard shell, direct source-write, merge, publication, source-promotion, controller-advancement, or kernel-relaxation authority;
-- keep final Change approval explicit and bound to the exact rendered revision and digest.
-
-The visual style should be retro console inspired rather than pure ASCII: monospace layout, high-contrast neutral cards, branded stage color, and low-noise horizontal bars. The compact header has no title or filter-tile row: it vertically centers the logo beside one bounded-width persistent search field, an integrated lifecycle/topic scope picker with a smaller midpoint-teal count, a solid dark logo-blue Add Change CTA, and one settings control. Add Change and Sprint `+` use the same primary-action component. The control group is optically centered with equal visual gutters. Search applies only within the selected lifecycle or Product/System Knowledge topic scope, and `/` focuses the same field.
-
-Settings opens a grouped accessible form over every `DashboardEditableConfig` field: workers, worktree isolation, automation, agency, budgets, model routing, and Pi host state. Controls display effective values, active bounds, disabled authority-raising choices, validation errors, save progress, receipts, and restart guidance. Form serialization preserves untouched and unset values and compiles only to the existing allowlisted bounded patch. Raw editable JSON and Close Dashboard are removed from header UX.
-
-## Tool and trace rendering
-
-Bootstrap keeps rich command rendering because it runs before a project has useful trace state. Explicit read commands such as `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render their requested view. After bootstrap, `wiki_*` tools should return compact agent handles; they should not own rich user observability or render preview output as product UX.
-
-The durable user-facing path is state-boundary driven:
-
-```text
-main conversation -> wiki_change -> Change Trace + Backlog view
-exact Change approval -> same Change Journey advances
-Planning epoch -> Sprint and Work Item views
-Assignment/Implementation append -> realization progress
-successful trace_close + Git restore ref -> Committed Change
-```
-
-Semantic loop preview results are agent-private validation drafts. Only appended trace records should update post-bootstrap lifecycle observability. Live frontend preview is a separate operational browser capability: it may project health and explicitly captured implementation evidence, but it cannot grant semantic approval or append trace truth directly.
-
-`src/pi/tui/index.ts` is a pure renderer facade for command renderers plus the CodeWiki footer status and legacy card renderers. It may be imported by commands/tests without writing state or depending on the Pi SDK. The active progress surface is the dashboard; no terminal widget state may become workflow truth.
-
-Rendered terminal output should continue to use display-width-aware truncation so Pi notifications never exceed terminal width. Bootstrap and footer rendering should expose the active extension artifact so dogfood users can distinguish local checkout, project-local package, and non-project package execution. Rendered output is not canonical truth and must not create hidden UI-only state.
-
-## Diagram rendering
-
-Canonical diagrams live under `.codewiki/kb/system/diagrams/**` as YAML. Terminal renderers read those YAML files or generated view lenses derived from them.
-
-Diagram rendering should prioritize interpretation over fidelity:
-
-- architecture/component maps render as grouped lanes or focused neighborhoods,
-- sequence flows render as ordered steps or simple swimlanes,
-- state lifecycle maps render as states plus transitions,
-- source maps render as trees,
-- data models render as entity cards plus relation lists.
-
-The renderer should use Unicode box drawing by default and ASCII fallback when needed. Renderer output is not canonical truth and must not create hidden UI-only state.
+Pi TUI renderers remain compact read surfaces for bootstrap, configuration, explanation, resume, and status notices. They do not compete with the dashboard or become project truth.
 
 ## Non-goals
 
-- No persistent terminal widgets for CodeWiki state.
-- No dashboard semantic trace writes in the MVP; stopping the local dashboard host is lifecycle control, not workflow mutation.
-- No status panel or dock UI.
-- No standalone Board or Map product UI.
-- No Product/System navigation panel work.
-- No full generated graph renderer by default.
-- No hidden terminal-only workflow state.
+- No per-Change pipeline dashboard.
+- No Pi-session-owned dashboard or scheduler.
+- No arbitrary dashboard-to-conversation prompt injection.
+- No dashboard-created SDK/RPC session chosen by browser input.
+- No public network service or unauthenticated proposal endpoint.
+- No canonical dashboard database, graph store, session registry, or WorkState file.
+- No full Knowledge graph rendered by default.
 
 ## Related docs
 
-- [Product TUI Diagram Rendering](../../product/uis/terminal.md)
-- [Loop Model](loop-model.md)
+- [Product Dashboard Contract](../../product/uis/terminal.md)
+- [Runtime](runtime.md)
+- [Session Coordination](session-coordination.md)
+- [Adapters and UI](adapters-and-ui.md)
 - [API Tool Surface](api-tools.md)

@@ -2,55 +2,94 @@ schema_version: 1
 id: spec.system.diagrams.component-map
 title: CodeWiki Component and Container Map
 kind: component_map
-purpose: Show major CodeWiki domain, application, adapter, truth, runtime, view, and proof components with dependency direction.
+purpose: Show client, control-plane, execution-adapter, semantic-loop, truth, projection, and proof components with dependency direction.
 source_docs:
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/loop-model.md
-  - .codewiki/kb/system/components/api-tools.md
-  - .codewiki/kb/system/components/source-map.md
-  - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
+  - .codewiki/kb/system/components/session-coordination.md
+  - .codewiki/kb/system/components/adapters-and-ui.md
+  - .codewiki/kb/system/components/api-tools.md
+  - .codewiki/kb/system/components/work-state.md
+  - .codewiki/kb/system/components/traces.md
 renderer:
   preferred: layered_graph
   fallback: mermaid_flowchart
 groups:
-  - id: surfaces
-    label: User and host surfaces
+  - id: client_layer
+    label: Project clients
   - id: api_layer
-    label: Tool/API layer
-  - id: runtime_layer
-    label: Runtime outer loop
+    label: Harness-neutral API
+  - id: control_layer
+    label: Project control plane
+  - id: adapter_layer
+    label: Execution adapters
   - id: loop_layer
     label: Semantic loops
   - id: truth_layer
-    label: Truth and state
+    label: Canonical truth and projections
   - id: proof_layer
     label: Proof and retention
 nodes:
-  - id: user_intent
-    label: User / agent intent
-    group: surfaces
-    kind: actor
-  - id: host_adapters
-    label: CLI / Pi / MCP adapters
-    group: surfaces
-    kind: host_adapter
-    source: .codewiki/kb/system/components/api-tools.md
-  - id: api
+  - id: dashboard
+    label: Dashboard client
+    group: client_layer
+    kind: client
+    source: .codewiki/kb/system/components/terminal-ui.md
+  - id: pi_extension
+    label: Pi conversational client
+    group: client_layer
+    kind: client_adapter
+    source: .codewiki/kb/system/components/extension.md
+  - id: other_clients
+    label: CLI / future adapters
+    group: client_layer
+    kind: client_adapter
+    source: .codewiki/kb/system/components/adapters-and-ui.md
+  - id: core_api
     label: CodeWiki core API
     group: api_layer
     kind: application
     source: .codewiki/kb/system/components/api.md
-  - id: wiki_tools
-    label: wiki_state / wiki_decide / wiki_plan / wiki_implement / wiki_archive / wiki_config
+  - id: client_capabilities
+    label: State / Change / authority / config / preview
     group: api_layer
-    kind: tool_surface
+    kind: capability_surface
     source: .codewiki/kb/system/components/api-tools.md
-  - id: runtime
-    label: Runtime outer loop
-    group: runtime_layer
+  - id: control_plane
+    label: Project control plane
+    group: control_layer
     kind: coordination
     source: .codewiki/kb/system/components/runtime.md
+  - id: scheduler
+    label: Compatible-job scheduler and lanes
+    group: control_layer
+    kind: scheduler
+    source: .codewiki/kb/system/components/session-coordination.md
+  - id: work_state
+    label: WorkState projector
+    group: control_layer
+    kind: generated_projection
+    source: .codewiki/kb/system/components/work-state.md
+  - id: semantic_contract
+    label: Semantic session adapter contract
+    group: adapter_layer
+    kind: adapter_contract
+    source: .codewiki/kb/system/components/session-coordination.md
+  - id: pi_sdk_adapter
+    label: Embedded Pi SDK adapter
+    group: adapter_layer
+    kind: execution_adapter
+    source: .codewiki/kb/system/components/extension.md
+  - id: worker_contract
+    label: Implementation worker adapter contract
+    group: adapter_layer
+    kind: adapter_contract
+    source: .codewiki/kb/system/components/session-coordination.md
+  - id: isolated_workers
+    label: Process / container workers
+    group: adapter_layer
+    kind: execution_adapter
   - id: decision_loop
     label: Decision loop
     group: loop_layer
@@ -67,25 +106,25 @@ nodes:
     kind: semantic_loop
     source: .codewiki/kb/system/components/implementation-loop.md
   - id: knowledge
-    label: Hot knowledge base
+    label: OKF Knowledge and diagram YAML
     group: truth_layer
     kind: durable_truth
     source: .codewiki/kb/system/components/knowledge.md
   - id: traces
-    label: JSONL trace truth
+    label: JSONL Change Trace truth
     group: truth_layer
     kind: durable_truth
     source: .codewiki/kb/system/components/traces.md
-  - id: views
-    label: Generated views
-    group: truth_layer
-    kind: generated_projection
-    source: .codewiki/kb/system/components/source-map.md
   - id: runtime_tmp
-    label: Runtime temp scratch
-    group: runtime_layer
+    label: Runtime endpoint / session / process scratch
+    group: truth_layer
     kind: transient_state
     source: .codewiki/kb/system/components/runtime.md
+  - id: views
+    label: Work / Product / System / Design projections
+    group: truth_layer
+    kind: generated_projection
+    source: .codewiki/kb/system/components/adapters-and-ui.md
   - id: code_tests
     label: Source + tests
     group: proof_layer
@@ -100,63 +139,90 @@ nodes:
     kind: retention_pipeline
     source: .codewiki/kb/system/components/traces.md
 edges:
-  - from: user_intent
-    to: host_adapters
-    label: requests work or state
-  - from: host_adapters
-    to: wiki_tools
-    label: exposes tool semantics
-  - from: wiki_tools
-    to: api
-    label: delegates to core APIs
-  - from: api
-    to: runtime
-    label: coordinates next actions
-  - from: runtime
+  - from: dashboard
+    to: client_capabilities
+    label: guarded local requests
+  - from: pi_extension
+    to: client_capabilities
+    label: conversational requests
+  - from: other_clients
+    to: client_capabilities
+    label: bounded protocol
+  - from: client_capabilities
+    to: core_api
+    label: delegates semantics
+  - from: core_api
+    to: control_plane
+    label: submits triggers and operations
+  - from: control_plane
+    to: scheduler
+    label: derives and admits jobs
+  - from: control_plane
+    to: work_state
+    label: refreshes
+  - from: scheduler
+    to: semantic_contract
+    label: semantic jobs
+  - from: semantic_contract
+    to: pi_sdk_adapter
+    label: Pi implementation
+  - from: scheduler
+    to: worker_contract
+    label: claimed Assignments
+  - from: worker_contract
+    to: isolated_workers
+    label: process or container implementation
+  - from: pi_sdk_adapter
     to: decision_loop
-    label: runs decision iteration
-  - from: runtime
+    label: Decision candidate
+  - from: pi_sdk_adapter
     to: planning_loop
-    label: runs planning iteration
-  - from: runtime
+    label: Planning candidate
+  - from: pi_sdk_adapter
     to: implementation_loop
-    label: runs implementation iteration or workers
+    label: review candidate
+  - from: isolated_workers
+    to: implementation_loop
+    label: worker evidence candidate
   - from: decision_loop
     to: knowledge
-    label: updates accepted intent
+    label: accepted intent update
   - from: decision_loop
     to: traces
-    label: appends iteration
+    label: guarded append
   - from: planning_loop
     to: traces
-    label: appends iteration
+    label: guarded epoch append
   - from: implementation_loop
     to: traces
-    label: appends iteration
-  - from: runtime
-    to: traces
-    label: appends coordination
-  - from: runtime
+    label: guarded realization append
+  - from: control_plane
     to: runtime_tmp
-    label: stores active scratch
-  - from: implementation_loop
-    to: code_tests
-    label: changes and verifies
-  - from: implementation_loop
-    to: git
-    label: produces content proof
-  - from: traces
-    to: views
-    label: projects current state
+    label: bounded operational scratch
   - from: knowledge
-    to: views
-    label: enriches current state
+    to: work_state
+    label: canonical context
+  - from: traces
+    to: work_state
+    label: workflow facts
+  - from: code_tests
+    to: work_state
+    label: executable state
   - from: git
+    to: work_state
+    label: content proof
+  - from: work_state
     to: views
-    label: proves closure
-  - from: retention
-    to: git
-    label: stores cold restore refs
+    label: deterministic projection
+  - from: views
+    to: dashboard
+    label: snapshots and events
+  - from: views
+    to: pi_extension
+    label: compact state
   - from: traces
     to: retention
     label: closes and archives
+  - from: retention
+    to: git
+    label: stores restore refs

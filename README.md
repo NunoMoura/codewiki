@@ -1,8 +1,8 @@
 # codewiki
 
-CodeWiki is being rebuilt as a source-first package.
+CodeWiki is being rebuilt as a source-first, project-scoped development operating system.
 
-The old implementation archive has been removed after the migration audit. The rebuilt product surface is Pi-native tools/commands over the core facades; the CLI remains only a temporary development harness during stabilization.
+The approved target is one CodeWiki project control plane with a local dashboard and Pi conversational/execution adapters. Pi remains the primary agent engine, but no individual Pi session owns project scheduling or truth. The CLI remains only a temporary development/test client during stabilization.
 
 ## Current posture
 
@@ -16,17 +16,25 @@ The old implementation archive has been removed after the migration audit. The r
 - Pi native compaction handles conversation compression.
 - Decision, Planning, and Implementation production standards remain strict package behavior, but candidates cannot grade or operate their own source checkout.
 
-## Changes Backlog and control center
+## Work and project control plane
 
-The Changes Backlog is a generated view over persisted Change Traces whose current Decision state is pending. Change is the accountable carrier of intent; Decision is the loop that refines, validates, and approves an exact revision, not another entity. First explicit persistence creates one append-only JSONL Change Trace. That trace follows the same Change through approval, Planning-created Sprints and Work Items, runtime Assignments, Implementation realization, outcome disposition, and retention. A validation card still shows Current state, Proposed change, Agent opinion, content revision, record revision, digest, lifecycle status, and validation state from one bounded projection.
+CodeWiki's approved product architecture has four dashboard destinations: Work, Product, System, and Design. Work contains separate Backlog, Planning, and Implementation workspaces. Runtime owns the portfolio pipeline; a Change remains the durable accountable carrier of one intended product or system delta and opens as a cross-cutting dossier rather than owning a private pipeline.
 
-`wiki_change` can draft, revise, validate, link, split, merge, defer, reject, withdraw, and query Change revisions under exact Change-Trace-store head and record-revision guards. Bounded feedback intake deterministically reinforces a match or creates only a pending unvalidated Change. It cannot approve intent, create Planning truth, launch workers, edit source, publish, or advance a controller. CodeWiki has no hidden Git-ref Change store or backwards-compatibility importer; pre-release history remains available through normal Git history.
+Backlog is a generated and guarded intake surface over persisted pending Change revisions. `wiki_change` can draft, revise, validate, link, split, merge, defer, reject, withdraw, and query revisions under exact Change-Trace-store guards. Submission grants no semantic approval or execution authority. CodeWiki has no hidden Git-ref Change store or backwards-compatibility importer; pre-release history remains available through Git.
 
-Planning observes a bounded project-wide portfolio of approved Changes and owns Sprint creation. One Change may span several Sprints, and one Sprint may coordinate several Changes. Every Work Item has exactly one owning Change and may contribute explicitly to others; runtime grants bounded Assignment attempts. `WorkState` is the disposable typed projection joining Change Traces with KB, source ownership, source/tests/Git, configuration, and runtime observations. `WorkStateSession` streams each JSONL trace once and then parses only appended bytes while runtime stays alive; loss of memory causes a normal rebuild. SQLite is not required.
+Planning observes a bounded project-wide portfolio of approved Changes and owns Sprint creation. One Change may span several Sprints, and one Sprint may coordinate several Changes. Every Work Item has one owning Change and may contribute explicitly to others. Runtime should schedule a compatible set of independent Decision and Work Item jobs while serializing one accepted project Planning writer, conflicting paths, shared integration, commits, and publication.
 
-In a consuming project, an eligible Pi TUI session opens the dashboard automatically once. Its Work Pipeline uses one card per Change journey, with attached Sprints, Work Items, Assignments, Knowledge, files, previews, evidence, and outcomes. Five independent bars remain Change orange, Decision yellow, Planning green, Implementation blue, and Committed teal. Blockers render as `✕ Blocked — reason`. Resume, Change, and Resolve Blocker use a guarded same-session `pi.sendUserMessage()` bridge. Configuration remains a grouped bounded form; raw JSON and Close Dashboard are not settings UX.
+Implementation presents Work Items, Assignments, worker sessions, isolation, integration, checks, evidence, and Git proof. Worker completion remains candidate transport evidence. The Implementation loop alone accepts realization. Isolated worker output never appears as integrated product state.
 
-Worker dispatch resolves a deterministic execution policy before claim append and child-process creation. The selected provider, model, thinking level, allowed tools, timeout, immutable pricing snapshot, budget, and policy digest travel through handoff, start, observation, and guarded resume. Attached supervision and usage telemetry are mandatory. Policy drift, route mismatch, missing usage, exhausted limits, monitoring loss, detached execution, or invalid escalation stops the attempt without granting semantic authority.
+`WorkState` is the disposable typed project projection joining Change Traces with Knowledge, source ownership, source/tests/Git, configuration, integration, and bounded runtime observations. `WorkStateSession` streams JSONL append boundaries incrementally; memory loss causes a normal rebuild. SQLite is not required.
+
+Target runtime topology is one project-scoped control plane with concurrent dashboard, Pi, CLI/test, and future clients. It owns intake, WorkState refresh, compatible-job scheduling, semantic-session and worker lifecycle, guarded writes, integration, and live projections. No Pi conversation owns runtime lifetime.
+
+The first executable long-term seam is the entrypoint-isolated `@nunomoura/codewiki/pi-sdk` adapter. It creates bounded in-memory Pi SDK sessions for read-only Decision, Planning, and Implementation review, exposes only project-scoped read tools plus one closed candidate-submission tool, and returns candidates to `runRuntimeSemanticExecutor()`. The Pi SDK remains an optional peer during the architecture spike; disposable SDK fixtures must install it explicitly and use Node.js 22.19 or newer.
+
+Implementation workers remain on the separate process path today and target worktree plus process/container isolation. The current source still has a singular `RuntimeReactor`, one-shot host primitives, and an extension-owned dashboard implementation. Those are known implementation gaps against approved Knowledge, not target behavior. Production dashboard redesign waits for the project-control-plane and multi-session spike.
+
+Worker dispatch already resolves a deterministic execution policy before claim append and child-process creation. Provider, model, thinking level, allowed tools, timeout, pricing snapshot, budget, and policy digest travel through handoff, start, observation, and guarded resume. Attached supervision and usage telemetry are mandatory. Policy drift, route mismatch, missing usage, exhausted limits, monitoring loss, detached execution, or invalid escalation stops the attempt without granting semantic authority.
 
 ## New source layout
 
@@ -52,7 +60,9 @@ src/
   utils/
 ```
 
-The semantic loop roots are `decision`, `planning`, and `implementation`. Runtime is their supervised event-driven outer loop. Each semantic loop owns typed inputs, typed outputs, quality standards, and exit conditions. `traces` owns one append-only JSONL journey per persisted Change. `work-state` derives shared current project state; `views` render bounded projections such as Change Journey, Sprints, work plan/queue, runtime, blockers, and conflicts. `runRuntimeSemanticExecutor()` invokes only runtime-selected work, injects canonical entity context and append authority, retries CAS races under budget, stops on route-back, and repeats committed progress to quiescence. Semantic adapters submit judgment or evidence only. Runtime also owns triggers, Assignment claims, workers, integration, policy, guarded appends, and temporary data. `error-handling` owns shared errors and recovery hints.
+The semantic loop roots are `decision`, `planning`, and `implementation`. Runtime is their project-scoped event-driven outer control plane. Each semantic loop owns typed inputs, outputs, quality standards, and exits. `traces` owns one append-only JSONL journey per persisted Change. `work-state` derives shared project state; `views` render Backlog, Planning, Implementation, Change dossiers, quality, blockers, and outcomes.
+
+Current `runRuntimeSemanticExecutor()` remains one bounded job primitive: it invokes runtime-selected work, injects canonical identity and append authority, retries CAS races, and stops on route-back or budget. Target scheduling admits several compatible jobs while preserving one semantic owner per invariant. `src/pi/sdk-semantic-session.ts` implements the first embedded semantic-session adapter; existing process worker code remains a separate implementation adapter. `error-handling` owns shared errors and recovery hints.
 
 Temporary trace scratch belongs under `.codewiki/runtime/tmp/<change-trace>/<loop>/`. It remains non-authoritative and is cleaned only after durable trace/KB/source/Git or recovery refs exist.
 
@@ -60,7 +70,7 @@ The active migration record lives in `.codewiki/kb/system/flows/migration-audit.
 
 ## Requirements
 
-CodeWiki source remains TypeScript-first during the rebuild. Npm packages are built to `dist/**` before packing because Node does not strip TypeScript inside `node_modules`; installed packages target Node.js `>=20.6.0`. Local source commands and tests still use `node --experimental-strip-types`, so use Node.js `>=22.6.0` for development on this scaffold.
+CodeWiki source remains TypeScript-first during the rebuild. Npm packages are built to `dist/**` before packing because Node does not strip TypeScript inside `node_modules`; harness-neutral installed APIs target Node.js `>=20.6.0`. Local source commands and tests use `node --experimental-strip-types`, so use Node.js `>=22.6.0` for development. The optional `./pi-sdk` adapter follows Pi's stronger requirement and fails closed below Node.js 22.19.0.
 
 ## OKF compatibility
 
@@ -138,6 +148,8 @@ npm run test:pack
 npm run test:pi-install
 npm run test:pi-rpc
 npm run test:pi-mutation
+npm run test:pi-sdk
+npm run test:pi-sdk-package
 npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
@@ -160,6 +172,12 @@ Smoke command roles:
   previews first, submits semantic candidates without repository authority,
   verifies runtime-owned byte/sequence guards, and reads resulting state through
   `wiki_state`.
+- `npm run test:pi-sdk`: unit-proves bounded embedded semantic-session roles,
+  exactly-one candidate submission, lifecycle observations, payload limits, and
+  project-root containment without starting a model turn.
+- `npm run test:pi-sdk-package`: packs CodeWiki, installs it with an explicit
+  optional Pi SDK peer in a disposable external project, imports `./pi-sdk`, and
+  proves the closed adapter path without starting a model turn.
 - `npm run test:project-local-install`: installs the packed package under a
   fresh project's `.pi/npm/node_modules/@nunomoura/codewiki` path and verifies bootstrap,
   config write, and guarded decision append without controlled-test overrides.
@@ -202,9 +220,11 @@ agent-harness isolation.
 
 Repo-local Pi settings intentionally load pi-lens only. Do not install CodeWiki, add a controller pin, or add a repo-local `.pi/extensions/codewiki.ts` shim in this source checkout. Consuming projects use reviewed packed artifacts through project-local Pi installation.
 
-Installed package use should be through Pi-owned `/wiki-*` commands and runtime-routed capabilities, not the transitional CLI. `wiki_state`, `wiki_change`, and `wiki_config` remain generally active; runtime derives WorkState and activates at most one registered Decision, Planning, or Implementation candidate adapter. Adapter input contains semantic judgment or evidence, while runtime invokes the loop and owns exact Change/Sprint/Work Item/Assignment context, freshness, sequence, parents, source ownership, and trace bytes. Unrelated loop schemas and archive lifecycle stay out of model context. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. Dashboard opens automatically once for an eligible Pi TUI session; `/wiki-dashboard` reopens it, `--no-open` returns URL, and `--stop` stops local host.
+Current packed installs expose `/wiki-*` commands and runtime-routed capabilities through the Pi extension. `wiki_state`, `wiki_change`, and `wiki_config` remain generally active. Runtime owns exact Change/Sprint/Work Item/Assignment context, freshness, routing, sequence, parents, source ownership, and trace bytes. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`.
 
-Change Trace Detail follows one Change journey. Planning-created Sprints and Work Items, Assignment attempts, aggregate Integration and Exit Review, evidence, and outcome disposition remain attached to that identity. Activity Feed explains progress, impact, and next action. Dev Log stays bounded, redacted, operational, and non-authoritative. After installing a different packed runtime, fully restart Pi rather than relying on `/reload` to replace cached package modules.
+Target extension behavior is a thin client of one project service. It ensures or discovers the dashboard, submits intent and exact authority, registers supervision, and reads compact state. Runtime-created embedded sessions perform bounded read-only Decision, Planning, and Implementation review; process/container workers perform Assignment-scoped implementation. Main conversations do not become hidden semantic hosts.
+
+Backlog, Planning, and Implementation are project-wide Work surfaces. Change detail is a dossier joining intent, authority, impact, Planning coverage, Assignment/integration evidence, Git proof, and history. Dev Log stays bounded, redacted, operational, and non-authoritative. After installing a different packed runtime, fully restart Pi rather than relying on `/reload` to replace cached package modules.
 
 ## Trace archive cleanup
 

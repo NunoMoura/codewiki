@@ -2,7 +2,7 @@ schema_version: 1
 id: spec.system.diagrams.data-model
 title: CodeWiki Data Model
 kind: data_model
-purpose: Show target data ownership for KB docs, JSONL traces, generated views, runtime tmp, source/tests, and Git proof.
+purpose: Show target data ownership for canonical Knowledge, JSONL traces, source/tests, Git proof, generated WorkState views, and disposable control-plane/session scratch.
 source_docs:
   - .codewiki/kb/system/components/source-map.md
   - .codewiki/kb/system/components/traces.md
@@ -33,13 +33,23 @@ entities:
     examples:
       - status
       - resume
-      - work-plan
+      - backlog
+      - planning-horizon
+      - implementation
+      - change-dossier
       - blockers
       - conflicts
   - id: runtime_tmp
-    label: Runtime temporary data
-    storage: .codewiki/runtime/tmp/<trace-id>/<loop>/**
+    label: Control-plane, session, worker, and loop temporary data
+    storage: .codewiki/runtime/**
     truth: false
+    examples:
+      - endpoint metadata
+      - coordinator generation
+      - session refs
+      - bounded observations
+      - recovery packets
+      - loop scratch
   - id: source_file
     label: Source/test file
     storage: src/** and tests/**

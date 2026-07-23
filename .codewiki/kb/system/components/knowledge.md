@@ -101,7 +101,7 @@ CodeWiki hot knowledge is an OKF v0.1 markdown/frontmatter bundle under `.codewi
 
 CodeWiki concepts such as Change, Change Trace, Decision loop, approval, Sprint, WorkState, Work Item, Assignment, Ready Checks, and Needs Review are defined in `.codewiki/kb/**/*.md` as OKF-compatible knowledge.
 
-Actual Change and Sprint instances are not KB documents. One Change's durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Sprint, Work Pipeline, queue, and Change Journey screens are WorkState-backed projections over Change Traces, current KB/source/Git, and runtime observations; they must not become another state root.
+Actual Change and Sprint instances are not KB documents. One Change's durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections over Change Traces, current KB/source/Git, integration state, and bounded runtime observations; they must not become another state root.
 
 Use Change/Sprint/Work Item/Assignment in product-facing views. Keep trace ids, event ids, Change revision refs, Work Item ids, Assignment ids, and digests where storage, recovery, tests, or runtime coordination require exact technical identity.
 

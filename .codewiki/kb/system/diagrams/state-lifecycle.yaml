@@ -1,8 +1,8 @@
 schema_version: 1
 id: spec.system.diagrams.state-lifecycle
-title: CodeWiki Trace State Lifecycle
+title: One Change Trace Semantic Lifecycle
 kind: state_lifecycle
-purpose: Show target trace lifecycle states, semantic loop iteration outcomes, runtime coordination, and cleanup boundaries.
+purpose: Show one Change Trace's semantic facts, route-backs, terminal proof, and cleanup boundaries without implying that the Change owns the project runtime pipeline.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
   - .codewiki/kb/system/components/traces.md

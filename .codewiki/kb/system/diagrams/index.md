@@ -50,6 +50,6 @@ Nodes can set `requires_doc: true` when a diagram concept requires an owning Mar
 
 ## Related docs
 
-- [Terminal UI and Agent Visual Language](../components/terminal-ui.md)
+- [Project Dashboard and Pi Client Architecture](../components/terminal-ui.md)
 - [Source Map](../components/source-map.md)
 - [System Overview](../components/overview.md)

@@ -72,7 +72,7 @@ There is no target package root for split evaluation, stored state, graph projec
 
 ## Runtime model
 
-Runtime coordinates execution and owns trace writes. It owns boundaries, claims, leases, work-unit claim selection, heartbeat/watch coordination, worker liveness, automation policy, budgets, worker-start handoff, lifecycle helpers, retention orchestration, and temporary data. Runtime is the outer control loop, not a semantic loop. Main host, trace host, and worker host are host roles that drive or execute runtime instructions; they are not separate runtimes.
+Runtime is one project-scoped control plane and owns scheduling plus guarded trace writes. It owns client intake, WorkState refresh, compatible-job selection, semantic lanes, claims, leases, session and worker lifecycle, integration, automation policy, budgets, supervision, retention, and temporary data. Runtime is the outer control loop, not a semantic loop. Dashboard, Pi, and future clients do not own its lifetime. Embedded semantic sessions and process/container workers execute runtime instructions through adapter contracts; they are not separate runtimes.
 
 Temporary data lives under `.codewiki/runtime/tmp/<trace-id>/<loop>/`. Loop exit deletes loop temp after durable refs exist. Continue/blocked/route-back can preserve loop temp for remediation. Superseding iterations replace stale temp. Trace close cleans all remaining temp.
 
@@ -82,15 +82,14 @@ Pi native compaction is the only active compaction mechanism during the rebuild.
 
 Generated views answer current-state questions quickly:
 
-- status;
-- resume;
-- work-plan;
-- work-queue;
-- quality;
-- blockers;
-- conflicts.
+- Backlog and Decision state;
+- Planning horizon, coverage, and ready/held frontier;
+- Implementation Assignments, workers, integration, and proof;
+- Change dossiers;
+- status and resume;
+- quality, blockers, and conflicts.
 
-A terminal board or kanban display, if added later, renders trace-backed views. It is not a separate truth concept.
+Dashboard graphs, lanes, lists, search indexes, and compact Pi views render trace-backed WorkState. They are not separate truth concepts.
 
 ## Loop contracts
 

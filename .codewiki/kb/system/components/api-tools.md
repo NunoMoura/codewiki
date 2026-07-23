@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: API Tool Surface
-description: "CodeWiki exposes bounded state, Change, and config capabilities while runtime selects semantic work. Decision, Planning, and Implementation host adapters are registered but only the runtime-selected loop is active; archive lifecycle remains runtime-owned."
+description: "CodeWiki clients expose bounded state, Change, authority, and config capabilities while the project control plane schedules semantic sessions and workers through execution adapters."
 tags:
   - codewiki
   - system
@@ -30,18 +30,19 @@ codewiki_source_map:
 ---
 # API Tool Surface
 
-CodeWiki exposes a small set of explicit capabilities backed by the same core package APIs. `wiki_state`, `wiki_change`, and `wiki_config` remain generally active. Decision, Planning, and Implementation candidate adapters are registered for bounded semantic input, but runtime derives WorkState, activates only the selected adapter, and invokes the owning loop through `runRuntimeSemanticExecutor()`. Archive lifecycle is runtime-owned and not normally model-active. Runtime is backend coordination, not a model-facing mega-tool.
+CodeWiki exposes a small set of explicit client capabilities backed by the same core package APIs and one project-scoped control plane. `wiki_state`, `wiki_change`, and `wiki_config` remain bounded Pi-client capabilities. Runtime derives WorkState and schedules Decision, Planning, and Implementation-review jobs through semantic-session adapters rather than asking the main conversation to choose or host the next loop. Archive lifecycle remains runtime-owned and not normally model-active. Runtime is backend coordination, not a model-facing mega-tool.
 
-The current rebuild keeps the core package harness-agnostic, but the intended agent-facing product surface is Pi-native tools and commands. The CLI remains a temporary development/test harness until the Pi adapter is stable.
+The core package remains harness-neutral. Pi has two adapter roles: a thin conversational client and the primary execution engine. The dashboard is another first-class client. The CLI remains temporary development/test support.
 
 ```text
-CodeWiki core package
-  -> Pi extension adapter (primary product surface)
-  -> CLI harness (temporary development/test support)
-  -> MCP adapter (future optional adapter)
+Dashboard / Pi extension / CLI or future clients
+  -> CodeWiki project control plane and core APIs
+       -> embedded Pi SDK semantic-session adapter
+       -> process/container implementation-worker adapter
+       -> future harness adapters
 ```
 
-Pi is the supported host/peer for normal CodeWiki operation, not the CodeWiki core. Core source must not import the Pi SDK directly. Pi integration belongs under `src/pi/**`. The CodeWiki source checkout does not install or load CodeWiki itself during stabilization; maintainers use Pi native coding tools and test packed extension artifacts in disposable external projects. Unattended runtime automation remains disabled.
+Harness-neutral core source must not import Pi SDK types. Pi integration belongs under `src/pi/**`. The CodeWiki source checkout does not install or load CodeWiki itself during stabilization; maintainers use Pi native coding tools and test packed artifacts in disposable external projects. Unattended runtime automation remains disabled.
 
 ## Tool parameter style
 
@@ -70,7 +71,7 @@ Rules:
 
 ## Current internal agent tools
 
-Registered capabilities are small and phase-aligned. Registration does not imply concurrent model visibility: runtime removes all semantic and archive adapters from the active set, then activates at most the selected Decision, Planning, or Implementation candidate adapter. Calling that adapter submits judgment or evidence to the runtime executor; it does not invoke a facade with caller-authored repository context.
+Client capabilities remain small and phase-aligned. Main Pi conversations normally receive state, Change, configuration, explanation, and exact authority capabilities only. Runtime-created semantic sessions receive one closed role-specific candidate-submission tool plus read-only repository tools. They never receive unrelated semantic schemas or archive authority. Candidate submission returns judgment or evidence to the runtime executor; it does not invoke a facade with caller-authored repository context.
 
 | Tool | Responsibility | Mutates truth? |
 | --- | --- | --- |
@@ -84,7 +85,7 @@ Registered capabilities are small and phase-aligned. Registration does not imply
 
 `wiki_change` also exposes bounded feedback intake for explicit user, runtime, or lab findings. Intake searches pending Changes first, reinforces a deterministic match with evidence, or creates only a pending unvalidated Change. Its closed schema rejects prompts, reasoning, credentials, private fields, unrestricted refs, and oversized output. It cannot accept, decide, plan, implement, launch, publish, or advance controllers.
 
-Dashboard controls are narrower than the model-facing tools. Changes control permits only draft, revise, validate, and withdraw under capability, same-origin, head/record CAS, idempotency, and receipt checks. Resume, Change, and Resolve Blocker may deliver only allowlisted trace-scoped user messages through an attached active-session bridge; delivery is not approval or trace mutation. Configuration renders a grouped form over `DashboardEditableConfig`, compiles only bounded schema-defined patches below active authority and quality ceilings, validates the complete resulting config, and persists it atomically. Raw editable JSON is not browser UX. Neither control can grant semantic approval, source-write, publication, controller, or unsupervised authority. Execution-affecting configuration changes require a full Pi exit and restart; `/reload` does not replace cached package modules.
+Dashboard controls are narrower than model execution adapters. Backlog permits bounded proposal, revision, validation, withdrawal, and exact authority responses under capability, same-origin, revision/digest CAS, idempotency, and receipt checks. Product, System, and Design editors submit deterministic source patches through the Change workflow; browser code never writes source directly. Configuration compiles only schema-defined patches below active authority and quality ceilings and validates the complete result. Raw arbitrary execution JSON is not browser UX. No dashboard request grants semantic approval implicitly, starts a caller-authored model prompt, appends trace truth, publishes, advances controllers, or raises unsupervised authority.
 
 There is no standalone current tool for split output generation or split exit evaluation. Loop output, exit-condition evaluation, and trace append are one safe operation at the public tool boundary. Normal agents should not use split output/evaluation tools because that can recreate split-brain workflow state.
 
@@ -92,9 +93,10 @@ There is no standalone current tool for split output generation or split exit ev
 
 | Consumer | Surface | Backend support | Non-goal |
 | --- | --- | --- | --- |
-| Internal agent | Normally `wiki_state`, `wiki_change`, and `wiki_config`, plus at most one runtime-selected semantic candidate adapter. | WorkState-backed reads, checked Change Trace intake, and judgment/evidence submission for one bounded selected semantic iteration. | Choosing or invoking a loop directly, activating archive lifecycle, runtime mega-tools, caller-supplied repository truth, or split output/evaluation tools. |
-| Host/runtime | Package APIs such as `runWikiRuntime()`, host lifecycle helpers, worker-start helpers, handoff manifest helpers. | Work-unit claim selection, heartbeat-cycle Run starts, lease expiry, worker session transport, release events, append-safe coordination writes. | Semantic approval, Planning-owned work invention, or treating worker output as proof before implementation validation. |
-| User/Pi commands | Automatic dashboard startup plus `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, `/wiki-bootstrap`. | Work Pipeline observability, dashboard reopen/stop lifecycle, resume handoff, source/path explanation, effective config, setup readiness. | Grouped namespace commands, state-dump commands, terminal widget stacks, former state aliases, extra command sprawl such as `/wiki-board`, or exposing runtime internals directly. |
+| Main Pi client | Normally `wiki_state`, `wiki_change`, `wiki_config`, explanation, and exact authority capabilities. | WorkState-backed reads, checked Change intake, supervision presence, and guarded client requests. | Choosing semantic routing, owning runtime lifetime, or acting as hidden Planning/worker session. |
+| Semantic session | One runtime-selected role-specific candidate tool plus bounded read-only repository tools. | Judgment/evidence submission for one exact Decision, Planning, or Implementation-review job. | Append authority, repository identity replacement, source mutation, worker launch, archive, publication, or unrelated semantic tools. |
+| Control plane | Core APIs, scheduler, session/worker adapters, lifecycle helpers, claim/integration helpers, and guarded writers. | Compatible-job selection, claims, session and worker lifecycle, integration, retries, append-safe writes, and client projections. | Semantic approval, Planning-owned work invention, or treating worker output as proof before Implementation acceptance. |
+| User clients | Dashboard plus `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. | Backlog, Planning, Implementation, Product, System, Design, dashboard lifecycle, explanation, configuration, and setup readiness. | Direct source/trace mutation, arbitrary prompts, grouped namespace commands, state-dump command sprawl, or exposed runtime internals. |
 
 The core reduced-tool facade shape now exists for the current tool set:
 
@@ -113,7 +115,7 @@ The runtime backend remains available to host code, not as a normal agent tool:
 - Runtime lifecycle helpers plan main-host and trace-host coordination from derived views and can create trace-owned host observed/block/stop events. They are helpers, not a fourth semantic loop.
 - `createRuntimeHandoffManifest()` turns a runtime result into a disposable host handoff bundle: claim events, worktree command steps, worker prompts, expected completion shape, and release instructions. It is a helper, not a separate semantic tool.
 
-Semantic hosts submit candidates to `runRuntimeSemanticExecutor()` instead of calling loop facades directly or exposing separate proof, output, evaluation, context-loading, and append steps. The Pi adapter registers candidate adapters, while `RuntimeReactor` controls activation through Pi's active-tool set so unrelated schemas never enter current model context. Runtime continuously derives WorkState, invokes bounded Decision, Planning, or Implementation iterations, validates reports, owns CAS writes and retries, and repeats to quiescence under budgets. Host runners derive Implementation context from canonical WorkState and worker-result correlation rather than caller-marshalled Planning authority. The CLI adapter remains a transitional development harness.
+Semantic sessions submit candidates to `runRuntimeSemanticExecutor()` instead of calling loop facades directly or exposing separate proof, output, evaluation, context-loading, and append steps. The embedded Pi SDK adapter creates a bounded role-specific session with read-only repository tools and one closed candidate tool. Runtime derives WorkState, schedules compatible jobs, validates reports, owns CAS writes and retries, and repeats or requeues under budgets. Process/container worker adapters derive Implementation context from canonical WorkState and worker-result correlation rather than caller-marshalled Planning authority. The CLI adapter remains a transitional development harness.
 
 ## `wiki_state` views
 
@@ -124,7 +126,7 @@ Supported `view` values stay intentionally small:
 | View | Purpose |
 | --- | --- |
 | `summary` | Default state summary: trace ids, selected trace status/resume when available, work-queue summary, next action, and append handles. |
-| `board` | Work Pipeline context: Change journeys, Planning-created Sprints, Work Items, runtime projection, next action, and append handles for active Change Traces. |
+| `board` | Compatibility projection of Backlog, Planning, Implementation, Changes, Sprints, Work Items, runtime state, and append handles for active Change Traces. It is not the dashboard information architecture. |
 | `quality` | Per-loop quality standard summaries and blockers for decision, planning, and implementation iterations. |
 | `blockers` | Current blocked/route-back/continue exit conditions and remediation refs for the selected trace. |
 | `all` | Debug/maintenance payload containing all derived projections. |
@@ -150,7 +152,7 @@ Slash commands are host UX, not workflow semantics. Use direct `/wiki-*` command
 
 | Command | Backend action |
 | --- | --- |
-| `/wiki-dashboard [--no-open] [--json] [--stop]` | Reopen/reuse the automatic Work Pipeline dashboard, return its URL without opening, or stop its local host. |
+| `/wiki-dashboard [--no-open] [--json] [--stop]` | Ensure/discover and reopen the project dashboard, return service state without opening, or explicitly stop the local service according to policy. |
 | `/wiki-resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
 | `/wiki-explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, OKF source ownership, mapped tests, trace refs, and quality summaries. |
 | `/wiki-bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. The default render is a ready summary with active extension source/version/entry identity, not only raw scaffold counts. |
@@ -174,7 +176,7 @@ Preview mode is agent-private validation. It can fail fast and guide the agent, 
 
 Renderers are UI-only and must not become hidden state. Debug-only views may include trace ids, sequence numbers, expected byte checks, or raw JSONL refs when explicitly needed by CodeWiki maintainers.
 
-Change Journey, Sprint, Work Pipeline, and Sprints Queue screens are WorkState projections over Change Traces and current project truth. They must not write UI files or create a separate Board/state root. Internal `board` and `cards` values select projection shapes only; they carry no legacy state semantics.
+Backlog, Planning, Implementation, Sprint, and Change dossier screens are WorkState projections over Change Traces and current project truth. They must not write UI files or create a separate Board/state root. Internal `board` and `cards` values are compatibility projection selectors only; they do not define product information architecture.
 
 ## Agent guidance
 
@@ -188,12 +190,14 @@ Distribution should keep one harness-agnostic core and multiple thin adapters.
 
 Recommended packaging path:
 
-1. `codewiki` package exports core APIs and types.
-2. Pi extension adapter registers the normal CodeWiki tools and commands once the core surface stabilizes.
-3. CLI source remains optional development/CI support only if deliberately retained; the package should not expose a `codewiki` binary while Pi is the intended product surface.
-4. A future MCP adapter must preserve runtime-selected capability activation rather than exposing all semantic loops concurrently.
+1. `codewiki` package exports harness-neutral core APIs, control-plane types, and execution-adapter contracts.
+2. The package exposes a local project-service entrypoint used by dashboard and clients.
+3. Pi extension entrypoint registers conversational client tools and commands.
+4. Pi execution entrypoint implements embedded semantic sessions and process-worker transport without leaking Pi SDK types into core.
+5. CLI source remains temporary development/CI support until an explicit product CLI is approved.
+6. Future MCP or harness adapters preserve runtime-owned routing and authority.
 
-If Pi SDK dependencies become heavy or version-sensitive, split adapters into optional packages later. Until then, avoid hard SDK imports from core source and keep adapter dependencies optional or entrypoint-isolated.
+Pi SDK dependencies stay entrypoint-isolated. If weight or version coupling warrants it, Pi client and execution adapters may split into optional packages without changing core contracts.
 
 ## Retention and archive tools
 

@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Product
-description: CodeWiki exists to keep repository intent fresh, explicit, actionable, and recoverable for humans and agents.
+description: CodeWiki is a project-scoped development operating system that keeps intent, planning, implementation, and repository knowledge explicit, connected, actionable, and recoverable for humans and agents.
 tags:
   - codewiki
   - product
@@ -10,58 +10,78 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Product
 
-CodeWiki exists to keep repository intent fresh, explicit, actionable, and recoverable for humans and agents.
+CodeWiki is a project-scoped development operating system. It keeps repository intent, planning, implementation, and knowledge explicit, connected, actionable, and recoverable for humans and agents.
 
-For the current architecture wave, CodeWiki is backend-first. The active product focus is:
+The runtime owns the work pipeline. Individual Changes do not. A Change is the durable accountable carrier of one intended product or system delta. Runtime processes the portfolio through Backlog and Decision, global Planning, parallel Implementation, integration, and proof.
 
-- hot knowledge in `.codewiki/kb/**`;
-- a Google DESIGN.md-compatible `.codewiki/kb/product/DESIGN.md` for normative visual identity, tokens, typography, iconography, component rules, and durable visual references;
-- one durable append-only JSONL Change Trace for every explicitly persisted Change journey;
-- Changes Backlog, Sprint, queue, and journey views derived from Change Traces and WorkState;
-- an event-driven supervised runtime outer loop that remains available and quiesces safely;
-- Decision, Planning, and Implementation semantic loops;
-- loop outputs and exit conditions;
-- generated status/resume/work views;
-- Git-backed content proof and retention;
-- package APIs and future host adapters.
+## Product structure
 
-Product docs own user definitions, user stories, value, workflows, non-goals, branding, and visual identity. `product/DESIGN.md` is the canonical design-system contract and combines Google DESIGN.md tokens with CodeWiki-compatible OKF metadata. Product UI docs define behavior and information architecture; DESIGN.md defines visual rationale and normative token values.
+The dashboard has four primary destinations:
 
-## UI position
+- **Work** presents Backlog, Planning, and Implementation as separate purpose-built operational workspaces.
+- **Product** presents Users and Stories from canonical Product Markdown.
+- **System** renders canonical System diagrams with topology-specific views.
+- **Design** presents Guidelines and UIs from the canonical design system and UI concepts.
 
-Previous status panels, status docks, Board, Map, Product/System navigation panels, write-capable browser Control Room concepts, and persistent terminal card widgets are deprecated for now.
+Work opens by default. Change detail remains available from every destination as a cross-cutting dossier. It explains the exact intent, approval, Product/System/Design impact, Planning coverage, realization evidence, Git proof, route-backs, and history. It does not reproduce the project pipeline inside each Change.
 
-The retained UI direction is a focused Pi conversation plus a local retro dashboard that opens automatically once when an eligible Pi TUI session starts. The Pi conversation is the main user session: the user and agent brainstorm, explicitly persist Changes, refine exact revisions through Decision, approve them, and supervise active work. There is no separate Ideas Workspace or hidden Change store. First persistence creates the Change Trace, so conversation compaction or restart cannot lose retained intent. `/wiki-dashboard` remains the explicit reopen/recovery action and can stop the local host with `--stop`.
+Product and System Markdown, System diagram YAML, source, tests, Git, Change Traces, and runtime observations keep separate authority. Dashboard views connect them through OKF links, CodeWiki relationship metadata, source ownership, planning references, and evidence references without creating another truth store.
 
-Change is the accountable product carrier. Decision is the loop that approves an exact Change revision, not another entity. Planning creates Sprints and Work Items from the relevant portfolio of approved Changes; runtime grants bounded Assignments. Relationships are `Change * ↔ * Sprint`, `Sprint → Work Item`, and `Work Item → Assignment attempts`. Each Work Item has one owning Change and may contribute to others.
+## Work model
 
-One Change owns one JSONL Change Trace from intake through outcome disposition. A Sprint is a Planning-created execution grouping and generated view across one or more Change Traces, not a trace lifecycle. Runtime can coordinate global Planning, parallel workers, integration, and Implementation while the main session continues discussing other Changes. The dashboard projects one Change-rooted Work Pipeline plus Sprint, Work Item, Assignment, preview, and Configuration views. It never owns truth or writes source directly. Change Traces, KB, source/tests, Git evidence, and bounded config remain authoritative.
+Backlog is the open intake and Decision surface. Authenticated users, agents, and future bounded integrations may submit proposals concurrently. Submission grants no approval, tool, filesystem, model, or execution authority. Decision refines and dispositions one exact Change revision under explicit authority.
 
-Pi TUI support remains for focused command output and source-backed system diagrams as ASCII/Unicode from canonical `.codewiki/kb/system/diagrams/*.yaml` files. Backend state and continuation remain available through internal tools and APIs such as `wiki_state`, generated views derived from traces, loop outputs, and exit-condition results. `/wiki-dashboard` is the only public state/dashboard command; the former state alias is removed. No separate status command is planned. Renderer output is never canonical truth.
+Planning is project-wide. It observes a bounded horizon of approved Changes and emits one coherent graph of Sprints, Work Items, dependencies, contribution, conflicts, integration boundaries, rollback boundaries, and verification requirements. Sprints group execution; they do not own Changes or become another lifecycle.
+
+Implementation consumes the ready frontier of that graph. Runtime may assign independent Work Items concurrently while serializing conflicting paths, shared integration targets, commits, and guarded external effects. Workers return candidate evidence. The Implementation loop alone accepts semantic realization.
+
+One Change owns one append-only JSONL Change Trace. Planning facts may be sliced across several participating Change Traces. WorkState joins those traces with current Knowledge, source ownership, source/tests, Git, configuration, integration state, and bounded runtime observations.
+
+## Runtime and clients
+
+CodeWiki owns one project-scoped control plane. It accepts proposals, refreshes WorkState, schedules compatible semantic and mechanical jobs, manages session and worker lifecycles, guards writes, exposes live projections, and quiesces when no eligible work exists.
+
+Pi remains the primary agent execution engine and conversational client, but an individual Pi session does not own project runtime lifetime. The Pi extension connects to the project control plane, contributes user interaction and supervision, and reuses Pi authentication and model configuration through adapter boundaries.
+
+Target execution uses:
+
+- embedded Pi SDK sessions for bounded read-only Decision, Planning, and review work;
+- isolated process or container workers for implementation;
+- harness-neutral runtime adapter interfaces so another execution engine can be added without changing CodeWiki semantics.
+
+Sessions are replaceable operational context. They never become canonical truth, authority, scheduler locks, or the source of a Change, plan, or accepted implementation.
+
+## Source-backed knowledge
+
+CodeWiki renders and edits the same canonical files that agents consume. Product, System, and Design editing uses typed operations over Markdown or YAML, expected source digests, previewed diffs, format validation, and guarded Change workflows. The dashboard never writes a hidden content database or silently infers relationships.
+
+OKF supplies portable concept documents and standard links. CodeWiki adds explicit typed relationships where workflow, ownership, dependency, or impact semantics require more than OKF's untyped links. Generated graph and search indexes remain disposable.
 
 ## Product boundaries
 
-Tools, commands, skills, temporary CLI harness access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe outcomes those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/components/api.md), [API Tool Surface](../system/components/api-tools.md), and [Extension](../system/components/extension.md).
+Tools, commands, package APIs, worker processes, SDK sessions, and future harness adapters are access and execution mechanisms, not product truth. Their contracts belong in System Knowledge.
 
-CodeWiki core is harness-agnostic. Pi is a primary host adapter, not the core. MCP adapters should expose the same semantics when added. The source CLI remains a temporary development/test harness and is not a product host.
+CodeWiki remains local-private by default. It does not expose a public proposal endpoint, arbitrary shell strings, public tunnels, personal browser profiles, or silent dependency installation.
 
-CodeWiki should optimize for the best achievable code quality with the least useful token spend. Ceremony that does not improve quality, recovery, or agent efficiency should be questioned instead of preserved by default.
+The CodeWiki source repository does not load or dogfood its own extension during stabilization. Packed candidates are tested only in disposable external projects with isolated Pi settings.
 
 ## Success signals
 
-- User intent is captured in one accountable Change Trace before implementation expands.
-- Approved Changes receive globally coherent Planning coverage across Sprints without losing per-Change accountability.
-- Product stories map to semantic loops and system components without duplicating technical design.
-- Backend state is inspectable through `wiki_state` and generated views.
-- Loop outputs are high-signal enough for downstream loops without chat archaeology.
-- Workflow ceremony improves code quality or token efficiency; otherwise it is removed or challenged.
-- Exit conditions make next actions, blockers, and route-backs explicit.
-- System diagrams can be rendered in Pi TUI as ASCII/Unicode from canonical YAML.
-- Historical recovery relies on Git, harness session storage, compact trace iterations, and retained refs rather than product doc event logs.
+- Proposals can arrive while Planning and Implementation continue safely.
+- Runtime, rather than one Change or Pi conversation, owns scheduling and project progress.
+- Approved Changes receive globally coherent Planning coverage without losing per-Change accountability.
+- Independent Work Items run concurrently while conflicts and shared integration remain serialized.
+- Every session receives a bounded, exact, freshness-bound context slice from canonical project truth.
+- Product, System, and Design views render and edit canonical Markdown/YAML without parallel state.
+- Users can inspect why work is queued, running, held, accepted, routed back, or waiting for authority.
+- Closing or replacing one Pi session does not corrupt or erase project work.
+- Restarting the control plane reconstructs pending work without duplicate semantic writes.
+- Workflow ceremony improves quality, recovery, or token efficiency; otherwise it is removed.
 
 ## Related docs
 
 - [CodeWiki Design System](DESIGN.md)
+- [Project Dashboard and Pi Client](uis/terminal.md)
 - [Maintainers](users/maintainers.md)
 - [Agents](users/agents.md)
 - [Extension and Workflow Authors](users/package-authors.md)

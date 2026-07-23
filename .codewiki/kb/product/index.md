@@ -2,8 +2,8 @@
 
 ## Concepts
 
-* [CodeWiki Design System](DESIGN.md) - Canonical branding, visual identity, and interaction design contract for CodeWiki product interfaces.
-* [Product](overview.md) - CodeWiki exists to keep repository intent fresh, explicit, actionable, and recoverable for humans and agents.
+* [CodeWiki Design System](DESIGN.md) - A warm, precise project interface for portfolio Work, Product knowledge, System topology, and Design guidance, grounded in canonical sources and calibrated evidence.
+* [Product](overview.md) - CodeWiki is a project-scoped development operating system that keeps intent, planning, implementation, and repository knowledge explicit, connected, actionable, and recoverable for humans and agents.
 
 ## Directories
 

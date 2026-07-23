@@ -109,7 +109,7 @@ tail_checkpoint
 trace_close          # terminal lifecycle record
 ```
 
-There is no separate Change journal, hidden Change Git ref, Sprint trace store, central trace catalog, or canonical WorkState file. The Change Trace is the Change ledger. The Changes Backlog, approved-Change portfolio, Sprint views, work queue, Change Journey, and Work Pipeline are rebuildable views.
+There is no separate Change journal, hidden Change Git ref, Sprint trace store, central trace catalog, or canonical WorkState file. The Change Trace is the Change ledger. Backlog, Planning, Implementation, approved-Change portfolio, Sprint views, work queue, and Change dossiers are rebuildable views.
 
 CodeWiki has no hidden Git-ref Change store, legacy reader, or compatibility importer. Pre-release development history remains recoverable through normal Git history; runtime supports only Change Trace storage.
 
@@ -263,14 +263,15 @@ Across Change Traces, origin and explicit Change links express amendment, regres
 WorkState folds all relevant Change Traces with current KB, source ownership, source/tests, Git, configuration, and runtime observations. Generated views include:
 
 ```text
-Changes Backlog
+Backlog
 approved Changes
-Change Journey
+Planning horizon
 Sprint views
-Work Pipeline
 work plan
 work queue
-runtime board
+Implementation cockpit
+Change dossiers
+runtime status
 quality
 blockers
 conflicts

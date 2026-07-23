@@ -77,7 +77,7 @@ interface WorkState {
 
 A concrete API may serialize maps as sorted arrays or records. Ordering and digest construction must be deterministic.
 
-## Change-rooted relationships
+## Change-accountable relationships
 
 Change is the accountable semantic carrier. Decision is a loop and approval fact, not another domain entity. Planning creates Sprints and Work Items from approved Changes. Runtime grants Assignments for Work Items. Implementation records realization and evidence against the owning Change.
 
@@ -106,21 +106,22 @@ A Sprint view joins matching Planning facts from participating Change Traces, in
 
 ## Runtime use
 
-Runtime is logically always available and physically quiescent when no eligible work exists. On each trigger it rebuilds or refreshes WorkState, selects the unmet invariant and owning semantic loop, supplies a bounded typed loop input, validates the loop output and exit result, appends accepted facts to affected Change Traces, and rebuilds projections.
+Runtime is logically always available and physically quiescent when no eligible work exists. On each trigger set it rebuilds or refreshes WorkState, derives eligible invariant repairs, admits a compatible bounded job set, supplies exact context slices, validates each output and exit result, appends accepted facts to affected Change Traces, and rebuilds projections.
 
 ```text
-trigger
+trigger set
 -> refresh WorkState
--> select eligible invariant repair
--> build loop-owned input
--> run one semantic iteration
+-> derive eligible jobs
+-> apply lanes, conflicts, dependencies, capacity, and policy
+-> build exact loop or Assignment context slices
+-> run compatible jobs through execution adapters
 -> evaluate loop-owned quality standards
 -> guarded append to Change Trace(s)
 -> schedule permitted effects
 -> repeat or quiesce
 ```
 
-WorkState selection must be impact-bounded. Global Planning observes every relevant approved Change, dependency, overlap, active Sprint, integration target, and policy constraint in its planning horizon; it does not reread unrelated closed history on every cycle.
+WorkState scheduling and context selection must be impact-bounded. Global Planning observes every relevant approved Change, dependency, overlap, active Sprint, integration target, and policy constraint in its planning horizon; it does not reread unrelated closed history on every cycle. Concurrent Decision and worker jobs receive separate exact slices so one session does not depend on another session's transcript.
 
 ## Freshness and concurrency
 
@@ -147,12 +148,12 @@ Pi compaction keeps full JSONL history while projecting a smaller model context.
 
 User and agent views are projections over WorkState or the same canonical inputs:
 
-- Changes Backlog: persisted Change Traces whose current Decision state is not approved or terminal;
-- approved Changes: exact approved revisions awaiting or receiving planning coverage;
+- Backlog: persisted Change Traces whose current Decision state is not approved or terminal;
+- Planning horizon: approved Changes, Planning epochs, Sprints, Work Items, typed edges, coverage, and held/ready frontiers;
+- Implementation cockpit: claims, Assignments, worker observations, isolation, integration, checks, evidence, and Git proof;
 - Sprint views: Planning-created execution groups across one or more Change Traces;
-- Work Pipeline: Change-rooted lifecycle and realization state;
 - work queue: claimable Planning-approved Work Items;
-- Change Journey: one Change Trace rendered for accountability, recovery, and learning;
+- Change dossier: one Change Trace joined with Product/System/Design impact, Planning coverage, realization, proof, and history;
 - alignment and outcome views: intended, planned, realized, experience-verified, and outcome-observed dimensions.
 
 Views must label explicit facts separately from inferred relationships and must remain rebuildable.
@@ -163,6 +164,7 @@ Views must label explicit facts separately from inferred relationships and must 
 - No fourth state, validation, knowledge, or recovery loop.
 - No monolithic mutable Change object containing every worker and runtime field.
 - No caller-supplied replacement for repository facts the core can load itself.
+- No session transcript, session registry, graph layout, or dashboard cache as project truth.
 - No automatic semantic approval based on projection state.
 
 ## Related docs

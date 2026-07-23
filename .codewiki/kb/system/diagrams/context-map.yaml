@@ -2,12 +2,15 @@ schema_version: 1
 id: spec.system.diagrams.context-map
 title: CodeWiki Context Map
 kind: context_map
-purpose: Show who uses CodeWiki, which access surfaces they use, and where the repository-local boundary sits.
+purpose: Show who manages a CodeWiki project, which clients connect, where execution occurs, and where repository and external boundaries sit.
 source_docs:
   - .codewiki/kb/product/users/maintainers.md
   - .codewiki/kb/product/users/agents.md
   - .codewiki/kb/product/users/package-authors.md
   - .codewiki/kb/product/users/external-users.md
+  - .codewiki/kb/system/components/runtime.md
+  - .codewiki/kb/system/components/session-coordination.md
+  - .codewiki/kb/system/components/adapters-and-ui.md
   - .codewiki/kb/system/components/extension.md
   - .codewiki/kb/system/components/api.md
 renderer:
@@ -18,7 +21,7 @@ actors:
     label: Maintainer
     source: .codewiki/kb/product/users/maintainers.md
   - id: agent
-    label: Agent / subagent
+    label: Agent / bounded integration
     source: .codewiki/kb/product/users/agents.md
   - id: package_author
     label: Extension/workflow author
@@ -27,59 +30,83 @@ actors:
     label: Future external user
     source: .codewiki/kb/product/users/external-users.md
 systems:
-  - id: chat_interface
-    label: Agent chat interface
-    boundary: external
-  - id: pi_codewiki_surface
-    label: Pi-hosted CodeWiki surface
-    boundary: codewiki
+  - id: dashboard
+    label: Local project dashboard
+    boundary: codewiki_client
     source: .codewiki/kb/system/components/terminal-ui.md
-  - id: pi_adapter
-    label: Pi adapter
-    boundary: codewiki
+  - id: pi_client
+    label: Pi conversational client
+    boundary: codewiki_client
     source: .codewiki/kb/system/components/extension.md
-  - id: codewiki_api
-    label: CodeWiki API
+  - id: future_client
+    label: CLI / MCP / editor / CI client
+    boundary: codewiki_client
+    source: .codewiki/kb/system/components/adapters-and-ui.md
+  - id: control_plane
+    label: CodeWiki project control plane
     boundary: codewiki
-    source: .codewiki/kb/system/components/api.md
+    source: .codewiki/kb/system/components/runtime.md
+  - id: pi_sdk_sessions
+    label: Embedded Pi semantic sessions
+    boundary: codewiki_execution
+    source: .codewiki/kb/system/components/session-coordination.md
+  - id: isolated_workers
+    label: Process / container implementation workers
+    boundary: execution_sandbox
+    source: .codewiki/kb/system/components/session-coordination.md
   - id: repo_contract
-    label: Repo-local .codewiki contract
+    label: Repo-local Knowledge / traces / source / tests / Git
     boundary: repository
     source: .codewiki/kb/system/components/knowledge.md
+  - id: model_providers
+    label: Configured model providers
+    boundary: external
   - id: git_remote
-    label: Git remotes
+    label: Git remotes / publication targets
     boundary: external
 relationships:
   - from: maintainer
-    to: chat_interface
-    label: directs agent work
+    to: dashboard
+    label: manages Work, Product, System, and Design
   - from: maintainer
-    to: pi_codewiki_surface
-    label: inspects Pi-hosted status and navigation
+    to: pi_client
+    label: discusses intent and grants exact authority
   - from: agent
-    to: codewiki_api
-    label: reads and mutates through tools
+    to: pi_client
+    label: proposes and inspects through bounded capabilities
   - from: package_author
-    to: codewiki_api
-    label: extends typed capabilities
+    to: future_client
+    label: implements compatible client adapters
   - from: future_external_user
-    to: pi_codewiki_surface
-    label: inspects repo-local state through supported adapters
-  - from: chat_interface
-    to: pi_adapter
-    label: invokes packaged tools and commands
-  - from: pi_adapter
-    to: codewiki_api
-    label: delegates semantics
-  - from: pi_codewiki_surface
-    to: codewiki_api
-    label: reads curated state and routes actions
-  - from: codewiki_api
+    to: dashboard
+    label: inspects supported project state
+  - from: dashboard
+    to: control_plane
+    label: guarded local requests and state stream
+  - from: pi_client
+    to: control_plane
+    label: intent, authority, supervision, and reads
+  - from: future_client
+    to: control_plane
+    label: bounded local protocol
+  - from: control_plane
+    to: pi_sdk_sessions
+    label: schedules read-only semantic jobs
+  - from: control_plane
+    to: isolated_workers
+    label: starts claimed Assignments
+  - from: control_plane
     to: repo_contract
-    label: owns durable and generated state access
+    label: reads truth and performs guarded writes
+  - from: pi_sdk_sessions
+    to: model_providers
+    label: invokes configured models
+  - from: isolated_workers
+    to: repo_contract
+    label: changes scoped isolated working state
   - from: repo_contract
     to: git_remote
-    label: synchronizes durable truth through git
+    label: synchronizes only under explicit authority
 ui_hints:
   default_scope: codewiki_boundary
   inspector_fields:

@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Loop Model
-description: CodeWiki is a Change-trace-backed software-development OS with one runtime outer loop and exactly three quality-governed semantic loops.
+description: CodeWiki is a Change-trace-backed software-development OS whose project control plane schedules compatible work across exactly three quality-governed semantic loops.
 tags:
   - codewiki
   - system
@@ -11,7 +11,7 @@ timestamp: 2026-08-01T00:00:00Z
 ---
 # Loop Model
 
-CodeWiki is a Change-trace-backed software-development OS. One supervised runtime outer loop continuously restores project invariants by invoking exactly three semantic loops: Decision, Planning, and Implementation.
+CodeWiki is a Change-trace-backed software-development OS. One project-scoped runtime control plane continuously restores project invariants through exactly three semantic loops: Decision, Planning, and Implementation. One semantic owner governs each invariant, while compatible invariants may be processed concurrently.
 
 ```text
 runtime outer loop
@@ -37,26 +37,27 @@ Change intent
 -> outcome disposition
 ```
 
-One append-only JSONL Change Trace records this journey. Backlog, Sprint, Work Pipeline, and Change Journey screens are views.
+One append-only JSONL Change Trace records this journey. Backlog, Planning, Implementation, Sprint, and Change dossier screens are views. No Change owns a private copy of the runtime pipeline.
 
 ## Runtime outer loop
 
 Runtime is logically always available and physically quiescent when no eligible work exists. It is not a semantic loop and does not own semantic truth.
 
 ```text
-receive user, agent, worker, Git, KB, schedule, or preview trigger
+receive user, agent, worker, Git, KB, schedule, or preview triggers
 refresh WorkState
-identify an unmet project invariant
-select its owning semantic loop or permitted mechanical action
-build bounded typed input
-run one semantic iteration
-validate output and exit through loop-owned quality standards
+identify eligible project invariant repairs and mechanical actions
+select a compatible bounded job set
+acquire lanes, claims, capacity, and integration guards
+build exact typed inputs and context slices
+run semantic sessions or workers through adapters
+validate outputs and exits through loop-owned quality standards
 guarded append to affected Change Trace(s)
 schedule permitted effects
 repeat until quiescent, blocked, or budget exhausted
 ```
 
-Runtime coordinates trace writes, scheduling, claims, workers, integration, temporary data, budgets, supervision, retention, and host adapters. It cannot approve Change meaning, create Planning truth, or accept Implementation evidence.
+Runtime coordinates client intake, trace writes, scheduling, lanes, claims, semantic sessions, workers, integration, temporary data, budgets, supervision, retention, and execution adapters. It cannot approve Change meaning, create Planning truth, or accept Implementation evidence. Clients and sessions cannot choose their own semantic routing.
 
 Always available does not mean uncontrolled automation. Runtime stops when authority is missing, supervision disappears, policy blocks execution, a guarded source changes, conflict requires semantic resolution, budget is exhausted, or no eligible work remains.
 

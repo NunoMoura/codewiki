@@ -54,7 +54,7 @@ describe("OKF index and log navigation", () => {
 		assert.equal(product.path, "product/index.md");
 		assert.match(
 			product.content,
-			/\* \[Product\]\(overview\.md\) - CodeWiki exists to keep repository intent/,
+			/\* \[Product\]\(overview\.md\) - CodeWiki is a project-scoped development operating system/,
 		);
 		assert.match(product.content, /\* \[Stories\]\(stories\/\) - 5 concepts/);
 
@@ -66,7 +66,7 @@ describe("OKF index and log navigation", () => {
 		assert.match(system.content, /\* \[Diagrams\]\(diagrams\/\) - 0 concepts/);
 		assert.match(
 			components.content,
-			/\* \[Runtime\]\(runtime\.md\) - Runtime is CodeWiki's supervised event-driven outer control loop\./,
+			/\* \[Runtime\]\(runtime\.md\) - Runtime is CodeWiki's project-scoped control plane\./,
 		);
 	});
 

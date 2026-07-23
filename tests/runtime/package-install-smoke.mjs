@@ -36,6 +36,12 @@ try {
 		),
 		false,
 	);
+	assert.equal(
+		existsSync(
+			join(installRoot, "node_modules", "@earendil-works", "pi-coding-agent"),
+		),
+		false,
+	);
 
 	const smokeScript = join(installRoot, "smoke.mjs");
 	writeFileSync(
@@ -69,7 +75,21 @@ assert.equal(packageJson.bin, undefined);
 assert.equal(packageJson.publishConfig, undefined);
 assert.deepEqual(packageJson.pi, { extensions: ["dist/pi/extension.js"] });
 assert.equal(packageJson.pi.skills, undefined);
-assert.deepEqual(Object.keys(packageJson.exports).sort(), [".", "./package.json"]);
+assert.deepEqual(Object.keys(packageJson.exports).sort(), [".", "./package.json", "./pi-sdk"]);
+assert.deepEqual(packageJson.exports["./pi-sdk"], {
+\ttypes: "./dist/pi/sdk-semantic-session.d.ts",
+\timport: "./dist/pi/sdk-semantic-session.js",
+});
+assert.equal(
+\tpackageJson.peerDependencies["@earendil-works/pi-coding-agent"],
+\t">=0.80.10 <0.82.0",
+);
+assert.equal(
+\tpackageJson.peerDependenciesMeta["@earendil-works/pi-coding-agent"].optional,
+\ttrue,
+);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.ts")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
 assert.deepEqual(buildWorkState({ records: [] }).changeIds, []);
@@ -82,7 +102,10 @@ for (const dependency of Object.keys(packageJson.dependencies || {})) {
 assert.equal(packageJson.dependencies["js-yaml"], undefined);
 assert.equal(packageJson.dependencies.yaml.startsWith("^2."), true);
 assert.equal(packageJson.dependencies.typebox, undefined);
-assert.deepEqual(packageJson.peerDependencies, { typebox: "*" });
+assert.deepEqual(packageJson.peerDependencies, {
+	"@earendil-works/pi-coding-agent": ">=0.80.10 <0.82.0",
+	typebox: "*",
+});
 for (const forbiddenPath of [
 	"lab",
 	"tests",

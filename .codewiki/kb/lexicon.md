@@ -15,7 +15,11 @@ Non-canonical terms are listed only to identify their replacements.
 
 ## Runtime outer loop
 
-The control loop that folds traces, chooses next safe actions, coordinates claims/workers/budgets/retention, and appends trace records. Runtime is not a semantic loop and does not invent semantic truth.
+The project-scoped control loop that folds canonical inputs, schedules a compatible set of next safe jobs, coordinates semantic sessions, claims, workers, integration, budgets, supervision, retention, and guarded writes. Runtime is not a semantic loop and does not invent semantic truth.
+
+## Project control plane
+
+The single elected project coordinator generation that owns runtime scheduling, WorkState refresh, session and worker lifecycle, integration, guarded writes, and client projections. Dashboard, Pi, CLI/test, and future clients connect to it; no client session owns its lifetime.
 
 ## Semantic loop
 
@@ -118,16 +122,16 @@ user-facing terminal rendering.
 | Change | Stable accountable carrier of user or agent intent and the product/system delta CodeWiki tries to close. Each semantic revision is immutable once approved. | Change revisions and lifecycle facts in one Change Trace. |
 | Change Trace | Complete append-only journey of one persisted Change from intake through Decision, Planning, Assignments, Implementation, outcome disposition, and retention. | One `.codewiki/traces/TRACE-*.jsonl` file bound one-to-one to a Change id. |
 | Change Journey | Human/agent-readable projection of one Change Trace, including revisions, approval, Sprints, Work Items, evidence, route-backs, and outcomes. | Generated view; never a truth file. |
-| Changes Backlog | View of persisted Change Traces whose current Decision state is not approved or terminal. It is not a store, workspace, or loop. | WorkState projection over Change Traces. |
+| Backlog | Work workspace for proposal intake and persisted Change Traces whose current Decision state is not approved or terminal. It is a projection and guarded client surface, not a truth store or semantic loop. | WorkState projection over Change Traces plus bounded intake capabilities. |
 | Decision | Semantic loop that receives, refines, validates, and approves or terminally dispositions an exact Change revision. It is not a domain entity. | Decision-loop iterations in the Change Trace. |
 | Approval | Binding fact that exact authority accepted one exact Change revision and digest. | `decision.change_approved` event output. |
 | Approved Change | Exact immutable Change revision plus approval receipt that Planning or an approved direct Implementation route may consume. | Exited Decision-loop output in the Change Trace. |
 | Sprint | Planning-created execution grouping covering one or more approved Changes under coherent dependency, integration, rollback, and verification boundaries. | Planning facts joined across participating Change Traces into a Sprint view. |
 | Planning epoch | One global Planning iteration over a bounded approved-Change horizon that may create or revise several Sprints and Work Items. | Deterministic Planning output batch with participant and WorkState digests. |
-| Work Pipeline | Change-rooted lifecycle projection from persisted intent through approval, planning, realization, outcome disposition, and commitment. | WorkState/UI projection over Change Traces and current project truth. |
-| Pipeline Card | Shared user-facing shell for one Change journey. Sprint, Work Item, Assignment, preview, Knowledge, file, and evidence detail are attached projections. | Generated Change view. |
-| Sprints Queue | Current Planning-created execution groups and their Work Items. | Generated Sprint/work-queue views over WorkState. |
-| Trace Detail | Expanded Change Journey with loop iterations, Sprint coverage, Work Items, Assignments, blockers, refs, paths, evidence, and current action. | Generated Change Trace projection. |
+| Work | User-facing runtime destination containing Backlog, Planning, and Implementation. It does not rename Change, Sprint, Work Item, Assignment, or semantic loops. | Purpose-built WorkState and runtime projections. |
+| Planning workspace | Project-wide graph of approved Changes, Planning epochs, Sprints, Work Items, dependencies, conflicts, contribution, and ready/held frontiers. | Generated WorkState projection over canonical Planning facts. |
+| Implementation workspace | Execution view over Work Items, Assignments, workers, isolation, integration, checks, evidence, and Git proof. | Generated WorkState plus bounded runtime observations. |
+| Change dossier | Cross-cutting accountable detail for one Change: intent, authority, impact, Planning coverage, realization, proof, route-backs, and history. It does not own a private pipeline. | Generated Change Trace and current-project projection. |
 | Work Item | Planning-created, parallel-safe, assignable execution unit with exactly one owning Change and optional explicit contribution to others. | Planning output in the owning Change Trace. |
 | Assignment | Runtime claim of one Planning-approved Work Item by one worker/session attempt. | Runtime claim event in the owning Change Trace. |
 | WorkState | Disposable typed project-wide projection used by runtime and all loops to reason from the same current facts. | Fold over Change Traces, KB, source/tests/Git, configuration, ownership, and runtime observations. |
@@ -141,12 +145,10 @@ user-facing terminal rendering.
 | Unknown | Topic scope, baseline, or evidence is insufficient to establish alignment. | Safe generated fallback. |
 
 Implementation workers may use private scratchpads or checklists inside an
-assigned Work Item. These are execution aids, not Planning truth, Sprints Queue items,
+assigned Work Item. These are execution aids, not Planning truth, work-queue items,
 or runtime-claimable units.
 
-Host/session terms such as decision host, trace host, worker session, process
-session, and runtime claim are technical architecture terms. They should appear
-in runtime or host-adapter docs only when that topology matters.
+Host/session terms such as semantic session, SDK session, worker process, container worker, session reference, and runtime claim are technical architecture terms. They should appear in runtime or adapter docs only when topology matters. Session identity is operational metadata, never canonical authority.
 
 ## Route-back
 
@@ -194,6 +196,7 @@ Human-facing host command, such as Pi slash commands or CLI commands. Commands a
 Harness-exposed `wiki_*` tool used by agents and automation. Target normal tools:
 
 - `wiki_state`;
+- `wiki_change`;
 - `wiki_decide`;
 - `wiki_plan`;
 - `wiki_implement`;
@@ -206,13 +209,25 @@ Runtime coordination is backend/host plumbing, not a normal model-facing tool. N
 
 Harness-agnostic package source that owns semantic loops, traces, views, runtime, knowledge parsing, Git proof helpers, config, and APIs. CodeWiki core must not import the Pi SDK directly.
 
-## Host adapter
+## Client adapter
 
-Thin package/entrypoint that exposes CodeWiki core semantics to a host such as Pi, CLI, MCP, editor integrations, or CI.
+Thin package/entrypoint that connects a user or host surface such as Pi, dashboard, CLI, MCP, editor integration, or CI to the project control plane.
+
+## Execution adapter
+
+Harness-neutral runtime boundary for creating bounded semantic sessions or isolated implementation workers. It reports capabilities and normalized outcomes without owning semantic routing or durable writes.
+
+## Semantic session
+
+Replaceable read-only agent context for one runtime-selected Decision, Planning, or Implementation-review job. It receives exact bounded context and returns a candidate. It is not truth, authority, a lane, or a Change.
+
+## Worker adapter
+
+Execution adapter for one Assignment attempt. Target implementations use a process or container boundary and may receive scoped mutation capability. Worker output remains candidate evidence until Implementation accepts it.
 
 ## Pi adapter
 
-Optional CodeWiki host adapter for Pi. Pi is a primary host, not the CodeWiki core.
+CodeWiki integration for Pi. Its conversational side is a client adapter; its execution side embeds Pi SDK semantic sessions and may start Pi process workers. Pi remains the primary execution engine, not CodeWiki core.
 
 ## Worktree isolation
 
@@ -229,12 +244,16 @@ Optional worker isolation mode controlled by config: `none`, `worktree`, or `aut
 | gateway | loop-local exit conditions |
 | gate verdict | exit status |
 | validation report | exit condition result |
-| board | Work Pipeline or Sprints Queue; compatibility flag/name only where already public |
-| trace board | Work Pipeline or Sprints Queue |
+| board | Backlog, Planning, or Implementation projection; compatibility flag/name only where already public |
+| Work Pipeline | Work destination with separate Backlog, Planning, and Implementation workspaces |
+| Pipeline Card | Change dossier entry or purpose-specific Work row/node/lane |
+| Sprints Queue | Planning workspace or work queue |
+| trace board | Backlog, Planning, or Implementation projection |
 | trace queue | work queue; internal generated view only |
-| trace card | Change Journey / Pipeline Card |
-| Sprint Card | Sprint view |
-| generic card | Pipeline Card |
+| trace card | Change dossier entry |
+| Trace Detail | Change dossier |
+| Sprint Card | Sprint view or Planning graph cluster |
+| generic card | purpose-specific row, node, lane, or inspector |
 | Sprint Queue | Sprints Queue |
 | Archived (user-facing status) | Committed; archive remains a backend retention term |
 | sprint proposal | Planning preview or Sprint plan |

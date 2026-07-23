@@ -112,7 +112,12 @@ describe("install readiness checklist", () => {
 		assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 			".",
 			"./package.json",
+			"./pi-sdk",
 		]);
+		assert.deepEqual(packageJson.exports["./pi-sdk"], {
+			types: "./dist/pi/sdk-semantic-session.d.ts",
+			import: "./dist/pi/sdk-semantic-session.js",
+		});
 		assert.equal(packageJson.scripts["test:pi-dogfood"], undefined);
 		assert.equal(
 			packageJson.scripts["test:pi-install"],
@@ -238,8 +243,8 @@ describe("install readiness checklist", () => {
 			false,
 		);
 		const readme = readFileSync("README.md", "utf8");
-		assert.match(readme, /Changes Backlog and control center/);
-		assert.match(readme, /pending unvalidated Change/);
+		assert.match(readme, /Work and project control plane/);
+		assert.match(readme, /persisted pending Change revisions/);
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 	});
 
@@ -264,21 +269,35 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("does not bundle Pi as a runtime dependency", () => {
-		const dependencyNames = [
+	it("keeps the Pi SDK entrypoint optional and out of runtime dependencies", () => {
+		const runtimeDependencyNames = [
 			...Object.keys(packageJson.dependencies || {}),
-			...Object.keys(packageJson.peerDependencies || {}),
 			...Object.keys(packageJson.bundledDependencies || {}),
 		];
 		assert.deepEqual(
-			dependencyNames.filter((name) => name.startsWith("@earendil-works/")),
+			runtimeDependencyNames.filter((name) =>
+				name.startsWith("@earendil-works/"),
+			),
 			[],
+		);
+		assert.equal(
+			packageJson.devDependencies["@earendil-works/pi-coding-agent"],
+			"^0.81.1",
+		);
+		assert.equal(
+			packageJson.peerDependencies["@earendil-works/pi-coding-agent"],
+			">=0.80.10 <0.82.0",
+		);
+		assert.equal(
+			packageJson.peerDependenciesMeta["@earendil-works/pi-coding-agent"]
+				.optional,
+			true,
 		);
 		assert.equal(packageJson.dependencies["js-yaml"], undefined);
 		assert.equal(packageJson.dependencies.yaml.startsWith("^2."), true);
 		assert.equal(packageJson.dependencies.typebox, undefined);
-		assert.equal(packageJson.devDependencies.typebox, "^1.2.14");
-		assert.deepEqual(packageJson.peerDependencies, { typebox: "*" });
+		assert.equal(packageJson.devDependencies.typebox, "^1.3.6");
+		assert.equal(packageJson.peerDependencies.typebox, "*");
 	});
 
 	it("keeps the active .codewiki top level in the target shape", () => {
@@ -312,7 +331,7 @@ describe("install readiness checklist", () => {
 		);
 		assert.match(
 			knowledgeDoc,
-			/Sprint, Work Pipeline, queue, and Change Journey screens are WorkState-backed projections/,
+			/Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections/,
 		);
 		assert.match(
 			knowledgeDoc,
@@ -379,6 +398,8 @@ describe("install readiness checklist", () => {
 			"npm run test:pi-install",
 			"npm run test:pi-rpc",
 			"npm run test:pi-mutation",
+			"npm run test:pi-sdk",
+			"npm run test:pi-sdk-package",
 			"npm run test:project-local-install",
 			"npm run test:external-lifecycle",
 			"npm run test:external-failures",

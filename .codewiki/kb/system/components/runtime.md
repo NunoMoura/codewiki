@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Runtime
-description: Runtime is CodeWiki's supervised event-driven outer control loop. It derives WorkState, invokes exactly one owning semantic loop per eligible invariant, guards Change Trace writes, coordinates Assignments and integration, and quiesces safely.
+description: Runtime is CodeWiki's project-scoped control plane. It derives WorkState, schedules a compatible set of invariant repairs, owns session and worker lifecycles, guards writes and integration, and quiesces safely.
 tags:
   - codewiki
   - system
@@ -56,22 +56,41 @@ codewiki_source_map:
 ---
 # Runtime
 
-Runtime is CodeWiki's outer control loop. It is logically always available, event-driven, supervised, and physically quiescent when no eligible work exists. It does not own product meaning or semantic loop output.
+Runtime is CodeWiki's project-scoped control plane and outer control loop. It is logically always available, event-driven, supervised, and physically quiescent when no eligible work exists. It does not own product meaning or semantic loop output.
 
 ```text
-trigger
+trigger or client request
 -> refresh WorkState
--> identify unmet invariant
--> select Decision, Planning, Implementation, or permitted mechanical action
--> build bounded typed loop input
--> run one semantic iteration
+-> identify eligible invariant repairs and mechanical actions
+-> select a compatible bounded job set
+-> acquire semantic lanes, claims, capacity, and integration guards
+-> build exact typed inputs and context slices
+-> run semantic sessions or implementation workers through adapters
 -> validate quality-governed output and freshness
 -> append accepted facts to affected Change Trace(s)
 -> schedule permitted effects
 -> repeat or quiesce
 ```
 
-The three semantic loops are ongoing project capabilities, not processes embodied by individual traces. One Change Trace records one Change journey. Runtime may invoke loop iterations for many Change Traces over time and may run one global Planning epoch across several approved Changes.
+The three semantic loops are ongoing project capabilities, not processes embodied by individual traces or Pi conversations. One Change Trace records one Change journey. Runtime may run Decision work for independent Changes concurrently, admits one accepted project Planning writer at a time, and starts several non-conflicting Work Item Assignments under bounded capacity.
+
+One semantic owner still governs each invariant. Concurrency means several compatible invariants may be repaired at once; it never means two writers may decide the same Change revision, accept the same Planning epoch, claim the same Work Item, or integrate into the same guarded target concurrently.
+
+## Project control plane
+
+One elected coordinator generation owns scheduling and durable write authority for a project. Dashboard, Pi, CLI/test, and future clients connect to it through bounded local capabilities. Client lifetime does not define runtime lifetime.
+
+The control plane owns:
+
+- proposal intake and idempotency;
+- incremental WorkState projection and invalidation;
+- compatible-job selection, lanes, fairness, capacity, and budgets;
+- semantic-session and implementation-worker adapter invocation;
+- supervision, cancellation, restart recovery, and bounded observation;
+- guarded trace, Knowledge, integration, Git, preview, and cleanup effects;
+- project state and event projections for connected clients.
+
+A local service may remain available for intake and observability while execution is paused. Under supervised policy, losing all approved supervisors prevents new semantic or worker starts. Unattended continuation requires separate explicit project policy.
 
 ## Authority
 
@@ -131,37 +150,55 @@ Runtime stops or remains idle when:
 
 Quiescence is healthy state, not failure. Durable Change Traces and WorkState reconstruction make later resume deterministic.
 
-## Host roles
+## Runtime roles
 
 | Role | Responsibility |
 | --- | --- |
-| Main host | User-facing Pi session for brainstorming, explicit Change persistence, approval, supervision, and guarded controls. It is not a singleton daemon. |
-| Runtime coordinator | Project-scoped supervised reactor that refreshes WorkState, schedules loop iterations and Assignments, and guards writes. |
-| Semantic loop host | Bounded execution of one Decision, Planning, or Implementation iteration over runtime-supplied typed input. It returns output; it does not append directly. |
-| Worker host | Narrow Assignment attempt for one Planning-owned Work Item, usually in isolated worktree. It returns candidate evidence only. |
+| Project control plane | Elected project coordinator that owns WorkState refresh, scheduling, lanes, session/worker lifecycle, guarded writes, integration, and client projections. |
+| Client | Dashboard, Pi extension, CLI/test, or future adapter that submits bounded intent, evidence, authority, or control requests. |
+| Semantic session | Bounded read-only Decision, Planning, or Implementation-review execution over runtime-supplied typed input. It returns a candidate; it does not append directly. |
+| Worker | Narrow Assignment attempt for one Planning-owned Work Item in a process or container isolation boundary. It returns candidate evidence only. |
+| Integrator | Serialized mechanical host for one exact integration target and source base under Planning and runtime authority. |
 
-One process may perform several roles over time, but capabilities and authority remain explicit. User-facing UX should show Changes, Sprints, Work Items, Assignments, loops, blockers, and evidence rather than internal host topology unless a maintainer requests runtime detail.
+The target Pi semantic adapter embeds Pi SDK sessions. The target worker adapter starts process or container workers. Harness-neutral runtime contracts own inputs, outputs, capabilities, cancellation, and observations; Pi SDK types remain inside `src/pi/**`.
 
-## WorkState-driven selection
+One process may perform several roles over time, but capabilities and authority remain explicit. Session identity is operational metadata, never a lane, claim, canonical entity, or proof. User-facing UX shows Changes, Sprints, Work Items, Assignments, blockers, evidence, and held reasons before internal host topology.
 
-Runtime derives one WorkState from canonical inputs and uses impact-bounded selectors:
+## WorkState-driven scheduling
+
+Runtime derives one WorkState from canonical inputs and computes eligible jobs:
 
 ```text
-persisted unapproved Change -> Decision eligible
-approved Change lacking current coverage -> Planning eligible
-ready Work Item -> Assignment eligible
-worker/integration result -> Implementation eligible
-closed/retention-ready Change -> archive eligible
-no eligible transition -> quiescent
+persisted unapproved Change -> Decision job eligible
+approved Change lacking current coverage -> project Planning dirty
+ready Work Item -> Assignment job eligible
+worker/integration result -> Implementation review job eligible
+closed/retention-ready Change -> archive action eligible
+no eligible job -> quiescent
 ```
 
-Selection is deterministic under the same WorkState, trigger, and policy. Runtime first prefers eligible Changes named by the triggering refs, then older unchanged work, then stable Change identity. This avoids fixed loop-priority starvation while keeping event-local reactions responsive. Planning expands from one selected Change through explicit Change links and overlapping target refs under a bounded horizon. Model judgment may rank semantically valid candidates only where policy permits; it cannot repair missing authority.
+Eligibility and admission are separate. Runtime first derives every bounded candidate, then admits a deterministic compatible set under lane, dependency, conflict, capacity, budget, supervision, and integration constraints.
 
-`RuntimeReactor` owns this selection and reuses one incremental `WorkStateSession`. Agents and adapters do not choose which semantic loop runs. `runRuntimeSemanticExecutor()` invokes only the selected adapter, injects exact Change, Planning horizon, Sprint, Work Item, Assignment, WorkState, and append authority, then repeats after committed truth changes until quiescence or a bounded stop. Semantic adapters return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, or source ownership as replacement facts.
+The lane contract is:
 
-Each execution has explicit iteration, wall-clock, and CAS-retry budgets. A compare-and-swap race invalidates the incremental observation and reruns the same runtime-selected semantic work against fresh entity state. Preview performs one bounded iteration without repetition. A route-back result is appended as semantic evidence and stops forward repetition so the target owner or user can respond.
+- one Decision writer per exact Change revision, with unrelated Changes eligible concurrently;
+- one accepted project Planning writer, with optional concurrent read-only analysis;
+- one active Assignment claim per Work Item;
+- several independent Work Items within capacity;
+- one Integration writer per exact target/base;
+- serialized commit, merge, publication, and other guarded external effects.
+
+Selection remains deterministic under the same WorkState, trigger set, and policy. Trigger-local candidates receive bounded preference, then fairness uses age and stable identity. Planning expands through explicit Change links and overlapping target refs under a bounded horizon. Model judgment may rank semantically valid candidates only where policy permits; it cannot repair missing authority or override compatibility.
+
+Current executable `RuntimeReactor` selects one reaction and `runRuntimeSemanticExecutor()` invokes one adapter. Target control-plane work replaces that project-wide singular bottleneck with compatible-job scheduling while preserving the existing single-job executor as a bounded job primitive.
+
+Agents, clients, and adapters never choose semantic routing. Runtime injects exact Change, Planning horizon, Sprint, Work Item, Assignment, context slice, WorkState, and append authority. Semantic sessions return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, source ownership, lane ownership, or runtime routing as replacement facts.
+
+Each job has explicit iteration, wall-clock, token, cost, and CAS-retry budgets plus cancellation. A compare-and-swap race invalidates the observation and reruns or requeues the same runtime-selected work against fresh state. Preview performs one bounded iteration without repetition. A route-back result is appended as semantic evidence and stops forward repetition so the target owner or user can respond.
 
 ## Global Planning
+
+Planning is a project lane, not a session attached to one Change Trace. New approvals and relevant canonical changes mark the bounded planning horizon dirty. Runtime coalesces those signals and admits one accepted Planning writer while claimed Work Items remain frozen according to plan-revision policy.
 
 Planning may observe several approved Changes and emit one planning epoch. Runtime:
 

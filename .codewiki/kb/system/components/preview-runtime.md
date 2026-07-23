@@ -128,6 +128,6 @@ This standalone harness is the fast visual-development path. Packed installation
 ## Related docs
 
 - [Adapters and UI Component](adapters-and-ui.md)
-- [Pi Terminal and Dashboard UX](terminal-ui.md)
-- [Pi Session and Retro Dashboard UI](../../product/uis/terminal.md)
+- [Project Dashboard and Pi Client Architecture](terminal-ui.md)
+- [Project Dashboard and Pi Client](../../product/uis/terminal.md)
 - [Implementation Loop](implementation-loop.md)

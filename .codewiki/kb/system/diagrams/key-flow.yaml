@@ -1,97 +1,134 @@
 schema_version: 1
 id: spec.system.diagrams.key-flow
-title: CodeWiki Intent-to-Implementation Flow
+title: CodeWiki Portfolio Intent-to-Implementation Flow
 kind: sequence_flow
-purpose: Show target flow from user intent through semantic loop iterations, runtime coordination, JSONL traces, generated views, and Git evidence.
+purpose: Show concurrent proposal intake, runtime-owned semantic sessions, global Planning, parallel isolated workers, Implementation acceptance, and canonical proof.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
   - .codewiki/kb/system/components/decision-loop.md
   - .codewiki/kb/system/components/planning-loop.md
   - .codewiki/kb/system/components/implementation-loop.md
+  - .codewiki/kb/system/components/session-coordination.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
 renderer:
   preferred: mermaid_sequence
   fallback: custom_sequence
 participants:
-  - id: user
-    label: User
-    kind: actor
-  - id: runtime
-    label: Runtime outer loop
+  - id: client
+    label: Dashboard / Pi / bounded client
+    kind: client
+  - id: control_plane
+    label: Project control plane
     kind: coordination
     source: .codewiki/kb/system/components/runtime.md
+  - id: semantic_sessions
+    label: Embedded read-only semantic sessions
+    kind: execution_adapter
+    source: .codewiki/kb/system/components/session-coordination.md
   - id: decision
     label: Decision loop
     kind: semantic_loop
     source: .codewiki/kb/system/components/decision-loop.md
   - id: planning
-    label: Planning loop
+    label: Global Planning loop
     kind: semantic_loop
     source: .codewiki/kb/system/components/planning-loop.md
+  - id: workers
+    label: Isolated implementation workers
+    kind: execution_adapter
+    source: .codewiki/kb/system/components/session-coordination.md
   - id: implementation
     label: Implementation loop
     kind: semantic_loop
     source: .codewiki/kb/system/components/implementation-loop.md
   - id: traces
-    label: JSONL traces
+    label: JSONL Change Traces
     kind: durable_truth
     source: .codewiki/kb/system/components/traces.md
+  - id: knowledge_git
+    label: Knowledge / source / tests / Git
+    kind: canonical_truth
   - id: views
-    label: Generated views
+    label: WorkState and client projections
     kind: generated_projection
-    source: .codewiki/kb/system/components/source-map.md
-  - id: git
-    label: Git content evidence
-    kind: executable_truth
+    source: .codewiki/kb/system/components/work-state.md
 steps:
-  - id: capture_intent
-    from: user
-    to: runtime
-    message: provides intent, constraints, alternatives, and approval needs
-  - id: run_decision
-    from: runtime
+  - id: submit_proposals
+    from: client
+    to: control_plane
+    message: authenticated users or agents submit concurrent idempotent proposals
+  - id: persist_pending_changes
+    from: control_plane
+    to: traces
+    message: persists one pending Change revision and provenance per proposal
+  - id: schedule_decisions
+    from: control_plane
+    to: semantic_sessions
+    message: starts compatible read-only Decision jobs for independent Change revisions
+  - id: submit_decision_candidates
+    from: semantic_sessions
     to: decision
-    message: runs decision loop cycle and evaluates exit conditions
-  - id: append_decision
+    message: returns typed judgment candidates without append authority
+  - id: append_decisions
     from: decision
     to: traces
-    message: appends decision.changes_approved with output, exit status, conditions, progress, and refs
-  - id: run_planning
-    from: runtime
+    message: control plane appends accepted Decision results under exact revision and CAS guards
+  - id: mark_planning_dirty
+    from: traces
+    to: control_plane
+    message: approved portfolio changes mark one bounded project Planning horizon dirty
+  - id: schedule_planning
+    from: control_plane
+    to: semantic_sessions
+    message: admits one Planning writer and supplies exact project context
+  - id: submit_planning_candidate
+    from: semantic_sessions
     to: planning
-    message: runs planning loop from exited decision output
-  - id: append_planning
+    message: returns one candidate epoch spanning approved Changes, Sprints, Work Items, dependencies, and integration
+  - id: append_planning_epoch
     from: planning
     to: traces
-    message: appends planning.work_units_created with work units, acceptance, path scopes, conditions, and refs
-  - id: schedule_work
+    message: control plane writes deterministic participant slices and exposes partial-commit recovery
+  - id: select_parallel_frontier
     from: traces
-    to: runtime
-    message: folds traces and derives runnable work queue, claims, budgets, and temp paths
-  - id: run_implementation
-    from: runtime
+    to: control_plane
+    message: WorkState yields compatible ready Work Items under claims, conflicts, capacity, and supervision
+  - id: start_workers
+    from: control_plane
+    to: workers
+    message: starts concurrent non-conflicting Assignments in process or container isolation
+  - id: worker_candidates
+    from: workers
     to: implementation
-    message: runs implementation loop or starts workers with source refs and content-evidence requirements
+    message: returns candidate changes, checks, provenance, and exact evidence refs
+  - id: review_and_integrate
+    from: control_plane
+    to: semantic_sessions
+    message: starts bounded read-only Implementation review over exact worker and integration state
+  - id: submit_implementation_candidate
+    from: semantic_sessions
+    to: implementation
+    message: returns acceptance, remediation, or route-back candidate
   - id: append_implementation
     from: implementation
     to: traces
-    message: appends implementation.evidence_accepted with evidence, checks, worker provenance, proof, exit conditions, and refs
+    message: control plane appends accepted realization or recovery result to owning Change traces
   - id: prove_content
     from: implementation
-    to: git
-    message: records exact working-tree, tree, commit, restore, or publication evidence
-  - id: project_views
+    to: knowledge_git
+    message: binds accepted realization to exact source, tests, tree, commit, and restore evidence
+  - id: project_state
     from: traces
     to: views
-    message: regenerates status, resume, work-plan, work-queue, quality, blockers, and conflicts views
+    message: folds Backlog, Planning, Implementation, Change dossiers, quality, blockers, and outcomes
   - id: render_state
     from: views
-    to: user
-    message: shows state, next action, and unresolved exit conditions
+    to: client
+    message: streams current state, held reasons, interventions, evidence, and recovery
 ui_hints:
-  default_focus: run_decision
+  default_focus: select_parallel_frontier
   show_exit_steps:
-    - append_decision
-    - append_planning
+    - append_decisions
+    - append_planning_epoch
     - append_implementation

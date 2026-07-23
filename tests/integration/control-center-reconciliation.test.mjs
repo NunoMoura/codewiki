@@ -157,16 +157,19 @@ describe("control-center reconciliation integration", () => {
 			".codewiki/kb/system/components/runtime.md",
 			"utf8",
 		);
-		assert.match(readme, /## Changes Backlog and control center/);
-		assert.match(readme, /pending unvalidated Change/);
+		assert.match(readme, /## Work and project control plane/);
+		assert.match(readme, /persisted pending Change revisions/);
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 		assert.match(decision, /Decision is a process.*not a domain entity/i);
 		assert.match(decision, /exact approved Change revision/i);
 		assert.match(tools, /First explicit persistence creates a Change Trace/i);
-		assert.match(tools, /Configuration renders a grouped form/i);
+		assert.match(tools, /Configuration compiles only schema-defined patches/i);
 		assert.match(runtime, /WorkState refresh/i);
 		assert.match(runtime, /policy snapshot and lease/i);
-		assert.match(runtime, /supervised event-driven outer control loop/i);
+		assert.match(
+			runtime,
+			/project-scoped control plane and outer control loop/i,
+		);
 	});
 
 	it("keeps active shipped surfaces on canonical Change vocabulary", () => {
