@@ -1,14 +1,10 @@
 import { realpath } from "node:fs/promises";
 import { isAbsolute, relative, resolve } from "node:path";
-import {
+import type {
 	createAgentSession as createPiAgentSession,
-	DefaultResourceLoader,
-	getAgentDir,
-	SessionManager,
-	SettingsManager,
-	type CreateAgentSessionOptions,
-	type ExtensionFactory,
-	type ToolDefinition,
+	CreateAgentSessionOptions,
+	ExtensionFactory,
+	ToolDefinition,
 } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import type {
@@ -78,6 +74,7 @@ export type PiSdkSemanticSessionFactory = (
 
 export interface PiSdkRuntimeSemanticAdapterOptions {
 	repoRoot: string;
+	piSdk?: typeof import("@earendil-works/pi-coding-agent");
 	agentDir?: string;
 	modelRuntime?: CreateAgentSessionOptions["modelRuntime"];
 	model?: CreateAgentSessionOptions["model"];
@@ -260,10 +257,12 @@ function createDefaultPiSdkSessionFactory(
 ): PiSdkSemanticSessionFactory {
 	return async (input) => {
 		assertPiSdkNodeVersion();
-		const settingsManager = SettingsManager.inMemory();
-		const resourceLoader = new DefaultResourceLoader({
+		const piSdk =
+			options.piSdk || (await import("@earendil-works/pi-coding-agent"));
+		const settingsManager = piSdk.SettingsManager.inMemory();
+		const resourceLoader = new piSdk.DefaultResourceLoader({
 			cwd: input.repoRoot,
-			agentDir: options.agentDir || getAgentDir(),
+			agentDir: options.agentDir || piSdk.getAgentDir(),
 			settingsManager,
 			extensionFactories: [projectReadBoundaryExtension(input.repoRoot)],
 			noExtensions: true,
@@ -276,10 +275,10 @@ function createDefaultPiSdkSessionFactory(
 		await resourceLoader.reload();
 		const candidateTool = candidateSubmissionTool(input);
 		const createAgentSession =
-			options.createAgentSession || createPiAgentSession;
+			options.createAgentSession || piSdk.createAgentSession;
 		const { session } = await createAgentSession({
 			cwd: input.repoRoot,
-			agentDir: options.agentDir || getAgentDir(),
+			agentDir: options.agentDir || piSdk.getAgentDir(),
 			...(options.modelRuntime ? { modelRuntime: options.modelRuntime } : {}),
 			...(options.model ? { model: options.model } : {}),
 			...(options.thinkingLevel
@@ -288,7 +287,7 @@ function createDefaultPiSdkSessionFactory(
 			tools: [...READ_ONLY_TOOL_NAMES, input.candidateToolName],
 			customTools: [candidateTool],
 			resourceLoader,
-			sessionManager: SessionManager.inMemory(input.repoRoot),
+			sessionManager: piSdk.SessionManager.inMemory(input.repoRoot),
 			settingsManager,
 		});
 		return session;

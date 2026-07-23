@@ -24,6 +24,10 @@ export {
 	type EnsureProjectCoordinatorServiceOptions,
 } from "./project-coordinator-process.ts";
 export {
+	startProjectCoordinatorDaemon,
+	type ProjectCoordinatorDaemonHandle,
+} from "./project-coordinator-daemon.ts";
+export {
 	connectProjectCoordinatorClient,
 	readProjectCoordinatorServiceState,
 	requestProjectCoordinatorHealth,
@@ -32,6 +36,7 @@ export {
 	type ProjectCoordinatorCandidateResult,
 	type ProjectCoordinatorClientRequestOptions,
 	type ProjectCoordinatorRemoteClient,
+	type ProjectCoordinatorSemanticExecution,
 	type RuntimeCandidateLoop,
 	type ProjectCoordinatorServiceHandle,
 	type ProjectCoordinatorServiceOptions,

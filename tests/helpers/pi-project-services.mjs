@@ -17,6 +17,12 @@ export function testPiProjectServices() {
 		inspect(root, _ctx, trigger) {
 			return reactorFor(root).inspect(trigger);
 		},
+		async semanticExecution() {
+			return "client_candidate";
+		},
+		async react() {
+			throw new Error("autonomous semantic execution is not expected");
+		},
 		async submitCandidate(root, _ctx, trigger, loop, candidate, mode) {
 			const reactor = reactorFor(root);
 			const reaction = await reactor.inspect(trigger);

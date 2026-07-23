@@ -47,12 +47,20 @@ export async function connectEnsuredProjectCoordinatorClient(
 	});
 }
 
-export function spawnProjectCoordinatorDaemon(repoRoot: string): void {
+interface ProjectCoordinatorDaemonSpawnOptions {
+	env?: NodeJS.ProcessEnv;
+}
+
+export function spawnProjectCoordinatorDaemon(
+	repoRoot: string,
+	options: ProjectCoordinatorDaemonSpawnOptions = {},
+): void {
 	const child = spawn(
 		process.execPath,
 		[projectCoordinatorDaemonScriptPath(), repoRoot],
 		{
 			cwd: repoRoot,
+			...(options.env ? { env: { ...process.env, ...options.env } } : {}),
 			detached: true,
 			stdio: "ignore",
 			windowsHide: true,
@@ -64,7 +72,7 @@ export function spawnProjectCoordinatorDaemon(repoRoot: string): void {
 
 export function projectCoordinatorDaemonScriptPath(): string {
 	return fileURLToPath(
-		new URL("./project-coordinator-daemon.js", import.meta.url),
+		new URL("../pi/project-coordinator-daemon.js", import.meta.url),
 	);
 }
 

@@ -33,6 +33,10 @@ test("Pi project-service clients reuse one leased supervised connection", async 
 			kind: "manual_resume",
 		});
 		assert.equal(reaction.status, "quiescent");
+		assert.equal(
+			await clients.semanticExecution(root, ctx),
+			"client_candidate",
+		);
 		assert.equal(starts, 1);
 		assert.equal(service.coordinator.snapshot().clientCount, 1);
 		assert.equal(service.coordinator.snapshot().supervisorCount, 1);
@@ -43,7 +47,10 @@ test("Pi project-service clients reuse one leased supervised connection", async 
 		});
 		assert.equal(recovered.status, "quiescent");
 		assert.equal(starts, 2);
-		assert.equal(service.coordinator.snapshot().generationId, "generation:pi-client:2");
+		assert.equal(
+			service.coordinator.snapshot().generationId,
+			"generation:pi-client:2",
+		);
 		assert.equal(service.coordinator.snapshot().supervisorCount, 1);
 		await clients.disconnect(root);
 		assert.equal(service.coordinator.snapshot().clientCount, 0);

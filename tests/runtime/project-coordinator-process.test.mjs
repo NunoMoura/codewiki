@@ -55,7 +55,7 @@ test("project coordinator process ensure reuses one responsive service", async (
 		assert.equal(await readProjectCoordinatorEndpoint(root), undefined);
 		assert.match(
 			projectCoordinatorDaemonScriptPath(),
-			/project-coordinator-daemon\.js$/,
+			/[\\/]pi[\\/]project-coordinator-daemon\.js$/,
 		);
 	} finally {
 		if (service) await service.close();

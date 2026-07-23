@@ -177,6 +177,8 @@ try {
 	assert.equal(shared.supervisorCount, 2);
 	const endpoint = await coordinator.readProjectCoordinatorEndpoint(projectRoot);
 	assert.equal(endpoint.generationId, shared.generationId);
+	const health = await coordinator.requestProjectCoordinatorHealth(endpoint);
+	assert.equal(health.semanticExecution, "service");
 
 	await stopPi(second);
 	const afterOneExit = await waitUntil(
@@ -208,6 +210,7 @@ try {
 				generationId: shared.generationId,
 				sharedClients: shared.clientCount,
 				supervisors: shared.supervisorCount,
+				semanticExecution: health.semanticExecution,
 				pausedAfterExit: !unsupervised.executionPermitted,
 			},
 			null,

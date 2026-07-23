@@ -35,6 +35,12 @@ function projectServices() {
 		inspect(root, _ctx, trigger) {
 			return new RuntimeReactor(root).inspect(trigger);
 		},
+		async semanticExecution() {
+			return "client_candidate";
+		},
+		async react() {
+			throw new Error("autonomous semantic execution is not expected");
+		},
 		async submitCandidate() {
 			throw new Error("candidate submission is not expected");
 		},
@@ -115,6 +121,59 @@ describe("runtime tool routing", () => {
 			"wiki_change",
 			"wiki_plan",
 		]);
+	});
+
+	it("delegates selected work to service semantic execution without exposing candidate tools", async () => {
+		const root = await project();
+		const store = new ChangeTraceStore({ repoRoot: root });
+		await store.write({
+			expectedHead: null,
+			records: [
+				createChangeRecord(
+					acceptedChangeFixture({ id: "CHG-service-semantic-routing" }),
+				),
+			],
+			message: "Persist Change",
+			actor: "maintainer",
+			createdAt: "2026-08-04T00:00:00.000Z",
+		});
+		const handlers = new Map();
+		let activeTools = ["read", "wiki_state", "wiki_change", "wiki_decide"];
+		const triggers = [];
+		registerRuntimeToolRouting(
+			{
+				on(name, handler) {
+					handlers.set(name, handler);
+				},
+				getActiveTools() {
+					return [...activeTools];
+				},
+				setActiveTools(names) {
+					activeTools = [...names];
+				},
+			},
+			{
+				async connect() {},
+				inspect(root, _ctx, trigger) {
+					return new RuntimeReactor(root).inspect(trigger);
+				},
+				async semanticExecution() {
+					return "service";
+				},
+				async react(_root, _ctx, trigger) {
+					triggers.push(trigger);
+					return [];
+				},
+				async submitCandidate() {
+					throw new Error("candidate submission is not expected");
+				},
+				async disconnect() {},
+			},
+		);
+
+		await handlers.get("before_agent_start")({}, { cwd: root });
+		assert.deepEqual(activeTools, ["read", "wiki_state", "wiki_change"]);
+		assert.deepEqual(triggers, [{ kind: "manual_resume" }]);
 	});
 
 	it("fails closed outside a CodeWiki project", async () => {

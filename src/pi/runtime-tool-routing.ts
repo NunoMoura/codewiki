@@ -25,9 +25,8 @@ const REACTION_TOOL_NAMES = new Set([
 ]);
 
 /**
- * Keep semantic candidate adapters registered while exposing only the one
- * selected by runtime. Adapter execution returns judgment or evidence to the
- * runtime executor; the agent never invokes loop facades or sees all choices.
+ * Prefer coordinator-owned semantic sessions. When optional Pi SDK execution
+ * is unavailable, expose only runtime-selected candidate tool as fallback.
  */
 export function registerRuntimeToolRouting(
 	pi: CodewikiExtensionApi,
@@ -50,13 +49,22 @@ export function registerRuntimeToolRouting(
 			return;
 		}
 		try {
-			applyReaction(
-				pi,
-				await projectServices.inspect(root, ctx, {
-					kind: trigger.kind,
-					...(trigger.refs ? { refs: trigger.refs } : {}),
-				}),
-			);
+			const remoteTrigger = {
+				kind: trigger.kind,
+				...(trigger.refs ? { refs: trigger.refs } : {}),
+			};
+			const reaction = await projectServices.inspect(root, ctx, remoteTrigger);
+			if (
+				reaction.selection &&
+				(await projectServices.semanticExecution(root, ctx)) === "service"
+			) {
+				applyReaction(pi, undefined);
+				void projectServices
+					.react(root, ctx, remoteTrigger)
+					.catch(() => undefined);
+				return;
+			}
+			applyReaction(pi, reaction);
 		} catch {
 			applyReaction(pi, undefined);
 		}

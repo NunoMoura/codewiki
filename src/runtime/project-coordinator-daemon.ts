@@ -1,23 +1,41 @@
 import { realpathSync } from "node:fs";
-import { startProjectCoordinatorService } from "./project-coordinator-service.ts";
+import {
+	startProjectCoordinatorService,
+	type ProjectCoordinatorServiceHandle,
+	type ProjectCoordinatorServiceOptions,
+} from "./project-coordinator-service.ts";
 
-const repoRoot = process.argv[2];
-if (!repoRoot) {
-	throw new Error("CodeWiki project coordinator daemon requires a repo root argument.");
+export interface ProjectCoordinatorDaemonHandle
+	extends Omit<ProjectCoordinatorServiceHandle, "close"> {
+	close(): Promise<void>;
 }
 
-const service = await startProjectCoordinatorService(realpathSync(repoRoot));
-let closing = false;
-
-async function shutdown(): Promise<void> {
-	if (closing) return;
-	closing = true;
-	service.coordinator.setExecutionPolicy("paused");
-	await waitForJobs(Date.now() + 30_000);
-	await service.close().catch(() => undefined);
+export async function startProjectCoordinatorDaemon(
+	repoRoot: string,
+	options: ProjectCoordinatorServiceOptions = {},
+): Promise<ProjectCoordinatorDaemonHandle> {
+	const service = await startProjectCoordinatorService(
+		realpathSync(repoRoot),
+		options,
+	);
+	let closing = false;
+	return {
+		endpoint: service.endpoint,
+		coordinator: service.coordinator,
+		async close() {
+			if (closing) return;
+			closing = true;
+			service.coordinator.setExecutionPolicy("paused");
+			await waitForJobs(service, Date.now() + 30_000);
+			await service.close();
+		},
+	};
 }
 
-async function waitForJobs(deadline: number): Promise<void> {
+async function waitForJobs(
+	service: ProjectCoordinatorServiceHandle,
+	deadline: number,
+): Promise<void> {
 	if (
 		service.coordinator.snapshot().jobs.length === 0 ||
 		Date.now() >= deadline
@@ -25,11 +43,5 @@ async function waitForJobs(deadline: number): Promise<void> {
 		return;
 	}
 	await new Promise((resolve) => setTimeout(resolve, 50));
-	return waitForJobs(deadline);
-}
-
-for (const signal of ["SIGINT", "SIGTERM"] as const) {
-	process.once(signal, () => {
-		void shutdown().finally(() => process.exit(0));
-	});
+	return waitForJobs(service, deadline);
 }

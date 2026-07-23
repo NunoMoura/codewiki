@@ -79,6 +79,9 @@ type ProjectCoordinatorRemoteTrigger = Omit<
 	"occurredAt"
 >;
 export type RuntimeCandidateLoop = "decision" | "planning" | "implementation";
+export type ProjectCoordinatorSemanticExecution =
+	| "service"
+	| "client_candidate";
 
 export interface ProjectCoordinatorCandidateResult {
 	receipt: RuntimeReactionJobReceipt;
@@ -89,6 +92,7 @@ export interface ProjectCoordinatorRemoteClient {
 	clientId: string;
 	connectionId: string;
 	generationId: string;
+	semanticExecution: ProjectCoordinatorSemanticExecution;
 	state(): Promise<ProjectCoordinatorSnapshot>;
 	inspect(trigger: ProjectCoordinatorRemoteTrigger): Promise<RuntimeReaction>;
 	submitCandidate(
@@ -257,6 +261,7 @@ export async function connectProjectCoordinatorClient(
 		clientId: string;
 		connectionId: string;
 		generationId: string;
+		semanticExecution: ProjectCoordinatorSemanticExecution;
 	}>(endpoint, "/v1/clients/connect", {
 		method: "POST",
 		body: input,
@@ -267,6 +272,7 @@ export async function connectProjectCoordinatorClient(
 		clientId: response.clientId,
 		connectionId: response.connectionId,
 		generationId: response.generationId,
+		semanticExecution: response.semanticExecution,
 		state() {
 			assertRemoteClientConnected(disconnected, response.clientId);
 			return requestCoordinatorJson<ProjectCoordinatorSnapshot>(
@@ -313,7 +319,11 @@ export async function connectProjectCoordinatorClient(
 				{
 					method: "POST",
 					body: { connectionId: response.connectionId, trigger, mode },
-					timeoutMs: options.timeoutMs,
+					timeoutMs: Math.max(
+						DEFAULT_REQUEST_TIMEOUT_MS,
+						options.timeoutMs || 0,
+						180_000,
+					),
 				},
 			);
 		},
@@ -366,7 +376,11 @@ export async function readProjectCoordinatorServiceState(
 export async function requestProjectCoordinatorHealth(
 	endpoint: ProjectCoordinatorEndpoint,
 	options: ProjectCoordinatorClientRequestOptions = {},
-): Promise<{ generationId: string; pid: number }> {
+): Promise<{
+	generationId: string;
+	pid: number;
+	semanticExecution: ProjectCoordinatorSemanticExecution;
+}> {
 	return requestCoordinatorJson(endpoint, "/v1/health", {
 		timeoutMs: options.timeoutMs,
 	});
@@ -403,6 +417,7 @@ async function routeServiceRequest(
 		writeJson(response, 200, {
 			generationId: runtime.endpoint.generationId,
 			pid: runtime.endpoint.pid,
+			semanticExecution: semanticExecution(runtime),
 		});
 		return;
 	}
@@ -448,6 +463,7 @@ async function routeServiceRequest(
 			clientId: connection.clientId,
 			connectionId,
 			generationId: runtime.endpoint.generationId,
+			semanticExecution: semanticExecution(runtime),
 		});
 		return;
 	}
@@ -583,6 +599,12 @@ async function handleRuntimeReaction(
 	} finally {
 		extendLease(runtime, lease);
 	}
+}
+
+function semanticExecution(
+	runtime: ServiceRuntime,
+): ProjectCoordinatorSemanticExecution {
+	return runtime.semanticAdapters ? "service" : "client_candidate";
 }
 
 function candidateAdapters(

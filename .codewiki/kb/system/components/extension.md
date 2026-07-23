@@ -20,6 +20,7 @@ codewiki_test_patterns:
   - tests/runtime/pi-install-scope.test.mjs
   - tests/runtime/pi-process-session.test.mjs
   - tests/runtime/pi-project-service-client.test.mjs
+  - tests/runtime/pi-project-coordinator-daemon.test.mjs
   - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
   - tests/runtime/pi-rpc-smoke.mjs
   - tests/runtime/pi-tool-mutation-smoke.mjs
@@ -41,6 +42,7 @@ codewiki_source_map:
       - tests/runtime/pi-install-scope.test.mjs
       - tests/runtime/pi-process-session.test.mjs
       - tests/runtime/pi-project-service-client.test.mjs
+      - tests/runtime/pi-project-coordinator-daemon.test.mjs
       - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
       - tests/runtime/pi-rpc-smoke.mjs
       - tests/runtime/pi-tool-mutation-smoke.mjs
@@ -63,7 +65,7 @@ The user-facing slash surface remains `/wiki-dashboard`, `/wiki-resume`, `/wiki-
 
 CodeWiki is not published to the npm registry yet. Its selected registry identity is `@nunomoura/codewiki`, while package metadata keeps `"private": true` so npm refuses publication during stabilization. Distribution testing packs the candidate and installs it only into disposable external projects with isolated Pi settings. The source checkout contains canonical KB, source, tests, and Git history but no active dogfood trace or Changes state. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default in consuming projects; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
 
-Mocked extension tests cover registered capabilities, runtime-selected candidate routing, runtime-owned semantic invocation, direct `/wiki-*` slash commands, pure TUI renderers, and prompt guidance. Prompt guidance is additive context only; it must not choose or directly invoke a semantic loop, create workflow truth, or replace explicit trace evidence.
+Mocked extension tests cover registered capabilities, service-owned semantic dispatch, peer-absent runtime-selected candidate fallback, runtime-owned semantic invocation, direct `/wiki-*` slash commands, pure TUI renderers, and prompt guidance. Prompt guidance is additive context only; it must not choose or directly invoke a semantic loop, create workflow truth, or replace explicit trace evidence.
 
 `npm run test:pi-install` is the reproducible install smoke. It packs CodeWiki, installs the tarball into a temp npm prefix, installs that package through Pi with temp `PI_CODING_AGENT_DIR`/session dirs, and verifies Pi can resolve the package without writing repo-local or global Pi settings.
 
@@ -71,7 +73,7 @@ Mocked extension tests cover registered capabilities, runtime-selected candidate
 
 In a consuming project, one detached local project daemon owns the runtime coordinator. Pi sessions discover and connect as leased clients; no individual session owns its lifetime. Dashboard runtimes connect as separate observers while their existing HTTP endpoint remains a transitional process. Initial TUI `session_start` may ensure the coordinator and open one browser tab. Reload or session replacement reuses the endpoint without opening another tab. Closing a browser tab or Pi session does not mutate workflow truth. Under supervised policy, loss of all approved supervisors prevents new execution starts while preserving deterministic recovery. `/wiki-dashboard` health-checks project service state before reopening it. Stale endpoint metadata is removed after failed serving. Installing a different package version while Pi is running requires fully exiting and restarting Pi; `/reload` may reload extension registration but cannot guarantee replacement of cached imported package modules.
 
-`npm run test:pi-multiprocess` packs CodeWiki into a disposable external project, starts two real Pi RPC processes plus the dashboard, verifies three leased clients share one coordinator generation with two approved supervisors, then verifies supervisor loss pauses execution and explicit shutdown leaves no daemon.
+`npm run test:pi-multiprocess` packs CodeWiki into a disposable external project, starts two real Pi RPC processes plus the dashboard, verifies three leased clients share one coordinator generation with two approved supervisors, proves the installed extension resolves the host Pi SDK and advertises service-owned semantic execution, then verifies supervisor loss pauses execution and explicit shutdown leaves no daemon.
 
 `npm run test:pi-mutation` is the isolated tool mutation smoke. It uses a temp
 project, exercises a Pi-registered `wiki_decide` tool with preview first, rejects
@@ -100,7 +102,7 @@ failure paths through installed package artifacts.
 
 ## Production readiness gates
 
-Supported now: project-local packed/local package installs, guarded expected-byte/sequence mutation, process worker primitives, external sandbox compatibility, and a detached elected project coordinator service with authenticated loopback clients. Pi sessions use leased service clients for runtime inspection, active-tool routing, and candidate-only semantic submission; dashboard runtimes register separate observers. Runtime selects exact invariants, schedules typed jobs, binds successful writes to deterministic job ids in canonical Change Trace events, rechecks generation ownership before append, and recovers completion evidence after restart without reinvoking adapters. A packed external spike proves two real Pi RPC processes plus one dashboard share one generation and supervision pauses after both Pi clients exit. An entrypoint-isolated `./pi-sdk` adapter creates bounded read-only semantic sessions. Autonomous real model/auth execution through the daemon, durable event delivery, implementation-worker scheduling, dashboard-service consolidation, and process/container worker isolation still require external gates before production use. Public npm publish, unattended worker start, auto-merge, auto-publish, global/user installs for normal mutation, and treating worker completion as truth without Implementation acceptance remain gated.
+Supported now: project-local packed/local package installs, guarded expected-byte/sequence mutation, process worker primitives, external sandbox compatibility, and a detached elected project coordinator service with authenticated loopback clients. Pi sessions use leased service clients for runtime inspection and bounded trigger submission; when the optional Pi SDK peer is available, the daemon owns semantic-session dispatch and removes semantic candidate tools from the main conversation. Peer-absent installs retain only the runtime-selected candidate fallback. Dashboard runtimes register separate observers. Runtime selects exact invariants, schedules typed jobs, binds successful writes to deterministic job ids in canonical Change Trace events, rechecks generation ownership before append, and recovers completion evidence after restart without reinvoking adapters. A packed external spike proves two real Pi RPC processes plus one dashboard share one generation and supervision pauses after both Pi clients exit. External real model/auth execution, durable event delivery, implementation-worker scheduling, dashboard-service consolidation, and process/container worker isolation still require external gates before production use. Public npm publish, unattended worker start, auto-merge, auto-publish, global/user installs for normal mutation, and treating worker completion as truth without Implementation acceptance remain gated.
 
 Before enabling unattended worker start or auto-merge, require multiple successful
 external package lifecycle smokes, passing package failure-path smokes, no project-root

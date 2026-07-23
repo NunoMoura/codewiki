@@ -128,11 +128,21 @@ assert.equal((await remoteClient.state()).supervisorCount, 1);
 assert.equal(typeof remoteClient.react, "function");
 assert.equal(typeof remoteClient.inspect, "function");
 assert.equal(typeof remoteClient.submitCandidate, "function");
+assert.equal(remoteClient.semanticExecution, "client_candidate");
 assert.equal(typeof scheduleRuntimeReactions, "function");
 assert.equal(typeof ensureProjectCoordinatorService, "function");
 assert.equal(typeof stopProjectCoordinatorService, "function");
 await remoteClient.disconnect();
 await service.close();
+await ensureProjectCoordinatorService(process.cwd());
+const daemonClient = await connectProjectCoordinatorClient(process.cwd(), {
+	clientId: "packed:daemon-client",
+	kind: "test",
+	supervision: "approved",
+});
+assert.equal(daemonClient.semanticExecution, "client_candidate");
+await daemonClient.disconnect();
+await stopProjectCoordinatorService(process.cwd());
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
 assert.deepEqual(buildWorkState({ records: [] }).changeIds, []);
 assert.match(buildWorkState({ records: [] }).snapshotDigest, /^sha256:[a-f0-9]{64}$/);
@@ -189,6 +199,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator-api.js
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-process.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-coordinator-daemon.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);

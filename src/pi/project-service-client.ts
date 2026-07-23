@@ -6,10 +6,13 @@ import {
 import type {
 	ProjectCoordinatorCandidateResult,
 	ProjectCoordinatorRemoteClient,
+	ProjectCoordinatorSemanticExecution,
 	RuntimeCandidateLoop,
 } from "../runtime/project-coordinator-service.ts";
 import type { RuntimeReaction, RuntimeTrigger } from "../runtime/reactor.ts";
+import type { RuntimeReactionJobReceipt } from "../runtime/runtime-reaction-jobs.ts";
 import type { RuntimeSemanticMode } from "../runtime/semantic-executor.ts";
+import { spawnPiProjectCoordinatorDaemon } from "./project-coordinator-daemon.ts";
 import type { CodewikiExtensionContext } from "./types.ts";
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
@@ -26,6 +29,16 @@ export interface PiProjectServiceClientProvider {
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
 		trigger: RemoteTrigger,
 	): Promise<RuntimeReaction>;
+	semanticExecution(
+		repoRoot: string,
+		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
+	): Promise<ProjectCoordinatorSemanticExecution>;
+	react(
+		repoRoot: string,
+		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
+		trigger: RemoteTrigger,
+		mode?: RuntimeSemanticMode,
+	): Promise<RuntimeReactionJobReceipt[]>;
 	submitCandidate(
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
@@ -45,6 +58,9 @@ interface ClientEntry {
 export function createPiProjectServiceClients(
 	options: EnsureProjectCoordinatorServiceOptions = {},
 ): PiProjectServiceClientProvider {
+	const serviceOptions = options.spawnDaemon
+		? options
+		: { ...options, spawnDaemon: spawnPiProjectCoordinatorDaemon };
 	const instanceId = randomUUID();
 	const clients = new Map<string, ClientEntry>();
 
@@ -73,7 +89,7 @@ export function createPiProjectServiceClients(
 				supervision:
 					ctx.mode === "tui" || ctx.mode === "rpc" ? "approved" : "observer",
 			},
-			options,
+			serviceOptions,
 		);
 		const entry = {
 			client,
@@ -111,6 +127,12 @@ export function createPiProjectServiceClients(
 		},
 		inspect(repoRoot, ctx, trigger) {
 			return invoke(repoRoot, ctx, (client) => client.inspect(trigger));
+		},
+		semanticExecution(repoRoot, ctx) {
+			return invoke(repoRoot, ctx, async (client) => client.semanticExecution);
+		},
+		react(repoRoot, ctx, trigger, mode = "append") {
+			return invoke(repoRoot, ctx, (client) => client.react(trigger, mode));
 		},
 		submitCandidate(repoRoot, ctx, trigger, loop, candidate, mode) {
 			return invoke(repoRoot, ctx, (client) =>
