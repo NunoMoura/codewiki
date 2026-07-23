@@ -367,7 +367,7 @@ function completionPlanningRefs(
 
 function completionReleaseData(
 	completion: RuntimeWorkerCompletionReleaseInput,
-	status: "completed" | "blocked" | "failed",
+	status: "completed" | "blocked" | "failed" | "cancelled",
 ): Record<string, unknown> {
 	return {
 		status,
@@ -387,9 +387,13 @@ function completionReleaseData(
 	};
 }
 
-function completionStatus(value: unknown): "completed" | "blocked" | "failed" {
+function completionStatus(
+	value: unknown,
+): "completed" | "blocked" | "failed" | "cancelled" {
 	const status = text(value).toLowerCase();
-	if (status === "blocked" || status === "failed") return status;
+	if (status === "blocked" || status === "failed" || status === "cancelled") {
+		return status;
+	}
 	return "completed";
 }
 

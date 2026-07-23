@@ -77,17 +77,22 @@ async function executePiProcessWorker(
 		workerId: assignment.workerId,
 		claimId: assignment.claimId,
 		prompt: assignment.prompt,
+		signal,
 		options: {
 			claimEvents: [],
 			sessionFactory,
 			promptOptions: options.promptOptions,
 		},
 	});
-	if (signal.aborted)
-		throw new Error("Implementation worker assignment aborted.");
-	await assertBoundedFile(outputFile, 2 * 1024 * 1024, "worker output");
-	const completions = await collectPiWorkerOutputFiles([workerStart]);
-	const implementationEvidence = collectPiWorkerReports(completions)[0];
+	let implementationEvidence;
+	try {
+		await assertBoundedFile(outputFile, 2 * 1024 * 1024, "worker output");
+		const completions = await collectPiWorkerOutputFiles([workerStart]);
+		implementationEvidence = collectPiWorkerReports(completions)[0];
+	} catch (error) {
+		if (workerStart.status !== "cancelled" || !isNotFound(error)) throw error;
+		implementationEvidence = collectPiWorkerReports([{ workerStart }])[0];
+	}
 	if (!implementationEvidence) {
 		throw new Error("Pi process worker did not produce a normalized report.");
 	}
@@ -138,13 +143,16 @@ async function recoverPiProcessWorker(
 	} catch {
 		throw new Error("Implementation worker recovery report is invalid JSON.");
 	}
-	assertImplementationWorkerReport(assignment, report);
+	if (!report || typeof report !== "object" || Array.isArray(report)) {
+		throw new Error("Implementation worker recovery report is invalid.");
+	}
 	const { reportRef, ...reportWithoutRef } = report;
 	if (reportRef !== workerReportRef(reportWithoutRef)) {
 		throw new Error(
 			"Implementation worker recovery report digest does not match.",
 		);
 	}
+	assertImplementationWorkerReport(assignment, report);
 	return report;
 }
 
@@ -215,7 +223,12 @@ function workerReportRef(
 function workerReportStatus(
 	status: string | undefined,
 ): ImplementationWorkerReport["status"] {
-	if (status === "completed" || status === "blocked" || status === "failed") {
+	if (
+		status === "completed" ||
+		status === "blocked" ||
+		status === "failed" ||
+		status === "cancelled"
+	) {
 		return status;
 	}
 	return "failed";

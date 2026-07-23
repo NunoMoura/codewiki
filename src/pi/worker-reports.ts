@@ -164,6 +164,7 @@ function completionStatus(
 	input: PiWorkerCompletionInput,
 	parsed: ParsedCompletionOutput,
 ): ImplementationWorkerReportInput["status"] {
+	if (input.workerStart.status === "cancelled") return "cancelled";
 	if (
 		input.error ||
 		input.workerStart.status === "failed" ||
@@ -302,8 +303,8 @@ function invalidStatusMessage(value: unknown): string {
 
 function isWorkerStatus(
 	status: string,
-): status is "completed" | "blocked" | "failed" {
-	return ["completed", "blocked", "failed"].includes(status);
+): status is "completed" | "blocked" | "failed" | "cancelled" {
+	return ["completed", "blocked", "failed", "cancelled"].includes(status);
 }
 
 function optionalTextField<Key extends string>(

@@ -1412,9 +1412,11 @@ function terminalWorkerReleaseCheck(
 
 function workerStatus(
 	worker: ImplementationWorkerReportInput,
-): "completed" | "blocked" | "failed" {
+): "completed" | "blocked" | "failed" | "cancelled" {
 	const status = String(worker.status || "completed").toLowerCase();
-	return status === "blocked" || status === "failed" ? status : "completed";
+	return status === "blocked" || status === "failed" || status === "cancelled"
+		? status
+		: "completed";
 }
 
 function releaseCheckForImplementation(

@@ -131,7 +131,7 @@ describe("Pi worker completion normalization", () => {
 		);
 	});
 
-	it("normalizes blocked and failed completions without log refs", () => {
+	it("normalizes blocked, failed, and cancelled completions without log refs", () => {
 		const blocked = normalizePiWorkerCompletion({
 			workerStart: workerStart(),
 			output: {
@@ -148,6 +148,12 @@ describe("Pi worker completion normalization", () => {
 			workerStart: workerStart({ status: "failed", error: "spawn failed" }),
 			output: "plain text is not structured JSON",
 		});
+		const cancelled = normalizePiWorkerCompletion({
+			workerStart: workerStart({
+				status: "cancelled",
+				error: "assignment cancelled",
+			}),
+		});
 
 		assert.equal(blocked.status, "blocked");
 		assert.equal(blocked.message, "Needs planning scope change.");
@@ -157,6 +163,8 @@ describe("Pi worker completion normalization", () => {
 			"Worker completion output is missing a codewiki-worker-report block. plain text is not structured JSON spawn failed",
 		);
 		assert.equal(failed.refs, undefined);
+		assert.equal(cancelled.status, "cancelled");
+		assert.equal(cancelled.message, "assignment cancelled");
 	});
 
 	it("fails invalid fenced CodeWiki worker reports", () => {
@@ -205,7 +213,7 @@ describe("Pi worker completion normalization", () => {
 		const result = normalizePiWorkerCompletion({
 			workerStart: workerStart(),
 			output: `\`\`\`codewiki-worker-report\n${JSON.stringify({
-				status: "completed | blocked | failed",
+				status: "completed | blocked | failed | cancelled",
 				changedFiles: ["src/pi/worker-reports.ts"],
 			})}\n\`\`\``,
 		});
@@ -213,7 +221,7 @@ describe("Pi worker completion normalization", () => {
 		assert.equal(result.status, "failed");
 		assert.match(
 			result.message,
-			/Worker completion status "completed \| blocked \| failed" is invalid\./,
+			/Worker completion status "completed \| blocked \| failed \| cancelled" is invalid\./,
 		);
 	});
 

@@ -200,6 +200,47 @@ test("elected coordinator service schedules worker assignments through configure
 	}
 });
 
+test("coordinator service drains active workers into cancelled reports", async () => {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-worker-service-cancel-"));
+	const started = Promise.withResolvers();
+	let service;
+	let client;
+	try {
+		service = await startProjectCoordinatorService(root, {
+			generationId: "generation:worker-service-cancel",
+			workerAdapter: {
+				async recover() {
+					return undefined;
+				},
+				async execute(input, signal) {
+					started.resolve();
+					await new Promise((resolve) =>
+						signal.addEventListener("abort", resolve, { once: true }),
+					);
+					return result(input, "cancelled");
+				},
+			},
+		});
+		client = await connectProjectCoordinatorClient(root, {
+			clientId: "pi:worker-service-cancel-supervisor",
+			kind: "pi",
+			supervision: "approved",
+		});
+		const scheduled = service.scheduleWorkerAssignments([
+			assignment(root, "service-cancel", "src/service-cancel/**"),
+		]);
+		await started.promise;
+		await service.close();
+		const [receipt] = await scheduled;
+		assert.equal(receipt.report.status, "cancelled");
+		assert.equal(service.coordinator.snapshot().jobs.length, 0);
+	} finally {
+		if (client) await client.disconnect().catch(() => undefined);
+		if (service) await service.close().catch(() => undefined);
+		await rm(root, { recursive: true, force: true });
+	}
+});
+
 test("implementation worker batches reject repeated Work Items", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-worker-duplicate-"));
 	const coordinator = new ProjectCoordinator(root);

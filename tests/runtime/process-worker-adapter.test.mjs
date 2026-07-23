@@ -115,6 +115,43 @@ test("Pi process worker adapter persists and recovers normalized Worker reports"
 	}
 });
 
+test("Pi process worker adapter persists cancelled reports after start", async () => {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-process-worker-cancel-"));
+	const input = assignment(root);
+	await mkdir(input.worktree.path, { recursive: true });
+	const started = Promise.withResolvers();
+	const controller = new AbortController();
+	const adapter = createPiProcessImplementationWorkerAdapter({
+		process: {
+			async runner(command) {
+				started.resolve();
+				await new Promise((resolve) =>
+					command.signal.addEventListener("abort", resolve, { once: true }),
+				);
+				return {
+					pid: 4343,
+					outputFile: command.outputFile,
+					exitCode: 1,
+					signal: "SIGTERM",
+					cancelled: true,
+				};
+			},
+		},
+	});
+	try {
+		const execution = adapter.execute(input, controller.signal);
+		await started.promise;
+		controller.abort();
+		const report = await execution;
+		assert.equal(report.status, "cancelled");
+		assert.equal(report.implementationEvidence?.status, "cancelled");
+		assert.match(report.error, /cancelled/i);
+		assert.deepEqual(await adapter.recover(input), report);
+	} finally {
+		await rm(root, { recursive: true, force: true });
+	}
+});
+
 test("Pi process worker adapter requires worktree isolation and runtime report paths", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-process-worker-guard-"));
 	const base = assignment(root);

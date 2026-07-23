@@ -33,7 +33,7 @@ export interface ImplementationWorkerReport {
 	assignmentId: string;
 	workerId: string;
 	workItemId: string;
-	status: "completed" | "blocked" | "failed";
+	status: "completed" | "blocked" | "failed" | "cancelled";
 	reportRef: string;
 	implementationEvidence?: ImplementationWorkerReportInput;
 	sessionId?: string;
@@ -170,16 +170,26 @@ export function assertImplementationWorkerReport(
 	if (!report.reportRef.trim()) {
 		throw new Error("Implementation worker report ref is required.");
 	}
-	if (
-		report.implementationEvidence &&
-		(report.implementationEvidence.workerId !== assignment.workerId ||
-			report.implementationEvidence.workUnitId !== assignment.workItemId)
-	) {
-		throw new Error(
-			"Implementation worker evidence identity does not match assignment.",
-		);
+	if (report.implementationEvidence) {
+		if (
+			report.implementationEvidence.workerId !== assignment.workerId ||
+			report.implementationEvidence.workUnitId !== assignment.workItemId
+		) {
+			throw new Error(
+				"Implementation worker evidence identity does not match assignment.",
+			);
+		}
+		if (report.implementationEvidence.status !== report.status) {
+			throw new Error(
+				"Implementation worker evidence status does not match report.",
+			);
+		}
 	}
-	if (!(["completed", "blocked", "failed"] as const).includes(report.status)) {
+	if (
+		!(["completed", "blocked", "failed", "cancelled"] as const).includes(
+			report.status,
+		)
+	) {
 		throw new Error("Implementation worker report status is invalid.");
 	}
 }

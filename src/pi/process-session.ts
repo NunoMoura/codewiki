@@ -51,6 +51,7 @@ export interface PiProcessSessionFactoryOptions {
 	outputFile?: string | ((input: PiWorkerSessionInput) => string);
 	runner?: PiProcessCommandRunner;
 	resumeRunner?: PiProcessSessionResumeRunner;
+	terminationGraceMs?: number;
 }
 
 export interface PiProcessCommandRunnerInput {
@@ -64,6 +65,8 @@ export interface PiProcessCommandRunnerInput {
 	workUnitId: string;
 	traceId: string;
 	timeoutMs?: number;
+	terminationGraceMs?: number;
+	signal?: AbortSignal;
 	outputMode?: "raw" | "trace-host";
 }
 
@@ -78,6 +81,9 @@ export interface PiProcessCommandResult {
 	stderr?: string;
 	controller?: TraceHostSessionController;
 	usage?: WorkerExecutionUsage;
+	cancelled?: boolean;
+	timedOut?: boolean;
+	timeoutMs?: number;
 }
 
 export type PiProcessCommandRunner = (
@@ -262,8 +268,17 @@ class PiProcessSession implements PiWorkerSession {
 		this.options = options;
 	}
 
-	async prompt(text: string): Promise<void> {
-		const commandInput = processCommandInput(this.input, this.options, text);
+	async prompt(
+		text: string,
+		_options?: unknown,
+		signal?: AbortSignal,
+	): Promise<void> {
+		const commandInput = processCommandInput(
+			this.input,
+			this.options,
+			text,
+			signal,
+		);
 		const startedAt = Date.now();
 		const result = await (this.options.runner || runPiProcessCommand)(
 			commandInput,
@@ -289,6 +304,7 @@ function processCommandInput(
 	input: PolicyAwareWorkerSessionInput,
 	options: PiProcessSessionFactoryOptions,
 	prompt: string,
+	signal?: AbortSignal,
 ): PiProcessCommandRunnerInput {
 	const policy = input.executionPolicy;
 	if (policy && options.detached) {
@@ -323,6 +339,10 @@ function processCommandInput(
 		workUnitId: input.workUnitId,
 		traceId: input.traceId,
 		...(policy ? { timeoutMs: policy.route.timeoutMs } : {}),
+		...(options.terminationGraceMs === undefined
+			? {}
+			: { terminationGraceMs: options.terminationGraceMs }),
+		...(signal ? { signal } : {}),
 	};
 }
 
@@ -507,6 +527,9 @@ function waitForProcessExit(
 async function runForegroundPiProcessCommand(
 	input: PiProcessCommandRunnerInput,
 ): Promise<PiProcessCommandResult> {
+	if (input.signal?.aborted) {
+		throw new Error("Pi worker process cancelled before start.");
+	}
 	return await new Promise((resolve, reject) => {
 		const child = spawn(input.command, input.args, {
 			cwd: input.cwd,
@@ -516,6 +539,33 @@ async function runForegroundPiProcessCommand(
 		});
 		let stdout = "";
 		let stderr = "";
+		let cancelled = false;
+		let timedOut = false;
+		let forceKillTimer: NodeJS.Timeout | undefined;
+		const terminationGraceMs = Math.min(
+			Math.max(input.terminationGraceMs ?? 1_000, 0),
+			30_000,
+		);
+		const terminate = (): void => {
+			if (child.exitCode !== null || child.signalCode !== null) return;
+			child.kill("SIGTERM");
+			forceKillTimer = setTimeout(() => {
+				if (child.exitCode === null && child.signalCode === null) {
+					child.kill("SIGKILL");
+				}
+			}, terminationGraceMs);
+			forceKillTimer.unref();
+		};
+		const onAbort = (): void => {
+			if (timedOut) return;
+			cancelled = true;
+			terminate();
+		};
+		const cleanup = (): void => {
+			if (timeoutTimer) clearTimeout(timeoutTimer);
+			if (forceKillTimer) clearTimeout(forceKillTimer);
+			input.signal?.removeEventListener("abort", onAbort);
+		};
 		child.stdout?.setEncoding("utf8");
 		child.stderr?.setEncoding("utf8");
 		child.stdout?.on("data", (chunk) => {
@@ -524,18 +574,21 @@ async function runForegroundPiProcessCommand(
 		child.stderr?.on("data", (chunk) => {
 			stderr += String(chunk);
 		});
-		const timer = input.timeoutMs
+		const timeoutTimer = input.timeoutMs
 			? setTimeout(() => {
-					child.kill("SIGTERM");
-					reject(new Error(`Pi worker exceeded timeout ${input.timeoutMs}ms.`));
+					if (cancelled) return;
+					timedOut = true;
+					terminate();
 				}, input.timeoutMs)
 			: undefined;
+		input.signal?.addEventListener("abort", onAbort, { once: true });
+		if (input.signal?.aborted) onAbort();
 		child.once("error", (error) => {
-			if (timer) clearTimeout(timer);
+			cleanup();
 			reject(error);
 		});
-		child.once("close", async (exitCode, signal) => {
-			if (timer) clearTimeout(timer);
+		child.once("close", async (exitCode, processSignal) => {
+			cleanup();
 			try {
 				await mkdir(dirname(input.outputFile), { recursive: true });
 				const { writeFile } = await import("node:fs/promises");
@@ -543,10 +596,14 @@ async function runForegroundPiProcessCommand(
 				resolve({
 					pid: child.pid,
 					outputFile: input.outputFile,
-					exitCode: exitCode ?? 0,
-					signal,
+					exitCode: exitCode ?? (processSignal ? 1 : 0),
+					signal: processSignal,
 					stdout,
 					stderr,
+					...(cancelled ? { cancelled: true } : {}),
+					...(timedOut
+						? { timedOut: true, timeoutMs: input.timeoutMs }
+						: {}),
 				});
 			} catch (error) {
 				reject(error);
@@ -556,10 +613,18 @@ async function runForegroundPiProcessCommand(
 }
 
 function isFailedProcessResult(result: PiProcessCommandResult): boolean {
-	return typeof result.exitCode === "number" && result.exitCode !== 0;
+	return (
+		result.cancelled === true ||
+		result.timedOut === true ||
+		(typeof result.exitCode === "number" && result.exitCode !== 0)
+	);
 }
 
 function processFailureMessage(result: PiProcessCommandResult): string {
+	if (result.cancelled) return "Pi worker process cancelled.";
+	if (result.timedOut) {
+		return `Pi worker exceeded timeout ${result.timeoutMs ?? "unknown"}ms.`;
+	}
 	return [
 		`pi process exited with code ${result.exitCode}`,
 		result.signal ? `signal ${result.signal}` : "",

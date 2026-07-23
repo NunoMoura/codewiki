@@ -399,72 +399,87 @@ test("authenticated project-service clients trigger automatic worker reconciliat
 	}
 });
 
-test("failed worker reports release claims without becoming Implementation truth", async () => {
-	const root = await mkdtemp(`${tmpdir()}/codewiki-worker-failed-release-`);
-	const fixture = await seedRuntimeImplementation(root, {
-		suffix: "worker-failed-release",
-		pathScopes: ["src/worker-failed/**"],
-	});
-	const coordinator = new ProjectCoordinator(root, {
-		generationId: "generation:worker-failed-release",
-	});
-	const client = coordinator.connectClient({
-		clientId: "pi:worker-failed-release",
+for (const terminalStatus of ["failed", "cancelled"]) {
+	test(`${terminalStatus} worker reports release claims without becoming Implementation truth`, async () => {
+		const root = await mkdtemp(
+			`${tmpdir()}/codewiki-worker-${terminalStatus}-release-`,
+		);
+		const fixture = await seedRuntimeImplementation(root, {
+			suffix: `worker-${terminalStatus}-release`,
+			pathScopes: [`src/worker-${terminalStatus}/**`],
+		});
+		const coordinator = new ProjectCoordinator(root, {
+			generationId: `generation:worker-${terminalStatus}-release`,
+		});
+		const client = coordinator.connectClient({
+			clientId: `pi:worker-${terminalStatus}-release`,
 		kind: "pi",
 		supervision: "approved",
 	});
-	const persisted = new Map();
-	const dispatcher = new ImplementationWorkerDispatcher({
-		repoRoot: root,
-		coordinator,
-		reactor: new RuntimeReactor(root),
-		adapter: {
-			isolationKinds: ["worktree"],
-			async recover(assignment) {
-				return persisted.get(assignment.assignmentId);
+		const persisted = new Map();
+		const dispatcher = new ImplementationWorkerDispatcher({
+			repoRoot: root,
+			coordinator,
+			reactor: new RuntimeReactor(root),
+			adapter: {
+				isolationKinds: ["worktree"],
+				async recover(assignment) {
+					return persisted.get(assignment.assignmentId);
+				},
+				async execute(assignment) {
+					const result = completedResult(assignment, terminalStatus);
+					persisted.set(assignment.assignmentId, result);
+					return result;
+				},
 			},
-			async execute(assignment) {
-				const result = completedResult(assignment, "failed");
-				persisted.set(assignment.assignmentId, result);
-				return result;
+			loadConfig: async () => automaticConfig(),
+			collectGitStatus: async () => gitStatus(root),
+			worktreeRunner() {
+				return { exitCode: 0 };
 			},
-		},
-		loadConfig: async () => automaticConfig(),
-		collectGitStatus: async () => gitStatus(root),
-		worktreeRunner() {
-			return { exitCode: 0 };
-		},
-		now: () => "2026-07-21T11:30:00.000Z",
+			now: () => "2026-07-21T11:30:00.000Z",
+		});
+		try {
+			await dispatcher.reconcile({
+				kind: "project_truth_changed",
+				occurredAt: "2026-07-21T11:30:00.000Z",
+			});
+			await waitForCoordinator(coordinator);
+			const releasing = await dispatcher.reconcile({
+				kind: "timer_due",
+				occurredAt: "2026-07-21T11:30:01.000Z",
+			});
+			assert.deepEqual(releasing.reviewReadyWorkItemIds, []);
+			assert.equal(
+				releasing.scheduledJobIds.some((jobId) =>
+					jobId.startsWith("implementation-worker-release:"),
+				),
+				true,
+			);
+			await waitForCoordinator(coordinator);
+			const state = await buildProjectWorkState({ repoRoot: root });
+			assert.equal(state.assignments[0].status, "released");
+			assert.equal(state.workItems[0].id, fixture.workItemId);
+			assert.equal(state.workItems[0].implemented, false);
+			const records = (await readFile(
+				join(root, ".codewiki", "traces", `${fixture.traceId}.jsonl`),
+				"utf8",
+			))
+				.trim()
+				.split("\n")
+				.map((line) => JSON.parse(line));
+			const release = records.findLast(
+				(record) => record.event === "runtime.work_unit.claim.released",
+			);
+			assert.equal(release.data.completionStatus, terminalStatus);
+		} finally {
+			client.disconnect();
+			await waitForCoordinator(coordinator);
+			coordinator.close();
+			await rm(root, { recursive: true, force: true });
+		}
 	});
-	try {
-		await dispatcher.reconcile({
-			kind: "project_truth_changed",
-			occurredAt: "2026-07-21T11:30:00.000Z",
-		});
-		await waitForCoordinator(coordinator);
-		const releasing = await dispatcher.reconcile({
-			kind: "timer_due",
-			occurredAt: "2026-07-21T11:30:01.000Z",
-		});
-		assert.deepEqual(releasing.reviewReadyWorkItemIds, []);
-		assert.equal(
-			releasing.scheduledJobIds.some((jobId) =>
-				jobId.startsWith("implementation-worker-release:"),
-			),
-			true,
-		);
-		await waitForCoordinator(coordinator);
-		const state = await buildProjectWorkState({ repoRoot: root });
-		assert.equal(state.assignments[0].status, "released");
-		assert.equal(state.workItems[0].id, fixture.workItemId);
-		assert.equal(state.workItems[0].implemented, false);
-	} finally {
-		client.disconnect();
-		await waitForCoordinator(coordinator);
-		coordinator.close();
-		await rm(root, { recursive: true, force: true });
-	}
-});
+}
 
 test("worker claims remain held when elected coordinator lacks supervision", async () => {
 	const root = await mkdtemp(`${tmpdir()}/codewiki-worker-held-`);

@@ -62,7 +62,8 @@ export type ProjectCoordinatorEventState =
 	| "job_started"
 	| "job_recovered"
 	| "job_completed"
-	| "job_failed";
+	| "job_failed"
+	| "job_cancelled";
 
 export interface ProjectCoordinatorEvent {
 	generationId: string;
@@ -325,6 +326,52 @@ export class ProjectCoordinator {
 		this.activeLocks.clear();
 	}
 
+	async cancelJobs(
+		message = `Project coordinator ${this.generationId} is stopping.`,
+		timeoutMs = 5_000,
+	): Promise<void> {
+		this.assertOpen();
+		const entries = [...this.jobs.values()];
+		if (entries.length === 0) return;
+		const drain = Promise.allSettled(entries.map((entry) => entry.promise));
+		const cancellation = new Error(message);
+		for (const entry of entries.filter((candidate) => candidate.state !== "active")) {
+			if (entry.settled) continue;
+			entry.settled = true;
+			entry.controller.abort(cancellation);
+			this.release(entry);
+			entry.reject(cancellation);
+			this.emitJob("job_cancelled", entry, message);
+		}
+		for (const entry of entries.filter((candidate) => candidate.state === "active")) {
+			entry.controller.abort(cancellation);
+		}
+		const boundedTimeoutMs = boundedInteger(
+			timeoutMs,
+			5_000,
+			1,
+			60_000,
+			"cancellationTimeoutMs",
+		);
+		let timer: NodeJS.Timeout | undefined;
+		try {
+			await Promise.race([
+				drain,
+				new Promise<never>((_resolve, reject) => {
+					timer = setTimeout(() => {
+						reject(
+							new Error(
+								`Project coordinator ${this.generationId} did not drain cancelled jobs within ${boundedTimeoutMs}ms.`,
+							),
+						);
+					}, boundedTimeoutMs);
+				}),
+			]);
+		} finally {
+			if (timer) clearTimeout(timer);
+		}
+	}
+
 	private async recover<T>(entry: PendingJob<T>): Promise<void> {
 		try {
 			const recovered = await entry.job.recover?.();
@@ -393,7 +440,11 @@ export class ProjectCoordinator {
 		entry.settled = true;
 		this.release(entry);
 		entry.reject(error);
-		this.emitJob("job_failed", entry, errorMessage(error));
+		this.emitJob(
+			entry.controller.signal.aborted ? "job_cancelled" : "job_failed",
+			entry,
+			errorMessage(error),
+		);
 		this.pump();
 	}
 

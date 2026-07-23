@@ -126,7 +126,11 @@ export interface PlanningImplementationScope {
 	verification: string[];
 }
 
-export type ImplementationWorkerStatus = "completed" | "blocked" | "failed";
+export type ImplementationWorkerStatus =
+	| "completed"
+	| "blocked"
+	| "failed"
+	| "cancelled";
 export type ImplementationWorkerClaimStatus = "active" | "released" | "expired";
 
 export interface ImplementationWorkerClaim {

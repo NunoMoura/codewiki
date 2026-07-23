@@ -21,6 +21,7 @@ export type RuntimeDisposableWorkerState =
 	| "completed"
 	| "failed"
 	| "blocked"
+	| "cancelled"
 	| "detached";
 
 export interface RuntimeWorkerStatusRemediation {

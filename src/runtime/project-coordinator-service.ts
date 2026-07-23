@@ -277,23 +277,27 @@ export async function startProjectCoordinatorService(
 			Math.min(Math.max(Math.floor(runtime.clientLeaseMs / 2), 250), 5_000),
 		);
 		sweep.unref();
-		let closed = false;
-		const close = async (): Promise<void> => {
-			if (closed) return;
-			if (coordinator.snapshot().jobs.length > 0) {
-				throw new Error("Project coordinator service cannot close with pending jobs.");
-			}
-			closed = true;
-			runtime.closing = true;
-			clearInterval(sweep);
-			eventJournal.close();
-			for (const lease of clients.values()) lease.connection.disconnect();
-			clients.clear();
-			const serverClosed = closeServer(server as Server);
-			(server as Server).closeAllConnections();
-			await serverClosed;
-			coordinator.close();
-			await releaseProjectCoordinatorOwnership(ownership as ProjectCoordinatorOwnership);
+		let closePromise: Promise<void> | undefined;
+		const close = (): Promise<void> => {
+			if (closePromise) return closePromise;
+			closePromise = (async () => {
+				runtime.closing = true;
+				clearInterval(sweep);
+				for (const lease of clients.values()) lease.connection.disconnect();
+				clients.clear();
+				const serverClosed = closeServer(server as Server);
+				(server as Server).closeAllConnections();
+				await coordinator.cancelJobs(
+					`Project coordinator generation ${generationId} is stopping.`,
+				);
+				await serverClosed;
+				eventJournal.close();
+				coordinator.close();
+				await releaseProjectCoordinatorOwnership(
+					ownership as ProjectCoordinatorOwnership,
+				);
+			})();
+			return closePromise;
 		};
 		runtime.shutdown = close;
 		return {

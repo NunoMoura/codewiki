@@ -18,7 +18,11 @@ import type { TraceEvent } from "../traces/types.ts";
 import type { WorkerExecutionPolicySnapshot } from "../runtime/execution-policy.ts";
 
 export interface PiWorkerSession {
-	prompt(text: string, options?: unknown): Promise<void>;
+	prompt(
+		text: string,
+		options?: unknown,
+		signal?: AbortSignal,
+	): Promise<void>;
 	dispose?(): void | Promise<void>;
 	sessionId?: string;
 	sessionFile?: string;
@@ -90,7 +94,7 @@ export interface PiWorkerStartResult {
 	sessionFile?: string;
 	outputFile?: string;
 	pid?: number;
-	status: "started" | "failed";
+	status: "started" | "failed" | "cancelled";
 	error?: string;
 }
 
@@ -243,6 +247,7 @@ export interface PiWorkerAssignmentStartInput {
 	workerId: string;
 	prompt?: string;
 	claimId?: string;
+	signal?: AbortSignal;
 	options: PiWorkerStartOptions;
 }
 
@@ -262,7 +267,7 @@ export async function startPiWorkerAssignment(
 			...(input.item.worktree ? { worktree: input.item.worktree } : {}),
 			prompt,
 		});
-		await session.prompt(prompt, input.options.promptOptions);
+		await session.prompt(prompt, input.options.promptOptions, input.signal);
 		return {
 			workUnitId: input.item.workUnitId,
 			workerId: input.workerId,
@@ -286,8 +291,10 @@ export async function startPiWorkerAssignment(
 			...(session?.sessionFile ? { sessionFile: session.sessionFile } : {}),
 			...(session?.outputFile ? { outputFile: session.outputFile } : {}),
 			...(session?.pid ? { pid: session.pid } : {}),
-			status: "failed",
-			error: errorMessage(error),
+			status: input.signal?.aborted ? "cancelled" : "failed",
+			error: input.signal?.aborted
+				? "Implementation worker assignment cancelled."
+				: errorMessage(error),
 		};
 	} finally {
 		if (input.options.disposeSessions) await session?.dispose?.();

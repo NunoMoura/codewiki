@@ -186,7 +186,7 @@ Assignment packets are restartable operational scratch, not project truth. A cop
 
 ## Worker report
 
-Immutable normalized report written by the worker adapter for one exact Assignment attempt. It records outcome status (`completed`, `blocked`, `failed`, or `cancelled` when cancellation is supported), bounded implementation evidence, and references needed to recover a settled worker job without invoking the worker again.
+Immutable normalized report written by the worker adapter for one exact Assignment attempt. It records outcome status (`completed`, `blocked`, `failed`, or `cancelled`), bounded implementation evidence, and references needed to recover a settled worker job without invoking the worker again.
 
 Runtime must match the report digest, identity, Assignment, and active Claim before using it. A completed report becomes candidate evidence for Implementation review. A blocked, failed, or cancelled report supports guarded claim release and repair routing. The report remains the same object through persistence, recovery, and review; no separate Worker receipt or Worker result exists.
 

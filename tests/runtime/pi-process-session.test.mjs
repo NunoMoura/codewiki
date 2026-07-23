@@ -609,6 +609,34 @@ describe("Pi process session factory", () => {
 		}
 	});
 
+	it("terminates an aborted foreground worker without leaking its child", async () => {
+		const base = join(process.cwd(), ".tmp-worktrees/pi-process-session");
+		await mkdir(base, { recursive: true });
+		const root = await mkdtemp(join(base, "cancel-"));
+		try {
+			const controller = new AbortController();
+			const factory = createPiProcessSessionFactory({
+				command: process.execPath,
+				args: ["-e", "setInterval(() => {}, 1000)", "--"],
+				outputFile: join(root, "cancelled-worker.jsonl"),
+				terminationGraceMs: 25,
+			});
+			const session = await factory.create(sessionInput());
+			const prompt = session.prompt("wait", undefined, controller.signal);
+			setTimeout(() => controller.abort(), 25);
+
+			await assert.rejects(prompt, /process cancelled/);
+			assert.equal(typeof session.pid, "number");
+			assert.throws(
+				() => process.kill(session.pid, 0),
+				(error) => error?.code === "ESRCH",
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+			await rm(base, { recursive: true, force: true });
+		}
+	});
+
 	it("redirects detached process output for later worker collection", async () => {
 		const base = join(process.cwd(), ".tmp-worktrees/pi-process-session");
 		await mkdir(base, { recursive: true });

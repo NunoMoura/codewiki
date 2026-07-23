@@ -379,6 +379,49 @@ test("write jobs recover from durable evidence after coordinator restart", async
 	}
 });
 
+test("coordinator cancels active and queued jobs before closing", async () => {
+	const root = mkdtempSync(join(tmpdir(), "codewiki-coordinator-cancel-"));
+	try {
+		const events = [];
+		const coordinator = new ProjectCoordinator(root, {
+			generationId: "generation:cancel",
+			executionPolicy: "unattended",
+			onEvent: (event) => events.push(event),
+		});
+		const started = deferred();
+		const active = coordinator.schedule(
+			decisionJob("decision:cancel-active", "CHG-cancel", async (signal) => {
+				started.resolve();
+				await new Promise((_resolve, reject) => {
+					signal.addEventListener("abort", () => reject(signal.reason), {
+						once: true,
+					});
+				});
+			}),
+		);
+		await started.promise;
+		const queued = coordinator.schedule(
+			decisionJob("decision:cancel-queued", "CHG-cancel", () => "never"),
+		);
+		const activeRejected = assert.rejects(active, /generation is stopping/);
+		const queuedRejected = assert.rejects(queued, /generation is stopping/);
+
+		await coordinator.cancelJobs("Coordinator generation is stopping.", 1_000);
+		await Promise.all([activeRejected, queuedRejected]);
+		assert.equal(coordinator.snapshot().jobs.length, 0);
+		assert.deepEqual(
+			events
+				.filter((event) => event.state === "job_cancelled")
+				.map((event) => event.idempotencyKey)
+				.sort(),
+			["decision:cancel-active", "decision:cancel-queued"],
+		);
+		coordinator.close();
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
 test("coordinator validates external inputs and keeps observation non-authoritative", async () => {
 	const root = mkdtempSync(join(tmpdir(), "codewiki-coordinator-validation-"));
 	try {
