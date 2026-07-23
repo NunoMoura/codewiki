@@ -55,6 +55,24 @@ export function registerRuntimeToolRouting(
 				...(trigger.refs ? { refs: trigger.refs } : {}),
 			};
 			const reaction = await projectServices.inspect(root, ctx, remoteTrigger);
+			const workerDispatch = projectServices.reconcileWorkers
+				? await projectServices
+						.reconcileWorkers(root, ctx, remoteTrigger)
+						.catch(() => undefined)
+				: undefined;
+			const implementationSelection =
+				reaction.selection?.loop === "implementation"
+					? reaction.selection
+					: undefined;
+			if (
+				implementationSelection &&
+				workerDispatch?.pendingWorkItemIds.some((workItemId) =>
+					implementationSelection.workItemIds.includes(workItemId),
+				)
+			) {
+				applyReaction(pi, undefined);
+				return;
+			}
 			if (
 				reaction.selection &&
 				(await projectServices.semanticExecution(root, ctx)) === "service"

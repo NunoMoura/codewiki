@@ -4,6 +4,7 @@ import {
 	type EnsureProjectCoordinatorServiceOptions,
 } from "../runtime/project-coordinator-process.ts";
 import type { ProjectCoordinatorEventBatch } from "../runtime/project-coordinator-events.ts";
+import type { ImplementationWorkerDispatchResult } from "../runtime/implementation-worker-dispatch.ts";
 import type {
 	ProjectCoordinatorCandidateResult,
 	ProjectCoordinatorRemoteClient,
@@ -40,6 +41,11 @@ export interface PiProjectServiceClientProvider {
 		trigger: RemoteTrigger,
 		mode?: RuntimeSemanticMode,
 	): Promise<RuntimeReactionJobReceipt[]>;
+	reconcileWorkers(
+		repoRoot: string,
+		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
+		trigger: RemoteTrigger,
+	): Promise<ImplementationWorkerDispatchResult>;
 	events(
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
@@ -146,6 +152,11 @@ export function createPiProjectServiceClients(
 		},
 		react(repoRoot, ctx, trigger, mode = "append") {
 			return invoke(repoRoot, ctx, (client) => client.react(trigger, mode));
+		},
+		reconcileWorkers(repoRoot, ctx, trigger) {
+			return invoke(repoRoot, ctx, (client) =>
+				client.reconcileWorkers(trigger),
+			);
 		},
 		events(repoRoot, ctx, afterCursor, eventOptions) {
 			return invoke(repoRoot, ctx, (client) =>

@@ -31,6 +31,7 @@ export function createPiProcessImplementationWorkerAdapter(
 	options: PiProcessImplementationWorkerAdapterOptions = {},
 ): ImplementationWorkerAdapter {
 	return {
+		isolationKinds: ["worktree"],
 		execute: (assignment, signal) =>
 			executePiProcessWorker(assignment, signal, options),
 		recover: recoverPiProcessWorker,

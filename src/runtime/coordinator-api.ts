@@ -37,6 +37,11 @@ export {
 	type ImplementationWorkerExecutionResult,
 } from "./implementation-worker-adapter.ts";
 export {
+	ImplementationWorkerDispatcher,
+	type ImplementationWorkerDispatcherOptions,
+	type ImplementationWorkerDispatchResult,
+} from "./implementation-worker-dispatch.ts";
+export {
 	scheduleImplementationWorkerAssignment,
 	scheduleImplementationWorkerAssignments,
 	type ImplementationWorkerJobReceipt,

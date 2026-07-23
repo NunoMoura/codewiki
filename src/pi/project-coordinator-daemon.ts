@@ -2,6 +2,10 @@ import { readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
+	createShellWorktreeCommandRunner,
+	type WorktreeCommandExecFile,
+} from "../git/worktree-shell-runner.ts";
+import {
 	startProjectCoordinatorDaemon,
 	type ProjectCoordinatorDaemonHandle,
 } from "../runtime/project-coordinator-daemon.ts";
@@ -17,6 +21,7 @@ export type PiSemanticAdapterLoader = (
 export interface PiProjectCoordinatorDaemonOptions {
 	loadSemanticAdapters?: PiSemanticAdapterLoader;
 	workerAdapter?: ImplementationWorkerAdapter;
+	worktreeExecFile?: WorktreeCommandExecFile;
 }
 
 const PI_SDK_MODULE_URL_ENV = "CODEWIKI_PI_SDK_MODULE_URL";
@@ -60,6 +65,9 @@ export async function startPiProjectCoordinatorDaemon(
 		...(semanticAdapters ? { semanticAdapters } : {}),
 		workerAdapter:
 			options.workerAdapter || createPiProcessImplementationWorkerAdapter(),
+		workerWorktreeRunner: createShellWorktreeCommandRunner({
+			...(options.worktreeExecFile ? { execFile: options.worktreeExecFile } : {}),
+		}),
 	});
 }
 

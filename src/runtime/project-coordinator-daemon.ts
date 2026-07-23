@@ -23,6 +23,7 @@ export async function startProjectCoordinatorDaemon(
 		endpoint: service.endpoint,
 		coordinator: service.coordinator,
 		scheduleWorkerAssignments: service.scheduleWorkerAssignments.bind(service),
+		reconcileWorkers: service.reconcileWorkers.bind(service),
 		async close() {
 			if (closing) return;
 			closing = true;

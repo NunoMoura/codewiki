@@ -76,7 +76,7 @@ Pi authentication and model configuration remain inside the Pi adapter. Core run
 
 Implementation workers now use a harness-neutral Assignment adapter contract. Each exact input binds repository, Assignment, worker, claim, Work Item, Change Trace, Planning refs, path/component scopes, WorkState digest, source base, context digest, prompt digest, result path, execution policy, and explicit isolation identity. Deterministic coordinator jobs use the per-Work-Item Assignment lane, write-effect recovery probes, and hierarchical path conflict checks. Independent assignments run concurrently; overlapping paths serialize.
 
-The Pi daemon installs a compatibility process adapter over the existing worker process/session path. It requires explicit Git-worktree isolation, rejects result paths outside `.codewiki/runtime/**` or through symlinks, normalizes worker output, and atomically persists a digest-bound private recovery receipt. A replacement coordinator can recover that receipt without reinvoking the worker. Worker output remains candidate evidence and never appends semantic facts.
+The Pi daemon installs a compatibility process adapter over the existing worker process/session path. It requires explicit Git-worktree isolation, rejects result paths outside `.codewiki/runtime/**` or through symlinks, normalizes worker output, and atomically persists a digest-bound private recovery receipt. Authenticated Pi triggers ask the elected service to reconcile workers. The service derives ready Work Items from canonical WorkState, appends exact claims under CAS, prepares structured Git worktree commands plus explicitly configured setup commands, and admits each Assignment through coordinator supervision, capacity, and path-conflict locks. Private Assignment packets are written before claim append and are executable after restart only when their digest and deterministic job id match the active canonical claim. A replacement coordinator can then recover the worker receipt without reinvoking the worker. Worker output remains candidate evidence and never appends semantic facts.
 
 The target adapter order remains:
 
@@ -84,7 +84,7 @@ The target adapter order remains:
 2. container workers when project policy or risk requires filesystem/process isolation;
 3. future harness implementations behind the same worker contract.
 
-Automatic WorkState-to-claim-to-Assignment construction inside the daemon, process cancellation after start, the crash window before receipt persistence, integration scheduling, and container enforcement remain open. Workers may receive scoped mutation tools required by one Assignment. They cannot approve Changes, revise Planning, integrate outside exact authority, commit outside policy, publish, or relax configuration. Worktrees reduce collision but are not a security sandbox; stronger isolation requires a process sandbox or container policy.
+Process cancellation after start, worker-result review handoff and claim release, cleanup of orphan packets or partially prepared worktrees across remaining crash windows, integration scheduling, and container enforcement remain open. Workers may receive scoped mutation tools required by one Assignment. They cannot approve Changes, revise Planning, integrate outside exact authority, commit outside policy, publish, or relax configuration. Worktrees reduce collision but are not a security sandbox; stronger isolation requires a process sandbox or container policy.
 
 ## Always-ready behavior
 

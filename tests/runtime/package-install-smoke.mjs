@@ -59,6 +59,7 @@ import {
 } from "@nunomoura/codewiki";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
+	ImplementationWorkerDispatcher,
 	connectProjectCoordinatorClient,
 	ensureProjectCoordinatorService,
 	scheduleImplementationWorkerAssignments,
@@ -112,6 +113,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "process-worker-adapter.js")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
@@ -133,11 +135,13 @@ assert.equal((await remoteClient.state()).supervisorCount, 1);
 assert.equal(typeof remoteClient.react, "function");
 assert.equal(typeof remoteClient.inspect, "function");
 assert.equal(typeof remoteClient.submitCandidate, "function");
+assert.equal(typeof remoteClient.reconcileWorkers, "function");
 assert.equal(typeof remoteClient.events, "function");
 assert.equal((await remoteClient.events(0)).events[0].state, "client_connected");
 assert.equal(remoteClient.semanticExecution, "client_candidate");
 assert.equal(typeof scheduleRuntimeReactions, "function");
 assert.equal(typeof scheduleImplementationWorkerAssignments, "function");
+assert.equal(typeof ImplementationWorkerDispatcher, "function");
 assert.equal(IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION, 1);
 assert.equal(typeof ensureProjectCoordinatorService, "function");
 assert.equal(typeof stopProjectCoordinatorService, "function");

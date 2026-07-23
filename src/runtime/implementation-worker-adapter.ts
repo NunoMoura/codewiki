@@ -44,6 +44,7 @@ export interface ImplementationWorkerExecutionResult {
 }
 
 export interface ImplementationWorkerAdapter {
+	isolationKinds?: readonly ImplementationWorkerAssignment["isolation"]["kind"][];
 	execute(
 		assignment: ImplementationWorkerAssignment,
 		signal: AbortSignal,

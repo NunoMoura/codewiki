@@ -58,6 +58,7 @@ export interface ScheduleRuntimeReactionsInput {
 	maxReactions?: number;
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
+	blockedImplementationWorkItemIds?: string[];
 	beforeAppend?: () => void | Promise<void>;
 }
 
@@ -74,8 +75,12 @@ export async function scheduleRuntimeReactions(
 		maxReactions: input.maxReactions,
 		maxPlanningChanges: input.maxPlanningChanges,
 	});
+	const blocked = new Set(input.blockedImplementationWorkItemIds || []);
+	const reactions = observation.reactions.filter(
+		(reaction) => !blockedImplementationReaction(reaction, blocked),
+	);
 	return Promise.all(
-		observation.reactions.map((reaction) =>
+		reactions.map((reaction) =>
 			scheduleRuntimeReactionJob({
 				repoRoot: input.repoRoot,
 				coordinator: input.coordinator,
@@ -87,6 +92,19 @@ export async function scheduleRuntimeReactions(
 				beforeAppend: input.beforeAppend,
 			}),
 		),
+	);
+}
+
+function blockedImplementationReaction(
+	reaction: RuntimeReaction,
+	blockedWorkItemIds: Set<string>,
+): boolean {
+	const selection = reaction.selection;
+	return Boolean(
+		selection?.loop === "implementation" &&
+			selection.workItemIds.some((workItemId) =>
+				blockedWorkItemIds.has(workItemId),
+			),
 	);
 }
 

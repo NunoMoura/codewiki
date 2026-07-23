@@ -17,6 +17,7 @@ codewiki_source_patterns:
   - src/index.ts
   - src/runtime/coordinator-api.ts
   - src/runtime/implementation-worker-adapter.ts
+  - src/runtime/implementation-worker-dispatch.ts
   - src/runtime/implementation-worker-jobs.ts
   - src/runtime/project-coordinator-daemon.ts
   - src/runtime/project-coordinator-events.ts
@@ -31,6 +32,7 @@ codewiki_test_patterns:
   - tests/runtime/project-coordinator-service.test.mjs
   - tests/runtime/project-coordinator-process.test.mjs
   - tests/runtime/project-coordinator-events.test.mjs
+  - tests/runtime/implementation-worker-dispatch.test.mjs
   - tests/runtime/implementation-worker-jobs.test.mjs
   - tests/runtime/process-worker-adapter.test.mjs
   - tests/runtime/pi-project-coordinator-daemon.test.mjs
@@ -54,6 +56,7 @@ codewiki_source_map:
       - src/index.ts
       - src/runtime/coordinator-api.ts
       - src/runtime/implementation-worker-adapter.ts
+      - src/runtime/implementation-worker-dispatch.ts
       - src/runtime/implementation-worker-jobs.ts
       - src/runtime/project-coordinator-daemon.ts
       - src/runtime/project-coordinator-events.ts
@@ -68,6 +71,7 @@ codewiki_source_map:
       - tests/runtime/project-coordinator-service.test.mjs
       - tests/runtime/project-coordinator-process.test.mjs
       - tests/runtime/project-coordinator-events.test.mjs
+      - tests/runtime/implementation-worker-dispatch.test.mjs
       - tests/runtime/implementation-worker-jobs.test.mjs
       - tests/runtime/process-worker-adapter.test.mjs
       - tests/runtime/pi-project-coordinator-daemon.test.mjs

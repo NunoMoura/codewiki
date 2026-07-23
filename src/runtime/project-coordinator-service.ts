@@ -4,6 +4,11 @@ import type { AddressInfo } from "node:net";
 import { realpathSync } from "node:fs";
 import type { Server } from "node:http";
 
+import type { WorktreeCommandRunner } from "../git/worktrees.ts";
+import {
+	ImplementationWorkerDispatcher,
+	type ImplementationWorkerDispatchResult,
+} from "./implementation-worker-dispatch.ts";
 import type {
 	ImplementationWorkerAdapter,
 	ImplementationWorkerAssignment,
@@ -79,6 +84,7 @@ export interface ProjectCoordinatorServiceOptions
 	maxCasRetries?: number;
 	maxEventHistory?: number;
 	workerAdapter?: ImplementationWorkerAdapter;
+	workerWorktreeRunner?: WorktreeCommandRunner;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
@@ -88,6 +94,7 @@ export interface ProjectCoordinatorServiceHandle {
 	scheduleWorkerAssignments(
 		assignments: ImplementationWorkerAssignment[],
 	): Promise<ImplementationWorkerJobReceipt[]>;
+	reconcileWorkers(trigger: RuntimeTrigger): Promise<ImplementationWorkerDispatchResult>;
 	close(): Promise<void>;
 }
 
@@ -122,6 +129,9 @@ export interface ProjectCoordinatorRemoteClient {
 		trigger: ProjectCoordinatorRemoteTrigger,
 		mode?: RuntimeSemanticMode,
 	): Promise<RuntimeReactionJobReceipt[]>;
+	reconcileWorkers(
+		trigger: ProjectCoordinatorRemoteTrigger,
+	): Promise<ImplementationWorkerDispatchResult>;
 	events(
 		afterCursor: number,
 		options?: { maxEvents?: number; waitMs?: number },
@@ -148,6 +158,7 @@ interface ServiceRuntime {
 	coordinator: ProjectCoordinator;
 	eventJournal: ProjectCoordinatorEventJournal;
 	reactor: RuntimeReactor;
+	workerDispatcher?: ImplementationWorkerDispatcher;
 	semanticAdapters?: RuntimeSemanticAdapters;
 	maxReactions?: number;
 	maxPlanningChanges?: number;
@@ -197,6 +208,18 @@ export async function startProjectCoordinatorService(
 		const token = projectCoordinatorBearerToken();
 		const clients = new Map<string, RemoteClientLease>();
 		const runtime = {} as ServiceRuntime;
+		const reactor = new RuntimeReactor(canonicalRoot);
+		const workerDispatcher = options.workerAdapter
+			? new ImplementationWorkerDispatcher({
+					repoRoot: canonicalRoot,
+					coordinator,
+					reactor,
+					adapter: options.workerAdapter,
+					worktreeRunner: options.workerWorktreeRunner,
+					now: options.now,
+					beforeAppend: () => assertCurrentGeneration(runtime),
+				})
+			: undefined;
 		server = createServer((request, response) => {
 			void routeServiceRequest(runtime, request, response).catch((error) => {
 				writeServiceError(response, error);
@@ -221,7 +244,8 @@ export async function startProjectCoordinatorService(
 			ownership,
 			coordinator,
 			eventJournal,
-			reactor: new RuntimeReactor(canonicalRoot),
+			reactor,
+			workerDispatcher,
 			semanticAdapters: options.semanticAdapters,
 			maxReactions: boundedOptionalInteger(
 				options.maxReactions,
@@ -285,6 +309,13 @@ export async function startProjectCoordinatorService(
 					adapter: options.workerAdapter,
 					assignments,
 				});
+			},
+			async reconcileWorkers(trigger) {
+				await assertCurrentGeneration(runtime);
+				if (!workerDispatcher) {
+					throw new Error("Implementation worker dispatcher is unavailable.");
+				}
+				return workerDispatcher.reconcile(trigger);
 			},
 			close,
 		};
@@ -374,6 +405,18 @@ export async function connectProjectCoordinatorClient(
 						options.timeoutMs || 0,
 						180_000,
 					),
+				},
+			);
+		},
+		reconcileWorkers(trigger) {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<ImplementationWorkerDispatchResult>(
+				endpoint,
+				"/v1/runtime/workers/reconcile",
+				{
+					method: "POST",
+					body: { connectionId: response.connectionId, trigger },
+					timeoutMs: options.timeoutMs,
 				},
 			);
 		},
@@ -553,6 +596,10 @@ async function routeServiceRequest(
 		await handleRuntimeReaction(runtime, request, response);
 		return;
 	}
+	if (method === "POST" && url.pathname === "/v1/runtime/workers/reconcile") {
+		await handleWorkerReconciliation(runtime, request, response);
+		return;
+	}
 	if (method === "POST" && url.pathname === "/v1/clients/heartbeat") {
 		const lease = requiredLease(runtime, await readConnectionId(request));
 		lease.expiresAt = runtime.clock() + runtime.clientLeaseMs;
@@ -678,6 +725,27 @@ async function handleRuntimeCandidate(
 	}
 }
 
+async function handleWorkerReconciliation(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+): Promise<void> {
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, ["connectionId", "trigger"]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	const trigger = runtimeTrigger(body.trigger, runtime.clock());
+	const dispatcher = runtime.workerDispatcher;
+	if (!dispatcher) {
+		throw new HttpError(503, "implementation_worker_dispatcher_unavailable");
+	}
+	lease.activeRequests += 1;
+	try {
+		writeJson(response, 200, await dispatcher.reconcile(trigger));
+	} finally {
+		extendLease(runtime, lease);
+	}
+}
+
 async function handleRuntimeReaction(
 	runtime: ServiceRuntime,
 	request: IncomingMessage,
@@ -694,6 +762,9 @@ async function handleRuntimeReaction(
 	}
 	lease.activeRequests += 1;
 	try {
+		const workerDispatch = await runtime.workerDispatcher
+			?.reconcile(trigger)
+			.catch(() => undefined);
 		const receipts = await scheduleRuntimeReactions({
 			repoRoot: runtime.endpoint.repoRoot,
 			coordinator: runtime.coordinator,
@@ -704,6 +775,7 @@ async function handleRuntimeReaction(
 			maxReactions: runtime.maxReactions,
 			maxPlanningChanges: runtime.maxPlanningChanges,
 			maxCasRetries: runtime.maxCasRetries,
+			blockedImplementationWorkItemIds: workerDispatch?.pendingWorkItemIds,
 			beforeAppend: () => assertCurrentGeneration(runtime),
 		});
 		writeJson(response, 200, receipts);
