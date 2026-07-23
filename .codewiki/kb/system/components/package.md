@@ -18,6 +18,7 @@ codewiki_source_patterns:
 codewiki_test_patterns:
   - tests/scaffold-core.test.mjs
   - tests/runtime/package-install-smoke.mjs
+  - tests/runtime/project-coordinator.test.mjs
   - tests/runtime/pi-sdk-semantic-session.test.mjs
   - tests/runtime/pi-sdk-package-smoke.mjs
   - tests/runtime/project-local-install-smoke.mjs
@@ -37,6 +38,7 @@ codewiki_source_map:
     test_patterns:
       - tests/scaffold-core.test.mjs
       - tests/runtime/package-install-smoke.mjs
+      - tests/runtime/project-coordinator.test.mjs
       - tests/runtime/pi-sdk-semantic-session.test.mjs
       - tests/runtime/pi-sdk-package-smoke.mjs
       - tests/runtime/project-local-install-smoke.mjs
@@ -52,7 +54,7 @@ while preserving `README.md` as the human package entrypoint.
 
 The package component owns the npm manifest, lockfile, TypeScript entrypoints, README distribution guidance, optional execution-adapter peers, and install/readiness smoke coverage.
 
-The root entrypoint remains harness-neutral. `./pi-sdk` is an entrypoint-isolated adapter that embeds bounded Pi semantic sessions. During the architecture spike, `@earendil-works/pi-coding-agent` is an optional peer and development dependency rather than a production dependency. Disposable SDK fixtures install that peer explicitly. Normal core/extension installs do not silently pull a second Pi runtime.
+The root entrypoint remains harness-neutral and exports the transport-neutral `ProjectCoordinator` kernel for project-service hosts. `./pi-sdk` is an entrypoint-isolated adapter that embeds bounded Pi semantic sessions. During the architecture spike, `@earendil-works/pi-coding-agent` is an optional peer and development dependency rather than a production dependency. Disposable SDK fixtures install that peer explicitly. Normal core/extension installs do not silently pull a second Pi runtime.
 
 The Pi SDK subpath requires Node.js 22.19 or newer even while the harness-neutral core retains its broader engine range. Promotion to a production dependency or separate adapter package requires clean security audit, package-size review, external install proof, model/auth proof, cancellation and cleanup proof, and no duplicate-host resolution ambiguity.
 

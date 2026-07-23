@@ -190,7 +190,9 @@ The lane contract is:
 
 Selection remains deterministic under the same WorkState, trigger set, and policy. Trigger-local candidates receive bounded preference, then fairness uses age and stable identity. Planning expands through explicit Change links and overlapping target refs under a bounded horizon. Model judgment may rank semantically valid candidates only where policy permits; it cannot repair missing authority or override compatibility.
 
-Current executable `RuntimeReactor` selects one reaction and `runRuntimeSemanticExecutor()` invokes one adapter. Target control-plane work replaces that project-wide singular bottleneck with compatible-job scheduling while preserving the existing single-job executor as a bounded job primitive.
+Current executable `RuntimeReactor.selectRuntimeReactions()` derives a bounded compatible horizon while `selectRuntimeReaction()` and `runRuntimeSemanticExecutor()` remain singular bounded job primitives. The transport-neutral `ProjectCoordinator` kernel registers concurrent clients, enforces supervision, deduplicates jobs, requires durable recovery for writes, and admits compatible typed lanes under capacity and resource locks. It serializes one Change Decision lane, one Planning writer, one Work Item assignment, and one integration/effect target writer while allowing unrelated Decisions and non-conflicting Work Items to run concurrently.
+
+This kernel does not yet claim project-service ownership. Cross-process election, authenticated loopback transport, endpoint discovery, generation replacement, and exact execution of each selected reaction remain the next slice. Until then, process-local Pi reactors and one-shot host callers remain implementation drift rather than project-wide ownership.
 
 Agents, clients, and adapters never choose semantic routing. Runtime injects exact Change, Planning horizon, Sprint, Work Item, Assignment, context slice, WorkState, and append authority. Semantic sessions return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, source ownership, lane ownership, or runtime routing as replacement facts.
 

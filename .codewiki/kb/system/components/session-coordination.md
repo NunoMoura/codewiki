@@ -43,6 +43,10 @@ Runtime serializes authority where required and permits concurrency where safe:
 
 A session is not a lane. Reusing, replacing, resuming, or losing a session cannot transfer lane ownership or bypass a claim.
 
+The current `ProjectCoordinator` kernel implements these admission rules inside one elected generation. It registers multiple Pi, dashboard, CLI/test, or future clients; separates observer presence from approved supervision; holds new execution when supervised policy has no approved supervisor; and supports explicit unattended policy. Typed Decision, Planning, Assignment, Implementation-review, Integration, and external-effect lanes plus normalized resource conflict refs determine compatibility. Write jobs must provide a durable recovery probe before admission, so generation restart can return exact persisted completion instead of repeating a canonical append.
+
+The kernel is transport-neutral and intentionally not a cross-process singleton by itself. A later project service must own election, authentication, loopback transport, endpoint discovery, stale-generation fencing, and process lifecycle around this kernel.
+
 ## Semantic session adapter
 
 Runtime invokes bounded semantic work through a harness-neutral adapter. The target Pi implementation embeds `createAgentSession()` through the Pi SDK and creates distinct sessions for Decision, Planning, and Implementation review.

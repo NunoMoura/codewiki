@@ -94,6 +94,7 @@ describe("fresh scaffold", () => {
 		assert.deepEqual(Object.keys(publicApi).sort(), [
 			"CODEWIKI_EXTENSION_AVAILABLE",
 			"DEFAULT_WIKI_CONFIG",
+			"ProjectCoordinator",
 			"buildProjectWorkState",
 			"buildWikiState",
 			"buildWorkState",

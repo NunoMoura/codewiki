@@ -394,6 +394,7 @@ describe("install readiness checklist", () => {
 		const audit = packageJson.scripts["audit:codewiki"];
 		for (const command of [
 			"npm test",
+			"npm run test:coordinator",
 			"npm run test:pack",
 			"npm run test:pi-install",
 			"npm run test:pi-rpc",

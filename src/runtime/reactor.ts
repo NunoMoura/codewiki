@@ -65,6 +65,7 @@ export interface RuntimeReaction {
 
 export interface SelectRuntimeReactionOptions {
 	maxPlanningChanges?: number;
+	maxReactions?: number;
 }
 
 export interface InspectRuntimeInput extends SelectRuntimeReactionOptions {
@@ -74,6 +75,10 @@ export interface InspectRuntimeInput extends SelectRuntimeReactionOptions {
 
 export interface RuntimeObservation extends WorkStateRefreshResult {
 	reaction: RuntimeReaction;
+}
+
+export interface RuntimeBatchObservation extends WorkStateRefreshResult {
+	reactions: RuntimeReaction[];
 }
 
 /** Supervised runtime reader that reuses indexed Change Trace state. */
@@ -92,6 +97,17 @@ export class RuntimeReactor {
 		return {
 			...refreshed,
 			reaction: selectRuntimeReaction(refreshed.workState, trigger, options),
+		};
+	}
+
+	async observeMany(
+		trigger: RuntimeTrigger,
+		options: SelectRuntimeReactionOptions = {},
+	): Promise<RuntimeBatchObservation> {
+		const refreshed = await this.workState.refresh(trigger.occurredAt);
+		return {
+			...refreshed,
+			reactions: selectRuntimeReactions(refreshed.workState, trigger, options),
 		};
 	}
 
@@ -117,48 +133,76 @@ export function selectRuntimeReaction(
 	trigger: RuntimeTrigger,
 	options: SelectRuntimeReactionOptions = {},
 ): RuntimeReaction {
+	return (
+		selectRuntimeReactions(workState, trigger, {
+			...options,
+			maxReactions: 1,
+		})[0] || quiescentReaction(workState, trigger)
+	);
+}
+
+/** Derive a bounded compatible horizon for the project coordinator. */
+export function selectRuntimeReactions(
+	workState: WorkState,
+	trigger: RuntimeTrigger,
+	options: SelectRuntimeReactionOptions = {},
+): RuntimeReaction[] {
+	const maxReactions = boundedReactionLimit(options.maxReactions);
+	const planningLimit = boundedPlanningLimit(options.maxPlanningChanges);
 	const candidates = eligibleChanges(workState, trigger);
+	const reactions: RuntimeReaction[] = [];
+	const selectedDecisions: WorkStateChange[] = [];
+	const selectedSprints = new Set<string>();
+	let planningSelected = false;
+
 	for (const candidate of candidates) {
+		if (reactions.length >= maxReactions) break;
 		if (candidate.currentLoop === "decision") {
-			return readyReaction(workState, trigger, {
-				loop: "decision",
-				change: runtimeChangeRef(candidate),
-			});
+			if (
+				selectedDecisions.some((selected) =>
+					changesOverlap(selected.record, candidate.record),
+				)
+			) {
+				continue;
+			}
+			selectedDecisions.push(candidate);
+			reactions.push(
+				readyReaction(workState, trigger, {
+					loop: "decision",
+					change: runtimeChangeRef(candidate),
+				}),
+			);
+			continue;
 		}
 		if (candidate.currentLoop === "planning") {
-			const limit = boundedPlanningLimit(options.maxPlanningChanges);
-			const horizon = relatedPlanningChanges(workState, candidate, limit);
-			return readyReaction(workState, trigger, {
-				loop: "planning",
-				planningHorizon: horizon.map(runtimeChangeRef),
-			});
+			if (planningSelected) continue;
+			planningSelected = true;
+			const horizon = relatedPlanningChanges(
+				workState,
+				candidate,
+				planningLimit,
+			);
+			reactions.push(
+				readyReaction(workState, trigger, {
+					loop: "planning",
+					planningHorizon: horizon.map(runtimeChangeRef),
+				}),
+			);
+			continue;
 		}
 		const implementation = implementationSprint(workState, candidate.id);
-		if (implementation) {
-			return readyReaction(workState, trigger, {
+		if (!implementation || selectedSprints.has(implementation.id)) continue;
+		selectedSprints.add(implementation.id);
+		reactions.push(
+			readyReaction(workState, trigger, {
 				loop: "implementation",
 				sprintId: implementation.id,
 				changeIds: [...implementation.participatingChangeIds].sort(compareText),
-				workItemIds: implementation.workItemIds
-					.filter((id) => {
-						const item = workState.workItems.find(
-							(workItem) => workItem.id === id,
-						);
-						return item
-							? !item.implemented && item.blockers.length === 0
-							: false;
-					})
-					.sort(compareText),
-			});
-		}
+				workItemIds: readyWorkItemIds(workState, implementation),
+			}),
+		);
 	}
-
-	return {
-		schemaVersion: RUNTIME_REACTION_SCHEMA_VERSION,
-		status: "quiescent",
-		trigger: normalizedTrigger(trigger),
-		observedWorkStateDigest: workState.snapshotDigest,
-	};
+	return reactions;
 }
 
 export async function inspectRuntime(
@@ -167,6 +211,7 @@ export async function inspectRuntime(
 	const workState = await buildProjectWorkState({ repoRoot: input.repoRoot });
 	return selectRuntimeReaction(workState, input.trigger, input);
 }
+
 
 function eligibleChanges(
 	workState: WorkState,
@@ -274,6 +319,18 @@ function runtimeChangeRef(change: WorkStateChange): RuntimeChangeRef {
 	};
 }
 
+function readyWorkItemIds(
+	workState: WorkState,
+	sprint: WorkStateSprint,
+): string[] {
+	return sprint.workItemIds
+		.filter((id) => {
+			const item = workState.workItems.find((workItem) => workItem.id === id);
+			return item ? !item.implemented && item.blockers.length === 0 : false;
+		})
+		.sort(compareText);
+}
+
 function readyReaction(
 	workState: WorkState,
 	trigger: RuntimeTrigger,
@@ -288,6 +345,18 @@ function readyReaction(
 	};
 }
 
+function quiescentReaction(
+	workState: WorkState,
+	trigger: RuntimeTrigger,
+): RuntimeReaction {
+	return {
+		schemaVersion: RUNTIME_REACTION_SCHEMA_VERSION,
+		status: "quiescent",
+		trigger: normalizedTrigger(trigger),
+		observedWorkStateDigest: workState.snapshotDigest,
+	};
+}
+
 function normalizedTrigger(trigger: RuntimeTrigger): RuntimeTrigger {
 	return {
 		kind: trigger.kind,
@@ -296,6 +365,14 @@ function normalizedTrigger(trigger: RuntimeTrigger): RuntimeTrigger {
 			? { refs: [...new Set(trigger.refs)].sort(compareText) }
 			: {}),
 	};
+}
+
+function boundedReactionLimit(value: number | undefined): number {
+	if (value === undefined) return 4;
+	if (!Number.isInteger(value) || value < 1 || value > 32) {
+		throw new Error("Runtime maxReactions must be an integer from 1 to 32.");
+	}
+	return value;
 }
 
 function boundedPlanningLimit(value: number | undefined): number {

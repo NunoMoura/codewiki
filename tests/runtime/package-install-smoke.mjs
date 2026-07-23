@@ -52,6 +52,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
+	ProjectCoordinator,
 	buildWikiState,
 	buildWorkState,
 	runWikiConfig,
@@ -91,6 +92,12 @@ assert.equal(
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.ts")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
+const coordinator = new ProjectCoordinator(process.cwd(), {
+	generationId: "packed:coordinator",
+	executionPolicy: "unattended",
+});
+assert.equal(coordinator.snapshot().generationId, "packed:coordinator");
+coordinator.close();
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
 assert.deepEqual(buildWorkState({ records: [] }).changeIds, []);
 assert.match(buildWorkState({ records: [] }).snapshotDigest, /^sha256:[a-f0-9]{64}$/);
@@ -142,6 +149,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-ref-reader.
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projector.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);

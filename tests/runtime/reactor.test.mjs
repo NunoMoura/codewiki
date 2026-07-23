@@ -1,7 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
-import { selectRuntimeReaction } from "../../src/runtime/reactor.ts";
+import {
+	selectRuntimeReaction,
+	selectRuntimeReactions,
+} from "../../src/runtime/reactor.ts";
 
 function record(id, targetRefs = [], links = []) {
 	return {
@@ -188,12 +191,93 @@ describe("runtime reactor", () => {
 		assert.deepEqual(reaction.selection.workItemIds, ["WI-ready"]);
 	});
 
+	it("selects a bounded compatible batch without overlapping Decisions", () => {
+		const reactions = selectRuntimeReactions(
+			state({
+				changes: [
+					change("CHG-a", "decision", ["src/shared.ts"]),
+					change("CHG-b", "decision", ["src/shared.ts"]),
+					change("CHG-c", "decision", ["src/other.ts"]),
+				],
+			}),
+			trigger,
+			{ maxReactions: 4 },
+		);
+
+		assert.deepEqual(
+			reactions.map((reaction) => reaction.selection.change.changeId),
+			["CHG-a", "CHG-c"],
+		);
+		assert.equal(
+			reactions.every(
+				(reaction) =>
+					reaction.observedWorkStateDigest === "sha256:work-state",
+			),
+			true,
+		);
+	});
+
+	it("coalesces one Planning horizon and one reaction per Sprint", () => {
+		const reactions = selectRuntimeReactions(
+			state({
+				changes: [
+					change("CHG-a-plan", "planning", ["src/shared.ts"]),
+					change("CHG-b-plan", "planning", ["src/shared.ts"]),
+					change("CHG-c-implementation", "implementation"),
+					change("CHG-d-implementation", "implementation"),
+				],
+				sprints: [
+					{
+						id: "SPR-shared",
+						source: "planning",
+						goal: "Implement shared Sprint",
+						participatingChangeIds: [
+							"CHG-c-implementation",
+							"CHG-d-implementation",
+						],
+						workItemIds: ["WI-ready"],
+						rollbackBoundary: "Revert Sprint work as one boundary.",
+						dependencyIds: [],
+						integrationRefs: [],
+						complete: false,
+						blockers: [],
+					},
+				],
+				workItems: [{ id: "WI-ready", implemented: false, blockers: [] }],
+			}),
+			trigger,
+			{ maxPlanningChanges: 4, maxReactions: 4 },
+		);
+
+		assert.deepEqual(
+			reactions.map((reaction) => reaction.selection.loop),
+			["planning", "implementation"],
+		);
+		assert.deepEqual(
+			reactions[0].selection.planningHorizon.map((entry) => entry.changeId),
+			["CHG-a-plan", "CHG-b-plan"],
+		);
+		assert.equal(reactions[1].selection.sprintId, "SPR-shared");
+	});
+
 	it("stays quiescent when no eligible work exists", () => {
 		const reaction = selectRuntimeReaction(state(), {
 			kind: "timer_due",
 		});
 		assert.equal(reaction.status, "quiescent");
 		assert.equal(reaction.selection, undefined);
+	});
+
+	it("rejects unbounded reaction batches", () => {
+		assert.throws(
+			() =>
+				selectRuntimeReactions(
+					state({ changes: [change("CHG-plan", "planning")] }),
+					trigger,
+					{ maxReactions: 0 },
+				),
+			/1 to 32/,
+		);
 	});
 
 	it("rejects unbounded Planning horizons", () => {

@@ -87,6 +87,7 @@ export type {
 } from "../git/worktrees.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
+export * from "../runtime/project-coordinator.ts";
 export * from "../runtime/semantic-executor.ts";
 export type {
 	CreateRuntimeHandoffManifestOptions,

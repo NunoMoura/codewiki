@@ -30,9 +30,11 @@ Implementation presents Work Items, Assignments, worker sessions, isolation, int
 
 Target runtime topology is one project-scoped control plane with concurrent dashboard, Pi, CLI/test, and future clients. It owns intake, WorkState refresh, compatible-job scheduling, semantic-session and worker lifecycle, guarded writes, integration, and live projections. No Pi conversation owns runtime lifetime.
 
-The first executable long-term seam is the entrypoint-isolated `@nunomoura/codewiki/pi-sdk` adapter. It creates bounded in-memory Pi SDK sessions for read-only Decision, Planning, and Implementation review, exposes only project-scoped read tools plus one closed candidate-submission tool, and returns candidates to `runRuntimeSemanticExecutor()`. The Pi SDK remains an optional peer during the architecture spike; disposable SDK fixtures must install it explicitly and use Node.js 22.19 or newer.
+The first executable long-term seams are the transport-neutral `ProjectCoordinator` kernel and the entrypoint-isolated `@nunomoura/codewiki/pi-sdk` adapter. The coordinator registers concurrent Pi/dashboard/CLI clients, enforces supervised or unattended admission, deduplicates jobs, requires durable recovery for writes, admits bounded compatible lanes, serializes shared resources and integration targets, and exposes bounded lifecycle state. `RuntimeReactor.selectRuntimeReactions()` now derives several compatible runtime-owned reactions while retaining the singular selector as a bounded compatibility primitive.
 
-Implementation workers remain on the separate process path today and target worktree plus process/container isolation. The current source still has a singular `RuntimeReactor`, one-shot host primitives, and an extension-owned dashboard implementation. Those are known implementation gaps against approved Knowledge, not target behavior. Production dashboard redesign waits for the project-control-plane and multi-session spike.
+The SDK adapter creates bounded in-memory Pi SDK sessions for read-only Decision, Planning, and Implementation review, exposes only project-scoped read tools plus one closed candidate-submission tool, and returns candidates to `runRuntimeSemanticExecutor()`. The Pi SDK remains an optional peer during the architecture spike; disposable SDK fixtures must install it explicitly and use Node.js 22.19 or newer.
+
+Implementation workers remain on the separate process path today and target worktree plus process/container isolation. Cross-process coordinator election, authenticated loopback transport, durable endpoint discovery, and exact multi-reaction semantic execution remain the next control-plane slice. Existing one-shot host primitives and the extension-owned dashboard are known implementation gaps against approved Knowledge. Production dashboard redesign waits for that service and external multi-session spike.
 
 Worker dispatch already resolves a deterministic execution policy before claim append and child-process creation. Provider, model, thinking level, allowed tools, timeout, pricing snapshot, budget, and policy digest travel through handoff, start, observation, and guarded resume. Attached supervision and usage telemetry are mandatory. Policy drift, route mismatch, missing usage, exhausted limits, monitoring loss, detached execution, or invalid escalation stops the attempt without granting semantic authority.
 
@@ -62,7 +64,7 @@ src/
 
 The semantic loop roots are `decision`, `planning`, and `implementation`. Runtime is their project-scoped event-driven outer control plane. Each semantic loop owns typed inputs, outputs, quality standards, and exits. `traces` owns one append-only JSONL journey per persisted Change. `work-state` derives shared project state; `views` render Backlog, Planning, Implementation, Change dossiers, quality, blockers, and outcomes.
 
-Current `runRuntimeSemanticExecutor()` remains one bounded job primitive: it invokes runtime-selected work, injects canonical identity and append authority, retries CAS races, and stops on route-back or budget. Target scheduling admits several compatible jobs while preserving one semantic owner per invariant. `src/pi/sdk-semantic-session.ts` implements the first embedded semantic-session adapter; existing process worker code remains a separate implementation adapter. `error-handling` owns shared errors and recovery hints.
+Current `runRuntimeSemanticExecutor()` remains one bounded job primitive: it invokes runtime-selected work, injects canonical identity and append authority, retries CAS races, and stops on route-back or budget. `src/runtime/project-coordinator.ts` now owns transport-neutral client supervision, idempotent compatible-job admission, lane/resource serialization, and restart recovery hooks; `selectRuntimeReactions()` derives a bounded compatible horizon. Exact execution of each selected reaction through the coordinator remains intentionally separate until durable recovery can bind each result to canonical trace evidence. `src/pi/sdk-semantic-session.ts` implements the embedded semantic-session adapter; existing process worker code remains a separate implementation adapter. `error-handling` owns shared errors and recovery hints.
 
 Temporary trace scratch belongs under `.codewiki/runtime/tmp/<change-trace>/<loop>/`. It remains non-authoritative and is cleaned only after durable trace/KB/source/Git or recovery refs exist.
 
@@ -148,6 +150,7 @@ npm run test:pack
 npm run test:pi-install
 npm run test:pi-rpc
 npm run test:pi-mutation
+npm run test:coordinator
 npm run test:pi-sdk
 npm run test:pi-sdk-package
 npm run test:project-local-install
@@ -172,6 +175,7 @@ Smoke command roles:
   previews first, submits semantic candidates without repository authority,
   verifies runtime-owned byte/sequence guards, and reads resulting state through
   `wiki_state`.
+- `npm run test:coordinator`: proves multi-client supervision, compatible Decision and Work Item concurrency, serialized Planning/integration/effect lanes, idempotency, and durable restart recovery.
 - `npm run test:pi-sdk`: unit-proves bounded embedded semantic-session roles,
   exactly-one candidate submission, lifecycle observations, payload limits, and
   project-root containment without starting a model turn.
