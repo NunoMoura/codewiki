@@ -31,7 +31,7 @@ function assignment(root) {
 		sourceBaseRef: "git:base:abc123",
 		contextDigest: "sha256:context",
 		prompt: "Implement the assigned runtime change.",
-		resultPath: join(
+		reportPath: join(
 			root,
 			".codewiki",
 			"runtime",
@@ -66,7 +66,7 @@ function workerReport() {
 	].join("\n");
 }
 
-test("Pi process worker adapter persists and recovers normalized receipts", async () => {
+test("Pi process worker adapter persists and recovers normalized Worker reports", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-process-worker-"));
 	const input = assignment(root);
 	await mkdir(input.worktree.path, { recursive: true });
@@ -93,29 +93,29 @@ test("Pi process worker adapter persists and recovers normalized receipts", asyn
 		const result = await adapter.execute(input, new AbortController().signal);
 		assert.equal(result.status, "completed");
 		assert.equal(result.pid, 4242);
-		assert.equal(result.workerResult?.workUnitId, input.workItemId);
-		assert.match(result.receiptRef, /^runtime-worker-receipt:[a-f0-9]{64}$/);
+		assert.equal(result.implementationEvidence?.workUnitId, input.workItemId);
+		assert.match(result.reportRef, /^runtime-worker-report:[a-f0-9]{64}$/);
 		assert.equal(executions, 1);
-		const persisted = JSON.parse(await readFile(input.resultPath, "utf8"));
-		assert.equal(persisted.receiptRef, result.receiptRef);
+		const persisted = JSON.parse(await readFile(input.reportPath, "utf8"));
+		assert.equal(persisted.reportRef, result.reportRef);
 		const recovered = await adapter.recover(input);
 		assert.deepEqual(recovered, result);
 		assert.equal(executions, 1);
 		await writeFile(
-			input.resultPath,
+			input.reportPath,
 			JSON.stringify({ ...persisted, status: "blocked" }),
 			"utf8",
 		);
 		await assert.rejects(
 			adapter.recover(input),
-			/receipt digest does not match/,
+			/report digest does not match/,
 		);
 	} finally {
 		await rm(root, { recursive: true, force: true });
 	}
 });
 
-test("Pi process worker adapter requires worktree isolation and runtime receipt paths", async () => {
+test("Pi process worker adapter requires worktree isolation and runtime report paths", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-process-worker-guard-"));
 	const base = assignment(root);
 	const adapter = createPiProcessImplementationWorkerAdapter();
@@ -128,7 +128,7 @@ test("Pi process worker adapter requires worktree isolation and runtime receipt 
 			/require explicit worktree isolation/,
 		);
 		await assert.rejects(
-			adapter.recover({ ...base, resultPath: join(root, "outside.json") }),
+			adapter.recover({ ...base, reportPath: join(root, "outside.json") }),
 			/must stay below \.codewiki\/runtime/,
 		);
 		const outside = join(root, "outside");

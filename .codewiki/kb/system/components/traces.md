@@ -301,7 +301,7 @@ Scratch belongs under:
 .codewiki/runtime/tmp/<change-trace-id>/<loop>/
 ```
 
-Runtime temp may contain proposed output, quality drafts, worker results, bounded logs, or multi-trace write-ahead recovery packets. It is not truth. Durable trace append, Git/content proof, or another canonical ref must exist before cleanup removes evidence needed for recovery.
+Runtime temp may contain proposed output, quality drafts, worker reports, bounded logs, or multi-trace write-ahead recovery packets. It is not truth. Durable trace append, Git/content proof, or another canonical ref must exist before cleanup removes evidence needed for recovery.
 
 ## Retention
 

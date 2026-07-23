@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Implementation Loop
-description: The Implementation loop continuously receives planned Work Items and worker results, then accepts Change realization only after scoped integration, checks, evidence, and content proof pass.
+description: The Implementation loop continuously receives planned Work Items and worker reports, then accepts Change realization only after scoped integration, checks, evidence, and content proof pass.
 tags:
   - codewiki
   - system
@@ -47,7 +47,7 @@ codewiki_source_map:
 ---
 # Implementation Loop
 
-Implementation is the continuous realization service for approved, planned Changes. It receives ready Work Items and worker results across active Sprints, integrates candidate output, runs scoped and aggregate checks, and appends accepted or rejected evidence to each owning Change Trace.
+Implementation is the continuous realization service for approved, planned Changes. It receives ready Work Items and worker reports across active Sprints, integrates candidate output, runs scoped and aggregate checks, and appends accepted or rejected evidence to each owning Change Trace.
 
 Workers execute Assignment attempts. They do not own an Implementation loop and cannot mark semantic success. The Implementation loop alone decides whether planned intent is realized.
 
@@ -57,7 +57,7 @@ Implementation owns:
 
 - source, test, package, README, and product-document edits inside accepted Work Item scope;
 - local TDD when required;
-- worker result normalization and active-Assignment correlation;
+- worker report normalization and active-Assignment correlation;
 - integration and conflict handling within Planning authority;
 - check and review evidence;
 - acceptance-criterion coverage;
@@ -86,21 +86,21 @@ Implementation input includes:
 - owning approved Change ref and current realization state;
 - exact accepted Work Item and acceptance-criterion refs;
 - relevant Sprint, dependency, Assignment, and integration projections;
-- normalized worker results and claim/session provenance;
+- normalized worker reports and claim/session provenance;
 - current source/test/Git snapshot and content proof;
 - source ownership and review policy;
 - relevant WorkState slice and digest;
 - prior implementation output refs;
 - trigger and route-back context.
 
-`runWikiImplement()` accepts a WorkState freshness guard plus normalized worker results or explicit evidence keyed by Work Item. Runtime selects the Sprint and Work Items, resolves each owning Change, verifies Assignment correlation, loads canonical Planning events, source ownership, existing paths, policy, trace tails, and Git state, and derives sequence, parent, and byte guards. Caller-supplied `traceId`, Planning events, Change IDs, Planning refs, Assignment identity, source map, sequence, parent, and expected bytes are rejected as replacement repository facts.
+`runWikiImplement()` accepts a WorkState freshness guard plus normalized worker reports or explicit evidence keyed by Work Item. Runtime selects the Sprint and Work Items, resolves each owning Change, verifies Assignment correlation, loads canonical Planning events, source ownership, existing paths, policy, trace tails, and Git state, and derives sequence, parent, and byte guards. Caller-supplied `traceId`, Planning events, Change IDs, Planning refs, Assignment identity, source map, sequence, parent, and expected bytes are rejected as replacement repository facts.
 
 One bounded invocation writes evidence for one owning Change. Portfolio work is grouped by canonical Work Item ownership, then runtime refreshes WorkState and repeats for remaining Change groups.
 
 ## Loop cycle
 
 ```text
-receive ready Work Item or worker result
+receive ready Work Item or worker report
 refresh owning Change and integration WorkState
 validate Assignment, plan revision, source base, path scope, and dependencies
 integrate candidate source/docs/tests
@@ -124,7 +124,7 @@ Implementation output contains:
 - structured checks with command, phase, criterion id, and status;
 - acceptance evidence mapped to stable criterion ids;
 - TDD red/green proof when required;
-- worker result and Assignment provenance;
+- worker report and Assignment provenance;
 - normalized worker proof and conflict findings;
 - component/path/test alignment evidence;
 - integration state and shared Sprint refs;

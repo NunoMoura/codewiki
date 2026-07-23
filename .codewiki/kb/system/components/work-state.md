@@ -97,7 +97,7 @@ A Change view may expose:
 - Decision-loop validation and exact approval receipt;
 - planning coverage and Sprint memberships;
 - owned and contributing Work Items;
-- Assignments and worker results;
+- Assignments and worker reports;
 - implementation realization and integration evidence;
 - Knowledge impacts and outcome disposition;
 - blockers, current loop, and next safe action.

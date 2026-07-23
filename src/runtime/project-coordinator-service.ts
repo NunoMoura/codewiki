@@ -777,7 +777,7 @@ async function handleRuntimeReaction(
 			maxCasRetries: runtime.maxCasRetries,
 			blockedImplementationWorkItemIds:
 				workerReconciliation?.dispatch.pendingWorkItemIds,
-			implementationWorkerResults: workerReconciliation?.workerResults,
+			implementationWorkerReports: workerReconciliation?.workerReports,
 			beforeAppend: () => assertCurrentGeneration(runtime),
 		});
 		writeJson(response, 200, receipts);

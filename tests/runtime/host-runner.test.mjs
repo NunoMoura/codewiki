@@ -667,8 +667,8 @@ describe("runtime host worker session revive", () => {
 
 			assert.equal(watched.workerStatuses[0].state, "completed");
 			assert.equal(watched.completions.length, 1);
-			assert.equal(watched.workerResults[0].status, "completed");
-			assert.deepEqual(watched.workerResults[0].changedFiles, [
+			assert.equal(watched.workerReports[0].status, "completed");
+			assert.deepEqual(watched.workerReports[0].changedFiles, [
 				"src/runtime/a.ts",
 			]);
 			assert.equal(watched.hostErrors.length, 0);
@@ -849,7 +849,7 @@ describe("runtime host one-shot execution", () => {
 				result.handoff.workers[0].executionPolicy.digest,
 			);
 			assert.equal(result.completions.length, 1);
-			assert.equal(result.workerResults[0].status, "completed");
+			assert.equal(result.workerReports[0].status, "completed");
 			assert.deepEqual(result.workerStatuses[0], {
 				workerId: "host-worker-001",
 				workUnitId: "WU-host-once",
@@ -959,7 +959,7 @@ describe("runtime host one-shot execution", () => {
 				),
 				true,
 			);
-			assert.equal(result.workerResults[0].status, "completed");
+			assert.equal(result.workerReports[0].status, "completed");
 			assert.equal(
 				result.implementationPreviews[0].loopResult.readyForClosure,
 				true,
@@ -995,9 +995,9 @@ describe("runtime host one-shot execution", () => {
 				releaseIdPrefix: "missing-output-release",
 			});
 
-			assert.equal(result.workerResults[0].status, "failed");
+			assert.equal(result.workerReports[0].status, "failed");
 			assert.equal(
-				result.workerResults[0].message,
+				result.workerReports[0].message,
 				"Worker completion output file is missing for worker host-worker-001.",
 			);
 			assert.deepEqual(result.releaseCheck, {
@@ -1051,9 +1051,9 @@ describe("runtime host one-shot execution", () => {
 				releaseIdPrefix: "malformed-output-release",
 			});
 
-			assert.equal(result.workerResults[0].status, "failed");
+			assert.equal(result.workerReports[0].status, "failed");
 			assert.match(
-				result.workerResults[0].message,
+				result.workerReports[0].message,
 				/Worker completion output is missing a codewiki-worker-report block\..*not a worker report/s,
 			);
 			assert.equal(result.releaseCheck.reason, "worker_failed");
@@ -1104,7 +1104,7 @@ describe("runtime host one-shot execution", () => {
 				releaseIdPrefix: "blocked-output-release",
 			});
 
-			assert.equal(result.workerResults[0].status, "blocked");
+			assert.equal(result.workerReports[0].status, "blocked");
 			assert.equal(result.releaseCheck.reason, "worker_blocked");
 			assert.equal(result.remediation.route, "planning");
 			assert.match(result.remediation.blockers[0], /Need clarified/);
@@ -1181,8 +1181,8 @@ describe("runtime host one-shot execution", () => {
 			});
 
 			assert.equal(result.releaseCheck.reason, "worker_failed");
-			assert.equal(result.workerResults[0].status, "completed");
-			assert.equal(result.workerResults[1].status, "failed");
+			assert.equal(result.workerReports[0].status, "completed");
+			assert.equal(result.workerReports[1].status, "failed");
 			assert.equal(result.implementationAppends.length, 1);
 			assert.equal(result.releaseAppend.events.length, 2);
 			assert.equal(
@@ -1869,8 +1869,8 @@ describe("runtime host one-shot execution", () => {
 				appendImplementation: true,
 			});
 
-			assert.equal(result.workerResults[0].status, "failed");
-			assert.match(result.workerResults[0].message, /completion_guard/);
+			assert.equal(result.workerReports[0].status, "failed");
+			assert.match(result.workerReports[0].message, /completion_guard/);
 			assert.equal(result.workerStatuses[0].state, "failed");
 			assert.equal(result.workerStatuses[0].remediation.route, "retry_worker");
 			assert.equal(result.releaseCheck.status, "ready");

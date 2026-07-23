@@ -602,9 +602,9 @@ async function runMissingOutput(installed, root) {
 		releaseIdPrefix: "missing-output-release",
 	});
 	assert.equal(created.length, 1);
-	assert.equal(result.workerResults[0].status, "failed");
+	assert.equal(result.workerReports[0].status, "failed");
 	assert.equal(
-		result.workerResults[0].message,
+		result.workerReports[0].message,
 		"Worker completion output file is missing for worker external-worker-001.",
 	);
 	assert.equal(result.releaseCheck.reason, "worker_failed");
@@ -647,9 +647,9 @@ async function runMalformedOutput(installed, root) {
 		releaseCreatedAt: "2026-06-18T11:00:03.000Z",
 		releaseIdPrefix: "malformed-output-release",
 	});
-	assert.equal(result.workerResults[0].status, "failed");
+	assert.equal(result.workerReports[0].status, "failed");
 	assert.match(
-		result.workerResults[0].message,
+		result.workerReports[0].message,
 		/missing a codewiki-worker-report/,
 	);
 	assert.equal(result.releaseCheck.reason, "worker_failed");
@@ -699,7 +699,7 @@ async function runBlockedOutput(installed, root) {
 		releaseCreatedAt: "2026-06-18T11:00:03.000Z",
 		releaseIdPrefix: "blocked-output-release",
 	});
-	assert.equal(result.workerResults[0].status, "blocked");
+	assert.equal(result.workerReports[0].status, "blocked");
 	assert.equal(result.releaseCheck.reason, "worker_blocked");
 	assert.equal(result.remediation.route, "planning");
 	assert.match(result.remediation.blockers[0], /Need clarified/);
@@ -774,7 +774,7 @@ async function runMixedOutputs(installed, root) {
 			JSON.stringify(
 				{
 					releaseCheck: result.releaseCheck,
-					workers: result.workerResults.map((worker) => ({
+					workers: result.workerReports.map((worker) => ({
 						workUnitId: worker.workUnitId,
 						status: worker.status,
 						message: worker.message,
@@ -789,8 +789,8 @@ async function runMixedOutputs(installed, root) {
 		);
 	}
 	assert.equal(result.releaseCheck.reason, "worker_failed");
-	assert.equal(result.workerResults[0].status, "completed");
-	assert.equal(result.workerResults[1].status, "failed");
+	assert.equal(result.workerReports[0].status, "completed");
+	assert.equal(result.workerReports[1].status, "failed");
 	assert.equal(result.implementationAppends.length, 1);
 	assert.equal(result.releaseAppend.events.length, 2);
 	assert.equal(result.releaseBatch.events[0].data.reason, "worker_completed");

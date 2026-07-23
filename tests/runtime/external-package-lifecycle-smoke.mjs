@@ -512,7 +512,7 @@ try {
 		releaseIdPrefix: "external-release",
 	});
 	assert.equal(hostResult.releaseCheck.reason, "implementation_exit_passed");
-	assert.equal(hostResult.workerResults[0].status, "completed");
+	assert.equal(hostResult.workerReports[0].status, "completed");
 	assert.equal(hostResult.implementationAppends.length, 1);
 	assert.equal(hostResult.releaseAppend.events.length, 1);
 	assert.equal(

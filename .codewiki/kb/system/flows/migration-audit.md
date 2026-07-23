@@ -34,7 +34,7 @@ This audit records the current migration state after the pivot to runtime outer 
 | Project bootstrap/context | 9 files | 5 files | Core migrated | Root/config/config-file/bootstrap/types exist. Bootstrap writes target KB/traces/views/config scaffold without old graph or roadmap truth roots. |
 | Roadmap/tasks | 8 files | planning/work-queue | Deprecated / replaced | Planning work units and work-queue projections replace roadmap truth. Historical roadmap files remain archive/reference state, not active workflow truth. |
 | Runtime | 3 files | 10 files | Migrated core | Work-unit claim selection, claims, work-unit claim helper batches, leases/budget/policy stubs, and tmp helpers exist. |
-| Session/worktree worker start | 11 files | runtime + implementation + git stubs | Partial | Claims, worker start seam, worker result aggregation, and aggregate proof exist. Full worktree isolation/session tooling is deferred. |
+| Session/worktree worker start | 11 files | runtime + implementation + git stubs | Partial | Claims, worker start seam, worker report aggregation, and aggregate proof exist. Full worktree isolation/session tooling is deferred. |
 | Shared utilities | 4 files | 5 files | Partial | Small source utilities exist. Historical lock/ports helpers are not migrated wholesale. |
 | State/graph/resume | 21 files | traces + views | Replaced core, Pi surface active | JSONL traces and generated views replace graph/state roots. State/resume projections are exposed through core facades and direct `/wiki-*` commands. |
 | Telemetry/lifecycle | 3 files | trace events | Replaced conceptually | Trace events/checkpoints/close records carry lifecycle facts. Historical telemetry roots are not target truth. |
@@ -52,8 +52,8 @@ The following source is now stable enough to be treated as the active migration 
 - work-plan, work-queue, quality, status, resume, blockers, and conflicts projections;
 - runtime work-unit claim selection, claim/release events, and append preflight for work-unit claims;
 - injected Pi worker-start seam with no hard Pi dependency;
-- worker result aggregation into implementation changes;
-- runtime claim to worker result correlation;
+- worker report aggregation into implementation changes;
+- runtime claim to worker report correlation;
 - core facades for the reduced model-facing `wiki_*` surface: state, decide, plan, implement, archive, and config, with runtime kept as a backend/host facade;
 - `runWikiDecide()`, `runWikiPlan()`, and `runWikiImplement()` core facades for preview/append loop iterations;
 - implementation snapshot/proof helpers wired through `runWikiImplement()`;

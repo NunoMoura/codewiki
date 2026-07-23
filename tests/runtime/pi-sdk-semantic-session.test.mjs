@@ -141,7 +141,7 @@ test("Pi SDK semantic adapter maps implementation to a review role", async () =>
 			sprint: { id: "SPR-sdk" },
 			workItems: [],
 			assignments: [],
-			workerResults: [
+			workerReports: [
 				{
 					workerId: "worker:sdk",
 					workUnitId: "WU-sdk",

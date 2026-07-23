@@ -23,7 +23,7 @@ import {
 	type RuntimeWorktreePlan,
 	type WorktreeCommandRunner,
 } from "../git/worktrees.ts";
-import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
 import { loadWikiConfigFile } from "../project/config-file.ts";
 import type { WikiConfig } from "../project/config.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
@@ -33,11 +33,11 @@ import { createRuntimeHandoffManifest } from "./handoff.ts";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
-	assertImplementationWorkerResult,
+	assertImplementationWorkerReport,
 	implementationWorkerJobId,
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
-	type ImplementationWorkerExecutionResult,
+	type ImplementationWorkerReport,
 } from "./implementation-worker-adapter.ts";
 import { scheduleImplementationWorkerAssignment } from "./implementation-worker-jobs.ts";
 import { implementationWorkerClaimReleaseJob } from "./implementation-worker-review.ts";
@@ -59,7 +59,7 @@ export interface ImplementationWorkerDispatchResult {
 
 export interface ImplementationWorkerRuntimeReconciliation {
 	dispatch: ImplementationWorkerDispatchResult;
-	workerResults: ImplementationWorkerResultInput[];
+	workerReports: ImplementationWorkerReportInput[];
 }
 
 export interface ImplementationWorkerDispatcherOptions {
@@ -84,8 +84,8 @@ interface ImplementationWorkerDispatchPacket {
 interface RecoveredImplementationWorker {
 	packet: ImplementationWorkerDispatchPacket;
 	claimEvent: TraceEvent;
-	result: ImplementationWorkerExecutionResult;
-	workerResult: ImplementationWorkerResultInput;
+	report: ImplementationWorkerReport;
+	reviewInput: ImplementationWorkerReportInput;
 }
 
 /**
@@ -156,20 +156,20 @@ export class ImplementationWorkerDispatcher {
 		);
 		const resumed = await this.resumePackets(activeClaims);
 		const releaseable = resumed.recovered.filter((worker) =>
-			workerResultCanRelease(worker, observation.workState),
+			workerReportCanRelease(worker, observation.workState),
 		);
 		const releasingClaims = new Set(
 			releaseable.map((worker) => worker.packet.assignment.claimId),
 		);
-		const workerResults = resumed.recovered
+		const workerReports = resumed.recovered
 			.filter(
 				(worker) => !releasingClaims.has(worker.packet.assignment.claimId),
 			)
-			.map((worker) => worker.workerResult);
+			.map((worker) => worker.reviewInput);
 		const releaseJobIds = this.scheduleReleases(releaseable, createdAt);
 		const resumedJobIds = [...resumed.jobIds, ...releaseJobIds];
 		const pending = new Set(workerRequiredWorkItemIds);
-		for (const result of workerResults) pending.delete(result.workUnitId);
+		for (const result of workerReports) pending.delete(result.workUnitId);
 		const complete = (
 			status: ImplementationWorkerDispatchResult["status"],
 			jobIds: string[],
@@ -180,11 +180,11 @@ export class ImplementationWorkerDispatcher {
 					status,
 					observation.workState,
 					pending,
-					workerResults,
+					workerReports,
 					jobIds,
 					blockers,
 				),
-				workerResults,
+				workerReports,
 			);
 
 		if (!this.options.coordinator.snapshot().executionPermitted) {
@@ -291,14 +291,14 @@ export class ImplementationWorkerDispatcher {
 		const recovered = await Promise.all(
 			active.map(async ({ packet, claimEvent }) => {
 				try {
-					const result = await this.options.adapter.recover(packet.assignment);
-					if (!result) return undefined;
-					assertImplementationWorkerResult(packet.assignment, result);
-		return {
+					const report = await this.options.adapter.recover(packet.assignment);
+					if (!report) return undefined;
+					assertImplementationWorkerReport(packet.assignment, report);
+					return {
 						packet,
 						claimEvent,
-						result,
-						workerResult: reviewWorkerResult(packet.assignment, result),
+						report,
+						reviewInput: reviewWorkerReport(packet.assignment, report),
 					};
 				} catch {
 					return undefined;
@@ -308,7 +308,7 @@ export class ImplementationWorkerDispatcher {
 		return {
 			jobIds: this.schedulePackets(active.map(({ packet }) => packet)),
 			recovered: recovered.filter(
-				(result): result is RecoveredImplementationWorker => Boolean(result),
+				(worker): worker is RecoveredImplementationWorker => Boolean(worker),
 			),
 		};
 	}
@@ -322,7 +322,7 @@ export class ImplementationWorkerDispatcher {
 				repoRoot: this.options.repoRoot,
 				reactor: this.options.reactor,
 				assignment: worker.packet.assignment,
-				result: worker.result,
+				report: worker.report,
 				claimEvent: worker.claimEvent,
 				createdAt,
 				beforeAppend: this.options.beforeAppend,
@@ -384,7 +384,7 @@ function createDispatchPackets(
 			traceRefs: candidate.traceRefs,
 			prompt: worker.sessionInput.prompt,
 		});
-		const resultKey = digest({ claimId: worker.claimId, contextDigest }).slice(
+		const reportKey = digest({ claimId: worker.claimId, contextDigest }).slice(
 			7,
 			39,
 		);
@@ -404,12 +404,12 @@ function createDispatchPackets(
 			sourceBaseRef: `git:${worker.worktree.baseSha || worker.worktree.baseRef || "HEAD"}`,
 			contextDigest,
 			prompt: worker.sessionInput.prompt,
-			resultPath: join(
+			reportPath: join(
 				repoRoot,
 				".codewiki",
 				"runtime",
 				"workers",
-				`${resultKey}.json`,
+				`${reportKey}.json`,
 			),
 			isolation: {
 				kind: "worktree",
@@ -617,11 +617,11 @@ function adapterSupportsWorktree(
 	return !adapter.isolationKinds || adapter.isolationKinds.includes("worktree");
 }
 
-function workerResultCanRelease(
+function workerReportCanRelease(
 	worker: RecoveredImplementationWorker,
 	workState: WorkState,
 ): boolean {
-	if (worker.result.status !== "completed") return true;
+	if (worker.report.status !== "completed") return true;
 	return Boolean(
 		workState.workItems.find(
 			(item) => item.id === worker.packet.assignment.workItemId,
@@ -629,37 +629,37 @@ function workerResultCanRelease(
 	);
 }
 
-function reviewWorkerResult(
+function reviewWorkerReport(
 	assignment: ImplementationWorkerAssignment,
-	result: ImplementationWorkerExecutionResult,
-): ImplementationWorkerResultInput {
-	const workerResult = result.workerResult;
+	report: ImplementationWorkerReport,
+): ImplementationWorkerReportInput {
+	const evidence = report.implementationEvidence;
 	return {
-		...(workerResult || {}),
+		...(evidence || {}),
 		workerId: assignment.workerId,
 		workUnitId: assignment.workItemId,
 		claimId: assignment.claimId,
 		planningRefs: [...assignment.planningRefs],
-		status: result.status,
-		refs: [...new Set([...(workerResult?.refs || []), result.receiptRef])],
-		...(result.sessionId ? { sessionId: result.sessionId } : {}),
-		...(result.sessionFile ? { sessionFile: result.sessionFile } : {}),
-		...(result.error ? { message: result.error } : {}),
+		status: report.status,
+		refs: [...new Set([...(evidence?.refs || []), report.reportRef])],
+		...(report.sessionId ? { sessionId: report.sessionId } : {}),
+		...(report.sessionFile ? { sessionFile: report.sessionFile } : {}),
+		...(report.error ? { message: report.error } : {}),
 	};
 }
 
 function runtimeReconciliation(
 	dispatch: ImplementationWorkerDispatchResult,
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 ): ImplementationWorkerRuntimeReconciliation {
-	return { dispatch, workerResults };
+	return { dispatch, workerReports };
 }
 
 function dispatchResult(
 	status: ImplementationWorkerDispatchResult["status"],
 	workState: WorkState,
 	pendingWorkItemIds: Set<string>,
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 	scheduledJobIds: string[],
 	blockers: string[],
 ): ImplementationWorkerDispatchResult {
@@ -667,7 +667,7 @@ function dispatchResult(
 		status,
 		workStateDigest: workState.snapshotDigest,
 		pendingWorkItemIds: [...pendingWorkItemIds].sort(compareText),
-		reviewReadyWorkItemIds: workerResults
+		reviewReadyWorkItemIds: workerReports
 			.map((result) => result.workUnitId)
 			.sort(compareText),
 		scheduledJobIds: [...new Set(scheduledJobIds)].sort(compareText),

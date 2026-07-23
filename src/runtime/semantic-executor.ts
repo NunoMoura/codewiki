@@ -14,7 +14,7 @@ import {
 	type RunWikiPlanResult,
 } from "../api/wiki-plan.ts";
 import { TraceAppendConflictError } from "../error-handling/trace-errors.ts";
-import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
 import type {
 	WorkStateAssignment,
 	WorkStateChange,
@@ -57,7 +57,7 @@ export type RuntimeImplementationCandidate = Omit<
 	RunWikiImplementInput,
 	| "repoRoot"
 	| "expectedWorkStateDigest"
-	| "workerResults"
+	| "workerReports"
 	| "runtimeJobId"
 	| "mode"
 >;
@@ -80,7 +80,7 @@ export interface RuntimeImplementationInvocation {
 	sprint: WorkStateSprint;
 	workItems: WorkStateWorkItem[];
 	assignments: WorkStateAssignment[];
-	workerResults: ImplementationWorkerResultInput[];
+	workerReports: ImplementationWorkerReportInput[];
 }
 
 export interface RuntimeSemanticAdapters {
@@ -129,7 +129,7 @@ export interface RunRuntimeSelectedSemanticReactionInput {
 	maxCasRetries?: number;
 	reactor?: RuntimeReactor;
 	signal?: AbortSignal;
-	implementationWorkerResults?: ImplementationWorkerResultInput[];
+	implementationWorkerReports?: ImplementationWorkerReportInput[];
 	beforeAppend?: () => void | Promise<void>;
 }
 
@@ -169,7 +169,7 @@ export async function runRuntimeSelectedSemanticReaction(
 				input.adapters,
 				input.runtimeJobId,
 				input.beforeAppend,
-				input.implementationWorkerResults,
+				input.implementationWorkerReports,
 			);
 			if (mode === "preview") {
 				return {
@@ -326,7 +326,7 @@ async function executeSelectedSemanticWork(
 	adapters: RuntimeSemanticAdapters,
 	runtimeJobId?: string,
 	beforeAppend?: () => void | Promise<void>,
-	implementationWorkerResults: ImplementationWorkerResultInput[] = [],
+	implementationWorkerReports: ImplementationWorkerReportInput[] = [],
 ): Promise<RuntimeSemanticOutcome> {
 	const selection = observation.reaction.selection;
 	if (!selection) throw new Error("Runtime ready reaction has no selection.");
@@ -442,10 +442,10 @@ async function executeSelectedSemanticWork(
 	const assignments = observation.workState.assignments.filter((assignment) =>
 		selectedIds.has(assignment.workItemId),
 	);
-	const selectedWorkerResults = runtimeSelectedWorkerResults(
+	const selectedWorkerReports = runtimeSelectedWorkerReports(
 		selection.workItemIds,
 		assignments,
-		implementationWorkerResults,
+		implementationWorkerReports,
 	);
 	const candidate = await adapters.implementation({
 		loop: "implementation",
@@ -453,12 +453,12 @@ async function executeSelectedSemanticWork(
 		sprint,
 		workItems,
 		assignments,
-		workerResults: selectedWorkerResults,
+		workerReports: selectedWorkerReports,
 	});
 	assertNoRuntimeAuthority("implementation", candidate, [
 		"repoRoot",
 		"expectedWorkStateDigest",
-		"workerResults",
+		"workerReports",
 		"runtimeJobId",
 		"traceId",
 		"planningEvents",
@@ -480,7 +480,7 @@ async function executeSelectedSemanticWork(
 				...candidate,
 				repoRoot,
 				expectedWorkStateDigest: observation.workState.snapshotDigest,
-				workerResults: selectedWorkerResults,
+				workerReports: selectedWorkerReports,
 				runtimeJobId,
 				mode,
 			},
@@ -501,18 +501,18 @@ function requiredChange(
 	return change;
 }
 
-function runtimeSelectedWorkerResults(
+function runtimeSelectedWorkerReports(
 	workItemIds: string[],
 	assignments: WorkStateAssignment[],
-	workerResults: ImplementationWorkerResultInput[],
-): ImplementationWorkerResultInput[] {
-	if (workerResults.length === 0) return [];
+	workerReports: ImplementationWorkerReportInput[],
+): ImplementationWorkerReportInput[] {
+	if (workerReports.length === 0) return [];
 	const selected = new Set(workItemIds);
 	const seen = new Set<string>();
-	for (const result of workerResults) {
+	for (const result of workerReports) {
 		if (!selected.has(result.workUnitId) || seen.has(result.workUnitId)) {
 			throw new Error(
-				`Runtime Implementation worker result ${result.workUnitId} is not an exact selected Work Item.`,
+				`Runtime Implementation worker report ${result.workUnitId} is not an exact selected Work Item.`,
 			);
 		}
 		seen.add(result.workUnitId);
@@ -525,18 +525,18 @@ function runtimeSelectedWorkerResults(
 		);
 		if (!assignment) {
 			throw new Error(
-				`Runtime Implementation worker result ${result.workUnitId} does not match its active Assignment.`,
+				`Runtime Implementation worker report ${result.workUnitId} does not match its active Assignment.`,
 			);
 		}
 	}
 	for (const workItemId of selected) {
 		if (!seen.has(workItemId)) {
 			throw new Error(
-				`Runtime Implementation worker result is missing for ${workItemId}.`,
+				`Runtime Implementation worker report is missing for ${workItemId}.`,
 			);
 		}
 	}
-	return workerResults;
+	return workerReports;
 }
 
 function requiredTraceBytes(

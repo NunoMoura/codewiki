@@ -30,11 +30,11 @@ export {
 export {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
-	assertImplementationWorkerResult,
+	assertImplementationWorkerReport,
 	implementationWorkerJobId,
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
-	type ImplementationWorkerExecutionResult,
+	type ImplementationWorkerReport,
 } from "./implementation-worker-adapter.ts";
 export {
 	ImplementationWorkerDispatcher,

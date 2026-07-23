@@ -29,10 +29,10 @@ import {
 } from "../pi/worker-start.ts";
 import {
 	collectPiWorkerOutputFiles,
-	collectPiWorkerResults,
+	collectPiWorkerReports,
 	type PiWorkerCompletionInput,
-} from "../pi/worker-results.ts";
-import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
+} from "../pi/worker-reports.ts";
+import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
 import { resolveWikiConfig } from "../project/config.ts";
 import { buildProjectWorkState } from "../work-state/project.ts";
 import type { TraceEvent } from "../traces/types.ts";
@@ -83,7 +83,7 @@ type RuntimeHostCompletionCollector = (input: {
 
 type RuntimeHostImplementationInput = Omit<
 	RunWikiImplementInput,
-	"repoRoot" | "expectedWorkStateDigest" | "mode" | "workerResults"
+	"repoRoot" | "expectedWorkStateDigest" | "mode" | "workerReports"
 >;
 
 type RuntimeHostWorktreeCommandMode = "skip" | "dry-run" | "execute";
@@ -111,7 +111,7 @@ export interface WatchRuntimeHostWorkerSessionsInput
 export interface WatchRuntimeHostWorkerSessionsResult {
 	workerStatuses: RuntimeDisposableWorkerStatus[];
 	completions: PiWorkerCompletionInput[];
-	workerResults: ImplementationWorkerResultInput[];
+	workerReports: ImplementationWorkerReportInput[];
 	hostErrors: CodewikiHostError[];
 	releaseCheck: RuntimeHostReleaseCheck;
 	remediation?: RuntimeHostRemediation;
@@ -178,7 +178,7 @@ interface RunRuntimeHostOnceResult {
 	handoff: RuntimeHandoffManifest;
 	workers: PiWorkerStartResult[];
 	completions: PiWorkerCompletionInput[];
-	workerResults: ImplementationWorkerResultInput[];
+	workerReports: ImplementationWorkerReportInput[];
 	workerStatuses: RuntimeDisposableWorkerStatus[];
 	implementationPreviews: RunWikiImplementResult[];
 	implementationAppends?: RunWikiImplementResult[];
@@ -241,7 +241,7 @@ export async function watchRuntimeHostWorkerSessions(
 		return {
 			workerStatuses: revived.workerStatuses,
 			completions: [],
-			workerResults: [],
+			workerReports: [],
 			hostErrors: detachedHostErrors(revived.workerStatuses),
 			releaseCheck: {
 				status: "blocked",
@@ -253,21 +253,21 @@ export async function watchRuntimeHostWorkerSessions(
 	const completions = await collectPiWorkerOutputFiles(
 		terminal.map(workerStartFromStatus),
 	);
-	const workerResults = collectPiWorkerResults(completions);
-	const hostErrors = completionHostErrors(completions, workerResults);
-	const releaseCheck = releaseCheckForHostCompletion(workerResults, []);
+	const workerReports = collectPiWorkerReports(completions);
+	const hostErrors = completionHostErrors(completions, workerReports);
+	const releaseCheck = releaseCheckForHostCompletion(workerReports, []);
 	return {
-		workerStatuses: mergeWatchedWorkerResults(
+		workerStatuses: mergeWatchedWorkerReports(
 			revived.workerStatuses,
-			workerResults,
+			workerReports,
 			hostErrors,
 		),
 		completions,
-		workerResults,
+		workerReports,
 		hostErrors,
 		releaseCheck,
 		...optionalRemediation(
-			remediationForHostCompletion(releaseCheck, workerResults, [], hostErrors),
+			remediationForHostCompletion(releaseCheck, workerReports, [], hostErrors),
 		),
 	};
 }
@@ -320,13 +320,13 @@ function workerStartFromStatus(
 	};
 }
 
-function mergeWatchedWorkerResults(
+function mergeWatchedWorkerReports(
 	statuses: RuntimeDisposableWorkerStatus[],
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 	hostErrors: CodewikiHostError[],
 ): RuntimeDisposableWorkerStatus[] {
 	const results = new Map(
-		workerResults.map((result) => [
+		workerReports.map((result) => [
 			hostErrorKey(result.workerId, result.workUnitId),
 			result,
 		]),
@@ -350,12 +350,12 @@ function mergeWatchedWorkerResults(
 			...((result.sessionFile ?? result.session_file)
 				? { sessionFile: result.sessionFile ?? result.session_file }
 				: {}),
-			...(error ? { remediation: workerResultRemediation(error) } : {}),
+			...(error ? { remediation: workerReportRemediation(error) } : {}),
 		};
 	});
 }
 
-function workerResultRemediation(error: CodewikiHostError) {
+function workerReportRemediation(error: CodewikiHostError) {
 	return {
 		reason: "worker_completion_error",
 		route: "retry_worker",
@@ -681,7 +681,7 @@ function worktreeFailureHostResult(
 		handoff: workerStartContext.handoff,
 		workers: [],
 		completions: [],
-		workerResults: [],
+		workerReports: [],
 		implementationPreviews: [],
 		hostErrors: remediation.hostErrors,
 		releaseCheck: {
@@ -721,7 +721,7 @@ async function failedStartHostResult(
 			: {}),
 		workers,
 		completions: [],
-		workerResults: [],
+		workerReports: [],
 		implementationPreviews: [],
 		hostErrors: remediation.hostErrors,
 		releaseCheck,
@@ -759,18 +759,18 @@ async function completeRuntimeHostOnce(
 		workerStartContext,
 		workers,
 	);
-	const workerResults = collectPiWorkerResults(completions);
-	const hostErrors = completionHostErrors(completions, workerResults);
+	const workerReports = collectPiWorkerReports(completions);
+	const hostErrors = completionHostErrors(completions, workerReports);
 	const implementationPreviews = await implementationPreviewsForHostOnce(
 		input,
 		workerStartContext.claimEvents,
 		completions,
-		workerResults,
+		workerReports,
 	);
 	return await hostCompletionResult(input, workerStartContext, {
 		workers,
 		completions,
-		workerResults,
+		workerReports,
 		implementationPreviews,
 		hostErrors,
 	});
@@ -793,9 +793,9 @@ async function collectHostWorkerCompletions(
 
 function completionHostErrors(
 	completions: PiWorkerCompletionInput[],
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 ): CodewikiHostError[] {
-	return workerResults.flatMap((result, index): CodewikiHostError[] => {
+	return workerReports.flatMap((result, index): CodewikiHostError[] => {
 		const completion = completions[index];
 		const kind = completionHostErrorKind(completion, result);
 		if (!kind) return [];
@@ -822,7 +822,7 @@ function completionHostErrors(
 
 function completionHostErrorKind(
 	completion: PiWorkerCompletionInput | undefined,
-	result: ImplementationWorkerResultInput,
+	result: ImplementationWorkerReportInput,
 ): CodewikiHostErrorKind | undefined {
 	const message = String(result.message || completion?.error || "");
 	if (completion?.error) {
@@ -842,7 +842,7 @@ function completionHostErrorKind(
 
 function completionHostErrorMessage(
 	completion: PiWorkerCompletionInput | undefined,
-	result: ImplementationWorkerResultInput,
+	result: ImplementationWorkerReportInput,
 ): string {
 	return [
 		result.workUnitId || completion?.workerStart.workUnitId,
@@ -864,13 +864,13 @@ async function implementationPreviewsForHostOnce(
 	input: RunRuntimeHostOnceInput,
 	_claimEvents: TraceEvent[],
 	completions: PiWorkerCompletionInput[],
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 ): Promise<RunWikiImplementResult[]> {
 	return await runHostImplementationReports(
 		input,
 		"preview",
 		completions,
-		workerResults,
+		workerReports,
 	);
 }
 
@@ -879,13 +879,13 @@ async function implementationAppendsForHostOnce(
 	_runtime: RunWikiRuntimeResult,
 	_claimEvents: TraceEvent[],
 	completions: PiWorkerCompletionInput[],
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 ): Promise<RunWikiImplementResult[]> {
 	return await runHostImplementationReports(
 		input,
 		"append",
 		completions,
-		workerResults,
+		workerReports,
 	);
 }
 
@@ -893,13 +893,13 @@ async function runHostImplementationReports(
 	input: RunRuntimeHostOnceInput,
 	mode: "preview" | "append",
 	_completions: PiWorkerCompletionInput[],
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 ): Promise<RunWikiImplementResult[]> {
 	if (!input.implementation) return [];
 	const repoRoot = requiredRepoRoot(input.runtime.repoRoot, "implementation");
 	const initialWorkState = await buildProjectWorkState({ repoRoot });
-	const resultsByChange = new Map<string, ImplementationWorkerResultInput[]>();
-	for (const result of workerResults.filter(hasImplementationEvidence)) {
+	const resultsByChange = new Map<string, ImplementationWorkerReportInput[]>();
+	for (const result of workerReports.filter(hasImplementationEvidence)) {
 		const item = initialWorkState.workItems.find(
 			(candidate) => candidate.id === result.workUnitId,
 		);
@@ -937,7 +937,7 @@ async function runHostImplementationReports(
 				repoRoot,
 				expectedWorkStateDigest: workState.snapshotDigest,
 				mode,
-				workerResults: resultsByChange.get(changeId) || [],
+				workerReports: resultsByChange.get(changeId) || [],
 			}),
 		);
 	}
@@ -945,7 +945,7 @@ async function runHostImplementationReports(
 }
 
 function hasImplementationEvidence(
-	result: ImplementationWorkerResultInput,
+	result: ImplementationWorkerReportInput,
 ): boolean {
 	return (
 		result.status === "blocked" ||
@@ -962,13 +962,13 @@ async function hostCompletionResult(
 		RunRuntimeHostOnceResult,
 		| "workers"
 		| "completions"
-		| "workerResults"
+		| "workerReports"
 		| "implementationPreviews"
 		| "hostErrors"
 	>,
 ): Promise<RunRuntimeHostOnceResult> {
 	const releaseCheck = releaseCheckForHostCompletion(
-		completed.workerResults,
+		completed.workerReports,
 		completed.implementationPreviews,
 	);
 	const implementationAppends = await maybeAppendImplementation(
@@ -986,7 +986,7 @@ async function hostCompletionResult(
 	);
 	const remediation = remediationForHostCompletion(
 		releaseCheck,
-		completed.workerResults,
+		completed.workerReports,
 		completed.implementationPreviews,
 		completed.hostErrors,
 	);
@@ -1017,7 +1017,7 @@ async function maybeAppendImplementation(
 	workerStartContext: RuntimeHostWorkerStartContext,
 	completed: Pick<
 		RunRuntimeHostOnceResult,
-		"completions" | "workerResults" | "implementationPreviews"
+		"completions" | "workerReports" | "implementationPreviews"
 	>,
 	_releaseCheck: RuntimeHostReleaseCheck,
 ): Promise<RunWikiImplementResult[] | undefined> {
@@ -1029,7 +1029,7 @@ async function maybeAppendImplementation(
 		workerStartContext.runtime,
 		workerStartContext.claimEvents,
 		completed.completions,
-		completed.workerResults,
+		completed.workerReports,
 	);
 }
 
@@ -1049,7 +1049,7 @@ function releaseBatchForHostCompletion(
 	workerStartContext: RuntimeHostWorkerStartContext,
 	completed: Pick<
 		RunRuntimeHostOnceResult,
-		"completions" | "workerResults" | "hostErrors"
+		"completions" | "workerReports" | "hostErrors"
 	>,
 	releaseCheck: RuntimeHostReleaseCheck,
 	implementationAppends?: RunWikiImplementResult[],
@@ -1058,7 +1058,7 @@ function releaseBatchForHostCompletion(
 	return createRuntimeWorkerCompletionReleaseEvents(
 		releaseInputs(
 			completed.completions,
-			completed.workerResults,
+			completed.workerReports,
 			completed.hostErrors || [],
 		),
 		workerStartContext.claimEvents,
@@ -1185,14 +1185,14 @@ function workerStartHostErrors(
 
 function remediationForHostCompletion(
 	releaseCheck: RuntimeHostReleaseCheck,
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 	implementationPreviews: RunWikiImplementResult[],
 	hostErrors: CodewikiHostError[] = [],
 ): RuntimeHostRemediation | undefined {
 	if (releaseCheck.reason === "worker_failed") {
 		return terminalWorkerRemediation(
 			releaseCheck,
-			workerResults,
+			workerReports,
 			"retry_worker",
 			hostErrors,
 		);
@@ -1200,7 +1200,7 @@ function remediationForHostCompletion(
 	if (releaseCheck.reason === "worker_blocked") {
 		return terminalWorkerRemediation(
 			releaseCheck,
-			workerResults,
+			workerReports,
 			"planning",
 			hostErrors,
 		);
@@ -1253,14 +1253,14 @@ function implementationPreviewRemediation(
 
 function terminalWorkerRemediation(
 	releaseCheck: RuntimeHostReleaseCheck,
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 	route: RuntimeHostRemediationRoute,
 	hostErrors: CodewikiHostError[] = [],
 ): RuntimeHostRemediation {
 	return {
 		reason: releaseCheck.reason,
 		route,
-		blockers: workerResults
+		blockers: workerReports
 			.filter((result) => workerStatus(result) !== "completed")
 			.map(
 				(result) =>
@@ -1268,7 +1268,7 @@ function terminalWorkerRemediation(
 			),
 		refs: uniqueHostErrorRefs(hostErrors).length
 			? uniqueHostErrorRefs(hostErrors)
-			: workerResults.flatMap((result) => [
+			: workerReports.flatMap((result) => [
 					result.workUnitId,
 					...(result.planningRefs || result.planning_refs || []),
 					...(result.refs || []),
@@ -1390,17 +1390,17 @@ function worktreeFailureMessage(
 }
 
 function releaseCheckForHostCompletion(
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 	implementationPreviews: RunWikiImplementResult[],
 ): RuntimeHostReleaseCheck {
-	const terminal = terminalWorkerReleaseCheck(workerResults);
+	const terminal = terminalWorkerReleaseCheck(workerReports);
 	return terminal || releaseCheckForImplementation(implementationPreviews);
 }
 
 function terminalWorkerReleaseCheck(
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 ): RuntimeHostReleaseCheck | undefined {
-	const statuses = workerResults.map((result) => workerStatus(result));
+	const statuses = workerReports.map((result) => workerStatus(result));
 	if (statuses.includes("failed")) {
 		return { status: "ready", reason: "worker_failed", blockers: [] };
 	}
@@ -1411,7 +1411,7 @@ function terminalWorkerReleaseCheck(
 }
 
 function workerStatus(
-	worker: ImplementationWorkerResultInput,
+	worker: ImplementationWorkerReportInput,
 ): "completed" | "blocked" | "failed" {
 	const status = String(worker.status || "completed").toLowerCase();
 	return status === "blocked" || status === "failed" ? status : "completed";
@@ -1451,11 +1451,11 @@ function releaseCheckForImplementation(
 
 function releaseInputs(
 	completions: PiWorkerCompletionInput[],
-	workerResults: ImplementationWorkerResultInput[],
+	workerReports: ImplementationWorkerReportInput[],
 	hostErrors: CodewikiHostError[],
 ) {
 	const hostErrorsByWorker = hostErrorMap(hostErrors);
-	return workerResults.map((result, index) => ({
+	return workerReports.map((result, index) => ({
 		traceId: completions[index]?.workerStart.traceId,
 		workerId: result.workerId,
 		workUnitId: result.workUnitId,
@@ -1562,19 +1562,19 @@ function disposableWorkerStatusesFromResult(
 	result: Omit<RunRuntimeHostOnceResult, "mode" | "workerStatuses">,
 ): RuntimeDisposableWorkerStatus[] {
 	if (result.workers.length === 0) return [...result.handoff.workerStatuses];
-	const workerResults = new Map(
-		result.workerResults.map((workerResult) => [
-			workerResult.workerId,
-			workerResult,
+	const workerReports = new Map(
+		result.workerReports.map((workerReport) => [
+			workerReport.workerId,
+			workerReport,
 		]),
 	);
 	return result.workers.map((worker) => {
-		const workerResult = workerResults.get(worker.workerId);
+		const workerReport = workerReports.get(worker.workerId);
 		const executionPolicy = result.handoff.workers.find(
 			(candidate) => candidate.workerId === worker.workerId,
 		)?.executionPolicy;
-		const state = workerResult
-			? workerStatus(workerResult)
+		const state = workerReport
+			? workerStatus(workerReport)
 			: worker.status === "failed"
 				? "failed"
 				: "running";

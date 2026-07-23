@@ -4,9 +4,9 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import {
 	collectPiWorkerOutputFiles,
-	collectPiWorkerResults,
+	collectPiWorkerReports,
 	normalizePiWorkerCompletion,
-} from "../../src/pi/worker-results.ts";
+} from "../../src/pi/worker-reports.ts";
 
 function workerStart(overrides = {}) {
 	return {
@@ -24,7 +24,7 @@ function workerStart(overrides = {}) {
 }
 
 describe("Pi worker completion normalization", () => {
-	it("converts structured session output into implementation worker results", () => {
+	it("converts structured session output into implementation worker reports", () => {
 		const result = normalizePiWorkerCompletion({
 			workerStart: workerStart(),
 			output: JSON.stringify({
@@ -35,7 +35,7 @@ describe("Pi worker completion normalization", () => {
 				head_sha: "abc1234",
 				tree_sha: "def5678",
 				working_tree_digest: "sha256:abc123",
-				validation_ref: "tests/runtime/pi-worker-results.test.mjs",
+				validation_ref: "tests/runtime/pi-worker-reports.test.mjs",
 				changes: [
 					{
 						id: "IC-worker-a",
@@ -44,7 +44,7 @@ describe("Pi worker completion normalization", () => {
 							{
 								criterionId: "AC-001",
 								summary: "Worker evidence normalized.",
-								evidenceRefs: ["tests/runtime/pi-worker-results.test.mjs"],
+								evidenceRefs: ["tests/runtime/pi-worker-reports.test.mjs"],
 							},
 						],
 					},
@@ -72,7 +72,7 @@ describe("Pi worker completion normalization", () => {
 		assert.equal(result.workingTreeDigest, "sha256:abc123");
 		assert.equal(
 			result.validationRef,
-			"tests/runtime/pi-worker-results.test.mjs",
+			"tests/runtime/pi-worker-reports.test.mjs",
 		);
 		assert.equal(result.changeInputs[0].id, "IC-worker-a");
 	});
@@ -86,8 +86,8 @@ describe("Pi worker completion normalization", () => {
 				workUnitRef: planningRef,
 				message: "Implemented worker report parsing.",
 				notes: "Implementation loop must still evaluate exit.",
-				changedFiles: ["src/pi/worker-results.ts"],
-				checksRun: ["node --test tests/runtime/pi-worker-results.test.mjs"],
+				changedFiles: ["src/pi/worker-reports.ts"],
+				checksRun: ["node --test tests/runtime/pi-worker-reports.test.mjs"],
 				contentProofRefs: ["sha256:abcdef"],
 				residualRisks: ["No runtime process adapter yet."],
 				changes: [
@@ -96,7 +96,7 @@ describe("Pi worker completion normalization", () => {
 						planningRefs: [planningRef],
 						checkResults: [
 							{
-								command: "node --test tests/runtime/pi-worker-results.test.mjs",
+								command: "node --test tests/runtime/pi-worker-reports.test.mjs",
 								status: "pass",
 							},
 						],
@@ -104,7 +104,7 @@ describe("Pi worker completion normalization", () => {
 							{
 								criterionId: "AC-001",
 								summary: "Report evidence normalized.",
-								evidenceRefs: ["tests/runtime/pi-worker-results.test.mjs"],
+								evidenceRefs: ["tests/runtime/pi-worker-reports.test.mjs"],
 							},
 						],
 					},
@@ -114,9 +114,9 @@ describe("Pi worker completion normalization", () => {
 
 		assert.equal(result.status, "completed");
 		assert.deepEqual(result.planningRefs, [planningRef]);
-		assert.deepEqual(result.changedFiles, ["src/pi/worker-results.ts"]);
+		assert.deepEqual(result.changedFiles, ["src/pi/worker-reports.ts"]);
 		assert.deepEqual(result.checksRun, [
-			"node --test tests/runtime/pi-worker-results.test.mjs",
+			"node --test tests/runtime/pi-worker-reports.test.mjs",
 		]);
 		assert.equal(result.refs.includes("sha256:abcdef"), true);
 		assert.equal(
@@ -206,7 +206,7 @@ describe("Pi worker completion normalization", () => {
 			workerStart: workerStart(),
 			output: `\`\`\`codewiki-worker-report\n${JSON.stringify({
 				status: "completed | blocked | failed",
-				changedFiles: ["src/pi/worker-results.ts"],
+				changedFiles: ["src/pi/worker-reports.ts"],
 			})}\n\`\`\``,
 		});
 
@@ -231,7 +231,7 @@ describe("Pi worker completion normalization", () => {
 	});
 
 	it("collects worker output files in worker-start order", async () => {
-		const base = join(process.cwd(), ".tmp-worktrees/pi-worker-results");
+		const base = join(process.cwd(), ".tmp-worktrees/pi-worker-reports");
 		await mkdir(base, { recursive: true });
 		const root = await mkdtemp(join(base, "run-"));
 		try {
@@ -241,7 +241,7 @@ describe("Pi worker completion normalization", () => {
 				firstOutput,
 				`\`\`\`codewiki-worker-report\n${JSON.stringify({
 					status: "completed",
-					changedFiles: ["src/pi/worker-results.ts"],
+					changedFiles: ["src/pi/worker-reports.ts"],
 				})}\n\`\`\``,
 			);
 
@@ -257,7 +257,7 @@ describe("Pi worker completion normalization", () => {
 					outputFile: missingOutput,
 				}),
 			]);
-			const results = collectPiWorkerResults(completions);
+			const results = collectPiWorkerReports(completions);
 
 			assert.equal(
 				completions[0].output.includes("codewiki-worker-report"),
@@ -265,7 +265,7 @@ describe("Pi worker completion normalization", () => {
 			);
 			assert.equal(completions[1].workerStart.outputFile, missingOutput);
 			assert.equal(results[0].status, "completed");
-			assert.deepEqual(results[0].changedFiles, ["src/pi/worker-results.ts"]);
+			assert.deepEqual(results[0].changedFiles, ["src/pi/worker-reports.ts"]);
 			assert.equal(results[1].status, "failed");
 			assert.match(
 				results[1].message,
@@ -282,7 +282,7 @@ describe("Pi worker completion normalization", () => {
 		const completions = await collectPiWorkerOutputFiles([
 			workerStart({ workerId: "worker-no-output", outputFile: undefined }),
 		]);
-		const results = collectPiWorkerResults(completions);
+		const results = collectPiWorkerReports(completions);
 
 		assert.equal(
 			completions[0].error,
@@ -296,12 +296,12 @@ describe("Pi worker completion normalization", () => {
 	});
 
 	it("collects multiple completions in worker-start order", () => {
-		const results = collectPiWorkerResults([
+		const results = collectPiWorkerReports([
 			{
 				workerStart: workerStart({ workUnitId: "WU-a", workerId: "worker-a" }),
 				output: {
 					status: "completed",
-					changedFiles: ["src/pi/worker-results.ts"],
+					changedFiles: ["src/pi/worker-reports.ts"],
 				},
 			},
 			{

@@ -5,15 +5,15 @@ import {
 import { changedPaths as implementationChangedPaths } from "./evidence.ts";
 import type { ImplementationChange } from "./types.ts";
 import {
-	aggregateImplementationWorkerResults,
-	type ImplementationWorkerResultInput,
+	aggregateImplementationWorkerReports,
+	type ImplementationWorkerReportInput,
 } from "./workers.ts";
 import { workerProofRefs } from "./worker-proof.ts";
 
 export interface ImplementationMergeContentProofInput {
 	repoRoot: string;
 	changes?: ImplementationChange[];
-	workerResults?: ImplementationWorkerResultInput[];
+	workerReports?: ImplementationWorkerReportInput[];
 	proofPaths?: string[];
 	changedPaths?: string[];
 	evidencePaths?: string[];
@@ -33,8 +33,8 @@ export interface ImplementationMergeContentProof {
 export async function createImplementationMergeContentProof(
 	input: ImplementationMergeContentProofInput,
 ): Promise<ImplementationMergeContentProof> {
-	const workerProofs = aggregateImplementationWorkerResults(
-		input.workerResults,
+	const workerProofs = aggregateImplementationWorkerReports(
+		input.workerReports,
 	).workerProofs;
 	const proofPaths = implementationMergeProofPaths(input, workerProofs);
 	return {
@@ -58,7 +58,7 @@ export async function createImplementationMergeContentProof(
 function implementationMergeProofPaths(
 	input: ImplementationMergeContentProofInput,
 	workerProofs: ReturnType<
-		typeof aggregateImplementationWorkerResults
+		typeof aggregateImplementationWorkerReports
 	>["workerProofs"],
 ): string[] {
 	if (input.proofPaths) return normalizePaths(input.proofPaths);

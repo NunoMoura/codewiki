@@ -757,7 +757,7 @@ describe("implementation iteration runner", () => {
 		);
 	});
 
-	it("aggregates completed worker results into implementation changes", () => {
+	it("aggregates completed worker reports into implementation changes", () => {
 		const planning = planningEvents();
 		const planningEvent = planningWorkEvent(planning);
 		const claim = runtimeClaimEvent(planningEvent, {
@@ -769,7 +769,7 @@ describe("implementation iteration runner", () => {
 			planningEvents: planning,
 			claimEvents: [claim],
 			aggregateContentProof: { workingTreeDigest: "sha256:abcd1234" },
-			workerResults: [
+			workerReports: [
 				{
 					workerId: "worker-1",
 					workUnitId: "WU-001",
@@ -787,7 +787,7 @@ describe("implementation iteration runner", () => {
 							acceptanceEvidenceItems: [
 								{
 									criterionId: "AC-001",
-									summary: "Worker result provides evidence.",
+									summary: "Worker report provides evidence.",
 									evidenceRefs: [
 										"tests/implementation/implementation-iteration.test.mjs",
 									],
@@ -826,7 +826,7 @@ describe("implementation iteration runner", () => {
 			"claim-WU-001",
 		);
 		assert.equal(
-			result.traceEvents[0].data?.output?.workerResults[0].workerId,
+			result.traceEvents[0].data?.output?.workerReports[0].workerId,
 			"worker-1",
 		);
 		assert.match(
@@ -852,7 +852,7 @@ describe("implementation iteration runner", () => {
 			planningEvents: planning,
 			claimEvents: [claim],
 			aggregateContentProof: { workingTreeDigest: "sha256:abcdef" },
-			workerResults: [
+			workerReports: [
 				{
 					workerId: "worker-proof-fill",
 					workUnitId: "WU-001",
@@ -986,7 +986,7 @@ describe("implementation iteration runner", () => {
 			traceId: "TRACE-implementation",
 			planningEvents: planning,
 			claimEvents: [claim],
-			workerResults: [
+			workerReports: [
 				{
 					workerId: "worker-merge-proof",
 					workUnitId: "WU-001",
@@ -1036,7 +1036,7 @@ describe("implementation iteration runner", () => {
 			traceId: "TRACE-implementation",
 			planningEvents: planning,
 			claimEvents: [claim],
-			workerResults: [
+			workerReports: [
 				{
 					workerId: "worker-blocked",
 					workUnitId: "WU-001",
@@ -1060,7 +1060,7 @@ describe("implementation iteration runner", () => {
 		assert.equal(result.workerAggregation.blocked.length, 1);
 	});
 
-	it("rejects worker results without an active runtime claim", () => {
+	it("rejects worker reports without an active runtime claim", () => {
 		const planning = planningEvents();
 		const planningEvent = planningWorkEvent(planning);
 		const claim = runtimeClaimEvent(planningEvent, {
@@ -1083,7 +1083,7 @@ describe("implementation iteration runner", () => {
 			traceId: "TRACE-implementation",
 			planningEvents: planning,
 			claimEvents: [claim, release],
-			workerResults: [
+			workerReports: [
 				{
 					workerId: "worker-released",
 					workUnitId: "WU-001",
@@ -1123,7 +1123,7 @@ describe("implementation iteration runner", () => {
 		const unknown = evaluateImplementationExit({
 			planningRefs: [planningEvent.id],
 			changes: [],
-			workerResults: [
+			workerReports: [
 				{
 					workerId: "worker-unknown",
 					workUnitId: "WU-001",

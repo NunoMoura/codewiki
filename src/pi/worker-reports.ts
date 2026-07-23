@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import type { ImplementationChangeInput } from "../implementation/types.ts";
 import type {
 	ImplementationWorkerBlockerInput,
-	ImplementationWorkerResultInput,
+	ImplementationWorkerReportInput,
 } from "../implementation/workers.ts";
 import type { PiWorkerStartResult } from "./worker-start.ts";
 
@@ -26,9 +26,9 @@ export async function collectPiWorkerOutputFiles(
 	return Promise.all(workers.map(collectPiWorkerOutputFile));
 }
 
-export function collectPiWorkerResults(
+export function collectPiWorkerReports(
 	inputs: PiWorkerCompletionInput[],
-): ImplementationWorkerResultInput[] {
+): ImplementationWorkerReportInput[] {
 	return inputs.map(normalizePiWorkerCompletion);
 }
 
@@ -56,7 +56,7 @@ async function collectPiWorkerOutputFile(
 
 export function normalizePiWorkerCompletion(
 	input: PiWorkerCompletionInput,
-): ImplementationWorkerResultInput {
+): ImplementationWorkerReportInput {
 	const parsed = parseCompletionOutput(input.output);
 	const data = parsed.data;
 	const status = completionStatus(input, parsed);
@@ -81,17 +81,17 @@ export function normalizePiWorkerCompletion(
 }
 
 function guardEmptyCompletedWorkerEvidence(
-	result: ImplementationWorkerResultInput,
-): ImplementationWorkerResultInput {
-	if (result.status !== "completed" || hasImplementationEvidence(result)) {
-		return result;
+	report: ImplementationWorkerReportInput,
+): ImplementationWorkerReportInput {
+	if (report.status !== "completed" || hasImplementationEvidence(report)) {
+		return report;
 	}
 	return {
-		...result,
+		...report,
 		status: "failed",
 		message: [
 			"completion_guard: completed worker produced no implementation evidence.",
-			result.message,
+			report.message,
 		]
 			.filter(Boolean)
 			.join(" "),
@@ -99,16 +99,16 @@ function guardEmptyCompletedWorkerEvidence(
 }
 
 function hasImplementationEvidence(
-	result: ImplementationWorkerResultInput,
+	report: ImplementationWorkerReportInput,
 ): boolean {
 	return [
-		result.changedFiles,
-		result.changed_files,
-		result.checksRun,
-		result.checks_run,
-		result.changeInputs,
-		result.change_inputs,
-		result.refs,
+		report.changedFiles,
+		report.changed_files,
+		report.checksRun,
+		report.checks_run,
+		report.changeInputs,
+		report.change_inputs,
+		report.refs,
 	].some((items) => Array.isArray(items) && items.length > 0);
 }
 
@@ -163,7 +163,7 @@ function parseJsonObject(value: string): Record<string, unknown> | undefined {
 function completionStatus(
 	input: PiWorkerCompletionInput,
 	parsed: ParsedCompletionOutput,
-): ImplementationWorkerResultInput["status"] {
+): ImplementationWorkerReportInput["status"] {
 	if (
 		input.error ||
 		input.workerStart.status === "failed" ||
@@ -191,7 +191,7 @@ function completionPlanningRefs(
 function completionSession(
 	input: PiWorkerCompletionInput,
 	data: Record<string, unknown>,
-): Partial<ImplementationWorkerResultInput> {
+): Partial<ImplementationWorkerReportInput> {
 	return {
 		...optionalTextField(
 			"sessionId",
@@ -208,7 +208,7 @@ function completionMessage(
 	input: PiWorkerCompletionInput,
 	data: Record<string, unknown>,
 	parsed: ParsedCompletionOutput,
-): Partial<ImplementationWorkerResultInput> {
+): Partial<ImplementationWorkerReportInput> {
 	const message = [
 		parsed.parseError,
 		invalidStatusMessage(data.status),
@@ -229,7 +229,7 @@ function completionMessage(
 
 function completionRefs(
 	data: Record<string, unknown>,
-): Partial<ImplementationWorkerResultInput> {
+): Partial<ImplementationWorkerReportInput> {
 	const refs = unique([
 		...stringList(data.refs),
 		...stringList(data.references),
@@ -243,7 +243,7 @@ function completionRefs(
 
 function completionChanges(
 	data: Record<string, unknown>,
-): Partial<ImplementationWorkerResultInput> {
+): Partial<ImplementationWorkerReportInput> {
 	const changeInputs = [
 		...objectList<ImplementationChangeInput>(data.changeInputs),
 		...objectList<ImplementationChangeInput>(data.change_inputs),
@@ -254,7 +254,7 @@ function completionChanges(
 
 function completionProof(
 	data: Record<string, unknown>,
-): Partial<ImplementationWorkerResultInput> {
+): Partial<ImplementationWorkerReportInput> {
 	return {
 		...optionalObjectField(
 			"proof",
@@ -287,7 +287,7 @@ function completionProof(
 
 function completionBlockers(
 	data: Record<string, unknown>,
-): Partial<ImplementationWorkerResultInput> {
+): Partial<ImplementationWorkerReportInput> {
 	const blockers = objectList<ImplementationWorkerBlockerInput>(data.blockers);
 	return blockers.length > 0 ? { blockers } : {};
 }

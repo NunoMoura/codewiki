@@ -373,7 +373,7 @@ Users uses a persistent user rail on desktop and a labeled selector on mobile. S
 
 Stories uses a browsable story collection organized around user promise, acceptance signals, audience, related UIs, System realization, and active Changes. Story detail expands inside the same workspace and restores prior scroll and focus on Back.
 
-Dictionary renders `.codewiki/kb/lexicon.md` as the canonical vocabulary reference. It provides exact-term search, alphabetical navigation, stable anchors, deprecated-term redirects, technical backing, and related terms without copying definitions into dashboard state. Runtime inspectors and contextual help link unfamiliar qualified terms such as Assignment packet or Worker receipt to their exact entry. Unknown terms remain undefined rather than receiving model-generated authority.
+Dictionary renders `.codewiki/kb/lexicon.md` as the canonical vocabulary reference. It provides exact-term search, alphabetical navigation, stable anchors, deprecated-term redirects, technical backing, and related terms without copying definitions into dashboard state. Runtime inspectors and contextual help link unfamiliar qualified terms such as Assignment packet or Worker report to their exact entry. Unknown terms remain undefined rather than receiving model-generated authority.
 
 Product Markdown remains source truth. Dashboard editing proposes deterministic canonical patches; it does not duplicate descriptions, infer audience from prose, or create a second glossary.
 

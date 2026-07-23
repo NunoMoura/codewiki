@@ -90,7 +90,7 @@ export interface WorkerExecutionPolicySnapshot {
 	escalation: ResolvedExecutionPolicy["escalation"];
 }
 
-export interface WorkerExecutionReceipt {
+export interface WorkerExecutionVerification {
 	policyDigest: string;
 	routeId: string;
 	usage: WorkerExecutionUsage;
@@ -158,7 +158,7 @@ export function workerExecutionPolicySnapshot(
 export function verifyWorkerExecutionUsage(
 	policy: WorkerExecutionPolicySnapshot,
 	usage: WorkerExecutionUsage | undefined,
-): WorkerExecutionReceipt {
+): WorkerExecutionVerification {
 	if (!usage) throw new Error("Worker usage telemetry is missing.");
 	for (const [field, value] of Object.entries(usage)) {
 		if (!Number.isFinite(value) || value < 0) {

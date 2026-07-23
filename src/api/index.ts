@@ -33,7 +33,7 @@ export type {
 	ImplementationChangeInput,
 	ImplementationWorkerClaim,
 } from "../implementation/types.ts";
-export type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
+export type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
 export type {
 	ImplementationWorkerProof,
 	ImplementationWorkerProofConflict,

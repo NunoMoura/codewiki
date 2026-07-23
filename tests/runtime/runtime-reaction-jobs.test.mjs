@@ -66,56 +66,56 @@ function approvedCoordinator(root, generationId) {
 	return coordinator;
 }
 
-test("Implementation reaction identity includes stable exact worker-result context", () => {
+test("Implementation reaction identity includes stable exact worker-report context", () => {
 	const reaction = {
 		schemaVersion: 1,
 		status: "ready",
 		trigger: { kind: "timer_due", occurredAt: "2026-08-09T00:00:00.000Z" },
-		observedWorkStateDigest: "sha256:worker-result-context",
+		observedWorkStateDigest: "sha256:worker-report-context",
 		selection: {
 			loop: "implementation",
-			sprintId: "SPR-worker-result-context",
-			workItemIds: ["WU-worker-result-context"],
-			changeIds: ["CHG-worker-result-context"],
-			pathScopes: ["src/worker-result.ts"],
+			sprintId: "SPR-worker-report-context",
+			workItemIds: ["WU-worker-report-context"],
+			changeIds: ["CHG-worker-report-context"],
+			pathScopes: ["src/worker-report.ts"],
 			componentRefs: ["runtime"],
 		},
 	};
-	const workerResult = {
+	const workerReport = {
 		workerId: "worker:context",
-		workUnitId: "WU-worker-result-context",
+		workUnitId: "WU-worker-report-context",
 		claimId: "claim:context",
-		planningRefs: ["trace:planning#work:WU-worker-result-context"],
+		planningRefs: ["trace:planning#work:WU-worker-report-context"],
 		status: "completed",
-		refs: ["runtime-worker-receipt:context"],
+		refs: ["runtime-worker-report:context"],
 	};
 	const first = runtimeReactionJob({
-		repoRoot: "/tmp/codewiki-worker-result-context",
+		repoRoot: "/tmp/codewiki-worker-report-context",
 		reaction,
 		adapters: {},
-		implementationWorkerResults: [workerResult],
+		implementationWorkerReports: [workerReport],
 	});
 	const reordered = runtimeReactionJob({
-		repoRoot: "/tmp/codewiki-worker-result-context",
+		repoRoot: "/tmp/codewiki-worker-report-context",
 		reaction,
 		adapters: {},
-		implementationWorkerResults: [
+		implementationWorkerReports: [
 			{
-				refs: workerResult.refs,
-				status: workerResult.status,
-				planningRefs: workerResult.planningRefs,
-				claimId: workerResult.claimId,
-				workUnitId: workerResult.workUnitId,
-				workerId: workerResult.workerId,
+				refs: workerReport.refs,
+				status: workerReport.status,
+				planningRefs: workerReport.planningRefs,
+				claimId: workerReport.claimId,
+				workUnitId: workerReport.workUnitId,
+				workerId: workerReport.workerId,
 			},
 		],
 	});
 	const changed = runtimeReactionJob({
-		repoRoot: "/tmp/codewiki-worker-result-context",
+		repoRoot: "/tmp/codewiki-worker-report-context",
 		reaction,
 		adapters: {},
-		implementationWorkerResults: [
-			{ ...workerResult, refs: ["runtime-worker-receipt:changed"] },
+		implementationWorkerReports: [
+			{ ...workerReport, refs: ["runtime-worker-report:changed"] },
 		],
 	});
 	assert.equal(first.idempotencyKey, reordered.idempotencyKey);

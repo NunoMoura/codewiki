@@ -32,10 +32,10 @@ import {
 } from "./loop.ts";
 import { workerProofRefs } from "./worker-proof.ts";
 import type {
-	ImplementationWorkerAggregation,
-	ImplementationWorkerResultInput,
+	ImplementationWorkerReportAggregation,
+	ImplementationWorkerReportInput,
 } from "./workers.ts";
-import { aggregateImplementationWorkerResults } from "./workers.ts";
+import { aggregateImplementationWorkerReports } from "./workers.ts";
 import {
 	evidenceRefsForReport,
 	mergeImplementationEvidenceReports,
@@ -58,7 +58,7 @@ export interface ImplementationIterationInput {
 	planningEvents: TraceEvent[];
 	changes?: ImplementationChange[];
 	changeInputs?: ImplementationChangeInput[];
-	workerResults?: ImplementationWorkerResultInput[];
+	workerReports?: ImplementationWorkerReportInput[];
 	workerClaims?: ImplementationWorkerClaim[];
 	claimEvents?: TraceEvent[];
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
@@ -82,7 +82,7 @@ export interface ImplementationIterationResult {
 	planningRefs: string[];
 	acceptanceRequirements: AcceptanceRequirement[];
 	planningScopes: PlanningImplementationScope[];
-	workerAggregation: ImplementationWorkerAggregation;
+	workerAggregation: ImplementationWorkerReportAggregation;
 	workerClaims: ImplementationWorkerClaim[];
 	aggregateContentProof?: ContentProof;
 	changes: ImplementationChange[];
@@ -105,8 +105,8 @@ export function runImplementationIteration(
 	const acceptanceRequirements =
 		acceptanceRequirementsFromPlanningEvents(routeSourceEvents);
 	const planningScopes = planningScopesFromEvents(routeSourceEvents);
-	const workerAggregation = aggregateImplementationWorkerResults(
-		input.workerResults,
+	const workerAggregation = aggregateImplementationWorkerReports(
+		input.workerReports,
 	);
 	const workerClaims =
 		input.workerClaims ??
@@ -134,7 +134,7 @@ export function runImplementationIteration(
 		existingPaths: input.existingPaths,
 		requireTddEvidence: input.requireTddEvidence,
 		aggregateContentProof,
-		workerResults: workerAggregation.workerResults,
+		workerReports: workerAggregation.workerReports,
 		workerProofs: workerAggregation.workerProofs,
 		workerProofConflicts: workerAggregation.workerProofConflicts,
 		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
@@ -213,8 +213,8 @@ export async function runImplementationIterationWithRunner(
 	const acceptanceRequirements =
 		acceptanceRequirementsFromPlanningEvents(routeSourceEvents);
 	const planningScopes = planningScopesFromEvents(routeSourceEvents);
-	const workerAggregation = aggregateImplementationWorkerResults(
-		input.workerResults,
+	const workerAggregation = aggregateImplementationWorkerReports(
+		input.workerReports,
 	);
 	const workerClaims =
 		input.workerClaims ??
@@ -242,7 +242,7 @@ export async function runImplementationIterationWithRunner(
 		existingPaths: input.existingPaths,
 		requireTddEvidence: input.requireTddEvidence,
 		aggregateContentProof,
-		workerResults: workerAggregation.workerResults,
+		workerReports: workerAggregation.workerReports,
 		workerProofs: workerAggregation.workerProofs,
 		workerProofConflicts: workerAggregation.workerProofConflicts,
 		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
@@ -373,7 +373,7 @@ function implementationTraceEvents(args: {
 	planningRefs: string[];
 	acceptanceRequirements: AcceptanceRequirement[];
 	planningScopes: PlanningImplementationScope[];
-	workerAggregation: ImplementationWorkerAggregation;
+	workerAggregation: ImplementationWorkerReportAggregation;
 	workerClaims: ImplementationWorkerClaim[];
 	aggregateContentProof?: ContentProof;
 	changes: ImplementationChange[];
@@ -415,7 +415,7 @@ function implementationTraceEvents(args: {
 				planningRefs,
 				acceptanceRequirements,
 				planningScopes,
-				workerResults: workerAggregation.workerResults,
+				workerReports: workerAggregation.workerReports,
 				workerProofs: workerAggregation.workerProofs,
 				workerProofConflicts: workerAggregation.workerProofConflicts,
 				workerClaims,
@@ -442,7 +442,7 @@ function implementationOutputRefs(
 	planningRefs: string[],
 	changes: ImplementationChange[],
 	planningScopes: PlanningImplementationScope[],
-	workerAggregation: ImplementationWorkerAggregation,
+	workerAggregation: ImplementationWorkerReportAggregation,
 	aggregateContentProof?: ContentProof,
 	componentMap?: SourceMapContract,
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[],

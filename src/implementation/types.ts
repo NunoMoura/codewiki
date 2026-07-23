@@ -140,7 +140,7 @@ export interface ImplementationWorkerClaim {
 	expiresAt?: string;
 }
 
-export interface ImplementationWorkerSummary {
+export interface ImplementationWorkerReportSummary {
 	workerId: string;
 	workUnitId: string;
 	planningRefs: string[];
@@ -315,7 +315,7 @@ export interface ImplementationExitInput {
 	existingPaths?: string[];
 	requireTddEvidence?: boolean;
 	aggregateContentProof?: ContentProof;
-	workerResults?: ImplementationWorkerSummary[];
+	workerReports?: ImplementationWorkerReportSummary[];
 	workerProofs?: import("./worker-proof.ts").ImplementationWorkerProof[];
 	workerProofConflicts?: import("./worker-proof.ts").ImplementationWorkerProofConflict[];
 	expectedWorkerBaseSha?: string;

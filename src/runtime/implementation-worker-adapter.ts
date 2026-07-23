@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
 import type { WorktreeRef } from "../git/worktrees.ts";
 import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
@@ -21,7 +21,7 @@ export interface ImplementationWorkerAssignment {
 	sourceBaseRef: string;
 	contextDigest: string;
 	prompt: string;
-	resultPath: string;
+	reportPath: string;
 	isolation:
 		| { kind: "worktree"; ref: string }
 		| { kind: "container"; ref: string };
@@ -29,13 +29,13 @@ export interface ImplementationWorkerAssignment {
 	executionPolicy?: WorkerExecutionPolicySnapshot;
 }
 
-export interface ImplementationWorkerExecutionResult {
+export interface ImplementationWorkerReport {
 	assignmentId: string;
 	workerId: string;
 	workItemId: string;
 	status: "completed" | "blocked" | "failed";
-	receiptRef: string;
-	workerResult?: ImplementationWorkerResultInput;
+	reportRef: string;
+	implementationEvidence?: ImplementationWorkerReportInput;
 	sessionId?: string;
 	sessionFile?: string;
 	outputFile?: string;
@@ -48,10 +48,10 @@ export interface ImplementationWorkerAdapter {
 	execute(
 		assignment: ImplementationWorkerAssignment,
 		signal: AbortSignal,
-	): Promise<ImplementationWorkerExecutionResult>;
+	): Promise<ImplementationWorkerReport>;
 	recover(
 		assignment: ImplementationWorkerAssignment,
-	): Promise<ImplementationWorkerExecutionResult | undefined>;
+	): Promise<ImplementationWorkerReport | undefined>;
 }
 
 export function implementationWorkerJobId(
@@ -78,7 +78,7 @@ export function implementationWorkerJobId(
 				promptDigest: createHash("sha256")
 					.update(assignment.prompt)
 					.digest("hex"),
-				resultPath: assignment.resultPath,
+				reportPath: assignment.reportPath,
 				isolation: assignment.isolation,
 				worktree: assignment.worktree,
 				executionPolicyDigest: assignment.executionPolicy?.digest,
@@ -108,7 +108,7 @@ export function assertImplementationWorkerAssignment(
 		sourceBaseRef: assignment.sourceBaseRef,
 		contextDigest: assignment.contextDigest,
 		prompt: assignment.prompt,
-		resultPath: assignment.resultPath,
+		reportPath: assignment.reportPath,
 	})) {
 		if (typeof value !== "string" || !value.trim()) {
 			throw new Error(`Implementation worker assignment ${field} is required.`);
@@ -154,32 +154,32 @@ function compareText(left: string, right: string): number {
 	return 0;
 }
 
-export function assertImplementationWorkerResult(
+export function assertImplementationWorkerReport(
 	assignment: ImplementationWorkerAssignment,
-	result: ImplementationWorkerExecutionResult,
+	report: ImplementationWorkerReport,
 ): void {
 	if (
-		result.assignmentId !== assignment.assignmentId ||
-		result.workerId !== assignment.workerId ||
-		result.workItemId !== assignment.workItemId
+		report.assignmentId !== assignment.assignmentId ||
+		report.workerId !== assignment.workerId ||
+		report.workItemId !== assignment.workItemId
 	) {
 		throw new Error(
-			"Implementation worker result identity does not match assignment.",
+			"Implementation worker report identity does not match assignment.",
 		);
 	}
-	if (!result.receiptRef.trim()) {
-		throw new Error("Implementation worker result receiptRef is required.");
+	if (!report.reportRef.trim()) {
+		throw new Error("Implementation worker report ref is required.");
 	}
 	if (
-		result.workerResult &&
-		(result.workerResult.workerId !== assignment.workerId ||
-			result.workerResult.workUnitId !== assignment.workItemId)
+		report.implementationEvidence &&
+		(report.implementationEvidence.workerId !== assignment.workerId ||
+			report.implementationEvidence.workUnitId !== assignment.workItemId)
 	) {
 		throw new Error(
 			"Implementation worker evidence identity does not match assignment.",
 		);
 	}
-	if (!(["completed", "blocked", "failed"] as const).includes(result.status)) {
-		throw new Error("Implementation worker result status is invalid.");
+	if (!(["completed", "blocked", "failed"] as const).includes(report.status)) {
+		throw new Error("Implementation worker report status is invalid.");
 	}
 }

@@ -13,7 +13,7 @@ import { runDetachedTraceHostCommand } from "./trace-host-process.ts";
 import {
 	verifyWorkerExecutionUsage,
 	type WorkerExecutionPolicySnapshot,
-	type WorkerExecutionReceipt,
+	type WorkerExecutionVerification,
 	type WorkerExecutionUsage,
 } from "../runtime/execution-policy.ts";
 import type {
@@ -250,7 +250,7 @@ class PiProcessSession implements PiWorkerSession {
 	sessionFile?: string;
 	outputFile?: string;
 	pid?: number;
-	executionReceipt?: WorkerExecutionReceipt;
+	executionVerification?: WorkerExecutionVerification;
 	private readonly input: PolicyAwareWorkerSessionInput;
 	private readonly options: PiProcessSessionFactoryOptions;
 
@@ -276,7 +276,7 @@ class PiProcessSession implements PiWorkerSession {
 			throw new Error(processFailureMessage(result));
 		}
 		if (this.input.executionPolicy) {
-			this.executionReceipt = verifyWorkerExecutionUsage(
+			this.executionVerification = verifyWorkerExecutionUsage(
 				this.input.executionPolicy,
 				result.usage ||
 					workerUsageFromOutput(result.stdout, Date.now() - startedAt),

@@ -52,7 +52,7 @@ function completedResult(assignment, status = "completed") {
 		workerId: assignment.workerId,
 		workItemId: assignment.workItemId,
 		status,
-		receiptRef: `runtime-worker-receipt:${assignment.assignmentId}`,
+		reportRef: `runtime-worker-report:${assignment.assignmentId}`,
 	};
 }
 
@@ -147,7 +147,7 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 				repoRoot: root,
 				reactor: new RuntimeReactor(root),
 				assignment: executions[0],
-				result: persisted.get(executions[0].assignmentId),
+				report: persisted.get(executions[0].assignmentId),
 				claimEvent: claim,
 				createdAt: "2026-07-21T10:00:01.500Z",
 			}).run(new AbortController().signal),
@@ -210,8 +210,8 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 			/^implementation-worker-release:[a-f0-9]{64}$/,
 		);
 		assert.match(
-			releaseEvents[0].data?.workerReceiptRef,
-			/^runtime-worker-receipt:/,
+			releaseEvents[0].data?.workerReportRef,
+			/^runtime-worker-report:/,
 		);
 	} finally {
 		client.disconnect();
@@ -343,9 +343,9 @@ test("authenticated project-service clients trigger automatic worker reconciliat
 			semanticAdapters: {
 				implementation(invocation) {
 					semanticExecutions += 1;
-					assert.equal(invocation.workerResults.length, 1);
+					assert.equal(invocation.workerReports.length, 1);
 					assert.equal(
-						invocation.workerResults[0].workUnitId,
+						invocation.workerReports[0].workUnitId,
 						fixture.workItemId,
 					);
 					return {};
@@ -399,7 +399,7 @@ test("authenticated project-service clients trigger automatic worker reconciliat
 	}
 });
 
-test("failed worker receipts release claims without becoming Implementation truth", async () => {
+test("failed worker reports release claims without becoming Implementation truth", async () => {
 	const root = await mkdtemp(`${tmpdir()}/codewiki-worker-failed-release-`);
 	const fixture = await seedRuntimeImplementation(root, {
 		suffix: "worker-failed-release",

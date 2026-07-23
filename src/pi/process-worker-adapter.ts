@@ -4,10 +4,10 @@ import { mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import {
 	assertImplementationWorkerAssignment,
-	assertImplementationWorkerResult,
+	assertImplementationWorkerReport,
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
-	type ImplementationWorkerExecutionResult,
+	type ImplementationWorkerReport,
 } from "../runtime/implementation-worker-adapter.ts";
 import {
 	createPiProcessSessionFactory,
@@ -15,8 +15,8 @@ import {
 } from "./process-session.ts";
 import {
 	collectPiWorkerOutputFiles,
-	collectPiWorkerResults,
-} from "./worker-results.ts";
+	collectPiWorkerReports,
+} from "./worker-reports.ts";
 import {
 	startPiWorkerAssignment,
 	type PiWorkerSessionFactory,
@@ -42,9 +42,9 @@ async function executePiProcessWorker(
 	assignment: ImplementationWorkerAssignment,
 	signal: AbortSignal,
 	options: PiProcessImplementationWorkerAdapterOptions,
-): Promise<ImplementationWorkerExecutionResult> {
+): Promise<ImplementationWorkerReport> {
 	assertImplementationWorkerAssignment(assignment);
-	assertResultPath(assignment);
+	assertReportPath(assignment);
 	if (assignment.isolation.kind !== "worktree" || !assignment.worktree?.path) {
 		throw new Error("Pi process workers require explicit worktree isolation.");
 	}
@@ -56,7 +56,7 @@ async function executePiProcessWorker(
 	}
 	if (signal.aborted)
 		throw new Error("Implementation worker assignment aborted.");
-	const outputFile = `${assignment.resultPath}.worker-output`;
+	const outputFile = `${assignment.reportPath}.worker-output`;
 	const processFactory = createPiProcessSessionFactory({
 		...options.process,
 		cwd: assignment.worktree.path,
@@ -87,16 +87,16 @@ async function executePiProcessWorker(
 		throw new Error("Implementation worker assignment aborted.");
 	await assertBoundedFile(outputFile, 2 * 1024 * 1024, "worker output");
 	const completions = await collectPiWorkerOutputFiles([workerStart]);
-	const workerResult = collectPiWorkerResults(completions)[0];
-	if (!workerResult) {
-		throw new Error("Pi process worker did not produce a normalized result.");
+	const implementationEvidence = collectPiWorkerReports(completions)[0];
+	if (!implementationEvidence) {
+		throw new Error("Pi process worker did not produce a normalized report.");
 	}
-	const resultWithoutReceipt = {
+	const reportWithoutRef = {
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
 		workItemId: assignment.workItemId,
-		status: workerExecutionStatus(workerResult.status),
-		workerResult,
+		status: workerReportStatus(implementationEvidence.status),
+		implementationEvidence,
 		...(workerStart.sessionId ? { sessionId: workerStart.sessionId } : {}),
 		...(workerStart.sessionFile
 			? { sessionFile: workerStart.sessionFile }
@@ -104,48 +104,48 @@ async function executePiProcessWorker(
 		...(workerStart.outputFile ? { outputFile: workerStart.outputFile } : {}),
 		...(workerStart.pid ? { pid: workerStart.pid } : {}),
 		...(workerStart.error ? { error: workerStart.error } : {}),
-	} satisfies Omit<ImplementationWorkerExecutionResult, "receiptRef">;
-	const receiptRef = workerReceiptRef(resultWithoutReceipt);
-	const result: ImplementationWorkerExecutionResult = {
-		...resultWithoutReceipt,
-		receiptRef,
+	} satisfies Omit<ImplementationWorkerReport, "reportRef">;
+	const reportRef = workerReportRef(reportWithoutRef);
+	const report: ImplementationWorkerReport = {
+		...reportWithoutRef,
+		reportRef,
 	};
-	assertImplementationWorkerResult(assignment, result);
-	await writeReceipt(assignment.resultPath, result);
-	return result;
+	assertImplementationWorkerReport(assignment, report);
+	await writeReport(assignment.reportPath, report);
+	return report;
 }
 
 async function recoverPiProcessWorker(
 	assignment: ImplementationWorkerAssignment,
-): Promise<ImplementationWorkerExecutionResult | undefined> {
+): Promise<ImplementationWorkerReport | undefined> {
 	assertImplementationWorkerAssignment(assignment);
-	assertResultPath(assignment);
+	assertReportPath(assignment);
 	let source: string;
 	try {
 		await assertBoundedFile(
-			assignment.resultPath,
+			assignment.reportPath,
 			1024 * 1024,
-			"worker recovery receipt",
+			"worker recovery report",
 		);
-		source = await readFile(assignment.resultPath, "utf8");
+		source = await readFile(assignment.reportPath, "utf8");
 	} catch (error) {
 		if (isNotFound(error)) return undefined;
 		throw error;
 	}
-	let result: ImplementationWorkerExecutionResult;
+	let report: ImplementationWorkerReport;
 	try {
-		result = JSON.parse(source) as ImplementationWorkerExecutionResult;
+		report = JSON.parse(source) as ImplementationWorkerReport;
 	} catch {
-		throw new Error("Implementation worker recovery receipt is invalid JSON.");
+		throw new Error("Implementation worker recovery report is invalid JSON.");
 	}
-	assertImplementationWorkerResult(assignment, result);
-	const { receiptRef, ...resultWithoutReceipt } = result;
-	if (receiptRef !== workerReceiptRef(resultWithoutReceipt)) {
+	assertImplementationWorkerReport(assignment, report);
+	const { reportRef, ...reportWithoutRef } = report;
+	if (reportRef !== workerReportRef(reportWithoutRef)) {
 		throw new Error(
-			"Implementation worker recovery receipt digest does not match.",
+			"Implementation worker recovery report digest does not match.",
 		);
 	}
-	return result;
+	return report;
 }
 
 function policySessionFactory(
@@ -163,30 +163,30 @@ function policySessionFactory(
 	};
 }
 
-async function writeReceipt(
+async function writeReport(
 	path: string,
-	result: ImplementationWorkerExecutionResult,
+	report: ImplementationWorkerReport,
 ): Promise<void> {
 	await mkdir(dirname(path), { recursive: true, mode: 0o700 });
 	const temporaryPath = `${path}.${process.pid}.tmp`;
-	await writeFile(temporaryPath, `${JSON.stringify(result)}\n`, {
+	await writeFile(temporaryPath, `${JSON.stringify(report)}\n`, {
 		encoding: "utf8",
 		mode: 0o600,
 	});
 	await rename(temporaryPath, path);
 }
 
-function assertResultPath(assignment: ImplementationWorkerAssignment): void {
+function assertReportPath(assignment: ImplementationWorkerAssignment): void {
 	const runtimeRoot = resolve(
 		realpathSync(assignment.repoRoot),
 		".codewiki",
 		"runtime",
 	);
-	const target = resolve(assignment.resultPath);
+	const target = resolve(assignment.reportPath);
 	const child = relative(runtimeRoot, target);
 	if (!child || child.startsWith("..") || child.includes("\0")) {
 		throw new Error(
-			"Implementation worker resultPath must stay below .codewiki/runtime.",
+			"Implementation worker reportPath must stay below .codewiki/runtime.",
 		);
 	}
 	let current = realpathSync(assignment.repoRoot);
@@ -198,23 +198,23 @@ function assertResultPath(assignment: ImplementationWorkerAssignment): void {
 		current = resolve(current, segment);
 		if (existsSync(current) && lstatSync(current).isSymbolicLink()) {
 			throw new Error(
-				"Implementation worker resultPath cannot traverse symbolic links.",
+				"Implementation worker reportPath cannot traverse symbolic links.",
 			);
 		}
 	}
 }
 
-function workerReceiptRef(
-	result: Omit<ImplementationWorkerExecutionResult, "receiptRef">,
+function workerReportRef(
+	report: Omit<ImplementationWorkerReport, "reportRef">,
 ): string {
-	return `runtime-worker-receipt:${createHash("sha256")
-		.update(JSON.stringify(result))
+	return `runtime-worker-report:${createHash("sha256")
+		.update(JSON.stringify(report))
 		.digest("hex")}`;
 }
 
-function workerExecutionStatus(
+function workerReportStatus(
 	status: string | undefined,
-): ImplementationWorkerExecutionResult["status"] {
+): ImplementationWorkerReport["status"] {
 	if (status === "completed" || status === "blocked" || status === "failed") {
 		return status;
 	}

@@ -7,7 +7,7 @@ import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import {
 	implementationWorkerJobId,
 	type ImplementationWorkerAssignment,
-	type ImplementationWorkerExecutionResult,
+	type ImplementationWorkerReport,
 } from "./implementation-worker-adapter.ts";
 import type {
 	ProjectCoordinator,
@@ -24,7 +24,7 @@ export interface ImplementationWorkerClaimReleaseInput {
 	coordinator: ProjectCoordinator;
 	reactor: RuntimeReactor;
 	assignment: ImplementationWorkerAssignment;
-	result: ImplementationWorkerExecutionResult;
+	report: ImplementationWorkerReport;
 	claimEvent: TraceEvent;
 	createdAt: string;
 	beforeAppend?: () => void | Promise<void>;
@@ -47,7 +47,7 @@ export function implementationWorkerClaimReleaseJob(
 	input: Omit<ImplementationWorkerClaimReleaseInput, "coordinator">,
 ): ProjectCoordinatorJob<ImplementationWorkerClaimReleaseReceipt> {
 	assertClaimMatchesAssignment(input.claimEvent, input.assignment);
-	const jobId = releaseJobId(input.assignment, input.result);
+	const jobId = releaseJobId(input.assignment, input.report);
 	return {
 		idempotencyKey: jobId,
 		lane: { kind: "assignment", workItemId: input.assignment.workItemId },
@@ -93,7 +93,7 @@ export function implementationWorkerClaimReleaseJob(
 			}
 			assertClaimMatchesAssignment(claim, input.assignment);
 			if (
-				input.result.status === "completed" &&
+				input.report.status === "completed" &&
 				!observation.workState.workItems.find(
 					(item) =>
 						item.id === input.assignment.workItemId && item.implemented,
@@ -129,11 +129,11 @@ function releaseBatch(
 				workUnitId: input.assignment.workItemId,
 				claimId: input.assignment.claimId,
 				planningRefs: [...input.assignment.planningRefs],
-				status: input.result.status,
-				message: input.result.error,
-				refs: [input.result.receiptRef],
-				sessionId: input.result.sessionId,
-				sessionFile: input.result.sessionFile,
+				status: input.report.status,
+				message: input.report.error,
+				refs: [input.report.reportRef],
+				sessionId: input.report.sessionId,
+				sessionFile: input.report.sessionFile,
 			},
 		],
 		[claim],
@@ -150,7 +150,7 @@ function releaseBatch(
 			data: {
 				...(event.data || {}),
 				runtimeJobId: jobId,
-				workerReceiptRef: input.result.receiptRef,
+				workerReportRef: input.report.reportRef,
 			},
 		})),
 	};
@@ -158,7 +158,7 @@ function releaseBatch(
 
 function releaseJobId(
 	assignment: ImplementationWorkerAssignment,
-	result: ImplementationWorkerExecutionResult,
+	report: ImplementationWorkerReport,
 ): string {
 	const digest = createHash("sha256")
 		.update(
@@ -168,8 +168,8 @@ function releaseJobId(
 				claimId: assignment.claimId,
 				workItemId: assignment.workItemId,
 				workerId: assignment.workerId,
-				resultStatus: result.status,
-				receiptRef: result.receiptRef,
+				reportStatus: report.status,
+				reportRef: report.reportRef,
 			}),
 		)
 		.digest("hex");

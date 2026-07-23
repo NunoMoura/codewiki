@@ -90,7 +90,7 @@ export const IMPLEMENTATION_QUALITY_STANDARDS: LoopQualityStandardDefinition<
 		id: "worker_claims_correlated",
 		weight: 12,
 		description:
-			"Worker-produced evidence is tied to active runtime claims and completed worker results.",
+			"Worker-produced evidence is tied to active runtime claims and completed worker reports.",
 		codes: [
 			"worker_failed",
 			"worker_blocked",

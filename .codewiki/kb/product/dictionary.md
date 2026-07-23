@@ -27,7 +27,7 @@ Product contains three workspaces:
 
 Dictionary supports exact-term lookup, aliases and deprecated-term lookup, text search, alphabetical navigation, and stable anchors for direct links from Work, Product, System, Design, Change dossiers, inspectors, and help text. Selecting a term shows its canonical definition, technical backing when present, related terms, and replacement guidance when the selected wording is deprecated.
 
-Runtime and UI copy should prefer qualified terms such as **Assignment packet** and **Worker receipt** instead of unexplained bare words such as “packet” or “receipt.” Contextual help may show a short excerpt, but it links to the exact Dictionary entry and must not invent a competing definition.
+Runtime and UI copy should prefer qualified terms such as **Assignment packet** and **Worker report** instead of unexplained bare words such as “packet” or “report.” Contextual help may show a short excerpt, but it links to the exact Dictionary entry and must not invent a competing definition.
 
 ## Truth and editing
 
@@ -43,8 +43,7 @@ At minimum, user-facing runtime explanations distinguish:
 - **Claim**: canonical temporary authority to execute it;
 - **Assignment**: exact bounded contract for one worker attempt;
 - **Assignment packet**: private serialized handoff for that attempt;
-- **Worker receipt**: private adapter record that the attempt settled;
-- **Worker result**: candidate evidence submitted to Implementation review;
+- **Worker report**: immutable adapter outcome and candidate evidence for one exact attempt;
 - **Claim release**: end of reservation, not proof of success.
 
 ## Related docs

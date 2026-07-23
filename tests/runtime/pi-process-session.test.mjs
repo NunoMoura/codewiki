@@ -391,7 +391,7 @@ describe("Pi process session factory", () => {
 			"Implement with exact policy.",
 		]);
 		assert.equal(calls[0].timeoutMs, 90_000);
-		assert.deepEqual(session.executionReceipt, {
+		assert.deepEqual(session.executionVerification, {
 			policyDigest: policy.digest,
 			routeId: "route-high",
 			usage: {

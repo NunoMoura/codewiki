@@ -32,7 +32,7 @@ function assignment(root, id, pathScope) {
 		sourceBaseRef: "git:base:abc123",
 		contextDigest: `sha256:context-${id}`,
 		prompt: `Implement ${id}.`,
-		resultPath: join(root, ".codewiki", "runtime", "workers", `${id}.json`),
+		reportPath: join(root, ".codewiki", "runtime", "workers", `${id}.json`),
 		isolation: { kind: "worktree", ref: `worktree:${id}` },
 		worktree: {
 			path: join(root, ".codewiki", "runtime", "worktrees", id),
@@ -48,7 +48,7 @@ function result(input, status = "completed") {
 		workerId: input.workerId,
 		workItemId: input.workItemId,
 		status,
-		receiptRef: `runtime-worker-receipt:${input.assignmentId}`,
+		reportRef: `runtime-worker-report:${input.assignmentId}`,
 	};
 }
 
@@ -103,7 +103,7 @@ test("implementation worker jobs run independent assignments concurrently and ho
 	}
 });
 
-test("implementation worker jobs recover durable receipts without reinvoking adapter", async () => {
+test("implementation worker jobs recover durable Worker reports without reinvoking adapter", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-worker-recovery-"));
 	const input = assignment(root, "recovery", "src/recovery/**");
 	const persisted = new Map();
@@ -151,7 +151,7 @@ test("implementation worker jobs recover durable receipts without reinvoking ada
 			adapter,
 			assignments: [input],
 		});
-		assert.equal(recovered.result.status, "completed");
+		assert.equal(recovered.report.status, "completed");
 		assert.equal(executions, 1);
 		assert.match(
 			implementationWorkerJobId(input),
@@ -187,10 +187,10 @@ test("elected coordinator service schedules worker assignments through configure
 			kind: "pi",
 			supervision: "approved",
 		});
-		const [receipt] = await service.scheduleWorkerAssignments([
+		const [jobReceipt] = await service.scheduleWorkerAssignments([
 			assignment(root, "service", "src/service/**"),
 		]);
-		assert.equal(receipt.result.status, "completed");
+		assert.equal(jobReceipt.report.status, "completed");
 		assert.equal(executions, 1);
 		assert.equal(service.coordinator.snapshot().completedJobCount, 1);
 	} finally {

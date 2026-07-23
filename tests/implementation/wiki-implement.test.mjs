@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
-import { collectPiWorkerResults } from "../../src/pi/worker-results.ts";
+import { collectPiWorkerReports } from "../../src/pi/worker-reports.ts";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
 import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/work-unit-claims.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
@@ -357,7 +357,7 @@ describe("wiki_implement core facade", () => {
 			const expectedWorkStateDigest = (
 				await buildProjectWorkState({ repoRoot: root })
 			).snapshotDigest;
-			const workerResults = collectPiWorkerResults([
+			const workerReports = collectPiWorkerReports([
 				{
 					workerStart: {
 						workerId: "pi-worker-001",
@@ -383,7 +383,7 @@ describe("wiki_implement core facade", () => {
 				repoRoot: root,
 				expectedWorkStateDigest,
 				mode: "preview",
-				workerResults,
+				workerReports,
 				createdAt: "2026-06-11T00:00:03.000Z",
 			});
 
@@ -394,7 +394,7 @@ describe("wiki_implement core facade", () => {
 				"claim-WU-implement-001",
 			);
 			assert.equal(
-				result.loopResult.workerAggregation.workerResults[0].sessionId,
+				result.loopResult.workerAggregation.workerReports[0].sessionId,
 				"session-pi-worker-001",
 			);
 			assert.match(
@@ -402,7 +402,7 @@ describe("wiki_implement core facade", () => {
 				/^sha256:[a-f0-9]{64}$/,
 			);
 			const release = createRuntimeWorkerCompletionReleaseEvents(
-				workerResults,
+				workerReports,
 				[claim],
 				{
 					createdAt: "2026-06-11T00:00:04.000Z",

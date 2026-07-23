@@ -40,8 +40,8 @@ import type {
 } from "../implementation/types.ts";
 import { createImplementationMergeContentProof } from "../implementation/merge-proof.ts";
 import {
-	aggregateImplementationWorkerResults,
-	type ImplementationWorkerResultInput,
+	aggregateImplementationWorkerReports,
+	type ImplementationWorkerReportInput,
 } from "../implementation/workers.ts";
 import { loadWikiConfigFile } from "../project/config-file.ts";
 import { readProjectSourceMap } from "../project/explain.ts";
@@ -94,7 +94,7 @@ export interface RunWikiImplementInput {
 	repoRoot: string;
 	expectedWorkStateDigest: string;
 	evidence?: ImplementationEvidenceSubmission[];
-	workerResults?: ImplementationWorkerResultInput[];
+	workerReports?: ImplementationWorkerReportInput[];
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
 	archiveDisposition?: ImplementationArchiveDisposition;
 	archiveDispositionInput?: ImplementationArchiveDispositionInput;
@@ -180,7 +180,7 @@ const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"repoRoot",
 	"expectedWorkStateDigest",
 	"evidence",
-	"workerResults",
+	"workerReports",
 	"reviewEvidenceReports",
 	"archiveDisposition",
 	"archiveDispositionInput",
@@ -258,7 +258,7 @@ async function runPreparedWikiImplement(
 	const mergeProof = await createImplementationMergeContentProof({
 		repoRoot: input.repoRoot,
 		changes,
-		workerResults: input.workerResults,
+		workerReports: input.workerReports,
 		proofPaths: input.proofPaths,
 		changedPaths: input.changedPaths,
 		evidencePaths: input.evidencePaths,
@@ -361,7 +361,7 @@ async function runtimeImplementationContext(
 	const sources = implementationEvidenceSources(input);
 	if (sources.length === 0) {
 		throw new Error(
-			"Implementation requires worker results or explicit evidence for runtime-selected Work Items.",
+			"Implementation requires worker reports or explicit evidence for runtime-selected Work Items.",
 		);
 	}
 	const selectedIds = new Set(selection.workItemIds);
@@ -446,12 +446,12 @@ function implementationEvidenceSources(
 			...(assignmentId ? { claimId: assignmentId } : {}),
 		} as ImplementationChangeInput;
 	});
-	const workerAggregation = aggregateImplementationWorkerResults(
-		input.workerResults,
+	const workerAggregation = aggregateImplementationWorkerReports(
+		input.workerReports,
 	);
 	const worker = [
 		...workerAggregation.changeInputs,
-		...(input.workerResults || []).flatMap((result) =>
+		...(input.workerReports || []).flatMap((result) =>
 			workerAggregation.changeInputs.some(
 				(change) => evidenceWorkItemId(change) === result.workUnitId,
 			)
@@ -920,7 +920,7 @@ function implementationIterationInput(
 		traceId: input.traceId,
 		planningEvents: input.planningEvents,
 		changes: prepared.changes,
-		workerResults: input.workerResults,
+		workerReports: input.workerReports,
 		workerClaims: input.workerClaims,
 		claimEvents: input.claimEvents,
 		expectedWorkerBaseSha: input.expectedWorkerBaseSha,

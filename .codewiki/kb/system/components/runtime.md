@@ -127,7 +127,7 @@ Runtime may react to:
 - approved Change portfolio changes;
 - KB, source, test, Git, policy, profile, or target changes;
 - Work Item readiness or dependency completion;
-- worker result, timeout, claim expiry, cancellation, or host failure;
+- worker report, timeout, claim expiry, cancellation, or host failure;
 - integration conflict or successful merge;
 - preview/browser observation;
 - scheduled or event trigger becoming due;

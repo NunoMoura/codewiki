@@ -1,10 +1,10 @@
 import {
 	assertImplementationWorkerAssignment,
-	assertImplementationWorkerResult,
+	assertImplementationWorkerReport,
 	implementationWorkerJobId,
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
-	type ImplementationWorkerExecutionResult,
+	type ImplementationWorkerReport,
 } from "./implementation-worker-adapter.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 
@@ -18,7 +18,7 @@ export interface ImplementationWorkerJobReceipt {
 	jobId: string;
 	assignmentId: string;
 	workItemId: string;
-	result: ImplementationWorkerExecutionResult;
+	report: ImplementationWorkerReport;
 }
 
 export function scheduleImplementationWorkerAssignments(
@@ -60,7 +60,7 @@ export async function scheduleImplementationWorkerAssignment(input: {
 	const { assignment } = input;
 	assertImplementationWorkerAssignment(assignment);
 	const jobId = implementationWorkerJobId(assignment);
-	const result = await input.coordinator.schedule({
+	const report = await input.coordinator.schedule({
 		idempotencyKey: jobId,
 		lane: { kind: "assignment", workItemId: assignment.workItemId },
 		effect: "write",
@@ -68,12 +68,12 @@ export async function scheduleImplementationWorkerAssignment(input: {
 		recover: async () => {
 			const recovered = await input.adapter.recover(assignment);
 			if (!recovered) return undefined;
-			assertImplementationWorkerResult(assignment, recovered);
+			assertImplementationWorkerReport(assignment, recovered);
 			return { status: "completed", result: recovered };
 		},
 		run: async (signal) => {
 			const executed = await input.adapter.execute(assignment, signal);
-			assertImplementationWorkerResult(assignment, executed);
+			assertImplementationWorkerReport(assignment, executed);
 			return executed;
 		},
 	});
@@ -81,7 +81,7 @@ export async function scheduleImplementationWorkerAssignment(input: {
 		jobId,
 		assignmentId: assignment.assignmentId,
 		workItemId: assignment.workItemId,
-		result,
+		report: report,
 	};
 }
 

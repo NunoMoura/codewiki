@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { changeTraceId } from "../changes/change-trace.ts";
 import { stableJson } from "../changes/digest.ts";
-import type { ImplementationWorkerResultInput } from "../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
 import { readTraceFile } from "../traces/reader.ts";
 import { traceFilePath } from "../traces/schema.ts";
 import type { TraceEvent } from "../traces/types.ts";
@@ -47,7 +47,7 @@ export interface RuntimeReactionJobInput {
 	adapters: RuntimeSemanticAdapters;
 	mode?: RuntimeSemanticMode;
 	maxCasRetries?: number;
-	implementationWorkerResults?: ImplementationWorkerResultInput[];
+	implementationWorkerReports?: ImplementationWorkerReportInput[];
 	beforeAppend?: () => void | Promise<void>;
 	onExecution?: (result: RunRuntimeSelectedSemanticReactionResult) => void;
 }
@@ -63,7 +63,7 @@ export interface ScheduleRuntimeReactionsInput {
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
 	blockedImplementationWorkItemIds?: string[];
-	implementationWorkerResults?: ImplementationWorkerResultInput[];
+	implementationWorkerReports?: ImplementationWorkerReportInput[];
 	beforeAppend?: () => void | Promise<void>;
 }
 
@@ -93,9 +93,9 @@ export async function scheduleRuntimeReactions(
 				reaction,
 				adapters: input.adapters,
 				mode: input.mode,
-				implementationWorkerResults: workerResultsForReaction(
+				implementationWorkerReports: workerReportsForReaction(
 					reaction,
-					input.implementationWorkerResults || [],
+					input.implementationWorkerReports || [],
 				),
 				maxCasRetries: input.maxCasRetries,
 				beforeAppend: input.beforeAppend,
@@ -104,14 +104,14 @@ export async function scheduleRuntimeReactions(
 	);
 }
 
-function workerResultsForReaction(
+function workerReportsForReaction(
 	reaction: RuntimeReaction,
-	workerResults: ImplementationWorkerResultInput[],
-): ImplementationWorkerResultInput[] {
+	workerReports: ImplementationWorkerReportInput[],
+): ImplementationWorkerReportInput[] {
 	const selection = reaction.selection;
 	if (selection?.loop !== "implementation") return [];
 	const selected = new Set(selection.workItemIds);
-	return workerResults
+	return workerReports
 		.filter((result) => selected.has(result.workUnitId))
 		.sort((left, right) =>
 			`${left.workUnitId}:${left.workerId}`.localeCompare(
@@ -120,11 +120,11 @@ function workerResultsForReaction(
 		);
 }
 
-function workerResultContextDigest(
-	workerResults: ImplementationWorkerResultInput[],
+function workerReportContextDigest(
+	workerReports: ImplementationWorkerReportInput[],
 ): string | undefined {
-	if (workerResults.length === 0) return undefined;
-	return createHash("sha256").update(stableJson(workerResults)).digest("hex");
+	if (workerReports.length === 0) return undefined;
+	return createHash("sha256").update(stableJson(workerReports)).digest("hex");
 }
 
 function blockedImplementationReaction(
@@ -153,7 +153,7 @@ export function runtimeReactionJob(
 	const jobId = runtimeSemanticJobId(
 		input.reaction,
 		mode,
-		workerResultContextDigest(input.implementationWorkerResults || []),
+		workerReportContextDigest(input.implementationWorkerReports || []),
 	);
 	const job: ProjectCoordinatorJob<RuntimeReactionJobReceipt> = {
 		idempotencyKey: jobId,
@@ -170,7 +170,7 @@ export function runtimeReactionJob(
 				maxCasRetries: input.maxCasRetries,
 				reactor: input.reactor,
 				signal,
-				implementationWorkerResults: input.implementationWorkerResults,
+				implementationWorkerReports: input.implementationWorkerReports,
 				beforeAppend: input.beforeAppend,
 			});
 			try {

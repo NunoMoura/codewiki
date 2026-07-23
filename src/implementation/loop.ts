@@ -190,7 +190,7 @@ export const IMPLEMENTATION_LOOP_QUALITY_PACK = parseLoopQualityPack({
 			cost: 12,
 			hardGate: true,
 			description:
-				"Worker-produced evidence is tied to active runtime claims and completed worker results.",
+				"Worker-produced evidence is tied to active runtime claims and completed worker reports.",
 			codes: [
 				"worker_failed",
 				"worker_blocked",
@@ -520,7 +520,7 @@ function implementationJudgeInput(
 			claimId: change.claimId,
 		})),
 		componentMap: input.componentMap,
-		workerResults: input.workerResults,
+		workerReports: input.workerReports,
 		workerClaims: input.workerClaims,
 		aggregateContentProof: input.aggregateContentProof,
 		requireTddEvidence: input.requireTddEvidence,
@@ -596,7 +596,7 @@ export function collectImplementationExitIssues(
 	return [
 		...coverageIssues(input),
 		...unknownPlanningRefIssues(input),
-		...workerResultIssues(input),
+		...workerReportIssues(input),
 		...workerProofIssues(input),
 		...duplicateChangeIssues(input.changes),
 		...changeIssues(input.changes),
@@ -652,30 +652,30 @@ function unknownPlanningRefIssues(
 		}));
 }
 
-function workerResultIssues(
+function workerReportIssues(
 	input: ImplementationExitInput,
 ): ImplementationExitIssue[] {
-	return (input.workerResults || []).flatMap((worker) => [
-		...workerClaimIssues(input, worker),
-		...workerStatusIssues(worker),
+	return (input.workerReports || []).flatMap((report) => [
+		...workerClaimIssues(input, report),
+		...workerStatusIssues(report),
 	]);
 }
 
 function workerStatusIssues(
-	worker: NonNullable<ImplementationExitInput["workerResults"]>[number],
+	report: NonNullable<ImplementationExitInput["workerReports"]>[number],
 ): ImplementationExitIssue[] {
-	if (worker.status === "completed") return [];
-	const code = worker.status === "blocked" ? "worker_blocked" : "worker_failed";
+	if (report.status === "completed") return [];
+	const code = report.status === "blocked" ? "worker_blocked" : "worker_failed";
 	return [
 		{
 			code,
-			workerId: worker.workerId,
-			claimId: worker.claimId,
-			planningRef: worker.planningRefs[0],
-			ref: worker.refs[0],
+			workerId: report.workerId,
+			claimId: report.claimId,
+			planningRef: report.planningRefs[0],
+			ref: report.refs[0],
 			message:
-				worker.message ||
-				`Implementation worker ${worker.workerId} ${worker.status} for ${worker.workUnitId}.`,
+				report.message ||
+				`Implementation worker ${report.workerId} ${report.status} for ${report.workUnitId}.`,
 		},
 	];
 }
@@ -728,29 +728,29 @@ function uniqueWorkerProofConflicts(
 
 function workerClaimIssues(
 	input: ImplementationExitInput,
-	worker: NonNullable<ImplementationExitInput["workerResults"]>[number],
+	report: NonNullable<ImplementationExitInput["workerReports"]>[number],
 ): ImplementationExitIssue[] {
-	if (!worker.claimId) {
+	if (!report.claimId) {
 		return [
 			{
 				code: "missing_worker_claim" as const,
-				workerId: worker.workerId,
-				planningRef: worker.planningRefs[0],
-				message: `Implementation worker ${worker.workerId} result does not identify a runtime claim.`,
+				workerId: report.workerId,
+				planningRef: report.planningRefs[0],
+				message: `Implementation worker ${report.workerId} report does not identify a runtime claim.`,
 			},
 		];
 	}
 	const claim = (input.workerClaims || []).find(
-		(candidate) => candidate.claimId === worker.claimId,
+		(candidate) => candidate.claimId === report.claimId,
 	);
 	if (!claim) {
 		return [
 			{
 				code: "unknown_worker_claim" as const,
-				workerId: worker.workerId,
-				claimId: worker.claimId,
-				planningRef: worker.planningRefs[0],
-				message: `Implementation worker ${worker.workerId} references unknown runtime claim ${worker.claimId}.`,
+				workerId: report.workerId,
+				claimId: report.claimId,
+				planningRef: report.planningRefs[0],
+				message: `Implementation worker ${report.workerId} references unknown runtime claim ${report.claimId}.`,
 			},
 		];
 	}
@@ -758,36 +758,36 @@ function workerClaimIssues(
 		return [
 			{
 				code: "inactive_worker_claim" as const,
-				workerId: worker.workerId,
-				claimId: worker.claimId,
-				planningRef: worker.planningRefs[0],
+				workerId: report.workerId,
+				claimId: report.claimId,
+				planningRef: report.planningRefs[0],
 				ref: claim.refs[0],
-				message: `Implementation worker ${worker.workerId} references ${claim.status} runtime claim ${worker.claimId}.`,
+				message: `Implementation worker ${report.workerId} references ${claim.status} runtime claim ${report.claimId}.`,
 			},
 		];
 	}
-	if (workerMatchesClaim(worker, claim)) return [];
+	if (workerMatchesClaim(report, claim)) return [];
 	return [
 		{
 			code: "worker_claim_mismatch" as const,
-			workerId: worker.workerId,
-			claimId: worker.claimId,
-			planningRef: worker.planningRefs[0],
+			workerId: report.workerId,
+			claimId: report.claimId,
+			planningRef: report.planningRefs[0],
 			ref: claim.refs[0],
-			message: `Implementation worker ${worker.workerId} result does not match runtime claim ${worker.claimId}.`,
+			message: `Implementation worker ${report.workerId} report does not match runtime claim ${report.claimId}.`,
 		},
 	];
 }
 
 function workerMatchesClaim(
-	worker: NonNullable<ImplementationExitInput["workerResults"]>[number],
+	report: NonNullable<ImplementationExitInput["workerReports"]>[number],
 	claim: NonNullable<ImplementationExitInput["workerClaims"]>[number],
 ): boolean {
 	return (
-		worker.workerId === claim.workerId &&
-		worker.workUnitId === claim.workUnitId &&
-		worker.planningRefs.length > 0 &&
-		worker.planningRefs.every((planningRef) =>
+		report.workerId === claim.workerId &&
+		report.workUnitId === claim.workUnitId &&
+		report.planningRefs.length > 0 &&
+		report.planningRefs.every((planningRef) =>
 			claim.planningRefs.includes(planningRef),
 		)
 	);
@@ -1882,7 +1882,7 @@ function requiresAggregateContentProof(
 ): boolean {
 	return (
 		input.changes.length > 1 ||
-		(input.workerResults || []).length > 0 ||
+		(input.workerReports || []).length > 0 ||
 		input.changes.some((change) => Boolean(change.workerId || change.claimId))
 	);
 }
@@ -2026,7 +2026,7 @@ const IMPLEMENTATION_REMEDIATION: Record<
 	worker_blocked:
 		"Resolve the worker blocker, route back if needed, or release/retry the claim.",
 	missing_worker_claim:
-		"Attach the runtime claim id to the worker result before aggregation.",
+		"Attach the runtime claim id to the worker report before aggregation.",
 	unknown_worker_claim:
 		"Reference an active runtime claim from the trace, or reacquire the work claim.",
 	inactive_worker_claim:
@@ -2034,7 +2034,7 @@ const IMPLEMENTATION_REMEDIATION: Record<
 	worker_claim_mismatch:
 		"Align worker id, work unit id, and planning refs with the runtime claim.",
 	worker_proof_failed:
-		"Fix failed worker proof checks or route the worker result as blocked/failed.",
+		"Fix failed worker proof checks or route the worker report as blocked/failed.",
 	worker_proof_conflict:
 		"Resolve overlapping worker proof paths, duplicate worker proofs, or base-SHA mismatch before aggregate closure.",
 	invalid_change: "Complete change id, planning refs, and changed paths.",

@@ -9,7 +9,7 @@ import {
 import type {
 	ImplementationChangeInput,
 	ImplementationWorkerStatus,
-	ImplementationWorkerSummary,
+	ImplementationWorkerReportSummary,
 } from "./types.ts";
 
 export interface ImplementationWorkerBlockerInput {
@@ -17,7 +17,7 @@ export interface ImplementationWorkerBlockerInput {
 	refs?: string[];
 }
 
-export interface ImplementationWorkerResultInput {
+export interface ImplementationWorkerReportInput {
 	workerId: string;
 	workUnitId: string;
 	planningRefs?: string[];
@@ -66,38 +66,38 @@ export interface ImplementationWorkerResultInput {
 	blockers?: ImplementationWorkerBlockerInput[];
 }
 
-export interface ImplementationWorkerAggregation {
-	workerResults: ImplementationWorkerSummary[];
+export interface ImplementationWorkerReportAggregation {
+	workerReports: ImplementationWorkerReportSummary[];
 	workerProofs: ImplementationWorkerProof[];
 	workerProofConflicts: ImplementationWorkerProofConflict[];
 	changeInputs: ImplementationChangeInput[];
-	completed: ImplementationWorkerSummary[];
-	blocked: ImplementationWorkerSummary[];
-	failed: ImplementationWorkerSummary[];
+	completed: ImplementationWorkerReportSummary[];
+	blocked: ImplementationWorkerReportSummary[];
+	failed: ImplementationWorkerReportSummary[];
 }
 
-export function aggregateImplementationWorkerResults(
-	inputs: ImplementationWorkerResultInput[] = [],
-): ImplementationWorkerAggregation {
-	const workerResults = inputs.map(workerSummary);
-	const workerProofs = workerResults.flatMap((result) =>
-		result.proof ? [result.proof] : [],
+export function aggregateImplementationWorkerReports(
+	inputs: ImplementationWorkerReportInput[] = [],
+): ImplementationWorkerReportAggregation {
+	const workerReports = inputs.map(workerReportSummary);
+	const workerProofs = workerReports.flatMap((report) =>
+		report.proof ? [report.proof] : [],
 	);
 	return {
-		workerResults,
+		workerReports,
 		workerProofs,
 		workerProofConflicts:
 			detectImplementationWorkerProofConflicts(workerProofs),
 		changeInputs: inputs.flatMap(workerChangeInputs),
-		completed: workerResults.filter((result) => result.status === "completed"),
-		blocked: workerResults.filter((result) => result.status === "blocked"),
-		failed: workerResults.filter((result) => result.status === "failed"),
+		completed: workerReports.filter((report) => report.status === "completed"),
+		blocked: workerReports.filter((report) => report.status === "blocked"),
+		failed: workerReports.filter((report) => report.status === "failed"),
 	};
 }
 
-function workerSummary(
-	input: ImplementationWorkerResultInput,
-): ImplementationWorkerSummary {
+function workerReportSummary(
+	input: ImplementationWorkerReportInput,
+): ImplementationWorkerReportSummary {
 	const proof = normalizeImplementationWorkerProof(input);
 	return {
 		workerId: text(input.workerId),
@@ -120,7 +120,7 @@ function workerSummary(
 }
 
 function workerChangeInputs(
-	input: ImplementationWorkerResultInput,
+	input: ImplementationWorkerReportInput,
 ): ImplementationChangeInput[] {
 	if (normalizeWorkerStatus(input.status) !== "completed") return [];
 	const metadata = workerChangeMetadata(input);
@@ -131,7 +131,7 @@ function workerChangeInputs(
 
 function workerChangeInput(
 	change: ImplementationChangeInput,
-	input: ImplementationWorkerResultInput,
+	input: ImplementationWorkerReportInput,
 	metadata: Partial<ImplementationChangeInput>,
 	index: number,
 ): ImplementationChangeInput {
@@ -206,7 +206,7 @@ function isTestPath(path: string): boolean {
 }
 
 function workerChangeMetadata(
-	input: ImplementationWorkerResultInput,
+	input: ImplementationWorkerReportInput,
 ): Partial<ImplementationChangeInput> {
 	return {
 		workerId: text(input.workerId),
@@ -221,7 +221,7 @@ function workerChangeMetadata(
 }
 
 function rawWorkerChangeInputs(
-	input: ImplementationWorkerResultInput,
+	input: ImplementationWorkerReportInput,
 ): ImplementationChangeInput[] {
 	return [
 		...objectList<ImplementationChangeInput>(input.changeInputs),
@@ -232,7 +232,7 @@ function rawWorkerChangeInputs(
 
 function planningRefsForChange(
 	change: ImplementationChangeInput,
-	input: ImplementationWorkerResultInput,
+	input: ImplementationWorkerReportInput,
 ): string[] {
 	const refs = [
 		...stringList(change.planningRefs),
@@ -241,7 +241,7 @@ function planningRefsForChange(
 	return refs.length > 0 ? unique(refs) : planningRefs(input);
 }
 
-function planningRefs(input: ImplementationWorkerResultInput): string[] {
+function planningRefs(input: ImplementationWorkerReportInput): string[] {
 	const explicitRefs = unique([
 		...stringList(input.planningRefs),
 		...stringList(input.planning_refs),
@@ -255,7 +255,7 @@ function planningRefs(input: ImplementationWorkerResultInput): string[] {
 	);
 }
 
-function workerRefs(input: ImplementationWorkerResultInput): string[] {
+function workerRefs(input: ImplementationWorkerReportInput): string[] {
 	return unique([
 		...planningRefs(input),
 		...stringList(input.refs),
@@ -266,7 +266,7 @@ function workerRefs(input: ImplementationWorkerResultInput): string[] {
 	]);
 }
 
-function workerProofRefs(input: ImplementationWorkerResultInput): string[] {
+function workerProofRefs(input: ImplementationWorkerReportInput): string[] {
 	const proof = normalizeImplementationWorkerProof(input);
 	return proof
 		? [proof.digest, proof.validationRef, proof.patchRef].filter(
@@ -275,7 +275,7 @@ function workerProofRefs(input: ImplementationWorkerResultInput): string[] {
 		: [];
 }
 
-function workerMessage(input: ImplementationWorkerResultInput): string {
+function workerMessage(input: ImplementationWorkerReportInput): string {
 	return (
 		text(input.message) ||
 		objectList<ImplementationWorkerBlockerInput>(input.blockers)

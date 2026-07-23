@@ -32,7 +32,7 @@ function changes(planningRef) {
 	]);
 }
 
-function workerResult(planningRef, overrides = {}) {
+function workerReport(planningRef, overrides = {}) {
 	return {
 		workerId: "worker-merge-proof",
 		workUnitId: "WU-merge-proof",
@@ -55,7 +55,7 @@ describe("implementation merge content proof", () => {
 			const result = await createImplementationMergeContentProof({
 				repoRoot: root,
 				changes: changes(planningRef),
-				workerResults: [workerResult(planningRef)],
+				workerReports: [workerReport(planningRef)],
 			});
 
 			assert.deepEqual(result.proofPaths, [
@@ -87,8 +87,8 @@ describe("implementation merge content proof", () => {
 				() =>
 					createImplementationMergeContentProof({
 						repoRoot: root,
-						workerResults: [
-							workerResult(planningRef, {
+						workerReports: [
+							workerReport(planningRef, {
 								changedFiles: ["src/missing.ts"],
 							}),
 						],
