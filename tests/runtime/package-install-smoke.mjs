@@ -59,6 +59,7 @@ import {
 } from "@nunomoura/codewiki";
 import {
 	connectProjectCoordinatorClient,
+	scheduleRuntimeReactions,
 	startProjectCoordinatorService,
 } from "@nunomoura/codewiki/coordinator";
 
@@ -104,6 +105,8 @@ assert.equal(
 );
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 const coordinator = new ProjectCoordinator(process.cwd(), {
 	generationId: "packed:coordinator",
@@ -120,6 +123,8 @@ const remoteClient = await connectProjectCoordinatorClient(process.cwd(), {
 	supervision: "approved",
 });
 assert.equal((await remoteClient.state()).supervisorCount, 1);
+assert.equal(typeof remoteClient.react, "function");
+assert.equal(typeof scheduleRuntimeReactions, "function");
 await remoteClient.disconnect();
 await service.close();
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);

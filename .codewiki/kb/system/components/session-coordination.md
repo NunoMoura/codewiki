@@ -47,7 +47,9 @@ The current `ProjectCoordinator` kernel implements these admission rules inside 
 
 The project service now owns cross-process election and client transport around the kernel. It binds only to `127.0.0.1`, writes endpoint metadata and bearer capability with current-user permissions, requires the exact coordinator generation on every request, rechecks the exclusive ownership record before serving, and gives each remote registration a bounded lease. Query parameters never carry the token. Live owners reject contenders; dead-owner takeover creates a new generation; stale owners return a fenced response instead of accepting work.
 
-This transport does not make client identity an authority source. The service token is a local control-plane capability and must never enter traces, prompts, URLs, logs, Git, or external proposal payloads. Approved supervision remains explicit registration metadata from an authenticated local adapter. Exact semantic scheduling and worker lifecycle still need to move behind this service before Pi and dashboard clients stop using process-local paths.
+This transport does not make client identity an authority source. The service token is a local control-plane capability and must never enter traces, prompts, URLs, logs, Git, or external proposal payloads. Approved supervision remains explicit registration metadata from an authenticated local adapter.
+
+Exact semantic scheduling now runs behind this service. A client submits only a bounded trigger. Runtime selects compatible invariants, assigns deterministic job identities and typed lanes, revalidates fresh WorkState, invokes the matching adapter, rechecks generation ownership before append, and binds successful writes to exact Change Trace event evidence. Restart recovery scans those selected traces and never trusts client-supplied completion. Pi/dashboard connection lifecycle, project event delivery, and implementation-worker lifecycle still need to move behind the service before process-local paths can be removed.
 
 ## Semantic session adapter
 

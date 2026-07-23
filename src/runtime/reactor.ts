@@ -81,6 +81,32 @@ export interface RuntimeBatchObservation extends WorkStateRefreshResult {
 	reactions: RuntimeReaction[];
 }
 
+function runtimeReactionInvariantKey(reaction: RuntimeReaction): string {
+	if (reaction.status !== "ready" || !reaction.selection) return "quiescent";
+	return JSON.stringify(reaction.selection);
+}
+
+export function runtimeReactionsShareInvariant(
+	expected: RuntimeReaction,
+	candidate: RuntimeReaction,
+): boolean {
+	if (
+		expected.status !== "ready" ||
+		candidate.status !== "ready" ||
+		!expected.selection ||
+		!candidate.selection
+	) {
+		return false;
+	}
+	if (
+		expected.selection.loop === "implementation" &&
+		expected.observedWorkStateDigest !== candidate.observedWorkStateDigest
+	) {
+		return false;
+	}
+	return runtimeReactionInvariantKey(expected) === runtimeReactionInvariantKey(candidate);
+}
+
 /** Supervised runtime reader that reuses indexed Change Trace state. */
 export class RuntimeReactor {
 	private readonly workState: WorkStateSession;

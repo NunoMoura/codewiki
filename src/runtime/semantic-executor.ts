@@ -22,6 +22,7 @@ import type {
 } from "../work-state/types.ts";
 import {
 	RuntimeReactor,
+	runtimeReactionsShareInvariant,
 	type RuntimeObservation,
 	type RuntimeReaction,
 	type RuntimeTrigger,
@@ -37,6 +38,7 @@ export type RuntimeDecisionCandidate = Omit<
 	| "expectedChangeDigest"
 	| "expectedWorkStateDigest"
 	| "expectedBytes"
+	| "runtimeJobId"
 	| "mode"
 >;
 
@@ -46,12 +48,13 @@ export type RuntimePlanningCandidate = Omit<
 	| "expectedWorkStateDigest"
 	| "expectedChangeIds"
 	| "expectedBytesByChangeId"
+	| "runtimeJobId"
 	| "mode"
 >;
 
 export type RuntimeImplementationCandidate = Omit<
 	RunWikiImplementInput,
-	"repoRoot" | "expectedWorkStateDigest" | "mode"
+	"repoRoot" | "expectedWorkStateDigest" | "runtimeJobId" | "mode"
 >;
 
 export interface RuntimeDecisionInvocation {
@@ -109,6 +112,86 @@ export interface RunRuntimeSemanticExecutorResult {
 	casRetries: number;
 	outcomes: RuntimeSemanticOutcome[];
 	reaction: RuntimeReaction;
+}
+
+export interface RunRuntimeSelectedSemanticReactionInput {
+	repoRoot: string;
+	reaction: RuntimeReaction;
+	runtimeJobId: string;
+	adapters: RuntimeSemanticAdapters;
+	mode?: RuntimeSemanticMode;
+	maxCasRetries?: number;
+	reactor?: RuntimeReactor;
+	signal?: AbortSignal;
+	beforeAppend?: () => void | Promise<void>;
+}
+
+export interface RunRuntimeSelectedSemanticReactionResult {
+	status: "completed" | "previewed" | "routed" | "stale";
+	mode: RuntimeSemanticMode;
+	casRetries: number;
+	outcome?: RuntimeSemanticOutcome;
+	reaction: RuntimeReaction;
+}
+
+/** Execute one coordinator-selected invariant without drifting into another lane. */
+export async function runRuntimeSelectedSemanticReaction(
+	input: RunRuntimeSelectedSemanticReactionInput,
+): Promise<RunRuntimeSelectedSemanticReactionResult> {
+	if (input.reaction.status !== "ready" || !input.reaction.selection) {
+		throw new Error("Runtime selected semantic reaction must be ready.");
+	}
+	const mode = input.mode || "append";
+	const maxCasRetries = boundedInteger(
+		input.maxCasRetries,
+		2,
+		0,
+		8,
+		"maxCasRetries",
+	);
+	const reactor = input.reactor || new RuntimeReactor(input.repoRoot);
+	let casRetries = 0;
+	let observation = await observeSelectedReaction(reactor, input.reaction);
+	while (observation) {
+		input.signal?.throwIfAborted();
+		try {
+			const outcome = await executeSelectedSemanticWork(
+				input.repoRoot,
+				mode,
+				observation,
+				input.adapters,
+				input.runtimeJobId,
+				input.beforeAppend,
+			);
+			if (mode === "preview") {
+				return {
+					status: "previewed",
+					mode,
+					casRetries,
+					outcome,
+					reaction: observation.reaction,
+				};
+			}
+			return {
+				status: outcomeRoutesBack(outcome) ? "routed" : "completed",
+				mode,
+				casRetries,
+				outcome,
+				reaction: observation.reaction,
+			};
+		} catch (error) {
+			if (!isCasConflict(error) || casRetries >= maxCasRetries) throw error;
+			casRetries += 1;
+			reactor.invalidate();
+			observation = await observeSelectedReaction(reactor, input.reaction);
+		}
+	}
+	return {
+		status: "stale",
+		mode,
+		casRetries,
+		reaction: input.reaction,
+	};
 }
 
 /**
@@ -215,11 +298,26 @@ export async function runRuntimeSemanticExecutor(
 	);
 }
 
+async function observeSelectedReaction(
+	reactor: RuntimeReactor,
+	expected: RuntimeReaction,
+): Promise<RuntimeObservation | undefined> {
+	const observation = await reactor.observeMany(expected.trigger, {
+		maxReactions: 32,
+	});
+	const reaction = observation.reactions.find((candidate) =>
+		runtimeReactionsShareInvariant(expected, candidate),
+	);
+	return reaction ? { ...observation, reaction } : undefined;
+}
+
 async function executeSelectedSemanticWork(
 	repoRoot: string,
 	mode: RuntimeSemanticMode,
 	observation: RuntimeObservation,
 	adapters: RuntimeSemanticAdapters,
+	runtimeJobId?: string,
+	beforeAppend?: () => void | Promise<void>,
 ): Promise<RuntimeSemanticOutcome> {
 	const selection = observation.reaction.selection;
 	if (!selection) throw new Error("Runtime ready reaction has no selection.");
@@ -238,6 +336,7 @@ async function executeSelectedSemanticWork(
 			"expectedChangeDigest",
 			"expectedWorkStateDigest",
 			"expectedBytes",
+			"runtimeJobId",
 			"mode",
 		]);
 		const coreInput: RunWikiDecideInput = {
@@ -247,12 +346,14 @@ async function executeSelectedSemanticWork(
 			expectedRevision: selection.change.changeRevision,
 			expectedChangeDigest: selection.change.changeDigest,
 			expectedWorkStateDigest: observation.workState.snapshotDigest,
+			runtimeJobId,
 			mode: "preview",
 		};
 		const preview = await runWikiDecide(coreInput);
 		if (mode === "preview" || preview.report.exit.status !== "exit") {
 			return { loop: "decision", result: preview };
 		}
+		await beforeAppend?.();
 		return {
 			loop: "decision",
 			result: await runWikiDecide({
@@ -280,6 +381,7 @@ async function executeSelectedSemanticWork(
 			"expectedWorkStateDigest",
 			"expectedChangeIds",
 			"expectedBytesByChangeId",
+			"runtimeJobId",
 			"mode",
 		]);
 		const expectedChangeIds = selection.planningHorizon.map(
@@ -290,6 +392,7 @@ async function executeSelectedSemanticWork(
 			repoRoot,
 			expectedWorkStateDigest: observation.workState.snapshotDigest,
 			expectedChangeIds,
+			runtimeJobId,
 			mode: "preview",
 		};
 		const preview = await runRuntimeSelectedWikiPlan(
@@ -299,6 +402,7 @@ async function executeSelectedSemanticWork(
 		if (mode === "preview" || preview.report.exit.status !== "exit") {
 			return { loop: "planning", result: preview };
 		}
+		await beforeAppend?.();
 		return {
 			loop: "planning",
 			result: await runRuntimeSelectedWikiPlan(
@@ -339,6 +443,7 @@ async function executeSelectedSemanticWork(
 	assertNoRuntimeAuthority("implementation", candidate, [
 		"repoRoot",
 		"expectedWorkStateDigest",
+		"runtimeJobId",
 		"traceId",
 		"planningEvents",
 		"changes",
@@ -359,9 +464,11 @@ async function executeSelectedSemanticWork(
 				...candidate,
 				repoRoot,
 				expectedWorkStateDigest: observation.workState.snapshotDigest,
+				runtimeJobId,
 				mode,
 			},
 			observation,
+			beforeAppend,
 		),
 	};
 }

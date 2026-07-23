@@ -150,6 +150,52 @@ test("coordinator service authenticates loopback clients and shares supervision"
 		assert.equal(state.clientCount, 2);
 		assert.equal(state.supervisorCount, 1);
 		assert.equal(state.executionPermitted, true);
+		const callerSelected = await fetch(
+			`${service.endpoint.origin}/v1/runtime/react`,
+			{
+				method: "POST",
+				headers: {
+					authorization: `Bearer ${service.endpoint.token}`,
+					"content-type": "application/json",
+					"x-codewiki-generation": service.endpoint.generationId,
+				},
+				body: JSON.stringify({
+					connectionId: dashboard.connectionId,
+					trigger: { kind: "manual_resume" },
+					selection: { loop: "decision", changeId: "CHG-forged" },
+				}),
+			},
+		);
+		assert.equal(callerSelected.status, 400);
+		assert.deepEqual(await callerSelected.json(), {
+			error: "unsupported_field:selection",
+		});
+		const callerTimed = await fetch(
+			`${service.endpoint.origin}/v1/runtime/react`,
+			{
+				method: "POST",
+				headers: {
+					authorization: `Bearer ${service.endpoint.token}`,
+					"content-type": "application/json",
+					"x-codewiki-generation": service.endpoint.generationId,
+				},
+				body: JSON.stringify({
+					connectionId: dashboard.connectionId,
+					trigger: {
+						kind: "manual_resume",
+						occurredAt: "2099-01-01T00:00:00.000Z",
+					},
+				}),
+			},
+		);
+		assert.equal(callerTimed.status, 400);
+		assert.deepEqual(await callerTimed.json(), {
+			error: "unsupported_field:occurredAt",
+		});
+		await assert.rejects(
+			() => dashboard.react({ kind: "manual_resume" }),
+			/semantic_adapters_unavailable/,
+		);
 
 		const result = await service.coordinator.schedule({
 			idempotencyKey: "decision:service",

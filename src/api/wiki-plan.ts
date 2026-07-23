@@ -7,7 +7,10 @@ import {
 } from "../traces/append.ts";
 import { createLoopIterationEvent } from "../traces/events.ts";
 import { readTraceFileSnapshot } from "../traces/reader.ts";
-import { traceFilePath } from "../traces/schema.ts";
+import {
+	assertRuntimeSemanticJobId,
+	traceFilePath,
+} from "../traces/schema.ts";
 import type {
 	LoopQualityStandardResult,
 	TraceEvent,
@@ -38,6 +41,7 @@ export interface RunWikiPlanInput {
 	mode?: WikiPlanMode;
 	repoRoot?: string;
 	expectedBytesByChangeId?: Record<string, number>;
+	runtimeJobId?: string;
 }
 
 export interface PlanningEpochReport {
@@ -84,6 +88,7 @@ const INPUT_KEYS = [
 	"mode",
 	"repoRoot",
 	"expectedBytesByChangeId",
+	"runtimeJobId",
 ] as const;
 
 export async function runWikiPlan(
@@ -168,7 +173,13 @@ async function runWikiPlanForSelectedChanges(
 	const events = Object.fromEntries(
 		traces.map((trace) => [
 			trace.changeId,
-			planningEvent(trace, report, input.actor, input.rationale, createdAt),
+			planningEvent(trace, {
+				report,
+				actor: input.actor,
+				rationale: input.rationale,
+				createdAt,
+				runtimeJobId: input.runtimeJobId,
+			}),
 		]),
 	);
 	if (!quality.passed) {
@@ -189,11 +200,15 @@ async function runWikiPlanForSelectedChanges(
 
 function planningEvent(
 	trace: LoadedParticipantTrace,
-	report: PlanningEpochReport,
-	actor: string,
-	rationale: string,
-	createdAt: string,
+	input: {
+		report: PlanningEpochReport;
+		actor: string;
+		rationale: string;
+		createdAt: string;
+		runtimeJobId?: string;
+	},
 ): TraceEvent {
+	const { report, actor, rationale, createdAt, runtimeJobId } = input;
 	const events = trace.records.filter(
 		(record): record is TraceEvent => record.type === "trace_event",
 	);
@@ -263,7 +278,10 @@ function planningEvent(
 				...report.workItems.map((item) => `work:${item.id}`),
 			],
 		},
-		data: { observedWorkStateDigest: report.observedWorkStateDigest },
+		data: {
+			observedWorkStateDigest: report.observedWorkStateDigest,
+			...(runtimeJobId ? { runtimeJobId } : {}),
+		},
 	});
 }
 
@@ -450,6 +468,7 @@ function assertInput(input: RunWikiPlanInput): void {
 		throw new Error("wiki_plan workItems must be an array.");
 	requiredText(input.actor, "actor");
 	requiredText(input.rationale, "rationale");
+	assertRuntimeSemanticJobId(input.runtimeJobId, "wiki_plan");
 	if (input.mode && !["preview", "append"].includes(input.mode)) {
 		throw new Error("wiki_plan mode is invalid.");
 	}

@@ -26,3 +26,10 @@ export {
 	type ProjectCoordinatorServiceHandle,
 	type ProjectCoordinatorServiceOptions,
 } from "./project-coordinator-service.ts";
+export {
+	persistedRuntimeJobEvidence,
+	scheduleRuntimeReactions,
+	type RuntimeReactionJobEvidence,
+	type RuntimeReactionJobReceipt,
+	type ScheduleRuntimeReactionsInput,
+} from "./runtime-reaction-jobs.ts";

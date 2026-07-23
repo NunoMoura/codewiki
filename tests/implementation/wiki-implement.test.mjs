@@ -429,18 +429,22 @@ describe("wiki_implement core facade", () => {
 				"wiki-implement-append",
 			);
 			const { traceId, expectedWorkStateDigest } = prepared;
+			const runtimeJobId = `runtime-reaction:${"2".repeat(64)}`;
 			const result = await runWikiImplement({
 				repoRoot: root,
 				expectedWorkStateDigest,
 				mode: "append",
 				createdAt: "2026-06-11T00:00:03.000Z",
 				evidence: [evidenceInput()],
+				runtimeJobId,
 			});
 			const readBack = await readTrace(join(root, traceFilePath(traceId)));
 			const state = replayTrace(readBack.records);
 
 			assert.equal(result.mode, "append");
 			assert.equal(result.append?.records.length, 2);
+			assert.equal(result.iterationEvent.data?.runtimeJobId, runtimeJobId);
+			assert.equal(state.events.at(-1)?.data?.runtimeJobId, runtimeJobId);
 			assert.equal(state.events.at(-1)?.event, "evidence_accepted");
 			assertQualityGraphIdentity(state.events.at(-1), "implementation.loop");
 			assert.equal(state.latestCheckpoint?.parentId, result.iterationEvent.id);

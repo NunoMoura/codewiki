@@ -71,6 +71,7 @@ export interface ImplementationIterationInput {
 	aggregateContentProof?: ContentProof;
 	existingPaths?: string[];
 	requireTddEvidence?: boolean;
+	runtimeJobId?: string;
 	qualityJudge?: LoopQualityJudgeExecutionOptions;
 	parentId?: string | null;
 	startSequence?: number;
@@ -430,6 +431,9 @@ function implementationTraceEvents(args: {
 			},
 			exit: loopExitFromEvaluation("implementation", exit),
 			progress: loopProgressFromEvaluation(exit, refs),
+			...(input.runtimeJobId
+				? { data: { runtimeJobId: input.runtimeJobId } }
+				: {}),
 		}),
 	];
 }

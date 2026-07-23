@@ -198,12 +198,23 @@ describe("wiki_plan portfolio facade", () => {
 	it("appends one shared epoch to every participating Change Trace", async () => {
 		const { root } = await setupApprovedPortfolio();
 		const input = await planningInput(root);
-		const result = await runWikiPlan({ ...input, mode: "append" });
+		const runtimeJobId = `runtime-reaction:${"1".repeat(64)}`;
+		const result = await runWikiPlan({
+			...input,
+			mode: "append",
+			runtimeJobId,
+		});
 		const workState = await buildProjectWorkState({ repoRoot: root });
 
 		assert.deepEqual(
 			Object.keys(result.append).sort(),
 			[...input.expectedChangeIds].sort(),
+		);
+		assert.equal(
+			Object.values(result.events).every(
+				(event) => event.data?.runtimeJobId === runtimeJobId,
+			),
+			true,
 		);
 		assert.equal(workState.sprints.length, 1);
 		assert.equal(workState.sprints[0].id, "SPR-shared-runtime");

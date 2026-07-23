@@ -1,0 +1,304 @@
+import { join } from "node:path";
+import { changeTraceId } from "../changes/change-trace.ts";
+import { readTraceFile } from "../traces/reader.ts";
+import { traceFilePath } from "../traces/schema.ts";
+import type { TraceEvent } from "../traces/types.ts";
+import type {
+	ProjectCoordinator,
+	ProjectCoordinatorJob,
+	ProjectCoordinatorLane,
+} from "./project-coordinator.ts";
+import type {
+	RuntimeReactor,
+	RuntimeReaction,
+	RuntimeTrigger,
+} from "./reactor.ts";
+import { runtimeSemanticJobId } from "./semantic-job-id.ts";
+import {
+	runRuntimeSelectedSemanticReaction,
+	type RuntimeSemanticAdapters,
+	type RuntimeSemanticMode,
+	type RuntimeSemanticOutcome,
+} from "./semantic-executor.ts";
+
+export interface RuntimeReactionJobEvidence {
+	traceId: string;
+	eventId: string;
+	sequence: number;
+}
+
+export interface RuntimeReactionJobReceipt {
+	schemaVersion: 1;
+	jobId: string;
+	loop: "decision" | "planning" | "implementation";
+	status: "completed" | "previewed" | "routed" | "stale";
+	evidence: RuntimeReactionJobEvidence[];
+}
+
+export interface RuntimeReactionJobInput {
+	repoRoot: string;
+	coordinator: ProjectCoordinator;
+	reactor: RuntimeReactor;
+	reaction: RuntimeReaction;
+	adapters: RuntimeSemanticAdapters;
+	mode?: RuntimeSemanticMode;
+	maxCasRetries?: number;
+	beforeAppend?: () => void | Promise<void>;
+}
+
+export interface ScheduleRuntimeReactionsInput {
+	repoRoot: string;
+	coordinator: ProjectCoordinator;
+	reactor: RuntimeReactor;
+	trigger: RuntimeTrigger;
+	adapters: RuntimeSemanticAdapters;
+	mode?: RuntimeSemanticMode;
+	maxReactions?: number;
+	maxPlanningChanges?: number;
+	maxCasRetries?: number;
+	beforeAppend?: () => void | Promise<void>;
+}
+
+export async function scheduleRuntimeReactionJob(
+	input: RuntimeReactionJobInput,
+): Promise<RuntimeReactionJobReceipt> {
+	return input.coordinator.schedule(runtimeReactionJob(input));
+}
+
+export async function scheduleRuntimeReactions(
+	input: ScheduleRuntimeReactionsInput,
+): Promise<RuntimeReactionJobReceipt[]> {
+	const observation = await input.reactor.observeMany(input.trigger, {
+		maxReactions: input.maxReactions,
+		maxPlanningChanges: input.maxPlanningChanges,
+	});
+	return Promise.all(
+		observation.reactions.map((reaction) =>
+			scheduleRuntimeReactionJob({
+				repoRoot: input.repoRoot,
+				coordinator: input.coordinator,
+				reactor: input.reactor,
+				reaction,
+				adapters: input.adapters,
+				mode: input.mode,
+				maxCasRetries: input.maxCasRetries,
+				beforeAppend: input.beforeAppend,
+			}),
+		),
+	);
+}
+
+export function runtimeReactionJob(
+	input: Omit<RuntimeReactionJobInput, "coordinator">,
+): ProjectCoordinatorJob<RuntimeReactionJobReceipt> {
+	const selection = input.reaction.selection;
+	if (input.reaction.status !== "ready" || !selection) {
+		throw new Error("Runtime coordinator cannot schedule a quiescent reaction.");
+	}
+	const mode = input.mode || "append";
+	const jobId = runtimeSemanticJobId(input.reaction, mode);
+	const job: ProjectCoordinatorJob<RuntimeReactionJobReceipt> = {
+		idempotencyKey: jobId,
+		lane: reactionLane(input.reaction),
+		conflictRefs: reactionConflictRefs(input.reaction),
+		effect: mode === "append" ? "write" : "read",
+		async run(signal) {
+			const result = await runRuntimeSelectedSemanticReaction({
+				repoRoot: input.repoRoot,
+				reaction: input.reaction,
+				runtimeJobId: jobId,
+				adapters: input.adapters,
+				mode,
+				maxCasRetries: input.maxCasRetries,
+				reactor: input.reactor,
+				signal,
+				beforeAppend: input.beforeAppend,
+			});
+			const evidence = result.outcome
+				? semanticOutcomeEvidence(result.outcome)
+				: [];
+			return receipt(jobId, selection.loop, result.status, evidence);
+		},
+	};
+	if (mode === "append") {
+		job.recover = async () => {
+			const events = await persistedRuntimeJobEvents(
+				input.repoRoot,
+				input.reaction,
+				jobId,
+			);
+			const evidence = events.map(eventEvidence).sort(compareEvidence);
+			return evidence.length > 0
+				? {
+						status: "completed",
+						result: receipt(
+							jobId,
+							selection.loop,
+							persistedJobStatus(selection.loop, events),
+							evidence,
+						),
+					}
+				: undefined;
+		};
+	}
+	return job;
+}
+
+export async function persistedRuntimeJobEvidence(
+	repoRoot: string,
+	reaction: RuntimeReaction,
+	jobId: string,
+): Promise<RuntimeReactionJobEvidence[]> {
+	const events = await persistedRuntimeJobEvents(repoRoot, reaction, jobId);
+	return events.map(eventEvidence).sort(compareEvidence);
+}
+
+async function persistedRuntimeJobEvents(
+	repoRoot: string,
+	reaction: RuntimeReaction,
+	jobId: string,
+): Promise<TraceEvent[]> {
+	const events: TraceEvent[] = [];
+	for (const traceId of reactionTraceIds(reaction)) {
+		const records = await readTraceFile(join(repoRoot, traceFilePath(traceId))).catch(
+			(error: unknown) => {
+				if (isNotFound(error)) return [];
+				throw error;
+			},
+		);
+		for (const record of records) {
+			if (
+				record.type === "trace_event" &&
+				objectRecord(record.data).runtimeJobId === jobId
+			) {
+				events.push(record);
+			}
+		}
+	}
+	return events.sort(
+		(left, right) =>
+			left.traceId.localeCompare(right.traceId) ||
+			left.sequence - right.sequence ||
+			left.id.localeCompare(right.id),
+	);
+}
+
+function persistedJobStatus(
+	loop: RuntimeReactionJobReceipt["loop"],
+	events: TraceEvent[],
+): RuntimeReactionJobReceipt["status"] {
+	if (loop !== "implementation") return "completed";
+	return events.some((event) => {
+		const exit = objectRecord(objectRecord(event.data).exit);
+		return (
+			exit.status !== "exit" ||
+			["decision", "planning", "user"].includes(String(exit.targetLoop || ""))
+		);
+	})
+		? "routed"
+		: "completed";
+}
+
+function reactionLane(reaction: RuntimeReaction): ProjectCoordinatorLane {
+	const selection = reaction.selection;
+	if (!selection) throw new Error("Runtime reaction selection is required.");
+	if (selection.loop === "decision") {
+		return {
+			kind: "decision",
+			changeId: selection.change.changeId,
+			revision: selection.change.changeRevision,
+		};
+	}
+	if (selection.loop === "planning") return { kind: "planning" };
+	return { kind: "implementation_review", sprintId: selection.sprintId };
+}
+
+function reactionConflictRefs(reaction: RuntimeReaction): string[] {
+	const selection = reaction.selection;
+	if (!selection) return [];
+	if (selection.loop === "decision") {
+		return [`change:${selection.change.changeId}`];
+	}
+	if (selection.loop === "planning") {
+		return selection.planningHorizon.map(
+			(change) => `change:${change.changeId}`,
+		);
+	}
+	return [
+		...selection.changeIds.map((changeId) => `change:${changeId}`),
+		...selection.workItemIds.map((workItemId) => `work-item:${workItemId}`),
+	];
+}
+
+function reactionTraceIds(reaction: RuntimeReaction): string[] {
+	const selection = reaction.selection;
+	if (!selection) return [];
+	if (selection.loop === "decision") return [selection.change.traceId];
+	if (selection.loop === "planning") {
+		return selection.planningHorizon.map((change) => change.traceId);
+	}
+	return selection.changeIds.map(changeTraceId);
+}
+
+function semanticOutcomeEvidence(
+	outcome: RuntimeSemanticOutcome,
+): RuntimeReactionJobEvidence[] {
+	if (outcome.loop === "decision") {
+		return outcome.result.append && outcome.result.event
+			? [eventEvidence(outcome.result.event)]
+			: [];
+	}
+	if (outcome.loop === "planning") {
+		return outcome.result.append
+			? Object.values(outcome.result.events)
+					.map(eventEvidence)
+					.sort(compareEvidence)
+			: [];
+	}
+	return outcome.result.append
+		? [eventEvidence(outcome.result.iterationEvent)]
+		: [];
+}
+
+function eventEvidence(event: TraceEvent): RuntimeReactionJobEvidence {
+	return {
+		traceId: event.traceId,
+		eventId: event.id,
+		sequence: event.sequence,
+	};
+}
+
+function receipt(
+	jobId: string,
+	loop: RuntimeReactionJobReceipt["loop"],
+	status: RuntimeReactionJobReceipt["status"],
+	evidence: RuntimeReactionJobEvidence[],
+): RuntimeReactionJobReceipt {
+	return { schemaVersion: 1, jobId, loop, status, evidence };
+}
+
+function objectRecord(value: unknown): Record<string, unknown> {
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: {};
+}
+
+function isNotFound(error: unknown): boolean {
+	return (
+		error !== null &&
+		typeof error === "object" &&
+		"code" in error &&
+		(error as { code?: unknown }).code === "ENOENT"
+	);
+}
+
+function compareEvidence(
+	left: RuntimeReactionJobEvidence,
+	right: RuntimeReactionJobEvidence,
+): number {
+	return (
+		left.traceId.localeCompare(right.traceId) ||
+		left.sequence - right.sequence ||
+		left.eventId.localeCompare(right.eventId)
+	);
+}

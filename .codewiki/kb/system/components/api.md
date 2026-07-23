@@ -73,7 +73,7 @@ The API exposes reduced core facades for `buildWorkState()`, `buildWikiState()`,
 
 `runWikiOkf()` is a format-compatibility facade, not a workflow loop. `validate` and `export` actions default to CodeWiki KB scope and only include `.codewiki/kb/**/*.md`. `consume` defaults to generic OKF bundle scope and preserves unknown producer frontmatter fields when callers round-trip imported OKF markdown. The facade does not use BigQuery, Gemini, Google Cloud Knowledge Catalog, or the Google OKF reference agent.
 
-Pi extension package metadata is present for external installs. The current extension entry is covered by mocks, isolated Pi install smoke tests, external Pi RPC smoke tests, and repo-local read-only command smoke. `@nunomoura/codewiki/coordinator` now exposes the project-service host/client boundary, and `@nunomoura/codewiki/pi-sdk` exposes the optional embedded semantic-session adapter, while the root facade and source-checkout boundary remain harness-neutral.
+Pi extension package metadata is present for external installs. The current extension entry is covered by mocks, isolated Pi install smoke tests, external Pi RPC smoke tests, and repo-local read-only command smoke. `@nunomoura/codewiki/coordinator` exposes the project-service host/client boundary, including authenticated trigger submission, runtime-owned compatible reaction selection, typed coordinator jobs, pre-append generation fencing, and trace-backed restart recovery. `@nunomoura/codewiki/pi-sdk` exposes the optional embedded semantic-session adapter, while the root facade and source-checkout boundary remain harness-neutral.
 
 ## Related docs
 

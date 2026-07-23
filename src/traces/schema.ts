@@ -72,6 +72,16 @@ export function isChangeId(value: unknown): value is string {
 	return typeof value === "string" && /^CHG-[A-Za-z0-9._-]+$/.test(value);
 }
 
+export function assertRuntimeSemanticJobId(
+	value: string | undefined,
+	operation: string,
+): void {
+	if (value === undefined) return;
+	if (!/^runtime-reaction:[a-f0-9]{64}$/.test(value)) {
+		throw new Error(`${operation} runtimeJobId is invalid.`);
+	}
+}
+
 export function validateTraceRecord(
 	value: unknown,
 ): TraceValidationResult<TraceRecord> {

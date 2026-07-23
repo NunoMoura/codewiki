@@ -4,7 +4,10 @@ import {
 	type AppendTraceBatchResult,
 } from "../traces/append.ts";
 import { readTraceFileSnapshot } from "../traces/reader.ts";
-import { traceFilePath } from "../traces/schema.ts";
+import {
+	assertRuntimeSemanticJobId,
+	traceFilePath,
+} from "../traces/schema.ts";
 import type { LoopQualityStandardResult, TraceEvent } from "../traces/types.ts";
 import {
 	changeTraceEventId,
@@ -43,6 +46,7 @@ export interface RunWikiDecideInput {
 	mode?: WikiDecideMode;
 	repoRoot?: string;
 	expectedBytes?: number;
+	runtimeJobId?: string;
 }
 
 export interface ChangeApproval {
@@ -107,6 +111,7 @@ const INPUT_KEYS = [
 	"mode",
 	"repoRoot",
 	"expectedBytes",
+	"runtimeJobId",
 ] as const;
 
 export async function runWikiDecide(
@@ -272,6 +277,9 @@ function decisionEvent(input: {
 		...event,
 		data: {
 			...event.data,
+			...(input.input.runtimeJobId
+				? { runtimeJobId: input.input.runtimeJobId }
+				: {}),
 			trigger: `decision.${input.input.disposition}`,
 			observedWorkStateDigest: input.input.expectedWorkStateDigest,
 			exit: {
@@ -483,6 +491,7 @@ function assertInput(input: RunWikiDecideInput): void {
 		throw new Error("wiki_decide disposition is invalid.");
 	}
 	requiredText(input.rationale, "rationale");
+	assertRuntimeSemanticJobId(input.runtimeJobId, "wiki_decide");
 	if (input.authority) {
 		if (!["user", "policy"].includes(input.authority.kind)) {
 			throw new Error("wiki_decide authority.kind is invalid.");

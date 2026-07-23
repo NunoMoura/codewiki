@@ -75,6 +75,22 @@ describe("runtime semantic executor", () => {
 				}),
 			/Runtime decision candidate cannot supply runtime-owned fields: changeId/,
 		);
+		await assert.rejects(
+			() =>
+				runRuntimeSemanticExecutor({
+					repoRoot: root,
+					trigger: { kind: "manual_resume" },
+					mode: "preview",
+					adapters: {
+						decision: () => ({
+							disposition: "approve",
+							rationale: "Caller attempted to forge runtime recovery.",
+							runtimeJobId: `runtime-reaction:${"0".repeat(64)}`,
+						}),
+					},
+				}),
+			/Runtime decision candidate cannot supply runtime-owned fields: runtimeJobId/,
+		);
 	});
 
 	it("re-observes and reruns selected semantic work after a CAS race", async () => {

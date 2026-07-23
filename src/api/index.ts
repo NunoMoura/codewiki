@@ -88,7 +88,20 @@ export type {
 export type { ProjectSnapshot } from "../project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
 export * from "../runtime/project-coordinator.ts";
-export * from "../runtime/semantic-executor.ts";
+export { runRuntimeSemanticExecutor } from "../runtime/semantic-executor.ts";
+export type {
+	RunRuntimeSemanticExecutorInput,
+	RunRuntimeSemanticExecutorResult,
+	RuntimeDecisionCandidate,
+	RuntimeDecisionInvocation,
+	RuntimeImplementationCandidate,
+	RuntimeImplementationInvocation,
+	RuntimePlanningCandidate,
+	RuntimePlanningInvocation,
+	RuntimeSemanticAdapters,
+	RuntimeSemanticMode,
+	RuntimeSemanticOutcome,
+} from "../runtime/semantic-executor.ts";
 export type {
 	CreateRuntimeHandoffManifestOptions,
 	RuntimeHandoffAction,

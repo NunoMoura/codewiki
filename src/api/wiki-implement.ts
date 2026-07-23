@@ -51,6 +51,7 @@ import {
 	type ProjectSnapshot,
 } from "../project/snapshot.ts";
 import { RuntimeReactor, type RuntimeObservation } from "../runtime/reactor.ts";
+import { assertRuntimeSemanticJobId } from "../traces/schema.ts";
 import {
 	appendSemanticLoopReport,
 	assertSemanticLoopReportBatch,
@@ -111,6 +112,7 @@ export interface RunWikiImplementInput {
 	changedPaths?: string[];
 	evidencePaths?: string[];
 	aggregateContentProof?: ContentProof;
+	runtimeJobId?: string;
 }
 
 interface PreparedWikiImplementInput
@@ -196,6 +198,7 @@ const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"changedPaths",
 	"evidencePaths",
 	"aggregateContentProof",
+	"runtimeJobId",
 ] as const;
 
 interface PreparedWikiImplementResult
@@ -211,13 +214,15 @@ export async function runWikiImplement(
 export async function runRuntimeSelectedWikiImplement(
 	input: RunWikiImplementInput,
 	observation: RuntimeObservation,
+	beforeAppend?: () => void | Promise<void>,
 ): Promise<RunWikiImplementResult> {
-	return await runWikiImplementFromObservation(input, observation);
+	return await runWikiImplementFromObservation(input, observation, beforeAppend);
 }
 
 async function runWikiImplementFromObservation(
 	input: RunWikiImplementInput,
 	observation?: RuntimeObservation,
+	beforeAppend?: () => void | Promise<void>,
 ): Promise<RunWikiImplementResult> {
 	assertKnownInputKeys(
 		"wiki_implement",
@@ -230,13 +235,15 @@ async function runWikiImplementFromObservation(
 		"expectedWorkStateDigest",
 		input.expectedWorkStateDigest,
 	);
+	assertRuntimeSemanticJobId(input.runtimeJobId, "wiki_implement");
 	const context = await runtimeImplementationContext(input, observation);
-	const result = await runPreparedWikiImplement(context.input);
+	const result = await runPreparedWikiImplement(context.input, beforeAppend);
 	return { ...result, selection: context.selection };
 }
 
 async function runPreparedWikiImplement(
 	input: PreparedWikiImplementInput,
+	beforeAppend?: () => void | Promise<void>,
 ): Promise<PreparedWikiImplementResult> {
 	const traceId = input.traceId;
 	const mode = input.mode || "preview";
@@ -277,6 +284,7 @@ async function runPreparedWikiImplement(
 		qualityJudge,
 	});
 	if (mode === "append") {
+		await beforeAppend?.();
 		const expectedBytes = requiredExpectedBytes(input.expectedBytes);
 		const result = await appendSemanticLoopReport({
 			repoRoot: input.repoRoot,
@@ -918,6 +926,7 @@ function implementationIterationInput(
 		expectedWorkerBaseSha: input.expectedWorkerBaseSha,
 		componentMap: input.componentMap,
 		requireTddEvidence: input.requireTddEvidence,
+		runtimeJobId: input.runtimeJobId,
 		parentId: input.parentId,
 		createdAt: input.createdAt,
 		existingPaths: prepared.existingPaths,

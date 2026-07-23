@@ -26,9 +26,18 @@ import {
 	type ProjectCoordinatorEndpoint,
 	type ProjectCoordinatorOwnership,
 } from "./project-coordinator-endpoint.ts";
+import { RuntimeReactor, type RuntimeTrigger } from "./reactor.ts";
+import {
+	scheduleRuntimeReactions,
+	type RuntimeReactionJobReceipt,
+} from "./runtime-reaction-jobs.ts";
+import type {
+	RuntimeSemanticAdapters,
+	RuntimeSemanticMode,
+} from "./semantic-executor.ts";
 
 const DEFAULT_CLIENT_LEASE_MS = 30_000;
-const DEFAULT_REQUEST_TIMEOUT_MS = 5_000;
+const DEFAULT_REQUEST_TIMEOUT_MS = 60_000;
 const MAX_REQUEST_BYTES = 16 * 1_024;
 const MAX_RESPONSE_BYTES = 1024 * 1_024;
 
@@ -43,6 +52,10 @@ export interface ProjectCoordinatorServiceOptions
 	port?: number;
 	now?: () => string;
 	clock?: () => number;
+	semanticAdapters?: RuntimeSemanticAdapters;
+	maxReactions?: number;
+	maxPlanningChanges?: number;
+	maxCasRetries?: number;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
@@ -52,11 +65,20 @@ export interface ProjectCoordinatorServiceHandle {
 	close(): Promise<void>;
 }
 
+type ProjectCoordinatorRemoteTrigger = Omit<
+	RuntimeTrigger,
+	"occurredAt"
+>;
+
 export interface ProjectCoordinatorRemoteClient {
 	clientId: string;
 	connectionId: string;
 	generationId: string;
 	state(): Promise<ProjectCoordinatorSnapshot>;
+	react(
+		trigger: ProjectCoordinatorRemoteTrigger,
+		mode?: RuntimeSemanticMode,
+	): Promise<RuntimeReactionJobReceipt[]>;
 	heartbeat(): Promise<void>;
 	disconnect(): Promise<void>;
 }
@@ -69,6 +91,7 @@ interface RemoteClientLease {
 	clientId: string;
 	connectionId: string;
 	expiresAt: number;
+	activeRequests: number;
 	connection: ProjectCoordinatorClientConnection;
 }
 
@@ -76,6 +99,11 @@ interface ServiceRuntime {
 	endpoint: ProjectCoordinatorEndpoint;
 	ownership: ProjectCoordinatorOwnership;
 	coordinator: ProjectCoordinator;
+	reactor: RuntimeReactor;
+	semanticAdapters?: RuntimeSemanticAdapters;
+	maxReactions?: number;
+	maxPlanningChanges?: number;
+	maxCasRetries?: number;
 	clients: Map<string, RemoteClientLease>;
 	clientLeaseMs: number;
 	clock: () => number;
@@ -135,6 +163,26 @@ export async function startProjectCoordinatorService(
 			endpoint,
 			ownership,
 			coordinator,
+			reactor: new RuntimeReactor(canonicalRoot),
+			semanticAdapters: options.semanticAdapters,
+			maxReactions: boundedOptionalInteger(
+				options.maxReactions,
+				1,
+				32,
+				"maxReactions",
+			),
+			maxPlanningChanges: boundedOptionalInteger(
+				options.maxPlanningChanges,
+				1,
+				32,
+				"maxPlanningChanges",
+			),
+			maxCasRetries: boundedOptionalInteger(
+				options.maxCasRetries,
+				0,
+				8,
+				"maxCasRetries",
+			),
 			clients,
 			clientLeaseMs: boundedClientLease(options.clientLeaseMs),
 			clock: options.clock || Date.now,
@@ -153,8 +201,8 @@ export async function startProjectCoordinatorService(
 			coordinator,
 			async close() {
 				if (closed) return;
-				if (coordinator.snapshot().activeJobCount > 0) {
-					throw new Error("Project coordinator service cannot close with active jobs.");
+				if (coordinator.snapshot().jobs.length > 0) {
+					throw new Error("Project coordinator service cannot close with pending jobs.");
 				}
 				closed = true;
 				runtime.closing = true;
@@ -204,6 +252,18 @@ export async function connectProjectCoordinatorClient(
 				endpoint,
 				"/v1/state",
 				{ timeoutMs: options.timeoutMs },
+			);
+		},
+		react(trigger, mode = "append") {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<RuntimeReactionJobReceipt[]>(
+				endpoint,
+				"/v1/runtime/react",
+				{
+					method: "POST",
+					body: { connectionId: response.connectionId, trigger, mode },
+					timeoutMs: options.timeoutMs,
+				},
 			);
 		},
 		async heartbeat() {
@@ -302,6 +362,7 @@ async function routeServiceRequest(
 			clientId: connection.clientId,
 			connectionId,
 			expiresAt: runtime.clock() + runtime.clientLeaseMs,
+			activeRequests: 0,
 			connection,
 		});
 		writeJson(response, 201, {
@@ -309,6 +370,10 @@ async function routeServiceRequest(
 			connectionId,
 			generationId: runtime.endpoint.generationId,
 		});
+		return;
+	}
+	if (method === "POST" && url.pathname === "/v1/runtime/react") {
+		await handleRuntimeReaction(runtime, request, response);
 		return;
 	}
 	if (method === "POST" && url.pathname === "/v1/clients/heartbeat") {
@@ -332,6 +397,45 @@ async function routeServiceRequest(
 	writeJson(response, 404, { error: "not_found" });
 }
 
+async function handleRuntimeReaction(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+): Promise<void> {
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, ["connectionId", "trigger", "mode"]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	const trigger = runtimeTrigger(body.trigger, runtime.clock());
+	const mode = runtimeSemanticMode(body.mode);
+	const adapters = runtime.semanticAdapters;
+	if (!adapters) {
+		throw new HttpError(503, "semantic_adapters_unavailable");
+	}
+	lease.activeRequests += 1;
+	try {
+		const receipts = await scheduleRuntimeReactions({
+			repoRoot: runtime.endpoint.repoRoot,
+			coordinator: runtime.coordinator,
+			reactor: runtime.reactor,
+			trigger,
+			adapters,
+			mode,
+			maxReactions: runtime.maxReactions,
+			maxPlanningChanges: runtime.maxPlanningChanges,
+			maxCasRetries: runtime.maxCasRetries,
+			async beforeAppend() {
+				if (!(await projectCoordinatorOwnershipIsCurrent(runtime.ownership))) {
+					throw new HttpError(409, "stale_generation");
+				}
+			},
+		});
+		writeJson(response, 200, receipts);
+	} finally {
+		lease.activeRequests -= 1;
+		lease.expiresAt = runtime.clock() + runtime.clientLeaseMs;
+	}
+}
+
 async function readConnectionId(request: IncomingMessage): Promise<string> {
 	const body = objectBody(await readJsonBody(request));
 	assertOnlyKeys(body, ["connectionId"]);
@@ -350,7 +454,7 @@ function requiredLease(
 function sweepExpiredClients(runtime: ServiceRuntime): void {
 	const now = runtime.clock();
 	for (const [connectionId, lease] of runtime.clients) {
-		if (lease.expiresAt > now) continue;
+		if (lease.activeRequests > 0 || lease.expiresAt > now) continue;
 		lease.connection.disconnect();
 		runtime.clients.delete(connectionId);
 	}
@@ -478,6 +582,45 @@ function objectBody(value: unknown): Record<string, unknown> {
 	return value as Record<string, unknown>;
 }
 
+function runtimeTrigger(value: unknown, observedAt: number): RuntimeTrigger {
+	const trigger = objectBody(value);
+	assertOnlyKeys(trigger, ["kind", "refs"]);
+	const kind = text(trigger.kind);
+	if (
+		![
+			"session_started",
+			"change_trace_appended",
+			"project_truth_changed",
+			"timer_due",
+			"user_response",
+			"manual_resume",
+		].includes(kind)
+	) {
+		throw new HttpError(400, "invalid_runtime_trigger_kind");
+	}
+	if (!Number.isFinite(observedAt) || observedAt < 0) {
+		throw new Error("Project coordinator clock returned an invalid time.");
+	}
+	if (trigger.refs !== undefined && !Array.isArray(trigger.refs)) {
+		throw new HttpError(400, "invalid_runtime_trigger_refs");
+	}
+	const refs = (trigger.refs || []).map((ref) => text(ref).trim());
+	if (refs.length > 128 || refs.some((ref) => !ref || ref.length > 1_024)) {
+		throw new HttpError(400, "invalid_runtime_trigger_refs");
+	}
+	return {
+		kind: kind as RuntimeTrigger["kind"],
+		occurredAt: new Date(observedAt).toISOString(),
+		...(refs.length > 0 ? { refs: [...new Set(refs)].sort(compareText) } : {}),
+	};
+}
+
+function runtimeSemanticMode(value: unknown): RuntimeSemanticMode {
+	if (value === undefined || value === "append") return "append";
+	if (value === "preview") return "preview";
+	throw new HttpError(400, "invalid_runtime_semantic_mode");
+}
+
 function assertOnlyKeys(
 	value: Record<string, unknown>,
 	allowed: string[],
@@ -556,8 +699,8 @@ function boundedClientLease(value: number | undefined): number {
 
 function boundedRequestTimeout(value: number | undefined): number {
 	if (value === undefined) return DEFAULT_REQUEST_TIMEOUT_MS;
-	if (!Number.isInteger(value) || value < 100 || value > 60_000) {
-		throw new Error("timeoutMs must be an integer from 100 to 60000.");
+	if (!Number.isInteger(value) || value < 100 || value > 600_000) {
+		throw new Error("timeoutMs must be an integer from 100 to 600000.");
 	}
 	return value;
 }
@@ -566,6 +709,21 @@ function boundedPort(value: number | undefined): number {
 	if (value === undefined) return 0;
 	if (!Number.isInteger(value) || value < 0 || value > 65_535) {
 		throw new Error("port must be an integer from 0 to 65535.");
+	}
+	return value;
+}
+
+function boundedOptionalInteger(
+	value: number | undefined,
+	minimum: number,
+	maximum: number,
+	field: string,
+): number | undefined {
+	if (value === undefined) return undefined;
+	if (!Number.isInteger(value) || value < minimum || value > maximum) {
+		throw new Error(
+			`${field} must be an integer from ${minimum} to ${maximum}.`,
+		);
 	}
 	return value;
 }
