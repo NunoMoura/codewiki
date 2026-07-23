@@ -1,6 +1,10 @@
 import { registerCodewikiCommands } from "./commands/index.ts";
 import { registerCodewikiMessageRenderers } from "./messages.ts";
 import { registerCodewikiPromptHooks } from "./prompt/index.ts";
+import {
+	createPiProjectServiceClients,
+	type PiProjectServiceClientProvider,
+} from "./project-service-client.ts";
 import { registerCodeWikiReviewHooks } from "./review-hooks.ts";
 import { registerCodewikiTools } from "./tools/index.ts";
 import { registerCodewikiFooter } from "./tui/index.ts";
@@ -17,12 +21,24 @@ export default function codewikiExtension(pi: CodewikiExtensionApi): void {
 	registerCodewikiExtension(pi);
 }
 
-export function registerCodewikiExtension(pi: CodewikiExtensionApi): void {
+export interface RegisterCodewikiExtensionOptions {
+	projectServices?: PiProjectServiceClientProvider;
+	connectDashboardCoordinator?: boolean;
+}
+
+export function registerCodewikiExtension(
+	pi: CodewikiExtensionApi,
+	options: RegisterCodewikiExtensionOptions = {},
+): void {
+	const projectServices =
+		options.projectServices || createPiProjectServiceClients();
+	const connectDashboardCoordinator =
+		options.connectDashboardCoordinator ?? true;
 	registerCodewikiMessageRenderers(pi);
-	registerCodewikiTools(pi);
-	registerCodewikiCommands(pi);
+	registerCodewikiTools(pi, projectServices);
+	registerCodewikiCommands(pi, connectDashboardCoordinator);
 	registerCodewikiPromptHooks(pi);
-	registerRuntimeToolRouting(pi);
+	registerRuntimeToolRouting(pi, projectServices);
 	registerCodeWikiReviewHooks({ on: pi.on?.bind(pi) });
-	registerCodewikiFooter(pi);
+	registerCodewikiFooter(pi, connectDashboardCoordinator);
 }

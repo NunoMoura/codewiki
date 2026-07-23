@@ -3,8 +3,7 @@ import { startCodewikiDashboardServer } from "./server.ts";
 const repoRoot = process.argv[2];
 
 if (!repoRoot) {
-	console.error("CodeWiki dashboard daemon requires a repo root argument.");
-	process.exit(1);
+	throw new Error("CodeWiki dashboard daemon requires a repo root argument.");
 }
 
 await startCodewikiDashboardServer({
@@ -12,4 +11,5 @@ await startCodewikiDashboardServer({
 	open: false,
 	keepAlive: true,
 	inProcess: true,
+	projectCoordinatorClient: true,
 });

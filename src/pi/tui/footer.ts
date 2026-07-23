@@ -18,7 +18,10 @@ import type {
 export const CODEWIKI_FOOTER_STATUS_KEY = "codewiki";
 const LEGACY_WIDGET_KEYS = ["codewiki-cards"];
 
-export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
+export function registerCodewikiFooter(
+	pi: CodewikiExtensionApi,
+	connectProjectCoordinator = true,
+): void {
 	if (typeof pi.on !== "function") return;
 	let sessionGeneration = 0;
 	pi.on("session_shutdown", async (_event, ctx) => {
@@ -54,6 +57,7 @@ export function registerCodewikiFooter(pi: CodewikiExtensionApi): void {
 						() => generation === sessionGeneration,
 					),
 					previewControl: piPreviewControl(projectRoot),
+					projectCoordinatorClient: connectProjectCoordinator,
 				}).catch(() => undefined),
 			);
 		}

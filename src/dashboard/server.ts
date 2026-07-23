@@ -43,6 +43,8 @@ import {
 	unavailableDashboardPreviewControl,
 } from "../preview/dashboard-control.ts";
 import { readDevLog } from "../runtime/dev-log.ts";
+import { connectEnsuredProjectCoordinatorClient } from "../runtime/project-coordinator-process.ts";
+import type { ProjectCoordinatorRemoteClient } from "../runtime/project-coordinator-service.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
 import {
 	createDashboardChangeControl,
@@ -81,6 +83,7 @@ export interface CodewikiDashboardServerOptions {
 	configControl?: DashboardConfigControl;
 	sessionActionControl?: DashboardSessionActionControl;
 	previewControl?: DashboardPreviewControl;
+	projectCoordinatorClient?: boolean;
 }
 
 export interface CodewikiDashboardServerHandle {
@@ -102,6 +105,8 @@ interface DashboardRuntime {
 	watcher?: FSWatcher;
 	broadcastTimer?: NodeJS.Timeout;
 	traceHostTimer?: NodeJS.Timeout;
+	coordinatorHeartbeatTimer?: NodeJS.Timeout;
+	coordinatorClient?: ProjectCoordinatorRemoteClient;
 	traceHostControl: DashboardTraceHostControl;
 	changeControl: DashboardChangeControl;
 	configControl: DashboardConfigControl;
@@ -451,6 +456,7 @@ async function startInProcessDashboardServer(
 		options.configControl,
 		options.sessionActionControl,
 		options.previewControl,
+		{ connectCoordinator: options.projectCoordinatorClient ?? false },
 	);
 	dashboards.set(options.repoRoot, runtime);
 	if (!(await dashboardEndpointServesState(runtime))) {
@@ -619,6 +625,7 @@ async function createDashboardRuntime(
 	providedConfigControl?: DashboardConfigControl,
 	providedSessionActionControl?: DashboardSessionActionControl,
 	providedPreviewControl?: DashboardPreviewControl,
+	options: { connectCoordinator?: boolean } = {},
 ): Promise<DashboardRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
@@ -657,6 +664,13 @@ async function createDashboardRuntime(
 		});
 	const previewControl =
 		providedPreviewControl || unavailableDashboardPreviewControl();
+	const coordinatorClient = options.connectCoordinator
+		? await connectEnsuredProjectCoordinatorClient(repoRoot, {
+				clientId: `dashboard:${process.pid}:${address.port}`,
+				kind: "dashboard",
+				supervision: "observer",
+			})
+		: undefined;
 	runtime = {
 		repoRoot,
 		server,
@@ -664,6 +678,7 @@ async function createDashboardRuntime(
 		origin,
 		token,
 		clients,
+		coordinatorClient,
 		traceHostControl,
 		changeControl,
 		configControl,
@@ -682,6 +697,12 @@ async function createDashboardRuntime(
 		void runtime.traceHostControl.heartbeat(attached).catch(() => undefined);
 	}, 1_000);
 	runtime.traceHostTimer.unref();
+	if (coordinatorClient) {
+		runtime.coordinatorHeartbeatTimer = setInterval(() => {
+			void coordinatorClient.heartbeat().catch(() => undefined);
+		}, 10_000);
+		runtime.coordinatorHeartbeatTimer.unref();
+	}
 	return runtime;
 }
 
@@ -1057,6 +1078,10 @@ async function closeRuntime(runtime: DashboardRuntime): Promise<void> {
 	dashboards.delete(runtime.repoRoot);
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
 	if (runtime.traceHostTimer) clearInterval(runtime.traceHostTimer);
+	if (runtime.coordinatorHeartbeatTimer) {
+		clearInterval(runtime.coordinatorHeartbeatTimer);
+	}
+	await runtime.coordinatorClient?.disconnect().catch(() => undefined);
 	await runtime.traceHostControl.shutdown();
 	runtime.watcher?.close();
 	for (const client of runtime.clients) client.end();

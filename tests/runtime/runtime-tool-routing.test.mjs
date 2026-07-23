@@ -11,6 +11,7 @@ import {
 } from "../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
 import { registerRuntimeToolRouting } from "../../src/pi/runtime-tool-routing.ts";
+import { RuntimeReactor } from "../../src/runtime/reactor.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
 const roots = [];
@@ -26,6 +27,19 @@ async function project() {
 	roots.push(root);
 	await mkdir(join(root, ".codewiki", "kb"), { recursive: true });
 	return root;
+}
+
+function projectServices() {
+	return {
+		async connect() {},
+		inspect(root, _ctx, trigger) {
+			return new RuntimeReactor(root).inspect(trigger);
+		},
+		async submitCandidate() {
+			throw new Error("candidate submission is not expected");
+		},
+		async disconnect() {},
+	};
 }
 
 describe("runtime tool routing", () => {
@@ -53,17 +67,20 @@ describe("runtime tool routing", () => {
 			"wiki_implement",
 			"wiki_archive",
 		];
-		registerRuntimeToolRouting({
-			on(name, handler) {
-				handlers.set(name, handler);
+		registerRuntimeToolRouting(
+			{
+				on(name, handler) {
+					handlers.set(name, handler);
+				},
+				getActiveTools() {
+					return [...activeTools];
+				},
+				setActiveTools(names) {
+					activeTools = [...names];
+				},
 			},
-			getActiveTools() {
-				return [...activeTools];
-			},
-			setActiveTools(names) {
-				activeTools = [...names];
-			},
-		});
+			projectServices(),
+		);
 
 		await handlers.get("before_agent_start")({}, { cwd: root });
 		assert.deepEqual(activeTools, [
@@ -105,17 +122,20 @@ describe("runtime tool routing", () => {
 		roots.push(root);
 		const handlers = new Map();
 		let activeTools = ["read", "wiki_decide", "wiki_plan", "wiki_archive"];
-		registerRuntimeToolRouting({
-			on(name, handler) {
-				handlers.set(name, handler);
+		registerRuntimeToolRouting(
+			{
+				on(name, handler) {
+					handlers.set(name, handler);
+				},
+				getActiveTools() {
+					return [...activeTools];
+				},
+				setActiveTools(names) {
+					activeTools = [...names];
+				},
 			},
-			getActiveTools() {
-				return [...activeTools];
-			},
-			setActiveTools(names) {
-				activeTools = [...names];
-			},
-		});
+			projectServices(),
+		);
 
 		await handlers.get("session_start")({}, { cwd: root });
 		assert.deepEqual(activeTools, ["read"]);

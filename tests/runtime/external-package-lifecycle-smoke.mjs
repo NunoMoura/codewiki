@@ -328,6 +328,7 @@ try {
 	const notifications = [];
 	const ctx = {
 		cwd: projectRoot,
+		mode: "rpc",
 		ui: {
 			notify(message) {
 				notifications.push(message);
@@ -422,7 +423,7 @@ try {
 			ctx,
 			"decide-preview",
 		),
-		/wiki_decide: runtime previewed after 1 iteration\(s\)\./,
+		/wiki_decide: coordinator previewed with 0 durable event\(s\)\./,
 	).outcomes[0].result;
 	const decided = assertToolResult(
 		await executeTool(
@@ -435,7 +436,7 @@ try {
 			ctx,
 			"decide",
 		),
-		/wiki_decide: runtime budget_exhausted after 1 iteration\(s\)\./,
+		/wiki_decide: coordinator completed with 1 durable event\(s\)\./,
 	).outcomes[0].result;
 	assert.equal(preview.report.exit.status, "exit");
 	assert.equal(decided.report.exit.status, "exit");
@@ -446,7 +447,7 @@ try {
 			ctx,
 			"plan",
 		),
-		/wiki_plan: runtime budget_exhausted after 1 iteration\(s\)\./,
+		/wiki_plan: coordinator completed with 1 durable event\(s\)\./,
 	).outcomes[0].result;
 	assert.equal(planned.report.exit.status, "exit");
 	const planningEvents = Object.values(planned.events);
@@ -575,5 +576,23 @@ try {
 		),
 	);
 } finally {
+	const coordinatorApi = join(
+		root,
+		"install",
+		"node_modules",
+		"@nunomoura",
+		"codewiki",
+		"dist",
+		"runtime",
+		"coordinator-api.js",
+	);
+	if (existsSync(coordinatorApi)) {
+		const { stopProjectCoordinatorService } = await import(
+			pathToFileURL(coordinatorApi).href
+		);
+		await stopProjectCoordinatorService(join(root, "external-project"), {
+			timeoutMs: 2_000,
+		}).catch(() => undefined);
+	}
 	rmSync(root, { recursive: true, force: true });
 }

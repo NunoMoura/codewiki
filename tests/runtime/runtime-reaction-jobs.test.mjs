@@ -347,22 +347,44 @@ test("authenticated remote client executes semantic work through elected service
 	try {
 		service = await startProjectCoordinatorService(root, {
 			generationId: "generation:transport",
-			semanticAdapters: approvingAdapters("confirmation:transport"),
 		});
 		client = await connectProjectCoordinatorClient(root, {
 			clientId: "pi:semantic-client",
 			kind: "pi",
 			supervision: "approved",
 		});
-		const preview = await client.react({ kind: "manual_resume" }, "preview");
-		assert.equal(preview.length, 1);
-		assert.equal(preview[0].status, "previewed");
-		assert.deepEqual(preview[0].evidence, []);
-		const receipts = await client.react({ kind: "manual_resume" });
-		assert.equal(receipts.length, 1);
-		assert.notEqual(receipts[0].jobId, preview[0].jobId);
-		assert.equal(receipts[0].status, "completed");
-		assert.equal(receipts[0].evidence.length, 1);
+		const selected = await client.inspect({ kind: "manual_resume" });
+		assert.equal(selected.selection?.loop, "decision");
+		const candidate = approvingAdapters("confirmation:transport").decision();
+		await assert.rejects(
+			() =>
+				client.submitCandidate(
+					{ kind: "manual_resume" },
+					"planning",
+					candidate,
+					"preview",
+				),
+			(error) =>
+				error?.status === 409 && error.message === "runtime_reaction_mismatch",
+		);
+		const preview = await client.submitCandidate(
+			{ kind: "manual_resume" },
+			"decision",
+			candidate,
+			"preview",
+		);
+		assert.equal(preview.receipt.status, "previewed");
+		assert.equal(preview.execution?.status, "previewed");
+		assert.deepEqual(preview.receipt.evidence, []);
+		const appended = await client.submitCandidate(
+			{ kind: "manual_resume" },
+			"decision",
+			candidate,
+		);
+		assert.notEqual(appended.receipt.jobId, preview.receipt.jobId);
+		assert.equal(appended.receipt.status, "completed");
+		assert.equal(appended.receipt.evidence.length, 1);
+		assert.equal(appended.execution?.outcome?.loop, "decision");
 		await client.disconnect();
 		client = undefined;
 		await service.close();

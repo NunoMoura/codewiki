@@ -105,7 +105,7 @@ The core reduced-tool facade shape now exists for the current tool set:
 - `runWikiDecide()` evaluates a runtime-prepared exact Change candidate and previews or appends approval or terminal disposition to the same Change Trace.
 - `runWikiPlan()` evaluates a runtime-prepared bounded global Planning candidate and previews or appends deterministic per-Change slices of one accepted Planning epoch.
 - `runWikiImplement()` accepts only a WorkState freshness guard plus worker results or explicit evidence. It resolves the runtime-selected Sprint, Work Items, owning Change, Planning events, Assignments, source ownership, sequence, parent, and byte offset internally before evaluating or appending realization.
-- `runRuntimeSemanticExecutor()` owns semantic selection, invocation, append authority, CAS reruns, budgets, route-back stops, and repeat-to-quiescence.
+- Exact coordinator reaction jobs own production semantic selection, invocation, append authority, CAS reruns, route-back stops, deterministic job identity, and restart recovery. `runRuntimeSemanticExecutor()` remains a singular compatibility primitive.
 - `runWikiArchive()` previews trace retention stubs, appends `trace_close` records with byte preflight, and plans hydrate/restore from archived records.
 - `runWikiConfig()` resolves and patches typed CodeWiki project config for automation, agency, approvals, budgets, worktree isolation, retention, and host adapters.
 
@@ -115,7 +115,7 @@ The runtime backend remains available to host code, not as a normal agent tool:
 - Runtime lifecycle helpers plan main-host and trace-host coordination from derived views and can create trace-owned host observed/block/stop events. They are helpers, not a fourth semantic loop.
 - `createRuntimeHandoffManifest()` turns a runtime result into a disposable host handoff bundle: claim events, worktree command steps, worker prompts, expected completion shape, and release instructions. It is a helper, not a separate semantic tool.
 
-Semantic sessions submit candidates to `runRuntimeSemanticExecutor()` instead of calling loop facades directly or exposing separate proof, output, evaluation, context-loading, and append steps. The embedded Pi SDK adapter creates a bounded role-specific session with read-only repository tools and one closed candidate tool. Runtime derives WorkState, schedules compatible jobs, validates reports, owns CAS writes and retries, and repeats or requeues under budgets. Process/container worker adapters derive Implementation context from canonical WorkState and worker-result correlation rather than caller-marshalled Planning authority. The CLI adapter remains a transitional development harness.
+Semantic sessions submit candidates through the authenticated project service instead of calling loop facades directly or exposing separate proof, output, evaluation, context-loading, and append steps. Runtime remotely inspects current WorkState, rejects loop mismatch and runtime-owned fields, binds each accepted candidate to one exact coordinator job, validates reports, and owns CAS writes and recovery. The embedded Pi SDK adapter creates a bounded role-specific session with read-only repository tools and one closed candidate tool. Process/container worker adapters derive Implementation context from canonical WorkState and worker-result correlation rather than caller-marshalled Planning authority. The CLI adapter remains a transitional development harness.
 
 ## `wiki_state` views
 

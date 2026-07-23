@@ -9,14 +9,7 @@ import {
 	type RunWikiChangeResult,
 } from "../../api/index.ts";
 import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
-import { runtimeReactorFor } from "../../runtime/project-reactors.ts";
-import {
-	runRuntimeSemanticExecutor,
-	type RuntimeDecisionCandidate,
-	type RuntimeImplementationCandidate,
-	type RuntimePlanningCandidate,
-	type RuntimeSemanticMode,
-} from "../../runtime/semantic-executor.ts";
+import type { RuntimeSemanticMode } from "../../runtime/semantic-executor.ts";
 import type { RuntimeReaction } from "../../runtime/reactor.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
@@ -37,6 +30,10 @@ import {
 	projectLocalInstallWarning,
 	stripNonProjectInstallOverride,
 } from "../install-scope.ts";
+import {
+	createPiProjectServiceClients,
+	type PiProjectServiceClientProvider,
+} from "../project-service-client.ts";
 import { renderPiChangeValidationCard } from "../rendering/change-validation-card.ts";
 import type {
 	CodewikiExtensionApi,
@@ -68,9 +65,12 @@ const WIKI_STATE_TOOL_VIEWS = new Set<string>([
 	"all",
 ]);
 
-export function registerCodewikiTools(pi: CodewikiExtensionApi): void {
+export function registerCodewikiTools(
+	pi: CodewikiExtensionApi,
+	projectServices: PiProjectServiceClientProvider = createPiProjectServiceClients(),
+): void {
 	const runSequential = createSequentialRunner();
-	for (const tool of codewikiTools()) {
+	for (const tool of codewikiTools(projectServices)) {
 		pi.registerTool(withSequentialExecution(tool, runSequential));
 	}
 }
@@ -103,25 +103,30 @@ function withSequentialExecution(
 	};
 }
 
-function codewikiTools(): CodewikiToolDefinition[] {
+function codewikiTools(
+	projectServices: PiProjectServiceClientProvider,
+): CodewikiToolDefinition[] {
 	return [
-		wikiStateTool(),
+		wikiStateTool(projectServices),
 		wikiConfigTool(),
 		wikiChangeTool(),
 		runtimeSemanticTool(
 			"decision",
 			"wiki_decide",
 			"Submit Decision judgment for the exact Change selected by runtime; runtime injects identity, revision, digest, WorkState, and append authority.",
+			projectServices,
 		),
 		runtimeSemanticTool(
 			"planning",
 			"wiki_plan",
 			"Submit a Planning candidate for the approved Change horizon selected by runtime; runtime injects participants, freshness, and multi-trace append authority.",
+			projectServices,
 		),
 		runtimeSemanticTool(
 			"implementation",
 			"wiki_implement",
 			"Submit evidence for runtime-selected Work Items; runtime derives Sprint, owning Change, Planning, Assignment, source-map, sequence, and append authority.",
+			projectServices,
 		),
 		facadeTool<RunWikiArchiveInput>(
 			"wiki_archive",
@@ -133,7 +138,9 @@ function codewikiTools(): CodewikiToolDefinition[] {
 	];
 }
 
-function wikiStateTool(): CodewikiToolDefinition {
+function wikiStateTool(
+	projectServices: PiProjectServiceClientProvider,
+): CodewikiToolDefinition {
 	return {
 		name: WIKI_STATE_TOOL_NAME,
 		label: "CodeWiki State",
@@ -190,22 +197,16 @@ function wikiStateTool(): CodewikiToolDefinition {
 			assertOptionalString(WIKI_STATE_TOOL_NAME, input, "generatedAt");
 			const traceId = optionalString(input.traceId);
 			const generatedAt = optionalString(input.generatedAt);
-			const observed = await runtimeReactorFor(root).observe({
+			const runtimeReaction = await projectServices.inspect(root, ctx, {
 				kind: "manual_resume",
-				...(generatedAt ? { occurredAt: generatedAt } : {}),
 				...(traceId ? { refs: [`trace:${traceId}`] } : {}),
 			});
 			const snapshot = await buildProjectWikiState({
 				repoRoot: root,
 				traceId,
 				generatedAt,
-				traceFiles: {
-					records: observed.records,
-					expectedBytesByTrace: observed.expectedBytesByTrace,
-				},
 			});
 			const view = optionalStateView(input.view);
-			const runtimeReaction = observed.reaction;
 			const activeWorkItems = snapshot.workQueue.items.filter(
 				(item) => item.status !== "done",
 			).length;
@@ -426,15 +427,13 @@ function wikiChangeModelPayload(result: RunWikiChangeResult): unknown {
 
 type RuntimeSemanticToolLoop = "decision" | "planning" | "implementation";
 
-type RuntimeSemanticToolCandidate =
-	| RuntimeDecisionCandidate
-	| RuntimePlanningCandidate
-	| RuntimeImplementationCandidate;
+type RuntimeSemanticToolCandidate = Record<string, unknown>;
 
 function runtimeSemanticTool(
 	loop: RuntimeSemanticToolLoop,
 	name: string,
 	description: string,
+	projectServices: PiProjectServiceClientProvider,
 ): CodewikiToolDefinition {
 	return {
 		name,
@@ -467,29 +466,26 @@ function runtimeSemanticTool(
 			}
 			const { mode: _mode, ...candidate } = prepared;
 			const semanticCandidate = candidate as RuntimeSemanticToolCandidate;
-			const adapters =
-				loop === "decision"
-					? {
-							decision: () => semanticCandidate as RuntimeDecisionCandidate,
-						}
-					: loop === "planning"
-						? {
-								planning: () => semanticCandidate as RuntimePlanningCandidate,
-							}
-						: {
-								implementation: () =>
-									semanticCandidate as RuntimeImplementationCandidate,
-							};
-			const result = await runRuntimeSemanticExecutor({
-				repoRoot: root,
-				trigger: { kind: "manual_resume" },
+			const submittedResult = await projectServices.submitCandidate(
+				root,
+				ctx,
+				{ kind: "manual_resume" },
+				loop,
+				semanticCandidate,
 				mode,
-				maxIterations: 1,
-				reactor: runtimeReactorFor(root),
-				adapters,
-			});
+			);
+			const execution = submittedResult.execution;
+			const result = {
+				...submittedResult,
+				status: execution?.status || submittedResult.receipt.status,
+				mode,
+				iterations: execution?.outcome ? 1 : 0,
+				casRetries: execution?.casRetries || 0,
+				outcomes: execution?.outcome ? [execution.outcome] : [],
+				reaction: execution?.reaction,
+			};
 			return toolResult(
-				`${name}: runtime ${result.status} after ${result.iterations} iteration(s).`,
+				`${name}: coordinator ${result.status} with ${submittedResult.receipt.evidence.length} durable event(s).`,
 				result,
 				mode === "append" ? undefined : notifyInstallWarning(ctx, root),
 			);

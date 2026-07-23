@@ -13,6 +13,15 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
+const PROJECT_NAMES = [
+	"missing-output",
+	"malformed-output",
+	"blocked-output",
+	"mixed-output",
+	"worktree-prepare",
+	"worktree-cleanup",
+];
+
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
 		encoding: "utf8",
@@ -358,7 +367,7 @@ async function newProject(root, installed, name) {
 		decide: toolByName(pi, "wiki_decide"),
 		plan: toolByName(pi, "wiki_plan"),
 	};
-	const ctx = { cwd: projectRoot, ui: { notify() {} } };
+	const ctx = { cwd: projectRoot, mode: "rpc", ui: { notify() {} } };
 	await commands.bootstrap.handler("--allow-non-project-install --json", ctx);
 	run("git", ["init", "-q"], { cwd: projectRoot });
 	return {
@@ -909,5 +918,27 @@ try {
 		),
 	);
 } finally {
+	const coordinatorApi = join(
+		root,
+		"install",
+		"node_modules",
+		"@nunomoura",
+		"codewiki",
+		"dist",
+		"runtime",
+		"coordinator-api.js",
+	);
+	if (existsSync(coordinatorApi)) {
+		const { stopProjectCoordinatorService } = await import(
+			pathToFileURL(coordinatorApi).href
+		);
+		await Promise.all(
+			PROJECT_NAMES.map((name) =>
+				stopProjectCoordinatorService(join(root, name), {
+					timeoutMs: 2_000,
+				}).catch(() => undefined),
+			),
+		);
+	}
 	rmSync(root, { recursive: true, force: true });
 }

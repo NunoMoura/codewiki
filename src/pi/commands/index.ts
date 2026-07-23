@@ -18,6 +18,7 @@ import {
 	closeCodewikiDashboardServer,
 	startCodewikiDashboardServer,
 } from "../../dashboard/index.ts";
+import { stopProjectCoordinatorService } from "../../runtime/project-coordinator-service.ts";
 import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
@@ -34,11 +35,19 @@ import type {
 	CodewikiExtensionContext,
 } from "../types.ts";
 
-export function registerCodewikiCommands(pi: CodewikiExtensionApi): void {
+export function registerCodewikiCommands(
+	pi: CodewikiExtensionApi,
+	connectProjectCoordinator = true,
+): void {
 	for (const command of CODEWIKI_DIRECT_COMMANDS) {
 		pi.registerCommand(
 			command.name,
-			directWikiCommand(pi, command.subcommand, command.description),
+			directWikiCommand(
+				pi,
+				command.subcommand,
+				command.description,
+				connectProjectCoordinator,
+			),
 		);
 	}
 }
@@ -47,11 +56,18 @@ function directWikiCommand(
 	pi: CodewikiExtensionApi,
 	subcommand: CodewikiSubcommand,
 	description: string,
+	connectProjectCoordinator: boolean,
 ): CodewikiCommandDefinition {
 	return {
 		description,
 		handler: async (args, ctx) => {
-			return await dispatchWikiCommand(subcommand, tokens(args), ctx, pi);
+			return await dispatchWikiCommand(
+				subcommand,
+				tokens(args),
+				ctx,
+				pi,
+				connectProjectCoordinator,
+			);
 		},
 	};
 }
@@ -61,8 +77,11 @@ async function dispatchWikiCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
+	connectProjectCoordinator: boolean,
 ): Promise<unknown> {
-	if (subcommand === "dashboard") return await dashboardCommand(args, ctx, pi);
+	if (subcommand === "dashboard") {
+		return await dashboardCommand(args, ctx, pi, connectProjectCoordinator);
+	}
 	if (subcommand === "resume") return await resumeCommand(args, ctx, pi);
 	if (subcommand === "explain") return await explainCommand(args, ctx, pi);
 	if (subcommand === "config") return await configCommand(args, ctx, pi);
@@ -89,9 +108,15 @@ async function dashboardCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
+	connectProjectCoordinator: boolean,
 ): Promise<unknown> {
 	const options = parseDashboardOptions(args);
-	const result = await startDashboard(ctx, options, pi);
+	const result = await startDashboard(
+		ctx,
+		options,
+		pi,
+		connectProjectCoordinator,
+	);
 	emitCommandOutput(
 		pi,
 		ctx,
@@ -107,11 +132,15 @@ async function startDashboard(
 	ctx: CodewikiExtensionContext,
 	options: DashboardCommandOptions,
 	pi: CodewikiExtensionApi,
+	connectProjectCoordinator: boolean,
 ): Promise<DashboardCommandResult> {
 	const root = await requireCodewikiRoot(ctx);
 	notifyInstallWarning(ctx, root);
 	if (options.stop) {
 		await closeCodewikiDashboardServer(root);
+		if (connectProjectCoordinator) {
+			await stopProjectCoordinatorService(root).catch(() => undefined);
+		}
 		return {
 			command: "dashboard",
 			json: options.json,
@@ -131,6 +160,7 @@ async function startDashboard(
 		persistent: false,
 		sessionActionControl: createPiDashboardSessionActionControl(pi, ctx),
 		previewControl: piPreviewControl(root),
+		projectCoordinatorClient: connectProjectCoordinator,
 	});
 	return {
 		command: "dashboard",

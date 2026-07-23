@@ -11,13 +11,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
 import { changeTraceId } from "../../src/changes/change-trace.ts";
-import codewikiExtension from "../../src/pi/extension.ts";
+import { registerCodewikiExtension } from "../../src/pi/extension.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
-import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";
+import { testPiProjectServices } from "../helpers/pi-project-services.mjs";
 
 function mockPi() {
 	const tools = [];
@@ -153,7 +153,9 @@ try {
 	const tracePath = join(root, traceFilePath(traceId));
 	const initialText = await readFile(tracePath, "utf8");
 	const pi = mockPi();
-	codewikiExtension(pi.api);
+	registerCodewikiExtension(pi.api, {
+		projectServices: testPiProjectServices(),
+	});
 	const decideTool = toolByName(pi, "wiki_decide");
 	const planTool = toolByName(pi, "wiki_plan");
 	const implementTool = toolByName(pi, "wiki_implement");
@@ -178,7 +180,7 @@ try {
 			undefined,
 			ctx,
 		),
-		/wiki_decide: runtime previewed after 1 iteration\(s\)\./,
+		/wiki_decide: coordinator previewed with 0 durable event\(s\)\./,
 	).outcomes[0].result;
 	assert.equal(preview.append, undefined);
 	assert.equal(await readFile(tracePath, "utf8"), initialText);
@@ -195,7 +197,7 @@ try {
 			undefined,
 			ctx,
 		),
-		/wiki_decide: runtime budget_exhausted after 1 iteration\(s\)\./,
+		/wiki_decide: coordinator completed with 1 durable event\(s\)\./,
 	).outcomes[0].result;
 	assert.equal(decided.append.records.length, 1);
 	const planned = assertToolResult(
@@ -241,7 +243,7 @@ try {
 			undefined,
 			ctx,
 		),
-		/wiki_plan: runtime budget_exhausted after 1 iteration\(s\)\./,
+		/wiki_plan: coordinator completed with 1 durable event\(s\)\./,
 	).outcomes[0].result;
 	assert.equal(planned.report.exit.status, "exit");
 	const planningEvents = Object.values(planned.events);
@@ -345,7 +347,7 @@ try {
 			undefined,
 			ctx,
 		),
-		/wiki_implement: runtime budget_exhausted after 1 iteration\(s\)\./,
+		/wiki_implement: coordinator completed with 1 durable event\(s\)\./,
 	).outcomes[0].result;
 	assert.equal(implemented.loopResult.readyForClosure, true);
 	assert.equal(

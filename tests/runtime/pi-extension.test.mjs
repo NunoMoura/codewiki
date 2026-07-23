@@ -14,7 +14,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import codewikiExtension from "../../src/pi/extension.ts";
+import { registerCodewikiExtension } from "../../src/pi/extension.ts";
 import { CODEWIKI_COMMAND_NAMES } from "../../src/pi/command-catalog.ts";
 import {
 	CODEWIKI_PROMPT_MARKER,
@@ -38,6 +38,14 @@ import { changeTraceId } from "../../src/changes/change-trace.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
+import { testPiProjectServices } from "../helpers/pi-project-services.mjs";
+
+function registerTestExtension(pi) {
+	registerCodewikiExtension(pi, {
+		projectServices: testPiProjectServices(),
+		connectDashboardCoordinator: false,
+	});
+}
 
 function toolByName(pi, name) {
 	return pi.tools.find((candidate) => candidate.name === name);
@@ -169,7 +177,7 @@ describe("Pi extension adapter", () => {
 	it("registers the intended Pi-native tools and command without package install", async () => {
 		const pi = mockPi();
 
-		codewikiExtension(pi.api);
+		registerTestExtension(pi.api);
 
 		assert.deepEqual(
 			pi.tools.map((tool) => tool.name),
@@ -216,7 +224,7 @@ describe("Pi extension adapter", () => {
 		try {
 			execFileSync("git", ["init", "-q"], { cwd: root });
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const tool = toolByName(pi, "wiki_change");
 			const result = assertToolResult(
 				await tool.execute(
@@ -250,7 +258,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi({ sendMessage: true });
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const command = pi.commands.find(
 				(candidate) => candidate.name === "wiki-resume",
 			).command;
@@ -299,7 +307,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const hook = pi.events.find(
 				(event) => event.eventName === "session_start",
 			);
@@ -336,7 +344,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const widgets = [];
 
 			for (const hook of pi.events.filter(
@@ -369,7 +377,7 @@ describe("Pi extension adapter", () => {
 
 	it("injects CodeWiki prompt guidance once when Pi event hooks exist", async () => {
 		const pi = mockPi();
-		codewikiExtension(pi.api);
+		registerTestExtension(pi.api);
 		const hook = pi.events.find(
 			(event) => event.eventName === "before_agent_start",
 		);
@@ -398,7 +406,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 
 			await assert.rejects(
 				() =>
@@ -464,7 +472,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			await seedChangeAcceptance(root, { id: "CHG-pi-runtime-append" });
 			const result = await toolByName(pi, "wiki_decide").execute(
 				"tool-call-decide-append",
@@ -487,7 +495,7 @@ describe("Pi extension adapter", () => {
 			);
 			const execution = assertToolResult(
 				result,
-				/wiki_decide: runtime budget_exhausted after 1 iteration/,
+				/wiki_decide: coordinator completed with 1 durable event/,
 			);
 			assert.equal(execution.outcomes[0].result.append.records.length, 1);
 			await assert.rejects(
@@ -510,7 +518,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const ctx = { cwd: join(root, "src") };
 			const { record } = await seedChangeAcceptance(root, {
 				id: "CHG-pi-preview",
@@ -541,7 +549,7 @@ describe("Pi extension adapter", () => {
 			);
 			const execution = assertToolResult(
 				decidedResult,
-				/wiki_decide: runtime previewed after 1 iteration\(s\)\./,
+				/wiki_decide: coordinator previewed with 0 durable event\(s\)\./,
 			);
 			const decided = execution.outcomes[0].result;
 			assert.equal(decided.report.exit.status, "exit");
@@ -559,7 +567,7 @@ describe("Pi extension adapter", () => {
 		try {
 			const configPath = join(root, ".codewiki", "config.json");
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const tool = toolByName(pi, "wiki_config");
 
 			const read = assertToolResult(
@@ -595,7 +603,7 @@ describe("Pi extension adapter", () => {
 		try {
 			const notifications = [];
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const dashboardCommand = pi.commands.find(
 				(candidate) => candidate.name === "wiki-dashboard",
 			).command;
@@ -632,7 +640,7 @@ describe("Pi extension adapter", () => {
 		try {
 			const notifications = [];
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const dashboardCommand = pi.commands.find(
 				(candidate) => candidate.name === "wiki-dashboard",
 			).command;
@@ -674,7 +682,7 @@ describe("Pi extension adapter", () => {
 			const notifications = [];
 			const widgets = [];
 			const pi = mockPi({ sendUserMessage: true });
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const dashboardCommand = pi.commands.find(
 				(candidate) => candidate.name === "wiki-dashboard",
 			).command;
@@ -1030,7 +1038,7 @@ describe("Pi extension adapter", () => {
 			);
 			const notifications = [];
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const command = pi.commands.find(
 				(candidate) => candidate.name === "wiki-explain",
 			).command;
@@ -1071,7 +1079,7 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const tool = toolByName(pi, "wiki_state");
 
 			const result = await tool.execute(
@@ -1130,7 +1138,7 @@ describe("Pi extension adapter", () => {
 			await writeFile(join(root, "package.json"), '{"name":"pi-bootstrap"}\n');
 			const notifications = [];
 			const pi = mockPi();
-			codewikiExtension(pi.api);
+			registerTestExtension(pi.api);
 			const command = pi.commands.find(
 				(candidate) => candidate.name === "wiki-bootstrap",
 			).command;

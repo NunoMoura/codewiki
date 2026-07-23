@@ -19,6 +19,7 @@ import {
 	type RuntimeSemanticAdapters,
 	type RuntimeSemanticMode,
 	type RuntimeSemanticOutcome,
+	type RunRuntimeSelectedSemanticReactionResult,
 } from "./semantic-executor.ts";
 
 export interface RuntimeReactionJobEvidence {
@@ -44,6 +45,7 @@ export interface RuntimeReactionJobInput {
 	mode?: RuntimeSemanticMode;
 	maxCasRetries?: number;
 	beforeAppend?: () => void | Promise<void>;
+	onExecution?: (result: RunRuntimeSelectedSemanticReactionResult) => void;
 }
 
 export interface ScheduleRuntimeReactionsInput {
@@ -114,6 +116,11 @@ export function runtimeReactionJob(
 				signal,
 				beforeAppend: input.beforeAppend,
 			});
+			try {
+				input.onExecution?.(result);
+			} catch {
+				// Execution observers cannot change semantic scheduling or durable writes.
+			}
 			const evidence = result.outcome
 				? semanticOutcomeEvidence(result.outcome)
 				: [];

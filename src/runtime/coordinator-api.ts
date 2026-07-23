@@ -17,12 +17,22 @@ export {
 	type ProjectCoordinatorEndpoint,
 } from "./project-coordinator-endpoint.ts";
 export {
+	connectEnsuredProjectCoordinatorClient,
+	ensureProjectCoordinatorService,
+	projectCoordinatorDaemonScriptPath,
+	spawnProjectCoordinatorDaemon,
+	type EnsureProjectCoordinatorServiceOptions,
+} from "./project-coordinator-process.ts";
+export {
 	connectProjectCoordinatorClient,
 	readProjectCoordinatorServiceState,
 	requestProjectCoordinatorHealth,
 	startProjectCoordinatorService,
+	stopProjectCoordinatorService,
+	type ProjectCoordinatorCandidateResult,
 	type ProjectCoordinatorClientRequestOptions,
 	type ProjectCoordinatorRemoteClient,
+	type RuntimeCandidateLoop,
 	type ProjectCoordinatorServiceHandle,
 	type ProjectCoordinatorServiceOptions,
 } from "./project-coordinator-service.ts";

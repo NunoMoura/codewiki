@@ -26,12 +26,21 @@ import {
 	type ProjectCoordinatorEndpoint,
 	type ProjectCoordinatorOwnership,
 } from "./project-coordinator-endpoint.ts";
-import { RuntimeReactor, type RuntimeTrigger } from "./reactor.ts";
 import {
+	RuntimeReactor,
+	type RuntimeReaction,
+	type RuntimeTrigger,
+} from "./reactor.ts";
+import {
+	scheduleRuntimeReactionJob,
 	scheduleRuntimeReactions,
 	type RuntimeReactionJobReceipt,
 } from "./runtime-reaction-jobs.ts";
 import type {
+	RunRuntimeSelectedSemanticReactionResult,
+	RuntimeDecisionCandidate,
+	RuntimeImplementationCandidate,
+	RuntimePlanningCandidate,
 	RuntimeSemanticAdapters,
 	RuntimeSemanticMode,
 } from "./semantic-executor.ts";
@@ -69,12 +78,25 @@ type ProjectCoordinatorRemoteTrigger = Omit<
 	RuntimeTrigger,
 	"occurredAt"
 >;
+export type RuntimeCandidateLoop = "decision" | "planning" | "implementation";
+
+export interface ProjectCoordinatorCandidateResult {
+	receipt: RuntimeReactionJobReceipt;
+	execution?: RunRuntimeSelectedSemanticReactionResult;
+}
 
 export interface ProjectCoordinatorRemoteClient {
 	clientId: string;
 	connectionId: string;
 	generationId: string;
 	state(): Promise<ProjectCoordinatorSnapshot>;
+	inspect(trigger: ProjectCoordinatorRemoteTrigger): Promise<RuntimeReaction>;
+	submitCandidate(
+		trigger: ProjectCoordinatorRemoteTrigger,
+		loop: RuntimeCandidateLoop,
+		candidate: Record<string, unknown>,
+		mode?: RuntimeSemanticMode,
+	): Promise<ProjectCoordinatorCandidateResult>;
 	react(
 		trigger: ProjectCoordinatorRemoteTrigger,
 		mode?: RuntimeSemanticMode,
@@ -109,6 +131,7 @@ interface ServiceRuntime {
 	clock: () => number;
 	server: Server;
 	closing: boolean;
+	shutdown?: () => Promise<void>;
 }
 
 export async function startProjectCoordinatorService(
@@ -196,24 +219,22 @@ export async function startProjectCoordinatorService(
 		);
 		sweep.unref();
 		let closed = false;
-		return {
-			endpoint,
-			coordinator,
-			async close() {
-				if (closed) return;
-				if (coordinator.snapshot().jobs.length > 0) {
-					throw new Error("Project coordinator service cannot close with pending jobs.");
-				}
-				closed = true;
-				runtime.closing = true;
-				clearInterval(sweep);
-				await closeServer(server as Server);
-				for (const lease of clients.values()) lease.connection.disconnect();
-				clients.clear();
-				coordinator.close();
-				await releaseProjectCoordinatorOwnership(ownership as ProjectCoordinatorOwnership);
-			},
+		const close = async (): Promise<void> => {
+			if (closed) return;
+			if (coordinator.snapshot().jobs.length > 0) {
+				throw new Error("Project coordinator service cannot close with pending jobs.");
+			}
+			closed = true;
+			runtime.closing = true;
+			clearInterval(sweep);
+			await closeServer(server as Server);
+			for (const lease of clients.values()) lease.connection.disconnect();
+			clients.clear();
+			coordinator.close();
+			await releaseProjectCoordinatorOwnership(ownership as ProjectCoordinatorOwnership);
 		};
+		runtime.shutdown = close;
+		return { endpoint, coordinator, close };
 	} catch (error) {
 		if (server) await closeServer(server).catch(() => undefined);
 		try {
@@ -254,6 +275,36 @@ export async function connectProjectCoordinatorClient(
 				{ timeoutMs: options.timeoutMs },
 			);
 		},
+		inspect(trigger) {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<RuntimeReaction>(
+				endpoint,
+				"/v1/runtime/inspect",
+				{
+					method: "POST",
+					body: { connectionId: response.connectionId, trigger },
+					timeoutMs: options.timeoutMs,
+				},
+			);
+		},
+		submitCandidate(trigger, loop, candidate, mode = "append") {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<ProjectCoordinatorCandidateResult>(
+				endpoint,
+				"/v1/runtime/candidate",
+				{
+					method: "POST",
+					body: {
+						connectionId: response.connectionId,
+						trigger,
+						loop,
+						candidate,
+						mode,
+					},
+					timeoutMs: options.timeoutMs,
+				},
+			);
+		},
 		react(trigger, mode = "append") {
 			assertRemoteClientConnected(disconnected, response.clientId);
 			return requestCoordinatorJson<RuntimeReactionJobReceipt[]>(
@@ -284,6 +335,22 @@ export async function connectProjectCoordinatorClient(
 			});
 		},
 	};
+}
+
+export async function stopProjectCoordinatorService(
+	repoRoot: string,
+	options: ProjectCoordinatorClientRequestOptions = {},
+): Promise<void> {
+	const endpoint = await requiredEndpoint(repoRoot);
+	await requestCoordinatorJson(endpoint, "/v1/shutdown", {
+		method: "POST",
+		body: {},
+		timeoutMs: options.timeoutMs,
+	});
+	await waitForCoordinatorStop(
+		endpoint,
+		Date.now() + boundedRequestTimeout(options.timeoutMs),
+	);
 }
 
 export async function readProjectCoordinatorServiceState(
@@ -343,6 +410,18 @@ async function routeServiceRequest(
 		writeJson(response, 200, runtime.coordinator.snapshot());
 		return;
 	}
+	if (method === "POST" && url.pathname === "/v1/shutdown") {
+		const body = objectBody(await readJsonBody(request));
+		assertOnlyKeys(body, []);
+		if (runtime.coordinator.snapshot().jobs.length > 0) {
+			throw new HttpError(409, "coordinator_jobs_pending");
+		}
+		writeJson(response, 202, { status: "shutting_down" });
+		setImmediate(() => {
+			void runtime.shutdown?.();
+		});
+		return;
+	}
 	if (method === "POST" && url.pathname === "/v1/clients/connect") {
 		const body = objectBody(await readJsonBody(request));
 		assertOnlyKeys(body, ["clientId", "kind", "supervision"]);
@@ -372,6 +451,14 @@ async function routeServiceRequest(
 		});
 		return;
 	}
+	if (method === "POST" && url.pathname === "/v1/runtime/inspect") {
+		await handleRuntimeInspection(runtime, request, response);
+		return;
+	}
+	if (method === "POST" && url.pathname === "/v1/runtime/candidate") {
+		await handleRuntimeCandidate(runtime, request, response);
+		return;
+	}
 	if (method === "POST" && url.pathname === "/v1/runtime/react") {
 		await handleRuntimeReaction(runtime, request, response);
 		return;
@@ -395,6 +482,73 @@ async function routeServiceRequest(
 		return;
 	}
 	writeJson(response, 404, { error: "not_found" });
+}
+
+async function handleRuntimeInspection(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+): Promise<void> {
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, ["connectionId", "trigger"]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	const trigger = runtimeTrigger(body.trigger, runtime.clock());
+	lease.activeRequests += 1;
+	try {
+		writeJson(response, 200, await runtime.reactor.inspect(trigger));
+	} finally {
+		extendLease(runtime, lease);
+	}
+}
+
+async function handleRuntimeCandidate(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+): Promise<void> {
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, [
+		"connectionId",
+		"trigger",
+		"loop",
+		"candidate",
+		"mode",
+	]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	const trigger = runtimeTrigger(body.trigger, runtime.clock());
+	const loop = runtimeCandidateLoop(body.loop);
+	const candidate = objectBody(body.candidate);
+	const mode = runtimeSemanticMode(body.mode);
+	lease.activeRequests += 1;
+	try {
+		const observation = await runtime.reactor.observe(trigger);
+		if (
+			observation.reaction.status !== "ready" ||
+			observation.reaction.selection?.loop !== loop
+		) {
+			throw new HttpError(409, "runtime_reaction_mismatch");
+		}
+		let execution: RunRuntimeSelectedSemanticReactionResult | undefined;
+		const receipt = await scheduleRuntimeReactionJob({
+			repoRoot: runtime.endpoint.repoRoot,
+			coordinator: runtime.coordinator,
+			reactor: runtime.reactor,
+			reaction: observation.reaction,
+			adapters: candidateAdapters(loop, candidate),
+			mode,
+			maxCasRetries: runtime.maxCasRetries,
+			beforeAppend: () => assertCurrentGeneration(runtime),
+			onExecution(result) {
+				execution = result;
+			},
+		});
+		writeJson(response, 200, {
+			receipt,
+			...(execution ? { execution } : {}),
+		} satisfies ProjectCoordinatorCandidateResult);
+	} finally {
+		extendLease(runtime, lease);
+	}
 }
 
 async function handleRuntimeReaction(
@@ -423,17 +577,38 @@ async function handleRuntimeReaction(
 			maxReactions: runtime.maxReactions,
 			maxPlanningChanges: runtime.maxPlanningChanges,
 			maxCasRetries: runtime.maxCasRetries,
-			async beforeAppend() {
-				if (!(await projectCoordinatorOwnershipIsCurrent(runtime.ownership))) {
-					throw new HttpError(409, "stale_generation");
-				}
-			},
+			beforeAppend: () => assertCurrentGeneration(runtime),
 		});
 		writeJson(response, 200, receipts);
 	} finally {
-		lease.activeRequests -= 1;
-		lease.expiresAt = runtime.clock() + runtime.clientLeaseMs;
+		extendLease(runtime, lease);
 	}
+}
+
+function candidateAdapters(
+	loop: RuntimeCandidateLoop,
+	candidate: Record<string, unknown>,
+): RuntimeSemanticAdapters {
+	if (loop === "decision") {
+		return { decision: () => candidate as RuntimeDecisionCandidate };
+	}
+	if (loop === "planning") {
+		return { planning: () => candidate as RuntimePlanningCandidate };
+	}
+	return {
+		implementation: () => candidate as RuntimeImplementationCandidate,
+	};
+}
+
+async function assertCurrentGeneration(runtime: ServiceRuntime): Promise<void> {
+	if (!(await projectCoordinatorOwnershipIsCurrent(runtime.ownership))) {
+		throw new HttpError(409, "stale_generation");
+	}
+}
+
+function extendLease(runtime: ServiceRuntime, lease: RemoteClientLease): void {
+	lease.activeRequests -= 1;
+	lease.expiresAt = runtime.clock() + runtime.clientLeaseMs;
 }
 
 async function readConnectionId(request: IncomingMessage): Promise<string> {
@@ -615,6 +790,17 @@ function runtimeTrigger(value: unknown, observedAt: number): RuntimeTrigger {
 	};
 }
 
+function runtimeCandidateLoop(value: unknown): RuntimeCandidateLoop {
+	if (
+		value === "decision" ||
+		value === "planning" ||
+		value === "implementation"
+	) {
+		return value;
+	}
+	throw new HttpError(400, "invalid_runtime_candidate_loop");
+}
+
 function runtimeSemanticMode(value: unknown): RuntimeSemanticMode {
 	if (value === undefined || value === "append") return "append";
 	if (value === "preview") return "preview";
@@ -747,6 +933,21 @@ function assertRemoteClientConnected(
 	if (disconnected) {
 		throw new Error(`Project coordinator client ${clientId} is disconnected.`);
 	}
+}
+
+async function waitForCoordinatorStop(
+	endpoint: ProjectCoordinatorEndpoint,
+	deadline: number,
+): Promise<void> {
+	const current = await readProjectCoordinatorEndpoint(endpoint.repoRoot).catch(
+		() => undefined,
+	);
+	if (!current || current.generationId !== endpoint.generationId) return;
+	if (Date.now() >= deadline) {
+		throw new Error("Project coordinator service did not stop before timeout.");
+	}
+	await new Promise((resolve) => setTimeout(resolve, 25));
+	return waitForCoordinatorStop(endpoint, deadline);
 }
 
 function compareText(left: string, right: string): number {

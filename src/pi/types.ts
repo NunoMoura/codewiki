@@ -46,6 +46,9 @@ export interface CodewikiCustomUiOptions {
 export interface CodewikiExtensionContext {
 	cwd: string;
 	mode?: string;
+	sessionManager?: {
+		getSessionId?(): string;
+	};
 	ui?: CodewikiExtensionUi;
 	isIdle?(): boolean;
 }

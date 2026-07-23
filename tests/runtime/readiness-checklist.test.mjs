@@ -403,6 +403,7 @@ describe("install readiness checklist", () => {
 			"npm run test:pack",
 			"npm run test:pi-install",
 			"npm run test:pi-rpc",
+			"npm run test:pi-multiprocess",
 			"npm run test:pi-mutation",
 			"npm run test:pi-sdk",
 			"npm run test:pi-sdk-package",

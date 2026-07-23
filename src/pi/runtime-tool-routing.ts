@@ -1,10 +1,13 @@
 import { findCodewikiProjectRoot } from "../project/root.ts";
-import {
-	releaseRuntimeReactor,
-	runtimeReactorFor,
-} from "../runtime/project-reactors.ts";
 import type { RuntimeReaction, RuntimeTrigger } from "../runtime/reactor.ts";
-import type { CodewikiExtensionApi } from "./types.ts";
+import {
+	createPiProjectServiceClients,
+	type PiProjectServiceClientProvider,
+} from "./project-service-client.ts";
+import type {
+	CodewikiExtensionApi,
+	CodewikiExtensionContext,
+} from "./types.ts";
 
 const LOOP_TOOL_BY_NAME = {
 	decision: "wiki_decide",
@@ -26,7 +29,10 @@ const REACTION_TOOL_NAMES = new Set([
  * selected by runtime. Adapter execution returns judgment or evidence to the
  * runtime executor; the agent never invokes loop facades or sees all choices.
  */
-export function registerRuntimeToolRouting(pi: CodewikiExtensionApi): void {
+export function registerRuntimeToolRouting(
+	pi: CodewikiExtensionApi,
+	projectServices: PiProjectServiceClientProvider = createPiProjectServiceClients(),
+): void {
 	if (
 		typeof pi.on !== "function" ||
 		typeof pi.getActiveTools !== "function" ||
@@ -35,7 +41,7 @@ export function registerRuntimeToolRouting(pi: CodewikiExtensionApi): void {
 		return;
 	}
 	const route = async (
-		ctx: { cwd?: string },
+		ctx: Partial<CodewikiExtensionContext>,
 		trigger: RuntimeTrigger,
 	): Promise<void> => {
 		const root = ctx.cwd ? await findCodewikiProjectRoot(ctx.cwd) : undefined;
@@ -44,7 +50,13 @@ export function registerRuntimeToolRouting(pi: CodewikiExtensionApi): void {
 			return;
 		}
 		try {
-			applyReaction(pi, await runtimeReactorFor(root).inspect(trigger));
+			applyReaction(
+				pi,
+				await projectServices.inspect(root, ctx, {
+					kind: trigger.kind,
+					...(trigger.refs ? { refs: trigger.refs } : {}),
+				}),
+			);
 		} catch {
 			applyReaction(pi, undefined);
 		}
@@ -66,14 +78,9 @@ export function registerRuntimeToolRouting(pi: CodewikiExtensionApi): void {
 					: "project_truth_changed",
 		});
 	});
-	pi.on("session_shutdown", (_event, ctx) => {
-		if (!ctx.cwd) {
-			releaseRuntimeReactor();
-			return;
-		}
-		void findCodewikiProjectRoot(ctx.cwd).then((root) => {
-			releaseRuntimeReactor(root);
-		});
+	pi.on("session_shutdown", async (_event, ctx) => {
+		const root = ctx.cwd ? await findCodewikiProjectRoot(ctx.cwd) : undefined;
+		await projectServices.disconnect(root);
 	});
 }
 

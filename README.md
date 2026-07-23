@@ -32,9 +32,9 @@ Target runtime topology is one project-scoped control plane with concurrent dash
 
 The executable control-plane seam now consists of the transport-neutral `ProjectCoordinator` kernel plus the `@nunomoura/codewiki/coordinator` project service. The service elects one live process through an exclusive project lock, binds only to `127.0.0.1`, publishes private endpoint metadata, requires bearer and exact-generation capabilities, fences stale owners against the current lock on every request, registers leased Pi/dashboard/CLI clients, and replaces dead generations without reusing identity. The kernel enforces supervised or unattended admission, deduplicates jobs, requires durable recovery for writes, admits bounded compatible lanes, serializes shared resources and integration targets, and exposes exact held reasons. `RuntimeReactor.selectRuntimeReactions()` derives several compatible runtime-owned reactions while retaining the singular selector as a bounded job primitive.
 
-The SDK adapter creates bounded in-memory Pi SDK sessions for read-only Decision, Planning, and Implementation review, exposes only project-scoped read tools plus one closed candidate-submission tool, and returns candidates to `runRuntimeSemanticExecutor()`. The Pi SDK remains an optional peer during the architecture spike; disposable SDK fixtures must install it explicitly and use Node.js 22.19 or newer.
+The SDK adapter creates bounded in-memory Pi SDK sessions for read-only Decision, Planning, and Implementation review, exposes only project-scoped read tools plus one closed candidate-submission tool, and returns candidates to runtime-owned exact-reaction jobs. The Pi SDK remains an optional peer during the architecture spike; disposable SDK fixtures must install it explicitly and use Node.js 22.19 or newer.
 
-Implementation workers remain on the separate process path today and target worktree plus process/container isolation. The elected service now selects a bounded compatible reaction horizon, admits each exact semantic invariant as a typed coordinator job, executes one invariant without drifting into another lane, binds successful appends to a deterministic runtime job id in canonical Change Trace events, and recovers completed writes from those exact events after restart. It rechecks generation ownership immediately before append. Pi/dashboard client migration, durable WorkState event streaming, implementation-worker scheduling, and process/container hardening remain the next control-plane slices. Existing one-shot host primitives and the extension-owned dashboard are known implementation gaps against approved Knowledge.
+Implementation workers remain on the separate process path today and target worktree plus process/container isolation. A detached project daemon now owns the elected coordinator independently of any Pi session. Pi sessions connect as leased supervised clients, route tool activation through remote runtime inspection, and submit candidate-only semantic payloads to exact coordinator jobs. Dashboard runtimes register separate observer clients. Successful appends remain bound to deterministic runtime job ids and recoverable Change Trace events, with generation ownership rechecked before append. Durable WorkState event streaming, autonomous SDK-backed semantic dispatch, implementation-worker scheduling, dashboard-service consolidation, and process/container hardening remain next control-plane slices.
 
 Worker dispatch already resolves a deterministic execution policy before claim append and child-process creation. Provider, model, thinking level, allowed tools, timeout, pricing snapshot, budget, and policy digest travel through handoff, start, observation, and guarded resume. Attached supervision and usage telemetry are mandatory. Policy drift, route mismatch, missing usage, exhausted limits, monitoring loss, detached execution, or invalid escalation stops the attempt without granting semantic authority.
 
@@ -64,7 +64,7 @@ src/
 
 The semantic loop roots are `decision`, `planning`, and `implementation`. Runtime is their project-scoped event-driven outer control plane. Each semantic loop owns typed inputs, outputs, quality standards, and exits. `traces` owns one append-only JSONL journey per persisted Change. `work-state` derives shared project state; `views` render Backlog, Planning, Implementation, Change dossiers, quality, blockers, and outcomes.
 
-Current `runRuntimeSemanticExecutor()` remains the singular compatibility primitive. `runRuntimeSelectedSemanticReaction()` executes one exact coordinator-selected invariant, while `runtime-reaction-jobs.ts` maps Decision, Planning, and Implementation-review selections to typed lanes, deterministic idempotency keys, conflict refs, and durable recovery probes. Successful semantic events carry the runtime-owned job id, so a replacement generation can return exact completion evidence without reinvoking an adapter. `src/runtime/project-coordinator-service.ts` exposes this through authenticated `react()` requests and rechecks project ownership before append. `src/pi/sdk-semantic-session.ts` implements the embedded semantic-session adapter; existing process worker code remains a separate implementation adapter. `error-handling` owns shared errors and recovery hints.
+Current `runRuntimeSemanticExecutor()` remains the singular compatibility primitive. `runRuntimeSelectedSemanticReaction()` executes one exact coordinator-selected invariant, while `runtime-reaction-jobs.ts` maps Decision, Planning, and Implementation-review selections to typed lanes, deterministic idempotency keys, conflict refs, and durable recovery probes. `project-coordinator-daemon.ts` and `project-coordinator-process.ts` provide process-independent service ownership and discovery. Authenticated clients can inspect runtime selection, submit candidate-only semantic payloads, or request autonomous reactions when a service adapter exists; clients cannot supply observation time, Change/trace identity, selection, or append authority. `src/pi/project-service-client.ts` owns leased Pi connections and failover. Existing process worker code remains a separate implementation adapter.
 
 Temporary trace scratch belongs under `.codewiki/runtime/tmp/<change-trace>/<loop>/`. It remains non-authoritative and is cleaned only after durable trace/KB/source/Git or recovery refs exist.
 
@@ -149,6 +149,7 @@ npm test
 npm run test:pack
 npm run test:pi-install
 npm run test:pi-rpc
+npm run test:pi-multiprocess
 npm run test:pi-mutation
 npm run test:coordinator
 npm run test:pi-sdk
@@ -171,6 +172,7 @@ Smoke command roles:
 - `npm run test:pi-install`: isolated Pi install smoke with temporary Pi settings.
 - `npm run test:pi-rpc`: temp-project Pi RPC smoke for `/wiki-bootstrap` and
   `/wiki-dashboard --no-open` dashboard command rendering without a model turn.
+- `npm run test:pi-multiprocess`: packs CodeWiki into a disposable external project, starts two real Pi RPC processes plus the dashboard, proves all three share one coordinator generation, then proves supervisor loss pauses new execution and cleanup leaves no daemon.
 - `npm run test:pi-mutation`: isolated Pi extension tool mutation smoke;
   previews first, submits semantic candidates without repository authority,
   verifies runtime-owned byte/sequence guards, and reads resulting state through

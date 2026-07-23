@@ -13,11 +13,14 @@ codewiki_components:
 codewiki_source_patterns:
   - src/pi/**
 codewiki_test_patterns:
+  - tests/helpers/pi-project-services.mjs
   - tests/runtime/pi-worker-start.test.mjs
   - tests/runtime/pi-extension.test.mjs
   - tests/runtime/pi-install-smoke.mjs
   - tests/runtime/pi-install-scope.test.mjs
   - tests/runtime/pi-process-session.test.mjs
+  - tests/runtime/pi-project-service-client.test.mjs
+  - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
   - tests/runtime/pi-rpc-smoke.mjs
   - tests/runtime/pi-tool-mutation-smoke.mjs
   - tests/runtime/pi-worker-results.test.mjs
@@ -31,11 +34,14 @@ codewiki_source_map:
     source_patterns:
       - src/pi/**
     test_patterns:
+      - tests/helpers/pi-project-services.mjs
       - tests/runtime/pi-worker-start.test.mjs
       - tests/runtime/pi-extension.test.mjs
       - tests/runtime/pi-install-smoke.mjs
       - tests/runtime/pi-install-scope.test.mjs
       - tests/runtime/pi-process-session.test.mjs
+      - tests/runtime/pi-project-service-client.test.mjs
+      - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
       - tests/runtime/pi-rpc-smoke.mjs
       - tests/runtime/pi-tool-mutation-smoke.mjs
       - tests/runtime/pi-worker-results.test.mjs
@@ -47,13 +53,13 @@ codewiki_source_map:
 ---
 # Pi Extension
 
-The CodeWiki package exposes a future Pi extension for external package installs through `package.json` `pi.extensions`. During stabilization, the CodeWiki source repository does not register, install, or load CodeWiki in project-local Pi settings. Maintainers work with Pi native coding tools and pi-lens; no `.pi/extensions/codewiki.ts` shim, local package path, pinned controller, or mutable-source autoload is allowed.
+The CodeWiki package exposes its Pi extension for external package installs through `package.json` `pi.extensions`. During stabilization, the CodeWiki source repository does not register, install, or load CodeWiki in project-local Pi settings. Maintainers work with Pi native coding tools and pi-lens; no `.pi/extensions/codewiki.ts` shim, local package path, pinned controller, or mutable-source autoload is allowed.
 
 Pi integration lives under `src/pi/**` and has two distinct roles. The extension is a thin conversational client of one project-scoped CodeWiki control plane. The Pi execution adapter creates bounded agent sessions on runtime request. Pi remains the primary execution engine, not the CodeWiki core; harness-neutral runtime code must not import Pi SDK types.
 
 The target CodeWiki OS keeps bounded state, Change, and configuration capabilities available to clients while the project control plane owns semantic selection and scheduling. Decision, Planning, and Implementation-review sessions are created through an embedded Pi SDK adapter with read-only repository tools and a closed candidate-submission tool. Implementation workers use a separate process or container adapter. Runtime supplies exact context, freshness, budgets, and append authority; sessions return judgment or evidence only.
 
-The user-facing slash surface remains `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi session ensures or connects to the local project service and may open its dashboard once. `/wiki-dashboard` reopens, discovers, or explicitly stops the service according to policy. No grouped namespace command or former state alias exists. The CLI remains a temporary development/test client.
+The user-facing slash surface remains `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi session ensures or connects to the detached local project service and may open its dashboard once. `/wiki-dashboard` reopens, discovers, or explicitly stops the dashboard and coordinator service according to policy. No grouped namespace command or former state alias exists. The CLI remains a temporary development/test client.
 
 CodeWiki is not published to the npm registry yet. Its selected registry identity is `@nunomoura/codewiki`, while package metadata keeps `"private": true` so npm refuses publication during stabilization. Distribution testing packs the candidate and installs it only into disposable external projects with isolated Pi settings. The source checkout contains canonical KB, source, tests, and Git history but no active dogfood trace or Changes state. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default in consuming projects; controlled tests may opt into the explicit non-project-install override. CodeWiki does not provide a sandbox, but it remains compatible with external sandbox, worktree, container, or agent-harness isolation.
 
@@ -63,7 +69,9 @@ Mocked extension tests cover registered capabilities, runtime-selected candidate
 
 `npm run test:pi-rpc` is the external command smoke. It uses a temp project and temp Pi settings, installs the packed package, starts Pi RPC mode, runs `/wiki-bootstrap` and `/wiki-dashboard --no-open`, and verifies dashboard command rendering without starting a model turn.
 
-In a consuming project, one local project service owns the dashboard endpoint and runtime coordinator. Pi sessions discover and connect to that service; no individual session owns its lifetime. Initial TUI `session_start` may ensure the service and open one browser tab. Reload or session replacement reuses the endpoint without opening another tab. Closing a browser tab or Pi session does not mutate workflow truth. Under supervised policy, loss of all approved supervisors prevents new execution starts while preserving deterministic recovery. `/wiki-dashboard` health-checks project service state before reopening it. Stale endpoint metadata is removed after failed serving. Installing a different package version while Pi is running requires fully exiting and restarting Pi; `/reload` may reload extension registration but cannot guarantee replacement of cached imported package modules.
+In a consuming project, one detached local project daemon owns the runtime coordinator. Pi sessions discover and connect as leased clients; no individual session owns its lifetime. Dashboard runtimes connect as separate observers while their existing HTTP endpoint remains a transitional process. Initial TUI `session_start` may ensure the coordinator and open one browser tab. Reload or session replacement reuses the endpoint without opening another tab. Closing a browser tab or Pi session does not mutate workflow truth. Under supervised policy, loss of all approved supervisors prevents new execution starts while preserving deterministic recovery. `/wiki-dashboard` health-checks project service state before reopening it. Stale endpoint metadata is removed after failed serving. Installing a different package version while Pi is running requires fully exiting and restarting Pi; `/reload` may reload extension registration but cannot guarantee replacement of cached imported package modules.
+
+`npm run test:pi-multiprocess` packs CodeWiki into a disposable external project, starts two real Pi RPC processes plus the dashboard, verifies three leased clients share one coordinator generation with two approved supervisors, then verifies supervisor loss pauses execution and explicit shutdown leaves no daemon.
 
 `npm run test:pi-mutation` is the isolated tool mutation smoke. It uses a temp
 project, exercises a Pi-registered `wiki_decide` tool with preview first, rejects
@@ -92,7 +100,7 @@ failure paths through installed package artifacts.
 
 ## Production readiness gates
 
-Supported now: project-local packed/local package installs, guarded expected-byte/sequence mutation, process worker primitives, external sandbox compatibility, and an elected project coordinator service with authenticated loopback clients. The service derives compatible semantic reactions from WorkState, schedules one exact invariant per typed coordinator job, binds successful writes to deterministic runtime job ids in canonical Change Trace events, rechecks generation ownership before append, and recovers exact completion evidence after restart without reinvoking adapters. An entrypoint-isolated `./pi-sdk` adapter creates one bounded read-only semantic session through an injected or embedded Pi SDK factory, accepts exactly one closed candidate submission, limits invocation/candidate size and time, emits bounded lifecycle observations, and blocks read-tool paths and symlinks outside the project root. Real model/auth execution through the elected service, Pi/dashboard client migration, durable event delivery, implementation-worker scheduling, and process/container worker isolation still require disposable external architecture gates before production use. Public npm publish, unattended worker start, auto-merge, auto-publish, global/user installs for normal mutation, and treating worker completion as truth without Implementation acceptance remain gated.
+Supported now: project-local packed/local package installs, guarded expected-byte/sequence mutation, process worker primitives, external sandbox compatibility, and a detached elected project coordinator service with authenticated loopback clients. Pi sessions use leased service clients for runtime inspection, active-tool routing, and candidate-only semantic submission; dashboard runtimes register separate observers. Runtime selects exact invariants, schedules typed jobs, binds successful writes to deterministic job ids in canonical Change Trace events, rechecks generation ownership before append, and recovers completion evidence after restart without reinvoking adapters. A packed external spike proves two real Pi RPC processes plus one dashboard share one generation and supervision pauses after both Pi clients exit. An entrypoint-isolated `./pi-sdk` adapter creates bounded read-only semantic sessions. Autonomous real model/auth execution through the daemon, durable event delivery, implementation-worker scheduling, dashboard-service consolidation, and process/container worker isolation still require external gates before production use. Public npm publish, unattended worker start, auto-merge, auto-publish, global/user installs for normal mutation, and treating worker completion as truth without Implementation acceptance remain gated.
 
 Before enabling unattended worker start or auto-merge, require multiple successful
 external package lifecycle smokes, passing package failure-path smokes, no project-root

@@ -59,8 +59,10 @@ import {
 } from "@nunomoura/codewiki";
 import {
 	connectProjectCoordinatorClient,
+	ensureProjectCoordinatorService,
 	scheduleRuntimeReactions,
 	startProjectCoordinatorService,
+	stopProjectCoordinatorService,
 } from "@nunomoura/codewiki/coordinator";
 
 function filesUnder(root) {
@@ -124,7 +126,11 @@ const remoteClient = await connectProjectCoordinatorClient(process.cwd(), {
 });
 assert.equal((await remoteClient.state()).supervisorCount, 1);
 assert.equal(typeof remoteClient.react, "function");
+assert.equal(typeof remoteClient.inspect, "function");
+assert.equal(typeof remoteClient.submitCandidate, "function");
 assert.equal(typeof scheduleRuntimeReactions, "function");
+assert.equal(typeof ensureProjectCoordinatorService, "function");
+assert.equal(typeof stopProjectCoordinatorService, "function");
 await remoteClient.disconnect();
 await service.close();
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
@@ -180,7 +186,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), 
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator-api.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-process.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);
 assert.equal(readFileSync(join(packageRoot, "dist", "pi", "prompt", "index.js"), "utf8").includes("lab/"), false);

@@ -173,6 +173,18 @@ try {
 		messages.some((message) => message.type === "agent_start"),
 		false,
 	);
+	messages.length = 0;
+	send({
+		id: "dashboard-stop",
+		type: "prompt",
+		message: "/wiki-dashboard --stop --no-open",
+	});
+	await waitFor(
+		messages,
+		(message) =>
+			message.type === "response" && message.id === "dashboard-stop",
+		stderrRef,
+	);
 
 	console.log(
 		JSON.stringify(
