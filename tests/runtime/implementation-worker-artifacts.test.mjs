@@ -315,6 +315,29 @@ test("worker artifact cleanup preserves completed work until integration proof",
 		);
 		assert.equal(result.cleanedWorktreePaths.length, 1);
 		assert.equal((await readdir(packetDirectory(root))).length, 1);
+
+		const integrated = await cleanupImplementationWorkerArtifacts({
+			repoRoot: root,
+			activeClaimIds: new Set(),
+			canonicalClaimEventIds: new Set([completed.packet.claimEventId]),
+			integratedClaims: new Map([
+				[
+					completed.packet.assignment.claimId,
+					{
+						assignmentId: completed.packet.assignment.assignmentId,
+						workerReportRef: completed.report.reportRef,
+					},
+				],
+			]),
+			worktreeRunner() {
+				return { exitCode: 0 };
+			},
+		});
+		assert.deepEqual(integrated.cleanedWorktreePaths, [
+			completed.packet.assignment.worktree.path,
+		]);
+		assert.equal(await exists(completed.packet.assignment.reportPath), false);
+		assert.equal((await readdir(packetDirectory(root))).length, 0);
 	} finally {
 		await rm(root, { recursive: true, force: true });
 	}

@@ -236,6 +236,36 @@ describe("WorkState", () => {
 				},
 			}),
 		);
+		await appendEvent(
+			root,
+			"CHG-assigned",
+			({ traceId, parentId, sequence }) => ({
+				type: "trace_event",
+				id: "evt-integration-assigned",
+				parentId,
+				traceId,
+				sequence,
+				event: "runtime.integration.proven",
+				refs: [
+					"runtime-worker-report:assignment-1",
+					`git-commit:${"a".repeat(40)}`,
+					`git-tree:${"b".repeat(40)}`,
+				],
+				createdAt: "2026-08-01T01:05:00.000Z",
+				data: {
+					runtimeJobId: `implementation-integration:${"c".repeat(64)}`,
+					workItemId: "WI-assigned",
+					targetRef: "project:default",
+					targetRefs: [],
+					baseCommit: "d".repeat(40),
+					commit: "a".repeat(40),
+					tree: "b".repeat(40),
+					contentProof: `git-tree:${"b".repeat(40)}`,
+					changedPaths: ["src/dashboard/state.ts"],
+					workerReportRef: "runtime-worker-report:assignment-1",
+				},
+			}),
+		);
 
 		const state = await buildProjectWorkState({ repoRoot: root });
 		assert.deepEqual(state.assignmentIds, ["ASN-assigned"]);
@@ -253,6 +283,25 @@ describe("WorkState", () => {
 			state.changes.find((change) => change.id === "CHG-contributor")
 				.realizationStatus,
 			"active",
+		);
+		assert.deepEqual(
+			state.workItems.find((item) => item.id === "WI-assigned")
+				.integrationProofs,
+			[
+				{
+					eventId: "evt-integration-assigned",
+					jobId: `implementation-integration:${"c".repeat(64)}`,
+					targetRef: "project:default",
+					targetRefs: [],
+					baseCommit: "d".repeat(40),
+					commit: "a".repeat(40),
+					tree: "b".repeat(40),
+					contentProof: `git-tree:${"b".repeat(40)}`,
+					changedPaths: ["src/dashboard/state.ts"],
+					workerReportRef: "runtime-worker-report:assignment-1",
+					integratedAt: "2026-08-01T01:05:00.000Z",
+				},
+			],
 		);
 	});
 

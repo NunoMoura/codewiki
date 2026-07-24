@@ -34,11 +34,13 @@ function automaticConfig() {
 	});
 }
 
+const TEST_BASE_SHA = "a".repeat(40);
+
 function gitStatus(root) {
 	return {
 		repoRoot: root,
 		baseRef: "HEAD",
-		baseSha: "abc123",
+		baseSha: TEST_BASE_SHA,
 		dirtyPaths: [],
 		errors: [],
 		gitRoot: root,
@@ -119,8 +121,8 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 		assert.equal(executions[0].workItemId, fixture.workItemId);
 		assert.equal(executions[0].traceId, fixture.traceId);
 		assert.equal(executions[0].planningRefs[0], fixture.planningRef);
-		assert.equal(executions[0].sourceBaseRef, "git:abc123");
-		assert.equal(executions[0].worktree.baseRef, "abc123");
+		assert.equal(executions[0].sourceBaseRef, `git:${TEST_BASE_SHA}`);
+		assert.equal(executions[0].worktree.baseRef, TEST_BASE_SHA);
 		assert.match(executions[0].contextDigest, /^sha256:[a-f0-9]{64}$/);
 		assert.deepEqual(worktreeSteps, [
 			"worktree.prepare",
@@ -187,6 +189,12 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 		assert.deepEqual(releasing.reviewReadyWorkItemIds, []);
 		assert.equal(
 			releasing.scheduledJobIds.some((jobId) =>
+				jobId.startsWith("implementation-integration:"),
+			),
+			true,
+		);
+		assert.equal(
+			releasing.scheduledJobIds.some((jobId) =>
 				jobId.startsWith("implementation-worker-release:"),
 			),
 			true,
@@ -213,6 +221,17 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 			releaseEvents[0].data?.workerReportRef,
 			/^runtime-worker-report:/,
 		);
+		const integrationRetry = await dispatcher.reconcile({
+			kind: "timer_due",
+			occurredAt: "2026-07-21T10:00:05.000Z",
+		});
+		assert.equal(
+			integrationRetry.scheduledJobIds.some((jobId) =>
+				jobId.startsWith("implementation-integration:"),
+			),
+			true,
+		);
+		await waitForCoordinator(coordinator);
 	} finally {
 		client.disconnect();
 		await waitForCoordinator(coordinator);

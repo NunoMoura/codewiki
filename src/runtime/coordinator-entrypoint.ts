@@ -43,6 +43,12 @@ export {
 	type ImplementationWorkerRuntimeReconciliation,
 } from "./implementation-worker-dispatch.ts";
 export {
+	implementationWorkerIntegrationJob,
+	scheduleImplementationWorkerIntegration,
+	type ImplementationWorkerIntegrationInput,
+	type ImplementationWorkerIntegrationReceipt,
+} from "./implementation-worker-integration.ts";
+export {
 	implementationWorkerClaimReleaseJob,
 	scheduleImplementationWorkerClaimRelease,
 	type ImplementationWorkerClaimReleaseInput,

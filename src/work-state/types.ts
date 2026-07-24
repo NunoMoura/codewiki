@@ -71,6 +71,20 @@ export interface WorkStateSprint {
 	blockers: string[];
 }
 
+export interface WorkStateIntegrationProof {
+	eventId: string;
+	jobId: string;
+	targetRef: string;
+	targetRefs: string[];
+	baseCommit: string;
+	commit: string;
+	tree: string;
+	contentProof: string;
+	changedPaths: string[];
+	workerReportRef: string;
+	integratedAt: string;
+}
+
 export interface WorkStateWorkItem {
 	id: string;
 	sprintId: string;
@@ -85,6 +99,7 @@ export interface WorkStateWorkItem {
 	acceptanceCriterionIds: string[];
 	assignmentIds: string[];
 	implemented: boolean;
+	integrationProofs?: WorkStateIntegrationProof[];
 	blockers: string[];
 }
 

@@ -104,6 +104,8 @@ A Change view may expose:
 
 A Sprint view joins matching Planning facts from participating Change Traces, including canonical `uiPreviewTargets[]` bindings and their exact target/profile digests when UI realization is in scope. It is a generated execution-group projection, not a separate Sprint trace or truth file.
 
+A Work Item may project one or more exact Integration proofs from `runtime.integration.proven` events. Each projection keeps the event and runtime-job identity, Planning target refs, base/commit/tree/content proof, changed paths, Worker-report ref, and integration time separate from semantic `implemented` status. Missing integration evidence is never inferred from Worker completion or Implementation acceptance.
+
 ## Runtime use
 
 Runtime is logically always available and physically quiescent when no eligible work exists. On each trigger set it rebuilds or refreshes WorkState, derives eligible invariant repairs, admits a compatible bounded job set, supplies exact context slices, validates each output and exit result, appends accepted facts to affected Change Traces, and rebuilds projections.

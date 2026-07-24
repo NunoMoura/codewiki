@@ -46,15 +46,17 @@ from worker TDD phases (`red`, `green`, `refactor`).
 
 Hosts can call the read-only Git status helper before runtime claim selection to collect `dirtyPaths`, `baseRef`, and `baseSha` for `worktreeIsolation: "auto"`. The helper runs only read-only Git commands (`rev-parse` and `status --porcelain`) and supports an injected runner for tests or custom hosts.
 
-The elected worker reconciler owns idempotent cleanup for generated worktrees under `.codewiki/runtime/tmp/**`. It never deletes a worktree associated with an active canonical Claim. A packet written before Claim append, or a released failed, blocked, or cancelled attempt, may be cleaned by removing the runtime-local directory and running structured `git worktree prune` through the injected runner. Completed and ambiguous attempts remain preserved until exact integration and Git proof authorize deletion. Paths outside the runtime temp root fail closed and require explicit host remediation.
+The elected worker reconciler owns idempotent cleanup for generated worktrees under `.codewiki/runtime/tmp/**`. It never deletes a worktree associated with an active canonical Claim. A packet written before Claim append, or a released failed, blocked, or cancelled attempt, may be cleaned by removing the runtime-local directory and running structured `git worktree prune` through the injected runner. Completed and ambiguous attempts remain preserved until an exact `runtime.integration.proven` event matches the Claim, Assignment, Worker report, commit, tree, and content proof. Only then may sanitation remove the completed worker worktree and private artifacts. Paths outside the runtime temp root fail closed and require explicit host remediation.
+
+Accepted worker output is integrated into a separate runtime-local worktree rooted at the exact Assignment source commit. The integrator stages worker changes to include untracked files, emits a bounded binary patch, enforces Planning path scopes, serializes the exact target/base lane, applies with Git's three-way index mode, runs `git diff --cached --check`, and creates a no-GPG local commit. The normal project checkout and branch are not moved. Integration branch commits remain available for aggregate preview and later guarded merge; they are not publication.
 
 Target constraints:
 
 - Trace events own worker claims and releases.
 - Ephemeral leases coordinate local writes but are not durable truth.
 - Runtime boundaries carry source refs and content-evidence requirements.
-- Worktree Git mutations require an explicit host call and injected command runner.
-- Final implementation closure requires aggregate content proof after worker outputs are merged.
+- Worktree Git mutations require an injected structured command runner under elected-runtime execution policy.
+- Final integration proof requires an exact local commit and tree after accepted worker output is applied.
 - Pi session history is referenced, not copied into CodeWiki truth.
 - No `wiki_resume_context`, CodeWiki-owned compaction, or auto-pickup runs while repo-local dogfooding is disabled or during any later guarded re-enable phase.
 

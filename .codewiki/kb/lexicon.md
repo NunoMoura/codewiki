@@ -190,7 +190,11 @@ Immutable normalized report written by the worker adapter for one exact Assignme
 
 Runtime must match the report digest, identity, Assignment, and active Claim before using it. A completed report becomes candidate evidence for Implementation review. A blocked, failed, or cancelled report supports guarded claim release and repair routing. The report remains the same object through persistence, recovery, and review; no separate Worker receipt or Worker result exists.
 
-A Worker report proves only what the adapter observed about that attempt. It never marks a Work Item implemented or semantically accepted by itself. Implementation acceptance remains a separate canonical fact. Active-Claim and completed reports are retained during artifact sanitation; terminal unsuccessful orphan reports may be removed after guarded Claim handling.
+A Worker report proves only what the adapter observed about that attempt. It never marks a Work Item implemented or semantically accepted by itself. Implementation acceptance remains a separate canonical fact. Active-Claim and completed reports are retained during artifact sanitation; terminal unsuccessful orphan reports may be removed after guarded Claim handling. Completed report artifacts remain until exact Integration proof authorizes cleanup.
+
+## Integration proof
+
+Canonical runtime evidence that accepted worker output was applied under one exact Planning target set and source base to a guarded integration worktree. It binds the runtime job, Claim, Assignment, Worker report, base and parent commits, resulting local commit and tree, changed paths, patch digest, and integration checks. Integration proof establishes integrated content state; it does not merge the project branch, push, publish, grant semantic approval, or prove a business outcome.
 
 ## Aggregate content proof
 

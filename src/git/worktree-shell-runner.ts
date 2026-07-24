@@ -46,7 +46,7 @@ export function createShellWorktreeCommandRunner(
 ): WorktreeCommandRunner {
 	const runShell = (options.exec || exec) as ShellWorktreeCommandExec;
 	const runProcess = (options.execFile || execFile) as WorktreeCommandExecFile;
-	return (command) =>
+	return (command, context) =>
 		new Promise<WorktreeCommandRunnerResult>((resolve) => {
 			const callback = (
 				error: ExecException | null,
@@ -54,13 +54,13 @@ export function createShellWorktreeCommandRunner(
 				stderr: string | Buffer,
 			) => resolve(shellRunnerResult(error, stdout, stderr));
 			if (typeof command === "string") {
-				runShell(command, shellExecOptions(options), callback);
+				runShell(command, shellExecOptions(options, context.signal), callback);
 				return;
 			}
 			runProcess(
 				command.executable,
 				command.args,
-				processExecOptions(options),
+				processExecOptions(options, context.signal),
 				callback,
 			);
 		});
@@ -68,18 +68,21 @@ export function createShellWorktreeCommandRunner(
 
 function shellExecOptions(
 	options: CreateShellWorktreeCommandRunnerOptions,
+	signal?: AbortSignal,
 ): ExecOptions {
 	return {
-		...processExecOptions(options),
+		...processExecOptions(options, signal),
 		...(options.shell ? { shell: options.shell } : {}),
 	};
 }
 
 function processExecOptions(
 	options: CreateShellWorktreeCommandRunnerOptions,
+	signal?: AbortSignal,
 ): Omit<ExecOptions, "shell"> {
 	return {
 		windowsHide: true,
+		...(signal ? { signal } : {}),
 		...(options.cwd ? { cwd: options.cwd } : {}),
 		...(options.env ? { env: options.env } : {}),
 		...(Number.isInteger(options.timeoutMs)

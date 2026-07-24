@@ -66,6 +66,7 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 	for (const group of groups.values()) {
 		projectAssignments(group, workItemMap, assignmentMap);
 		projectImplementation(group, workItemMap);
+		projectIntegration(group, workItemMap);
 		projectEventBlockers(group, blockers);
 	}
 	applyAssignmentRefs(workItemMap, assignmentMap);
@@ -442,6 +443,55 @@ function projectImplementation(
 			const item = workItemMap.get(id);
 			if (item) item.implemented = true;
 		}
+	}
+}
+
+function projectIntegration(
+	group: TraceGroup,
+	workItemMap: Map<string, WorkStateWorkItem>,
+): void {
+	for (const event of group.events.filter(
+		(candidate) => candidate.event === "runtime.integration.proven",
+	)) {
+		const workItemId = text(event.data?.workItemId);
+		const item = workItemId ? workItemMap.get(workItemId) : undefined;
+		const jobId = text(event.data?.runtimeJobId);
+		const targetRef = text(event.data?.targetRef);
+		const baseCommit = text(event.data?.baseCommit);
+		const commit = text(event.data?.commit);
+		const tree = text(event.data?.tree);
+		const contentProof = text(event.data?.contentProof);
+		const workerReportRef = text(event.data?.workerReportRef);
+		if (
+			!item ||
+			!jobId ||
+			!targetRef ||
+			!baseCommit ||
+			!commit ||
+			!tree ||
+			!contentProof ||
+			!workerReportRef
+		) {
+			continue;
+		}
+		item.integrationProofs = [
+			...(item.integrationProofs || []).filter(
+				(proof) => proof.eventId !== event.id,
+			),
+			{
+				eventId: event.id,
+				jobId,
+				targetRef,
+				targetRefs: stringList(event.data?.targetRefs),
+				baseCommit,
+				commit,
+				tree,
+				contentProof,
+				changedPaths: stringList(event.data?.changedPaths),
+				workerReportRef,
+				integratedAt: event.createdAt,
+			},
+		].sort((left, right) => left.eventId.localeCompare(right.eventId));
 	}
 }
 

@@ -36,14 +36,23 @@ export interface ImplementationWorkerDispatchPacket {
 	worktreePlan: RuntimeWorktreePlan;
 }
 
-export interface ImplementationWorkerArtifactCleanupInput {
+interface ImplementationWorkerIntegrationArtifactProof {
+	assignmentId: string;
+	workerReportRef: string;
+}
+
+interface ImplementationWorkerArtifactCleanupInput {
 	repoRoot: string;
 	activeClaimIds: ReadonlySet<string>;
 	canonicalClaimEventIds: ReadonlySet<string>;
+	integratedClaims?: ReadonlyMap<
+		string,
+		ImplementationWorkerIntegrationArtifactProof
+	>;
 	worktreeRunner?: WorktreeCommandRunner;
 }
 
-export interface ImplementationWorkerArtifactCleanupResult {
+interface ImplementationWorkerArtifactCleanupResult {
 	removedPaths: string[];
 	preservedPaths: string[];
 	cleanedWorktreePaths: string[];
@@ -119,9 +128,14 @@ export async function cleanupImplementationWorkerArtifacts(
 		const canonicalClaimExists = input.canonicalClaimEventIds.has(
 			packet.claimEventId,
 		);
+		const integration = input.integratedClaims?.get(claimId);
+		const integrationProven =
+			integration?.assignmentId === packet.assignment.assignmentId &&
+			(!report || integration.workerReportRef === report.reportRef);
 		if (
 			canonicalClaimExists &&
-			(!report || report.status === "completed")
+			(!report || report.status === "completed") &&
+			!integrationProven
 		) {
 			preservedPaths.add(file.path);
 			if (reportPath) retainedReportPaths.add(reportPath);

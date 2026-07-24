@@ -63,6 +63,7 @@ import {
 	connectProjectCoordinatorClient,
 	ensureProjectCoordinatorService,
 	scheduleImplementationWorkerClaimRelease,
+	scheduleImplementationWorkerIntegration,
 	scheduleImplementationWorkerAssignments,
 	scheduleRuntimeReactions,
 	startProjectCoordinatorService,
@@ -117,6 +118,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-wor
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-integration.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "process-worker-adapter.js")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 const coordinator = new ProjectCoordinator(process.cwd(), {
@@ -144,6 +146,7 @@ assert.equal(remoteClient.semanticExecution, "client_candidate");
 assert.equal(typeof scheduleRuntimeReactions, "function");
 assert.equal(typeof scheduleImplementationWorkerAssignments, "function");
 assert.equal(typeof scheduleImplementationWorkerClaimRelease, "function");
+assert.equal(typeof scheduleImplementationWorkerIntegration, "function");
 assert.equal(typeof ImplementationWorkerDispatcher, "function");
 assert.equal(IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION, 1);
 assert.equal(typeof ensureProjectCoordinatorService, "function");

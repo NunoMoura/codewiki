@@ -17,10 +17,11 @@ codewiki_test_patterns:
   - tests/runtime/**
   - tests/helpers/runtime-implementation.mjs
 codewiki_trace_events:
-  - runtime.work_item.claimed
-  - runtime.work_item.claim.released
-  - runtime.work_item.claim.expired
-  - runtime.work_item.claim.cancelled
+  - runtime.work_unit.claimed
+  - runtime.work_unit.claim.released
+  - runtime.work_unit.claim.expired
+  - runtime.work_unit.claim.cancelled
+  - runtime.integration.proven
   - runtime.host.started
   - runtime.host.observed
   - runtime.host.blocked
@@ -43,10 +44,11 @@ codewiki_source_map:
       - tests/runtime/**
       - tests/helpers/runtime-implementation.mjs
     trace_events:
-      - runtime.work_item.claimed
-      - runtime.work_item.claim.released
-      - runtime.work_item.claim.expired
-      - runtime.work_item.claim.cancelled
+      - runtime.work_unit.claimed
+      - runtime.work_unit.claim.released
+      - runtime.work_unit.claim.expired
+      - runtime.work_unit.claim.cancelled
+      - runtime.integration.proven
       - runtime.host.started
       - runtime.host.observed
       - runtime.host.blocked
@@ -200,9 +202,11 @@ A detached project daemon now owns this service independently of Pi session life
 
 The service now publishes a bounded generation-scoped event journal over authenticated leased long polls. Monotonic cursors replay coordinator lifecycle events and exact `work_state_observed` digests; overflow or generation replacement requires a canonical snapshot refresh rather than trusting a gap. Events are operational invalidations, not durable truth: Change Traces and other canonical project sources remain authoritative. Pi clients reconnect, compare generation, refresh routing after reset, and continue completed semantic work toward quiescence. Dashboard observers reconnect under a replacement generation and bridge coordinator invalidations into their existing browser state stream.
 
-The elected service now also reconciles ready Work Items from current WorkState. It derives a work queue, current Git base and dirty paths, effective automation and agency, capacity, and explicit worktree policy; previews deterministic claims; writes private Assignment packets; rechecks generation ownership; appends claims under exact trace-byte CAS; prepares worktrees; and schedules compatible Assignment jobs without waiting for worker completion. Each canonical claim binds the deterministic runtime job id and digest of its private packet. A replacement generation may resume only when the packet still matches that canonical digest and active claim; runtime scratch alone grants no execution authority. Pending worker Work Items are excluded from Implementation-review scheduling until an exact durable report is recovered. Runtime filters recovered reports to the selected Work Items, binds their exact normalized context into the semantic job identity, and supplies them as candidate evidence to the selected Implementation review. Completed claims remain active until canonical Implementation acceptance is visible. Blocked, failed, or cancelled reports and accepted completions schedule deterministic release jobs that revalidate active Assignment identity, generation ownership, and trace-byte CAS before appending terminal release events. Worker completion alone never becomes implementation truth. Graceful elected-service shutdown aborts active jobs, drains cancellation-aware workers, and allows foreground process adapters to persist cancelled reports before coordinator ownership is released. Worker reconciliation also performs bounded private-artifact sanitation: active-Claim evidence is retained, pre-Claim and terminal unsuccessful scratch is removed idempotently, runtime-local partial worktrees are deleted and pruned through the structured Git runner, and completed or ambiguous artifacts remain retained until integration proof makes cleanup safe.
+The elected service now also reconciles ready Work Items from current WorkState. It derives a work queue, current Git base and dirty paths, effective automation and agency, capacity, and explicit worktree policy; previews deterministic claims; writes private Assignment packets; rechecks generation ownership; appends claims under exact trace-byte CAS; prepares worktrees; and schedules compatible Assignment jobs without waiting for worker completion. Each canonical claim binds the deterministic runtime job id and digest of its private packet. A replacement generation may resume only when the packet still matches that canonical digest and active claim; runtime scratch alone grants no execution authority. Pending worker Work Items are excluded from Implementation-review scheduling until an exact durable report is recovered. Runtime filters recovered reports to the selected Work Items, binds their exact normalized context into the semantic job identity, and supplies them as candidate evidence to the selected Implementation review. Completed claims remain active until canonical Implementation acceptance is visible. Blocked, failed, or cancelled reports and accepted completions schedule deterministic release jobs that revalidate active Assignment identity, generation ownership, and trace-byte CAS before appending terminal release events. Worker completion alone never becomes implementation truth. Graceful elected-service shutdown aborts active jobs, drains cancellation-aware workers, and allows foreground process adapters to persist cancelled reports before coordinator ownership is released.
 
-External real-model/auth proof for autonomous sessions, container workers, integration scheduling and completed-artifact cleanup after exact Git proof, full dashboard-service consolidation, abrupt-death process observation, and cancellation-aware draining of active semantic SDK jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
+Accepted completed Work Items now become eligible for deterministic integration jobs. Each job revalidates the canonical Claim, Assignment-packet digest, Worker report, exact acceptance event, source commit, Planning path scope, coordinator generation, and trace bytes. The integrator captures committed and untracked worker changes as a bounded binary patch, serializes one writer per derived Planning target set and source base, applies the patch to a private integration worktree, runs `git diff --check`, and creates a local no-GPG integration commit without moving the project checkout. A successful `runtime.integration.proven` event binds the runtime job, Claim, Assignment, Worker report, target refs, base/parent/commit/tree identities, changed paths, integrated patch digest, and check evidence. A commit trailer plus digest-bound in-progress manifest closes crash windows before canonical append; canonical event recovery prevents duplicate integration. WorkState projects the exact proof on the Work Item. Only then may sanitation delete the completed packet, report, output, and worker worktree. Integration commits are content proof, not publication or authority to merge the project branch.
+
+External real-model/auth proof for autonomous sessions, container workers, project-branch merge/publication scheduling, full dashboard-service consolidation, abrupt-death process observation, and cancellation-aware draining of active semantic SDK jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
 
 Agents, clients, and adapters never choose semantic routing. Runtime injects exact Change, Planning horizon, Sprint, Work Item, Assignment, context slice, WorkState, and append authority. Semantic sessions return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, source ownership, lane ownership, or runtime routing as replacement facts.
 
@@ -253,8 +257,9 @@ accepted Work Item
 -> candidate result
 -> Implementation iteration
 -> semantic acceptance or remediation
+-> guarded integration commit and Git proof
 -> release/cancel/expire
--> cleanup
+-> proof-authorized cleanup
 ```
 
 Worker agents receive exact scoped prompts, refs, constraints, and evidence requirements. They cannot append semantic trace events, approve Changes, change Planning truth, merge outside authority, publish, or relax policy.
@@ -263,7 +268,7 @@ Worker liveness remains runtime observation. Meaningful start, terminal, claim, 
 
 ## Integration workspaces
 
-Independent worker worktrees do not form combined product state automatically. Planning declares integration boundaries. Runtime creates or reuses one guarded integration-preview workspace, applies selected worker outputs in planned order, reports conflicts, and exposes exact integrated Change refs and Git/tree digest.
+Independent worker worktrees do not form combined product state automatically. Planning declares integration boundaries. Runtime creates or reuses one guarded integration workspace per exact target set and source base, applies accepted worker outputs in serialized order, fails closed on path-scope escape or patch conflict, and records the resulting local commit, tree, changed paths, patch digest, checks, Assignment, Claim, and Worker-report identity. Zero explicit Planning refs use the project-default integration boundary; several refs derive one deterministic target-set identity while preserving every original ref in proof.
 
 Shared Live Preview and aggregate checks use that integration state. Dashboard must distinguish:
 
@@ -273,7 +278,7 @@ Shared Live Preview and aggregate checks use that integration state. Dashboard m
 - conflicting Changes;
 - superseded or excluded Changes.
 
-Runtime cannot claim conceptual union when filesystem state is not integrated.
+Runtime cannot claim conceptual union when filesystem state is not integrated. The private integration branch and `runtime.integration.proven` event prove integrated content; they do not merge the user branch, push, publish, or imply business-outcome success.
 
 ## Supervision and autonomy
 

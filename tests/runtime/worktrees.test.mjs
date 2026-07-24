@@ -246,6 +246,20 @@ describe("runtime worktree planning", () => {
 		assert.equal(shellCalls[0].options.shell, "/bin/sh");
 		assert.equal(result.records[0].stdout, "verified\n");
 		assert.equal(result.records[0].exitCode, 0);
+
+		const controller = new AbortController();
+		await runner(
+			{ executable: "git", args: ["status"] },
+			{
+				plan,
+				step: "worktree.verify",
+				command: "git status",
+				commandIndex: 0,
+				dryRun: false,
+				signal: controller.signal,
+			},
+		);
+		assert.equal(processCalls.at(-1).options.signal, controller.signal);
 	});
 
 	it("surfaces shell runner failures through worktree execution records", async () => {

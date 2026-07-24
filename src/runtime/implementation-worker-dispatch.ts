@@ -38,6 +38,10 @@ import {
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
 } from "./implementation-worker-adapter.ts";
+import {
+	implementationWorkerIntegrationJob,
+	type ImplementationWorkerIntegrationInput,
+} from "./implementation-worker-integration.ts";
 import { scheduleImplementationWorkerAssignment } from "./implementation-worker-jobs.ts";
 import { implementationWorkerClaimReleaseJob } from "./implementation-worker-review.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
@@ -135,19 +139,24 @@ export class ImplementationWorkerDispatcher {
 		const activeClaimIds = new Set(
 			activeAssignments.map((assignment) => assignment.id),
 		);
-		const canonicalClaimEventIds = new Set(
+		const canonicalClaims = new Map(
 			observation.records.flatMap((record) =>
 				record.type === "trace_event" &&
-				record.event === "runtime.work_unit.claimed"
-					? [record.id]
+				record.event === "runtime.work_unit.claimed" &&
+				text(record.data?.claimId)
+					? [[text(record.data?.claimId) as string, record] as const]
 					: [],
 			),
+		);
+		const canonicalClaimEventIds = new Set(
+			[...canonicalClaims.values()].map((claim) => claim.id),
 		);
 		await this.options.beforeAppend?.();
 		const cleanup = await cleanupImplementationWorkerArtifacts({
 			repoRoot: this.options.repoRoot,
 			activeClaimIds,
 			canonicalClaimEventIds,
+			integratedClaims: integratedClaimProofs(observation.records),
 			worktreeRunner: this.options.worktreeRunner,
 		});
 		const createdAt = (this.options.now || (() => new Date().toISOString()))();
@@ -162,19 +171,33 @@ export class ImplementationWorkerDispatcher {
 				: [],
 		);
 		const resumed = await this.resumePackets(activeClaims);
+		const integrationWorkers = await this.recoverIntegrationWorkers(
+			canonicalClaims,
+			resumed.recovered,
+		);
+		const integrations = this.scheduleIntegrations(
+			integrationWorkers,
+			observation.workState,
+			observation.records,
+			createdAt,
+		);
 		const releaseable = resumed.recovered.filter((worker) =>
 			workerReportCanRelease(worker, observation.workState),
 		);
 		const releasingClaims = new Set(
 			releaseable.map((worker) => worker.packet.assignment.claimId),
 		);
-		const workerReports = resumed.recovered
-			.filter(
-				(worker) => !releasingClaims.has(worker.packet.assignment.claimId),
-			)
-			.map((worker) => worker.reviewInput);
+		const workerReports = resumed.recovered.flatMap((worker) =>
+			releasingClaims.has(worker.packet.assignment.claimId)
+				? []
+				: [worker.reviewInput],
+		);
 		const releaseJobIds = this.scheduleReleases(releaseable, createdAt);
-		const resumedJobIds = [...resumed.jobIds, ...releaseJobIds];
+		const resumedJobIds = [
+			...resumed.jobIds,
+			...integrations.jobIds,
+			...releaseJobIds,
+		];
 		const pending = new Set(workerRequiredWorkItemIds);
 		for (const result of workerReports) pending.delete(result.workUnitId);
 		const complete = (
@@ -183,19 +206,22 @@ export class ImplementationWorkerDispatcher {
 			blockers: string[],
 		): ImplementationWorkerRuntimeReconciliation =>
 			runtimeReconciliation(
-				dispatchResult(
+				dispatchResult({
 					status,
-					observation.workState,
-					pending,
+					workState: observation.workState,
+					pendingWorkItemIds: pending,
 					workerReports,
-					jobIds,
+					scheduledJobIds: jobIds,
 					blockers,
-				),
+				}),
 				workerReports,
 			);
 
-		if (cleanup.blockers.length > 0) {
-			return complete("held", resumedJobIds, cleanup.blockers);
+		if (cleanup.blockers.length > 0 || integrations.blockers.length > 0) {
+			return complete("held", resumedJobIds, [
+				...cleanup.blockers,
+				...integrations.blockers,
+			]);
 		}
 
 		if (!this.options.coordinator.snapshot().executionPermitted) {
@@ -324,6 +350,97 @@ export class ImplementationWorkerDispatcher {
 				(worker): worker is RecoveredImplementationWorker => Boolean(worker),
 			),
 		};
+	}
+
+	private async recoverIntegrationWorkers(
+		canonicalClaims: Map<string, TraceEvent>,
+		activeWorkers: RecoveredImplementationWorker[],
+	): Promise<RecoveredImplementationWorker[]> {
+		const recoveredByClaim = new Map(
+			activeWorkers.map((worker) => [
+				worker.packet.assignment.claimId,
+				worker,
+			]),
+		);
+		const packets = await readImplementationWorkerDispatchPackets(
+			this.options.repoRoot,
+		);
+		await Promise.all(
+			packets.map(async (packet) => {
+				const claimId = packet.assignment.claimId;
+				if (recoveredByClaim.has(claimId)) return undefined;
+				const claimEvent = canonicalClaims.get(claimId);
+				if (!claimEvent || !packetMatchesClaim(packet, claimEvent)) {
+					return undefined;
+				}
+				try {
+					const report = await this.options.adapter.recover(packet.assignment);
+					if (!report || report.status !== "completed") return undefined;
+					assertImplementationWorkerReport(packet.assignment, report);
+					recoveredByClaim.set(claimId, {
+						packet,
+						claimEvent,
+						report,
+						reviewInput: reviewWorkerReport(packet.assignment, report),
+					});
+				} catch {
+					// Invalid private evidence cannot authorize integration.
+				}
+				return undefined;
+			}),
+		);
+		return [...recoveredByClaim.values()];
+	}
+
+	private scheduleIntegrations(
+		workers: RecoveredImplementationWorker[],
+		workState: WorkState,
+		records: TraceRecord[],
+		createdAt: string,
+	): { jobIds: string[]; blockers: string[] } {
+		const candidates = workers.flatMap((worker) => {
+			if (worker.report.status !== "completed") return [];
+			const assignment = worker.packet.assignment;
+			const item = workState.workItems.find(
+				(candidate) => candidate.id === assignment.workItemId,
+			);
+			if (!item?.implemented || integrationAlreadyProven(worker, records)) {
+				return [];
+			}
+			const sprint = workState.sprints.find(
+				(candidate) => candidate.id === item.sprintId,
+			);
+			const acceptanceEvent = implementationAcceptanceEvent(
+				records,
+				assignment.traceId,
+				assignment.workItemId,
+			);
+			return sprint && acceptanceEvent ? [{ worker, sprint, acceptanceEvent }] : [];
+		});
+		if (candidates.length > 0 && !this.options.worktreeRunner) {
+			return {
+				jobIds: [],
+				blockers: ["implementation_integration_runner_unavailable"],
+			};
+		}
+		const jobIds = candidates.map(({ worker, sprint, acceptanceEvent }) => {
+			const input: Omit<ImplementationWorkerIntegrationInput, "coordinator"> = {
+				repoRoot: this.options.repoRoot,
+				reactor: this.options.reactor,
+				packet: worker.packet,
+				report: worker.report,
+				acceptanceEvent,
+				sprintId: sprint.id,
+				targetRefs: [...sprint.integrationRefs],
+				createdAt,
+				runner: this.options.worktreeRunner as WorktreeCommandRunner,
+				beforeAppend: this.options.beforeAppend,
+			};
+			const job = implementationWorkerIntegrationJob(input);
+			void this.options.coordinator.schedule(job).catch(() => undefined);
+			return job.idempotencyKey;
+		});
+		return { jobIds, blockers: [] };
 	}
 
 	private scheduleReleases(
@@ -560,6 +677,90 @@ function adapterSupportsWorktree(
 	return !adapter.isolationKinds || adapter.isolationKinds.includes("worktree");
 }
 
+function integratedClaimProofs(
+	records: TraceRecord[],
+): Map<string, { assignmentId: string; workerReportRef: string }> {
+	return new Map(
+		records.flatMap((record) => {
+			if (
+				record.type !== "trace_event" ||
+				record.event !== "runtime.integration.proven"
+			) {
+				return [];
+			}
+			const claimId = text(record.data?.claimId);
+			const assignmentId = text(record.data?.assignmentId);
+			const workerReportRef = text(record.data?.workerReportRef);
+			const runtimeJobId = text(record.data?.runtimeJobId);
+			const commit = text(record.data?.commit);
+			const tree = text(record.data?.tree);
+			const contentProof = text(record.data?.contentProof);
+			return claimId &&
+				assignmentId &&
+				workerReportRef &&
+				/^implementation-integration:[a-f0-9]{64}$/u.test(runtimeJobId) &&
+				/^[a-f0-9]{40}(?:[a-f0-9]{24})?$/u.test(commit) &&
+				/^[a-f0-9]{40}(?:[a-f0-9]{24})?$/u.test(tree) &&
+				contentProof === `git-tree:${tree}`
+				? [[claimId, { assignmentId, workerReportRef }] as const]
+				: [];
+		}),
+	);
+}
+
+function integrationAlreadyProven(
+	worker: RecoveredImplementationWorker,
+	records: TraceRecord[],
+): boolean {
+	const assignment = worker.packet.assignment;
+	return records.some(
+		(record) =>
+			record.type === "trace_event" &&
+			record.event === "runtime.integration.proven" &&
+			record.data?.claimId === assignment.claimId &&
+			record.data?.assignmentId === assignment.assignmentId &&
+			record.data?.workerReportRef === worker.report.reportRef,
+	);
+}
+
+function implementationAcceptanceEvent(
+	records: TraceRecord[],
+	traceId: string,
+	workItemId: string,
+): TraceEvent | undefined {
+	for (let index = records.length - 1; index >= 0; index -= 1) {
+		const record = records[index];
+		if (
+			record?.type === "trace_event" &&
+			record.traceId === traceId &&
+			record.loop === "implementation" &&
+			record.event === "evidence_accepted" &&
+			implementationEventCoversWorkItem(record, workItemId)
+		) {
+			return record;
+		}
+	}
+	return undefined;
+}
+
+function implementationEventCoversWorkItem(
+	event: TraceEvent,
+	workItemId: string,
+): boolean {
+	const output = objectValue(event.data?.output);
+	return [
+		...stringList(output?.coveredWorkItemRefs),
+		...objectList(output?.changes).flatMap((change) =>
+			stringList(change.planningRefs),
+		),
+	].some(
+		(ref) =>
+			ref === workItemId ||
+			ref.endsWith(`#work:${workItemId}`) ||
+			ref.endsWith(`#work-item:${workItemId}`),
+	);
+}
+
 function workerReportCanRelease(
 	worker: RecoveredImplementationWorker,
 	workState: WorkState,
@@ -598,23 +799,23 @@ function runtimeReconciliation(
 	return { dispatch, workerReports };
 }
 
-function dispatchResult(
-	status: ImplementationWorkerDispatchResult["status"],
-	workState: WorkState,
-	pendingWorkItemIds: Set<string>,
-	workerReports: ImplementationWorkerReportInput[],
-	scheduledJobIds: string[],
-	blockers: string[],
-): ImplementationWorkerDispatchResult {
+function dispatchResult(input: {
+	status: ImplementationWorkerDispatchResult["status"];
+	workState: WorkState;
+	pendingWorkItemIds: Set<string>;
+	workerReports: ImplementationWorkerReportInput[];
+	scheduledJobIds: string[];
+	blockers: string[];
+}): ImplementationWorkerDispatchResult {
 	return {
-		status,
-		workStateDigest: workState.snapshotDigest,
-		pendingWorkItemIds: [...pendingWorkItemIds].sort(compareText),
-		reviewReadyWorkItemIds: workerReports
+		status: input.status,
+		workStateDigest: input.workState.snapshotDigest,
+		pendingWorkItemIds: [...input.pendingWorkItemIds].sort(compareText),
+		reviewReadyWorkItemIds: input.workerReports
 			.map((result) => result.workUnitId)
 			.sort(compareText),
-		scheduledJobIds: [...new Set(scheduledJobIds)].sort(compareText),
-		blockers: [...new Set(blockers)].sort(compareText),
+		scheduledJobIds: [...new Set(input.scheduledJobIds)].sort(compareText),
+		blockers: [...new Set(input.blockers)].sort(compareText),
 	};
 }
 
@@ -635,6 +836,27 @@ function stableStringify(value: unknown): string {
 			.join(",")}}`;
 	}
 	return JSON.stringify(value);
+}
+
+function objectValue(value: unknown): Record<string, unknown> | undefined {
+	if (!value || typeof value !== "object" || Array.isArray(value)) {
+		return undefined;
+	}
+	return value as Record<string, unknown>;
+}
+
+function objectList(value: unknown): Record<string, unknown>[] {
+	if (!Array.isArray(value)) return [];
+	return value.flatMap((entry) => {
+		const object = objectValue(entry);
+		return object ? [object] : [];
+	});
+}
+
+function stringList(value: unknown): string[] {
+	return Array.isArray(value)
+		? value.filter((entry): entry is string => typeof entry === "string")
+		: [];
 }
 
 function text(value: unknown): string {

@@ -59,6 +59,7 @@ export interface WorktreeCommandExecutionContext {
 	command: string;
 	commandIndex: number;
 	dryRun: boolean;
+	signal?: AbortSignal;
 }
 
 export interface WorktreeCommandRunnerResult {

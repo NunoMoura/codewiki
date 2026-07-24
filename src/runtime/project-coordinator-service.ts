@@ -720,6 +720,7 @@ async function handleRuntimeCandidate(
 				execution = result;
 			},
 		});
+		await reconcileWorkersAfterSemantic(runtime);
 		writeJson(response, 200, {
 			receipt,
 			...(execution ? { execution } : {}),
@@ -784,9 +785,25 @@ async function handleRuntimeReaction(
 			implementationWorkerReports: workerReconciliation?.workerReports,
 			beforeAppend: () => assertCurrentGeneration(runtime),
 		});
+		await reconcileWorkersAfterSemantic(runtime);
 		writeJson(response, 200, receipts);
 	} finally {
 		extendLease(runtime, lease);
+	}
+}
+
+async function reconcileWorkersAfterSemantic(
+	runtime: ServiceRuntime,
+): Promise<void> {
+	if (!runtime.workerDispatcher) return;
+	try {
+		await assertCurrentGeneration(runtime);
+		await runtime.workerDispatcher.reconcileRuntime({
+			kind: "project_truth_changed",
+			occurredAt: new Date(runtime.clock()).toISOString(),
+		});
+	} catch {
+		// Semantic append is already authoritative; later triggers retry reconciliation.
 	}
 }
 

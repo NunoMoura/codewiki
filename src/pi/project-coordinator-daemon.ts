@@ -66,6 +66,9 @@ export async function startPiProjectCoordinatorDaemon(
 		workerAdapter:
 			options.workerAdapter || createPiProcessImplementationWorkerAdapter(),
 		workerWorktreeRunner: createShellWorktreeCommandRunner({
+			cwd: canonicalRoot,
+			timeoutMs: 60_000,
+			maxBufferBytes: 8 * 1024 * 1024,
 			...(options.worktreeExecFile ? { execFile: options.worktreeExecFile } : {}),
 		}),
 	});
