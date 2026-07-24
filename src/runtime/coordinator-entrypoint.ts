@@ -75,6 +75,23 @@ export {
 	type ProjectBranchPushReceipt,
 } from "./project-branch-push.ts";
 export {
+	productPublicationJob,
+	scheduleProductPublication,
+	type ProductPublicationInput,
+	type ProductPublicationReceipt,
+} from "./product-publication.ts";
+export type {
+	ProductPublicationAdapter,
+	ProductPublicationAdapterInput,
+	ProductPublicationArtifact,
+	ProductPublicationAuthority,
+	ProductPublicationDestinationObservation,
+	ProductPublicationOperation,
+	ProductPublicationPlan,
+	ProductPublicationTarget,
+	ProductPublicationTargetKind,
+} from "./product-publication-contract.ts";
+export {
 	implementationWorkerClaimReleaseJob,
 	scheduleImplementationWorkerClaimRelease,
 	type ImplementationWorkerClaimReleaseInput,

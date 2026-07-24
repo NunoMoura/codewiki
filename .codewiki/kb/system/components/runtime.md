@@ -24,6 +24,7 @@ codewiki_trace_events:
   - runtime.integration.proven
   - runtime.project_branch.merged
   - runtime.project_branch.pushed
+  - runtime.product.published
   - runtime.host.started
   - runtime.host.observed
   - runtime.host.blocked
@@ -53,6 +54,7 @@ codewiki_source_map:
       - runtime.integration.proven
       - runtime.project_branch.merged
       - runtime.project_branch.pushed
+      - runtime.product.published
       - runtime.host.started
       - runtime.host.observed
       - runtime.host.blocked
@@ -214,7 +216,9 @@ Project-branch promotion is a distinct opt-in runtime effect after Integration p
 
 Git push is another distinct opt-in external effect. Only elected-host `ProjectBranchPushAuthority` with explicit user authority may name one configured remote, exact local branch, and expected remote commit or branch absence. Runtime revalidates canonical merge proof, current local commit/tree, checked-out branch, CodeWiki-only dirtiness, safe credential-free configured remote URL, generation, and exact remote head before a structured normal `git push --no-verify`; force arguments, remote deletion, arbitrary URLs, and policy-only authority are forbidden. A digest-bound private prepared/pushed manifest and second exact remote observation prove the result before `runtime.project_branch.pushed` records prior remote state, commit/tree, merge identity, user authority, and deterministic job. Recovery requires both exact `pushed` manifest phase and remote state, so a preexisting matching remote commit is never attributed to CodeWiki. Abrupt death after remote acceptance but before that local phase persists remains ambiguous and fail-closed rather than creating guessed proof. Push proof grants no product publication, deployment, package release, registry, or business-outcome authority.
 
-External real-model/auth proof for autonomous sessions, trusted container-worker image distribution and real provider-auth execution proof, product publication/deployment/release scheduling, full dashboard-service consolidation, abrupt-death process observation, and cancellation-aware draining of active semantic SDK jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
+Product publication is a separately scheduled provider-neutral effect after exact canonical push proof. The elected host supplies a closed target, a bounded artifact file under private runtime storage, source commit/tree and SHA-256 proof, expected destination revision/digest, adapter identity, and explicit user authority binding those values. Runtime freezes scheduled identity, verifies non-symbolic artifact paths and exact bytes before and after the operation, serializes by target/channel and destination, rechecks canonical push and generation ownership, and requires the trusted adapter to declare provider-key idempotency, reuse the deterministic job id, and enforce destination CAS. Canonical `runtime.product.published` follows provider operation identity plus exact destination re-observation. Digest-bound prepared/published manifests recover only persisted exact operations; preexisting matching artifacts and ambiguous acceptance before local operation evidence are never attributed. The adapter contract has no deployment, release, Git, tag, channel-promotion, or arbitrary-shell authority, and credentials remain provider-owned outside traces, manifests, prompts, and errors.
+
+External real-model/auth proof for autonomous sessions, trusted container-worker image distribution and real provider-auth execution proof, product deployment/release scheduling, full dashboard-service consolidation, abrupt-death process observation, and cancellation-aware draining of active semantic SDK jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
 
 Agents, clients, and adapters never choose semantic routing. Runtime injects exact Change, Planning horizon, Sprint, Work Item, Assignment, context slice, WorkState, and append authority. Semantic sessions return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, source ownership, lane ownership, or runtime routing as replacement facts.
 

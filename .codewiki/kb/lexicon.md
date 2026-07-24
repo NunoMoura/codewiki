@@ -204,6 +204,12 @@ Canonical runtime evidence that one exact Integration commit was fast-forwarded 
 
 Canonical runtime evidence that one exact locally merged project-branch commit was accepted as the exact head of one configured Git remote branch under explicit user authority. It binds the prior remote commit or branch absence, merge proof, local and remote branch identity, pushed commit and tree, user authority, runtime job, and observation time. It proves only exact Git transport state at that boundary; it does not authorize or prove product publication, deployment, release, registry publication, business outcomes, or later remote state.
 
+## Product publication proof
+
+Canonical runtime evidence that one exact artifact derived from a canonically pushed source commit was accepted at one exact publication target under explicit elected-host user authority. It binds the push event and runtime job, source commit/tree, target id/kind/channel/destination, artifact id/digest/version, prior destination revision/digest, provider operation and resulting revision, adapter identity, publication job, authority, and observation time.
+
+Product publication proof establishes only artifact availability at that exact target. It does not authorize or prove deployment, release, Git tagging, channel promotion, package adoption, business success, or any later external effect. Matching provider state without exact operation evidence is not attributed to CodeWiki.
+
 ## Aggregate content proof
 
 Final content proof for merged implementation output, such as a working-tree digest, tree, commit, package digest, or publication ref. Worker-local proof is provenance only when worker/parallel changes are involved.

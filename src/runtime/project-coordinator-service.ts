@@ -23,6 +23,10 @@ import {
 } from "./project-coordinator-events.ts";
 import type { ProjectBranchMergeAuthority } from "./project-branch-merge.ts";
 import type { ProjectBranchPushAuthority } from "./project-branch-push.ts";
+import type {
+	ProductPublicationAdapter,
+	ProductPublicationPlan,
+} from "./product-publication-contract.ts";
 import {
 	ProjectCoordinator,
 	type ProjectCoordinatorClientConnection,
@@ -89,6 +93,8 @@ export interface ProjectCoordinatorServiceOptions
 	workerWorktreeRunner?: WorktreeCommandRunner;
 	mergeAuthority?: ProjectBranchMergeAuthority;
 	pushAuthority?: ProjectBranchPushAuthority;
+	publicationPlan?: ProductPublicationPlan;
+	publicationAdapter?: ProductPublicationAdapter;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
@@ -222,6 +228,8 @@ export async function startProjectCoordinatorService(
 					worktreeRunner: options.workerWorktreeRunner,
 					mergeAuthority: options.mergeAuthority,
 					pushAuthority: options.pushAuthority,
+					publicationPlan: options.publicationPlan,
+					publicationAdapter: options.publicationAdapter,
 					now: options.now,
 					beforeAppend: () => assertCurrentGeneration(runtime),
 				})

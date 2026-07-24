@@ -12,6 +12,7 @@ import {
 	type UiPreviewTargetBinding,
 } from "../preview/binding.ts";
 import type { TraceEvent, TraceHead, TraceRecord } from "../traces/types.ts";
+import { projectProductPublications } from "./publication-projection.ts";
 import {
 	WORK_STATE_SCHEMA_VERSION,
 	type WorkState,
@@ -71,6 +72,7 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 		projectIntegration(group, workItemMap);
 		projectProjectBranchMerges(group, workItemMap);
 		projectProjectBranchPushes(group, workItemMap);
+		projectProductPublications(group.events, workItemMap);
 		projectEventBlockers(group, blockers);
 	}
 	applyAssignmentRefs(workItemMap, assignmentMap);

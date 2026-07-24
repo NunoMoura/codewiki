@@ -86,9 +86,8 @@ transitions:
     trace_event: planning.work_units_created
   - from: production_ready
     to: published
-    trigger: optional publication proof recorded
-    trace_event: implementation.evidence_accepted
-    exit_status: exit
+    trigger: exact guarded product publication proof recorded
+    trace_event: runtime.product.published
   - from: production_ready
     to: closed
     trigger: close without publication requirement

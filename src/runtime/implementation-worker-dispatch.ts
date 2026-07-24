@@ -52,6 +52,11 @@ import {
 	projectBranchPushJob,
 	type ProjectBranchPushAuthority,
 } from "./project-branch-push.ts";
+import type {
+	ProductPublicationAdapter,
+	ProductPublicationPlan,
+} from "./product-publication-contract.ts";
+import { productPublicationJob } from "./product-publication.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./work-unit-claims.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
@@ -81,6 +86,8 @@ export interface ImplementationWorkerDispatcherOptions {
 	collectGitStatus?: (repoRoot: string) => Promise<GitStatusSnapshot>;
 	mergeAuthority?: ProjectBranchMergeAuthority;
 	pushAuthority?: ProjectBranchPushAuthority;
+	publicationPlan?: ProductPublicationPlan;
+	publicationAdapter?: ProductPublicationAdapter;
 	now?: () => string;
 	beforeAppend?: () => void | Promise<void>;
 }
@@ -208,6 +215,10 @@ export class ImplementationWorkerDispatcher {
 			observation.records,
 			createdAt,
 		);
+		const publications = this.scheduleProductPublications(
+			observation.records,
+			createdAt,
+		);
 		const releaseable = resumed.recovered.filter((worker) =>
 			workerReportCanRelease(worker, observation.workState),
 		);
@@ -225,6 +236,7 @@ export class ImplementationWorkerDispatcher {
 			...integrations.jobIds,
 			...merges.jobIds,
 			...pushes.jobIds,
+			...publications.jobIds,
 			...releaseJobIds,
 		];
 		const pending = new Set(workerRequiredWorkItemIds);
@@ -251,6 +263,7 @@ export class ImplementationWorkerDispatcher {
 			integrations.blockers.length > 0 ||
 			merges.blockers.length > 0 ||
 			pushes.blockers.length > 0 ||
+			publications.blockers.length > 0 ||
 			!adapterAvailability.available
 		) {
 			return complete("held", resumedJobIds, [
@@ -258,6 +271,7 @@ export class ImplementationWorkerDispatcher {
 				...integrations.blockers,
 				...merges.blockers,
 				...pushes.blockers,
+				...publications.blockers,
 				...(!adapterAvailability.available
 					? [
 							`implementation_worker_adapter_unavailable:${adapterAvailability.reason}`,
@@ -604,6 +618,56 @@ export class ImplementationWorkerDispatcher {
 		return { jobIds, blockers };
 	}
 
+	private scheduleProductPublications(
+		records: TraceRecord[],
+		createdAt: string,
+	): { jobIds: string[]; blockers: string[] } {
+		const plan = this.options.publicationPlan;
+		if (!plan) return { jobIds: [], blockers: [] };
+		const pushEvent = records.find(
+			(record): record is TraceEvent =>
+				record.type === "trace_event" && record.id === plan.pushEventId,
+		);
+		if (!pushEvent || productPublicationAlreadyProven(pushEvent, plan, records)) {
+			return { jobIds: [], blockers: [] };
+		}
+		if (!this.options.publicationAdapter) {
+			return {
+				jobIds: [],
+				blockers: ["product_publication_adapter_unavailable"],
+			};
+		}
+		try {
+			const job = productPublicationJob({
+				repoRoot: this.options.repoRoot,
+				reactor: this.options.reactor,
+				plan,
+				pushEvent,
+				adapter: this.options.publicationAdapter,
+				createdAt,
+				beforeAppend: this.options.beforeAppend,
+			});
+			void this.options.coordinator
+				.schedule(job)
+				.then(() =>
+					this.enqueue({
+						kind: "project_truth_changed",
+						occurredAt: (this.options.now || (() => new Date().toISOString()))(),
+						refs: [pushEvent.traceId],
+					}),
+				)
+				.catch(() => undefined);
+			return { jobIds: [job.idempotencyKey], blockers: [] };
+		} catch {
+			return {
+				jobIds: [],
+				blockers: [
+					`product_publication_proof_invalid:${safeBlockerSegment(pushEvent.id)}`,
+				],
+			};
+		}
+	}
+
 	private scheduleReleases(
 		workers: RecoveredImplementationWorker[],
 		createdAt: string,
@@ -898,6 +962,24 @@ function projectBranchPushAlreadyProven(
 			record.data?.commit === mergeEvent.data?.commit &&
 			record.data?.tree === mergeEvent.data?.tree,
 	);
+}
+
+function productPublicationAlreadyProven(
+	pushEvent: TraceEvent,
+	plan: ProductPublicationPlan,
+	records: TraceRecord[],
+): boolean {
+	return records.some((record) => {
+		if (record.type !== "trace_event") return false;
+		const artifact = objectValue(record.data?.artifact);
+		return (
+			record.event === "runtime.product.published" &&
+			record.data?.pushEventId === pushEvent.id &&
+			record.data?.targetId === plan.target.targetId &&
+			record.data?.channel === plan.target.channel &&
+			artifact?.digest === plan.artifact.digest
+		);
+	});
 }
 
 function safeBlockerSegment(value: string): string {

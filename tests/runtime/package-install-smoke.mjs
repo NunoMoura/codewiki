@@ -68,6 +68,7 @@ import {
 	scheduleImplementationWorkerAssignments,
 	scheduleProjectBranchMerge,
 	scheduleProjectBranchPush,
+	scheduleProductPublication,
 	scheduleRuntimeReactions,
 	startProjectCoordinatorService,
 	stopProjectCoordinatorService,
@@ -132,6 +133,11 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-branch-mer
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-branch-push.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-branch-push-operations.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-branch-push-manifest.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "product-publication.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "product-publication-proof.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "product-publication-contract.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "product-publication-artifact.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "product-publication-manifest.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "process-worker-adapter.js")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 const coordinator = new ProjectCoordinator(process.cwd(), {
@@ -162,6 +168,7 @@ assert.equal(typeof scheduleImplementationWorkerClaimRelease, "function");
 assert.equal(typeof scheduleImplementationWorkerIntegration, "function");
 assert.equal(typeof scheduleProjectBranchMerge, "function");
 assert.equal(typeof scheduleProjectBranchPush, "function");
+assert.equal(typeof scheduleProductPublication, "function");
 assert.equal(typeof createOciContainerImplementationWorkerAdapter, "function");
 assert.equal(typeof ImplementationWorkerDispatcher, "function");
 assert.equal(IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION, 1);

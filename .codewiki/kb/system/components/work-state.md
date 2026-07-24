@@ -108,7 +108,9 @@ A Work Item may project one or more exact Integration proofs from `runtime.integ
 
 A Work Item separately projects exact project-branch promotion from `runtime.project_branch.merged`. Merge proof preserves the Integration event/job, checked-out target branch, prior target commit, promoted commit/tree/content proof, merge job, exact authority, and observation time.
 
-`runtime.project_branch.pushed` projects another exact boundary: merge event/job, configured remote and branch, prior remote commit or branch absence, pushed commit/tree/content proof, user authority, push job, and observation time. Integration, project-branch merge, push, product publication/deployment, package release, and registry publication remain distinct states; one never implies another.
+`runtime.project_branch.pushed` projects another exact boundary: merge event/job, configured remote and branch, prior remote commit or branch absence, pushed commit/tree/content proof, user authority, push job, and observation time.
+
+`runtime.product.published` projects product publication separately on the owning Work Item. The projection preserves canonical push event, target kind/id/channel/destination, artifact id/digest/version, previous destination revision/digest, resulting provider revision and operation, adapter identity, exact user authority, publication job, and observation time. Integration, project-branch merge, push, product publication, deployment, package release, and registry release remain distinct states; one never implies another.
 
 ## Runtime use
 
