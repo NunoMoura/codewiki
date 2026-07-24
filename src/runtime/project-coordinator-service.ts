@@ -22,6 +22,7 @@ import {
 	type ProjectCoordinatorEventBatch,
 } from "./project-coordinator-events.ts";
 import type { ProjectBranchMergeAuthority } from "./project-branch-merge.ts";
+import type { ProjectBranchPushAuthority } from "./project-branch-push.ts";
 import {
 	ProjectCoordinator,
 	type ProjectCoordinatorClientConnection,
@@ -87,6 +88,7 @@ export interface ProjectCoordinatorServiceOptions
 	workerAdapter?: ImplementationWorkerAdapter;
 	workerWorktreeRunner?: WorktreeCommandRunner;
 	mergeAuthority?: ProjectBranchMergeAuthority;
+	pushAuthority?: ProjectBranchPushAuthority;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
@@ -219,6 +221,7 @@ export async function startProjectCoordinatorService(
 					adapter: options.workerAdapter,
 					worktreeRunner: options.workerWorktreeRunner,
 					mergeAuthority: options.mergeAuthority,
+					pushAuthority: options.pushAuthority,
 					now: options.now,
 					beforeAppend: () => assertCurrentGeneration(runtime),
 				})

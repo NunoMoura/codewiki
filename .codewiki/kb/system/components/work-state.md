@@ -106,7 +106,9 @@ A Sprint view joins matching Planning facts from participating Change Traces, in
 
 A Work Item may project one or more exact Integration proofs from `runtime.integration.proven` events. Each projection keeps the event and runtime-job identity, Planning target refs, base/commit/tree/content proof, changed paths, Worker-report ref, and integration time separate from semantic `implemented` status. Missing integration evidence is never inferred from Worker completion or Implementation acceptance.
 
-A Work Item separately projects exact project-branch promotion from `runtime.project_branch.merged`. Merge proof preserves the Integration event/job, checked-out target branch, prior target commit, promoted commit/tree/content proof, merge job, exact authority, and observation time. Integration, project-branch merge, push, publication, and release remain distinct states; one never implies another.
+A Work Item separately projects exact project-branch promotion from `runtime.project_branch.merged`. Merge proof preserves the Integration event/job, checked-out target branch, prior target commit, promoted commit/tree/content proof, merge job, exact authority, and observation time.
+
+`runtime.project_branch.pushed` projects another exact boundary: merge event/job, configured remote and branch, prior remote commit or branch absence, pushed commit/tree/content proof, user authority, push job, and observation time. Integration, project-branch merge, push, product publication/deployment, package release, and registry publication remain distinct states; one never implies another.
 
 ## Runtime use
 

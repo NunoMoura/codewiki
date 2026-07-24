@@ -24,6 +24,7 @@ import {
 	type WorkStatePlanningStatus,
 	type WorkStateRealizationStatus,
 	type WorkStateMergeProof,
+	type WorkStatePushProof,
 	type WorkStateSprint,
 	type WorkStateWorkItem,
 } from "./types.ts";
@@ -69,6 +70,7 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 		projectImplementation(group, workItemMap);
 		projectIntegration(group, workItemMap);
 		projectProjectBranchMerges(group, workItemMap);
+		projectProjectBranchPushes(group, workItemMap);
 		projectEventBlockers(group, blockers);
 	}
 	applyAssignmentRefs(workItemMap, assignmentMap);
@@ -580,6 +582,68 @@ function projectProjectBranchMerges(
 	}
 }
 
+function projectProjectBranchPushes(
+	group: TraceGroup,
+	workItemMap: Map<string, WorkStateWorkItem>,
+): void {
+	for (const event of group.events.filter(
+		(candidate) => candidate.event === "runtime.project_branch.pushed",
+	)) {
+		const workItemId = text(event.data?.workItemId);
+		const item = workItemId ? workItemMap.get(workItemId) : undefined;
+		const authority = objectValue(event.data?.authority);
+		const jobId = text(event.data?.runtimeJobId);
+		const mergeEventId = text(event.data?.mergeEventId);
+		const remote = text(event.data?.remote);
+		const targetBranch = text(event.data?.targetBranch);
+		const previousRemoteCommit = nullableText(
+			event.data?.expectedRemoteCommit,
+		);
+		const commit = text(event.data?.commit);
+		const tree = text(event.data?.tree);
+		const contentProof = text(event.data?.contentProof);
+		const authorityKind = text(authority?.kind);
+		const authorityActor = text(authority?.actor);
+		const authorityRef = text(authority?.ref);
+		if (
+			!item ||
+			!jobId ||
+			!mergeEventId ||
+			!remote ||
+			!targetBranch ||
+			previousRemoteCommit === undefined ||
+			!commit ||
+			!tree ||
+			!contentProof ||
+			authorityKind !== "user" ||
+			!authorityActor ||
+			!authorityRef
+		) {
+			continue;
+		}
+		const proof: WorkStatePushProof = {
+			eventId: event.id,
+			jobId,
+			mergeEventId,
+			remote,
+			targetBranch,
+			previousRemoteCommit,
+			commit,
+			tree,
+			contentProof,
+			authorityActor,
+			authorityRef,
+			pushedAt: event.createdAt,
+		};
+		item.pushProofs = [
+			...(item.pushProofs || []).filter(
+				(candidate) => candidate.eventId !== event.id,
+			),
+			proof,
+		].sort((left, right) => left.eventId.localeCompare(right.eventId));
+	}
+}
+
 function applyAssignmentRefs(
 	workItemMap: Map<string, WorkStateWorkItem>,
 	assignmentMap: Map<string, WorkStateAssignment>,
@@ -952,6 +1016,11 @@ function stringList(value: unknown): string[] {
 		const normalized = item.trim();
 		return normalized ? [normalized] : [];
 	});
+}
+
+function nullableText(value: unknown): string | null | undefined {
+	if (value === null) return null;
+	return text(value);
 }
 
 function text(value: unknown): string | undefined {

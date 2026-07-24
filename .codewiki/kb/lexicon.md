@@ -200,6 +200,10 @@ Canonical runtime evidence that accepted worker output was applied under one exa
 
 Canonical runtime evidence that one exact Integration commit was fast-forwarded from its expected parent onto one exact checked-out local project branch under explicit elected-host user or policy authority. It binds the Integration event and runtime job, target branch, prior target commit, promoted commit and tree, content proof, merge job, authority, and observation time. It does not authorize or prove push, publication, release, remote effects, semantic approval, business outcomes, or automatic rollback.
 
+## Project-branch push proof
+
+Canonical runtime evidence that one exact locally merged project-branch commit was accepted as the exact head of one configured Git remote branch under explicit user authority. It binds the prior remote commit or branch absence, merge proof, local and remote branch identity, pushed commit and tree, user authority, runtime job, and observation time. It proves only exact Git transport state at that boundary; it does not authorize or prove product publication, deployment, release, registry publication, business outcomes, or later remote state.
+
 ## Aggregate content proof
 
 Final content proof for merged implementation output, such as a working-tree digest, tree, commit, package digest, or publication ref. Worker-local proof is provenance only when worker/parallel changes are involved.

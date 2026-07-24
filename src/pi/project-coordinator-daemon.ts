@@ -12,6 +12,7 @@ import {
 import { spawnProjectCoordinatorDaemon } from "../runtime/project-coordinator-process.ts";
 import type { ImplementationWorkerAdapter } from "../runtime/implementation-worker-adapter.ts";
 import type { ProjectBranchMergeAuthority } from "../runtime/project-branch-merge.ts";
+import type { ProjectBranchPushAuthority } from "../runtime/project-branch-push.ts";
 import type { RuntimeSemanticAdapters } from "../runtime/semantic-executor.ts";
 import { createPiProcessImplementationWorkerAdapter } from "./process-worker-adapter.ts";
 
@@ -24,6 +25,7 @@ export interface PiProjectCoordinatorDaemonOptions {
 	workerAdapter?: ImplementationWorkerAdapter;
 	worktreeExecFile?: WorktreeCommandExecFile;
 	mergeAuthority?: ProjectBranchMergeAuthority;
+	pushAuthority?: ProjectBranchPushAuthority;
 }
 
 const PI_SDK_MODULE_URL_ENV = "CODEWIKI_PI_SDK_MODULE_URL";
@@ -68,6 +70,7 @@ export async function startPiProjectCoordinatorDaemon(
 		...(options.mergeAuthority
 			? { mergeAuthority: options.mergeAuthority }
 			: {}),
+		...(options.pushAuthority ? { pushAuthority: options.pushAuthority } : {}),
 		workerAdapter:
 			options.workerAdapter || createPiProcessImplementationWorkerAdapter(),
 		workerWorktreeRunner: createShellWorktreeCommandRunner({

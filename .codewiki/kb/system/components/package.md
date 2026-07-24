@@ -28,6 +28,9 @@ codewiki_source_patterns:
   - src/runtime/implementation-worker-integration.ts
   - src/runtime/project-branch-merge.ts
   - src/runtime/project-branch-merge-git.ts
+  - src/runtime/project-branch-push.ts
+  - src/runtime/project-branch-push-operations.ts
+  - src/runtime/project-branch-push-manifest.ts
   - src/runtime/project-coordinator-daemon.ts
   - src/runtime/project-coordinator-events.ts
   - src/runtime/project-coordinator-process.ts
@@ -45,6 +48,7 @@ codewiki_test_patterns:
   - tests/runtime/implementation-worker-jobs.test.mjs
   - tests/runtime/implementation-worker-integration.test.mjs
   - tests/runtime/project-branch-merge.test.mjs
+  - tests/runtime/project-branch-push.test.mjs
   - tests/runtime/process-worker-adapter.test.mjs
   - tests/runtime/container-worker-adapter.test.mjs
   - tests/runtime/pi-project-coordinator-daemon.test.mjs
@@ -79,6 +83,9 @@ codewiki_source_map:
       - src/runtime/implementation-worker-integration.ts
       - src/runtime/project-branch-merge.ts
       - src/runtime/project-branch-merge-git.ts
+      - src/runtime/project-branch-push.ts
+      - src/runtime/project-branch-push-operations.ts
+      - src/runtime/project-branch-push-manifest.ts
       - src/runtime/project-coordinator-daemon.ts
       - src/runtime/project-coordinator-events.ts
       - src/runtime/project-coordinator-process.ts
@@ -96,6 +103,7 @@ codewiki_source_map:
       - tests/runtime/implementation-worker-jobs.test.mjs
       - tests/runtime/implementation-worker-integration.test.mjs
       - tests/runtime/project-branch-merge.test.mjs
+      - tests/runtime/project-branch-push.test.mjs
       - tests/runtime/process-worker-adapter.test.mjs
       - tests/runtime/container-worker-adapter.test.mjs
       - tests/runtime/pi-project-coordinator-daemon.test.mjs

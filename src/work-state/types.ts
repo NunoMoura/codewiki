@@ -100,6 +100,21 @@ export interface WorkStateMergeProof {
 	mergedAt: string;
 }
 
+export interface WorkStatePushProof {
+	eventId: string;
+	jobId: string;
+	mergeEventId: string;
+	remote: string;
+	targetBranch: string;
+	previousRemoteCommit: string | null;
+	commit: string;
+	tree: string;
+	contentProof: string;
+	authorityActor: string;
+	authorityRef: string;
+	pushedAt: string;
+}
+
 export interface WorkStateWorkItem {
 	id: string;
 	sprintId: string;
@@ -116,6 +131,7 @@ export interface WorkStateWorkItem {
 	implemented: boolean;
 	integrationProofs?: WorkStateIntegrationProof[];
 	mergeProofs?: WorkStateMergeProof[];
+	pushProofs?: WorkStatePushProof[];
 	blockers: string[];
 }
 

@@ -48,6 +48,10 @@ import {
 	projectBranchMergeJob,
 	type ProjectBranchMergeAuthority,
 } from "./project-branch-merge.ts";
+import {
+	projectBranchPushJob,
+	type ProjectBranchPushAuthority,
+} from "./project-branch-push.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./work-unit-claims.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
@@ -76,6 +80,7 @@ export interface ImplementationWorkerDispatcherOptions {
 	loadConfig?: (repoRoot: string) => Promise<WikiConfig>;
 	collectGitStatus?: (repoRoot: string) => Promise<GitStatusSnapshot>;
 	mergeAuthority?: ProjectBranchMergeAuthority;
+	pushAuthority?: ProjectBranchPushAuthority;
 	now?: () => string;
 	beforeAppend?: () => void | Promise<void>;
 }
@@ -199,6 +204,10 @@ export class ImplementationWorkerDispatcher {
 			observation.records,
 			createdAt,
 		);
+		const pushes = this.scheduleProjectBranchPushes(
+			observation.records,
+			createdAt,
+		);
 		const releaseable = resumed.recovered.filter((worker) =>
 			workerReportCanRelease(worker, observation.workState),
 		);
@@ -215,6 +224,7 @@ export class ImplementationWorkerDispatcher {
 			...resumed.jobIds,
 			...integrations.jobIds,
 			...merges.jobIds,
+			...pushes.jobIds,
 			...releaseJobIds,
 		];
 		const pending = new Set(workerRequiredWorkItemIds);
@@ -240,12 +250,14 @@ export class ImplementationWorkerDispatcher {
 			cleanup.blockers.length > 0 ||
 			integrations.blockers.length > 0 ||
 			merges.blockers.length > 0 ||
+			pushes.blockers.length > 0 ||
 			!adapterAvailability.available
 		) {
 			return complete("held", resumedJobIds, [
 				...cleanup.blockers,
 				...integrations.blockers,
 				...merges.blockers,
+				...pushes.blockers,
 				...(!adapterAvailability.available
 					? [
 							`implementation_worker_adapter_unavailable:${adapterAvailability.reason}`,
@@ -525,11 +537,67 @@ export class ImplementationWorkerDispatcher {
 					runner: this.options.worktreeRunner,
 					beforeAppend: this.options.beforeAppend,
 				});
-				void this.options.coordinator.schedule(job).catch(() => undefined);
+				void this.options.coordinator
+					.schedule(job)
+					.then(() =>
+						this.enqueue({
+							kind: "project_truth_changed",
+							occurredAt: (this.options.now || (() => new Date().toISOString()))(),
+							refs: [integrationEvent.traceId],
+						}),
+					)
+					.catch(() => undefined);
 				jobIds.push(job.idempotencyKey);
 			} catch {
 				blockers.push(
 					`project_branch_merge_proof_invalid:${safeBlockerSegment(integrationEvent.id)}`,
+				);
+			}
+		}
+		return { jobIds, blockers };
+	}
+
+	private scheduleProjectBranchPushes(
+		records: TraceRecord[],
+		createdAt: string,
+	): { jobIds: string[]; blockers: string[] } {
+		const candidates = records.filter(
+			(record): record is TraceEvent =>
+				record.type === "trace_event" &&
+				record.event === "runtime.project_branch.merged" &&
+				!projectBranchPushAlreadyProven(record, records),
+		);
+		if (candidates.length === 0) return { jobIds: [], blockers: [] };
+		if (!this.options.pushAuthority) {
+			return {
+				jobIds: [],
+				blockers: ["project_branch_push_authority_unavailable"],
+			};
+		}
+		if (!this.options.worktreeRunner) {
+			return {
+				jobIds: [],
+				blockers: ["project_branch_push_runner_unavailable"],
+			};
+		}
+		const jobIds: string[] = [];
+		const blockers: string[] = [];
+		for (const mergeEvent of candidates) {
+			try {
+				const job = projectBranchPushJob({
+					repoRoot: this.options.repoRoot,
+					reactor: this.options.reactor,
+					mergeEvent,
+					authority: this.options.pushAuthority,
+					createdAt,
+					runner: this.options.worktreeRunner,
+					beforeAppend: this.options.beforeAppend,
+				});
+				void this.options.coordinator.schedule(job).catch(() => undefined);
+				jobIds.push(job.idempotencyKey);
+			} catch {
+				blockers.push(
+					`project_branch_push_proof_invalid:${safeBlockerSegment(mergeEvent.id)}`,
 				);
 			}
 		}
@@ -815,6 +883,20 @@ function projectBranchMergeAlreadyProven(
 			record.data?.integrationEventId === integrationEvent.id &&
 			record.data?.commit === integrationEvent.data?.commit &&
 			record.data?.tree === integrationEvent.data?.tree,
+	);
+}
+
+function projectBranchPushAlreadyProven(
+	mergeEvent: TraceEvent,
+	records: TraceRecord[],
+): boolean {
+	return records.some(
+		(record) =>
+			record.type === "trace_event" &&
+			record.event === "runtime.project_branch.pushed" &&
+			record.data?.mergeEventId === mergeEvent.id &&
+			record.data?.commit === mergeEvent.data?.commit &&
+			record.data?.tree === mergeEvent.data?.tree,
 	);
 }
 
