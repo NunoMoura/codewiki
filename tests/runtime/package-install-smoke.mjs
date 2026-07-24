@@ -61,6 +61,7 @@ import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	ImplementationWorkerDispatcher,
 	connectProjectCoordinatorClient,
+	createOciContainerImplementationWorkerAdapter,
 	ensureProjectCoordinatorService,
 	scheduleImplementationWorkerClaimRelease,
 	scheduleImplementationWorkerIntegration,
@@ -115,6 +116,11 @@ assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-options.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-git.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "oci-container-command.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-report-store.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), true);
@@ -147,6 +153,7 @@ assert.equal(typeof scheduleRuntimeReactions, "function");
 assert.equal(typeof scheduleImplementationWorkerAssignments, "function");
 assert.equal(typeof scheduleImplementationWorkerClaimRelease, "function");
 assert.equal(typeof scheduleImplementationWorkerIntegration, "function");
+assert.equal(typeof createOciContainerImplementationWorkerAdapter, "function");
 assert.equal(typeof ImplementationWorkerDispatcher, "function");
 assert.equal(IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION, 1);
 assert.equal(typeof ensureProjectCoordinatorService, "function");

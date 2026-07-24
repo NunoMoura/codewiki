@@ -8,6 +8,7 @@ import test from "node:test";
 
 import { writeWikiConfigFile } from "../../src/project/config-file.ts";
 import { resolveWikiConfig } from "../../src/project/config.ts";
+import { readImplementationWorkerDispatchPackets } from "../../src/runtime/implementation-worker-artifacts.ts";
 import { ImplementationWorkerDispatcher } from "../../src/runtime/implementation-worker-dispatch.ts";
 import { implementationWorkerClaimReleaseJob } from "../../src/runtime/implementation-worker-review.ts";
 import { ProjectCoordinator } from "../../src/runtime/project-coordinator.ts";
@@ -499,6 +500,85 @@ for (const terminalStatus of ["failed", "cancelled"]) {
 		}
 	});
 }
+
+test("container-only adapters hold before Claim append when unavailable and produce container Assignments when ready", async () => {
+	const root = await mkdtemp(`${tmpdir()}/codewiki-container-dispatch-`);
+	const fixture = await seedRuntimeImplementation(root, {
+		suffix: "container-dispatch",
+		pathScopes: ["src/container-dispatch/**"],
+	});
+	const coordinator = new ProjectCoordinator(root, {
+		generationId: "generation:container-dispatch",
+	});
+	const client = coordinator.connectClient({
+		clientId: "pi:container-dispatch",
+		kind: "pi",
+		supervision: "approved",
+	});
+	let available = false;
+	const executions = [];
+	const adapter = {
+		isolationKinds: ["container"],
+		async availability() {
+			return available
+				? { available: true }
+				: { available: false, reason: "container runtime unavailable" };
+		},
+		async recover() {
+			return undefined;
+		},
+		async execute(assignment) {
+			executions.push(assignment);
+			return completedResult(assignment);
+		},
+	};
+	const dispatcher = new ImplementationWorkerDispatcher({
+		repoRoot: root,
+		coordinator,
+		reactor: new RuntimeReactor(root),
+		adapter,
+		loadConfig: async () => automaticConfig(),
+		collectGitStatus: async () => gitStatus(root),
+		worktreeRunner() {
+			return { exitCode: 0 };
+		},
+		now: () => "2026-07-21T11:45:00.000Z",
+	});
+	try {
+		const held = await dispatcher.reconcile({
+			kind: "project_truth_changed",
+			occurredAt: "2026-07-21T11:45:00.000Z",
+		});
+		assert.equal(held.status, "held");
+		assert.deepEqual(held.blockers, [
+			"implementation_worker_adapter_unavailable:container_runtime_unavailable",
+		]);
+		assert.equal(
+			(await buildProjectWorkState({ repoRoot: root })).assignments.length,
+			0,
+		);
+		assert.equal((await readImplementationWorkerDispatchPackets(root)).length, 0);
+
+		available = true;
+		const scheduled = await dispatcher.reconcile({
+			kind: "timer_due",
+			occurredAt: "2026-07-21T11:45:01.000Z",
+		});
+		assert.equal(scheduled.status, "scheduled");
+		await waitForCoordinator(coordinator);
+		assert.equal(executions.length, 1);
+		assert.equal(executions[0].workItemId, fixture.workItemId);
+		assert.equal(executions[0].isolation.kind, "container");
+		assert.match(executions[0].isolation.ref, /^container:[a-f0-9]{64}$/u);
+		const [packet] = await readImplementationWorkerDispatchPackets(root);
+		assert.equal(packet.assignment.isolation.kind, "container");
+	} finally {
+		client.disconnect();
+		await waitForCoordinator(coordinator);
+		coordinator.close();
+		await rm(root, { recursive: true, force: true });
+	}
+});
 
 test("worker claims remain held when elected coordinator lacks supervision", async () => {
 	const root = await mkdtemp(`${tmpdir()}/codewiki-worker-held-`);

@@ -67,6 +67,7 @@ export interface ImplementationWorkerDispatcherOptions {
 	coordinator: ProjectCoordinator;
 	reactor: RuntimeReactor;
 	adapter: ImplementationWorkerAdapter;
+	isolationKind?: ImplementationWorkerAssignment["isolation"]["kind"];
 	worktreeRunner?: WorktreeCommandRunner;
 	loadConfig?: (repoRoot: string) => Promise<WikiConfig>;
 	collectGitStatus?: (repoRoot: string) => Promise<GitStatusSnapshot>;
@@ -170,7 +171,15 @@ export class ImplementationWorkerDispatcher {
 				? [item.id]
 				: [],
 		);
-		const resumed = await this.resumePackets(activeClaims);
+		const isolationKind = implementationWorkerIsolationKind(this.options);
+		const adapterAvailability =
+			workerRequiredWorkItemIds.length > 0
+				? await inspectWorkerAdapter(this.options.adapter)
+				: { available: true as const };
+		const resumed = await this.resumePackets(
+			activeClaims,
+			adapterAvailability.available,
+		);
 		const integrationWorkers = await this.recoverIntegrationWorkers(
 			canonicalClaims,
 			resumed.recovered,
@@ -217,10 +226,19 @@ export class ImplementationWorkerDispatcher {
 				workerReports,
 			);
 
-		if (cleanup.blockers.length > 0 || integrations.blockers.length > 0) {
+		if (
+			cleanup.blockers.length > 0 ||
+			integrations.blockers.length > 0 ||
+			!adapterAvailability.available
+		) {
 			return complete("held", resumedJobIds, [
 				...cleanup.blockers,
 				...integrations.blockers,
+				...(!adapterAvailability.available
+					? [
+							`implementation_worker_adapter_unavailable:${adapterAvailability.reason}`,
+						]
+					: []),
 			]);
 		}
 
@@ -276,7 +294,8 @@ export class ImplementationWorkerDispatcher {
 		}
 		const unsupported = preview.policy.worktrees.filter(
 			(plan) =>
-				!plan.worktree || !adapterSupportsWorktree(this.options.adapter),
+				!plan.worktree ||
+				!adapterSupportsIsolation(this.options.adapter, isolationKind),
 		);
 		if (unsupported.length > 0) {
 			return complete("held", resumedJobIds, [
@@ -296,6 +315,7 @@ export class ImplementationWorkerDispatcher {
 			this.options.repoRoot,
 			observation.workState,
 			preview,
+			isolationKind,
 		);
 		await Promise.all(
 			packets.map((packet) =>
@@ -314,7 +334,10 @@ export class ImplementationWorkerDispatcher {
 		return complete("scheduled", [...resumedJobIds, ...scheduled], []);
 	}
 
-	private async resumePackets(activeClaims: Map<string, TraceEvent>): Promise<{
+	private async resumePackets(
+		activeClaims: Map<string, TraceEvent>,
+		executionAvailable: boolean,
+	): Promise<{
 		jobIds: string[];
 		recovered: RecoveredImplementationWorker[];
 	}> {
@@ -345,7 +368,9 @@ export class ImplementationWorkerDispatcher {
 			}),
 		);
 		return {
-			jobIds: this.schedulePackets(active.map(({ packet }) => packet)),
+			jobIds: executionAvailable
+				? this.schedulePackets(active.map(({ packet }) => packet))
+				: [],
 			recovered: recovered.filter(
 				(worker): worker is RecoveredImplementationWorker => Boolean(worker),
 			),
@@ -485,6 +510,7 @@ function createDispatchPackets(
 	repoRoot: string,
 	workState: WorkState,
 	runtime: Awaited<ReturnType<typeof runWikiRuntime>>,
+	isolationKind: ImplementationWorkerAssignment["isolation"]["kind"],
 ): ImplementationWorkerDispatchPacket[] {
 	const claimEvents = runtime.batch?.events || [];
 	const handoff = createRuntimeHandoffManifest({ runtime, claimEvents });
@@ -542,8 +568,8 @@ function createDispatchPackets(
 				`${reportKey}.json`,
 			),
 			isolation: {
-				kind: "worktree",
-				ref: `worktree:${digest(worker.worktree).slice(7)}`,
+				kind: isolationKind,
+				ref: `${isolationKind}:${digest(worker.worktree).slice(7)}`,
 			},
 			worktree: worker.worktree,
 			...(worker.executionPolicy
@@ -616,8 +642,10 @@ function preparedAdapter(
 	plan: RuntimeWorktreePlan,
 	runner: WorktreeCommandRunner | undefined,
 ): ImplementationWorkerAdapter {
+	const availability = adapter.availability?.bind(adapter);
 	return {
 		isolationKinds: adapter.isolationKinds,
+		...(availability ? { availability } : {}),
 		recover: (assignment) => adapter.recover(assignment),
 		async execute(assignment, signal) {
 			signal.throwIfAborted();
@@ -671,10 +699,50 @@ function dispatchPrefix(
 	return `${kind}-${digest(workStateDigest).slice(7, 19)}`;
 }
 
-function adapterSupportsWorktree(
+function adapterSupportsIsolation(
 	adapter: ImplementationWorkerAdapter,
+	kind: ImplementationWorkerAssignment["isolation"]["kind"],
 ): boolean {
-	return !adapter.isolationKinds || adapter.isolationKinds.includes("worktree");
+	return !adapter.isolationKinds || adapter.isolationKinds.includes(kind);
+}
+
+function implementationWorkerIsolationKind(
+	options: ImplementationWorkerDispatcherOptions,
+): ImplementationWorkerAssignment["isolation"]["kind"] {
+	if (options.isolationKind) return options.isolationKind;
+	if (
+		options.adapter.isolationKinds?.includes("container") &&
+		!options.adapter.isolationKinds.includes("worktree")
+	) {
+		return "container";
+	}
+	return "worktree";
+}
+
+async function inspectWorkerAdapter(
+	adapter: ImplementationWorkerAdapter,
+): Promise<{ available: boolean; reason: string }> {
+	if (!adapter.availability) return { available: true, reason: "available" };
+	try {
+		const result = await adapter.availability();
+		return result.available
+			? { available: true, reason: "available" }
+			: {
+					available: false,
+					reason: safeBlockerSegment(result.reason || "unavailable"),
+				};
+	} catch {
+		return { available: false, reason: "inspection_failed" };
+	}
+}
+
+function safeBlockerSegment(value: string): string {
+	const normalized = value
+		.toLowerCase()
+		.replace(/[^a-z0-9_-]+/gu, "_")
+		.replace(/^_+|_+$/gu, "")
+		.slice(0, 80);
+	return normalized || "unavailable";
 }
 
 function integratedClaimProofs(

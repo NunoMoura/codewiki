@@ -28,6 +28,8 @@ const MAX_PACKET_BYTES = 256 * 1024;
 const MAX_REPORT_BYTES = 1024 * 1024;
 const REPORT_FILE = /^[a-f0-9]{32}\.json$/;
 const REPORT_OUTPUT_FILE = /^[a-f0-9]{32}\.json\.worker-output$/;
+const REPORT_CONTAINER_OUTCOME_FILE =
+	/^[a-f0-9]{32}\.json\.container-outcome$/;
 
 export interface ImplementationWorkerDispatchPacket {
 	schemaVersion: typeof IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION;
@@ -357,6 +359,27 @@ async function cleanupUnreferencedReports(input: {
 			}
 			await removeFile(path, input.removedPaths);
 			await removeFile(`${path}.worker-output`, input.removedPaths);
+			continue;
+		}
+		if (REPORT_CONTAINER_OUTCOME_FILE.test(name)) {
+			const reportName = name.slice(0, -".container-outcome".length);
+			const reportPath = join(directory, reportName);
+			const report = existing.has(reportName)
+				? await readReport(reportPath)
+				: undefined;
+			if (
+				input.retainedReportPaths.has(reportPath) ||
+				(existing.has(reportName) && !report) ||
+				Boolean(
+					report &&
+						(input.activeClaimIds.has(report.assignmentId) ||
+							report.status === "completed"),
+				)
+			) {
+				input.preservedPaths.add(path);
+				continue;
+			}
+			await removeFile(path, input.removedPaths);
 			continue;
 		}
 		if (REPORT_OUTPUT_FILE.test(name)) {

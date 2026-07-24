@@ -120,6 +120,11 @@ async function seedArtifacts(root, fixture) {
 		"worker output",
 		"utf8",
 	);
+	await writeFile(
+		`${fixture.packet.assignment.reportPath}.container-outcome`,
+		"container outcome",
+		"utf8",
+	);
 }
 
 async function exists(path) {
@@ -148,6 +153,10 @@ test("worker artifact cleanup preserves every artifact for an active Claim", asy
 
 		assert.deepEqual(result.removedPaths, []);
 		assert.equal(await exists(fixture.packet.assignment.reportPath), true);
+		assert.equal(
+			await exists(`${fixture.packet.assignment.reportPath}.container-outcome`),
+			true,
+		);
 		assert.equal(
 			await exists(join(fixture.packet.assignment.worktree.path, "candidate.txt")),
 			true,
@@ -200,6 +209,10 @@ test("worker artifact cleanup removes pre-claim scratch and partial worktrees id
 		assert.equal(await exists(fixture.packet.assignment.reportPath), false);
 		assert.equal(
 			await exists(`${fixture.packet.assignment.reportPath}.worker-output`),
+			false,
+		);
+		assert.equal(
+			await exists(`${fixture.packet.assignment.reportPath}.container-outcome`),
 			false,
 		);
 		assert.equal(

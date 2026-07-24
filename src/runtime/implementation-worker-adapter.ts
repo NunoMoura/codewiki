@@ -43,8 +43,14 @@ export interface ImplementationWorkerReport {
 	error?: string;
 }
 
+export interface ImplementationWorkerAdapterAvailability {
+	available: boolean;
+	reason?: string;
+}
+
 export interface ImplementationWorkerAdapter {
 	isolationKinds?: readonly ImplementationWorkerAssignment["isolation"]["kind"][];
+	availability?(): Promise<ImplementationWorkerAdapterAvailability>;
 	execute(
 		assignment: ImplementationWorkerAssignment,
 		signal: AbortSignal,

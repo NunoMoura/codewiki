@@ -17,6 +17,11 @@ codewiki_source_patterns:
   - src/index.ts
   - src/runtime/coordinator-entrypoint.ts
   - src/runtime/implementation-worker-adapter.ts
+  - src/runtime/container-worker-adapter.ts
+  - src/runtime/container-worker-options.ts
+  - src/runtime/container-worker-git.ts
+  - src/runtime/oci-container-command.ts
+  - src/runtime/implementation-worker-report-store.ts
   - src/runtime/implementation-worker-dispatch.ts
   - src/runtime/implementation-worker-jobs.ts
   - src/runtime/implementation-worker-review.ts
@@ -36,6 +41,7 @@ codewiki_test_patterns:
   - tests/runtime/implementation-worker-dispatch.test.mjs
   - tests/runtime/implementation-worker-jobs.test.mjs
   - tests/runtime/process-worker-adapter.test.mjs
+  - tests/runtime/container-worker-adapter.test.mjs
   - tests/runtime/pi-project-coordinator-daemon.test.mjs
   - tests/runtime/runtime-reaction-jobs.test.mjs
   - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
@@ -57,6 +63,11 @@ codewiki_source_map:
       - src/index.ts
       - src/runtime/coordinator-entrypoint.ts
       - src/runtime/implementation-worker-adapter.ts
+      - src/runtime/container-worker-adapter.ts
+      - src/runtime/container-worker-options.ts
+      - src/runtime/container-worker-git.ts
+      - src/runtime/oci-container-command.ts
+      - src/runtime/implementation-worker-report-store.ts
       - src/runtime/implementation-worker-dispatch.ts
       - src/runtime/implementation-worker-jobs.ts
       - src/runtime/implementation-worker-review.ts
@@ -76,6 +87,7 @@ codewiki_source_map:
       - tests/runtime/implementation-worker-dispatch.test.mjs
       - tests/runtime/implementation-worker-jobs.test.mjs
       - tests/runtime/process-worker-adapter.test.mjs
+      - tests/runtime/container-worker-adapter.test.mjs
       - tests/runtime/pi-project-coordinator-daemon.test.mjs
       - tests/runtime/runtime-reaction-jobs.test.mjs
       - tests/runtime/pi-multiprocess-coordinator-smoke.mjs
@@ -94,7 +106,7 @@ while preserving `README.md` as the human package entrypoint.
 
 The package component owns the npm manifest, lockfile, TypeScript entrypoints, README distribution guidance, optional execution-adapter peers, and install/readiness smoke coverage.
 
-The root entrypoint remains harness-neutral and exports the transport-neutral `ProjectCoordinator` kernel. `src/runtime/coordinator-entrypoint.ts` is the explicit package-export facade for `./coordinator`, which exposes the detached project-service host/client boundary: daemon ensure/start/stop, exclusive election, private endpoint discovery, authenticated loopback transport, leased client registration, bounded generation-scoped event replay, remote inspection, capability-advertised semantic execution, candidate fallback, exact Assignment-worker scheduling through harness-neutral adapters, generation fencing, exact semantic reaction scheduling, and trace-backed restart recovery. `src/runtime/project-coordinator-daemon.ts` owns harness-neutral daemon lifecycle; `src/pi/project-coordinator-daemon.ts` is the executable launcher that dynamically loads `./pi-sdk` when its optional peer is available and installs the worktree-isolated Pi process worker adapter. During the architecture spike, `@earendil-works/pi-coding-agent` remains an optional peer and development dependency rather than a production dependency. Peer-absent packed installs start the coordinator without semantic adapters instead of silently pulling a second Pi runtime.
+The root entrypoint remains harness-neutral and exports the transport-neutral `ProjectCoordinator` kernel. `src/runtime/coordinator-entrypoint.ts` is the explicit package-export facade for `./coordinator`, which exposes the detached project-service host/client boundary: daemon ensure/start/stop, exclusive election, private endpoint discovery, authenticated loopback transport, leased client registration, bounded generation-scoped event replay, remote inspection, capability-advertised semantic execution, candidate fallback, exact Assignment-worker scheduling through harness-neutral process or OCI adapters, generation fencing, exact semantic reaction scheduling, and trace-backed restart recovery. The OCI adapter is opt-in and requires the host to supply a digest-pinned worker image; package installation does not install Docker/Podman, pull an image, select credentials, or enable container execution automatically. `src/runtime/project-coordinator-daemon.ts` owns harness-neutral daemon lifecycle; `src/pi/project-coordinator-daemon.ts` is the executable launcher that dynamically loads `./pi-sdk` when its optional peer is available and installs the worktree-isolated Pi process worker adapter. During the architecture spike, `@earendil-works/pi-coding-agent` remains an optional peer and development dependency rather than a production dependency. Peer-absent packed installs start the coordinator without semantic adapters instead of silently pulling a second Pi runtime.
 
 The Pi SDK subpath requires Node.js 22.19 or newer even while the harness-neutral core retains its broader engine range. Promotion to a production dependency or separate adapter package requires clean security audit, package-size review, external install proof, model/auth proof, cancellation and cleanup proof, and no duplicate-host resolution ambiguity.
 

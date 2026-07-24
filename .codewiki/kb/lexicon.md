@@ -248,7 +248,7 @@ Replaceable read-only agent context for one runtime-selected Decision, Planning,
 
 ## Worker adapter
 
-Execution adapter for one Assignment attempt. Target implementations use a process or container boundary and may receive scoped mutation capability. Worker output remains candidate evidence until Implementation accepts it.
+Execution adapter for one Assignment attempt. Implementations use a process or container boundary and may receive scoped mutation capability. Runtime probes adapters that expose external availability before appending a Claim. The opt-in OCI adapter requires a digest-pinned preinstalled image, explicit bounded mounts/resources/environment/network policy, and the same immutable Worker report contract as a process adapter; it does not grant semantic or publication authority. Worker output remains candidate evidence until Implementation accepts it.
 
 ## Pi adapter
 
