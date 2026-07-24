@@ -85,6 +85,21 @@ export interface WorkStateIntegrationProof {
 	integratedAt: string;
 }
 
+export interface WorkStateMergeProof {
+	eventId: string;
+	jobId: string;
+	integrationEventId: string;
+	targetBranch: string;
+	previousCommit: string;
+	commit: string;
+	tree: string;
+	contentProof: string;
+	authorityKind: "user" | "policy";
+	authorityActor: string;
+	authorityRef: string;
+	mergedAt: string;
+}
+
 export interface WorkStateWorkItem {
 	id: string;
 	sprintId: string;
@@ -100,6 +115,7 @@ export interface WorkStateWorkItem {
 	assignmentIds: string[];
 	implemented: boolean;
 	integrationProofs?: WorkStateIntegrationProof[];
+	mergeProofs?: WorkStateMergeProof[];
 	blockers: string[];
 }
 

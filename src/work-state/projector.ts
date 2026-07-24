@@ -23,6 +23,7 @@ import {
 	type WorkStateOutcomeStatus,
 	type WorkStatePlanningStatus,
 	type WorkStateRealizationStatus,
+	type WorkStateMergeProof,
 	type WorkStateSprint,
 	type WorkStateWorkItem,
 } from "./types.ts";
@@ -67,6 +68,7 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 		projectAssignments(group, workItemMap, assignmentMap);
 		projectImplementation(group, workItemMap);
 		projectIntegration(group, workItemMap);
+		projectProjectBranchMerges(group, workItemMap);
 		projectEventBlockers(group, blockers);
 	}
 	applyAssignmentRefs(workItemMap, assignmentMap);
@@ -517,6 +519,64 @@ function projectEventBlockers(
 				refs: [event.id],
 			});
 		}
+	}
+}
+
+function projectProjectBranchMerges(
+	group: TraceGroup,
+	workItemMap: Map<string, WorkStateWorkItem>,
+): void {
+	for (const event of group.events.filter(
+		(candidate) => candidate.event === "runtime.project_branch.merged",
+	)) {
+		const workItemId = text(event.data?.workItemId);
+		const item = workItemId ? workItemMap.get(workItemId) : undefined;
+		const authority = objectValue(event.data?.authority);
+		const jobId = text(event.data?.runtimeJobId);
+		const integrationEventId = text(event.data?.integrationEventId);
+		const targetBranch = text(event.data?.targetBranch);
+		const previousCommit = text(event.data?.expectedTargetCommit);
+		const commit = text(event.data?.commit);
+		const tree = text(event.data?.tree);
+		const contentProof = text(event.data?.contentProof);
+		const authorityKind = text(authority?.kind);
+		const authorityActor = text(authority?.actor);
+		const authorityRef = text(authority?.ref);
+		if (
+			!item ||
+			!jobId ||
+			!integrationEventId ||
+			!targetBranch ||
+			!previousCommit ||
+			!commit ||
+			!tree ||
+			!contentProof ||
+			(authorityKind !== "user" && authorityKind !== "policy") ||
+			!authorityActor ||
+			!authorityRef
+		) {
+			continue;
+		}
+		const proof: WorkStateMergeProof = {
+			eventId: event.id,
+			jobId,
+			integrationEventId,
+			targetBranch,
+			previousCommit,
+			commit,
+			tree,
+			contentProof,
+			authorityKind,
+			authorityActor,
+			authorityRef,
+			mergedAt: event.createdAt,
+		};
+		item.mergeProofs = [
+			...(item.mergeProofs || []).filter(
+				(candidate) => candidate.eventId !== event.id,
+			),
+			proof,
+		].sort((left, right) => left.eventId.localeCompare(right.eventId));
 	}
 }
 

@@ -61,6 +61,13 @@ export {
 	type ImplementationWorkerIntegrationReceipt,
 } from "./implementation-worker-integration.ts";
 export {
+	projectBranchMergeJob,
+	scheduleProjectBranchMerge,
+	type ProjectBranchMergeAuthority,
+	type ProjectBranchMergeInput,
+	type ProjectBranchMergeReceipt,
+} from "./project-branch-merge.ts";
+export {
 	implementationWorkerClaimReleaseJob,
 	scheduleImplementationWorkerClaimRelease,
 	type ImplementationWorkerClaimReleaseInput,

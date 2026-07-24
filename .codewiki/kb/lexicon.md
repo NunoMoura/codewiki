@@ -196,6 +196,10 @@ A Worker report proves only what the adapter observed about that attempt. It nev
 
 Canonical runtime evidence that accepted worker output was applied under one exact Planning target set and source base to a guarded integration worktree. It binds the runtime job, Claim, Assignment, Worker report, base and parent commits, resulting local commit and tree, changed paths, patch digest, and integration checks. Integration proof establishes integrated content state; it does not merge the project branch, push, publish, grant semantic approval, or prove a business outcome.
 
+## Project-branch merge proof
+
+Canonical runtime evidence that one exact Integration commit was fast-forwarded from its expected parent onto one exact checked-out local project branch under explicit elected-host user or policy authority. It binds the Integration event and runtime job, target branch, prior target commit, promoted commit and tree, content proof, merge job, authority, and observation time. It does not authorize or prove push, publication, release, remote effects, semantic approval, business outcomes, or automatic rollback.
+
 ## Aggregate content proof
 
 Final content proof for merged implementation output, such as a working-tree digest, tree, commit, package digest, or publication ref. Worker-local proof is provenance only when worker/parallel changes are involved.

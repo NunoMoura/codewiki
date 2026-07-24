@@ -44,6 +44,10 @@ import {
 } from "./implementation-worker-integration.ts";
 import { scheduleImplementationWorkerAssignment } from "./implementation-worker-jobs.ts";
 import { implementationWorkerClaimReleaseJob } from "./implementation-worker-review.ts";
+import {
+	projectBranchMergeJob,
+	type ProjectBranchMergeAuthority,
+} from "./project-branch-merge.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./work-unit-claims.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
@@ -71,6 +75,7 @@ export interface ImplementationWorkerDispatcherOptions {
 	worktreeRunner?: WorktreeCommandRunner;
 	loadConfig?: (repoRoot: string) => Promise<WikiConfig>;
 	collectGitStatus?: (repoRoot: string) => Promise<GitStatusSnapshot>;
+	mergeAuthority?: ProjectBranchMergeAuthority;
 	now?: () => string;
 	beforeAppend?: () => void | Promise<void>;
 }
@@ -190,6 +195,10 @@ export class ImplementationWorkerDispatcher {
 			observation.records,
 			createdAt,
 		);
+		const merges = this.scheduleProjectBranchMerges(
+			observation.records,
+			createdAt,
+		);
 		const releaseable = resumed.recovered.filter((worker) =>
 			workerReportCanRelease(worker, observation.workState),
 		);
@@ -205,6 +214,7 @@ export class ImplementationWorkerDispatcher {
 		const resumedJobIds = [
 			...resumed.jobIds,
 			...integrations.jobIds,
+			...merges.jobIds,
 			...releaseJobIds,
 		];
 		const pending = new Set(workerRequiredWorkItemIds);
@@ -229,11 +239,13 @@ export class ImplementationWorkerDispatcher {
 		if (
 			cleanup.blockers.length > 0 ||
 			integrations.blockers.length > 0 ||
+			merges.blockers.length > 0 ||
 			!adapterAvailability.available
 		) {
 			return complete("held", resumedJobIds, [
 				...cleanup.blockers,
 				...integrations.blockers,
+				...merges.blockers,
 				...(!adapterAvailability.available
 					? [
 							`implementation_worker_adapter_unavailable:${adapterAvailability.reason}`,
@@ -462,10 +474,66 @@ export class ImplementationWorkerDispatcher {
 				beforeAppend: this.options.beforeAppend,
 			};
 			const job = implementationWorkerIntegrationJob(input);
-			void this.options.coordinator.schedule(job).catch(() => undefined);
+			void this.options.coordinator
+				.schedule(job)
+				.then(() =>
+					this.enqueue({
+						kind: "project_truth_changed",
+						occurredAt: (this.options.now || (() => new Date().toISOString()))(),
+						refs: [worker.packet.assignment.traceId],
+					}),
+				)
+				.catch(() => undefined);
 			return job.idempotencyKey;
 		});
 		return { jobIds, blockers: [] };
+	}
+
+	private scheduleProjectBranchMerges(
+		records: TraceRecord[],
+		createdAt: string,
+	): { jobIds: string[]; blockers: string[] } {
+		const candidates = records.filter(
+			(record): record is TraceEvent =>
+				record.type === "trace_event" &&
+				record.event === "runtime.integration.proven" &&
+				!projectBranchMergeAlreadyProven(record, records),
+		);
+		if (candidates.length === 0) return { jobIds: [], blockers: [] };
+		if (!this.options.mergeAuthority) {
+			return {
+				jobIds: [],
+				blockers: ["project_branch_merge_authority_unavailable"],
+			};
+		}
+		if (!this.options.worktreeRunner) {
+			return {
+				jobIds: [],
+				blockers: ["project_branch_merge_runner_unavailable"],
+			};
+		}
+		const jobIds: string[] = [];
+		const blockers: string[] = [];
+		for (const integrationEvent of candidates) {
+			try {
+				const job = projectBranchMergeJob({
+					repoRoot: this.options.repoRoot,
+					reactor: this.options.reactor,
+					integrationEvent,
+					authority: this.options.mergeAuthority,
+					createdAt,
+					runner: this.options.worktreeRunner,
+					beforeAppend: this.options.beforeAppend,
+				});
+				void this.options.coordinator.schedule(job).catch(() => undefined);
+				jobIds.push(job.idempotencyKey);
+			} catch {
+				blockers.push(
+					`project_branch_merge_proof_invalid:${safeBlockerSegment(integrationEvent.id)}`,
+				);
+			}
+		}
+		return { jobIds, blockers };
 	}
 
 	private scheduleReleases(
@@ -734,6 +802,20 @@ async function inspectWorkerAdapter(
 	} catch {
 		return { available: false, reason: "inspection_failed" };
 	}
+}
+
+function projectBranchMergeAlreadyProven(
+	integrationEvent: TraceEvent,
+	records: TraceRecord[],
+): boolean {
+	return records.some(
+		(record) =>
+			record.type === "trace_event" &&
+			record.event === "runtime.project_branch.merged" &&
+			record.data?.integrationEventId === integrationEvent.id &&
+			record.data?.commit === integrationEvent.data?.commit &&
+			record.data?.tree === integrationEvent.data?.tree,
+	);
 }
 
 function safeBlockerSegment(value: string): string {

@@ -54,6 +54,8 @@ The OCI adapter treats outcome content as untrusted. It validates exact worker/W
 
 Accepted worker output is integrated into a separate runtime-local worktree rooted at the exact Assignment source commit. The integrator stages worker changes to include untracked files, emits a bounded binary patch, enforces Planning path scopes, serializes the exact target/base lane, applies with Git's three-way index mode, runs `git diff --cached --check`, and creates a no-GPG local commit. The normal project checkout and branch are not moved. Integration branch commits remain available for aggregate preview and later guarded merge; they are not publication.
 
+Project-branch promotion is separate and opt-in. Elected-host `ProjectBranchMergeAuthority` binds one exact checked-out local branch and user/policy authority. Runtime verifies that Integration commit is the exact child of the expected target, verifies its trailer/tree/paths/patch, permits only CodeWiki trace/runtime dirtiness, checks generation before mutation and append, and executes a structured hook-disabled fast-forward. A stale/non-fast-forward branch is never reconciled by an implicit merge commit or reset. `runtime.project_branch.merged` preserves prior commit as the restore boundary and exact promoted tree as proof. No merge proof authorizes push, publication, release, or automatic rollback.
+
 Target constraints:
 
 - Trace events own worker claims and releases.

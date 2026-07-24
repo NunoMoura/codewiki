@@ -21,6 +21,7 @@ import {
 	ProjectCoordinatorEventJournal,
 	type ProjectCoordinatorEventBatch,
 } from "./project-coordinator-events.ts";
+import type { ProjectBranchMergeAuthority } from "./project-branch-merge.ts";
 import {
 	ProjectCoordinator,
 	type ProjectCoordinatorClientConnection,
@@ -85,6 +86,7 @@ export interface ProjectCoordinatorServiceOptions
 	maxEventHistory?: number;
 	workerAdapter?: ImplementationWorkerAdapter;
 	workerWorktreeRunner?: WorktreeCommandRunner;
+	mergeAuthority?: ProjectBranchMergeAuthority;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
@@ -216,6 +218,7 @@ export async function startProjectCoordinatorService(
 					reactor,
 					adapter: options.workerAdapter,
 					worktreeRunner: options.workerWorktreeRunner,
+					mergeAuthority: options.mergeAuthority,
 					now: options.now,
 					beforeAppend: () => assertCurrentGeneration(runtime),
 				})
