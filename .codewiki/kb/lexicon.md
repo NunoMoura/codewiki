@@ -210,6 +210,12 @@ Canonical runtime evidence that one exact artifact derived from a canonically pu
 
 Product publication proof establishes only artifact availability at that exact target. It does not authorize or prove deployment, release, Git tagging, channel promotion, package adoption, business success, or any later external effect. Matching provider state without exact operation evidence is not attributed to CodeWiki.
 
+## Product release proof
+
+Canonical runtime evidence that one exact published artifact was promoted onto one exact release target/channel under explicit elected-host user authority. It binds canonical publication event/job and provider operation/revision, artifact id/digest/version, release target id/kind/channel/destination, prior channel revision/digest, resulting provider operation/revision, adapter identity, release job, authority, and observation time.
+
+Product release proof establishes exact provider release-channel state only. It does not authorize or prove deployment, Git tagging, announcement delivery, installation, adoption, runtime health, business success, rollback, or any later external effect. Matching channel state without exact operation evidence is not attributed to CodeWiki.
+
 ## Aggregate content proof
 
 Final content proof for merged implementation output, such as a working-tree digest, tree, commit, package digest, or publication ref. Worker-local proof is provenance only when worker/parallel changes are involved.

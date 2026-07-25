@@ -27,6 +27,10 @@ import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
 } from "./product-publication-contract.ts";
+import type {
+	ProductReleaseAdapter,
+	ProductReleasePlan,
+} from "./product-release-contract.ts";
 import {
 	ProjectCoordinator,
 	type ProjectCoordinatorClientConnection,
@@ -95,6 +99,8 @@ export interface ProjectCoordinatorServiceOptions
 	pushAuthority?: ProjectBranchPushAuthority;
 	publicationPlan?: ProductPublicationPlan;
 	publicationAdapter?: ProductPublicationAdapter;
+	releasePlan?: ProductReleasePlan;
+	releaseAdapter?: ProductReleaseAdapter;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
 }
 
@@ -230,6 +236,8 @@ export async function startProjectCoordinatorService(
 					pushAuthority: options.pushAuthority,
 					publicationPlan: options.publicationPlan,
 					publicationAdapter: options.publicationAdapter,
+					releasePlan: options.releasePlan,
+					releaseAdapter: options.releaseAdapter,
 					now: options.now,
 					beforeAppend: () => assertCurrentGeneration(runtime),
 				})

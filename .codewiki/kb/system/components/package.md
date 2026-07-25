@@ -36,6 +36,10 @@ codewiki_source_patterns:
   - src/runtime/product-publication-contract.ts
   - src/runtime/product-publication-artifact.ts
   - src/runtime/product-publication-manifest.ts
+  - src/runtime/product-release.ts
+  - src/runtime/product-release-proof.ts
+  - src/runtime/product-release-contract.ts
+  - src/runtime/product-release-manifest.ts
   - src/runtime/project-coordinator-daemon.ts
   - src/runtime/project-coordinator-events.ts
   - src/runtime/project-coordinator-process.ts
@@ -55,6 +59,7 @@ codewiki_test_patterns:
   - tests/runtime/project-branch-merge.test.mjs
   - tests/runtime/project-branch-push.test.mjs
   - tests/runtime/product-publication.test.mjs
+  - tests/runtime/product-release.test.mjs
   - tests/runtime/process-worker-adapter.test.mjs
   - tests/runtime/container-worker-adapter.test.mjs
   - tests/runtime/pi-project-coordinator-daemon.test.mjs
@@ -97,6 +102,10 @@ codewiki_source_map:
       - src/runtime/product-publication-contract.ts
       - src/runtime/product-publication-artifact.ts
       - src/runtime/product-publication-manifest.ts
+      - src/runtime/product-release.ts
+      - src/runtime/product-release-proof.ts
+      - src/runtime/product-release-contract.ts
+      - src/runtime/product-release-manifest.ts
       - src/runtime/project-coordinator-daemon.ts
       - src/runtime/project-coordinator-events.ts
       - src/runtime/project-coordinator-process.ts
@@ -116,6 +125,7 @@ codewiki_source_map:
       - tests/runtime/project-branch-merge.test.mjs
       - tests/runtime/project-branch-push.test.mjs
       - tests/runtime/product-publication.test.mjs
+      - tests/runtime/product-release.test.mjs
       - tests/runtime/process-worker-adapter.test.mjs
       - tests/runtime/container-worker-adapter.test.mjs
       - tests/runtime/pi-project-coordinator-daemon.test.mjs

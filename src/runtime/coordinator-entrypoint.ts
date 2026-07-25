@@ -92,6 +92,23 @@ export type {
 	ProductPublicationTargetKind,
 } from "./product-publication-contract.ts";
 export {
+	productReleaseJob,
+	scheduleProductRelease,
+	type ProductReleaseInput,
+	type ProductReleaseReceipt,
+} from "./product-release.ts";
+export type {
+	ProductReleaseAdapter,
+	ProductReleaseAdapterInput,
+	ProductReleaseAuthority,
+	ProductReleaseChannelObservation,
+	ProductReleaseOperation,
+	ProductReleasePlan,
+	ProductReleaseTarget,
+	ProductReleaseTargetKind,
+	PublishedArtifactObservation,
+} from "./product-release-contract.ts";
+export {
 	implementationWorkerClaimReleaseJob,
 	scheduleImplementationWorkerClaimRelease,
 	type ImplementationWorkerClaimReleaseInput,

@@ -110,7 +110,9 @@ A Work Item separately projects exact project-branch promotion from `runtime.pro
 
 `runtime.project_branch.pushed` projects another exact boundary: merge event/job, configured remote and branch, prior remote commit or branch absence, pushed commit/tree/content proof, user authority, push job, and observation time.
 
-`runtime.product.published` projects product publication separately on the owning Work Item. The projection preserves canonical push event, target kind/id/channel/destination, artifact id/digest/version, previous destination revision/digest, resulting provider revision and operation, adapter identity, exact user authority, publication job, and observation time. Integration, project-branch merge, push, product publication, deployment, package release, and registry release remain distinct states; one never implies another.
+`runtime.product.published` projects product publication separately on the owning Work Item. The projection preserves canonical push event, target kind/id/channel/destination, artifact id/digest/version, previous destination revision/digest, resulting provider revision and operation, adapter identity, exact user authority, publication job, and observation time.
+
+`runtime.product.released` projects release independently. It preserves canonical publication event, release target kind/id/channel/destination, exact artifact identity, previous channel revision/digest, resulting provider revision and operation, adapter identity, user authority, release job, and observation time. Integration, project-branch merge, push, publication, deployment, and release remain distinct states; one never implies another.
 
 ## Runtime use
 

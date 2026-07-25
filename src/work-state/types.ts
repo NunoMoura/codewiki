@@ -136,6 +136,27 @@ export interface WorkStatePublicationProof {
 	publishedAt: string;
 }
 
+export interface WorkStateReleaseProof {
+	eventId: string;
+	jobId: string;
+	publicationEventId: string;
+	targetId: string;
+	targetKind: "package-channel" | "artifact-channel" | "site-channel";
+	channel: string;
+	destinationRef: string;
+	artifactId: string;
+	artifactDigest: string;
+	artifactVersion: string;
+	previousRevision: string | null;
+	previousArtifactDigest: string | null;
+	revision: string;
+	operationId: string;
+	adapterId: string;
+	authorityActor: string;
+	authorityRef: string;
+	releasedAt: string;
+}
+
 export interface WorkStateWorkItem {
 	id: string;
 	sprintId: string;
@@ -154,6 +175,7 @@ export interface WorkStateWorkItem {
 	mergeProofs?: WorkStateMergeProof[];
 	pushProofs?: WorkStatePushProof[];
 	publicationProofs?: WorkStatePublicationProof[];
+	releaseProofs?: WorkStateReleaseProof[];
 	blockers: string[];
 }
 

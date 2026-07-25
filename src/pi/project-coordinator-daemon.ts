@@ -17,6 +17,10 @@ import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
 } from "../runtime/product-publication-contract.ts";
+import type {
+	ProductReleaseAdapter,
+	ProductReleasePlan,
+} from "../runtime/product-release-contract.ts";
 import type { RuntimeSemanticAdapters } from "../runtime/semantic-executor.ts";
 import { createPiProcessImplementationWorkerAdapter } from "./process-worker-adapter.ts";
 
@@ -32,6 +36,8 @@ export interface PiProjectCoordinatorDaemonOptions {
 	pushAuthority?: ProjectBranchPushAuthority;
 	publicationPlan?: ProductPublicationPlan;
 	publicationAdapter?: ProductPublicationAdapter;
+	releasePlan?: ProductReleasePlan;
+	releaseAdapter?: ProductReleaseAdapter;
 }
 
 const PI_SDK_MODULE_URL_ENV = "CODEWIKI_PI_SDK_MODULE_URL";
@@ -82,6 +88,10 @@ export async function startPiProjectCoordinatorDaemon(
 			: {}),
 		...(options.publicationAdapter
 			? { publicationAdapter: options.publicationAdapter }
+			: {}),
+		...(options.releasePlan ? { releasePlan: options.releasePlan } : {}),
+		...(options.releaseAdapter
+			? { releaseAdapter: options.releaseAdapter }
 			: {}),
 		workerAdapter:
 			options.workerAdapter || createPiProcessImplementationWorkerAdapter(),

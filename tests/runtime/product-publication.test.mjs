@@ -58,7 +58,7 @@ async function publicationFixture(suffix) {
 	const target = {
 		targetId: `registry:${suffix}`,
 		kind: "package-registry",
-		channel: "stable",
+		channel: "candidate",
 		destinationRef: `registry:@example/${suffix}`,
 	};
 	const artifact = {

@@ -25,6 +25,8 @@ states:
     label: Production ready
   - id: published
     label: Published
+  - id: released
+    label: Released
   - id: closed
     label: Closed / retained
 transitions:
@@ -94,7 +96,16 @@ transitions:
     trace_event: trace_close
     cleanup: delete all remaining trace tmp
   - from: published
+    to: released
+    trigger: exact guarded product release proof recorded
+    trace_event: runtime.product.released
+  - from: published
     to: closed
-    trigger: close after publication proof
+    trigger: close after publication when release is not required
+    trace_event: trace_close
+    cleanup: delete all remaining trace tmp
+  - from: released
+    to: closed
+    trigger: close after release proof
     trace_event: trace_close
     cleanup: delete all remaining trace tmp

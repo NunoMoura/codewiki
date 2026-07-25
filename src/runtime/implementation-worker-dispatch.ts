@@ -57,6 +57,11 @@ import type {
 	ProductPublicationPlan,
 } from "./product-publication-contract.ts";
 import { productPublicationJob } from "./product-publication.ts";
+import type {
+	ProductReleaseAdapter,
+	ProductReleasePlan,
+} from "./product-release-contract.ts";
+import { productReleaseJob } from "./product-release.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./work-unit-claims.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
@@ -88,6 +93,8 @@ export interface ImplementationWorkerDispatcherOptions {
 	pushAuthority?: ProjectBranchPushAuthority;
 	publicationPlan?: ProductPublicationPlan;
 	publicationAdapter?: ProductPublicationAdapter;
+	releasePlan?: ProductReleasePlan;
+	releaseAdapter?: ProductReleaseAdapter;
 	now?: () => string;
 	beforeAppend?: () => void | Promise<void>;
 }
@@ -219,6 +226,10 @@ export class ImplementationWorkerDispatcher {
 			observation.records,
 			createdAt,
 		);
+		const productReleases = this.scheduleProductReleases(
+			observation.records,
+			createdAt,
+		);
 		const releaseable = resumed.recovered.filter((worker) =>
 			workerReportCanRelease(worker, observation.workState),
 		);
@@ -237,6 +248,7 @@ export class ImplementationWorkerDispatcher {
 			...merges.jobIds,
 			...pushes.jobIds,
 			...publications.jobIds,
+			...productReleases.jobIds,
 			...releaseJobIds,
 		];
 		const pending = new Set(workerRequiredWorkItemIds);
@@ -264,6 +276,7 @@ export class ImplementationWorkerDispatcher {
 			merges.blockers.length > 0 ||
 			pushes.blockers.length > 0 ||
 			publications.blockers.length > 0 ||
+			productReleases.blockers.length > 0 ||
 			!adapterAvailability.available
 		) {
 			return complete("held", resumedJobIds, [
@@ -272,6 +285,7 @@ export class ImplementationWorkerDispatcher {
 				...merges.blockers,
 				...pushes.blockers,
 				...publications.blockers,
+				...productReleases.blockers,
 				...(!adapterAvailability.available
 					? [
 							`implementation_worker_adapter_unavailable:${adapterAvailability.reason}`,
@@ -668,6 +682,51 @@ export class ImplementationWorkerDispatcher {
 		}
 	}
 
+	private scheduleProductReleases(
+		records: TraceRecord[],
+		createdAt: string,
+	): { jobIds: string[]; blockers: string[] } {
+		const plan = this.options.releasePlan;
+		if (!plan) return { jobIds: [], blockers: [] };
+		const publicationEvent = records.find(
+			(record): record is TraceEvent =>
+				record.type === "trace_event" &&
+				record.id === plan.publicationEventId,
+		);
+		if (
+			!publicationEvent ||
+			productReleaseAlreadyProven(publicationEvent, plan, records)
+		) {
+			return { jobIds: [], blockers: [] };
+		}
+		if (!this.options.releaseAdapter) {
+			return {
+				jobIds: [],
+				blockers: ["product_release_adapter_unavailable"],
+			};
+		}
+		try {
+			const job = productReleaseJob({
+				repoRoot: this.options.repoRoot,
+				reactor: this.options.reactor,
+				plan,
+				publicationEvent,
+				adapter: this.options.releaseAdapter,
+				createdAt,
+				beforeAppend: this.options.beforeAppend,
+			});
+			void this.options.coordinator.schedule(job).catch(() => undefined);
+			return { jobIds: [job.idempotencyKey], blockers: [] };
+		} catch {
+			return {
+				jobIds: [],
+				blockers: [
+					`product_release_proof_invalid:${safeBlockerSegment(publicationEvent.id)}`,
+				],
+			};
+		}
+	}
+
 	private scheduleReleases(
 		workers: RecoveredImplementationWorker[],
 		createdAt: string,
@@ -978,6 +1037,24 @@ function productPublicationAlreadyProven(
 			record.data?.targetId === plan.target.targetId &&
 			record.data?.channel === plan.target.channel &&
 			artifact?.digest === plan.artifact.digest
+		);
+	});
+}
+
+function productReleaseAlreadyProven(
+	publicationEvent: TraceEvent,
+	plan: ProductReleasePlan,
+	records: TraceRecord[],
+): boolean {
+	return records.some((record) => {
+		if (record.type !== "trace_event") return false;
+		const artifact = objectValue(record.data?.artifact);
+		return (
+			record.event === "runtime.product.released" &&
+			record.data?.publicationEventId === publicationEvent.id &&
+			record.data?.targetId === plan.target.targetId &&
+			record.data?.channel === plan.target.channel &&
+			artifact?.digest === plan.authority.artifactDigest
 		);
 	});
 }

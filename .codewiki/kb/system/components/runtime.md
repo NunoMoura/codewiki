@@ -25,6 +25,7 @@ codewiki_trace_events:
   - runtime.project_branch.merged
   - runtime.project_branch.pushed
   - runtime.product.published
+  - runtime.product.released
   - runtime.host.started
   - runtime.host.observed
   - runtime.host.blocked
@@ -55,6 +56,7 @@ codewiki_source_map:
       - runtime.project_branch.merged
       - runtime.project_branch.pushed
       - runtime.product.published
+      - runtime.product.released
       - runtime.host.started
       - runtime.host.observed
       - runtime.host.blocked
@@ -218,7 +220,9 @@ Git push is another distinct opt-in external effect. Only elected-host `ProjectB
 
 Product publication is a separately scheduled provider-neutral effect after exact canonical push proof. The elected host supplies a closed target, a bounded artifact file under private runtime storage, source commit/tree and SHA-256 proof, expected destination revision/digest, adapter identity, and explicit user authority binding those values. Runtime freezes scheduled identity, verifies non-symbolic artifact paths and exact bytes before and after the operation, serializes by target/channel and destination, rechecks canonical push and generation ownership, and requires the trusted adapter to declare provider-key idempotency, reuse the deterministic job id, and enforce destination CAS. Canonical `runtime.product.published` follows provider operation identity plus exact destination re-observation. Digest-bound prepared/published manifests recover only persisted exact operations; preexisting matching artifacts and ambiguous acceptance before local operation evidence are never attributed. The adapter contract has no deployment, release, Git, tag, channel-promotion, or arbitrary-shell authority, and credentials remain provider-owned outside traces, manifests, prompts, and errors.
 
-External real-model/auth proof for autonomous sessions, trusted container-worker image distribution and real provider-auth execution proof, product deployment/release scheduling, full dashboard-service consolidation, abrupt-death process observation, and cancellation-aware draining of active semantic SDK jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
+Product release is a further separately authorized provider-neutral effect over one exact canonical publication. The elected host binds the publication event/revision, artifact id/version/digest, release target/channel/destination, expected current channel revision/digest, adapter identity, and explicit user authority. Runtime freezes that identity, verifies the published provider artifact still matches canonical publication operation/revision/digest, serializes the release channel, requires provider-key idempotency and destination CAS, then re-observes the exact release operation, channel revision, and artifact digest before `runtime.product.released`. Prepared/released manifests recover only persisted exact operations; preexisting matching channels and ambiguous acceptance remain unattributed. Release does not rebuild, republish, deploy, push, tag, announce, or prove adoption/business success.
+
+External real-model/auth proof for autonomous sessions, trusted container-worker image distribution and real provider-auth execution proof, product deployment scheduling, full dashboard-service consolidation, abrupt-death process observation, and cancellation-aware draining of active semantic SDK jobs remain open. One-shot host callers remain implementation drift rather than project-wide ownership.
 
 Agents, clients, and adapters never choose semantic routing. Runtime injects exact Change, Planning horizon, Sprint, Work Item, Assignment, context slice, WorkState, and append authority. Semantic sessions return judgment or evidence only; they never provide trace identity, revision, digest, sequence, parent, byte offset, Planning events, source ownership, lane ownership, or runtime routing as replacement facts.
 
