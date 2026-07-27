@@ -135,7 +135,7 @@ Decision output contains:
 - delivery constraints and planning questions;
 - exact approval receipt when authority accepts the revision;
 - terminal disposition when rejected, deferred, or withdrawn;
-- Quality Policy receipt, compact assessments, deterministic gate results, and canonical refs.
+- Quality Policy resolution, immutable Quality Report, and canonical refs.
 
 Approval receipt includes at least:
 
@@ -207,8 +207,8 @@ Planning consumes only exact approved Change revisions. Rejected, withdrawn, def
       "changeRevision": {},
       "approval": {},
       "knowledgeImpacts": [],
-      "qualityPolicyReceipt": {},
-      "assessments": []
+      "qualityPolicyResolution": {},
+      "qualityReport": {}
     },
     "exit": {
       "status": "exit",

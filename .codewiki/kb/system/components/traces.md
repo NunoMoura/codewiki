@@ -147,8 +147,8 @@ One semantic iteration records:
 
 - typed loop input refs or observed-state digest;
 - loop-specific high-signal output;
-- Stage Protocol version/digest and Quality Policy receipt identity;
-- compact per-Standard assessments and deterministic gate results;
+- Stage Protocol version/digest and Quality Policy resolution identity;
+- one compact immutable Quality Report with per-Standard Assessments and deterministic gate results;
 - latency, token, cache, and repair summaries when policy permits;
 - exit status and route;
 - progress signals;
@@ -291,7 +291,7 @@ Trace `refs` contain canonical artifact identity only:
 - KB refs;
 - source and test paths;
 - Git commits, trees, and restore refs;
-- content, Stage Protocol, Quality Policy receipt, target, and evidence digests.
+- content, Stage Protocol, Quality Policy resolution, target, and evidence digests.
 
 Commands, summaries, acceptance text, remediation, compact assessments, and Quality detail belong in `data`, not `refs`. Raw prompts, private reasoning, credentials, private Workbench contents, and full tool/model payloads belong in neither.
 

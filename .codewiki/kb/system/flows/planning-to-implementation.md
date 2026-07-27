@@ -40,7 +40,7 @@ Planning output gives runtime and Implementation:
 - required isolation and budget class;
 - frozen minimum Implementation Quality Standards;
 - uncertainty, readiness, blockers, and explicit resolutions;
-- canonical refs and policy receipt.
+- canonical refs and policy resolution.
 
 Planning does not select a provider/model, install Skills, grant tools or credentials, prepare private source state, append Claims, or attest that a Workbench exists. Runtime resolves every host-specific fact against fresh state.
 

@@ -10,7 +10,7 @@ tags:
 ---
 # Quality Policy
 
-Quality Policy is CodeWiki's common assurance contract across Decision, Planning, and Implementation. It replaces stage-specific ad hoc acceptance logic with explicit Standards, bindings, assessments, deterministic gates, and an explainable resolution receipt.
+Quality Policy is CodeWiki's common assurance contract across Decision, Planning, and Implementation. It replaces stage-specific ad hoc acceptance logic with explicit Standards, bindings, assessments, deterministic gates, and an explainable policy resolution.
 
 Quality evaluation is machinery inside the three semantic loops. It is not a fourth loop and does not create a standalone Implementation reviewer agent.
 
@@ -23,7 +23,8 @@ Quality evaluation is machinery inside the three semantic loops. It is not a fou
 | Assessment | Verifier result for one bound Standard against one immutable candidate. Status is `met`, `unmet`, or `indeterminate`; optional measurements, evidence refs, findings, and repair feedback retain their declared shape. |
 | Deterministic gate | Pure policy decision over one or more assessments and exact authority facts. A gate may permit exit, require repair, route back, or block. Model output never directly controls progression. |
 | Resolved Quality Policy | Complete immutable set of active Standard bindings and gates for one candidate. |
-| Quality Policy receipt | Explainable identity of the resolved policy: inputs, active bindings, `activatedBy` reasons, rule refs, protected Standards, permitted exclusions, versions, and digest. |
+| Quality Policy resolution | Explainable identity of the resolved policy: inputs, active bindings, `activatedBy` reasons, rule refs, protected Standards, permitted exclusions, versions, and digest. |
+| Quality Report | Immutable aggregate evaluation output binding one candidate and policy digest to per-Standard Assessments, deterministic gate results, and aggregate `pass`, `fail`, or `indeterminate` status. |
 
 Verifier kind, measurement shape, and enforcement mode are independent dimensions. A deterministic verifier may produce a boolean, score, count, set, or structured finding. A model verifier may produce a categorical assessment with evidence and feedback. Enforcement may be `observe`, `warn`, or `enforce` regardless of measurement shape.
 
@@ -50,7 +51,7 @@ Every active binding records the facts and rule refs that activated it. Every in
 
 Protected kernel Standards cannot be disabled. Project Standards progress through `observe`, then `warn`, then explicit approved `enforce`. Initial project composition uses only CodeWiki's closed evaluator and evidence-adapter registry; arbitrary JavaScript and shell evaluators are not allowed.
 
-Planning freezes the minimum expected Implementation policy for each Work Item. Fresh source and actual effects may add mandatory Standards, but cannot silently remove that minimum. Any reduction requires an allowed non-kernel exclusion plus exact authority and a new receipt.
+Planning freezes the minimum expected Implementation policy for each Work Item. Fresh source and actual effects may add mandatory Standards, but cannot silently remove that minimum. Any reduction requires an allowed non-kernel exclusion plus exact authority and a new resolution.
 
 ## Candidate and admission
 
@@ -83,7 +84,7 @@ Evaluation dependencies express genuine input requirements. Gate dependencies ex
 
 Concurrency is bounded separately for provider calls, local models, CPU analysis, test/build processes, and external services. Fail-fast applies only to invalid or stale evaluation input, a genuine missing evaluation prerequisite, cancellation, or budget policy—not merely because one Standard is unmet.
 
-Required Standards may execute asynchronously, but authoritative stage exit waits at fan-in for every required assessment or an explicit policy-approved `indeterminate` disposition. Assessments may stream to clients before fan-in so users receive useful feedback early.
+Required Standards may execute asynchronously, but authoritative stage exit waits at fan-in for every required Assessment or an explicit policy-approved `indeterminate` disposition. Assessments may stream to clients before fan-in so users receive useful feedback early. Fan-in emits one immutable Quality Report; it does not mutate the Quality Policy resolution.
 
 ## Model assessment and batching
 
@@ -110,9 +111,9 @@ A cache result is reusable only when every relevant identity matches. Shared fac
 
 ## Evidence and trace boundary
 
-Canonical traces may retain policy receipt identity, active Standard ids and versions, compact assessments, measurements, evidence refs, deterministic gate results, latency/token summaries, and repair routes. They must not retain raw prompts, private reasoning, credentials, system instructions, full model responses, full tool payloads, or private provider metadata.
+Canonical traces may retain Quality Policy resolution identity and one compact Quality Report containing active Standard ids and versions, Assessments, measurements, evidence refs, deterministic gate results, latency/token summaries, and repair routes. They must not retain raw prompts, private reasoning, credentials, system instructions, full model responses, full tool payloads, or private provider metadata.
 
-Quality telemetry is operational and separate from Change revision, policy receipt, and canonical Change Trace authority. It measures time to first useful feedback, time to authoritative exit, verifier latency, tokens, cache reuse, repair iterations, false passes, false blocks, and indeterminate rates.
+Quality telemetry is operational and separate from Change revision, policy resolution, and canonical Change Trace authority. It measures time to first useful feedback, time to authoritative exit, verifier latency, tokens, cache reuse, repair iterations, false passes, false blocks, and indeterminate rates.
 
 ## Efficiency objective
 

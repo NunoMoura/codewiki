@@ -132,7 +132,7 @@ Implementation output contains:
 - aggregate content proof over merged output;
 - residual issue and outcome-disposition evidence;
 - publication/archive refs when configured;
-- Quality Policy receipt, compact per-Standard assessments, deterministic gate results, and efficiency summary;
+- Quality Policy resolution and immutable Quality Report with compact Assessments, deterministic gate results, and efficiency summary;
 - route-back questions and canonical refs.
 
 Implementation output excludes full logs, private scratch, unbounded diffs, planner-authored replacements, and new product meaning decided during coding.
@@ -243,8 +243,8 @@ Long-running observation may leave a delivered Change dormant but open under ret
       "acceptanceEvidence": [],
       "aggregateContentProof": {},
       "outcomeDisposition": {},
-      "qualityPolicyReceipt": {},
-      "assessments": []
+      "qualityPolicyResolution": {},
+      "qualityReport": {}
     },
     "exit": {
       "status": "exit",

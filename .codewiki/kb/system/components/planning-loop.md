@@ -145,8 +145,8 @@ interface PlanningEpoch {
   changeCoverage: ChangePlanningCoverage[];
   dependencies: PlanningDependency[];
   resolutions: ChangePlanningResolution[];
-  qualityPolicyReceipt: QualityPolicyReceipt;
-  assessments: QualityAssessment[];
+  qualityPolicyResolution: QualityPolicyResolution;
+  qualityReport: QualityReport;
 }
 ```
 
@@ -255,8 +255,8 @@ Runtime never invents Work Items from raw approved Changes. It selects only acce
       "workItems": [],
       "changeCoverage": [],
       "resolutions": [],
-      "qualityPolicyReceipt": {},
-      "assessments": []
+      "qualityPolicyResolution": {},
+      "qualityReport": {}
     },
     "exit": {
       "status": "exit",

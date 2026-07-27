@@ -89,7 +89,7 @@ steps:
   - id: append_decisions
     from: quality
     to: traces
-    message: control plane appends gated Decision result and compact policy receipt under exact revision and CAS guards
+    message: control plane appends gated Decision result, Quality Policy resolution, and immutable Quality Report under exact revision and CAS guards
   - id: mark_planning_dirty
     from: traces
     to: control_plane

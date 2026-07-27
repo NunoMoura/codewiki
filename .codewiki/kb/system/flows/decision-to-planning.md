@@ -28,7 +28,7 @@ Decision output gives planning:
 - risks and approvals;
 - planning questions;
 - canonical refs;
-- Decision Quality Policy receipt and exact approval authority.
+- Decision Quality Policy resolution and exact approval authority.
 
 Planning must route back to decision instead of guessing when product/system authority is missing.
 

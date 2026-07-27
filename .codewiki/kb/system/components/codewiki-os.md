@@ -72,7 +72,7 @@ Conflicts resolve in this order: runtime authority and safety constraints, CodeW
 
 ## Prompt and context boundaries
 
-CodeWiki supplies minimum sufficient context. Shared OS and Stage Protocol resources should be cache-friendly and stable. Runtime-specific identity, WorkState slices, Change or Planning facts, Quality Policy receipts, and Workbench manifests remain separate typed inputs rather than being copied into one mutable prose prompt.
+CodeWiki supplies minimum sufficient context. Shared OS and Stage Protocol resources should be cache-friendly and stable. Runtime-specific identity, WorkState slices, Change or Planning facts, Quality Policy resolutions, and Workbench manifests remain separate typed inputs rather than being copied into one mutable prose prompt.
 
 Prompts and context must exclude credentials, bearer tokens, private provider configuration, unrelated repository content, raw traces, unrestricted runtime artifacts, and hidden authority fields. Candidate outputs remain compact typed data; conversational transcript and private reasoning are never canonical evidence.
 

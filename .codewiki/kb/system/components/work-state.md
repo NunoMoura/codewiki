@@ -99,7 +99,7 @@ A Change view may expose:
 - planning coverage and Sprint memberships;
 - owned and contributing Work Items;
 - Assignments, selected Implementation tiers, bounded Workbench summaries, and Worker Reports;
-- resolved Quality Policy receipts, assessment progress, gates, latency/token summaries, and repair routes;
+- Quality Policy resolutions, in-progress Assessments, immutable Quality Reports, latency/token summaries, and repair routes;
 - implementation realization and integration evidence;
 - Knowledge impacts and outcome disposition;
 - blockers, current loop, and next safe action.

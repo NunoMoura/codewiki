@@ -56,7 +56,7 @@ Tier selection uses typed facts rather than prose or worker preference:
 - prior attempt count and failure classes;
 - Quality Policy cost and verifier requirements.
 
-Rules are versioned, deterministic, monotonic for safety, and explainable. Every selection produces a private receipt with input facts, matched rule refs, selected tier, route digest, and budget. A candidate, Skill, worker, verifier, or remote client cannot choose or lower its tier.
+Rules are versioned, deterministic, monotonic for safety, and explainable. Every selection produces a private tier-selection resolution with input facts, matched rule refs, selected tier, route digest, and budget. A candidate, Skill, worker, verifier, or remote client cannot choose or lower its tier.
 
 Actual implementation effects may raise the tier or add Quality Standards. They cannot silently lower the frozen Planning minimum. Tier escalation creates a new attempt or verifier identity and invalidates dependent caches.
 
@@ -76,7 +76,7 @@ Model-route changes require calibration against visible and sealed cases. Evalua
 
 ## Current migration drift
 
-Current project routing exposes a more generic route model and does not yet provide the five semantic slots or deterministic Implementation tier receipt. Source migration must preserve Pi-owned provider/auth behavior while adding these slots, configuration validation, runtime selection, Workbench binding, verifier identity, and observability.
+Current project routing exposes a more generic route model and does not yet provide the five semantic slots or deterministic Implementation tier-selection resolution. Source migration must preserve Pi-owned provider/auth behavior while adding these slots, configuration validation, runtime selection, Workbench binding, verifier identity, and observability.
 
 ## Related docs
 

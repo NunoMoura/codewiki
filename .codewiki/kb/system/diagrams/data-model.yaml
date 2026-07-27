@@ -41,15 +41,19 @@ entities:
       - change-dossier
       - blockers
       - conflicts
-  - id: quality_policy_receipt
-    label: Quality Policy receipt embedded in trace event data
-    storage: compact receipt identity in one semantic trace iteration
+  - id: quality_policy_resolution
+    label: Quality Policy resolution embedded in trace event data
+    storage: compact resolution identity in one semantic trace iteration
     truth: true
     excludes:
       - raw prompts
       - private reasoning
       - credentials
       - full tool payloads
+  - id: quality_report
+    label: Immutable aggregate Quality Report embedded in trace event data
+    storage: candidate and policy digests, aggregate status, Assessments, and deterministic gate results
+    truth: true
   - id: quality_assessment
     label: Compact Standard assessment embedded in trace event data
     storage: bounded assessment, measurement, findings, evidence refs, and repair route
@@ -82,11 +86,14 @@ relationships:
     to: trace_record
     label: contains
   - from: trace_record
-    to: quality_policy_receipt
+    to: quality_policy_resolution
     label: records exact policy identity
   - from: trace_record
+    to: quality_report
+    label: records aggregate evaluation output
+  - from: quality_report
     to: quality_assessment
-    label: records bounded required results
+    label: contains bounded per-Standard results
   - from: trace_record
     to: generated_view
     label: projects into
@@ -100,8 +107,8 @@ relationships:
     to: trace_record
     label: content proof
   - from: runtime_tmp
-    to: quality_assessment
-    label: distills bounded evidence before cleanup
+    to: quality_report
+    label: distills bounded evaluation output before cleanup
   - from: runtime_tmp
     to: trace_record
     label: promotes durable facts before cleanup

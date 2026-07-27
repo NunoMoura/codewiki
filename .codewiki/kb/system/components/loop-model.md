@@ -125,7 +125,7 @@ A loop output is not downstream-authoritative until its quality-governed iterati
 
 ## Quality Policy and exit
 
-Runtime deterministically resolves the exact Quality Standards and bindings required for one immutable loop candidate. Resolution combines protected kernel invariants, stage baseline, Change kind/risk/layers, project traits, technology/path overlays, and approved additions or permitted non-kernel exclusions. Its receipt explains every activation and binds the exact policy digest.
+Runtime deterministically resolves the exact Quality Standards and bindings required for one immutable loop candidate. Resolution combines protected kernel invariants, stage baseline, Change kind/risk/layers, project traits, technology/path overlays, and approved additions or permitted non-kernel exclusions. Its resolution explains every activation and binds the exact policy digest.
 
 Independent deterministic, model, external, and human verifiers run through bounded fan-out against the same candidate. Required assessments join at fan-in, then deterministic gates answer:
 

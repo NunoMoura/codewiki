@@ -89,9 +89,13 @@ Result produced by a verifier for one bound Standard against one immutable candi
 
 Pure CodeWiki policy decision over assessments and exact authority facts. A deterministic gate may permit exit, require repair, route back, or block. A stochastic model assessment never controls progression directly.
 
-## Quality Policy receipt
+## Quality Policy resolution
 
 Explainable identity of one Resolved Quality Policy. It records selector inputs, active bindings, `activatedBy` reasons, rule refs, protected Standards, permitted exclusions, versions, and digest without storing prompts, private reasoning, credentials, or full tool payloads.
+
+## Quality Report
+
+Immutable aggregate output from evaluating one Quality Policy against one candidate. It binds candidate and policy digests, per-Standard Assessments, deterministic gate results, and aggregate `pass`, `fail`, or `indeterminate` status. It is evaluation output, not policy selection or worker execution output.
 
 ## Implementation tier
 
@@ -175,7 +179,8 @@ user-facing terminal rendering.
 | Worker Workbench | Complete private execution environment for one exact Assignment attempt, binding fresh source, bounded context, Skills, tools, model route, Quality obligations, isolation, budgets, and report contract. | Digest-bound private manifest and materialized environment under `.codewiki/runtime/**`. |
 | Worker report | Immutable normalized report that one execution adapter completed, blocked, failed, or cancelled an exact Assignment attempt, with bounded implementation evidence and references. Runtime verifies it against the active Claim before Quality Policy evaluation or release. | Digest-bound operational file under `.codewiki/runtime/workers/**`; accepted realization remains a separate canonical Implementation fact. |
 | WorkState | Disposable typed project-wide projection used by runtime and all loops to reason from the same current facts. | Fold over Change Traces, KB, source/tests/Git, configuration, ownership, and runtime observations. |
-| Quality Policy | Exact resolved Standards, bindings, assessments, and deterministic gates required for one immutable stage candidate. | Deterministic policy resolution plus receipt digest and bounded evaluation output. |
+| Quality Policy | Exact resolved Standards, bindings, and deterministic gates required for one immutable stage candidate. | Quality Policy resolution plus policy digest. |
+| Quality Report | Aggregate Assessments and deterministic gate results for one candidate and resolved policy. | Immutable bounded evaluation output embedded in semantic trace data. |
 | Ready Checks | User-facing name for active Quality Standards and deterministic exit gates that must permit progression before output becomes downstream-authoritative. | Resolved Quality Policy and exit-result internals. |
 | Needs Review | User-facing status when earlier semantic authority is required. | `route_back` exit status. |
 | Blocked | User-facing status when an external wait, resource, host capability, or policy prevents progress. | `blocked` exit status. |
