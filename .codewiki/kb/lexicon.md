@@ -29,7 +29,19 @@ One of CodeWiki's three product workflow loops:
 2. Planning loop;
 3. Implementation loop.
 
-There are no knowledge, validation, runtime, roadmap, graph, publication, or recovery semantic loops.
+There are no knowledge, validation, runtime, roadmap, graph, publication, quality, review, or recovery semantic loops.
+
+## CodeWiki OS
+
+Versioned compact system guidance that applies CodeWiki's truth, authority, routing, privacy, and progression invariants to Pi-owned execution. It does not replace Pi providers, authentication, tools, sessions, extensions, or Skills.
+
+## Stage Protocol
+
+Mandatory versioned CodeWiki instruction for Decision, Planning, or Implementation. A Stage Protocol defines stage role, authoritative input, required output, prohibited actions, stop conditions, route-back behavior, and candidate schema. It is not a Skill.
+
+## Pi Skill
+
+Ordinary Pi-discovered reusable capability that provides a method or workflow. CodeWiki does not own a Skill schema, registry, taxonomy, distribution mechanism, or activation protocol. A Skill cannot grant authority, tools, paths, acceptance, routing, or Quality Policy changes.
 
 ## Loop cycle
 
@@ -60,6 +72,30 @@ One of four statuses:
 | `exit` | Loop output is accepted for downstream use. |
 | `route_back` | Earlier loop authority is required. |
 | `blocked` | External user, resource, policy, or runtime wait is required. |
+
+## Quality Standard
+
+Versioned statement of what must be established for one bounded candidate. It declares assessment criteria, verifier kind, measurement shape, evidence requirements, repair target, cost, timeout, and protected status where applicable.
+
+## Standard binding
+
+Deterministic activation of one Quality Standard for one candidate, including enforcement mode, parameters, dependencies, and explainable activation reasons.
+
+## Assessment
+
+Result produced by a verifier for one bound Standard against one immutable candidate. Status is `met`, `unmet`, or `indeterminate`. Measurements, findings, evidence refs, and repair feedback preserve the Standard's declared shape. Operational verifier failure is `indeterminate`, never fabricated failure evidence or score `0`.
+
+## Deterministic gate
+
+Pure CodeWiki policy decision over assessments and exact authority facts. A deterministic gate may permit exit, require repair, route back, or block. A stochastic model assessment never controls progression directly.
+
+## Quality Policy receipt
+
+Explainable identity of one Resolved Quality Policy. It records selector inputs, active bindings, `activatedBy` reasons, rule refs, protected Standards, permitted exclusions, versions, and digest without storing prompts, private reasoning, credentials, or full tool payloads.
+
+## Implementation tier
+
+Runtime-selected `routine`, `standard`, or `complex` model class for one Implementation attempt. Selection uses structured risk, scope, uncertainty, context, tool, verification, effect, and prior-attempt facts. Planning may establish a minimum budget class but does not choose the concrete model route.
 
 ## Progress boundary
 
@@ -136,9 +172,11 @@ user-facing terminal rendering.
 | Claim | Canonical, temporary reservation that grants one exact worker attempt the right to execute one Work Item while preventing unsafe overlap. A claim grants bounded execution authority, not semantic acceptance. | `runtime.work_unit.claimed` event in the owning Change Trace. |
 | Assignment | Runtime-derived binding of one Planning-approved Work Item, one worker attempt, exact context, scope, isolation, and report contract. An Assignment becomes executable only while its matching canonical Claim is active. | Canonical Claim plus runtime-derived Assignment contract and WorkState projection. |
 | Assignment packet | Private serialized handoff containing the exact Assignment details needed by an execution adapter. A packet is operational scratch and grants no authority unless its digest and job identity match the active canonical Claim. | Digest-bound file under `.codewiki/runtime/worker-assignments/**`. |
-| Worker report | Immutable normalized report that one execution adapter completed, blocked, failed, or cancelled an exact Assignment attempt, with bounded implementation evidence and references. Runtime verifies it against the active Claim before review or release. | Digest-bound operational file under `.codewiki/runtime/workers/**`; accepted realization remains a separate canonical Implementation fact. |
+| Worker Workbench | Complete private execution environment for one exact Assignment attempt, binding fresh source, bounded context, Skills, tools, model route, Quality obligations, isolation, budgets, and report contract. | Digest-bound private manifest and materialized environment under `.codewiki/runtime/**`. |
+| Worker report | Immutable normalized report that one execution adapter completed, blocked, failed, or cancelled an exact Assignment attempt, with bounded implementation evidence and references. Runtime verifies it against the active Claim before Quality Policy evaluation or release. | Digest-bound operational file under `.codewiki/runtime/workers/**`; accepted realization remains a separate canonical Implementation fact. |
 | WorkState | Disposable typed project-wide projection used by runtime and all loops to reason from the same current facts. | Fold over Change Traces, KB, source/tests/Git, configuration, ownership, and runtime observations. |
-| Ready Checks | User-facing name for loop quality standards and exit conditions that must pass before output becomes downstream-authoritative. | Quality-network and exit-result internals. |
+| Quality Policy | Exact resolved Standards, bindings, assessments, and deterministic gates required for one immutable stage candidate. | Deterministic policy resolution plus receipt digest and bounded evaluation output. |
+| Ready Checks | User-facing name for active Quality Standards and deterministic exit gates that must permit progression before output becomes downstream-authoritative. | Resolved Quality Policy and exit-result internals. |
 | Needs Review | User-facing status when earlier semantic authority is required. | `route_back` exit status. |
 | Blocked | User-facing status when an external wait, resource, host capability, or policy prevents progress. | `blocked` exit status. |
 | Committed | User-facing delivery status for a realized Change whose closure carries Git restore evidence and explicit outcome disposition. | Closed-complete Change view plus `trace_close.gitRestoreRef`. |
@@ -183,6 +221,12 @@ Assignment and Claim are related but not interchangeable: Assignment says what o
 Private runtime serialization of an Assignment used to hand work to a process or container adapter and recover it after coordinator replacement. Runtime writes the packet before appending the Claim, then records its digest in the Claim. The packet becomes executable only when packet digest, deterministic worker job identity, and active Claim all match.
 
 Assignment packets are restartable operational scratch, not project truth. A copied, edited, orphaned, or stale packet grants no execution authority. Runtime preserves packets matching active Claims and may remove pre-Claim or terminal unsuccessful packet scratch idempotently; completed or ambiguous packet evidence remains until integration proof authorizes cleanup.
+
+## Worker Workbench
+
+Complete private environment provisioned by runtime for one exact Assignment attempt. Planning declares Workbench requirements; runtime binds fresh source, context, Pi Skills, tools, model tier and route, Quality obligations, isolation, budgets, output path, report schema, and exact digests.
+
+A Workbench is inert before its exact matching canonical Claim and grants no semantic authority after activation. It is disposable operational state, never Planning truth, WorkState truth, a canonical trace artifact, or acceptance evidence by itself.
 
 ## Worker report
 
@@ -264,7 +308,7 @@ Harness-neutral runtime boundary for creating bounded semantic sessions or isola
 
 ## Semantic session
 
-Replaceable read-only agent context for one runtime-selected Decision, Planning, or Implementation-review job. It receives exact bounded context and returns a candidate. It is not truth, authority, a lane, or a Change.
+Replaceable read-only agent context for one runtime-selected Decision, Planning, Implementation Quality, or other model-based Standard job. It receives exact bounded context plus the CodeWiki OS and relevant Stage Protocol, then returns a candidate or assessment. It is not truth, authority, a lane, a reviewer agent, or a Change.
 
 ## Worker adapter
 
@@ -285,10 +329,12 @@ Optional worker isolation mode controlled by config: `none`, `worktree`, or `aut
 | compiler | loop output shaping / loop internals |
 | compiler output | loop output |
 | build | loop output or runtime-temp scratch |
-| gate | exit condition evaluator |
-| gateway | loop-local exit conditions |
-| gate verdict | exit status |
-| validation report | exit condition result |
+| generic gate | deterministic gate or exit condition, whichever is exact |
+| gateway | resolved Quality Policy and loop-local exit conditions |
+| gate verdict | deterministic gate result or exit status |
+| rubric | assessment criteria |
+| standalone Implementation reviewer | Implementation Quality Policy evaluation |
+| validation report | assessment, deterministic gate result, or exit-condition result |
 | board | Backlog, Planning, or Implementation projection; compatibility flag/name only where already public |
 | Work Pipeline | Work destination with separate Backlog, Planning, and Implementation workspaces |
 | Pipeline Card | Change dossier entry or purpose-specific Work row/node/lane |
@@ -317,6 +363,10 @@ Deprecated terms may appear in this replacement list only; the old implementatio
 ## Related docs
 
 - [Loop Model](system/components/loop-model.md)
+- [CodeWiki OS and Stage Protocols](system/components/codewiki-os.md)
+- [Quality Policy](system/components/quality-policy.md)
+- [Worker Workbench](system/components/worker-workbench.md)
+- [Model Routing](system/components/model-routing.md)
 - [Decision Loop](system/components/decision-loop.md)
 - [Planning Loop](system/components/planning-loop.md)
 - [Implementation Loop](system/components/implementation-loop.md)

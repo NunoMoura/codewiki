@@ -5,6 +5,7 @@ kind: state_lifecycle
 purpose: Show one Change Trace's semantic facts, route-backs, terminal proof, and cleanup boundaries without implying that the Change owns the project runtime pipeline.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/quality-policy.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
 renderer:
@@ -32,7 +33,7 @@ states:
 transitions:
   - from: decision_active
     to: planning_active
-    trigger: decision iteration exits
+    trigger: Decision Quality Policy gates permit exit
     trace_event: decision.changes_approved
     exit_status: exit
     cleanup: clean decision tmp after durable refs exist
@@ -44,7 +45,7 @@ transitions:
     cleanup: preserve decision tmp when remediation needs it
   - from: planning_active
     to: implementation_active
-    trigger: planning iteration exits
+    trigger: Planning Quality Policy gates permit exit
     trace_event: planning.work_units_created
     exit_status: exit
     cleanup: clean planning tmp after durable refs exist
@@ -62,7 +63,7 @@ transitions:
     cleanup: preserve planning tmp when remediation needs it
   - from: implementation_active
     to: production_ready
-    trigger: implementation iteration exits
+    trigger: Implementation Quality Policy gates permit exit
     trace_event: implementation.evidence_accepted
     exit_status: exit
     cleanup: clean implementation tmp after durable refs exist

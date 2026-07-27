@@ -20,7 +20,7 @@ runtime outer loop
 └── Implementation semantic loop
 ```
 
-Each semantic loop owns typed inputs, typed outputs, loop-specific quality standards, and exit conditions. Quality networks govern loop exit; they are not additional loops.
+Each semantic loop owns typed inputs, typed outputs, a mandatory Stage Protocol, and exit authority governed by one resolved Quality Policy. Quality evaluation is machinery inside those loops, not an additional loop or standalone reviewer agent.
 
 ## Change as semantic carrier
 
@@ -49,9 +49,10 @@ refresh WorkState
 identify eligible project invariant repairs and mechanical actions
 select a compatible bounded job set
 acquire lanes, claims, capacity, and integration guards
-build exact typed inputs and context slices
-run semantic sessions or workers through adapters
-validate outputs and exits through loop-owned quality standards
+build exact typed inputs, Stage Protocols, model routes, and context slices
+resolve explainable Quality Policy and Worker Workbench requirements
+run semantic sessions, verifiers, or workers through adapters
+evaluate immutable candidates through bounded fan-out/fan-in
 guarded append to affected Change Trace(s)
 schedule permitted effects
 repeat until quiescent, blocked, or budget exhausted
@@ -82,11 +83,11 @@ Each loop receives only the relevant WorkState slice plus exact source versions 
 Every semantic loop repeats the same control shape while preserving loop-specific semantics:
 
 ```text
-receive typed loop input
+receive typed loop input and mandatory Stage Protocol
 observe bounded WorkState
-act within loop authority
-produce typed loop output
-evaluate loop-owned quality standards
+act within loop authority using ordinary scoped Pi Skills
+produce one immutable typed candidate
+resolve and evaluate the candidate's Quality Policy
 continue, exit, route back, or block
 ```
 
@@ -122,9 +123,11 @@ Outputs exclude full chat, private reasoning, raw logs, stale views, unbounded d
 
 A loop output is not downstream-authoritative until its quality-governed iteration exits successfully and runtime appends it. Continue, route-back, and blocked iterations remain durable accountability and remediation evidence but cannot masquerade as accepted upstream output.
 
-## Quality networks and exit
+## Quality Policy and exit
 
-Each loop owns one versioned quality network. Quality-standard nodes answer:
+Runtime deterministically resolves the exact Quality Standards and bindings required for one immutable loop candidate. Resolution combines protected kernel invariants, stage baseline, Change kind/risk/layers, project traits, technology/path overlays, and approved additions or permitted non-kernel exclusions. Its receipt explains every activation and binds the exact policy digest.
+
+Independent deterministic, model, external, and human verifiers run through bounded fan-out against the same candidate. Required assessments join at fan-in, then deterministic gates answer:
 
 ```text
 Can this bounded iteration exit?
@@ -139,9 +142,9 @@ Exit statuses are:
 | `continue` | Same semantic loop can repair unmet conditions. |
 | `exit` | Output is accepted for downstream use. |
 | `route_back` | Earlier semantic authority is required. |
-| `blocked` | External user, resource, policy, capability, or supervision wait is required. |
+| `blocked` | External user, resource, policy, capability, supervision, or required indeterminate-verifier disposition is needed. |
 
-Quality networks are evaluation machinery inside semantic loops, not inner quality loops or another product lifecycle.
+Verifier failure is `indeterminate`, not fabricated quality failure. A failed gate prevents exit but does not cancel unrelated useful assessments. Quality evaluation remains machinery inside semantic loops, not an inner quality loop or another product lifecycle.
 
 ## Loop responsibilities
 
@@ -151,11 +154,11 @@ Maintains the invariant that every approved Change revision is coherent, grounde
 
 ### Planning
 
-Maintains the invariant that every selected approved Change is covered by a feasible global execution plan or explicit resolution. It observes a bounded project planning horizon, creates Sprints and Work Items, assigns one owning Change per Work Item, declares cross-Change contribution and dependencies, and optimizes safe execution across active work.
+Maintains the invariant that every selected approved Change is covered by a feasible global execution plan or explicit resolution. It observes a bounded project planning horizon, creates Sprints and worker-ready Work Items, assigns one owning Change per Work Item, declares cross-Change contribution, dependencies, and Workbench requirements, and optimizes safe execution across active work. Planning shapes work; runtime selects concrete models and provisions Workbenches.
 
 ### Implementation
 
-Maintains the invariant that every accepted Work Item and approved direct scope is realized, integrated, tested, evidenced, and aligned with the owning Change. Workers produce candidate evidence; the Implementation loop alone accepts semantic realization.
+Maintains the invariant that every accepted Work Item and approved direct scope is realized, integrated, tested, evidenced, and aligned with the owning Change. Runtime selects a `routine`, `standard`, or `complex` model tier from structured facts and provisions one private Workbench per Assignment. Workers produce candidate evidence; Implementation Quality Policy alone governs semantic realization acceptance.
 
 ## Progress and churn control
 
@@ -211,6 +214,10 @@ Runtime coordination facts may appear between semantic iterations but never crea
 ## Related docs
 
 - [WorkState](work-state.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Loop Contracts](loop-contracts.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)

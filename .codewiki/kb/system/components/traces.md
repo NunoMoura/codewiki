@@ -147,7 +147,9 @@ One semantic iteration records:
 
 - typed loop input refs or observed-state digest;
 - loop-specific high-signal output;
-- loop-owned quality-standard results;
+- Stage Protocol version/digest and Quality Policy receipt identity;
+- compact per-Standard assessments and deterministic gate results;
+- latency, token, cache, and repair summaries when policy permits;
 - exit status and route;
 - progress signals;
 - canonical refs.
@@ -289,9 +291,9 @@ Trace `refs` contain canonical artifact identity only:
 - KB refs;
 - source and test paths;
 - Git commits, trees, and restore refs;
-- content, policy, profile, target, and evidence digests.
+- content, Stage Protocol, Quality Policy receipt, target, and evidence digests.
 
-Commands, summaries, acceptance text, remediation, and quality detail belong in `data`, not `refs`.
+Commands, summaries, acceptance text, remediation, compact assessments, and Quality detail belong in `data`, not `refs`. Raw prompts, private reasoning, credentials, private Workbench contents, and full tool/model payloads belong in neither.
 
 ## Temporary data
 
@@ -301,7 +303,7 @@ Scratch belongs under:
 .codewiki/runtime/tmp/<change-trace-id>/<loop>/
 ```
 
-Runtime temp may contain proposed output, quality drafts, worker reports, bounded logs, or multi-trace write-ahead recovery packets. It is not truth. Durable trace append, Git/content proof, or another canonical ref must exist before cleanup removes evidence needed for recovery.
+Runtime temp may contain proposed output, Quality drafts, Worker Workbenches, Assignment packets, Worker Reports, bounded logs, or multi-trace write-ahead recovery packets. It is not truth. Durable trace append, Git/content proof, or another canonical ref must exist before cleanup removes evidence needed for recovery.
 
 ## Retention
 

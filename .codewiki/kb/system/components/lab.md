@@ -113,7 +113,7 @@ by `tests/lab/candidate-contract.test.mjs`.
 Production loop helpers and wiring live under `src/<loop>/**`. Shared standard
 construction helpers live under `src/loops/**`. Those helpers should stay small,
 deterministic, and reusable. Lab training may tune topology, weights, thresholds,
-scoring formulas, and judge rubrics; packaged extension code ships a frozen
+scoring formulas, and judge assessment criteria; packaged extension code ships a frozen
 production network and must not silently mutate it in user projects.
 
 Production source supports the lab by exporting three substrate seams per loop:

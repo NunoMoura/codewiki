@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Decision to Planning Flow
-description: Planning may start only from a decision iteration whose exit status is `exit`.
+description: Planning may start only after Decision Quality Policy gates permit exit for one exact approved Change revision.
 tags:
   - codewiki
   - system
@@ -13,7 +13,7 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Decision to Planning Flow
 
-Planning may start only from a decision iteration whose exit status is `exit`.
+Planning may start only after every required Decision assessment reaches fan-in and deterministic gates permit `exit` for one exact approved Change revision.
 
 ```text
 decision.change_approved(exit) -> planning.work_units_created
@@ -27,7 +27,8 @@ Decision output gives planning:
 - current-state baseline refs;
 - risks and approvals;
 - planning questions;
-- canonical refs.
+- canonical refs;
+- Decision Quality Policy receipt and exact approval authority.
 
 Planning must route back to decision instead of guessing when product/system authority is missing.
 
@@ -35,4 +36,5 @@ Related docs:
 
 - [Decision Loop](../components/decision-loop.md)
 - [Planning Loop](../components/planning-loop.md)
+- [Quality Policy](../components/quality-policy.md)
 - [Loop Model](../components/loop-model.md)

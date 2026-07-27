@@ -191,7 +191,7 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("keeps production quality definitions immutable and documents lab authority", () => {
+	it("protects kernel quality, bounds project composition, and documents lab authority", () => {
 		assert.match(DECISION_CHANGE_GRAPH_HASH, /^sha256:[a-f0-9]{64}$/);
 		assert.match(PLANNING_PORTFOLIO_GRAPH_HASH, /^sha256:[a-f0-9]{64}$/);
 		assert.equal(DECISION_CHANGE_QUALITY_STANDARDS.length > 0, true);
@@ -213,9 +213,12 @@ describe("install readiness checklist", () => {
 		assert.match(loopContracts, /immutable `kernel` packs in `enforce` mode/);
 		assert.match(
 			loopContracts,
-			/Project policy composition and a Quality Designer remain deferred/,
+			/Project Standards progress through `observe`, `warn`, and approved `enforce`/,
 		);
-		assert.match(loopContracts, /JavaScript evaluators, shell evaluators/);
+		assert.match(
+			loopContracts,
+			/never permits project-owned kernel overrides.*arbitrary JavaScript or shell evaluators/,
+		);
 		assert.match(labDocumentation, /authority is `lab`/);
 		assert.match(labDocumentation, /rollout is `observe`/);
 		assert.match(labDocumentation, /does not grant production authority/);

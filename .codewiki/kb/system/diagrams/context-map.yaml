@@ -9,6 +9,8 @@ source_docs:
   - .codewiki/kb/product/users/package-authors.md
   - .codewiki/kb/product/users/external-users.md
   - .codewiki/kb/system/components/runtime.md
+  - .codewiki/kb/system/components/codewiki-os.md
+  - .codewiki/kb/system/components/model-routing.md
   - .codewiki/kb/system/components/session-coordination.md
   - .codewiki/kb/system/components/adapters-and-ui.md
   - .codewiki/kb/system/components/extension.md
@@ -46,6 +48,10 @@ systems:
     label: CodeWiki project control plane
     boundary: codewiki
     source: .codewiki/kb/system/components/runtime.md
+  - id: pi_runtime
+    label: Pi providers / auth / tools / sessions / Skills
+    boundary: host_execution
+    source: .codewiki/kb/system/components/codewiki-os.md
   - id: pi_sdk_sessions
     label: Embedded Pi semantic sessions
     boundary: codewiki_execution
@@ -90,17 +96,20 @@ relationships:
     to: control_plane
     label: bounded local protocol
   - from: control_plane
+    to: pi_runtime
+    label: binds CodeWiki OS, Stage Protocol, route, policy, and Workbench scope
+  - from: pi_runtime
     to: pi_sdk_sessions
-    label: schedules read-only semantic jobs
+    label: creates read-only semantic and verifier sessions
   - from: control_plane
     to: isolated_workers
-    label: starts claimed Assignments
+    label: activates claimed private Workbenches
   - from: control_plane
     to: repo_contract
     label: reads truth and performs guarded writes
-  - from: pi_sdk_sessions
+  - from: pi_runtime
     to: model_providers
-    label: invokes configured models
+    label: owns provider authentication and invocation
   - from: isolated_workers
     to: repo_contract
     label: changes scoped isolated working state

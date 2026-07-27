@@ -30,9 +30,11 @@ Semantic loops:
 
 Each semantic loop is defined by:
 
-1. loop cycle;
-2. loop output;
-3. exit conditions.
+1. a mandatory versioned Stage Protocol;
+2. typed input and immutable candidate output;
+3. one resolved Quality Policy with assessments and deterministic exit gates.
+
+Pi owns provider/authentication mechanics, tools, sessions, and ordinary Skills. CodeWiki owns OS guidance, Stage Protocols, semantic authority, Quality Policy, Workbench scope, model-tier selection, routing, and canonical writes.
 
 Older migration vocabulary must not define product concepts, source layout, or tool boundaries. Desired-state docs and tools use loop vocabulary.
 
@@ -72,7 +74,7 @@ There is no target package root for split evaluation, stored state, graph projec
 
 ## Runtime model
 
-Runtime is one project-scoped control plane and owns scheduling plus guarded trace writes. It owns client intake, WorkState refresh, compatible-job selection, semantic lanes, claims, leases, session and worker lifecycle, integration, automation policy, budgets, supervision, retention, and temporary data. Runtime is the outer control loop, not a semantic loop. Dashboard, Pi, and future clients do not own its lifetime. Embedded semantic sessions and process/container workers execute runtime instructions through adapter contracts; they are not separate runtimes.
+Runtime is one project-scoped control plane and owns scheduling plus guarded trace writes. It owns client intake, WorkState refresh, compatible-job selection, semantic lanes, claims, leases, session and worker lifecycle, integration, automation policy, budgets, supervision, retention, and temporary data. Runtime is the outer control loop, not a semantic loop. Dashboard, Pi, and future clients do not own its lifetime. Embedded semantic sessions, independent Quality verifiers, and process/container workers execute runtime instructions through adapter contracts; they are not separate runtimes. Planning declares worker-ready Workbench requirements. Runtime binds fresh source, context, Skills, tools, model tier, policy, isolation, and budgets into one private Workbench before Claim activation.
 
 Temporary data lives under `.codewiki/runtime/tmp/<trace-id>/<loop>/`. Loop exit deletes loop temp after durable refs exist. Continue/blocked/route-back can preserve loop temp for remediation. Superseding iterations replace stale temp. Trace close cleans all remaining temp.
 
@@ -100,6 +102,10 @@ Loop output becomes downstream context only when exit conditions return `exit`. 
 ## Related docs
 
 - [Loop Model](loop-model.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)

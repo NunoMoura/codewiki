@@ -36,14 +36,15 @@ codewiki_source_map:
 
 CodeWiki has exactly three semantic loops: Decision, Planning, and Implementation. There is no fourth knowledge, validation, runtime, publication, roadmap, graph, state, or recovery loop.
 
-Runtime is the outer control loop. The three semantic loops are inner project capabilities governed by loop-owned quality networks. Quality networks determine loop exit; they are not loops themselves.
+Runtime is the outer control loop. The three semantic loops are inner project capabilities governed by mandatory Stage Protocols and resolved Quality Policies. Quality evaluation determines whether deterministic exit gates permit progression; it is not a loop or standalone reviewer agent.
 
 Each semantic loop has:
 
 1. a typed loop input;
-2. a loop cycle;
-3. a typed loop output;
-4. quality standards and exit conditions.
+2. a versioned Stage Protocol;
+3. a loop cycle;
+4. a typed immutable candidate;
+5. a resolved Quality Policy, assessments, deterministic gates, and exit conditions.
 
 Change is the accountable semantic carrier. Decision receives, refines, validates, and approves exact Change revisions; Decision is not another domain entity. One persisted Change owns one append-only JSONL Change Trace. Planning observes a project-wide WorkState horizon and creates Sprints and Work Items from approved Changes. Runtime grants bounded Assignments. Implementation records realization against each Work Item's owning Change.
 
@@ -67,21 +68,21 @@ WorkState is the shared disposable projection over Change Traces, KB, source own
 | Planning | Relevant portfolio of approved Changes, WorkState planning horizon, active Sprints/Assignments/integration state, ownership, policy, and prior plan revisions. | Planning epoch containing Sprints, owned Work Items, acceptance criteria, dependencies, path scopes, verification, triggers, resolutions, and per-Change coverage. | Approved-Change coverage, Sprint coherence, work ownership, acceptance clarity, dependency/path/component validity, claimed-work stability, integration safety, and execution readiness. |
 | Implementation | Owning approved Change, accepted Work Items, Assignments/worker reports, integration state, source ownership, source/tests/Git, policy, and prior evidence. | Change realization, changed paths, checks, acceptance evidence, worker provenance, integration proof, aggregate content proof, outcome disposition, and route-back questions. | Change/plan coverage, scope, checks, acceptance/TDD evidence, claim correlation, integration, ownership, content proof, outcome disposition, and closure readiness. |
 
-## Implementation review and tool evidence
+## Implementation Quality evaluation and tool evidence
 
-CodeWiki owns implementation review. Pi-lens, pi-posher, and other Pi extensions are not runtime dependencies and must not own CodeWiki pass/fail authority. Low-level tools such as compilers, linters, test runners, security scanners, formatters, and language analyzers are evidence sensors. CodeWiki-owned adapters run or ingest those tools, normalize their findings, and map evidence into Implementation quality-network standards.
+CodeWiki owns Implementation progression through the resolved Quality Policy; there is no standalone Implementation reviewer agent or review model slot. Pi-lens, pi-posher, and other Pi extensions are not runtime dependencies and must not own CodeWiki progression authority. Low-level tools such as compilers, linters, test runners, security scanners, formatters, and language analyzers are evidence sensors. CodeWiki-owned adapters run or ingest those tools, normalize their findings, and map evidence into Implementation Quality assessments.
 
-Implementation review has two phases:
+Implementation Quality evaluation has two evidence phases:
 
 1. **Fast edit feedback** runs after intercepted code-bearing edits when host hooks are available. It is latency-bounded, usually touched-file scoped, and reports clear blocks or warnings while the agent can still repair the local edit.
-2. **Implementation exit review** runs when an implementation output is submitted. It is work-unit scoped, trace-aware, and authoritative for loop exit.
+2. **Implementation exit evaluation** runs when an immutable implementation candidate is submitted. It is Work Item scoped and trace-aware; required assessments fan in before deterministic gates decide whether exit is permitted.
 
 Both phases have two layers:
 
 - a language-agnostic common layer for path scope, forbidden/generated/vendor paths, secret-like content, artifact routing, normalized diagnostics, evidence-link shape, and acceptance/check relevance; and
 - optional language-specific packs for ecosystem semantics such as TypeScript/JavaScript type evidence, Python lint/type evidence, Go vet/test evidence, Rust Clippy/test evidence, or shell analysis.
 
-A clean linter or compiler result is never sufficient by itself. Implementation exit still requires planned acceptance coverage, relevant checks, changed-path scope, content proof where required, and any risk/security authority required by the quality network.
+A clean linter or compiler result is never sufficient by itself. Implementation exit still requires planned acceptance coverage, relevant checks, changed-path scope, content proof where required, and any risk/security authority required by the resolved Quality Policy.
 
 Fast edit feedback may cache normalized evidence for the active session. Implementation exit may reuse cached fast evidence for hard blockers, then combine it with explicit exit evidence and any required full checks. Fast-only cached evidence can block on diagnostics, scope violations, or secret-like content, but it does not by itself satisfy acceptance coverage; exit-phase evidence must still link acceptance criteria to concrete refs.
 
@@ -93,7 +94,7 @@ Review pack dispatch follows the Pi-lens file-kind idea: classify changed paths 
 
 Review pack recipes are ordinary project config, not loop truth. A TypeScript-only project can set `enabledPacks` to `tsjs.typescript` and `tsjs.lint`. A Python project can enable `python.ruff` and `python.pyright`, or disable one with `disabledPacks`. A Go/Rust project can enable `go.test`, `go.vet`, `rust.cargo-test`, and `rust.cargo-clippy`, then disable slower packs in normal runs. A shell-heavy project can enable `shell.shellcheck`. `autoEvidence: false` stops automatic exit pack execution while still allowing explicit caller-supplied review reports. `includeCachedEvidence: false` prevents cached fast edit evidence from entering Implementation exit. `requiredPacks` makes relevant pack outcomes of `fail`, `blocked`, `not-run`, or `no-evidence` into CodeWiki blocking diagnostics; required packs must be enabled and cannot be disabled. `enabled: false` disables project review policy, but explicit reports passed to `wiki_implement` remain caller-provided implementation evidence.
 
-Code-bearing repo edits route to Implementation review. KB, trace, decision, and planning artifacts keep their owning loop contracts; a global host hook may classify the artifact and dispatch lightweight feedback, but it does not create a fourth semantic loop.
+Code-bearing repo edits route to Implementation Quality feedback. KB, trace, decision, and planning artifacts keep their owning loop contracts; a global host hook may classify the artifact and dispatch lightweight feedback, but it does not create a fourth semantic loop.
 
 Write authority is surface-specific. Implementation owns repo payload writes such as `src/`, `tests/`, package files, README, and product docs. Decision owns `.codewiki/kb/**` meaning changes. The guarded runtime append boundary owns `.codewiki/traces/**`. `wiki_config` owns config writes with decision approval when policy or behavior changes. `.codewiki/views/**` is disposable projection output and must not become active truth.
 
@@ -137,21 +138,15 @@ Every loop iteration should include an exit result:
 
 Boolean pass/fail is not enough for recovery or automation.
 
-Host errors are not loop exit conditions. If a main, trace, or worker host cannot execute or coordinate work, runtime records or returns host-error metadata. Once a semantic loop runs and produces output, quality standards determine whether that loop exits, continues, routes back, or blocks.
+Host errors are not loop exit conditions. If a main, trace, or worker host cannot execute or coordinate work, runtime records or returns host-error metadata. Once a semantic loop runs and produces a candidate, deterministic gates over its resolved Quality Policy determine whether that loop exits, continues, routes back, or blocks.
 
-## Versioned quality networks
+## Versioned Quality Policy
 
-A loop exit condition is the output of a versioned quality network in that
-loop's `loop.ts`. The network is the editable quality surface: it defines what
-must be true for a decision, plan, or implementation output to leave its loop.
-It is represented in source as a graph for hashing and scheduling, but product
-vocabulary should treat it as a layered quality network whose final layer is the
-high-signal report returned to the coding agent. Exit wiring, helper predicates,
-component/source-map lookups, trace reading, and runner behavior may live outside
-the graph plumbing, but the network definition lives in `src/<loop>/loop.ts` for
-production and `lab/<loop>/loop.ts` for lab candidates.
+A loop exit condition is the deterministic result of one resolved Quality Policy. Production `loop.ts` graphs remain a source representation for Standard identity, dependencies, hashing, and scheduling, but they are inputs to policy resolution rather than the whole policy. The resolved policy defines what must be established for one exact Decision, Planning, or Implementation candidate.
 
-Decision-type loop quality profiles are activation masks over these frozen quality networks. They do not delete nodes, mutate graph definitions, or make inactive nodes look passed. A masked node must carry an allowed reason such as `not_applicable`, `covered_by_invariant`, or `escalated_elsewhere`; protected hard gates fail closed unless the profile proves invariant coverage or explicit escalation.
+Runtime composes protected kernel invariants, stage baseline, Change kind/risk/layer overlays, project traits, technology/path overlays, explicit approved additions, and permitted non-kernel exclusions. Sparse typed selector rules produce active Standard bindings plus an explainable receipt containing `activatedBy`, rule refs, versions, protected status, exclusions, and one policy digest. Learned activation is forbidden.
+
+Profiles become compatibility inputs to typed selector facts during migration; they are not permanent masks over one frozen graph. Protected kernel Standards cannot be removed. Inactive considered Standards must carry an allowed exclusion reason such as `not_applicable`, `covered_by_invariant`, or `escalated_elsewhere`. Actual Implementation effects may add mandatory Standards but cannot silently remove the frozen Planning minimum.
 
 Quality-standard implementation is split from graph identity:
 
@@ -163,14 +158,9 @@ Quality-standard implementation is split from graph identity:
   standard result construction.
 - `src/<loop>/quality-standards.ts` owns the loop-specific quality-standard
   implementations for Decision, Planning, or Implementation.
-- `src/loops/runner.ts` owns async scheduling concerns such as dependency order,
-  parallel execution, hard-gate skips, and timeout diagnostics.
+- `src/loops/runner.ts` owns async scheduling concerns such as evaluation dependencies, bounded resource pools, streaming assessments, required-result fan-in, cancellation, and timeout diagnostics.
 
-The public `wiki_decide`, `wiki_plan`, and `wiki_implement` facades run their
-quality-standard evaluation through the loop runner and include compact
-`qualityRunner` latency/node summaries in loop output, exit data, and tail
-checkpoints. Synchronous loop evaluators remain available for focused tests and
-pure in-process callers.
+The public `wiki_decide`, `wiki_plan`, and `wiki_implement` facades run their Quality Policy through the loop runner and include compact policy receipt, assessment, gate, latency, token, and cache summaries in loop output, exit data, and tail checkpoints. Synchronous evaluators remain available for focused tests and pure deterministic callers.
 
 ### Declarative quality-pack contract
 
@@ -178,21 +168,13 @@ Production and lab standards use one strict `qualityPack.schemaVersion = 1` decl
 
 CodeWiki owns all kernel standards. The Decision, Planning, and Implementation built-ins are immutable `kernel` packs in `enforce` mode. Graph identities and output contracts version with current semantic-loop contracts; pre-release contracts receive no compatibility projection. The generic runner composes current packs deterministically and fails closed on stale graph or contract identities.
 
-Lab candidates use the same schema with `authority: "lab"` and `rollout: "observe"`. Lab packs report candidate identity but cannot enforce production exits, grade themselves with arbitrary code, or advance a production controller. `observe` records findings without changing verdicts; `warn` may surface non-blocking diagnostics; `enforce` may affect exit only for CodeWiki-authorized packs. Project policy composition and a Quality Designer remain deferred; this migration does not permit project-owned kernel overrides, custom semantic loops, JavaScript evaluators, shell evaluators, automatic merge, or automatic publication.
+Lab candidates use the same schema with `authority: "lab"` and `rollout: "observe"`. Lab packs report candidate identity but cannot enforce production exits, grade themselves with arbitrary code, or advance a production controller. `observe` records findings without changing gates; `warn` may surface non-blocking diagnostics; `enforce` may affect exit only after explicit CodeWiki authorization. Project Standards progress through `observe`, `warn`, and approved `enforce`. Composition never permits project-owned kernel overrides, custom semantic loops, arbitrary JavaScript or shell evaluators, automatic merge, or automatic publication.
 
 Rollback remains source-level and deterministic: revert the production or lab migration commits while retaining the strict schema/composition foundation, then rerun public facade, lab, package, Pi, readiness, and disposable external-install gates. A release artifact advances only after separate review of an exact clean commit, tree, and tarball identity; migration success alone grants no activation authority.
 
-The runner can optionally use specialized quality judge nodes for
-`agent_self_assessment` and `model_judge` standards. Conceptually there is one
-judge per non-deterministic quality standard: each node declares a one-job judge
-spec, rubric, and score threshold. The HTTP provider may batch those per-standard
-judge requests into one loop attempt transport for latency and cost, but the
-semantic contract remains one verdict and one 0-100 score per standard id. Judge
-work is skipped when deterministic hard gates already fail and is cacheable by
-graph hash, judge prompt version, and input/evidence hash. No model dependency is
-required for deterministic gates or normal local execution; real judge workers
-are injected through the runner options or through the production judge provider
-boundary, while tests use a fake judge.
+The runner can use specialized model verifiers for `agent_self_assessment` and `model_judge` Standards. Conceptually each bound non-deterministic Standard owns one assessment identity and declares verifier id, assessment criteria, measurement shape, and deterministic gate threshold where applicable. A provider may batch related requests through one coherent transport envelope for latency, tokens, and prompt-cache reuse, but each Standard retains a distinct assessment.
+
+A failed hard gate does not skip unrelated model work. Verifiers stop early only for invalid or stale input, genuine missing evaluation dependencies, cancellation, or budget policy. Model or provider failure yields `indeterminate`, never fabricated `unmet` or score `0`. No model dependency is required for deterministic Standards or normal local execution; production verifier providers are injected through the runner boundary while tests use fakes.
 
 Production attempts opt in through `.codewiki/config.json` or environment:
 
@@ -210,15 +192,7 @@ Production attempts opt in through `.codewiki/config.json` or environment:
 }
 ```
 
-Equivalent environment overrides are
-`CODEWIKI_LOOP_QUALITY_JUDGE_URL`,
-`CODEWIKI_LOOP_QUALITY_JUDGE_PROMPT_VERSION`,
-`CODEWIKI_LOOP_QUALITY_JUDGE_TIMEOUT_MS`, and
-`CODEWIKI_LOOP_QUALITY_JUDGE_ENABLED`. The HTTP worker receives a batch of judge
-requests with versioned prompts and returns `{ verdicts: [...] }`. Each verdict
-must include `standardId`, `status`, `score`, and feedback linked to refs where
-possible. A judge `pass` below the node threshold, or a `pass` without a numeric
-score, fails closed.
+Equivalent environment overrides are `CODEWIKI_LOOP_QUALITY_JUDGE_URL`, `CODEWIKI_LOOP_QUALITY_JUDGE_PROMPT_VERSION`, `CODEWIKI_LOOP_QUALITY_JUDGE_TIMEOUT_MS`, and `CODEWIKI_LOOP_QUALITY_JUDGE_ENABLED`. These names and the current `{ verdicts: [...] }` transport remain compatibility surfaces during migration. Current v3 verdicts require `standardId`, `status`, `score`, and feedback, and fail closed when a claimed pass lacks its configured score. The common Assessment contract will make measurement optional and shape-specific, distinguish `indeterminate`, and bind exact verifier, adapter, model, configuration, trial, and aggregation identity before compatibility fields can be removed.
 
 Each graph declares:
 
@@ -228,47 +202,28 @@ Each graph declares:
 - layers;
 - quality-standard nodes.
 
-Each non-deterministic node also declares or derives a specialized judge spec:
+Each non-deterministic node also declares or derives a specialized verifier spec:
 
-- judge id;
-- judge role;
-- rubric;
-- score threshold;
-- optional calibration refs.
+- verifier or judge id;
+- verifier role;
+- assessment criteria;
+- measurement shape;
+- model route and configuration identity;
+- optional score threshold and calibration refs;
+- trial and aggregation policy.
 
-Each node declares:
+Current graph nodes declare stable id, description, verifier method, compatibility `gate` and `mode`, layer, Standard type, repair target, weight/cost/timeout, dependencies, and issue predicates. Common Quality contracts separate these concerns: the Quality Standard owns criteria and verifier/measurement metadata; the binding owns activation, enforcement, parameters, and evaluation dependencies; deterministic gates own progression logic. Compatibility graph fields compile into those contracts during migration rather than remaining one overloaded node schema.
 
-- stable id;
-- description;
-- method: `deterministic`, `agent_self_assessment`, `model_judge`,
-  `human_authority`, or `external_evidence`;
-- gate: `hard`, `soft`, or `score_only`;
-- mode: `deterministic`, `agent`, or `user`;
-- layer;
-- quality-standard type;
-- repair target;
-- weight, cost, and timeout budget;
-- optional dependencies on other stable node ids;
-- issue codes or predicates that make the node unmet or blocked.
+Quality graph schema v3 validates graph identity, unique declared layers, unique node ids, known dependencies, and acyclic dependency order before hashing or execution. Evaluation dependencies skip only nodes whose required assessment input cannot exist. Gate dependencies are evaluated later at fan-in. Independent Standards continue through bounded parallel pools even when another gate will fail. Policy-inactive nodes are excluded with receipt reasons rather than reported as passed.
 
-Quality graph schema v3 validates graph identity, unique declared layers, unique
-node ids, known dependencies, and acyclic dependency order before hashing or
-execution. The runner skips a dependent node when its hard-gate dependency
-fails while independent standards may continue in parallel. Profile-inactive
-nodes are removed from the active dependency set rather than being reported as
-passed.
-
-Deterministic nodes emit 0-100 scores from activated issue coverage. No issue
-means 100. Blocked hard gates remain 0. Partial deterministic scores enrich the
-repair report but cannot average away an unmet or blocked route.
+Deterministic Standards preserve their declared measurement shape. Existing score-producing nodes may emit 0-100 measurements from activated issue coverage, but an operational failure remains `indeterminate`. Partial scores enrich repair feedback and cannot average away an unmet, blocked, or authority-required route.
 
 CodeWiki owns this semantic runner and does not depend on Pi-lens, Caveman, or
 other Pi extensions. External tools may provide evidence refs, but they never
 own semantic authority. Standards with method `external_evidence` consume
 reported checks, TDD proof, content proof, CI refs, or optional linter results;
 CodeWiki validates their presence/shape and trace coverage, not the linter's
-internal rules. Production loop outputs carry quality-standard results plus graph
-id, version, and hash for traceability and recovery. The lab uses editable
+internal rules. Production loop outputs carry compact assessments, deterministic gate results, Quality Policy receipt identity, and compatibility graph id/version/hash for traceability and recovery. The lab uses editable
 candidate graphs and locked eval cases to improve DEC, PEC, IEC, PCE, and HCE
 before promotion back into production code.
 
@@ -276,13 +231,14 @@ before promotion back into production code.
 
 The loop runner follows linter-style AX without depending on linters:
 
-1. normalize the submitted loop input;
-2. build shared facts once;
-3. run cheap hard gates first;
-4. skip dependent or expensive standards after failed hard gates;
-5. run independent standards in parallel;
-6. batch or cache model-judge work when model standards are enabled;
-7. return compact diagnostics and repair guidance for resubmission.
+1. normalize the submitted loop input and verify candidate freshness;
+2. resolve the Quality Policy and build shared facts once;
+3. run all ready Standards through bounded resource-specific pools;
+4. stream compact assessments as they settle;
+5. batch or cache coherent model-verifier work when identity permits;
+6. cancel only stale, invalid, dependency-impossible, explicitly cancelled, or budget-blocked work;
+7. fan in every required assessment and apply deterministic gates;
+8. return compact diagnostics and repair guidance for resubmission.
 
 Loop outputs include `qualityDiagnostics`: sorted unmet-standard feedback with
 severity, method, gate, refs, repair target, route, and concrete repair action.
@@ -292,14 +248,12 @@ working on softer guidance.
 This mirrors the useful feedback shape of linters while keeping CodeWiki's
 scope semantic: trace refs, route authority, loop coverage, acceptance evidence,
 and source-of-truth alignment. The coding agent itself is the debugger: it uses
-the final quality-network report as the next iteration's worklist, then resubmits
+the final Quality Policy report as the next iteration's worklist, then resubmits
 loop output after fixing the highest-signal blockers.
 
-## Hard-gate policy
+## Deterministic gate policy
 
-Hard gates are binary semantic contracts. They are cheap, deterministic or
-human-authority backed, and must not be averaged away or delayed behind model
-judgment.
+Hard gates are binary semantic contracts. They are deterministic and may depend on deterministic, model, external, or human assessments plus exact authority facts. They cannot be averaged away. Cheap admission runs first, but required fan-in cannot fabricate or omit an assessment merely because another hard gate already failed.
 
 Decision hard gates cover Change-revision readiness, understood intent, accountable outcome, canonical Knowledge impacts, approval authority, current-state grounding, evidence, risk classification, active Change overlap, route safety, delivery constraints, and Change-kind classification.
 
@@ -307,9 +261,7 @@ Planning hard gates cover approved-Change coverage, coherent Sprint grouping, on
 
 Implementation hard gates cover approved-Change and Planning coverage, scope control, acceptance evidence, verification results, required TDD proof, integration and content proof, worker-Assignment correlation, source ownership, outcome disposition, archive readiness, release approval, and canonical refs.
 
-Softer agent-assessment standards still fail the loop when unmet, but they are
-not hard-gate fail-fast blockers because they may need richer repair guidance or
-future model-judge batching.
+Softer assessments may still prevent exit through deterministic gate rules when unmet. Their verifier kind does not determine enforcement. Independent assessments continue to provide repair guidance even when another gate already prevents exit.
 
 ## Baseline exit-condition invariants
 
@@ -410,13 +362,17 @@ Exit-condition findings and checkpoints provide recovery alignment after errors,
 
 ## Token-efficiency rule
 
-Do not add loops to compensate for weak loop outputs or weak exit conditions. Add compact outputs, exact refs, and stronger weighted standards. Downstream loops should read the previous loop output and touched refs, not reload full chat history.
+Do not add loops to compensate for weak loop outputs or weak Quality Policy. Add compact outputs, exact refs, better activation, and stronger Standards. Downstream loops should read the previous loop output and touched refs, not reload full chat history.
 
-Preview results are validation drafts for the agent. Append only meaningful trace facts, keep loop outputs compact, run cheap deterministic checks before expensive agent-judgment standards, and let views cache derived status/progress for hosts and renderers.
+Preview results are assessment drafts for the agent. Append only meaningful trace facts, keep loop outputs compact, share extracted facts, use exact caches and coherent model batches, cancel stale candidates, and let views cache derived status/progress for hosts and renderers. Optimize both time to first useful feedback and time to authoritative exit.
 
 ## Related docs
 
 - [WorkState](work-state.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)

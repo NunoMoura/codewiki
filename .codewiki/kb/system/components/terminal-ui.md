@@ -72,7 +72,7 @@ Clients cannot select semantic loops, create arbitrary model sessions, submit ar
 
 ## Pi execution
 
-The target semantic adapter embeds Pi through its SDK. Each Decision, Planning, or Implementation-review job receives one runtime-built bounded context and read-only tool set. A closed candidate-submission tool returns typed output to runtime. Runtime validates freshness, quality, identity, and append authority before any durable write.
+The target semantic adapter embeds Pi through its SDK. Each Decision, Planning, Implementation Quality, or model-Standard job receives versioned CodeWiki OS guidance, one mandatory Stage Protocol, one runtime-built bounded context, normal or Workbench-scoped Pi Skills, and a read-only tool set. A closed candidate-submission tool returns typed output to runtime. Runtime validates freshness, Quality Policy, identity, deterministic gates, and append authority before any durable write.
 
 Implementation uses a separate harness-neutral worker adapter. Exact Assignment jobs run through coordinator lanes; the Pi compatibility adapter starts foreground child processes only in explicit isolated worktrees and persists bounded immutable Worker reports. Container-capable hosts may instead install the opt-in OCI adapter with a digest-pinned preinstalled image, explicit resource and egress policy, and the same report/recovery contract; the default Pi daemon does not provision or select an image. The elected service derives Assignments automatically and, after canonical Implementation acceptance, schedules guarded target/base Integration jobs that create exact local Git commit/tree proof without moving the project branch. Core runtime depends on adapter contracts, not Pi types.
 

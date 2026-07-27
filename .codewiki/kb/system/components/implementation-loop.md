@@ -49,7 +49,7 @@ codewiki_source_map:
 
 Implementation is the continuous realization service for approved, planned Changes. It receives ready Work Items and worker reports across active Sprints, integrates candidate output, runs scoped and aggregate checks, and appends accepted or rejected evidence to each owning Change Trace.
 
-Workers execute Assignment attempts. They do not own an Implementation loop and cannot mark semantic success. The Implementation loop alone decides whether planned intent is realized.
+Workers execute Assignment attempts inside runtime-provisioned private Workbenches. They do not own an Implementation loop and cannot mark semantic success. The Implementation loop's resolved Quality Policy alone governs whether planned intent is realized. There is no standalone Implementation reviewer agent.
 
 ## Loop authority
 
@@ -57,9 +57,9 @@ Implementation owns:
 
 - source, test, package, README, and product-document edits inside accepted Work Item scope;
 - local TDD when required;
-- worker report normalization and active-Assignment correlation;
+- Worker Report, Workbench, and active-Assignment correlation;
 - integration and conflict handling within Planning authority;
-- check and review evidence;
+- deterministic, model, external, and human Quality assessments;
 - acceptance-criterion coverage;
 - component/path/test alignment;
 - Change realization evidence;
@@ -75,7 +75,7 @@ Implementation does not own new Change meaning, Knowledge semantics, approval, S
 One semantic Implementation loop has two bounded levels:
 
 1. **Work Item realization** receives one or more Assignment results, validates local scope and checks, and produces candidate realization evidence for the owning Change.
-2. **Integration and exit review** evaluates merged output, shared dependencies, aggregate checks, cross-Change acceptance, preview evidence, and content proof before accepting Change realization.
+2. **Integration and exit Quality evaluation** evaluates merged output, shared dependencies, aggregate checks, cross-Change acceptance, preview evidence, and content proof before deterministic gates may accept Change realization.
 
 These are phases inside one semantic loop, not separate loops.
 
@@ -86,9 +86,9 @@ Implementation input includes:
 - owning approved Change ref and current realization state;
 - exact accepted Work Item and acceptance-criterion refs;
 - relevant Sprint, dependency, Assignment, and integration projections;
-- normalized worker reports and claim/session provenance;
+- normalized Worker Reports plus Claim, Assignment, Workbench, model-tier, and session provenance;
 - current source/test/Git snapshot and content proof;
-- source ownership and review policy;
+- source ownership and resolved Quality Policy inputs;
 - relevant WorkState slice and digest;
 - prior implementation output refs;
 - trigger and route-back context.
@@ -102,12 +102,12 @@ One bounded invocation writes evidence for one owning Change. Portfolio work is 
 ```text
 receive ready Work Item or worker report
 refresh owning Change and integration WorkState
-validate Assignment, plan revision, source base, path scope, and dependencies
+validate Assignment, Workbench, plan revision, source base, path scope, and dependencies
 integrate candidate source/docs/tests
-run required checks and review adapters
-map evidence to acceptance criteria and Change outcome
-create aggregate content proof
-run Implementation quality standards
+build one immutable candidate and shared facts
+run required evidence adapters and bounded Quality verifier fan-out
+map assessments and evidence to acceptance criteria and Change outcome
+create aggregate content proof and apply deterministic gates
 append accepted/rejected evidence to owning Change Trace
 continue, exit, route back, or block
 ```
@@ -124,7 +124,7 @@ Implementation output contains:
 - structured checks with command, phase, criterion id, and status;
 - acceptance evidence mapped to stable criterion ids;
 - TDD red/green proof when required;
-- worker report and Assignment provenance;
+- Worker Report, Assignment, Workbench, model-tier, protocol, and policy provenance;
 - normalized worker proof and conflict findings;
 - component/path/test alignment evidence;
 - integration state and shared Sprint refs;
@@ -132,7 +132,7 @@ Implementation output contains:
 - aggregate content proof over merged output;
 - residual issue and outcome-disposition evidence;
 - publication/archive refs when configured;
-- production-quality assessment;
+- Quality Policy receipt, compact per-Standard assessments, deterministic gate results, and efficiency summary;
 - route-back questions and canonical refs.
 
 Implementation output excludes full logs, private scratch, unbounded diffs, planner-authored replacements, and new product meaning decided during coding.
@@ -143,9 +143,13 @@ Every Work Item has one owning Change. Its implementation event is canonical in 
 
 A shared Sprint or integration check may provide one content-addressed evidence artifact referenced by several Change Traces. Each Change still receives its own quality-governed realization decision against its approved outcome and acceptance coverage.
 
-## Quality standards
+## Quality Policy baseline
 
-| Quality standard | Required signal |
+Implementation resolves its exact Quality Policy from protected kernel Standards, stage baseline, frozen Planning minimums, Change risk/layers, project traits, paths, technologies, actual effects, and approved additions. Actual effects may add mandatory Standards but cannot silently remove the Planning minimum. Independent verifiers run against one immutable candidate; required assessments join before deterministic exit gates.
+
+Baseline Standards include:
+
+| Quality Standard | Required signal |
 | --- | --- |
 | approved_change_coverage_complete | Accepted implementation evidence covers current approved Change requirements. |
 | planning_coverage_complete | Every claimed/selected Work Item ref is known and dispositioned. |
@@ -167,7 +171,7 @@ A shared Sprint or integration check may provide one content-addressed evidence 
 | release_safety_approved | External, destructive, release, or publication action has exact user authority. |
 | traceability_refs_canonical | Change, trace, KB, Git, digest, source, and test refs are canonical. |
 
-External tools are evidence sensors. CodeWiki-owned quality standards retain pass/fail authority.
+External tools are evidence sensors. CodeWiki-owned deterministic gates retain progression authority. Verifier timeout or operational failure is `indeterminate`, not fabricated evidence that implementation is bad or score `0`.
 
 ## Exit statuses
 
@@ -182,14 +186,16 @@ Implementation routes to Planning for Work Item, path, dependency, ordering, ver
 
 ```text
 WorkState work queue
--> runtime Assignment
--> worker attempt
--> candidate result
--> Implementation realization review
+-> runtime Implementation tier selection
+-> private Worker Workbench provisioned
+-> guarded Claim activates exact Assignment
+-> isolated worker attempt
+-> immutable Worker Report candidate
+-> Implementation Quality Policy evaluation
 -> accepted Change Trace evidence
 ```
 
-Runtime may schedule many Work Items across Changes. Claims remain trace-owned by the Work Item's owning Change. Worker completion is transport evidence only. Release does not imply semantic acceptance.
+Runtime may schedule many Work Items across Changes. Claims remain trace-owned by the Work Item's owning Change. Workers share no private memory or peer scratch. Worker completion is candidate evidence only. Release does not imply semantic acceptance.
 
 Planning-approved shared integration workspaces combine selected worker outputs. The dashboard and Live Preview must identify which Changes are integrated and visible, which remain isolated, and which conflict. Conceptual association alone cannot make isolated work appear in one preview.
 
@@ -237,7 +243,8 @@ Long-running observation may leave a delivered Change dormant but open under ret
       "acceptanceEvidence": [],
       "aggregateContentProof": {},
       "outcomeDisposition": {},
-      "qualityStandards": []
+      "qualityPolicyReceipt": {},
+      "assessments": []
     },
     "exit": {
       "status": "exit",
@@ -252,6 +259,10 @@ Long-running observation may leave a delivered Change dormant but open under ret
 ## Related docs
 
 - [WorkState](work-state.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)
 - [Planning Loop](planning-loop.md)

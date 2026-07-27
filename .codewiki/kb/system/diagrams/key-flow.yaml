@@ -5,6 +5,10 @@ kind: sequence_flow
 purpose: Show concurrent proposal intake, runtime-owned semantic sessions, global Planning, parallel isolated workers, Implementation acceptance, and canonical proof.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/codewiki-os.md
+  - .codewiki/kb/system/components/quality-policy.md
+  - .codewiki/kb/system/components/worker-workbench.md
+  - .codewiki/kb/system/components/model-routing.md
   - .codewiki/kb/system/components/decision-loop.md
   - .codewiki/kb/system/components/planning-loop.md
   - .codewiki/kb/system/components/implementation-loop.md
@@ -23,9 +27,9 @@ participants:
     kind: coordination
     source: .codewiki/kb/system/components/runtime.md
   - id: semantic_sessions
-    label: Embedded read-only semantic sessions
+    label: Pi sessions with CodeWiki OS, Stage Protocol, and scoped Skills
     kind: execution_adapter
-    source: .codewiki/kb/system/components/session-coordination.md
+    source: .codewiki/kb/system/components/codewiki-os.md
   - id: decision
     label: Decision loop
     kind: semantic_loop
@@ -34,6 +38,14 @@ participants:
     label: Global Planning loop
     kind: semantic_loop
     source: .codewiki/kb/system/components/planning-loop.md
+  - id: quality
+    label: Quality Policy resolver, verifiers, and deterministic gates
+    kind: quality_policy
+    source: .codewiki/kb/system/components/quality-policy.md
+  - id: workbench
+    label: Private Worker Workbench
+    kind: transient_execution_environment
+    source: .codewiki/kb/system/components/worker-workbench.md
   - id: workers
     label: Isolated implementation workers
     kind: execution_adapter
@@ -70,10 +82,14 @@ steps:
     from: semantic_sessions
     to: decision
     message: returns typed judgment candidates without append authority
-  - id: append_decisions
+  - id: assess_decision
     from: decision
+    to: quality
+    message: resolves exact Standards, fans out independent assessments, then applies deterministic gates
+  - id: append_decisions
+    from: quality
     to: traces
-    message: control plane appends accepted Decision results under exact revision and CAS guards
+    message: control plane appends gated Decision result and compact policy receipt under exact revision and CAS guards
   - id: mark_planning_dirty
     from: traces
     to: control_plane
@@ -86,34 +102,42 @@ steps:
     from: semantic_sessions
     to: planning
     message: returns one candidate epoch spanning approved Changes, Sprints, Work Items, dependencies, and integration
-  - id: append_planning_epoch
+  - id: assess_planning
     from: planning
+    to: quality
+    message: evaluates one immutable epoch candidate and Workbench readiness at required-result fan-in
+  - id: append_planning_epoch
+    from: quality
     to: traces
-    message: control plane writes deterministic participant slices and exposes partial-commit recovery
+    message: control plane writes gated deterministic participant slices and exposes partial-commit recovery
   - id: select_parallel_frontier
     from: traces
     to: control_plane
     message: WorkState yields compatible ready Work Items under claims, conflicts, capacity, and supervision
-  - id: start_workers
+  - id: provision_workbenches
     from: control_plane
+    to: workbench
+    message: selects Implementation tier and binds fresh source, context, Skills, tools, Quality minimum, isolation, and budgets before Claim
+  - id: start_workers
+    from: workbench
     to: workers
-    message: starts concurrent non-conflicting Assignments in process or container isolation
+    message: exact matching Claim activates concurrent non-conflicting Assignments
   - id: worker_candidates
     from: workers
     to: implementation
     message: returns candidate changes, checks, provenance, and exact evidence refs
-  - id: review_and_integrate
-    from: control_plane
-    to: semantic_sessions
-    message: starts bounded read-only Implementation review over exact worker and integration state
-  - id: submit_implementation_candidate
-    from: semantic_sessions
+  - id: assess_implementation
+    from: implementation
+    to: quality
+    message: resolves actual-effect overlays and runs bounded independent deterministic, model, external, and human verifiers
+  - id: fan_in_implementation
+    from: quality
     to: implementation
-    message: returns acceptance, remediation, or route-back candidate
+    message: required assessments join before deterministic repair, exit, route-back, or block gates
   - id: append_implementation
     from: implementation
     to: traces
-    message: control plane appends accepted realization or recovery result to owning Change traces
+    message: control plane appends gated realization or recovery result to owning Change traces
   - id: prove_content
     from: implementation
     to: knowledge_git

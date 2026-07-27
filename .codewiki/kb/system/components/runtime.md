@@ -74,9 +74,10 @@ trigger or client request
 -> identify eligible invariant repairs and mechanical actions
 -> select a compatible bounded job set
 -> acquire semantic lanes, claims, capacity, and integration guards
--> build exact typed inputs and context slices
--> run semantic sessions or implementation workers through adapters
--> validate quality-governed output and freshness
+-> bind exact typed inputs, CodeWiki OS, Stage Protocol, and model route
+-> resolve Quality Policy or provision private Worker Workbench
+-> run semantic sessions, verifiers, or isolated workers through adapters
+-> validate immutable candidate, required assessments, deterministic gates, and freshness
 -> append accepted facts to affected Change Trace(s)
 -> schedule permitted effects
 -> repeat or quiesce
@@ -123,7 +124,8 @@ Runtime does not:
 - create Sprint or Work Item truth outside exited Planning output;
 - accept worker output as Implementation truth;
 - treat generated views as canonical input;
-- bypass quality standards;
+- bypass, suppress, or delegate resolved Quality Policy;
+- let candidates, Skills, workers, verifiers, or remote clients choose canonical identity, model tier, or routing;
 - broaden authority because automation is enabled;
 - keep running when required supervision or policy authority disappears.
 
@@ -166,8 +168,8 @@ Quiescence is healthy state, not failure. Durable Change Traces and WorkState re
 | --- | --- |
 | Project control plane | Elected project coordinator that owns WorkState refresh, scheduling, lanes, session/worker lifecycle, guarded writes, integration, and client projections. |
 | Client | Dashboard, Pi extension, CLI/test, or future adapter that submits bounded intent, evidence, authority, or control requests. |
-| Semantic session | Bounded read-only Decision, Planning, or Implementation-review execution over runtime-supplied typed input. It returns a candidate; it does not append directly. |
-| Worker | Narrow Assignment attempt for one Planning-owned Work Item in a process or container isolation boundary. It returns candidate evidence only. |
+| Semantic session | Bounded read-only Decision, Planning, Implementation Quality, or model-Standard execution over runtime-supplied typed input, CodeWiki OS, and Stage Protocol. It returns a candidate or assessment; it does not append directly. |
+| Worker | Narrow Assignment attempt inside one runtime-provisioned private Worker Workbench. It returns immutable candidate evidence only. |
 | Integrator | Serialized mechanical host for one exact integration target and source base under Planning and runtime authority. |
 
 The Pi semantic adapter embeds Pi SDK sessions. A harness-neutral worker contract schedules exact Assignment jobs through coordinator lanes, conflicts, supervision, idempotency, adapter-availability checks, and durable Worker report recovery. The Pi compatibility adapter runs workers as foreground child processes in explicit Git worktrees. The opt-in harness-neutral OCI adapter accepts the same Assignment contract, selects `container` isolation only for container-capable hosts, requires a digest-pinned preinstalled image, and runs Docker or Podman through structured arguments with no implicit pull, read-only root state, dropped capabilities, no privilege escalation, bounded resources and output, exact source/outcome mounts, explicit environment forwarding, and no network unless the host names a restricted network. Pi types remain inside `src/pi/**`.
@@ -181,8 +183,9 @@ Runtime derives one WorkState from canonical inputs and computes eligible jobs:
 ```text
 persisted unapproved Change -> Decision job eligible
 approved Change lacking current coverage -> project Planning dirty
-ready Work Item -> Assignment job eligible
-worker/integration result -> Implementation review job eligible
+worker-ready Work Item -> tier selection and Workbench provisioning eligible
+active Claim plus matching Workbench -> Assignment job eligible
+worker/integration result -> Implementation Quality job eligible
 closed/retention-ready Change -> archive action eligible
 no eligible job -> quiescent
 ```
@@ -204,13 +207,13 @@ Current executable `RuntimeReactor.selectRuntimeReactions()` derives a bounded c
 
 The executable project service wraps this kernel with one exclusive project ownership lock, a loopback-only HTTP endpoint, private project-local endpoint metadata, bearer authentication, exact-generation request capabilities, leased client registrations, and an ownership check on every request. A live owner excludes contenders; a dead owner can be replaced under a new generation; and a stale process whose lock identity no longer matches is fenced even if its socket remains alive. Endpoint and ownership files are runtime scratch, never semantic or scheduling truth.
 
-Authenticated clients can now submit a bounded runtime trigger kind and refs without supplying observation time, semantic selection, trace identity, or append authority. The service stamps observation time from its own clock. The service derives a bounded compatible horizon and maps every selected Decision, Planning, or Implementation-review invariant to one typed coordinator job. Each job has a deterministic identity derived from the exact observed selection, resource conflict refs, one-lane execution, and a durable recovery probe. A selected job revalidates its invariant against fresh WorkState, invokes only its loop adapter, cannot continue into a different lane, and rechecks current coordinator ownership immediately before append. Successful Decision, Planning, and Implementation events carry the runtime-owned job id; a replacement generation scans only the selected Change Traces and returns exact event evidence without reinvoking the adapter.
+Authenticated clients can now submit a bounded runtime trigger kind and refs without supplying observation time, semantic selection, trace identity, or append authority. The service stamps observation time from its own clock. The service derives a bounded compatible horizon and maps every selected Decision, Planning, or Implementation Quality invariant to one typed coordinator job. Each job has a deterministic identity derived from the exact observed selection, resource conflict refs, one-lane execution, and a durable recovery probe. A selected job revalidates its invariant against fresh WorkState, invokes only its loop adapter, cannot continue into a different lane, and rechecks current coordinator ownership immediately before append. Successful Decision, Planning, and Implementation events carry the runtime-owned job id; a replacement generation scans only the selected Change Traces and returns exact event evidence without reinvoking the adapter.
 
 A detached project daemon now owns this service independently of Pi session lifetime. Its Pi-specific launcher dynamically loads the optional embedded SDK adapter without importing Pi types into harness-neutral runtime modules. The service advertises whether semantic execution is service-owned or requires client-candidate fallback. When SDK execution is available, thin Pi clients hide main-conversation semantic tools and submit only a bounded trigger; the daemon creates the selected read-only semantic session and returns its candidate to the exact coordinator job. When the optional peer is absent, packed core installs remain operational and expose only the runtime-selected candidate tool. Dashboard runtimes register separate observer clients. Two packed Pi RPC processes plus one dashboard have been proven against one generation, with supervisor loss pausing new execution and explicit shutdown removing daemon state.
 
 The service now publishes a bounded generation-scoped event journal over authenticated leased long polls. Monotonic cursors replay coordinator lifecycle events and exact `work_state_observed` digests; overflow or generation replacement requires a canonical snapshot refresh rather than trusting a gap. Events are operational invalidations, not durable truth: Change Traces and other canonical project sources remain authoritative. Pi clients reconnect, compare generation, refresh routing after reset, and continue completed semantic work toward quiescence. Dashboard observers reconnect under a replacement generation and bridge coordinator invalidations into their existing browser state stream.
 
-The elected service now also reconciles ready Work Items from current WorkState. It derives a work queue, current Git base and dirty paths, effective automation and agency, capacity, and explicit worktree policy; previews deterministic claims; writes private Assignment packets; rechecks generation ownership; appends claims under exact trace-byte CAS; prepares worktrees; and schedules compatible Assignment jobs without waiting for worker completion. Each canonical claim binds the deterministic runtime job id and digest of its private packet. A replacement generation may resume only when the packet still matches that canonical digest and active claim; runtime scratch alone grants no execution authority. Pending worker Work Items are excluded from Implementation-review scheduling until an exact durable report is recovered. Runtime filters recovered reports to the selected Work Items, binds their exact normalized context into the semantic job identity, and supplies them as candidate evidence to the selected Implementation review. Completed claims remain active until canonical Implementation acceptance is visible. Blocked, failed, or cancelled reports and accepted completions schedule deterministic release jobs that revalidate active Assignment identity, generation ownership, and trace-byte CAS before appending terminal release events. Worker completion alone never becomes implementation truth. Graceful elected-service shutdown aborts active jobs, drains cancellation-aware workers, and allows foreground process adapters to persist cancelled reports before coordinator ownership is released.
+The elected service now also reconciles ready Work Items from current WorkState. It derives a work queue, current Git base and dirty paths, effective automation and agency, capacity, and explicit worktree policy; previews deterministic claims; writes private Assignment packets; rechecks generation ownership; appends claims under exact trace-byte CAS; prepares worktrees; and schedules compatible Assignment jobs without waiting for worker completion. Each canonical claim binds the deterministic runtime job id and digest of its private packet. A replacement generation may resume only when the packet still matches that canonical digest and active claim; runtime scratch alone grants no execution authority. Pending worker Work Items are excluded from Implementation Quality scheduling until an exact durable report is recovered. Runtime filters recovered reports to selected Work Items, binds exact normalized Workbench and report context into the semantic job identity, and supplies one immutable candidate to selected Implementation Quality evaluation. Completed claims remain active until canonical Implementation acceptance is visible. Blocked, failed, or cancelled reports and accepted completions schedule deterministic release jobs that revalidate active Assignment identity, generation ownership, and trace-byte CAS before appending terminal release events. Worker completion alone never becomes implementation truth. Graceful elected-service shutdown aborts active jobs, drains cancellation-aware workers, and allows foreground process adapters to persist cancelled reports before coordinator ownership is released.
 
 Accepted completed Work Items now become eligible for deterministic integration jobs. Each job revalidates the canonical Claim, Assignment-packet digest, Worker report, exact acceptance event, source commit, Planning path scope, coordinator generation, and trace bytes. The integrator captures committed and untracked worker changes as a bounded binary patch, serializes one writer per derived Planning target set and source base, applies the patch to a private integration worktree, runs `git diff --check`, and creates a local no-GPG integration commit without moving the project checkout. A successful `runtime.integration.proven` event binds the runtime job, Claim, Assignment, Worker report, target refs, base/parent/commit/tree identities, changed paths, integrated patch digest, and check evidence. A commit trailer plus digest-bound in-progress manifest closes crash windows before canonical append; canonical event recovery prevents duplicate integration. WorkState projects the exact proof on the Work Item. Only then may sanitation delete the completed packet, report, output, and worker worktree.
 
@@ -244,13 +247,15 @@ Planning may observe several approved Changes and emit one planning epoch. Runti
 
 Filesystem multi-file append is not silently treated as atomic. A planning event carries epoch id, participant set, batch digest, and deterministic event ids so surviving records reveal missing participants. Runtime temp may hold a private write-ahead recovery packet; it does not become truth.
 
-## Work Items and Assignments
+## Work Items, Workbenches, and Assignments
 
-Planning creates Work Items. Runtime creates bounded Assignment attempts.
+Planning creates worker-ready Work Items and declares Workbench requirements. Runtime selects the Implementation tier, resolves the Pi route, Skills and tools, probes capabilities, provisions one exact private Worker Workbench, and creates a bounded Assignment attempt. Planning never chooses concrete provider credentials or runtime-owned model identity.
 
-A claim binds:
+Before Claim append, runtime creates an inert digest-bound Workbench manifest containing exact source, context, resolved Skills and tools, model tier/route, Quality minimums, evidence obligations, isolation, budgets, and report contract. Runtime probes required process/container capabilities first. Only an exact matching active Claim activates that Workbench; private scratch alone grants no execution authority.
 
-- Work Item and owning Change Trace;
+A Claim binds:
+
+- Work Item, Worker Workbench, and owning Change Trace;
 - accepted Change and Planning revisions;
 - worker/session identity;
 - source base and worktree/integration refs;
@@ -265,10 +270,11 @@ Claim, release, expiry, and cancellation are runtime coordination events in the 
 
 ```text
 accepted Work Item
+-> Implementation tier selection
+-> exact private Workbench provisioning and capability probe
 -> claim preview
--> guarded claim append
--> worktree/integration preparation
--> worker session start
+-> guarded Claim append activates Workbench
+-> isolated worker session start
 -> bounded observation
 -> candidate result
 -> Implementation iteration
@@ -278,7 +284,7 @@ accepted Work Item
 -> proof-authorized cleanup
 ```
 
-Worker agents receive exact scoped prompts, refs, constraints, and evidence requirements. They cannot append semantic trace events, approve Changes, change Planning truth, merge outside authority, publish, or relax policy.
+Worker agents receive exact CodeWiki OS and Implementation Stage Protocol resources plus scoped source, context, Pi Skills, tools, constraints, and evidence requirements from the Workbench. Workers have no peer/shared private memory. They cannot append semantic trace events, approve Changes, change Planning truth, widen the Workbench, select their model tier, merge outside authority, publish, or relax policy.
 
 Worker liveness remains runtime observation. Meaningful start, terminal, claim, and blocker facts may enter traces; noisy heartbeats and raw logs stay outside semantic truth.
 
@@ -347,6 +353,10 @@ CodeWiki does not load or dogfood its own extension in this source repository du
 ## Related docs
 
 - [WorkState](work-state.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)
 - [Traces](traces.md)

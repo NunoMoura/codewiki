@@ -63,7 +63,8 @@ Planning owns:
 - dependency and ordering constraints across Changes and Sprints;
 - component refs, path scopes, test strategy, and integration targets;
 - conflict, starvation, deferral, supersession, and route-back policy;
-- worker profiles and safe concurrency constraints;
+- worker-ready outcome boundaries, Workbench requirements, and safe concurrency constraints;
+- optional narrowing of the normally available Pi Skill catalog for a Workbench;
 - recurring schedules, event triggers, hooks, and manual triggers;
 - replanning after implementation, Git, KB, policy, or capacity changes.
 
@@ -91,8 +92,8 @@ Planning optimizes lexicographically rather than hiding authority inside one sco
 2. satisfy semantic and technical dependencies;
 3. preserve coherent rollback and integration boundaries;
 4. avoid component/path/worktree conflicts;
-5. keep Work Items independently claimable and acceptance-testable;
-6. maximize safe parallelism;
+5. keep Work Items coherent, independently verifiable, and backed by buildable Workbench requirements;
+6. maximize safe parallelism without harmful over-decomposition;
 7. batch shared setup, verification, integration, and preview work;
 8. reduce latency, model use, token cost, and repeated checks.
 
@@ -119,9 +120,10 @@ refresh relevant WorkState planning horizon
 select approved Changes needing new or revised coverage
 shape globally coherent Sprints
 create or revise owned Work Items, criteria, dependencies, paths, tests, and triggers
+declare Workbench context, capability, Skill-scope, isolation, Quality, evidence, and budget requirements
 check active claims, conflicts, integration state, and execution capacity
 record explicit deferrals, resolutions, and route-backs
-run Planning quality standards
+resolve and run Planning Quality Policy
 append per-Change slices of one planning epoch
 continue, exit, route back, or block
 ```
@@ -143,7 +145,8 @@ interface PlanningEpoch {
   changeCoverage: ChangePlanningCoverage[];
   dependencies: PlanningDependency[];
   resolutions: ChangePlanningResolution[];
-  qualityStandards: QualityStandardResult[];
+  qualityPolicyReceipt: QualityPolicyReceipt;
+  assessments: QualityAssessment[];
 }
 ```
 
@@ -166,9 +169,13 @@ Every Work Item contains:
 - concrete technical requirements;
 - stable acceptance criteria;
 - components, path scopes, and verification;
-- dependencies and worker profile;
+- dependencies and Workbench requirements;
+- optional narrowed Pi Skill scope, with omission preserving normal discovery;
+- required capabilities, isolation, minimum Quality Standards, evidence, and budget class;
 - trigger when applicable;
-- uncertainty and readiness assessment.
+- uncertainty, worker readiness, and Workbench buildability assessment.
+
+Planning does not select a concrete provider/model, install Skills, grant tools or credentials, or build the private Workbench. Runtime resolves the exact model route, Skill catalog, capabilities, source, context, isolation, and policy against fresh state before Claim.
 
 Planning output excludes source edits, test results, worker-local checklists, implementation evidence, and product decisions made during decomposition.
 
@@ -202,7 +209,8 @@ A partial multi-trace write is not accepted Sprint state. WorkState exposes `inc
 | claimed_work_stable | Replanning does not silently mutate active Assignments. |
 | integration_plan_safe | Worktree, merge, shared preview, and rollback constraints are explicit where needed. |
 | ui_preview_targets_valid | Every preview binding freezes canonical target/profile digests and stays within Sprint Change/Work Item authority. |
-| worker_assignment_ready | Work is independent, right-sized, and has an eligible worker profile. |
+| worker_assignment_ready | Work is coherent, independently verifiable, right-sized, and does not create harmful decomposition. |
+| worker_workbench_buildable | Context, capabilities, Skill scope, isolation, minimum Standards, evidence, and budget requirements can produce a bounded Workbench. |
 | uncertainty_resolved | Planning uncertainty is repaired or routed to Decision. |
 | triggers_valid | Recurring/event/hook/manual triggers have bounded run and concurrency policy. |
 | resolutions_accounted | Deferral, already-realized, knowledge-only, non-executable, superseded, or route-back facts carry evidence. |
@@ -223,7 +231,8 @@ approved Planning epoch
 -> WorkState
 -> Sprint/work-plan views
 -> work queue
--> runtime Assignment selection
+-> runtime tier selection and private Workbench provisioning
+-> guarded Claim and Assignment activation
 ```
 
 Runtime never invents Work Items from raw approved Changes. It selects only accepted Planning-owned Work Items whose owning Change, plan revision, dependencies, integration state, and policy remain current.
@@ -246,7 +255,8 @@ Runtime never invents Work Items from raw approved Changes. It selects only acce
       "workItems": [],
       "changeCoverage": [],
       "resolutions": [],
-      "qualityStandards": []
+      "qualityPolicyReceipt": {},
+      "assessments": []
     },
     "exit": {
       "status": "exit",
@@ -261,6 +271,10 @@ Runtime never invents Work Items from raw approved Changes. It selects only acce
 ## Related docs
 
 - [WorkState](work-state.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)
 - [Decision Loop](decision-loop.md)

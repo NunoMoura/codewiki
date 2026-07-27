@@ -67,6 +67,7 @@ interface WorkState {
   sprints: Map<SprintId, SprintView>;
   workItems: Map<WorkItemId, WorkItemView>;
   assignments: Map<AssignmentId, AssignmentView>;
+  quality: QualityPolicyProjectionState;
   knowledge: KnowledgeState;
   integration: IntegrationState;
   runtime: RuntimeObservationState;
@@ -97,7 +98,8 @@ A Change view may expose:
 - Decision-loop validation and exact approval receipt;
 - planning coverage and Sprint memberships;
 - owned and contributing Work Items;
-- Assignments and worker reports;
+- Assignments, selected Implementation tiers, bounded Workbench summaries, and Worker Reports;
+- resolved Quality Policy receipts, assessment progress, gates, latency/token summaries, and repair routes;
 - implementation realization and integration evidence;
 - Knowledge impacts and outcome disposition;
 - blockers, current loop, and next safe action.
@@ -123,9 +125,9 @@ trigger set
 -> refresh WorkState
 -> derive eligible jobs
 -> apply lanes, conflicts, dependencies, capacity, and policy
--> build exact loop or Assignment context slices
--> run compatible jobs through execution adapters
--> evaluate loop-owned quality standards
+-> bind Stage Protocol and resolve model route, Quality Policy, or Worker Workbench
+-> run compatible jobs through execution adapters and bounded verifier pools
+-> fan in required assessments and apply deterministic gates
 -> guarded append to Change Trace(s)
 -> schedule permitted effects
 -> repeat or quiesce
@@ -160,7 +162,7 @@ User and agent views are projections over WorkState or the same canonical inputs
 
 - Backlog: persisted Change Traces whose current Decision state is not approved or terminal;
 - Planning horizon: approved Changes, Planning epochs, Sprints, Work Items, typed edges, coverage, and held/ready frontiers;
-- Implementation cockpit: claims, Assignments, worker observations, isolation, integration, checks, evidence, and Git proof;
+- Implementation cockpit: Claims, Assignments, selected tiers, bounded Workbench summaries, assessment progress, isolation, integration, checks, evidence, latency/tokens, and Git proof;
 - Sprint views: Planning-created execution groups across one or more Change Traces;
 - work queue: claimable Planning-approved Work Items;
 - Change dossier: one Change Trace joined with Product/System/Design impact, Planning coverage, realization, proof, and history;
@@ -180,6 +182,10 @@ Views must label explicit facts separately from inferred relationships and must 
 ## Related docs
 
 - [Loop Model](loop-model.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Loop Contracts](loop-contracts.md)
 - [Traces](traces.md)
 - [Runtime](runtime.md)

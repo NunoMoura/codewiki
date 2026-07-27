@@ -6,6 +6,10 @@ purpose: "Show the target project-scoped control plane, concurrent clients, sema
 source_docs:
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/codewiki-os.md
+  - .codewiki/kb/system/components/quality-policy.md
+  - .codewiki/kb/system/components/worker-workbench.md
+  - .codewiki/kb/system/components/model-routing.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/session-coordination.md
   - .codewiki/kb/system/components/adapters-and-ui.md
@@ -61,11 +65,31 @@ nodes:
     group: control
     kind: generated_projection
     source: .codewiki/kb/system/components/work-state.md
+  - id: os_protocols
+    label: CodeWiki OS + Stage Protocols
+    group: control
+    kind: versioned_policy_resource
+    source: .codewiki/kb/system/components/codewiki-os.md
+  - id: quality_policy
+    label: Quality Policy resolver + bounded evaluator
+    group: control
+    kind: quality_policy
+    source: .codewiki/kb/system/components/quality-policy.md
+  - id: model_routing
+    label: Stage routes + Implementation tier selector
+    group: control
+    kind: model_routing
+    source: .codewiki/kb/system/components/model-routing.md
   - id: semantic_adapter
     label: Embedded Pi SDK semantic sessions
     group: execution
     kind: execution_adapter
     source: .codewiki/kb/system/components/session-coordination.md
+  - id: worker_workbench
+    label: Private Worker Workbench
+    group: execution
+    kind: transient_execution_environment
+    source: .codewiki/kb/system/components/worker-workbench.md
   - id: worker_adapter
     label: Process / container workers
     group: execution
@@ -125,11 +149,23 @@ edges:
     to: work_state
     label: refreshes canonical projection
   - from: control_plane
+    to: os_protocols
+    label: binds exact versioned instructions
+  - from: control_plane
+    to: quality_policy
+    label: resolves candidate-specific Standards
+  - from: control_plane
+    to: model_routing
+    label: resolves stage route or Implementation tier
+  - from: control_plane
     to: semantic_adapter
     label: schedules bounded read-only jobs
   - from: control_plane
+    to: worker_workbench
+    label: provisions exact private environment before Claim
+  - from: worker_workbench
     to: worker_adapter
-    label: starts claimed isolated Assignments
+    label: activates only under matching Claim
   - from: semantic_adapter
     to: decision
     label: submits Decision candidate
@@ -138,7 +174,13 @@ edges:
     label: submits Planning candidate
   - from: semantic_adapter
     to: implementation
-    label: submits review candidate
+    label: submits candidate or independent assessment
+  - from: planning
+    to: worker_workbench
+    label: declares Workbench requirements
+  - from: model_routing
+    to: worker_workbench
+    label: binds selected model route
   - from: worker_adapter
     to: implementation
     label: returns candidate realization evidence
@@ -151,6 +193,15 @@ edges:
   - from: planning
     to: traces
     label: accepted epoch slices through control plane
+  - from: quality_policy
+    to: decision
+    label: governs deterministic exit
+  - from: quality_policy
+    to: planning
+    label: governs deterministic exit
+  - from: quality_policy
+    to: implementation
+    label: governs deterministic exit
   - from: implementation
     to: traces
     label: accepted realization through control plane

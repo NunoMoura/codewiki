@@ -61,13 +61,13 @@ The CodeWiki package exposes its Pi extension for external package installs thro
 
 Pi integration lives under `src/pi/**` and has two distinct roles. The extension is a thin conversational client of one project-scoped CodeWiki control plane. The Pi execution adapter creates bounded agent sessions on runtime request. Pi remains the primary execution engine, not the CodeWiki core; harness-neutral runtime code must not import Pi SDK types.
 
-The target CodeWiki OS keeps bounded state, Change, and configuration capabilities available to clients while the project control plane owns semantic selection and scheduling. Decision, Planning, and Implementation-review sessions are created through an embedded Pi SDK adapter with read-only repository tools and a closed candidate-submission tool. Implementation Assignments use a separate harness-neutral worker contract. The default Pi adapter executes foreground child processes in explicit worktrees. An opt-in core OCI adapter executes the same contract through a host-selected digest-pinned Docker/Podman image and preserves the same Claim, Assignment, cancellation, immutable Worker report, recovery, review, Integration, and cleanup semantics. The executable Pi daemon does not select or provision that image automatically. Runtime supplies exact context, freshness, budgets, and append authority; sessions return judgment or evidence only.
+The target CodeWiki OS keeps bounded state, Change, and configuration capabilities available to clients while the project control plane owns semantic selection and scheduling. Decision, Planning, Implementation Quality, and model-Standard sessions are created through an embedded Pi SDK adapter with read-only repository tools and a closed candidate-submission tool. Runtime injects versioned CodeWiki OS guidance plus the exact mandatory Stage Protocol. Normal Pi Skill discovery and progressive loading remain available unless Planning narrows Skill scope through one Workbench. Implementation Assignments use a separate harness-neutral worker contract. The default Pi adapter executes foreground child processes in explicit worktrees. An opt-in core OCI adapter executes the same contract through a host-selected digest-pinned Docker/Podman image and preserves the same Claim, Assignment, cancellation, immutable Worker report, recovery, review, Integration, and cleanup semantics. The executable Pi daemon does not select or provision that image automatically. Runtime supplies exact context, freshness, budgets, and append authority; sessions return judgment or evidence only.
 
 The user-facing slash surface remains `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi session ensures or connects to the detached local project service and may open its dashboard once. `/wiki-dashboard` reopens, discovers, or explicitly stops the dashboard and coordinator service according to policy. No grouped namespace command or former state alias exists. The CLI remains a temporary development/test client.
 
 CodeWiki is not published to the npm registry yet. Its selected registry identity is `@nunomoura/codewiki`, while package metadata keeps `"private": true` so npm refuses publication during stabilization. Distribution testing packs the candidate and installs it only into disposable external projects with isolated Pi settings. The source checkout contains canonical KB, source, tests, and Git history but no active dogfood trace or Changes state. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi installation by default in consuming projects; controlled tests may opt into the explicit non-project-install override. CodeWiki exposes a hardened OCI adapter seam but does not ship a trusted worker image or treat containerization alone as complete sandbox authority. It remains compatible with external sandbox, worktree, container, or agent-harness isolation.
 
-Mocked extension tests cover registered capabilities, service-owned semantic dispatch, peer-absent runtime-selected candidate fallback, runtime-owned semantic invocation, direct `/wiki-*` slash commands, pure TUI renderers, and prompt guidance. Prompt guidance is additive context only; it must not choose or directly invoke a semantic loop, create workflow truth, or replace explicit trace evidence.
+Mocked extension tests cover registered capabilities, service-owned semantic dispatch, peer-absent runtime-selected candidate fallback, runtime-owned semantic invocation, direct `/wiki-*` slash commands, pure TUI renderers, CodeWiki OS guidance, Stage Protocol binding, and normal Skill discovery. Prompt resources constrain candidate behavior but cannot choose routing, create workflow truth, grant tools or authority, suppress Quality Standards, or replace explicit trace evidence.
 
 `npm run test:pi-install` is the reproducible install smoke. It packs CodeWiki, installs the tarball into a temp npm prefix, installs that package through Pi with temp `PI_CODING_AGENT_DIR`/session dirs, and verifies Pi can resolve the package without writing repo-local or global Pi settings.
 
@@ -116,7 +116,7 @@ externally visible actions.
 
 Repo-local self-hosting means using CodeWiki `wiki_*` tools inside the CodeWiki source checkout. It is disabled during stabilization because it creates a circular trust and versioning dependency between mutable source and the controller evaluating that source.
 
-Normal development uses Pi native coding tools, pi-lens, KB updates, source/tests, and Git. The repository carries no active dogfood traces, Changes Backlog ref, controller pin, CodeWiki package entry, or project-local CodeWiki skills. Removing current dogfood state from the branch tip does not remove recoverability from Git history or the explicit ignored migration backup.
+Normal development uses Pi native coding tools, pi-lens, KB updates, source/tests, and Git. The repository carries no active dogfood traces, Changes Backlog ref, controller pin, CodeWiki package entry, or project-local CodeWiki Skills. CodeWiki OS and Stage Protocol package resources are product source tested through packed external installs; they are not activated in this checkout. Removing current dogfood state from the branch tip does not remove recoverability from Git history or the explicit ignored migration backup.
 
 Release readiness is proved externally:
 
@@ -140,6 +140,10 @@ Self-hosting is not a release requirement. If reconsidered later, it needs a new
 
 ## Related docs
 
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Worker Workbench](worker-workbench.md)
+- [Model Routing](model-routing.md)
 - [Source Map](source-map.md)
 - [Traces](traces.md)
 - [Runtime](runtime.md)

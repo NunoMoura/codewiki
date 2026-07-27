@@ -114,8 +114,8 @@ receive or reload one Change Trace
 observe relevant WorkState and canonical sources
 refine the next semantic Change revision
 assess intent, user value, outcome, evidence, Knowledge impact, risk, and alternatives
-render the exact revision and approval receipt candidate
-run Decision quality standards
+render one immutable revision and approval-receipt candidate
+resolve and evaluate Decision Quality Policy
 append the iteration through runtime
 continue, exit, route back, or block
 ```
@@ -135,7 +135,7 @@ Decision output contains:
 - delivery constraints and planning questions;
 - exact approval receipt when authority accepts the revision;
 - terminal disposition when rejected, deferred, or withdrawn;
-- quality-standard results and canonical refs.
+- Quality Policy receipt, compact assessments, deterministic gate results, and canonical refs.
 
 Approval receipt includes at least:
 
@@ -159,11 +159,13 @@ Decision owns accepted Product/System Knowledge meaning changes. Before approval
 
 KB may describe accepted future intent before source realizes it. WorkState must therefore distinguish expected realization pending from unexplained semantic drift.
 
-## Quality standards
+## Quality Policy baseline
 
-Decision can approve only when active standards are met:
+Decision uses the user-selected Decision model route under the mandatory Decision Stage Protocol. Runtime resolves exact Standards from protected kernel invariants, Decision baseline, Change kind/risk/layers, project traits, active overlap, and approved additions. Decision can approve only when deterministic gates over every required assessment and exact authority fact permit exit.
 
-| Quality standard | Required signal |
+Baseline Standards include:
+
+| Quality Standard | Required signal |
 | --- | --- |
 | change_revision_ready | One stable, complete Change revision and digest are present. |
 | intention_understood | Current state, desired state, rationale, and non-goals are explicit. |
@@ -205,7 +207,8 @@ Planning consumes only exact approved Change revisions. Rejected, withdrawn, def
       "changeRevision": {},
       "approval": {},
       "knowledgeImpacts": [],
-      "qualityStandards": []
+      "qualityPolicyReceipt": {},
+      "assessments": []
     },
     "exit": {
       "status": "exit",
@@ -224,6 +227,9 @@ Planning or Implementation route-back cites the exact originating event and unme
 ## Related docs
 
 - [WorkState](work-state.md)
+- [CodeWiki OS and Stage Protocols](codewiki-os.md)
+- [Quality Policy](quality-policy.md)
+- [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)
 - [Planning Loop](planning-loop.md)

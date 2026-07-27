@@ -6,6 +6,10 @@ purpose: Show client, control-plane, execution-adapter, semantic-loop, truth, pr
 source_docs:
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/codewiki-os.md
+  - .codewiki/kb/system/components/quality-policy.md
+  - .codewiki/kb/system/components/worker-workbench.md
+  - .codewiki/kb/system/components/model-routing.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/session-coordination.md
   - .codewiki/kb/system/components/adapters-and-ui.md
@@ -71,6 +75,21 @@ nodes:
     group: control_layer
     kind: generated_projection
     source: .codewiki/kb/system/components/work-state.md
+  - id: protocol_resources
+    label: CodeWiki OS + Stage Protocol resources
+    group: control_layer
+    kind: versioned_policy_resource
+    source: .codewiki/kb/system/components/codewiki-os.md
+  - id: quality_policy
+    label: Quality Policy resolver + evaluator
+    group: control_layer
+    kind: quality_policy
+    source: .codewiki/kb/system/components/quality-policy.md
+  - id: model_router
+    label: Stage route + Implementation tier resolver
+    group: control_layer
+    kind: model_routing
+    source: .codewiki/kb/system/components/model-routing.md
   - id: semantic_contract
     label: Semantic session adapter contract
     group: adapter_layer
@@ -82,10 +101,15 @@ nodes:
     kind: execution_adapter
     source: .codewiki/kb/system/components/extension.md
   - id: worker_contract
-    label: Implementation worker adapter contract
+    label: Worker Workbench adapter contract
     group: adapter_layer
     kind: adapter_contract
-    source: .codewiki/kb/system/components/session-coordination.md
+    source: .codewiki/kb/system/components/worker-workbench.md
+  - id: worker_workbench
+    label: Private Worker Workbench manifest + environment
+    group: adapter_layer
+    kind: transient_execution_environment
+    source: .codewiki/kb/system/components/worker-workbench.md
   - id: isolated_workers
     label: Process / container workers
     group: adapter_layer
@@ -160,6 +184,15 @@ edges:
   - from: control_plane
     to: work_state
     label: refreshes
+  - from: control_plane
+    to: protocol_resources
+    label: binds versions and digests
+  - from: control_plane
+    to: quality_policy
+    label: resolves immutable candidate policy
+  - from: control_plane
+    to: model_router
+    label: selects route and tier
   - from: scheduler
     to: semantic_contract
     label: semantic jobs
@@ -168,10 +201,19 @@ edges:
     label: Pi implementation
   - from: scheduler
     to: worker_contract
-    label: claimed Assignments
+    label: worker-ready Work Items
+  - from: planning_loop
+    to: worker_contract
+    label: declares Workbench requirements
+  - from: model_router
+    to: worker_contract
+    label: binds Implementation route
   - from: worker_contract
+    to: worker_workbench
+    label: provisions before Claim
+  - from: worker_workbench
     to: isolated_workers
-    label: process or container implementation
+    label: activates under exact Claim
   - from: pi_sdk_adapter
     to: decision_loop
     label: Decision candidate
@@ -180,7 +222,7 @@ edges:
     label: Planning candidate
   - from: pi_sdk_adapter
     to: implementation_loop
-    label: review candidate
+    label: candidate or independent assessment
   - from: isolated_workers
     to: implementation_loop
     label: worker evidence candidate
@@ -193,6 +235,15 @@ edges:
   - from: planning_loop
     to: traces
     label: guarded epoch append
+  - from: quality_policy
+    to: decision_loop
+    label: deterministic exit gates
+  - from: quality_policy
+    to: planning_loop
+    label: deterministic exit gates
+  - from: quality_policy
+    to: implementation_loop
+    label: deterministic exit gates
   - from: implementation_loop
     to: traces
     label: guarded realization append
