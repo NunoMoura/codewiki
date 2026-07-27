@@ -121,7 +121,7 @@ Quality optimization targets minimum sufficient assurance rather than maximum ev
 
 ## Current migration drift
 
-Decision, Planning, and Implementation currently expose different production quality paths. Current graph and judge contracts use `rubric`, incomplete cache identity, profile masks, and hard-gate skipping that can suppress unrelated feedback. Source migration must first introduce common contracts with behavior parity, then move all three stages onto deterministic policy resolution and bounded fan-out/fan-in.
+Common Quality contracts, the closed native Standard registry, and deterministic typed policy resolution now exist in source. Decision, Planning, and Implementation still execute different legacy quality paths whose graph and judge contracts use `rubric`, incomplete cache identity, profile masks, and hard-gate skipping that can suppress unrelated feedback. Because CodeWiki has no production compatibility burden, each stage will make a clean cut directly to native policy resolution and bounded fan-out/fan-in, removing its superseded internal contracts, tests, and exports in the same slice rather than retaining compatibility projections.
 
 ## Related docs
 

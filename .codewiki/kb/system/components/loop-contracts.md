@@ -146,7 +146,7 @@ A loop exit condition is the deterministic result of one resolved Quality Policy
 
 Runtime composes protected kernel invariants, stage baseline, Change kind/risk/layer overlays, project traits, technology/path overlays, explicit approved additions, and permitted non-kernel exclusions. Sparse typed selector rules produce active Standard bindings plus an explainable resolution containing `activatedBy`, rule refs, versions, protected status, exclusions, and one policy digest. Learned activation is forbidden.
 
-Profiles become compatibility inputs to typed selector facts during migration; they are not permanent masks over one frozen graph. Protected kernel Standards cannot be removed. Inactive considered Standards must carry an allowed exclusion reason such as `not_applicable`, `covered_by_invariant`, or `escalated_elsewhere`. Actual Implementation effects may add mandatory Standards but cannot silently remove the frozen Planning minimum.
+Typed selector facts replace profiles during each clean stage cut; profiles do not remain as masks over one frozen graph. Protected kernel Standards cannot be removed. Inactive considered Standards must carry an allowed exclusion reason such as `not_applicable`, `covered_by_invariant`, or `escalated_elsewhere`. Actual Implementation effects may add mandatory Standards but cannot silently remove the frozen Planning minimum.
 
 Quality-standard implementation is split from graph identity:
 
@@ -212,7 +212,7 @@ Each non-deterministic node also declares or derives a specialized verifier spec
 - optional score threshold and calibration refs;
 - trial and aggregation policy.
 
-Current graph nodes declare stable id, description, verifier method, compatibility `gate` and `mode`, layer, Standard type, repair target, weight/cost/timeout, dependencies, and issue predicates. Common Quality contracts separate these concerns: the Quality Standard owns criteria and verifier/measurement metadata; the binding owns activation, enforcement, parameters, and evaluation dependencies; deterministic gates own progression logic. Compatibility graph fields compile into those contracts during migration rather than remaining one overloaded node schema.
+Legacy graph nodes declare stable id, description, verifier method, overloaded `gate` and `mode`, layer, Standard type, repair target, weight/cost/timeout, dependencies, and issue predicates. Common Quality contracts separate these concerns: the Quality Standard owns criteria and verifier/measurement metadata; the binding owns activation, enforcement, parameters, and evaluation dependencies; deterministic gates own progression logic. Each pre-production stage cut replaces its overloaded graph contract directly and removes the superseded internal representation rather than compiling a lasting compatibility projection.
 
 Quality graph schema v3 validates graph identity, unique declared layers, unique node ids, known dependencies, and acyclic dependency order before hashing or execution. Evaluation dependencies skip only nodes whose required assessment input cannot exist. Gate dependencies are evaluated later at fan-in. Independent Standards continue through bounded parallel pools even when another gate will fail. Policy-inactive nodes are excluded with resolution reasons rather than reported as passed.
 
@@ -223,7 +223,7 @@ other Pi extensions. External tools may provide evidence refs, but they never
 own semantic authority. Standards with method `external_evidence` consume
 reported checks, TDD proof, content proof, CI refs, or optional linter results;
 CodeWiki validates their presence/shape and trace coverage, not the linter's
-internal rules. Production loop outputs carry Quality Policy resolution identity, one compact immutable Quality Report, and compatibility graph id/version/hash for traceability and recovery. The lab uses editable
+internal rules. Production loop outputs carry Quality Policy resolution identity and one compact immutable Quality Report for traceability and recovery. The lab uses editable
 candidate graphs and locked eval cases to improve DEC, PEC, IEC, PCE, and HCE
 before promotion back into production code.
 

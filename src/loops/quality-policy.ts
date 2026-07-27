@@ -167,7 +167,7 @@ export function createQualityPolicyResolution(
 	assertValidResolutionShape(resolutionWithoutDigest);
 	return {
 		...resolutionWithoutDigest,
-		policyDigest: digest(resolutionWithoutDigest),
+		policyDigest: qualityPolicyDigest(resolutionWithoutDigest),
 	};
 }
 
@@ -182,7 +182,7 @@ export function assertValidQualityPolicyResolution(
 	const { policyDigest, ...resolutionWithoutDigest } = resolution;
 	assertDigest(policyDigest, "policyDigest");
 	assertValidResolutionShape(resolutionWithoutDigest);
-	const expectedDigest = digest(resolutionWithoutDigest);
+	const expectedDigest = qualityPolicyDigest(resolutionWithoutDigest);
 	if (policyDigest !== expectedDigest) {
 		throw new Error(
 			`Quality Policy resolution digest mismatch: expected ${expectedDigest}.`,
@@ -361,7 +361,7 @@ function sortObject(
 	);
 }
 
-function digest(value: unknown): string {
+export function qualityPolicyDigest(value: unknown): string {
 	return `sha256:${createHash("sha256").update(stableJson(value)).digest("hex")}`;
 }
 

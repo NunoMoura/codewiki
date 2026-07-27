@@ -30,15 +30,15 @@ Move Decision, Planning, and Implementation onto one explainable Quality Policy 
 - [x] Freeze CodeWiki OS, Stage Protocol, Quality Policy, Worker Workbench, Skill, model-route, and asynchronous evaluation architecture in the KB and diagrams. Commit `4d833f7`.
 - [x] Add common `QualityStandard`, `QualityStandardBinding`, `QualityAssessment`, deterministic gate, `QualityPolicyResolution`, and `QualityReport` contracts without changing current loop behavior. Commit `0f2f0f1`.
 - [x] Explore a compatibility adapter in commit `d538092`; reject it before stage adoption because CodeWiki has no production compatibility burden.
-- [x] Remove the unused adapter and its tests. Checkpoint subject: `refactor: remove quality compatibility layer`.
+- [x] Remove the unused adapter and its tests. Commit `48a1ff8`.
+- [x] Implement the native closed Standard registry and deterministic typed Quality Policy activation, including protected kernel Standards, project rollout progression, sparse overlays, approved additions/exclusions, frozen Planning minimums, and explainable policy digests. Checkpoint subject: `feat: resolve native quality policies`.
 
 ### Current
 
-- [ ] Implement the native CodeWiki Standard registry and deterministic Quality Policy activation from stage, Change kind/risk/layers, project traits, technologies, paths, and approved additions/exclusions. Protect kernel Standards, stage project Standards through `observe` → `warn` → approved `enforce`, and produce explainable policy digests.
+- [ ] Implement native minimal admission plus bounded asynchronous verifier fan-out, required-result fan-in, deterministic gates, and immutable `QualityReport` output.
 
 ### Next
 
-- [ ] Implement native minimal admission plus bounded asynchronous verifier fan-out, required-result fan-in, deterministic gates, and immutable `QualityReport` output.
 - [ ] Cut Decision directly from its legacy quality internals to native Quality contracts; remove superseded Decision source, tests, types, and exports in the same slice.
 - [ ] Cut Planning directly from its legacy quality internals to native Quality contracts; remove superseded Planning source, tests, types, and exports in the same slice.
 - [ ] Cut Implementation directly from its legacy quality internals to native Quality contracts; remove superseded graph/profile/pack/evaluator paths once no stage references them.
@@ -59,8 +59,8 @@ Move Decision, Planning, and Implementation onto one explainable Quality Policy 
 ## Current baseline
 
 - Branch: `main`
-- Latest recorded commit: `d538092`; compatibility source is removed by the commit containing this checklist update.
-- Core suite: 752/752
+- Latest recorded commit: `48a1ff8`; native policy resolution is added by the commit containing this checklist update.
+- Core suite: 763/763
 - Typecheck: passing
 - LSP/lens errors: 0
 - Source checkout Pi packages: `npm:pi-lens` only
