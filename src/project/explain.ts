@@ -460,10 +460,10 @@ function implementationChangeTouchesPath(
 ): boolean {
 	return refsTouchPath(
 		[
-			...stringList(change.codePaths ?? change.code_paths),
-			...stringList(change.docPaths ?? change.doc_paths),
-			...stringList(change.testPaths ?? change.test_paths),
-			...stringList(change.publicationRefs ?? change.publication_refs),
+			...stringList(change.codePaths),
+			...stringList(change.docPaths),
+			...stringList(change.testPaths),
+			...stringList(change.publicationRefs),
 		],
 		target,
 		owner,

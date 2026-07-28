@@ -25,8 +25,8 @@ describe("implementation worker proof normalization", () => {
 			clean: true,
 			change_inputs: [
 				{
-					code_paths: ["src/d.ts"],
-					check_results: [{ command: "node --test worker", status: "pass" }],
+					codePaths: ["src/d.ts"],
+					checkResults: [{ command: "node --test worker", status: "pass" }],
 				},
 			],
 		};

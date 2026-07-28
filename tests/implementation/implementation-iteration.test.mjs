@@ -121,6 +121,19 @@ function componentMap() {
 }
 
 describe("implementation iteration runner", () => {
+	it("rejects deprecated nested Implementation change aliases", () => {
+		assert.throws(
+			() =>
+				normalizeImplementationChanges([
+					{
+						id: "IC-deprecated",
+						planning_refs: ["trace:deprecated"],
+					},
+				]),
+			/Implementation change input 0 received unsupported field planning_refs/,
+		);
+	});
+
 	it("records implementation evidence as trace events", () => {
 		const planning = planningEvents();
 		const planningEvent = planningWorkEvent(planning);
@@ -1318,19 +1331,19 @@ describe("implementation iteration runner", () => {
 			changeInputs: [
 				{
 					id: "IC-docs",
-					planning_refs: [planningEvent.id],
-					doc_paths: [".codewiki/kb/system/components/traces.md"],
-					checks_run: ["npm test"],
-					check_results: [{ command: "npm test", status: "pass" }],
-					acceptance_evidence: ["Trace docs updated."],
-					acceptance_evidence_items: [
+					planningRefs: [planningEvent.id],
+					docPaths: [".codewiki/kb/system/components/traces.md"],
+					checks: ["npm test"],
+					checkResults: [{ command: "npm test", status: "pass" }],
+					acceptanceEvidence: ["Trace docs updated."],
+					acceptanceEvidenceItems: [
 						{
 							criterion_id: "AC-001",
 							summary: "Trace docs updated.",
 							evidence_refs: [".codewiki/kb/system/components/traces.md"],
 						},
 					],
-					content_proof: { commit: "abc123", tree: "def456" },
+					contentProof: { commit: "abc123", tree: "def456" },
 					...implementationQualityFields(),
 				},
 			],

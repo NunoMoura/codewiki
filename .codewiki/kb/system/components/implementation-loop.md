@@ -120,7 +120,7 @@ One immutable Implementation candidate describes the exact realization under eva
 - residual issues, uncertainty, and outcome disposition;
 - route-back questions.
 
-Candidate excludes caller-authored aggregate proof, cached-review inclusion switches, TDD/evidence policy switches, runtime time, candidate id, authority, Check Results, Exit Report, and final route. The executable Implementation facade now accepts only normalized evidence field names and rejects caller proof, approval authority, routing identity, and deprecated snake-case aliases at admission. Archive disposition has one exact normalized contract; the duplicate compatibility input and its snake-case aliases have been deleted.
+Candidate excludes caller-authored aggregate proof, cached-review inclusion switches, TDD/evidence policy switches, runtime time, candidate id, authority, Check Results, Exit Report, and final route. The executable Implementation facade now accepts only normalized evidence field names and rejects caller proof, approval authority, routing identity, and deprecated snake-case aliases at admission. Nested `ImplementationChangeInput` content is also camel-case-only and rejects unknown fields rather than silently normalizing compatibility aliases. Archive disposition has one exact normalized contract; the duplicate compatibility input and its snake-case aliases have been deleted.
 
 Runtime constructs aggregate content proof from exact source or Integration state. Supplied proof can never override observed proof.
 

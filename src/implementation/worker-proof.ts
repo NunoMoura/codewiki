@@ -326,10 +326,9 @@ function workerProofVerdict(
 	const statuses = [
 		...objectList<CheckResultInput>(input.checkResults),
 		...objectList<CheckResultInput>(input.check_results),
-		...changeInputs(input).flatMap((change) => [
-			...objectList<CheckResultInput>(change.checkResults),
-			...objectList<CheckResultInput>(change.check_results),
-		]),
+		...changeInputs(input).flatMap((change) =>
+			objectList<CheckResultInput>(change.checkResults),
+		),
 	]
 		.map((check) => text(check.status).toLowerCase())
 		.filter(Boolean);
@@ -453,31 +452,21 @@ function changeInputs(
 }
 
 function changePlanningRefs(change: ImplementationChangeInput): string[] {
-	return [
-		...stringList(change.planningRefs),
-		...stringList(change.planning_refs),
-	];
+	return stringList(change.planningRefs);
 }
 
 function changeChangedPaths(change: ImplementationChangeInput): string[] {
 	return [
 		...stringList(change.codePaths),
-		...stringList(change.code_paths),
 		...stringList(change.docPaths),
-		...stringList(change.doc_paths),
 		...stringList(change.testPaths),
-		...stringList(change.test_paths),
 	];
 }
 
 function changeChecks(change: ImplementationChangeInput): string[] {
 	return [
 		...stringList(change.checks),
-		...stringList(change.checks_run),
 		...objectList<CheckResultInput>(change.checkResults).map((check) =>
-			text(check.command),
-		),
-		...objectList<CheckResultInput>(change.check_results).map((check) =>
 			text(check.command),
 		),
 	];

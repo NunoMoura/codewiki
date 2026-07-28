@@ -496,7 +496,7 @@ function assertEvidenceDoesNotClaimRuntimeAuthority(
 }
 
 function evidenceWorkItemId(input: ImplementationChangeInput): string {
-	const value = input.workUnitId || input.work_unit_id;
+	const value = input.workUnitId;
 	if (!value) throw new Error("Implementation evidence requires workItemId.");
 	return value;
 }
@@ -597,17 +597,11 @@ function runtimeOwnedChangeInput(
 const RUNTIME_OWNED_CHANGE_INPUT_KEYS = [
 	"id",
 	"planningRefs",
-	"planning_refs",
 	"workerId",
-	"worker_id",
 	"workUnitId",
-	"work_unit_id",
 	"claimId",
-	"claim_id",
 	"sessionId",
-	"session_id",
 	"sessionFile",
-	"session_file",
 ] as const;
 
 function assignmentForEvidence(
@@ -615,7 +609,7 @@ function assignmentForEvidence(
 	workItemId: string,
 	assignments: WorkStateAssignment[],
 ): WorkStateAssignment | undefined {
-	const assignmentId = text(source.claimId || source.claim_id);
+	const assignmentId = text(source.claimId);
 	if (assignmentId) {
 		const exact = assignments.find(
 			(candidate) =>

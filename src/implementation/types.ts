@@ -194,43 +194,24 @@ export interface AcceptanceEvidenceInput {
 export interface ImplementationChangeInput {
 	id: string;
 	planningRefs?: string[];
-	planning_refs?: string[];
 	workerId?: string;
-	worker_id?: string;
 	workUnitId?: string;
-	work_unit_id?: string;
 	claimId?: string;
-	claim_id?: string;
 	sessionId?: string;
-	session_id?: string;
 	sessionFile?: string;
-	session_file?: string;
 	codePaths?: string[];
-	code_paths?: string[];
 	docPaths?: string[];
-	doc_paths?: string[];
 	testPaths?: string[];
-	test_paths?: string[];
 	checks?: string[];
-	checks_run?: string[];
 	checkResults?: CheckResultInput[];
-	check_results?: CheckResultInput[];
 	acceptanceEvidence?: string[];
-	acceptance_evidence?: string[];
 	acceptanceEvidenceItems?: AcceptanceEvidenceInput[];
-	acceptance_evidence_items?: AcceptanceEvidenceInput[];
 	contentProof?: ContentProof;
-	content_proof?: ContentProof;
 	implementationAssessment?: ImplementationQualityAssessmentInput;
-	implementation_assessment?: ImplementationQualityAssessmentInput;
 	sensitiveSurfaceAssessment?: SensitiveSurfaceAssessmentInput;
-	sensitive_surface_assessment?: SensitiveSurfaceAssessmentInput;
 	approvalAuthority?: ImplementationApprovalAuthority;
-	approval_authority?: ImplementationApprovalAuthority;
 	approvalRef?: string;
-	approval_ref?: string;
 	publicationRefs?: string[];
-	publication_refs?: string[];
 }
 
 export type ImplementationExitIssueCode =

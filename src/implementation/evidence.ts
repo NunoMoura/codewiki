@@ -28,70 +28,81 @@ const CHECK_PHASES = new Set<CheckPhase>([
 	"verify",
 ]);
 
+const IMPLEMENTATION_CHANGE_INPUT_FIELDS = new Set([
+	"id",
+	"planningRefs",
+	"workerId",
+	"workUnitId",
+	"claimId",
+	"sessionId",
+	"sessionFile",
+	"codePaths",
+	"docPaths",
+	"testPaths",
+	"checks",
+	"checkResults",
+	"acceptanceEvidence",
+	"acceptanceEvidenceItems",
+	"contentProof",
+	"implementationAssessment",
+	"sensitiveSurfaceAssessment",
+	"approvalAuthority",
+	"approvalRef",
+	"publicationRefs",
+]);
+
 export function normalizeImplementationChanges(
 	changes: ImplementationChangeInput[],
 ): ImplementationChange[] {
-	return changes.map((change) => ({
-		id: text(change.id),
-		planningRefs: unique([
-			...stringList(change.planningRefs),
-			...stringList(change.planning_refs),
-		]),
-		...optionalTextField("workerId", change.workerId ?? change.worker_id),
-		...optionalTextField(
-			"workUnitId",
-			change.workUnitId ?? change.work_unit_id,
-		),
-		...optionalTextField("claimId", change.claimId ?? change.claim_id),
-		...optionalTextField("sessionId", change.sessionId ?? change.session_id),
-		...optionalTextField(
-			"sessionFile",
-			change.sessionFile ?? change.session_file,
-		),
-		codePaths: unique([
-			...stringList(change.codePaths),
-			...stringList(change.code_paths),
-		]),
-		docPaths: unique([
-			...stringList(change.docPaths),
-			...stringList(change.doc_paths),
-		]),
-		testPaths: unique([
-			...stringList(change.testPaths),
-			...stringList(change.test_paths),
-		]),
-		checks: unique([
-			...stringList(change.checks),
-			...stringList(change.checks_run),
-		]),
-		checkResults: normalizeCheckResults([
-			...objectList<CheckResultInput>(change.checkResults),
-			...objectList<CheckResultInput>(change.check_results),
-		]),
-		acceptanceEvidence: unique([
-			...stringList(change.acceptanceEvidence),
-			...stringList(change.acceptance_evidence),
-		]),
-		acceptanceEvidenceItems: normalizeAcceptanceEvidence([
-			...objectList<AcceptanceEvidenceInput>(change.acceptanceEvidenceItems),
-			...objectList<AcceptanceEvidenceInput>(change.acceptance_evidence_items),
-		]),
-		contentProof: change.contentProof ?? change.content_proof,
-		implementationAssessment: normalizeImplementationAssessment(
-			change.implementationAssessment ?? change.implementation_assessment,
-		),
-		sensitiveSurfaceAssessment: normalizeSensitiveSurfaceAssessment(
-			change.sensitiveSurfaceAssessment ?? change.sensitive_surface_assessment,
-		),
-		approvalAuthority: text(
-			change.approvalAuthority ?? change.approval_authority,
-		),
-		approvalRef: text(change.approvalRef ?? change.approval_ref) || undefined,
-		publicationRefs: unique([
-			...stringList(change.publicationRefs),
-			...stringList(change.publication_refs),
-		]),
-	}));
+	return changes.map((change, index) => {
+		assertImplementationChangeInput(change, index);
+		return {
+			id: text(change.id),
+			planningRefs: unique(stringList(change.planningRefs)),
+			...optionalTextField("workerId", change.workerId),
+			...optionalTextField("workUnitId", change.workUnitId),
+			...optionalTextField("claimId", change.claimId),
+			...optionalTextField("sessionId", change.sessionId),
+			...optionalTextField("sessionFile", change.sessionFile),
+			codePaths: unique(stringList(change.codePaths)),
+			docPaths: unique(stringList(change.docPaths)),
+			testPaths: unique(stringList(change.testPaths)),
+			checks: unique(stringList(change.checks)),
+			checkResults: normalizeCheckResults(
+				objectList<CheckResultInput>(change.checkResults),
+			),
+			acceptanceEvidence: unique(stringList(change.acceptanceEvidence)),
+			acceptanceEvidenceItems: normalizeAcceptanceEvidence(
+				objectList<AcceptanceEvidenceInput>(change.acceptanceEvidenceItems),
+			),
+			contentProof: change.contentProof,
+			implementationAssessment: normalizeImplementationAssessment(
+				change.implementationAssessment,
+			),
+			sensitiveSurfaceAssessment: normalizeSensitiveSurfaceAssessment(
+				change.sensitiveSurfaceAssessment,
+			),
+			approvalAuthority: text(change.approvalAuthority),
+			approvalRef: text(change.approvalRef) || undefined,
+			publicationRefs: unique(stringList(change.publicationRefs)),
+		};
+	});
+}
+
+function assertImplementationChangeInput(
+	change: ImplementationChangeInput,
+	index: number,
+): void {
+	if (!change || typeof change !== "object" || Array.isArray(change)) {
+		throw new Error(`Implementation change input ${index} must be an object.`);
+	}
+	for (const key of Object.keys(change)) {
+		if (!IMPLEMENTATION_CHANGE_INPUT_FIELDS.has(key)) {
+			throw new Error(
+				`Implementation change input ${index} received unsupported field ${key}.`,
+			);
+		}
+	}
 }
 
 export function acceptanceRequirementsFromPlanningEvents(

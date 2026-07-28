@@ -143,9 +143,7 @@ function workerChangeInput(
 		...metadata,
 		id: text(change.id) || `${text(input.workUnitId)}-${index + 1}`,
 		planningRefs: planningRefsForChange(change, input),
-		...(change.contentProof || change.content_proof || !contentProof
-			? {}
-			: { contentProof }),
+		...(change.contentProof || !contentProof ? {} : { contentProof }),
 	};
 }
 
@@ -168,15 +166,7 @@ function missingPathField(
 	paths?: string[],
 ): Partial<ImplementationChangeInput> {
 	if (!paths?.length) return {};
-	const snakeKey = key.replace(
-		/[A-Z]/g,
-		(letter) => `_${letter.toLowerCase()}`,
-	);
-	const existing = [
-		...stringList(change[key]),
-		...stringList(change[snakeKey as keyof ImplementationChangeInput]),
-	];
-	return existing.length > 0 ? {} : { [key]: paths };
+	return stringList(change[key]).length > 0 ? {} : { [key]: paths };
 }
 
 function categorizedChangedPaths(
@@ -234,10 +224,7 @@ function planningRefsForChange(
 	change: ImplementationChangeInput,
 	input: ImplementationWorkerReportInput,
 ): string[] {
-	const refs = [
-		...stringList(change.planningRefs),
-		...stringList(change.planning_refs),
-	];
+	const refs = stringList(change.planningRefs);
 	return refs.length > 0 ? unique(refs) : planningRefs(input);
 }
 
@@ -248,10 +235,9 @@ function planningRefs(input: ImplementationWorkerReportInput): string[] {
 	]);
 	if (explicitRefs.length > 0) return explicitRefs;
 	return unique(
-		rawWorkerChangeInputs(input).flatMap((change) => [
-			...stringList(change.planningRefs),
-			...stringList(change.planning_refs),
-		]),
+		rawWorkerChangeInputs(input).flatMap((change) =>
+			stringList(change.planningRefs),
+		),
 	);
 }
 
