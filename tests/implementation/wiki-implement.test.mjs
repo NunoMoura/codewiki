@@ -82,6 +82,34 @@ describe("wiki_implement core facade", () => {
 		);
 	});
 
+	it("rejects caller proof and deprecated evidence aliases", async () => {
+		const root = await fixture();
+		try {
+			const { expectedWorkStateDigest } = await seedRuntimeImplementation(
+				root,
+				"wiki-implement-exact-evidence",
+			);
+			for (const unsupported of [
+				{ contentProof: { workingTreeDigest: "sha256:caller" } },
+				{ code_paths: ["src/forged.ts"] },
+				{ approvalAuthority: "maintainer" },
+			]) {
+				await assert.rejects(
+					() =>
+						runWikiImplement({
+							repoRoot: root,
+							expectedWorkStateDigest,
+							mode: "preview",
+							evidence: [{ ...evidenceInput(), ...unsupported }],
+						}),
+					/Implementation evidence received unsupported field/,
+				);
+			}
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("routes implementation uncertainty back to decision", async () => {
 		const root = await fixture();
 		try {

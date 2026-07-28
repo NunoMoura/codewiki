@@ -280,6 +280,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [ ] Define runtime-owned immutable Decision, Planning, and Implementation candidate schemas and content identities.
 - [ ] Replace broad `Omit<RunWiki*Input, ...>` candidate types and SDK arbitrary-record submission with exact role-specific allowlists.
 - [ ] Reject candidate control over authority, actor/time, review/TDD activation, snapshot/proof scope, aggregate content proof, runtime job identity, append guards, routing, and Check selection.
+  - [x] Replace broad Implementation evidence `Omit` input with one normalized allowlist; reject caller proof, approval authority, runtime routing, and deprecated aliases.
 - [ ] Replace global-by-id registration with Loop-qualified Check identity binding exact criterion digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, and catalog digest.
 - [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.
 - [ ] Derive approved additions/exclusions, rollout progression, and frozen Planning minimums only from canonical runtime observations.

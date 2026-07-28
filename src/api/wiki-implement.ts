@@ -33,10 +33,14 @@ import {
 } from "../implementation/iteration.ts";
 import type {
 	ImplementationArchiveDisposition,
+	AcceptanceEvidenceInput,
+	CheckResultInput,
 	ImplementationArchiveDispositionInput,
 	ImplementationChange,
 	ImplementationChangeInput,
+	ImplementationQualityAssessmentInput,
 	ImplementationWorkerClaim,
+	SensitiveSurfaceAssessmentInput,
 } from "../implementation/types.ts";
 import { createImplementationMergeContentProof } from "../implementation/merge-proof.ts";
 import {
@@ -66,29 +70,36 @@ import type {
 
 export type WikiImplementMode = "preview" | "append";
 
-type RuntimeOwnedImplementationField =
-	| "id"
-	| "planningRefs"
-	| "planning_refs"
-	| "workerId"
-	| "worker_id"
-	| "workUnitId"
-	| "work_unit_id"
-	| "claimId"
-	| "claim_id"
-	| "sessionId"
-	| "session_id"
-	| "sessionFile"
-	| "session_file";
-
-/** Evidence supplied by a worker or semantic adapter; runtime owns all routing facts. */
-export type ImplementationEvidenceSubmission = Omit<
-	ImplementationChangeInput,
-	RuntimeOwnedImplementationField
-> & {
+/** Normalized evidence supplied by a worker or semantic adapter. Runtime owns routing and proof. */
+export interface ImplementationEvidenceSubmission {
 	workItemId: string;
 	assignmentId?: string;
-};
+	codePaths?: string[];
+	docPaths?: string[];
+	testPaths?: string[];
+	checks?: string[];
+	checkResults?: CheckResultInput[];
+	acceptanceEvidence?: string[];
+	acceptanceEvidenceItems?: AcceptanceEvidenceInput[];
+	implementationAssessment?: ImplementationQualityAssessmentInput;
+	sensitiveSurfaceAssessment?: SensitiveSurfaceAssessmentInput;
+	publicationRefs?: string[];
+}
+
+const IMPLEMENTATION_EVIDENCE_FIELDS = new Set([
+	"workItemId",
+	"assignmentId",
+	"codePaths",
+	"docPaths",
+	"testPaths",
+	"checks",
+	"checkResults",
+	"acceptanceEvidence",
+	"acceptanceEvidenceItems",
+	"implementationAssessment",
+	"sensitiveSurfaceAssessment",
+	"publicationRefs",
+]);
 
 export interface RunWikiImplementInput {
 	repoRoot: string;
@@ -478,25 +489,12 @@ function implementationEvidenceSources(
 function assertEvidenceDoesNotClaimRuntimeAuthority(
 	entry: ImplementationEvidenceSubmission,
 ): void {
-	const forbidden = [
-		"id",
-		"planningRefs",
-		"planning_refs",
-		"workerId",
-		"worker_id",
-		"workUnitId",
-		"work_unit_id",
-		"claimId",
-		"claim_id",
-		"sessionId",
-		"session_id",
-		"sessionFile",
-		"session_file",
-	].filter((key) => key in (entry as unknown as Record<string, unknown>));
-	if (forbidden.length > 0) {
-		throw new Error(
-			`Implementation evidence cannot supply runtime-owned fields: ${forbidden.join(", ")}.`,
-		);
+	for (const key of Object.keys(entry)) {
+		if (!IMPLEMENTATION_EVIDENCE_FIELDS.has(key)) {
+			throw new Error(
+				`Implementation evidence received unsupported field ${key}.`,
+			);
+		}
 	}
 }
 

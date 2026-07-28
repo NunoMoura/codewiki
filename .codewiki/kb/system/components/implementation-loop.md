@@ -120,7 +120,7 @@ One immutable Implementation candidate describes the exact realization under eva
 - residual issues, uncertainty, and outcome disposition;
 - route-back questions.
 
-Candidate excludes caller-authored aggregate proof, cached-review inclusion switches, TDD/evidence policy switches, runtime time, candidate id, authority, Check Results, Exit Report, and final route.
+Candidate excludes caller-authored aggregate proof, cached-review inclusion switches, TDD/evidence policy switches, runtime time, candidate id, authority, Check Results, Exit Report, and final route. The executable Implementation facade now accepts only normalized evidence field names and rejects caller proof, approval authority, routing identity, and deprecated snake-case aliases at admission.
 
 Runtime constructs aggregate content proof from exact source or Integration state. Supplied proof can never override observed proof.
 
