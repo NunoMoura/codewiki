@@ -1,5 +1,7 @@
-import { createHash } from "node:crypto";
 import type { SemanticLoop as TraceLoop } from "../semantic-loop.ts";
+import { canonicalJsonDigest as qualityPolicyDigest } from "./identity.ts";
+
+export { qualityPolicyDigest };
 
 export const QUALITY_POLICY_SCHEMA_VERSION = 1;
 
@@ -359,19 +361,4 @@ function sortObject(
 	return Object.fromEntries(
 		Object.entries(value).sort(([left], [right]) => left.localeCompare(right)),
 	);
-}
-
-export function qualityPolicyDigest(value: unknown): string {
-	return `sha256:${createHash("sha256").update(stableJson(value)).digest("hex")}`;
-}
-
-function stableJson(value: unknown): string {
-	if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
-	if (value && typeof value === "object") {
-		return `{${Object.entries(value as Record<string, unknown>)
-			.sort(([left], [right]) => left.localeCompare(right))
-			.map(([key, entry]) => `${JSON.stringify(key)}:${stableJson(entry)}`)
-			.join(",")}}`;
-	}
-	return JSON.stringify(value);
 }

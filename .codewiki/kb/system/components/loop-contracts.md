@@ -354,7 +354,7 @@ src/
 
 Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Clean cuts retain no old-path re-exports.
 
-The unused native contracts, catalog, resolver, and frozen identity-only `LoopExitSuite` now occupy the target package/runtime boundaries without old-path exports. Loop-owned `exit/**` declarations currently bind only exact Loop identity; role-specific candidate/Check declarations arrive with identity hardening. Current production `src/loops/**` graph/judge/evaluator machinery remains executable migration state until runner and per-Loop cuts replace it in the ratified order.
+The unused native contracts, catalog, resolver, shared canonical JSON/digest and Runtime-owned candidate-envelope primitives, and frozen identity-only `LoopExitSuite` now occupy the target package/runtime boundaries without old-path exports. The candidate envelope binds normalized content and observed-base digests/refs, but Loop-owned `exit/**` declarations currently bind only exact Loop identity; role-specific candidate content admission and Check declarations remain pending. Current production `src/loops/**` graph/judge/evaluator machinery remains executable migration state until runner and per-Loop cuts replace it in the ratified order.
 
 ## Token-efficiency rule
 
