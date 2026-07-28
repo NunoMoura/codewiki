@@ -35,7 +35,7 @@ Active migration is the ratified Loop-exit and standalone Runtime cut. `REFACTOR
 | --- | --- | --- |
 | Product boundary | Pi extension and coordinator service dominate current executable surface; CLI is scaffold. | Standalone CLI + Project Runtime + dashboard + embedded published Pi SDK; optional thin Pi client. |
 | Loop vocabulary | Source/tests retain superseded checking and stage-era names. | Semantic Loop, Loop Protocol, Candidate, Check, Code Check, Model Check, Check Result, Resolved Exit Policy, Exit Report. |
-| Shared exit package | Unused contracts/catalog/resolver now live under `src/loop-exit/**` with shared `SemanticLoop`; production legacy paths and Loop-specific modules remain. | Complete Loop-owned `exit/**` and `src/runtime/loop-exit-runtime.ts`; no old-path exports. |
+| Shared exit package | Unused contracts/catalog/resolver, identity-only Loop declarations, and frozen Runtime `LoopExitSuite` now occupy target paths; production legacy execution remains. | Extend declarations with exact role-specific candidates/Checks and complete native execution; no old-path exports. |
 | Candidate authority | Broad candidate inputs and SDK arbitrary-record submission leak Runtime-owned controls. | Exact role-specific schemas; Runtime owns identity, actor/time, snapshots, activation, thresholds, proof scope, routes, and CAS. |
 | Exit identity | Existing interfaces cannot prove exact candidate/policy/Result consistency. | Validated constructors for Candidate, Check, Result, Policy, and Report identities. |
 | Execution | Existing synchronous graphs/judges/review paths suppress work and use weak caches. | Minimal admission, bounded resource-specific fan-out, cancellation, exact cache identity, complete required-result fan-in, immutable Report. |

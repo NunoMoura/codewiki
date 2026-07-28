@@ -372,10 +372,10 @@ export function createQualityStandardCatalog(
 		}
 	}
 	assertAcyclicCatalog(registrations);
-	return {
+	return Object.freeze({
 		version: QUALITY_STANDARD_CATALOG_VERSION,
-		get: (standardId) => cloneRegistration(byId.get(standardId)),
-		list: (stage) =>
+		get: (standardId: string) => cloneRegistration(byId.get(standardId)),
+		list: (stage?: TraceLoop) =>
 			registrations
 				.flatMap((registration) => {
 					const clone = cloneRegistration(registration);
@@ -386,7 +386,7 @@ export function createQualityStandardCatalog(
 				.sort((left, right) =>
 					left.standard.id.localeCompare(right.standard.id),
 				),
-	};
+	});
 }
 
 function builtInRegistrations(): QualityStandardRegistration[] {
