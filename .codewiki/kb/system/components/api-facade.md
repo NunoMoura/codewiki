@@ -1,43 +1,41 @@
 ---
 type: Concept
 title: API Facade Component
-description: The API facade is the stable boundary that exposes CodeWiki operations to adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations. It converts external requests into typed CodeWiki capabilities and keeps callers away from direct `.codewiki/` file mutation.
+description: Harness-neutral typed facade exposes CodeWiki Runtime/client/query capabilities while preventing direct `.codewiki/**` mutation and runtime-authority injection.
 tags:
   - codewiki
   - system
   - components
   - api
   - facade
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
 # API Facade Component
 
 ## Responsibility
 
-The API facade is the stable boundary that exposes CodeWiki operations to adapters, scripts, UI surfaces, skills, CLI/MCP wrappers, and future harness integrations. It converts external requests into typed CodeWiki capabilities and keeps callers away from direct `.codewiki/` file mutation.
+`src/api/**` exposes stable typed CodeWiki use cases to standalone CLI, dashboard, optional Pi client, tests, and future adapters. It keeps clients away from direct Knowledge/trace/private-runtime mutation and host-specific SDK types.
 
-## Owned paths
-
-- `src/api/**` re-exports stable use-case entrypoints.
-- `src/decision/**`, `src/planning/**`, `src/implementation/**`, `src/traces/**`, `src/views/**`, `src/runtime/**`, `src/knowledge/**`, `src/git/**`, and `src/project/**` own behavior behind the facade.
-
-There is no target API facade over old stored-state, roadmap, session, artifact-output, split-evaluation, or cleanup roots.
+Behavior remains owned by Decision, Planning, Implementation, Loop Exit, WorkState, traces, Knowledge, Git, project configuration, and Project Runtime packages.
 
 ## Contracts
 
-- Public agent tools use the `wiki_<name>` convention.
-- Results should be compact envelopes with exit status, changed refs, artifact refs, next actions, and blocking questions.
-- Large machine payloads belong in source refs or trace data, not chat output.
-- Generated views are rebuilt from truth sources and are never hand-edited.
+- Use exact role-specific schemas; no arbitrary candidate records or universal mega-tool.
+- Read/query results are compact, snapshot-bound, provenance-bearing, and explicit about coverage/staleness/truncation.
+- Candidate/Check/Result/Report identity, activation, thresholds, actor/time, generation, CAS, and route remain Runtime-owned.
+- Preview and apply/append/effect are distinct; passing Exit Report is not effect authority.
+- Large/private machine payloads remain under bounded Runtime paths; chat/UI receives compact refs and findings.
+- Generated views rebuild from canonical sources and are never hand-edited.
+- Current `wiki_*` facades remain compatibility surface while standalone CLI/Runtime API becomes primary.
+- Host adapters remain entrypoint-isolated and cannot change core semantics.
 
-## Flow links
-
-- [Decision to planning](../flows/decision-to-planning.md)
-- [Planning to implementation](../flows/planning-to-implementation.md)
+There is no target facade over canonical graph, roadmap, session, artifact-output, validation, lesson/memory, split-evaluation, or cleanup roots.
 
 ## Related docs
 
-- [System overview](overview.md)
-- [Loop Model](loop-model.md)
-- [API Tool Surface](api-tools.md)
-- [Source map](source-map.md)
+- [Decision to Planning](../flows/decision-to-planning.md)
+- [Planning to Implementation](../flows/planning-to-implementation.md)
+- [System Overview](overview.md)
+- [Loop Exit](loop-exit.md)
+- [API and Client Surface](api-tools.md)
+- [Source Map](source-map.md)

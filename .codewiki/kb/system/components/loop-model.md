@@ -1,221 +1,209 @@
 ---
 type: Concept
 title: Loop Model
-description: CodeWiki is a Change-trace-backed software-development OS whose project control plane schedules compatible work across exactly three quality-governed semantic loops.
+description: CodeWiki Project Runtime schedules compatible work across exactly three semantic Loops; each Loop produces an immutable candidate whose exact Checks fan into one Exit Report.
 tags:
   - codewiki
   - system
   - loop
   - model
-timestamp: 2026-08-01T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
 # Loop Model
 
-CodeWiki is a Change-trace-backed software-development OS. One project-scoped runtime control plane continuously restores project invariants through exactly three semantic loops: Decision, Planning, and Implementation. One semantic owner governs each invariant, while compatible invariants may be processed concurrently.
+CodeWiki has exactly three semantic Loops:
 
 ```text
-runtime outer loop
-├── Decision semantic loop
-├── Planning semantic loop
-└── Implementation semantic loop
+Project Runtime
+├── Decision Loop
+├── Planning Loop
+└── Implementation Loop
 ```
 
-Each semantic loop owns typed inputs, typed outputs, a mandatory Stage Protocol, and exit authority governed by one resolved Quality Policy. Quality evaluation is machinery inside those loops, not an additional loop or standalone reviewer agent.
+Runtime is the outer project control plane, not another semantic Loop. Learning, checking, graph projection, recovery, publication, and feedback are also not semantic Loops.
+
+Each Loop owns typed input, one mandatory Loop Protocol, exact immutable candidate semantics, Loop-specific Checks, and exit facts. Shared Loop-exit machinery schedules Checks and constructs Exit Reports without owning Decision, Planning, or Implementation meaning.
 
 ## Change as semantic carrier
 
-Change is the stable accountable carrier of user or agent intent and the delta CodeWiki tries to close. Decision is not another entity. Decision is the semantic loop that receives, refines, validates, and approves an exact Change revision.
-
-Planning creates Sprints and Work Items from approved Changes. Runtime grants Assignments. Implementation realizes planned intent and records evidence against the owning Change. One Change may span several Sprints, and one Sprint may coordinate several Changes.
+Change is the stable accountable carrier of intent and the durable dossier for closing one project delta. Decision is not another entity; it is the Loop that receives, refines, and dispositions exact Change revisions.
 
 ```text
 Change intent
--> exact approved Change revision
--> Sprint and Work Item coverage
--> Assignment attempts
--> implementation realization
--> outcome disposition
+→ Decision candidate and approval
+→ Planning coverage
+→ Work Items and Assignments
+→ Implementation realization candidate
+→ Integration and Git proof
+→ delivery and outcome disposition
 ```
 
-One append-only JSONL Change Trace records this journey. Backlog, Planning, Implementation, Sprint, and Change dossier screens are views. No Change owns a private copy of the runtime pipeline.
+One append-only JSONL Change Trace records the journey. Backlog, Planning, Implementation, Sprint, relationship, learning, and Change dossier screens are disposable views. No Change owns a private copy of the runtime pipeline.
 
-## Runtime outer loop
-
-Runtime is logically always available and physically quiescent when no eligible work exists. It is not a semantic loop and does not own semantic truth.
+## Runtime control cycle
 
 ```text
-receive user, agent, worker, Git, KB, schedule, or preview triggers
-refresh WorkState
-identify eligible project invariant repairs and mechanical actions
-select a compatible bounded job set
-acquire lanes, claims, capacity, and integration guards
-build exact typed inputs, Stage Protocols, model routes, and context slices
-resolve explainable Quality Policy and Worker Workbench requirements
-run semantic sessions, verifiers, or workers through adapters
-evaluate immutable candidates through bounded fan-out/fan-in
-guarded append to affected Change Trace(s)
-schedule permitted effects
-repeat until quiescent, blocked, or budget exhausted
+receive user/agent/worker/Knowledge/Git/schedule/preview trigger
+→ refresh WorkState and bounded relationship projections
+→ derive eligible semantic or mechanical jobs
+→ select compatible bounded set under lanes, claims, capacity, and budgets
+→ bind exact Loop Protocol, model route, context, and authority
+→ run semantic candidate producer or isolated worker
+→ resolve candidate-specific Exit Policy
+→ run bounded Code/Model Checks
+→ construct immutable Exit Report
+→ revalidate generation, freshness, authority, and CAS
+→ append accepted facts or durable remediation
+→ schedule separately permitted effects
+→ repeat or quiesce
 ```
 
-Runtime coordinates client intake, trace writes, scheduling, lanes, claims, semantic sessions, workers, integration, temporary data, budgets, supervision, retention, and execution adapters. It cannot approve Change meaning, create Planning truth, or accept Implementation evidence. Clients and sessions cannot choose their own semantic routing.
-
-Always available does not mean uncontrolled automation. Runtime stops when authority is missing, supervision disappears, policy blocks execution, a guarded source changes, conflict requires semantic resolution, budget is exhausted, or no eligible work remains.
+Runtime cannot approve Change meaning, invent Planning truth, or accept Implementation evidence on its own. Clients, sessions, workers, and Checks cannot choose semantic routing or canonical identity.
 
 ## WorkState
 
-WorkState is the shared disposable projection used by runtime and all loops:
+WorkState is the shared disposable project projection:
 
 ```text
 Change Traces
-+ Knowledge Base
++ Knowledge
 + source ownership
 + source/tests/Git
-+ config and policy
++ configuration and policy
 + bounded runtime observations
 = WorkState
 ```
 
-Each loop receives only the relevant WorkState slice plus exact source versions and authority refs. Callers should provide intent, evidence, or explicit observations they own; they should not marshal repository facts the core can load itself.
+Each Loop receives one relevant exact slice. Callers provide intent, authority, evidence, or observations they legitimately own; they do not replace repository facts runtime can load.
 
-## Semantic loop cycle
-
-Every semantic loop repeats the same control shape while preserving loop-specific semantics:
+## Loop cycle
 
 ```text
-receive typed loop input and mandatory Stage Protocol
-observe bounded WorkState
-act within loop authority using ordinary scoped Pi Skills
-produce one immutable typed candidate
-resolve and evaluate the candidate's Quality Policy
-continue, exit, route back, or block
+receive typed Loop input and mandatory Loop Protocol
+→ observe bounded WorkState and relationship context
+→ act inside Loop authority using ordinary scoped Pi Skills/tools
+→ produce one immutable typed candidate
+→ resolve exact Checks for that candidate
+→ run Code/Model Checks and build Exit Report
+→ runtime chooses repair, advance, route-back, retry, wait, or block
 ```
 
-Noisy reading, editing, testing, model interaction, or worker execution stays in tools, sessions, or runtime temp until distilled into high-signal output and canonical refs.
+Noisy reading, editing, testing, model interaction, and worker execution stay in sessions or runtime artifacts until distilled into candidate facts, Check Results, canonical refs, and durable route evidence.
 
-## Loop inputs
+## Inputs
 
-Loop inputs state:
+Loop inputs bind:
 
-- trigger and actor;
+- trigger and authenticated actor/authority refs;
 - target Change or approved Change set;
-- relevant WorkState slice;
-- exact Change revisions, trace tails, KB/Git/policy digests, and plan revisions observed;
-- user or external authority refs;
-- submitted facts that the loop owns interpreting.
+- relevant WorkState and relationship snapshot;
+- exact Change revisions, trace tails, Knowledge/Git/config/policy digests, and Planning revisions;
+- route-back context when applicable;
+- submitted facts the Loop legitimately interprets.
 
-Inputs are loop-specific. A generic infrastructure envelope may carry routing and concurrency metadata, but it must not replace `DecisionLoopInput`, `PlanningLoopInput`, or `ImplementationLoopInput` as domain contracts.
+Infrastructure envelopes may carry scheduling metadata, but cannot replace exact `DecisionLoopInput`, `PlanningLoopInput`, or `ImplementationLoopInput` contracts.
 
-## Loop outputs
+## Candidates and outputs
 
-A loop output is the bounded high-signal result needed by downstream work and trace replay.
+A candidate is the exact proposed semantic output of one Loop attempt. It contains high-signal facts, stable ids, canonical refs, coverage, risks, unresolved authority, and downstream obligations. It excludes full transcript, private reasoning, raw logs, stale views, unrestricted diffs, and caller-authored runtime fields.
 
-Good outputs contain:
+Candidate identity is runtime-owned. Any candidate or guarded base change creates a new identity and invalidates dependent Results.
 
-- accepted facts and stable ids;
-- canonical refs and source versions;
-- coverage maps;
-- risks, blockers, and unresolved authority;
-- quality-standard results;
-- route and next safe action.
+A candidate becomes downstream-authoritative only when:
 
-Outputs exclude full chat, private reasoning, raw logs, stale views, unbounded diffs, and duplicate repository facts.
+1. its Exit Report passes;
+2. runtime revalidates freshness and authority;
+3. runtime appends the exact evaluated output.
 
-A loop output is not downstream-authoritative until its quality-governed iteration exits successfully and runtime appends it. Continue, route-back, and blocked iterations remain durable accountability and remediation evidence but cannot masquerade as accepted upstream output.
+Failed and indeterminate attempts remain durable accountability, repair, and learning evidence.
 
-## Quality Policy and exit
+## Checks and exit
 
-Runtime deterministically resolves the exact Quality Standards and bindings required for one immutable loop candidate. Resolution combines protected kernel invariants, stage baseline, Change kind/risk/layers, project traits, technology/path overlays, and approved additions or permitted non-kernel exclusions. Its resolution explains every activation and binds the exact policy digest.
+Runtime deterministically resolves one candidate-specific Exit Policy from protected kernel Checks, Loop baseline, Change traits/risk/layers, project traits, technologies/paths, Planning minimums, actual effects, and approved additions/exclusions.
 
-Independent deterministic, model, external, and human verifiers run through bounded fan-out against the same candidate. Required assessments join at fan-in, then deterministic gates answer:
-
-```text
-Can this bounded iteration exit?
-Can downstream work trust its output?
-If not, which authority or repair owns the gap?
+```ts
+type Check = CodeCheck | ModelCheck;
 ```
 
-Exit statuses are:
+Code Checks use trusted deterministic code. Model Checks use independent bounded Pi sessions. Execution kind, qualitative/quantitative measurement, and `observe|warn|require` enforcement remain independent.
 
-| Status | Meaning |
-| --- | --- |
-| `continue` | Same semantic loop can repair unmet conditions. |
-| `exit` | Output is accepted for downstream use. |
-| `route_back` | Earlier semantic authority is required. |
-| `blocked` | External user, resource, policy, capability, supervision, or required indeterminate-verifier disposition is needed. |
+Each Check produces one `pass|fail|indeterminate` Check Result. Required Results fan into one Exit Report:
 
-Verifier failure is `indeterminate`, not fabricated quality failure. A failed gate prevents exit but does not cancel unrelated useful assessments. Quality evaluation remains machinery inside semantic loops, not an inner quality loop or another product lifecycle.
+```text
+required fail exists          → fail
+else required indeterminate   → indeterminate
+else                           → pass
+```
+
+A failed required Check does not cancel unrelated Checks that can still provide repair feedback. Operational failures are indeterminate, never fabricated candidate rejection.
+
+Exit Report status says whether exact semantic candidate may exit. Runtime route remains separate because failure may require same-Loop repair, earlier authority, runtime retry, user input, or operational wait.
 
 ## Loop responsibilities
 
 ### Decision
 
-Maintains the invariant that every approved Change revision is coherent, grounded, outcome-oriented, knowledge-accounted, risk-classified, and approved by exact authority. It may continue refining the same Change, reject or defer it, or exit with an immutable approval receipt.
+Maintains the invariant that every accepted Change revision is coherent, grounded, outcome-oriented, Knowledge-accounted, risk-classified, overlap-accounted, and approved by exact authority.
 
 ### Planning
 
-Maintains the invariant that every selected approved Change is covered by a feasible global execution plan or explicit resolution. It observes a bounded project planning horizon, creates Sprints and worker-ready Work Items, assigns one owning Change per Work Item, declares cross-Change contribution, dependencies, and Workbench requirements, and optimizes safe execution across active work. Planning shapes work; runtime selects concrete models and provisions Workbenches.
+Maintains the invariant that every selected approved Change has globally coherent executable coverage or explicit resolution. Planning creates Sprints and worker-ready Work Items, one owner per item, cross-Change contribution, dependencies, verification, integration boundaries, and Workbench requirements.
 
 ### Implementation
 
-Maintains the invariant that every accepted Work Item and approved direct scope is realized, integrated, tested, evidenced, and aligned with the owning Change. Runtime selects a `routine`, `standard`, or `complex` model tier from structured facts and provisions one private Workbench per Assignment. Workers produce candidate evidence; Implementation Quality Policy alone governs semantic realization acceptance.
+Maintains the invariant that every accepted Work Item or approved direct scope is realized, integrated, tested, evidenced, and aligned with its owning Change. Workers produce candidate evidence; only the Implementation Exit Report permits semantic realization acceptance.
 
-## Progress and churn control
+## Progress and repair
 
-Each iteration records progress signals:
+Each attempt records bounded progress:
 
-- newly met standards;
-- changed canonical refs;
-- superseded output refs;
-- repeated failure signatures;
-- unchanged state digests;
-- budget spent;
+- changed candidate and canonical refs;
+- newly passing or failing Checks;
+- issue classes and repair targets;
+- repeated attempt patterns;
+- unchanged guarded digests;
+- budget and latency summaries;
 - next safe action.
 
-Runtime may quiesce, block, or ask for authority when repeated iterations consume budget without moving the relevant invariant.
+Runtime may quiesce, escalate model tier, route back, block, or ask for authority when attempts consume budget without moving the relevant invariant.
+
+Repair Episodes are derived relationships between failed/indeterminate Results, subsequent candidates, and later outcomes. Repair Patterns aggregate episodes but never become authority automatically.
 
 ## Route-back
 
-Workflow is not a one-way pipeline:
-
-- Implementation routes to Planning for scope, ordering, dependency, path, verification, or Work Item changes.
-- Implementation routes to Decision when accepted intent, product behavior, risk, Knowledge meaning, or user authority must change.
+- Implementation routes to Planning for scope, ordering, dependency, path, verification, Work Item, Sprint, or integration-plan changes.
+- Implementation routes to Decision for accepted intent, Product behavior, Knowledge, material risk, compatibility, or user authority changes.
 - Planning routes to Decision when approved Change meaning is insufficient or contradictory.
-- Decision may observe current project state before continuing but cannot delegate approval authority downstream.
 
-Route-back appends a later iteration to the same Change Trace. Approved revisions remain immutable. If accountable outcome changes materially, runtime creates a linked new Change Trace rather than silently rewriting identity.
+Route-back appends a later attempt to the same Change Trace. Approved revisions remain immutable. Materially changed outcome creates a linked Change.
 
 ## Trace iteration
 
-One semantic iteration is one append-only durable trace boundary:
+One semantic attempt is one append-only durable boundary. Target trace shape keeps candidate, policy, Results, report, and runtime route distinct:
 
 ```json
 {
   "loop": "implementation",
   "event": "evidence_accepted",
-  "refs": ["src/example.ts", "tests/example.test.ts", "sha256:..."],
   "data": {
     "iteration": 4,
-    "trigger": "worker_results",
-    "observedWorkStateDigest": "sha256:...",
-    "output": {},
-    "exit": {
-      "status": "continue",
-      "conditions": [],
-      "nextAction": "Collect aggregate integration proof."
-    },
+    "candidate": { "id": "candidate:...", "digest": "sha256:..." },
+    "resolvedExitPolicy": {},
+    "exitReport": { "status": "pass", "results": [] },
+    "route": { "kind": "advance" },
     "progress": {}
-  }
+  },
+  "refs": ["src/example.ts", "tests/example.test.ts", "sha256:..."]
 }
 ```
 
-Runtime coordination facts may appear between semantic iterations but never create a fourth loop.
+Current trace schemas retain legacy fields until the named clean cut. Runtime coordination events may appear between semantic attempts but never create a fourth Loop.
 
 ## Related docs
 
 - [WorkState](work-state.md)
-- [CodeWiki OS and Stage Protocols](codewiki-os.md)
-- [Quality Policy](quality-policy.md)
+- [CodeWiki OS and Loop Protocols](codewiki-os.md)
+- [Loop Exit](loop-exit.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Loop Contracts](loop-contracts.md)

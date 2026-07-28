@@ -1,138 +1,157 @@
 ---
 type: Concept
-title: Production readiness audit
-description: "Status: external package, Pi install, lifecycle, and failure gates define readiness; the source repository does not load CodeWiki."
+title: Production Readiness Audit
+description: CodeWiki remains private pre-production software; release requires clean Loop-exit migration, exact authority/identity, OKF v0.2, external Pi/provider/OCI proof, and separately approved publication.
 tags:
   - codewiki
   - system
   - production
   - readiness
   - audit
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
-# Production readiness audit
+# Production Readiness Audit
 
-Status: package readiness is evaluated through packed installs in disposable external projects. The source repository does not register, install, or load CodeWiki during stabilization.
+Status: **not production-ready**. Package readiness is evaluated through source/tests and packed installs in disposable external projects. Source repository does not register, install, or load CodeWiki.
 
-## Ready now
+## Proven foundations
 
-- Public Pi command surface is bounded to `/wiki-dashboard`, `/wiki-resume`,
-  `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`.
-- Normally active model capabilities are bounded to `wiki_state`, `wiki_change`, and `wiki_config`; runtime may activate at most one registered Decision, Planning, or Implementation host adapter from current WorkState.
-- Archive and runtime coordination remain backend/host plumbing rather than model-active tools.
-- `lab/**` is outside package files and Pi extension registration.
-- Package metadata keeps `private: true`; public npm publish remains gated.
-- Trace append paths use expected byte/sequence checks in mutation smokes.
-- Production loop quality graphs live in `src/<loop>/loop.ts` as immutable enforcing kernel quality packs and persist current graph identity in semantic events and tail checkpoints. Pre-release contracts have no compatibility projection.
-- Lab candidates use the same strict pack schema with `authority: lab` and `rollout: observe`; graph reports expose pack identity while locked tests prevent candidate-owned evaluator authority.
-- `.pi/settings.json` loads pi-lens only. No CodeWiki controller pin, local package registration, project-local CodeWiki skills, Changes Backlog ref, or dogfood trace state is active in this source checkout.
-- Packed candidate artifacts are installed only into disposable external projects with isolated Pi settings. Install, RPC, guarded mutation, lifecycle, failure, dashboard, and cleanup smokes exercise extension behavior without granting candidate code authority over its own source.
-- Historical pinned-controller evidence remains recoverable from Git and the ignored migration backup, but it grants no current activation or release authority.
-- `npm run lab:forge` can reduce hot trace JSONL into sanitized draft case
-  material while requiring human labels.
-- Loop exits expose compact `qualityDiagnostics` repair feedback in trace output
-  so agents see hard-gate blockers before softer guidance.
-- `npm run lab:promotion` reports promotion eligibility across visible gates,
-  PCE, sealed holdout, objective threshold, graph diff, and human review; the
-  current state is correctly blocked until sealed holdout and review evidence
-  exist.
+Current executable source/tests cover:
 
-## Fixed during this audit
+- append-only Change Traces, guarded expected-byte/sequence writes, and WorkState projections;
+- Decision, global Planning, Work Items, Claims, Assignments, isolated workers, Worker Reports, semantic acceptance, and guarded Integration;
+- elected coordinator generation, authentication, fencing, leased clients, scheduling lanes, recovery, draining, cancellation for foreground process workers, and private runtime artifacts;
+- opt-in OCI adapter contract with digest-pinned/preinstalled image, strict mounts/resources/capabilities/network bounds, and pre-Claim availability probe;
+- separately guarded local branch merge, remote push, product publication, and release with exact predecessor proof, authority, CAS/idempotency, and post-operation observation;
+- packed external install, RPC, mutation, lifecycle, failure, dashboard, coordinator, Pi SDK, and project-local package smokes;
+- source-checkout non-dogfood boundary and repo-local Pi-Lens-only configuration;
+- private package metadata preventing accidental npm publication.
 
-- Removed repo-local CodeWiki package registration, controller pin, project-local CodeWiki skills, Changes Backlog ref, and dogfood traces after preserving recovery artifacts and migrating accepted intent into the Knowledge Base.
-- Updated readiness, docs, and drift checks so package readiness is proved externally while source-repository self-hosting stays disabled.
-- Made `lab/**` and `.codewiki/config.json` canonical trace refs so audit and
-  lab evidence can be cited without false trace-fidelity failures.
-- Added tests for canonical lab/config refs and the dogfood boundary.
-- Added the trace-derived draft case forge and tests so real traces can become
-  reviewable case material without becoming automatic truth.
-- Expanded visible DEC, PEC, and IEC seed corpora from 3 to 5 cases per loop.
-- Added low-level trace append validation so invalid semantic event names are
-  rejected before any write reaches hot trace files.
-- Fixed view projections so superseded decision/planning attempts, superseded
-  blockers, and conflicts from already completed work no longer keep finished
-  traces blocked or queued.
-- Updated the `wiki_state` tool summary to report active work items instead of
-  total historical work items.
-- Added the shared AX route contract and direct implementation route for tiny or
-  small low-risk decisions, while routing planning/implementation ambiguity back
-  to Decision.
-- Renamed the canonical production and lab quality-graph files to `loop.ts` and
-  added a standalone CodeWiki loop graph runner with parallel node execution,
-  hard-gate skips, timeout diagnostics, and node contract coverage tests.
-- Added compact loop quality diagnostics and a lab promotion eligibility report
-  so repair guidance and candidate promotion gates are explicit.
+These proofs establish local contract behavior under tests. They do not establish semantic perfection, real provider/auth operation, real OCI execution, remote policy enforcement, deployment, or user outcomes.
 
-## Remaining blockers before production release
+## Ratified target not yet implemented
 
-- External test use remains supervised: every append requires preview and expected byte/sequence guards; unattended workers, auto-merge, and auto-publish remain disabled.
-- Public npm publish is still blocked: package is private and the registry name
-  is unresolved.
-- Objective evidence is visible-only: sealed holdout has zero cases and the
-  objective remains capped at 90.
-- Visible DEC/PEC/IEC/PCE corpora are tiny seed sets; they are regression smoke
-  evidence, not release confidence.
-- Trace-derived case curation is not complete yet; the forge now creates drafts,
-  but humans must label downstream outcomes before cases join visible or sealed
-  evals.
-- Isolated experiment runner/worktree loop is not built yet, so lab candidates
-  cannot be safely optimized autonomously. The semantic loop graph runner exists,
-  but the isolated experiment runner remains separate follow-up work.
-- Promotion from `lab/<loop>/loop.ts` to `src/<loop>/loop.ts` is now guarded by
-  an explicit report, but actual promotion remains blocked until sealed holdout
-  evidence and human review are available.
-- Project-composed semantic policies and the Quality Designer remain deferred. Current packs cannot add arbitrary JavaScript/shell evaluators, custom semantic loops, automatic merge, automatic publication, or controller advancement.
+Documentation defines target architecture:
 
-## Risks / follow-up work
+```text
+Change
+→ Loop
+→ Candidate
+→ Resolved Exit Policy
+→ Code Checks + Model Checks
+→ Check Results
+→ Exit Report
+→ Runtime route
+```
 
-- Fully restart Pi in a disposable consuming project after installing a different packed CodeWiki build; an already-running session can keep stale registered modules. The source repository itself must continue loading pi-lens only.
-- Package contents include runtime/backend APIs and the temporary CLI harness in
-  `dist/**`. This is acceptable for current smokes, but release review should
-  decide whether to narrow `files` before public publish.
-- `lens_diagnostics` still reports stale TypeScript findings that contradict
-  `tsc --noEmit`; keep using `npm run typecheck`, `npm test`, and package smokes
-  as authoritative until the lens cache issue is resolved.
-- Pi-lens quality warnings highlight complexity/noise in several source and lab
-  files. They are not blocking tests today, but they should be triaged after
-  release-critical gates.
+Current source still contains legacy checking, graph, judge, review-pack, broad candidate, trace, and view contracts. They are migration state, not target authority.
 
-## Validation evidence
+Required clean cuts:
 
-Current validation set:
+1. move shared foundation to `src/loop-exit/**` without old-path re-exports;
+2. add validated exact Candidate/Check/Result/Policy/Report identity;
+3. remove caller/candidate control of authority, actor/time, snapshots, activation, thresholds, proof scope, aggregate proof, and Runtime identity;
+4. implement bounded cancellation-aware Code/Model Check fan-out, required-result fan-in, exact caching, and immutable Reports;
+5. cut Decision, Planning, and Implementation individually;
+6. persist policy/Report history instead of interpreting old attempts through current catalog;
+7. remove obsolete legacy machinery/config/exports/tests;
+8. migrate Knowledge production/consumption to OKF v0.2 with v0.1 fallback and software-alignment extensions;
+9. add bounded Work/Alignment/Learning query views;
+10. validate passive Repair Episode projection before any learning-context injection;
+11. add local user-reviewed Feedback Bundle generation.
+
+Exact order and deletion map live in `REFACTORING_PLAN.md`.
+
+## Blocking authority and correctness defects
+
+Production remains blocked until tests prove:
+
+- role-specific candidate schemas reject all runtime-owned fields;
+- runtime alone creates candidate, Result, Report, job, actor/time, generation, and route identity;
+- candidate-supplied aggregate proof can never override observed proof;
+- missing required review/evidence cannot silently produce no issue;
+- built-in/kernel Check registration is internal and project/caller cannot claim protected authority;
+- Check constructors reject unknown Loop, mismatched execution kind, blank criterion/repair target, invalid cost/timeout/bounds, and fabricated Planning minimums;
+- Loop-qualified Check identity prevents duplicate global ids from inheriting wrong criterion/repair target;
+- Planning-specific UI preview validation activates when required;
+- release/effect Checks activate only from relevant accepted traits/effects;
+- independent Checks continue after unrelated failure;
+- preview/append use same immutable candidate/Report;
+- multi-trace Planning crash recovery completes before Claims;
+- stale/global cached evidence cannot authorize reuse;
+- exact rejection behavior at public authority boundaries remains stable where required.
+
+## External blockers
+
+- Real Docker/Podman OCI execution is unproven on current host.
+- Real model/provider authentication and cancellation/cleanup proof remains required.
+- Current Pi peer range excludes active Pi `0.82.1`; packed compatibility must pass before widening.
+- Optional Pi SDK development dependency audit includes unresolved transitive vulnerabilities until upstream/fixed versions are available and validated.
+- Trusted worker image distribution is not defined.
+- Remote guarantees need protected branches, required status checks, commit-bound attestations, artifact provenance, and observations.
+- Generic deployment remains deferred until real hosted target exists.
+- Public npm publication, product release, or provider mutation requires separate maintainer approval.
+
+## Learning and Lab gates
+
+No project-learning feature may ship merely because traces exist. Before advisory retrieval:
+
+- establish passive candidate-bound Repair Episode projection;
+- measure false passes, escaped regressions, false blocks, repair iterations, interventions, first useful feedback, authoritative-exit latency, tokens/cost, and first-pass Check success;
+- compare current feedback, raw history, scoped Repair Episodes, and issue-class-routed validated Repair Patterns;
+- use temporal/component holdouts and fixed Check identities;
+- prove no worsening of false passes or escaped regressions;
+- keep Model Checks isolated from producer repair context;
+- promote stable guidance only through accountable Change.
+
+Feedback Bundles must be local, allowlisted, pseudonymized, previewed/redacted by user, and exported only under separate approval. Full traces and project content/identity remain excluded.
+
+## Release gates
+
+A release candidate requires:
 
 ```bash
 npm run typecheck
-npm test
 npm run build
+npm test
 npm run test:readiness
 npm run test:pack
 npm run test:pi-install
 npm run test:pi-rpc
+npm run test:pi-multiprocess
 npm run test:pi-mutation
+npm run test:coordinator
+npm run test:pi-sdk
+npm run test:pi-sdk-package
 npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
 npm run lab:gate
 npm run lab:pipeline -- --gate
-npm run lab:graph
-npm run lab:objective
-npm run lab:promotion
-npm run lab:forge -- --json
 npm audit --omit=dev
 git diff --check
 ```
 
-Quality-pack identity evidence:
+Plus:
 
-- Production Decision, Planning, and Implementation graph hashes match current reviewed contracts; stale pre-release identities are rejected rather than projected.
-- Public facade suites, strict kernel-override tests, all lab tests, package/Pi/readiness gates, and typecheck must pass before any release review.
-- Rollback remains a normal Git revert of production or lab migration commits followed by the same external package gates; no source migration may silently replace an already reviewed release artifact.
+- zero blocking LSP/pi-lens errors in changed source;
+- exact Loop-exit identity/authority fixtures;
+- OKF v0.2 upstream bundle fixture;
+- real provider/auth proof;
+- real OCI proof where OCI is claimed;
+- external dashboard/runtime lifecycle, recovery, cleanup, and guarded-effect proof;
+- competitive fixtures against plain Pi, OpenClaw where applicable, and at least one specification-driven system;
+- human review of package contents, security, privacy, latency, and authority;
+- explicit publication/release approval.
 
-Current lab evidence:
+## Survival rule
 
-- DEC: 100 on 5 visible cases.
-- PEC: 100 on 5 visible cases.
-- IEC: 100 on 5 visible cases.
-- PCE: 100 on 3 visible cases.
-- Objective: 90 visible-only; no sealed holdout cases.
-- Promotion: blocked until sealed holdout evidence and human review exist.
+If benchmarks do not show materially lower drift, false acceptance, lost context, repeated repair, and Integration errors enough to offset latency and ceremony, CodeWiki should shrink into a thin Pi/OpenClaw extension rather than maintain separate Runtime.
+
+## Related docs
+
+- [Product](../../product/overview.md)
+- [Loop Exit](../components/loop-exit.md)
+- [Runtime](../components/runtime.md)
+- [Lab](../components/lab.md)
+- [Package Boundary](../components/package.md)

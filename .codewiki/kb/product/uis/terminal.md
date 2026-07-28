@@ -1,7 +1,7 @@
 ---
 type: Concept
-title: Project Dashboard and Pi Client
-description: CodeWiki combines a project-scoped local dashboard with conversational Pi clients while the control plane owns Backlog, Planning, Implementation, and execution sessions.
+title: Project Dashboard and Optional Pi Client
+description: Standalone CLI and dashboard are primary Project Runtime clients; optional thin Pi client supports conversational intent, authority, explanation, and supervision.
 tags:
   - codewiki
   - product
@@ -31,11 +31,11 @@ codewiki_source_map:
       - tests/runtime/pi-rpc-smoke.mjs
     role: project_management_ui
 ---
-# Project Dashboard and Pi Client
+# Project Dashboard and Optional Pi Client
 
-CodeWiki combines a local browser dashboard with conversational Pi clients. The dashboard is the primary project-management workspace. Pi remains a natural place to discuss intent, submit Changes, answer exact authority questions, and inspect or steer work. Neither surface owns canonical truth or project runtime lifetime.
+Standalone CLI and dashboard are primary Project Runtime clients. Dashboard is primary visual project-management workspace. Optional Pi client remains natural place to discuss intent, submit Changes, answer exact authority questions, and inspect or steer work. No client owns canonical truth or Runtime lifetime.
 
-The project control plane owns intake, WorkState, scheduling, semantic-session creation, worker lifecycle, integration, guarded writes, and live projections. Several Pi sessions and the dashboard may connect to the same project concurrently.
+Project Runtime owns intake, WorkState, scheduling, semantic-session creation, worker lifecycle, Integration, guarded writes/effects, and live projections. CLI, several Pi sessions, dashboard, and future bounded clients may connect concurrently.
 
 ## Primary navigation
 
@@ -89,7 +89,7 @@ The default graph includes:
 - uncovered, deferred, or route-back Changes;
 - current Planning epoch and superseded history.
 
-Selection opens an inspector with authoritative inputs, active quality standards, open hard conditions, coverage, evidence, recovery, and exact source/OKF impact. The full repository knowledge graph is not drawn by default. Only the current planning horizon and selected context neighborhood appear.
+Selection opens an inspector with authoritative inputs, active Checks and `activatedBy` reasons, failed/indeterminate Results, coverage, evidence, recovery, and exact source/OKF impact. The full repository knowledge graph is not drawn by default. Only the current planning horizon and selected context neighborhood appear.
 
 ## Work / Implementation
 
@@ -102,10 +102,10 @@ It shows:
 - worker session, model, worktree/container, source base, claim, and freshness;
 - path or integration conflicts that hold work;
 - isolated candidate output versus integrated product state;
-- exact tests, checks, preview evidence, content proof, and unmet acceptance conditions;
+- exact Checks, Results, preview evidence, content proof, and unmet acceptance criteria;
 - Implementation acceptance, remediation, or route-back;
 - commit and restore proof after integration;
-- publication as a separate guarded authority decision.
+- Integration, merge, push, publication, release, and outcome as distinct guarded/observed boundaries.
 
 Live state is a disposable runtime projection. The UI never invents motion from a next-action hint or writes heartbeat records merely to appear active.
 
@@ -123,7 +123,7 @@ It presents:
 6. Git proof, restore, outcome disposition, and publication state;
 7. factual route-back and supersession history.
 
-The dossier may summarize current runtime activity, but it does not own stage controls, four progress bars, or a duplicated runtime scheduler.
+The dossier may summarize current runtime activity, but it does not own Loop controls, four progress bars, or a duplicated Runtime scheduler.
 
 ## Product, System, and Design
 
@@ -161,7 +161,7 @@ Settings exposes bounded capacity, model routing, isolation, automation, budgets
 
 ## Pi client
 
-The Pi extension connects the active conversation to the existing project control plane. It may:
+Optional Pi extension connects active conversation to existing Project Runtime. It may:
 
 - submit or revise Change intent;
 - provide explicit authority bound to exact revisions;
@@ -172,7 +172,7 @@ The Pi extension connects the active conversation to the existing project contro
 
 The extension does not own the dashboard server, scheduler, Planning session, or worker pool. Dashboard actions do not inject arbitrary prompts into whichever Pi conversation happens to be active.
 
-Runtime creates bounded read-only Decision, Planning, and review sessions through the embedded Pi SDK adapter. Implementation workers run through isolated process or container adapters. Main user conversations remain independent.
+Runtime creates bounded read-only Decision, Planning, Implementation candidate, and Model Check sessions through embedded published Pi SDK adapter. Implementation workers run through isolated process or container adapters. Main user conversations remain independent.
 
 ## Local-private host
 
@@ -190,7 +190,7 @@ Dashboard shows target identity, exact integration state, contributing Changes a
 
 All custom navigation, listboxes, graph nodes, tabs, inspectors, and dialogs support keyboard, touch, focus return, zoom, screen readers, and reduced motion. Graph information has a nonvisual structured equivalent.
 
-Trust remains calibrated. The UI exposes authoritative basis, claimed result, open hard conditions, proven standards, missing or stale evidence, exclusions, authority, recovery, and exact proof. It never presents a generic trust score, private reasoning, unexplained confidence percentage, or process theater.
+Trust remains calibrated. UI exposes authoritative basis, exact candidate, active Checks and activation reasons, failed/indeterminate/passing Results, Report status, separate Runtime route, missing/stale evidence, exclusions, authority, recovery, and exact proof. It never presents a generic trust score, private reasoning, unexplained confidence percentage, or process theater.
 
 ## Success signals
 

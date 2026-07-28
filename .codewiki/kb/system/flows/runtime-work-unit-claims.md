@@ -1,33 +1,43 @@
 ---
 type: Concept
-title: Runtime Work-Unit Claim Flow
-description: 1. A planning iteration exits and records Planning-owned work units, ordering, conflicts, path scopes, and verification strategy in the trace. 2. Runtime folds traces and generated work-queue views. 3. Runtime performs one bounded work-unit claim selection from current state and policy. 4. Runtime appends trace-owned work-unit claim events and any ephemeral local leases only when append policy and byte preflight allow it. 5. The host/Pi adapter starts workers from appended claim events and provides source refs, path scopes, budgets, temporary data paths, claim ids, and content-evidence requirements. 6. Workers report evidence to the host. The implementation loop evaluates the evidence and produces an appendable implementation report. 7. Runtime appends implementation and release events when policy, expected bytes, and implementation exit checks allow it. 8. Runtime cleans temporary data according to exit status and trace lifecycle policy.
+title: Runtime Work Item Claim Flow
+description: Passed Planning yields worker-ready Work Items; Runtime provisions exact Workbenches, appends Claims, supervises isolated Assignments, and feeds Worker Report evidence into Implementation without granting acceptance.
 tags:
   - codewiki
   - system
   - flows
   - runtime
-  - work
-  - unit
+  - work-item
   - claims
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
-# Runtime Work-Unit Claim Flow
+# Runtime Work Item Claim Flow
 
-1. A planning iteration exits and records Planning-owned work units, ordering, conflicts, path scopes, and verification strategy in the trace.
-2. Runtime folds traces and generated work-queue views.
-3. Runtime performs one bounded work-unit claim selection from current state and policy.
-4. Runtime appends trace-owned work-unit claim events and any ephemeral local leases only when append policy and byte preflight allow it.
-5. The host/Pi adapter starts workers from appended claim events and provides source refs, path scopes, budgets, temporary data paths, claim ids, and content-evidence requirements.
-6. Workers report evidence to the host. The implementation loop evaluates the evidence and produces an appendable implementation report.
-7. Runtime appends implementation and release events when policy, expected bytes, and implementation exit checks allow it.
-8. Runtime cleans temporary data according to exit status and trace lifecycle policy.
+```text
+passed-and-appended Planning epoch
+→ WorkState ready frontier
+→ compatibility/capacity/authority selection
+→ private Workbench provision + capability probe
+→ exact Claim append
+→ isolated Assignment attempt
+→ immutable Worker Report
+→ exact Implementation candidate
+→ Code/Model Checks and Exit Report
+→ accepted realization or remediation
+→ guarded Integration
+→ release/cancel/expire and proof-authorized cleanup
+```
 
-Runtime is the orchestrator and trace writer. It does not close traces by itself, does not invent accepted work truth, and does not replace semantic loop exit conditions.
+Runtime owns selection, candidate/job identity, Claim/Assignment/Workbench correlation, source base, budgets, observation, cancellation, generation/CAS, and trace append. Planning owns Work Item meaning and minimum obligations. Worker owns only bounded execution attempt and Report evidence. Implementation owns semantic realization candidate.
+
+A completed Worker Report never grants acceptance. A passing Implementation Exit Report permits semantic exit only; Integration and every later effect remain separately guarded.
+
+Runtime cannot invent Work Items directly from approved Changes, rewrite Planning truth, self-approve semantic evidence, or treat runtime scratch as authority. Replacement generation recovers only when canonical Claim and digest-bound private packet/Report prove exact attempt.
 
 ## Related docs
 
 - [Runtime](../components/runtime.md)
 - [Traces](../components/traces.md)
 - [Planning Loop](../components/planning-loop.md)
+- [Worker Workbench](../components/worker-workbench.md)
 - [Implementation Loop](../components/implementation-loop.md)

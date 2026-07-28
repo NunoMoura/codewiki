@@ -1,138 +1,120 @@
 ---
 type: Concept
 title: Migration Audit
-description: CodeWiki has completed the useful migration audit from the old implementation into the clean `src/**` scaffold. The `_OLD_VERSION/**` archive has been removed; archived Pi extension code, graph truth roots, roadmap truth roots, validation roots, and CodeWiki-owned compaction must not be reintroduced wholesale.
+description: Historical source reduction is complete; active migration now replaces legacy Loop-exit contracts with exact Candidate, Check, Result, Policy, and Report identity while preserving Runtime, trace, worker, and effect foundations.
 tags:
   - codewiki
   - system
   - migration
   - audit
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
 # Migration Audit
 
-CodeWiki has completed the useful migration audit from the old implementation into the clean `src/**` scaffold. The `_OLD_VERSION/**` archive has been removed; archived Pi extension code, graph truth roots, roadmap truth roots, validation roots, and CodeWiki-owned compaction must not be reintroduced wholesale.
+CodeWiki completed its earlier reduction from `_OLD_VERSION/**` into a TypeScript-first source package. That archive is removed. Old graph/roadmap/artifact/validation/session/telemetry roots, CodeWiki-owned compaction, and monolithic Pi extension must not return wholesale.
 
-The roadmap product concept is deprecated. Active work state is a projection over traces, especially `work-plan` and `work-queue`. Historical roadmap files are archive/reference material unless a future accepted decision explicitly imports selected facts.
+Active migration is the ratified Loop-exit and standalone Runtime cut. `REFACTORING_PLAN.md` carries ordered mechanical continuity; canonical intended behavior lives in current KB.
 
-This audit records the current migration state after the pivot to runtime outer loop, semantic loop iterations, loop outputs, exit conditions, runtime claims, worker aggregation, claim correlation, and aggregate content proof.
+## Foundations to preserve
 
-## Current source inventory
+- one append-only JSONL Change Trace per accountable Change;
+- disposable WorkState and generated Work/Alignment/Learning views;
+- exactly three semantic Loops: Decision, Planning, Implementation;
+- global Planning with Sprints and worker-ready Work Items;
+- elected Project Runtime generation, authentication, lanes, CAS, idempotency, and recovery;
+- guarded Claims, private Workbenches, isolated process/OCI workers, and immutable Worker Reports;
+- guarded Integration and separately authorized merge, push, publication, and release;
+- OKF Knowledge/source ownership and exact source/test/Git proof;
+- package/build/external-smoke boundaries;
+- source-checkout non-dogfood rule;
+- Pi-owned providers/auth/sessions/compaction/tools/extensions/Skills.
 
-| Area | Old source | New source | Migration state | Notes |
-| --- | ---: | ---: | --- | --- |
-| Pi adapter and commands | 36 files | 13 files | Package metadata enabled / direct command smokes | `src/pi/**` exposes tools, direct `/wiki-*` commands, prompt/TUI seams, process/session worker transport, and package install/RPC smoke coverage without importing the Pi SDK into core source. |
-| Agency | 5 files | 0 files | Intentionally dropped for now | Role/agency scheduling is not a target concept during the rebuild. Runtime scheduling uses work-queue projections and claims. |
-| Public API facade | 2 files | 8 files | Core facades complete | Core facades remain testable; Pi normally exposes state, Change, and config while runtime activates at most one selected semantic host. Archive stays backend-only, and MCP remains deferred. |
-| Audit/checks | 8 files | 0 files | Partially replaced | Deterministic checks move into semantic loop exit conditions where relevant. Packaged audit tooling is not migrated. |
-| Output artifacts | 7 old files | semantic loop internals | Replaced | Loop output and runtime-temp scratch replace the old artifact model. Historical artifact files are not target truth. |
-| Decision | 5 files | 6 files | Migrated core | Sprint proposal, iteration runner, exit evaluation, propagation, and approval helpers exist in target source. |
-| Validation roots | 7 files | loop exit conditions | Replaced | There is no target validation root. Exit conditions live with the three semantic loops. |
-| Retention/archive | 3 old files | trace retention lifecycle | Migrated core | Trace retention stubs, `trace_close`, and hydrate plans exist. Destructive purge remains out of target normal workflow. |
-| Knowledge parsing | 2 files | 8 files | Expanded core | Markdown headings/body, diagram YAML, source-map, and source map parsing exist. Markdown frontmatter is intentionally forbidden. Deep scaffold refactor remains deferred. |
-| Policy/risk | 4 files | exit-condition inputs/runtime stubs | Partial | Policy is currently encoded as deterministic exit-condition options and runtime stubs, not a standalone policy subsystem. |
-| Project bootstrap/context | 9 files | 5 files | Core migrated | Root/config/config-file/bootstrap/types exist. Bootstrap writes target KB/traces/views/config scaffold without old graph or roadmap truth roots. |
-| Roadmap/tasks | 8 files | planning/work-queue | Deprecated / replaced | Planning work units and work-queue projections replace roadmap truth. Historical roadmap files remain archive/reference state, not active workflow truth. |
-| Runtime | 3 files | 10 files | Migrated core | Work-unit claim selection, claims, work-unit claim helper batches, leases/budget/policy stubs, and tmp helpers exist. |
-| Session/worktree worker start | 11 files | runtime + implementation + git stubs | Partial | Claims, worker start seam, worker report aggregation, and aggregate proof exist. Full worktree isolation/session tooling is deferred. |
-| Shared utilities | 4 files | 5 files | Partial | Small source utilities exist. Historical lock/ports helpers are not migrated wholesale. |
-| State/graph/resume | 21 files | traces + views | Replaced core, Pi surface active | JSONL traces and generated views replace graph/state roots. State/resume projections are exposed through core facades and direct `/wiki-*` commands. |
-| Telemetry/lifecycle | 3 files | trace events | Replaced conceptually | Trace events/checkpoints/close records carry lifecycle facts. Historical telemetry roots are not target truth. |
-| Workflow composite tool | 1 file | runtime-routed facades | No workflow mega-tool exists. Runtime selects one semantic host from WorkState; state, Change, and config remain bounded active capabilities. CLI is a temporary harness, Pi is package-installable, and MCP remains deferred. |
+## Active clean cuts
 
-## Stabilized target spine
+| Cut | Current migration state | Target |
+| --- | --- | --- |
+| Product boundary | Pi extension and coordinator service dominate current executable surface; CLI is scaffold. | Standalone CLI + Project Runtime + dashboard + embedded published Pi SDK; optional thin Pi client. |
+| Loop vocabulary | Source/tests retain superseded checking and stage-era names. | Semantic Loop, Loop Protocol, Candidate, Check, Code Check, Model Check, Check Result, Resolved Exit Policy, Exit Report. |
+| Shared exit package | Unused foundation and production legacy paths remain under `src/loops/**` plus Loop-specific legacy modules. | `src/loop-exit/**`, Loop-owned `exit/**`, and `src/runtime/loop-exit-runtime.ts`; no old-path exports. |
+| Candidate authority | Broad candidate inputs and SDK arbitrary-record submission leak Runtime-owned controls. | Exact role-specific schemas; Runtime owns identity, actor/time, snapshots, activation, thresholds, proof scope, routes, and CAS. |
+| Exit identity | Existing interfaces cannot prove exact candidate/policy/Result consistency. | Validated constructors for Candidate, Check, Result, Policy, and Report identities. |
+| Execution | Existing synchronous graphs/judges/review paths suppress work and use weak caches. | Minimal admission, bounded resource-specific fan-out, cancellation, exact cache identity, complete required-result fan-in, immutable Report. |
+| Decision | Preview/append may reevaluate and authority fields leak into candidate. | One immutable candidate/Report; authenticated Runtime approval receipt. |
+| Planning | Global semantics exist but partial multi-trace crash recovery and minimum authority need hardening. | Exact epoch identity, full recovery before Claims, validated frozen Check minimums. |
+| Implementation | Candidate may control review/evidence/proof behavior; current loop mixes concerns. | Runtime-observed proof, exact worker/Integration evidence, Loop-owned Checks, clean repair/route boundaries. |
+| Trace/views | Legacy fields and current-catalog historical interpretation remain. | Persisted candidate/policy/Result/Report identity; historical meaning independent of current catalog. |
+| OKF | Source currently produces/validates v0.1 only. | Produce v0.2, consume v0.2 plus v0.1 fallback, preserve unknown fields, keep imported trust metadata advisory. |
+| Relationships | Existing WorkState/source map/topic digest projections are partial. | Bounded snapshot-bound Work/Alignment/Learning queries with provenance, authority, coverage, truncation, and staleness. |
+| Learning | No governed project-local repair retrieval. | Passive Repair Episode projection and metrics first; ablation before advisory retrieval. |
+| Feedback | No privacy-preserving product feedback artifact. | Local allowlisted user-reviewed Feedback Bundle; no automatic upload. |
 
-The following source is now stable enough to be treated as the active migration base:
+## Authority defects that must not survive
 
-- runtime outer loop plus exactly three semantic loops: decision, planning, implementation;
-- loop cycles, loop outputs, exit conditions, progress signals, and route-back statuses;
-- trace append/replay/query/project folding helpers;
-- compact semantic iteration/checkpoint trace events;
-- canonical trace refs and validation of traceability refs;
-- work-plan, work-queue, quality, status, resume, blockers, and conflicts projections;
-- runtime work-unit claim selection, claim/release events, and append preflight for work-unit claims;
-- injected Pi worker-start seam with no hard Pi dependency;
-- worker report aggregation into implementation changes;
-- runtime claim to worker report correlation;
-- core facades for the reduced model-facing `wiki_*` surface: state, decide, plan, implement, archive, and config, with runtime kept as a backend/host facade;
-- `runWikiDecide()`, `runWikiPlan()`, and `runWikiImplement()` core facades for preview/append loop iterations;
-- implementation snapshot/proof helpers wired through `runWikiImplement()`;
-- final aggregate content proof for worker or parallel implementation outputs;
-- OKF source ownership component alignment for planning and implementation exit conditions;
-- red/green TDD proof support when policy requires it.
+- candidate-supplied authority, actor/time, identity, runtime job id, snapshot/proof scope, activation, threshold, or final route;
+- caller-declared kernel/built-in registration or fabricated frozen minimums;
+- missing Loop-qualified Check identity/validation;
+- candidate-supplied aggregate content proof overriding observed proof;
+- missing required evidence producing no issue;
+- global cache reuse without exact age/config/candidate/evidence identity;
+- preview/append stochastic reevaluation;
+- historical projections through today's catalog;
+- early generation fencing without final pre-append guard;
+- partial Planning epoch appearing accepted;
+- unrelated Check suppression after one failure.
 
 ## Intentional non-migrations
 
-These old behaviors should stay out of active source unless a future accepted decision explicitly reintroduces them:
+Do not add:
 
-- automatic CodeWiki compaction, context projection, or prompt injection;
-- repo-local CodeWiki self-hosting during source stabilization; reconsideration requires a new explicit product/system decision;
-- graph files as canonical truth;
-- historical roadmap/artifact/validation/session/telemetry roots as active workflow truth;
-- role-based agency scheduling as a first-class workflow axis;
-- standalone validation, knowledge-update, publication, or semantic runtime loops;
-- old split output/evaluation terms as product concepts;
-- standalone split-output, split-evaluation, or roadmap normal tools;
-- restoring `_OLD_VERSION/**` or archived API shims without a new accepted decision and target-loop tests.
+- canonical graph files/database, roadmap, artifact, lesson/memory, Todo, validation, telemetry, or session stores;
+- fourth semantic, Knowledge, checking, learning, recovery, publication, or review Loop;
+- user-authored Loop DSL or arbitrary third-party executable Checks;
+- generic code-intelligence engine, agent runtime, workflow engine, CI/CD, issue board, ontology platform, or messaging layer;
+- CodeWiki-owned provider/auth/session/compaction/Skill systems;
+- Pi-Lens as authoritative Check evidence in v1;
+- learned Check activation or threshold changes;
+- automatic full-trace telemetry;
+- compatibility adapters or old-path re-exports without real production burden;
+- source-checkout self-hosting during stabilization.
 
-## Remaining migration gaps
+## Revised migration order
 
-| Priority | Gap | Why it matters | Target shape |
-| --- | --- | --- | --- |
-| Done | Runtime trace-writer boundary | `appendSemanticLoopReport()` lives under `src/runtime/trace-writer.ts`, runs one semantic loop iteration, verifies one target semantic output event plus checkpoint, and appends the batch with expected bytes/sequence. | Semantic loops produce appendable reports; runtime owns trace writes. |
-| Done | `wiki_state` core facade | `buildWikiState()` folds active trace records into status, resume, work-plan, work-queue, trace-board, triggers, runtime-board, blockers, conflicts, quality, and next-action projections without reading stored views as truth. Project-backed state adds append handles from hot trace files. Source-map/path ownership is handled by explain/source-map APIs, not `wiki_state`. | Host tools/commands can wrap this facade later. |
-| Done | Target `wiki_*` core API | Agents need CodeWiki tools to operate the development OS. Old tool sprawl should not return, but the reduced core surface is required before host wrappers. | Core facades exist, root exports are facade-only, and host/CLI/Pi wrappers can sit over the reduced set. |
-| Done | User-facing dashboard/resume surface | Core `wiki_state` exists, and the CLI can inspect trace-backed state without Pi. | Pi `/wiki-dashboard` and `/wiki-resume` are package-installable through temp-project/package smokes; the source repository does not self-host during stabilization. |
-| Done | Repository snapshot/content proof helpers | `collectProjectSnapshot()`, `createWorkingTreeDigest()`, and `createWorkingTreeContentProof()` provide normalized path snapshots and deterministic content proof for implementation exit inputs. | `runWikiImplement()` now calls these helpers automatically. |
-| Done | Agent guidance refactor | Tools execute the OS, but agents need concise semantic-loop guidance. | Packaged Pi prompt/tool guidance covers Decision, Planning, and Implementation; the source checkout carries no project-local CodeWiki skills, while state/config/archive stay tools/APIs and runtime stays backend/host coordination. |
-| Done | Retention/archive pipeline | Hot `.codewiki/kb/**` and active traces need smooth cold archival through Git restore refs. This is product lifecycle, not destructive cleanup. | `wiki_archive` now previews retention stubs, appends `trace_close` records, and plans hydrate/restore from archived trace records. |
-| Done | Worktree isolation and session lifecycle | Worktrees may help parallel workers, dirty repos, and aggregate Git proof, but defaulting to them everywhere adds cost. | Config declares isolation policy as `none`, `worktree`, or `auto`; host-owned worktree execution is dry-run by default, explicit-runner only, and includes optional setup hooks. |
-| Done | Project bootstrap/scaffold generation | New repositories need target `.codewiki` structure without old graph/roadmap/gateway roots. | `src/project/bootstrap.ts` now writes config, KB, traces, views, and source-map scaffold; `/wiki-bootstrap` is the target Pi command, while the CLI remains a temporary harness. |
-| P2 | Roadmap archival note | Planning work units replace roadmap truth. Old roadmap files may need a recorded archival decision, not import by default. | Write a trace/KB note that old roadmap state is ignored or archived unless explicitly selected for import. |
-| Done | Policy/config model | Exit-condition policy and agency behavior need one typed project config instead of scattered options. | `src/project/config.ts` now resolves automation, agency, worktree isolation, budgets, approvals, retention, and host adapter flags through `wiki_config`; `src/project/config-file.ts` loads and saves `.codewiki/config.json`. |
-| P2 | Audit command | External Pi/LSP/lens validation is used during rebuild. | Package audit facade can wait until active CLI/API needs it. |
+1. preserve and inspect unrelated current working-tree changes;
+2. ratify/update KB, diagrams, README, and `REFACTORING_PLAN.md`;
+3. perform mechanical `src/loop-exit/**` boundary cut without behavior change;
+4. implement exact identity/constructors;
+5. remove candidate authority leaks and broad schemas;
+6. migrate OKF v0.2 compatibility/profile;
+7. implement bounded Code/Model Check runner and immutable Reports;
+8. cut Decision, Planning, and Implementation in that order;
+9. delete obsolete shared/Loop/config/trace/view source and tests;
+10. add relationship queries;
+11. add passive Repair Episode projection/metrics;
+12. run learning ablations, then add advisory retrieval only if justified;
+13. add Feedback Bundle generation;
+14. complete external Pi/provider/OCI/release proof.
 
-## Recommended next migration order
-
-1. **Exit criteria hardening** — continue reviewing old validation lessons and migrate only loop-owned conditions into `decision/loop.ts`, `planning/loop.ts`, and `implementation/loop.ts`. Proposed changes now require explicit low/medium/high risk tiers; sprint proposal source refs are validated before entering current-state evidence; user-authority decision blockers remediate to the user; planning resolutions now preserve and reject unknown kinds; implementation evidence now must cover planned verification refs/commands; package/dependency changes now require pack verification inside `implementation/loop.ts`; complete planning route-back resolutions now return to decision authority instead of implementation; `trace_close` now terminates appends and active queue/status/resume behavior; package metadata keeps installed runtime support at Node.js `>=20.6.0`, and packages build `dist/**` before packing so installed bins do not execute TypeScript from `node_modules`.
-2. **Optional host integrations** — Pi extension commands/tools and MCP after core package APIs are stable.
-
-## Stop condition for architecture work
-
-Do not add another architecture subsystem before the P0 path from active loop input to durable traces and back to `wiki_state` summary/views exists. The loop-to-trace append facade, read-only `wiki_state` core facade, facade-only root exports, temporary source CLI harness, and semantic loop skills now exist; remaining work should deepen lifecycle behavior rather than add parallel architecture.
+Every slice updates intended KB and executable source/tests together, runs proactive diagnostics and focused/full validation, commits and pushes only its own changes, and performs no publication/release/provider mutation without separate approval.
 
 ## Distribution direction
 
-CodeWiki should distribute as a harness-agnostic core with thin host adapters:
-
 ```text
-codewiki core package -> Pi extension adapter -> future MCP adapter
+standalone CodeWiki CLI / dashboard
+→ Project Runtime
+→ published Pi SDK execution adapter
+→ optional thin Pi client
+→ future client or worker adapters
 ```
 
-Pi is a primary host, not the core. Core source must stay free of hard Pi SDK imports. The Pi extension is package-installable through temp-project smokes, and the source checkout does not self-host during stabilization. The source CLI is only a temporary development/test harness. MCP adapters should expose the same tool semantics when added so other harnesses can operate CodeWiki without reimplementing the OS model.
+Harness adapters reuse Runtime semantics. No host may choose candidate identity, policy, exit, route, append, or effect authority.
 
-## Tool-surface direction
+## Stop condition
 
-Use a small number of powerful-but-explicit tools. Read tools can use structured selectors such as `view`, `include`, `traceId`, and `format`. Write tools need explicit `mode`, trace scope, expected sequence/bytes, and typed inputs. CLI flags should be a rendering of these structured parameters, not separate semantics.
-
-The target normal tools are:
-
-```text
-wiki_state
-wiki_decide
-wiki_plan
-wiki_implement
-wiki_archive
-wiki_config
-```
-
-Standalone split-evaluation, split-output, roadmap, and destructive cleanup tools are not target normal tools. Exit-condition behavior belongs inside safe loop operations. Roadmap is replaced by trace views. Destructive cleanup is replaced by retention/archive for knowledge and trace lifecycle.
+Do not add another subsystem before exact Candidate→Check→Result→Report path works end to end for all three Loops and legacy machinery is deleted. If benchmarks fail to offset ceremony/latency with materially lower drift, false acceptance, repeated repair, lost context, and Integration errors, shrink CodeWiki to thin Pi/OpenClaw extension.
 
 ## Related docs
 
 - [System Overview](../components/overview.md)
-- [Loop Contracts](../components/loop-contracts.md)
-- [Traces](../components/traces.md)
+- [Loop Exit](../components/loop-exit.md)
 - [Runtime](../components/runtime.md)
-- [Loop Model](../components/loop-model.md)
-- [Source Map](../components/source-map.md)
+- [Production Readiness Audit](production-readiness-audit.md)

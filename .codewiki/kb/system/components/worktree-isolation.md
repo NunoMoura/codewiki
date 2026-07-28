@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Worktree Isolation
-description: The old worktree-isolation workflow is deprecated during the rebuild. Useful ideas should migrate into `src/runtime/**` and `src/git/**` as trace-owned claims, leases, work-unit claim boundaries, budgets, and content-evidence requirements.
+description: Runtime uses optional explicit Git worktrees and opt-in OCI isolation to bound parallel Assignments, preserve exact provenance, and feed guarded Integration without granting semantic authority.
 tags:
   - codewiki
   - system
@@ -11,7 +11,7 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Worktree Isolation
 
-The old worktree-isolation workflow is deprecated during the rebuild. Useful ideas should migrate into `src/runtime/**` and `src/git/**` as trace-owned claims, leases, work-unit claim boundaries, budgets, and content-evidence requirements.
+Runtime uses optional explicit Git worktrees and opt-in OCI isolation to bound parallel Assignments, preserve exact provenance, and feed guarded Integration. Isolation is execution machinery, not semantic authority or a complete security boundary.
 
 Worktrees are useful for parallel workers, dirty repositories, risky merges, and producing clean per-worker Git proof. They should not be mandatory for every Work Item because that adds setup and merge cost. Target policy is config-driven:
 
@@ -50,7 +50,7 @@ The elected worker reconciler owns idempotent cleanup for generated worktrees un
 
 Container isolation is available through the opt-in harness-neutral OCI worker adapter without changing the canonical worker lifecycle. Runtime still prepares one explicit Git worktree because that worktree is both the bounded mutable source mount and the later Integration input. Container-only adapters are availability-probed before Claim append. They require a digest-pinned image already present on the host and use structured Docker/Podman arguments with `--pull never`, a read-only root, dropped capabilities, no privilege escalation, bounded resources/output/time, an explicit numeric user, and no network by default. A host may name a separately governed restricted network, but `host`, default bridge, and implicit broad networks are rejected. Only explicitly listed environment variables are forwarded. The container receives Assignment context through standard input; mounts the exact writable worktree, one pre-created outcome file, and the canonical repository Git common directory read-only; and never mounts the project checkout, Docker socket, home directory, or full runtime state. Fixed `GIT_DIR`, `GIT_WORK_TREE`, and `GIT_OPTIONAL_LOCKS=0` values let tools inspect linked-worktree status and history without mutating refs or indexes. Runtime rejects worktree admin metadata whose resolved common directory differs from the canonical repository.
 
-The OCI adapter treats outcome content as untrusted. It validates exact worker/Work Item identity and status, converts malformed or unsuccessful output into a terminal failed/cancelled Worker report, writes the final digest-bound report atomically on the host, and uses the same recovery and semantic-review path as process workers. Cancellation terminates the foreground runtime client and force-removes the deterministic exact container before the coordinator releases its lane. Orphan container-outcome scratch is preserved for active Claims and unintegrated completed evidence, then removed under the same terminal or Integration-proof sanitation rules.
+The OCI adapter treats outcome content as untrusted. It validates exact worker/Work Item identity and status, converts malformed or unsuccessful output into a terminal failed/cancelled Worker report, writes the final digest-bound report atomically on the host, and uses the same recovery and Implementation candidate/Check path as process workers. Cancellation terminates the foreground runtime client and force-removes the deterministic exact container before the coordinator releases its lane. Orphan container-outcome scratch is preserved for active Claims and unintegrated completed evidence, then removed under the same terminal or Integration-proof sanitation rules.
 
 Accepted worker output is integrated into a separate runtime-local worktree rooted at the exact Assignment source commit. The integrator stages worker changes to include untracked files, emits a bounded binary patch, enforces Planning path scopes, serializes the exact target/base lane, applies with Git's three-way index mode, runs `git diff --cached --check`, and creates a no-GPG local commit. The normal project checkout and branch are not moved. Integration branch commits remain available for aggregate preview and later guarded merge; they are not publication.
 
@@ -58,7 +58,7 @@ Project-branch promotion is separate and opt-in. Elected-host `ProjectBranchMerg
 
 A later push is separately opt-in under elected-host user authority. Runtime binds configured remote name, exact branch, expected remote head, local merged commit/tree, generation, and canonical merge event; performs no-force structured push with pre-push hooks disabled; and confirms exact remote head before recording `runtime.project_branch.pushed`. Remote drift or divergence fails without overwrite. Merge and push proofs remain distinct, and neither authorizes product publication, deployment, release, registry publication, or automatic rollback.
 
-Target constraints:
+Constraints:
 
 - Trace events own worker claims and releases.
 - Ephemeral leases coordinate local writes but are not durable truth.

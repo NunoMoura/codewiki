@@ -1,16 +1,16 @@
 ---
 type: Concept
 title: Loop Contracts
-description: "CodeWiki has exactly three semantic loops: decision, planning, and implementation. There is no fourth knowledge, validation, runtime, publication, roadmap, graph, or recovery loop."
+description: "CodeWiki has exactly three semantic Loops: Decision, Planning, and Implementation. Every attempt proposes one exact candidate whose required Check Results deterministically reduce to an Exit Report."
 tags:
   - codewiki
   - system
   - loop
   - contracts
 timestamp: 2026-06-30T00:00:00Z
-codewiki_component: loop_standards
+codewiki_component: loop_exit
 codewiki_components:
-  - loop_standards
+  - loop_exit
 codewiki_source_patterns:
   - src/loops/**
 codewiki_test_patterns:
@@ -19,9 +19,9 @@ codewiki_test_patterns:
   - tests/planning/**
   - tests/implementation/**
   - tests/lab/**
-codewiki_role: loop_standard_engine
+codewiki_role: loop_exit_engine
 codewiki_source_map:
-  - id: loop_standards
+  - id: loop_exit
     source_patterns:
       - src/loops/**
     test_patterns:
@@ -30,352 +30,340 @@ codewiki_source_map:
       - tests/planning/**
       - tests/implementation/**
       - tests/lab/**
-    role: loop_standard_engine
+    role: loop_exit_engine
 ---
 # Loop Contracts
 
-CodeWiki has exactly three semantic loops: Decision, Planning, and Implementation. There is no fourth knowledge, validation, runtime, publication, roadmap, graph, state, or recovery loop.
-
-Runtime is the outer control loop. The three semantic loops are inner project capabilities governed by mandatory Stage Protocols and resolved Quality Policies. Quality evaluation determines whether deterministic exit gates permit progression; it is not a loop or standalone reviewer agent.
-
-Each semantic loop has:
-
-1. a typed loop input;
-2. a versioned Stage Protocol;
-3. a loop cycle;
-4. a typed immutable candidate;
-5. a resolved Quality Policy, assessments, deterministic gates, and exit conditions.
-
-Change is the accountable semantic carrier. Decision receives, refines, validates, and approves exact Change revisions; Decision is not another domain entity. One persisted Change owns one append-only JSONL Change Trace. Planning observes a project-wide WorkState horizon and creates Sprints and Work Items from approved Changes. Runtime grants bounded Assignments. Implementation records realization against each Work Item's owning Change.
-
-Relationships are many-to-many where execution requires them:
+CodeWiki has exactly three semantic Loops:
 
 ```text
-Change * <-> * Sprint
-Sprint 1 -> * Work Item
-Work Item 1 -> * Assignment attempt
+Decision
+Planning
+Implementation
 ```
 
-A Sprint is a Planning-created execution group and generated view, not a trace. One Change may span several Sprints, and one Sprint may coordinate several Changes. Each Work Item has exactly one owning Change and may contribute explicitly to others.
+Runtime is the outer control loop, while **Project Runtime** names the whole project control plane. Knowledge propagation belongs to Decision. Planning evaluates a bounded WorkState horizon rather than one Change in isolation. Check execution, learning, graph projection, recovery, Integration, publication, release, and feedback are machinery or effects—not additional semantic Loops.
 
-WorkState is the shared disposable projection over Change Traces, KB, source ownership, source/tests/Git, configuration, and bounded runtime observations. It is not a truth store. `RuntimeReactor` selects eligible semantic work. The project service turns every compatible selected invariant into one typed coordinator job, and `runRuntimeSelectedSemanticReaction()` executes that exact invariant without drifting into another lane. `runRuntimeSemanticExecutor()` remains a singular compatibility primitive. Runtime and all loop facades derive bounded inputs from the same WorkState semantics rather than asking callers to marshal repository truth. Candidate adapters may return semantic judgment or evidence only; runtime owns exact entity identity, freshness, append validation, CAS reruns, budgets, route-back stops, job identity, and durable recovery evidence.
+Write authority is surface-specific: semantic sessions and workers return candidates/evidence; Project Runtime alone appends traces and performs separately authorized effects.
+
+Each Loop has:
+
+1. an exact typed input;
+2. a versioned mandatory Loop Protocol;
+3. one or more attempts;
+4. an immutable role-specific candidate for each attempt;
+5. one candidate-specific Resolved Exit Policy;
+6. one Check Result per active Check;
+7. one immutable Exit Report;
+8. one runtime-selected route after freshness and authority validation.
+
+```text
+Change
+→ Loop
+→ Candidate
+→ Resolved Exit Policy
+→ Code Checks + Model Checks
+→ Check Results
+→ Exit Report
+→ Runtime route and guarded append/effect
+```
+
+## Change, Planning, and execution relationships
+
+Change is one accountable intent and the durable dossier over all revisions, attempts, repairs, Planning coverage, implementation realization, Git/delivery proof, and observations. It remains a conceptual aggregate over append-only records, not one mutable object.
+
+```text
+Change * ↔ * Sprint
+Sprint 1 → * Work Item
+Work Item 1 → * Assignment attempt
+```
+
+Each Work Item has exactly one owning Change and may declare contribution to others. Runtime grants bounded Assignments. Worker completion is candidate evidence, never semantic acceptance.
+
+WorkState is a disposable projection over Change Traces, Knowledge, source ownership, source/tests/Git, configuration, and bounded observations. Relationship and learning views are also disposable.
 
 ## Loop responsibilities
 
-| Loop | Loop input | Loop output | Exit-condition focus |
+| Loop | Input focus | Candidate focus | Required exit meaning |
 | --- | --- | --- | --- |
-| Decision | Persisted/proposed Change revision, relevant WorkState, canonical current-state refs, authority, and route-back context. | Complete normalized Change revision, validation, Knowledge impacts, outcome contract, risks, delivery constraints, and exact approval or terminal disposition fact. | Intent and outcome quality, current-state grounding, Knowledge impact, evidence, risk, overlap, exact authority, and safe downstream constraints. |
-| Planning | Relevant portfolio of approved Changes, WorkState planning horizon, active Sprints/Assignments/integration state, ownership, policy, and prior plan revisions. | Planning epoch containing Sprints, owned Work Items, acceptance criteria, dependencies, path scopes, verification, triggers, resolutions, and per-Change coverage. | Approved-Change coverage, Sprint coherence, work ownership, acceptance clarity, dependency/path/component validity, claimed-work stability, integration safety, and execution readiness. |
-| Implementation | Owning approved Change, accepted Work Items, Assignments/worker reports, integration state, source ownership, source/tests/Git, policy, and prior evidence. | Change realization, changed paths, checks, acceptance evidence, worker provenance, integration proof, aggregate content proof, outcome disposition, and route-back questions. | Change/plan coverage, scope, checks, acceptance/TDD evidence, claim correlation, integration, ownership, content proof, outcome disposition, and closure readiness. |
+| Decision | Exact proposed/persisted Change revision, relevant WorkState/Knowledge/current-state refs, overlap, authority, route-back context. | Normalized intent, outcome, Knowledge delta, constraints, risks, delivery effects, overlap disposition, approval or terminal disposition facts. | Accepted interpretation is grounded, coherent, Knowledge-accounted, risk-aware, overlap-accounted, and exactly authorized. |
+| Planning | Bounded approved-Change portfolio, current Planning/Assignment/Integration state, ownership, constraints, prior plan revisions. | Globally coherent Sprints, worker-ready Work Items, dependencies, criteria, verification, path/component bounds, triggers, resolutions, Integration and Workbench requirements. | Every selected approved Change has coherent executable coverage or explicit authorized resolution. |
+| Implementation | Owning approved Change, accepted Work Items, Assignments/Worker Reports, Integration state, source ownership, source/tests/Git, prior evidence. | Exact realization, changed paths, criterion evidence, trusted check observations, worker provenance, Integration/content proof, outcome disposition, route-back questions. | Exact accepted obligations are realized, verified, integrated, provenance-bound, and ready for the requested semantic exit. |
 
-## Implementation Quality evaluation and tool evidence
+Downstream Loops consume only exact passed-and-appended upstream output. Failed and indeterminate attempts remain durable accountability, repair, and learning evidence.
 
-CodeWiki owns Implementation progression through the resolved Quality Policy; there is no standalone Implementation reviewer agent or review model slot. Pi-lens, pi-posher, and other Pi extensions are not runtime dependencies and must not own CodeWiki progression authority. Low-level tools such as compilers, linters, test runners, security scanners, formatters, and language analyzers are evidence sensors. CodeWiki-owned adapters run or ingest those tools, normalize their findings, and map evidence into Implementation Quality assessments.
+## Candidate contract
 
-Implementation Quality evaluation has two evidence phases:
+A candidate is exact immutable output proposed by one Loop attempt. Candidate identity binds:
 
-1. **Fast edit feedback** runs after intercepted code-bearing edits when host hooks are available. It is latency-bounded, usually touched-file scoped, and reports clear blocks or warnings while the agent can still repair the local edit.
-2. **Implementation exit evaluation** runs when an immutable implementation candidate is submitted. It is Work Item scoped and trace-aware; required assessments fan in before deterministic gates decide whether exit is permitted.
+- Loop and candidate schema version;
+- normalized candidate content;
+- exact Change revision or approved portfolio;
+- WorkState and Knowledge snapshot;
+- relevant source/Git base;
+- runtime-derived facts required by candidate construction.
 
-Both phases have two layers:
+Runtime creates candidate identity. Candidates cannot supply identity, actor authority, canonical timestamps, runtime job IDs, generation, activation, CAS, final route, proof scope, or aggregate proof.
 
-- a language-agnostic common layer for path scope, forbidden/generated/vendor paths, secret-like content, artifact routing, normalized diagnostics, evidence-link shape, and acceptance/check relevance; and
-- optional language-specific packs for ecosystem semantics such as TypeScript/JavaScript type evidence, Python lint/type evidence, Go vet/test evidence, Rust Clippy/test evidence, or shell analysis.
+Different content or observed base creates a different candidate. Preview and append use the same immutable candidate and Exit Report; append never performs stochastic reevaluation.
 
-A clean linter or compiler result is never sufficient by itself. Implementation exit still requires planned acceptance coverage, relevant checks, changed-path scope, content proof where required, and any risk/security authority required by the resolved Quality Policy.
+Role-specific schemas replace broad arbitrary-record submissions and broad `Omit<RunWiki*Input, ...>` contracts. Constructors reject unsupported and runtime-owned fields before execution.
 
-Fast edit feedback may cache normalized evidence for the active session. Implementation exit may reuse cached fast evidence for hard blockers, then combine it with explicit exit evidence and any required full checks. Fast-only cached evidence can block on diagnostics, scope violations, or secret-like content, but it does not by itself satisfy acceptance coverage; exit-phase evidence must still link acceptance criteria to concrete refs.
+## Check contract
 
-Project config owns review policy under `quality.review`: whether review evidence is enabled, whether `wiki_implement` auto-runs review packs, whether cached evidence is included, tool budgets, enabled/disabled pack ids, and required pack ids such as `tsjs.typescript`, `tsjs.lint`, `python.ruff`, `python.pyright`, `go.test`, `go.vet`, `rust.cargo-test`, `rust.cargo-clippy`, and `shell.shellcheck`. These settings control adapter execution only; they do not transfer semantic authority from CodeWiki quality-network standards to linters or external tools.
-
-Review pack dispatch follows the Pi-lens file-kind idea: classify changed paths by language, then run only the matching packs from the enabled set. Default config enables every built-in pack, so mixed-language projects do not need per-language setup. `enabledPacks` is an optional allowlist, `disabledPacks` is an opt-out list, and `requiredPacks` is a strict evidence policy for matching changed files. The Pi edit hook uses the same path-language selection for fast review evidence and caches fast findings for Implementation exit.
-
-`wiki_implement` returns a `reviewEvidence` summary that names available, enabled, selected, skipped, and required packs, generated/submitted report counts, check status counts, diagnostic counts, and blocking diagnostics. `wiki_state` includes trace-backed review summaries and cached fast-review summaries so an agent can explain why Implementation is blocked without digging through raw tool output.
-
-Review pack recipes are ordinary project config, not loop truth. A TypeScript-only project can set `enabledPacks` to `tsjs.typescript` and `tsjs.lint`. A Python project can enable `python.ruff` and `python.pyright`, or disable one with `disabledPacks`. A Go/Rust project can enable `go.test`, `go.vet`, `rust.cargo-test`, and `rust.cargo-clippy`, then disable slower packs in normal runs. A shell-heavy project can enable `shell.shellcheck`. `autoEvidence: false` stops automatic exit pack execution while still allowing explicit caller-supplied review reports. `includeCachedEvidence: false` prevents cached fast edit evidence from entering Implementation exit. `requiredPacks` makes relevant pack outcomes of `fail`, `blocked`, `not-run`, or `no-evidence` into CodeWiki blocking diagnostics; required packs must be enabled and cannot be disabled. `enabled: false` disables project review policy, but explicit reports passed to `wiki_implement` remain caller-provided implementation evidence.
-
-Code-bearing repo edits route to Implementation Quality feedback. KB, trace, decision, and planning artifacts keep their owning loop contracts; a global host hook may classify the artifact and dispatch lightweight feedback, but it does not create a fourth semantic loop.
-
-Write authority is surface-specific. Implementation owns repo payload writes such as `src/`, `tests/`, package files, README, and product docs. Decision owns `.codewiki/kb/**` meaning changes. The guarded runtime append boundary owns `.codewiki/traces/**`. `wiki_config` owns config writes with decision approval when policy or behavior changes. `.codewiki/views/**` is disposable projection output and must not become active truth.
-
-The CodeWiki source checkout does not load or dogfood its own extension during stabilization. Repo-local Pi-tool autoload uses only pi-lens; source development uses Pi-native tools, KB/source/tests, diagnostics, and Git. Packed candidates exercise Change Traces and loop mutation only in disposable external repositories. Fast edit feedback is never enough to grant semantic approval.
-
-## Knowledge propagation timing
-
-Knowledge updates are part of Decision. CodeWiki does not add a separate Knowledge loop.
-
-Decision reads current KB, source refs, active WorkState, and Git/content refs, then records a compact current-state baseline in the Change Trace. It cannot approve a Change revision unless every semantic impact has updated KB/diagram refs, explicit no-impact rationale, or grounded deferral/route-back.
-
-Planning consumes exact approved Change revisions. It may create several Sprints for one Change or combine compatible approved Changes in one Sprint. Tiny or small low-risk Changes may route directly to Implementation only when their approved revision carries explicit direct scope, rationale, path boundaries, acceptance criteria, and verification. Larger, ambiguous, higher-risk, multi-component, product/API, security/privacy, release, or dependency work requires Planning.
-
-If an approved Change needs recurrence, an event trigger, or a hook, Planning owns the trigger. Planning records schedule/event source, concurrency, run mode, run key, owner, and criteria. Implementation proves enablement or consumption; runtime only coordinates due work.
-
-KB truth during an active Change Trace means accepted product/system intent, not implementation completion. Source/tests/Git prove implementation truth; Change Traces state where work and outcome realization stand.
-
-## Loop output and exit
-
-A semantic loop output is not downstream-authoritative until its quality-governed iteration exits successfully and runtime appends it to affected Change Trace(s). Continue, blocked, and route-back iterations remain durable accountability and next-action evidence, but downstream loops consume only exited upstream output revisions.
-
-A loop output should separate:
-
-- high-signal facts needed by the next loop;
-- exact canonical refs;
-- unmet exit conditions;
-- dropped noise that should not leave runtime temp;
-- route-back questions that require earlier-loop authority.
-
-## Exit result contract
-
-Every loop iteration should include an exit result:
-
-- `status`: `continue`, `exit`, `route_back`, or `blocked`;
-- `conditions`: structured condition results;
-- `remediation`: exact next actions for unmet conditions;
-- `targetLoop`: current machine-readable loop pointer when available;
-- `routePlan`: shared AX route contract with target, kind, rationale, refs, and optional implementation mode;
-- `nextAction`: the next safe action;
-- progress signals such as newly met conditions, changed refs, repeated failures, and budget concerns.
-
-Boolean pass/fail is not enough for recovery or automation.
-
-Host errors are not loop exit conditions. If a main, trace, or worker host cannot execute or coordinate work, runtime records or returns host-error metadata. Once a semantic loop runs and produces a candidate, deterministic gates over its resolved Quality Policy determine whether that loop exits, continues, routes back, or blocks.
-
-## Versioned Quality Policy
-
-A loop exit condition is the deterministic result of one resolved Quality Policy. Production `loop.ts` graphs remain a source representation for Standard identity, dependencies, hashing, and scheduling, but they are inputs to policy resolution rather than the whole policy. The resolved policy defines what must be established for one exact Decision, Planning, or Implementation candidate.
-
-Runtime composes protected kernel invariants, stage baseline, Change kind/risk/layer overlays, project traits, technology/path overlays, explicit approved additions, and permitted non-kernel exclusions. Sparse typed selector rules produce active Standard bindings plus an explainable resolution containing `activatedBy`, rule refs, versions, protected status, exclusions, and one policy digest. Learned activation is forbidden.
-
-Typed selector facts replace profiles during each clean stage cut; profiles do not remain as masks over one frozen graph. Protected kernel Standards cannot be removed. Inactive considered Standards must carry an allowed exclusion reason such as `not_applicable`, `covered_by_invariant`, or `escalated_elsewhere`. Actual Implementation effects may add mandatory Standards but cannot silently remove the frozen Planning minimum.
-
-Quality-standard implementation is split from graph identity:
-
-- `src/loops/quality-pack.ts` owns the closed declarative pack schema, authority and rollout validation, evaluator identifiers, evidence-adapter identifiers, and protected kernel-standard checks.
-- `src/loops/graph.ts` owns graph schema, refs, hashes, and node metadata.
-- `src/loops/evaluator.ts` maps standard issues/results into graph-aware
-  quality-standard output.
-- `src/loops/quality-standards.ts` owns shared helpers for criteria and reusable
-  standard result construction.
-- `src/<loop>/quality-standards.ts` owns the loop-specific quality-standard
-  implementations for Decision, Planning, or Implementation.
-- `src/loops/runner.ts` owns async scheduling concerns such as evaluation dependencies, bounded resource pools, streaming assessments, required-result fan-in, cancellation, and timeout diagnostics.
-
-The public `wiki_decide`, `wiki_plan`, and `wiki_implement` facades run their Quality Policy through the loop runner and include the Quality Policy resolution plus a compact immutable Quality Report with assessment, gate, latency, token, and cache summaries in loop output, exit data, and tail checkpoints. Synchronous evaluators remain available for focused tests and pure deterministic callers.
-
-### Declarative quality-pack contract
-
-Production and lab standards use one strict `qualityPack.schemaVersion = 1` declaration. A pack declares a stable pack id and version, authority (`kernel`, `official`, `project`, or `lab`), rollout (`observe`, `warn`, or `enforce`), one known semantic-loop graph, and standards with closed evaluator and evidence-adapter identifiers. Unknown fields, arbitrary evaluators, arbitrary evidence adapters, graph mismatches, duplicate ids, missing dependencies, dependency cycles, and attempts to replace protected kernel standards fail before execution.
-
-CodeWiki owns all kernel standards. The Decision, Planning, and Implementation built-ins are immutable `kernel` packs in `enforce` mode. Graph identities and output contracts version with current semantic-loop contracts; pre-release contracts receive no compatibility projection. The generic runner composes current packs deterministically and fails closed on stale graph or contract identities.
-
-Lab candidates use the same schema with `authority: "lab"` and `rollout: "observe"`. Lab packs report candidate identity but cannot enforce production exits, grade themselves with arbitrary code, or advance a production controller. `observe` records findings without changing gates; `warn` may surface non-blocking diagnostics; `enforce` may affect exit only after explicit CodeWiki authorization. Project Standards progress through `observe`, `warn`, and approved `enforce`. Composition never permits project-owned kernel overrides, custom semantic loops, arbitrary JavaScript or shell evaluators, automatic merge, or automatic publication.
-
-Rollback remains source-level and deterministic: revert the production or lab migration commits while retaining the strict schema/composition foundation, then rerun public facade, lab, package, Pi, readiness, and disposable external-install gates. A release artifact advances only after separate review of an exact clean commit, tree, and tarball identity; migration success alone grants no activation authority.
-
-The runner can use specialized model verifiers for `agent_self_assessment` and `model_judge` Standards. Conceptually each bound non-deterministic Standard owns one assessment identity and declares verifier id, assessment criteria, measurement shape, and deterministic gate threshold where applicable. A provider may batch related requests through one coherent transport envelope for latency, tokens, and prompt-cache reuse, but each Standard retains a distinct assessment.
-
-A failed hard gate does not skip unrelated model work. Verifiers stop early only for invalid or stale input, genuine missing evaluation dependencies, cancellation, or budget policy. Model or provider failure yields `indeterminate`, never fabricated `unmet` or score `0`. No model dependency is required for deterministic Standards or normal local execution; production verifier providers are injected through the runner boundary while tests use fakes.
-
-Production attempts opt in through `.codewiki/config.json` or environment:
-
-```json
-{
-  "quality": {
-    "judge": {
-      "enabled": true,
-      "provider": "http",
-      "endpoint": "http://127.0.0.1:8787/judge",
-      "promptVersion": "loop-quality-judge.v3",
-      "timeoutMs": 30000
-    }
-  }
-}
+```ts
+type Check = CodeCheck | ModelCheck;
 ```
 
-Equivalent environment overrides are `CODEWIKI_LOOP_QUALITY_JUDGE_URL`, `CODEWIKI_LOOP_QUALITY_JUDGE_PROMPT_VERSION`, `CODEWIKI_LOOP_QUALITY_JUDGE_TIMEOUT_MS`, and `CODEWIKI_LOOP_QUALITY_JUDGE_ENABLED`. These names and the current `{ verdicts: [...] }` transport remain compatibility surfaces during migration. Current v3 verdicts require `standardId`, `status`, `score`, and feedback, and fail closed when a claimed pass lacks its configured score. The common Assessment contract will make measurement optional and shape-specific, distinguish `indeterminate`, and bind exact verifier, adapter, model, configuration, trial, and aggregation identity before compatibility fields can be removed.
+A Check is one atomic versioned requirement plus criterion, execution kind, measurement contract, evidence requirements, repair target, resource limits, and implementation identity. It is not an entire Loop policy.
 
-Each graph declares:
+### Code Check
 
-- graph id;
-- graph version;
-- schema version;
-- layers;
-- quality-standard nodes.
+A Code Check is trusted deterministic CodeWiki-owned code. “Code” describes implementation, not subject matter. Examples include:
 
-Each non-deterministic node also declares or derives a specialized verifier spec:
+- schema and reference validity;
+- dependency closure and cycle detection;
+- path scope and source ownership;
+- test failure count and coverage threshold;
+- exact authority and active-Change overlap;
+- Git tree correspondence and Integration proof.
 
-- verifier or judge id;
-- verifier role;
-- assessment criteria;
-- measurement shape;
-- model route and configuration identity;
-- optional score threshold and calibration refs;
-- trial and aggregation policy.
+The initial catalog is closed. Projects cannot inject arbitrary JavaScript, shell, executors, or third-party verifiers. Project Checks are declarative and may use only approved contracts/adapters.
 
-Legacy graph nodes declare stable id, description, verifier method, overloaded `gate` and `mode`, layer, Standard type, repair target, weight/cost/timeout, dependencies, and issue predicates. Common Quality contracts separate these concerns: the Quality Standard owns criteria and verifier/measurement metadata; the binding owns activation, enforcement, parameters, and evaluation dependencies; deterministic gates own progression logic. Each pre-production stage cut replaces its overloaded graph contract directly and removes the superseded internal representation rather than compiling a lasting compatibility projection.
+### Model Check
 
-Quality graph schema v3 validates graph identity, unique declared layers, unique node ids, known dependencies, and acyclic dependency order before hashing or execution. Evaluation dependencies skip only nodes whose required assessment input cannot exist. Gate dependencies are evaluated later at fan-in. Independent Standards continue through bounded parallel pools even when another gate will fail. Policy-inactive nodes are excluded with resolution reasons rather than reported as passed.
+A Model Check is one independent bounded Pi model session evaluating one semantic requirement against immutable evidence.
 
-Deterministic Standards preserve their declared measurement shape. Existing score-producing nodes may emit 0-100 measurements from activated issue coverage, but an operational failure remains `indeterminate`. Partial scores enrich repair feedback and cannot average away an unmet, blocked, or authority-required route.
+- It shares no conversational state with the candidate producer.
+- Runtime chooses model route and configuration.
+- Output is structured and bounded.
+- Timeout, provider failure, malformed output, cancellation, or unavailable service is `indeterminate`.
+- It cannot append, route, change policy, or attest acceptance.
 
-CodeWiki owns this semantic runner and does not depend on Pi-lens, Caveman, or
-other Pi extensions. External tools may provide evidence refs, but they never
-own semantic authority. Standards with method `external_evidence` consume
-reported checks, TDD proof, content proof, CI refs, or optional linter results;
-CodeWiki validates their presence/shape and trace coverage, not the linter's
-internal rules. Production loop outputs carry Quality Policy resolution identity and one compact immutable Quality Report for traceability and recovery. The lab uses editable
-candidate graphs and locked eval cases to improve DEC, PEC, IEC, PCE, and HCE
-before promotion back into production code.
+Related Model Checks may share transport/context envelopes for efficiency, but every Check retains distinct Result identity.
 
-## Semantic runner AX model
-
-The loop runner follows linter-style AX without depending on linters:
-
-1. normalize the submitted loop input and verify candidate freshness;
-2. resolve the Quality Policy and build shared facts once;
-3. run all ready Standards through bounded resource-specific pools;
-4. stream compact assessments as they settle;
-5. batch or cache coherent model-verifier work when identity permits;
-6. cancel only stale, invalid, dependency-impossible, explicitly cancelled, or budget-blocked work;
-7. fan in every required assessment and apply deterministic gates;
-8. return compact diagnostics and repair guidance for resubmission.
-
-Loop outputs include `qualityDiagnostics`: sorted unmet-standard feedback with
-severity, method, gate, refs, repair target, route, and concrete repair action.
-Hard-gate diagnostics appear first so agents can fix binary blockers before
-working on softer guidance.
-
-This mirrors the useful feedback shape of linters while keeping CodeWiki's
-scope semantic: trace refs, route authority, loop coverage, acceptance evidence,
-and source-of-truth alignment. The coding agent itself is the debugger: it uses
-the final Quality Policy report as the next iteration's worklist, then resubmits
-loop output after fixing the highest-signal blockers.
-
-## Deterministic gate policy
-
-Hard gates are binary semantic contracts. They are deterministic and may depend on deterministic, model, external, or human assessments plus exact authority facts. They cannot be averaged away. Cheap admission runs first, but required fan-in cannot fabricate or omit an assessment merely because another hard gate already failed.
-
-Decision hard gates cover Change-revision readiness, understood intent, accountable outcome, canonical Knowledge impacts, approval authority, current-state grounding, evidence, risk classification, active Change overlap, route safety, delivery constraints, and Change-kind classification.
-
-Planning hard gates cover approved-Change coverage, coherent Sprint grouping, one owning Change per Work Item, cross-Change contribution, acceptance/verification, source ownership, dependency ordering, claimed-work stability, integration safety, trigger validity, resolution validity, and canonical refs.
-
-Implementation hard gates cover approved-Change and Planning coverage, scope control, acceptance evidence, verification results, required TDD proof, integration and content proof, worker-Assignment correlation, source ownership, outcome disposition, archive readiness, release approval, and canonical refs.
-
-Softer assessments may still prevent exit through deterministic gate rules when unmet. Their verifier kind does not determine enforcement. Independent assessments continue to provide repair guidance even when another gate already prevents exit.
-
-## Baseline exit-condition invariants
-
-Every loop should enforce cheap structural invariants before deeper semantic checks:
-
-- stable unique ids for Change revisions, approvals, Sprints, Work Items, Assignments, acceptance criteria, and realization evidence;
-- canonical refs for KB, trace, Git, digest, source, and test evidence;
-- no unknown dependencies or dependency cycles;
-- path-scope conflict detection across exact and hierarchical overlaps;
-- component ownership alignment from OKF frontmatter to source paths and tests;
-- optional repo-snapshot existence checks for changed source/docs/test and evidence paths;
-- structured implementation check results with command, phase, acceptance criterion id, and pass/fail status;
-- optional red/green TDD evidence when implementation policy requires it;
-- structured acceptance evidence with summaries and canonical evidence refs;
-- no downstream consumption of outputs from non-exited iterations.
-
-These invariants are deliberately cheap and token-efficient. They catch low-level drift before the agent spends context on deeper KB/source analysis.
-
-## Worker-owned AC-ID TDD
-
-Planning assigns stable acceptance criterion ids to every executable work unit, including micro-plans. A micro-plan is a compact one-unit planning output for tiny or small low-risk work. A direct implementation route is allowed only when the proposed change itself carries the bounded scope and acceptance/verification packet that Implementation can consume. Implementation workers own their local TDD cycle by default: they may create the tests, implement the change, and submit local check evidence for the work unit they claimed. Worker reports are aggregated into one implementation output only when they reference an active runtime claim that matches worker id, work-unit id, and planning refs.
-
-The implementation loop owns final trust and aggregate coverage. Worker-local success is never enough to exit implementation.
-
-Implementation evidence must map back to approved Change and planned acceptance-criterion ids:
+### Orthogonal dimensions
 
 ```text
-approved Change -> Sprint -> Work Item -> AC -> red check -> green check -> acceptance evidence -> changed paths -> local content proof -> aggregate content proof
+execution:   code | model
+measurement: qualitative | quantitative
+enforcement: observe | warn | require
 ```
 
-When TDD proof is required by policy, red checks must fail before implementation and green checks must pass after implementation. Red check failures are accepted only when explicitly marked with `phase: "red"`; other failed checks block exit. TDD checks should carry `criterionId` so exit conditions can prove red/green coverage for each planned acceptance criterion.
+Execution kind never implies enforcement.
 
-Worker-local content proof is provenance, not closure proof. Worker/parallel implementation requires final aggregate content proof after merge.
+Quantitative Checks declare exact value shape, unit, comparator, threshold, allowed bounds, and aggregation policy. Runtime applies the threshold. Candidate and model cannot choose or reinterpret it.
 
-## Component and source ownership alignment
-
-OKF ownership frontmatter is the active component contract. Component entries declare one owning doc, owned source/docs paths, and owned test paths for a system area. No separate source-map YAML file is active truth.
-
-Planning output should include `componentRefs` that point to OKF ownership component ids. Planning exit conditions validate that declared path scopes and verification refs fit those components. Implementation derives the same component requirements from exited planning iterations.
-
-Implementation exit conditions validate the aggregate output against the component contract:
-
-- changed code and docs must be inside planned component source paths or owning doc;
-- changed test paths must be inside planned component test paths;
-- code changes must have matching test evidence under component test paths;
-- when a repo path snapshot is supplied, changed paths and path-based evidence refs must exist;
-- unknown or incomplete source ownership component entries prevent exit.
-
-Component ids are trace data, not trace refs. Trace `refs` continue to carry only canonical artifacts: KB paths, source/test paths, trace ids, Git refs, and content digests.
-
-## Change closure and runtime work queue
-
-A Change Trace represents one accountable intent-to-outcome journey. It may close only when the current approved Change revision is fully dispositioned through Planning and Implementation, required realization evidence exists, and outcome disposition is explicit. Documentation-only proof cannot satisfy a source-bearing Change unless its approved scope is knowledge-only or Planning records a grounded non-executable resolution.
-
-One Change may receive planning coverage from several Sprints. One Sprint may include Work Items owned by several Change Traces. Sprint completion is a generated view over its Work Items; Change completion is a generated view over its approved requirements, planning coverage, realization evidence, and outcome disposition.
-
-The archive close path must block incomplete Change journeys and incomplete multi-trace planning batches. Derived views may surface `needs_decision`, `needs_planning`, `needs_implementation`, `observing_outcome`, `blocked`, `deferred`, `finished`, `closed_complete`, or `closed_incomplete`; those statuses are calculations, not workflow truth.
-
-Completed Change Traces leave hot state through a post-commit archive pipeline: full history is first preserved by a Git restore ref, then `wiki_archive` may close and compact the hot file into `trace_head` + retention checkpoint + `trace_close`. Hydration restores and validates full history; compaction cannot be an unrecoverable delete.
-
-Decision checks active Change journeys before approving a revision. Semantic overlap should be merged, linked, superseded, deferred, ordered, or explicitly justified before Planning. Planning owns execution grouping and conflict-aware ordering; runtime may detect cheap operational overlap but cannot resolve semantic contradiction.
-
-Current work is not stored in a separate roadmap or Sprint board. WorkState and generated views derive it from Change Traces and current project truth.
+Qualitative Checks produce structured status, evidence refs, findings, feedback, optional `issueClass`, and repair target.
 
 ```text
-all Change Traces + current project truth -> WorkState -> work queue -> runtime Assignment selection -> claim events -> worker start
+measurement = observation
+status      = interpretation under exact resolved policy
 ```
 
-The work queue classifies Planning-owned Work Items as backlog, waiting, ready, claimed, blocked, or done. Planning dependencies decide waiting versus ready. Runtime claims or live leases decide claimed. Claim expiry or release returns work to ready unless another blocker exists. Implementation acceptance decides done. Path conflicts are selection constraints, not semantic truth by themselves.
+Operational failure never fabricates a failing measurement or score zero.
 
-## Trace write contract
+## Resolved Exit Policy
 
-One JSONL trace line should be one durable semantic iteration or one runtime coordination event. It is not full chat, scratch state, or a full artifact dump.
+Runtime resolves one immutable candidate-specific policy from:
 
-Trace writes are runtime-owned. A semantic loop iteration produces compact loop output, exit condition results, progress signals, and canonical refs; runtime validates and appends that report. Runtime coordination events are also appended by runtime.
+- protected kernel Checks;
+- Loop baseline;
+- accepted Change traits, risk, and affected layers;
+- project traits and technologies/paths;
+- frozen Planning minimums;
+- actual candidate effects;
+- approved project additions and permitted non-kernel exclusions;
+- model route/configuration and Check catalog/Loop Protocol identities.
 
-`refs` must contain canonical artifact refs only, such as KB paths, source/test paths, trace event ids, Git refs, restore refs, or content digests. Commands, prose summaries, acceptance text, and remediation details belong in `data`, not `refs`.
+Every active Check records `activatedBy`, rule refs, version, parameters, threshold, enforcement, dependencies, and permitted exclusions. Selection is deterministic and explainable. Learned or neural activation is forbidden.
 
-## Recovery contract
+Kernel Checks cannot be disabled. Project Checks progress:
 
-A resume agent should be able to replay a trace and answer:
+```text
+observe → warn → explicitly approved require
+```
 
-1. What is the latest iteration for each semantic loop?
-2. Which loop is active now?
-3. Which loop outputs have exited and are safe to consume?
-4. Which exit conditions remain unmet?
-5. Which route-back or blocked iteration explains current remediation?
-6. Which KB/source/test/Git refs prove the current state?
+Actual candidate growth may add required Checks. It cannot silently lower risk or remove Planning minimums.
+
+## Identity chain
+
+### Check identity
+
+Binds Loop, Check id/version, criterion/content digest, execution kind, implementation/protocol identity, measurement schema, and evidence contract. Reusing an id under a different Loop or definition creates a different identity.
+
+### Check Result identity
+
+Binds exact candidate, resolved Check binding, implementation/model/configuration identity, evidence digests, measurement, runtime threshold, findings/status, and trial/aggregation identity where relevant.
+
+### Exit Report identity
+
+Binds exact candidate, Resolved Exit Policy digest, complete Result set, deterministic reduction version, and aggregate status.
+
+Validated constructors reject wrong candidate or Check version, missing required Result, duplicate Result, wrong measurement shape, invalid threshold/bounds, contradictory status, stale policy, and fabricated authority.
+
+## Exit status and runtime route
+
+Check Result status and Exit Report status are:
+
+```text
+pass | fail | indeterminate
+```
+
+Reduction is deterministic:
+
+```text
+required fail exists          → fail
+else required indeterminate   → indeterminate
+else                           → pass
+```
+
+`observe` and `warn` Results remain visible but do not block exit. A passing Exit Report permits semantic Loop exit only for that exact candidate. It does not authorize append under stale generation, Integration, merge, push, publication, release, deployment, or any other effect.
+
+Runtime revalidates candidate freshness, generation, authority, and CAS, then chooses a separate route:
+
+- repair in same Loop;
+- advance to downstream work;
+- route to Planning or Decision;
+- retry or wait on runtime/provider state;
+- block for authority, supervision, budget, or explicit unknown.
+
+A host/runtime failure is not fabricated as a candidate failure. It is operational evidence and normally routes to retry, wait, or block.
+
+## Execution and scheduling
+
+```text
+immutable candidate
+→ minimal admission
+→ resolve Exit Policy
+→ build shared facts once
+→ bounded Code/Model Check fan-out
+→ stream Check Results
+→ required-result fan-in
+→ immutable Exit Report
+→ runtime route
+→ final freshness/CAS guard
+→ append or block
+```
+
+Rules:
+
+- independent Checks continue after unrelated failure;
+- work is skipped only for invalid/stale input, real dependency absence, cancellation, or budget policy;
+- provider/model, CPU, test/build, and external-service work use separate bounded pools;
+- cancellation signals reach underlying work;
+- cache reuse requires exact candidate, Check binding, implementation/configuration, and evidence identity;
+- TTL controls eviction only;
+- path overlap may invalidate evidence but never authorize reuse;
+- historical projections read persisted policy/Report identity, never today's catalog.
+
+Cheap admission rejects malformed candidate/authority contracts before expensive work. It cannot decide semantic exit.
+
+## Workbench and tool evidence
+
+Pi-Lens, LSP, compilers, linters, test runners, browser tools, AST tools, formatters, security scanners, and Skills are ordinary Workbench and repair capabilities. Their output is not automatically authoritative Check evidence.
+
+A trusted Code Check may run or normalize an approved tool under its exact implementation/configuration contract. Tool success never substitutes for planned acceptance coverage, exact candidate identity, or semantic Checks.
+
+Current legacy review-pack configuration and Pi hooks remain executable migration state. The clean Implementation cut decides which trusted adapters survive inside Code Checks and deletes CodeWiki-owned review machinery that does not meet the new contract. Pi-Lens remains optional and non-authoritative in v1.
+
+The source checkout does not load or dogfood its own extension during stabilization. Packed candidates exercise runtime behavior only in disposable external projects.
+
+## Knowledge, source, and ownership
+
+Decision owns accepted Knowledge meaning; no Knowledge Loop exists. Planning consumes exact approved Knowledge/Change revisions. Implementation realizes them or routes ambiguity back.
+
+OKF source ownership maps stable system responsibilities/interfaces to source and tests. Fine-grained symbol relationships remain derived. Changed code/docs/tests must fit accepted Planning and ownership boundaries or produce explicit route-back.
+
+Knowledge may intentionally lead source only when an exact active Change accounts for the transition. Incomplete brownfield coverage remains explicit `unknown`; it never becomes proof of alignment.
+
+## Worker-owned execution evidence
+
+Planning assigns stable acceptance criterion ids to worker-ready Work Items. Workers may perform local test-first repair and report:
+
+```text
+approved Change
+→ Sprint/Work Item
+→ acceptance criterion
+→ pre-change failing evidence when required
+→ post-change passing evidence
+→ changed paths
+→ local content proof
+→ aggregate Integration proof
+```
+
+Runtime accepts a Worker Report only when worker, Assignment, Claim, Work Item, plan revision, base, and freshness match. Local worker success cannot exit Implementation. Aggregate merged-tree Checks and exact Integration proof remain required when the candidate spans workers.
+
+## Trace write and recovery
+
+One JSONL trace line is one durable semantic attempt/result or one runtime coordination event. It is not full chat, private reasoning, raw tool output, Workbench state, or an artifact dump.
+
+Trace events retain compact candidate identity, parent/repair lineage, policy and Check identities, Results, Exit Report, route, progress, canonical refs, Git/delivery evidence, and outcome observations. `refs` contain canonical artifacts; prose and remediation live in structured `data`.
+
+A resume operation must answer:
+
+1. What exact candidate was last attempted in each Loop?
+2. Which upstream outputs passed and were appended?
+3. Which required Checks failed or became indeterminate?
+4. Which route/authority owns remediation?
+5. Which candidate repaired which earlier candidate?
+6. Which Knowledge/source/test/Git/delivery refs prove current state?
 7. What is the next safe action?
 
-Accepted loop outputs provide Change-rooted vertical alignment:
+Change Trace replay rebuilds semantic project state, not private agent cognition or exact model/tool execution.
+
+## Learning boundary
+
+A failed or indeterminate Result plus a later candidate and outcome can derive a Repair Episode. Similar Episodes can derive a Repair Pattern. These are analytical projections, not canonical entities or another Loop.
+
+Candidate producers may receive bounded applicable successful and harmful repair evidence. Model Checks receive only pinned candidate evidence. Learning cannot suppress Checks, lower thresholds, alter activation, change authority, or promote itself. Stable guidance enters Knowledge/configuration/source only through an accountable Change.
+
+## Current executable compatibility
+
+Current executable source represents protected declarations as immutable `kernel` packs in `enforce` mode. In that legacy vocabulary, Project Standards progress through `observe`, `warn`, and approved `enforce`; current compatibility never permits project-owned kernel overrides or arbitrary JavaScript or shell evaluators. These are descriptions of source awaiting clean cuts, not target public vocabulary or permission for third-party executable Checks.
+
+Fast edit feedback is never enough for Implementation exit. Pi-tool autoload uses only package/host configuration in disposable external projects; this source checkout loads Pi-Lens only and never loads CodeWiki itself.
+
+**Review pack recipes (current migration):** `requiredPacks` may require a configured legacy evidence sensor to run, but pack success cannot attest semantic acceptance. Clean Implementation/config cuts replace these recipes with trusted Code Check bindings.
+
+## Target source boundary
 
 ```text
-Change intent -> exact approval -> Sprint/Work Item coverage -> Change realization -> Git/content proof -> outcome disposition
+src/
+  semantic-loop.ts
+  loop-exit/
+    contracts.ts
+    identity.ts
+    catalog.ts
+    resolve-policy.ts
+    runner.ts
+    cache.ts
+    report.ts
+  decision/exit/**
+  planning/exit/**
+  implementation/exit/**
+  runtime/loop-exit-runtime.ts
 ```
 
-Exit-condition findings and checkpoints provide recovery alignment after errors, failed iterations, context loss, or agent replacement.
+Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Clean cuts retain no old-path re-exports.
+
+Current `src/loops/**` Quality graph/judge/evaluator machinery remains executable migration state until mechanical boundary, identity, runner, and per-Loop cuts replace it in the ratified order.
 
 ## Token-efficiency rule
 
-Do not add loops to compensate for weak loop outputs or weak Quality Policy. Add compact outputs, exact refs, better activation, and stronger Standards. Downstream loops should read the previous loop output and touched refs, not reload full chat history.
-
-Preview results are assessment drafts for the agent. Append only meaningful trace facts, keep loop outputs compact, share extracted facts, use exact caches and coherent model batches, cancel stale candidates, and let views cache derived status/progress for hosts and renderers. Optimize both time to first useful feedback and time to authoritative exit.
+Do not add Loops to compensate for weak candidates or Checks. Use exact refs, compact outputs, shared extracted facts, scoped query results, exact caches, coherent model envelopes, cancellation, and high-signal repair guidance. Optimize time to first useful feedback and time to authoritative exit without weakening false-pass or escaped-regression rates.
 
 ## Related docs
 
 - [WorkState](work-state.md)
-- [CodeWiki OS and Stage Protocols](codewiki-os.md)
-- [Quality Policy](quality-policy.md)
+- [CodeWiki OS and Loop Protocols](codewiki-os.md)
+- [Loop Exit](loop-exit.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)
+- [Knowledge](knowledge.md)
 - [Traces](traces.md)
 - [Runtime](runtime.md)

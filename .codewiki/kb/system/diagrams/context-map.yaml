@@ -2,19 +2,15 @@ schema_version: 1
 id: spec.system.diagrams.context-map
 title: CodeWiki Context Map
 kind: context_map
-purpose: Show who manages a CodeWiki project, which clients connect, where execution occurs, and where repository and external boundaries sit.
+purpose: Show who operates CodeWiki, primary and optional clients, Project Runtime authority, Pi/worker execution, repository truth, and guarded external boundaries.
 source_docs:
   - .codewiki/kb/product/users/maintainers.md
   - .codewiki/kb/product/users/agents.md
-  - .codewiki/kb/product/users/package-authors.md
-  - .codewiki/kb/product/users/external-users.md
+  - .codewiki/kb/product/overview.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/codewiki-os.md
-  - .codewiki/kb/system/components/model-routing.md
-  - .codewiki/kb/system/components/session-coordination.md
-  - .codewiki/kb/system/components/adapters-and-ui.md
+  - .codewiki/kb/system/components/loop-exit.md
   - .codewiki/kb/system/components/extension.md
-  - .codewiki/kb/system/components/api.md
 renderer:
   preferred: graph
   fallback: mermaid_flowchart
@@ -25,97 +21,116 @@ actors:
   - id: agent
     label: Agent / bounded integration
     source: .codewiki/kb/product/users/agents.md
-  - id: package_author
-    label: Extension/workflow author
+  - id: adapter_author
+    label: Client / worker adapter author
     source: .codewiki/kb/product/users/package-authors.md
   - id: future_external_user
     label: Future external user
     source: .codewiki/kb/product/users/external-users.md
 systems:
+  - id: cli
+    label: Standalone CodeWiki CLI
+    boundary: codewiki_client
+    source: README.md
   - id: dashboard
     label: Local project dashboard
     boundary: codewiki_client
     source: .codewiki/kb/system/components/terminal-ui.md
   - id: pi_client
-    label: Pi conversational client
+    label: Optional thin Pi client
     boundary: codewiki_client
     source: .codewiki/kb/system/components/extension.md
-  - id: future_client
-    label: CLI / MCP / editor / CI client
-    boundary: codewiki_client
+  - id: future_adapter
+    label: MCP / editor / CI / OpenClaw adapter
+    boundary: codewiki_client_or_worker
     source: .codewiki/kb/system/components/adapters-and-ui.md
-  - id: control_plane
-    label: CodeWiki project control plane
+  - id: project_runtime
+    label: CodeWiki Project Runtime
     boundary: codewiki
     source: .codewiki/kb/system/components/runtime.md
   - id: pi_runtime
-    label: Pi providers / auth / tools / sessions / Skills
+    label: Pi providers / auth / sessions / compaction / tools / Skills
     boundary: host_execution
     source: .codewiki/kb/system/components/codewiki-os.md
   - id: pi_sdk_sessions
-    label: Embedded Pi semantic sessions
+    label: Candidate producer and Model Check sessions
     boundary: codewiki_execution
     source: .codewiki/kb/system/components/session-coordination.md
   - id: isolated_workers
-    label: Process / container implementation workers
+    label: Process / OCI implementation workers
     boundary: execution_sandbox
     source: .codewiki/kb/system/components/session-coordination.md
-  - id: repo_contract
-    label: Repo-local Knowledge / traces / source / tests / Git
+  - id: repository
+    label: Knowledge / Change Traces / source / tests / Git
     boundary: repository
     source: .codewiki/kb/system/components/knowledge.md
   - id: model_providers
     label: Configured model providers
     boundary: external
   - id: git_remote
-    label: Git remotes / publication targets
+    label: Git remotes
+    boundary: external
+  - id: delivery_targets
+    label: Publication / release / deployment / observations
     boundary: external
 relationships:
+  - from: maintainer
+    to: cli
+    label: operates lifecycle and grants exact authority
   - from: maintainer
     to: dashboard
     label: manages Work, Product, System, and Design
   - from: maintainer
     to: pi_client
-    label: discusses intent and grants exact authority
+    label: discusses intent and supervision
   - from: agent
     to: pi_client
     label: proposes and inspects through bounded capabilities
-  - from: package_author
-    to: future_client
-    label: implements compatible client adapters
+  - from: agent
+    to: cli
+    label: uses bounded automation contract
+  - from: adapter_author
+    to: future_adapter
+    label: implements compatible boundary
   - from: future_external_user
     to: dashboard
     label: inspects supported project state
+  - from: cli
+    to: project_runtime
+    label: authenticated bounded requests
   - from: dashboard
-    to: control_plane
+    to: project_runtime
     label: guarded local requests and state stream
   - from: pi_client
-    to: control_plane
-    label: intent, authority, supervision, and reads
-  - from: future_client
-    to: control_plane
-    label: bounded local protocol
-  - from: control_plane
+    to: project_runtime
+    label: intent / authority / supervision / reads
+  - from: future_adapter
+    to: project_runtime
+    label: typed client or Assignment protocol
+  - from: project_runtime
     to: pi_runtime
-    label: binds CodeWiki OS, Stage Protocol, route, policy, and Workbench scope
+    label: binds CodeWiki OS, Loop Protocol, route, policy, and Workbench scope
   - from: pi_runtime
     to: pi_sdk_sessions
-    label: creates read-only semantic and verifier sessions
-  - from: control_plane
+    label: creates independent bounded sessions
+  - from: project_runtime
     to: isolated_workers
     label: activates claimed private Workbenches
-  - from: control_plane
-    to: repo_contract
-    label: reads truth and performs guarded writes
+  - from: project_runtime
+    to: repository
+    label: reads authority and performs guarded writes
   - from: pi_runtime
     to: model_providers
     label: owns provider authentication and invocation
   - from: isolated_workers
-    to: repo_contract
-    label: changes scoped isolated working state
-  - from: repo_contract
+    to: repository
+    label: changes scoped isolated working state only
+  - from: project_runtime
     to: git_remote
-    label: synchronizes only under explicit authority
+    label: pushes exact commit under separate authority
+  - from: project_runtime
+    to: delivery_targets
+    label: performs separately authorized exact effects
 ui_hints:
   default_scope: codewiki_boundary
   inspector_fields:

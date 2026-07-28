@@ -1,11 +1,11 @@
 schema_version: 1
 id: spec.system.diagrams.state-lifecycle
-title: One Change Trace Semantic Lifecycle
+title: One Change Dossier Lifecycle
 kind: state_lifecycle
-purpose: Show one Change Trace's semantic facts, route-backs, terminal proof, and cleanup boundaries without implying that the Change owns the project runtime pipeline.
+purpose: Show one Change's semantic candidates, Runtime routes, Integration/delivery boundaries, outcome disposition, and retention without implying that Change owns Project Runtime pipeline.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
-  - .codewiki/kb/system/components/quality-policy.md
+  - .codewiki/kb/system/components/loop-exit.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
 renderer:
@@ -18,95 +18,137 @@ states:
     label: Planning active
   - id: implementation_active
     label: Implementation active
-  - id: blocked
-    label: Blocked or waiting
+  - id: waiting
+    label: Waiting / blocked / indeterminate
   - id: route_back
-    label: Route-back recorded
-  - id: production_ready
-    label: Production ready
+    label: Earlier authority required
+  - id: realized
+    label: Semantic realization accepted
+  - id: integrated
+    label: Integration proven
+  - id: merged
+    label: Project branch merged
+  - id: pushed
+    label: Remote branch pushed
   - id: published
-    label: Published
+    label: Artifact published
   - id: released
-    label: Released
+    label: Product released
+  - id: outcome_dispositioned
+    label: Outcome disposition recorded
   - id: closed
     label: Closed / retained
 transitions:
   - from: decision_active
     to: planning_active
-    trigger: Decision Quality Policy gates permit exit
-    trace_event: decision.changes_approved
-    exit_status: exit
-    cleanup: clean decision tmp after durable refs exist
+    trigger: Decision Exit Report passes and Runtime appends exact authorized approval
+    trace_event: decision.change_approved
+    exit_status: pass
+    cleanup: remove private attempt material after durable refs exist
   - from: decision_active
-    to: blocked
-    trigger: decision iteration blocks or continues without progress
-    trace_event: decision.changes_approved
-    exit_status: blocked
-    cleanup: preserve decision tmp when remediation needs it
+    to: waiting
+    trigger: required Decision Result is indeterminate or Runtime lacks authority/capability
+    trace_event: decision.change_deferred
+    exit_status: indeterminate
+    cleanup: preserve bounded repair or retry evidence
   - from: planning_active
     to: implementation_active
-    trigger: Planning Quality Policy gates permit exit
-    trace_event: planning.work_units_created
-    exit_status: exit
-    cleanup: clean planning tmp after durable refs exist
+    trigger: Planning Exit Report passes and complete epoch append is recovered
+    trace_event: planning.change_planned
+    exit_status: pass
+    cleanup: remove private attempt material after durable refs exist
   - from: planning_active
     to: route_back
-    trigger: planning needs decision authority
-    trace_event: planning.work_units_created
-    exit_status: route_back
-    cleanup: preserve planning tmp when useful
+    trigger: Runtime route requires Decision meaning or authority
+    trace_event: planning.change_replanned
+    exit_status: fail
+    cleanup: preserve bounded route evidence
   - from: planning_active
-    to: blocked
-    trigger: planning blocks or continues without progress
-    trace_event: planning.work_units_created
-    exit_status: blocked
-    cleanup: preserve planning tmp when remediation needs it
+    to: waiting
+    trigger: required Planning Result is indeterminate or Runtime wait applies
+    trace_event: planning.change_replanned
+    exit_status: indeterminate
+    cleanup: preserve bounded repair or retry evidence
   - from: implementation_active
-    to: production_ready
-    trigger: Implementation Quality Policy gates permit exit
+    to: realized
+    trigger: Implementation Exit Report passes and Runtime appends exact realization
     trace_event: implementation.evidence_accepted
-    exit_status: exit
-    cleanup: clean implementation tmp after durable refs exist
+    exit_status: pass
+    cleanup: preserve worker material until Integration proof authorizes cleanup
   - from: implementation_active
     to: route_back
-    trigger: implementation needs planning or decision authority
-    trace_event: implementation.evidence_accepted
-    exit_status: route_back
-    cleanup: preserve implementation tmp when useful
+    trigger: Runtime route requires Planning or Decision authority
+    trace_event: implementation.evidence_rejected
+    exit_status: fail
+    cleanup: preserve bounded route and repair evidence
   - from: implementation_active
-    to: blocked
-    trigger: implementation blocks or continues without progress
-    trace_event: implementation.evidence_accepted
-    exit_status: blocked
-    cleanup: preserve implementation tmp when remediation needs it
+    to: waiting
+    trigger: required Implementation Result is indeterminate or Runtime wait applies
+    trace_event: implementation.evidence_rejected
+    exit_status: indeterminate
+    cleanup: preserve bounded retry evidence
   - from: route_back
     to: decision_active
-    trigger: target loop is decision
-    trace_event: decision.changes_approved
+    trigger: target authority is Decision
+    trace_event: decision.change_revised
   - from: route_back
     to: planning_active
-    trigger: target loop is planning
-    trace_event: planning.work_units_created
-  - from: production_ready
+    trigger: target authority is Planning
+    trace_event: planning.change_replanned
+  - from: waiting
+    to: decision_active
+    trigger: Decision authority/evidence becomes available
+    trace_event: decision.change_revised
+  - from: waiting
+    to: planning_active
+    trigger: Planning dependency/evidence becomes available
+    trace_event: planning.change_replanned
+  - from: waiting
+    to: implementation_active
+    trigger: Implementation capability/evidence becomes available
+    trace_event: implementation.evidence_rejected
+  - from: realized
+    to: integrated
+    trigger: exact guarded Integration commit/tree proof recorded
+    trace_event: runtime.integration.proven
+  - from: integrated
+    to: merged
+    trigger: separately authorized local fast-forward merge recorded
+    trace_event: runtime.project_branch.merged
+  - from: merged
+    to: pushed
+    trigger: separately authorized exact remote push recorded
+    trace_event: runtime.project_branch.pushed
+  - from: pushed
     to: published
-    trigger: exact guarded product publication proof recorded
+    trigger: separately authorized exact artifact publication recorded
     trace_event: runtime.product.published
-  - from: production_ready
-    to: closed
-    trigger: close without publication requirement
-    trace_event: trace_close
-    cleanup: delete all remaining trace tmp
   - from: published
     to: released
-    trigger: exact guarded product release proof recorded
+    trigger: separately authorized exact release promotion recorded
     trace_event: runtime.product.released
+  - from: realized
+    to: outcome_dispositioned
+    trigger: no further delivery effect required and outcome disposition recorded
+    trace_event: implementation.evidence_accepted
+  - from: integrated
+    to: outcome_dispositioned
+    trigger: Integration is final required boundary and outcome disposition recorded
+    trace_event: runtime.integration.proven
+  - from: pushed
+    to: outcome_dispositioned
+    trigger: push is final required boundary and outcome disposition recorded
+    trace_event: runtime.project_branch.pushed
   - from: published
-    to: closed
-    trigger: close after publication when release is not required
-    trace_event: trace_close
-    cleanup: delete all remaining trace tmp
+    to: outcome_dispositioned
+    trigger: publication is final required boundary and outcome disposition recorded
+    trace_event: runtime.product.published
   - from: released
+    to: outcome_dispositioned
+    trigger: release is final required boundary and outcome disposition recorded
+    trace_event: runtime.product.released
+  - from: outcome_dispositioned
     to: closed
-    trigger: close after release proof
+    trigger: retention policy permits close and no live dependency remains
     trace_event: trace_close
-    cleanup: delete all remaining trace tmp
+    cleanup: remove remaining private material after Git restore refs preserve history

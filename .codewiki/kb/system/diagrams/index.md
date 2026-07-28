@@ -17,7 +17,7 @@ Each diagram should include:
 - renderer hints
 - diagram-specific raw data such as nodes, edges, participants, entities, states, transitions, and UI hints
 
-Agents should prefer small stable IDs, explicit source paths, and short labels. Long explanations belong in component Markdown docs, product docs, loop outputs, trace iteration data, or runtime temp while active.
+Agents should prefer small stable IDs, explicit source paths, and short labels. Long explanations belong in component Markdown docs, Product Knowledge, Loop candidate/Report data, trace attempts, or bounded private Runtime material.
 
 ## Diagram refs
 
@@ -36,7 +36,7 @@ Nodes can set `requires_doc: true` when a diagram concept requires an owning Mar
 | `component-map.yaml` | `component_map` | Show major runtime components, adapters, data stores, and dependency direction. | Layered graph, custom SVG, or Mermaid flowchart. |
 | `key-flow.yaml` | `sequence_flow` | Show the most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
 | `data-model.yaml` | `data_model` | Show durable entities, generated state, evidence, and ownership. | Mermaid ER/custom ER renderer. |
-| `state-lifecycle.yaml` | `state_lifecycle` | Show semantic loop iteration, exit-condition, runtime coordination, retention, and release lifecycles. | Mermaid state diagram or custom state renderer. |
+| `state-lifecycle.yaml` | `state_lifecycle` | Show semantic Loop attempts, Exit Report/Runtime routes, guarded delivery boundaries, outcome disposition, and retention. | Mermaid state diagram or custom state renderer. |
 
 ## Rendering boundaries
 
@@ -50,6 +50,6 @@ Nodes can set `requires_doc: true` when a diagram concept requires an owning Mar
 
 ## Related docs
 
-- [Project Dashboard and Pi Client Architecture](../components/terminal-ui.md)
+- [Client and Dashboard Architecture](../components/terminal-ui.md)
 - [Source Map](../components/source-map.md)
 - [System Overview](../components/overview.md)

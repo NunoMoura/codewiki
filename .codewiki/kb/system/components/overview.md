@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: System Overview
-description: CodeWiki is being rebuilt from a clean source scaffold. The old implementation archive has been removed after migration audit; the new Pi extension is package-installable, and repo-local CodeWiki dogfooding stays disabled while production readiness is hardened. This checkout uses `.codewiki/kb/**` as design truth while source stabilizes. The current migration inventory and remaining gaps are tracked in [Migration Audit](../flows/migration-audit.md).
+description: CodeWiki is an intent-to-production alignment runtime built as a standalone CLI, Project Runtime, and dashboard over Pi, with exactly three semantic Loops and candidate-bound exit Checks.
 tags:
   - codewiki
   - system
@@ -10,100 +10,107 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # System Overview
 
-CodeWiki is being rebuilt from a clean source scaffold. The old implementation archive has been removed after migration audit; the new Pi extension is package-installable, and repo-local CodeWiki dogfooding stays disabled while production readiness is hardened. This checkout uses `.codewiki/kb/**` as design truth while source stabilizes. The current migration inventory and remaining gaps are tracked in [Migration Audit](../flows/migration-audit.md).
+CodeWiki turns accepted intent into accountable project change. Primary boundary is standalone CLI, Project Runtime, dashboard, and embedded published Pi SDK. Optional Pi extension is a thin client.
 
-## Target mental model
+Source checkout uses `.codewiki/kb/**` as intended design truth, source/tests as executable truth, and Git as history/checkpoint proof. It does not load or dogfood its own extension during stabilization.
 
-CodeWiki has one runtime outer loop and three semantic loops.
-
-Runtime outer loop:
+## Mental model
 
 ```text
-read traces/views -> choose next action -> run semantic iteration or runtime coordination -> append trace -> repeat
+(Kₜ, Gₜ, Pₜ) + ΔIntent
+  ──CodeWiki──>
+(Kₜ₊₁, Gₜ₊₁, Pₜ₊₁, Evidence)
 ```
 
-Semantic loops:
+`K` is accepted Knowledge, `G` exact Git state, `P` delivery state, and Evidence includes exact Check Results, Exit Reports, authority, Integration proof, and observations.
 
-1. **Decision** — accept intent, requirements, tradeoffs, risks, and KB impact.
-2. **Planning** — turn accepted decisions into executable work units, ordering, conflicts, path scopes, and verification strategy.
-3. **Implementation** — change code/docs/tests, record evidence, run checks, aggregate workers, and produce content proof.
+```text
+Project Runtime
+├── Decision Loop
+├── Planning Loop
+└── Implementation Loop
+```
 
-Each semantic loop is defined by:
+Each Loop has versioned Loop Protocol, exact typed input, immutable candidate, candidate-specific Resolved Exit Policy, Code/Model Checks, Check Results, and immutable Exit Report.
 
-1. a mandatory versioned Stage Protocol;
-2. typed input and immutable candidate output;
-3. one resolved Quality Policy with assessments and deterministic exit gates.
+```text
+Change
+→ Loop
+→ Candidate
+→ Resolved Exit Policy
+→ Checks
+→ Check Results
+→ Exit Report
+→ Runtime route
+```
 
-Pi owns provider/authentication mechanics, tools, sessions, and ordinary Skills. CodeWiki owns OS guidance, Stage Protocols, semantic authority, Quality Policy, Workbench scope, model-tier selection, routing, and canonical writes.
+Runtime validates freshness, generation, authority, and CAS before append/effect. A passing Report permits exact Loop exit only.
 
-Older migration vocabulary must not define product concepts, source layout, or tool boundaries. Desired-state docs and tools use loop vocabulary.
+## Ownership boundary
 
-## Source-of-truth model
+Pi owns providers, credentials, model transport, sessions, compaction, tools, extensions, and Skills.
 
-CodeWiki truth comes from:
+CodeWiki owns Change Traces, WorkState, Loops, Loop Protocols, Checks/exit, Workbenches, workers, Integration, routing, and guarded effects. Future harness adapters cannot replace semantic authority.
 
-- `.codewiki/kb/**` for hot product/system knowledge;
-- `.codewiki/traces/TRACE-*.jsonl` for append-only workflow and state truth;
-- OKF frontmatter for doc/source/test/view/event ownership mapping;
-- source/tests for implementation content;
-- Git for cold history, restore refs, commits, trees, and publication proof.
+## Truth and projections
 
-Generated views live under `.codewiki/views/**` and are disposable derived calculations/caches over traces and sources. Runtime temp under `.codewiki/runtime/tmp/**` is scratch only. Historical dogfood files outside the active roots are not target truth roots.
+- `.codewiki/kb/**`: accepted Product/System/Design Knowledge, portable through OKF.
+- `.codewiki/traces/TRACE-CHG-*.jsonl`: append-only Change progression and reusable evidence in consuming projects.
+- source/tests: executable truth.
+- Git/remote/artifact observations: exact content and delivery-boundary proof.
+- configuration: approved policy and capabilities.
 
-## Source roots
+WorkState, Work/Alignment/Learning graphs, indexes, dashboard state, `.codewiki/views/**`, and `.codewiki/runtime/learning/**` are disposable projections/caches. Private Workbenches, raw model/tool output, failed patches, credentials, and reasoning stay under bounded runtime storage and never become trace truth.
 
-Target package roots are:
+Alignment means every discrepancy is resolved, tied to an exact active Change, or explicitly unknown and blocked from unsafe progression.
 
-- `src/decision/**`
-- `src/planning/**`
-- `src/implementation/**`
-- `src/loops/**`
-- `src/dashboard/**`
-- `src/traces/**`
-- `src/views/**`
-- `src/knowledge/**`
-- `src/git/**`
-- `src/runtime/**`
-- `src/error-handling/**`
-- `src/pi/**`
-- `src/project/**`
-- `src/utils/**`
-- `src/api/**`
+## Target source roots
 
-There is no target package root for split evaluation, stored state, graph projections as truth, roadmap state, or old artifact state.
+```text
+src/
+  semantic-loop.ts
+  loop-exit/**
+  decision/**
+  planning/**
+  implementation/**
+  runtime/loop-exit-runtime.ts
+  dashboard/**
+  traces/**
+  views/**
+  knowledge/**
+  git/**
+  runtime/**
+  error-handling/**
+  pi/**
+  project/**
+  utils/**
+  api/**
+```
 
-## Runtime model
+Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Current `src/loops/**` checking/judge/graph machinery is migration state and will be deleted by clean cuts without old-path re-exports.
 
-Runtime is one project-scoped control plane and owns scheduling plus guarded trace writes. It owns client intake, WorkState refresh, compatible-job selection, semantic lanes, claims, leases, session and worker lifecycle, integration, automation policy, budgets, supervision, retention, and temporary data. Runtime is the outer control loop, not a semantic loop. Dashboard, Pi, and future clients do not own its lifetime. Embedded semantic sessions, independent Quality verifiers, and process/container workers execute runtime instructions through adapter contracts; they are not separate runtimes. Planning declares worker-ready Workbench requirements. Runtime binds fresh source, context, Skills, tools, model tier, policy, isolation, and budgets into one private Workbench before Claim activation.
+## Work and execution
 
-Temporary data lives under `.codewiki/runtime/tmp/<trace-id>/<loop>/`. Loop exit deletes loop temp after durable refs exist. Continue/blocked/route-back can preserve loop temp for remediation. Superseding iterations replace stale temp. Trace close cleans all remaining temp.
+Decision creates accepted semantic revisions and Knowledge impact. Planning globally shapes approved Changes into Sprints and worker-ready Work Items. Runtime provisions bounded Workbenches and Assignments. Implementation accepts exact realization candidates. Runtime serializes Integration and separately guarded merge, push, publication, release, and future deployment effects.
 
-Pi native compaction is the only active compaction mechanism during the rebuild. CodeWiki-owned refresh windows and automatic resume pickup remain disabled until explicitly reintroduced.
+Workers and Model Checks are isolated and non-authoritative. Worker completion is candidate evidence. Model Check operational failure is indeterminate. Pi-Lens/tools/Skills help build and repair candidates but cannot attest acceptance.
 
-## Generated views
+## Learning and feedback
 
-Generated views answer current-state questions quickly:
+Compact candidate/Check/repair/outcome lineage persists in Change Traces. Repair Episodes and Repair Patterns are derived project-local views, not truth or another Loop. Learned context cannot alter activation, thresholds, authority, or exit.
 
-- Backlog and Decision state;
-- Planning horizon, coverage, and ready/held frontier;
-- Implementation Assignments, workers, integration, and proof;
-- Change dossiers;
-- status and resume;
-- quality, blockers, and conflicts.
+Suspected CodeWiki defects may produce local allowlisted Feedback Bundles only after user preview/redaction and separate approval. No full-trace telemetry or automatic upload.
 
-Dashboard graphs, lanes, lists, search indexes, and compact Pi views render trace-backed WorkState. They are not separate truth concepts.
+## Guarantee boundary
 
-## Loop contracts
-
-The decision loop owns semantic KB propagation. There is no separate knowledge-update loop between decision and planning. Decision loop output includes KB propagation or explicit no-impact rationale. Planning starts only from exited decision output plus updated KB refs.
-
-Loop output becomes downstream context only when exit conditions return `exit`. Continue, blocked, and route-back iterations record compact provenance and next actions, but they do not promote downstream-consumable truth.
+CodeWiki guarantees bounded process integrity, exact identity, independent checking, deterministic threshold/reduction, guarded progression, provenance, and explicit uncertainty. It does not guarantee unknowable semantic perfection or permanent remote state.
 
 ## Related docs
 
+- [Alignment Model](alignment-model.md)
 - [Loop Model](loop-model.md)
-- [CodeWiki OS and Stage Protocols](codewiki-os.md)
-- [Quality Policy](quality-policy.md)
+- [CodeWiki OS and Loop Protocols](codewiki-os.md)
+- [Loop Exit](loop-exit.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Decision Loop](decision-loop.md)

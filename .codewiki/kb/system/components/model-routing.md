@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Model Routing
-description: Users bind Pi model routes to Decision, Planning, and three Implementation tiers while runtime selects the tier from structured execution facts.
+description: Users bind Pi routes to Decision, Planning, and three Implementation tiers while Runtime selects exact producer and Model Check routes from structured facts.
 tags:
   - codewiki
   - system
@@ -10,11 +10,9 @@ tags:
 ---
 # Model Routing
 
-Pi owns providers, model discovery, credentials, authentication, and invocation mechanics. CodeWiki owns semantic model slots, runtime tier selection, exact route binding, budgets, and the authority boundary around model output.
+Pi owns providers, model discovery, credentials, authentication, transport, and session mechanics. CodeWiki owns semantic model slots, runtime tier selection, exact route/configuration binding, budgets, and authority around model output.
 
-## User model bindings
-
-Project configuration exposes five user-selectable slots:
+## User bindings
 
 ```text
 decision
@@ -24,64 +22,64 @@ implementation.standard
 implementation.complex
 ```
 
-Each slot resolves through Pi to one model route and bounded invocation configuration. CodeWiki stores route references and safe configuration digests, never provider credentials or bearer tokens.
+Each slot resolves through Pi to one route and bounded invocation configuration. CodeWiki stores safe route/configuration identity only, never credentials or bearer tokens.
 
-There is no `implementation.review` slot. Implementation review is execution of the resolved Quality Policy, not a standalone reviewer agent. Model-based Quality Standards use independent verifier invocations and normally inherit the relevant stage route. Implementation verifiers default to `implementation.complex` unless a calibrated CodeWiki-owned Standard override specifies another route.
+No `implementation.review` slot exists. Implementation acceptance comes from Code Checks and independent Model Checks under one Resolved Exit Policy, not a standalone reviewer agent.
 
-## Stage bindings
+## Loop and Check binding
 
-Decision and Planning jobs use their user-selected stage routes. Planning shapes worker-ready Work Items and declares Workbench requirements; it does not choose a concrete model or provider for an Assignment.
-
-Runtime selects one Implementation tier for each attempt:
+Decision and Planning candidate producers use their selected Loop route. Runtime selects one Implementation tier per Assignment/candidate attempt:
 
 | Tier | Intended use |
 | --- | --- |
-| `routine` | Small, well-bounded, low-risk work with clear acceptance, familiar tools, and cheap verification. |
-| `standard` | Normal multi-file or moderately uncertain work requiring broader context, checks, or integration. |
-| `complex` | High-risk, cross-component, security/privacy, migration, release-sensitive, tool-heavy, previously failed, or semantically uncertain work. |
+| `routine` | Runtime-proven small, bounded, low-risk work with clear acceptance and cheap verification. |
+| `standard` | Normal multi-file or moderately uncertain work needing broader context, Checks, or Integration. |
+| `complex` | High-risk, cross-component, security/privacy, migration, release-sensitive, tool-heavy, repeatedly failed, or semantically uncertain work. |
 
-The selected tier resolves to the corresponding user model binding and enters the private Worker Workbench manifest.
+Planning declares Workbench/model requirements but cannot choose provider/model. Candidate, worker, Skill, client, or caller cannot self-label work `routine` or lower its tier.
+
+Model Checks normally inherit calibrated routes for their owning Loop. Implementation Model Checks use `implementation.complex` unless a trusted versioned Check binding establishes another calibrated route. Runtime records exact model, configuration, Check, trial, and aggregation identity in each Result.
 
 ## Deterministic tier selection
 
-Tier selection uses typed facts rather than prose or worker preference:
+Typed facts include:
 
-- Change risk and affected layers;
-- path count, component count, and dependency breadth;
-- public API, persistence, security, privacy, accessibility, migration, and release effects;
-- acceptance and verification complexity;
-- context size and required tool capabilities;
-- isolation and integration requirements;
+- accepted Change risk/layers;
+- path/component/dependency breadth;
+- API, persistence, security, privacy, accessibility, migration, dependency, and delivery effects;
+- acceptance/verification complexity;
+- context size and capabilities;
+- isolation/Integration requirements;
 - unresolved uncertainty;
-- prior attempt count and failure classes;
-- Quality Policy cost and verifier requirements.
+- prior attempt count and issue classes;
+- Resolved Exit Policy cost and Model Check needs.
 
-Rules are versioned, deterministic, monotonic for safety, and explainable. Every selection produces a private tier-selection resolution with input facts, matched rule refs, selected tier, route digest, and budget. A candidate, Skill, worker, verifier, or remote client cannot choose or lower its tier.
+Rules are versioned, deterministic, monotonic for safety, and explainable. Resolution records input facts, matched rules, selected tier, route/configuration digest, and budget in private runtime state. Actual effects may raise tier or add Checks; they cannot silently lower frozen Planning minimums. Route/tier changes create new dependent identities and invalidate caches.
 
-Actual implementation effects may raise the tier or add Quality Standards. They cannot silently lower the frozen Planning minimum. Tier escalation creates a new attempt or verifier identity and invalidates dependent caches.
+Learned history may inform candidate repair context and offline calibration. It cannot activate Checks, lower thresholds, or select a cheaper tier automatically.
 
 ## Model authority
 
-A model invocation may produce a Decision candidate, Planning candidate, implementation changes, or one Quality assessment. It cannot provide canonical identity, runtime job id, observation time, CAS guards, final routing, or acceptance authority.
+A model may produce one Decision/Planning candidate, Implementation edits/candidate evidence, or one Model Check measurement/assessment. It cannot provide canonical identity, authority, runtime job id, observation time, activation, threshold, CAS guard, route, append, or final acceptance.
 
-Candidate generation and model verification use separate sessions and conversational state, even when they resolve to the same provider/model. Runtime binds exact protocol, candidate, evidence, policy, model, configuration, trial, and aggregation identities before accepting an assessment.
+Candidate generation and Model Checking use separate sessions and conversational state even when they resolve to the same provider/model. Model Checks receive immutable candidate evidence, not producer transcript or retrieved repair context.
 
-Model unavailability or malformed output is operationally `indeterminate` or blocked according to policy. It is never silently converted into product rejection, score `0`, or approval.
+Timeout, provider failure, unavailable service, malformed output, cancellation, or invalid schema yields `indeterminate`. Runtime never converts operational failure into score zero, candidate rejection, or approval.
 
 ## Budgets and efficiency
 
-Each route has explicit token, cost, wall-time, iteration, and concurrency budgets. Runtime may use prompt caching, coherent verifier batches, shared facts, exact result caching, and stale-work cancellation. Budget policy may block or require authority, but cannot bypass required Standards.
+Every route has token, cost, wall-time, iteration, and concurrency budgets. Runtime may use prompt caching, coherent Model Check envelopes, shared extracted facts, exact Result caching, and stale-work cancellation. Budget policy may wait, block, or require authority; it cannot bypass required Checks.
 
-Model-route changes require calibration against visible and sealed cases. Evaluation compares false passes, false blocks, repair iterations, worker success, tokens, time to first useful feedback, and time to authoritative exit. No optimizer or model automatically promotes itself.
+Route changes require calibration against visible and sealed fixtures. Compare false passes, escaped regressions, false blocks, repair iterations, interventions, tokens/cost, first useful feedback, and authoritative-exit latency. No optimizer/model promotes itself.
 
 ## Current migration drift
 
-Current project routing exposes a more generic route model and does not yet provide the five semantic slots or deterministic Implementation tier-selection resolution. Source migration must preserve Pi-owned provider/auth behavior while adding these slots, configuration validation, runtime selection, Workbench binding, verifier identity, and observability.
+Current configuration uses a generic route model and lacks all five semantic slots plus complete deterministic tier resolution. Migration preserves Pi-owned provider/auth/session behavior while adding slot validation, Runtime selection, Workbench binding, Model Check identity, cancellation, and observability.
 
 ## Related docs
 
-- [CodeWiki OS and Stage Protocols](codewiki-os.md)
-- [Quality Policy](quality-policy.md)
+- [CodeWiki OS and Loop Protocols](codewiki-os.md)
+- [Loop Exit](loop-exit.md)
 - [Worker Workbench](worker-workbench.md)
 - [Runtime](runtime.md)
 - [Pi Extension](extension.md)

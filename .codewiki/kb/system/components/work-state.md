@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: WorkState
-description: WorkState is the disposable project-wide projection that lets runtime and all three semantic loops reason from the same current state without creating another truth store.
+description: WorkState is the disposable project-wide projection that lets Runtime and all three semantic Loops reason from one current snapshot without creating another truth store.
 tags:
   - codewiki
   - system
   - state
   - projection
-timestamp: 2026-08-01T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 codewiki_component: work_state
 codewiki_components:
   - work_state
@@ -30,36 +30,34 @@ codewiki_source_map:
 ---
 # WorkState
 
-WorkState is CodeWiki's typed, disposable projection of current project work. Runtime, Decision, Planning, Implementation, APIs, and user-facing views must derive their bounded inputs from the same WorkState semantics instead of independently reconstructing partial state.
+WorkState is CodeWiki's typed disposable projection of current project work. Project Runtime, Decision, Planning, Implementation, APIs, clients, and relationship queries derive bounded inputs from the same semantics instead of independently reconstructing partial state.
 
-WorkState is not a canonical file, event journal, semantic loop, or authority. An in-memory instance or generated `.codewiki/views/work-state.json` cache may be discarded and rebuilt.
+WorkState is not canonical, a semantic Loop, an event journal, or authority. In-memory state and generated `.codewiki/views/**` may be discarded and rebuilt.
 
 ## Inputs and authority
 
 ```text
 Change Traces
-+ current Knowledge Base
-+ source ownership
-+ source and tests
-+ Git state
-+ configuration and policy
-+ bounded runtime observations
++ current OKF Knowledge
++ source/test ownership and implementation
++ exact Git/remote/delivery evidence
++ configuration
++ bounded Runtime observations
 = WorkState
 ```
 
-Each input keeps its existing authority:
+Each source retains authority:
 
-- Change Traces own durable workflow, approval, planning, runtime-coordination, implementation, and outcome-disposition facts for each Change journey.
-- Knowledge Base documents own accepted product and system intent.
-- Source, tests, and Git own implementation and content-proof truth.
-- Configuration owns bounded execution policy.
-- Runtime observations own only ephemeral process, lease, and capability state.
+- Change Traces own durable Change progression, Loop attempts, Planning, runtime coordination, Check/Exit evidence, realization, and outcome disposition.
+- Knowledge owns accepted Product/System/Design intent.
+- Source/tests/Git own executable and content identity.
+- Remote checks/artifacts/observations own only their exact external boundary.
+- Configuration owns approved execution/assurance policy.
+- Runtime observations own ephemeral process, lease, capacity, and capability state.
 
-WorkState records refs, versions, and digests for those sources. It never copies their authority into a generated projection.
+WorkState records refs, versions, coverage, and digests. It never transfers authority into a generated projection.
 
-## Shape
-
-The conceptual shape is:
+## Conceptual shape
 
 ```ts
 interface WorkState {
@@ -67,123 +65,153 @@ interface WorkState {
   sprints: Map<SprintId, SprintView>;
   workItems: Map<WorkItemId, WorkItemView>;
   assignments: Map<AssignmentId, AssignmentView>;
-  quality: QualityPolicyProjectionState;
+  loopExit: LoopExitProjectionState;
   knowledge: KnowledgeState;
+  alignment: AlignmentProjectionState;
   integration: IntegrationState;
+  delivery: DeliveryState;
   runtime: RuntimeObservationState;
   blockers: BlockerView[];
   snapshotDigest: string;
 }
 ```
 
-A concrete API may serialize maps as sorted arrays or records. Ordering and digest construction must be deterministic.
+Concrete APIs may serialize sorted arrays/records. Ordering and digest construction are deterministic.
 
 ## Change-accountable relationships
 
-Change is the accountable semantic carrier. Decision is a loop and approval fact, not another domain entity. Planning creates Sprints and Work Items from approved Changes. Runtime grants Assignments for Work Items. Implementation records realization and evidence against the owning Change.
-
-The durable relationship is many-to-many where execution requires it:
-
 ```text
-Change * <-> * Sprint
-Sprint 1 -> * Work Item
-Work Item 1 -> * Assignment attempt
+Change * ↔ * Sprint
+Sprint 1 → * Work Item
+Work Item 1 → * Assignment attempt
 ```
 
-Each Work Item has exactly one owning Change and may declare additional Changes it contributes to. This gives every Work Item and implementation result one canonical Change Trace while preserving cross-Change coverage.
+Each Work Item has exactly one owning Change and may contribute explicitly to others. This preserves one canonical trace owner while enabling global Planning.
 
 A Change view may expose:
 
-- current semantic revision and digest;
-- Decision-loop validation and exact approval receipt;
-- planning coverage and Sprint memberships;
-- owned and contributing Work Items;
-- Assignments, selected Implementation tiers, bounded Workbench summaries, and Worker Reports;
-- Quality Policy resolutions, in-progress Assessments, immutable Quality Reports, latency/token summaries, and repair routes;
-- implementation realization and integration evidence;
-- Knowledge impacts and outcome disposition;
-- blockers, current loop, and next safe action.
+- exact semantic revision, digest, authority, and current Loop;
+- Decision candidates and accepted revision;
+- Planning coverage, Sprints, Work Items, dependencies, and contribution;
+- Assignments, tiers, Workbench summaries, Claims, and Worker Reports;
+- candidate lineage, Resolved Exit Policies, Checks, Results, Exit Reports, latency/token buckets, and repair routes;
+- Implementation realization and Integration proof;
+- Knowledge/alignment impact and suspect relationships;
+- merge, push, publication, release, deployment/observation boundaries;
+- blockers and next safe action.
 
-A Sprint view joins matching Planning facts from participating Change Traces, including canonical `uiPreviewTargets[]` bindings and their exact target/profile digests when UI realization is in scope. It is a generated execution-group projection, not a separate Sprint trace or truth file.
+Sprint and relationship views join exact trace facts. They do not become separate Sprint, graph, or lesson stores.
 
-A Work Item may project one or more exact Integration proofs from `runtime.integration.proven` events. Each projection keeps the event and runtime-job identity, Planning target refs, base/commit/tree/content proof, changed paths, Worker-report ref, and integration time separate from semantic `implemented` status. Missing integration evidence is never inferred from Worker completion or Implementation acceptance.
+## Loop-exit projection
 
-A Work Item separately projects exact project-branch promotion from `runtime.project_branch.merged`. Merge proof preserves the Integration event/job, checked-out target branch, prior target commit, promoted commit/tree/content proof, merge job, exact authority, and observation time.
+WorkState projects persisted policy/report identity and active Runtime execution separately:
 
-`runtime.project_branch.pushed` projects another exact boundary: merge event/job, configured remote and branch, prior remote commit or branch absence, pushed commit/tree/content proof, user authority, push job, and observation time.
+- candidate id/digest and guarded snapshots;
+- active Check bindings and `activatedBy` reasons;
+- completed/pending Results;
+- exact thresholds and enforcement;
+- immutable Exit Report status;
+- separate Runtime route and freshness state;
+- parent/repair candidate lineage.
 
-`runtime.product.published` projects product publication separately on the owning Work Item. The projection preserves canonical push event, target kind/id/channel/destination, artifact id/digest/version, previous destination revision/digest, resulting provider revision and operation, adapter identity, exact user authority, publication job, and observation time.
+Historical views never reinterpret old attempts through today's Check catalog. In-progress state is operational; accepted Results/Reports live in traces.
 
-`runtime.product.released` projects release independently. It preserves canonical publication event, release target kind/id/channel/destination, exact artifact identity, previous channel revision/digest, resulting provider revision and operation, adapter identity, user authority, release job, and observation time. Integration, project-branch merge, push, publication, deployment, and release remain distinct states; one never implies another.
+## Alignment and delivery projection
+
+WorkState distinguishes:
+
+- resolved, Change-accounted, suspect, contradictory, blocked, and unknown relationships;
+- local candidate, isolated worker output, integrated tree, project-branch merge, remote push, publication, release, deployment, and outcome observation;
+- explicit proof from inferred relationships.
+
+One boundary never implies another. Missing proof remains missing.
 
 ## Runtime use
 
-Runtime is logically always available and physically quiescent when no eligible work exists. On each trigger set it rebuilds or refreshes WorkState, derives eligible invariant repairs, admits a compatible bounded job set, supplies exact context slices, validates each output and exit result, appends accepted facts to affected Change Traces, and rebuilds projections.
-
 ```text
 trigger set
--> refresh WorkState
--> derive eligible jobs
--> apply lanes, conflicts, dependencies, capacity, and policy
--> bind Stage Protocol and resolve model route, Quality Policy, or Worker Workbench
--> run compatible jobs through execution adapters and bounded verifier pools
--> fan in required assessments and apply deterministic gates
--> guarded append to Change Trace(s)
--> schedule permitted effects
--> repeat or quiesce
+→ refresh WorkState and relationship snapshot
+→ derive eligible jobs
+→ apply lanes, conflicts, dependencies, capacity, budget, and authority
+→ bind Loop Protocol/model route/Workbench
+→ produce immutable candidate
+→ resolve policy and run bounded Checks
+→ build Exit Report
+→ final freshness/generation/CAS guard
+→ append exact facts or remediation
+→ schedule separately permitted effects
+→ repeat or quiesce
 ```
 
-WorkState scheduling and context selection must be impact-bounded. Global Planning observes every relevant approved Change, dependency, overlap, active Sprint, integration target, and policy constraint in its planning horizon; it does not reread unrelated closed history on every cycle. Concurrent Decision and worker jobs receive separate exact slices so one session does not depend on another session's transcript.
+Global Planning observes every relevant approved Change, dependency, overlap, active Sprint, integration target, and constraint inside one bounded horizon. Concurrent Decision and Assignment jobs receive separate exact slices; no job depends on another transcript.
 
 ## Freshness and concurrency
 
-Every semantic iteration binds the WorkState snapshot or bounded source versions it observed. Runtime must reject or rerun a proposed append when any guarded Change revision, trace tail, KB target digest, policy digest, Git base, or plan revision changed during evaluation.
+Every candidate binds exact WorkState or bounded source versions. Runtime rejects or reruns when any guarded Change revision, trace tail, Knowledge digest, policy/config identity, Git base, source proof, or plan revision changes.
 
-Generated WorkState digests are concurrency evidence, not semantic approval. Entity-level compare-and-swap guards remain authoritative for writes.
+WorkState digest is snapshot evidence, not semantic approval or sole write guard. Entity-level CAS remains authoritative.
 
-## JSONL read efficiency
+A changed concept/source/Check/evidence relationship makes dependents suspect. Suspect propagation requests reevaluation; it does not fabricate contradiction or automatic failure.
 
-CodeWiki follows the useful parts of Pi's session-storage pattern without copying session semantics:
+## Read efficiency
 
-- parse JSONL as an LF-delimited stream rather than loading each file as one large string;
-- load each active Change Trace once into a supervised in-memory session;
-- retain records and stable identity indexes while runtime remains alive;
-- on refresh, compare file metadata and parse only bytes appended after the last complete newline;
-- rebuild one trace when it is truncated, replaced, malformed, or invalidated;
-- rebuild the complete disposable projection when process memory is lost.
+CodeWiki parses JSONL as LF-delimited streams, loads each active trace once per supervised process, indexes stable identities, tails complete appended lines, and rebuilds a trace when truncated/replaced/malformed. Process loss rebuilds all disposable state.
 
-`WorkStateSession` implements load, reuse, tail, invalidation, and removal detection. `RuntimeReactor` reuses that session while selecting bounded work. SQLite is not part of the architecture. If a future measured workload needs a durable warm index, that index must remain disposable and reconstructible from Change Traces.
+No SQLite or graph database belongs to current architecture. If measured workloads later justify a warm index, it remains disposable and reconstructible.
 
-Pi compaction keeps full JSONL history while projecting a smaller model context. CodeWiki applies the same separation of durable history from bounded context, but semantic Change facts are never summarized lossily. Runtime supplies loops with scoped refs, exact revisions and digests, selected Knowledge/source context, and deltas; deterministic checkpoints may accelerate replay without replacing event history.
+Durable semantic facts are never summarized lossily. Runtime compiles bounded model context from exact refs, revisions, selected Knowledge/source slices, relationship facts, and deltas.
+
+## Relationship query service
+
+Runtime may expose typed read-only operations over three derived views:
+
+- **Work:** blockers, dependencies, overlap, Claims, Assignment readiness, and integration state.
+- **Alignment:** Knowledge constraints, realization, reverse traceability, suspect/invalidation relationships, plan coverage, and active Check explanation.
+- **Learning:** similar Repair Episodes and prior successful/harmful Repair Patterns.
+
+Every result includes:
+
+```ts
+{
+  snapshotDigest: string;
+  facts: StructuredFact[];
+  provenanceRefs: string[];
+  authority: "canonical" | "derived" | "observed";
+  coverage: "complete" | "partial" | "unknown";
+  truncated: boolean;
+  stale: boolean;
+}
+```
+
+No arbitrary Cypher, generic graph DSL, graph mutation, or inference of non-existence from partial coverage. Runtime preloads mandatory context; query access is supplemental and Assignment-scoped for workers.
 
 ## Views
 
-User and agent views are projections over WorkState or the same canonical inputs:
+- **Backlog:** open intake and Decision state.
+- **Planning:** approved Changes, Planning epochs, Sprints, Work Items, dependencies, coverage, and ready/held frontier.
+- **Implementation:** Claims, Assignments, tiers, Workbenches, Result progress, repair, isolation, Integration, Git/delivery proof.
+- **Change dossier:** one complete accountable Change journey.
+- **Alignment:** vertical, horizontal, temporal, and delivery relationships with coverage/authority.
+- **Learning:** derived candidate/Result/repair/outcome episodes and patterns.
 
-- Backlog: persisted Change Traces whose current Decision state is not approved or terminal;
-- Planning horizon: approved Changes, Planning epochs, Sprints, Work Items, typed edges, coverage, and held/ready frontiers;
-- Implementation cockpit: Claims, Assignments, selected tiers, bounded Workbench summaries, assessment progress, isolation, integration, checks, evidence, latency/tokens, and Git proof;
-- Sprint views: Planning-created execution groups across one or more Change Traces;
-- work queue: claimable Planning-approved Work Items;
-- Change dossier: one Change Trace joined with Product/System/Design impact, Planning coverage, realization, proof, and history;
-- alignment and outcome views: intended, planned, realized, experience-verified, and outcome-observed dimensions.
-
-Views must label explicit facts separately from inferred relationships and must remain rebuildable.
+Views label explicit versus derived facts and remain rebuildable.
 
 ## Non-goals
 
-- No canonical `work-state.json` truth file.
-- No fourth state, validation, knowledge, or recovery loop.
-- No monolithic mutable Change object containing every worker and runtime field.
-- No caller-supplied replacement for repository facts the core can load itself.
-- No session transcript, session registry, graph layout, or dashboard cache as project truth.
-- No automatic semantic approval based on projection state.
+- No canonical WorkState, graph, lesson, or relationship file.
+- No fourth state, validation, Knowledge, learning, or recovery Loop.
+- No monolithic mutable Change object.
+- No caller-supplied replacement for repository facts.
+- No transcript, session registry, graph layout, dashboard cache, or Pi-Lens index as truth.
+- No automatic semantic approval from projection state.
+- No absence-as-proof under partial/unknown coverage.
 
 ## Related docs
 
+- [Alignment Model](alignment-model.md)
 - [Loop Model](loop-model.md)
-- [CodeWiki OS and Stage Protocols](codewiki-os.md)
-- [Quality Policy](quality-policy.md)
+- [CodeWiki OS and Loop Protocols](codewiki-os.md)
+- [Loop Exit](loop-exit.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Loop Contracts](loop-contracts.md)

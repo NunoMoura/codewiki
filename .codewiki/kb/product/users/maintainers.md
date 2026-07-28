@@ -1,38 +1,41 @@
 ---
 type: Concept
 title: Maintainers
-description: Maintainers use CodeWiki to keep current intent, trace-backed work state, implementation evidence, and publication readiness close to the repository.
+description: Maintainers use CodeWiki to connect accepted intent, exact candidates and Checks, project-wide work, implementation, Git/delivery proof, and outcomes without losing authority or privacy.
 tags:
   - codewiki
   - product
   - users
   - maintainers
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
 # Maintainers
 
-Maintainers use CodeWiki to keep current intent, trace-backed work state, implementation evidence, and publication readiness close to the repository.
+Maintainers need CodeWiki to answer:
 
-They need CodeWiki to answer:
-
-- what is current;
-- what changed;
-- what is planned;
-- what needs a decision;
-- what exit conditions limit agent autonomy;
-- what evidence supports closure, commit, push, or release.
+- What intent is accepted, pending, superseded, or blocked?
+- Which discrepancies are resolved, Change-accounted, suspect, contradictory, or unknown?
+- What does global Planning require and what can run safely in parallel?
+- Which exact candidate was checked and why did each Check activate?
+- Which failed/indeterminate Result owns repair or authority?
+- What Git, Integration, remote, artifact, release, or outcome evidence exists?
+- What is next safe action, and which separate authority/effect guard controls it?
 
 ## Success signals
 
-- Maintainers can inspect project state without reading raw generated files.
-- Product and system knowledge stay current rather than historical.
-- Trace-backed work-plan/work-queue views capture active priority, progress, blockers, and closure.
-- Exited loop outputs provide briefed intent, implementation specs, and implementation evidence.
-- Exit-condition results make blocked, route-back, or continue states explicit.
+- Work/Product/System/Design and Change dossier read canonical sources without hidden browser truth.
+- Every accepted intent has visible realization/delivery state; every promoted tree has accountable intent.
+- Exit Reports bind exact candidates and complete required Results.
+- Worker completion and model output never self-attest acceptance.
+- Remote claims name exact observation boundary.
+- Brownfield unknowns stay explicit rather than fabricated.
+- Repair repetition falls without higher false-pass or escaped-regression rates.
+- Feedback Bundles can diagnose recurring CodeWiki defects without exporting project content by default.
 
 ## Related docs
 
 - [Product](../overview.md)
 - [Maintain Fresh Intent](../stories/intent.md)
 - [Use Loop-Governed Automation](../stories/automation.md)
-- [Pi TUI Diagram Rendering](../uis/terminal.md)
+- [Project Dashboard and Optional Pi Client](../uis/terminal.md)
+- [Alignment Model](../../system/components/alignment-model.md)

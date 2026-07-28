@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Dictionary
-description: Product contract for rendering CodeWiki's canonical vocabulary from the root Lexicon without creating a copied glossary.
+description: Product workspace rendering CodeWiki's canonical vocabulary from root Lexicon without creating a copied glossary or second authority.
 tags:
   - codewiki
   - product
@@ -13,43 +13,51 @@ resource: ../lexicon.md
 ---
 # Dictionary
 
-Dictionary is a Product workspace that renders the canonical [Lexicon](../lexicon.md). It helps humans and agents understand CodeWiki's exact vocabulary, especially when runtime activity introduces a term that is unfamiliar or easy to confuse with a related term.
+Dictionary is Product workspace rendering canonical [Lexicon](../lexicon.md). It helps humans and agents understand exact vocabulary when Runtime activity introduces unfamiliar or confusable terms.
 
-The Lexicon remains the single vocabulary contract. Dictionary is a source-backed projection, not a copied glossary, generated summary, browser database, or second authority. Changes to definitions must modify `.codewiki/kb/lexicon.md` through the same digest-guarded, previewed, validated Change workflow used for other canonical Product Knowledge.
+Lexicon remains sole vocabulary contract. Dictionary is source-backed projection, not copied glossary, generated summary, browser database, or second authority.
 
 ## Navigation and retrieval
 
-Product contains three workspaces:
+Product contains Users, Stories, and Dictionary. Dictionary supports exact-term lookup, superseded-term lookup, text search, alphabetical navigation, and stable anchors from Work/Product/System/Design/Change views.
 
-1. Users;
-2. Stories;
-3. Dictionary.
-
-Dictionary supports exact-term lookup, aliases and deprecated-term lookup, text search, alphabetical navigation, and stable anchors for direct links from Work, Product, System, Design, Change dossiers, inspectors, and help text. Selecting a term shows its canonical definition, technical backing when present, related terms, and replacement guidance when the selected wording is deprecated.
-
-Runtime and UI copy should prefer qualified terms such as **Assignment packet** and **Worker report** instead of unexplained bare words such as “packet” or “report.” Contextual help may show a short excerpt, but it links to the exact Dictionary entry and must not invent a competing definition.
+Selecting term shows canonical definition, technical backing, related terms, and migration replacement where applicable. Contextual help may show excerpt but links exact entry and cannot invent definition.
 
 ## Truth and editing
 
-Dictionary reads current Lexicon Markdown and preserves its section structure, tables, code examples, and links. Search indexes, alphabetical groupings, and related-term edges are disposable projections. Unknown terms remain visibly undefined; the dashboard must not generate authoritative definitions from usage frequency or model output.
+Dictionary reads current Lexicon Markdown and preserves structure, tables, code, and links. Search indexes, alphabetical grouping, and related-term edges are disposable. Unknown terms remain visibly undefined; model output or usage frequency cannot create authoritative vocabulary.
 
-A proposed definition change includes the expected Lexicon source digest, deterministic patch, rendered diff, Markdown and link validation, and a Change that explains why vocabulary changed. Accepted writes carry source and Git proof. Unsupported Markdown and unknown frontmatter fields are preserved.
+Definition changes require accountable Change, expected source digest, deterministic patch, rendered diff, Markdown/link validation, and Git proof. Unknown frontmatter/OKF extensions are preserved.
 
-## Initial vocabulary assurance
+## Minimum distinctions
 
-At minimum, user-facing runtime explanations distinguish:
+User-facing explanations distinguish:
 
-- **Work Item**: what Planning says should be done;
-- **Claim**: canonical temporary authority to execute it;
-- **Assignment**: exact bounded contract for one worker attempt;
-- **Assignment packet**: private serialized handoff for that attempt;
-- **Worker report**: immutable adapter outcome and candidate evidence for one exact attempt;
-- **Claim release**: end of reservation, not proof of success.
+- **Change**: accountable intent and complete durable dossier;
+- **Semantic Loop**: Decision, Planning, or Implementation only;
+- **Candidate**: exact immutable output proposed by one Loop attempt;
+- **Check**: one versioned requirement/execution/measurement contract;
+- **Code Check** versus **Model Check**: deterministic CodeWiki code versus independent bounded Pi session;
+- **Check Result**: one exact Check outcome;
+- **Resolved Exit Policy**: candidate-specific active Check contract;
+- **Exit Report**: complete deterministic aggregate for exact candidate;
+- **Runtime route**: next action, separate from Report status;
+- **Work Item**: Planning-owned worker-ready outcome;
+- **Claim**: temporary execution authority;
+- **Assignment**: exact bounded worker-attempt contract;
+- **Assignment packet**: private serialized handoff;
+- **Worker Report**: immutable adapter outcome/candidate evidence;
+- **Integration proof**: exact combined content boundary, not merge/push/publication;
+- **Repair Episode/Pattern**: derived learning views, not authority;
+- **Feedback Bundle**: user-reviewed privacy-preserving diagnostics, not full trace telemetry.
+
+Superseded Stage/Quality/Standard/Assessment/Gate vocabulary appears only in migration guidance and executable legacy surfaces awaiting clean cuts.
 
 ## Related docs
 
 - [Lexicon](../lexicon.md)
 - [Product](overview.md)
-- [Project Dashboard and Pi Client](uis/terminal.md)
+- [Project Dashboard and Optional Pi Client](uis/terminal.md)
 - [Runtime](../system/components/runtime.md)
+- [Loop Exit](../system/components/loop-exit.md)
 - [Session Coordination](../system/components/session-coordination.md)

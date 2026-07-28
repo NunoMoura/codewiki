@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Adapters and UI Component
-description: Pi, dashboard, CLI, and future harness adapters connect to the CodeWiki project control plane without owning canonical semantics or runtime lifetime.
+description: Standalone CLI, dashboard, optional Pi client, and future adapters connect to Project Runtime without owning canonical semantics or Runtime lifetime.
 tags:
   - codewiki
   - system
@@ -14,7 +14,7 @@ timestamp: 2026-06-30T00:00:00Z
 
 ## Responsibility
 
-Adapters translate user, host, model, and browser operations into bounded CodeWiki control-plane requests. They do not own canonical semantics, project scheduling, or truth. The local dashboard is a first-class client of the same project control plane used by Pi sessions and future integrations.
+Adapters translate user, host, model, and browser operations into bounded Project Runtime requests. They do not own canonical semantics, scheduling, or truth. Standalone CLI and dashboard are primary clients; optional Pi and future integrations use same bounded Runtime.
 
 ## Owned paths
 
@@ -22,20 +22,20 @@ Adapters translate user, host, model, and browser operations into bounded CodeWi
 - `src/pi/**` owns Pi extension, embedded SDK, process-session, command, prompt, and tool integration. The embedded adapter is exposed through `./pi-sdk`, not the harness-neutral root entrypoint.
 - `src/dashboard/**` owns Work, Product, System, and Design projections, local transport, accessibility, and guarded user operations.
 - `src/preview/**` owns project-native preview and browser adapter boundaries.
-- `src/cli/**` remains a temporary development/test client until an explicit product CLI is approved.
+- `src/cli/**` is migration scaffold for the approved primary standalone CodeWiki CLI.
 
 ## Client topology
 
 ```text
-Pi extension clients ─┐
-Dashboard client ─────┼──> local project control plane
-CLI/test clients ─────┘              │
-                                     ├── semantic session adapters
-                                     ├── implementation worker adapters
-                                     └── guarded core APIs
+Standalone CLI ───────┐
+Dashboard client ─────┼──> local Project Runtime
+Optional Pi client ───┤              │
+Future clients ───────┘              ├── Pi semantic/Model Check sessions
+                                    ├── Implementation worker adapters
+                                    └── guarded core/query APIs
 ```
 
-One Pi conversation may connect or disconnect without becoming project runtime owner. The dashboard may remain available independently. Runtime decides whether work can continue from current supervision and unattended-execution policy.
+One Pi conversation may connect or disconnect without becoming Project Runtime owner. The dashboard may remain available independently. Runtime decides whether work can continue from current supervision and unattended-execution policy.
 
 ## Contracts
 
@@ -46,7 +46,7 @@ One Pi conversation may connect or disconnect without becoming project runtime o
 - Product, System, and Design edits compile to deterministic Markdown/YAML patches, show a diff, validate canonical format, and enter the Change/Decision workflow before guarded application.
 - The dashboard cannot accept arbitrary prompts, shell commands, public URLs, credentials, semantic approval through message delivery, or authority-raising configuration.
 - The control plane—not browser JavaScript and not an attached Pi conversation—creates semantic sessions and implementation workers through configured adapters.
-- Embedded semantic sessions remain read-only and return candidates. Isolated implementation workers receive only Assignment-scoped mutation capability.
+- Embedded semantic sessions remain read-only and return role-specific Candidates or Model Check outputs. Isolated implementation workers receive only Assignment-scoped mutation capability.
 - Preview runners accept structured commands, approved profile digests, exact integration state, bounded loopback URLs, isolated browser session identifiers, and lifecycle cleanup.
 - Visual artifacts remain implementation evidence and never imply semantic approval or business outcomes.
 - Generated views, search indexes, graph layouts, and live observations remain disposable projections.
@@ -64,7 +64,7 @@ One Pi conversation may connect or disconnect without becoming project runtime o
 
 ## Local transport and security
 
-The project control plane binds only to loopback or an equivalent user-private local socket. Endpoint metadata and capabilities are user-only. Browser mutation requests require same-origin authority and stale-state guards. CORS, public tunnels, public proposal endpoints, arbitrary iframe embedding, and external resource loading remain disabled by default.
+Project Runtime binds only to loopback or an equivalent user-private local socket. Endpoint metadata and capabilities are user-only. Browser mutation requests require same-origin authority and stale-state guards. CORS, public tunnels, public proposal endpoints, arbitrary iframe embedding, and external resource loading remain disabled by default.
 
 ## Flow links
 

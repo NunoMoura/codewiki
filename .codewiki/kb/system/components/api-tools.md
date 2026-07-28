@@ -1,7 +1,7 @@
 ---
 type: Concept
-title: API Tool Surface
-description: "CodeWiki clients expose bounded state, Change, authority, and config capabilities while the project control plane schedules semantic sessions and workers through execution adapters."
+title: API and Client Surface
+description: CodeWiki exposes bounded client and query capabilities while Project Runtime alone selects semantic work, owns exact identity, and performs guarded writes and effects.
 tags:
   - codewiki
   - system
@@ -28,196 +28,205 @@ codewiki_source_map:
       - tests/integration/control-center-reconciliation.test.mjs
     role: host_tool_adapter
 ---
-# API Tool Surface
+# API and Client Surface
 
-CodeWiki exposes a small set of explicit client capabilities backed by the same core package APIs and one project-scoped control plane. `wiki_state`, `wiki_change`, and `wiki_config` remain bounded Pi-client capabilities. Runtime derives WorkState and schedules Decision, Planning, Implementation Quality, and model-Standard jobs through semantic-session adapters rather than asking the main conversation to choose or host the next loop. Archive lifecycle remains runtime-owned and not normally model-active. Runtime is backend coordination, not a model-facing mega-tool.
-
-The core package remains harness-neutral. Pi has two adapter roles: a thin conversational client and the primary execution engine. The dashboard is another first-class client. The CLI remains temporary development/test support.
+CodeWiki's standalone CLI, dashboard, optional Pi extension, tests, and future adapters connect to one Project Runtime. Clients expose bounded intent, authority, state, configuration, explanation, query, and supervision capabilities. They do not choose semantic jobs or append truth directly.
 
 ```text
-Dashboard / Pi extension / CLI or future clients
-  -> CodeWiki project control plane and core APIs
-       -> embedded Pi SDK semantic-session adapter
-       -> process/container implementation-worker adapter
-       -> future harness adapters
+CLI / dashboard / thin Pi extension / future client
+→ authenticated bounded Runtime API
+→ WorkState and relationship queries
+→ Runtime-selected semantic session or isolated Assignment
+→ guarded append/effect
 ```
 
-Harness-neutral core source must not import Pi SDK types. Pi integration belongs under `src/pi/**`. The CodeWiki source checkout does not install or load CodeWiki itself during stabilization; maintainers use Pi native coding tools and test packed artifacts in disposable external projects. Unattended runtime automation remains disabled.
+Core package remains harness-neutral. Pi integration belongs under `src/pi/**`; published Pi SDK stays entrypoint-isolated. Source checkout never loads CodeWiki itself during stabilization.
 
-## Tool parameter style
+## API style
 
-Use structured parameters rather than broad, free-form flags. The same shape can render as CLI flags, Pi tool schemas, or MCP JSON parameters.
-
-Good pattern:
-
-```json
-{
-  "view": "board",
-  "traceId": "TRACE-...",
-  "include": ["blockers", "refs"]
-}
-```
-
-Temporary CLI harnesses may map the same objects to flags for development, but normal agents should use registered Pi tools instead of shelling out.
+Use closed role-specific schemas, never arbitrary records or prose flags. The same domain object may render as CLI arguments, HTTP JSON, Pi tool schema, or SDK input.
 
 Rules:
 
-- read tools may support compact selectors such as `view`, `include`, `format`, `traceId`, `workUnitId`, and `ref`;
-- write tools must use explicit `mode` such as `preview` or `append` when a dry-run/apply distinction exists;
-- append operations must use expected trace sequence and byte checks held by runtime when they write durable JSONL state; semantic callers never marshal those guards;
-- Pi tools that can write traces or config must register as sequential tools so parallel model tool calls do not race mutation windows;
-- no tool should hide loop promotion behind prose-only flags;
-- no single mega-tool should replace the small verb set.
+- read operations use bounded selectors and report coverage/truncation/staleness;
+- write/effect operations distinguish preview from explicit apply/append;
+- Runtime holds exact trace bytes/sequence, generation, snapshot, candidate identity, CAS, canonical actor/time, and idempotency;
+- client inputs contain only intent, evidence, authority, or control facts they legitimately own;
+- mutation endpoints are sequential/idempotent and fail closed on stale state;
+- no mega-tool, user-authored Loop DSL, arbitrary shell, arbitrary model prompt, or generic graph mutation endpoint;
+- credentials and provider auth remain inside Pi/host adapters;
+- a trigger requests observation; it grants no authority.
 
-## Current internal agent tools
+## Client capabilities
 
-Client capabilities remain small and phase-aligned. Main Pi conversations normally receive state, Change, configuration, explanation, and exact authority capabilities only. Runtime-created semantic sessions receive one closed role-specific candidate-submission tool plus read-only repository tools. They never receive unrelated semantic schemas or archive authority. Candidate submission returns judgment or evidence to the runtime executor; it does not invoke a facade with caller-authored repository context.
+Target capability groups:
 
-| Tool | Responsibility | Mutates truth? |
+| Capability | Purpose | Authority boundary |
 | --- | --- | --- |
-| `wiki_state` | Read bounded WorkState-backed Change, Sprint, queue, quality, and blocker projections. Views are output shape, not truth input. | No |
-| `wiki_change` | Explicitly persist, query, revise, link, split, merge, defer, reject, withdraw, or validate Change revisions by appending Decision-loop intake facts to Change Traces. It cannot approve, plan, implement, launch workers, or edit source. | Yes |
-| `wiki_decide` | Submit disposition, rationale, and authority evidence for the exact Change selected by runtime. Runtime invokes Decision and owns identity, freshness, and append guards. | Yes, through runtime |
-| `wiki_plan` | Submit a Sprint and Work Item candidate for the bounded approved-Change horizon selected by runtime. Runtime invokes Planning and owns participants, freshness, and multi-trace append guards. | Yes, through runtime |
-| `wiki_implement` | Submit worker reports or explicit realization evidence for runtime-selected Work Items. Runtime derives Sprint, owning Change, Planning events, Assignments, source ownership, sequence, parent, and byte guards before invoking Implementation. | Yes, through runtime |
-| `wiki_archive` | Preview retention stubs, append trace-close records, and plan hydrate/restore from retained trace refs. Trace close may take a guarded `traceId` and resolve records internally so agents never need to copy raw trace JSONL into model context or tool arguments. | Yes |
-| `wiki_config` | Read and update CodeWiki configuration for automation, agency, approval, budgets, worktree isolation, retention, skills, and host integration. | Yes |
+| State | Read bounded WorkState, Change dossier, Loop exit, blockers, delivery, and next-safe-action projections. | Read-only derived data. |
+| Change | Submit/revise/link/split/merge/defer/reject/withdraw pending intent. | Creates Decision intake only; no approval/execution. |
+| Authority | Submit exact user/maintainer approval or intervention response. | Runtime authenticates and binds exact candidate/revision/effect. |
+| Project query | Read bounded Work, Alignment, and Learning relationships. | Snapshot-bound, read-only, provenance-bearing. |
+| Configuration | Read/propose schema-defined changes below authority ceilings. | No Check suppression, threshold lowering, credential mutation, or hidden execution. |
+| Runtime control | Inspect/pause/resume/cancel according to policy. | No semantic selection or truth mutation by payload. |
+| Preview | Manage declared local preview targets and evidence capture. | Evidence only; no acceptance. |
+| Feedback Bundle | Generate local allowlisted diagnostic preview. | Export requires separate user approval. |
 
-`wiki_change` also exposes bounded feedback intake for explicit user, runtime, or lab findings. Intake searches pending Changes first, reinforces a deterministic match with evidence, or creates only a pending unvalidated Change. Its closed schema rejects prompts, reasoning, credentials, private fields, unrestricted refs, and oversized output. It cannot accept, decide, plan, implement, launch, publish, or advance controllers.
+Archive/retention, Integration, merge, push, publication, release, and deployment are Runtime/effect APIs, not ordinary model-active tools.
 
-Dashboard controls are narrower than model execution adapters. Backlog permits bounded proposal, revision, validation, withdrawal, and exact authority responses under capability, same-origin, revision/digest CAS, idempotency, and receipt checks. Product, System, and Design editors submit deterministic source patches through the Change workflow; browser code never writes source directly. Configuration compiles only schema-defined patches below active authority and quality ceilings and validates the complete result. Raw arbitrary execution JSON is not browser UX. No dashboard request grants semantic approval implicitly, starts a caller-authored model prompt, appends trace truth, publishes, advances controllers, or raises unsupervised authority.
+## Semantic session surface
 
-There is no standalone current tool for split output generation or split exit evaluation. Loop output, exit-condition evaluation, and trace append are one safe operation at the public tool boundary. Normal agents should not use split output/evaluation tools because that can recreate split-brain workflow state.
+Runtime-created Pi semantic sessions receive:
 
-## Backend support contract
+- exact CodeWiki OS and one mandatory Loop Protocol;
+- exact role-specific typed input and bounded context;
+- Runtime-selected route/configuration;
+- normal or Workbench-scoped Pi Skills;
+- read-only repository/query tools;
+- one closed role-specific candidate or Model Check submission tool.
 
-| Consumer | Surface | Backend support | Non-goal |
-| --- | --- | --- | --- |
-| Main Pi client | Normally `wiki_state`, `wiki_change`, `wiki_config`, explanation, and exact authority capabilities. | WorkState-backed reads, checked Change intake, supervision presence, and guarded client requests. | Choosing semantic routing, owning runtime lifetime, or acting as hidden Planning/worker session. |
-| Semantic session | One runtime-selected Stage Protocol, model route, role-specific candidate tool, normal or Workbench-scoped Pi Skills, and bounded read-only repository tools. | Candidate or assessment submission for one exact Decision, Planning, Implementation Quality, or model-Standard job. | Append authority, repository identity replacement, source mutation, worker launch, archive, publication, Quality Policy changes, or unrelated semantic tools. |
-| Control plane | Core APIs, scheduler, session/worker adapters, lifecycle helpers, claim/integration helpers, and guarded writers. | Compatible-job selection, claims, session and worker lifecycle, integration, retries, append-safe writes, and client projections. | Semantic approval, Planning-owned work invention, or treating worker output as proof before Implementation acceptance. |
-| User clients | Dashboard plus `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. | Backlog, Planning, Implementation, Product, System, Design, dashboard lifecycle, explanation, configuration, and setup readiness. | Direct source/trace mutation, arbitrary prompts, grouped namespace commands, state-dump command sprawl, or exposed runtime internals. |
+They do not receive trace append, source mutation, worker launch, config mutation, archive, Integration, publication, arbitrary shell, or unrelated semantic schemas.
 
-The core reduced-tool facade shape now exists for the current tool set:
+Exact submission schemas include `DecisionCandidateSubmission`, `PlanningCandidateSubmission`, `ImplementationCandidateSubmission`, and `ModelCheckOutput`. Broad `Record<string, unknown>` and broad `Omit<RunWiki*Input, ...>` submissions are forbidden.
 
-- `runWikiChange()` creates or mutates canonical Change revisions by guarded append to one Change Trace per Change, with bounded inputs, deduplication, secret rejection, and exact trace/revision guards.
-- `buildWorkState()` derives typed current project work from Change Traces, KB, ownership, source/tests/Git, config, and bounded runtime observations. `buildWikiState()` exposes bounded model-facing views over that state.
-- `runWikiDecide()` evaluates a runtime-prepared exact Change candidate and previews or appends approval or terminal disposition to the same Change Trace.
-- `runWikiPlan()` evaluates a runtime-prepared bounded global Planning candidate and previews or appends deterministic per-Change slices of one accepted Planning epoch.
-- `runWikiImplement()` accepts only a WorkState freshness guard plus worker reports or explicit evidence. It resolves the runtime-selected Sprint, Work Items, owning Change, Planning events, Assignments, source ownership, sequence, parent, and byte offset internally before evaluating or appending realization.
-- Exact coordinator reaction jobs own production semantic selection, invocation, append authority, CAS reruns, route-back stops, deterministic job identity, and restart recovery. `runRuntimeSemanticExecutor()` remains a singular compatibility primitive.
-- `ImplementationWorkerDispatcher.reconcile()` derives eligible Work Items from canonical WorkState and current Git/config policy, probes adapter availability before Claim append, writes private Assignment packets, appends exact claims under CAS, prepares worktrees, and schedules exact process or container worker jobs. Canonical claim data binds each packet digest and deterministic job id so runtime scratch cannot grant execution authority. Coordinator Assignment lanes serialize one Work Item and overlapping paths while compatible work runs concurrently. Exact recovered output is filtered to runtime-selected Work Items, bound into the Implementation Quality job identity, and supplied as candidate evidence only. `scheduleImplementationWorkerClaimRelease()` appends deterministic terminal release events after canonical acceptance or failed/blocked result handling, with fresh Assignment, generation, and trace-byte checks.
-- `runWikiArchive()` previews trace retention stubs, appends `trace_close` records with byte preflight, and plans hydrate/restore from archived records.
-- `runWikiConfig()` resolves and patches typed CodeWiki project config for automation, agency, approvals, budgets, worktree isolation, retention, and host adapters.
+Runtime adds candidate/Result identity, snapshots, actor/time, policy, thresholds, routes, and guards. Model Check output cannot declare final authority or aggregate Exit Report.
 
-The runtime backend remains available to host code, not as a normal agent tool:
+## Implementation workers
 
-- `runWikiRuntime()` selects work-unit claims from the work queue, reports runtime policy blockers, can include heartbeat-cycle trigger/run planning and lease expiry, and optionally appends runtime claim events, lease-expiry events, or run trace heads when automation policy and append safety checks allow it.
-- Runtime lifecycle helpers plan main-host and trace-host coordination from derived views and can create trace-owned host observed/block/stop events. They are helpers, not a fourth semantic loop.
-- `createRuntimeHandoffManifest()` turns a runtime result into a disposable host handoff bundle: claim events, worktree command steps, worker prompts, expected completion shape, and release instructions. It is a helper, not a separate semantic tool.
+Assignment execution uses separate harness-neutral worker adapter, not read-only semantic-session tool set. Worker receives one exact private Workbench and may mutate only assigned source/workspace through allowed capabilities. It returns immutable Worker Report.
 
-The authenticated project service exposes bounded generation-scoped event polling, exact semantic execution, and `POST /v1/runtime/workers/reconcile` for leased clients. Event cursors replay coordinator transitions and runtime-observed WorkState digests; gaps require snapshot refresh and never grant event payloads truth authority. The service selects an exact invariant and invokes the embedded Pi SDK adapter when that optional peer is available. The adapter creates a bounded role-specific session with read-only repository tools and one closed candidate tool, then returns its candidate directly to the exact coordinator job. Main Pi conversations do not receive semantic tools in this mode. Peer-absent installs retain a candidate-only fallback through the service, which still rejects loop mismatch and runtime-owned fields. Runtime validates reports and owns identity, CAS writes, fencing, and recovery. Process/container worker adapters derive Implementation context from canonical WorkState and worker-report correlation rather than caller-marshalled Planning authority. The CLI adapter remains a transitional development harness.
+Worker cannot call semantic append, widen scope, alter Checks, select tier, integrate, publish, or mark acceptance. Runtime correlates Report with Claim/Assignment/Workbench/base before constructing Implementation candidate.
 
-## `wiki_state` views
+## Project relationship queries
 
-`wiki_state` is the primary internal agent trace read surface. Summary and focused views come from one progressive read model. Views own derived calculations over active trace records only. Stored `.codewiki/views/**` files are optional caches or render artifacts, never state truth. Source-map ownership is still canonical, but it is exposed through KB/source-map validation and `/wiki-explain`, not `wiki_state`. Project-backed `wiki_state` also returns append handles for active trace files as diagnostic state. Runtime consumes those handles for guarded semantic appends; semantic callers do not copy byte offsets or sequence numbers into adapter inputs.
+Agents use typed bounded operations, not arbitrary Cypher or generic graph DSL. Query classes include:
 
-Supported `view` values stay intentionally small:
+- blockers, dependencies, overlap, Claims, and Integration state;
+- Knowledge constraints and source/test realization;
+- reverse trace from source to accepted intent;
+- suspect/invalidation relationships;
+- Planning coverage across Changes/Knowledge/Work Items;
+- explanation of active Checks and failed Results;
+- applicable successful and harmful Repair Episodes/Patterns.
 
-| View | Purpose |
+Every result includes:
+
+```ts
+{
+  snapshotDigest: string;
+  facts: StructuredFact[];
+  provenanceRefs: string[];
+  authority: "canonical" | "derived" | "observed";
+  coverage: "complete" | "partial" | "unknown";
+  truncated: boolean;
+  stale: boolean;
+}
+```
+
+Runtime preloads mandatory context. Queries are supplemental and Assignment-scoped for workers. Model Checks read only pinned candidate evidence. Partial coverage never proves absence.
+
+Exact operation names and physical relationship index remain deferred. No canonical graph file/database may be introduced without measured need.
+
+## Current Pi compatibility tools
+
+Current packed extension exposes these compatibility capabilities while standalone CLI/Runtime API is built. First explicit persistence creates a Change Trace. Configuration compiles only schema-defined patches:
+
+| Tool | Current responsibility |
 | --- | --- |
-| `summary` | Default state summary: trace ids, selected trace status/resume when available, work-queue summary, next action, and append handles. |
-| `board` | Compatibility projection of Backlog, Planning, Implementation, Changes, Sprints, Work Items, runtime state, and append handles for active Change Traces. It is not the dashboard information architecture. |
-| `quality` | Per-loop quality standard summaries and blockers for decision, planning, and implementation iterations. |
-| `blockers` | Current blocked/route-back/continue exit conditions and remediation refs for the selected trace. |
-| `all` | Debug/maintenance payload containing all derived projections. |
+| `wiki_state` | Read WorkState-backed Change, Sprint, work, exit, and blocker projections. |
+| `wiki_change` | Guarded Change intake/revision/link/split/merge/defer/reject/withdraw. |
+| `wiki_decide` | Submit Decision candidate/authority evidence for Runtime-selected Change. |
+| `wiki_plan` | Submit Planning candidate for Runtime-selected approved horizon. |
+| `wiki_implement` | Submit Worker Reports or explicit evidence for Runtime-selected Work Items. |
+| `wiki_archive` | Guarded retention preview/close/hydrate planning. |
+| `wiki_config` | Read/update schema-defined project config. |
 
-Every full project-backed state payload includes:
+Compatibility tools preserve exact rejection of unsupported/runtime-owned fields. Target moves candidate submission into Runtime-created sessions and keeps main Pi client focused on state, intent, authority, explanation, supervision, and dashboard access.
 
-- `next`: compact safe-action hint (`decide`, `plan`, `implement`, `archive`, or `wait`) with target tool when applicable;
-- `append.byTrace[traceId].expectedBytes`: current hot open trace file byte length;
-- `append.byTrace[traceId].nextSequence`: next trace event sequence for guarded semantic appends.
+`wiki_change` feedback intake may create or reinforce pending Change only. It rejects prompts, reasoning, credentials, private fields, unrestricted refs, and oversized content. It cannot approve, plan, implement, launch, publish, or advance.
 
-Closed traces are terminal, so they appear in trace-board/history projections when still hot but are omitted from `append.byTrace`.
+## Current facades and migration
 
-Useful selectors:
+Current harness-neutral facades remain executable truth:
 
-- `traceId`
-- `generatedAt` for deterministic tests
+- `runWikiChange()` performs guarded Change intake/mutation.
+- `buildWorkState()` derives current project state; `buildWikiState()` exposes bounded views.
+- `runWikiDecide()`, `runWikiPlan()`, and `runWikiImplement()` evaluate prepared inputs and preview/append legacy outputs.
+- exact Runtime reaction jobs own production selection, idempotency, recovery, and generation fencing.
+- `ImplementationWorkerDispatcher.reconcile()` derives ready Work Items, writes private Assignment packets, appends Claims, prepares worktrees, and schedules adapters.
+- `runWikiArchive()` and `runWikiConfig()` own retention/config compatibility behavior.
 
-Large future results should return omitted-count metadata and refs for expansion instead of growing the model-facing tool list.
+Migration replaces broad candidate submission and preview/append reevaluation with exact immutable Candidate/Resolved Exit Policy/Check Result/Exit Report contracts. It also renames legacy state `quality` projections to Loop-exit projections and removes current-catalog historical reinterpretation.
+
+## Runtime backend
+
+Runtime backend, unavailable as normal model tool, owns:
+
+- eligible-job selection and typed lanes;
+- candidate/Check/Result/Report identity;
+- Check activation/thresholds/scheduling/caching/cancellation;
+- Claims, Workbenches, Assignments, Worker Reports, and Integration;
+- exact append, multi-trace recovery, merge/push/publication/release;
+- retention and cleanup.
+
+Authenticated local service exposes generation-scoped state/event polling and bounded trigger/authority/control requests. Event gaps require canonical snapshot refresh. Event payloads never become truth.
 
 ## User command surface
 
-Slash commands are host UX, not workflow semantics. Use direct `/wiki-*` commands so Pi can show and trigger each supported action as its own slash command. No grouped namespace command exists.
+Current optional Pi commands:
 
-| Command | Backend action |
+| Command | Purpose |
 | --- | --- |
-| `/wiki-dashboard [--no-open] [--json] [--stop]` | Ensure/discover and reopen the project dashboard, return service state without opening, or explicitly stop the local service according to policy. |
-| `/wiki-resume` | Resume-oriented `wiki_state` view plus host prompt handoff for the next safe action. |
-| `/wiki-explain [target]` | Read-only explanation of the project, a component, a flow, or a path from KB, OKF source ownership, mapped tests, trace refs, and quality summaries. |
-| `/wiki-bootstrap` | Explicit setup action for the current repository; install must not auto-bootstrap. The default render is a ready summary with active extension source/version/entry identity, not only raw scaffold counts. |
-| `/wiki-config` | Effective config summary; writes require explicit user confirmation. |
+| `/wiki-dashboard [--no-open] [--json] [--stop]` | Ensure/discover/reopen/inspect/stop local Runtime dashboard according to policy. |
+| `/wiki-resume` | Show current intervention or next safe action. |
+| `/wiki-explain [target]` | Explain project/Knowledge/component/flow/source from canonical refs. |
+| `/wiki-bootstrap` | Explicit guarded setup for external project. |
+| `/wiki-config` | Inspect/propose bounded configuration. |
 
-Users may ask for decisions, planning, implementation, automation, or archive work in chat. Runtime selects semantic work and activates the matching bounded candidate adapter; submitted judgment or evidence is then invoked through runtime, not directly by the agent. Archive and coordination use runtime backend APIs.
+Standalone CLI eventually exposes equivalent lifecycle/client capabilities without making Pi extension primary. CLI and Pi command names are host UX, not semantic contract.
 
-## Rendering contract
-
-Pi command rendering and future trace/view rendering are product UX surfaces. Wiki tools execute loops and return compact agent handles; they should not register rich TUI renderers for calls or results.
-
-Post-bootstrap observability is Change-Trace-append driven. First explicit persistence creates a Change Trace; revisions, links, merge/split facts, validation, approval, planning, realization, and outcome disposition append there. Final approval remains bound to the exact rendered Change revision and digest.
+## Rendering
 
 ```text
-wiki_* append -> trace record -> derived view -> renderer
+guarded append/effect
+→ canonical trace/Knowledge/Git fact
+→ WorkState/relationship projection
+→ dashboard/TUI/CLI renderer
 ```
 
-Preview mode is agent-private validation. It can fail fast and guide the agent, but it should not update user-facing progress UI because it is not proof of durable work.
+Preview is private validation and does not update durable progress. Rich progress shows Change candidates, Checks, Results, Exit Report, blockers, workers, Integration, Git/delivery proof, and completion receipts from canonical/projected facts—not raw tool payloads.
 
-`/wiki-bootstrap` remains the rich setup renderer because it can run before useful trace state exists. Explicit read commands such as `/wiki-resume`, `/wiki-explain`, and `/wiki-config` may render the requested view. The automatically opened dashboard owns rich user-facing progress observability, while `/wiki-dashboard` provides reopen/recovery and host stop. Loop progress, collapsed-by-default Ready Checks, blockers, workers, host lifecycle events, and completion receipts should render from Change/trace-backed projections, not from raw tool payloads.
-
-Renderers are UI-only and must not become hidden state. Debug-only views may include trace ids, sequence numbers, expected byte checks, or raw JSONL refs when explicitly needed by CodeWiki maintainers.
-
-Backlog, Planning, Implementation, Sprint, and Change dossier screens are WorkState projections over Change Traces and current project truth. They must not write UI files or create a separate Board/state root. Internal `board` and `cards` values are compatibility projection selectors only; they do not define product information architecture.
-
-## Agent guidance
-
-Semantic-loop guidance belongs to the packaged Pi prompt and runtime reaction, not agent loop choice, a second tool surface, or project-local skill directory. The source repository carries no `codewiki-*` skills during stabilization. Decision, Planning, and Implementation remain the only semantic loops; state and config remain bounded capabilities, archive remains a backend lifecycle API, and Runtime remains coordination rather than a fourth loop.
-
-Mutation workflows must still require explicit expected byte/sequence checks and must not reintroduce old roadmap truth, graph truth, split output/evaluation as product concepts, standalone validation loops, or CodeWiki-owned compaction.
+Generated view selectors such as current `board` or `quality` are legacy compatibility values, not product information architecture.
 
 ## Distribution
 
-Distribution should keep one harness-agnostic core and multiple thin adapters.
+Recommended package boundary:
 
-Recommended packaging path:
+1. core package exports harness-neutral domain/Runtime APIs and adapter contracts;
+2. standalone CLI and Project Runtime service are primary hosts;
+3. dashboard connects to same Runtime;
+4. Pi extension is optional thin client;
+5. Pi execution entrypoint embeds published SDK without leaking types into core;
+6. future MCP/OpenClaw adapters preserve Runtime-owned semantics and authority.
 
-1. `codewiki` package exports harness-neutral core APIs, control-plane types, and execution-adapter contracts.
-2. The package exposes a local project-service entrypoint used by dashboard and clients.
-3. Pi extension entrypoint registers conversational client tools and commands.
-4. Pi execution entrypoint implements embedded semantic sessions and process-worker transport without leaking Pi SDK types into core.
-5. CLI source remains temporary development/CI support until an explicit product CLI is approved.
-6. Future MCP or harness adapters preserve runtime-owned routing and authority.
+If weight/version coupling warrants, optional client/execution adapters may split packages without changing contracts.
 
-Pi SDK dependencies stay entrypoint-isolated. If weight or version coupling warrants it, Pi client and execution adapters may split into optional packages without changing core contracts.
+## Security and source boundary
 
-## Retention and archive tools
-
-Do not model hot/cold knowledge movement as generic garbage collection. The current concept is a retention and archival pipeline:
-
-```text
-hot .codewiki/kb + active traces
-  -> close trace with trace_close
-  -> compact trace stub + Git restore refs
-  -> hydrate/restore on demand
-```
-
-Temporary cleanup and Change Trace archival are runtime lifecycle responsibilities. Archive APIs stay guarded and testable without becoming a normal model-active destructive tool.
+- Local service uses private loopback transport and exact generation capabilities.
+- Browser writes require same-origin/capability/idempotency/freshness validation.
+- No public unauthenticated proposal endpoint or public tunnel by default.
+- No client-supplied shell, prompt, path widening, model route, Check, threshold, or effect authority.
+- No credentials/prompts/reasoning/raw output in traces/events.
+- Source repository carries no active CodeWiki extension, commands, tools, controller, Skills, or Change Traces.
+- Packed candidates run only in disposable external projects.
 
 ## Related docs
 
 - [CodeWiki API](api.md)
-- [Migration Audit](../flows/migration-audit.md)
-- [Traces](traces.md)
+- [Loop Exit](loop-exit.md)
 - [Runtime](runtime.md)
+- [Session Coordination](session-coordination.md)
 - [Extension](extension.md)
+- [Traces](traces.md)
 - [Source Map](source-map.md)

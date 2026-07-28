@@ -2,7 +2,7 @@
 
 ## Concepts
 
-* [Agents and Subagents](agents.md) - Agents use CodeWiki as persistent project memory and loop-governed orchestration state through host adapters. They need compact current state, clear source-of-truth boundaries, scoped runtime claims for parallel coordination, wait/heartbeat signals, and explicit exit conditions before they change knowledge, source, tests, or publication state.
-* [Extension and Workflow Authors](package-authors.md) - Extension and workflow authors use CodeWiki's structure and capability contracts without adopting CodeWiki as a sandbox, telemetry runtime, or general execution framework.
+* [Agents and Workers](agents.md) - Agents operate CodeWiki through bounded clients, Loop Protocols, Workbenches, exact Checks, and snapshot-bound queries without owning project truth, routing, or acceptance.
+* [Client and Execution Adapter Authors](package-authors.md) - Adapter authors integrate clients or workers through typed CodeWiki contracts without replacing Project Runtime, Pi, canonical authority, Loop exit, or isolation policy.
 * [Future External Users](external-users.md) - Future external users may include people and agents working through CLI, TUI, MCP, editor panels, service agents, package APIs, or optional runtime programs.
-* [Maintainers](maintainers.md) - Maintainers use CodeWiki to keep current intent, trace-backed work state, implementation evidence, and publication readiness close to the repository.
+* [Maintainers](maintainers.md) - Maintainers use CodeWiki to connect accepted intent, exact candidates and Checks, project-wide work, implementation, Git/delivery proof, and outcomes without losing authority or privacy.

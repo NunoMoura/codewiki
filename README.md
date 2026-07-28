@@ -1,160 +1,266 @@
-# codewiki
+# CodeWiki
 
-CodeWiki is being rebuilt as a source-first, project-scoped development operating system.
+CodeWiki is an intent-to-production alignment runtime.
 
-The approved target is one CodeWiki project control plane with a local dashboard and Pi conversational/execution adapters. Pi remains the primary agent engine, but no individual Pi session owns project scheduling or truth. The CLI remains only a temporary development/test client during stabilization.
+It turns accepted user intent into an accountable transition of project Knowledge and implementation, then permits exact Git and delivery state to advance only when required alignment evidence is complete, fresh, and authorized.
+
+```text
+(Kₜ, Gₜ, Pₜ) + ΔIntent
+  ──CodeWiki──>
+(Kₜ₊₁, Gₜ₊₁, Pₜ₊₁, Evidence)
+```
+
+Where `K` is accepted Knowledge, `G` is exact Git state, `P` is delivery state, and Evidence includes exact Check Results, Exit Reports, authority, Integration proof, and observations.
+
+> **A Change is accountable intent and a durable dossier. Runtime owns the portfolio pipeline.**
+
+CodeWiki does not guarantee unknowable semantic perfection. It provides bounded process integrity: accepted-intent provenance, exact candidate identity, independent checking, deterministic exit status, guarded progression, exact Git/delivery proof, and explicit uncertainty.
 
 ## Current posture
 
-- CodeWiki is developed with Pi native coding tools, pi-lens, normal Git review, source, and tests.
-- Package metadata exposes the future Pi extension through `pi.extensions`, but this source repository does not install or load CodeWiki itself during stabilization.
-- Repo-local Pi settings load pi-lens only. No CodeWiki controller pin, project-local CodeWiki skills, prompt injection, dashboard, commands, or `wiki_*` tools are active here.
-- `.codewiki/kb/**` is source-of-truth documentation for intended product/system design.
-- `src/**` and `tests/**` are executable truth; Git is history and checkpoint evidence.
-- This source checkout keeps no active dogfood Change Traces or `.codewiki/traces/TRACE-*.jsonl` instance state. Trace behavior is tested in disposable external projects.
-- `.codewiki/views/**` and other generated roots are disposable outputs, not truth.
-- Pi native compaction handles conversation compression.
-- Decision, Planning, and Implementation production standards remain strict package behavior, but candidates cannot grade or operate their own source checkout.
+CodeWiki is private pre-production software under active clean-cut refactoring.
+
+- `.codewiki/kb/**` is intended Product/System/Design truth.
+- `src/**` and `tests/**` are executable truth.
+- Git is history and checkpoint evidence.
+- `REFACTORING_PLAN.md` is temporary non-authoritative migration continuity state.
+- This source checkout is developed with Pi native coding tools, Pi-Lens, normal file edits, tests, and Git.
+- It does **not** install, load, or dogfood its own CodeWiki extension during stabilization.
+- Repo-local Pi loads Pi-Lens only. No CodeWiki controller pin, local CodeWiki Skills, commands, tools, prompt injection, or active Change Traces belong here.
+- Packed candidates are tested only in disposable external projects with isolated Pi settings.
+- `.codewiki/views/**` and `.codewiki/runtime/**` are disposable generated/private state, not source truth.
+- Pi native compaction remains the active conversation-compaction mechanism.
+
+The package is currently `@nunomoura/codewiki@0.3.0` with `"private": true` and is not published to the npm registry yet. Avoid global/user installs for normal mutation workflows. Current source exposes an optional Pi extension and compatibility CLI/test harness, but the approved target boundary below is not yet fully implemented.
+
+This source repository does not install or load CodeWiki and does not self-host. Reintroducing source self-hosting requires a new explicit product Decision; historical pins, traces, approvals, and releases grant no authority.
+
+## Primary product boundary
+
+```text
+CodeWiki CLI
++ Project Runtime
++ dashboard
++ embedded published Pi SDK
+```
+
+The optional Pi extension is a thin conversational client to the same Project Runtime. It does not contain duplicate workflow authority or own project lifetime.
+
+Pi owns:
+
+- providers and credentials;
+- model transport and authentication;
+- sessions and compaction;
+- tools and extensions;
+- ordinary Skills.
+
+CodeWiki owns:
+
+- Change Traces and WorkState;
+- Decision, Planning, and Implementation;
+- Loop Protocols;
+- Checks and Loop exit;
+- private Workbenches and isolated workers;
+- Integration and routing;
+- guarded merge, push, publication, release, and future deployment effects.
+
+CodeWiki embeds published Pi SDK APIs. It does not fork or copy Pi provider/session machinery. Future OpenClaw support may be a client or Assignment execution adapter; CodeWiki retains semantic and canonical authority.
+
+## Exactly three semantic Loops
+
+```text
+Project Runtime
+├── Decision
+├── Planning
+└── Implementation
+```
+
+Runtime is the outer control plane, not a fourth semantic Loop. Checking, learning, graph projection, recovery, Integration, publication, release, and feedback are not semantic Loops.
+
+- **Decision** turns persisted intent into an exact approved or terminally dispositioned Change revision and owns accepted Knowledge meaning.
+- **Planning** reasons globally across a bounded approved-Change portfolio and creates coherent Sprints, worker-ready Work Items, dependencies, verification, Integration boundaries, and Workbench requirements.
+- **Implementation** realizes accepted obligations in source/tests/Knowledge and accepts one exact realization candidate only through required evidence.
+
+Every Loop attempt follows one model:
+
+```text
+Change
+→ Loop
+→ immutable Candidate
+→ Resolved Exit Policy
+→ Code Checks + Model Checks
+→ Check Results
+→ immutable Exit Report
+→ Runtime route
+```
+
+## Checks and exit
+
+```ts
+type Check = CodeCheck | ModelCheck;
+```
+
+A Check is one atomic versioned requirement plus execution, measurement, evidence, repair, resource, and implementation contracts.
+
+- **Code Check**: trusted deterministic CodeWiki-owned implementation.
+- **Model Check**: independent bounded Pi session over immutable evidence with no candidate-producer conversational state.
+
+Check dimensions are independent:
+
+```text
+execution:   code | model
+measurement: qualitative | quantitative
+enforcement: observe | warn | require
+```
+
+Runtime applies quantitative thresholds. Timeout, provider failure, malformed output, unavailable service, or cancellation is `indeterminate`, never a fabricated score of zero.
+
+```text
+required fail exists          → fail
+else required indeterminate   → indeterminate
+else                           → pass
+```
+
+A passing Exit Report permits exact semantic Loop exit only. Runtime separately revalidates generation, freshness, authority, and CAS before append or any effect.
+
+Initial Code Check catalog is closed. Projects cannot inject arbitrary JavaScript, shell, or executable verifiers. Kernel Checks cannot be disabled. Project Checks progress from `observe` to `warn` to explicitly approved `require`. Activation is deterministic and records `activatedBy`; learned activation and threshold changes are forbidden.
+
+Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain Workbench/repair capabilities. Their output is not automatically authoritative Check evidence.
 
 ## Work and project control plane
 
-CodeWiki's approved product architecture has four dashboard destinations: Work, Product, System, and Design. Work contains separate Backlog, Planning, and Implementation workspaces. Product contains Users, Stories, and Dictionary; Dictionary renders the canonical `.codewiki/kb/lexicon.md` rather than copying vocabulary into dashboard state. Runtime owns the portfolio pipeline; a Change remains the durable accountable carrier of one intended product or system delta and opens as a cross-cutting dossier rather than owning a private pipeline.
+Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority.
 
-Backlog is a generated and guarded intake surface over persisted pending Change revisions. `wiki_change` can draft, revise, validate, link, split, merge, defer, reject, withdraw, and query revisions under exact Change-Trace-store guards. Submission grants no semantic approval or execution authority. CodeWiki has no hidden Git-ref Change store or backwards-compatibility importer; pre-release history remains available through Git.
+One Change owns one append-only JSONL dossier:
 
-Planning observes a bounded project-wide portfolio of approved Changes and owns Sprint creation. One Change may span several Sprints, and one Sprint may coordinate several Changes. Every Work Item has one owning Change and may contribute explicitly to others. Runtime should schedule a compatible set of independent Decision and Work Item jobs while serializing one accepted project Planning writer, conflicting paths, shared integration, commits, and publication.
+```text
+.codewiki/traces/TRACE-CHG-<id>.jsonl
+```
 
-Implementation presents Work Items, Assignments, worker sessions, isolation, integration, checks, evidence, and Git proof. Worker completion remains candidate transport evidence. The Implementation loop alone accepts realization. Isolated worker output never appears as integrated product state.
+It retains exact semantic revisions, all Loop attempts, passed/failed/indeterminate Results, repairs, Planning coverage, implementation realization, Git/delivery proof, and outcome observations. Full prompts, reasoning, raw tool/model output, credentials, private Workbenches, and complete failed patches never enter canonical traces.
 
-`WorkState` is the disposable typed project projection joining Change Traces with Knowledge, source ownership, source/tests/Git, configuration, integration, and bounded runtime observations. `WorkStateSession` streams JSONL append boundaries incrementally; memory loss causes a normal rebuild. SQLite is not required.
+Dashboard destinations are:
 
-Target runtime topology is one project-scoped control plane with concurrent dashboard, Pi, CLI/test, and future clients. It owns intake, WorkState refresh, compatible-job scheduling, semantic-session and worker lifecycle, guarded writes, integration, and live projections. No Pi conversation owns runtime lifetime.
+- **Work:** Backlog, Planning, Implementation;
+- **Product:** Users, Stories, Dictionary;
+- **System:** canonical diagrams and architecture Knowledge;
+- **Design:** Guidelines and UIs.
 
-The executable control-plane seam now consists of the transport-neutral `ProjectCoordinator` kernel plus the `@nunomoura/codewiki/coordinator` project service. The service elects one live process through an exclusive project lock, binds only to `127.0.0.1`, publishes private endpoint metadata, requires bearer and exact-generation capabilities, fences stale owners against the current lock on every request, registers leased Pi/dashboard/CLI clients, and replaces dead generations without reusing identity. The kernel enforces supervised or unattended admission, deduplicates jobs, requires durable recovery for writes, admits bounded compatible lanes, serializes shared resources and integration targets, and exposes exact held reasons. `RuntimeReactor.selectRuntimeReactions()` derives several compatible runtime-owned reactions while retaining the singular selector as a bounded job primitive.
+Change detail is a cross-cutting dossier, not a private copy of the pipeline.
 
-The SDK adapter creates bounded in-memory Pi SDK sessions for read-only Decision, Planning, and Implementation review, exposes only project-scoped read tools plus one closed candidate-submission tool, and returns candidates to runtime-owned exact-reaction jobs. The Pi SDK remains an optional peer during the architecture spike; disposable SDK fixtures must install it explicitly and use Node.js 22.19 or newer.
+Project Runtime derives a compatible bounded job set from WorkState, admits exact lanes/Claims/capacity, invokes semantic sessions or workers, runs candidate-bound exit, and guards writes/effects. It allows unrelated Decision and Work Item work concurrently while serializing one accepted Planning writer, overlapping paths, shared Integration targets, and external effects.
 
-Implementation workers remain on a separate adapter path. The elected project service derives ready Work Items from current WorkState, checks current automation, agency, supervision, capacity, Git-base, dirty-path, adapter availability, and worktree-isolation policy, appends exact Assignment claims under CAS, persists canonically digest-bound private dispatch packets, prepares explicit worktrees, and schedules compatible process or OCI-container workers through coordinator lanes. The opt-in OCI adapter requires a digest-pinned preinstalled image and runs it with no image pull, a read-only root, dropped capabilities, no privilege escalation, bounded memory/CPU/PIDs/output/time, an explicit numeric user, exact-file outcome mounting, read-only Git common metadata for linked-worktree inspection, and either no network or a named restricted network. Only explicitly selected environment names enter the container. A replacement generation can recover an active claim from its canonical packet digest and immutable Worker report without treating runtime scratch as authority. Pi sessions submit bounded reconciliation triggers through leased clients. Exact matched reports enter only the selected Implementation review and contribute to its deterministic semantic job identity; worker output remains candidate evidence. Completed claims release only after canonical Implementation acceptance becomes visible, while blocked, failed, or cancelled reports release without becoming implementation truth.
+`WorkState` is a disposable projection over Change Traces, Knowledge, source/test ownership, source/tests/Git, configuration, delivery evidence, and bounded Runtime observations. JSONL is streamed and indexed in memory; process loss causes rebuild. No SQLite or graph database belongs to the current architecture.
 
-A compatible OCI image exposes `/usr/local/bin/codewiki-worker` by default, reads one schema-v1 envelope from standard input, edits `/workspace`, and writes bounded JSON to the envelope's `/codewiki-runtime/outcome.json` path. The outcome contains only an attempt `status` and optional normalized `implementationEvidence`; host runtime validates identity/status and creates the final digest-bound Worker report. Hosts may select another structured command, named restricted network, resource limits, numeric user, and explicit provider environment values through `createOciContainerImplementationWorkerAdapter()`. CodeWiki never pulls the image, passes ambient Docker contexts, mounts provider config or the Docker socket, or lets the container write canonical traces.
+## Workers, Integration, and effects
 
-Accepted completed output now schedules one deterministic Integration job per exact Planning target set and source base. Runtime revalidates the Claim-bound packet, report, acceptance event, path scopes, generation, and trace bytes; captures committed and untracked worker changes as a bounded binary patch; applies it under a serialized target/base lane to a private integration worktree; runs `git diff --check`; and creates a local integration commit without moving the project checkout. Canonical `runtime.integration.proven` evidence binds exact job, Claim, Assignment, report, target refs, base/parent/commit/tree, changed paths, patch digest, and check proof. Commit-trailer recovery closes the commit-to-append crash window. WorkState projects the proof, and sanitation removes completed worker artifacts only after that exact event.
+Planning creates worker-ready Work Items rather than the smallest possible tasks. Runtime selects `routine`, `standard`, or `complex` Implementation tier from structured facts; callers and workers cannot self-label work routine.
 
-Project-branch promotion is a separate opt-in effect. An elected host must provide runtime-owned `ProjectBranchMergeAuthority` for one exact `refs/heads/*` target; clients and semantic candidates cannot supply it. Runtime revalidates the canonical Integration event, commit trailer, parent, tree, changed paths, patch digest, generation, checkout branch, allowed CodeWiki-only dirtiness, and exact target commit before performing a structured hook-disabled `git merge --ff-only`. `runtime.project_branch.merged` records previous commit, promoted commit/tree, Integration identity, and exact user or policy authority. Exact-commit recovery closes the merge-to-append crash window. Stale/non-fast-forward targets, unrelated dirty paths, detached/wrong branches, missing authority, and malformed runner output fail closed.
+Runtime resolves each Assignment into one private digest-bound Workbench containing exact source, context, Loop Protocol, Pi Skills/tools, model route, frozen Check/evidence minimums, isolation, budgets, and Worker Report contract. Only a matching canonical Claim activates it.
 
-Git push is separately opt-in and requires elected-host `ProjectBranchPushAuthority` with explicit user authority, configured remote name, exact branch, and expected remote commit or absence. Runtime revalidates canonical merge proof, local commit/tree, generation, checked-out branch, CodeWiki-only dirtiness, credential-free configured remote URL, and exact remote head before a normal structured non-force push with project pre-push hooks disabled. A digest-bound private prepared/pushed manifest plus a second remote observation precede canonical `runtime.project_branch.pushed`; exact matching evidence recovers the persisted-push-to-append window without attributing a preexisting remote commit to CodeWiki. Abrupt death after remote acceptance but before the local `pushed` phase is persisted remains deliberately unattributed rather than guessed. Remote drift, non-fast-forward updates, force options, embedded URL credentials, malformed output, policy-only authority, and unrelated dirtiness fail closed. Push proves exact Git transport only and grants no product publication, deployment, package release, registry, or business-outcome authority.
+Workers are isolated and non-authoritative. A completed Worker Report is candidate evidence only.
 
-Product publication is a further opt-in external effect behind a provider-neutral `ProductPublicationAdapter`. An elected host must supply an exact artifact proof under `.codewiki/runtime/publications/artifacts/**`, one closed publication target, the canonical push event, expected destination revision and digest, and explicit user authority binding all of them. Runtime verifies artifact size, source commit/tree, SHA-256 bytes, non-symbolic private paths, immutable scheduled identity, adapter identity, generation, and destination CAS before calling the structured adapter. The adapter must declare provider-key idempotency, use the deterministic runtime job id for retries, enforce the same expected destination, and return provider operation identity; runtime then re-observes exact revision, operation, and artifact digest before appending `runtime.product.published`. Private prepared/published manifests permit exact persisted-operation recovery without attributing a preexisting matching artifact. Adapter errors are redacted, credentials remain provider-owned, and ambiguous acceptance before local operation evidence persists fails closed. Publication does not deploy, release, tag, push Git, promote channels, or establish business success. CodeWiki remains `"private": true`; source-repository tests use injected fake providers and perform no registry publication.
+Accepted worker output enters a serialized private Integration workspace. Exact Integration proof binds Claim, Assignment, Worker Report, base/parent/commit/tree, changed paths, patch digest, and trusted checks. It does not imply branch merge, push, publication, release, deployment, or outcome.
 
-Product release is separately opt-in behind `ProductReleaseAdapter` and consumes one exact canonical publication without rebuilding or republishing its artifact. Explicit user authority binds publication revision, artifact id/version/digest, release target/channel/destination, expected current channel revision/digest, and adapter identity. Runtime freezes scheduled identity, revalidates canonical publication, requires the provider artifact to retain the exact publication operation/revision/digest, enforces provider-key idempotency and release-channel CAS, and re-observes exact operation, channel revision, and artifact digest before `runtime.product.released`. Private prepared/released manifests recover persisted exact promotions without attributing preexisting matching channels. Ambiguous acceptance remains fail-closed. Release grants no deployment, Git tag, announcement, adoption, or business-outcome authority. Source tests use a fake release provider; CodeWiki remains `"private": true` and no real release occurs.
+Each later boundary is separately guarded and authorized:
 
-Deployment, abrupt-death process observation, dashboard-service consolidation, trusted worker-image distribution, and external real-container/provider-auth proof remain later control-plane slices.
+```text
+Implementation exit
+→ Integration proof
+→ optional local fast-forward merge
+→ optional remote push
+→ optional publication
+→ optional release
+→ future deployment and outcome observation
+```
 
-Worker dispatch already resolves a deterministic execution policy before claim append and child-process creation. Provider, model, thinking level, allowed tools, timeout, pricing snapshot, budget, and policy digest travel through handoff, start, observation, and guarded resume. Attached supervision and usage telemetry are mandatory. Policy drift, route mismatch, missing usage, exhausted limits, monitoring loss, detached execution, or invalid escalation stops the attempt without granting semantic authority.
+OCI workers are opt-in, digest-pinned, preinstalled, capability-scoped, resource-bounded, non-privileged, and network-denied unless a restricted network is explicitly authorized. CodeWiki never implicitly pulls an image or mounts provider credentials/Docker socket.
 
-## New source layout
+## Alignment and Knowledge
+
+Alignment means every discrepancy among intent, Knowledge, Planning, source/tests, Git, delivery, and outcomes is:
+
+1. resolved;
+2. accounted for by one exact active Change; or
+3. explicitly unknown and blocked from unsafe progression.
+
+CodeWiki keeps vertical, horizontal, temporal, and delivery alignment separate. Local proof never implies continuing remote state.
+
+OKF provides portable Knowledge; CodeWiki adds software realization, exact authority, Change accountability, and Git/delivery proof.
+
+Target Knowledge support is OKF v0.2 with v0.1 fallback consumption, including `sources`, `generated`, `verified`, lifecycle/freshness metadata, meaningful concept types, unknown-field preservation, and inert Attested Computation definitions. Current executable source remains v0.1-only migration state.
+
+Imported `generated`, `verified`, `status`, `stale_after`, provenance, or Attested Computation metadata never grants CodeWiki authority or Loop exit. Change Traces remain outside OKF.
+
+## Relationship queries and learning
+
+Work, Alignment, and Learning graphs are disposable views over canonical sources. Agents may use bounded read-only semantic queries that include snapshot digest, provenance, authority class, coverage, truncation, and staleness. No arbitrary Cypher, graph mutation, canonical graph file, or absence-as-proof under partial coverage.
+
+> **Changes improve future Changes.**
+
+Compact candidate/Check/repair/outcome lineage in Change Traces can derive:
+
+- **Repair Episode:** failed/indeterminate Result → repair candidate → later outcome;
+- **Repair Pattern:** applicable aggregation of successful and harmful Episodes.
+
+These remain advisory projections, not a Lesson/Memory entity or fourth Loop. Learning cannot suppress Checks, lower thresholds, change activation, grant authority, or promote itself. Stable guidance enters Knowledge/config/source only through another accountable Change.
+
+Lab must compare current feedback, raw history, retrieved Repair Episodes, and issue-class-routed validated Repair Patterns using temporal/component holdouts. Retrieval ships only when measured benefit exceeds latency/cost without worsening false passes or escaped regressions.
+
+Recurring suspected CodeWiki defects may produce a local allowlisted pseudonymized Feedback Bundle. User previews/redacts and separately approves export. Full traces, project content/identity, paths, commits, prompts, reasoning, raw output, credentials, exact timestamps, and project-defined Check content are excluded by default. Initial transport is manual file only.
+
+## Target source layout
 
 ```text
 src/
-  index.ts
-  api/
+  semantic-loop.ts
+  loop-exit/
+    contracts.ts
+    identity.ts
+    catalog.ts
+    resolve-policy.ts
+    runner.ts
+    cache.ts
+    report.ts
   decision/
+    candidate.ts
+    iteration.ts
+    exit/**
   planning/
+    candidate.ts
+    iteration.ts
+    exit/**
   implementation/
-  loops/
-  dashboard/
-  traces/
-  views/
-  work-state/
-  knowledge/
-  git/
+    candidate.ts
+    iteration.ts
+    exit/**
   runtime/
-  error-handling/
-  cli/
-  pi/
-  project/
-  utils/
+    loop-exit-runtime.ts
+  dashboard/**
+  traces/**
+  views/**
+  work-state/**
+  knowledge/**
+  git/**
+  error-handling/**
+  pi/**
+  project/**
+  api/**
+  utils/**
 ```
 
-The semantic loop roots are `decision`, `planning`, and `implementation`. Runtime is their project-scoped event-driven outer control plane. Each semantic loop owns typed inputs, outputs, quality standards, and exits. `traces` owns one append-only JSONL journey per persisted Change. `work-state` derives shared project state; `views` render Backlog, Planning, Implementation, Change dossiers, quality, blockers, and outcomes.
+Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Clean cuts keep no old-path re-exports.
 
-Current `runRuntimeSemanticExecutor()` remains the singular compatibility primitive. `runRuntimeSelectedSemanticReaction()` executes one exact coordinator-selected invariant, while `runtime-reaction-jobs.ts` maps Decision, Planning, and Implementation-review selections to typed lanes, deterministic idempotency keys, conflict refs, and durable recovery probes. Harness-neutral daemon lifecycle and process discovery live under `src/runtime/**`; the executable Pi launcher dynamically loads the optional SDK semantic adapter. The service advertises whether semantic execution is service-owned or requires candidate fallback. Thin Pi clients hide semantic tools and submit only bounded triggers when daemon execution is available; peer-absent installs expose only the runtime-selected candidate tool. Bounded generation-scoped event replay carries coordinator transitions and exact runtime-observed WorkState digests to leased Pi and dashboard clients. Monotonic cursors support replay; overflow or generation replacement requires canonical snapshot refresh. Event payloads remain operational invalidations, never truth. Clients cannot supply observation time, Change/trace identity, selection, or append authority. `ImplementationWorkerDispatcher` turns current WorkState into guarded claims and exact harness-neutral Assignments, binds private recovery packets to canonical claim digests, schedules worktree-only Pi process workers through typed coordinator jobs, recovers exact results for Implementation review, and schedules deterministic terminal release jobs after review or failure handling. Cancellation hardening, integration, crash-window cleanup, and containers remain pending.
+Current `src/loops/**`, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 
-Temporary trace scratch belongs under `.codewiki/runtime/tmp/<change-trace>/<loop>/`. It remains non-authoritative and is cleaned only after durable trace/KB/source/Git or recovery refs exist.
+## Development requirements
 
-The active migration record lives in `.codewiki/kb/system/flows/migration-audit.md`. Do not restore the old implementation wholesale; recover any future idea only through a new accepted decision, targeted source changes, and tests.
+- Package/runtime APIs target Node.js `>=20.6.0` where supported.
+- Local stripped-TypeScript commands require Node.js `>=22.6.0`.
+- Optional Pi SDK adapter follows Pi's stronger supported runtime requirement.
+- Npm packages build to `dist/**` before packing.
 
-## Requirements
-
-CodeWiki source remains TypeScript-first during the rebuild. Npm packages are built to `dist/**` before packing because Node does not strip TypeScript inside `node_modules`; harness-neutral installed APIs target Node.js `>=20.6.0`. Local source commands and tests use `node --experimental-strip-types`, so use Node.js `>=22.6.0` for development. The optional `./pi-sdk` adapter follows Pi's stronger requirement and fails closed below Node.js 22.19.0.
-
-## OKF compatibility
-
-CodeWiki exports and validates `.codewiki/kb/**/*.md` as Open Knowledge Format v0.1. Change Trace files remain outside OKF: `.codewiki/traces/TRACE-*.jsonl` is workflow truth and is filtered before OKF parsing.
-
-```ts
-import { runWikiOkf } from "@nunomoura/codewiki";
-
-const validation = runWikiOkf({ action: "validate", files });
-const exported = runWikiOkf({ action: "export", files });
-const consumed = runWikiOkf({ action: "consume", files: exported.files });
-```
-
-`validate` and `export` default to CodeWiki KB scope and only include `.codewiki/kb/**/*.md`. `consume` defaults to generic OKF bundle scope for imported OKF markdown. Unknown producer frontmatter fields are preserved during consume/export round trips. OKF compatibility is format-level only; CodeWiki does not depend on BigQuery, Gemini, Google Cloud Knowledge Catalog, or the Google OKF reference agent.
-
-## DESIGN.md compatibility
-
-`/wiki-bootstrap` creates `.codewiki/kb/product/DESIGN.md` using Google's open DESIGN.md alpha format. The file combines normative machine-readable colors, typography, spacing, radii, and component tokens with human-readable brand rationale, iconography rules, and durable visual-reference URLs or repository paths. CodeWiki's additional OKF concept fields coexist in the format's extensible YAML frontmatter, so one file serves both design agents and Knowledge Base navigation. Existing DESIGN.md files are preserved unless normal explicit bootstrap force behavior applies.
-
-Validate one with the official tool when available:
-
-```bash
-npx @google/design.md lint .codewiki/kb/product/DESIGN.md
-```
-
-## Live Preview targets and profiles
-
-Declare project-native server profiles and canonical UI targets in `.codewiki/config.json`:
-
-```json
-{
-  "preview": {
-    "profiles": [
-      {
-        "id": "web",
-        "runner": {
-          "kind": "package_script",
-          "script": "dev",
-          "scriptDigest": "sha256:b16efac145e9242cfb05d739a8509ac7295f381108dce0f753e52a1aaf48e7a1"
-        },
-        "url": "http://127.0.0.1:3000",
-        "readyPath": "/",
-        "readyTimeoutMs": 30000,
-        "browser": "system",
-        "autoOpen": true
-      }
-    ],
-    "uiPreviewTargets": [
-      {
-        "id": "dashboard-detail",
-        "uiRef": ".codewiki/kb/product/uis/terminal.md#live-preview",
-        "profileId": "web",
-        "route": "/dashboard",
-        "viewports": ["desktop", "mobile"],
-        "scenario": "implemented-change"
-      }
-    ]
-  }
-}
-```
-
-`wiki_config` and dashboard settings expose computed profile and target digests. Profiles define how one native development server runs; canonical UI targets define which route, scenario, and viewports are shown. Decision-approved frontend Changes declare affected UI refs. Planning freezes exact target/profile digests plus contributing Change, Sprint, and Work Item refs before Implementation. Several targets may share one profile process, and several integrated Changes may contribute to one target. `runner.scriptDigest` remains SHA-256 of exact `package.json` script text and is rechecked before managed start.
-
-Profiles that explicitly select `"browser": "playwright"` also expose a guarded Capture action after readiness. CodeWiki first probes `playwright-cli --version` without a shell, update check, or install side effect. The CLI is a soft CodeWiki dependency but a hard dependency for automated Capture. Capture stays disabled until Open verifies the browser session. If the CLI or browser is unavailable, the dashboard keeps the development server ready and shows explicit installation guidance; Restart reruns the probe.
-
-Capture reuses the isolated Playwright CLI session, applies accepted viewports, writes screenshots and a manifest under `.codewiki/runtime/preview-evidence/`, and records bounded redacted console/network observations. Target manifests correlate canonical UI target/profile digests, route, exact integration Git/tree state, contributing Change Traces and relevant Implementation iterations. CodeWiki never installs Playwright or a browser silently, and capture never grants semantic approval.
-
-## Development commands
+Core commands:
 
 ```bash
 npm run typecheck
@@ -172,269 +278,81 @@ npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
-npm run lab
 npm run lab:gate
-npm run lab:forge -- --json
 npm run lab:pipeline -- --gate
-npm run lab:graph
-npm run lab:objective
 npm run audit:codewiki
 ```
 
-Smoke command roles:
+External smokes pack/install into disposable projects. They must not mutate this source checkout or perform real publication/release without separate approval.
 
-- `npm run test:pi-install`: isolated Pi install smoke with temporary Pi settings.
-- `npm run test:pi-rpc`: temp-project Pi RPC smoke for `/wiki-bootstrap` and
-  `/wiki-dashboard --no-open` dashboard command rendering without a model turn.
-- `npm run test:pi-multiprocess`: packs CodeWiki into a disposable external project, starts two real Pi RPC processes plus the dashboard, proves all three share one coordinator generation, then proves supervisor loss pauses new execution and cleanup leaves no daemon.
-- `npm run test:pi-mutation`: isolated Pi extension tool mutation smoke;
-  previews first, submits semantic candidates without repository authority,
-  verifies runtime-owned byte/sequence guards, and reads resulting state through
-  `wiki_state`.
-- `npm run test:coordinator`: proves multi-client supervision, compatible Decision and Work Item concurrency, serialized Planning/integration/effect lanes, automatic WorkState claim and Assignment dispatch, canonical packet binding, worktree preparation, accepted-worker integration commits, exact Git/tree proof, commit-to-append recovery, proof-authorized cleanup, exact semantic reaction execution, trace-bound runtime job evidence, no-reinvoke restart recovery, pre-append generation fencing, authenticated loopback access, private endpoint metadata, client leases, live-owner exclusion, stale-generation fencing, and dead-process takeover.
-- `npm run test:pi-sdk`: unit-proves bounded embedded semantic-session roles,
-  exactly-one candidate submission, lifecycle observations, payload limits, and
-  project-root containment without starting a model turn.
-- `npm run test:pi-sdk-package`: packs CodeWiki, installs it with an explicit
-  optional Pi SDK peer in a disposable external project, imports `./pi-sdk`, and
-  proves the closed adapter path without starting a model turn.
-- `npm run test:project-local-install`: installs the packed package under a
-  fresh project's `.pi/npm/node_modules/@nunomoura/codewiki` path and verifies bootstrap,
-  config write, and guarded decision append without controlled-test overrides.
-- `npm run test:external-lifecycle`: packs and installs CodeWiki into a fresh
-  external project, runs `/wiki-bootstrap`, guarded lifecycle appends, runtime
-  host worker-output collection, release, and archive close.
-- `npm run test:external-failures`: packs and installs CodeWiki into fresh
-  external projects and verifies missing/malformed/blocked worker output,
-  mixed worker outcomes, and worktree prepare/cleanup failure remediation.
-- `npm run test:readiness`: package, state-shape, install-gate, and stale
-  wording checks.
-- Dormant `self-dogfood:*` scripts remain release-engineering experiments only. They are not normal development commands and must not install CodeWiki into this source checkout.
-- Stable extension candidates are packed and exercised through the Pi install, RPC, mutation, project-local, lifecycle, and failure smokes in disposable external projects.
-- `npm run lab`: scores the Decision, Planning, and Implementation candidate
-  exit standards with DEC, PEC, and IEC.
-- `npm run lab:gate`: fails while any lab score exposes false-pass or
-  expected-pass-regression gaps.
-- `npm run lab:forge`: reduces `.codewiki/traces/TRACE-*.jsonl` into sanitized,
-  human-labeled draft case material; it does not make raw traces truth.
-- `npm run lab:pipeline -- --gate`: fails while pipeline carryover loses
-  decision facts, planning refs, or implementation acceptance coverage.
-- `npm run lab:graph`: inspects production and candidate quality graphs by
-  loop, layer, node, version, hash, and shared pack identity/authority/rollout.
-- `npm run lab:objective`: reports the scalar visible/sealed lab objective for
-  the quality-graph candidate surface.
-- `npm run audit:codewiki`: full validation/readiness/package/Pi/audit sequence
-  run serially.
+For dashboard visual development:
 
-`src/cli/index.ts` exists only as a temporary development/test harness while the Pi adapter stabilizes. It is not the intended agent-facing CodeWiki OS, and the npm package currently does not expose a CLI binary.
+```bash
+npm run dashboard:dev -- --project /tmp/codewiki-dashboard-fixture
+```
 
-## Pi usage
+Fixture must exist outside repository. Harness does not load CodeWiki extension into source checkout.
 
-CodeWiki is not published to the npm registry yet. Its selected registry identity is `@nunomoura/codewiki`, but package metadata keeps `"private": true` so npm refuses publication during stabilization. Current distribution testing uses packed/local package installs only, so the package, Pi settings, and `.codewiki/**` state all belong to the repository being documented.
+## Current extension and distribution testing
 
-Avoid global/user installs for normal mutation workflows. Mutation-capable `/wiki-*` commands and `wiki_*` tools enforce project-local Pi package installation by default and point users back to a project-local packed/local package install until a registry package exists.
+Package manifest retains:
 
-CodeWiki provides an opt-in hardened OCI worker adapter but does not ship a trusted worker image or claim that a container alone is a complete security boundary. It writes project-local `.codewiki/**` state and remains compatible with external sandbox, worktree, container, or agent-harness isolation.
+```json
+{
+  "pi": {
+    "extensions": ["dist/pi/extension.js"]
+  }
+}
+```
 
-Repo-local Pi settings intentionally load pi-lens only. Do not install CodeWiki, add a controller pin, or add a repo-local `.pi/extensions/codewiki.ts` shim in this source checkout. Consuming projects use reviewed packed artifacts through project-local Pi installation.
+This remains useful for optional thin client. Current packed installs expose compatibility `/wiki-*` commands and `wiki_*` capabilities in disposable projects. Runtime must continue owning exact identity, source facts, routing, freshness, sequence/parent/byte guards, and append authority.
 
-Current packed installs expose `/wiki-*` commands and runtime-routed capabilities through the Pi extension. `wiki_state`, `wiki_change`, and `wiki_config` remain generally active. Runtime owns exact Change/Sprint/Work Item/Assignment context, freshness, routing, sequence, parents, source ownership, and trace bytes. Available slash commands are `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`.
+After installing different packed runtime, fully restart Pi rather than relying on module reload. Do not install CodeWiki globally or under this repository's `.pi/` directory during stabilization.
 
-Target extension behavior is a thin client of one project service. It ensures or discovers the dashboard, submits intent and exact authority, registers supervision, and reads compact state. Runtime-created embedded sessions perform bounded read-only Decision, Planning, and Implementation review; process/container workers perform Assignment-scoped implementation. Main conversations do not become hidden semantic hosts.
+## Review evidence configuration (current migration)
 
-Backlog, Planning, and Implementation are project-wide Work surfaces. Change detail is a dossier joining intent, authority, impact, Planning coverage, Assignment/integration evidence, Git proof, and history. Dev Log stays bounded, redacted, operational, and non-authoritative. After installing a different packed runtime, fully restart Pi rather than relying on `/reload` to replace cached package modules.
-
-## Trace archive cleanup
-
-Completed Change Traces should not stay hot forever. After implementation realization, outcome disposition, and source commit, runtime can invoke the guarded archive API to close/compact a hot `TRACE-*.jsonl` into a replayable stub (`trace_head`, retention checkpoint, and `trace_close`) while a Git restore ref preserves full history. Archive remains testable as a registered adapter but is not normally model-active.
-
-Hydration validates the stub against archived records before restoring full detail. Compaction is therefore cleanup of hot state, not unrecoverable deletion. When cleanup is required, Implementation quality can require an archive disposition: either `post_commit_compact` with `afterCommit: true`, or an explicit `retain_hot` reason.
-
-## Review evidence configuration
-
-CodeWiki owns Implementation review. External tools such as TypeScript, ESLint, Biome, Ruff, Pyright, Go, Cargo, Clippy, and ShellCheck are evidence sensors only; a clean tool run does not prove implementation correctness. Implementation exit still requires acceptance evidence links, changed-path scope, checks, content proof where required, and CodeWiki quality-network gates.
-
-CodeWiki detects the language of changed files by path and extension, similar to Pi-lens file-kind dispatch. A mixed TypeScript/Python/Go/Rust/shell project does not need per-language setup for pack selection: by default, CodeWiki enables all built-in packs and runs only the packs matching the changed paths. Project config is an override for teams that want to disable, allowlist, require, or budget packs.
-
-Project config lives at `.codewiki/config.json`. Config keys are strict at every nesting level; unknown or misspelled keys fail with their full path instead of being ignored. Review behavior is controlled under `quality.review`:
+Current executable source still supports legacy `.codewiki/config.json` `quality.review` evidence-pack settings while the Implementation clean cut is pending. This compatibility surface is not the target Check architecture and grants no semantic authority.
 
 ```json
 {
   "quality": {
     "review": {
-      "enabled": true,
       "autoEvidence": true,
       "includeCachedEvidence": true,
-      "timeoutMs": 15000,
-      "fastTimeoutMs": 3000,
-      "maxCachedEvidenceAgeMs": 600000,
-      "enabledPacks": [
-        "tsjs.typescript",
-        "tsjs.lint",
-        "python.ruff",
-        "python.pyright",
-        "go.test",
-        "go.vet",
-        "rust.cargo-test",
-        "rust.cargo-clippy",
-        "shell.shellcheck"
-      ],
-      "disabledPacks": [],
       "requiredPacks": []
     }
   }
 }
 ```
 
-Pack ids and evidence commands:
-
-| Pack id | Evidence source |
-| --- | --- |
-| `tsjs.typescript` | project `typecheck` script or local TypeScript `tsc` |
-| `tsjs.lint` | project-local ESLint, Biome, or `npm run lint` |
-| `python.ruff` | `ruff check --output-format=json` |
-| `python.pyright` | `pyright --outputjson` |
-| `go.test` | `go test ./...` |
-| `go.vet` | `go vet ./...` |
-| `rust.cargo-test` | `cargo test --message-format=json` |
-| `rust.cargo-clippy` | `cargo clippy --all-targets --all-features --message-format=json` |
-| `shell.shellcheck` | `shellcheck --format=json` |
-
-CodeWiki does not install these tools. Missing tools produce `not-run` review evidence with a reason such as missing executable, missing script, or no matching changed files. `wiki_implement.reviewEvidence.skippedPacks` reports packs skipped because they were disabled, not enabled, or had no matching changed files. The Pi edit hook uses the same changed-path language detection for fast review evidence and caches fast findings for Implementation exit.
-
-`requiredPacks` hardens evidence policy for teams that want CI-like gates. A required pack must be enabled and cannot be disabled. When a required pack is relevant to changed files, `fail`, `blocked`, `not-run`, or `no-evidence` status becomes a blocking CodeWiki diagnostic. This does not make the external tool semantically authoritative; it only requires that the configured evidence sensor ran successfully.
-
-Common recipes:
-
-Optional allowlist for a TypeScript-only project:
-
-```json
-{
-  "quality": {
-    "review": {
-      "enabledPacks": ["tsjs.typescript", "tsjs.lint"]
-    }
-  }
-}
-```
-
-Python project with Ruff only:
-
-```json
-{
-  "quality": {
-    "review": {
-      "enabledPacks": ["python.ruff"],
-      "disabledPacks": ["python.pyright"]
-    }
-  }
-}
-```
-
-Go and Rust project, but skip slower Clippy in normal implementation runs:
-
-```json
-{
-  "quality": {
-    "review": {
-      "enabledPacks": ["go.test", "go.vet", "rust.cargo-test"],
-      "disabledPacks": ["rust.cargo-clippy"]
-    }
-  }
-}
-```
-
-Disable automatic exit evidence while still allowing explicit review reports supplied to `wiki_implement`:
-
-```json
-{
-  "quality": {
-    "review": {
-      "autoEvidence": false
-    }
-  }
-}
-```
-
-Disable cached fast-edit evidence at Implementation exit:
-
-```json
-{
-  "quality": {
-    "review": {
-      "includeCachedEvidence": false
-    }
-  }
-}
-```
-
-Require TypeScript and lint evidence to run for changed TypeScript/JavaScript files:
-
-```json
-{
-  "quality": {
-    "review": {
-      "enabledPacks": ["tsjs.typescript", "tsjs.lint"],
-      "requiredPacks": ["tsjs.typescript", "tsjs.lint"]
-    }
-  }
-}
-```
-
-Disable project review policy entirely. Explicit `reviewEvidenceReports` passed directly to `wiki_implement` are still validated as implementation evidence if provided by the caller:
-
-```json
-{
-  "quality": {
-    "review": {
-      "enabled": false
-    }
-  }
-}
-```
-
-`wiki_implement` returns a compact `reviewEvidence` summary with selected pack ids, report counts, check status counts, diagnostic counts, and blocking diagnostics. `wiki_state` includes trace-backed review summaries and cached fast-review blockers so agents can explain why Implementation is blocked without digging through raw tool output.
+Built-in pack ids are `tsjs.typescript`, `tsjs.lint`, `python.ruff`, `python.pyright`, `go.test`, `go.vet`, `rust.cargo-test`, `rust.cargo-clippy`, and `shell.shellcheck`. `skippedPacks` explains disabled, unmatched, or unavailable sensors. Explicit `reviewEvidenceReports` remain validated compatibility input. `requiredPacks` requires relevant sensors to run, but their success never attests candidate acceptance. Clean Implementation/config cuts replace this surface with trusted Code Check bindings and exact evidence contracts.
 
 ## Production readiness and automation gates
 
-Current supported posture:
+Before production release, prove:
 
-- Project-local packed/local package installation in disposable external projects; no public npm publish yet.
-- Supervised `/wiki-*` and `wiki_*` use in external controlled tests only; the CodeWiki source checkout does not self-host.
-- Guarded trace mutation with expected byte and sequence checks.
-- Runtime worker output treated as untrusted transport until `wiki_implement`
-  validates implementation evidence.
-- External sandbox, worktree, container, or agent-harness isolation supplied by
-  the user or host environment.
+- exact candidate/Check/Result/Report identity and authority hardening;
+- bounded cancellation-aware Code/Model Check execution;
+- clean Decision, Planning, and Implementation cuts;
+- persisted historical policy/Report meaning;
+- OKF v0.2 compatibility and software alignment profile;
+- packed Pi `0.82.1` compatibility before widening peer range;
+- real provider/auth execution;
+- trusted OCI image distribution and real OCI execution;
+- external dashboard/runtime lifecycle, failure, recovery, cleanup, and guarded effects;
+- user-approved publication/release;
+- competitive fixtures showing benefit over simpler workflows.
 
-Still gated before production automation:
+If CodeWiki cannot materially reduce drift, false acceptance, lost context, repeated repair, and Integration errors enough to offset ceremony and latency, it should shrink into a thin Pi/OpenClaw extension.
 
-- Unattended runtime worker start.
-- Auto-merge or auto-publish.
-- Treating worker completion as semantic truth without implementation preview.
-- Global/user CodeWiki installs for normal mutation workflows.
-- Public claims that CodeWiki is more token- or speed-efficient than baseline
-  agent workflows.
+## Documentation
 
-Before enabling unattended worker start or auto-merge, require: multiple successful
-external package lifecycle smokes, passing failure-path package smokes, no project-root
-ambiguity, no `.codewiki/runtime` scratch leakage after checks, archive/hydrate
-validation green, explicit user approval policy for destructive or externally
-visible actions, and passing DEC, PEC, and IEC lab gates for core loop exit
-quality. Full app benchmarks are deferred until loop exits are hardened.
-
-### Source-repository extension policy
-
-The CodeWiki source repository does not install or load CodeWiki during stabilization. This avoids circular authority, stale controller schemas, prompt injection from an older build, and candidate code evaluating its own workflow state.
-
-Development uses Pi native coding tools, pi-lens, KB updates, source/tests, and Git. Extension behavior is tested only through packed installs in disposable external projects. Stable candidates may be released as normal Pi packages after external install, RPC, mutation, lifecycle, failure, dashboard, and package gates pass.
-
-For the fast dashboard visual-development loop, run:
-
-```bash
-npm run dashboard:dev -- --project /tmp/codewiki-dashboard-fixture
-```
-
-The project path must identify an existing disposable fixture outside the CodeWiki source tree. The harness opens the loopback dashboard through the system browser by default and reloads changed dashboard assets automatically. Use `--browser playwright` when `@playwright/cli` and its browser are already installed, or `--no-open` for manual and automated checks. This standalone harness does not register Pi commands, load the CodeWiki extension, or create source-checkout workflow state.
-
-Repo-local self-hosting is not required for release. Reintroducing it would require a new explicit decision; historical pins, traces, and approvals grant no authority.
+- [Product overview](.codewiki/kb/product/overview.md)
+- [System overview](.codewiki/kb/system/components/overview.md)
+- [Alignment model](.codewiki/kb/system/components/alignment-model.md)
+- [Loop model](.codewiki/kb/system/components/loop-model.md)
+- [Loop exit](.codewiki/kb/system/components/loop-exit.md)
+- [Runtime](.codewiki/kb/system/components/runtime.md)
+- [Knowledge](.codewiki/kb/system/components/knowledge.md)
+- [Lexicon](.codewiki/kb/lexicon.md)
+- [Refactoring plan](REFACTORING_PLAN.md)

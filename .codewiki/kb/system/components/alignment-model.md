@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Alignment Model
-description: Alignment means all durable sources tell the same story about current intent, state, implementation, and proof.
+description: Alignment means every discrepancy among accepted intent, Knowledge, work, implementation, Git, delivery, and outcomes is resolved, accounted for by an exact active Change, or explicitly unknown and blocked from unsafe progression.
 tags:
   - codewiki
   - system
@@ -11,49 +11,139 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Alignment Model
 
-Alignment means all durable sources tell the same story about current intent, state, implementation, and proof.
+Alignment is not permanent equality among durable sources. During active work, accepted future intent may deliberately lead source, Git, or delivery state.
 
-Durable product sources:
+A project is accountably aligned when every relevant discrepancy is:
 
-- KB docs under `.codewiki/kb/**`;
-- source and tests under `src/**` and `tests/**`;
-- Git commits, trees, restore refs, and publication refs;
-- JSONL traces under `.codewiki/traces/TRACE-*.jsonl` only in projects where the released extension is installed and operating.
+1. resolved;
+2. explained by one exact active Change and its current transition state; or
+3. explicitly unknown and blocked from unsafe progression.
 
-Generated views under `.codewiki/views/**` are alignment outputs, not alignment truth.
+Unaccounted divergence is drift.
 
-KB docs carry accepted semantic intent. Source, tests, and Git carry implementation truth. Installed CodeWiki projects may additionally use JSONL traces for workflow/state/recovery truth. The CodeWiki source repository does not self-host during stabilization: it keeps no active dogfood traces or Changes Backlog and uses Pi native tools plus normal Git review.
+```text
+resolved state
+or exact Change-accounted transition
+or explicit unknown with safe block
+= accountable alignment
+```
+
+## Authority sources
+
+Durable sources retain separate authority:
+
+- `.codewiki/kb/**` owns accepted Product/System/Design Knowledge;
+- `.codewiki/traces/TRACE-CHG-*.jsonl` owns durable Change progression, Loop attempts, Check Results, Exit Reports, runtime coordination, and outcome disposition in consuming projects;
+- source and tests own executable implementation truth;
+- Git commits, trees, refs, and artifact proofs own exact content and delivery-boundary facts;
+- protected remote checks, attestations, provider observations, and deployment observations own only their exact external boundary.
+
+Generated WorkState, relationship views, indexes, dashboards, and `.codewiki/views/**` are disposable alignment projections. They do not become another authority.
+
+The CodeWiki source repository does not self-host during stabilization. It carries no active dogfood Change Traces; Pi-native tools, canonical KB, source/tests, Git, and normal review remain its development authorities.
+
+## Four alignment dimensions
+
+### Vertical alignment
+
+Connects intent through realization:
+
+```text
+accepted Change intent
+→ Knowledge and invariants
+→ Planning obligations
+→ source/tests
+→ exact Git candidate
+→ delivery/outcome evidence
+```
+
+### Horizontal alignment
+
+Maintains coherence among concurrent Changes, shared invariants, components, dependencies, path Claims, Sprints, Work Items, integration boundaries, and conflicting outcomes.
+
+### Temporal alignment
+
+Preserves exact lineage across revisions, supersession, staleness, failed attempts, repairs, changed Checks, invalidated evidence, and later observations. Historical meaning comes from persisted candidate, policy, Result, and Report identity—not today's catalog.
+
+### Delivery alignment
+
+Distinguishes local candidate, integrated tree, project-branch merge, remote push, published artifact, release, deployment, and observed user outcome. One boundary never implies another.
+
+## Accounted transitions
+
+An active Change may intentionally create temporary divergence:
+
+```text
+accepted Knowledge says target behavior B
+source still realizes behavior A
+Change CHG-B records approved intent, plan, current realization state,
+and exact work needed to close the gap
+```
+
+This is aligned transition, not unexplained drift. If the Change is stale, contradictory, unowned, or missing required evidence, WorkState marks the relevant relationship suspect or blocked.
+
+No user action should exist only because runtime needs a field it can derive safely. Change Trace exhaust should emerge from doing work, not from paperwork.
 
 ## Loop alignment
 
-| Loop | Alignment evidence |
+| Loop | Required alignment output |
 | --- | --- |
-| Decision | Exact approved Change revision, requirements, outcomes, risks, alternatives, route-back answers, and KB impacts are recorded in the Change Trace and KB refs. |
-| Planning | Every selected approved Change requirement is covered by Sprints, owned Work Items, ordering, conflicts, verification, path scopes, or explicit resolution. |
-| Implementation | Changed code/docs/tests, checks, acceptance evidence, Assignment provenance, integration, component/path alignment, and content proof satisfy each owning Change. |
+| Decision | Exact accepted interpretation, outcome, Knowledge delta, constraints, risks, active-Change overlap, and authority. |
+| Planning | Global coverage of approved Changes through coherent Work Items, dependencies, verification, ownership, integration, and explicit resolutions. |
+| Implementation | Exact realization of accepted obligations in source/tests/Knowledge plus candidate-bound Checks, Git proof, Integration, and outcome disposition. |
 
-Exit conditions validate loop alignment and route remediation back to the owning loop. Exit conditions do not form a separate loop. Only outputs from iterations with `exit` are promoted for downstream consumption; continue, route-back, and blocked iterations stay as recovery provenance.
+Each Loop produces one immutable candidate, Resolved Exit Policy, Check Results, and Exit Report. Runtime routes and appends only after final freshness and authority guards. Failed and indeterminate attempts remain evidence for repair and later learning.
 
-## Change Knowledge alignment projection
+## Relationship projection
 
-A Change's Knowledge scope is the canonical Product/System topic set accepted with its exact revision. Decision approval captures a SHA-256 baseline for every readable declared topic. Dashboard projection compares those recorded topic digests with current canonical content; missing baseline or current evidence fails safely to Unknown. Alignment has four user-facing states:
+CodeWiki may derive one bounded relationship layer over canonical inputs with several views:
+
+- **Work Graph:** Changes, Sprints, Work Items, dependencies, Assignments, Claims, blockers, and Integration state.
+- **Alignment Graph:** OKF concepts, provenance, components, source/test ownership, Change revisions, candidates, Check Results, Git trees, delivery artifacts, and outcome observations.
+- **Learning View:** temporal candidate-to-failed-Check-to-repair-to-outcome relationships derived from Change Traces.
+
+These views remain disposable. Agents query typed, scoped, snapshot-bound operations rather than arbitrary graph mutation or a general graph DSL. Query results name provenance, authority class, coverage, truncation, and staleness.
+
+## Knowledge alignment
+
+A Change's Knowledge scope is the accepted Product/System/Design topic set for its exact revision. Decision binds the relevant concept versions and provenance. Runtime compares current concept digests and grounded findings against that accepted scope.
+
+User-facing projection may show:
 
 | State | Meaning |
 | --- | --- |
-| Aligned | Relevant topic content matches the last validated scoped baseline and no grounded contradiction is open. |
-| Review Needed | Relevant topic content changed after the baseline and requires semantic review. A digest change alone can establish only this state. |
-| Misaligned | An explicit grounded finding identifies a contradiction, affected layer, source-of-truth refs, rationale, and recommended next semantic loop. |
-| Unknown | Topic scope, baseline, or grounding is insufficient, including legacy traces without required metadata. |
+| Aligned | Relevant relationships are resolved or validly accounted for by current Changes, with no grounded contradiction. |
+| Review Needed | Relevant content or evidence changed and dependent relationships are suspect pending semantic review. |
+| Misaligned | Grounded evidence proves an unaccounted contradiction and names affected layer, source refs, rationale, and owning Loop. |
+| Unknown | Scope, provenance, coverage, current evidence, or relationship grounding is insufficient. Unsafe progression remains blocked. |
 
-This state is a disposable deterministic projection plus explicit findings. It cannot rewrite traces, create a semantic loop, or automatically approve/fork Changes. Topic filters, Change detail, and related Sprint views consume the same result.
+A digest change can establish only Review Needed. Misaligned requires grounded contradiction. Unknown is honest brownfield state, not failure to fabricate certainty.
 
-Knowledge alignment remains separate from outcome realization. WorkState projects intent alignment, Planning coverage, implementation coverage, integration visibility, experience verification, and outcome observation as distinct dimensions rather than one misleading score.
+## Progressive brownfield adoption
+
+Projects may begin with sparse Knowledge and provisional source mappings. CodeWiki should:
+
+- preserve accepted known concepts;
+- label uncovered areas as unknown;
+- derive fine-grained source relationships from LSP/AST/Pi-Lens without making them canonical;
+- expand validated Knowledge and ownership through actual Changes;
+- persist stable semantic relationships only to outcome, behavior/invariant, system responsibility/interface, source ownership boundary, and tests/evidence.
+
+No complete ontology or exhaustive symbol graph is required before useful work begins.
+
+## Guarantee boundary
+
+CodeWiki can guarantee structural validity, exact identity, deterministic thresholding, required-result fan-in, progression integrity, Git/delivery provenance, and explicit uncertainty. Model Checks provide bounded semantic assurance, not proof of unknowable perfect intent interpretation.
+
+Ongoing remote claims require protected branches, required status checks, commit-bound attestations, artifact provenance, and deployment observations. Without those, CodeWiki reports only what it observed at one exact time.
 
 ## Related docs
 
 - [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
+- [Loop Exit](loop-exit.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)
+- [Knowledge](knowledge.md)
 - [Traces](traces.md)

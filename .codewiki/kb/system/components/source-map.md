@@ -43,9 +43,9 @@ codewiki_source_map:
 ---
 # Source Map
 
-OKF frontmatter is the active source ownership read path. OKF metadata is the active ownership read path. There is no separate `source-map.yaml` truth file.
+OKF frontmatter is the active source-ownership read path. There is no separate `source-map.yaml` truth file.
 
-KB Markdown concepts use OKF v0.1 frontmatter plus CodeWiki extension keys. CodeWiki ownership fields live in concept frontmatter and are read through the OKF-backed ownership view. Non-KB owners, such as the package component whose human entrypoint is `README.md`, use `codewiki_source_map[].doc` to point at that artifact from an OKF concept inside `.codewiki/kb`. Doc identity remains the canonical `kb:<relative-path>` ref for KB concepts. Human title remains the first `#` heading.
+Current KB Markdown concepts use OKF v0.1 frontmatter plus CodeWiki extension keys. Target cut emits OKF v0.2 and consumes v0.2 with v0.1 fallback while preserving unknown fields. CodeWiki ownership fields live in concept frontmatter and are read through the OKF-backed ownership view. Imported provenance, generated/verified, lifecycle/freshness, and Attested Computation metadata remain advisory and cannot grant source ownership or Runtime authority. Non-KB owners, such as the package component whose human entrypoint is `README.md`, use `codewiki_source_map[].doc` to point at that artifact from an OKF concept inside `.codewiki/kb`. Doc identity remains the canonical `kb:<relative-path>` ref for KB concepts. Human title remains the first `#` heading.
 
 ## Why one map
 

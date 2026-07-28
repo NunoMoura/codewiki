@@ -1,18 +1,16 @@
 schema_version: 1
 id: spec.system.diagrams.key-flow
-title: CodeWiki Portfolio Intent-to-Implementation Flow
+title: CodeWiki Intent-to-Production Flow
 kind: sequence_flow
-purpose: Show concurrent proposal intake, runtime-owned semantic sessions, global Planning, parallel isolated workers, Implementation acceptance, and canonical proof.
+purpose: Show exact candidate production, candidate-specific Checks, deterministic exit, global Planning, isolated workers, Integration, and separately guarded effects.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
   - .codewiki/kb/system/components/codewiki-os.md
-  - .codewiki/kb/system/components/quality-policy.md
+  - .codewiki/kb/system/components/loop-exit.md
   - .codewiki/kb/system/components/worker-workbench.md
-  - .codewiki/kb/system/components/model-routing.md
   - .codewiki/kb/system/components/decision-loop.md
   - .codewiki/kb/system/components/planning-loop.md
   - .codewiki/kb/system/components/implementation-loop.md
-  - .codewiki/kb/system/components/session-coordination.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
 renderer:
@@ -20,28 +18,28 @@ renderer:
   fallback: custom_sequence
 participants:
   - id: client
-    label: Dashboard / Pi / bounded client
+    label: CLI / dashboard / optional Pi client
     kind: client
-  - id: control_plane
-    label: Project control plane
+  - id: runtime
+    label: Project Runtime
     kind: coordination
     source: .codewiki/kb/system/components/runtime.md
-  - id: semantic_sessions
-    label: Pi sessions with CodeWiki OS, Stage Protocol, and scoped Skills
+  - id: pi_sessions
+    label: Pi sessions with CodeWiki OS / Loop Protocol / scoped Skills
     kind: execution_adapter
     source: .codewiki/kb/system/components/codewiki-os.md
   - id: decision
-    label: Decision loop
+    label: Decision Loop
     kind: semantic_loop
     source: .codewiki/kb/system/components/decision-loop.md
   - id: planning
-    label: Global Planning loop
+    label: Global Planning Loop
     kind: semantic_loop
     source: .codewiki/kb/system/components/planning-loop.md
-  - id: quality
-    label: Quality Policy resolver, verifiers, and deterministic gates
-    kind: quality_policy
-    source: .codewiki/kb/system/components/quality-policy.md
+  - id: loop_exit
+    label: Candidate identity / Exit Policy / Code and Model Checks / Exit Report
+    kind: loop_exit_runtime
+    source: .codewiki/kb/system/components/loop-exit.md
   - id: workbench
     label: Private Worker Workbench
     kind: transient_execution_environment
@@ -51,108 +49,112 @@ participants:
     kind: execution_adapter
     source: .codewiki/kb/system/components/session-coordination.md
   - id: implementation
-    label: Implementation loop
+    label: Implementation Loop
     kind: semantic_loop
     source: .codewiki/kb/system/components/implementation-loop.md
   - id: traces
     label: JSONL Change Traces
     kind: durable_truth
     source: .codewiki/kb/system/components/traces.md
-  - id: knowledge_git
-    label: Knowledge / source / tests / Git
+  - id: project_state
+    label: Knowledge / source / tests / Git / delivery observations
     kind: canonical_truth
   - id: views
-    label: WorkState and client projections
+    label: WorkState + Work / Alignment / Learning views
     kind: generated_projection
     source: .codewiki/kb/system/components/work-state.md
 steps:
-  - id: submit_proposals
+  - id: submit_intent
     from: client
-    to: control_plane
-    message: authenticated users or agents submit concurrent idempotent proposals
-  - id: persist_pending_changes
-    from: control_plane
+    to: runtime
+    message: submits bounded authenticated intent; trigger grants no semantic authority
+  - id: persist_change
+    from: runtime
     to: traces
-    message: persists one pending Change revision and provenance per proposal
-  - id: schedule_decisions
-    from: control_plane
-    to: semantic_sessions
-    message: starts compatible read-only Decision jobs for independent Change revisions
-  - id: submit_decision_candidates
-    from: semantic_sessions
+    message: creates one pending Change revision with runtime-owned identity and time
+  - id: produce_decision
+    from: runtime
+    to: pi_sessions
+    message: starts bounded Decision candidate producer against exact project snapshot
+  - id: submit_decision_candidate
+    from: pi_sessions
     to: decision
-    message: returns typed judgment candidates without append authority
-  - id: assess_decision
+    message: returns role-specific candidate content without runtime-owned fields
+  - id: check_decision
     from: decision
-    to: quality
-    message: resolves exact Standards, fans out independent assessments, then applies deterministic gates
-  - id: append_decisions
-    from: quality
+    to: loop_exit
+    message: Runtime identities candidate, resolves policy, fans out independent Checks, and builds Exit Report
+  - id: append_decision
+    from: loop_exit
     to: traces
-    message: control plane appends gated Decision result, Quality Policy resolution, and immutable Quality Report under exact revision and CAS guards
-  - id: mark_planning_dirty
+    message: Runtime appends exact approved or terminal disposition after generation, freshness, authority, and CAS guard
+  - id: dirty_planning
     from: traces
-    to: control_plane
-    message: approved portfolio changes mark one bounded project Planning horizon dirty
-  - id: schedule_planning
-    from: control_plane
-    to: semantic_sessions
-    message: admits one Planning writer and supplies exact project context
+    to: runtime
+    message: approved portfolio change makes bounded global Planning horizon eligible
+  - id: produce_planning
+    from: runtime
+    to: pi_sessions
+    message: admits one Planning writer with exact portfolio and relationship context
   - id: submit_planning_candidate
-    from: semantic_sessions
+    from: pi_sessions
     to: planning
-    message: returns one candidate epoch spanning approved Changes, Sprints, Work Items, dependencies, and integration
-  - id: assess_planning
+    message: returns Sprints, worker-ready Work Items, dependencies, verification, Integration, and Workbench requirements
+  - id: check_planning
     from: planning
-    to: quality
-    message: evaluates one immutable epoch candidate and Workbench readiness at required-result fan-in
-  - id: append_planning_epoch
-    from: quality
+    to: loop_exit
+    message: resolves candidate-specific Planning Checks and complete required-result fan-in
+  - id: append_planning
+    from: loop_exit
     to: traces
-    message: control plane writes gated deterministic participant slices and exposes partial-commit recovery
-  - id: select_parallel_frontier
+    message: Runtime appends deterministic participant slices and repairs partial epochs before Claims
+  - id: select_frontier
     from: traces
-    to: control_plane
-    message: WorkState yields compatible ready Work Items under claims, conflicts, capacity, and supervision
-  - id: provision_workbenches
-    from: control_plane
+    to: runtime
+    message: WorkState yields compatible ready Work Items under dependencies, Claims, capacity, and supervision
+  - id: provision_workbench
+    from: runtime
     to: workbench
-    message: selects Implementation tier and binds fresh source, context, Skills, tools, Quality minimum, isolation, and budgets before Claim
-  - id: start_workers
+    message: binds exact source, context, Skills/tools, tier/route, frozen Checks/evidence, isolation, and budgets
+  - id: start_worker
     from: workbench
     to: workers
-    message: exact matching Claim activates concurrent non-conflicting Assignments
-  - id: worker_candidates
+    message: exact matching Claim activates concurrent non-conflicting Assignment
+  - id: worker_report
     from: workers
+    to: runtime
+    message: returns immutable Worker Report candidate evidence only
+  - id: build_implementation_candidate
+    from: runtime
     to: implementation
-    message: returns candidate changes, checks, provenance, and exact evidence refs
-  - id: assess_implementation
+    message: binds Worker Report with exact source/test/Git/Integration observations
+  - id: check_implementation
     from: implementation
-    to: quality
-    message: resolves actual-effect overlays and runs bounded independent deterministic, model, external, and human verifiers
-  - id: fan_in_implementation
-    from: quality
-    to: implementation
-    message: required assessments join before deterministic repair, exit, route-back, or block gates
+    to: loop_exit
+    message: actual effects may add Checks; required Results fan in without suppressing unrelated feedback
   - id: append_implementation
-    from: implementation
+    from: loop_exit
     to: traces
-    message: control plane appends gated realization or recovery result to owning Change traces
-  - id: prove_content
-    from: implementation
-    to: knowledge_git
-    message: binds accepted realization to exact source, tests, tree, commit, and restore evidence
-  - id: project_state
+    message: Runtime appends exact realization or remediation after final guards
+  - id: integrate
+    from: runtime
+    to: project_state
+    message: creates guarded Integration commit/tree proof for accepted worker output
+  - id: delivery_effects
+    from: runtime
+    to: project_state
+    message: separately authorizes merge, push, publication, release, and later observation
+  - id: project_views
     from: traces
     to: views
-    message: folds Backlog, Planning, Implementation, Change dossiers, quality, blockers, and outcomes
-  - id: render_state
+    message: folds Change dossiers, Work, Alignment, Learning, blockers, and outcomes
+  - id: render
     from: views
     to: client
-    message: streams current state, held reasons, interventions, evidence, and recovery
+    message: streams bounded state, provenance, coverage, held reasons, evidence, and next safe action
 ui_hints:
-  default_focus: select_parallel_frontier
+  default_focus: check_implementation
   show_exit_steps:
-    - append_decisions
-    - append_planning_epoch
+    - append_decision
+    - append_planning
     - append_implementation

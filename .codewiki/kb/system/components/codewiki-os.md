@@ -1,7 +1,7 @@
 ---
 type: Concept
-title: CodeWiki OS and Stage Protocols
-description: CodeWiki adds versioned operating-system guidance and mandatory stage protocols to Pi without replacing Pi providers, authentication, tools, sessions, or Skills.
+title: CodeWiki OS and Loop Protocols
+description: CodeWiki adds versioned operating-system guidance and one mandatory Loop Protocol for Decision, Planning, or Implementation without replacing Pi providers, authentication, tools, sessions, or Skills.
 tags:
   - codewiki
   - system
@@ -9,81 +9,92 @@ tags:
   - skills
   - pi
 ---
-# CodeWiki OS and Stage Protocols
+# CodeWiki OS and Loop Protocols
 
-CodeWiki runs on Pi rather than replacing it. Pi owns model providers, authentication, sessions, tool mechanics, extension loading, Skill discovery, and progressive Skill loading. CodeWiki owns the software-development operating contract layered onto those capabilities: semantic authority, canonical truth boundaries, stage behavior, Quality Policy, Workbench scope, routing, and guarded progression.
+CodeWiki runs on Pi rather than replacing it. Pi owns providers, authentication, model transport, sessions, compaction, tool mechanics, extension loading, and ordinary Skill discovery. CodeWiki owns the software-development operating contract layered onto those capabilities: semantic authority, canonical truth boundaries, Loop behavior, exit Checks, Workbench scope, routing, and guarded progression.
 
 ```text
-Pi provider, authentication, session, and tool mechanics
+Pi provider/authentication/session/tool mechanics
 + versioned CodeWiki OS guidance
-+ one versioned Stage Protocol
-+ runtime-built stage input or Worker Workbench
++ one versioned Loop Protocol
++ runtime-built Loop input or Worker Workbench
 + ordinary Pi Skills available in that context
 = bounded CodeWiki execution
 ```
 
 ## CodeWiki OS guidance
 
-CodeWiki OS guidance is a compact, versioned package resource injected into every CodeWiki-owned semantic session and implementation worker. It establishes invariants shared by all stages:
+CodeWiki OS guidance is one compact versioned package resource injected into every CodeWiki-owned semantic session and implementation worker. It establishes shared invariants:
 
-- exactly three semantic loops exist: Decision, Planning, and Implementation;
-- Change is accountable intent and a durable dossier, while runtime owns portfolio progression;
-- `.codewiki/kb/**`, Change Traces, source/tests, and Git have distinct truth roles;
-- WorkState and generated views are disposable projections;
-- runtime alone owns scheduling, candidate identity, freshness, CAS, recovery, routing, and canonical writes;
-- candidates, Skills, workers, and verifiers provide methods or evidence but cannot grant authority;
-- private reasoning, credentials, raw tool payloads, Workbenches, and package prompt text never enter canonical traces;
-- progression requires the resolved Quality Policy and exact authority for any guarded effect.
+- exactly three semantic Loops exist: Decision, Planning, and Implementation;
+- Change is accountable intent and a durable dossier;
+- Project Runtime owns portfolio scheduling and progression;
+- Knowledge, Change Traces, source/tests, Git, and external observations retain distinct authority;
+- WorkState and relationship/learning views are disposable;
+- runtime alone owns candidate identity, freshness, CAS, recovery, routing, and canonical writes;
+- candidates, Skills, workers, Checks, clients, and tools cannot grant authority;
+- private reasoning, credentials, raw tool output, Workbenches, and package prompt text never enter canonical traces;
+- Loop exit requires an exact Resolved Exit Policy and immutable Exit Report;
+- guarded effects require separate exact authority after semantic exit.
 
-The resource has a stable id, semantic version, and content digest. Runtime records only those identifiers where recovery or audit requires them. It never stores the private prompt body in a Change Trace.
+The resource has stable id, semantic version, and content digest. Runtime records only those identifiers needed for recovery and audit, never private prompt text.
 
-## Stage Protocols
+## Loop Protocols
 
-A Stage Protocol is mandatory CodeWiki instruction for one semantic stage. It defines role, authoritative input, required output, prohibited actions, stop conditions, route-back behavior, and candidate schema. Stage Protocols are CodeWiki-owned package resources, not Pi Skills.
-
-CodeWiki has three protocol families:
+A Loop Protocol is mandatory CodeWiki instruction for one semantic Loop. It defines role, authoritative input, required candidate, prohibited actions, stop conditions, route-back behavior, and candidate schema. Loop Protocols are CodeWiki-owned package resources, not Pi Skills.
 
 | Protocol | Required behavior |
 | --- | --- |
-| Decision | Refine and assess one exact Change revision against current project truth, preserving Decision authority and returning a typed candidate without runtime-owned identity or append fields. |
-| Planning | Shape a bounded approved-Change portfolio into globally coherent worker-ready Work Items, dependencies, verification, integration boundaries, and Workbench requirements without choosing runtime model routes. |
-| Implementation | Realize accepted scope or assess exact realization evidence, follow the Assignment and Quality Policy, report bounded evidence, and route semantic uncertainty to Planning or Decision. |
+| Decision | Refine one exact Change revision against current project truth, preserve user/Decision authority, account for Knowledge and active-Change overlap, and return a typed candidate without runtime-owned fields. |
+| Planning | Shape a bounded approved-Change portfolio into globally coherent worker-ready Work Items, dependencies, verification, integration boundaries, and Workbench requirements without choosing concrete providers or runtime routes. |
+| Implementation | Realize accepted scope or assess exact realization evidence, follow Assignment and Check minimums, return bounded candidate evidence, and route semantic uncertainty to Planning or Decision. |
 
-Each protocol is independently versioned. Runtime binds one exact protocol id, version, and digest to a job before execution. A protocol update invalidates only candidate and cache identities that depend on that protocol.
+Each Protocol is independently versioned. Runtime binds exact id/version/digest before execution. Protocol changes invalidate only dependent candidate and cache identities.
 
-Stage Protocols do not form a user-authored loop language. Projects cannot replace stage authority, add a fourth semantic loop, change canonical output schemas, or weaken protected Quality Standards by supplying instructions.
+Loop Protocols do not form a user-authored Loop language. Projects cannot replace Loop authority, add a fourth semantic Loop, change canonical candidate schemas, weaken protected Checks, or alter runtime routing through instructions.
 
 ## Pi Skills
 
-Skills remain ordinary reusable Pi capabilities. CodeWiki does not define a Skill schema, registry, taxonomy, package format, distribution mechanism, or activation protocol.
+Skills remain ordinary reusable Pi capabilities. CodeWiki defines no Skill schema, registry, taxonomy, package format, distribution mechanism, or activation protocol.
 
-Normal Pi discovery and progressive loading remain available in CodeWiki-owned sessions. Planning may narrow a Work Item's Workbench Skill scope when reproducibility, safety, or context discipline requires it. An omitted scope means the normally discovered catalog remains available; it does not mean “no Skills.” Runtime resolves declared Skill scope against the fresh host catalog and records only bounded ids and version/digest evidence in the private Workbench manifest.
+Normal Pi discovery and progressive loading remain available. Planning may narrow Workbench Skill scope when reproducibility, safety, or context discipline requires it. Omitted scope preserves normal discovery. Runtime resolves a declared scope against the fresh host catalog and records only bounded identity evidence in the private Workbench manifest.
 
-A Skill may explain a method, workflow, tool usage pattern, or domain practice. A Skill cannot:
+A Skill may explain a method, workflow, tool pattern, or domain practice. It cannot:
 
 - grant tools or credentials;
 - widen Assignment paths or Workbench capabilities;
-- suppress or disable Quality Standards;
-- change semantic stage authority or routing;
-- change candidate or Worker Report schemas;
+- suppress or disable required Checks;
+- change Loop authority, candidate schema, or routing;
 - claim that a candidate passed, exited, integrated, published, or released.
 
-Conflicts resolve in this order: runtime authority and safety constraints, CodeWiki OS invariants, Stage Protocol, resolved Quality Policy and Workbench bounds, then Skill guidance. Runtime rejects candidates that rely on lower-authority guidance to violate a higher-authority contract.
+Conflicts resolve in this order:
+
+```text
+runtime authority and safety
+→ CodeWiki OS
+→ Loop Protocol
+→ Resolved Exit Policy and Workbench bounds
+→ Skill guidance
+```
+
+Runtime rejects candidates relying on lower-authority guidance to violate higher-authority contracts.
 
 ## Prompt and context boundaries
 
-CodeWiki supplies minimum sufficient context. Shared OS and Stage Protocol resources should be cache-friendly and stable. Runtime-specific identity, WorkState slices, Change or Planning facts, Quality Policy resolutions, and Workbench manifests remain separate typed inputs rather than being copied into one mutable prose prompt.
+CodeWiki supplies minimum sufficient context. OS and Loop Protocol resources should remain stable and cache-friendly. Runtime identity, WorkState slices, Change/Planning facts, Resolved Exit Policy, selected Repair Episodes, and Workbench manifests remain separate typed inputs instead of one mutable prose prompt.
 
-Prompts and context must exclude credentials, bearer tokens, private provider configuration, unrelated repository content, raw traces, unrestricted runtime artifacts, and hidden authority fields. Candidate outputs remain compact typed data; conversational transcript and private reasoning are never canonical evidence.
+Prompts/context exclude credentials, bearer tokens, private provider configuration, unrelated source, raw traces, unrestricted runtime artifacts, and hidden authority fields. Candidate outputs remain compact typed data; transcript and private reasoning are never canonical evidence.
+
+Candidate producers may receive bounded project-local repair evidence. Independent Model Checks never share producer conversational state or learning context.
 
 ## Current migration drift
 
-The current Pi SDK semantic-session implementation still hardcodes role guidance and sets `noSkills: true`. That is executable migration drift, not the target contract. Source migration must introduce versioned CodeWiki OS and Stage Protocol resources, restore normal Pi Skill discovery, and retain read-only semantic-session tool boundaries before this section is considered implemented.
+Current Pi SDK semantic sessions still hardcode role guidance and disable Skills with `noSkills: true`. Executable source/tests still retain superseded checking vocabulary and paths. Migration must introduce versioned CodeWiki OS and Loop Protocol resources, restore normal Pi Skill discovery, preserve read-only semantic-session boundaries, and adopt exact Candidate/Check/Result/Exit Report contracts.
 
 ## Related docs
 
 - [Loop Model](loop-model.md)
-- [Quality Policy](quality-policy.md)
+- [Loop Exit](loop-exit.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Pi Extension](extension.md)

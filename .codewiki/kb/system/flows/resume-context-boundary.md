@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Resume Context Boundary
-description: The old CodeWiki-owned resume/context-refresh boundary is disabled during the rebuild.
+description: Pi owns conversation/session compaction; CodeWiki resumes semantic project work from exact Change Trace, WorkState, Knowledge, source/Git, policy, and recovery refs rather than private cognition.
 tags:
   - codewiki
   - system
@@ -9,17 +9,29 @@ tags:
   - resume
   - context
   - boundary
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
 # Resume Context Boundary
 
-The old CodeWiki-owned resume/context-refresh boundary is disabled during the rebuild.
+Pi owns provider sessions and conversation compaction. CodeWiki does not copy/fork Pi compaction, replay full model/tool cognition, or make chat transcript canonical.
 
-Target runtime may later produce source-backed boundary packets from JSONL traces, KB refs, source refs, and Git content evidence, but that behavior requires a future accepted decision and an explicit Pi extension reintroduction.
+Project Runtime resumes from source-backed exact facts:
 
-Current rule: use Pi native compaction only. Do not run CodeWiki-owned compaction, auto-pickup, or `wiki_*` tools in this repository.
+- Change revision and trace tail;
+- last candidate, parent/repair lineage, policy, Results, Report, and Runtime route;
+- accepted Decision/Planning/Implementation outputs;
+- WorkState/relationship snapshot and coverage;
+- Knowledge/source/test/Git/config/effect refs;
+- active Claim/Assignment/Workbench/Worker Report/Integration recovery identity;
+- authority, blockers, and next safe action.
+
+Runtime compiles minimum sufficient context for new semantic session or worker. Private Workbenches/raw output remain bounded and are reused only when exact digest/canonical Claim/recovery contract permits.
+
+Source repository uses Pi native compaction and no CodeWiki tools/commands/self-hosting. Packed external projects test CodeWiki resume/recovery behavior.
 
 ## Related docs
 
 - [Runtime](../components/runtime.md)
-- [Traces](../components/traces.md)
+- [WorkState](../components/work-state.md)
+- [Change Traces](../components/traces.md)
+- [Session Coordination](../components/session-coordination.md)

@@ -3,8 +3,8 @@
 ## Concepts
 
 * [CodeWiki Design System](DESIGN.md) - A warm, precise project interface for portfolio Work, Product knowledge, System topology, and Design guidance, grounded in canonical sources and calibrated evidence.
-* [Dictionary](dictionary.md) - Product contract for rendering CodeWiki's canonical vocabulary from the root Lexicon without creating a copied glossary.
-* [Product](overview.md) - CodeWiki is a project-scoped development operating system that keeps intent, planning, implementation, and repository knowledge explicit, connected, actionable, and recoverable for humans and agents.
+* [Dictionary](dictionary.md) - Product workspace rendering CodeWiki's canonical vocabulary from root Lexicon without creating a copied glossary or second authority.
+* [Product](overview.md) - CodeWiki is a project-scoped development operating system specialized as an intent-to-production alignment runtime that permits exact project state to advance only when required evidence is complete, fresh, and authorized.
 
 ## Directories
 

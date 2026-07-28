@@ -1,41 +1,40 @@
 ---
 type: Concept
-title: Extension and Workflow Authors
-description: Extension and workflow authors use CodeWiki's structure and capability contracts without adopting CodeWiki as a sandbox, telemetry runtime, or general execution framework.
+title: Client and Execution Adapter Authors
+description: Adapter authors integrate clients or workers through typed CodeWiki contracts without replacing Project Runtime, Pi, canonical authority, Loop exit, or isolation policy.
 tags:
   - codewiki
   - product
   - users
-  - package
+  - adapters
   - authors
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-28T00:00:00Z
 ---
-# Extension and Workflow Authors
+# Client and Execution Adapter Authors
 
-Extension and workflow authors use CodeWiki's structure and capability contracts without adopting CodeWiki as a sandbox, telemetry runtime, or general execution framework.
+Authors may add thin CLI/editor/MCP/Pi/OpenClaw clients or Assignment execution adapters. They reuse CodeWiki semantics rather than building parallel workflow authority.
 
-They need stable semantics for:
+Stable needs:
 
-- compact state reads;
-- semantic loop iterations;
-- runtime claims and worker coordination;
-- exit-condition results;
-- generated view rebuilds;
-- loop-governed automation controls;
-- publication support;
-- packaged workflow skills;
-- future visual or non-visual access surfaces.
+- bounded authenticated state/intent/authority/query/control requests;
+- exact semantic-session candidate and Model Check contracts;
+- Assignment/Claim/Workbench/Worker Report correlation;
+- capability, cancellation, budget, and isolation reporting;
+- generated-view rebuild semantics;
+- separately guarded external-effect adapters.
 
 ## Success signals
 
-- Authors can extend workflows without bypassing `.codewiki/` semantics.
-- Skill packages compose with CodeWiki rather than replacing traces, loop outputs, generated views, source/tests, or Git proof.
-- Technical access surfaces use typed capabilities for semantic writes.
-- Visual surfaces read canonical and generated state rather than creating hidden UI-only truth.
+- Adapters cannot choose Loop, candidate identity, Check activation/thresholds, Exit Report, Runtime route, append, or effect authority.
+- Client events remain invalidations/observations, never truth.
+- Worker adapters mutate only exact Workbench scope and return immutable evidence.
+- Pi Skills/tools compose without replacing Change Traces, candidates/Reports, Knowledge, source/tests, or Git proof.
+- Visual surfaces read canonical/derived state rather than creating hidden UI truth.
+- Provider credentials remain host-owned and never enter CodeWiki traces/manifests/errors.
 
 ## Related docs
 
-- [CodeWiki API](../../system/components/api.md)
-- [API Tool Surface](../../system/components/api-tools.md)
-- [Loop Model](../../system/components/loop-model.md)
+- [API](../../system/components/api.md)
+- [API and Client Surface](../../system/components/api-tools.md)
+- [Runtime](../../system/components/runtime.md)
 - [Extension](../../system/components/extension.md)

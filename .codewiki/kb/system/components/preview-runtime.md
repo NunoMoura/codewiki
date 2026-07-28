@@ -45,7 +45,7 @@ The Live Preview Runtime creates an automatic, explicit relationship between fro
 
 ## Implementation status
 
-Structured profiles, canonical `uiPreviewTargets[]`, deterministic profile/target digests, Planning-owned target bindings, Implementation-stage coordination, profile-level server deduplication across routes, package-script supervision, exact integration checkout state, contributor aggregation, readiness, browser adapters, side-effect-free Playwright preflight, cleanup, dashboard controls, source-only harness, and explicit target evidence capture are implemented. Legacy single-Sprint `preview` binding is removed.
+Structured profiles, canonical `uiPreviewTargets[]`, deterministic profile/target digests, Planning-owned target bindings, Implementation Loop coordination, profile-level server deduplication across routes, package-script supervision, exact integration checkout state, contributor aggregation, readiness, browser adapters, side-effect-free Playwright preflight, cleanup, dashboard controls, source-only harness, and explicit target evidence capture are implemented. Legacy single-Sprint `preview` binding is removed.
 
 Capture automates the accepted desktop/mobile viewports, records bounded redacted console and network observations, hashes each screenshot, and writes a correlated manifest under `.codewiki/runtime/preview-evidence/`. Capture remains operational evidence and does not append semantic trace truth or grant approval.
 
@@ -128,6 +128,6 @@ This standalone harness is the fast visual-development path. Packed installation
 ## Related docs
 
 - [Adapters and UI Component](adapters-and-ui.md)
-- [Project Dashboard and Pi Client Architecture](terminal-ui.md)
-- [Project Dashboard and Pi Client](../../product/uis/terminal.md)
+- [Client and Dashboard Architecture](terminal-ui.md)
+- [Project Dashboard and Optional Pi Client](../../product/uis/terminal.md)
 - [Implementation Loop](implementation-loop.md)

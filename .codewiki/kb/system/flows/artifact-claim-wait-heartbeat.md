@@ -1,29 +1,32 @@
 ---
 type: Concept
-title: Artifact Claim Wait/Heartbeat Flow
-description: 1. Runtime records narrow claims before non-trivial overlapping writes. 2. If a needed scope is unavailable, work waits instead of forcing a conflict. 3. Holders heartbeat or release claims. Expired claims become stale and can be cleared by policy. 4. A released blocker sends a heartbeat with the claim id, planning refs, path scopes, and reason. 5. The worker or implementation iteration must fold current trace state and re-check claims before writing.
+title: Claim Wait and Observation Flow
+description: Runtime grants one exact bounded Claim per Work Item attempt, waits on overlap instead of forcing conflict, and treats leases/heartbeats as operational observations rather than semantic truth.
 tags:
   - codewiki
   - system
   - flows
-  - artifact
   - claim
   - wait
-  - heartbeat
-timestamp: 2026-06-30T00:00:00Z
+  - observation
+timestamp: 2026-07-28T00:00:00Z
 ---
-# Artifact Claim Wait/Heartbeat Flow
+# Claim Wait and Observation Flow
 
-1. Runtime records narrow claims before non-trivial overlapping writes.
-2. If a needed scope is unavailable, work waits instead of forcing a conflict.
-3. Holders heartbeat or release claims. Expired claims become stale and can be cleared by policy.
-4. A released blocker sends a heartbeat with the claim id, planning refs, path scopes, and reason.
-5. The worker or implementation iteration must fold current trace state and re-check claims before writing.
+1. Passed-and-appended Planning defines ready Work Item, dependencies, path/component scope, Workbench requirements, and frozen Check minimums.
+2. Runtime refreshes WorkState and rejects stale, blocked, overlapping, or capacity-incompatible selection.
+3. Runtime provisions inert digest-bound private Workbench and probes capabilities.
+4. Runtime appends one exact Claim under generation/freshness/CAS guards; matching Claim activates Workbench.
+5. Worker/host emits bounded operational observation while attempt runs.
+6. If scope is unavailable, work waits instead of forcing conflict. Released/expired/cancelled Claim invalidates Workbench activation.
+7. Worker returns immutable Worker Report. Runtime revalidates Claim/Assignment/Workbench/base before Implementation candidate construction.
+8. Claim releases after accepted realization/Integration-safe boundary or terminal blocked/failed/cancelled handling. Cleanup requires proof.
 
-Claim status is runtime coordination evidence only. Traces, loop outputs, source/tests, and Git refs remain canonical truth and proof.
+Lease, heartbeat, process, and liveness state are operational observations only. Change Traces own coordination facts; passed Loop candidates/Reports own semantic progression; source/tests/Git own executable/content proof.
 
 ## Related docs
 
 - [Runtime](../components/runtime.md)
+- [Worker Workbench](../components/worker-workbench.md)
 - [Implementation Loop](../components/implementation-loop.md)
 - [Traces](../components/traces.md)

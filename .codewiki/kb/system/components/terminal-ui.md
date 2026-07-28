@@ -1,7 +1,7 @@
 ---
 type: Concept
-title: Project Dashboard and Pi Client Architecture
-description: The dashboard and Pi extension are concurrent clients of one local CodeWiki project control plane that owns Work scheduling, execution sessions, guarded writes, and projections.
+title: Client and Dashboard Architecture
+description: Standalone CLI and dashboard are primary clients of one local Project Runtime; optional thin Pi client and future adapters share bounded contracts without owning workflow authority.
 tags:
   - codewiki
   - system
@@ -10,17 +10,18 @@ tags:
   - client
 timestamp: 2026-07-01T00:00:00Z
 ---
-# Project Dashboard and Pi Client Architecture
+# Client and Dashboard Architecture
 
-The dashboard and Pi extension are clients of one project-scoped CodeWiki control plane. The control plane owns runtime lifetime, WorkState, scheduling, session creation, worker supervision, integration, guarded writes, and event projection. No active Pi conversation owns the project pipeline.
+The standalone CLI and dashboard are primary clients of one project-scoped CodeWiki Runtime; optional Pi extension is a thin conversational client. Project Runtime owns lifetime, WorkState, scheduling, session creation, worker supervision, Integration, guarded writes, and event projection. No active Pi conversation owns project pipeline.
 
 ## Client surfaces
 
 | Client | Responsibility |
 | --- | --- |
+| CLI | Primary lifecycle, automation, configuration, and bounded project-operation interface. |
 | Dashboard | Primary Work, Product, System, and Design management interface. |
-| Pi extension | Conversational Change intake, authority, explanation, supervision presence, and dashboard launch/reopen. |
-| CLI/test client | Temporary development, CI, and external-install verification. |
+| Pi extension | Optional conversational Change intake, authority, explanation, supervision presence, and dashboard launch/reopen. |
+| Test client | Development, CI, and external-install verification. |
 | Future adapter | Same bounded control-plane protocol without changing core semantics. |
 
 Several clients may connect concurrently. Each request carries project identity, capability, idempotency, and expected state where mutation is possible.
@@ -72,7 +73,7 @@ Clients cannot select semantic loops, create arbitrary model sessions, submit ar
 
 ## Pi execution
 
-The target semantic adapter embeds Pi through its SDK. Each Decision, Planning, Implementation Quality, or model-Standard job receives versioned CodeWiki OS guidance, one mandatory Stage Protocol, one runtime-built bounded context, normal or Workbench-scoped Pi Skills, and a read-only tool set. A closed candidate-submission tool returns typed output to runtime. Runtime validates freshness, Quality Policy, identity, deterministic gates, and append authority before any durable write.
+The target semantic adapter embeds Pi through its published SDK. Each Decision, Planning, Implementation candidate, or Model Check job receives versioned CodeWiki OS guidance, one mandatory Loop Protocol, one Runtime-built bounded context, normal or Workbench-scoped Pi Skills, and a read-only tool set. Closed role-specific submission tools return typed candidates or Model Check outputs to Runtime. Runtime constructs exact identities, resolves Exit Policy, validates Result/Report consistency, and rechecks freshness, generation, authority, CAS, and append permission before durable write.
 
 Implementation uses a separate harness-neutral worker adapter. Exact Assignment jobs run through coordinator lanes; the Pi compatibility adapter starts foreground child processes only in explicit isolated worktrees and persists bounded immutable Worker reports. Container-capable hosts may instead install the opt-in OCI adapter with a digest-pinned preinstalled image, explicit resource and egress policy, and the same report/recovery contract; the default Pi daemon does not provision or select an image. The elected service derives Assignments automatically and, after canonical Implementation acceptance, schedules guarded target/base Integration jobs that create exact local Git commit/tree proof without moving the project branch. Core runtime depends on adapter contracts, not Pi types.
 

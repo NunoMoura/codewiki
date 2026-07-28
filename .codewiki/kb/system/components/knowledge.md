@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Knowledge
-description: Knowledge is the durable intended truth for product and system design. It is not a log, generated view, Work Item archive, trace archive, or code artifact store.
+description: Knowledge is accepted durable Product, System, and Design intent. It is portable through OKF, distinct from workflow history and implementation truth, and may intentionally lead source only when an exact active Change accounts for the transition.
 tags:
   - codewiki
   - system
@@ -29,21 +29,19 @@ codewiki_source_map:
 ---
 # Knowledge
 
-## Responsibility
+Knowledge is accepted durable Product, System, and Design intent. It is not workflow history, WorkState, a generated relationship graph, a Work Item archive, a trace archive, or a code artifact store.
 
-Knowledge is the durable intended truth for product and system design. It is not a log, generated view, Work Item archive, trace archive, or code artifact store.
-
-Hot knowledge lives in:
+Hot Knowledge lives under:
 
 ```text
 .codewiki/kb/**
 ```
 
-Cold history and restore detail live in Git.
+Git preserves history. Change Traces preserve accountable transitions. Source/tests/Git preserve implementation truth.
+
+Accepted Knowledge may describe future intent before source realizes it, but only one exact active Change may account for that discrepancy. Unaccounted divergence is drift; insufficient coverage remains explicitly unknown.
 
 ## Product structure
-
-Product knowledge defines users, user stories, product behavior, and visual user interfaces:
 
 ```text
 .codewiki/kb/product/
@@ -54,74 +52,138 @@ Product knowledge defines users, user stories, product behavior, and visual user
   uis/
 ```
 
-Product docs should avoid technical implementation detail unless it affects user value, user constraints, UI behavior, or a system constraint that changes what users can expect. `product/DESIGN.md` follows Google's DESIGN.md alpha format while retaining CodeWiki OKF concept fields in the same extensible YAML frontmatter. Its machine-readable tokens are normative; prose explains branding, visual rationale, fonts, iconography, layout, components, accessibility guardrails, and durable visual-reference URLs or repository paths.
+Product Knowledge defines users, outcomes, stories, behavior, vocabulary, and user-visible design. It avoids implementation detail unless that detail changes user value, constraints, or observable behavior.
 
 ## System structure
 
-System knowledge defines technical architecture that implements product intent:
-
 ```text
 .codewiki/kb/system/
-  overview.md
-  loop-model.md
-  decision-loop.md
-  planning-loop.md
-  implementation-loop.md
-  source-map.md
-  <component>.md
+  components/
+  flows/
   diagrams/
 ```
 
-System diagrams are the navigation spine for system knowledge. Diagram raw data lives under `system/diagrams/**` as YAML so agents can edit it safely and renderers can transform it into Mermaid, Cytoscape, ASCII/Unicode, or custom views.
+System Knowledge defines architecture, responsibilities, interfaces, authority boundaries, and operational flows. Diagram YAML remains canonical diagram source; Mermaid, Cytoscape, SVG, image, and terminal renderings remain generated views.
 
 ## Decision-owned propagation
 
-The decision loop owns knowledge propagation. There is no separate knowledge loop.
+Decision owns accepted Knowledge meaning. There is no separate Knowledge Loop.
 
-A change can originate in any layer:
+A Change may originate in any layer:
 
-- product changes can require system and code changes;
-- system changes can require product documentation updates when user-visible;
-- implementation discoveries can route back to planning or decision;
-- source drift can create a decision question.
+- Product changes can require System and source changes.
+- System changes can require Product updates when user-visible.
+- Implementation discoveries can route to Planning or Decision.
+- Source/Knowledge divergence can create a Decision question.
 
-Decision records accepted Change intent, KB impact, and diagram impact in the Change Trace. It cannot approve a revision unless required KB/diagram updates are made, explicitly unnecessary, blocked, or routed with owner and rationale.
+Decision records exact Knowledge impact and provenance in the Change candidate and Trace. It may exit only when affected Knowledge is updated, explicitly unaffected, grounded as an accounted transition, deferred with authority, or routed to the proper owner.
 
-Planning starts only from exact approved Change revisions and current KB refs.
+Planning consumes exact approved Change revisions and current Knowledge refs. Implementation realizes accepted obligations and may not invent new Knowledge meaning during coding.
+
+## Current executable compatibility
+
+Until the OKF cut, `.codewiki/kb/**` is an **OKF v0.1 markdown/frontmatter bundle** and durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections. OKF concept frontmatter is the active KB-code-test ownership source. These compatibility facts do not change the v0.2 target or make generated views authoritative.
+
+## OKF compatibility
+
+CodeWiki targets OKF v0.2 for `.codewiki/kb/**/*.md` while retaining v0.1 fallback consumption during migration. Current executable source still emits and validates v0.1; that is explicit migration drift until the named OKF cut updates source, tests, and this bundle together.
+
+Target support includes:
+
+- `sources` for document- or claim-level provenance;
+- `generated` for truthful producer/time metadata;
+- `verified` as advisory confirmation metadata;
+- `status` and `stale_after` lifecycle/freshness hints;
+- Attested Computation definitions;
+- meaningful software-domain `type` values;
+- unknown frontmatter round-trip preservation;
+- progressive disclosure through generated indexes.
+
+CodeWiki does not treat OKF claims as runtime authority:
+
+| OKF field | Does not prove |
+| --- | --- |
+| `sources` | Acceptance or correctness |
+| `generated` | Approval authority |
+| `verified` | Check pass or Loop exit |
+| `status: stable` | Implementation realization |
+| `stale_after` | Exact candidate freshness |
+| Attested Computation | Permission to execute arbitrary code |
+
+Runtime materializes any runtime-owned producer metadata before immutable candidate checking. It does not add machine `verified` metadata after checking because that would change the exact candidate digest the Exit Report covers.
+
+Attested Computation may later define sanctioned production-outcome measurements under a closed, digest-pinned executor/attester catalog. Imported definitions are parsed as untrusted data and never execute automatically.
+
+## Provenance versus realization
+
+Keep two directions distinct:
+
+```text
+sources / accepted Change provenance
+→ why Knowledge exists
+
+CodeWiki source ownership and trace/Git evidence
+→ where Knowledge is realized
+```
+
+Standard OKF `sources` describes upstream provenance. CodeWiki's structured source-map extension describes downstream component/source/test realization. One must not replace the other.
+
+Current `codewiki_source_map` is the canonical structured CodeWiki ownership extension. Existing flat convenience fields remain executable migration state; a clean Knowledge cut may remove duplicate authority once source/tests move to one structured profile.
 
 ## Links and generated relationships
 
-Knowledge docs should use sparse intentional Markdown links for human navigation and semantic dependencies. They should not try to manually encode every relationship.
+Knowledge docs use sparse intentional Markdown links. They do not encode every relationship manually.
 
-Generated views derive machine relationships from explicit refs, curated Markdown links, trace iteration data, OKF ownership metadata, source/test facts, and Git refs. If a relationship is mainly needed for routing, drift detection, freshness, backlinks, doc-code mapping, or current-state views, it belongs in generated views rather than hand-maintained prose.
+Disposable relationship views derive from:
 
-CodeWiki hot knowledge is an OKF v0.1 markdown/frontmatter bundle under `.codewiki/kb`. OKF concept frontmatter is the active KB-code-test ownership source; no separate source-map YAML file is active truth. Conceptual diagram relationships belong in diagram YAML files. Loop outputs and implementation evidence carry trace-local refs. Reusable drift lint rules live in source so readiness checks, future commands, and tests share one terminology contract instead of duplicating stale-wording scans.
+- OKF concept metadata and links;
+- provenance refs;
+- CodeWiki source ownership;
+- accepted Change and Planning refs;
+- source/test/Git facts;
+- Check Results and delivery evidence.
 
-## OKF and workflow boundary
+Stable semantic persistence should stop at outcome, behavior/invariant, system responsibility/interface, source ownership boundary, and tests/evidence. Fine-grained symbol relationships remain derived from LSP, AST, or Pi-Lens.
 
-CodeWiki concepts such as Change, Change Trace, Decision loop, approval, Sprint, WorkState, Work Item, Assignment, Ready Checks, and Needs Review are defined in `.codewiki/kb/**/*.md` as OKF-compatible knowledge.
+Agents may query bounded Work, Alignment, and Learning views. Query output names provenance, authority, completeness, truncation, and staleness. Queries cannot mutate Knowledge or grant progression authority.
 
-Actual Change and Sprint instances are not KB documents. One Change's durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections over Change Traces, current KB/source/Git, integration state, and bounded runtime observations; they must not become another state root.
+## Progressive brownfield adoption
 
-Use Change/Sprint/Work Item/Assignment in product-facing views. Keep trace ids, event ids, Change revision refs, Work Item ids, Assignment ids, and digests where storage, recovery, tests, or runtime coordination require exact technical identity.
+A brownfield project may begin with sparse Knowledge and provisional ownership. CodeWiki should:
+
+- preserve accepted known concepts;
+- label uncovered areas honestly as unknown;
+- inherit bounded source ownership where available;
+- derive provisional code relationships without making them truth;
+- expand validated Knowledge through actual Changes;
+- prevent unsafe progression when required semantics remain unknown.
+
+No complete ontology is required before useful work begins.
+
+## Workflow boundary
+
+Change, Change Trace, Decision, Planning, Implementation, WorkState, Sprint, Work Item, Assignment, Check, and Exit Report are defined as Knowledge concepts. Their live instances are not KB documents.
+
+One Change's workflow truth remains JSONL under `.codewiki/traces/TRACE-CHG-*.jsonl`. Backlog, Planning, Implementation, Change dossier, relationship, and learning screens remain projections over traces plus current Knowledge/source/Git/runtime facts.
 
 ## Rules
 
-- Keep current intended truth in knowledge; do not accumulate old decisions as raw history.
-- Use Git for historical recovery.
-- In consuming projects with the released extension, use traces for workflow/state truth.
-- In the CodeWiki source repository during stabilization, keep no active dogfood traces or Changes state; use Pi native tools and Git.
-- Use generated views for status, resume, routing, freshness, backlinks, and doc-code mapping.
-- Use code/tests for executable truth.
-- Prefer sparse intentional links over exhaustive wiki-link meshes.
-- Store canonical diagram source as readable YAML specs under `system/diagrams/**`; treat Mermaid, Cytoscape element JSON, SVG, or ASCII renderings as renderer targets unless explicitly promoted.
-- Do not use historical roadmap, graph, artifact, validation, or telemetry roots as target truth.
+- Keep current accepted intent in Knowledge; keep raw history in Git and Change Traces.
+- Never treat imported trust metadata as authenticated CodeWiki authority.
+- Keep Change Traces outside OKF.
+- Use generated views for navigation, status, freshness, backlinks, relationship queries, and learning retrieval.
+- Use source/tests for executable truth and Git for exact content/delivery identity.
+- Prefer sparse intentional links over exhaustive meshes.
+- Keep generated graph/search indexes disposable.
+- Do not reintroduce roadmap, graph, artifact, validation, or telemetry roots as project truth.
+- Do not fabricate provenance, verification, freshness, or semantic coverage.
 
 ## Related docs
 
 - [Product](../../product/overview.md)
-- [Design System](../../product/DESIGN.md)
+- [Alignment Model](alignment-model.md)
 - [Loop Model](loop-model.md)
 - [Decision Loop](decision-loop.md)
+- [Loop Exit](loop-exit.md)
 - [Traces](traces.md)
 - [Source Map](source-map.md)

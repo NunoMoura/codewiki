@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Change Lifecycle
-description: A CodeWiki change starts as user intent and becomes durable when it is represented consistently in KB, JSONL traces, source/tests, and Git proof.
+description: One Change carries accountable intent through Decision, global Planning, Implementation, Integration, Git/delivery boundaries, and outcome disposition while every discrepancy remains resolved, Change-accounted, or safely unknown.
 tags:
   - codewiki
   - system
@@ -11,27 +11,45 @@ timestamp: 2026-06-30T00:00:00Z
 ---
 # Change Lifecycle
 
-A CodeWiki change starts as user intent and becomes durable when it is represented consistently in KB, JSONL traces, source/tests, and Git proof.
+A Change begins when intent is explicitly persisted. One append-only Change Trace preserves complete dossier while Project Runtime owns portfolio progression.
+
+```text
+intent
+→ Decision attempts and exact disposition
+→ global Planning coverage
+→ Work Items and Assignments
+→ Implementation attempts and realization
+→ Integration and exact Git proof
+→ optional delivery effects
+→ outcome disposition
+→ retention
+```
 
 ## Flow
 
-1. Decision loop iterates until intent, requirements, alternatives, risks, KB impact, and planning handoff satisfy decision exit conditions.
-2. A decision iteration with `exit` appends accepted decision output and canonical refs to the trace.
-3. Planning loop starts from exited decision output and current KB refs, then iterates until work units, dependencies, path scopes, acceptance criteria, conflicts, and verification strategy satisfy planning exit conditions.
-4. A planning iteration with `exit` appends accepted planning output for implementation and runtime scheduling.
-5. Runtime outer loop folds traces, projects work queues, coordinates claims, starts workers, enforces budgets, and stores temporary scratch.
-6. Implementation loop starts from exited planning output, changes source/tests/docs, gathers checks/evidence, aggregates workers, and iterates until implementation exit conditions are satisfied.
-7. An implementation iteration with `exit` appends accepted implementation output, aggregate content proof, residual ownership, and publication refs when needed.
-8. Generated views update from traces, KB, source/tests, and Git refs.
-9. Retention can close, compact, archive, hydrate, or restore trace detail after policy allows it.
+1. Runtime persists bounded intent and creates one Change Trace.
+2. Decision produces immutable candidate; candidate-specific Checks fan into Exit Report.
+3. Runtime validates authority/freshness/generation/CAS and appends exact approval or terminal disposition.
+4. Global Planning observes bounded approved portfolio and produces coherent Sprints, worker-ready Work Items, dependencies, verification, Integration, and Workbench requirements.
+5. Planning Checks/Report pass; Runtime appends deterministic multi-trace epoch and repairs any partial crash before Claims.
+6. Runtime provisions private Workbenches, appends Claims, and starts compatible isolated Assignments under exact capacity/budget/isolation.
+7. Worker Reports supply candidate evidence only. Implementation constructs exact realization candidate over source/tests/Knowledge/Git/Integration facts.
+8. Implementation Checks/Report pass; Runtime appends exact realization after final guards.
+9. Separately authorized Integration, local merge, remote push, publication, release, and future deployment/observation boundaries may progress one exact proof at a time.
+10. Change records outcome observed, scheduled, not externally observable, deferred, not realized/abandoned, or indeterminate.
+11. WorkState and Work/Alignment/Learning views rebuild from canonical sources.
+12. Retention may close, compact, hydrate, or restore after no live dependency remains and Git restore refs preserve history.
 
-Failed, blocked, or route-back iterations append compact provenance and next actions, not downstream-consumable facts.
+Failed and indeterminate attempts persist compact candidate/Result/repair lineage. Full private material does not. Runtime route remains separate from Exit Report status.
 
-Chat history is continuity only. Pi native compaction may compress chat; CodeWiki-owned resume injection remains disabled during the rebuild.
+Knowledge may intentionally lead source/delivery while exact active Change accounts for transition. Unaccounted divergence is drift; missing coverage is explicit unknown and blocks unsafe progression.
+
+Chat history is continuity only. Pi native compaction may compress chat; CodeWiki Change Trace replays semantic project state, not private cognition.
 
 ## Related docs
 
+- [Alignment Model](../components/alignment-model.md)
 - [Loop Model](../components/loop-model.md)
+- [Loop Exit](../components/loop-exit.md)
 - [Traces](../components/traces.md)
-- [Loop Contracts](../components/loop-contracts.md)
 - [Runtime](../components/runtime.md)

@@ -144,9 +144,9 @@ codewiki_source_map:
 This concept anchors the package/distribution boundary inside the OKF bundle
 while preserving `README.md` as the human package entrypoint.
 
-The package component owns the npm manifest, lockfile, TypeScript entrypoints, README distribution guidance, versioned CodeWiki OS and Stage Protocol resources, optional execution-adapter peers, and install/readiness smoke coverage. Pi continues to own providers, authentication, tool mechanics, sessions, and ordinary Skill discovery.
+The package component owns the npm manifest, lockfile, standalone CLI and Project Runtime entrypoints, dashboard assets, README distribution guidance, versioned CodeWiki OS and Loop Protocol resources, optional thin Pi extension, optional execution-adapter peers, and install/readiness smoke coverage. Pi continues to own providers, authentication, model transport, tool mechanics, sessions, compaction, extensions, and ordinary Skill discovery.
 
-The root entrypoint remains harness-neutral and exports the transport-neutral `ProjectCoordinator` kernel. `src/runtime/coordinator-entrypoint.ts` is the explicit package-export facade for `./coordinator`, which exposes the detached project-service host/client boundary: daemon ensure/start/stop, exclusive election, private endpoint discovery, authenticated loopback transport, leased client registration, bounded generation-scoped event replay, remote inspection, capability-advertised semantic execution, candidate fallback, exact Assignment-worker scheduling through harness-neutral process or OCI adapters, generation fencing, exact semantic reaction scheduling, and trace-backed restart recovery. The OCI adapter is opt-in and requires the host to supply a digest-pinned worker image; package installation does not install Docker/Podman, pull an image, select credentials, or enable container execution automatically. `src/runtime/project-coordinator-daemon.ts` owns harness-neutral daemon lifecycle; `src/pi/project-coordinator-daemon.ts` is the executable launcher that dynamically loads `./pi-sdk` when its optional peer is available and installs the worktree-isolated Pi process worker adapter. During the architecture spike, `@earendil-works/pi-coding-agent` remains an optional peer and development dependency rather than a production dependency. Peer-absent packed installs start the coordinator without semantic adapters instead of silently pulling a second Pi runtime.
+The approved primary boundary is the CodeWiki CLI, Project Runtime, dashboard, and embedded published Pi SDK. Current package exports remain migration state until that standalone boundary is complete. The root entrypoint remains harness-neutral and exports the transport-neutral `ProjectCoordinator` kernel. `src/runtime/coordinator-entrypoint.ts` is the explicit package-export facade for `./coordinator`, which exposes the detached project-service host/client boundary: daemon ensure/start/stop, exclusive election, private endpoint discovery, authenticated loopback transport, leased client registration, bounded generation-scoped event replay, remote inspection, capability-advertised semantic execution, candidate fallback, exact Assignment-worker scheduling through harness-neutral process or OCI adapters, generation fencing, exact semantic reaction scheduling, and trace-backed restart recovery. The OCI adapter is opt-in and requires the host to supply a digest-pinned worker image; package installation does not install Docker/Podman, pull an image, select credentials, or enable container execution automatically. `src/runtime/project-coordinator-daemon.ts` owns harness-neutral daemon lifecycle; `src/pi/project-coordinator-daemon.ts` is the executable launcher that dynamically loads `./pi-sdk` when its optional peer is available and installs the worktree-isolated Pi process worker adapter. During the architecture spike, `@earendil-works/pi-coding-agent` remains an optional peer and development dependency rather than a production dependency. Peer-absent packed installs start the coordinator without semantic adapters instead of silently pulling a second Pi runtime.
 
 The Pi SDK subpath requires Node.js 22.19 or newer even while the harness-neutral core retains its broader engine range. Promotion to a production dependency or separate adapter package requires clean security audit, package-size review, external install proof, model/auth proof, cancellation and cleanup proof, and no duplicate-host resolution ambiguity.
 
@@ -156,7 +156,7 @@ CodeWiki is developed with Pi native coding tools, pi-lens, Git, source, tests, 
 
 Extension behavior is verified by packing the candidate and installing it into disposable external projects with isolated Pi settings. Those tests may exercise tools, prompt injection, commands, dashboards, trace lifecycle, and failure handling without granting the candidate authority over its source checkout.
 
-A stable release may be published or installed as a normal Pi package through `package.json` `pi.extensions`. Repo-local self-hosting, if ever restored, requires a separate explicit decision after external release gates pass; it is not part of ordinary development.
+A stable release may retain `package.json` `pi.extensions` for the optional thin client while shipping the standalone CLI/Runtime/dashboard as the primary product. Repo-local self-hosting, if ever restored, requires a separate explicit Decision after external release gates pass; it is not part of ordinary development.
 
 ## Ownership note
 
@@ -167,8 +167,8 @@ README has moved under `.codewiki/kb`.
 
 ## Related docs
 
-- [CodeWiki OS and Stage Protocols](codewiki-os.md)
-- [Quality Policy](quality-policy.md)
+- [CodeWiki OS and Loop Protocols](codewiki-os.md)
+- [Loop Exit](loop-exit.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Extension](extension.md)

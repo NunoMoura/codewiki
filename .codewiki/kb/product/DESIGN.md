@@ -234,7 +234,7 @@ CodeWiki borrows durable platform principles rather than imitating platform deco
 - Exact evidence before confidence language.
 - Stable spatial context during live updates.
 - One obvious primary action per local composition.
-- Progressive disclosure for technical proof, never concealment of hard conditions.
+- Progressive disclosure for technical proof, never concealment of failed or indeterminate required Checks.
 - Familiar keyboard, touch, focus, and recovery behavior.
 - Motion only when it explains a real state transition.
 - Honest unknown, stale, excluded, isolated, and unverified states.
@@ -318,7 +318,7 @@ Backlog answers:
 
 Use an intake/triage composition: a compact proposal list or grouped queue beside one focused detail region on desktop, and a list-to-detail transition on mobile. Rows prioritize title, origin, age/freshness, affected concepts, and current Decision state. They do not show a miniature lifecycle pipeline.
 
-Open hard conditions appear before proven standards. Completed Decision work becomes a receipt attached to the exact Change revision. Rejected, deferred, withdrawn, and superseded proposals remain searchable without competing with active intake.
+Failed and indeterminate required Checks appear before passing Results. Completed Decision work becomes a receipt attached to the exact Change revision. Rejected, deferred, withdrawn, and superseded proposals remain searchable without competing with active intake.
 
 Human attention appears only for underdetermined meaning, materially different valid outcomes, semantic/risk/authority forks, or reserved destructive/external/publication authority. Routine validation, retry, tests, accessibility, preview, and repair remain autonomous.
 
@@ -340,7 +340,7 @@ Default presentation is a bounded planning-horizon graph, not the entire OKF or 
 - dependency, contribution, conflict, rollback, and integration edges;
 - ready, claimed/frozen, held, and completed distinctions.
 
-Selection opens an adjacent or in-place inspector with authoritative inputs, coverage, active quality standards, open hard conditions, exact refs, recovery, and relevant OKF/source neighborhood. Keep graph labels readable at final size. Never solve density by shrinking text below comfortable reading size.
+Selection opens an adjacent or in-place inspector with authoritative inputs, coverage, active Checks and activation reasons, failed/indeterminate Results, exact refs, recovery, and relevant OKF/source neighborhood. Keep graph labels readable at final size. Never solve density by shrinking text below comfortable reading size.
 
 Provide a structured list/table equivalent with identical selection and filtering. Graph position is presentation only. Edge meaning always has text, direction, and non-color encoding.
 
@@ -428,24 +428,24 @@ Use a focused impact bridge when helpful: Product/Design concepts on one side, C
 
 Proof-first assurance remains a shared inspector grammar, applied to the claim owner:
 
-- Backlog attaches Decision assurance to the exact Change revision;
-- Planning attaches assurance to the Planning epoch, Sprint, Work Item, dependency, or coverage claim;
-- Implementation attaches assurance to an Assignment result, integration result, accepted realization, or Git proof.
+- Backlog attaches Decision candidate, Check Results, Exit Report, and approval receipt to exact Change revision;
+- Planning attaches candidate/Report evidence to Planning epoch, Sprint, Work Item, dependency, or coverage claim;
+- Implementation attaches Results and proof to exact candidate, Assignment evidence, Integration result, accepted realization, or Git boundary.
 
 Every assurance view explains:
 
 - what must be established;
 - authoritative input and authority boundary;
 - current claimed result;
-- open hard conditions before completed proof;
-- met, failed, running, masked, and inapplicable standards;
-- evidence bound to the exact revision, digest, candidate, tree, or commit;
-- exit, recovery, invalidation, and next safe action;
+- failed, indeterminate, and pending required Checks before completed proof;
+- pass, fail, indeterminate, pending, skipped, and inapplicable Check state with enforcement and `activatedBy` reasons;
+- evidence bound to exact revision, digest, candidate, Check, Result, tree, or commit;
+- Exit Report status, separate Runtime route, recovery, invalidation, and next safe action;
 - factual history under progressive disclosure.
 
-No generic trust score, model-confidence percentage, private reasoning, or decorative activity. One unmet hard condition remains prominent even when most standards pass. Missing, stale, unexecuted, excluded, superseded, and invalidated evidence is explicit.
+No generic trust score, model-confidence percentage, private reasoning, or decorative activity. One failed or indeterminate required Check remains prominent even when most Results pass. Missing, stale, unexecuted, excluded, superseded, and invalidated evidence is explicit.
 
-On mobile, show question, result, and open hard conditions first. Collapse detailed standards, evidence, and history by default while preserving exact counts and accessible expansion. Never compress proof into an unexplained badge merely to reduce height.
+On mobile, show question, Report status, Runtime route, and failed/indeterminate required Checks first. Collapse detailed Checks, evidence, and history by default while preserving exact counts and accessible expansion. Never compress proof into an unexplained badge merely to reduce height.
 
 ## Source-backed editing
 
@@ -519,7 +519,7 @@ Motion explains continuity, hierarchy, and real runtime transitions. It never ad
 - Keep readable text at final size; never scale text snapshots.
 - Use scoped View Transitions with complete nonanimated fallback.
 - Animate transform and opacity rather than routine layout properties.
-- New scheduler jobs, standard completion, route-back, integration, or terminal state may animate once.
+- New scheduler jobs, Check Result completion, route-back, Integration, or terminal state may animate once.
 - Live refresh never replays page entrance choreography.
 - No perpetual decoration, scroll hijacking, parallax, bouncing, or simulated “alive” activity.
 
@@ -579,11 +579,11 @@ Temporary screenshots and prototypes are review evidence, not lasting product tr
 - Do use Change detail as a dossier rather than a pipeline.
 - Do render and edit canonical Markdown/YAML through guarded source patches.
 - Do show integrated state separately from isolated worker output.
-- Do keep open hard conditions ahead of completed proof.
+- Do keep failed and indeterminate required Checks ahead of completed proof.
 - Do let source-backed content, graphs, diagrams, and execution lanes dominate chrome.
 - Do preserve exact technical proof behind calm progressive disclosure.
 - Do visually approve desktop and mobile before production implementation.
-- Don't use a four-stage Change progress rail.
+- Don't use a four-step Change progress rail.
 - Don't present every Change, Sprint, Work Item, or concept through one generic card component.
 - Don't turn the full OKF corpus into one global graph.
 - Don't make session count or animation stand in for progress.

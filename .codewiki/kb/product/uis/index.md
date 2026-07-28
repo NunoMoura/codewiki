@@ -2,4 +2,4 @@
 
 ## Concepts
 
-* [Project Dashboard and Pi Client](terminal.md) - CodeWiki combines a project-scoped local dashboard with conversational Pi clients while the control plane owns Backlog, Planning, Implementation, and execution sessions.
+* [Project Dashboard and Optional Pi Client](terminal.md) - Standalone CLI and dashboard are primary Project Runtime clients; optional thin Pi client supports conversational intent, authority, explanation, and supervision.
