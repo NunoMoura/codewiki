@@ -12,8 +12,11 @@ codewiki_component: loop_exit
 codewiki_components:
   - loop_exit
 codewiki_source_patterns:
+  - src/semantic-loop.ts
+  - src/loop-exit/**
   - src/loops/**
 codewiki_test_patterns:
+  - tests/loop-exit/**
   - tests/loops/**
   - tests/decision/**
   - tests/planning/**
@@ -23,8 +26,11 @@ codewiki_role: loop_exit_engine
 codewiki_source_map:
   - id: loop_exit
     source_patterns:
+      - src/semantic-loop.ts
+      - src/loop-exit/**
       - src/loops/**
     test_patterns:
+      - tests/loop-exit/**
       - tests/loops/**
       - tests/decision/**
       - tests/planning/**
@@ -347,7 +353,7 @@ src/
 
 Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Clean cuts retain no old-path re-exports.
 
-Current `src/loops/**` Quality graph/judge/evaluator machinery remains executable migration state until mechanical boundary, identity, runner, and per-Loop cuts replace it in the ratified order.
+The unused native contracts, catalog, and resolver now occupy `src/loop-exit/**` without old-path exports. They retain legacy internal names while exact identity is hardened. Current production `src/loops/**` graph/judge/evaluator machinery remains executable migration state until runner and per-Loop cuts replace it in the ratified order.
 
 ## Token-efficiency rule
 

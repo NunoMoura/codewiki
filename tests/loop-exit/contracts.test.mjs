@@ -5,7 +5,7 @@ import {
 	QUALITY_POLICY_SCHEMA_VERSION,
 	assertValidQualityPolicyResolution,
 	createQualityPolicyResolution,
-} from "../../src/loops/quality-policy.ts";
+} from "../../src/loop-exit/contracts.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const SELECTOR_DIGEST = `sha256:${"b".repeat(64)}`;

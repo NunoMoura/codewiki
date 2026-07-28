@@ -220,7 +220,7 @@ Operational telemetry remains separate from candidate, policy, report, and canon
 
 ## Current migration drift
 
-Current source still uses legacy Quality Standard, Assessment, gate, graph, judge, profile, pack, and review vocabulary. The unused native registry/resolver foundation remains under `src/loops/**`, while production Decision, Planning, and Implementation execute separate legacy paths. The clean migration moves the foundation directly to `src/loop-exit/**`, establishes Loop-owned `exit/**` declarations, hardens exact identity, then cuts each Loop without compatibility re-exports.
+Current source still uses legacy Quality Standard, Assessment, gate, graph, judge, profile, pack, and review vocabulary. The unused native contracts, catalog, and resolver have moved directly to `src/loop-exit/**` without old-path exports and now depend on the persistence-independent `SemanticLoop` type. Their legacy internal contract names remain until exact identity hardening. Production Decision, Planning, and Implementation still execute separate legacy paths; Loop-owned `exit/**`, Runtime composition, the native runner, and clean Loop cuts remain pending.
 
 ## Related docs
 

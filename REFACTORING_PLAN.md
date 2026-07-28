@@ -267,13 +267,13 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 
 ## Next — Loop-exit package boundary cut
 
-- [ ] Preserve and understand the four current modified native-foundation files before moving them.
-- [ ] Move and rename the unused native foundation from `src/loops/**` directly to `src/loop-exit/**`, with mirrored `tests/loop-exit/**`; do not create the superseded `src/quality/**` target or old-path re-exports.
-- [ ] Add shared `SemanticLoop` type independent of trace persistence types.
+- [x] Preserve, validate, and checkpoint the four native-foundation files before moving them (`7763173`).
+- [x] Move and rename the unused native foundation from `src/loops/**` directly to `src/loop-exit/**`, with mirrored `tests/loop-exit/**`; no superseded `src/quality/**` target or old-path re-exports.
+- [x] Add shared `SemanticLoop` type independent of trace persistence types and retain `TraceLoop` as the persistence alias during trace migration.
 - [ ] Establish Loop-owned `exit/**` directories and `src/runtime/loop-exit-runtime.ts` composition root without changing current production behavior.
 - [ ] Replace one public dual-registry design with one catalog surface that validates/indexes trusted Checks and implementations.
 - [ ] Remove the `src/index.ts` ↔ `src/api/index.ts` barrel cycle.
-- [ ] Update source layout and ownership mappings only when target paths exist.
+- [x] Update source ownership mappings for `src/semantic-loop.ts`, `src/loop-exit/**`, and `tests/loop-exit/**` after those paths exist.
 
 ## Next — exact identity and authority hardening
 

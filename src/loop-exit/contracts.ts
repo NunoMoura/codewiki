@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { TraceLoop } from "../traces/types.ts";
+import type { SemanticLoop as TraceLoop } from "../semantic-loop.ts";
 
 export const QUALITY_POLICY_SCHEMA_VERSION = 1;
 

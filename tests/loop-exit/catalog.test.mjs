@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { createQualityStandardRegistry } from "../../src/loops/quality-standard-registry.ts";
+import { createQualityStandardRegistry } from "../../src/loop-exit/catalog.ts";
 
 function projectRegistration(overrides = {}) {
 	return {

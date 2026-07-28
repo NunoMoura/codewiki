@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { resolveQualityPolicy } from "../../src/loops/quality-policy-resolver.ts";
-import { assertValidQualityPolicyResolution } from "../../src/loops/quality-policy.ts";
-import { createQualityStandardRegistry } from "../../src/loops/quality-standard-registry.ts";
+import { resolveQualityPolicy } from "../../src/loop-exit/resolve-policy.ts";
+import { assertValidQualityPolicyResolution } from "../../src/loop-exit/contracts.ts";
+import { createQualityStandardRegistry } from "../../src/loop-exit/catalog.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
@@ -26,7 +26,7 @@ function selectorInput(stage = "decision") {
 		],
 		projectTraits: [],
 		technologies: [],
-		paths: ["src/loops/quality-policy.ts"],
+		paths: ["src/loop-exit/contracts.ts"],
 	};
 }
 

@@ -1,8 +1,8 @@
-import type { TraceLoop } from "../traces/types.ts";
+import type { SemanticLoop as TraceLoop } from "../semantic-loop.ts";
 import type {
 	QualityEnforcementMode,
 	QualityStandard,
-} from "./quality-policy.ts";
+} from "./contracts.ts";
 
 export const QUALITY_STANDARD_REGISTRY_VERSION = "1.0.0";
 

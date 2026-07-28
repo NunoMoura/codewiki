@@ -6,7 +6,7 @@ import {
 	type ChangeRisk,
 	type ChangeType,
 } from "../changes/types.ts";
-import type { TraceLoop } from "../traces/types.ts";
+import type { SemanticLoop as TraceLoop } from "../semantic-loop.ts";
 import {
 	createQualityPolicyResolution,
 	qualityPolicyDigest,
@@ -15,12 +15,12 @@ import {
 	type QualityPolicyExclusionReason,
 	type QualityPolicyResolution,
 	type QualityStandardBinding,
-} from "./quality-policy.ts";
+} from "./contracts.ts";
 import {
 	createQualityStandardRegistry,
 	type QualityStandardRegistration,
 	type QualityStandardRegistry,
-} from "./quality-standard-registry.ts";
+} from "./catalog.ts";
 
 const QUALITY_POLICY_SELECTOR_VERSION = "1.0.0";
 
