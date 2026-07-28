@@ -272,7 +272,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [x] Add shared `SemanticLoop` type independent of trace persistence types and retain `TraceLoop` as the persistence alias during trace migration.
 - [x] Establish identity-only Loop-owned `exit/**` declarations and `src/runtime/loop-exit-runtime.ts`, composing one frozen `LoopExitSuite` and closed catalog without changing current production behavior.
 - [x] Replace the moved foundation's Registry API with one Catalog surface, internal kernel registration, catalog-assigned project authority, closed verifier/adapter identities, and no resolver-injected catalog.
-- [ ] Remove the `src/index.ts` ↔ `src/api/index.ts` barrel cycle.
+- [x] Remove the `src/index.ts` ↔ `src/api/index.ts` barrel cycle by moving layout metadata into `src/api/index.ts` and keeping root re-export direction one-way.
 - [x] Update source ownership mappings for `src/semantic-loop.ts`, `src/loop-exit/**`, and `tests/loop-exit/**` after those paths exist.
 
 ## Next — exact identity and authority hardening

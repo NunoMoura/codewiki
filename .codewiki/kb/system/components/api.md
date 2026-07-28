@@ -51,7 +51,7 @@ codewiki_source_map:
 ---
 # API
 
-`src/api/**` is the stable harness-neutral package/source facade used by Project Runtime, standalone CLI, dashboard, optional Pi client, tests, and future adapters. Root exports include current `wiki_*` compatibility facades, OKF compatibility, Runtime/Loop-exit contracts, query contracts, and stable types. `src/pi/**` contains entrypoint-isolated Pi conversational/execution adapters for packed external installs; repo-local dogfooding remains disabled. `src/cli/index.ts` is current migration scaffold for approved primary standalone CLI.
+`src/api/**` is the stable harness-neutral package/source facade used by Project Runtime, standalone CLI, dashboard, optional Pi client, tests, and future adapters. `src/api/index.ts` owns package-layout metadata; `src/index.ts` re-exports the API facade in one direction, and API modules never import the package root. Root exports include current `wiki_*` compatibility facades, OKF compatibility, Runtime/Loop-exit contracts, query contracts, and stable types. `src/pi/**` contains entrypoint-isolated Pi conversational/execution adapters for packed external installs; repo-local dogfooding remains disabled. `src/cli/index.ts` is current migration scaffold for approved primary standalone CLI.
 
 Target facade roots:
 

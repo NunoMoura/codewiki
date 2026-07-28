@@ -1,3 +1,28 @@
+export const CODEWIKI_EXTENSION_AVAILABLE = true as const;
+
+export const sourceLayout = {
+	loopRoots: ["decision", "planning", "implementation"],
+	supportRoots: [
+		"api",
+		"loop-exit",
+		"loops",
+		"dashboard",
+		"traces",
+		"views",
+		"work-state",
+		"knowledge",
+		"git",
+		"cli",
+		"pi",
+		"runtime",
+		"error-handling",
+		"project",
+		"utils",
+	],
+} as const;
+
+export type SourceLayout = typeof sourceLayout;
+
 export * from "./state.ts";
 export * from "./wiki-archive.ts";
 export * from "./wiki-config.ts";
@@ -26,8 +51,6 @@ export type {
 	WikiPlanMode,
 } from "./wiki-plan.ts";
 export * from "./wiki-runtime.ts";
-export { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../index.ts";
-export type { SourceLayout } from "../index.ts";
 export type {
 	ImplementationChange,
 	ImplementationChangeInput,

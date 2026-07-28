@@ -9,9 +9,12 @@ import tsconfig from "../tsconfig.json" with { type: "json" };
 import buildTsconfig from "../tsconfig.build.json" with { type: "json" };
 
 const readme = readFileSync("README.md", "utf8");
+const sourceIndex = readFileSync("src/index.ts", "utf8");
+const apiIndex = readFileSync("src/api/index.ts", "utf8");
 
 const expectedSupportRoots = [
 	"api",
+	"loop-exit",
 	"loops",
 	"dashboard",
 	"traces",
@@ -42,6 +45,11 @@ describe("fresh scaffold", () => {
 		assert.equal(sourceLayout.supportRoots.includes("graph"), false);
 		assert.equal(sourceLayout.supportRoots.includes("telemetry"), false);
 		assert.equal(sourceLayout.supportRoots.includes("agency"), false);
+	});
+
+	it("keeps the package root and API facade acyclic", () => {
+		assert.match(sourceIndex, /export \* from "\.\/api\/index\.ts"/);
+		assert.doesNotMatch(apiIndex, /from "\.\.\/index\.ts"/);
 	});
 
 	it("declares runtime requirements for generated package output", () => {
