@@ -21,50 +21,31 @@ export interface ImplementationWorkerReportInput {
 	workerId: string;
 	workUnitId: string;
 	planningRefs?: string[];
-	planning_refs?: string[];
 	status?: ImplementationWorkerStatus | string;
 	claimId?: string;
-	claim_id?: string;
 	message?: string;
 	refs?: string[];
 	sessionId?: string;
-	session_id?: string;
 	sessionFile?: string;
-	session_file?: string;
 	changeInputs?: ImplementationChangeInput[];
-	change_inputs?: ImplementationChangeInput[];
-	changes?: ImplementationChangeInput[];
 	proof?: ImplementationWorkerProofInput;
-	workerProof?: ImplementationWorkerProofInput;
-	worker_proof?: ImplementationWorkerProofInput;
-	baseSha?: string;
-	base_sha?: string;
-	headSha?: string;
-	head_sha?: string;
-	treeSha?: string;
-	tree_sha?: string;
-	workingTreeDigest?: string;
-	working_tree_digest?: string;
-	worktreePath?: string;
-	worktree_path?: string;
-	branch?: string;
-	changedPaths?: string[];
-	changed_paths?: string[];
-	changedFiles?: string[];
-	changed_files?: string[];
-	checksRun?: string[];
-	checks_run?: string[];
-	validationVerdict?: string;
-	validation_verdict?: string;
-	validationRef?: string;
-	validation_ref?: string;
-	buildRef?: string;
-	build_ref?: string;
-	patchRef?: string;
-	patch_ref?: string;
-	clean?: boolean;
 	blockers?: ImplementationWorkerBlockerInput[];
 }
+
+const IMPLEMENTATION_WORKER_REPORT_FIELDS = new Set([
+	"workerId",
+	"workUnitId",
+	"planningRefs",
+	"status",
+	"claimId",
+	"message",
+	"refs",
+	"sessionId",
+	"sessionFile",
+	"changeInputs",
+	"proof",
+	"blockers",
+]);
 
 export interface ImplementationWorkerReportAggregation {
 	workerReports: ImplementationWorkerReportSummary[];
@@ -98,22 +79,19 @@ export function aggregateImplementationWorkerReports(
 function workerReportSummary(
 	input: ImplementationWorkerReportInput,
 ): ImplementationWorkerReportSummary {
-	const proof = normalizeImplementationWorkerProof(input);
+	assertImplementationWorkerReport(input);
+	const proof = normalizeImplementationWorkerProof(workerProofInput(input));
 	return {
 		workerId: text(input.workerId),
 		workUnitId: text(input.workUnitId),
 		planningRefs: planningRefs(input),
 		status: normalizeWorkerStatus(input.status),
-		...(text(input.claimId ?? input.claim_id)
-			? { claimId: text(input.claimId ?? input.claim_id) }
-			: {}),
+		...(text(input.claimId) ? { claimId: text(input.claimId) } : {}),
 		message: workerMessage(input),
 		refs: workerRefs(input),
-		...(text(input.sessionId ?? input.session_id)
-			? { sessionId: text(input.sessionId ?? input.session_id) }
-			: {}),
-		...(text(input.sessionFile ?? input.session_file)
-			? { sessionFile: text(input.sessionFile ?? input.session_file) }
+		...(text(input.sessionId) ? { sessionId: text(input.sessionId) } : {}),
+		...(text(input.sessionFile)
+			? { sessionFile: text(input.sessionFile) }
 			: {}),
 		...(proof ? { proof } : {}),
 	};
@@ -135,7 +113,7 @@ function workerChangeInput(
 	metadata: Partial<ImplementationChangeInput>,
 	index: number,
 ): ImplementationChangeInput {
-	const proof = normalizeImplementationWorkerProof(input);
+	const proof = normalizeImplementationWorkerProof(workerProofInput(input));
 	const contentProof = contentProofFromWorkerProof(proof);
 	return {
 		...change,
@@ -201,23 +179,16 @@ function workerChangeMetadata(
 	return {
 		workerId: text(input.workerId),
 		workUnitId: text(input.workUnitId),
-		...optionalTextField("claimId", input.claimId ?? input.claim_id),
-		...optionalTextField("sessionId", input.sessionId ?? input.session_id),
-		...optionalTextField(
-			"sessionFile",
-			input.sessionFile ?? input.session_file,
-		),
+		...optionalTextField("claimId", input.claimId),
+		...optionalTextField("sessionId", input.sessionId),
+		...optionalTextField("sessionFile", input.sessionFile),
 	};
 }
 
 function rawWorkerChangeInputs(
 	input: ImplementationWorkerReportInput,
 ): ImplementationChangeInput[] {
-	return [
-		...objectList<ImplementationChangeInput>(input.changeInputs),
-		...objectList<ImplementationChangeInput>(input.change_inputs),
-		...objectList<ImplementationChangeInput>(input.changes),
-	];
+	return objectList<ImplementationChangeInput>(input.changeInputs);
 }
 
 function planningRefsForChange(
@@ -229,10 +200,7 @@ function planningRefsForChange(
 }
 
 function planningRefs(input: ImplementationWorkerReportInput): string[] {
-	const explicitRefs = unique([
-		...stringList(input.planningRefs),
-		...stringList(input.planning_refs),
-	]);
+	const explicitRefs = unique(stringList(input.planningRefs));
 	if (explicitRefs.length > 0) return explicitRefs;
 	return unique(
 		rawWorkerChangeInputs(input).flatMap((change) =>
@@ -252,8 +220,24 @@ function workerRefs(input: ImplementationWorkerReportInput): string[] {
 	]);
 }
 
+function workerProofInput(
+	input: ImplementationWorkerReportInput,
+): ImplementationWorkerProofInput {
+	return {
+		...input.proof,
+		workerId: text(input.workerId),
+		workUnitId: text(input.workUnitId),
+		planningRefs: planningRefs(input),
+		claimId: text(input.claimId),
+		sessionId: text(input.sessionId),
+		sessionFile: text(input.sessionFile),
+		status: text(input.status),
+		changeInputs: rawWorkerChangeInputs(input),
+	};
+}
+
 function workerProofRefs(input: ImplementationWorkerReportInput): string[] {
-	const proof = normalizeImplementationWorkerProof(input);
+	const proof = normalizeImplementationWorkerProof(workerProofInput(input));
 	return proof
 		? [proof.digest, proof.validationRef, proof.patchRef].filter(
 				(ref): ref is string => Boolean(ref),
@@ -269,6 +253,21 @@ function workerMessage(input: ImplementationWorkerReportInput): string {
 			.filter(Boolean)
 			.join(" ")
 	);
+}
+
+function assertImplementationWorkerReport(
+	input: ImplementationWorkerReportInput,
+): void {
+	if (!input || typeof input !== "object" || Array.isArray(input)) {
+		throw new Error("Implementation worker report must be an object.");
+	}
+	for (const key of Object.keys(input)) {
+		if (!IMPLEMENTATION_WORKER_REPORT_FIELDS.has(key)) {
+			throw new Error(
+				`Implementation worker report received unsupported field ${key}.`,
+			);
+		}
+	}
 }
 
 function normalizeWorkerStatus(value: unknown): ImplementationWorkerStatus {

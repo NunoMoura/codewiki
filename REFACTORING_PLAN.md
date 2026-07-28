@@ -283,6 +283,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
   - [x] Replace broad Implementation evidence `Omit` input with one normalized allowlist; reject caller proof, approval authority, runtime routing, and deprecated aliases.
   - [x] Delete duplicate `archiveDispositionInput` and its snake-case aliases; retain one exact normalized archive disposition contract.
   - [x] Delete snake-case fields from canonical `ImplementationChangeInput`, its normalizers, worker-proof projection, and historical path explanation; reject unknown nested fields.
+  - [x] Collapse canonical `ImplementationWorkerReportInput` and `ImplementationWorkerProofInput` to camel-case-only contracts, one `changeInputs` collection, and one nested `proof`; delete flattened proof fields and recursive wrappers.
 - [ ] Replace global-by-id registration with Loop-qualified Check identity binding exact criterion digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, and catalog digest.
 - [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.
 - [ ] Derive approved additions/exclusions, rollout progression, and frozen Planning minimums only from canonical runtime observations.

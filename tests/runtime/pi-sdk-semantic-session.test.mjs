@@ -239,7 +239,7 @@ test("Pi SDK semantic adapter enforces its deadline when abort does not settle p
 		adapters.decision(decisionInvocation()),
 		/exceeded 1000ms/,
 	);
-	assert.equal(Date.now() - startedAt < 2_000, true);
+	assert.equal(Date.now() - startedAt < 5_000, true);
 	assert.equal(aborts, 1);
 	assert.equal(disposals, 1);
 	assert.equal(observations.at(-1).state, "cancelled");

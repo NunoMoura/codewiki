@@ -668,7 +668,7 @@ describe("runtime host worker session revive", () => {
 			assert.equal(watched.workerStatuses[0].state, "completed");
 			assert.equal(watched.completions.length, 1);
 			assert.equal(watched.workerReports[0].status, "completed");
-			assert.deepEqual(watched.workerReports[0].changedFiles, [
+			assert.deepEqual(watched.workerReports[0].proof?.changedPaths, [
 				"src/runtime/a.ts",
 			]);
 			assert.equal(watched.hostErrors.length, 0);

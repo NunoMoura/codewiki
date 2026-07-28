@@ -65,13 +65,15 @@ describe("Pi worker completion normalization", () => {
 			"trace:TRACE-pi-a:planning:iteration:1#work:WU-a",
 		]);
 		assert.equal(result.message, "Worker finished.");
-		assert.deepEqual(result.changedFiles, ["src/runtime/work-unit-claims.ts"]);
-		assert.deepEqual(result.checksRun, ["npm test"]);
-		assert.equal(result.headSha, "abc1234");
-		assert.equal(result.treeSha, "def5678");
-		assert.equal(result.workingTreeDigest, "sha256:abc123");
+		assert.deepEqual(result.proof?.changedPaths, [
+			"src/runtime/work-unit-claims.ts",
+		]);
+		assert.deepEqual(result.proof?.checksRun, ["npm test"]);
+		assert.equal(result.proof?.headSha, "abc1234");
+		assert.equal(result.proof?.treeSha, "def5678");
+		assert.equal(result.proof?.workingTreeDigest, "sha256:abc123");
 		assert.equal(
-			result.validationRef,
+			result.proof?.validationRef,
 			"tests/runtime/pi-worker-reports.test.mjs",
 		);
 		assert.equal(result.changeInputs[0].id, "IC-worker-a");
@@ -114,8 +116,8 @@ describe("Pi worker completion normalization", () => {
 
 		assert.equal(result.status, "completed");
 		assert.deepEqual(result.planningRefs, [planningRef]);
-		assert.deepEqual(result.changedFiles, ["src/pi/worker-reports.ts"]);
-		assert.deepEqual(result.checksRun, [
+		assert.deepEqual(result.proof?.changedPaths, ["src/pi/worker-reports.ts"]);
+		assert.deepEqual(result.proof?.checksRun, [
 			"node --test tests/runtime/pi-worker-reports.test.mjs",
 		]);
 		assert.equal(result.refs.includes("sha256:abcdef"), true);
@@ -273,7 +275,9 @@ describe("Pi worker completion normalization", () => {
 			);
 			assert.equal(completions[1].workerStart.outputFile, missingOutput);
 			assert.equal(results[0].status, "completed");
-			assert.deepEqual(results[0].changedFiles, ["src/pi/worker-reports.ts"]);
+			assert.deepEqual(results[0].proof?.changedPaths, [
+				"src/pi/worker-reports.ts",
+			]);
 			assert.equal(results[1].status, "failed");
 			assert.match(
 				results[1].message,

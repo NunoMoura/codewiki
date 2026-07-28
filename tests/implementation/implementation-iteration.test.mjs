@@ -12,6 +12,7 @@ import {
 	normalizeImplementationChanges,
 } from "../../src/implementation/evidence.ts";
 import { evaluateImplementationExit } from "../../src/implementation/loop.ts";
+import { aggregateImplementationWorkerReports } from "../../src/implementation/workers.ts";
 import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
@@ -131,6 +132,20 @@ describe("implementation iteration runner", () => {
 					},
 				]),
 			/Implementation change input 0 received unsupported field planning_refs/,
+		);
+	});
+
+	it("rejects deprecated worker-report aliases", () => {
+		assert.throws(
+			() =>
+				aggregateImplementationWorkerReports([
+					{
+						workerId: "worker-deprecated",
+						workUnitId: "WU-deprecated",
+						planning_refs: ["trace:deprecated"],
+					},
+				]),
+			/Implementation worker report received unsupported field planning_refs/,
 		);
 	});
 
@@ -871,10 +886,12 @@ describe("implementation iteration runner", () => {
 					workUnitId: "WU-001",
 					claimId: "claim-proof-fill",
 					planningRefs: [planningEvent.id],
-					headSha: "abc1234",
-					treeSha: "def5678",
-					changedFiles: ["src/implementation/workers.ts"],
-					checksRun: ["npm test"],
+					proof: {
+						headSha: "abc1234",
+						treeSha: "def5678",
+						changedPaths: ["src/implementation/workers.ts"],
+						checksRun: ["npm test"],
+					},
 					changeInputs: [
 						{
 							id: "IC-worker-proof-fill",

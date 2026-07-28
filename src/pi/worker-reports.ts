@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import type { ImplementationChangeInput } from "../implementation/types.ts";
+import type { ImplementationWorkerProofInput } from "../implementation/worker-proof.ts";
 import type {
 	ImplementationWorkerBlockerInput,
 	ImplementationWorkerReportInput,
@@ -102,12 +103,10 @@ function hasImplementationEvidence(
 	report: ImplementationWorkerReportInput,
 ): boolean {
 	return [
-		report.changedFiles,
-		report.changed_files,
-		report.checksRun,
-		report.checks_run,
+		report.proof?.changedPaths,
+		report.proof?.checks,
+		report.proof?.checksRun,
 		report.changeInputs,
-		report.change_inputs,
 		report.refs,
 	].some((items) => Array.isArray(items) && items.length > 0);
 }
@@ -256,34 +255,45 @@ function completionChanges(
 function completionProof(
 	data: Record<string, unknown>,
 ): Partial<ImplementationWorkerReportInput> {
-	return {
-		...optionalObjectField(
-			"proof",
-			data.proof ?? data.workerProof ?? data.worker_proof,
-		),
-		...optionalTextField("baseSha", data.baseSha ?? data.base_sha),
-		...optionalTextField("headSha", data.headSha ?? data.head_sha),
-		...optionalTextField("treeSha", data.treeSha ?? data.tree_sha),
+	const nested = objectRecord(data.proof ?? data.workerProof ?? data.worker_proof);
+	const source = { ...data, ...nested };
+	const proof: ImplementationWorkerProofInput = {
+		...optionalTextField("baseSha", source.baseSha ?? source.base_sha),
+		...optionalTextField("headSha", source.headSha ?? source.head_sha),
+		...optionalTextField("treeSha", source.treeSha ?? source.tree_sha),
 		...optionalTextField(
 			"workingTreeDigest",
-			data.workingTreeDigest ?? data.working_tree_digest,
+			source.workingTreeDigest ?? source.working_tree_digest,
+		),
+		...optionalTextField(
+			"worktreePath",
+			source.worktreePath ?? source.worktree_path,
+		),
+		...optionalTextField("branch", source.branch),
+		...optionalListField(
+			"changedPaths",
+			source.changedPaths ??
+				source.changed_paths ??
+				source.changedFiles ??
+				source.changed_files,
 		),
 		...optionalListField(
-			"changedFiles",
-			data.changedFiles ?? data.changed_files,
+			"checksRun",
+			source.checksRun ?? source.checks_run,
 		),
-		...optionalListField("checksRun", data.checksRun ?? data.checks_run),
 		...optionalTextField(
 			"validationVerdict",
-			data.validationVerdict ?? data.validation_verdict,
+			source.validationVerdict ?? source.validation_verdict,
 		),
 		...optionalTextField(
 			"validationRef",
-			data.validationRef ?? data.validation_ref,
+			source.validationRef ?? source.validation_ref,
 		),
-		...optionalTextField("buildRef", data.buildRef ?? data.build_ref),
-		...optionalTextField("patchRef", data.patchRef ?? data.patch_ref),
+		...optionalTextField("buildRef", source.buildRef ?? source.build_ref),
+		...optionalTextField("patchRef", source.patchRef ?? source.patch_ref),
+		...(typeof source.clean === "boolean" ? { clean: source.clean } : {}),
 	};
+	return Object.keys(proof).length > 0 ? { proof } : {};
 }
 
 function completionBlockers(
@@ -322,16 +332,6 @@ function optionalListField<Key extends string>(
 	const output = stringList(value);
 	return output.length > 0
 		? ({ [key]: output } as Partial<Record<Key, string[]>>)
-		: {};
-}
-
-function optionalObjectField<Key extends string>(
-	key: Key,
-	value: unknown,
-): Partial<Record<Key, Record<string, unknown>>> {
-	const output = objectRecord(value);
-	return Object.keys(output).length > 0
-		? ({ [key]: output } as Partial<Record<Key, Record<string, unknown>>>)
 		: {};
 }
 

@@ -10,20 +10,20 @@ import {
 describe("implementation worker proof normalization", () => {
 	it("normalizes worker proof metadata deterministically", () => {
 		const input = {
-			worker_id: " worker-1 ",
-			task_id: " WU-001 ",
-			claim_id: " claim-1 ",
-			planning_refs: ["trace:TRACE-proof:planning:iteration:1#work:WU-001"],
-			base_sha: "aaa111",
+			workerId: " worker-1 ",
+			workUnitId: " WU-001 ",
+			claimId: " claim-1 ",
+			planningRefs: ["trace:TRACE-proof:planning:iteration:1#work:WU-001"],
+			baseSha: "aaa111",
 			headSha: "bbb222",
-			tree_sha: "ccc333",
-			worktree_path: "/tmp/worktrees/WU-001",
+			treeSha: "ccc333",
+			worktreePath: "/tmp/worktrees/WU-001",
 			branch: "codewiki/TRACE-proof/WU-001/worker-1",
-			changed_files: ["./src/b.ts", "src/a.ts", "src/a.ts", "src\\c.ts"],
-			checks_run: ["npm test", "npm test"],
-			validation_ref: "tests/implementation/worker-proof.test.mjs",
+			changedPaths: ["./src/b.ts", "src/a.ts", "src/a.ts", "src\\c.ts"],
+			checksRun: ["npm test", "npm test"],
+			validationRef: "tests/implementation/worker-proof.test.mjs",
 			clean: true,
-			change_inputs: [
+			changeInputs: [
 				{
 					codePaths: ["src/d.ts"],
 					checkResults: [{ command: "node --test worker", status: "pass" }],
@@ -33,7 +33,7 @@ describe("implementation worker proof normalization", () => {
 		const proof = normalizeImplementationWorkerProof(input);
 		const proofAgain = normalizeImplementationWorkerProof({
 			...input,
-			changed_files: ["src\\c.ts", "src/a.ts", "./src/b.ts"],
+			changedPaths: ["src\\c.ts", "src/a.ts", "./src/b.ts"],
 		});
 
 		assert.equal(proof.workerId, "worker-1");
@@ -54,6 +54,18 @@ describe("implementation worker proof normalization", () => {
 			tree: "ccc333",
 		});
 		assert.equal(workerProofRefs(proof).includes(proof.digest), true);
+	});
+
+	it("rejects deprecated proof aliases", () => {
+		assert.throws(
+			() =>
+				normalizeImplementationWorkerProof({
+					workerId: "worker-1",
+					workUnitId: "WU-001",
+					changed_files: ["src/legacy.ts"],
+				}),
+			/Implementation worker proof received unsupported field changed_files/,
+		);
 	});
 
 	it("detects overlap, duplicate proof, and base mismatch conflicts", () => {

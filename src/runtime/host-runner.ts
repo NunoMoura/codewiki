@@ -342,14 +342,9 @@ function mergeWatchedWorkerReports(
 		return {
 			...status,
 			state,
-			planningRefs:
-				result.planningRefs ?? result.planning_refs ?? status.planningRefs,
-			...((result.sessionId ?? result.session_id)
-				? { sessionId: result.sessionId ?? result.session_id }
-				: {}),
-			...((result.sessionFile ?? result.session_file)
-				? { sessionFile: result.sessionFile ?? result.session_file }
-				: {}),
+			planningRefs: result.planningRefs ?? status.planningRefs,
+			...(result.sessionId ? { sessionId: result.sessionId } : {}),
+			...(result.sessionFile ? { sessionFile: result.sessionFile } : {}),
 			...(error ? { remediation: workerReportRemediation(error) } : {}),
 		};
 	});
@@ -807,12 +802,12 @@ function completionHostErrors(
 				traceId: workerStart?.traceId,
 				workUnitId: result.workUnitId || workerStart?.workUnitId,
 				workerId: result.workerId || workerStart?.workerId,
-				claimId: result.claimId ?? result.claim_id ?? workerStart?.claimId,
+				claimId: result.claimId ?? workerStart?.claimId,
 				message: completionHostErrorMessage(completion, result),
 				suggestedAction: "release_claim",
 				refs: [
-					result.sessionId ?? result.session_id,
-					result.sessionFile ?? result.session_file,
+					result.sessionId,
+					result.sessionFile,
 					...(result.refs || []),
 				].filter((ref): ref is string => Boolean(ref)),
 			}),
@@ -947,12 +942,7 @@ async function runHostImplementationReports(
 function hasImplementationEvidence(
 	result: ImplementationWorkerReportInput,
 ): boolean {
-	return (
-		result.status === "blocked" ||
-		[result.changeInputs, result.change_inputs, result.changes].some(
-			(value) => Array.isArray(value) && value.length > 0,
-		)
-	);
+	return result.status === "blocked" || Boolean(result.changeInputs?.length);
 }
 
 async function hostCompletionResult(
@@ -1270,7 +1260,7 @@ function terminalWorkerRemediation(
 			? uniqueHostErrorRefs(hostErrors)
 			: workerReports.flatMap((result) => [
 					result.workUnitId,
-					...(result.planningRefs || result.planning_refs || []),
+					...(result.planningRefs || []),
 					...(result.refs || []),
 				]),
 		suggestedActions:
@@ -1461,13 +1451,13 @@ function releaseInputs(
 		traceId: completions[index]?.workerStart.traceId,
 		workerId: result.workerId,
 		workUnitId: result.workUnitId,
-		claimId: result.claimId ?? result.claim_id,
-		planningRefs: result.planningRefs ?? result.planning_refs,
+		claimId: result.claimId,
+		planningRefs: result.planningRefs,
 		status: result.status,
 		message: result.message,
 		refs: result.refs,
-		sessionId: result.sessionId ?? result.session_id,
-		sessionFile: result.sessionFile ?? result.session_file,
+		sessionId: result.sessionId,
+		sessionFile: result.sessionFile,
 		hostError: hostErrorsByWorker.get(
 			hostErrorKey(result.workerId, result.workUnitId),
 		),

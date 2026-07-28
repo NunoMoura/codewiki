@@ -32,17 +32,19 @@ function changes(planningRef) {
 	]);
 }
 
-function workerReport(planningRef, overrides = {}) {
+function workerReport(planningRef, proofOverrides = {}) {
 	return {
 		workerId: "worker-merge-proof",
 		workUnitId: "WU-merge-proof",
 		claimId: "claim-merge-proof",
 		planningRefs: [planningRef],
 		status: "completed",
-		changedFiles: ["src/feature.ts", "tests/feature.test.mjs"],
-		workingTreeDigest: "sha256:worker-local",
-		checksRun: ["node --test tests/feature.test.mjs"],
-		...overrides,
+		proof: {
+			changedPaths: ["src/feature.ts", "tests/feature.test.mjs"],
+			workingTreeDigest: "sha256:worker-local",
+			checksRun: ["node --test tests/feature.test.mjs"],
+			...proofOverrides,
+		},
 	};
 }
 
@@ -89,7 +91,7 @@ describe("implementation merge content proof", () => {
 						repoRoot: root,
 						workerReports: [
 							workerReport(planningRef, {
-								changedFiles: ["src/missing.ts"],
+								changedPaths: ["src/missing.ts"],
 							}),
 						],
 					}),

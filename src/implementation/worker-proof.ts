@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
 import type { ContentProof } from "../git/content-proof.ts";
+import { canonicalJsonDigest } from "../loop-exit/identity.ts";
 import type { CheckResultInput, ImplementationChangeInput } from "./types.ts";
 
 export type ImplementationWorkerProofVerdict =
@@ -10,58 +10,57 @@ export type ImplementationWorkerProofVerdict =
 
 export interface ImplementationWorkerProofInput {
 	workerId?: string;
-	worker_id?: string;
 	workUnitId?: string;
-	work_unit_id?: string;
-	taskId?: string;
-	task_id?: string;
 	claimId?: string;
-	claim_id?: string;
 	planningRefs?: string[];
-	planning_refs?: string[];
 	sessionId?: string;
-	session_id?: string;
 	sessionFile?: string;
-	session_file?: string;
 	baseSha?: string;
-	base_sha?: string;
 	headSha?: string;
-	head_sha?: string;
 	treeSha?: string;
-	tree_sha?: string;
 	workingTreeDigest?: string;
-	working_tree_digest?: string;
 	worktreePath?: string;
-	worktree_path?: string;
 	branch?: string;
 	changedPaths?: string[];
-	changed_paths?: string[];
-	changedFiles?: string[];
-	changed_files?: string[];
 	checks?: string[];
 	checksRun?: string[];
-	checks_run?: string[];
 	checkResults?: CheckResultInput[];
-	check_results?: CheckResultInput[];
 	validationVerdict?: string;
-	validation_verdict?: string;
 	validationRef?: string;
-	validation_ref?: string;
 	buildRef?: string;
-	build_ref?: string;
 	patchRef?: string;
-	patch_ref?: string;
 	contentProof?: ContentProof;
-	content_proof?: ContentProof;
 	clean?: boolean;
 	status?: string;
 	changeInputs?: ImplementationChangeInput[];
-	change_inputs?: ImplementationChangeInput[];
-	changes?: ImplementationChangeInput[];
-	proof?: ImplementationWorkerProofInput;
-	workerProof?: ImplementationWorkerProofInput;
-	worker_proof?: ImplementationWorkerProofInput;
 }
+
+const IMPLEMENTATION_WORKER_PROOF_FIELDS = new Set([
+	"workerId",
+	"workUnitId",
+	"claimId",
+	"planningRefs",
+	"sessionId",
+	"sessionFile",
+	"baseSha",
+	"headSha",
+	"treeSha",
+	"workingTreeDigest",
+	"worktreePath",
+	"branch",
+	"changedPaths",
+	"checks",
+	"checksRun",
+	"checkResults",
+	"validationVerdict",
+	"validationRef",
+	"buildRef",
+	"patchRef",
+	"contentProof",
+	"clean",
+	"status",
+	"changeInputs",
+]);
 
 export interface ImplementationWorkerProof {
 	workerId: string;
@@ -105,13 +104,13 @@ export interface ImplementationWorkerProofConflict {
 export function normalizeImplementationWorkerProof(
 	input: ImplementationWorkerProofInput,
 ): ImplementationWorkerProof | undefined {
-	const raw = mergeProofInput(input);
-	const context = workerProofContext(raw);
-	if (!hasWorkerProofSignal(raw, context)) return undefined;
-	const proofWithoutDigest = buildWorkerProof(raw, context);
+	assertImplementationWorkerProofInput(input);
+	const context = workerProofContext(input);
+	if (!hasWorkerProofSignal(input, context)) return undefined;
+	const proofWithoutDigest = buildWorkerProof(input, context);
 	return {
 		...proofWithoutDigest,
-		digest: stableDigest(proofWithoutDigest),
+		digest: canonicalJsonDigest(proofWithoutDigest),
 	};
 }
 
@@ -175,16 +174,16 @@ function hasWorkerProofSignal(
 	context: WorkerProofContext,
 ): boolean {
 	return [
-		text(input.baseSha ?? input.base_sha),
-		text(input.headSha ?? input.head_sha),
-		text(input.treeSha ?? input.tree_sha),
-		text(input.workingTreeDigest ?? input.working_tree_digest),
-		text(input.worktreePath ?? input.worktree_path),
+		text(input.baseSha),
+		text(input.headSha),
+		text(input.treeSha),
+		text(input.workingTreeDigest),
+		text(input.worktreePath),
 		text(input.branch),
-		text(input.validationRef ?? input.validation_ref),
-		text(input.buildRef ?? input.build_ref),
-		text(input.patchRef ?? input.patch_ref),
-		...(input.contentProof || input.content_proof ? ["content-proof"] : []),
+		text(input.validationRef),
+		text(input.buildRef),
+		text(input.patchRef),
+		...(input.contentProof ? ["content-proof"] : []),
 		...context.changedPaths,
 		...context.checks,
 	].some(Boolean);
@@ -212,21 +211,15 @@ function workerProofIdentity(
 		Pick<ImplementationWorkerProof, "claimId" | "sessionId" | "sessionFile">
 	> {
 	return {
-		workerId: text(input.workerId ?? input.worker_id),
-		workUnitId: text(
-			input.workUnitId ?? input.work_unit_id ?? input.taskId ?? input.task_id,
-		),
+		workerId: text(input.workerId),
+		workUnitId: text(input.workUnitId),
 		planningRefs: unique([
 			...stringList(input.planningRefs),
-			...stringList(input.planning_refs),
 			...changeInputs(input).flatMap(changePlanningRefs),
 		]),
-		...optionalTextField("claimId", input.claimId ?? input.claim_id),
-		...optionalTextField("sessionId", input.sessionId ?? input.session_id),
-		...optionalTextField(
-			"sessionFile",
-			input.sessionFile ?? input.session_file,
-		),
+		...optionalTextField("claimId", input.claimId),
+		...optionalTextField("sessionId", input.sessionId),
+		...optionalTextField("sessionFile", input.sessionFile),
 	};
 }
 
@@ -244,16 +237,16 @@ function workerProofGitMetadata(
 	>
 > {
 	return {
-		...optionalTextField("baseSha", input.baseSha ?? input.base_sha),
-		...optionalTextField("headSha", input.headSha ?? input.head_sha),
-		...optionalTextField("treeSha", input.treeSha ?? input.tree_sha),
+		...optionalTextField("baseSha", input.baseSha),
+		...optionalTextField("headSha", input.headSha),
+		...optionalTextField("treeSha", input.treeSha),
 		...optionalTextField(
 			"workingTreeDigest",
-			input.workingTreeDigest ?? input.working_tree_digest,
+			input.workingTreeDigest,
 		),
 		...optionalTextField(
 			"worktreePath",
-			input.worktreePath ?? input.worktree_path,
+			input.worktreePath,
 		),
 		...optionalTextField("branch", input.branch),
 	};
@@ -270,22 +263,11 @@ function workerProofEvidenceMetadata(
 	return {
 		...optionalTextField(
 			"validationRef",
-			input.validationRef ?? input.validation_ref,
+			input.validationRef,
 		),
-		...optionalTextField("buildRef", input.buildRef ?? input.build_ref),
-		...optionalTextField("patchRef", input.patchRef ?? input.patch_ref),
+		...optionalTextField("buildRef", input.buildRef),
+		...optionalTextField("patchRef", input.patchRef),
 		...optionalContentProof(input),
-	};
-}
-
-function mergeProofInput(
-	input: ImplementationWorkerProofInput,
-): ImplementationWorkerProofInput {
-	return {
-		...input,
-		...(input.proof || {}),
-		...(input.workerProof || {}),
-		...(input.worker_proof || {}),
 	};
 }
 
@@ -294,9 +276,6 @@ function workerProofChangedPaths(
 ): string[] {
 	return normalizePaths([
 		...stringList(input.changedPaths),
-		...stringList(input.changed_paths),
-		...stringList(input.changedFiles),
-		...stringList(input.changed_files),
 		...changeInputs(input).flatMap(changeChangedPaths),
 	]);
 }
@@ -305,11 +284,7 @@ function workerProofChecks(input: ImplementationWorkerProofInput): string[] {
 	return unique([
 		...stringList(input.checks),
 		...stringList(input.checksRun),
-		...stringList(input.checks_run),
 		...objectList<CheckResultInput>(input.checkResults).map((check) =>
-			text(check.command),
-		),
-		...objectList<CheckResultInput>(input.check_results).map((check) =>
 			text(check.command),
 		),
 		...changeInputs(input).flatMap(changeChecks),
@@ -319,13 +294,10 @@ function workerProofChecks(input: ImplementationWorkerProofInput): string[] {
 function workerProofVerdict(
 	input: ImplementationWorkerProofInput,
 ): ImplementationWorkerProofVerdict {
-	const explicit = normalizeVerdict(
-		input.validationVerdict ?? input.validation_verdict,
-	);
+	const explicit = normalizeVerdict(input.validationVerdict);
 	if (explicit !== "unknown") return explicit;
 	const statuses = [
 		...objectList<CheckResultInput>(input.checkResults),
-		...objectList<CheckResultInput>(input.check_results),
 		...changeInputs(input).flatMap((change) =>
 			objectList<CheckResultInput>(change.checkResults),
 		),
@@ -341,6 +313,21 @@ function workerProofVerdict(
 	if (status === "blocked") return "block";
 	if (status === "failed") return "fail";
 	return "unknown";
+}
+
+function assertImplementationWorkerProofInput(
+	input: ImplementationWorkerProofInput,
+): void {
+	if (!input || typeof input !== "object" || Array.isArray(input)) {
+		throw new Error("Implementation worker proof must be an object.");
+	}
+	for (const key of Object.keys(input)) {
+		if (!IMPLEMENTATION_WORKER_PROOF_FIELDS.has(key)) {
+			throw new Error(
+				`Implementation worker proof received unsupported field ${key}.`,
+			);
+		}
+	}
 }
 
 function normalizeVerdict(value: unknown): ImplementationWorkerProofVerdict {
@@ -444,11 +431,7 @@ function changedPathsOverlap(
 function changeInputs(
 	input: ImplementationWorkerProofInput,
 ): ImplementationChangeInput[] {
-	return [
-		...objectList<ImplementationChangeInput>(input.changeInputs),
-		...objectList<ImplementationChangeInput>(input.change_inputs),
-		...objectList<ImplementationChangeInput>(input.changes),
-	];
+	return objectList<ImplementationChangeInput>(input.changeInputs);
 }
 
 function changePlanningRefs(change: ImplementationChangeInput): string[] {
@@ -475,18 +458,12 @@ function changeChecks(change: ImplementationChangeInput): string[] {
 function optionalContentProof(input: ImplementationWorkerProofInput): {
 	contentProof?: ContentProof;
 } {
-	const proof = input.contentProof ?? input.content_proof;
+	const proof = input.contentProof;
 	return proof ? { contentProof: proof } : {};
 }
 
 function contentProofRefs(proof?: ContentProof): string[] {
 	return unique([proof?.commit, proof?.tree, proof?.workingTreeDigest]);
-}
-
-function stableDigest(value: unknown): string {
-	return `sha256:${createHash("sha256")
-		.update(JSON.stringify(value))
-		.digest("hex")}`;
 }
 
 function normalizePaths(paths: string[]): string[] {
