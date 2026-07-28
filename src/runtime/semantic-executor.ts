@@ -5,7 +5,7 @@ import {
 } from "../api/wiki-decide.ts";
 import {
 	runRuntimeSelectedWikiImplement,
-	type RunWikiImplementInput,
+	type ImplementationEvidenceSubmission,
 	type RunWikiImplementResult,
 } from "../api/wiki-implement.ts";
 import {
@@ -13,8 +13,17 @@ import {
 	type RunWikiPlanInput,
 	type RunWikiPlanResult,
 } from "../api/wiki-plan.ts";
+import type { ContentProof } from "../git/content-proof.ts";
+import type { ChangeDecisionAuthority, ChangeDisposition } from "../decision/change-quality.ts";
 import { TraceAppendConflictError } from "../error-handling/trace-errors.ts";
+import type { ImplementationEvidencePolicy } from "../implementation/evidence-policy.ts";
+import type { ImplementationEvidenceReportInput } from "../implementation/review/index.ts";
+import type { ImplementationArchiveDisposition } from "../implementation/types.ts";
 import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
+import type {
+	PortfolioWorkItemInput,
+	SprintPlanInput,
+} from "../planning/portfolio-quality.ts";
 import type {
 	WorkStateAssignment,
 	WorkStateChange,
@@ -31,36 +40,172 @@ import {
 
 export type RuntimeSemanticMode = "preview" | "append";
 
-export type RuntimeDecisionCandidate = Omit<
-	RunWikiDecideInput,
-	| "repoRoot"
-	| "changeId"
-	| "expectedRevision"
-	| "expectedChangeDigest"
-	| "expectedWorkStateDigest"
-	| "expectedBytes"
-	| "runtimeJobId"
-	| "mode"
->;
+export interface RuntimeDecisionCandidate {
+	disposition: ChangeDisposition;
+	rationale: string;
+	authority?: ChangeDecisionAuthority;
+	occurredAt?: string;
+}
 
-export type RuntimePlanningCandidate = Omit<
-	RunWikiPlanInput,
-	| "repoRoot"
-	| "expectedWorkStateDigest"
-	| "expectedChangeIds"
-	| "expectedBytesByChangeId"
-	| "runtimeJobId"
-	| "mode"
->;
+export interface RuntimePlanningCandidate {
+	sprints: SprintPlanInput[];
+	workItems: PortfolioWorkItemInput[];
+	actor: string;
+	rationale: string;
+	createdAt?: string;
+}
 
-export type RuntimeImplementationCandidate = Omit<
-	RunWikiImplementInput,
-	| "repoRoot"
-	| "expectedWorkStateDigest"
-	| "workerReports"
-	| "runtimeJobId"
-	| "mode"
->;
+export interface RuntimeImplementationCandidate {
+	evidence?: ImplementationEvidenceSubmission[];
+	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
+	archiveDisposition?: ImplementationArchiveDisposition;
+	requireArchiveDisposition?: boolean;
+	evidencePolicy?: ImplementationEvidencePolicy;
+	includeCachedReviewEvidence?: boolean;
+	autoReviewEvidence?: boolean;
+	reviewTimeoutMs?: number;
+	requireTddEvidence?: boolean;
+	createdAt?: string;
+	snapshotRoots?: string[];
+	snapshotExclude?: string[];
+	proofPaths?: string[];
+	changedPaths?: string[];
+	evidencePaths?: string[];
+	aggregateContentProof?: ContentProof;
+}
+
+const DECISION_CANDIDATE_FIELDS = [
+	"disposition",
+	"rationale",
+	"authority",
+	"occurredAt",
+] as const;
+const DECISION_RUNTIME_FIELDS = [
+	"repoRoot",
+	"changeId",
+	"expectedRevision",
+	"expectedChangeDigest",
+	"expectedWorkStateDigest",
+	"expectedBytes",
+	"runtimeJobId",
+	"mode",
+] as const;
+const PLANNING_CANDIDATE_FIELDS = [
+	"sprints",
+	"workItems",
+	"actor",
+	"rationale",
+	"createdAt",
+] as const;
+const PLANNING_RUNTIME_FIELDS = [
+	"repoRoot",
+	"expectedWorkStateDigest",
+	"expectedChangeIds",
+	"expectedBytesByChangeId",
+	"runtimeJobId",
+	"mode",
+] as const;
+const IMPLEMENTATION_CANDIDATE_FIELDS = [
+	"evidence",
+	"reviewEvidenceReports",
+	"archiveDisposition",
+	"requireArchiveDisposition",
+	"evidencePolicy",
+	"includeCachedReviewEvidence",
+	"autoReviewEvidence",
+	"reviewTimeoutMs",
+	"requireTddEvidence",
+	"createdAt",
+	"snapshotRoots",
+	"snapshotExclude",
+	"proofPaths",
+	"changedPaths",
+	"evidencePaths",
+	"aggregateContentProof",
+] as const;
+const IMPLEMENTATION_RUNTIME_FIELDS = [
+	"repoRoot",
+	"expectedWorkStateDigest",
+	"workerReports",
+	"runtimeJobId",
+	"traceId",
+	"planningEvents",
+	"changes",
+	"changeInputs",
+	"workerClaims",
+	"claimEvents",
+	"componentMap",
+	"parentId",
+	"expectedBytes",
+	"nextSequence",
+	"expectedTraceId",
+	"mode",
+] as const;
+
+export function parseRuntimeDecisionCandidate(
+	value: unknown,
+): RuntimeDecisionCandidate {
+	const candidate = candidateRecord(value, "decision");
+	assertCandidateKeys(
+		"decision",
+		candidate,
+		DECISION_CANDIDATE_FIELDS,
+		DECISION_RUNTIME_FIELDS,
+	);
+	if (!DECISION_DISPOSITIONS.includes(candidate.disposition as ChangeDisposition)) {
+		throw new Error("Runtime decision candidate disposition is invalid.");
+	}
+	requiredCandidateText(candidate.rationale, "decision", "rationale");
+	return candidate as unknown as RuntimeDecisionCandidate;
+}
+
+export function parseRuntimePlanningCandidate(
+	value: unknown,
+): RuntimePlanningCandidate {
+	const candidate = candidateRecord(value, "planning");
+	assertCandidateKeys(
+		"planning",
+		candidate,
+		PLANNING_CANDIDATE_FIELDS,
+		PLANNING_RUNTIME_FIELDS,
+	);
+	if (!Array.isArray(candidate.sprints)) {
+		throw new Error("Runtime planning candidate sprints must be an array.");
+	}
+	if (!Array.isArray(candidate.workItems)) {
+		throw new Error("Runtime planning candidate workItems must be an array.");
+	}
+	requiredCandidateText(candidate.actor, "planning", "actor");
+	requiredCandidateText(candidate.rationale, "planning", "rationale");
+	return candidate as unknown as RuntimePlanningCandidate;
+}
+
+export function parseRuntimeImplementationCandidate(
+	value: unknown,
+): RuntimeImplementationCandidate {
+	const candidate = candidateRecord(value, "implementation");
+	assertCandidateKeys(
+		"implementation",
+		candidate,
+		IMPLEMENTATION_CANDIDATE_FIELDS,
+		IMPLEMENTATION_RUNTIME_FIELDS,
+	);
+	for (const field of ["evidence", "reviewEvidenceReports"] as const) {
+		if (candidate[field] !== undefined && !Array.isArray(candidate[field])) {
+			throw new Error(
+				`Runtime implementation candidate ${field} must be an array.`,
+			);
+		}
+	}
+	return candidate as unknown as RuntimeImplementationCandidate;
+}
+
+const DECISION_DISPOSITIONS: ChangeDisposition[] = [
+	"approve",
+	"reject",
+	"defer",
+	"withdraw",
+];
 
 export interface RuntimeDecisionInvocation {
 	loop: "decision";
@@ -333,21 +478,13 @@ async function executeSelectedSemanticWork(
 	if (selection.loop === "decision") {
 		if (!adapters.decision) throw missingAdapter("decision");
 		const change = requiredChange(observation, selection.change.changeId);
-		const candidate = await adapters.decision({
-			loop: "decision",
-			observedWorkStateDigest: observation.workState.snapshotDigest,
-			change,
-		});
-		assertNoRuntimeAuthority("decision", candidate, [
-			"repoRoot",
-			"changeId",
-			"expectedRevision",
-			"expectedChangeDigest",
-			"expectedWorkStateDigest",
-			"expectedBytes",
-			"runtimeJobId",
-			"mode",
-		]);
+		const candidate = parseRuntimeDecisionCandidate(
+			await adapters.decision({
+				loop: "decision",
+				observedWorkStateDigest: observation.workState.snapshotDigest,
+				change,
+			}),
+		);
 		const coreInput: RunWikiDecideInput = {
 			...candidate,
 			repoRoot,
@@ -380,19 +517,13 @@ async function executeSelectedSemanticWork(
 		const changes = selection.planningHorizon.map((entry) =>
 			requiredChange(observation, entry.changeId),
 		);
-		const candidate = await adapters.planning({
-			loop: "planning",
-			observedWorkStateDigest: observation.workState.snapshotDigest,
-			changes,
-		});
-		assertNoRuntimeAuthority("planning", candidate, [
-			"repoRoot",
-			"expectedWorkStateDigest",
-			"expectedChangeIds",
-			"expectedBytesByChangeId",
-			"runtimeJobId",
-			"mode",
-		]);
+		const candidate = parseRuntimePlanningCandidate(
+			await adapters.planning({
+				loop: "planning",
+				observedWorkStateDigest: observation.workState.snapshotDigest,
+				changes,
+			}),
+		);
 		const expectedChangeIds = selection.planningHorizon.map(
 			(entry) => entry.changeId,
 		);
@@ -447,32 +578,16 @@ async function executeSelectedSemanticWork(
 		assignments,
 		implementationWorkerReports,
 	);
-	const candidate = await adapters.implementation({
-		loop: "implementation",
-		observedWorkStateDigest: observation.workState.snapshotDigest,
-		sprint,
-		workItems,
-		assignments,
-		workerReports: selectedWorkerReports,
-	});
-	assertNoRuntimeAuthority("implementation", candidate, [
-		"repoRoot",
-		"expectedWorkStateDigest",
-		"workerReports",
-		"runtimeJobId",
-		"traceId",
-		"planningEvents",
-		"changes",
-		"changeInputs",
-		"workerClaims",
-		"claimEvents",
-		"componentMap",
-		"parentId",
-		"expectedBytes",
-		"nextSequence",
-		"expectedTraceId",
-		"mode",
-	]);
+	const candidate = parseRuntimeImplementationCandidate(
+		await adapters.implementation({
+			loop: "implementation",
+			observedWorkStateDigest: observation.workState.snapshotDigest,
+			sprint,
+			workItems,
+			assignments,
+			workerReports: selectedWorkerReports,
+		}),
+	);
 	return {
 		loop: "implementation",
 		result: await runRuntimeSelectedWikiImplement(
@@ -589,16 +704,45 @@ function isCasConflict(error: unknown): boolean {
 	);
 }
 
-function assertNoRuntimeAuthority(
+function candidateRecord(
+	value: unknown,
 	loop: string,
-	candidate: object,
-	forbiddenKeys: string[],
+): Record<string, unknown> {
+	if (!value || typeof value !== "object" || Array.isArray(value)) {
+		throw new Error(`Runtime ${loop} candidate must be an object.`);
+	}
+	return value as Record<string, unknown>;
+}
+
+function assertCandidateKeys(
+	loop: string,
+	candidate: Record<string, unknown>,
+	allowedKeys: readonly string[],
+	runtimeKeys: readonly string[],
 ): void {
-	const claimed = forbiddenKeys.filter((key) => key in candidate);
+	const claimed = runtimeKeys.filter((key) => key in candidate);
 	if (claimed.length > 0) {
 		throw new Error(
 			`Runtime ${loop} candidate cannot supply runtime-owned fields: ${claimed.join(", ")}.`,
 		);
+	}
+	const unsupported = Object.keys(candidate).filter(
+		(key) => !allowedKeys.includes(key),
+	);
+	if (unsupported.length > 0) {
+		throw new Error(
+			`Runtime ${loop} candidate received unsupported fields: ${unsupported.join(", ")}.`,
+		);
+	}
+}
+
+function requiredCandidateText(
+	value: unknown,
+	loop: string,
+	field: string,
+): asserts value is string {
+	if (typeof value !== "string" || !value.trim()) {
+		throw new Error(`Runtime ${loop} candidate ${field} is required.`);
 	}
 }
 

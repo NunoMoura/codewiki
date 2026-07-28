@@ -63,13 +63,13 @@ import {
 	scheduleRuntimeReactions,
 	type RuntimeReactionJobReceipt,
 } from "./runtime-reaction-jobs.ts";
-import type {
-	RunRuntimeSelectedSemanticReactionResult,
-	RuntimeDecisionCandidate,
-	RuntimeImplementationCandidate,
-	RuntimePlanningCandidate,
-	RuntimeSemanticAdapters,
-	RuntimeSemanticMode,
+import {
+	parseRuntimeDecisionCandidate,
+	parseRuntimeImplementationCandidate,
+	parseRuntimePlanningCandidate,
+	type RunRuntimeSelectedSemanticReactionResult,
+	type RuntimeSemanticAdapters,
+	type RuntimeSemanticMode,
 } from "./semantic-executor.ts";
 
 const DEFAULT_CLIENT_LEASE_MS = 30_000;
@@ -839,15 +839,20 @@ function candidateAdapters(
 	loop: RuntimeCandidateLoop,
 	candidate: Record<string, unknown>,
 ): RuntimeSemanticAdapters {
-	if (loop === "decision") {
-		return { decision: () => candidate as RuntimeDecisionCandidate };
+	try {
+		if (loop === "decision") {
+			const parsed = parseRuntimeDecisionCandidate(candidate);
+			return { decision: () => parsed };
+		}
+		if (loop === "planning") {
+			const parsed = parseRuntimePlanningCandidate(candidate);
+			return { planning: () => parsed };
+		}
+		const parsed = parseRuntimeImplementationCandidate(candidate);
+		return { implementation: () => parsed };
+	} catch (error) {
+		throw new HttpError(400, errorMessage(error));
 	}
-	if (loop === "planning") {
-		return { planning: () => candidate as RuntimePlanningCandidate };
-	}
-	return {
-		implementation: () => candidate as RuntimeImplementationCandidate,
-	};
 }
 
 async function assertCurrentGeneration(runtime: ServiceRuntime): Promise<void> {

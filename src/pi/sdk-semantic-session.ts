@@ -7,14 +7,17 @@ import type {
 	ToolDefinition,
 } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import type {
-	RuntimeDecisionCandidate,
-	RuntimeDecisionInvocation,
-	RuntimeImplementationCandidate,
-	RuntimeImplementationInvocation,
-	RuntimePlanningCandidate,
-	RuntimePlanningInvocation,
-	RuntimeSemanticAdapters,
+import {
+	parseRuntimeDecisionCandidate,
+	parseRuntimeImplementationCandidate,
+	parseRuntimePlanningCandidate,
+	type RuntimeDecisionCandidate,
+	type RuntimeDecisionInvocation,
+	type RuntimeImplementationCandidate,
+	type RuntimeImplementationInvocation,
+	type RuntimePlanningCandidate,
+	type RuntimePlanningInvocation,
+	type RuntimeSemanticAdapters,
 } from "../runtime/semantic-executor.ts";
 
 const READ_ONLY_TOOL_NAMES = ["read", "grep", "find", "ls"] as const;
@@ -25,12 +28,84 @@ const MIN_TIMEOUT_MS = 1_000;
 const MAX_TIMEOUT_MS = 900_000;
 const MIN_PAYLOAD_BYTES = 1_024;
 const MAX_PAYLOAD_BYTES = 1_048_576;
-const candidateSubmissionSchema = Type.Object(
-	{
-		candidate: Type.Record(Type.String(), Type.Unknown()),
-	},
-	{ additionalProperties: false },
-);
+const candidateSubmissionSchemas = {
+	decision: Type.Object(
+		{
+			candidate: Type.Object(
+				{
+					disposition: Type.Union([
+						Type.Literal("approve"),
+						Type.Literal("reject"),
+						Type.Literal("defer"),
+						Type.Literal("withdraw"),
+					]),
+					rationale: Type.String(),
+					authority: Type.Optional(
+						Type.Object(
+							{
+								kind: Type.Union([
+									Type.Literal("user"),
+									Type.Literal("policy"),
+								]),
+								actor: Type.String(),
+								ref: Type.String(),
+							},
+							{ additionalProperties: false },
+						),
+					),
+					occurredAt: Type.Optional(Type.String()),
+				},
+				{ additionalProperties: false },
+			),
+		},
+		{ additionalProperties: false },
+	),
+	planning: Type.Object(
+		{
+			candidate: Type.Object(
+				{
+					sprints: Type.Array(Type.Record(Type.String(), Type.Unknown())),
+					workItems: Type.Array(Type.Record(Type.String(), Type.Unknown())),
+					actor: Type.String(),
+					rationale: Type.String(),
+					createdAt: Type.Optional(Type.String()),
+				},
+				{ additionalProperties: false },
+			),
+		},
+		{ additionalProperties: false },
+	),
+	implementation_review: Type.Object(
+		{
+			candidate: Type.Object(
+				{
+					evidence: Type.Optional(
+						Type.Array(Type.Record(Type.String(), Type.Unknown())),
+					),
+					reviewEvidenceReports: Type.Optional(
+						Type.Array(Type.Record(Type.String(), Type.Unknown())),
+					),
+					archiveDisposition: Type.Optional(Type.Unknown()),
+					requireArchiveDisposition: Type.Optional(Type.Boolean()),
+					evidencePolicy: Type.Optional(Type.Unknown()),
+					includeCachedReviewEvidence: Type.Optional(Type.Boolean()),
+					autoReviewEvidence: Type.Optional(Type.Boolean()),
+					reviewTimeoutMs: Type.Optional(Type.Number()),
+					requireTddEvidence: Type.Optional(Type.Boolean()),
+					createdAt: Type.Optional(Type.String()),
+					snapshotRoots: Type.Optional(Type.Array(Type.String())),
+					snapshotExclude: Type.Optional(Type.Array(Type.String())),
+					proofPaths: Type.Optional(Type.Array(Type.String())),
+					changedPaths: Type.Optional(Type.Array(Type.String())),
+					evidencePaths: Type.Optional(Type.Array(Type.String())),
+					aggregateContentProof: Type.Optional(Type.Unknown()),
+				},
+				{ additionalProperties: false },
+			),
+		},
+		{ additionalProperties: false },
+	),
+} as const;
 
 export type PiSdkSemanticRole =
 	| "decision"
@@ -233,7 +308,7 @@ async function runSemanticSession<TInvocation, TCandidate>(
 			...(session.sessionId ? { sessionId: session.sessionId } : {}),
 			...(session.sessionFile ? { sessionFile: session.sessionFile } : {}),
 		});
-		return candidate as TCandidate;
+		return parseSemanticCandidate(role, candidate) as TCandidate;
 	} catch (error) {
 		emitObservation(options, {
 			role,
@@ -308,7 +383,7 @@ function candidateSubmissionTool(
 			"Call this tool exactly once after evaluating the supplied invocation.",
 			"Never include runtime-owned identity, routing, authority, freshness, sequence, or append fields.",
 		],
-		parameters: candidateSubmissionSchema,
+		parameters: candidateSubmissionSchemas[input.role],
 		execute: async (_toolCallId, params) => {
 			if (!record(params) || !record(params.candidate)) {
 				throw new Error("Pi SDK candidate tool requires an object candidate.");
@@ -402,6 +477,15 @@ function semanticInvocationPrompt(
 		invocationJson,
 		"</codewiki_invocation>",
 	].join("\n");
+}
+
+function parseSemanticCandidate(
+	role: PiSdkSemanticRole,
+	value: unknown,
+): RuntimeDecisionCandidate | RuntimePlanningCandidate | RuntimeImplementationCandidate {
+	if (role === "decision") return parseRuntimeDecisionCandidate(value);
+	if (role === "planning") return parseRuntimePlanningCandidate(value);
+	return parseRuntimeImplementationCandidate(value);
 }
 
 function cloneCandidate(

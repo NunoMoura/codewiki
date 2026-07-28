@@ -34,8 +34,8 @@ test("Pi SDK semantic adapter runs one bounded role session and returns its cand
 	const observations = [];
 	const sessions = [];
 	const candidate = {
-		candidateId: "candidate-1",
-		proposal: { summary: "Keep runtime authority outside session." },
+		disposition: "defer",
+		rationale: "Keep runtime authority outside session.",
 	};
 	const adapters = createPiSdkRuntimeSemanticAdapters({
 		repoRoot: process.cwd(),
@@ -85,7 +85,12 @@ test("default Pi SDK factory enables only read tools and one closed candidate to
 						const candidateTool = sdkOptions.customTools[0];
 						await candidateTool.execute(
 							"candidate-call",
-							{ candidate: { candidateId: "default-factory" } },
+							{
+								candidate: {
+									disposition: "defer",
+									rationale: "Await trusted authority.",
+								},
+							},
 							undefined,
 							undefined,
 							{},
@@ -99,7 +104,8 @@ test("default Pi SDK factory enables only read tools and one closed candidate to
 	});
 
 	assert.deepEqual(await adapters.decision(decisionInvocation()), {
-		candidateId: "default-factory",
+		disposition: "defer",
+		rationale: "Await trusted authority.",
 	});
 	assert.deepEqual(sdkOptions.tools, [
 		"read",
@@ -194,6 +200,20 @@ test("Pi SDK semantic adapter requires exactly one object candidate", async () =
 	await assert.rejects(
 		nonObject.decision(decisionInvocation()),
 		/candidate must be an object/,
+	);
+
+	const wrongRoleShape = createPiSdkRuntimeSemanticAdapters({
+		repoRoot: process.cwd(),
+		sessionFactory: async (input) => ({
+			async prompt() {
+				input.submitCandidate({ sprints: [], workItems: [] });
+			},
+			dispose() {},
+		}),
+	});
+	await assert.rejects(
+		wrongRoleShape.decision(decisionInvocation()),
+		/Runtime decision candidate received unsupported fields: sprints, workItems/,
 	);
 });
 

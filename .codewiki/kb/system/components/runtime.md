@@ -195,7 +195,7 @@ Each selected semantic invariant becomes one exact runtime job with:
 - iteration, wall-clock, token, cost, and retry budgets;
 - cancellation and durable recovery probes.
 
-The job invokes only its selected Loop adapter. It cannot drift into another lane. Route-back is appended as evidence and stops forward repetition until the target owner responds.
+The job invokes only its selected Loop adapter. It cannot drift into another lane. Decision, Planning, and Implementation use explicit role-specific candidate contracts. Direct adapters, isolated Pi SDK sessions, and remote coordinator submissions pass through the same strict top-level candidate admission; unknown and runtime-owned fields fail before core Loop invocation. Route-back is appended as evidence and stops forward repetition until the target owner responds.
 
 A compare-and-swap race invalidates the observation. Runtime requeues or reruns against fresh state under budget; it never appends stale output. A replacement generation recovers exact completed event evidence before considering reinvocation.
 

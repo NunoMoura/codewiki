@@ -426,6 +426,16 @@ test("authenticated remote client executes semantic work through elected service
 			(error) =>
 				error?.status === 409 && error.message === "runtime_reaction_mismatch",
 		);
+		await assert.rejects(
+			() =>
+				client.submitCandidate(
+					{ kind: "manual_resume" },
+					"decision",
+					{ ...candidate, candidateId: "caller-owned" },
+					"preview",
+				),
+			/Runtime decision candidate received unsupported fields: candidateId/,
+		);
 		const preview = await client.submitCandidate(
 			{ kind: "manual_resume" },
 			"decision",

@@ -278,7 +278,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 ## Next — exact identity and authority hardening
 
 - [ ] Define runtime-owned immutable Decision, Planning, and Implementation candidate schemas and content identities.
-- [ ] Replace broad `Omit<RunWiki*Input, ...>` candidate types and SDK arbitrary-record submission with exact role-specific allowlists.
+- [x] Replace broad `Omit<RunWiki*Input, ...>` candidate types and SDK arbitrary-record submission with explicit role-specific top-level allowlists; parse direct adapters, Pi SDK submissions, and remote coordinator candidates through the same admission functions.
 - [ ] Reject candidate control over authority, actor/time, review/TDD activation, snapshot/proof scope, aggregate content proof, runtime job identity, append guards, routing, and Check selection.
   - [x] Replace broad Implementation evidence `Omit` input with one normalized allowlist; reject caller proof, approval authority, runtime routing, and deprecated aliases.
   - [x] Delete duplicate `archiveDispositionInput` and its snake-case aliases; retain one exact normalized archive disposition contract.
