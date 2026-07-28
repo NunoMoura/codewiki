@@ -1,9 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import {
-	createQualityStandardRegistry,
-} from "../../src/loops/quality-standard-registry.ts";
+import { createQualityStandardRegistry } from "../../src/loops/quality-standard-registry.ts";
 
 function projectRegistration(overrides = {}) {
 	return {
@@ -40,16 +38,28 @@ describe("Quality Standard registry", () => {
 		const planning = registry.list("planning");
 		const implementation = registry.list("implementation");
 
-		assert.ok(decision.some((entry) => entry.standard.id === "change_revision_ready"));
-		assert.ok(planning.some((entry) => entry.standard.id === "worker_workbench_buildable"));
-		assert.ok(implementation.some((entry) => entry.standard.id === "verification_passed"));
 		assert.ok(
-			registry.list().every(
-				(entry) =>
-					entry.authority === "kernel" &&
-					entry.rollout === "enforce" &&
-					entry.standard.protected,
+			decision.some((entry) => entry.standard.id === "change_revision_ready"),
+		);
+		assert.ok(
+			planning.some(
+				(entry) => entry.standard.id === "worker_workbench_buildable",
 			),
+		);
+		assert.ok(
+			implementation.some(
+				(entry) => entry.standard.id === "verification_passed",
+			),
+		);
+		assert.ok(
+			registry
+				.list()
+				.every(
+					(entry) =>
+						entry.authority === "kernel" &&
+						entry.rollout === "enforce" &&
+						entry.standard.protected,
+				),
 		);
 		assert.deepEqual(
 			implementation.map((entry) => entry.standard.id),
@@ -91,7 +101,9 @@ describe("Quality Standard registry", () => {
 	});
 
 	it("enforces project rollout progression and approval", () => {
-		assert.doesNotThrow(() => createQualityStandardRegistry([projectRegistration()]));
+		assert.doesNotThrow(() =>
+			createQualityStandardRegistry([projectRegistration()]),
+		);
 		assert.doesNotThrow(() =>
 			createQualityStandardRegistry([
 				projectRegistration({ rollout: "warn", rolloutHistory: ["observe"] }),
@@ -109,7 +121,10 @@ describe("Quality Standard registry", () => {
 		assert.throws(
 			() =>
 				createQualityStandardRegistry([
-					projectRegistration({ rollout: "enforce", rolloutHistory: ["observe"] }),
+					projectRegistration({
+						rollout: "enforce",
+						rolloutHistory: ["observe"],
+					}),
 				]),
 			/must progress through observe -> warn before enforce/,
 		);

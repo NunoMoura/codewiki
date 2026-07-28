@@ -50,77 +50,248 @@ export interface QualityStandardRegistry {
 }
 
 const DECISION_BASELINE = [
-	["change_revision_ready", "One stable, complete Change revision and digest are present."],
-	["intention_understood", "Current state, desired state, rationale, and non-goals are explicit."],
+	[
+		"change_revision_ready",
+		"One stable, complete Change revision and digest are present.",
+	],
+	[
+		"intention_understood",
+		"Current state, desired state, rationale, and non-goals are explicit.",
+	],
 	["user_value_clear", "User or project outcome is concrete and observable."],
-	["outcome_contract_complete", "Desired outcome, success signals, and evidence expectations are bounded."],
+	[
+		"outcome_contract_complete",
+		"Desired outcome, success signals, and evidence expectations are bounded.",
+	],
 	["current_state_grounded", "Canonical project refs ground current state."],
 	["evidence_sufficient", "Evidence is proportional to candidate risk."],
-	["recommendation_justified", "Recommendation and rationale are explicit and evidenced."],
-	["intention_validated", "Assessment protects user value and long-term project interests."],
+	[
+		"recommendation_justified",
+		"Recommendation and rationale are explicit and evidenced.",
+	],
+	[
+		"intention_validated",
+		"Assessment protects user value and long-term project interests.",
+	],
 	["approval_safety", "Required authority binds the exact candidate."],
-	["risks_and_alternatives_considered", "Risks, alternatives, invariants, and rollback are proportional."],
-	["knowledge_impact_accounted", "Knowledge changes or explicit no-impact rationale are complete."],
-	["change_kind_classified", "Change kind is explicit and supports kind-specific assurance."],
-	["delivery_constraints_safe", "Delivery constraints preserve Planning authority and safe downstream execution."],
-	["active_change_overlap_accounted", "Overlapping active Changes are resolved or ordered."],
+	[
+		"risks_and_alternatives_considered",
+		"Risks, alternatives, invariants, and rollback are proportional.",
+	],
+	[
+		"knowledge_impact_accounted",
+		"Knowledge changes or explicit no-impact rationale are complete.",
+	],
+	[
+		"change_kind_classified",
+		"Change kind is explicit and supports kind-specific assurance.",
+	],
+	[
+		"delivery_constraints_safe",
+		"Delivery constraints preserve Planning authority and safe downstream execution.",
+	],
+	[
+		"active_change_overlap_accounted",
+		"Overlapping active Changes are resolved or ordered.",
+	],
 ] as const;
 
 const PLANNING_BASELINE = [
-	["approved_change_coverage_complete", "Every selected approved Change has executable coverage or explicit resolution."],
-	["sprint_boundaries_coherent", "Sprint goals, participants, rollback, integration, and dependencies form safe execution groups."],
-	["work_items_self_contained", "Work Items have stable ownership, outcomes, requirements, criteria, and bounded paths."],
-	["cross_change_contribution_explicit", "Cross-Change contributions are explicit without duplicating ownership."],
-	["technical_requirements_complete", "Technical requirements preserve accepted meaning and are executable."],
-	["acceptance_and_verification_testable", "Acceptance criteria and verification are concrete and testable."],
-	["source_ownership_aligned", "Components and path/test scopes align with source ownership."],
-	["dependency_order_clear", "Dependencies exist, remain acyclic, and order overlapping work."],
-	["claimed_work_stable", "Replanning does not silently mutate active Assignments."],
-	["integration_plan_safe", "Integration, worktree, preview, and rollback constraints are explicit."],
-	["worker_assignment_ready", "Work is coherent, independently verifiable, and safely sized."],
-	["worker_workbench_buildable", "Declared context, capabilities, isolation, Quality, evidence, and budgets can form a bounded Workbench."],
-	["uncertainty_resolved", "Remaining uncertainty is repaired or routed to its semantic owner."],
-	["triggers_valid", "Recurring, event, hook, and manual triggers have bounded execution policy."],
-	["resolutions_accounted", "Non-executable and route-back resolutions carry exact evidence."],
-	["traceability_refs_canonical", "Change, trace, Knowledge, Git, digest, source, and test refs are canonical."],
+	[
+		"approved_change_coverage_complete",
+		"Every selected approved Change has executable coverage or explicit resolution.",
+	],
+	[
+		"sprint_boundaries_coherent",
+		"Sprint goals, participants, rollback, integration, and dependencies form safe execution groups.",
+	],
+	[
+		"work_items_self_contained",
+		"Work Items have stable ownership, outcomes, requirements, criteria, and bounded paths.",
+	],
+	[
+		"cross_change_contribution_explicit",
+		"Cross-Change contributions are explicit without duplicating ownership.",
+	],
+	[
+		"technical_requirements_complete",
+		"Technical requirements preserve accepted meaning and are executable.",
+	],
+	[
+		"acceptance_and_verification_testable",
+		"Acceptance criteria and verification are concrete and testable.",
+	],
+	[
+		"source_ownership_aligned",
+		"Components and path/test scopes align with source ownership.",
+	],
+	[
+		"dependency_order_clear",
+		"Dependencies exist, remain acyclic, and order overlapping work.",
+	],
+	[
+		"claimed_work_stable",
+		"Replanning does not silently mutate active Assignments.",
+	],
+	[
+		"integration_plan_safe",
+		"Integration, worktree, preview, and rollback constraints are explicit.",
+	],
+	[
+		"worker_assignment_ready",
+		"Work is coherent, independently verifiable, and safely sized.",
+	],
+	[
+		"worker_workbench_buildable",
+		"Declared context, capabilities, isolation, Quality, evidence, and budgets can form a bounded Workbench.",
+	],
+	[
+		"uncertainty_resolved",
+		"Remaining uncertainty is repaired or routed to its semantic owner.",
+	],
+	[
+		"triggers_valid",
+		"Recurring, event, hook, and manual triggers have bounded execution policy.",
+	],
+	[
+		"resolutions_accounted",
+		"Non-executable and route-back resolutions carry exact evidence.",
+	],
+	[
+		"traceability_refs_canonical",
+		"Change, trace, Knowledge, Git, digest, source, and test refs are canonical.",
+	],
 ] as const;
 
 const IMPLEMENTATION_BASELINE = [
-	["approved_change_coverage_complete", "Implementation covers the current approved Change requirements."],
-	["planning_coverage_complete", "Every selected Work Item is known and dispositioned."],
-	["scope_controlled", "Changed paths remain inside accepted scope and source base."],
-	["acceptance_evidence_complete", "Every required criterion maps to structured evidence."],
-	["verification_passed", "Required scoped and aggregate checks are present and passing."],
-	["tdd_evidence_valid", "Required red and green proof maps to acceptance criteria."],
-	["worker_claims_correlated", "Worker evidence binds its active Assignment and exact execution identities."],
-	["integration_conflicts_resolved", "Integrated output has no unresolved scope, base, ownership, or semantic conflict."],
-	["content_proof_recorded", "Required local provenance and aggregate integrated proof exist."],
-	["source_ownership_aligned", "Source and test changes align with source ownership."],
-	["production_quality_reviewed", "Changed code is maintainable, simple, robust, and production-ready."],
-	["outcome_realization_accounted", "Delivery and observable outcome dimensions have evidence or explicit disposition."],
-	["archive_disposition_ready", "Required retention action or retain-hot rationale exists."],
-	["uncertainty_resolved", "Remaining uncertainty is repaired or routed to its semantic owner."],
-	["traceability_refs_canonical", "Change, trace, Knowledge, Git, digest, source, and test refs are canonical."],
+	[
+		"approved_change_coverage_complete",
+		"Implementation covers the current approved Change requirements.",
+	],
+	[
+		"planning_coverage_complete",
+		"Every selected Work Item is known and dispositioned.",
+	],
+	[
+		"scope_controlled",
+		"Changed paths remain inside accepted scope and source base.",
+	],
+	[
+		"acceptance_evidence_complete",
+		"Every required criterion maps to structured evidence.",
+	],
+	[
+		"verification_passed",
+		"Required scoped and aggregate checks are present and passing.",
+	],
+	[
+		"tdd_evidence_valid",
+		"Required red and green proof maps to acceptance criteria.",
+	],
+	[
+		"worker_claims_correlated",
+		"Worker evidence binds its active Assignment and exact execution identities.",
+	],
+	[
+		"integration_conflicts_resolved",
+		"Integrated output has no unresolved scope, base, ownership, or semantic conflict.",
+	],
+	[
+		"content_proof_recorded",
+		"Required local provenance and aggregate integrated proof exist.",
+	],
+	[
+		"source_ownership_aligned",
+		"Source and test changes align with source ownership.",
+	],
+	[
+		"production_quality_reviewed",
+		"Changed code is maintainable, simple, robust, and production-ready.",
+	],
+	[
+		"outcome_realization_accounted",
+		"Delivery and observable outcome dimensions have evidence or explicit disposition.",
+	],
+	[
+		"archive_disposition_ready",
+		"Required retention action or retain-hot rationale exists.",
+	],
+	[
+		"uncertainty_resolved",
+		"Remaining uncertainty is repaired or routed to its semantic owner.",
+	],
+	[
+		"traceability_refs_canonical",
+		"Change, trace, Knowledge, Git, digest, source, and test refs are canonical.",
+	],
 ] as const;
 
 const CONDITIONAL_STANDARDS = [
-	["fix_reproducible", "Fix candidates include reproducible source and expected behavior evidence."],
-	["hardening_boundaries_complete", "Hardening candidates identify abuse, failure, and negative-test boundaries."],
-	["improvement_outcome_observable", "Improvement candidates define an observable outcome."],
-	["migration_invariants_preserved", "Migration candidates preserve declared invariants or bounded equivalence."],
-	["security_privacy_reviewed", "Security and privacy implications are explicitly assessed for this stage."],
-	["accessibility_ui_reviewed", "UI changes include accessibility and interaction evidence appropriate to this stage."],
-	["dependency_risk_controlled", "Dependency-surface changes include compatibility, provenance, and risk evidence."],
-	["release_safety_approved", "Release or externally destructive effects have exact authority and safety evidence."],
-	["api_contract_reviewed", "Public API behavior and compatibility are explicitly bounded."],
-	["cli_behavior_verified", "CLI behavior, errors, and automation compatibility are explicitly bounded."],
-	["library_contract_preserved", "Library consumers and public contracts remain accounted for."],
-	["persistent_data_safety_reviewed", "Persistent-data changes include migration, rollback, and integrity evidence."],
-	["typescript_quality_verified", "TypeScript or JavaScript changes carry relevant type, lint, and test evidence."],
-	["python_quality_verified", "Python changes carry relevant lint, type, and test evidence."],
+	[
+		"fix_reproducible",
+		"Fix candidates include reproducible source and expected behavior evidence.",
+	],
+	[
+		"hardening_boundaries_complete",
+		"Hardening candidates identify abuse, failure, and negative-test boundaries.",
+	],
+	[
+		"improvement_outcome_observable",
+		"Improvement candidates define an observable outcome.",
+	],
+	[
+		"migration_invariants_preserved",
+		"Migration candidates preserve declared invariants or bounded equivalence.",
+	],
+	[
+		"security_privacy_reviewed",
+		"Security and privacy implications are explicitly assessed for this stage.",
+	],
+	[
+		"accessibility_ui_reviewed",
+		"UI changes include accessibility and interaction evidence appropriate to this stage.",
+	],
+	[
+		"dependency_risk_controlled",
+		"Dependency-surface changes include compatibility, provenance, and risk evidence.",
+	],
+	[
+		"release_safety_approved",
+		"Release or externally destructive effects have exact authority and safety evidence.",
+	],
+	[
+		"api_contract_reviewed",
+		"Public API behavior and compatibility are explicitly bounded.",
+	],
+	[
+		"cli_behavior_verified",
+		"CLI behavior, errors, and automation compatibility are explicitly bounded.",
+	],
+	[
+		"library_contract_preserved",
+		"Library consumers and public contracts remain accounted for.",
+	],
+	[
+		"persistent_data_safety_reviewed",
+		"Persistent-data changes include migration, rollback, and integrity evidence.",
+	],
+	[
+		"typescript_quality_verified",
+		"TypeScript or JavaScript changes carry relevant type, lint, and test evidence.",
+	],
+	[
+		"python_quality_verified",
+		"Python changes carry relevant lint, type, and test evidence.",
+	],
 	["go_quality_verified", "Go changes carry relevant vet and test evidence."],
-	["rust_quality_verified", "Rust changes carry relevant Clippy and test evidence."],
-	["shell_quality_verified", "Shell changes carry relevant static-analysis and execution evidence."],
+	[
+		"rust_quality_verified",
+		"Rust changes carry relevant Clippy and test evidence.",
+	],
+	[
+		"shell_quality_verified",
+		"Shell changes carry relevant static-analysis and execution evidence.",
+	],
 ] as const;
 
 const MODEL_STANDARD_IDS = new Set([
@@ -134,7 +305,10 @@ const MODEL_STANDARD_IDS = new Set([
 	"api_contract_reviewed",
 	"library_contract_preserved",
 ]);
-const HUMAN_STANDARD_IDS = new Set(["approval_safety", "release_safety_approved"]);
+const HUMAN_STANDARD_IDS = new Set([
+	"approval_safety",
+	"release_safety_approved",
+]);
 const EXTERNAL_STANDARD_IDS = new Set([
 	"verification_passed",
 	"tdd_evidence_valid",
@@ -201,11 +375,18 @@ export function createQualityStandardRegistry(
 }
 
 function builtInRegistrations(): QualityStandardRegistration[] {
-	const byId = new Map<string, { description: string; stages: Set<TraceLoop> }>();
+	const byId = new Map<
+		string,
+		{ description: string; stages: Set<TraceLoop> }
+	>();
 	addDefinitions(byId, "decision", DECISION_BASELINE);
 	addDefinitions(byId, "planning", PLANNING_BASELINE);
 	addDefinitions(byId, "implementation", IMPLEMENTATION_BASELINE);
-	addDefinitions(byId, ["decision", "planning", "implementation"], CONDITIONAL_STANDARDS.slice(0, 12));
+	addDefinitions(
+		byId,
+		["decision", "planning", "implementation"],
+		CONDITIONAL_STANDARDS.slice(0, 12),
+	);
 	addDefinitions(byId, "implementation", CONDITIONAL_STANDARDS.slice(12));
 	return [...byId.entries()].map(([id, definition]) =>
 		kernelRegistration(id, definition.description, [...definition.stages]),
@@ -256,9 +437,7 @@ function kernelRegistration(
 	};
 }
 
-function standardVerifierKind(
-	id: string,
-): QualityStandard["verifier"]["kind"] {
+function standardVerifierKind(id: string): QualityStandard["verifier"]["kind"] {
 	if (HUMAN_STANDARD_IDS.has(id)) return "human";
 	if (MODEL_STANDARD_IDS.has(id)) return "model";
 	if (EXTERNAL_STANDARD_IDS.has(id)) return "external";
@@ -286,9 +465,7 @@ function standardTimeout(kind: QualityStandard["verifier"]["kind"]): number {
 	return 5_000;
 }
 
-function evidenceAdapters(
-	kind: QualityStandard["verifier"]["kind"],
-): string[] {
+function evidenceAdapters(kind: QualityStandard["verifier"]["kind"]): string[] {
 	if (kind === "human") return ["authority", "trace"];
 	if (kind === "external") return ["checks", "source", "trace"];
 	if (kind === "model") return ["change", "planning", "source", "trace"];
@@ -311,7 +488,12 @@ function normalizeRegistration(
 		rolloutHistory: [...registration.rolloutHistory],
 		evaluationDependsOn: unique(registration.evaluationDependsOn),
 		...(registration.approval
-			? { approval: { status: "approved", refs: unique(registration.approval.refs) } }
+			? {
+					approval: {
+						status: "approved",
+						refs: unique(registration.approval.refs),
+					},
+				}
 			: {}),
 	};
 }
@@ -322,16 +504,25 @@ function validateRegistration(registration: QualityStandardRegistration): void {
 	validateStandardAuthority(registration);
 }
 
-function validateStandardShape(registration: QualityStandardRegistration): void {
+function validateStandardShape(
+	registration: QualityStandardRegistration,
+): void {
 	const standard = registration.standard;
 	if (!/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(standard.id)) {
 		throw new Error("Quality Standard registration requires a stable id.");
 	}
 	if (!standard.version.trim() || !standard.description.trim()) {
-		throw new Error(`Quality Standard ${standard.id} requires version and description.`);
+		throw new Error(
+			`Quality Standard ${standard.id} requires version and description.`,
+		);
 	}
-	if (standard.assessmentCriteria.length === 0 || registration.stages.length === 0) {
-		throw new Error(`Quality Standard ${standard.id} requires criteria and stages.`);
+	if (
+		standard.assessmentCriteria.length === 0 ||
+		registration.stages.length === 0
+	) {
+		throw new Error(
+			`Quality Standard ${standard.id} requires criteria and stages.`,
+		);
 	}
 }
 
@@ -339,13 +530,17 @@ function validateClosedVerifierInputs(
 	registration: QualityStandardRegistration,
 ): void {
 	const standard = registration.standard;
-	if (!(QUALITY_VERIFIER_IDS as readonly string[]).includes(standard.verifier.id)) {
+	if (
+		!(QUALITY_VERIFIER_IDS as readonly string[]).includes(standard.verifier.id)
+	) {
 		throw new Error(
 			`Quality Standard ${standard.id} uses unknown verifier ${standard.verifier.id}.`,
 		);
 	}
 	for (const adapterId of standard.evidenceAdapterIds) {
-		if (!(QUALITY_EVIDENCE_ADAPTER_IDS as readonly string[]).includes(adapterId)) {
+		if (
+			!(QUALITY_EVIDENCE_ADAPTER_IDS as readonly string[]).includes(adapterId)
+		) {
 			throw new Error(
 				`Quality Standard ${standard.id} uses unknown evidence adapter ${adapterId}.`,
 			);
@@ -366,9 +561,12 @@ function validateStandardAuthority(
 		return;
 	}
 	if (standard.protected) {
-		throw new Error(`Only kernel Quality Standards may be protected: ${standard.id}.`);
+		throw new Error(
+			`Only kernel Quality Standards may be protected: ${standard.id}.`,
+		);
 	}
-	if (registration.authority === "project") validateProjectRollout(registration);
+	if (registration.authority === "project")
+		validateProjectRollout(registration);
 }
 
 function validateProjectRollout(
@@ -376,12 +574,18 @@ function validateProjectRollout(
 ): void {
 	const standardId = registration.standard.id;
 	const expectedHistory = expectedProjectRolloutHistory(registration.rollout);
-	if (JSON.stringify(registration.rolloutHistory) !== JSON.stringify(expectedHistory)) {
+	if (
+		JSON.stringify(registration.rolloutHistory) !==
+		JSON.stringify(expectedHistory)
+	) {
 		throw new Error(
 			`Project Quality Standard ${standardId} must progress through ${expectedHistory.join(" -> ") || "no prior rollout"} before ${registration.rollout}.`,
 		);
 	}
-	if (registration.rollout === "enforce" && !registration.approval?.refs.length) {
+	if (
+		registration.rollout === "enforce" &&
+		!registration.approval?.refs.length
+	) {
 		throw new Error(
 			`Project Quality Standard ${standardId} requires approval before enforce.`,
 		);
@@ -392,7 +596,10 @@ function assertAcyclicRegistry(
 	registrations: QualityStandardRegistration[],
 ): void {
 	const byId = new Map(
-		registrations.map((registration) => [registration.standard.id, registration]),
+		registrations.map((registration) => [
+			registration.standard.id,
+			registration,
+		]),
 	);
 	const visiting = new Set<string>();
 	const visited = new Set<string>();

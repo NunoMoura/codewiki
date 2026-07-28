@@ -129,7 +129,9 @@ describe("Quality Policy resolver", () => {
 		assert.ok(
 			byId
 				.get("typescript_quality_verified")
-				.ruleRefs.includes("quality.technology.typescript.implementation@1.0.0"),
+				.ruleRefs.includes(
+					"quality.technology.typescript.implementation@1.0.0",
+				),
 		);
 	});
 
@@ -249,7 +251,10 @@ describe("Quality Policy resolver", () => {
 				authorityRef: "trace:approval:3",
 			},
 		];
-		assert.throws(() => resolveQualityPolicy(unknown), /Unknown Quality Standard project.unknown/);
+		assert.throws(
+			() => resolveQualityPolicy(unknown),
+			/Unknown Quality Standard project.unknown/,
+		);
 
 		const wrongStage = selectorInput("planning");
 		wrongStage.frozenMinimum = {

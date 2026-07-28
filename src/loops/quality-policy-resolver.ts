@@ -202,30 +202,110 @@ const CODEWIKI_QUALITY_ACTIVATION_RULES: QualityActivationRule[] = [
 		standardIds: STAGE_BASELINES[stage],
 		match: {},
 	})),
-	...rulesForAllStages("quality.change.kind.fix", ["fix_reproducible"], { changeKinds: ["fix"] }),
-	...rulesForAllStages("quality.change.kind.harden", ["hardening_boundaries_complete"], { changeKinds: ["harden"] }),
-	...rulesForAllStages("quality.change.kind.improve", ["improvement_outcome_observable"], { changeKinds: ["improve"] }),
-	...rulesForAllStages("quality.change.kind.migrate", ["migration_invariants_preserved"], { changeKinds: ["migrate"] }),
-	...rulesForAllStages("quality.change.type.security", ["security_privacy_reviewed"], { changeTypes: ["security_change"] }),
-	...rulesForAllStages("quality.change.risk.high", ["security_privacy_reviewed"], { risks: ["high"] }),
-	...rulesForAllStages("quality.project.security", ["security_privacy_reviewed"], { projectTraits: ["handles-personal-data", "security-sensitive"] }),
-	...rulesForAllStages("quality.layer.security", ["security_privacy_reviewed"], { affectedLayers: ["security", "privacy"] }),
-	...rulesForAllStages("quality.project.web-ui", ["accessibility_ui_reviewed"], { projectTraits: ["web-ui"] }),
-	...rulesForAllStages("quality.layer.ui", ["accessibility_ui_reviewed"], { affectedLayers: ["frontend", "ui", "web"] }),
-	...rulesForAllStages("quality.path.ui", ["accessibility_ui_reviewed"], { pathTraits: ["ui"] }),
-	...rulesForAllStages("quality.change.type.dependency", ["dependency_risk_controlled"], { changeTypes: ["dependency_change"] }),
-	...rulesForAllStages("quality.layer.dependency", ["dependency_risk_controlled"], { affectedLayers: ["dependency", "package"] }),
-	...rulesForAllStages("quality.path.dependency", ["dependency_risk_controlled"], { pathTraits: ["dependency"] }),
-	...rulesForAllStages("quality.change.type.release", ["release_safety_approved"], { changeTypes: ["release_change"] }),
-	...rulesForAllStages("quality.project.release", ["release_safety_approved"], { projectTraits: ["release-producing"] }),
-	...rulesForAllStages("quality.layer.release", ["release_safety_approved"], { affectedLayers: ["publication", "release"] }),
-	...rulesForAllStages("quality.path.release", ["release_safety_approved"], { pathTraits: ["release"] }),
-	...rulesForAllStages("quality.project.public-api", ["api_contract_reviewed"], { projectTraits: ["public-api"] }),
-	...rulesForAllStages("quality.layer.api", ["api_contract_reviewed"], { affectedLayers: ["api"] }),
-	...rulesForAllStages("quality.project.cli", ["cli_behavior_verified"], { projectTraits: ["cli"] }),
-	...rulesForAllStages("quality.project.library", ["library_contract_preserved"], { projectTraits: ["library"] }),
-	...rulesForAllStages("quality.project.persistent-data", ["persistent_data_safety_reviewed"], { projectTraits: ["persistent-data"] }),
-	...rulesForAllStages("quality.layer.data", ["persistent_data_safety_reviewed"], { affectedLayers: ["data", "database", "storage"] }),
+	...rulesForAllStages("quality.change.kind.fix", ["fix_reproducible"], {
+		changeKinds: ["fix"],
+	}),
+	...rulesForAllStages(
+		"quality.change.kind.harden",
+		["hardening_boundaries_complete"],
+		{ changeKinds: ["harden"] },
+	),
+	...rulesForAllStages(
+		"quality.change.kind.improve",
+		["improvement_outcome_observable"],
+		{ changeKinds: ["improve"] },
+	),
+	...rulesForAllStages(
+		"quality.change.kind.migrate",
+		["migration_invariants_preserved"],
+		{ changeKinds: ["migrate"] },
+	),
+	...rulesForAllStages(
+		"quality.change.type.security",
+		["security_privacy_reviewed"],
+		{ changeTypes: ["security_change"] },
+	),
+	...rulesForAllStages(
+		"quality.change.risk.high",
+		["security_privacy_reviewed"],
+		{ risks: ["high"] },
+	),
+	...rulesForAllStages(
+		"quality.project.security",
+		["security_privacy_reviewed"],
+		{ projectTraits: ["handles-personal-data", "security-sensitive"] },
+	),
+	...rulesForAllStages(
+		"quality.layer.security",
+		["security_privacy_reviewed"],
+		{ affectedLayers: ["security", "privacy"] },
+	),
+	...rulesForAllStages(
+		"quality.project.web-ui",
+		["accessibility_ui_reviewed"],
+		{ projectTraits: ["web-ui"] },
+	),
+	...rulesForAllStages("quality.layer.ui", ["accessibility_ui_reviewed"], {
+		affectedLayers: ["frontend", "ui", "web"],
+	}),
+	...rulesForAllStages("quality.path.ui", ["accessibility_ui_reviewed"], {
+		pathTraits: ["ui"],
+	}),
+	...rulesForAllStages(
+		"quality.change.type.dependency",
+		["dependency_risk_controlled"],
+		{ changeTypes: ["dependency_change"] },
+	),
+	...rulesForAllStages(
+		"quality.layer.dependency",
+		["dependency_risk_controlled"],
+		{ affectedLayers: ["dependency", "package"] },
+	),
+	...rulesForAllStages(
+		"quality.path.dependency",
+		["dependency_risk_controlled"],
+		{ pathTraits: ["dependency"] },
+	),
+	...rulesForAllStages(
+		"quality.change.type.release",
+		["release_safety_approved"],
+		{ changeTypes: ["release_change"] },
+	),
+	...rulesForAllStages("quality.project.release", ["release_safety_approved"], {
+		projectTraits: ["release-producing"],
+	}),
+	...rulesForAllStages("quality.layer.release", ["release_safety_approved"], {
+		affectedLayers: ["publication", "release"],
+	}),
+	...rulesForAllStages("quality.path.release", ["release_safety_approved"], {
+		pathTraits: ["release"],
+	}),
+	...rulesForAllStages(
+		"quality.project.public-api",
+		["api_contract_reviewed"],
+		{ projectTraits: ["public-api"] },
+	),
+	...rulesForAllStages("quality.layer.api", ["api_contract_reviewed"], {
+		affectedLayers: ["api"],
+	}),
+	...rulesForAllStages("quality.project.cli", ["cli_behavior_verified"], {
+		projectTraits: ["cli"],
+	}),
+	...rulesForAllStages(
+		"quality.project.library",
+		["library_contract_preserved"],
+		{ projectTraits: ["library"] },
+	),
+	...rulesForAllStages(
+		"quality.project.persistent-data",
+		["persistent_data_safety_reviewed"],
+		{ projectTraits: ["persistent-data"] },
+	),
+	...rulesForAllStages(
+		"quality.layer.data",
+		["persistent_data_safety_reviewed"],
+		{ affectedLayers: ["data", "database", "storage"] },
+	),
 	technologyRule("typescript", "typescript_quality_verified"),
 	technologyRule("javascript", "typescript_quality_verified"),
 	technologyRule("python", "python_quality_verified"),
@@ -306,7 +386,9 @@ function activateFrozenMinimum(
 			parameters: minimum.parameters,
 			enforcement: minimum.enforcement,
 			required: minimum.required,
-			activatedBy: [`planning-minimum:${selector.frozenMinimum.planningPolicyDigest}`],
+			activatedBy: [
+				`planning-minimum:${selector.frozenMinimum.planningPolicyDigest}`,
+			],
 			ruleRef: `quality.planning-minimum@${QUALITY_POLICY_SELECTOR_VERSION}`,
 		});
 	}
@@ -327,7 +409,10 @@ function applyApprovedExclusions(
 			selector.stage,
 			exclusion.standardVersion,
 		);
-		if (registration.authority === "kernel" || frozenIds.has(exclusion.standardId)) {
+		if (
+			registration.authority === "kernel" ||
+			frozenIds.has(exclusion.standardId)
+		) {
 			throw new Error(
 				`Quality Standard ${exclusion.standardId} cannot be excluded from ${selector.stage}.`,
 			);
@@ -359,7 +444,8 @@ function resolvedPolicy(
 				version: QUALITY_POLICY_SELECTOR_VERSION,
 				kind: "all_required",
 				standardIds: requiredStandardIds,
-				onFailure: selector.stage === "implementation" ? "repair" : "route_back",
+				onFailure:
+					selector.stage === "implementation" ? "repair" : "route_back",
 			},
 		],
 		protectedStandardIds: [...active.values()].flatMap((binding) =>
@@ -376,7 +462,10 @@ function resolvedExclusions(
 	selector: NormalizedSelectorInput,
 ) {
 	const approvedById = new Map(
-		selector.approvedExclusions.map((exclusion) => [exclusion.standardId, exclusion]),
+		selector.approvedExclusions.map((exclusion) => [
+			exclusion.standardId,
+			exclusion,
+		]),
 	);
 	return registry.list(selector.stage).flatMap((registration) => {
 		const standardId = registration.standard.id;
@@ -436,7 +525,9 @@ function normalizeSelectorInput(
 								...binding,
 								parameters: sortObject(binding.parameters),
 							}))
-							.sort((left, right) => left.standardId.localeCompare(right.standardId)),
+							.sort((left, right) =>
+								left.standardId.localeCompare(right.standardId),
+							),
 					},
 				}
 			: {}),
@@ -459,7 +550,10 @@ function assertSelectorChanges(input: ResolveQualityPolicyInput): void {
 		throw new Error("Quality Policy selector requires at least one Change.");
 	}
 	assertDigest(input.candidateDigest, "candidateDigest");
-	assertUnique(input.changes.map((change) => change.changeId), "Change");
+	assertUnique(
+		input.changes.map((change) => change.changeId),
+		"Change",
+	);
 	for (const change of input.changes) assertChangeFacts(change);
 }
 
@@ -479,12 +573,23 @@ function assertSelectorTraits(input: ResolveQualityPolicyInput): void {
 function assertApprovedAdjustments(input: ResolveQualityPolicyInput): void {
 	const additions = optionalValues(input.approvedAdditions);
 	const exclusions = optionalValues(input.approvedExclusions);
-	assertUnique(additions.map((entry) => entry.standardId), "approved addition");
-	assertUnique(exclusions.map((entry) => entry.standardId), "approved exclusion");
+	assertUnique(
+		additions.map((entry) => entry.standardId),
+		"approved addition",
+	);
+	assertUnique(
+		exclusions.map((entry) => entry.standardId),
+		"approved exclusion",
+	);
 	for (const addition of additions) assertAuthorityRef(addition.authorityRef);
-	for (const exclusion of exclusions) assertAuthorityRef(exclusion.authorityRef);
+	for (const exclusion of exclusions)
+		assertAuthorityRef(exclusion.authorityRef);
 	for (const addition of additions) {
-		if (exclusions.some((exclusion) => exclusion.standardId === addition.standardId)) {
+		if (
+			exclusions.some(
+				(exclusion) => exclusion.standardId === addition.standardId,
+			)
+		) {
 			throw new Error(
 				`Quality Standard ${addition.standardId} cannot be both added and excluded.`,
 			);
@@ -499,7 +604,10 @@ function assertFrozenMinimum(input: ResolveQualityPolicyInput): void {
 			"Only Implementation Quality Policy may carry a frozen Planning minimum.",
 		);
 	}
-	assertDigest(input.frozenMinimum.planningPolicyDigest, "planningPolicyDigest");
+	assertDigest(
+		input.frozenMinimum.planningPolicyDigest,
+		"planningPolicyDigest",
+	);
 	assertUnique(
 		input.frozenMinimum.bindings.map((binding) => binding.standardId),
 		"Planning minimum",
@@ -565,7 +673,9 @@ function activateDependencies(
 					registry,
 					stage,
 					standardId: dependency,
-					activatedBy: [`evaluation-dependency:${binding.registration.standard.id}`],
+					activatedBy: [
+						`evaluation-dependency:${binding.registration.standard.id}`,
+					],
 					ruleRef: `quality.registry-dependency@${QUALITY_STANDARD_DEPENDENCY_VERSION}`,
 				});
 				changed = true;
@@ -586,7 +696,9 @@ function requiredRegistration(
 	const registration = registry.get(standardId);
 	if (!registration) throw new Error(`Unknown Quality Standard ${standardId}.`);
 	if (!registration.stages.includes(stage)) {
-		throw new Error(`Quality Standard ${standardId} is not registered for ${stage}.`);
+		throw new Error(
+			`Quality Standard ${standardId} is not registered for ${stage}.`,
+		);
 	}
 	if (standardVersion && registration.standard.version !== standardVersion) {
 		throw new Error(
@@ -617,7 +729,7 @@ function assertActiveDependencies(active: Map<string, MutableBinding>): void {
 					`Quality Standard ${binding.registration.standard.id} requires excluded dependency ${dependency}.`,
 				);
 			}
-	}
+		}
 	}
 }
 
@@ -701,13 +813,25 @@ function classifyPathTraits(paths: string[]): QualityPathTrait[] {
 	const traits = new Set<QualityPathTrait>();
 	for (const path of paths) {
 		const classifiedPath = path.toLowerCase();
-		if (/(^|\/)(?:ui|web|frontend|components)(\/|$)|\.(?:css|html|jsx|tsx|vue|svelte)$/.test(classifiedPath)) {
+		if (
+			/(^|\/)(?:ui|web|frontend|components)(\/|$)|\.(?:css|html|jsx|tsx|vue|svelte)$/.test(
+				classifiedPath,
+			)
+		) {
 			traits.add("ui");
 		}
-		if (/(^|\/)(?:package(?:-lock)?\.json|pnpm-lock\.yaml|yarn\.lock|pyproject\.toml|requirements[^/]*\.txt|go\.mod|cargo\.toml)$/.test(classifiedPath)) {
+		if (
+			/(^|\/)(?:package(?:-lock)?\.json|pnpm-lock\.yaml|yarn\.lock|pyproject\.toml|requirements[^/]*\.txt|go\.mod|cargo\.toml)$/.test(
+				classifiedPath,
+			)
+		) {
 			traits.add("dependency");
 		}
-		if (/(^|\/)(?:\.github\/workflows|release|releases|changelog)(\/|\.|$)/.test(classifiedPath)) {
+		if (
+			/(^|\/)(?:\.github\/workflows|release|releases|changelog)(\/|\.|$)/.test(
+				classifiedPath,
+			)
+		) {
 			traits.add("release");
 		}
 	}
@@ -753,7 +877,9 @@ function ruleRefsForStandard(stage: TraceLoop, standardId: string): string[] {
 function normalizePath(value: string): string {
 	const path = value.trim().replaceAll("\\", "/").replace(/^\.\//, "");
 	if (!path || path.startsWith("/") || path.split("/").includes("..")) {
-		throw new Error(`Quality Policy selector path must be repository-relative: ${value}.`);
+		throw new Error(
+			`Quality Policy selector path must be repository-relative: ${value}.`,
+		);
 	}
 	return path;
 }
@@ -763,7 +889,9 @@ function assertChangeFacts(change: QualityChangeSelectorFacts): void {
 		throw new Error("Quality Policy Change requires a stable changeId.");
 	}
 	if (!Number.isInteger(change.revision) || change.revision < 1) {
-		throw new Error(`Quality Policy Change ${change.changeId} requires a positive revision.`);
+		throw new Error(
+			`Quality Policy Change ${change.changeId} requires a positive revision.`,
+		);
 	}
 	assertDigest(change.digest, `Change ${change.changeId} digest`);
 	if (!(CHANGE_KIND_VALUES as readonly string[]).includes(change.kind)) {
@@ -780,7 +908,9 @@ function assertChangeFacts(change: QualityChangeSelectorFacts): void {
 function normalizeLayer(value: string): string {
 	const layer = value.trim().toLowerCase().replaceAll("_", "-");
 	if (!/^[a-z0-9][a-z0-9.-]*$/.test(layer)) {
-		throw new Error(`Quality Policy affected layer must be a stable id: ${value}.`);
+		throw new Error(
+			`Quality Policy affected layer must be a stable id: ${value}.`,
+		);
 	}
 	return layer;
 }
@@ -791,8 +921,13 @@ function mergeParameters(
 	standardId: string,
 ): void {
 	for (const [key, value] of Object.entries(incoming)) {
-		if (key in current && qualityPolicyDigest(current[key]) !== qualityPolicyDigest(value)) {
-			throw new Error(`Quality Standard ${standardId} has conflicting parameter ${key}.`);
+		if (
+			key in current &&
+			qualityPolicyDigest(current[key]) !== qualityPolicyDigest(value)
+		) {
+			throw new Error(
+				`Quality Standard ${standardId} has conflicting parameter ${key}.`,
+			);
 		}
 		current[key] = value;
 	}
@@ -840,7 +975,10 @@ function assertUnique(values: string[], label: string): void {
 }
 
 function assertAuthorityRef(value: string): void {
-	if (!value.trim()) throw new Error("Quality Policy addition or exclusion requires authorityRef.");
+	if (!value.trim())
+		throw new Error(
+			"Quality Policy addition or exclusion requires authorityRef.",
+		);
 }
 
 function assertDigest(value: string, label: string): void {
