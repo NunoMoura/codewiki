@@ -35,7 +35,6 @@ import type {
 	ImplementationArchiveDisposition,
 	AcceptanceEvidenceInput,
 	CheckResultInput,
-	ImplementationArchiveDispositionInput,
 	ImplementationChange,
 	ImplementationChangeInput,
 	ImplementationQualityAssessmentInput,
@@ -108,7 +107,6 @@ export interface RunWikiImplementInput {
 	workerReports?: ImplementationWorkerReportInput[];
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
 	archiveDisposition?: ImplementationArchiveDisposition;
-	archiveDispositionInput?: ImplementationArchiveDispositionInput;
 	requireArchiveDisposition?: boolean;
 	evidencePolicy?: ImplementationEvidencePolicy;
 	includeCachedReviewEvidence?: boolean;
@@ -194,7 +192,6 @@ const WIKI_IMPLEMENT_INPUT_KEYS = [
 	"workerReports",
 	"reviewEvidenceReports",
 	"archiveDisposition",
-	"archiveDispositionInput",
 	"requireArchiveDisposition",
 	"evidencePolicy",
 	"includeCachedReviewEvidence",
@@ -931,7 +928,6 @@ function implementationIterationInput(
 		aggregateContentProof: prepared.aggregateContentProof,
 		reviewEvidenceReports: prepared.reviewEvidenceReports,
 		archiveDisposition: input.archiveDisposition,
-		archiveDispositionInput: input.archiveDispositionInput,
 		requireArchiveDisposition: input.requireArchiveDisposition,
 		reviewEvidenceCache: shouldIncludeCachedReviewEvidence(
 			input,

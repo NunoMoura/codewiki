@@ -91,18 +91,6 @@ export type ImplementationArchiveDispositionAction =
 	| "post_commit_compact"
 	| "retain_hot";
 
-export interface ImplementationArchiveDispositionInput {
-	action?: ImplementationArchiveDispositionAction | string;
-	traceId?: string;
-	trace_id?: string;
-	reason?: string;
-	afterCommit?: boolean;
-	after_commit?: boolean;
-	gitRestoreRef?: string;
-	git_restore_ref?: string;
-	refs?: string[];
-}
-
 export interface ImplementationArchiveDisposition {
 	action: ImplementationArchiveDispositionAction | string;
 	traceId: string;

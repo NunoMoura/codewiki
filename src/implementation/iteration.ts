@@ -45,7 +45,6 @@ import {
 import type {
 	AcceptanceRequirement,
 	ImplementationArchiveDisposition,
-	ImplementationArchiveDispositionInput,
 	ImplementationChange,
 	ImplementationChangeInput,
 	ImplementationExitResult,
@@ -64,7 +63,6 @@ export interface ImplementationIterationInput {
 	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
 	reviewEvidenceCache?: ReviewEvidenceCacheReader;
 	archiveDisposition?: ImplementationArchiveDisposition;
-	archiveDispositionInput?: ImplementationArchiveDispositionInput;
 	requireArchiveDisposition?: boolean;
 	expectedWorkerBaseSha?: string;
 	componentMap?: SourceMapContract;
@@ -125,7 +123,7 @@ export function runImplementationIteration(
 		input,
 		changes,
 	);
-	const archiveDisposition = archiveDispositionForIteration(input);
+	const archiveDisposition = input.archiveDisposition;
 	const exit = evaluateImplementationExit({
 		planningRefs,
 		acceptanceRequirements,
@@ -233,7 +231,7 @@ export async function runImplementationIterationWithRunner(
 		input,
 		changes,
 	);
-	const archiveDisposition = archiveDispositionForIteration(input);
+	const archiveDisposition = input.archiveDisposition;
 	const exit = await evaluateImplementationExitWithRunner({
 		planningRefs,
 		acceptanceRequirements,
@@ -335,34 +333,6 @@ function reviewEvidenceReportsForIteration(
 			phases: ["fast", "exit"],
 		}) || [];
 	return [...cachedReports, ...(input.reviewEvidenceReports || [])];
-}
-
-function archiveDispositionForIteration(
-	input: ImplementationIterationInput,
-): ImplementationArchiveDisposition | undefined {
-	if (input.archiveDisposition) return input.archiveDisposition;
-	const disposition = input.archiveDispositionInput;
-	if (!disposition) return undefined;
-	return {
-		action: text(disposition.action),
-		traceId: text(disposition.traceId ?? disposition.trace_id) || input.traceId,
-		reason: text(disposition.reason),
-		afterCommit: Boolean(
-			disposition.afterCommit ?? disposition.after_commit ?? false,
-		),
-		...(text(disposition.gitRestoreRef ?? disposition.git_restore_ref)
-			? {
-					gitRestoreRef: text(
-						disposition.gitRestoreRef ?? disposition.git_restore_ref,
-					),
-				}
-			: {}),
-		refs: (disposition.refs || []).map(text).filter(Boolean),
-	};
-}
-
-function text(value: unknown): string {
-	return String(value || "").trim();
 }
 
 function implementationTraceEvents(args: {

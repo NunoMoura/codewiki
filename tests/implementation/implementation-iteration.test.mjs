@@ -267,7 +267,7 @@ describe("implementation iteration runner", () => {
 			planningEvents: planning,
 			componentMap: componentMap(),
 			requireArchiveDisposition: true,
-			archiveDispositionInput: {
+			archiveDisposition: {
 				action: "post_commit_compact",
 				traceId: "TRACE-implementation",
 				afterCommit: true,
