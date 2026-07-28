@@ -17,9 +17,10 @@ import {
 	type QualityStandardBinding,
 } from "./contracts.ts";
 import {
-	createQualityStandardRegistry,
+	createQualityStandardCatalog,
+	type ProjectQualityStandardRegistration,
 	type QualityStandardRegistration,
-	type QualityStandardRegistry,
+	type QualityStandardCatalog,
 } from "./catalog.ts";
 
 const QUALITY_POLICY_SELECTOR_VERSION = "1.0.0";
@@ -95,7 +96,7 @@ interface ResolveQualityPolicyInput {
 	approvedAdditions?: QualityPolicyApprovedAddition[];
 	approvedExclusions?: QualityPolicyApprovedExclusion[];
 	frozenMinimum?: QualityPolicyFrozenMinimum;
-	registry?: QualityStandardRegistry;
+	projectRegistrations?: ProjectQualityStandardRegistration[];
 }
 
 interface QualityActivationRuleMatch {
@@ -118,7 +119,7 @@ interface QualityActivationRule {
 
 interface NormalizedSelectorInput {
 	selectorVersion: typeof QUALITY_POLICY_SELECTOR_VERSION;
-	registryVersion: string;
+	catalogVersion: string;
 	stage: TraceLoop;
 	candidateDigest: string;
 	changes: QualityChangeSelectorFacts[];
@@ -317,21 +318,21 @@ const CODEWIKI_QUALITY_ACTIVATION_RULES: QualityActivationRule[] = [
 export function resolveQualityPolicy(
 	input: ResolveQualityPolicyInput,
 ): QualityPolicyResolution {
-	const registry = input.registry ?? createQualityStandardRegistry();
-	const selector = normalizeSelectorInput(input, registry.version);
+	const catalog = createQualityStandardCatalog(input.projectRegistrations);
+	const selector = normalizeSelectorInput(input, catalog.version);
 	const active = new Map<string, MutableBinding>();
-	activateRules(active, registry, selector);
-	activateApprovedAdditions(active, registry, selector);
-	activateFrozenMinimum(active, registry, selector);
-	activateDependencies(active, registry, selector.stage);
-	applyApprovedExclusions(active, registry, selector);
+	activateRules(active, catalog, selector);
+	activateApprovedAdditions(active, catalog, selector);
+	activateFrozenMinimum(active, catalog, selector);
+	activateDependencies(active, catalog, selector.stage);
+	applyApprovedExclusions(active, catalog, selector);
 	assertActiveDependencies(active);
-	return resolvedPolicy(active, registry, selector);
+	return resolvedPolicy(active, catalog, selector);
 }
 
 function activateRules(
 	active: Map<string, MutableBinding>,
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	for (const rule of CODEWIKI_QUALITY_ACTIVATION_RULES) {
@@ -341,7 +342,7 @@ function activateRules(
 		for (const standardId of rule.standardIds) {
 			activate({
 				active,
-				registry,
+				catalog,
 				stage: selector.stage,
 				standardId,
 				activatedBy: reasons,
@@ -353,13 +354,13 @@ function activateRules(
 
 function activateApprovedAdditions(
 	active: Map<string, MutableBinding>,
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	for (const addition of selector.approvedAdditions) {
 		activate({
 			active,
-			registry,
+			catalog,
 			stage: selector.stage,
 			standardId: addition.standardId,
 			standardVersion: addition.standardVersion,
@@ -372,14 +373,14 @@ function activateApprovedAdditions(
 
 function activateFrozenMinimum(
 	active: Map<string, MutableBinding>,
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	if (!selector.frozenMinimum) return;
 	for (const minimum of selector.frozenMinimum.bindings) {
 		activate({
 			active,
-			registry,
+			catalog,
 			stage: selector.stage,
 			standardId: minimum.standardId,
 			standardVersion: minimum.standardVersion,
@@ -396,7 +397,7 @@ function activateFrozenMinimum(
 
 function applyApprovedExclusions(
 	active: Map<string, MutableBinding>,
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	const frozenIds = new Set(
@@ -404,7 +405,7 @@ function applyApprovedExclusions(
 	);
 	for (const exclusion of selector.approvedExclusions) {
 		const registration = requiredRegistration(
-			registry,
+			catalog,
 			exclusion.standardId,
 			selector.stage,
 			exclusion.standardVersion,
@@ -423,7 +424,7 @@ function applyApprovedExclusions(
 
 function resolvedPolicy(
 	active: Map<string, MutableBinding>,
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	selector: NormalizedSelectorInput,
 ): QualityPolicyResolution {
 	const bindings = [...active.values()].map(toBinding);
@@ -437,7 +438,7 @@ function resolvedPolicy(
 		candidateDigest: selector.candidateDigest,
 		selectorInputDigest: qualityPolicyDigest(selector),
 		bindings,
-		exclusions: resolvedExclusions(active, registry, selector),
+		exclusions: resolvedExclusions(active, catalog, selector),
 		gates: [
 			{
 				id: `${selector.stage}.exit`,
@@ -458,7 +459,7 @@ function resolvedPolicy(
 
 function resolvedExclusions(
 	active: Map<string, MutableBinding>,
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	selector: NormalizedSelectorInput,
 ) {
 	const approvedById = new Map(
@@ -467,7 +468,7 @@ function resolvedExclusions(
 			exclusion,
 		]),
 	);
-	return registry.list(selector.stage).flatMap((registration) => {
+	return catalog.list(selector.stage).flatMap((registration) => {
 		const standardId = registration.standard.id;
 		if (active.has(standardId)) return [];
 		const approved = approvedById.get(standardId);
@@ -486,7 +487,7 @@ function resolvedExclusions(
 
 function normalizeSelectorInput(
 	input: ResolveQualityPolicyInput,
-	registryVersion: string,
+	catalogVersion: string,
 ): NormalizedSelectorInput {
 	assertValidSelectorInput(input);
 	const additions = optionalValues(input.approvedAdditions);
@@ -494,7 +495,7 @@ function normalizeSelectorInput(
 	const paths = unique(optionalValues(input.paths).map(normalizePath));
 	return {
 		selectorVersion: QUALITY_POLICY_SELECTOR_VERSION,
-		registryVersion,
+		catalogVersion,
 		stage: input.stage,
 		candidateDigest: input.candidateDigest,
 		changes: [...input.changes]
@@ -616,7 +617,7 @@ function assertFrozenMinimum(input: ResolveQualityPolicyInput): void {
 
 function activate(input: {
 	active: Map<string, MutableBinding>;
-	registry: QualityStandardRegistry;
+	catalog: QualityStandardCatalog;
 	stage: TraceLoop;
 	standardId: string;
 	standardVersion?: string;
@@ -627,7 +628,7 @@ function activate(input: {
 	ruleRef: string;
 }): void {
 	const registration = requiredRegistration(
-		input.registry,
+		input.catalog,
 		input.standardId,
 		input.stage,
 		input.standardVersion,
@@ -660,7 +661,7 @@ function activate(input: {
 
 function activateDependencies(
 	active: Map<string, MutableBinding>,
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	stage: TraceLoop,
 ): void {
 	for (;;) {
@@ -670,13 +671,13 @@ function activateDependencies(
 				if (active.has(dependency)) continue;
 				activate({
 					active,
-					registry,
+					catalog,
 					stage,
 					standardId: dependency,
 					activatedBy: [
 						`evaluation-dependency:${binding.registration.standard.id}`,
 					],
-					ruleRef: `quality.registry-dependency@${QUALITY_STANDARD_DEPENDENCY_VERSION}`,
+					ruleRef: `quality.catalog-dependency@${QUALITY_STANDARD_DEPENDENCY_VERSION}`,
 				});
 				changed = true;
 			}
@@ -688,12 +689,12 @@ function activateDependencies(
 const QUALITY_STANDARD_DEPENDENCY_VERSION = "1.0.0";
 
 function requiredRegistration(
-	registry: QualityStandardRegistry,
+	catalog: QualityStandardCatalog,
 	standardId: string,
 	stage: TraceLoop,
 	standardVersion?: string,
 ): QualityStandardRegistration {
-	const registration = registry.get(standardId);
+	const registration = catalog.get(standardId);
 	if (!registration) throw new Error(`Unknown Quality Standard ${standardId}.`);
 	if (!registration.stages.includes(stage)) {
 		throw new Error(
@@ -943,7 +944,7 @@ function assertEnforcementWithinRollout(
 		strongerEnforcement(enforcement, registration.rollout) === enforcement
 	) {
 		throw new Error(
-			`Quality Standard ${registration.standard.id} cannot exceed registry rollout ${registration.rollout}.`,
+			`Quality Standard ${registration.standard.id} cannot exceed catalog rollout ${registration.rollout}.`,
 		);
 	}
 }

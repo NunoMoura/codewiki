@@ -4,7 +4,7 @@ import type {
 	QualityStandard,
 } from "./contracts.ts";
 
-export const QUALITY_STANDARD_REGISTRY_VERSION = "1.0.0";
+export const QUALITY_STANDARD_CATALOG_VERSION = "1.0.0";
 
 const QUALITY_VERIFIER_IDS = [
 	"codewiki.deterministic",
@@ -26,7 +26,7 @@ const QUALITY_EVIDENCE_ADAPTER_IDS = [
 	"work-state",
 ] as const;
 
-export type QualityStandardAuthority = "kernel" | "official" | "project";
+export type QualityStandardAuthority = "kernel" | "project";
 
 export interface QualityStandardRolloutApproval {
 	status: "approved";
@@ -43,11 +43,16 @@ export interface QualityStandardRegistration {
 	evaluationDependsOn: string[];
 }
 
-export interface QualityStandardRegistry {
-	version: typeof QUALITY_STANDARD_REGISTRY_VERSION;
+export interface QualityStandardCatalog {
+	version: typeof QUALITY_STANDARD_CATALOG_VERSION;
 	get(standardId: string): QualityStandardRegistration | undefined;
 	list(stage?: TraceLoop): QualityStandardRegistration[];
 }
+
+export type ProjectQualityStandardRegistration = Omit<
+	QualityStandardRegistration,
+	"authority"
+> & { authority?: never };
 
 const DECISION_BASELINE = [
 	[
@@ -322,12 +327,22 @@ const EXTERNAL_STANDARD_IDS = new Set([
 
 const CODEWIKI_QUALITY_STANDARD_REGISTRATIONS = builtInRegistrations();
 
-export function createQualityStandardRegistry(
-	additional: QualityStandardRegistration[] = [],
-): QualityStandardRegistry {
+export function createQualityStandardCatalog(
+	additional: ProjectQualityStandardRegistration[] = [],
+): QualityStandardCatalog {
+	for (const registration of additional) {
+		if ("authority" in registration) {
+			throw new Error(
+				`Caller-supplied Quality Standard ${registration.standard.id} cannot declare authority; the catalog assigns project authority.`,
+			);
+		}
+	}
 	const registrations = [
 		...CODEWIKI_QUALITY_STANDARD_REGISTRATIONS,
-		...additional,
+		...additional.map((registration) => ({
+			...registration,
+			authority: "project" as const,
+		})),
 	].map(normalizeRegistration);
 	const byId = new Map<string, QualityStandardRegistration>();
 	for (const registration of registrations) {
@@ -344,7 +359,7 @@ export function createQualityStandardRegistry(
 			const dependencyRegistration = byId.get(dependency);
 			if (!dependencyRegistration) {
 				throw new Error(
-					`Quality Standard ${registration.standard.id} has unknown registry dependency ${dependency}.`,
+					`Quality Standard ${registration.standard.id} has unknown catalog dependency ${dependency}.`,
 				);
 			}
 			for (const stage of registration.stages) {
@@ -356,9 +371,9 @@ export function createQualityStandardRegistry(
 			}
 		}
 	}
-	assertAcyclicRegistry(registrations);
+	assertAcyclicCatalog(registrations);
 	return {
-		version: QUALITY_STANDARD_REGISTRY_VERSION,
+		version: QUALITY_STANDARD_CATALOG_VERSION,
 		get: (standardId) => cloneRegistration(byId.get(standardId)),
 		list: (stage) =>
 			registrations
@@ -592,7 +607,7 @@ function validateProjectRollout(
 	}
 }
 
-function assertAcyclicRegistry(
+function assertAcyclicCatalog(
 	registrations: QualityStandardRegistration[],
 ): void {
 	const byId = new Map(
@@ -606,7 +621,7 @@ function assertAcyclicRegistry(
 	const visit = (standardId: string): void => {
 		if (visiting.has(standardId)) {
 			throw new Error(
-				`Quality Standard registry dependency cycle includes ${standardId}.`,
+				`Quality Standard catalog dependency cycle includes ${standardId}.`,
 			);
 		}
 		if (visited.has(standardId)) return;

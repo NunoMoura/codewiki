@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { createQualityStandardRegistry } from "../../src/loop-exit/catalog.ts";
+import { createQualityStandardCatalog } from "../../src/loop-exit/catalog.ts";
 
 function projectRegistration(overrides = {}) {
 	return {
@@ -23,7 +23,6 @@ function projectRegistration(overrides = {}) {
 			protected: false,
 		},
 		stages: ["implementation"],
-		authority: "project",
 		rollout: "observe",
 		rolloutHistory: [],
 		evaluationDependsOn: [],
@@ -31,12 +30,12 @@ function projectRegistration(overrides = {}) {
 	};
 }
 
-describe("Quality Standard registry", () => {
+describe("Quality Standard catalog", () => {
 	it("provides closed versioned kernel Standards for all three stages", () => {
-		const registry = createQualityStandardRegistry();
-		const decision = registry.list("decision");
-		const planning = registry.list("planning");
-		const implementation = registry.list("implementation");
+		const catalog = createQualityStandardCatalog();
+		const decision = catalog.list("decision");
+		const planning = catalog.list("planning");
+		const implementation = catalog.list("implementation");
 
 		assert.ok(
 			decision.some((entry) => entry.standard.id === "change_revision_ready"),
@@ -52,7 +51,7 @@ describe("Quality Standard registry", () => {
 			),
 		);
 		assert.ok(
-			registry
+			catalog
 				.list()
 				.every(
 					(entry) =>
@@ -72,7 +71,7 @@ describe("Quality Standard registry", () => {
 	it("allows only closed verifier and evidence-adapter identities", () => {
 		assert.throws(
 			() =>
-				createQualityStandardRegistry([
+				createQualityStandardCatalog([
 					projectRegistration({
 						standard: {
 							...projectRegistration().standard,
@@ -88,7 +87,7 @@ describe("Quality Standard registry", () => {
 		);
 		assert.throws(
 			() =>
-				createQualityStandardRegistry([
+				createQualityStandardCatalog([
 					projectRegistration({
 						standard: {
 							...projectRegistration().standard,
@@ -100,17 +99,29 @@ describe("Quality Standard registry", () => {
 		);
 	});
 
+	it("rejects all caller-declared authority", () => {
+		for (const authority of ["project", "kernel", "official"]) {
+			assert.throws(
+				() =>
+					createQualityStandardCatalog([
+						projectRegistration({ authority }),
+					]),
+				/cannot declare authority; the catalog assigns project authority/,
+			);
+		}
+	});
+
 	it("enforces project rollout progression and approval", () => {
 		assert.doesNotThrow(() =>
-			createQualityStandardRegistry([projectRegistration()]),
+			createQualityStandardCatalog([projectRegistration()]),
 		);
 		assert.doesNotThrow(() =>
-			createQualityStandardRegistry([
+			createQualityStandardCatalog([
 				projectRegistration({ rollout: "warn", rolloutHistory: ["observe"] }),
 			]),
 		);
 		assert.doesNotThrow(() =>
-			createQualityStandardRegistry([
+			createQualityStandardCatalog([
 				projectRegistration({
 					rollout: "enforce",
 					rolloutHistory: ["observe", "warn"],
@@ -120,7 +131,7 @@ describe("Quality Standard registry", () => {
 		);
 		assert.throws(
 			() =>
-				createQualityStandardRegistry([
+				createQualityStandardCatalog([
 					projectRegistration({
 						rollout: "enforce",
 						rolloutHistory: ["observe"],
@@ -130,7 +141,7 @@ describe("Quality Standard registry", () => {
 		);
 		assert.throws(
 			() =>
-				createQualityStandardRegistry([
+				createQualityStandardCatalog([
 					projectRegistration({
 						rollout: "enforce",
 						rolloutHistory: ["observe", "warn"],
@@ -143,7 +154,7 @@ describe("Quality Standard registry", () => {
 	it("prevents project Standards from replacing protected kernel identity", () => {
 		assert.throws(
 			() =>
-				createQualityStandardRegistry([
+				createQualityStandardCatalog([
 					projectRegistration({
 						standard: {
 							...projectRegistration().standard,
@@ -155,7 +166,7 @@ describe("Quality Standard registry", () => {
 		);
 	});
 
-	it("rejects registry dependency cycles before policy resolution", () => {
+	it("rejects catalog dependency cycles before policy resolution", () => {
 		const first = projectRegistration({
 			standard: {
 				...projectRegistration().standard,
@@ -172,8 +183,8 @@ describe("Quality Standard registry", () => {
 		});
 
 		assert.throws(
-			() => createQualityStandardRegistry([first, second]),
-			/registry dependency cycle includes project.first/,
+			() => createQualityStandardCatalog([first, second]),
+			/catalog dependency cycle includes project.first/,
 		);
 	});
 });

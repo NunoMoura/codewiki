@@ -3,7 +3,6 @@ import { describe, it } from "node:test";
 
 import { resolveQualityPolicy } from "../../src/loop-exit/resolve-policy.ts";
 import { assertValidQualityPolicyResolution } from "../../src/loop-exit/contracts.ts";
-import { createQualityStandardRegistry } from "../../src/loop-exit/catalog.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
@@ -50,7 +49,6 @@ function projectRegistration() {
 			protected: false,
 		},
 		stages: ["implementation"],
-		authority: "project",
 		rollout: "observe",
 		rolloutHistory: [],
 		evaluationDependsOn: [],
@@ -163,9 +161,8 @@ describe("Quality Policy resolver", () => {
 	});
 
 	it("activates approved project Standards without granting progression authority", () => {
-		const registry = createQualityStandardRegistry([projectRegistration()]);
 		const input = selectorInput("implementation");
-		input.registry = registry;
+		input.projectRegistrations = [projectRegistration()];
 		input.approvedAdditions = [
 			{
 				standardId: "project.documentation_current",
@@ -202,9 +199,8 @@ describe("Quality Policy resolver", () => {
 			/cannot be excluded from implementation/,
 		);
 
-		const registry = createQualityStandardRegistry([projectRegistration()]);
 		const minimumInput = selectorInput("implementation");
-		minimumInput.registry = registry;
+		minimumInput.projectRegistrations = [projectRegistration()];
 		minimumInput.frozenMinimum = {
 			planningPolicyDigest: PLANNING_POLICY_DIGEST,
 			bindings: [
@@ -224,7 +220,7 @@ describe("Quality Policy resolver", () => {
 		elevatedInput.frozenMinimum.bindings[0].enforcement = "enforce";
 		assert.throws(
 			() => resolveQualityPolicy(elevatedInput),
-			/cannot exceed registry rollout observe/,
+			/cannot exceed catalog rollout observe/,
 		);
 
 		minimumInput.approvedExclusions = [

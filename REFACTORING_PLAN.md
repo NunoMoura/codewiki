@@ -271,7 +271,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [x] Move and rename the unused native foundation from `src/loops/**` directly to `src/loop-exit/**`, with mirrored `tests/loop-exit/**`; no superseded `src/quality/**` target or old-path re-exports.
 - [x] Add shared `SemanticLoop` type independent of trace persistence types and retain `TraceLoop` as the persistence alias during trace migration.
 - [ ] Establish Loop-owned `exit/**` directories and `src/runtime/loop-exit-runtime.ts` composition root without changing current production behavior.
-- [ ] Replace one public dual-registry design with one catalog surface that validates/indexes trusted Checks and implementations.
+- [x] Replace the moved foundation's Registry API with one Catalog surface, internal kernel registration, catalog-assigned project authority, closed verifier/adapter identities, and no resolver-injected catalog.
 - [ ] Remove the `src/index.ts` ↔ `src/api/index.ts` barrel cycle.
 - [x] Update source ownership mappings for `src/semantic-loop.ts`, `src/loop-exit/**`, and `tests/loop-exit/**` after those paths exist.
 
@@ -281,7 +281,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [ ] Replace broad `Omit<RunWiki*Input, ...>` candidate types and SDK arbitrary-record submission with exact role-specific allowlists.
 - [ ] Reject candidate control over authority, actor/time, review/TDD activation, snapshot/proof scope, aggregate content proof, runtime job identity, append guards, routing, and Check selection.
 - [ ] Replace global-by-id registration with Loop-qualified Check identity binding exact criterion digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, and catalog digest.
-- [ ] Separate internal kernel/official registration from Project registration so caller data cannot self-claim authority.
+- [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.
 - [ ] Derive approved additions/exclusions, rollout progression, and frozen Planning minimums only from canonical runtime observations.
 - [ ] Make frozen Planning minimums independently digest-verifiable and bind Implementation to persisted Planning minimums.
 - [ ] Strictly validate loop, authority/enforcement, method-kind compatibility, criteria, repair targets, measurement bounds, thresholds, costs/timeouts, dependencies, and activation-rule refs.
