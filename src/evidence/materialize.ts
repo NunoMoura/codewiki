@@ -25,7 +25,7 @@ import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 } from "../utils/canonical-json.ts";
-import { assertTypeboxSchema } from "../utils/json.ts";
+import { assertExactKeys, assertTypeboxSchema } from "../utils/json.ts";
 
 const MATERIAL_FIELDS = [
 	"schemaVersion",
@@ -530,19 +530,6 @@ function objectValue(value: unknown, label: string): Record<string, unknown> {
 		throw new Error(`${label} must be a plain object.`);
 	}
 	return value as Record<string, unknown>;
-}
-
-function assertExactKeys(
-	value: object,
-	allowed: readonly string[],
-	label: string,
-): void {
-	const allowedKeys = new Set(allowed);
-	for (const key of Reflect.ownKeys(value)) {
-		if (typeof key !== "string" || !allowedKeys.has(key)) {
-			throw new Error(`${label} received unsupported field ${String(key)}.`);
-		}
-	}
 }
 
 function canonicalObject<T>(value: unknown): T {

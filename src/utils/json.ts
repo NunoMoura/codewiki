@@ -10,6 +10,23 @@ export function parseJsonObject<T>(text: string, label = "JSON input"): T {
 	}
 }
 
+export function assertExactKeys(
+	value: unknown,
+	allowed: readonly string[],
+	label: string,
+): void {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) {
+		throw new Error(`${label} must be an object.`);
+	}
+	const allowedKeys = new Set(allowed);
+	const unsupported = Reflect.ownKeys(value).find(
+		(key) => typeof key !== "string" || !allowedKeys.has(key),
+	);
+	if (unsupported !== undefined) {
+		throw new Error(`${label} received unsupported field ${String(unsupported)}.`);
+	}
+}
+
 export function assertTypeboxSchema(
 	schema: TSchema,
 	value: unknown,

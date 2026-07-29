@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { createCheckCatalog } from "../../src/loop-exit/catalog.ts";
+import { canonicalJsonDigest } from "../../src/loop-exit/identity.ts";
 import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
 import {
 	assertValidExitReport,
@@ -40,6 +41,63 @@ function foundation() {
 	return { policy, catalog };
 }
 
+function readyEvidenceResolution(obligation, salt = "default") {
+	const evidenceIds = Array.from({ length: obligation.minimumCount }, (_, index) => {
+		const digest = canonicalJsonDigest({
+			obligationId: obligation.id,
+			obligationVersion: obligation.version,
+			salt,
+			index,
+		});
+		return `evidence:${obligation.kinds[0]}:${digest.slice("sha256:".length)}`;
+	}).sort((left, right) => left.localeCompare(right));
+	const withoutDigest = {
+		obligationId: obligation.id,
+		obligationVersion: obligation.version,
+		obligationDigest: canonicalJsonDigest(obligation),
+		status: "ready",
+		inputEvidenceIds: evidenceIds,
+		eligibleEvidenceIds: evidenceIds,
+		supportingEvidenceIds: evidenceIds,
+		contradictoryEvidenceIds: [],
+		neutralEvidenceIds: [],
+		excludedEvidence: [],
+		duplicateEvidenceIds: [],
+		missingCount: 0,
+	};
+	return {
+		...withoutDigest,
+		resolutionDigest: canonicalJsonDigest(withoutDigest),
+	};
+}
+
+function missingEvidenceResolution(obligation) {
+	const withoutDigest = {
+		obligationId: obligation.id,
+		obligationVersion: obligation.version,
+		obligationDigest: canonicalJsonDigest(obligation),
+		status: "missing",
+		inputEvidenceIds: [],
+		eligibleEvidenceIds: [],
+		supportingEvidenceIds: [],
+		contradictoryEvidenceIds: [],
+		neutralEvidenceIds: [],
+		excludedEvidence: [],
+		duplicateEvidenceIds: [],
+		missingCount: obligation.minimumCount,
+	};
+	return {
+		...withoutDigest,
+		resolutionDigest: canonicalJsonDigest(withoutDigest),
+	};
+}
+
+function readyEvidenceResolutions(check, salt) {
+	return check.evidenceObligations.map((obligation) =>
+		readyEvidenceResolution(obligation, salt),
+	);
+}
+
 function resultFor(
 	policy,
 	catalog,
@@ -48,23 +106,19 @@ function resultFor(
 ) {
 	const check = catalog.get(binding.checkId, policy.loop).check;
 	const disposition = options.disposition ?? "satisfied";
+	const measurement =
+		options.measurement ??
+		(disposition === "indeterminate"
+			? undefined
+			: { shape: "boolean", value: disposition === "satisfied" });
 	return createCheckResult({
 		loop: policy.loop,
 		policy,
 		check,
 		disposition,
-		...(options.measurement
-			? { measurement: options.measurement }
-			: disposition === "indeterminate"
-				? {}
-				: {
-						measurement: {
-							shape: "boolean",
-							value: disposition === "satisfied",
-						},
-					}),
-		evidenceRefs: options.evidenceRefs ?? ["trace:CHG-results:implementation:1"],
-		evidenceInputDigests: [EVIDENCE_DIGEST],
+		...(measurement ? { measurement } : {}),
+		evidenceResolutions:
+			options.evidenceResolutions ?? readyEvidenceResolutions(check),
 		findings:
 			options.findings ??
 			(disposition === "satisfied" ? [] : [`${binding.checkId} did not pass.`]),
@@ -113,25 +167,73 @@ function projectScoreRegistration() {
 describe("immutable Check Result", () => {
 	it("derives stable identity from exact policy, Check, evidence, and execution", () => {
 		const { policy, catalog } = foundation();
-		const binding = policy.bindings[0];
+		const binding = policy.bindings.find(
+			(entry) =>
+				catalog.get(entry.checkId, policy.loop).check.evidenceObligations.length >
+				0,
+		);
+		const check = catalog.get(binding.checkId, policy.loop).check;
+		const evidenceResolutions = readyEvidenceResolutions(check);
 		const result = resultFor(policy, catalog, binding, {
-			evidenceRefs: ["trace:z", "trace:a", "trace:z"],
+			evidenceResolutions,
 			issueClass: "verification",
 		});
 		const equivalent = resultFor(policy, catalog, binding, {
-			evidenceRefs: ["trace:a", "trace:z"],
+			evidenceResolutions: [...evidenceResolutions].reverse(),
+			issueClass: "verification",
+		});
+		const changed = resultFor(policy, catalog, binding, {
+			evidenceResolutions: readyEvidenceResolutions(check, "changed"),
 			issueClass: "verification",
 		});
 
 		assert.equal(result.resultDigest, equivalent.resultDigest);
+		assert.notEqual(result.resultDigest, changed.resultDigest);
+		assert.notEqual(result.evidenceInputDigest, changed.evidenceInputDigest);
 		assert.equal(result.checkDigest, binding.checkDigest);
 		assert.equal(result.policyDigest, policy.policyDigest);
 		assert.equal(result.status, "pass");
 		assert.equal(result.issueClass, "verification");
 		assert.equal(result.repairTarget, "loop-candidate");
-		assert.deepEqual(result.evidenceRefs, ["trace:a", "trace:z"]);
+		assert.deepEqual(
+			result.evidenceRecordIds,
+			evidenceResolutions.flatMap((entry) => entry.inputEvidenceIds),
+		);
 		assert.equal(Object.isFrozen(result), true);
 		assert.equal(Object.isFrozen(result.execution), true);
+		assert.equal(Object.isFrozen(result.evidenceResolutions), true);
+	});
+
+	it("requires exact obligation resolutions before a determinate Result", () => {
+		const { policy, catalog } = foundation();
+		const binding = policy.bindings.find(
+			(entry) =>
+				catalog.get(entry.checkId, policy.loop).check.evidenceObligations.length >
+				0,
+		);
+		const check = catalog.get(binding.checkId, policy.loop).check;
+		const missing = check.evidenceObligations.map(missingEvidenceResolution);
+		assert.throws(
+			() =>
+				resultFor(policy, catalog, binding, {
+					evidenceResolutions: [],
+				}),
+			/is missing Evidence obligation resolution/,
+		);
+		assert.throws(
+			() =>
+				resultFor(policy, catalog, binding, {
+					evidenceResolutions: missing,
+				}),
+			/requires indeterminate disposition while Evidence obligation .* is missing/,
+		);
+		const result = resultFor(policy, catalog, binding, {
+			disposition: "indeterminate",
+			evidenceResolutions: missing,
+			findings: ["Required Evidence is missing."],
+		});
+		assert.equal(result.status, "indeterminate");
+		assert.deepEqual(result.evidenceRecordIds, []);
 	});
 
 	it("rejects caller-owned identity and wrong measurement", () => {
@@ -144,12 +246,17 @@ describe("immutable Check Result", () => {
 			check,
 			disposition: "satisfied",
 			measurement: { shape: "boolean", value: true },
+			evidenceResolutions: readyEvidenceResolutions(check),
 			execution: { ...check.execution },
 		};
 
 		assert.throws(
 			() => createCheckResult({ ...base, resultDigest: EVIDENCE_DIGEST }),
 			/Check Result input contains unsupported field resultDigest/,
+		);
+		assert.throws(
+			() => createCheckResult({ ...base, evidenceRecordIds: [] }),
+			/Check Result input contains unsupported field evidenceRecordIds/,
 		);
 		assert.throws(
 			() =>
@@ -200,7 +307,7 @@ describe("immutable Check Result", () => {
 			check,
 			disposition: "unsatisfied",
 			measurement: { shape: "score", value: 0.85 },
-			evidenceInputDigests: [EVIDENCE_DIGEST],
+			evidenceResolutions: [],
 			findings: ["Coverage is below the resolved minimum."],
 			execution: { ...check.execution },
 		});
@@ -215,6 +322,7 @@ describe("immutable Check Result", () => {
 					check,
 					disposition: "satisfied",
 					measurement: { shape: "score", value: 0.85 },
+					evidenceResolutions: [],
 					findings: [],
 					execution: { ...check.execution },
 				}),
@@ -301,6 +409,7 @@ describe("immutable Exit Report", () => {
 			check,
 			disposition: "unsatisfied",
 			measurement: { shape: "score", value: 0.5 },
+			evidenceResolutions: [],
 			findings: ["Observed project Check failed."],
 			execution: { ...check.execution },
 		});
@@ -376,6 +485,27 @@ describe("immutable Exit Report", () => {
 		assert.throws(
 			() => assertValidExitReport({ ...report, status: "fail" }, policy),
 			/Exit Report status mismatch/,
+		);
+
+		const evidenceIndex = report.checkResults.findIndex(
+			(result) => result.evidenceRecordIds.length > 0,
+		);
+		const { resultDigest: _discarded, ...resultBody } =
+			report.checkResults[evidenceIndex];
+		const tamperedBody = { ...resultBody, evidenceRecordIds: [] };
+		const tamperedResult = {
+			...tamperedBody,
+			resultDigest: canonicalJsonDigest(tamperedBody),
+		};
+		const tamperedResults = [...report.checkResults];
+		tamperedResults[evidenceIndex] = tamperedResult;
+		assert.throws(
+			() =>
+				assertValidExitReport(
+					{ ...report, checkResults: tamperedResults },
+					policy,
+				),
+			/Evidence Record identities do not match its resolutions/,
 		);
 	});
 });

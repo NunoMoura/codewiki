@@ -1,3 +1,5 @@
+import type { EvidenceId } from "../evidence/contracts.ts";
+import type { EvidenceObligationResolution } from "../evidence/obligation-resolution.ts";
 import type { EvidenceObligation } from "../evidence/obligations.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import { canonicalJsonDigest as resolvedExitPolicyDigest } from "./identity.ts";
@@ -110,8 +112,9 @@ export interface CheckResult {
 	status: CheckResultStatus;
 	measurement?: CheckMeasurement;
 	threshold?: CheckThreshold;
-	evidenceRefs: string[];
-	evidenceInputDigests: string[];
+	evidenceResolutions: EvidenceObligationResolution[];
+	evidenceRecordIds: EvidenceId[];
+	evidenceInputDigest: string;
 	findings: string[];
 	issueClass?: string;
 	repairTarget: string;

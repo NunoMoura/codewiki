@@ -15,12 +15,19 @@ import type {
 } from "./contracts.ts";
 import { assertValidEvidenceRecord } from "./materialize.ts";
 import {
+	assertValidEvidenceObligationResolution,
+	evidenceObligationStatus,
+	type EvidenceExclusion,
+	type EvidenceExclusionReason,
+	type EvidenceObligationResolution,
+} from "./obligation-resolution.ts";
+import {
 	assertSha256Digest,
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 } from "../utils/canonical-json.ts";
 import type { Sha256Digest } from "../utils/canonical-json.ts";
-import { assertTypeboxSchema } from "../utils/json.ts";
+import { assertExactKeys, assertTypeboxSchema } from "../utils/json.ts";
 
 export const EVIDENCE_OBLIGATION_VERSION = "1.0.0" as const;
 
@@ -37,7 +44,6 @@ type EvidenceArtifactRequirement =
 	| "available";
 type EvidenceContradictionPolicy = "retain" | "indeterminate";
 type EvidenceRelation = "supporting" | "contradictory" | "neutral";
-type EvidenceObligationStatus = "ready" | "missing" | "indeterminate";
 
 export interface EvidenceObligation {
 	readonly id: string;
@@ -59,44 +65,12 @@ interface EvidenceUse {
 	readonly relation: EvidenceRelation;
 }
 
-type EvidenceExclusionReason =
-	| "kind"
-	| "producer"
-	| "authority"
-	| "coverage"
-	| "sensitivity"
-	| "subject"
-	| "freshness"
-	| "artifact_missing"
-	| "artifact_unavailable";
-
-interface EvidenceExclusion {
-	readonly evidenceId: EvidenceId;
-	readonly reasons: readonly EvidenceExclusionReason[];
-}
-
 interface ReduceEvidenceObligationInput {
 	readonly obligation: EvidenceObligation;
 	readonly evidence: readonly EvidenceUse[];
 	readonly expectedSubject: EvidenceSubject;
 	readonly expectedFreshnessBoundary?: string;
 	readonly availableArtifactDigests?: readonly Sha256Digest[];
-}
-
-interface EvidenceObligationResolution {
-	readonly obligationId: string;
-	readonly obligationVersion: string;
-	readonly obligationDigest: Sha256Digest;
-	readonly status: EvidenceObligationStatus;
-	readonly inputEvidenceIds: readonly EvidenceId[];
-	readonly eligibleEvidenceIds: readonly EvidenceId[];
-	readonly supportingEvidenceIds: readonly EvidenceId[];
-	readonly contradictoryEvidenceIds: readonly EvidenceId[];
-	readonly neutralEvidenceIds: readonly EvidenceId[];
-	readonly excludedEvidence: readonly EvidenceExclusion[];
-	readonly duplicateEvidenceIds: readonly EvidenceId[];
-	readonly missingCount: number;
-	readonly resolutionDigest: Sha256Digest;
 }
 
 interface AdmittedReduction {
@@ -228,7 +202,7 @@ export function reduceEvidenceObligation(
 ): EvidenceObligationResolution {
 	const admitted = admitReductionInput(input);
 	const classified = classifyEvidence(admitted);
-	const status = obligationStatus({
+	const status = evidenceObligationStatus({
 		obligation: admitted.obligation,
 		supportingCount: classified.supportingEvidenceIds.length,
 		duplicateCount: admitted.duplicateEvidenceIds.length,
@@ -252,10 +226,12 @@ export function reduceEvidenceObligation(
 			admitted.obligation.minimumCount - classified.supportingEvidenceIds.length,
 		),
 	};
-	return toCanonicalJsonValue({
+	const resolution = toCanonicalJsonValue({
 		...withoutDigest,
 		resolutionDigest: canonicalJsonDigest(withoutDigest),
 	}) as unknown as EvidenceObligationResolution;
+	assertValidEvidenceObligationResolution(resolution, admitted.obligation);
+	return resolution;
 }
 
 function admitReductionInput(
@@ -523,24 +499,6 @@ function evidenceArtifactDigests(evidence: EvidenceRecord): Sha256Digest[] {
 	return sortedUniqueValues(values);
 }
 
-function obligationStatus(input: {
-	readonly obligation: EvidenceObligation;
-	readonly supportingCount: number;
-	readonly duplicateCount: number;
-	readonly eligibleContradictionCount: number;
-	readonly potentiallyRelevant: boolean;
-}): EvidenceObligationStatus {
-	if (input.duplicateCount > 0) return "indeterminate";
-	if (
-		input.obligation.contradiction === "indeterminate" &&
-		input.eligibleContradictionCount > 0
-	) {
-		return "indeterminate";
-	}
-	if (input.supportingCount >= input.obligation.minimumCount) return "ready";
-	return input.potentiallyRelevant ? "indeterminate" : "missing";
-}
-
 function duplicateIds(uses: readonly EvidenceUse[]): EvidenceId[] {
 	const counts = new Map<EvidenceId, number>();
 	for (const use of uses) {
@@ -584,27 +542,6 @@ function equalTextSets(left: readonly string[], right: readonly string[]): boole
 		normalizedLeft.length === normalizedRight.length &&
 		normalizedLeft.every((value, index) => value === normalizedRight[index])
 	);
-}
-
-function assertExactKeys(
-	value: unknown,
-	allowed: readonly string[],
-	label: string,
-): void {
-	if (typeof value !== "object" || value === null || Array.isArray(value)) {
-		throw new Error(`${label} must be an object.`);
-	}
-	const allowedKeys = new Set(allowed);
-	const extras: string[] = [];
-	for (const key of Reflect.ownKeys(value)) {
-		if (typeof key !== "string" || !allowedKeys.has(key)) {
-			extras.push(String(key));
-		}
-	}
-	extras.sort(compareText);
-	if (extras.length > 0) {
-		throw new Error(`${label} received unsupported fields: ${extras.join(", ")}.`);
-	}
 }
 
 function compareText(left: string, right: string): number {

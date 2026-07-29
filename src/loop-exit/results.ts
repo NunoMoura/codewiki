@@ -1,3 +1,8 @@
+import type { EvidenceId } from "../evidence/contracts.ts";
+import {
+	assertValidEvidenceObligationResolution,
+	type EvidenceObligationResolution,
+} from "../evidence/obligation-resolution.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import {
 	assertValidResolvedExitPolicy,
@@ -21,28 +26,27 @@ import {
 	toCanonicalJsonValue,
 } from "./identity.ts";
 
-export const EXIT_REPORT_REDUCTION_VERSION = "1.0.0";
+const EXIT_REPORT_REDUCTION_VERSION = "1.0.0";
 
-export type CheckObservationDisposition =
+type CheckObservationDisposition =
 	| "satisfied"
 	| "unsatisfied"
 	| "indeterminate";
 
-export interface CreateCheckResultInput {
+interface CreateCheckResultInput {
 	loop: SemanticLoop;
 	policy: ResolvedExitPolicy;
 	check: CheckDefinition;
 	disposition: CheckObservationDisposition;
 	measurement?: CheckMeasurement;
-	evidenceRefs?: string[];
-	evidenceInputDigests?: string[];
+	evidenceResolutions: EvidenceObligationResolution[];
 	findings?: string[];
 	issueClass?: string;
 	feedback?: string;
 	execution: CheckExecutionIdentity;
 }
 
-export interface CreateExitReportInput {
+interface CreateExitReportInput {
 	policy: ResolvedExitPolicy;
 	checkResults: CheckResult[];
 }
@@ -58,8 +62,7 @@ export function createCheckResult(
 			"check",
 			"disposition",
 			"measurement",
-			"evidenceRefs",
-			"evidenceInputDigests",
+			"evidenceResolutions",
 			"findings",
 			"issueClass",
 			"feedback",
@@ -90,14 +93,12 @@ export function createCheckResult(
 	if (status !== "pass" && findings.length === 0) {
 		throw new Error(`Check Result ${input.check.id} ${status} requires findings.`);
 	}
-	const evidenceInputDigests = normalizedTextList(
-		input.evidenceInputDigests ?? [],
-		"evidence digest",
-		true,
-	);
-	for (const digest of evidenceInputDigests) {
-		assertSha256Digest(digest, `Check Result ${input.check.id} evidence digest`);
-	}
+	const evidence = normalizedCheckEvidence({
+		check: input.check,
+		checkDigest: binding.checkDigest,
+		disposition: input.disposition,
+		resolutions: input.evidenceResolutions,
+	});
 	const issueClass = optionalText(input.issueClass, "issueClass");
 	const feedback = optionalText(input.feedback, "feedback");
 	const resultWithoutDigest = {
@@ -111,12 +112,9 @@ export function createCheckResult(
 		status,
 		...(measurement ? { measurement } : {}),
 		...(threshold ? { threshold } : {}),
-		evidenceRefs: normalizedTextList(
-			input.evidenceRefs ?? [],
-			"evidence ref",
-			true,
-		),
-		evidenceInputDigests,
+		evidenceResolutions: evidence.resolutions,
+		evidenceRecordIds: evidence.recordIds,
+		evidenceInputDigest: evidence.inputDigest,
 		findings,
 		...(issueClass ? { issueClass } : {}),
 		repairTarget: input.check.repairTarget,
@@ -127,6 +125,91 @@ export function createCheckResult(
 		...resultWithoutDigest,
 		resultDigest: canonicalJsonDigest(resultWithoutDigest),
 	});
+}
+
+interface NormalizedCheckEvidence {
+	readonly resolutions: EvidenceObligationResolution[];
+	readonly recordIds: EvidenceId[];
+	readonly inputDigest: string;
+}
+
+function normalizedCheckEvidence(input: {
+	readonly check: CheckDefinition;
+	readonly checkDigest: string;
+	readonly disposition: CheckObservationDisposition;
+	readonly resolutions: EvidenceObligationResolution[];
+}): NormalizedCheckEvidence {
+	const resolutions = normalizedEvidenceResolutions(input.resolutions);
+	const expectedById = new Map(
+		input.check.evidenceObligations.map((obligation) => [obligation.id, obligation]),
+	);
+	for (const resolution of resolutions) {
+		const obligation = expectedById.get(resolution.obligationId);
+		if (!obligation) {
+			throw new Error(
+				`Check Result ${input.check.id} received unknown Evidence obligation resolution ${resolution.obligationId}.`,
+			);
+		}
+		assertValidEvidenceObligationResolution(resolution, obligation);
+		if (resolution.status !== "ready" && input.disposition !== "indeterminate") {
+			throw new Error(
+				`Check Result ${input.check.id} requires indeterminate disposition while Evidence obligation ${resolution.obligationId} is ${resolution.status}.`,
+			);
+		}
+	}
+	for (const obligation of input.check.evidenceObligations) {
+		if (!resolutions.some((entry) => entry.obligationId === obligation.id)) {
+			throw new Error(
+				`Check Result ${input.check.id} is missing Evidence obligation resolution ${obligation.id}.`,
+			);
+		}
+	}
+	const recordIds = evidenceRecordIds(resolutions);
+	return {
+		resolutions,
+		recordIds,
+		inputDigest: checkEvidenceInputDigest(input.checkDigest, resolutions),
+	};
+}
+
+function checkEvidenceInputDigest(
+	checkDigest: string,
+	resolutions: readonly EvidenceObligationResolution[],
+): string {
+	assertSha256Digest(checkDigest, "Check evidence input Check digest");
+	const normalized = normalizedEvidenceResolutions(resolutions);
+	return canonicalJsonDigest({
+		checkDigest,
+		evidenceRecordIds: evidenceRecordIds(normalized),
+		resolutionDigests: normalized.map((entry) => entry.resolutionDigest),
+	});
+}
+
+function normalizedEvidenceResolutions(
+	values: readonly EvidenceObligationResolution[],
+): EvidenceObligationResolution[] {
+	if (!Array.isArray(values)) {
+		throw new Error("Check Result evidenceResolutions must be an array.");
+	}
+	for (const value of values) {
+		assertValidEvidenceObligationResolution(value);
+	}
+	const normalized = [...values].sort((left, right) =>
+		compareText(left.obligationId, right.obligationId),
+	);
+	const ids = normalized.map((entry) => entry.obligationId);
+	if (new Set(ids).size !== ids.length) {
+		throw new Error("Check Result Evidence obligation resolution ids must be unique.");
+	}
+	return normalized;
+}
+
+function evidenceRecordIds(
+	resolutions: readonly EvidenceObligationResolution[],
+): EvidenceId[] {
+	return [...new Set(resolutions.flatMap((entry) => entry.inputEvidenceIds))].sort(
+		compareText,
+	);
 }
 
 export function createExitReport(input: CreateExitReportInput): ExitReport {
@@ -233,6 +316,31 @@ function assertResultIdentity(
 	policy: ResolvedExitPolicy,
 	binding: CheckBinding,
 ): void {
+	assertExactKeys(
+		result,
+		[
+			"schemaVersion",
+			"checkId",
+			"checkVersion",
+			"requirementDigest",
+			"checkDigest",
+			"candidateDigest",
+			"policyDigest",
+			"status",
+			"measurement",
+			"threshold",
+			"evidenceResolutions",
+			"evidenceRecordIds",
+			"evidenceInputDigest",
+			"findings",
+			"issueClass",
+			"repairTarget",
+			"feedback",
+			"execution",
+			"resultDigest",
+		],
+		`Check Result ${result.checkId}`,
+	);
 	if (result.schemaVersion !== LOOP_EXIT_SCHEMA_VERSION) {
 		throw new Error(
 			`Check Result ${result.checkId} uses unsupported schema version ${result.schemaVersion}.`,
@@ -256,6 +364,7 @@ function assertResultIdentity(
 	if (!isCheckResultStatus(result.status)) {
 		throw new Error(`Check Result ${result.checkId} has invalid status.`);
 	}
+	assertResultEvidenceIdentity(result);
 	const { resultDigest, ...resultWithoutDigest } = result;
 	assertSha256Digest(resultDigest, `Check Result ${result.checkId} digest`);
 	const expectedDigest = canonicalJsonDigest(resultWithoutDigest);
@@ -264,6 +373,49 @@ function assertResultIdentity(
 			`Check Result ${result.checkId} digest mismatch: expected ${expectedDigest}.`,
 		);
 	}
+}
+
+function assertResultEvidenceIdentity(result: CheckResult): void {
+	const resolutions = normalizedEvidenceResolutions(result.evidenceResolutions);
+	const receivedOrder = result.evidenceResolutions.map(
+		(resolution) => resolution.obligationId,
+	);
+	const expectedOrder = resolutions.map((resolution) => resolution.obligationId);
+	if (!sameTextList(receivedOrder, expectedOrder)) {
+		throw new Error(
+			`Check Result ${result.checkId} Evidence obligation resolutions are not canonical.`,
+		);
+	}
+	const expectedRecordIds = evidenceRecordIds(resolutions);
+	if (!sameTextList(result.evidenceRecordIds, expectedRecordIds)) {
+		throw new Error(
+			`Check Result ${result.checkId} Evidence Record identities do not match its resolutions.`,
+		);
+	}
+	assertSha256Digest(
+		result.evidenceInputDigest,
+		`Check Result ${result.checkId} evidence input digest`,
+	);
+	const expectedInputDigest = checkEvidenceInputDigest(
+		result.checkDigest,
+		resolutions,
+	);
+	if (result.evidenceInputDigest !== expectedInputDigest) {
+		throw new Error(
+			`Check Result ${result.checkId} evidence input digest mismatch: expected ${expectedInputDigest}.`,
+		);
+	}
+}
+
+function sameTextList(
+	left: readonly string[],
+	right: readonly string[],
+): boolean {
+	return (
+		Array.isArray(left) &&
+		left.length === right.length &&
+		left.every((value, index) => value === right[index])
+	);
 }
 
 function assertCheckBinding(
@@ -536,6 +688,12 @@ function invalidMeasurement(checkId: string): never {
 
 function isCheckResultStatus(value: unknown): value is CheckResultStatus {
 	return value === "pass" || value === "fail" || value === "indeterminate";
+}
+
+function compareText(left: string, right: string): number {
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
 }
 
 function immutable<T>(value: unknown): T {

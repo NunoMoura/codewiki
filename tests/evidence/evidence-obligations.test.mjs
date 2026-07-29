@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { EVIDENCE_SCHEMA_VERSION } from "../../src/evidence/contracts.ts";
+import { canonicalJsonDigest } from "../../src/loop-exit/identity.ts";
 import { materializeEvidenceRecord } from "../../src/evidence/materialize.ts";
+import { assertValidEvidenceObligationResolution } from "../../src/evidence/obligation-resolution.ts";
 import {
 	createEvidenceObligation,
 	reduceEvidenceObligation,
@@ -71,6 +73,15 @@ function sourceObligation(overrides = {}) {
 	});
 }
 
+function withResolutionDigest(resolution, overrides) {
+	const { resolutionDigest: _discarded, ...body } = resolution;
+	const changed = { ...body, ...overrides };
+	return {
+		...changed,
+		resolutionDigest: canonicalJsonDigest(changed),
+	};
+}
+
 function reduce(obligation, evidence, overrides = {}) {
 	return reduceEvidenceObligation({
 		obligation,
@@ -133,6 +144,40 @@ describe("Evidence obligations", () => {
 		assert.match(left.resolutionDigest, /^sha256:[0-9a-f]{64}$/);
 		assert.ok(Object.isFrozen(left));
 		assert.ok(Object.isFrozen(left.inputEvidenceIds));
+	});
+
+	it("validates resolution identity, accounting, and exact obligation binding", () => {
+		const obligation = sourceObligation();
+		const resolution = reduce(obligation, [
+			{ evidence: sourceEvidence(), relation: "supporting" },
+		]);
+		assert.doesNotThrow(() =>
+			assertValidEvidenceObligationResolution(resolution, obligation),
+		);
+		assert.throws(
+			() =>
+				assertValidEvidenceObligationResolution(
+					{ ...resolution, resolutionDigest: digest("9") },
+					obligation,
+				),
+			/Evidence obligation resolution digest mismatch/,
+		);
+		assert.throws(
+			() =>
+				assertValidEvidenceObligationResolution(
+					withResolutionDigest(resolution, { missingCount: 1 }),
+					obligation,
+				),
+			/missingCount mismatch/,
+		);
+		assert.throws(
+			() =>
+				assertValidEvidenceObligationResolution(
+					withResolutionDigest(resolution, { eligibleEvidenceIds: [] }),
+					obligation,
+				),
+			/is not a subset|is not accounted exactly once/,
+		);
 	});
 
 	it("distinguishes missing Evidence from present but unusable Evidence", () => {

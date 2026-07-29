@@ -8,7 +8,7 @@ tags:
   - evidence
   - provenance
   - approval
-timestamp: 2026-07-29T10:12:35.000Z
+timestamp: 2026-07-29T10:58:42.000Z
 codewiki_component: evidence
 codewiki_components:
   - evidence
@@ -126,6 +126,8 @@ exact Check obligation
 ```
 
 The deterministic reducer filters and accounts for every supplied Evidence Record, preserves contradictory records, detects duplicate input, and distinguishes absent Evidence from present-but-stale, partial, unavailable, private, weak, or wrong-subject Evidence. `ready` means only that the Check has admissible inputs. It never means the Check requirement passed. Only the trusted Check implementation interprets requirement-specific meaning, and only Runtime creates the Check Result and Exit Report.
+
+Runtime validates each immutable obligation resolution against the exact Check obligation before constructing a Result. A determinate Result requires every obligation resolution to be `ready`; missing or indeterminate Evidence forces an indeterminate Result. Runtime derives `evidenceRecordIds` from every considered record—including excluded and contradictory records—and derives one `evidenceInputDigest` from the exact Check identity, canonical resolution digests, and Evidence Record identities. Callers cannot supply those derived bindings. The enclosing Exit Report persists and digests the exact Results, so later validation detects omitted or substituted Evidence identities.
 
 ## Kind-specific payloads
 
@@ -263,11 +265,12 @@ src/evidence/
   identity.ts
   materialize.ts
   obligations.ts
+  obligation-resolution.ts
 ```
 
 Loop-owned packages declare admissible domain payload/obligation semantics. `src/loop-exit/**` imports Evidence contracts to bind Check inputs and Results. Runtime composes materialization, artifact/provider adapters, approval correlation, trace writes, and retention. Dependency direction stays one-way; Evidence code cannot import Decision, Planning, or Implementation implementations.
 
-Current foundation implements the closed envelope and ten payload kinds, strict recursive admission, canonical normalization, content identity, required producer versions, Runtime-owned subject/time/producer/authority/coverage/freshness/sensitivity context, semantic kind bindings, tamper validation, declarative Check obligations, deterministic obligation reduction, and public Evidence Record contract types. Native Check identity now binds exact obligation definitions instead of generic evidence-adapter names. Existing evidence producers and trace writers are not migrated yet. Until that migration, legacy `sourceRefs`, `proofRefs`, preview captures, review reports, worker reports, and delivery proofs retain their current executable behavior and do not become canonical Evidence Records merely by resembling one.
+Current foundation implements the closed envelope and ten payload kinds, strict recursive admission, canonical normalization, content identity, required producer versions, Runtime-owned subject/time/producer/authority/coverage/freshness/sensitivity context, semantic kind bindings, tamper validation, declarative Check obligations, deterministic obligation reduction, strict resolution accounting, Runtime-derived Result Evidence bindings, and public Evidence Record contract types. Native Check identity binds exact obligation definitions instead of generic evidence-adapter names; Check Result and Exit Report identity now bind exact obligation resolutions, all considered Evidence Record ids, and the derived Evidence input digest. Existing evidence producers and trace writers are not migrated yet. Until that migration, legacy `sourceRefs`, `proofRefs`, preview captures, review reports, worker reports, and delivery proofs retain their current executable behavior and do not become canonical Evidence Records merely by resembling one.
 
 Canonical JSON/digest primitives live in `src/utils/canonical-json.ts` so Evidence and Loop-exit identity share exact serialization without reversing the dependency from Loop exit into Evidence.
 
