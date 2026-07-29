@@ -1,59 +1,55 @@
-import type { SemanticLoop as TraceLoop } from "../semantic-loop.ts";
-import { canonicalJsonDigest as qualityPolicyDigest } from "./identity.ts";
+import type { SemanticLoop } from "../semantic-loop.ts";
+import { canonicalJsonDigest as resolvedExitPolicyDigest } from "./identity.ts";
 
-export { qualityPolicyDigest };
+export { resolvedExitPolicyDigest };
 
-export const QUALITY_POLICY_SCHEMA_VERSION = 1;
+export const LOOP_EXIT_SCHEMA_VERSION = 1;
 
-export type QualityVerifierKind =
-	| "deterministic"
-	| "model"
-	| "external"
-	| "human";
-export type QualityMeasurementShape =
+export type CheckExecutionKind = "code" | "model";
+export type CheckMeasurementKind = "qualitative" | "quantitative";
+export type CheckMeasurementShape =
 	| "boolean"
 	| "score"
 	| "count"
 	| "set"
 	| "structured";
-export type QualityEnforcementMode = "observe" | "warn" | "enforce";
-export type QualityAssessmentStatus = "met" | "unmet" | "indeterminate";
-export type QualityGateStatus = "pass" | "fail" | "indeterminate";
-export type QualityReportStatus = "pass" | "fail" | "indeterminate";
-export type QualityGateFailureRoute = "repair" | "route_back" | "block";
-export type QualityPolicyExclusionReason =
+export type CheckEnforcement = "observe" | "warn" | "require";
+export type CheckResultStatus = "pass" | "fail" | "indeterminate";
+export type ExitReportStatus = "pass" | "fail" | "indeterminate";
+export type CheckExclusionReason =
 	| "not_applicable"
 	| "covered_by_invariant"
 	| "escalated_elsewhere";
 
-export type QualityJsonValue =
+export type CheckJsonValue =
 	| null
 	| boolean
 	| number
 	| string
-	| QualityJsonValue[]
-	| { [key: string]: QualityJsonValue };
+	| CheckJsonValue[]
+	| { [key: string]: CheckJsonValue };
 
-export interface QualityVerifierSpec {
+export interface CheckExecutionSpec {
 	id: string;
 	version: string;
-	kind: QualityVerifierKind;
+	kind: CheckExecutionKind;
 }
 
-export interface QualityMeasurementSpec {
-	shape: QualityMeasurementShape;
+export interface CheckMeasurementSpec {
+	kind: CheckMeasurementKind;
+	shape: CheckMeasurementShape;
 	minimum?: number;
 	maximum?: number;
 	schemaRef?: string;
 }
 
-export interface QualityStandard {
+export interface CheckDefinition {
 	id: string;
 	version: string;
 	description: string;
-	assessmentCriteria: string[];
-	verifier: QualityVerifierSpec;
-	measurement: QualityMeasurementSpec;
+	criteria: string[];
+	execution: CheckExecutionSpec;
+	measurement: CheckMeasurementSpec;
 	evidenceAdapterIds: string[];
 	repairTarget: string;
 	cost: number;
@@ -61,18 +57,18 @@ export interface QualityStandard {
 	protected: boolean;
 }
 
-export interface QualityStandardBinding {
-	standardId: string;
-	standardVersion: string;
-	enforcement: QualityEnforcementMode;
+export interface CheckBinding {
+	checkId: string;
+	checkVersion: string;
+	enforcement: CheckEnforcement;
 	required: boolean;
-	parameters: Record<string, QualityJsonValue>;
-	evaluationDependsOn: string[];
+	parameters: Record<string, CheckJsonValue>;
+	dependsOn: string[];
 	activatedBy: string[];
 	ruleRefs: string[];
 }
 
-export type QualityMeasurement =
+export type CheckMeasurement =
 	| { shape: "boolean"; value: boolean }
 	| { shape: "score"; value: number }
 	| { shape: "count"; value: number }
@@ -80,10 +76,10 @@ export type QualityMeasurement =
 	| {
 			shape: "structured";
 			schemaRef: string;
-			value: Record<string, QualityJsonValue>;
+			value: Record<string, CheckJsonValue>;
 	  };
 
-export interface QualityAssessmentVerifierIdentity {
+export interface CheckExecutionIdentity {
 	id: string;
 	version: string;
 	adapterVersion?: string;
@@ -93,261 +89,196 @@ export interface QualityAssessmentVerifierIdentity {
 	aggregationPolicy?: string;
 }
 
-export interface QualityAssessment {
-	standardId: string;
-	standardVersion: string;
+export interface CheckResult {
+	checkId: string;
+	checkVersion: string;
 	candidateDigest: string;
-	status: QualityAssessmentStatus;
-	measurement?: QualityMeasurement;
+	status: CheckResultStatus;
+	measurement?: CheckMeasurement;
 	evidenceRefs: string[];
 	findings: string[];
 	feedback?: string;
-	verifier: QualityAssessmentVerifierIdentity;
+	execution: CheckExecutionIdentity;
 }
 
-export interface QualityDeterministicGate {
-	id: string;
-	version: string;
-	kind: "all_required" | "threshold" | "authority";
-	standardIds: string[];
-	threshold?: number;
-	onFailure: QualityGateFailureRoute;
-}
-
-export interface QualityDeterministicGateResult {
-	gateId: string;
-	gateVersion: string;
-	status: QualityGateStatus;
-	assessmentStandardIds: string[];
-	route?: QualityGateFailureRoute;
-	message?: string;
-}
-
-export interface QualityReport {
-	schemaVersion: typeof QUALITY_POLICY_SCHEMA_VERSION;
-	stage: TraceLoop;
+export interface ExitReport {
+	schemaVersion: typeof LOOP_EXIT_SCHEMA_VERSION;
+	loop: SemanticLoop;
 	candidateDigest: string;
 	policyDigest: string;
-	status: QualityReportStatus;
-	assessments: QualityAssessment[];
-	gateResults: QualityDeterministicGateResult[];
+	status: ExitReportStatus;
+	checkResults: CheckResult[];
 }
 
-export interface QualityPolicyExclusion {
-	standardId: string;
-	standardVersion: string;
-	reason: QualityPolicyExclusionReason;
+export interface CheckExclusion {
+	checkId: string;
+	checkVersion: string;
+	reason: CheckExclusionReason;
 	refs: string[];
 }
 
-export interface QualityPolicyResolution {
-	schemaVersion: typeof QUALITY_POLICY_SCHEMA_VERSION;
-	stage: TraceLoop;
+export interface ResolvedExitPolicy {
+	schemaVersion: typeof LOOP_EXIT_SCHEMA_VERSION;
+	loop: SemanticLoop;
 	candidateDigest: string;
 	selectorInputDigest: string;
-	bindings: QualityStandardBinding[];
-	exclusions: QualityPolicyExclusion[];
-	gates: QualityDeterministicGate[];
-	protectedStandardIds: string[];
+	bindings: CheckBinding[];
+	exclusions: CheckExclusion[];
+	protectedCheckIds: string[];
 	policyDigest: string;
 }
 
-export interface CreateQualityPolicyResolutionInput {
-	stage: TraceLoop;
+export interface CreateResolvedExitPolicyInput {
+	loop: SemanticLoop;
 	candidateDigest: string;
 	selectorInputDigest: string;
-	bindings: QualityStandardBinding[];
-	exclusions?: QualityPolicyExclusion[];
-	gates: QualityDeterministicGate[];
-	protectedStandardIds?: string[];
+	bindings: CheckBinding[];
+	exclusions?: CheckExclusion[];
+	protectedCheckIds?: string[];
 }
 
-export function createQualityPolicyResolution(
-	input: CreateQualityPolicyResolutionInput,
-): QualityPolicyResolution {
-	const resolutionWithoutDigest = normalizeResolutionInput(input);
-	assertValidResolutionShape(resolutionWithoutDigest);
+export function createResolvedExitPolicy(
+	input: CreateResolvedExitPolicyInput,
+): ResolvedExitPolicy {
+	const policyWithoutDigest = normalizePolicyInput(input);
+	assertValidPolicyShape(policyWithoutDigest);
 	return {
-		...resolutionWithoutDigest,
-		policyDigest: qualityPolicyDigest(resolutionWithoutDigest),
+		...policyWithoutDigest,
+		policyDigest: resolvedExitPolicyDigest(policyWithoutDigest),
 	};
 }
 
-export function assertValidQualityPolicyResolution(
-	resolution: QualityPolicyResolution,
+export function assertValidResolvedExitPolicy(
+	policy: ResolvedExitPolicy,
 ): void {
-	if (resolution.schemaVersion !== QUALITY_POLICY_SCHEMA_VERSION) {
+	if (policy.schemaVersion !== LOOP_EXIT_SCHEMA_VERSION) {
 		throw new Error(
-			`Quality Policy resolution uses unsupported schema version ${resolution.schemaVersion}.`,
+			`Resolved Exit Policy uses unsupported schema version ${policy.schemaVersion}.`,
 		);
 	}
-	const { policyDigest, ...resolutionWithoutDigest } = resolution;
+	const { policyDigest, ...policyWithoutDigest } = policy;
 	assertDigest(policyDigest, "policyDigest");
-	assertValidResolutionShape(resolutionWithoutDigest);
-	const expectedDigest = qualityPolicyDigest(resolutionWithoutDigest);
+	assertValidPolicyShape(policyWithoutDigest);
+	const expectedDigest = resolvedExitPolicyDigest(policyWithoutDigest);
 	if (policyDigest !== expectedDigest) {
 		throw new Error(
-			`Quality Policy resolution digest mismatch: expected ${expectedDigest}.`,
+			`Resolved Exit Policy digest mismatch: expected ${expectedDigest}.`,
 		);
 	}
 }
 
-function normalizeResolutionInput(
-	input: CreateQualityPolicyResolutionInput,
-): Omit<QualityPolicyResolution, "policyDigest"> {
+function normalizePolicyInput(
+	input: CreateResolvedExitPolicyInput,
+): Omit<ResolvedExitPolicy, "policyDigest"> {
 	return {
-		schemaVersion: QUALITY_POLICY_SCHEMA_VERSION,
-		stage: input.stage,
+		schemaVersion: LOOP_EXIT_SCHEMA_VERSION,
+		loop: input.loop,
 		candidateDigest: input.candidateDigest,
 		selectorInputDigest: input.selectorInputDigest,
 		bindings: [...input.bindings]
 			.map((binding) => ({
 				...binding,
 				parameters: sortObject(binding.parameters),
-				evaluationDependsOn: sortedUnique(binding.evaluationDependsOn),
+				dependsOn: sortedUnique(binding.dependsOn),
 				activatedBy: sortedUnique(binding.activatedBy),
 				ruleRefs: sortedUnique(binding.ruleRefs),
 			}))
-			.sort((left, right) => left.standardId.localeCompare(right.standardId)),
+			.sort((left, right) => left.checkId.localeCompare(right.checkId)),
 		exclusions: [...(input.exclusions ?? [])]
 			.map((exclusion) => ({
 				...exclusion,
 				refs: sortedUnique(exclusion.refs),
 			}))
-			.sort((left, right) => left.standardId.localeCompare(right.standardId)),
-		gates: [...input.gates]
-			.map((gate) => ({
-				...gate,
-				standardIds: sortedUnique(gate.standardIds),
-			}))
-			.sort((left, right) => left.id.localeCompare(right.id)),
-		protectedStandardIds: sortedUnique(input.protectedStandardIds ?? []),
+			.sort((left, right) => left.checkId.localeCompare(right.checkId)),
+		protectedCheckIds: sortedUnique(input.protectedCheckIds ?? []),
 	};
 }
 
-function assertValidResolutionShape(
-	resolution: Omit<QualityPolicyResolution, "policyDigest">,
+function assertValidPolicyShape(
+	policy: Omit<ResolvedExitPolicy, "policyDigest">,
 ): void {
-	assertDigest(resolution.candidateDigest, "candidateDigest");
-	assertDigest(resolution.selectorInputDigest, "selectorInputDigest");
+	assertDigest(policy.candidateDigest, "candidateDigest");
+	assertDigest(policy.selectorInputDigest, "selectorInputDigest");
 	assertUniqueIds(
-		resolution.bindings.map((binding) => binding.standardId),
-		"binding standard",
+		policy.bindings.map((binding) => binding.checkId),
+		"binding Check",
 	);
 	assertUniqueIds(
-		resolution.exclusions.map((exclusion) => exclusion.standardId),
-		"excluded standard",
-	);
-	assertUniqueIds(
-		resolution.gates.map((gate) => gate.id),
-		"gate",
+		policy.exclusions.map((exclusion) => exclusion.checkId),
+		"excluded Check",
 	);
 
-	const activeIds = new Set(
-		resolution.bindings.map((binding) => binding.standardId),
-	);
-	for (const binding of resolution.bindings) {
-		assertStableId(binding.standardId, "binding standardId");
-		assertVersion(binding.standardVersion, `Standard ${binding.standardId}`);
+	const activeIds = new Set(policy.bindings.map((binding) => binding.checkId));
+	for (const binding of policy.bindings) {
+		assertStableId(binding.checkId, "binding checkId");
+		assertVersion(binding.checkVersion, `Check ${binding.checkId}`);
 		if (binding.activatedBy.length === 0) {
-			throw new Error(
-				`Quality Standard binding ${binding.standardId} requires activatedBy.`,
-			);
+			throw new Error(`Check binding ${binding.checkId} requires activatedBy.`);
 		}
-		for (const dependency of binding.evaluationDependsOn) {
+		for (const dependency of binding.dependsOn) {
 			if (!activeIds.has(dependency)) {
 				throw new Error(
-					`Quality Standard binding ${binding.standardId} has unknown evaluation dependency ${dependency}.`,
+					`Check binding ${binding.checkId} has unknown dependency ${dependency}.`,
 				);
 			}
 		}
 	}
-	assertAcyclicBindings(resolution.bindings);
+	assertAcyclicBindings(policy.bindings);
 
-	for (const exclusion of resolution.exclusions) {
-		assertStableId(exclusion.standardId, "exclusion standardId");
-		assertVersion(
-			exclusion.standardVersion,
-			`Standard ${exclusion.standardId}`,
-		);
-		if (activeIds.has(exclusion.standardId)) {
+	for (const exclusion of policy.exclusions) {
+		assertStableId(exclusion.checkId, "exclusion checkId");
+		assertVersion(exclusion.checkVersion, `Check ${exclusion.checkId}`);
+		if (activeIds.has(exclusion.checkId)) {
 			throw new Error(
-				`Quality Standard ${exclusion.standardId} cannot be both active and excluded.`,
+				`Check ${exclusion.checkId} cannot be both active and excluded.`,
 			);
 		}
 	}
-	for (const protectedId of resolution.protectedStandardIds) {
+	for (const protectedId of policy.protectedCheckIds) {
 		if (!activeIds.has(protectedId)) {
-			throw new Error(
-				`Protected Quality Standard ${protectedId} must remain active.`,
-			);
-		}
-	}
-	for (const gate of resolution.gates) {
-		assertStableId(gate.id, "gate id");
-		assertVersion(gate.version, `Gate ${gate.id}`);
-		if (gate.standardIds.length === 0) {
-			throw new Error(`Quality gate ${gate.id} requires Standard refs.`);
-		}
-		for (const standardId of gate.standardIds) {
-			if (!activeIds.has(standardId)) {
-				throw new Error(
-					`Quality gate ${gate.id} references inactive Standard ${standardId}.`,
-				);
-			}
-		}
-		if (gate.kind === "threshold" && gate.threshold === undefined) {
-			throw new Error(`Threshold Quality gate ${gate.id} requires threshold.`);
+			throw new Error(`Protected Check ${protectedId} must remain active.`);
 		}
 	}
 }
 
-function assertAcyclicBindings(bindings: QualityStandardBinding[]): void {
-	const byId = new Map(
-		bindings.map((binding) => [binding.standardId, binding]),
-	);
+function assertAcyclicBindings(bindings: CheckBinding[]): void {
+	const byId = new Map(bindings.map((binding) => [binding.checkId, binding]));
 	const visiting = new Set<string>();
 	const visited = new Set<string>();
 	const visit = (id: string): void => {
 		if (visiting.has(id)) {
-			throw new Error(
-				`Quality Standard evaluation dependency cycle includes ${id}.`,
-			);
+			throw new Error(`Check dependency cycle includes ${id}.`);
 		}
 		if (visited.has(id)) return;
 		visiting.add(id);
-		for (const dependency of byId.get(id)?.evaluationDependsOn ?? []) {
-			visit(dependency);
-		}
+		for (const dependency of byId.get(id)?.dependsOn ?? []) visit(dependency);
 		visiting.delete(id);
 		visited.add(id);
 	};
-	for (const binding of bindings) visit(binding.standardId);
+	for (const binding of bindings) visit(binding.checkId);
 }
 
 function assertUniqueIds(values: string[], label: string): void {
 	const seen = new Set<string>();
 	for (const value of values) {
-		if (seen.has(value))
-			throw new Error(`Duplicate Quality ${label} ${value}.`);
+		if (seen.has(value)) throw new Error(`Duplicate ${label} ${value}.`);
 		seen.add(value);
 	}
 }
 
 function assertStableId(value: string, label: string): void {
 	if (!/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(value)) {
-		throw new Error(`Quality ${label} must be a stable id.`);
+		throw new Error(`${label} must be a stable id.`);
 	}
 }
 
 function assertVersion(value: string, label: string): void {
-	if (value.trim().length === 0)
-		throw new Error(`${label} requires a version.`);
+	if (value.trim().length === 0) throw new Error(`${label} requires a version.`);
 }
 
 function assertDigest(value: string, label: string): void {
 	if (!/^sha256:[a-f0-9]{64}$/.test(value)) {
-		throw new Error(`Quality Policy ${label} must be a sha256 digest.`);
+		throw new Error(`Resolved Exit Policy ${label} must be a sha256 digest.`);
 	}
 }
 
@@ -356,8 +287,8 @@ function sortedUnique(values: string[]): string[] {
 }
 
 function sortObject(
-	value: Record<string, QualityJsonValue>,
-): Record<string, QualityJsonValue> {
+	value: Record<string, CheckJsonValue>,
+): Record<string, CheckJsonValue> {
 	return Object.fromEntries(
 		Object.entries(value).sort(([left], [right]) => left.localeCompare(right)),
 	);

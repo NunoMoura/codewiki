@@ -1,20 +1,20 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { resolveQualityPolicy } from "../../src/loop-exit/resolve-policy.ts";
-import { assertValidQualityPolicyResolution } from "../../src/loop-exit/contracts.ts";
+import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
+import { assertValidResolvedExitPolicy } from "../../src/loop-exit/contracts.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const PLANNING_POLICY_DIGEST = `sha256:${"c".repeat(64)}`;
 
-function selectorInput(stage = "decision") {
+function selectorInput(loop = "decision") {
 	return {
-		stage,
+		loop,
 		candidateDigest: CANDIDATE_DIGEST,
 		changes: [
 			{
-				changeId: "CHG-quality-policy",
+				changeId: "CHG-check-policy",
 				revision: 2,
 				digest: CHANGE_DIGEST,
 				kind: "improve",
@@ -31,34 +31,34 @@ function selectorInput(stage = "decision") {
 
 function projectRegistration() {
 	return {
-		standard: {
+		check: {
 			id: "project.documentation_current",
 			version: "1.0.0",
 			description: "Project documentation remains current.",
-			assessmentCriteria: ["Affected documentation is updated."],
-			verifier: {
-				id: "codewiki.deterministic",
+			criteria: ["Affected documentation is updated."],
+			execution: {
+				id: "codewiki.code-check",
 				version: "1.0.0",
-				kind: "deterministic",
+				kind: "code",
 			},
-			measurement: { shape: "boolean" },
+			measurement: { kind: "quantitative", shape: "boolean" },
 			evidenceAdapterIds: ["source", "trace"],
 			repairTarget: "source",
 			cost: 1,
 			timeoutMs: 5_000,
 			protected: false,
 		},
-		stages: ["implementation"],
+		loops: ["implementation"],
 		rollout: "observe",
 		rolloutHistory: [],
-		evaluationDependsOn: [],
+		dependsOn: [],
 	};
 }
 
-describe("Quality Policy resolver", () => {
-	it("activates protected stage baseline and Change-kind Standards", () => {
-		const resolution = resolveQualityPolicy(selectorInput());
-		const ids = resolution.bindings.map((binding) => binding.standardId);
+describe("Resolved Exit Policy resolver", () => {
+	it("activates protected loop baseline and Change-kind Checks", () => {
+		const resolution = resolveExitPolicy(selectorInput());
+		const ids = resolution.bindings.map((binding) => binding.checkId);
 
 		assert.ok(ids.includes("change_revision_ready"));
 		assert.ok(ids.includes("approval_safety"));
@@ -67,23 +67,19 @@ describe("Quality Policy resolver", () => {
 		assert.ok(
 			resolution.exclusions.some(
 				(exclusion) =>
-					exclusion.standardId === "security_privacy_reviewed" &&
+					exclusion.checkId === "security_privacy_reviewed" &&
 					exclusion.reason === "not_applicable",
 			),
 		);
 		assert.ok(
-			resolution.protectedStandardIds.includes("change_revision_ready"),
+			resolution.protectedCheckIds.includes("change_revision_ready"),
 		);
-		assert.deepEqual(resolution.gates, [
-			{
-				id: "decision.exit",
-				version: "1.0.0",
-				kind: "all_required",
-				standardIds: resolution.bindings.map((binding) => binding.standardId),
-				onFailure: "route_back",
-			},
-		]);
-		assert.doesNotThrow(() => assertValidQualityPolicyResolution(resolution));
+		assert.ok(
+			resolution.bindings.every(
+				(binding) => binding.required && binding.enforcement === "require",
+			),
+		);
+		assert.doesNotThrow(() => assertValidResolvedExitPolicy(resolution));
 	});
 
 	it("combines multi-trait, path, risk, and technology overlays explainably", () => {
@@ -98,21 +94,21 @@ describe("Quality Policy resolver", () => {
 			"package-lock.json",
 			".github/workflows/release.yml",
 		];
-		const resolution = resolveQualityPolicy(input);
+		const resolution = resolveExitPolicy(input);
 		const byId = new Map(
-			resolution.bindings.map((binding) => [binding.standardId, binding]),
+			resolution.bindings.map((binding) => [binding.checkId, binding]),
 		);
 
-		for (const standardId of [
+		for (const checkId of [
 			"security_privacy_reviewed",
 			"accessibility_ui_reviewed",
 			"dependency_risk_controlled",
 			"release_safety_approved",
 			"api_contract_reviewed",
-			"typescript_quality_verified",
-			"shell_quality_verified",
+			"typescript_verified",
+			"shell_verified",
 		]) {
-			assert.ok(byId.has(standardId), `missing ${standardId}`);
+			assert.ok(byId.has(checkId), `missing ${checkId}`);
 		}
 		assert.ok(
 			byId
@@ -126,9 +122,9 @@ describe("Quality Policy resolver", () => {
 		);
 		assert.ok(
 			byId
-				.get("typescript_quality_verified")
+				.get("typescript_verified")
 				.ruleRefs.includes(
-					"quality.technology.typescript.implementation@1.0.0",
+					"check.technology.typescript.implementation@1.0.0",
 				),
 		);
 	});
@@ -154,48 +150,47 @@ describe("Quality Policy resolver", () => {
 		right.changes.reverse();
 		right.changes[1].affectedLayers.reverse();
 
-		const first = resolveQualityPolicy(left);
-		const second = resolveQualityPolicy(right);
+		const first = resolveExitPolicy(left);
+		const second = resolveExitPolicy(right);
 		assert.equal(first.selectorInputDigest, second.selectorInputDigest);
 		assert.equal(first.policyDigest, second.policyDigest);
 	});
 
-	it("activates approved project Standards without granting progression authority", () => {
+	it("activates approved project Checks without granting progression authority", () => {
 		const input = selectorInput("implementation");
 		input.projectRegistrations = [projectRegistration()];
 		input.approvedAdditions = [
 			{
-				standardId: "project.documentation_current",
-				standardVersion: "1.0.0",
+				checkId: "project.documentation_current",
+				checkVersion: "1.0.0",
 				authorityRef: "trace:decision:approval:4",
 				parameters: { pathsRequired: true },
 			},
 		];
-		const resolution = resolveQualityPolicy(input);
+		const resolution = resolveExitPolicy(input);
 		const binding = resolution.bindings.find(
-			(entry) => entry.standardId === "project.documentation_current",
+			(entry) => entry.checkId === "project.documentation_current",
 		);
 
 		assert.equal(binding.enforcement, "observe");
 		assert.equal(binding.required, false);
 		assert.deepEqual(binding.parameters, { pathsRequired: true });
-		assert.ok(!resolution.gates[0].standardIds.includes(binding.standardId));
 	});
 
-	it("protects kernel Standards and frozen Planning minimums from exclusions", () => {
+	it("protects kernel Checks and frozen Planning minimums from exclusions", () => {
 		const kernelInput = selectorInput("implementation");
 		kernelInput.projectTraits = ["web-ui"];
 		kernelInput.approvedExclusions = [
 			{
-				standardId: "accessibility_ui_reviewed",
-				standardVersion: "1.0.0",
+				checkId: "accessibility_ui_reviewed",
+				checkVersion: "1.0.0",
 				authorityRef: "trace:approval:1",
 				reason: "not_applicable",
 				refs: [],
 			},
 		];
 		assert.throws(
-			() => resolveQualityPolicy(kernelInput),
+			() => resolveExitPolicy(kernelInput),
 			/cannot be excluded from implementation/,
 		);
 
@@ -205,8 +200,8 @@ describe("Quality Policy resolver", () => {
 			planningPolicyDigest: PLANNING_POLICY_DIGEST,
 			bindings: [
 				{
-					standardId: "project.documentation_current",
-					standardVersion: "1.0.0",
+					checkId: "project.documentation_current",
+					checkVersion: "1.0.0",
 					enforcement: "observe",
 					required: false,
 					parameters: {},
@@ -217,23 +212,23 @@ describe("Quality Policy resolver", () => {
 			...minimumInput,
 			frozenMinimum: structuredClone(minimumInput.frozenMinimum),
 		};
-		elevatedInput.frozenMinimum.bindings[0].enforcement = "enforce";
+		elevatedInput.frozenMinimum.bindings[0].enforcement = "require";
 		assert.throws(
-			() => resolveQualityPolicy(elevatedInput),
+			() => resolveExitPolicy(elevatedInput),
 			/cannot exceed catalog rollout observe/,
 		);
 
 		minimumInput.approvedExclusions = [
 			{
-				standardId: "project.documentation_current",
-				standardVersion: "1.0.0",
+				checkId: "project.documentation_current",
+				checkVersion: "1.0.0",
 				authorityRef: "trace:approval:2",
 				reason: "escalated_elsewhere",
 				refs: [],
 			},
 		];
 		assert.throws(
-			() => resolveQualityPolicy(minimumInput),
+			() => resolveExitPolicy(minimumInput),
 			/cannot be excluded from implementation/,
 		);
 	});
@@ -242,24 +237,24 @@ describe("Quality Policy resolver", () => {
 		const unknown = selectorInput();
 		unknown.approvedAdditions = [
 			{
-				standardId: "project.unknown",
-				standardVersion: "1.0.0",
+				checkId: "project.unknown",
+				checkVersion: "1.0.0",
 				authorityRef: "trace:approval:3",
 			},
 		];
 		assert.throws(
-			() => resolveQualityPolicy(unknown),
-			/Unknown Quality Standard project.unknown/,
+			() => resolveExitPolicy(unknown),
+			/Unknown Check project.unknown/,
 		);
 
-		const wrongStage = selectorInput("planning");
-		wrongStage.frozenMinimum = {
+		const wrongLoop = selectorInput("planning");
+		wrongLoop.frozenMinimum = {
 			planningPolicyDigest: PLANNING_POLICY_DIGEST,
 			bindings: [],
 		};
 		assert.throws(
-			() => resolveQualityPolicy(wrongStage),
-			/Only Implementation Quality Policy may carry a frozen Planning minimum/,
+			() => resolveExitPolicy(wrongLoop),
+			/Only Implementation Resolved Exit Policy may carry a frozen Planning minimum/,
 		);
 	});
 });

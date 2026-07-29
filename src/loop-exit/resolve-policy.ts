@@ -6,26 +6,26 @@ import {
 	type ChangeRisk,
 	type ChangeType,
 } from "../changes/types.ts";
-import type { SemanticLoop as TraceLoop } from "../semantic-loop.ts";
+import type { SemanticLoop } from "../semantic-loop.ts";
 import {
-	createQualityPolicyResolution,
-	qualityPolicyDigest,
-	type QualityEnforcementMode,
-	type QualityJsonValue,
-	type QualityPolicyExclusionReason,
-	type QualityPolicyResolution,
-	type QualityStandardBinding,
+	createResolvedExitPolicy,
+	resolvedExitPolicyDigest,
+	type CheckEnforcement,
+	type CheckJsonValue,
+	type CheckExclusionReason,
+	type ResolvedExitPolicy,
+	type CheckBinding,
 } from "./contracts.ts";
 import {
-	createQualityStandardCatalog,
-	type ProjectQualityStandardRegistration,
-	type QualityStandardRegistration,
-	type QualityStandardCatalog,
+	createCheckCatalog,
+	type ProjectCheckRegistration,
+	type CheckRegistration,
+	type CheckCatalog,
 } from "./catalog.ts";
 
-const QUALITY_POLICY_SELECTOR_VERSION = "1.0.0";
+const EXIT_POLICY_SELECTOR_VERSION = "1.0.0";
 
-const QUALITY_PROJECT_TRAITS = [
+const PROJECT_TRAITS = [
 	"web-ui",
 	"public-api",
 	"cli",
@@ -35,7 +35,7 @@ const QUALITY_PROJECT_TRAITS = [
 	"security-sensitive",
 	"release-producing",
 ] as const;
-const QUALITY_TECHNOLOGIES = [
+const TECHNOLOGIES = [
 	"typescript",
 	"javascript",
 	"python",
@@ -44,11 +44,11 @@ const QUALITY_TECHNOLOGIES = [
 	"shell",
 ] as const;
 
-type QualityProjectTrait = (typeof QUALITY_PROJECT_TRAITS)[number];
-type QualityTechnology = (typeof QUALITY_TECHNOLOGIES)[number];
-type QualityPathTrait = "ui" | "dependency" | "release";
+type ProjectTrait = (typeof PROJECT_TRAITS)[number];
+type Technology = (typeof TECHNOLOGIES)[number];
+type PathTrait = "ui" | "dependency" | "release";
 
-interface QualityChangeSelectorFacts {
+interface ChangeSelectorFacts {
 	changeId: string;
 	revision: number;
 	digest: string;
@@ -58,90 +58,90 @@ interface QualityChangeSelectorFacts {
 	affectedLayers: string[];
 }
 
-interface QualityPolicyApprovedAddition {
-	standardId: string;
-	standardVersion: string;
+interface ApprovedCheckAddition {
+	checkId: string;
+	checkVersion: string;
 	authorityRef: string;
-	parameters?: Record<string, QualityJsonValue>;
+	parameters?: Record<string, CheckJsonValue>;
 }
 
-interface QualityPolicyApprovedExclusion {
-	standardId: string;
-	standardVersion: string;
+interface ApprovedCheckExclusion {
+	checkId: string;
+	checkVersion: string;
 	authorityRef: string;
-	reason: QualityPolicyExclusionReason;
+	reason: CheckExclusionReason;
 	refs: string[];
 }
 
-interface QualityPolicyFrozenMinimumBinding {
-	standardId: string;
-	standardVersion: string;
-	enforcement: QualityEnforcementMode;
+interface FrozenMinimumCheckBinding {
+	checkId: string;
+	checkVersion: string;
+	enforcement: CheckEnforcement;
 	required: boolean;
-	parameters: Record<string, QualityJsonValue>;
+	parameters: Record<string, CheckJsonValue>;
 }
 
-interface QualityPolicyFrozenMinimum {
+interface FrozenMinimumPolicy {
 	planningPolicyDigest: string;
-	bindings: QualityPolicyFrozenMinimumBinding[];
+	bindings: FrozenMinimumCheckBinding[];
 }
 
-interface ResolveQualityPolicyInput {
-	stage: TraceLoop;
+interface ResolveExitPolicyInput {
+	loop: SemanticLoop;
 	candidateDigest: string;
-	changes: QualityChangeSelectorFacts[];
-	projectTraits?: QualityProjectTrait[];
-	technologies?: QualityTechnology[];
+	changes: ChangeSelectorFacts[];
+	projectTraits?: ProjectTrait[];
+	technologies?: Technology[];
 	paths?: string[];
-	approvedAdditions?: QualityPolicyApprovedAddition[];
-	approvedExclusions?: QualityPolicyApprovedExclusion[];
-	frozenMinimum?: QualityPolicyFrozenMinimum;
-	projectRegistrations?: ProjectQualityStandardRegistration[];
+	approvedAdditions?: ApprovedCheckAddition[];
+	approvedExclusions?: ApprovedCheckExclusion[];
+	frozenMinimum?: FrozenMinimumPolicy;
+	projectRegistrations?: ProjectCheckRegistration[];
 }
 
-interface QualityActivationRuleMatch {
+interface CheckActivationRuleMatch {
 	changeKinds?: ChangeKind[];
 	changeTypes?: ChangeType[];
 	risks?: ChangeRisk[];
 	affectedLayers?: string[];
-	projectTraits?: QualityProjectTrait[];
-	technologies?: QualityTechnology[];
-	pathTraits?: QualityPathTrait[];
+	projectTraits?: ProjectTrait[];
+	technologies?: Technology[];
+	pathTraits?: PathTrait[];
 }
 
-interface QualityActivationRule {
+interface CheckActivationRule {
 	id: string;
 	version: string;
-	stage: TraceLoop;
-	standardIds: string[];
-	match: QualityActivationRuleMatch;
+	loop: SemanticLoop;
+	checkIds: string[];
+	match: CheckActivationRuleMatch;
 }
 
 interface NormalizedSelectorInput {
-	selectorVersion: typeof QUALITY_POLICY_SELECTOR_VERSION;
+	selectorVersion: typeof EXIT_POLICY_SELECTOR_VERSION;
 	catalogVersion: string;
-	stage: TraceLoop;
+	loop: SemanticLoop;
 	candidateDigest: string;
-	changes: QualityChangeSelectorFacts[];
-	projectTraits: QualityProjectTrait[];
-	technologies: QualityTechnology[];
+	changes: ChangeSelectorFacts[];
+	projectTraits: ProjectTrait[];
+	technologies: Technology[];
 	paths: string[];
-	pathTraits: QualityPathTrait[];
-	approvedAdditions: QualityPolicyApprovedAddition[];
-	approvedExclusions: QualityPolicyApprovedExclusion[];
-	frozenMinimum?: QualityPolicyFrozenMinimum;
+	pathTraits: PathTrait[];
+	approvedAdditions: ApprovedCheckAddition[];
+	approvedExclusions: ApprovedCheckExclusion[];
+	frozenMinimum?: FrozenMinimumPolicy;
 }
 
 interface MutableBinding {
-	registration: QualityStandardRegistration;
-	enforcement: QualityEnforcementMode;
+	registration: CheckRegistration;
+	enforcement: CheckEnforcement;
 	required: boolean;
-	parameters: Record<string, QualityJsonValue>;
+	parameters: Record<string, CheckJsonValue>;
 	activatedBy: Set<string>;
 	ruleRefs: Set<string>;
 }
 
-const STAGE_BASELINES: Record<TraceLoop, string[]> = {
+const LOOP_BASELINES: Record<SemanticLoop, string[]> = {
 	decision: [
 		"change_revision_ready",
 		"intention_understood",
@@ -187,7 +187,7 @@ const STAGE_BASELINES: Record<TraceLoop, string[]> = {
 		"integration_conflicts_resolved",
 		"content_proof_recorded",
 		"source_ownership_aligned",
-		"production_quality_reviewed",
+		"production_readiness_reviewed",
 		"outcome_realization_accounted",
 		"archive_disposition_ready",
 		"uncertainty_resolved",
@@ -195,136 +195,136 @@ const STAGE_BASELINES: Record<TraceLoop, string[]> = {
 	],
 };
 
-const CODEWIKI_QUALITY_ACTIVATION_RULES: QualityActivationRule[] = [
-	...(["decision", "planning", "implementation"] as const).map((stage) => ({
-		id: `quality.stage.${stage}.baseline`,
+const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
+	...(["decision", "planning", "implementation"] as const).map((loop) => ({
+		id: `check.loop.${loop}.baseline`,
 		version: "1.0.0",
-		stage,
-		standardIds: STAGE_BASELINES[stage],
+		loop,
+		checkIds: LOOP_BASELINES[loop],
 		match: {},
 	})),
-	...rulesForAllStages("quality.change.kind.fix", ["fix_reproducible"], {
+	...rulesForAllLoops("check.change.kind.fix", ["fix_reproducible"], {
 		changeKinds: ["fix"],
 	}),
-	...rulesForAllStages(
-		"quality.change.kind.harden",
+	...rulesForAllLoops(
+		"check.change.kind.harden",
 		["hardening_boundaries_complete"],
 		{ changeKinds: ["harden"] },
 	),
-	...rulesForAllStages(
-		"quality.change.kind.improve",
+	...rulesForAllLoops(
+		"check.change.kind.improve",
 		["improvement_outcome_observable"],
 		{ changeKinds: ["improve"] },
 	),
-	...rulesForAllStages(
-		"quality.change.kind.migrate",
+	...rulesForAllLoops(
+		"check.change.kind.migrate",
 		["migration_invariants_preserved"],
 		{ changeKinds: ["migrate"] },
 	),
-	...rulesForAllStages(
-		"quality.change.type.security",
+	...rulesForAllLoops(
+		"check.change.type.security",
 		["security_privacy_reviewed"],
 		{ changeTypes: ["security_change"] },
 	),
-	...rulesForAllStages(
-		"quality.change.risk.high",
+	...rulesForAllLoops(
+		"check.change.risk.high",
 		["security_privacy_reviewed"],
 		{ risks: ["high"] },
 	),
-	...rulesForAllStages(
-		"quality.project.security",
+	...rulesForAllLoops(
+		"check.project.security",
 		["security_privacy_reviewed"],
 		{ projectTraits: ["handles-personal-data", "security-sensitive"] },
 	),
-	...rulesForAllStages(
-		"quality.layer.security",
+	...rulesForAllLoops(
+		"check.layer.security",
 		["security_privacy_reviewed"],
 		{ affectedLayers: ["security", "privacy"] },
 	),
-	...rulesForAllStages(
-		"quality.project.web-ui",
+	...rulesForAllLoops(
+		"check.project.web-ui",
 		["accessibility_ui_reviewed"],
 		{ projectTraits: ["web-ui"] },
 	),
-	...rulesForAllStages("quality.layer.ui", ["accessibility_ui_reviewed"], {
+	...rulesForAllLoops("check.layer.ui", ["accessibility_ui_reviewed"], {
 		affectedLayers: ["frontend", "ui", "web"],
 	}),
-	...rulesForAllStages("quality.path.ui", ["accessibility_ui_reviewed"], {
+	...rulesForAllLoops("check.path.ui", ["accessibility_ui_reviewed"], {
 		pathTraits: ["ui"],
 	}),
-	...rulesForAllStages(
-		"quality.change.type.dependency",
+	...rulesForAllLoops(
+		"check.change.type.dependency",
 		["dependency_risk_controlled"],
 		{ changeTypes: ["dependency_change"] },
 	),
-	...rulesForAllStages(
-		"quality.layer.dependency",
+	...rulesForAllLoops(
+		"check.layer.dependency",
 		["dependency_risk_controlled"],
 		{ affectedLayers: ["dependency", "package"] },
 	),
-	...rulesForAllStages(
-		"quality.path.dependency",
+	...rulesForAllLoops(
+		"check.path.dependency",
 		["dependency_risk_controlled"],
 		{ pathTraits: ["dependency"] },
 	),
-	...rulesForAllStages(
-		"quality.change.type.release",
+	...rulesForAllLoops(
+		"check.change.type.release",
 		["release_safety_approved"],
 		{ changeTypes: ["release_change"] },
 	),
-	...rulesForAllStages("quality.project.release", ["release_safety_approved"], {
+	...rulesForAllLoops("check.project.release", ["release_safety_approved"], {
 		projectTraits: ["release-producing"],
 	}),
-	...rulesForAllStages("quality.layer.release", ["release_safety_approved"], {
+	...rulesForAllLoops("check.layer.release", ["release_safety_approved"], {
 		affectedLayers: ["publication", "release"],
 	}),
-	...rulesForAllStages("quality.path.release", ["release_safety_approved"], {
+	...rulesForAllLoops("check.path.release", ["release_safety_approved"], {
 		pathTraits: ["release"],
 	}),
-	...rulesForAllStages(
-		"quality.project.public-api",
+	...rulesForAllLoops(
+		"check.project.public-api",
 		["api_contract_reviewed"],
 		{ projectTraits: ["public-api"] },
 	),
-	...rulesForAllStages("quality.layer.api", ["api_contract_reviewed"], {
+	...rulesForAllLoops("check.layer.api", ["api_contract_reviewed"], {
 		affectedLayers: ["api"],
 	}),
-	...rulesForAllStages("quality.project.cli", ["cli_behavior_verified"], {
+	...rulesForAllLoops("check.project.cli", ["cli_behavior_verified"], {
 		projectTraits: ["cli"],
 	}),
-	...rulesForAllStages(
-		"quality.project.library",
+	...rulesForAllLoops(
+		"check.project.library",
 		["library_contract_preserved"],
 		{ projectTraits: ["library"] },
 	),
-	...rulesForAllStages(
-		"quality.project.persistent-data",
+	...rulesForAllLoops(
+		"check.project.persistent-data",
 		["persistent_data_safety_reviewed"],
 		{ projectTraits: ["persistent-data"] },
 	),
-	...rulesForAllStages(
-		"quality.layer.data",
+	...rulesForAllLoops(
+		"check.layer.data",
 		["persistent_data_safety_reviewed"],
 		{ affectedLayers: ["data", "database", "storage"] },
 	),
-	technologyRule("typescript", "typescript_quality_verified"),
-	technologyRule("javascript", "typescript_quality_verified"),
-	technologyRule("python", "python_quality_verified"),
-	technologyRule("go", "go_quality_verified"),
-	technologyRule("rust", "rust_quality_verified"),
-	technologyRule("shell", "shell_quality_verified"),
+	technologyRule("typescript", "typescript_verified"),
+	technologyRule("javascript", "typescript_verified"),
+	technologyRule("python", "python_verified"),
+	technologyRule("go", "go_verified"),
+	technologyRule("rust", "rust_verified"),
+	technologyRule("shell", "shell_verified"),
 ];
 
-export function resolveQualityPolicy(
-	input: ResolveQualityPolicyInput,
-): QualityPolicyResolution {
-	const catalog = createQualityStandardCatalog(input.projectRegistrations);
+export function resolveExitPolicy(
+	input: ResolveExitPolicyInput,
+): ResolvedExitPolicy {
+	const catalog = createCheckCatalog(input.projectRegistrations);
 	const selector = normalizeSelectorInput(input, catalog.version);
 	const active = new Map<string, MutableBinding>();
 	activateRules(active, catalog, selector);
 	activateApprovedAdditions(active, catalog, selector);
 	activateFrozenMinimum(active, catalog, selector);
-	activateDependencies(active, catalog, selector.stage);
+	activateDependencies(active, catalog, selector.loop);
 	applyApprovedExclusions(active, catalog, selector);
 	assertActiveDependencies(active);
 	return resolvedPolicy(active, catalog, selector);
@@ -332,19 +332,19 @@ export function resolveQualityPolicy(
 
 function activateRules(
 	active: Map<string, MutableBinding>,
-	catalog: QualityStandardCatalog,
+	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
-	for (const rule of CODEWIKI_QUALITY_ACTIVATION_RULES) {
-		if (rule.stage !== selector.stage) continue;
+	for (const rule of CODEWIKI_CHECK_ACTIVATION_RULES) {
+		if (rule.loop !== selector.loop) continue;
 		const reasons = ruleReasons(rule, selector);
 		if (!reasons) continue;
-		for (const standardId of rule.standardIds) {
+		for (const checkId of rule.checkIds) {
 			activate({
 				active,
 				catalog,
-				stage: selector.stage,
-				standardId,
+				loop: selector.loop,
+				checkId,
 				activatedBy: reasons,
 				ruleRef: `${rule.id}@${rule.version}`,
 			});
@@ -354,26 +354,26 @@ function activateRules(
 
 function activateApprovedAdditions(
 	active: Map<string, MutableBinding>,
-	catalog: QualityStandardCatalog,
+	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	for (const addition of selector.approvedAdditions) {
 		activate({
 			active,
 			catalog,
-			stage: selector.stage,
-			standardId: addition.standardId,
-			standardVersion: addition.standardVersion,
+			loop: selector.loop,
+			checkId: addition.checkId,
+			checkVersion: addition.checkVersion,
 			parameters: addition.parameters,
 			activatedBy: [`approved-addition:${addition.authorityRef}`],
-			ruleRef: `quality.approved-addition@${QUALITY_POLICY_SELECTOR_VERSION}`,
+			ruleRef: `check.approved-addition@${EXIT_POLICY_SELECTOR_VERSION}`,
 		});
 	}
 }
 
 function activateFrozenMinimum(
 	active: Map<string, MutableBinding>,
-	catalog: QualityStandardCatalog,
+	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	if (!selector.frozenMinimum) return;
@@ -381,77 +381,62 @@ function activateFrozenMinimum(
 		activate({
 			active,
 			catalog,
-			stage: selector.stage,
-			standardId: minimum.standardId,
-			standardVersion: minimum.standardVersion,
+			loop: selector.loop,
+			checkId: minimum.checkId,
+			checkVersion: minimum.checkVersion,
 			parameters: minimum.parameters,
 			enforcement: minimum.enforcement,
 			required: minimum.required,
 			activatedBy: [
 				`planning-minimum:${selector.frozenMinimum.planningPolicyDigest}`,
 			],
-			ruleRef: `quality.planning-minimum@${QUALITY_POLICY_SELECTOR_VERSION}`,
+			ruleRef: `check.planning-minimum@${EXIT_POLICY_SELECTOR_VERSION}`,
 		});
 	}
 }
 
 function applyApprovedExclusions(
 	active: Map<string, MutableBinding>,
-	catalog: QualityStandardCatalog,
+	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	const frozenIds = new Set(
-		selector.frozenMinimum?.bindings.map((binding) => binding.standardId) ?? [],
+		selector.frozenMinimum?.bindings.map((binding) => binding.checkId) ?? [],
 	);
 	for (const exclusion of selector.approvedExclusions) {
 		const registration = requiredRegistration(
 			catalog,
-			exclusion.standardId,
-			selector.stage,
-			exclusion.standardVersion,
+			exclusion.checkId,
+			selector.loop,
+			exclusion.checkVersion,
 		);
 		if (
 			registration.authority === "kernel" ||
-			frozenIds.has(exclusion.standardId)
+			frozenIds.has(exclusion.checkId)
 		) {
 			throw new Error(
-				`Quality Standard ${exclusion.standardId} cannot be excluded from ${selector.stage}.`,
+				`Check ${exclusion.checkId} cannot be excluded from ${selector.loop}.`,
 			);
 		}
-		active.delete(exclusion.standardId);
+		active.delete(exclusion.checkId);
 	}
 }
 
 function resolvedPolicy(
 	active: Map<string, MutableBinding>,
-	catalog: QualityStandardCatalog,
+	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
-): QualityPolicyResolution {
+): ResolvedExitPolicy {
 	const bindings = [...active.values()].map(toBinding);
-	const requiredStandardIds = bindings.flatMap((binding) =>
-		binding.required && binding.enforcement === "enforce"
-			? [binding.standardId]
-			: [],
-	);
-	return createQualityPolicyResolution({
-		stage: selector.stage,
+	return createResolvedExitPolicy({
+		loop: selector.loop,
 		candidateDigest: selector.candidateDigest,
-		selectorInputDigest: qualityPolicyDigest(selector),
+		selectorInputDigest: resolvedExitPolicyDigest(selector),
 		bindings,
 		exclusions: resolvedExclusions(active, catalog, selector),
-		gates: [
-			{
-				id: `${selector.stage}.exit`,
-				version: QUALITY_POLICY_SELECTOR_VERSION,
-				kind: "all_required",
-				standardIds: requiredStandardIds,
-				onFailure:
-					selector.stage === "implementation" ? "repair" : "route_back",
-			},
-		],
-		protectedStandardIds: [...active.values()].flatMap((binding) =>
-			binding.registration.standard.protected
-				? [binding.registration.standard.id]
+		protectedCheckIds: [...active.values()].flatMap((binding) =>
+			binding.registration.check.protected
+				? [binding.registration.check.id]
 				: [],
 		),
 	});
@@ -459,34 +444,34 @@ function resolvedPolicy(
 
 function resolvedExclusions(
 	active: Map<string, MutableBinding>,
-	catalog: QualityStandardCatalog,
+	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ) {
 	const approvedById = new Map(
 		selector.approvedExclusions.map((exclusion) => [
-			exclusion.standardId,
+			exclusion.checkId,
 			exclusion,
 		]),
 	);
-	return catalog.list(selector.stage).flatMap((registration) => {
-		const standardId = registration.standard.id;
-		if (active.has(standardId)) return [];
-		const approved = approvedById.get(standardId);
+	return catalog.list(selector.loop).flatMap((registration) => {
+		const checkId = registration.check.id;
+		if (active.has(checkId)) return [];
+		const approved = approvedById.get(checkId);
 		return [
 			{
-				standardId,
-				standardVersion: registration.standard.version,
+				checkId,
+				checkVersion: registration.check.version,
 				reason: approved?.reason ?? ("not_applicable" as const),
 				refs: approved
 					? unique([approved.authorityRef, ...approved.refs])
-					: ruleRefsForStandard(selector.stage, standardId),
+					: ruleRefsForCheck(selector.loop, checkId),
 			},
 		];
 	});
 }
 
 function normalizeSelectorInput(
-	input: ResolveQualityPolicyInput,
+	input: ResolveExitPolicyInput,
 	catalogVersion: string,
 ): NormalizedSelectorInput {
 	assertValidSelectorInput(input);
@@ -494,9 +479,9 @@ function normalizeSelectorInput(
 	const exclusions = optionalValues(input.approvedExclusions);
 	const paths = unique(optionalValues(input.paths).map(normalizePath));
 	return {
-		selectorVersion: QUALITY_POLICY_SELECTOR_VERSION,
+		selectorVersion: EXIT_POLICY_SELECTOR_VERSION,
 		catalogVersion,
-		stage: input.stage,
+		loop: input.loop,
 		candidateDigest: input.candidateDigest,
 		changes: [...input.changes]
 			.map((change) => ({
@@ -513,10 +498,10 @@ function normalizeSelectorInput(
 				...addition,
 				parameters: sortObject(addition.parameters ?? {}),
 			}))
-			.sort((left, right) => left.standardId.localeCompare(right.standardId)),
+			.sort((left, right) => left.checkId.localeCompare(right.checkId)),
 		approvedExclusions: [...exclusions]
 			.map((exclusion) => ({ ...exclusion, refs: unique(exclusion.refs) }))
-			.sort((left, right) => left.standardId.localeCompare(right.standardId)),
+			.sort((left, right) => left.checkId.localeCompare(right.checkId)),
 		...(input.frozenMinimum
 			? {
 					frozenMinimum: {
@@ -527,7 +512,7 @@ function normalizeSelectorInput(
 								parameters: sortObject(binding.parameters),
 							}))
 							.sort((left, right) =>
-								left.standardId.localeCompare(right.standardId),
+								left.checkId.localeCompare(right.checkId),
 							),
 					},
 				}
@@ -539,16 +524,16 @@ function optionalValues<T>(values: T[] | undefined): T[] {
 	return values || [];
 }
 
-function assertValidSelectorInput(input: ResolveQualityPolicyInput): void {
+function assertValidSelectorInput(input: ResolveExitPolicyInput): void {
 	assertSelectorChanges(input);
 	assertSelectorTraits(input);
 	assertApprovedAdjustments(input);
 	assertFrozenMinimum(input);
 }
 
-function assertSelectorChanges(input: ResolveQualityPolicyInput): void {
+function assertSelectorChanges(input: ResolveExitPolicyInput): void {
 	if (input.changes.length === 0) {
-		throw new Error("Quality Policy selector requires at least one Change.");
+		throw new Error("Resolved Exit Policy selector requires at least one Change.");
 	}
 	assertDigest(input.candidateDigest, "candidateDigest");
 	assertUnique(
@@ -558,28 +543,28 @@ function assertSelectorChanges(input: ResolveQualityPolicyInput): void {
 	for (const change of input.changes) assertChangeFacts(change);
 }
 
-function assertSelectorTraits(input: ResolveQualityPolicyInput): void {
+function assertSelectorTraits(input: ResolveExitPolicyInput): void {
 	for (const trait of optionalValues(input.projectTraits)) {
-		if (!(QUALITY_PROJECT_TRAITS as readonly string[]).includes(trait)) {
-			throw new Error(`Unknown Quality Policy project trait ${trait}.`);
+		if (!(PROJECT_TRAITS as readonly string[]).includes(trait)) {
+			throw new Error(`Unknown Resolved Exit Policy project trait ${trait}.`);
 		}
 	}
 	for (const technology of optionalValues(input.technologies)) {
-		if (!(QUALITY_TECHNOLOGIES as readonly string[]).includes(technology)) {
-			throw new Error(`Unknown Quality Policy technology ${technology}.`);
+		if (!(TECHNOLOGIES as readonly string[]).includes(technology)) {
+			throw new Error(`Unknown Resolved Exit Policy technology ${technology}.`);
 		}
 	}
 }
 
-function assertApprovedAdjustments(input: ResolveQualityPolicyInput): void {
+function assertApprovedAdjustments(input: ResolveExitPolicyInput): void {
 	const additions = optionalValues(input.approvedAdditions);
 	const exclusions = optionalValues(input.approvedExclusions);
 	assertUnique(
-		additions.map((entry) => entry.standardId),
+		additions.map((entry) => entry.checkId),
 		"approved addition",
 	);
 	assertUnique(
-		exclusions.map((entry) => entry.standardId),
+		exclusions.map((entry) => entry.checkId),
 		"approved exclusion",
 	);
 	for (const addition of additions) assertAuthorityRef(addition.authorityRef);
@@ -588,21 +573,21 @@ function assertApprovedAdjustments(input: ResolveQualityPolicyInput): void {
 	for (const addition of additions) {
 		if (
 			exclusions.some(
-				(exclusion) => exclusion.standardId === addition.standardId,
+				(exclusion) => exclusion.checkId === addition.checkId,
 			)
 		) {
 			throw new Error(
-				`Quality Standard ${addition.standardId} cannot be both added and excluded.`,
+				`Check ${addition.checkId} cannot be both added and excluded.`,
 			);
 		}
 	}
 }
 
-function assertFrozenMinimum(input: ResolveQualityPolicyInput): void {
+function assertFrozenMinimum(input: ResolveExitPolicyInput): void {
 	if (!input.frozenMinimum) return;
-	if (input.stage !== "implementation") {
+	if (input.loop !== "implementation") {
 		throw new Error(
-			"Only Implementation Quality Policy may carry a frozen Planning minimum.",
+			"Only Implementation Resolved Exit Policy may carry a frozen Planning minimum.",
 		);
 	}
 	assertDigest(
@@ -610,39 +595,39 @@ function assertFrozenMinimum(input: ResolveQualityPolicyInput): void {
 		"planningPolicyDigest",
 	);
 	assertUnique(
-		input.frozenMinimum.bindings.map((binding) => binding.standardId),
+		input.frozenMinimum.bindings.map((binding) => binding.checkId),
 		"Planning minimum",
 	);
 }
 
 function activate(input: {
 	active: Map<string, MutableBinding>;
-	catalog: QualityStandardCatalog;
-	stage: TraceLoop;
-	standardId: string;
-	standardVersion?: string;
-	parameters?: Record<string, QualityJsonValue>;
-	enforcement?: QualityEnforcementMode;
+	catalog: CheckCatalog;
+	loop: SemanticLoop;
+	checkId: string;
+	checkVersion?: string;
+	parameters?: Record<string, CheckJsonValue>;
+	enforcement?: CheckEnforcement;
 	required?: boolean;
 	activatedBy: string[];
 	ruleRef: string;
 }): void {
 	const registration = requiredRegistration(
 		input.catalog,
-		input.standardId,
-		input.stage,
-		input.standardVersion,
+		input.checkId,
+		input.loop,
+		input.checkVersion,
 	);
-	const current = input.active.get(input.standardId);
+	const current = input.active.get(input.checkId);
 	const parameters = input.parameters || {};
 	assertEnforcementWithinRollout(input.enforcement, registration);
 	const enforcement = input.enforcement || registration.rollout;
 	const required =
 		typeof input.required === "boolean"
 			? input.required
-			: registration.rollout === "enforce";
+			: registration.rollout === "require";
 	if (!current) {
-		input.active.set(input.standardId, {
+		input.active.set(input.checkId, {
 			registration,
 			enforcement,
 			required,
@@ -652,7 +637,7 @@ function activate(input: {
 		});
 		return;
 	}
-	mergeParameters(current.parameters, parameters, input.standardId);
+	mergeParameters(current.parameters, parameters, input.checkId);
 	current.enforcement = strongerEnforcement(current.enforcement, enforcement);
 	current.required ||= required;
 	for (const reason of input.activatedBy) current.activatedBy.add(reason);
@@ -661,23 +646,23 @@ function activate(input: {
 
 function activateDependencies(
 	active: Map<string, MutableBinding>,
-	catalog: QualityStandardCatalog,
-	stage: TraceLoop,
+	catalog: CheckCatalog,
+	loop: SemanticLoop,
 ): void {
 	for (;;) {
 		let changed = false;
 		for (const binding of [...active.values()]) {
-			for (const dependency of binding.registration.evaluationDependsOn) {
+			for (const dependency of binding.registration.dependsOn) {
 				if (active.has(dependency)) continue;
 				activate({
 					active,
 					catalog,
-					stage,
-					standardId: dependency,
+					loop,
+					checkId: dependency,
 					activatedBy: [
-						`evaluation-dependency:${binding.registration.standard.id}`,
+						`check-dependency:${binding.registration.check.id}`,
 					],
-					ruleRef: `quality.catalog-dependency@${QUALITY_STANDARD_DEPENDENCY_VERSION}`,
+					ruleRef: `check.catalog-dependency@${CHECK_DEPENDENCY_RULE_VERSION}`,
 				});
 				changed = true;
 			}
@@ -686,37 +671,37 @@ function activateDependencies(
 	}
 }
 
-const QUALITY_STANDARD_DEPENDENCY_VERSION = "1.0.0";
+const CHECK_DEPENDENCY_RULE_VERSION = "1.0.0";
 
 function requiredRegistration(
-	catalog: QualityStandardCatalog,
-	standardId: string,
-	stage: TraceLoop,
-	standardVersion?: string,
-): QualityStandardRegistration {
-	const registration = catalog.get(standardId);
-	if (!registration) throw new Error(`Unknown Quality Standard ${standardId}.`);
-	if (!registration.stages.includes(stage)) {
+	catalog: CheckCatalog,
+	checkId: string,
+	loop: SemanticLoop,
+	checkVersion?: string,
+): CheckRegistration {
+	const registration = catalog.get(checkId);
+	if (!registration) throw new Error(`Unknown Check ${checkId}.`);
+	if (!registration.loops.includes(loop)) {
 		throw new Error(
-			`Quality Standard ${standardId} is not registered for ${stage}.`,
+			`Check ${checkId} is not registered for ${loop}.`,
 		);
 	}
-	if (standardVersion && registration.standard.version !== standardVersion) {
+	if (checkVersion && registration.check.version !== checkVersion) {
 		throw new Error(
-			`Quality Standard ${standardId} version changed: expected ${standardVersion}, actual ${registration.standard.version}.`,
+			`Check ${checkId} version changed: expected ${checkVersion}, actual ${registration.check.version}.`,
 		);
 	}
 	return registration;
 }
 
-function toBinding(binding: MutableBinding): QualityStandardBinding {
+function toBinding(binding: MutableBinding): CheckBinding {
 	return {
-		standardId: binding.registration.standard.id,
-		standardVersion: binding.registration.standard.version,
+		checkId: binding.registration.check.id,
+		checkVersion: binding.registration.check.version,
 		enforcement: binding.enforcement,
 		required: binding.required,
 		parameters: sortObject(binding.parameters),
-		evaluationDependsOn: binding.registration.evaluationDependsOn,
+		dependsOn: binding.registration.dependsOn,
 		activatedBy: [...binding.activatedBy],
 		ruleRefs: [...binding.ruleRefs],
 	};
@@ -724,10 +709,10 @@ function toBinding(binding: MutableBinding): QualityStandardBinding {
 
 function assertActiveDependencies(active: Map<string, MutableBinding>): void {
 	for (const binding of active.values()) {
-		for (const dependency of binding.registration.evaluationDependsOn) {
+		for (const dependency of binding.registration.dependsOn) {
 			if (!active.has(dependency)) {
 				throw new Error(
-					`Quality Standard ${binding.registration.standard.id} requires excluded dependency ${dependency}.`,
+					`Check ${binding.registration.check.id} requires excluded dependency ${dependency}.`,
 				);
 			}
 		}
@@ -735,7 +720,7 @@ function assertActiveDependencies(active: Map<string, MutableBinding>): void {
 }
 
 function ruleReasons(
-	rule: QualityActivationRule,
+	rule: CheckActivationRule,
 	selector: NormalizedSelectorInput,
 ): string[] | undefined {
 	const matches = [
@@ -761,7 +746,7 @@ function ruleReasons(
 			selectedReasons("path-trait", selector.pathTraits, values),
 		),
 	];
-	const reasons = [`stage:${rule.stage}`];
+	const reasons = [`loop:${rule.loop}`];
 	for (const match of matches) {
 		if (match?.length === 0) return undefined;
 		if (match) reasons.push(...match);
@@ -801,7 +786,7 @@ function selectedReasons<T extends string>(
 function changeReasons<T extends "kind" | "type" | "risk">(
 	selector: NormalizedSelectorInput,
 	field: T,
-	values: Array<QualityChangeSelectorFacts[T]>,
+	values: Array<ChangeSelectorFacts[T]>,
 ): string[] {
 	return selector.changes.flatMap((change) =>
 		values.includes(change[field])
@@ -810,8 +795,8 @@ function changeReasons<T extends "kind" | "type" | "risk">(
 	);
 }
 
-function classifyPathTraits(paths: string[]): QualityPathTrait[] {
-	const traits = new Set<QualityPathTrait>();
+function classifyPathTraits(paths: string[]): PathTrait[] {
+	const traits = new Set<PathTrait>();
 	for (const path of paths) {
 		const classifiedPath = path.toLowerCase();
 		if (
@@ -839,70 +824,70 @@ function classifyPathTraits(paths: string[]): QualityPathTrait[] {
 	return [...traits].sort((left, right) => left.localeCompare(right));
 }
 
-function rulesForAllStages(
+function rulesForAllLoops(
 	id: string,
-	standardIds: string[],
-	match: QualityActivationRuleMatch,
-): QualityActivationRule[] {
-	return (["decision", "planning", "implementation"] as const).map((stage) => ({
-		id: `${id}.${stage}`,
+	checkIds: string[],
+	match: CheckActivationRuleMatch,
+): CheckActivationRule[] {
+	return (["decision", "planning", "implementation"] as const).map((loop) => ({
+		id: `${id}.${loop}`,
 		version: "1.0.0",
-		stage,
-		standardIds,
+		loop,
+		checkIds,
 		match,
 	}));
 }
 
 function technologyRule(
-	technology: QualityTechnology,
-	standardId: string,
-): QualityActivationRule {
+	technology: Technology,
+	checkId: string,
+): CheckActivationRule {
 	return {
-		id: `quality.technology.${technology}.implementation`,
+		id: `check.technology.${technology}.implementation`,
 		version: "1.0.0",
-		stage: "implementation",
-		standardIds: [standardId],
+		loop: "implementation",
+		checkIds: [checkId],
 		match: { technologies: [technology] },
 	};
 }
 
-function ruleRefsForStandard(stage: TraceLoop, standardId: string): string[] {
-	const refs = CODEWIKI_QUALITY_ACTIVATION_RULES.flatMap((rule) =>
-		rule.stage === stage && rule.standardIds.includes(standardId)
+function ruleRefsForCheck(loop: SemanticLoop, checkId: string): string[] {
+	const refs = CODEWIKI_CHECK_ACTIVATION_RULES.flatMap((rule) =>
+		rule.loop === loop && rule.checkIds.includes(checkId)
 			? [`${rule.id}@${rule.version}`]
 			: [],
 	);
-	return refs.length > 0 ? refs : ["quality.selector:no-activation-rule"];
+	return refs.length > 0 ? refs : ["check.selector:no-activation-rule"];
 }
 
 function normalizePath(value: string): string {
 	const path = value.trim().replaceAll("\\", "/").replace(/^\.\//, "");
 	if (!path || path.startsWith("/") || path.split("/").includes("..")) {
 		throw new Error(
-			`Quality Policy selector path must be repository-relative: ${value}.`,
+			`Resolved Exit Policy selector path must be repository-relative: ${value}.`,
 		);
 	}
 	return path;
 }
 
-function assertChangeFacts(change: QualityChangeSelectorFacts): void {
+function assertChangeFacts(change: ChangeSelectorFacts): void {
 	if (!/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(change.changeId)) {
-		throw new Error("Quality Policy Change requires a stable changeId.");
+		throw new Error("Resolved Exit Policy Change requires a stable changeId.");
 	}
 	if (!Number.isInteger(change.revision) || change.revision < 1) {
 		throw new Error(
-			`Quality Policy Change ${change.changeId} requires a positive revision.`,
+			`Resolved Exit Policy Change ${change.changeId} requires a positive revision.`,
 		);
 	}
 	assertDigest(change.digest, `Change ${change.changeId} digest`);
 	if (!(CHANGE_KIND_VALUES as readonly string[]).includes(change.kind)) {
-		throw new Error(`Unknown Quality Policy Change kind ${change.kind}.`);
+		throw new Error(`Unknown Resolved Exit Policy Change kind ${change.kind}.`);
 	}
 	if (!(CHANGE_TYPE_VALUES as readonly string[]).includes(change.type)) {
-		throw new Error(`Unknown Quality Policy Change type ${change.type}.`);
+		throw new Error(`Unknown Resolved Exit Policy Change type ${change.type}.`);
 	}
 	if (!(CHANGE_RISK_VALUES as readonly string[]).includes(change.risk)) {
-		throw new Error(`Unknown Quality Policy Change risk ${change.risk}.`);
+		throw new Error(`Unknown Resolved Exit Policy Change risk ${change.risk}.`);
 	}
 }
 
@@ -910,24 +895,24 @@ function normalizeLayer(value: string): string {
 	const layer = value.trim().toLowerCase().replaceAll("_", "-");
 	if (!/^[a-z0-9][a-z0-9.-]*$/.test(layer)) {
 		throw new Error(
-			`Quality Policy affected layer must be a stable id: ${value}.`,
+			`Resolved Exit Policy affected layer must be a stable id: ${value}.`,
 		);
 	}
 	return layer;
 }
 
 function mergeParameters(
-	current: Record<string, QualityJsonValue>,
-	incoming: Record<string, QualityJsonValue>,
-	standardId: string,
+	current: Record<string, CheckJsonValue>,
+	incoming: Record<string, CheckJsonValue>,
+	checkId: string,
 ): void {
 	for (const [key, value] of Object.entries(incoming)) {
 		if (
 			key in current &&
-			qualityPolicyDigest(current[key]) !== qualityPolicyDigest(value)
+			resolvedExitPolicyDigest(current[key]) !== resolvedExitPolicyDigest(value)
 		) {
 			throw new Error(
-				`Quality Standard ${standardId} has conflicting parameter ${key}.`,
+				`Check ${checkId} has conflicting parameter ${key}.`,
 			);
 		}
 		current[key] = value;
@@ -935,8 +920,8 @@ function mergeParameters(
 }
 
 function assertEnforcementWithinRollout(
-	enforcement: QualityEnforcementMode | undefined,
-	registration: QualityStandardRegistration,
+	enforcement: CheckEnforcement | undefined,
+	registration: CheckRegistration,
 ): void {
 	if (
 		enforcement &&
@@ -944,26 +929,26 @@ function assertEnforcementWithinRollout(
 		strongerEnforcement(enforcement, registration.rollout) === enforcement
 	) {
 		throw new Error(
-			`Quality Standard ${registration.standard.id} cannot exceed catalog rollout ${registration.rollout}.`,
+			`Check ${registration.check.id} cannot exceed catalog rollout ${registration.rollout}.`,
 		);
 	}
 }
 
 function strongerEnforcement(
-	left: QualityEnforcementMode,
-	right: QualityEnforcementMode,
-): QualityEnforcementMode {
-	const rank: Record<QualityEnforcementMode, number> = {
+	left: CheckEnforcement,
+	right: CheckEnforcement,
+): CheckEnforcement {
+	const rank: Record<CheckEnforcement, number> = {
 		observe: 0,
 		warn: 1,
-		enforce: 2,
+		require: 2,
 	};
 	return rank[left] >= rank[right] ? left : right;
 }
 
 function sortObject(
-	value: Record<string, QualityJsonValue>,
-): Record<string, QualityJsonValue> {
+	value: Record<string, CheckJsonValue>,
+): Record<string, CheckJsonValue> {
 	return Object.fromEntries(
 		Object.entries(value).sort(([left], [right]) => left.localeCompare(right)),
 	);
@@ -971,20 +956,20 @@ function sortObject(
 
 function assertUnique(values: string[], label: string): void {
 	if (new Set(values).size !== values.length) {
-		throw new Error(`Quality Policy selector has duplicate ${label}.`);
+		throw new Error(`Resolved Exit Policy selector has duplicate ${label}.`);
 	}
 }
 
 function assertAuthorityRef(value: string): void {
 	if (!value.trim())
 		throw new Error(
-			"Quality Policy addition or exclusion requires authorityRef.",
+			"Resolved Exit Policy addition or exclusion requires authorityRef.",
 		);
 }
 
 function assertDigest(value: string, label: string): void {
 	if (!/^sha256:[a-f0-9]{64}$/.test(value)) {
-		throw new Error(`Quality Policy ${label} must be a sha256 digest.`);
+		throw new Error(`Resolved Exit Policy ${label} must be a sha256 digest.`);
 	}
 }
 

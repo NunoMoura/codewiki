@@ -1,19 +1,17 @@
-import type { SemanticLoop as TraceLoop } from "../semantic-loop.ts";
+import type { SemanticLoop } from "../semantic-loop.ts";
 import type {
-	QualityEnforcementMode,
-	QualityStandard,
+	CheckEnforcement,
+	CheckDefinition,
 } from "./contracts.ts";
 
-export const QUALITY_STANDARD_CATALOG_VERSION = "1.0.0";
+export const CHECK_CATALOG_VERSION = "1.0.0";
 
-const QUALITY_VERIFIER_IDS = [
-	"codewiki.deterministic",
-	"codewiki.model-assessor",
-	"codewiki.external-evidence",
-	"codewiki.human-authority",
+const CHECK_EXECUTOR_IDS = [
+	"codewiki.code-check",
+	"codewiki.model-check",
 ] as const;
 
-const QUALITY_EVIDENCE_ADAPTER_IDS = [
+const CHECK_EVIDENCE_ADAPTER_IDS = [
 	"authority",
 	"change",
 	"checks",
@@ -26,31 +24,31 @@ const QUALITY_EVIDENCE_ADAPTER_IDS = [
 	"work-state",
 ] as const;
 
-export type QualityStandardAuthority = "kernel" | "project";
+export type CheckAuthority = "kernel" | "project";
 
-export interface QualityStandardRolloutApproval {
+export interface CheckRolloutApproval {
 	status: "approved";
 	refs: string[];
 }
 
-export interface QualityStandardRegistration {
-	standard: QualityStandard;
-	stages: TraceLoop[];
-	authority: QualityStandardAuthority;
-	rollout: QualityEnforcementMode;
-	rolloutHistory: QualityEnforcementMode[];
-	approval?: QualityStandardRolloutApproval;
-	evaluationDependsOn: string[];
+export interface CheckRegistration {
+	check: CheckDefinition;
+	loops: SemanticLoop[];
+	authority: CheckAuthority;
+	rollout: CheckEnforcement;
+	rolloutHistory: CheckEnforcement[];
+	approval?: CheckRolloutApproval;
+	dependsOn: string[];
 }
 
-export interface QualityStandardCatalog {
-	version: typeof QUALITY_STANDARD_CATALOG_VERSION;
-	get(standardId: string): QualityStandardRegistration | undefined;
-	list(stage?: TraceLoop): QualityStandardRegistration[];
+export interface CheckCatalog {
+	version: typeof CHECK_CATALOG_VERSION;
+	get(checkId: string): CheckRegistration | undefined;
+	list(loop?: SemanticLoop): CheckRegistration[];
 }
 
-export type ProjectQualityStandardRegistration = Omit<
-	QualityStandardRegistration,
+export type ProjectCheckRegistration = Omit<
+	CheckRegistration,
 	"authority"
 > & { authority?: never };
 
@@ -76,7 +74,7 @@ const DECISION_BASELINE = [
 	],
 	[
 		"intention_validated",
-		"Assessment protects user value and long-term project interests.",
+		"Evaluation protects user value and long-term project interests.",
 	],
 	["approval_safety", "Required authority binds the exact candidate."],
 	[
@@ -148,7 +146,7 @@ const PLANNING_BASELINE = [
 	],
 	[
 		"worker_workbench_buildable",
-		"Declared context, capabilities, isolation, Quality, evidence, and budgets can form a bounded Workbench.",
+		"Declared context, capabilities, isolation, assurance, evidence, and budgets can form a bounded Workbench.",
 	],
 	[
 		"uncertainty_resolved",
@@ -210,7 +208,7 @@ const IMPLEMENTATION_BASELINE = [
 		"Source and test changes align with source ownership.",
 	],
 	[
-		"production_quality_reviewed",
+		"production_readiness_reviewed",
 		"Changed code is maintainable, simple, robust, and production-ready.",
 	],
 	[
@@ -231,7 +229,7 @@ const IMPLEMENTATION_BASELINE = [
 	],
 ] as const;
 
-const CONDITIONAL_STANDARDS = [
+const CONDITIONAL_CHECKS = [
 	[
 		"fix_reproducible",
 		"Fix candidates include reproducible source and expected behavior evidence.",
@@ -250,11 +248,11 @@ const CONDITIONAL_STANDARDS = [
 	],
 	[
 		"security_privacy_reviewed",
-		"Security and privacy implications are explicitly assessed for this stage.",
+		"Security and privacy implications are explicitly assessed for this loop.",
 	],
 	[
 		"accessibility_ui_reviewed",
-		"UI changes include accessibility and interaction evidence appropriate to this stage.",
+		"UI changes include accessibility and interaction evidence appropriate to this loop.",
 	],
 	[
 		"dependency_risk_controlled",
@@ -281,28 +279,28 @@ const CONDITIONAL_STANDARDS = [
 		"Persistent-data changes include migration, rollback, and integrity evidence.",
 	],
 	[
-		"typescript_quality_verified",
+		"typescript_verified",
 		"TypeScript or JavaScript changes carry relevant type, lint, and test evidence.",
 	],
 	[
-		"python_quality_verified",
+		"python_verified",
 		"Python changes carry relevant lint, type, and test evidence.",
 	],
-	["go_quality_verified", "Go changes carry relevant vet and test evidence."],
+	["go_verified", "Go changes carry relevant vet and test evidence."],
 	[
-		"rust_quality_verified",
+		"rust_verified",
 		"Rust changes carry relevant Clippy and test evidence.",
 	],
 	[
-		"shell_quality_verified",
+		"shell_verified",
 		"Shell changes carry relevant static-analysis and execution evidence.",
 	],
 ] as const;
 
-const MODEL_STANDARD_IDS = new Set([
+const MODEL_CHECK_IDS = new Set([
 	"recommendation_justified",
 	"intention_validated",
-	"production_quality_reviewed",
+	"production_readiness_reviewed",
 	"outcome_realization_accounted",
 	"uncertainty_resolved",
 	"security_privacy_reviewed",
@@ -310,62 +308,62 @@ const MODEL_STANDARD_IDS = new Set([
 	"api_contract_reviewed",
 	"library_contract_preserved",
 ]);
-const HUMAN_STANDARD_IDS = new Set([
+const HUMAN_CHECK_IDS = new Set([
 	"approval_safety",
 	"release_safety_approved",
 ]);
-const EXTERNAL_STANDARD_IDS = new Set([
+const EXTERNAL_CHECK_IDS = new Set([
 	"verification_passed",
 	"tdd_evidence_valid",
 	"content_proof_recorded",
-	"typescript_quality_verified",
-	"python_quality_verified",
-	"go_quality_verified",
-	"rust_quality_verified",
-	"shell_quality_verified",
+	"typescript_verified",
+	"python_verified",
+	"go_verified",
+	"rust_verified",
+	"shell_verified",
 ]);
 
-const CODEWIKI_QUALITY_STANDARD_REGISTRATIONS = builtInRegistrations();
+const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
 
-export function createQualityStandardCatalog(
-	additional: ProjectQualityStandardRegistration[] = [],
-): QualityStandardCatalog {
+export function createCheckCatalog(
+	additional: ProjectCheckRegistration[] = [],
+): CheckCatalog {
 	for (const registration of additional) {
 		if ("authority" in registration) {
 			throw new Error(
-				`Caller-supplied Quality Standard ${registration.standard.id} cannot declare authority; the catalog assigns project authority.`,
+				`Caller-supplied Check ${registration.check.id} cannot declare authority; the catalog assigns project authority.`,
 			);
 		}
 	}
 	const registrations = [
-		...CODEWIKI_QUALITY_STANDARD_REGISTRATIONS,
+		...CODEWIKI_CHECK_REGISTRATIONS,
 		...additional.map((registration) => ({
 			...registration,
 			authority: "project" as const,
 		})),
 	].map(normalizeRegistration);
-	const byId = new Map<string, QualityStandardRegistration>();
+	const byId = new Map<string, CheckRegistration>();
 	for (const registration of registrations) {
 		validateRegistration(registration);
-		if (byId.has(registration.standard.id)) {
+		if (byId.has(registration.check.id)) {
 			throw new Error(
-				`Duplicate Quality Standard registration ${registration.standard.id}.`,
+				`Duplicate Check registration ${registration.check.id}.`,
 			);
 		}
-		byId.set(registration.standard.id, registration);
+		byId.set(registration.check.id, registration);
 	}
 	for (const registration of registrations) {
-		for (const dependency of registration.evaluationDependsOn) {
+		for (const dependency of registration.dependsOn) {
 			const dependencyRegistration = byId.get(dependency);
 			if (!dependencyRegistration) {
 				throw new Error(
-					`Quality Standard ${registration.standard.id} has unknown catalog dependency ${dependency}.`,
+					`Check ${registration.check.id} has unknown catalog dependency ${dependency}.`,
 				);
 			}
-			for (const stage of registration.stages) {
-				if (!dependencyRegistration.stages.includes(stage)) {
+			for (const loop of registration.loops) {
+				if (!dependencyRegistration.loops.includes(loop)) {
 					throw new Error(
-						`Quality Standard ${registration.standard.id} dependency ${dependency} is not registered for ${stage}.`,
+						`Check ${registration.check.id} dependency ${dependency} is not registered for ${loop}.`,
 					);
 				}
 			}
@@ -373,26 +371,26 @@ export function createQualityStandardCatalog(
 	}
 	assertAcyclicCatalog(registrations);
 	return Object.freeze({
-		version: QUALITY_STANDARD_CATALOG_VERSION,
-		get: (standardId: string) => cloneRegistration(byId.get(standardId)),
-		list: (stage?: TraceLoop) =>
+		version: CHECK_CATALOG_VERSION,
+		get: (checkId: string) => cloneRegistration(byId.get(checkId)),
+		list: (loop?: SemanticLoop) =>
 			registrations
 				.flatMap((registration) => {
 					const clone = cloneRegistration(registration);
-					return (!stage || registration.stages.includes(stage)) && clone
+					return (!loop || registration.loops.includes(loop)) && clone
 						? [clone]
 						: [];
 				})
 				.sort((left, right) =>
-					left.standard.id.localeCompare(right.standard.id),
+					left.check.id.localeCompare(right.check.id),
 				),
 	});
 }
 
-function builtInRegistrations(): QualityStandardRegistration[] {
+function builtInRegistrations(): CheckRegistration[] {
 	const byId = new Map<
 		string,
-		{ description: string; stages: Set<TraceLoop> }
+		{ description: string; loops: Set<SemanticLoop> }
 	>();
 	addDefinitions(byId, "decision", DECISION_BASELINE);
 	addDefinitions(byId, "planning", PLANNING_BASELINE);
@@ -400,108 +398,104 @@ function builtInRegistrations(): QualityStandardRegistration[] {
 	addDefinitions(
 		byId,
 		["decision", "planning", "implementation"],
-		CONDITIONAL_STANDARDS.slice(0, 12),
+		CONDITIONAL_CHECKS.slice(0, 12),
 	);
-	addDefinitions(byId, "implementation", CONDITIONAL_STANDARDS.slice(12));
+	addDefinitions(byId, "implementation", CONDITIONAL_CHECKS.slice(12));
 	return [...byId.entries()].map(([id, definition]) =>
-		kernelRegistration(id, definition.description, [...definition.stages]),
+		kernelRegistration(id, definition.description, [...definition.loops]),
 	);
 }
 
 function addDefinitions(
-	byId: Map<string, { description: string; stages: Set<TraceLoop> }>,
-	stages: TraceLoop | TraceLoop[],
+	byId: Map<string, { description: string; loops: Set<SemanticLoop> }>,
+	loops: SemanticLoop | SemanticLoop[],
 	definitions: readonly (readonly [string, string])[],
 ): void {
 	for (const [id, description] of definitions) {
 		const current = byId.get(id);
 		if (current) {
-			for (const stage of asArray(stages)) current.stages.add(stage);
+			for (const loop of asArray(loops)) current.loops.add(loop);
 			continue;
 		}
-		byId.set(id, { description, stages: new Set(asArray(stages)) });
+		byId.set(id, { description, loops: new Set(asArray(loops)) });
 	}
 }
 
 function kernelRegistration(
 	id: string,
 	description: string,
-	stages: TraceLoop[],
-): QualityStandardRegistration {
-	const kind = standardVerifierKind(id);
-	const verifierId = verifierIdForKind(kind);
+	loops: SemanticLoop[],
+): CheckRegistration {
+	const kind = checkExecutionKind(id);
+	const executionId = executionIdForKind(kind);
 	return {
-		standard: {
+		check: {
 			id,
 			version: "1.0.0",
 			description,
-			assessmentCriteria: [description],
-			verifier: { id: verifierId, version: "1.0.0", kind },
-			measurement: { shape: "boolean" },
-			evidenceAdapterIds: evidenceAdapters(kind),
-			repairTarget: "stage-candidate",
-			cost: standardCost(kind),
-			timeoutMs: standardTimeout(kind),
+			criteria: [description],
+			execution: { id: executionId, version: "1.0.0", kind },
+			measurement: {
+				kind: kind === "model" ? "qualitative" : "quantitative",
+				shape: "boolean",
+			},
+			evidenceAdapterIds: evidenceAdapters(id, kind),
+			repairTarget: "loop-candidate",
+			cost: checkCost(kind),
+			timeoutMs: checkTimeout(kind),
 			protected: true,
 		},
-		stages,
+		loops,
 		authority: "kernel",
-		rollout: "enforce",
+		rollout: "require",
 		rolloutHistory: ["observe", "warn"],
-		evaluationDependsOn: [],
+		dependsOn: [],
 	};
 }
 
-function standardVerifierKind(id: string): QualityStandard["verifier"]["kind"] {
-	if (HUMAN_STANDARD_IDS.has(id)) return "human";
-	if (MODEL_STANDARD_IDS.has(id)) return "model";
-	if (EXTERNAL_STANDARD_IDS.has(id)) return "external";
-	return "deterministic";
+function checkExecutionKind(id: string): CheckDefinition["execution"]["kind"] {
+	return MODEL_CHECK_IDS.has(id) ? "model" : "code";
 }
 
-function verifierIdForKind(
-	kind: QualityStandard["verifier"]["kind"],
-): (typeof QUALITY_VERIFIER_IDS)[number] {
-	if (kind === "human") return "codewiki.human-authority";
-	if (kind === "model") return "codewiki.model-assessor";
-	if (kind === "external") return "codewiki.external-evidence";
-	return "codewiki.deterministic";
+function executionIdForKind(
+	kind: CheckDefinition["execution"]["kind"],
+): (typeof CHECK_EXECUTOR_IDS)[number] {
+	return kind === "model" ? "codewiki.model-check" : "codewiki.code-check";
 }
 
-function standardCost(kind: QualityStandard["verifier"]["kind"]): number {
-	if (kind === "model") return 4;
-	if (kind === "external") return 2;
-	return 1;
+function checkCost(kind: CheckDefinition["execution"]["kind"]): number {
+	return kind === "model" ? 4 : 1;
 }
 
-function standardTimeout(kind: QualityStandard["verifier"]["kind"]): number {
-	if (kind === "model") return 30_000;
-	if (kind === "external") return 60_000;
-	return 5_000;
+function checkTimeout(kind: CheckDefinition["execution"]["kind"]): number {
+	return kind === "model" ? 30_000 : 5_000;
 }
 
-function evidenceAdapters(kind: QualityStandard["verifier"]["kind"]): string[] {
-	if (kind === "human") return ["authority", "trace"];
-	if (kind === "external") return ["checks", "source", "trace"];
+function evidenceAdapters(
+	id: string,
+	kind: CheckDefinition["execution"]["kind"],
+): string[] {
+	if (HUMAN_CHECK_IDS.has(id)) return ["authority", "trace"];
+	if (EXTERNAL_CHECK_IDS.has(id)) return ["checks", "source", "trace"];
 	if (kind === "model") return ["change", "planning", "source", "trace"];
 	return ["change", "planning", "trace", "work-state"];
 }
 
 function normalizeRegistration(
-	registration: QualityStandardRegistration,
-): QualityStandardRegistration {
+	registration: CheckRegistration,
+): CheckRegistration {
 	return {
 		...registration,
-		standard: {
-			...registration.standard,
-			assessmentCriteria: unique(registration.standard.assessmentCriteria),
-			evidenceAdapterIds: unique(registration.standard.evidenceAdapterIds),
-			verifier: { ...registration.standard.verifier },
-			measurement: { ...registration.standard.measurement },
+		check: {
+			...registration.check,
+			criteria: unique(registration.check.criteria),
+			evidenceAdapterIds: unique(registration.check.evidenceAdapterIds),
+			execution: { ...registration.check.execution },
+			measurement: { ...registration.check.measurement },
 		},
-		stages: unique(registration.stages),
+		loops: unique(registration.loops),
 		rolloutHistory: [...registration.rolloutHistory],
-		evaluationDependsOn: unique(registration.evaluationDependsOn),
+		dependsOn: unique(registration.dependsOn),
 		...(registration.approval
 			? {
 					approval: {
@@ -513,71 +507,71 @@ function normalizeRegistration(
 	};
 }
 
-function validateRegistration(registration: QualityStandardRegistration): void {
-	validateStandardShape(registration);
-	validateClosedVerifierInputs(registration);
-	validateStandardAuthority(registration);
+function validateRegistration(registration: CheckRegistration): void {
+	validateCheckShape(registration);
+	validateClosedExecutionInputs(registration);
+	validateCheckAuthority(registration);
 }
 
-function validateStandardShape(
-	registration: QualityStandardRegistration,
+function validateCheckShape(
+	registration: CheckRegistration,
 ): void {
-	const standard = registration.standard;
-	if (!/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(standard.id)) {
-		throw new Error("Quality Standard registration requires a stable id.");
+	const check = registration.check;
+	if (!/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(check.id)) {
+		throw new Error("Check registration requires a stable id.");
 	}
-	if (!standard.version.trim() || !standard.description.trim()) {
+	if (!check.version.trim() || !check.description.trim()) {
 		throw new Error(
-			`Quality Standard ${standard.id} requires version and description.`,
+			`Check ${check.id} requires version and description.`,
 		);
 	}
 	if (
-		standard.assessmentCriteria.length === 0 ||
-		registration.stages.length === 0
+		check.criteria.length === 0 ||
+		registration.loops.length === 0
 	) {
 		throw new Error(
-			`Quality Standard ${standard.id} requires criteria and stages.`,
+			`Check ${check.id} requires criteria and loops.`,
 		);
 	}
 }
 
-function validateClosedVerifierInputs(
-	registration: QualityStandardRegistration,
+function validateClosedExecutionInputs(
+	registration: CheckRegistration,
 ): void {
-	const standard = registration.standard;
+	const check = registration.check;
 	if (
-		!(QUALITY_VERIFIER_IDS as readonly string[]).includes(standard.verifier.id)
+		!(CHECK_EXECUTOR_IDS as readonly string[]).includes(check.execution.id)
 	) {
 		throw new Error(
-			`Quality Standard ${standard.id} uses unknown verifier ${standard.verifier.id}.`,
+			`Check ${check.id} uses unknown execution ${check.execution.id}.`,
 		);
 	}
-	for (const adapterId of standard.evidenceAdapterIds) {
+	for (const adapterId of check.evidenceAdapterIds) {
 		if (
-			!(QUALITY_EVIDENCE_ADAPTER_IDS as readonly string[]).includes(adapterId)
+			!(CHECK_EVIDENCE_ADAPTER_IDS as readonly string[]).includes(adapterId)
 		) {
 			throw new Error(
-				`Quality Standard ${standard.id} uses unknown evidence adapter ${adapterId}.`,
+				`Check ${check.id} uses unknown evidence adapter ${adapterId}.`,
 			);
 		}
 	}
 }
 
-function validateStandardAuthority(
-	registration: QualityStandardRegistration,
+function validateCheckAuthority(
+	registration: CheckRegistration,
 ): void {
-	const standard = registration.standard;
+	const check = registration.check;
 	if (registration.authority === "kernel") {
-		if (!standard.protected || registration.rollout !== "enforce") {
+		if (!check.protected || registration.rollout !== "require") {
 			throw new Error(
-				`Kernel Quality Standard ${standard.id} must be protected and enforced.`,
+				`Kernel Check ${check.id} must be protected and required.`,
 			);
 		}
 		return;
 	}
-	if (standard.protected) {
+	if (check.protected) {
 		throw new Error(
-			`Only kernel Quality Standards may be protected: ${standard.id}.`,
+			`Only kernel Checks may be protected: ${check.id}.`,
 		);
 	}
 	if (registration.authority === "project")
@@ -585,67 +579,67 @@ function validateStandardAuthority(
 }
 
 function validateProjectRollout(
-	registration: QualityStandardRegistration,
+	registration: CheckRegistration,
 ): void {
-	const standardId = registration.standard.id;
+	const checkId = registration.check.id;
 	const expectedHistory = expectedProjectRolloutHistory(registration.rollout);
 	if (
 		JSON.stringify(registration.rolloutHistory) !==
 		JSON.stringify(expectedHistory)
 	) {
 		throw new Error(
-			`Project Quality Standard ${standardId} must progress through ${expectedHistory.join(" -> ") || "no prior rollout"} before ${registration.rollout}.`,
+			`Project Check ${checkId} must progress through ${expectedHistory.join(" -> ") || "no prior rollout"} before ${registration.rollout}.`,
 		);
 	}
 	if (
-		registration.rollout === "enforce" &&
+		registration.rollout === "require" &&
 		!registration.approval?.refs.length
 	) {
 		throw new Error(
-			`Project Quality Standard ${standardId} requires approval before enforce.`,
+			`Project Check ${checkId} requires approval before require.`,
 		);
 	}
 }
 
 function assertAcyclicCatalog(
-	registrations: QualityStandardRegistration[],
+	registrations: CheckRegistration[],
 ): void {
 	const byId = new Map(
 		registrations.map((registration) => [
-			registration.standard.id,
+			registration.check.id,
 			registration,
 		]),
 	);
 	const visiting = new Set<string>();
 	const visited = new Set<string>();
-	const visit = (standardId: string): void => {
-		if (visiting.has(standardId)) {
+	const visit = (checkId: string): void => {
+		if (visiting.has(checkId)) {
 			throw new Error(
-				`Quality Standard catalog dependency cycle includes ${standardId}.`,
+				`Check catalog dependency cycle includes ${checkId}.`,
 			);
 		}
-		if (visited.has(standardId)) return;
-		visiting.add(standardId);
-		for (const dependency of byId.get(standardId)?.evaluationDependsOn ?? []) {
+		if (visited.has(checkId)) return;
+		visiting.add(checkId);
+		for (const dependency of byId.get(checkId)?.dependsOn ?? []) {
 			visit(dependency);
 		}
-		visiting.delete(standardId);
-		visited.add(standardId);
+		visiting.delete(checkId);
+		visited.add(checkId);
 	};
-	for (const registration of registrations) visit(registration.standard.id);
+	for (const registration of registrations) visit(registration.check.id);
 }
 
 function expectedProjectRolloutHistory(
-	rollout: QualityEnforcementMode,
-): QualityEnforcementMode[] {
+	rollout: CheckEnforcement,
+): CheckEnforcement[] {
 	if (rollout === "observe") return [];
 	if (rollout === "warn") return ["observe"];
 	return ["observe", "warn"];
 }
 
 function cloneRegistration(
-	registration: QualityStandardRegistration | undefined,
-): QualityStandardRegistration | undefined {
+	registration: CheckRegistration | undefined,
+): CheckRegistration | undefined {
 	return registration ? normalizeRegistration(registration) : undefined;
 }
 

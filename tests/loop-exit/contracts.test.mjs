@@ -2,9 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
-	QUALITY_POLICY_SCHEMA_VERSION,
-	assertValidQualityPolicyResolution,
-	createQualityPolicyResolution,
+	assertValidResolvedExitPolicy,
+	createResolvedExitPolicy,
 } from "../../src/loop-exit/contracts.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
@@ -12,157 +11,145 @@ const SELECTOR_DIGEST = `sha256:${"b".repeat(64)}`;
 
 function policyInput() {
 	return {
-		stage: "implementation",
+		loop: "implementation",
 		candidateDigest: CANDIDATE_DIGEST,
 		selectorInputDigest: SELECTOR_DIGEST,
 		bindings: [
 			{
-				standardId: "acceptance_covered",
-				standardVersion: "1.0.0",
-				enforcement: "enforce",
+				checkId: "acceptance_covered",
+				checkVersion: "1.0.0",
+				enforcement: "require",
 				required: true,
-				parameters: { minimumCoverage: 1 },
-				evaluationDependsOn: ["input_valid"],
-				activatedBy: ["stage:implementation", "risk:standard"],
-				ruleRefs: ["quality.stage.implementation"],
+				parameters: { minimum: 1, evidence: "exact" },
+				dependsOn: ["input_valid"],
+				activatedBy: ["loop:implementation", "risk:check"],
+				ruleRefs: ["loop-exit.loop.implementation"],
 			},
 			{
-				standardId: "input_valid",
-				standardVersion: "1.0.0",
-				enforcement: "enforce",
+				checkId: "input_valid",
+				checkVersion: "1.0.0",
+				enforcement: "require",
 				required: true,
 				parameters: {},
-				evaluationDependsOn: [],
-				activatedBy: ["kernel", "stage:implementation"],
-				ruleRefs: ["quality.kernel.input"],
+				dependsOn: [],
+				activatedBy: ["kernel", "loop:implementation"],
+				ruleRefs: ["loop-exit.kernel.input"],
 			},
 		],
 		exclusions: [
 			{
-				standardId: "ui_accessibility",
-				standardVersion: "1.0.0",
+				checkId: "ui_accessibility",
+				checkVersion: "1.0.0",
 				reason: "not_applicable",
-				refs: ["selector:path-traits"],
+				refs: ["change:CHG-1"],
 			},
 		],
-		gates: [
-			{
-				id: "implementation_exit",
-				version: "1.0.0",
-				kind: "all_required",
-				standardIds: ["input_valid", "acceptance_covered"],
-				onFailure: "repair",
-			},
-		],
-		protectedStandardIds: ["input_valid"],
+		protectedCheckIds: ["input_valid"],
 	};
 }
 
-describe("Quality Policy contracts", () => {
-	it("creates one deterministic explainable resolution", () => {
-		const resolution = createQualityPolicyResolution(policyInput());
-		const reordered = policyInput();
+describe("Resolved Exit Policy contracts", () => {
+	it("normalizes ordering and produces stable identity", () => {
+		const policy = createResolvedExitPolicy(policyInput());
+		const reordered = structuredClone(policyInput());
 		reordered.bindings.reverse();
 		reordered.bindings[1].activatedBy.reverse();
-		reordered.gates[0].standardIds.reverse();
-		const equivalent = createQualityPolicyResolution(reordered);
+		reordered.bindings[1].dependsOn.reverse();
+		const equivalent = createResolvedExitPolicy(reordered);
 
-		assert.equal(resolution.schemaVersion, QUALITY_POLICY_SCHEMA_VERSION);
-		assert.match(resolution.policyDigest, /^sha256:[a-f0-9]{64}$/);
-		assert.equal(resolution.policyDigest, equivalent.policyDigest);
+		assert.equal(policy.policyDigest, equivalent.policyDigest);
 		assert.deepEqual(
-			resolution.bindings.map((binding) => binding.standardId),
+			policy.bindings.map((binding) => binding.checkId),
 			["acceptance_covered", "input_valid"],
 		);
-		assert.deepEqual(resolution.bindings[1].activatedBy, [
-			"kernel",
-			"stage:implementation",
+		assert.deepEqual(policy.bindings[0].activatedBy, [
+			"loop:implementation",
+			"risk:check",
 		]);
-		assert.doesNotThrow(() => assertValidQualityPolicyResolution(resolution));
+		assert.doesNotThrow(() => assertValidResolvedExitPolicy(policy));
 	});
 
-	it("keeps verifier, measurement, and enforcement dimensions independent", () => {
-		const standard = {
+	it("keeps execution, measurement, and enforcement dimensions independent", () => {
+		const check = {
 			id: "maintainability_reviewed",
 			version: "1.0.0",
-			description: "Changed code remains maintainable.",
-			assessmentCriteria: ["Names and boundaries communicate intent."],
-			verifier: {
-				id: "codewiki.model.assessor",
-				version: "2.0.0",
+			description: "Review maintainability independently.",
+			criteria: ["Findings are specific and actionable."],
+			execution: {
+				id: "codewiki.model-check",
+				version: "1.0.0",
 				kind: "model",
 			},
-			measurement: { shape: "structured", schemaRef: "quality.findings.v1" },
-			evidenceAdapterIds: ["changed_source"],
+			measurement: {
+				kind: "qualitative",
+				shape: "structured",
+				schemaRef: "check.findings.v1",
+			},
+			evidenceAdapterIds: ["source", "trace"],
 			repairTarget: "source",
 			cost: 4,
 			timeoutMs: 30_000,
 			protected: false,
 		};
 		const binding = {
-			...policyInput().bindings[0],
-			standardId: standard.id,
-			standardVersion: standard.version,
+			checkId: check.id,
+			checkVersion: check.version,
 			enforcement: "warn",
+			required: false,
 		};
-
-		assert.equal(standard.verifier.kind, "model");
-		assert.equal(standard.measurement.shape, "structured");
+		assert.equal(check.execution.kind, "model");
+		assert.equal(check.measurement.kind, "qualitative");
+		assert.equal(check.measurement.shape, "structured");
 		assert.equal(binding.enforcement, "warn");
 	});
 
-	it("represents operational verifier failure as indeterminate without a fabricated measurement", () => {
-		const assessment = {
-			standardId: "maintainability_reviewed",
-			standardVersion: "1.0.0",
+	it("represents operational failure as indeterminate Check Result", () => {
+		const result = {
+			checkId: "maintainability_reviewed",
+			checkVersion: "1.0.0",
 			candidateDigest: CANDIDATE_DIGEST,
 			status: "indeterminate",
 			evidenceRefs: [],
-			findings: ["Verifier timed out."],
-			verifier: {
-				id: "codewiki.model.assessor",
-				version: "2.0.0",
-				modelRef: "pi:model-route-digest",
-				configurationDigest: `sha256:${"c".repeat(64)}`,
+			findings: ["Model provider unavailable."],
+			execution: {
+				id: "codewiki.model-check",
+				version: "1.0.0",
+				modelRef: "pi:model-route",
 			},
 		};
-
-		assert.equal(assessment.status, "indeterminate");
-		assert.equal("measurement" in assessment, false);
+		assert.equal(result.status, "indeterminate");
+		assert.notEqual(result.status, "fail");
 	});
 
-	it("rejects protected exclusions and inactive gate refs", () => {
+	it("rejects protected omissions and inactive dependencies", () => {
 		const missingProtected = policyInput();
-		missingProtected.bindings = missingProtected.bindings.filter(
-			(binding) => binding.standardId !== "input_valid",
-		);
-		missingProtected.bindings[0].evaluationDependsOn = [];
+		missingProtected.bindings = missingProtected.bindings
+			.filter((binding) => binding.checkId !== "input_valid")
+			.map((binding) => ({ ...binding, dependsOn: [] }));
 		assert.throws(
-			() => createQualityPolicyResolution(missingProtected),
-			/Protected Quality Standard input_valid must remain active/,
+			() => createResolvedExitPolicy(missingProtected),
+			/Protected Check input_valid must remain active/,
 		);
-
-		const inactiveGateRef = policyInput();
-		inactiveGateRef.gates[0].standardIds.push("unknown_standard");
+		const inactiveDependency = policyInput();
+		inactiveDependency.bindings[0].dependsOn.push("unknown_check");
 		assert.throws(
-			() => createQualityPolicyResolution(inactiveGateRef),
-			/references inactive Standard unknown_standard/,
+			() => createResolvedExitPolicy(inactiveDependency),
+			/has unknown dependency unknown_check/,
 		);
 	});
 
-	it("rejects evaluation dependency cycles and resolution tampering", () => {
+	it("rejects dependency cycles and digest tampering", () => {
 		const cyclic = policyInput();
-		cyclic.bindings[1].evaluationDependsOn = ["acceptance_covered"];
+		cyclic.bindings[1].dependsOn.push("acceptance_covered");
 		assert.throws(
-			() => createQualityPolicyResolution(cyclic),
-			/evaluation dependency cycle includes acceptance_covered/,
+			() => createResolvedExitPolicy(cyclic),
+			/Check dependency cycle includes/,
 		);
-
-		const resolution = createQualityPolicyResolution(policyInput());
-		resolution.bindings[0].enforcement = "observe";
+		const policy = createResolvedExitPolicy(policyInput());
+		policy.bindings[0].enforcement = "observe";
 		assert.throws(
-			() => assertValidQualityPolicyResolution(resolution),
-			/Quality Policy resolution digest mismatch/,
+			() => assertValidResolvedExitPolicy(policy),
+			/Resolved Exit Policy digest mismatch/,
 		);
 	});
 });
