@@ -15,6 +15,7 @@ import type {
 	IntegrationProofPayload,
 	ModelAssessmentPayload,
 	OutcomeObservationPayload,
+	ResearchCitationPayload,
 	SourceObservationPayload,
 	UiCapturePayload,
 	WorkerReportPayload,
@@ -277,7 +278,7 @@ function assertKindSemantics(
 ): void {
 	switch (material.kind) {
 		case "research_citation":
-			assertDate(material.payload.publicationDate, "research publicationDate");
+			assertResearchCitation(material.payload, runtime.producer.kind);
 			break;
 		case "source_observation":
 			assertSourceObservation(material.payload);
@@ -313,6 +314,18 @@ function assertKindSemantics(
 		default:
 			throw new Error("Evidence kind has no semantic validator.");
 	}
+}
+
+function assertResearchCitation(
+	payload: ResearchCitationPayload,
+	producerKind: EvidenceRuntimeContext["producer"]["kind"],
+): void {
+	if (producerKind !== "runtime" && producerKind !== "external_service") {
+		throw new Error(
+			"Research citation Evidence producer must be runtime or external_service.",
+		);
+	}
+	assertDate(payload.publicationDate, "research publicationDate");
 }
 
 function assertSourceObservation(payload: SourceObservationPayload): void {

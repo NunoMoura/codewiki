@@ -7,7 +7,7 @@ tags:
   - system
   - decision
   - loop
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-29T11:34:23.000Z
 codewiki_component: decision
 codewiki_components:
   - decision
@@ -174,7 +174,9 @@ Runtime materializes `research_citation` Evidence Records from bounded source ma
 
 Code Checks validate provenance, freshness, artifact availability, and source independence. Independent Model Checks evaluate whether citations support claims without overstatement, whether contradictions and alternatives are accounted for, and whether coverage is proportional to risk. Required unavailable, stale, partial, or conflicting research is repaired or `indeterminate`, never fabricated support. Authenticated Decision approval remains separate.
 
-Current executable Decision evidence still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. The clean Decision cut replaces that behavior with typed Evidence Records and exact claim-level Checks.
+The native closed Catalog now registers Decision-only `research_provenance_valid` and `research_claims_supported` Checks. Both activate deterministically for high-risk, migration, dependency, security/privacy, and accepted security-trait facts. Provenance requires fresh complete `research_citation` Evidence bound to the exact Change revision; claim support additionally binds independent candidate-bound `model_assessment` Evidence and depends on valid provenance. Citation contradictions remain available to the Model Check rather than being discarded or converted into readiness failure.
+
+Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. Research collection, trusted Check execution, trace persistence, and replacement of that legacy path remain part of the clean Decision cut.
 
 ## Exit and route
 

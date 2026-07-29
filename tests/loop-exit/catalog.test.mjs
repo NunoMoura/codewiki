@@ -115,6 +115,44 @@ describe("Check catalog", () => {
 				.evidenceObligations[0].authorities,
 			["approved"],
 		);
+		const researchProvenance = catalog.get(
+			"research_provenance_valid",
+			"decision",
+		);
+		assert.equal(researchProvenance.check.execution.kind, "code");
+		assert.deepEqual(
+			{ ...researchProvenance.check.evidenceObligations[0] },
+			{
+				id: "research-citations",
+				version: "1.0.0",
+				kinds: ["research_citation"],
+				producerKinds: ["external_service", "runtime"],
+				authorities: ["observed", "verified"],
+				coverages: ["complete"],
+				sensitivities: ["private", "project", "public"],
+				minimumCount: 1,
+				subject: "change_revision",
+				freshness: "exact_boundary",
+				artifact: "optional",
+				contradiction: "retain",
+			},
+		);
+		const researchSupport = catalog.get(
+			"research_claims_supported",
+			"decision",
+		);
+		assert.equal(researchSupport.check.execution.kind, "model");
+		assert.deepEqual(
+			researchSupport.check.evidenceObligations.map(
+				(obligation) => obligation.id,
+			),
+			["model-assessment", "research-citations"],
+		);
+		assert.deepEqual(researchSupport.dependsOn, ["research_provenance_valid"]);
+		assert.equal(
+			catalog.get("research_provenance_valid", "planning"),
+			undefined,
+		);
 		assert.deepEqual(
 			catalog.get("production_readiness_reviewed", "implementation").check
 				.evidenceObligations[0].kinds,

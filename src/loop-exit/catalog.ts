@@ -298,6 +298,14 @@ const CONDITIONAL_CHECKS = [
 const LOOP_SPECIFIC_CONDITIONAL_CHECKS = {
 	decision: [
 		[
+			"research_provenance_valid",
+			"Required research citations have exact provenance, freshness, source identity, and durable passage evidence.",
+		],
+		[
+			"research_claims_supported",
+			"Independent assessment accounts for citation support, contradiction, overstatement, alternatives, and uncertainty.",
+		],
+		[
 			"release_intent_authorized",
 			"Release intent, authority boundary, and delivery constraints are explicitly accepted.",
 		],
@@ -321,6 +329,7 @@ const LOOP_SPECIFIC_CONDITIONAL_CHECKS = {
 } as const;
 
 const MODEL_CHECK_IDS = new Set([
+	"research_claims_supported",
 	"recommendation_justified",
 	"intention_validated",
 	"production_readiness_reviewed",
@@ -349,6 +358,10 @@ const EXTERNAL_CHECK_IDS = new Set([
 	"rust_verified",
 	"shell_verified",
 ]);
+
+const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
+	research_claims_supported: ["research_provenance_valid"],
+};
 
 const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
 
@@ -502,7 +515,7 @@ function kernelRegistration(
 		authority: "kernel",
 		rollout: "require",
 		rolloutHistory: ["observe", "warn"],
-		dependsOn: [],
+		dependsOn: [...(CHECK_DEPENDENCIES[id] ?? [])],
 	};
 }
 
@@ -528,6 +541,24 @@ function evidenceObligations(
 	id: string,
 	kind: CheckDefinition["execution"]["kind"],
 ): EvidenceObligation[] {
+	if (id === "research_provenance_valid") {
+		return [researchCitationObligation()];
+	}
+	if (id === "research_claims_supported") {
+		return [
+			researchCitationObligation(),
+			obligation({
+				id: "model-assessment",
+				kinds: ["model_assessment"],
+				producerKinds: ["model"],
+				authorities: ["observed"],
+				coverages: ["complete"],
+				subject: "candidate",
+				freshness: "none",
+				artifact: "optional",
+			}),
+		];
+	}
 	if (HUMAN_CHECK_IDS.has(id)) {
 		return [
 			obligation({
@@ -599,6 +630,23 @@ function evidenceObligations(
 		];
 	}
 	return [];
+}
+
+function researchCitationObligation(): EvidenceObligation {
+	return createEvidenceObligation({
+		id: "research-citations",
+		version: EVIDENCE_OBLIGATION_VERSION,
+		kinds: ["research_citation"],
+		producerKinds: ["runtime", "external_service"],
+		authorities: ["observed", "verified"],
+		coverages: ["complete"],
+		sensitivities: ["public", "project", "private"],
+		minimumCount: 1,
+		subject: "change_revision",
+		freshness: "exact_boundary",
+		artifact: "optional",
+		contradiction: "retain",
+	});
 }
 
 function obligation(

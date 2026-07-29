@@ -8,7 +8,7 @@ tags:
   - evidence
   - provenance
   - approval
-timestamp: 2026-07-29T10:58:42.000Z
+timestamp: 2026-07-29T11:34:23.000Z
 codewiki_component: evidence
 codewiki_components:
   - evidence
@@ -181,7 +181,9 @@ A research citation records the exact claim, primary or secondary source classif
 
 Decision research activation remains deterministic and risk-based: unknown current state, external provider/API dependency, security/privacy or regulatory claim, migration/compatibility risk, unfamiliar technology, or another accepted trait may require it. Required stale or unavailable research is `indeterminate`. Imported research cannot grant approval, rewrite Knowledge, execute code, or suppress another Check.
 
-Current executable Decision evidence uses broad `sourceRefs` and `proofRefs` and does not yet provide this exact research contract. The Decision clean cut must replace ref-count sufficiency with typed provenance, claim support, contradiction, freshness, and risk-proportional coverage.
+The native Check Catalog now provides Decision-only `research_provenance_valid` and `research_claims_supported` contracts. Their obligations require exact Change-revision research citations, exact freshness, complete coverage, Runtime/external-service observation provenance, and independent candidate-bound model assessment. Deterministic migration, dependency, security/privacy, accepted security-trait, and high-risk selectors activate both Checks. Research materialization rejects model-authored citations while retaining source claims, limitations, mixed support, and contradictions for trusted Check interpretation.
+
+Production Decision still uses broad `sourceRefs` and `proofRefs`. Direct research collection, Check execution, trace persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
 
 ## UI experience evidence
 

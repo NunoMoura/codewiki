@@ -412,6 +412,16 @@ describe("Evidence Record foundation", () => {
 		assert.throws(
 			() =>
 				materializeEvidenceRecord(
+					material("research_citation", payloads.research_citation),
+					runtimeFor("research_citation", {
+						producer: { kind: "model", id: "research-model", version: "1.0.0" },
+					}),
+				),
+			/Research citation Evidence producer must be runtime or external_service\./,
+		);
+		assert.throws(
+			() =>
+				materializeEvidenceRecord(
 					material("source_observation", payloads.source_observation),
 					runtimeFor("source_observation", {
 						producer: { kind: "runtime", id: "source-observer" },

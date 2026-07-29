@@ -182,6 +182,11 @@ const LOOP_BASELINES: Record<SemanticLoop, string[]> = {
 	],
 };
 
+const DECISION_RESEARCH_CHECK_IDS = [
+	"research_provenance_valid",
+	"research_claims_supported",
+];
+
 const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 	...(["decision", "planning", "implementation"] as const).map((loop) => ({
 		id: `check.loop.${loop}.baseline`,
@@ -190,6 +195,54 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 		checkIds: LOOP_BASELINES[loop],
 		match: {},
 	})),
+	...rulesForLoop(
+		"check.research.change.kind.migrate",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ changeKinds: ["migrate"] },
+	),
+	...rulesForLoop(
+		"check.research.change.type.dependency",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ changeTypes: ["dependency_change"] },
+	),
+	...rulesForLoop(
+		"check.research.change.type.security",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ changeTypes: ["security_change"] },
+	),
+	...rulesForLoop(
+		"check.research.change.risk.high",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ risks: ["high"] },
+	),
+	...rulesForLoop(
+		"check.research.project.security",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ projectTraits: ["handles-personal-data", "security-sensitive"] },
+	),
+	...rulesForLoop(
+		"check.research.layer.security",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ affectedLayers: ["security", "privacy"] },
+	),
+	...rulesForLoop(
+		"check.research.layer.dependency",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ affectedLayers: ["dependency", "package"] },
+	),
+	...rulesForLoop(
+		"check.research.path.dependency",
+		"decision",
+		DECISION_RESEARCH_CHECK_IDS,
+		{ pathTraits: ["dependency"] },
+	),
 	...rulesForAllLoops("check.change.kind.fix", ["fix_reproducible"], {
 		changeKinds: ["fix"],
 	}),

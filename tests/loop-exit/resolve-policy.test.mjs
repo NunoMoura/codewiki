@@ -136,6 +136,71 @@ describe("Resolved Exit Policy resolver", () => {
 		);
 	});
 
+	it("activates Decision research assurance from exact risk facts", () => {
+		const baseline = resolveExitPolicy(selectorInput("decision"));
+		for (const checkId of [
+			"research_provenance_valid",
+			"research_claims_supported",
+		]) {
+			assert.equal(
+				baseline.bindings.some((binding) => binding.checkId === checkId),
+				false,
+			);
+		}
+
+		const highRiskInput = selectorInput("decision");
+		highRiskInput.changes[0].risk = "high";
+		const highRisk = resolveExitPolicy(highRiskInput);
+		for (const checkId of [
+			"research_provenance_valid",
+			"research_claims_supported",
+		]) {
+			const binding = highRisk.bindings.find(
+				(candidate) => candidate.checkId === checkId,
+			);
+			assert.ok(binding, `missing ${checkId}`);
+			assert.ok(
+				binding.activatedBy.includes("change:CHG-check-policy:risk:high"),
+			);
+			assert.ok(binding.required);
+		}
+
+		const riskFactInputs = [
+			(input) => {
+				input.changes[0].kind = "migrate";
+			},
+			(input) => {
+				input.changes[0].type = "dependency_change";
+			},
+			(input) => {
+				input.changes[0].type = "security_change";
+			},
+			(input) => {
+				input.changes[0].affectedLayers = ["privacy"];
+			},
+			(input) => {
+				input.projectTraits = ["security-sensitive"];
+			},
+			(input) => {
+				input.paths = ["package-lock.json"];
+			},
+		];
+		for (const configure of riskFactInputs) {
+			const input = selectorInput("decision");
+			configure(input);
+			const resolution = resolveExitPolicy(input);
+			for (const checkId of [
+				"research_provenance_valid",
+				"research_claims_supported",
+			]) {
+				assert.ok(
+					resolution.bindings.some((binding) => binding.checkId === checkId),
+					`missing ${checkId}`,
+				);
+			}
+		}
+	});
+
 	it("uses Loop-specific release Checks and Planning UI preview validation", () => {
 		const releaseChecks = {
 			decision: "release_intent_authorized",
