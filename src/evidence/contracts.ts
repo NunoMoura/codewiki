@@ -45,7 +45,7 @@ export interface EvidenceSubject {
 export interface EvidenceProducer {
 	readonly kind: EvidenceProducerKind;
 	readonly id: string;
-	readonly version?: string;
+	readonly version: string;
 }
 
 export interface EvidenceArtifact {
@@ -301,7 +301,7 @@ const evidenceArtifactSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
-const evidenceSubjectSchema = Type.Object(
+export const evidenceSubjectSchema = Type.Object(
 	{
 		changeRefs: Type.Array(refSchema, { minItems: 1, maxItems: 256 }),
 		changeRevisionDigests: Type.Array(digestSchema, {
@@ -326,7 +326,7 @@ const evidenceProducerSchema = Type.Object(
 			Type.Literal("external_service"),
 		]),
 		id: idSchema,
-		version: Type.Optional(Type.String({ minLength: 1, maxLength: 256, pattern: "\\S" })),
+		version: Type.String({ minLength: 1, maxLength: 256, pattern: "\\S" }),
 	},
 	{ additionalProperties: false },
 );

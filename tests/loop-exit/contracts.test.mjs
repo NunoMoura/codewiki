@@ -96,7 +96,7 @@ describe("Resolved Exit Policy contracts", () => {
 				shape: "structured",
 				schemaRef: "check.findings.v1",
 			},
-			evidenceAdapterIds: ["source", "trace"],
+			evidenceObligations: [],
 			repairTarget: "source",
 			cost: 4,
 			timeoutMs: 30_000,

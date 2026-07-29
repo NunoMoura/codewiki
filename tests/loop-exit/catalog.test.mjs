@@ -3,6 +3,24 @@ import { describe, it } from "node:test";
 
 import { createCheckCatalog } from "../../src/loop-exit/catalog.ts";
 
+function evidenceObligation(overrides = {}) {
+	return {
+		id: "source-proof",
+		version: "1.0.0",
+		kinds: ["source_observation"],
+		producerKinds: ["runtime"],
+		authorities: ["verified"],
+		coverages: ["complete"],
+		sensitivities: ["project"],
+		minimumCount: 1,
+		subject: "candidate",
+		freshness: "none",
+		artifact: "optional",
+		contradiction: "indeterminate",
+		...overrides,
+	};
+}
+
 function projectRegistration(overrides = {}) {
 	return {
 		check: {
@@ -16,7 +34,7 @@ function projectRegistration(overrides = {}) {
 				kind: "code",
 			},
 			measurement: { kind: "quantitative", shape: "boolean" },
-			evidenceAdapterIds: ["source", "trace"],
+			evidenceObligations: [],
 			repairTarget: "source",
 			cost: 1,
 			timeoutMs: 5_000,
@@ -82,6 +100,27 @@ describe("Check catalog", () => {
 				),
 		);
 		assert.deepEqual(
+			catalog.get("verification_passed", "implementation").check
+				.evidenceObligations[0].kinds,
+			["command_execution"],
+		);
+		const workerObligation = catalog.get(
+			"worker_claims_correlated",
+			"implementation",
+		).check.evidenceObligations[0];
+		assert.deepEqual(workerObligation.producerKinds, ["worker"]);
+		assert.deepEqual(workerObligation.authorities, ["asserted"]);
+		assert.deepEqual(
+			catalog.get("release_intent_authorized", "decision").check
+				.evidenceObligations[0].authorities,
+			["approved"],
+		);
+		assert.deepEqual(
+			catalog.get("production_readiness_reviewed", "implementation").check
+				.evidenceObligations[0].kinds,
+			["model_assessment"],
+		);
+		assert.deepEqual(
 			implementation.map((entry) => entry.check.id),
 			implementation
 				.map((entry) => entry.check.id)
@@ -131,7 +170,7 @@ describe("Check catalog", () => {
 		);
 	});
 
-	it("allows only closed execution and evidence-adapter identities", () => {
+	it("allows only closed execution and declarative Evidence obligations", () => {
 		assert.throws(
 			() =>
 				createCheckCatalog([
@@ -154,11 +193,28 @@ describe("Check catalog", () => {
 					projectRegistration({
 						check: {
 							...projectRegistration().check,
-							evidenceAdapterIds: ["arbitrary-shell"],
+							evidenceObligations: [
+								{ ...evidenceObligation(), adapterId: "arbitrary-shell" },
+							],
 						},
 					}),
 				]),
-			/unknown evidence adapter arbitrary-shell/,
+			/Evidence obligation received unsupported field adapterId/,
+		);
+		assert.throws(
+			() =>
+				createCheckCatalog([
+					projectRegistration({
+						check: {
+							...projectRegistration().check,
+							evidenceObligations: [
+								evidenceObligation(),
+								evidenceObligation({ version: "1.1.0" }),
+							],
+						},
+					}),
+				]),
+			/evidence obligation ids must be unique/,
 		);
 	});
 

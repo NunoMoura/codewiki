@@ -1,3 +1,8 @@
+import {
+	EVIDENCE_OBLIGATION_VERSION,
+	createEvidenceObligation,
+} from "../evidence/obligations.ts";
+import type { EvidenceObligation } from "../evidence/obligations.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import type {
 	CheckEnforcement,
@@ -13,19 +18,6 @@ export const CHECK_CATALOG_VERSION = "1.0.0";
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
 	"codewiki.model-check",
-] as const;
-
-const CHECK_EVIDENCE_ADAPTER_IDS = [
-	"authority",
-	"change",
-	"checks",
-	"content-proof",
-	"planning",
-	"preview",
-	"source",
-	"trace",
-	"worker-report",
-	"work-state",
 ] as const;
 
 export type CheckAuthority = "kernel" | "project";
@@ -345,6 +337,8 @@ const HUMAN_CHECK_IDS = new Set([
 	"release_intent_authorized",
 	"release_safety_approved",
 ]);
+const WORKER_REPORT_CHECK_IDS = new Set(["worker_claims_correlated"]);
+const CONTENT_PROOF_CHECK_IDS = new Set(["content_proof_recorded"]);
 const EXTERNAL_CHECK_IDS = new Set([
 	"verification_passed",
 	"tdd_evidence_valid",
@@ -362,16 +356,7 @@ export function createCheckCatalog(
 	additional: ProjectCheckRegistration[] = [],
 ): CheckCatalog {
 	for (const registration of additional) {
-		if ("authority" in registration) {
-			throw new Error(
-				`Caller-supplied Check ${registration.check.id} cannot declare authority; the catalog assigns project authority.`,
-			);
-		}
-		if ("requirementDigest" in registration.check) {
-			throw new Error(
-				`Caller-supplied Check ${registration.check.id} cannot supply runtime-owned requirementDigest.`,
-			);
-		}
+		assertProjectRegistrationAuthority(registration);
 	}
 	const projectRegistrations: CheckRegistration[] = additional.map(
 		(registration) => ({
@@ -507,7 +492,7 @@ function kernelRegistration(
 				kind: kind === "model" ? "qualitative" : "quantitative",
 				shape: "boolean",
 			},
-			evidenceAdapterIds: evidenceAdapters(id, kind),
+			evidenceObligations: evidenceObligations(id, kind),
 			repairTarget: "loop-candidate",
 			cost: checkCost(kind),
 			timeoutMs: checkTimeout(kind),
@@ -539,14 +524,96 @@ function checkTimeout(kind: CheckDefinition["execution"]["kind"]): number {
 	return kind === "model" ? 30_000 : 5_000;
 }
 
-function evidenceAdapters(
+function evidenceObligations(
 	id: string,
 	kind: CheckDefinition["execution"]["kind"],
-): string[] {
-	if (HUMAN_CHECK_IDS.has(id)) return ["authority", "trace"];
-	if (EXTERNAL_CHECK_IDS.has(id)) return ["checks", "source", "trace"];
-	if (kind === "model") return ["change", "planning", "source", "trace"];
-	return ["change", "planning", "trace", "work-state"];
+): EvidenceObligation[] {
+	if (HUMAN_CHECK_IDS.has(id)) {
+		return [
+			obligation({
+				id: "approval-receipt",
+				kinds: ["approval_receipt"],
+				producerKinds: ["user", "external_service"],
+				authorities: ["approved"],
+				coverages: ["complete"],
+				subject: "candidate",
+				freshness: "none",
+				artifact: "optional",
+			}),
+		];
+	}
+	if (WORKER_REPORT_CHECK_IDS.has(id)) {
+		return [
+			obligation({
+				id: "worker-report",
+				kinds: ["worker_report"],
+				producerKinds: ["worker"],
+				authorities: ["asserted"],
+				coverages: ["complete"],
+				subject: "candidate_source_tree",
+				freshness: "exact_boundary",
+				artifact: "optional",
+			}),
+		];
+	}
+	if (CONTENT_PROOF_CHECK_IDS.has(id)) {
+		return [
+			obligation({
+				id: "integration-proof",
+				kinds: ["integration_proof", "source_observation"],
+				producerKinds: ["runtime"],
+				authorities: ["verified"],
+				coverages: ["complete"],
+				subject: "candidate_source_tree",
+				freshness: "exact_boundary",
+				artifact: "optional",
+			}),
+		];
+	}
+	if (EXTERNAL_CHECK_IDS.has(id)) {
+		return [
+			obligation({
+				id: "command-execution",
+				kinds: ["command_execution"],
+				producerKinds: ["runtime", "external_service"],
+				authorities: ["observed", "verified"],
+				coverages: ["complete"],
+				subject: "candidate_source_tree",
+				freshness: "exact_boundary",
+				artifact: "optional",
+			}),
+		];
+	}
+	if (kind === "model") {
+		return [
+			obligation({
+				id: "model-assessment",
+				kinds: ["model_assessment"],
+				producerKinds: ["model"],
+				authorities: ["observed"],
+				coverages: ["complete"],
+				subject: "candidate",
+				freshness: "none",
+				artifact: "optional",
+			}),
+		];
+	}
+	return [];
+}
+
+function obligation(
+	input: Omit<
+		EvidenceObligation,
+		"version" | "sensitivities" | "minimumCount" | "contradiction"
+	>,
+): EvidenceObligation {
+	return createEvidenceObligation({
+		...input,
+		version: EVIDENCE_OBLIGATION_VERSION,
+		sensitivities: ["public", "project", "private"],
+		minimumCount: 1,
+		contradiction: "indeterminate",
+	});
 }
 
 function registrationKey(loop: SemanticLoop, checkId: string): string {
@@ -570,22 +637,39 @@ function normalizeRegistration(
 		...registration,
 		check: {
 			...registration.check,
-			evidenceAdapterIds: unique(registration.check.evidenceAdapterIds).sort(),
+			evidenceObligations: registration.check.evidenceObligations
+				.map((entry) => createEvidenceObligation(entry))
+				.sort((left, right) => compareText(left.id, right.id)),
 			execution: { ...registration.check.execution },
 			measurement: { ...registration.check.measurement },
 		},
-		loops: unique(registration.loops).sort(),
+		loops: unique(registration.loops).sort(compareText),
 		rolloutHistory: [...registration.rolloutHistory],
-		dependsOn: unique(registration.dependsOn).sort(),
+		dependsOn: unique(registration.dependsOn).sort(compareText),
 		...(registration.approval
 			? {
 					approval: {
 						status: "approved",
-						refs: unique(registration.approval.refs).sort(),
+						refs: unique(registration.approval.refs).sort(compareText),
 					},
 				}
 			: {}),
 	};
+}
+
+function assertProjectRegistrationAuthority(
+	registration: ProjectCheckRegistration,
+): void {
+	if ("authority" in registration) {
+		throw new Error(
+			`Caller-supplied Check ${registration.check.id} cannot declare authority; the catalog assigns project authority.`,
+		);
+	}
+	if ("requirementDigest" in registration.check) {
+		throw new Error(
+			`Caller-supplied Check ${registration.check.id} cannot supply runtime-owned requirementDigest.`,
+		);
+	}
 }
 
 function validateRegistration(registration: CheckRegistration): void {
@@ -615,6 +699,10 @@ function validateCheckShape(
 			`Check ${check.id} requirement digest mismatch: expected ${expectedRequirementDigest}.`,
 		);
 	}
+	const obligationIds = check.evidenceObligations.map((entry) => entry.id);
+	if (new Set(obligationIds).size !== obligationIds.length) {
+		throw new Error(`Check ${check.id} evidence obligation ids must be unique.`);
+	}
 }
 
 function validateClosedExecutionInputs(
@@ -627,15 +715,6 @@ function validateClosedExecutionInputs(
 		throw new Error(
 			`Check ${check.id} uses unknown execution ${check.execution.id}.`,
 		);
-	}
-	for (const adapterId of check.evidenceAdapterIds) {
-		if (
-			!(CHECK_EVIDENCE_ADAPTER_IDS as readonly string[]).includes(adapterId)
-		) {
-			throw new Error(
-				`Check ${check.id} uses unknown evidence adapter ${adapterId}.`,
-			);
-		}
 	}
 }
 
@@ -730,7 +809,11 @@ function asArray<T>(value: T | T[]): T[] {
 }
 
 function unique<T>(values: T[]): T[] {
-	return [...new Set(values)].sort((left, right) =>
-		String(left).localeCompare(String(right)),
-	);
+	return [...new Set(values)];
+}
+
+function compareText(left: string, right: string): number {
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
 }

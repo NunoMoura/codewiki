@@ -41,7 +41,7 @@ function projectRegistration() {
 				kind: "code",
 			},
 			measurement: { kind: "quantitative", shape: "boolean" },
-			evidenceAdapterIds: ["source", "trace"],
+			evidenceObligations: [],
 			repairTarget: "source",
 			cost: 1,
 			timeoutMs: 5_000,

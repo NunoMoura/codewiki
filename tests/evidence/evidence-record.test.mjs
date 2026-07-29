@@ -404,10 +404,20 @@ describe("Evidence Record foundation", () => {
 				materializeEvidenceRecord(
 					material("model_assessment", payloads.model_assessment),
 					runtimeFor("model_assessment", {
-						producer: { kind: "runtime", id: "wrong-producer" },
+						producer: { kind: "runtime", id: "wrong-producer", version: "1.0.0" },
 					}),
 				),
 			/Model assessment Evidence producer must be model\./,
+		);
+		assert.throws(
+			() =>
+				materializeEvidenceRecord(
+					material("source_observation", payloads.source_observation),
+					runtimeFor("source_observation", {
+						producer: { kind: "runtime", id: "source-observer" },
+					}),
+				),
+			/Evidence runtime context is invalid.*version/,
 		);
 	});
 
@@ -438,7 +448,7 @@ describe("Evidence Record foundation", () => {
 						{ ...payloads.approval_receipt, channel: "git_provider" },
 					),
 					runtimeFor("approval_receipt", {
-						producer: { kind: "external_service", id: "github" },
+						producer: { kind: "external_service", id: "github", version: "1.0.0" },
 					}),
 				),
 			/Git-provider approval Evidence requires provider binding\./,

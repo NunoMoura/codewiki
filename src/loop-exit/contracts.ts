@@ -1,3 +1,4 @@
+import type { EvidenceObligation } from "../evidence/obligations.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import { canonicalJsonDigest as resolvedExitPolicyDigest } from "./identity.ts";
 
@@ -51,7 +52,7 @@ export interface CheckDefinition {
 	requirementDigest: string;
 	execution: CheckExecutionSpec;
 	measurement: CheckMeasurementSpec;
-	evidenceAdapterIds: string[];
+	evidenceObligations: EvidenceObligation[];
 	repairTarget: string;
 	cost: number;
 	timeoutMs: number;

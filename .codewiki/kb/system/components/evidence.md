@@ -8,11 +8,11 @@ tags:
   - evidence
   - provenance
   - approval
-timestamp: 2026-07-29T07:09:20.000Z
+timestamp: 2026-07-29T10:12:35.000Z
 codewiki_component: evidence
 codewiki_components:
   - evidence
-codewiki_responsibility: Define strict immutable cross-Loop Evidence Record contracts, content identity, Runtime materialization, provenance, authority, coverage, and privacy boundaries.
+codewiki_responsibility: Define strict immutable cross-Loop Evidence Record contracts, content identity, Runtime materialization, provenance, observation authority and obligations, coverage, and privacy boundaries.
 codewiki_source_patterns:
   - src/evidence/**
 codewiki_test_patterns:
@@ -87,7 +87,7 @@ interface EvidenceRecord<TKind extends EvidenceKind, TPayload> {
   producer: {
     kind: "runtime" | "worker" | "model" | "user" | "external_service";
     id: string;
-    version?: string;
+    version: string;
   };
   artifact?: {
     digest: string;
@@ -105,9 +105,27 @@ interface EvidenceRecord<TKind extends EvidenceKind, TPayload> {
 }
 ```
 
-Producer-facing Evidence material contains only schema/kind, bounded payload, optional artifact metadata, and provenance refs. Runtime supplies the canonical subject, producer metadata, observation time, authority, coverage, freshness boundary, and effective sensitivity after validating correlation, artifact digest, provenance, freshness, and privacy policy. Producers cannot self-bind a Candidate or Change revision, supply canonical identity, upgrade authority, claim complete coverage, lower sensitivity, or turn an artifact into acceptance.
+Producer-facing Evidence material contains only schema/kind, bounded payload, optional artifact metadata, and provenance refs. Runtime supplies the canonical subject, fixed producer id/version, observation time, authority, coverage, freshness boundary, and effective sensitivity after validating correlation, artifact digest, provenance, freshness, and privacy policy. Producers cannot self-bind a Candidate or Change revision, supply canonical identity, upgrade authority, claim complete coverage, lower sensitivity, or turn an artifact into acceptance.
+
+`EvidenceRecord.authority` describes how strongly one observation was established: asserted, directly observed, deterministically verified, or granted by an authenticated scoped approver. It is not Loop-exit authority. The semantic Loop owns its exit requirements, and Project Runtime alone constructs Check Results, reduces the Exit Report, and routes the exact candidate.
 
 Evidence created before a candidate, such as research against a pending Change revision, binds that exact revision. The later candidate binds the Evidence Record ids/digests in its observed base. Evidence created from a candidate, such as a UI capture, additionally binds the exact candidate and source tree. Check Results bind both candidate and consumed evidence identities.
+
+## Direct producer boundaries and obligations
+
+CodeWiki does not maintain a separate Evidence-adapter Catalog. Runtime operations call the closed typed materializer directly with discriminated Evidence material and an exact producer id/version. Trust remains in reviewed Runtime source and the elected Loop execution path rather than in a second registry that could be mistaken for acceptance authority. Clients, workers, models, and external services still cannot select materialization policy or canonical assurance metadata.
+
+Each Check embeds zero or more immutable versioned Evidence obligations. An obligation declares accepted Evidence kinds, producer classes, authority classes, coverage, sensitivity, exact subject binding, freshness mode, artifact availability, minimum count, and contradiction handling. It contains no executable adapter, shell command, model route, or authority grant.
+
+```text
+exact Check obligation
++ candidate/change subject and freshness boundary
++ immutable Evidence Records
++ Check-owned supporting | contradictory | neutral classification
+→ ready | missing | indeterminate obligation resolution
+```
+
+The deterministic reducer filters and accounts for every supplied Evidence Record, preserves contradictory records, detects duplicate input, and distinguishes absent Evidence from present-but-stale, partial, unavailable, private, weak, or wrong-subject Evidence. `ready` means only that the Check has admissible inputs. It never means the Check requirement passed. Only the trusted Check implementation interprets requirement-specific meaning, and only Runtime creates the Check Result and Exit Report.
 
 ## Kind-specific payloads
 
@@ -244,11 +262,12 @@ src/evidence/
   contracts.ts
   identity.ts
   materialize.ts
+  obligations.ts
 ```
 
 Loop-owned packages declare admissible domain payload/obligation semantics. `src/loop-exit/**` imports Evidence contracts to bind Check inputs and Results. Runtime composes materialization, artifact/provider adapters, approval correlation, trace writes, and retention. Dependency direction stays one-way; Evidence code cannot import Decision, Planning, or Implementation implementations.
 
-Current foundation implements the closed envelope and ten payload kinds, strict recursive admission, canonical normalization, content identity, Runtime-owned subject/time/producer/authority/coverage/freshness/sensitivity context, semantic kind bindings, tamper validation, and public contract types. Existing evidence producers and trace writers are not migrated yet. Until that migration, legacy `sourceRefs`, `proofRefs`, preview captures, review reports, worker reports, and delivery proofs retain their current executable behavior and do not become canonical Evidence Records merely by resembling one.
+Current foundation implements the closed envelope and ten payload kinds, strict recursive admission, canonical normalization, content identity, required producer versions, Runtime-owned subject/time/producer/authority/coverage/freshness/sensitivity context, semantic kind bindings, tamper validation, declarative Check obligations, deterministic obligation reduction, and public Evidence Record contract types. Native Check identity now binds exact obligation definitions instead of generic evidence-adapter names. Existing evidence producers and trace writers are not migrated yet. Until that migration, legacy `sourceRefs`, `proofRefs`, preview captures, review reports, worker reports, and delivery proofs retain their current executable behavior and do not become canonical Evidence Records merely by resembling one.
 
 Canonical JSON/digest primitives live in `src/utils/canonical-json.ts` so Evidence and Loop-exit identity share exact serialization without reversing the dependency from Loop exit into Evidence.
 

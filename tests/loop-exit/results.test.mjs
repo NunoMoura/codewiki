@@ -97,7 +97,7 @@ function projectScoreRegistration() {
 				minimum: 0.8,
 				maximum: 1,
 			},
-			evidenceAdapterIds: ["source"],
+			evidenceObligations: [],
 			repairTarget: "source",
 			cost: 1,
 			timeoutMs: 5_000,

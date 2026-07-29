@@ -335,8 +335,10 @@ Current producer/consumer migration inventory:
 
 - [x] Add `src/evidence/**` with exact closed base Evidence Record envelope, Runtime-owned identity/subject/time/producer/authority/coverage/freshness/effective-sensitivity context, discriminated payload schemas, public contract type exports, source ownership, and tests.
 - [x] Add strict recursive materialization and tamper validation for research citations, source observations, command executions, UI captures, model assessments, Worker Reports, Integration proof, approval receipts, delivery attestations, and outcome observations.
-- [ ] Add a versioned closed evidence-adapter Catalog that maps trusted producers into Runtime authority/coverage/freshness decisions; no client-supplied adapter or authority metadata.
-- [ ] Bind Check evidence obligations to accepted kinds, producer/authority classes, freshness, coverage, artifact availability, privacy, and contradiction policy; bind consumed Evidence Record identities into Results/cache/report.
+- [x] Reject a separate Evidence-adapter Catalog. Keep trust in direct typed Runtime materialization with exact producer id/version and reviewed source; producer observation authority never becomes Loop-exit authority.
+- [x] Replace native Check `evidenceAdapterIds` with immutable versioned obligations over accepted kinds, producer/observation-authority classes, exact subjects, freshness, coverage, artifact availability, sensitivity, minimum count, and contradiction policy.
+- [x] Add deterministic obligation reduction that preserves contradictions, detects duplicate input, and distinguishes `ready`, `missing`, and `indeterminate` without granting Check pass or Loop exit.
+- [ ] Bind exact obligation resolutions and consumed Evidence Record identities into Check Results, cache identity, and Exit Reports.
 - [ ] Replace Decision ref-count evidence sufficiency with exact research-citation provenance/freshness Code Checks, independent claim-support/contradiction Model Checks, and risk-proportional activation.
 - [ ] Extend preview capture with exact candidate/tree-bound screenshots and bounded MP4/WebM interaction recordings across required routes, states, scenarios, and viewports.
 - [ ] Add `ui_preview_evidence_valid`, bounded `ui_experience_reviewed`, and approval-backed `ui_experience_approved` with exact role, subject, artifact-bundle, and freshness semantics.
