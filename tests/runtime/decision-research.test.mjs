@@ -64,6 +64,77 @@ function context(overrides = {}) {
 	};
 }
 
+const candidateSubject = {
+	...subject,
+	candidateDigest: digest("2"),
+};
+
+function modelRoute(overrides = {}) {
+	return {
+		id: "decision-research-high",
+		provider: "test-provider",
+		model: "test-model-high",
+		thinking: "high",
+		quality: "high",
+		latency: "balanced",
+		timeoutMs: 60_000,
+		pricing: {
+			inputUsdPerMillion: 1,
+			outputUsdPerMillion: 2,
+			cacheReadUsdPerMillion: 0,
+			cacheWriteUsdPerMillion: 0,
+		},
+		allowedTools: [],
+		...overrides,
+	};
+}
+
+function claimsFixture(runtime, overrides = {}) {
+	const resolvedPolicy = overrides.policy ?? policy();
+	const evidence =
+		overrides.evidence ??
+		runtime.materializeDecisionResearchCitation(material(), context());
+	const provenanceResult =
+		overrides.provenanceResult ??
+		runtime.evaluateDecisionResearchProvenance({
+			policy: resolvedPolicy,
+			evidence: [evidence],
+			expectedSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+		});
+	return {
+		evidence,
+		input: {
+			policy: resolvedPolicy,
+			provenanceResult,
+			researchEvidence: [evidence],
+			expectedChangeSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+			candidateSubject,
+			route: modelRoute(),
+			sensitivity: "project",
+			...overrides.input,
+		},
+	};
+}
+
+function modelAssessmentResponse(
+	request,
+	conclusion,
+	findings = [],
+	limitations = [],
+) {
+	return {
+		claimAssessments: request.claims.map((claim) => ({
+			claimDigest: claim.claimDigest,
+			evidenceIds: claim.citations.map((citation) => citation.evidenceId),
+			conclusion,
+			findings,
+			limitations,
+		})),
+	};
+}
+
 describe("Decision research Runtime boundary", () => {
 	it("materializes exact Change-revision citations and creates a passing provenance Result", () => {
 		const runtime = createLoopExitRuntime();
@@ -186,6 +257,194 @@ describe("Decision research Runtime boundary", () => {
 					}),
 				),
 			/Decision research Evidence subject received unsupported field candidateDigest/,
+		);
+	});
+});
+
+describe("Decision research claim-support Model Check", () => {
+	it("prepares one immutable, tool-free, exact-input model request", () => {
+		const runtime = createLoopExitRuntime();
+		const fixture = claimsFixture(runtime);
+		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
+			fixture.input,
+		);
+
+		assert.equal(prepared.status, "ready");
+		assert.equal(prepared.request.protocolId, "codewiki.decision.research-claims");
+		assert.equal(prepared.request.candidateDigest, digest("2"));
+		assert.deepEqual(prepared.request.researchEvidenceIds, [
+			fixture.evidence.evidenceId,
+		]);
+		assert.equal(prepared.request.claims.length, 1);
+		assert.equal(prepared.request.claims[0].citations[0].stance, "supports");
+		assert.match(prepared.request.requestDigest, /^sha256:[a-f0-9]{64}$/);
+		assert.match(prepared.request.configurationDigest, /^sha256:[a-f0-9]{64}$/);
+		assert.ok(Object.isFrozen(prepared.request));
+		assert.equal("prompt" in prepared.request, false);
+	});
+
+	it("materializes bounded model output and derives pass or fail in Runtime", () => {
+		for (const [conclusion, expectedStatus] of [
+			["supported", "pass"],
+			["unsupported", "fail"],
+		]) {
+			const runtime = createLoopExitRuntime();
+			const fixture = claimsFixture(runtime);
+			const prepared = runtime.prepareDecisionResearchClaimsAssessment(
+				fixture.input,
+			);
+			assert.equal(prepared.status, "ready");
+			const completion = runtime.completeDecisionResearchClaimsAssessment(
+				fixture.input,
+				{
+					status: "completed",
+					requestDigest: prepared.request.requestDigest,
+					observedAt: "2026-07-29T12:05:00.000Z",
+					response: modelAssessmentResponse(
+						prepared.request,
+						conclusion,
+						conclusion === "supported"
+							? []
+							: ["Claim exceeds cited provider guarantee."],
+					),
+				},
+			);
+
+			assert.equal(completion.result.status, expectedStatus);
+			assert.equal(completion.evidenceRecords.length, 1);
+			const assessment = completion.evidenceRecords[0];
+			assert.equal(assessment.kind, "model_assessment");
+			assert.equal(assessment.authority, "observed");
+			assert.equal(assessment.payload.checkId, "research_claims_supported");
+			assert.equal(
+				assessment.payload.measurement.value,
+				conclusion === "supported",
+			);
+			assert.ok(completion.result.evidenceRecordIds.includes(assessment.evidenceId));
+			assert.equal(completion.result.execution.modelRef, "test-provider/test-model-high");
+		}
+	});
+
+	it("keeps semantic uncertainty indeterminate with observed model Evidence", () => {
+		const runtime = createLoopExitRuntime();
+		const fixture = claimsFixture(runtime);
+		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
+			fixture.input,
+		);
+		assert.equal(prepared.status, "ready");
+		const completion = runtime.completeDecisionResearchClaimsAssessment(
+			fixture.input,
+			{
+				status: "completed",
+				requestDigest: prepared.request.requestDigest,
+				observedAt: "2026-07-29T12:05:00.000Z",
+				response: modelAssessmentResponse(
+					prepared.request,
+					"uncertain",
+					[],
+					["Citation does not cover retry exhaustion."],
+				),
+			},
+		);
+
+		assert.equal(completion.result.status, "indeterminate");
+		assert.equal(completion.result.measurement, undefined);
+		assert.equal(completion.evidenceRecords.length, 1);
+	});
+
+	it("maps provider and malformed-output failures to indeterminate without fake Evidence", () => {
+		const runtime = createLoopExitRuntime();
+		const fixture = claimsFixture(runtime);
+		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
+			fixture.input,
+		);
+		assert.equal(prepared.status, "ready");
+		const wrongEvidenceResponse = modelAssessmentResponse(
+			prepared.request,
+			"supported",
+		);
+		wrongEvidenceResponse.claimAssessments[0].evidenceIds = [digest("9")];
+		for (const observation of [
+			{
+				status: "timeout",
+				requestDigest: prepared.request.requestDigest,
+			},
+			{
+				status: "completed",
+				requestDigest: prepared.request.requestDigest,
+				observedAt: "2026-07-29T12:05:00.000Z",
+				response: { conclusion: "probably" },
+			},
+			{
+				status: "completed",
+				requestDigest: prepared.request.requestDigest,
+				observedAt: "2026-07-29T12:05:00.000Z",
+				response: wrongEvidenceResponse,
+			},
+		]) {
+			const completion = runtime.completeDecisionResearchClaimsAssessment(
+				fixture.input,
+				observation,
+			);
+			assert.equal(completion.result.status, "indeterminate");
+			assert.equal(completion.result.measurement, undefined);
+			assert.deepEqual(completion.evidenceRecords, []);
+		}
+	});
+
+	it("does not invoke model work when exact provenance dependency failed", () => {
+		const runtime = createLoopExitRuntime();
+		const failedEvidence = runtime.materializeDecisionResearchCitation(
+			material({
+				payload: {
+					...material().payload,
+					publicationDate: "2026-07-30",
+				},
+			}),
+			context(),
+		);
+		const failedProvenance = runtime.evaluateDecisionResearchProvenance({
+			policy: policy(),
+			evidence: [failedEvidence],
+			expectedSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+		});
+		const fixture = claimsFixture(runtime, {
+			evidence: failedEvidence,
+			provenanceResult: failedProvenance,
+		});
+		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
+			fixture.input,
+		);
+
+		assert.equal(prepared.status, "indeterminate");
+		assert.equal(prepared.result.status, "indeterminate");
+		assert.match(prepared.result.findings[0], /provenance dependency is fail/);
+		assert.equal("request" in prepared, false);
+	});
+
+	it("rejects tools and observations for another exact request", () => {
+		const runtime = createLoopExitRuntime();
+		const fixture = claimsFixture(runtime);
+		assert.throws(
+			() =>
+				runtime.prepareDecisionResearchClaimsAssessment({
+					...fixture.input,
+					route: modelRoute({ allowedTools: ["read"] }),
+				}),
+			/route must disable all tools/,
+		);
+		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
+			fixture.input,
+		);
+		assert.equal(prepared.status, "ready");
+		assert.throws(
+			() =>
+				runtime.completeDecisionResearchClaimsAssessment(fixture.input, {
+					status: "timeout",
+					requestDigest: digest("9"),
+				}),
+			/request digest mismatch/,
 		);
 	});
 });

@@ -8,7 +8,7 @@ tags:
   - evidence
   - provenance
   - approval
-timestamp: 2026-07-29T12:02:37.000Z
+timestamp: 2026-07-29T21:00:05.000Z
 codewiki_component: evidence
 codewiki_components:
   - evidence
@@ -185,7 +185,9 @@ The native Check Catalog now provides Decision-only `research_provenance_valid` 
 
 Runtime now exposes a Decision-specific citation materialization boundary and a closed deterministic provenance executor. The materializer fixes observation authority, enforces one exact Change revision, and rejects caller-owned assurance. The executor preserves all considered Evidence identities, reduces freshness and admissibility into one exact obligation resolution, fails impossible publication/observation ordering without dropping the record, and constructs the immutable provenance Check Result.
 
-Production Decision still uses broad `sourceRefs` and `proofRefs`. External collection adapters, independent claim-support Model execution, native candidate/policy/report persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
+The independent claim-support envelope binds the exact passing provenance Result, candidate, policy, route/configuration digest, protocol version, claim digests, and citation Evidence ids. Models return bounded per-claim observations, not Check status. Runtime validates complete claim and citation coverage, derives the aggregate conclusion, and materializes candidate-bound observed `model_assessment` Evidence with exact producer, route, protocol, configuration, and request provenance. Raw model output and private reasoning are discarded. Operational or malformed output produces an indeterminate Result and no fake model Evidence.
+
+Production Decision still uses broad `sourceRefs` and `proofRefs`. External collection adapters, isolated Pi SDK protocol transport, native candidate/policy/report persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
 
 ## UI experience evidence
 

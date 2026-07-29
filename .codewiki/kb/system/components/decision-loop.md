@@ -7,7 +7,7 @@ tags:
   - system
   - decision
   - loop
-timestamp: 2026-07-29T12:02:37.000Z
+timestamp: 2026-07-29T21:00:05.000Z
 codewiki_component: decision
 codewiki_components:
   - decision
@@ -178,7 +178,9 @@ The native closed Catalog now registers Decision-only `research_provenance_valid
 
 The native Runtime bridge now admits bounded citation material through one Decision-specific function, fixes observation authority to `observed`, requires exactly one Change-revision subject, rejects caller-owned assurance fields, and materializes immutable `research_citation` records. Its closed deterministic provenance executor reduces the exact obligation and creates a canonical passing, failing, or indeterminate Check Result. Stale/missing input remains indeterminate; temporally impossible source metadata fails without discarding the Evidence; contradictory citation stance remains available for the independent claim-support Check.
 
-Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. External research collection, independent Model Check execution, candidate/policy/report persistence, and replacement of that legacy path remain part of the clean Decision cut.
+The versioned `codewiki.decision.research-claims` protocol now prepares one immutable, tool-free request from the exact passing provenance Result, candidate, policy, route configuration, claims, and citation Evidence ids. A model does not report aggregate Check pass/fail. It must assess every exact claim digest once and echo the complete citation-id set. Runtime rejects missing, duplicate, foreign, or malformed claim assessments; derives aggregate `supported | unsupported | uncertain`; materializes only bounded normalized `model_assessment` Evidence; and creates the immutable Check Result. Unsupported dominates uncertainty. Timeout, provider failure, unavailability, cancellation, or malformed output is indeterminate without fabricated measurement or Evidence.
+
+Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. External research collection, isolated Pi SDK transport for the prepared protocol, native candidate/policy/report persistence, and replacement of that legacy path remain part of the clean Decision cut.
 
 ## Exit and route
 

@@ -174,7 +174,7 @@ export function createDecisionResearchProvenanceExecutor(
 	};
 }
 
-function assertDecisionResearchSubject(subject: EvidenceSubject): void {
+export function assertDecisionResearchSubject(subject: EvidenceSubject): void {
 	assertExactKeys(
 		subject,
 		["changeRefs", "changeRevisionDigests", "acceptanceRequirementIds"],

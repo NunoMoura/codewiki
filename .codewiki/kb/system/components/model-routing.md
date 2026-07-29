@@ -64,6 +64,8 @@ A model may produce one Decision/Planning candidate, Implementation edits/candid
 
 Candidate generation and Model Checking use separate sessions and conversational state even when they resolve to the same provider/model. Model Checks receive immutable candidate evidence, not producer transcript or retrieved repair context.
 
+The native Decision research claim-support envelope now binds one exact tool-free route, configuration digest, versioned protocol resource, Candidate/policy, passing provenance Result, claim digests, and citation Evidence ids. The model reports one bounded assessment per exact claim and cannot report aggregate Check pass/fail. Runtime validates full claim/citation coverage, derives aggregate semantics, and records only normalized model-assessment Evidence. Isolated Pi SDK transport for this envelope remains pending.
+
 Timeout, provider failure, unavailable service, malformed output, cancellation, or invalid schema yields `indeterminate`. Runtime never converts operational failure into score zero, candidate rejection, or approval.
 
 ## Budgets and efficiency

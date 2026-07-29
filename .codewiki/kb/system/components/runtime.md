@@ -6,7 +6,7 @@ tags:
   - codewiki
   - system
   - runtime
-timestamp: 2026-07-29T12:02:37.000Z
+timestamp: 2026-07-29T21:00:05.000Z
 codewiki_components:
   - error_handling
   - runtime
@@ -230,7 +230,9 @@ else                           → pass
 
 A passing Report permits exact Loop exit only. Append and every effect remain separately guarded.
 
-Native Decision research now has one Runtime-specific bridge under `src/runtime/decision-research.ts`. Runtime materializes bounded citation material as observed, immutable, exact Change-revision Evidence and runs the protected deterministic provenance Check against exact freshness and subject obligations. Missing or stale input becomes an indeterminate Result; invalid temporal provenance becomes a failing Result while retaining the Evidence. This bridge does not yet collect external research, execute the independent claim-support Model Check, persist native Decision reports, or replace production Decision ref-count evaluation.
+Native Decision research uses Runtime-specific bridges under `src/runtime/decision-research.ts` and `src/runtime/decision-research-claims.ts`. Runtime materializes bounded citation material as observed, immutable, exact Change-revision Evidence and runs the protected deterministic provenance Check against exact freshness and subject obligations. Missing or stale input becomes an indeterminate Result; invalid temporal provenance becomes a failing Result while retaining the Evidence.
+
+For independent claim support, Runtime prepares an immutable tool-free request bound to the exact passing provenance Result, Candidate/policy, route configuration, protocol resource, claims, and citation ids. The model supplies one bounded assessment per exact claim; it cannot supply aggregate Check status. Runtime validates complete coverage, derives aggregate semantics, materializes candidate-bound observed model-assessment Evidence, and constructs the Result. Timeout, provider failure, unavailability, cancellation, and malformed output remain indeterminate without model Evidence or fabricated measurement. Isolated Pi SDK transport, external collection, native Decision report persistence, and replacement of production ref-count evaluation remain pending.
 
 Independent Checks continue after unrelated failure. Resource-specific pools bound provider/model, CPU, test/build, and external-service work. Exact cache identity includes candidate, Check binding, implementation/configuration, and evidence inputs. TTL and path overlap can evict or invalidate, never authorize reuse.
 
