@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { SemanticLoop } from "../semantic-loop.ts";
+import type { CheckDefinition, CheckJsonValue } from "./contracts.ts";
 
 export type Sha256Digest = `sha256:${string}`;
 export type CandidateId<TLoop extends SemanticLoop = SemanticLoop> =
@@ -35,6 +36,13 @@ export interface CreateLoopCandidateInput<
 	readonly observedBase: CandidateObservedBase;
 }
 
+export interface LoopQualifiedCheckIdentityInput {
+	readonly loop: SemanticLoop;
+	readonly check: CheckDefinition;
+	readonly configuration: Readonly<Record<string, CheckJsonValue>>;
+	readonly catalogDigest: string;
+}
+
 export type CanonicalJsonPrimitive = null | boolean | number | string;
 export type CanonicalJsonValue =
 	| CanonicalJsonPrimitive
@@ -61,6 +69,31 @@ export function assertSha256Digest(
 		throw new Error(`${field} must be a lowercase sha256 digest.`);
 	}
 	return value as Sha256Digest;
+}
+
+export function checkRequirementDigest(requirement: string): Sha256Digest {
+	if (!requirement.trim()) throw new Error("Check requirement cannot be blank.");
+	return canonicalJsonDigest({ requirement });
+}
+
+export function loopQualifiedCheckDigest(
+	input: LoopQualifiedCheckIdentityInput,
+): Sha256Digest {
+	assertSha256Digest(input.catalogDigest, "catalogDigest");
+	const expectedRequirementDigest = checkRequirementDigest(
+		input.check.requirement,
+	);
+	if (input.check.requirementDigest !== expectedRequirementDigest) {
+		throw new Error(
+			`Check ${input.check.id} requirement digest mismatch: expected ${expectedRequirementDigest}.`,
+		);
+	}
+	return canonicalJsonDigest({
+		loop: input.loop,
+		check: input.check,
+		configuration: input.configuration,
+		catalogDigest: input.catalogDigest,
+	});
 }
 
 export function createLoopCandidate<

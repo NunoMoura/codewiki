@@ -48,6 +48,7 @@ export interface CheckDefinition {
 	version: string;
 	description: string;
 	requirement: string;
+	requirementDigest: string;
 	execution: CheckExecutionSpec;
 	measurement: CheckMeasurementSpec;
 	evidenceAdapterIds: string[];
@@ -60,6 +61,8 @@ export interface CheckDefinition {
 export interface CheckBinding {
 	checkId: string;
 	checkVersion: string;
+	requirementDigest: string;
+	checkDigest: string;
 	enforcement: CheckEnforcement;
 	required: boolean;
 	parameters: Record<string, CheckJsonValue>;
@@ -113,6 +116,8 @@ export interface ExitReport {
 export interface CheckExclusion {
 	checkId: string;
 	checkVersion: string;
+	requirementDigest: string;
+	checkDigest: string;
 	reason: CheckExclusionReason;
 	refs: string[];
 }
@@ -121,6 +126,7 @@ export interface ResolvedExitPolicy {
 	schemaVersion: typeof LOOP_EXIT_SCHEMA_VERSION;
 	loop: SemanticLoop;
 	candidateDigest: string;
+	catalogDigest: string;
 	selectorInputDigest: string;
 	bindings: CheckBinding[];
 	exclusions: CheckExclusion[];
@@ -131,6 +137,7 @@ export interface ResolvedExitPolicy {
 export interface CreateResolvedExitPolicyInput {
 	loop: SemanticLoop;
 	candidateDigest: string;
+	catalogDigest: string;
 	selectorInputDigest: string;
 	bindings: CheckBinding[];
 	exclusions?: CheckExclusion[];
@@ -174,6 +181,7 @@ function normalizePolicyInput(
 		schemaVersion: LOOP_EXIT_SCHEMA_VERSION,
 		loop: input.loop,
 		candidateDigest: input.candidateDigest,
+		catalogDigest: input.catalogDigest,
 		selectorInputDigest: input.selectorInputDigest,
 		bindings: [...input.bindings]
 			.map((binding) => ({
@@ -198,6 +206,7 @@ function assertValidPolicyShape(
 	policy: Omit<ResolvedExitPolicy, "policyDigest">,
 ): void {
 	assertDigest(policy.candidateDigest, "candidateDigest");
+	assertDigest(policy.catalogDigest, "catalogDigest");
 	assertDigest(policy.selectorInputDigest, "selectorInputDigest");
 	assertUniqueIds(
 		policy.bindings.map((binding) => binding.checkId),
@@ -212,6 +221,11 @@ function assertValidPolicyShape(
 	for (const binding of policy.bindings) {
 		assertStableId(binding.checkId, "binding checkId");
 		assertVersion(binding.checkVersion, `Check ${binding.checkId}`);
+		assertDigest(
+			binding.requirementDigest,
+			`Check ${binding.checkId} requirementDigest`,
+		);
+		assertDigest(binding.checkDigest, `Check ${binding.checkId} checkDigest`);
 		if (binding.activatedBy.length === 0) {
 			throw new Error(`Check binding ${binding.checkId} requires activatedBy.`);
 		}
@@ -228,6 +242,14 @@ function assertValidPolicyShape(
 	for (const exclusion of policy.exclusions) {
 		assertStableId(exclusion.checkId, "exclusion checkId");
 		assertVersion(exclusion.checkVersion, `Check ${exclusion.checkId}`);
+		assertDigest(
+			exclusion.requirementDigest,
+			`Check ${exclusion.checkId} exclusion requirementDigest`,
+		);
+		assertDigest(
+			exclusion.checkDigest,
+			`Check ${exclusion.checkId} exclusion checkDigest`,
+		);
 		if (activeIds.has(exclusion.checkId)) {
 			throw new Error(
 				`Check ${exclusion.checkId} cannot be both active and excluded.`,

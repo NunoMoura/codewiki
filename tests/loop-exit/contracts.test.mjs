@@ -8,16 +8,22 @@ import {
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const SELECTOR_DIGEST = `sha256:${"b".repeat(64)}`;
+const CATALOG_DIGEST = `sha256:${"c".repeat(64)}`;
+const REQUIREMENT_DIGEST = `sha256:${"d".repeat(64)}`;
+const CHECK_DIGEST = `sha256:${"e".repeat(64)}`;
 
 function policyInput() {
 	return {
 		loop: "implementation",
 		candidateDigest: CANDIDATE_DIGEST,
+		catalogDigest: CATALOG_DIGEST,
 		selectorInputDigest: SELECTOR_DIGEST,
 		bindings: [
 			{
 				checkId: "acceptance_covered",
 				checkVersion: "1.0.0",
+				requirementDigest: REQUIREMENT_DIGEST,
+				checkDigest: CHECK_DIGEST,
 				enforcement: "require",
 				required: true,
 				parameters: { minimum: 1, evidence: "exact" },
@@ -28,6 +34,8 @@ function policyInput() {
 			{
 				checkId: "input_valid",
 				checkVersion: "1.0.0",
+				requirementDigest: REQUIREMENT_DIGEST,
+				checkDigest: CHECK_DIGEST,
 				enforcement: "require",
 				required: true,
 				parameters: {},
@@ -40,6 +48,8 @@ function policyInput() {
 			{
 				checkId: "ui_accessibility",
 				checkVersion: "1.0.0",
+				requirementDigest: REQUIREMENT_DIGEST,
+				checkDigest: CHECK_DIGEST,
 				reason: "not_applicable",
 				refs: ["change:CHG-1"],
 			},
@@ -75,6 +85,7 @@ describe("Resolved Exit Policy contracts", () => {
 			version: "1.0.0",
 			description: "Review maintainability independently.",
 			requirement: "Findings are specific and actionable.",
+			requirementDigest: REQUIREMENT_DIGEST,
 			execution: {
 				id: "codewiki.model-check",
 				version: "1.0.0",

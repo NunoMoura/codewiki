@@ -79,6 +79,14 @@ describe("Resolved Exit Policy resolver", () => {
 				(binding) => binding.required && binding.enforcement === "require",
 			),
 		);
+		assert.match(resolution.catalogDigest, /^sha256:[0-9a-f]{64}$/);
+		assert.ok(
+			resolution.bindings.every(
+				(binding) =>
+					/^sha256:[0-9a-f]{64}$/.test(binding.requirementDigest) &&
+					/^sha256:[0-9a-f]{64}$/.test(binding.checkDigest),
+			),
+		);
 		assert.doesNotThrow(() => assertValidResolvedExitPolicy(resolution));
 	});
 
@@ -154,6 +162,38 @@ describe("Resolved Exit Policy resolver", () => {
 		const second = resolveExitPolicy(right);
 		assert.equal(first.selectorInputDigest, second.selectorInputDigest);
 		assert.equal(first.policyDigest, second.policyDigest);
+	});
+
+	it("binds policy identity to exact Catalog content", () => {
+		const baselineInput = selectorInput("implementation");
+		const changedCatalogInput = selectorInput("implementation");
+		changedCatalogInput.projectRegistrations = [projectRegistration()];
+
+		const baseline = resolveExitPolicy(baselineInput);
+		const changedCatalog = resolveExitPolicy(changedCatalogInput);
+
+		assert.notEqual(baseline.catalogDigest, changedCatalog.catalogDigest);
+		assert.notEqual(baseline.selectorInputDigest, changedCatalog.selectorInputDigest);
+		assert.notEqual(baseline.policyDigest, changedCatalog.policyDigest);
+	});
+
+	it("creates different identity for the same Check definition in different Loops", () => {
+		const decision = resolveExitPolicy(selectorInput("decision"));
+		const implementation = resolveExitPolicy(selectorInput("implementation"));
+		const decisionBinding = decision.bindings.find(
+			(binding) => binding.checkId === "improvement_outcome_observable",
+		);
+		const implementationBinding = implementation.bindings.find(
+			(binding) => binding.checkId === "improvement_outcome_observable",
+		);
+
+		assert.ok(decisionBinding);
+		assert.ok(implementationBinding);
+		assert.equal(
+			decisionBinding.requirementDigest,
+			implementationBinding.requirementDigest,
+		);
+		assert.notEqual(decisionBinding.checkDigest, implementationBinding.checkDigest);
 	});
 
 	it("activates approved project Checks without granting progression authority", () => {

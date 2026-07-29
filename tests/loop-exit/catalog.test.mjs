@@ -66,6 +66,48 @@ describe("Check catalog", () => {
 				.map((entry) => entry.check.id)
 				.toSorted((left, right) => left.localeCompare(right)),
 		);
+		assert.match(catalog.digest, /^sha256:[0-9a-f]{64}$/);
+		assert.ok(
+			catalog
+				.list()
+				.every((entry) =>
+					/^sha256:[0-9a-f]{64}$/.test(entry.check.requirementDigest),
+				),
+		);
+	});
+
+	it("supports independent same-id Check definitions in disjoint Loops", () => {
+		const decision = projectRegistration({
+			loops: ["decision"],
+			check: {
+				...projectRegistration().check,
+				requirement: "Decision documentation intent is complete.",
+			},
+		});
+		const implementation = projectRegistration({
+			loops: ["implementation"],
+			check: {
+				...projectRegistration().check,
+				requirement: "Implementation documentation is current.",
+			},
+		});
+		const catalog = createCheckCatalog([decision, implementation]);
+		const reversed = createCheckCatalog([implementation, decision]);
+
+		assert.equal(catalog.digest, reversed.digest);
+		assert.equal(
+			catalog.get("project.documentation_current", "decision").check.requirement,
+			"Decision documentation intent is complete.",
+		);
+		assert.equal(
+			catalog.get("project.documentation_current", "implementation").check
+				.requirement,
+			"Implementation documentation is current.",
+		);
+		assert.throws(
+			() => catalog.get("project.documentation_current"),
+			/loop is required/,
+		);
 	});
 
 	it("allows only closed execution and evidence-adapter identities", () => {
@@ -99,7 +141,19 @@ describe("Check catalog", () => {
 		);
 	});
 
-	it("rejects all caller-declared authority", () => {
+	it("rejects caller-owned identity and authority", () => {
+		assert.throws(
+			() =>
+				createCheckCatalog([
+					projectRegistration({
+						check: {
+							...projectRegistration().check,
+							requirementDigest: `sha256:${"f".repeat(64)}`,
+						},
+					}),
+				]),
+			/cannot supply runtime-owned requirementDigest/,
+		);
 		for (const authority of ["project", "kernel", "official"]) {
 			assert.throws(
 				() =>
@@ -184,7 +238,7 @@ describe("Check catalog", () => {
 
 		assert.throws(
 			() => createCheckCatalog([first, second]),
-			/catalog dependency cycle includes project.first/,
+			/catalog dependency cycle includes implementation:project.first/,
 		);
 	});
 });

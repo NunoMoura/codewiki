@@ -3,6 +3,10 @@ import type {
 	CheckEnforcement,
 	CheckDefinition,
 } from "./contracts.ts";
+import {
+	canonicalJsonDigest,
+	checkRequirementDigest,
+} from "./identity.ts";
 
 export const CHECK_CATALOG_VERSION = "1.0.0";
 
@@ -43,14 +47,20 @@ export interface CheckRegistration {
 
 export interface CheckCatalog {
 	version: typeof CHECK_CATALOG_VERSION;
-	get(checkId: string): CheckRegistration | undefined;
+	digest: string;
+	get(checkId: string, loop?: SemanticLoop): CheckRegistration | undefined;
 	list(loop?: SemanticLoop): CheckRegistration[];
 }
 
 export type ProjectCheckRegistration = Omit<
 	CheckRegistration,
-	"authority"
-> & { authority?: never };
+	"authority" | "check"
+> & {
+	authority?: never;
+	check: Omit<CheckDefinition, "requirementDigest"> & {
+		requirementDigest?: never;
+	};
+};
 
 const DECISION_BASELINE = [
 	[
@@ -334,34 +344,47 @@ export function createCheckCatalog(
 				`Caller-supplied Check ${registration.check.id} cannot declare authority; the catalog assigns project authority.`,
 			);
 		}
-	}
-	const registrations = [
-		...CODEWIKI_CHECK_REGISTRATIONS,
-		...additional.map((registration) => ({
-			...registration,
-			authority: "project" as const,
-		})),
-	].map(normalizeRegistration);
-	const byId = new Map<string, CheckRegistration>();
-	for (const registration of registrations) {
-		validateRegistration(registration);
-		if (byId.has(registration.check.id)) {
+		if ("requirementDigest" in registration.check) {
 			throw new Error(
-				`Duplicate Check registration ${registration.check.id}.`,
+				`Caller-supplied Check ${registration.check.id} cannot supply runtime-owned requirementDigest.`,
 			);
 		}
-		byId.set(registration.check.id, registration);
+	}
+	const projectRegistrations: CheckRegistration[] = additional.map(
+		(registration) => ({
+			...registration,
+			check: {
+				...registration.check,
+				requirementDigest: checkRequirementDigest(
+					registration.check.requirement,
+				),
+			},
+			authority: "project" as const,
+		}),
+	);
+	const registrations = [
+		...CODEWIKI_CHECK_REGISTRATIONS,
+		...projectRegistrations,
+	]
+		.map(normalizeRegistration)
+		.sort(compareRegistrations);
+	const byKey = new Map<string, CheckRegistration>();
+	for (const registration of registrations) {
+		validateRegistration(registration);
+		for (const loop of registration.loops) {
+			const key = registrationKey(loop, registration.check.id);
+			if (byKey.has(key)) {
+				throw new Error(
+					`Duplicate Check registration ${registration.check.id} for ${loop}.`,
+				);
+			}
+			byKey.set(key, registration);
+		}
 	}
 	for (const registration of registrations) {
 		for (const dependency of registration.dependsOn) {
-			const dependencyRegistration = byId.get(dependency);
-			if (!dependencyRegistration) {
-				throw new Error(
-					`Check ${registration.check.id} has unknown catalog dependency ${dependency}.`,
-				);
-			}
 			for (const loop of registration.loops) {
-				if (!dependencyRegistration.loops.includes(loop)) {
+				if (!byKey.has(registrationKey(loop, dependency))) {
 					throw new Error(
 						`Check ${registration.check.id} dependency ${dependency} is not registered for ${loop}.`,
 					);
@@ -370,20 +393,34 @@ export function createCheckCatalog(
 		}
 	}
 	assertAcyclicCatalog(registrations);
+	const digest = canonicalJsonDigest({
+		version: CHECK_CATALOG_VERSION,
+		registrations,
+	});
 	return Object.freeze({
 		version: CHECK_CATALOG_VERSION,
-		get: (checkId: string) => cloneRegistration(byId.get(checkId)),
+		digest,
+		get: (checkId: string, loop?: SemanticLoop) => {
+			if (loop) {
+				return cloneRegistration(byKey.get(registrationKey(loop, checkId)));
+			}
+			const matches = registrations.filter(
+				(registration) => registration.check.id === checkId,
+			);
+			if (matches.length > 1) {
+				throw new Error(
+					`Check ${checkId} is registered independently for multiple loops; loop is required.`,
+				);
+			}
+			return cloneRegistration(matches[0]);
+		},
 		list: (loop?: SemanticLoop) =>
-			registrations
-				.flatMap((registration) => {
-					const clone = cloneRegistration(registration);
-					return (!loop || registration.loops.includes(loop)) && clone
-						? [clone]
-						: [];
-				})
-				.sort((left, right) =>
-					left.check.id.localeCompare(right.check.id),
-				),
+			registrations.flatMap((registration) => {
+				const clone = cloneRegistration(registration);
+				return (!loop || registration.loops.includes(loop)) && clone
+					? [clone]
+					: [];
+			}),
 	});
 }
 
@@ -434,6 +471,7 @@ function kernelRegistration(
 			version: "1.0.0",
 			description,
 			requirement: description,
+			requirementDigest: checkRequirementDigest(description),
 			execution: { id: executionId, version: "1.0.0", kind },
 			measurement: {
 				kind: kind === "model" ? "qualitative" : "quantitative",
@@ -481,6 +519,20 @@ function evidenceAdapters(
 	return ["change", "planning", "trace", "work-state"];
 }
 
+function registrationKey(loop: SemanticLoop, checkId: string): string {
+	return `${loop}:${checkId}`;
+}
+
+function compareRegistrations(
+	left: CheckRegistration,
+	right: CheckRegistration,
+): number {
+	return (
+		left.check.id.localeCompare(right.check.id) ||
+		left.loops.join(",").localeCompare(right.loops.join(","))
+	);
+}
+
 function normalizeRegistration(
 	registration: CheckRegistration,
 ): CheckRegistration {
@@ -488,18 +540,18 @@ function normalizeRegistration(
 		...registration,
 		check: {
 			...registration.check,
-			evidenceAdapterIds: unique(registration.check.evidenceAdapterIds),
+			evidenceAdapterIds: unique(registration.check.evidenceAdapterIds).sort(),
 			execution: { ...registration.check.execution },
 			measurement: { ...registration.check.measurement },
 		},
-		loops: unique(registration.loops),
+		loops: unique(registration.loops).sort(),
 		rolloutHistory: [...registration.rolloutHistory],
-		dependsOn: unique(registration.dependsOn),
+		dependsOn: unique(registration.dependsOn).sort(),
 		...(registration.approval
 			? {
 					approval: {
 						status: "approved",
-						refs: unique(registration.approval.refs),
+						refs: unique(registration.approval.refs).sort(),
 					},
 				}
 			: {}),
@@ -526,6 +578,12 @@ function validateCheckShape(
 	}
 	if (!check.requirement.trim() || registration.loops.length === 0) {
 		throw new Error(`Check ${check.id} requires one requirement and loops.`);
+	}
+	const expectedRequirementDigest = checkRequirementDigest(check.requirement);
+	if (check.requirementDigest !== expectedRequirementDigest) {
+		throw new Error(
+			`Check ${check.id} requirement digest mismatch: expected ${expectedRequirementDigest}.`,
+		);
 	}
 }
 
@@ -598,29 +656,29 @@ function validateProjectRollout(
 function assertAcyclicCatalog(
 	registrations: CheckRegistration[],
 ): void {
-	const byId = new Map(
-		registrations.map((registration) => [
-			registration.check.id,
-			registration,
-		]),
-	);
+	const byKey = new Map<string, CheckRegistration>();
+	for (const registration of registrations) {
+		for (const loop of registration.loops) {
+			byKey.set(registrationKey(loop, registration.check.id), registration);
+		}
+	}
 	const visiting = new Set<string>();
 	const visited = new Set<string>();
-	const visit = (checkId: string): void => {
-		if (visiting.has(checkId)) {
-			throw new Error(
-				`Check catalog dependency cycle includes ${checkId}.`,
-			);
+	const visit = (key: string): void => {
+		if (visiting.has(key)) {
+			throw new Error(`Check catalog dependency cycle includes ${key}.`);
 		}
-		if (visited.has(checkId)) return;
-		visiting.add(checkId);
-		for (const dependency of byId.get(checkId)?.dependsOn ?? []) {
-			visit(dependency);
+		if (visited.has(key)) return;
+		visiting.add(key);
+		const registration = byKey.get(key);
+		const loop = key.slice(0, key.indexOf(":")) as SemanticLoop;
+		for (const dependency of registration?.dependsOn ?? []) {
+			visit(registrationKey(loop, dependency));
 		}
-		visiting.delete(checkId);
-		visited.add(checkId);
+		visiting.delete(key);
+		visited.add(key);
 	};
-	for (const registration of registrations) visit(registration.check.id);
+	for (const key of byKey.keys()) visit(key);
 }
 
 function expectedProjectRolloutHistory(

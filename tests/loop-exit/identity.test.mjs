@@ -4,7 +4,9 @@ import {
 	assertSha256Digest,
 	canonicalJson,
 	canonicalJsonDigest,
+	checkRequirementDigest,
 	createLoopCandidate,
+	loopQualifiedCheckDigest,
 	toCanonicalJsonValue,
 } from "../../src/loop-exit/identity.ts";
 
@@ -87,6 +89,113 @@ describe("canonical Loop-exit identity", () => {
 		assert.equal(
 			canonicalJson({ left: shared, right: shared }),
 			'{"left":{"value":1},"right":{"value":1}}',
+		);
+	});
+});
+
+describe("Loop-qualified Check identity", () => {
+	function checkDefinition() {
+		const requirement = "Affected documentation is updated.";
+		return {
+			id: "project.documentation_current",
+			version: "1.0.0",
+			description: "Project documentation remains current.",
+			requirement,
+			requirementDigest: checkRequirementDigest(requirement),
+			execution: {
+				id: "codewiki.code-check",
+				version: "1.0.0",
+				kind: "code",
+			},
+			measurement: { kind: "quantitative", shape: "boolean" },
+			evidenceAdapterIds: ["source", "trace"],
+			repairTarget: "source",
+			cost: 1,
+			timeoutMs: 5_000,
+			protected: false,
+		};
+	}
+
+	it("binds Loop, exact Check definition, configuration, and Catalog", () => {
+		const check = checkDefinition();
+		const catalogDigest = `sha256:${"f".repeat(64)}`;
+		const original = loopQualifiedCheckDigest({
+			loop: "decision",
+			check,
+			configuration: { minimum: 1 },
+			catalogDigest,
+		});
+		const changedRequirement = "Documentation and examples are updated.";
+		const mutations = [
+			{ loop: "implementation", check, configuration: { minimum: 1 }, catalogDigest },
+			{
+				loop: "decision",
+				check: {
+					...check,
+					requirement: changedRequirement,
+					requirementDigest: checkRequirementDigest(changedRequirement),
+				},
+				configuration: { minimum: 1 },
+				catalogDigest,
+			},
+			{
+				loop: "decision",
+				check: {
+					...check,
+					execution: { ...check.execution, version: "1.0.1" },
+				},
+				configuration: { minimum: 1 },
+				catalogDigest,
+			},
+			{
+				loop: "decision",
+				check: {
+					...check,
+					measurement: { kind: "quantitative", shape: "count", minimum: 1 },
+				},
+				configuration: { minimum: 1 },
+				catalogDigest,
+			},
+			{
+				loop: "decision",
+				check: { ...check, evidenceAdapterIds: ["source"] },
+				configuration: { minimum: 1 },
+				catalogDigest,
+			},
+			{
+				loop: "decision",
+				check,
+				configuration: { minimum: 2 },
+				catalogDigest,
+			},
+			{
+				loop: "decision",
+				check,
+				configuration: { minimum: 1 },
+				catalogDigest: `sha256:${"e".repeat(64)}`,
+			},
+		];
+
+		assert.match(original, /^sha256:[0-9a-f]{64}$/);
+		for (const mutation of mutations) {
+			assert.notEqual(loopQualifiedCheckDigest(mutation), original);
+		}
+	});
+
+	it("rejects a requirement digest that does not match exact content", () => {
+		const check = checkDefinition();
+		assert.throws(
+			() =>
+				loopQualifiedCheckDigest({
+					loop: "decision",
+					check: {
+						...check,
+						requirement: "Different requirement.",
+					},
+					configuration: {},
+					catalogDigest: `sha256:${"f".repeat(64)}`,
+				}),
+			/requirement digest mismatch/,
 		);
 	});
 });

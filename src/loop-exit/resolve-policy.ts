@@ -22,6 +22,7 @@ import {
 	type CheckRegistration,
 	type CheckCatalog,
 } from "./catalog.ts";
+import { loopQualifiedCheckDigest } from "./identity.ts";
 
 const EXIT_POLICY_SELECTOR_VERSION = "1.0.0";
 
@@ -120,6 +121,7 @@ interface CheckActivationRule {
 interface NormalizedSelectorInput {
 	selectorVersion: typeof EXIT_POLICY_SELECTOR_VERSION;
 	catalogVersion: string;
+	catalogDigest: string;
 	loop: SemanticLoop;
 	candidateDigest: string;
 	changes: ChangeSelectorFacts[];
@@ -319,7 +321,11 @@ export function resolveExitPolicy(
 	input: ResolveExitPolicyInput,
 ): ResolvedExitPolicy {
 	const catalog = createCheckCatalog(input.projectRegistrations);
-	const selector = normalizeSelectorInput(input, catalog.version);
+	const selector = normalizeSelectorInput(
+		input,
+		catalog.version,
+		catalog.digest,
+	);
 	const active = new Map<string, MutableBinding>();
 	activateRules(active, catalog, selector);
 	activateApprovedAdditions(active, catalog, selector);
@@ -427,10 +433,13 @@ function resolvedPolicy(
 	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ): ResolvedExitPolicy {
-	const bindings = [...active.values()].map(toBinding);
+	const bindings = [...active.values()].map((binding) =>
+		toBinding(binding, selector.loop, catalog.digest),
+	);
 	return createResolvedExitPolicy({
 		loop: selector.loop,
 		candidateDigest: selector.candidateDigest,
+		catalogDigest: catalog.digest,
 		selectorInputDigest: resolvedExitPolicyDigest(selector),
 		bindings,
 		exclusions: resolvedExclusions(active, catalog, selector),
@@ -461,6 +470,13 @@ function resolvedExclusions(
 			{
 				checkId,
 				checkVersion: registration.check.version,
+				requirementDigest: registration.check.requirementDigest,
+				checkDigest: loopQualifiedCheckDigest({
+					loop: selector.loop,
+					check: registration.check,
+					configuration: {},
+					catalogDigest: catalog.digest,
+				}),
 				reason: approved?.reason ?? ("not_applicable" as const),
 				refs: approved
 					? unique([approved.authorityRef, ...approved.refs])
@@ -473,6 +489,7 @@ function resolvedExclusions(
 function normalizeSelectorInput(
 	input: ResolveExitPolicyInput,
 	catalogVersion: string,
+	catalogDigest: string,
 ): NormalizedSelectorInput {
 	assertValidSelectorInput(input);
 	const additions = optionalValues(input.approvedAdditions);
@@ -481,6 +498,7 @@ function normalizeSelectorInput(
 	return {
 		selectorVersion: EXIT_POLICY_SELECTOR_VERSION,
 		catalogVersion,
+		catalogDigest,
 		loop: input.loop,
 		candidateDigest: input.candidateDigest,
 		changes: [...input.changes]
@@ -679,12 +697,12 @@ function requiredRegistration(
 	loop: SemanticLoop,
 	checkVersion?: string,
 ): CheckRegistration {
-	const registration = catalog.get(checkId);
-	if (!registration) throw new Error(`Unknown Check ${checkId}.`);
-	if (!registration.loops.includes(loop)) {
-		throw new Error(
-			`Check ${checkId} is not registered for ${loop}.`,
-		);
+	const registration = catalog.get(checkId, loop);
+	if (!registration) {
+		if (catalog.list().some((entry) => entry.check.id === checkId)) {
+			throw new Error(`Check ${checkId} is not registered for ${loop}.`);
+		}
+		throw new Error(`Unknown Check ${checkId}.`);
 	}
 	if (checkVersion && registration.check.version !== checkVersion) {
 		throw new Error(
@@ -694,10 +712,21 @@ function requiredRegistration(
 	return registration;
 }
 
-function toBinding(binding: MutableBinding): CheckBinding {
+function toBinding(
+	binding: MutableBinding,
+	loop: SemanticLoop,
+	catalogDigest: string,
+): CheckBinding {
 	return {
 		checkId: binding.registration.check.id,
 		checkVersion: binding.registration.check.version,
+		requirementDigest: binding.registration.check.requirementDigest,
+		checkDigest: loopQualifiedCheckDigest({
+			loop,
+			check: binding.registration.check,
+			configuration: binding.parameters,
+			catalogDigest,
+		}),
 		enforcement: binding.enforcement,
 		required: binding.required,
 		parameters: sortObject(binding.parameters),
