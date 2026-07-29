@@ -297,7 +297,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [ ] Add startup validation for unique rule identities, known Loop-qualified Checks, KB/catalog agreement, implementation refs, and dependency acyclicity.
 - [ ] Add `ui_preview_targets_valid` to Planning and replace ambiguous cross-Loop release/security/accessibility/dependency semantics with Loop-specific Checks.
 - [x] Add strict shared canonical JSON/digest utilities and migrate the native policy identity off its local stable-stringify implementation.
-- [ ] Add constructors that derive and validate Check Result and Exit Report status; reject missing, duplicate, contradictory, wrong-candidate, wrong-policy, and wrong-measurement data.
+- [x] Add immutable Runtime-owned Check Result and Exit Report constructors that derive canonical status and identity; reject caller-owned identity/status, missing or duplicate required Results, contradictory measurements, and wrong-candidate, wrong-policy, wrong-Check, wrong-execution, or wrong-measurement data.
 
 ## Next — OKF v0.2 cut
 

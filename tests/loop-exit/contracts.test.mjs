@@ -114,24 +114,6 @@ describe("Resolved Exit Policy contracts", () => {
 		assert.equal(binding.enforcement, "warn");
 	});
 
-	it("represents operational failure as indeterminate Check Result", () => {
-		const result = {
-			checkId: "maintainability_reviewed",
-			checkVersion: "1.0.0",
-			candidateDigest: CANDIDATE_DIGEST,
-			status: "indeterminate",
-			evidenceRefs: [],
-			findings: ["Model provider unavailable."],
-			execution: {
-				id: "codewiki.model-check",
-				version: "1.0.0",
-				modelRef: "pi:model-route",
-			},
-		};
-		assert.equal(result.status, "indeterminate");
-		assert.notEqual(result.status, "fail");
-	});
-
 	it("rejects protected omissions and inactive dependencies", () => {
 		const missingProtected = policyInput();
 		missingProtected.bindings = missingProtected.bindings

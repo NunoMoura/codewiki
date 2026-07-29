@@ -85,6 +85,7 @@ export type CheckMeasurement =
 export interface CheckExecutionIdentity {
 	id: string;
 	version: string;
+	kind: CheckExecutionKind;
 	adapterVersion?: string;
 	modelRef?: string;
 	configurationDigest?: string;
@@ -92,25 +93,42 @@ export interface CheckExecutionIdentity {
 	aggregationPolicy?: string;
 }
 
+export interface CheckThreshold {
+	minimum?: number;
+	maximum?: number;
+}
+
 export interface CheckResult {
+	schemaVersion: typeof LOOP_EXIT_SCHEMA_VERSION;
 	checkId: string;
 	checkVersion: string;
+	requirementDigest: string;
+	checkDigest: string;
 	candidateDigest: string;
+	policyDigest: string;
 	status: CheckResultStatus;
 	measurement?: CheckMeasurement;
+	threshold?: CheckThreshold;
 	evidenceRefs: string[];
+	evidenceInputDigests: string[];
 	findings: string[];
+	issueClass?: string;
+	repairTarget: string;
 	feedback?: string;
 	execution: CheckExecutionIdentity;
+	resultDigest: string;
 }
 
 export interface ExitReport {
 	schemaVersion: typeof LOOP_EXIT_SCHEMA_VERSION;
+	reductionVersion: string;
 	loop: SemanticLoop;
 	candidateDigest: string;
+	catalogDigest: string;
 	policyDigest: string;
 	status: ExitReportStatus;
 	checkResults: CheckResult[];
+	reportDigest: string;
 }
 
 export interface CheckExclusion {

@@ -32,7 +32,7 @@ describe("Loop exit runtime composition", () => {
 		);
 	});
 
-	it("owns a frozen closed catalog without changing production Loops", () => {
+	it("owns frozen Catalog and result constructors without changing production Loops", () => {
 		const runtime = createLoopExitRuntime();
 
 		assert.equal(runtime.suite, LOOP_EXIT_SUITE);
@@ -45,5 +45,7 @@ describe("Loop exit runtime composition", () => {
 		assert.ok(runtime.catalog.list("decision").length > 0);
 		assert.ok(runtime.catalog.list("planning").length > 0);
 		assert.ok(runtime.catalog.list("implementation").length > 0);
+		assert.equal(typeof runtime.createCheckResult, "function");
+		assert.equal(typeof runtime.createExitReport, "function");
 	});
 });
