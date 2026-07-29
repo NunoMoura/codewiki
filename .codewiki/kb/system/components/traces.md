@@ -106,7 +106,7 @@ tail_checkpoint  # optional derived replay aid
 trace_close       # terminal retention boundary
 ```
 
-No hidden Change Git refs, Sprint trace store, central catalog, SQLite/graph authority, canonical WorkState, lesson store, or full session log exists. Backlog, Planning, Implementation, Change dossier, Work/Alignment/Learning graphs, and dashboard state are rebuildable projections.
+No hidden Change Git refs, Sprint trace store, central catalog, Evidence database, mutable approval store, SQLite/graph authority, canonical WorkState, lesson store, or full session log exists. Backlog, Planning, Implementation, Change dossier, Work/Alignment/Learning graphs, and dashboard state are rebuildable projections.
 
 ## Identity
 
@@ -140,6 +140,7 @@ One semantic attempt persists compact:
 - exact trigger/input/snapshot refs;
 - Loop Protocol identity;
 - candidate id/digest/schema and parent/repair candidate refs;
+- compact immutable Evidence Records with exact subject/provenance/artifact/authority/coverage/privacy metadata;
 - Resolved Exit Policy id/digest and Check bindings;
 - completed Check Results with measurements/status/findings/issue classes/repair targets/evidence refs;
 - immutable Exit Report id/status/reduction version;
@@ -172,6 +173,14 @@ One semantic attempt persists compact:
 
 Passed, failed, and indeterminate attempts persist. Full failed patches, prompts, reasoning, raw output, private Workbenches, and credentials do not.
 
+### Evidence Records inside trace events
+
+An Evidence Record is an immutable content-addressed entity represented in typed trace-event data, not a new top-level JSONL record type or separate store. It binds exact Change/revision and optional candidate/source-tree subject, acceptance requirements, producer, provenance, artifact digest/ref, Runtime-owned observation time, freshness, authority class, coverage, sensitivity, and closed kind-specific payload. Large or private bytes remain in source, Git, provider, or content-addressed artifact storage.
+
+Evidence created before candidate construction is later bound through candidate observed-base ids/digests. Candidate-derived evidence binds that candidate directly. Check Results cite exact consumed Evidence Record identities. Shared evidence has one owning observation record; other Changes cite it without inheriting acceptance.
+
+Pull-request Validation Bundles remain mutable projections. Authenticated provider review becomes canonical only as an approval-receipt Evidence Record after Runtime verifies exact repository, pull request, head, reviewer role, decision, provider event, bundle digest, and freshness. Request changes feedback remains attached to the exact candidate and later repair lineage.
+
 ### `tail_checkpoint`
 
 Derived replay accelerator bound to exact source tail and schema/digests. It cannot override event history. Historical policy/Report meaning comes from persisted identities, never current catalog.
@@ -194,15 +203,16 @@ implementation.*
 
 Detailed facts belong in typed data, not event-name proliferation.
 
-Runtime coordination includes Claims, Assignment release/expiry/cancellation, worker/host observations, Integration proof, project-branch merge, push, product publication, release, and future bounded observation. Runtime events cannot approve Change meaning, invent Planning, or accept realization without exact passed semantic evidence.
+Runtime coordination includes Claims, Assignment release/expiry/cancellation, worker/host observations, guarded review publication/observation, Integration proof, project-branch merge, push, product publication, release, and future bounded observation. Runtime events cannot approve Change meaning, invent Planning, or accept realization without exact passed semantic evidence.
 
 ## Candidate and exit identity
 
 Trace must prove what was evaluated:
 
 - Candidate binds Loop, schema/content, exact Change/Planning revision, Knowledge/WorkState snapshot, source/Git base, and runtime-derived facts.
+- Evidence Record binds exact subject, producer, provenance, artifact, observation/freshness, authority/coverage/sensitivity, and typed payload.
 - Check binding binds Loop, id/version/content, execution/measurement/evidence/implementation contracts, parameters, threshold, and enforcement.
-- Check Result binds candidate, resolved Check, implementation/model/configuration, evidence inputs, measurement, threshold, findings/status, and trial identity.
+- Check Result binds candidate, resolved Check, implementation/model/configuration, exact Evidence Record inputs, measurement, threshold, findings/status, and trial identity.
 - Exit Report binds candidate, policy digest, complete Result set, deterministic reduction version, and status.
 
 Validated constructors reject missing/duplicate/wrong Results, contradictory status, invalid thresholds/measurements, stale policy, wrong candidate, and fabricated authority.
@@ -269,7 +279,7 @@ Candidate producers may receive bounded scoped successful and harmful evidence. 
 - OKF Knowledge and provenance refs;
 - source/test paths and ownership refs;
 - Git commits/trees/restore refs;
-- Integration, remote, artifact, delivery, and observation digests.
+- Evidence Record, approval receipt, review publication/provider event, Integration, remote, artifact, delivery, and observation digests.
 
 Commands, summaries, findings, remediation, measurements, and outcome disposition belong in typed `data`. Credentials, prompts, private reasoning, full diffs, unrestricted paths, raw tool/model output, and Workbench contents belong in neither.
 
@@ -279,7 +289,7 @@ Commands, summaries, findings, remediation, measurements, and outcome dispositio
 .codewiki/runtime/**
 ```
 
-May contain proposed/failed candidate material, Workbenches, Assignment packets, Worker Reports, bounded logs, caches, and recovery packets. It is private, bounded, disposable after proof, and not authority.
+May contain proposed/failed candidate material, Workbenches, Assignment packets, Worker Reports, bounded logs, screenshots/videos/captured pages, caches, and recovery packets. It is private, bounded, disposable after proof, and not authority.
 
 Optional learning cache lives under `.codewiki/runtime/learning/**` and is fully reconstructible. User-facing generated views live under `.codewiki/views/**`.
 
@@ -305,7 +315,7 @@ Current schemas still use legacy event names and Quality graph/Standard/diagnost
 
 ## Non-goals
 
-- No hidden Change store, Sprint trace, central catalog, database, or canonical graph.
+- No hidden Change store, Sprint trace, central catalog, Evidence database, mutable approval store, or canonical graph.
 - No full cognition replay or generic mutation patches.
 - No fourth semantic or learning Loop.
 - No first-class Lesson, Memory, Todo, or Quality Issue entity.
@@ -317,6 +327,7 @@ Current schemas still use legacy event names and Quality graph/Standard/diagnost
 - [WorkState](work-state.md)
 - [Alignment Model](alignment-model.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)
 - [Decision Loop](decision-loop.md)

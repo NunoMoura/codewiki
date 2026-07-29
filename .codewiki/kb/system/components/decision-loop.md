@@ -105,6 +105,7 @@ Decision input binds:
 - relevant WorkState and relationship snapshot;
 - current trace tail and prior revision refs;
 - current Knowledge/source/test/Git/active-work refs;
+- exact source-observation and research-citation Evidence Record refs where activated;
 - authenticated trigger and authority refs;
 - route-back question and originating refs when applicable;
 - exact Loop Protocol, model route, and configuration identities.
@@ -127,6 +128,7 @@ It does not contain canonical candidate id, approval receipt, actor identity, ap
 
 ```text
 load one Change and bounded project facts
+→ materialize required source/research Evidence Records
 → interpret under Decision Loop Protocol
 → produce immutable role-specific candidate
 → resolve candidate-specific Decision Exit Policy
@@ -148,8 +150,10 @@ Final Check definitions are Loop-qualified and versioned. Current legacy IDs are
 | Intent preservation | Current state, desired state, rationale, and non-goals are coherent. |
 | User/project value | Outcome is concrete and observable where possible. |
 | Outcome contract | Success evidence and later observation expectations are bounded. |
-| Current-state grounding | Canonical Knowledge/source/test/trace/Git refs support claims. |
-| Evidence sufficiency | Evidence is proportional to claim and risk. |
+| Current-state grounding | Canonical Knowledge/source/test/trace/Git Evidence Records support claims. |
+| Research provenance | Activated external claims bind exact source classification, publisher, URI, passage/artifact digest, publication/retrieval facts, limitations, and freshness. |
+| Research claim support | Independent evaluation establishes support, contradiction, overstatement, alternatives, and uncertainty. |
+| Evidence sufficiency | Typed evidence coverage is proportional to claim and risk. |
 | Recommendation justification | Recommendation and alternatives are explicit. |
 | Exact approval safety | Runtime-observed authority binds exact candidate/revision. |
 | Risk and rollback | Failure modes, invariants, compatibility, rollback, and negative boundaries are proportional. |
@@ -161,6 +165,16 @@ Final Check definitions are Loop-qualified and versioned. Current legacy IDs are
 Protected kernel Checks cannot be disabled. Project Checks begin `observe`, then `warn`, and become `require` only through explicit approval. Runtime records `activatedBy` for every binding.
 
 Decision uses the `decision` model route for candidate production. Model Checks run independently and inherit calibrated Loop routes unless an approved Check definition says otherwise. No caller-selected review slot exists.
+
+## Research evidence
+
+Research supports Decision claims but does not become accepted Knowledge or authority automatically. Deterministic activation may require research for unknown current state, external provider/API dependency, security/privacy or regulatory claims, migration/compatibility risk, unfamiliar technology, or another accepted high-risk trait.
+
+Runtime materializes `research_citation` Evidence Records from bounded source material. Each record binds exact claim, primary/secondary source classification, publisher, URI, captured passage or artifact digest, publication/retrieval facts, support or contradiction, limitations, authority/coverage/sensitivity, and Runtime observation time. A mutable URL alone is not durable proof.
+
+Code Checks validate provenance, freshness, artifact availability, and source independence. Independent Model Checks evaluate whether citations support claims without overstatement, whether contradictions and alternatives are accounted for, and whether coverage is proportional to risk. Required unavailable, stale, partial, or conflicting research is repaired or `indeterminate`, never fabricated support. Authenticated Decision approval remains separate.
+
+Current executable Decision evidence still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. The clean Decision cut replaces that behavior with typed Evidence Records and exact claim-level Checks.
 
 ## Exit and route
 
@@ -229,6 +243,7 @@ Planning or Implementation cites exact originating candidate/event and required 
 - [WorkState](work-state.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)

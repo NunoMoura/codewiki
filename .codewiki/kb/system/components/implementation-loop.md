@@ -53,9 +53,9 @@ Workers perform Assignment attempts inside private Workbenches. They do not own 
 
 ```text
 planned obligation
-→ Assignment/worker evidence or direct bounded realization
+→ Assignment/worker Evidence Records or direct bounded realization
 → exact source/test/Git candidate
-→ Implementation Checks
+→ Implementation Checks and UI review when activated
 → Exit Report
 → Runtime freshness/authority/CAS guard
 → accepted realization or remediation append
@@ -116,7 +116,8 @@ Loop-owned immutable `ImplementationCandidateContent` describes the exact realiz
 - Worker Report/Assignment/Workbench provenance;
 - Integration state and conflict findings;
 - source ownership/component/test alignment;
-- preview/experience evidence when required;
+- preview/experience Evidence Record refs when required;
+- authenticated approval-receipt refs when subjective acceptance is required;
 - residual issues, uncertainty, and outcome disposition;
 - route-back questions.
 
@@ -169,9 +170,21 @@ Adaptive activation may add Checks for TDD, security/privacy, accessibility/UI p
 
 Actual candidate effects may add required Checks but cannot silently remove frozen Planning minimums. Every active Check records `activatedBy`.
 
-Tool output is evidence only. Pi-Lens, LSP, compiler, linter, browser, AST, test, and Skill output becomes authoritative only if an approved Code Check runs/normalizes it under exact implementation/configuration identity. Pi-Lens is not an authoritative Check adapter in v1.
+Tool output is evidence material only. Pi-Lens, LSP, compiler, linter, browser, AST, test, and Skill output becomes an Evidence Record only after Runtime validates a closed kind-specific contract; it becomes authoritative for exit only when an approved Check consumes it under exact implementation/configuration identity. Pi-Lens is not an authoritative Check adapter in v1.
 
-Timeout, unavailable service, malformed model output, cancellation, and operational failure are `indeterminate`, not score zero or fabricated candidate failure.
+For user-visible UI Changes, Planning activates exact preview targets and Implementation normally requires candidate-bound screenshots and short interaction videos, objective preview-manifest validation, bounded independent experience review, and authenticated user or delegated-role approval. Workers may capture artifacts but cannot approve them. A mutable live link supplements immutable media and manifest digests.
+
+Timeout, unavailable service, malformed model output, missing review artifact, cancellation, and operational failure are `indeterminate`, not score zero or fabricated candidate failure.
+
+## User and team review
+
+CodeWiki owns the canonical Change dossier, Evidence Records, Results, approval freshness, and Exit Report. Dashboard review is always available; team policy may additionally require a pull-request review surface. CodeWiki publishes a bounded Validation Bundle with exact intent, acceptance requirements, candidate/tree/head, Check status, screenshots, short videos, preview link, findings, reviewer roles, and dossier link. A provider review becomes an approval receipt only after Runtime re-observes authenticated actor, role, repository, pull request, exact head, decision, bundle digest, and provider event.
+
+Review does not require duplicate approval. An approval made through an allowed dashboard or pull-request channel is normalized once and projected to the other surface where possible. New source, candidate, head, preview target/profile, capture manifest, or media bundle invalidates dependent approval.
+
+Request changes feedback remains in the same Change Trace while accountable intent is stable and creates a new Implementation candidate. Scope/Work Item/preview-plan changes route to Planning; Product behavior, accepted meaning, material risk, or authority changes route to Decision; materially different outcome creates a linked Change.
+
+When pull-request approval is required before exit, Runtime may perform an explicitly authorized review-publication effect after required non-approval review-readiness Checks pass. It may push only an isolated review ref and create/update a draft pull request under exact CAS and privacy policy. It cannot move the project branch, auto-merge, force-push, publish a product artifact, or claim semantic exit. Final Exit Report still waits for approval-backed Result fan-in.
 
 ## Repair cycle
 
@@ -267,6 +280,7 @@ Current event payloads still include legacy `qualityGraph`, `qualityStandards`, 
 - [WorkState](work-state.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)

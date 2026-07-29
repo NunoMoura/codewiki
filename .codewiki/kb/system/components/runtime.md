@@ -107,14 +107,15 @@ Future OpenClaw support may implement client or Assignment execution adapters. I
 Runtime exclusively owns:
 
 - WorkState refresh, projection, invalidation, and impact-bounded Loop selection;
-- candidate, Resolved Exit Policy, Check Result, Exit Report, semantic-job, and effect-job identity;
+- candidate, Evidence Record, Resolved Exit Policy, Check Result, Exit Report, semantic-job, and effect-job identity;
+- evidence normalization, artifact/provenance/freshness/privacy validation, approval-receipt correlation, and contradiction preservation;
 - Check activation, thresholds, freshness, scheduling, caching, cancellation, and required-result fan-in;
 - generation fencing, exact CAS, idempotency, and recovery;
 - append to `.codewiki/traces/**`;
 - Planning epoch preflight and partial-commit repair;
 - Work Item readiness, Claims, Assignments, Workbench activation, and worker lifecycle;
 - Integration workspace lifecycle and exact proof;
-- guarded merge, push, publication, release, and future deployment effects;
+- guarded pre-exit review publication plus post-exit merge, push, publication, release, and future deployment effects;
 - bounded budgets, capacity, retries, supervision, temporary artifacts, retention, and cleanup.
 
 Runtime cannot:
@@ -298,10 +299,13 @@ Integration proof does not merge the project branch, push, publish, release, dep
 
 ## Separately guarded effects
 
-Every boundary below requires exact canonical predecessor proof, elected-generation ownership, target CAS, explicit capability, and its own authority:
+Every boundary below requires exact canonical predecessor proof, elected-generation ownership, target CAS, explicit capability, and its own authority. Review publication is the only permitted pre-exit external project-publication/mutation effect and exists solely to gather required human/team evidence; provider/model/research reads remain bounded observations, not project progression:
 
 ```text
-passed Implementation exit
+exact pending Implementation candidate
+→ optional guarded review publication to isolated ref + draft pull request
+→ approval/request-changes Evidence Records
+→ final Implementation Exit Report
 → Integration proof
 → optional project-branch fast-forward merge
 → optional remote push
@@ -309,6 +313,12 @@ passed Implementation exit
 → optional release
 → future deployment/observation
 ```
+
+### Review publication
+
+After all required non-approval work needed for safe review is complete, Runtime may publish an exact Validation Bundle under explicit project/user authority. It binds candidate/tree/head, destination CAS, provider adapter/configuration, idempotency, privacy policy, preview artifact digests, required reviewer roles, and post-operation observation. It may push only an isolated review ref and create or update a draft pull request. It cannot target the project/protected branch, force-push, auto-merge, publish a product artifact, claim semantic exit, or transfer provider authority into CodeWiki.
+
+Provider reviews are untrusted observations until Runtime revalidates repository, pull request, exact head, authenticated reviewer/role, decision, event identity, bundle digest, and freshness into an approval-receipt Evidence Record. Head/candidate/bundle drift invalidates approval. Projects that forbid review publication collect approval through CodeWiki and publish the pull request only after exit.
 
 ### Project branch merge
 
@@ -355,13 +365,13 @@ Runtime is sole canonical trace writer. Before append it verifies:
 - no prior close record;
 - effect-specific predecessor proof when applicable.
 
-Semantic sessions and workers return candidates/evidence. Model Checks return Results. None appends directly.
+Semantic sessions and workers return candidate or evidence material. Runtime alone materializes canonical Evidence Records. Model Checks return bounded observations used to construct Results. None appends directly.
 
 ## Retention, learning, and cleanup
 
 Private runtime material lives under bounded `.codewiki/runtime/**`. Failed patches, Workbenches, raw tool/model output, credentials, and private reasoning never enter Change Traces.
 
-Compact reusable observations persist in traces and exact Git/artifact refs. Repair Episodes/Patterns and graph indexes are derived in memory or disposable `.codewiki/runtime/learning/**`. User-facing views remain disposable `.codewiki/views/**`.
+Compact reusable Evidence Records persist in traces while exact source, Git, provider, and content-addressed artifact bytes remain in their owning boundaries. Screenshots/videos/captured pages and bounded outputs follow explicit retention and privacy policy; closure cannot delete the only required artifact before durable replacement or retention proof. Repair Episodes/Patterns and graph indexes are derived in memory or disposable `.codewiki/runtime/learning/**`. User-facing views and pull-request Validation Bundles remain projections, not authority.
 
 Cleanup failure cannot corrupt semantic state. Closed traces compact only after Git restore refs preserve full history and no live Planning, Assignment, Integration, preview, observation, or recovery dependency remains.
 
@@ -374,6 +384,7 @@ CodeWiki does not load or dogfood its own extension in this source repository du
 - [WorkState](work-state.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)

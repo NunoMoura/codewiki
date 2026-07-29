@@ -51,7 +51,7 @@ Rules:
 - read operations use bounded selectors and report coverage/truncation/staleness;
 - write/effect operations distinguish preview from explicit apply/append;
 - Runtime holds exact trace bytes/sequence, generation, snapshot, candidate identity, CAS, canonical actor/time, and idempotency;
-- client inputs contain only intent, evidence, authority, or control facts they legitimately own;
+- client inputs contain only intent, evidence material, authority, or control facts they legitimately own; Runtime alone creates canonical Evidence Records;
 - mutation endpoints are sequential/idempotent and fail closed on stale state;
 - no mega-tool, user-authored Loop DSL, arbitrary shell, arbitrary model prompt, or generic graph mutation endpoint;
 - credentials and provider auth remain inside Pi/host adapters;
@@ -65,14 +65,16 @@ Target capability groups:
 | --- | --- | --- |
 | State | Read bounded WorkState, Change dossier, Loop exit, blockers, delivery, and next-safe-action projections. | Read-only derived data. |
 | Change | Submit/revise/link/split/merge/defer/reject/withdraw pending intent. | Creates Decision intake only; no approval/execution. |
-| Authority | Submit exact user/maintainer approval or intervention response. | Runtime authenticates and binds exact candidate/revision/effect. |
+| Authority | Submit exact user/maintainer approval or intervention response. | Runtime authenticates and binds exact candidate/revision/effect into approval-receipt Evidence Record. |
+| Evidence | Submit bounded kind-specific material or read exact Evidence Record/artifact projections. | Runtime owns identity/time/authority/coverage/freshness; no verdict or route in payload. |
+| Review | Read Validation Bundle; Approve / Request changes; request explicitly authorized draft-PR publication. | One correlated action; no direct append, merge, branch movement, or acceptance. |
 | Project query | Read bounded Work, Alignment, and Learning relationships. | Snapshot-bound, read-only, provenance-bearing. |
 | Configuration | Read/propose schema-defined changes below authority ceilings. | No Check suppression, threshold lowering, credential mutation, or hidden execution. |
 | Runtime control | Inspect/pause/resume/cancel according to policy. | No semantic selection or truth mutation by payload. |
-| Preview | Manage declared local preview targets and evidence capture. | Evidence only; no acceptance. |
+| Preview | Manage declared local preview targets and screenshot/video capture. | Evidence material only; no acceptance. |
 | Feedback Bundle | Generate local allowlisted diagnostic preview. | Export requires separate user approval. |
 
-Archive/retention, Integration, merge, push, publication, release, and deployment are Runtime/effect APIs, not ordinary model-active tools.
+Archive/retention, guarded review publication, Integration, merge, push, product publication, release, and deployment are Runtime/effect APIs, not ordinary model-active tools.
 
 ## Semantic session surface
 
@@ -226,6 +228,7 @@ If weight/version coupling warrants, optional client/execution adapters may spli
 - [CodeWiki API](api.md)
 - [Loop Exit](loop-exit.md)
 - [Runtime](runtime.md)
+- [Evidence Records](evidence.md)
 - [Session Coordination](session-coordination.md)
 - [Extension](extension.md)
 - [Traces](traces.md)

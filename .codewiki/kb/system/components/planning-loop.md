@@ -174,7 +174,8 @@ Each Work Item includes:
 - stable acceptance requirements and verification;
 - components/path/test scope and dependencies;
 - Workbench context/capability/Skill/tool/isolation needs;
-- minimum required Checks/evidence and budget class;
+- minimum required Checks and typed Evidence Record obligations, including accepted kinds, producer/authority class, freshness, coverage, artifact and privacy requirements;
+- for user-visible UI work, exact routes/scenarios/states/viewports, screenshot/video obligations, required reviewer roles, and allowed review channel;
 - optional trigger;
 - uncertainty and worker-readiness rationale.
 
@@ -194,14 +195,15 @@ Omitted Skill scope preserves normal Pi discovery. Planning may narrow but canno
 | Dependency closure | References exist, graph is acyclic, and overlap is ordered. |
 | Claimed work stability | Replanning never silently mutates active Assignments. |
 | Integration safety | Worktrees, combined-tree checks, preview, merge, and rollback are explicit where needed. |
-| UI preview targets | Every binding freezes canonical target/profile identity and stays within participant authority. |
-| Workbench buildability | Context, capability, Skill/tool scope, isolation, minimum Checks, evidence, and budget can form a bounded Workbench. |
+| UI preview targets | Every binding freezes canonical target/profile, route/scenario/state/viewport, media, freshness, privacy, and reviewer-role obligations within participant authority. |
+| Evidence obligations | Required kinds, producer/authority class, coverage, artifact availability, contradiction handling, and retention are explicit and executable. |
+| Workbench buildability | Context, capability, Skill/tool scope, isolation, minimum Checks, Evidence Records, and budget can form a bounded Workbench. |
 | Uncertainty ownership | Ambiguity is repaired or routed to Decision. |
 | Trigger validity | Scheduled/event/manual triggers have bounded execution/concurrency policy. |
 | Resolution accountability | Deferral, already-realized, Knowledge-only, supersession, and route-back carry evidence. |
 | Canonical traceability | Change, Knowledge, source/test, Git, trace, and digest refs are valid. |
 
-The executable Check Catalog includes Planning-only `ui_preview_targets_valid` when UI scope activates it. Release-producing work activates Planning-specific release-plan safety rather than Implementation effect approval. Global Check ids cannot silently inherit another Loop's description or repair target.
+The executable Check Catalog includes Planning-only `ui_preview_targets_valid` when UI scope activates it. This Check validates that Work Items can produce exact candidate-bound screenshots/videos and approval evidence; it does not approve the eventual experience. Release-producing work activates Planning-specific release-plan safety rather than Implementation effect approval. Global Check ids cannot silently inherit another Loop's description or repair target.
 
 Protected kernel Checks cannot be disabled. Planning minimums become frozen obligations for downstream Workbenches/Implementation; actual effects may add but never silently remove them.
 
@@ -268,6 +270,7 @@ Current event names, payload fields, and legacy exit-view filename remain execut
 - [WorkState](work-state.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)

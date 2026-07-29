@@ -36,11 +36,14 @@ User-facing explanations distinguish:
 - **Change**: accountable intent and complete durable dossier;
 - **Semantic Loop**: Decision, Planning, or Implementation only;
 - **Candidate**: exact immutable output proposed by one Loop attempt;
-- **Check**: one versioned requirement/execution/measurement contract;
+- **Evidence Record**: immutable typed observation with no verdict or route authority;
+- **Check**: one versioned requirement/execution/measurement/evidence contract;
 - **Code Check** versus **Model Check**: deterministic CodeWiki code versus independent bounded Pi session;
 - **Check Result**: one exact Check outcome;
 - **Resolved Exit Policy**: candidate-specific active Check contract;
 - **Exit Report**: complete deterministic aggregate for exact candidate;
+- **Validation Bundle**: mutable CodeWiki/pull-request review projection, not approval;
+- **Approval receipt**: Runtime-correlated authenticated approval Evidence Record;
 - **Runtime route**: next action, separate from Report status;
 - **Work Item**: Planning-owned worker-ready outcome;
 - **Claim**: temporary execution authority;

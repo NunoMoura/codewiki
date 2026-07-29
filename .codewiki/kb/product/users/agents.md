@@ -18,12 +18,12 @@ Agents use CodeWiki as accountable project state through standalone CLI, dashboa
 - Agents begin from bounded WorkState/Change/relationship context rather than full Knowledge or trace history.
 - Candidate producers follow exact Decision, Planning, or Implementation Loop Protocol and return role-specific immutable candidate content.
 - Model Checks are independent from producer conversation and learning context.
-- Workers receive one private Assignment-scoped Workbench and return immutable Worker Report evidence only.
+- Workers receive one private Assignment-scoped Workbench and return immutable Worker Report and artifact material only; Runtime decides whether it can become an Evidence Record.
 - Agents can use normal Pi Skills and scoped tools, but none grants paths, authority, Check changes, routing, acceptance, or effects.
 - Work/Alignment/Learning queries report snapshot, provenance, authority, coverage, truncation, and staleness.
 - Ambiguous intent routes to Decision; plan/scope/dependency ambiguity routes to Planning; Runtime/provider/environment failure does not become candidate failure.
 - Failed and indeterminate Results provide concise issue classes, repair targets, and evidence refs.
-- Agents never write canonical traces directly or treat completion/tool success as acceptance.
+- Agents may produce research citations, command observations, screenshots, and short videos under bounded contracts, but cannot assign canonical Evidence identity/time/authority/coverage or treat completion/tool/media success as acceptance.
 
 ## Related docs
 
@@ -33,3 +33,4 @@ Agents use CodeWiki as accountable project state through standalone CLI, dashboa
 - [Loop Model](../../system/components/loop-model.md)
 - [Worker Workbench](../../system/components/worker-workbench.md)
 - [Runtime](../../system/components/runtime.md)
+- [Evidence Records](../../system/components/evidence.md)

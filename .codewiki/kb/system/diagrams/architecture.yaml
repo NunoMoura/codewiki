@@ -2,13 +2,14 @@ schema_version: 1
 id: spec.system.diagrams.architecture
 title: CodeWiki Intent-to-Production Architecture
 kind: architecture_map
-purpose: Show standalone clients, Project Runtime, Pi-owned execution, exactly three semantic Loops, candidate-bound exit, canonical truth, derived views, and guarded delivery boundaries.
+purpose: Show standalone clients and team review, Project Runtime, Evidence Records, Pi-owned execution, exactly three semantic Loops, candidate-bound exit, canonical truth, derived views, and guarded review/delivery boundaries.
 source_docs:
   - .codewiki/kb/product/overview.md
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/loop-model.md
   - .codewiki/kb/system/components/codewiki-os.md
   - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/worker-workbench.md
   - .codewiki/kb/system/components/model-routing.md
   - .codewiki/kb/system/components/runtime.md
@@ -54,6 +55,11 @@ nodes:
     group: clients
     kind: client_adapter
     source: .codewiki/kb/system/components/extension.md
+  - id: team_review
+    label: Optional draft pull-request team review
+    group: clients
+    kind: mutable_review_projection
+    source: .codewiki/kb/system/components/evidence.md
   - id: project_runtime
     label: Project Runtime
     group: runtime
@@ -74,6 +80,11 @@ nodes:
     group: runtime
     kind: loop_exit_runtime
     source: .codewiki/kb/system/components/loop-exit.md
+  - id: evidence_runtime
+    label: Evidence Record materialization + approval correlation
+    group: runtime
+    kind: evidence_runtime
+    source: .codewiki/kb/system/components/evidence.md
   - id: model_routing
     label: Loop routes + Implementation tier selector
     group: runtime
@@ -132,10 +143,15 @@ nodes:
     group: derived
     kind: generated_projection
     source: .codewiki/kb/system/components/work-state.md
-  - id: delivery
-    label: Merge / push / publication / release / observation
+  - id: review_publication
+    label: Isolated review ref + draft PR Validation Bundle
     group: effects
-    kind: guarded_effects
+    kind: guarded_pre_exit_review_effect
+    source: .codewiki/kb/system/components/evidence.md
+  - id: delivery
+    label: Integration / project merge / ordinary push / publication / release / observation
+    group: effects
+    kind: guarded_post_exit_effects
     source: .codewiki/kb/system/components/runtime.md
 edges:
   - from: user_agent
@@ -166,6 +182,9 @@ edges:
     to: model_routing
     label: selects exact route and tier
   - from: project_runtime
+    to: evidence_runtime
+    label: identities and validates bounded evidence material
+  - from: project_runtime
     to: pi_sdk
     label: starts bounded candidate or Model Check sessions
   - from: project_runtime
@@ -188,7 +207,13 @@ edges:
     label: declares worker-ready requirements
   - from: workers
     to: implementation
-    label: returns immutable Worker Report evidence
+    label: returns immutable Worker Report evidence material
+  - from: workers
+    to: evidence_runtime
+    label: bounded producer material
+  - from: evidence_runtime
+    to: loop_exit
+    label: exact candidate-bound Check inputs
   - from: decision
     to: loop_exit
     label: exact candidate
@@ -237,6 +262,15 @@ edges:
   - from: views
     to: pi_client
     label: compact state and notifications
+  - from: project_runtime
+    to: review_publication
+    label: explicit pre-exit review-readiness authority
+  - from: review_publication
+    to: team_review
+    label: exact Validation Bundle
+  - from: team_review
+    to: evidence_runtime
+    label: re-observed approval or request-changes event
   - from: project_runtime
     to: delivery
     label: separately authorizes exact effects

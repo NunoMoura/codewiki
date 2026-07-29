@@ -49,7 +49,7 @@ describe("OKF index and log navigation", () => {
 			/\* \[Lexicon\]\(lexicon\.md\) - This file is CodeWiki's active vocabulary contract\./,
 		);
 		assert.match(root.content, /\* \[Product\]\(product\/\) - 13 concepts/);
-		assert.match(root.content, /\* \[System\]\(system\/\) - 36 concepts/);
+		assert.match(root.content, /\* \[System\]\(system\/\) - 37 concepts/);
 
 		assert.equal(product.path, "product/index.md");
 		assert.match(
@@ -61,9 +61,13 @@ describe("OKF index and log navigation", () => {
 		assert.equal(system.path, "system/index.md");
 		assert.match(
 			system.content,
-			/\* \[Components\]\(components\/\) - 28 concepts/,
+			/\* \[Components\]\(components\/\) - 29 concepts/,
 		);
 		assert.match(system.content, /\* \[Diagrams\]\(diagrams\/\) - 0 concepts/);
+		assert.match(
+			components.content,
+			/\* \[Evidence Records\]\(evidence\.md\) - Evidence Records give every Loop one immutable, typed, content-addressed way/,
+		);
 		assert.match(
 			components.content,
 			/\* \[Runtime\]\(runtime\.md\) - Runtime is CodeWiki's project-scoped control plane\./,
@@ -103,7 +107,7 @@ describe("OKF index and log navigation", () => {
 		);
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 50);
+		assert.equal(result.conceptCount, 51);
 		assert.equal(result.reservedCount, 10);
 		assert.deepEqual(documentsByPath.get("index.md")?.frontmatter, {
 			okf_version: "0.1",

@@ -2,11 +2,12 @@ schema_version: 1
 id: spec.system.diagrams.key-flow
 title: CodeWiki Intent-to-Production Flow
 kind: sequence_flow
-purpose: Show exact candidate production, candidate-specific Checks, deterministic exit, global Planning, isolated workers, Integration, and separately guarded effects.
+purpose: Show exact candidate production, Evidence Record materialization, candidate-specific Checks, optional team review, deterministic exit, global Planning, isolated workers, Integration, and separately guarded effects.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
   - .codewiki/kb/system/components/codewiki-os.md
   - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/worker-workbench.md
   - .codewiki/kb/system/components/decision-loop.md
   - .codewiki/kb/system/components/planning-loop.md
@@ -40,6 +41,14 @@ participants:
     label: Candidate identity / Exit Policy / Code and Model Checks / Exit Report
     kind: loop_exit_runtime
     source: .codewiki/kb/system/components/loop-exit.md
+  - id: evidence
+    label: Runtime-owned Evidence Record materialization
+    kind: evidence_runtime
+    source: .codewiki/kb/system/components/evidence.md
+  - id: review
+    label: CodeWiki review / optional draft pull request
+    kind: mutable_review_projection
+    source: .codewiki/kb/system/components/evidence.md
   - id: workbench
     label: Private Worker Workbench
     kind: transient_execution_environment
@@ -80,10 +89,14 @@ steps:
     from: pi_sessions
     to: decision
     message: returns role-specific candidate content without runtime-owned fields
+  - id: materialize_decision_evidence
+    from: runtime
+    to: evidence
+    message: validates exact research/source/provenance observations without granting approval
   - id: check_decision
     from: decision
     to: loop_exit
-    message: Runtime identities candidate, resolves policy, fans out independent Checks, and builds Exit Report
+    message: Runtime identities candidate, binds exact Evidence Records, resolves policy, fans out independent Checks, and builds Exit Report
   - id: append_decision
     from: loop_exit
     to: traces
@@ -123,7 +136,11 @@ steps:
   - id: worker_report
     from: workers
     to: runtime
-    message: returns immutable Worker Report candidate evidence only
+    message: returns immutable Worker Report candidate evidence material only
+  - id: materialize_implementation_evidence
+    from: runtime
+    to: evidence
+    message: validates worker/source/command/preview/Integration material into exact typed Evidence Records
   - id: build_implementation_candidate
     from: runtime
     to: implementation
@@ -131,7 +148,19 @@ steps:
   - id: check_implementation
     from: implementation
     to: loop_exit
-    message: actual effects may add Checks; required Results fan in without suppressing unrelated feedback
+    message: actual effects may add Checks; non-approval and independent Results run against exact Evidence Records
+  - id: publish_review
+    from: runtime
+    to: review
+    message: when required and explicitly authorized, publishes exact Validation Bundle to CodeWiki and isolated draft review ref without semantic advancement
+  - id: observe_review
+    from: review
+    to: evidence
+    message: Runtime re-observes authenticated approval or request-changes against exact head/candidate/bundle
+  - id: approval_fan_in
+    from: evidence
+    to: loop_exit
+    message: approval-backed Check joins required fan-in; drift invalidates receipt and requests fresh review
   - id: append_implementation
     from: loop_exit
     to: traces
@@ -153,7 +182,7 @@ steps:
     to: client
     message: streams bounded state, provenance, coverage, held reasons, evidence, and next safe action
 ui_hints:
-  default_focus: check_implementation
+  default_focus: publish_review
   show_exit_steps:
     - append_decision
     - append_planning

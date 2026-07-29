@@ -2,10 +2,11 @@ schema_version: 1
 id: spec.system.diagrams.state-lifecycle
 title: One Change Dossier Lifecycle
 kind: state_lifecycle
-purpose: Show one Change's semantic candidates, Runtime routes, Integration/delivery boundaries, outcome disposition, and retention without implying that Change owns Project Runtime pipeline.
+purpose: Show one Change's semantic candidates, Evidence-backed review, Runtime routes, Integration/delivery boundaries, outcome disposition, and retention without implying that Change owns Project Runtime pipeline.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
   - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
 renderer:
@@ -18,6 +19,8 @@ states:
     label: Planning active
   - id: implementation_active
     label: Implementation active
+  - id: review_ready
+    label: Exact candidate awaiting user/team review
   - id: waiting
     label: Waiting / blocked / indeterminate
   - id: route_back
@@ -71,10 +74,32 @@ transitions:
     cleanup: preserve bounded repair or retry evidence
   - from: implementation_active
     to: realized
-    trigger: Implementation Exit Report passes and Runtime appends exact realization
+    trigger: no human review is required, Implementation Exit Report passes, and Runtime appends exact realization
     trace_event: implementation.evidence_accepted
     exit_status: pass
     cleanup: preserve worker material until Integration proof authorizes cleanup
+  - from: implementation_active
+    to: review_ready
+    trigger: required non-approval review-readiness Checks pass and guarded CodeWiki/draft-PR Validation Bundle publication is authorized
+    trace_event: runtime.review.published
+    cleanup: preserve exact candidate, media, bundle, and provider correlation until final review disposition
+  - from: review_ready
+    to: realized
+    trigger: authenticated approval receipt matches exact candidate/head/bundle and final Implementation Exit Report passes
+    trace_event: implementation.evidence_accepted
+    exit_status: pass
+    cleanup: preserve approval and media refs until Integration/retention proof authorizes cleanup
+  - from: review_ready
+    to: implementation_active
+    trigger: reviewer requests changes or candidate/head/preview/bundle drift invalidates approval
+    trace_event: runtime.review.observed
+    cleanup: preserve exact feedback and repair-parent evidence
+  - from: review_ready
+    to: waiting
+    trigger: required review, provider, or media evidence is unavailable or indeterminate
+    trace_event: runtime.review.observed
+    exit_status: indeterminate
+    cleanup: preserve bounded retry and review evidence
   - from: implementation_active
     to: route_back
     trigger: Runtime route requires Planning or Decision authority

@@ -22,7 +22,7 @@ Source checkout uses `.codewiki/kb/**` as intended design truth, source/tests as
 (Kₜ₊₁, Gₜ₊₁, Pₜ₊₁, Evidence)
 ```
 
-`K` is accepted Knowledge, `G` exact Git state, `P` delivery state, and Evidence includes exact Check Results, Exit Reports, authority, Integration proof, and observations.
+`K` is accepted Knowledge, `G` exact Git state, `P` delivery state, and Evidence includes immutable typed Evidence Records, exact Check Results and Exit Reports, authority receipts, Integration proof, and observations.
 
 ```text
 Project Runtime
@@ -91,9 +91,9 @@ Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes o
 
 ## Work and execution
 
-Decision creates accepted semantic revisions and Knowledge impact. Planning globally shapes approved Changes into Sprints and worker-ready Work Items. Runtime provisions bounded Workbenches and Assignments. Implementation accepts exact realization candidates. Runtime serializes Integration and separately guarded merge, push, publication, release, and future deployment effects.
+Decision creates accepted semantic revisions and Knowledge impact. Planning globally shapes approved Changes into Sprints and worker-ready Work Items. Runtime provisions bounded Workbenches and Assignments, materializes typed Evidence Records, and correlates exact approval. Implementation accepts exact realization candidates. For required team review, Runtime may publish an isolated draft-pull-request Validation Bundle before final exit solely to gather evidence. Runtime then serializes post-exit Integration and separately guarded project merge, ordinary push, publication, release, and future deployment effects.
 
-Workers and Model Checks are isolated and non-authoritative. Worker completion is candidate evidence. Model Check operational failure is indeterminate. Pi-Lens/tools/Skills help build and repair candidates but cannot attest acceptance.
+Workers and Model Checks are isolated and non-authoritative. Worker completion, screenshots/videos, and provider comments are evidence material until Runtime validates typed records and trusted Checks consume them. Model Check operational failure is indeterminate. Pi-Lens/tools/Skills help build and repair candidates but cannot attest acceptance.
 
 ## Learning and feedback
 
@@ -111,6 +111,7 @@ CodeWiki guarantees bounded process integrity, exact identity, independent check
 - [Loop Model](loop-model.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Decision Loop](decision-loop.md)

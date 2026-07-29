@@ -35,7 +35,15 @@ Immutable semantic version of Change meaning. Refinement may supersede revision 
 
 ### Approval
 
-Runtime-created fact that authenticated authority accepted one exact Decision candidate and Change revision after passing Exit Report and final freshness/CAS guards.
+Runtime-created fact that authenticated authority accepted one exact subject under an allowed role and policy after exact freshness/correlation guards. Decision approval accepts Change meaning; UI experience approval accepts exact candidate-bound experience evidence; effect approval authorizes only its named boundary. One approval never implies another.
+
+### Approval receipt
+
+`approval_receipt` Evidence Record binding authenticated actor, role, decision, exact subject, candidate/tree/head or Change revision, evidence/Validation Bundle digest, provider event when applicable, Runtime observation time, and freshness. Free-form comments and worker/model claims are not approval receipts.
+
+### Evidence Record
+
+Content-addressed cross-Loop entity represented by one immutable value record with exact subject, producer, provenance, artifact, Runtime-owned observation/freshness, authority class, coverage, sensitivity, and closed kind-specific payload. It has stable identity but no mutable lifecycle, separate workflow, database, verdict, route, or acceptance authority.
 
 ## Execution model
 
@@ -81,11 +89,19 @@ Exact immutable role-specific output proposed by one Loop attempt. Candidate ide
 
 Runtime-owned action after Exit Report and final guard: repair, advance, route to Planning/Decision, retry, wait, block, or request authority. Route is separate from Report status.
 
+### Validation Bundle
+
+Mutable review projection of exact accepted intent/requirements, pending candidate/tree/head, Evidence Records, Results, screenshots/videos, preview link, findings, and required reviewer roles. CodeWiki dashboard and optional draft pull request may render same bundle; bundle is not canonical truth or approval.
+
+### Review publication
+
+Separately authorized pre-exit evidence-gathering effect that may push only an isolated review ref and create/update draft pull request for one exact Validation Bundle. It cannot move project/protected branch, force-push, auto-merge, publish product state, or claim semantic exit.
+
 ## Loop exit
 
 ### Check
 
-One atomic versioned requirement plus criterion, execution kind, measurement contract, evidence requirements, repair target, resource limits, and implementation identity.
+One atomic versioned requirement plus execution kind, measurement contract, Evidence Record requirements, repair target, resource limits, and implementation identity.
 
 ```ts
 type Check = CodeCheck | ModelCheck;
@@ -99,7 +115,7 @@ Trusted deterministic CodeWiki-owned implementation of Check. “Code” names i
 
 ### Model Check
 
-Independent bounded Pi model session evaluating one semantic requirement over immutable evidence. It shares no producer conversation, returns structured output, and cannot append/route/attest acceptance. Operational failure yields `indeterminate`.
+Independent bounded Pi model session evaluating one semantic requirement over immutable candidate-bound Evidence Records. It shares no producer conversation, returns structured output, and cannot append/route/attest acceptance. Operational failure yields `indeterminate`.
 
 ### Check binding
 
@@ -163,7 +179,7 @@ Interprets persisted intent, grounds current/desired state, owns accepted Knowle
 
 ### Planning
 
-Globally shapes bounded approved-Change portfolio into coherent Sprints, worker-ready Work Items, dependencies, criteria, verification, Integration/rollback boundaries, resolutions, and Workbench requirements.
+Globally shapes bounded approved-Change portfolio into coherent Sprints, worker-ready Work Items, dependencies, acceptance requirements, verification, Integration/rollback boundaries, resolutions, and Workbench requirements.
 
 ### Implementation
 
@@ -185,7 +201,7 @@ One global Planning candidate/append batch over bounded participant set. May cre
 
 ### Work Item
 
-Planning-created worker-ready execution outcome with exactly one owning Change, optional contribution refs, criteria, scope, dependencies, verification, Integration, and Workbench requirements.
+Planning-created worker-ready execution outcome with exactly one owning Change, optional contribution refs, acceptance requirements, scope, dependencies, verification, Integration, and Workbench requirements.
 
 ### Claim
 

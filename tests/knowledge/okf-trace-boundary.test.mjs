@@ -77,7 +77,7 @@ describe("OKF trace boundary", () => {
 			true,
 		);
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 50);
+		assert.equal(result.conceptCount, 51);
 		assert.equal(result.reservedCount, 10);
 	});
 

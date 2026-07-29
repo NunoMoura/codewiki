@@ -49,8 +49,16 @@ One Pi conversation may connect or disconnect without becoming Project Runtime o
 - Embedded semantic sessions remain read-only and return role-specific Candidates or Model Check outputs. Isolated implementation workers receive only Assignment-scoped mutation capability.
 - Preview runners accept structured commands, approved profile digests, exact integration state, bounded loopback URLs, isolated browser session identifiers, and lifecycle cleanup.
 - Visual artifacts remain implementation evidence and never imply semantic approval or business outcomes.
+- A future pull-request review adapter may publish a bounded Validation Bundle to an explicitly authorized draft review ref and re-observe provider reviews. It cannot create canonical approval directly, move protected/project branches, auto-merge, or become workflow truth.
+- Provider review events become approval-receipt Evidence Records only after Runtime validates repository, pull request, exact head, authenticated actor/role, decision, bundle digest, event identity, and freshness. Dashboard and pull-request channels project one approval action rather than demanding duplicate approval.
 - Generated views, search indexes, graph layouts, and live observations remain disposable projections.
 - The CodeWiki source checkout never loads its own extension during stabilization. Packed artifacts are exercised in disposable external projects.
+
+## Review surfaces
+
+CodeWiki dashboard is the canonical dossier and local review surface. Team projects may additionally use draft pull requests for broad visibility, inline code discussion, CODEOWNERS, CI, screenshots, short videos, preview links, and Approve / Request changes actions. Pull requests remain mutable provider projections; CodeWiki retains exact Evidence Record, Result, approval freshness, and Change lineage authority.
+
+Review publication is a separately authorized pre-exit evidence-gathering effect, not Integration, merge, release, or semantic acceptance. Projects without a provider, network, or team review policy remain fully functional through CodeWiki alone.
 
 ## Dashboard information architecture
 

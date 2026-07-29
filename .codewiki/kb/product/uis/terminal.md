@@ -102,8 +102,8 @@ It shows:
 - worker session, model, worktree/container, source base, claim, and freshness;
 - path or integration conflicts that hold work;
 - isolated candidate output versus integrated product state;
-- exact Checks, Results, preview evidence, content proof, and unmet acceptance criteria;
-- Implementation acceptance, remediation, or route-back;
+- exact Evidence Records, Checks, Results, preview media, content proof, and unmet acceptance requirements;
+- review-readiness, required reviewer roles, approval freshness, Implementation acceptance, remediation, or route-back;
 - commit and restore proof after integration;
 - Integration, merge, push, publication, release, and outcome as distinct guarded/observed boundaries.
 
@@ -155,7 +155,7 @@ The editor preserves unknown OKF frontmatter and unsupported Markdown. Raw-sourc
 
 Global chrome contains repository identity, current destination and subpage, contextual search/filters, project-wide notifications, runtime state, and Settings. Contextual creation lives inside the active workspace.
 
-Notifications contain only genuine project-wide intervention questions. Routine test failure, retry, accessibility checking, preview review, and Planning-owned repair remain autonomous.
+Notifications contain only genuine project-wide intervention questions. Routine test failure, retry, accessibility checking, automated preview capture/critique, and Planning-owned repair remain autonomous. Required subjective approval or reserved risk acceptance is explicit human attention.
 
 Settings exposes bounded capacity, model routing, isolation, automation, budgets, preview profiles, and effective supervision. It cannot raise authority beyond active policy or accept raw arbitrary execution configuration.
 
@@ -185,6 +185,16 @@ Closing one browser tab or Pi session does not mutate workflow truth. Under supe
 Planning binds UI-affecting work to canonical UI targets and approved project-native preview profiles. Runtime owns one loopback development server per profile/integration root and isolated browser sessions per requested target.
 
 Dashboard shows target identity, exact integration state, contributing Changes and Work Items, readiness, browser capability, failures, bounded logs, and target-specific Open/Capture controls. Capture proves experience realization for the exact revision and viewport; it does not approve semantics or business outcomes.
+
+## Validation and approval
+
+For user-visible UI Changes, the dossier renders one candidate-bound Validation Bundle: accepted intent and requirements, exact candidate/tree/head, target states and viewports, screenshots, short interaction videos, live preview link, objective Results, independent experience findings, unresolved questions, required reviewer roles, and Approve / Request changes actions.
+
+CodeWiki is the canonical review and lineage surface. Team policy may project the same bundle to a draft pull request for broad visibility, code discussion, CODEOWNERS, CI, and provider review. Reviewers act once: Runtime correlates an allowed dashboard or provider decision into one authenticated approval receipt and projects current state to both surfaces where possible.
+
+Approval is exact and stale-sensitive. New source, candidate, head, target/profile, capture manifest, or media bundle removes passing approval state and requests fresh review. Request changes records feedback against the exact candidate; same-intent visual tuning creates another Implementation candidate in the same Change dossier. Scope/plan changes route to Planning, and behavior/intent/authority changes route to Decision.
+
+Pull-request review publication is visibly distinct from merge or release. A draft review ref may be published before final Implementation exit only under explicit authority and exact CAS; it cannot auto-merge, move the project branch, or imply acceptance.
 
 ## Accessibility and trust
 

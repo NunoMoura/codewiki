@@ -33,7 +33,7 @@ or explicit unknown with safe block
 Durable sources retain separate authority:
 
 - `.codewiki/kb/**` owns accepted Product/System/Design Knowledge;
-- `.codewiki/traces/TRACE-CHG-*.jsonl` owns durable Change progression, Loop attempts, Check Results, Exit Reports, runtime coordination, and outcome disposition in consuming projects;
+- `.codewiki/traces/TRACE-CHG-*.jsonl` owns durable Change progression, Loop attempts, compact Evidence Records, Check Results, Exit Reports, approval/review lineage, runtime coordination, and outcome disposition in consuming projects;
 - source and tests own executable implementation truth;
 - Git commits, trees, refs, and artifact proofs own exact content and delivery-boundary facts;
 - protected remote checks, attestations, provider observations, and deployment observations own only their exact external boundary.
@@ -63,7 +63,7 @@ Maintains coherence among concurrent Changes, shared invariants, components, dep
 
 ### Temporal alignment
 
-Preserves exact lineage across revisions, supersession, staleness, failed attempts, repairs, changed Checks, invalidated evidence, and later observations. Historical meaning comes from persisted candidate, policy, Result, and Report identity—not today's catalog.
+Preserves exact lineage across revisions, supersession, staleness, failed attempts, repairs, changed Checks, invalidated Evidence Records/approvals, and later observations. Historical meaning comes from persisted candidate, Evidence, policy, Result, and Report identity—not today's Catalog.
 
 ### Delivery alignment
 
@@ -92,14 +92,14 @@ No user action should exist only because runtime needs a field it can derive saf
 | Planning | Global coverage of approved Changes through coherent Work Items, dependencies, verification, ownership, integration, and explicit resolutions. |
 | Implementation | Exact realization of accepted obligations in source/tests/Knowledge plus candidate-bound Checks, Git proof, Integration, and outcome disposition. |
 
-Each Loop produces one immutable candidate, Resolved Exit Policy, Check Results, and Exit Report. Runtime routes and appends only after final freshness and authority guards. Failed and indeterminate attempts remain evidence for repair and later learning.
+Each Loop produces one immutable candidate while Runtime binds exact Evidence Records, Resolved Exit Policy, Check Results, and Exit Report. Runtime routes and appends only after final freshness and authority guards. Failed and indeterminate attempts remain evidence for repair and later learning.
 
 ## Relationship projection
 
 CodeWiki may derive one bounded relationship layer over canonical inputs with several views:
 
 - **Work Graph:** Changes, Sprints, Work Items, dependencies, Assignments, Claims, blockers, and Integration state.
-- **Alignment Graph:** OKF concepts, provenance, components, source/test ownership, Change revisions, candidates, Check Results, Git trees, delivery artifacts, and outcome observations.
+- **Alignment Graph:** OKF concepts, provenance, components, source/test ownership, Change revisions, candidates, Evidence Records, Check Results, approvals, Git trees, delivery artifacts, and outcome observations.
 - **Learning View:** temporal candidate-to-failed-Check-to-repair-to-outcome relationships derived from Change Traces.
 
 These views remain disposable. Agents query typed, scoped, snapshot-bound operations rather than arbitrary graph mutation or a general graph DSL. Query results name provenance, authority class, coverage, truncation, and staleness.
@@ -142,6 +142,7 @@ Ongoing remote claims require protected branches, required status checks, commit
 - [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)

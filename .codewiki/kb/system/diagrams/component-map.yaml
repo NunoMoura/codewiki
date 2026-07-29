@@ -2,13 +2,14 @@ schema_version: 1
 id: spec.system.diagrams.component-map
 title: CodeWiki Component and Package Map
 kind: component_map
-purpose: Show standalone clients, harness-neutral core, Project Runtime, Pi/worker adapters, Loop-owned exit declarations, shared Loop-exit package, authority roots, and derived views.
+purpose: Show standalone clients and review projection, harness-neutral core, Project Runtime evidence/exit machinery, Pi/worker/provider adapters, Loop-owned exit declarations, authority roots, and derived views.
 source_docs:
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/api-tools.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/codewiki-os.md
   - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/worker-workbench.md
   - .codewiki/kb/system/components/traces.md
 renderer:
@@ -45,6 +46,11 @@ nodes:
     group: client_layer
     kind: client_adapter
     source: .codewiki/kb/system/components/extension.md
+  - id: team_review
+    label: Optional draft pull-request review surface
+    group: client_layer
+    kind: mutable_review_projection
+    source: .codewiki/kb/system/components/evidence.md
   - id: core_api
     label: Typed CodeWiki core API
     group: core_layer
@@ -80,6 +86,11 @@ nodes:
     group: runtime_layer
     kind: loop_exit_runtime
     source: .codewiki/kb/system/components/loop-exit.md
+  - id: evidence_runtime
+    label: Evidence Record identity / materialization / artifact and approval correlation
+    group: runtime_layer
+    kind: evidence_runtime
+    source: .codewiki/kb/system/components/evidence.md
   - id: model_router
     label: Loop route + Implementation tier resolver
     group: runtime_layer
@@ -95,6 +106,11 @@ nodes:
     group: adapter_layer
     kind: execution_adapter
     source: .codewiki/kb/system/components/session-coordination.md
+  - id: review_adapter
+    label: Guarded review-ref / draft-PR provider adapter
+    group: adapter_layer
+    kind: review_publication_adapter
+    source: .codewiki/kb/system/components/adapters-and-ui.md
   - id: workbench
     label: Private Worker Workbench
     group: adapter_layer
@@ -171,6 +187,9 @@ edges:
   - from: project_runtime
     to: model_router
     label: selects routes and tier
+  - from: project_runtime
+    to: evidence_runtime
+    label: materializes exact observations and approval receipts
   - from: scheduler
     to: pi_sdk_adapter
     label: candidate and Model Check jobs
@@ -198,6 +217,9 @@ edges:
   - from: implementation
     to: loop_exit_runtime
     label: Loop-owned Checks and candidate
+  - from: evidence_runtime
+    to: loop_exit_runtime
+    label: exact candidate-bound Check inputs
   - from: loop_exit_runtime
     to: project_runtime
     label: exact Exit Report
@@ -206,7 +228,25 @@ edges:
     label: Workbench requirements and frozen minimums
   - from: worker_adapter
     to: implementation
-    label: immutable Worker Report evidence
+    label: immutable Worker Report evidence material
+  - from: worker_adapter
+    to: evidence_runtime
+    label: bounded producer material
+  - from: project_runtime
+    to: review_adapter
+    label: explicitly authorized exact Validation Bundle publication
+  - from: review_adapter
+    to: team_review
+    label: isolated review ref and draft pull request
+  - from: team_review
+    to: review_adapter
+    label: authenticated provider review event
+  - from: review_adapter
+    to: evidence_runtime
+    label: re-observed approval or request-changes material
+  - from: evidence_runtime
+    to: traces
+    label: compact Evidence Records through sole Runtime writer
   - from: project_runtime
     to: traces
     label: sole guarded writer

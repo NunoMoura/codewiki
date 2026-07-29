@@ -8,6 +8,7 @@ source_docs:
   - .codewiki/kb/system/components/knowledge.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/worker-workbench.md
 renderer:
   preferred: entity_relationship
@@ -34,6 +35,21 @@ entities:
     label: Exact immutable Loop candidate identity
     storage: compact identity/content refs in semantic trace attempt
     truth: true
+  - id: evidence_record
+    label: Immutable typed Evidence Record
+    storage: compact content-addressed metadata/payload in owning Change trace event data; large bytes remain behind exact artifact refs
+    truth: true
+    kinds:
+      - research_citation
+      - source_observation
+      - command_execution
+      - ui_capture
+      - model_assessment
+      - worker_report
+      - integration_proof
+      - approval_receipt
+      - delivery_attestation
+      - outcome_observation
   - id: exit_policy
     label: Resolved Exit Policy identity
     storage: candidate-specific Check bindings, thresholds, activation, exclusions, and digest
@@ -58,14 +74,19 @@ entities:
     label: Git / remote / artifact / outcome proof
     storage: commits, trees, refs, receipts, attestations, and bounded observations
     truth: true
+  - id: review_bundle
+    label: CodeWiki / draft pull-request Validation Bundle
+    storage: mutable generated projection over exact candidate, Evidence Records, Results, media refs, and required reviewer roles
+    truth: false
   - id: runtime_private
-    label: Workbench / Worker Report / failed material / recovery / cache
+    label: Workbench / Worker Report / media artifact / failed material / recovery / cache
     storage: .codewiki/runtime/**
     truth: false
     examples:
       - endpoint and generation metadata
       - Assignment packets and Workbench manifests
       - Worker Reports and bounded raw observations
+      - screenshots, short videos, captured pages, and bounded output artifacts
       - failed candidate material
       - Planning recovery packets
       - Check execution cache
@@ -89,6 +110,12 @@ relationships:
   - from: trace_record
     to: candidate
     label: records exact attempt identity
+  - from: trace_record
+    to: evidence_record
+    label: contains compact canonical observation
+  - from: evidence_record
+    to: candidate
+    label: binds observed base or exact candidate-derived subject
   - from: candidate
     to: exit_policy
     label: selects deterministic candidate-specific policy
@@ -98,6 +125,9 @@ relationships:
   - from: candidate
     to: check_result
     label: exact subject
+  - from: evidence_record
+    to: check_result
+    label: exact consumed observation
   - from: check_result
     to: exit_report
     label: complete fan-in
@@ -107,6 +137,15 @@ relationships:
   - from: exit_report
     to: runtime_route
     label: informs but does not authorize route
+  - from: candidate
+    to: review_bundle
+    label: exact pending review subject
+  - from: evidence_record
+    to: review_bundle
+    label: projects screenshots, videos, findings, and approval state
+  - from: review_bundle
+    to: evidence_record
+    label: provider/user response is re-observed as approval or request-changes evidence
   - from: knowledge_doc
     to: candidate
     label: exact snapshot/provenance input
@@ -137,6 +176,9 @@ relationships:
   - from: git_delivery_proof
     to: repair_episode
     label: supplies later outcome
+  - from: runtime_private
+    to: evidence_record
+    label: materializes bounded digest-bound observation before cleanup
   - from: runtime_private
     to: trace_record
     label: distills bounded durable facts before cleanup

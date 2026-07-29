@@ -18,7 +18,7 @@ Target transition:
 (Kₜ₊₁, Gₜ₊₁, Pₜ₊₁, Evidence)
 ```
 
-`K` is accepted Knowledge, `G` is exact Git state, `P` is delivery state, and `Evidence` contains exact Check Results, Exit Reports, authority, integration proof, remote proof, and outcome observations.
+`K` is accepted Knowledge, `G` is exact Git state, `P` is delivery state, and `Evidence` contains immutable typed Evidence Records, exact Check Results and Exit Reports, authority receipts, Integration proof, remote proof, and outcome observations.
 
 ## Canonical vocabulary
 
@@ -46,7 +46,8 @@ Change
 └── Loop attempt
     ├── Candidate
     ├── Resolved Exit Policy
-    ├── Checks
+    ├── Evidence Records
+    ├── Checks consuming exact Evidence Records
     ├── Check Results
     └── Exit Report
 
@@ -55,7 +56,7 @@ Runtime
     └── chooses route and guarded append/effect
 ```
 
-A Check is one versioned requirement plus its execution kind, measurement contract, evidence requirements, repair target, limits, and trusted implementation identity:
+An Evidence Record is the canonical immutable typed observation consumed across Loops. A Check is one versioned requirement plus its execution kind, measurement contract, Evidence Record obligations, repair target, limits, and trusted implementation identity:
 
 ```ts
 type Check = CodeCheck | ModelCheck;
@@ -105,17 +106,31 @@ Each Loop package owns:
 
 A Loop may return failed or indeterminate Results, repair targets, or route-back facts. It does not choose final runtime routing or append canonical records.
 
-Shared Loop-exit machinery belongs under `src/loop-exit/**`: contracts, exact identity, catalog validation, deterministic policy resolution, minimal admission, bounded scheduling, exact caching, and immutable Exit Report construction. Shared machinery must not import Loop implementations.
+Shared Evidence machinery belongs under `src/evidence/**`: closed record/payload contracts, identity, materialization, provenance/freshness/privacy validation, and artifact/approval correlation. Shared Loop-exit machinery belongs under `src/loop-exit/**`: Check/policy/result contracts, exact identity, catalog validation, deterministic policy resolution, minimal admission, bounded scheduling, exact caching, and immutable Exit Report construction. Neither shared package may import Loop implementations; Loop exit consumes Evidence contracts one way.
 
 Runtime is the composition root. It composes one immutable `LoopExitSuite` and closed built-in catalog from the three Loop-owned declarations, adds only canonically approved Project Checks, derives selector and authority facts, owns candidate identity and freshness, injects exact model routes, performs final routing, fences elected generation, and appends canonical records.
 
-Views and dashboard projections read the Resolved Exit Policy and Exit Report persisted with each Loop event. They never reinterpret historical events using today’s in-process Check catalog.
+Views and dashboard projections read the Evidence Records, Resolved Exit Policy, Check Results, and Exit Report persisted with each Loop event. They never reinterpret historical events using today’s in-process Check catalog.
+
+## Evidence and review boundary
+
+Evidence is standardized across Loops as an immutable content-addressed `EvidenceRecord`, not as a fourth Loop, mutable aggregate, CRUD service, central database, or generic arbitrary-record SDK. A small common envelope binds exact subject, producer, provenance, artifact, Runtime-owned observation/freshness, authority class, coverage, sensitivity, and one closed kind-specific payload. Initial kinds cover research citations, source observations, command executions, UI captures, model assessments, Worker Reports, Integration proof, approval receipts, delivery attestations, and outcome observations.
+
+Runtime alone materializes canonical Evidence Record identity and time. Producers return bounded material and cannot upgrade authority/coverage, set Check status, select routes, or attest acceptance. Compact records live in owning Change Traces; source/tests, Git, provider events, and content-addressed media/log/page bytes remain in their existing authority/storage boundaries and are cited by digest. Contradictions remain visible. Missing, stale, partial, unavailable, or conflicting required evidence yields repair, waiting, or `indeterminate`.
+
+User-visible UI Changes normally bind exact screenshots, short interaction videos, states/viewports, live preview, manifest and artifact digests, objective preview validation, optional independent experience critique, and authenticated approval. CodeWiki is canonical dossier/review authority; a draft pull request is an optional mutable team surface. One dashboard or provider action becomes one Runtime-validated approval receipt—never duplicate approval.
+
+Required pull-request approval permits one narrowly guarded pre-exit **review-publication effect** after non-approval review-readiness Checks pass. Runtime may push only an isolated review ref and create/update a draft pull request with an exact Validation Bundle. It cannot move the project/protected branch, force-push, auto-merge, publish product state, or claim Loop exit. Provider review, head, candidate, or bundle drift invalidates approval. Merge, ordinary push, publication, release, and deployment remain post-exit separately guarded effects.
 
 Target shape:
 
 ```text
 src/
   semantic-loop.ts
+  evidence/
+    contracts.ts
+    identity.ts
+    materialize.ts
   loop-exit/
     contracts.ts
     identity.ts
@@ -123,7 +138,7 @@ src/
     resolve-policy.ts
     runner.ts
     cache.ts
-    report.ts
+    results.ts
   decision/
     candidate.ts
     iteration.ts
@@ -189,7 +204,7 @@ Do not create canonical graph files or a graph database. Canonical authority rem
 Expose disposable bounded relationship views:
 
 - **Work Graph:** Changes, Sprints, Work Items, dependencies, Assignments, Claims, blockers, and Integration state.
-- **Alignment Graph:** OKF concepts, provenance, components, source/test ownership, Change revisions, candidates, Check Results, Git trees, remote artifacts, and outcome observations.
+- **Alignment Graph:** OKF concepts, provenance, components, source/test ownership, Change revisions, candidates, Evidence Records, Check Results, Git trees, remote artifacts, approvals, and outcome observations.
 - **Learning View:** temporal candidate → failed Check → repair candidate → later Result/outcome relationships derived from Change Traces.
 
 Check dependencies are internal runner metadata, not a public project graph or fourth loop.
@@ -237,7 +252,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - Keep Check selection deterministic and explainable through persisted `activatedBy` rule/trait/effect refs; learned activation is forbidden.
 - Keep kernel Checks non-disableable and move Project Checks only through `observe` → `warn` → explicitly approved `require`.
 - Keep candidate generation and Model Checks in independent sessions.
-- Keep Integration, merge, push, publication, release, and deployment as separately guarded effects.
+- Keep effects separately guarded: only exact isolated review publication may occur before Implementation exit to gather required approval evidence; Integration advancement, project-branch merge, ordinary push, product publication, release, and deployment remain post-exit.
 - Preserve exact rejection text and existing guarded effect behavior unless one reviewed slice explicitly changes it.
 - Make clean Loop/package cuts: replace obsolete internal contracts, remove superseded source/tests/exports in the same slice, and avoid compatibility layers without real consumers.
 - Commit and push each green slice without absorbing unrelated worktree changes.
@@ -300,6 +315,23 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [ ] Replace remaining ambiguous cross-Loop security, accessibility, and dependency semantics with Loop-specific Checks where requirements or repair targets differ.
 - [x] Add strict shared canonical JSON/digest utilities and migrate the native policy identity off its local stable-stringify implementation.
 - [x] Add immutable Runtime-owned Check Result and Exit Report constructors that derive canonical status and identity; reject caller-owned identity/status, missing or duplicate required Results, contradictory measurements, and wrong-candidate, wrong-policy, wrong-Check, wrong-execution, or wrong-measurement data.
+
+## Next — Evidence Records and team review
+
+- [x] Ratify Evidence Record as a content-addressed cross-Loop entity represented by one immutable value record, with no separate workflow, mutable lifecycle, database, graph authority, or user-authored paperwork.
+- [x] Ratify CodeWiki as canonical dossier/approval authority and draft pull request as optional team review projection; one review action is normalized once rather than duplicated.
+- [x] Ratify guarded pre-exit review publication as a narrow evidence-gathering effect that cannot advance semantic state, move project/protected branches, auto-merge, or authorize later effects.
+- [ ] Add `src/evidence/**` with exact closed base Evidence Record envelope, Runtime-owned identity/time, authority/coverage/sensitivity semantics, discriminated payload schemas, package exports, source ownership, and tests.
+- [ ] Add versioned closed evidence-adapter contracts and strict materialization for research citations, source observations, command executions, UI captures, model assessments, Worker Reports, Integration proof, approval receipts, delivery attestations, and outcome observations.
+- [ ] Bind Check evidence obligations to accepted kinds, producer/authority classes, freshness, coverage, artifact availability, privacy, and contradiction policy; bind consumed Evidence Record identities into Results/cache/report.
+- [ ] Replace Decision ref-count evidence sufficiency with exact research-citation provenance/freshness Code Checks, independent claim-support/contradiction Model Checks, and risk-proportional activation.
+- [ ] Extend preview capture with exact candidate/tree-bound screenshots and bounded MP4/WebM interaction recordings across required routes, states, scenarios, and viewports.
+- [ ] Add `ui_preview_evidence_valid`, bounded `ui_experience_reviewed`, and approval-backed `ui_experience_approved` with exact role, subject, artifact-bundle, and freshness semantics.
+- [ ] Add Runtime approval-receipt construction from authenticated CodeWiki actions and re-observed provider reviews; invalidate on candidate/tree/head/target/profile/manifest/media/bundle drift.
+- [ ] Add bounded Validation Bundle projection for CodeWiki and draft pull requests with intent, requirements, candidate/head, Results, screenshots/videos, preview link, findings, required roles, and dossier link.
+- [ ] Add guarded review-ref push/draft-PR create-update adapter with exact CAS, idempotency, privacy, capability, post-operation observation, and no force-push/merge/product-publication authority.
+- [ ] Persist compact Evidence Records and repair/review lineage in Change Traces while keeping large/private artifacts out of JSONL; define durable artifact retention before close/compaction.
+- [ ] Prove dashboard-only, provider-team, stale-head, Request changes, unavailable-media, privacy-redaction, retry/recovery, and cleanup flows in disposable external projects.
 
 ## Next — OKF v0.2 cut
 

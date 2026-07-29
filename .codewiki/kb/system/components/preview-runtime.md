@@ -47,7 +47,7 @@ The Live Preview Runtime creates an automatic, explicit relationship between fro
 
 Structured profiles, canonical `uiPreviewTargets[]`, deterministic profile/target digests, Planning-owned target bindings, Implementation Loop coordination, profile-level server deduplication across routes, package-script supervision, exact integration checkout state, contributor aggregation, readiness, browser adapters, side-effect-free Playwright preflight, cleanup, dashboard controls, source-only harness, and explicit target evidence capture are implemented. Legacy single-Sprint `preview` binding is removed.
 
-Capture automates the accepted desktop/mobile viewports, records bounded redacted console and network observations, hashes each screenshot, and writes a correlated manifest under `.codewiki/runtime/preview-evidence/`. Capture remains operational evidence and does not append semantic trace truth or grant approval.
+Capture currently automates accepted desktop/mobile viewports, records bounded redacted console and network observations, hashes each screenshot, and writes a correlated manifest under `.codewiki/runtime/preview-evidence/`. Capture remains operational evidence material and does not append semantic trace truth or grant approval. Candidate-bound short video capture, standardized Evidence Records, approval-backed UI Checks, and pull-request Validation Bundles are target work, not current executable behavior.
 
 ## Preview binding
 
@@ -109,6 +109,14 @@ The adapter uses one isolated, bounded session identifier and structured CLI arg
 
 Each capture manifest records canonical UI ref, target id/digest, profile id/digest, route, contributing Change Trace refs, relevant Implementation iteration refs, exact integration Git/tree and dirty state, visibility/conflict state, capture time, viewport, screenshot paths/digests, bounded redacted console/network observations, and manifest digest. Missing evidence is omitted rather than fabricated. Artifacts live under ignored runtime state and never become automatic semantic approval.
 
+## Target UI review evidence
+
+For user-visible UI work, target capture also supports bounded MP4/WebM interaction recordings, tablet and declared custom viewports, loading/empty/error/success and interaction states, before/after comparison, accessibility/overflow observations, and exact artifact size/media digests. Runtime converts valid manifests into `ui_capture` Evidence Records bound to exact Change revision, candidate, source tree, target/profile/scenario, viewport/state, capture time, and privacy policy.
+
+A live preview URL remains useful for inspection but is mutable. Required approval binds immutable capture and Validation Bundle digests. `ui_preview_evidence_valid` checks completeness, correlation, freshness, and artifact availability; optional `ui_experience_reviewed` supplies independent bounded critique; approval-backed `ui_experience_approved` validates exact user or delegated-role approval. Any relevant candidate, tree, target/profile, manifest, media, or pull-request head change invalidates approval.
+
+CodeWiki dashboard and draft pull request may render the same Validation Bundle. Provider comments/reviews are observations until Runtime authenticates and correlates them into approval-receipt Evidence Records. Request changes creates same-Change repair evidence rather than mutating an earlier candidate.
+
 ## Source dashboard development
 
 The CodeWiki source repository must not load its own Pi extension or create active product traces. `npm run dashboard:dev -- --project <external-project>` starts the source dashboard against a disposable external fixture, runs the same Preview Coordinator and dashboard control API, adds development-only asset reload, and opens the dashboard through the same bounded browser adapter. Source and fixture roots must be separate; ancestor, descendant, and identical roots fail closed.
@@ -131,3 +139,4 @@ This standalone harness is the fast visual-development path. Packed installation
 - [Client and Dashboard Architecture](terminal-ui.md)
 - [Project Dashboard and Optional Pi Client](../../product/uis/terminal.md)
 - [Implementation Loop](implementation-loop.md)
+- [Evidence Records](evidence.md)

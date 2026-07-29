@@ -28,6 +28,7 @@ Checking is machinery inside the three semantic Loops. It is not a fourth Loop a
 
 | Contract | Meaning |
 | --- | --- |
+| Evidence Record | Immutable content-addressed observation with exact subject, producer, provenance, artifact, freshness, authority, coverage, sensitivity, and kind-specific payload. It carries no verdict or route authority. |
 | Check | One versioned requirement plus its execution kind, measurement contract, evidence requirements, repair target, limits, and trusted implementation identity. |
 | Code Check | Trusted deterministic Check implemented by CodeWiki-owned code. “Code” describes the implementation mechanism, not necessarily source-code quality. |
 | Model Check | Independent bounded Pi model invocation that evaluates one semantic requirement against an exact immutable candidate and evidence snapshot. |
@@ -109,6 +110,10 @@ Project traits form a typed set, not one project type. Activation rules are spar
 Planning freezes the minimum expected Implementation Checks for each Work Item. Fresh source and actual effects may add required Checks, but cannot silently remove that minimum. Any permitted reduction requires exact authority, an allowed non-kernel exclusion, and a new policy resolution.
 
 ## Exact identity
+
+### Evidence identity
+
+Runtime derives each Evidence Record identity from its schema, kind, exact subject, producer, provenance, artifact digest, observation/freshness boundary, authority/coverage/sensitivity, and typed payload. Evidence observed before a candidate binds an exact Change or Planning revision and is later included in candidate observed-base identity; candidate-derived evidence additionally binds the candidate and source tree. Evidence cannot provide its own canonical id, observation time, authority upgrade, coverage claim, Check status, or route.
 
 ### Candidate identity
 
@@ -197,9 +202,13 @@ TTL controls eviction only. Path overlap may support invalidation hints, never a
 
 ## Evidence, tools, and repair
 
-Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain normal Workbench and repair capabilities. Their output does not automatically become authoritative Check evidence. CodeWiki-owned Code Checks may consume exact normalized evidence under closed contracts.
+Evidence Records standardize observations across all three Loops without creating an Evidence Loop, mutable aggregate, central database, or generic arbitrary-record SDK. Compact identity/provenance/payload summaries persist in the owning Change Trace; large or private artifacts remain in source, Git, provider, or content-addressed runtime storage and are cited by digest. Shared evidence has one owning observation record and may be cited by several Changes without transferring acceptance.
 
-Failed and indeterminate Results include concise evidence gaps, `issueClass`, and `repairTarget` where known. Candidate producers may receive selected prior Repair Episodes derived from Change Traces. Model Checks remain independent and do not see producer learning context.
+Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, Skills, workers, models, users, and external providers may produce evidence material. Their output does not automatically become an Evidence Record or authoritative Check input. Runtime validates one closed kind-specific payload, correlation, producer, artifact digest, provenance, freshness, coverage, and privacy boundary. CodeWiki-owned Checks then consume exact Evidence Record identities.
+
+Decision research uses typed citation Evidence Records plus provenance/freshness Code Checks and independent claim-support Model Checks. Implementation UI review uses candidate-bound screenshot/video capture records, optional independent experience critique, and authenticated approval receipts. A live URL supports inspection but is not durable proof.
+
+Failed and indeterminate Results include concise evidence gaps, `issueClass`, and `repairTarget` where known. Contradictory evidence remains visible; missing, stale, partial, unavailable, or conflicting required evidence yields repair, waiting, or `indeterminate`, never fabricated pass. Candidate producers may receive selected prior Repair Episodes derived from Change Traces. Model Checks remain independent and do not see producer learning context.
 
 Learning cannot suppress Checks, lower thresholds, change activation, or attest acceptance. Repeated patterns become deterministic mechanisms only after visible and sealed evaluation plus an accountable Change.
 
@@ -225,6 +234,7 @@ Production Decision, Planning, Implementation, traces, and views still use legac
 ## Related docs
 
 - [Loop Contracts](loop-contracts.md)
+- [Evidence Records](evidence.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Model Routing](model-routing.md)
 - [Worker Workbench](worker-workbench.md)

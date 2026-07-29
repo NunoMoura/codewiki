@@ -16,8 +16,9 @@ Maintainers need CodeWiki to answer:
 - What intent is accepted, pending, superseded, or blocked?
 - Which discrepancies are resolved, Change-accounted, suspect, contradictory, or unknown?
 - What does global Planning require and what can run safely in parallel?
-- Which exact candidate was checked and why did each Check activate?
+- Which exact candidate was checked, which Evidence Records support or contradict it, and why did each Check activate?
 - Which failed/indeterminate Result owns repair or authority?
+- For user-visible work, what exact screenshots, short videos, preview state, reviewer role, and fresh approval exist?
 - What Git, Integration, remote, artifact, release, or outcome evidence exists?
 - What is next safe action, and which separate authority/effect guard controls it?
 
@@ -26,7 +27,9 @@ Maintainers need CodeWiki to answer:
 - Work/Product/System/Design and Change dossier read canonical sources without hidden browser truth.
 - Every accepted intent has visible realization/delivery state; every promoted tree has accountable intent.
 - Exit Reports bind exact candidates and complete required Results.
-- Worker completion and model output never self-attest acceptance.
+- Worker completion, media capture, model output, and pull-request comments never self-attest acceptance.
+- Team reviewers can inspect one Validation Bundle and approve/request changes through CodeWiki or pull request without duplicate approval.
+- Approval becomes visibly stale when candidate, head, preview, or bundle changes.
 - Remote claims name exact observation boundary.
 - Brownfield unknowns stay explicit rather than fabricated.
 - Repair repetition falls without higher false-pass or escaped-regression rates.
@@ -39,3 +42,4 @@ Maintainers need CodeWiki to answer:
 - [Use Loop-Governed Automation](../stories/automation.md)
 - [Project Dashboard and Optional Pi Client](../uis/terminal.md)
 - [Alignment Model](../../system/components/alignment-model.md)
+- [Evidence Records](../../system/components/evidence.md)

@@ -50,7 +50,7 @@ Implementation
 
 Runtime is the outer control loop, while **Project Runtime** names the whole project control plane. Knowledge propagation belongs to Decision. Planning evaluates a bounded WorkState horizon rather than one Change in isolation. Check execution, learning, graph projection, recovery, Integration, publication, release, and feedback are machinery or effects—not additional semantic Loops.
 
-Write authority is surface-specific: semantic sessions and workers return candidates/evidence; Project Runtime alone appends traces and performs separately authorized effects.
+Write authority is surface-specific: semantic sessions, workers, tools, users, and providers return candidate or evidence material; Project Runtime alone materializes canonical Evidence Records, appends traces, and performs separately authorized effects.
 
 Each Loop has:
 
@@ -114,6 +114,20 @@ Runtime creates candidate identity. Candidates cannot supply identity, actor aut
 Different content or observed base creates a different candidate. Preview and append use the same immutable candidate and Exit Report; append never performs stochastic reevaluation.
 
 Role-specific schemas replace broad arbitrary-record submissions and broad `Omit<RunWiki*Input, ...>` contracts. Constructors reject unsupported and runtime-owned fields before execution.
+
+## Evidence contract
+
+An Evidence Record is one immutable content-addressed observation shared across Loops. Its small common envelope binds exact subject, producer, provenance, artifact, Runtime-owned observation/freshness, authority class, coverage, sensitivity, and one closed kind-specific payload. It has stable identity but no independent mutable lifecycle, CRUD service, central database, or semantic Loop.
+
+```text
+Check requirement = claim
+Evidence Record   = supporting, contradicting, partial, or unknown observation
+Check Result      = interpretation under exact candidate, Check, and policy
+```
+
+Runtime materializes Evidence Records from bounded producer material. Producers cannot provide canonical id/time, upgrade authority/coverage, select Checks, set verdict, or grant acceptance. Large media/log/page bytes remain in existing source, Git, provider, or content-addressed artifact boundaries; compact records and exact digests persist in Change Traces.
+
+Initial kinds are research citation, source observation, command execution, UI capture, model assessment, Worker Report, Integration proof, approval receipt, delivery attestation, and outcome observation. Each kind uses a discriminated schema and explicit privacy/retention policy. One record may support several Checks; one Check may require several kinds. Contradictions are preserved rather than overwritten.
 
 ## Check contract
 
@@ -267,7 +281,7 @@ Cheap admission rejects malformed candidate/authority contracts before expensive
 
 ## Workbench and tool evidence
 
-Pi-Lens, LSP, compilers, linters, test runners, browser tools, AST tools, formatters, security scanners, and Skills are ordinary Workbench and repair capabilities. Their output is not automatically authoritative Check evidence.
+Pi-Lens, LSP, compilers, linters, test runners, browser tools, AST tools, formatters, security scanners, workers, and Skills are ordinary Workbench and repair capabilities. Their output is evidence material, not automatically an Evidence Record or authoritative Check input.
 
 A trusted Code Check may run or normalize an approved tool under its exact implementation/configuration contract. Tool success never substitutes for planned acceptance coverage, exact candidate identity, or semantic Checks.
 
@@ -302,7 +316,7 @@ Runtime accepts a Worker Report only when worker, Assignment, Claim, Work Item, 
 
 ## Trace write and recovery
 
-One JSONL trace line is one durable semantic attempt/result or one runtime coordination event. It is not full chat, private reasoning, raw tool output, Workbench state, or an artifact dump.
+One JSONL trace line is one durable semantic attempt/result or one runtime coordination event. Typed event data may contain compact Evidence Records. It is not full chat, private reasoning, raw tool output, Workbench state, media bytes, or an artifact dump.
 
 Trace events retain compact candidate identity, parent/repair lineage, policy and Check identities, Results, Exit Report, route, progress, canonical refs, Git/delivery evidence, and outcome observations. `refs` contain canonical artifacts; prose and remediation live in structured `data`.
 
@@ -337,6 +351,10 @@ Fast edit feedback is never enough for Implementation exit. Pi-tool autoload use
 ```text
 src/
   semantic-loop.ts
+  evidence/
+    contracts.ts
+    identity.ts
+    materialize.ts
   loop-exit/
     contracts.ts
     suite.ts
@@ -345,16 +363,16 @@ src/
     resolve-policy.ts
     runner.ts
     cache.ts
-    report.ts
+    results.ts
   decision/exit/**
   planning/exit/**
   implementation/exit/**
   runtime/loop-exit-runtime.ts
 ```
 
-Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Clean cuts retain no old-path re-exports.
+Shared `src/evidence/**` and `src/loop-exit/**` cannot import Loop implementations. Loop exit consumes Evidence contracts one way. Runtime composes Evidence materialization and one immutable `LoopExitSuite`. Clean cuts retain no old-path re-exports.
 
-The unused native contracts, catalog, resolver, shared canonical JSON/digest and Runtime-owned candidate-envelope primitives, and frozen identity-only `LoopExitSuite` now occupy the target package/runtime boundaries without old-path exports. The candidate envelope binds normalized content and observed-base digests/refs, but Loop-owned `exit/**` declarations currently bind only exact Loop identity; role-specific candidate content admission and Check declarations remain pending. Current production `src/loops/**` graph/judge/evaluator machinery remains executable migration state until runner and per-Loop cuts replace it in the ratified order.
+The production-unwired native contracts, Catalog, resolver, shared canonical JSON/digests, strict role-specific Candidate admission, Runtime-owned Candidate/Check identity, immutable Result/Report constructors, and frozen `LoopExitSuite` occupy the target package/runtime boundaries without old-path exports. Loop-owned `exit/**` declarations currently bind exact Loop identity while the closed Catalog carries Check definitions; standardized Evidence Records, runner/cache, Loop-owned Check composition, and production Loop cuts remain pending. Current production `src/loops/**` graph/judge/evaluator machinery remains executable migration state until those clean cuts replace it in the ratified order.
 
 ## Token-efficiency rule
 
@@ -365,6 +383,7 @@ Do not add Loops to compensate for weak candidates or Checks. Use exact refs, co
 - [WorkState](work-state.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
+- [Evidence Records](evidence.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)

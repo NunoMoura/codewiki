@@ -44,7 +44,7 @@ Work pages use distinct projections:
 
 - Backlog joins pending Change revisions, proposal provenance, Decision state, overlap, authority, and intervention.
 - Planning joins approved Changes, Planning epochs, Sprints, Work Items, dependencies, contribution, conflicts, integration boundaries, and readiness.
-- Implementation joins claims, Assignments, session observations, workers, isolation, integration, checks, evidence, Git proof, and remediation.
+- Implementation joins claims, Assignments, session observations, workers, isolation, integration, Evidence Records, Checks/Results, preview screenshots/videos, Validation Bundle, reviewer roles, approval freshness, Git proof, and remediation.
 
 Product, System, and Design routes render canonical Knowledge. Change detail is a cross-cutting dossier and never owns another copy of the runtime pipeline.
 
@@ -67,9 +67,11 @@ The local protocol exposes bounded capability groups:
 - runtime pause/resume/cancel controls allowed by policy;
 - configuration below active authority ceilings;
 - preview and browser lifecycle controls;
+- candidate-bound Approve / Request changes actions with exact artifact-bundle freshness;
+- optional guarded draft-pull-request review publication/status without merge authority;
 - diagnostics and bounded audit receipts.
 
-Clients cannot select semantic loops, create arbitrary model sessions, submit arbitrary shell strings, append trace records, write source directly, merge, commit, publish, or relax policy. Runtime converts eligible canonical invariants into semantic and worker jobs.
+Clients cannot select semantic loops, create arbitrary model sessions, submit arbitrary shell strings, append trace/Evidence records, write source directly, merge, commit, publish review/product state, or relax policy. Review actions return bounded authority material; Runtime alone authenticates, correlates, and appends approval receipts. Runtime converts eligible canonical invariants into semantic and worker jobs.
 
 ## Pi execution
 
@@ -136,6 +138,7 @@ Pi TUI renderers remain compact read surfaces for bootstrap, configuration, expl
 
 - [Product Dashboard Contract](../../product/uis/terminal.md)
 - [Runtime](runtime.md)
+- [Evidence Records](evidence.md)
 - [Session Coordination](session-coordination.md)
 - [Adapters and UI](adapters-and-ui.md)
 - [API Tool Surface](api-tools.md)

@@ -2,7 +2,7 @@ schema_version: 1
 id: spec.system.diagrams.context-map
 title: CodeWiki Context Map
 kind: context_map
-purpose: Show who operates CodeWiki, primary and optional clients, Project Runtime authority, Pi/worker execution, repository truth, and guarded external boundaries.
+purpose: Show who operates and reviews CodeWiki work, primary and optional clients, Project Runtime authority, Pi/worker execution, repository truth, draft pull-request review, and guarded external boundaries.
 source_docs:
   - .codewiki/kb/product/users/maintainers.md
   - .codewiki/kb/product/users/agents.md
@@ -10,6 +10,7 @@ source_docs:
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/codewiki-os.md
   - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/extension.md
 renderer:
   preferred: graph
@@ -24,6 +25,9 @@ actors:
   - id: adapter_author
     label: Client / worker adapter author
     source: .codewiki/kb/product/users/package-authors.md
+  - id: team_reviewer
+    label: Intent / Product / Design / code / security reviewer
+    source: .codewiki/kb/system/components/evidence.md
   - id: future_external_user
     label: Future external user
     source: .codewiki/kb/product/users/external-users.md
@@ -70,6 +74,10 @@ systems:
   - id: git_remote
     label: Git remotes
     boundary: external
+  - id: pull_request
+    label: Optional draft pull-request review surface
+    boundary: external_mutable_projection
+    source: .codewiki/kb/system/components/evidence.md
   - id: delivery_targets
     label: Publication / release / deployment / observations
     boundary: external
@@ -92,6 +100,9 @@ relationships:
   - from: adapter_author
     to: future_adapter
     label: implements compatible boundary
+  - from: team_reviewer
+    to: pull_request
+    label: reviews exact Validation Bundle and submits approval or requested changes
   - from: future_external_user
     to: dashboard
     label: inspects supported project state
@@ -126,8 +137,14 @@ relationships:
     to: repository
     label: changes scoped isolated working state only
   - from: project_runtime
+    to: pull_request
+    label: guarded isolated review publication and provider-event re-observation
+  - from: pull_request
+    to: project_runtime
+    label: untrusted review event materialized only after exact correlation
+  - from: project_runtime
     to: git_remote
-    label: pushes exact commit under separate authority
+    label: ordinary post-exit push under separate authority
   - from: project_runtime
     to: delivery_targets
     label: performs separately authorized exact effects
