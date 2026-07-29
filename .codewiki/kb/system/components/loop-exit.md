@@ -120,7 +120,7 @@ Check identity binds:
 
 - semantic Loop;
 - Check id and version;
-- criterion/content digest;
+- requirement/content digest;
 - `code` or `model` kind;
 - implementation or protocol identity;
 - measurement schema;

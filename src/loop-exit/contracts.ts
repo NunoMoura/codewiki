@@ -47,7 +47,7 @@ export interface CheckDefinition {
 	id: string;
 	version: string;
 	description: string;
-	criteria: string[];
+	requirement: string;
 	execution: CheckExecutionSpec;
 	measurement: CheckMeasurementSpec;
 	evidenceAdapterIds: string[];

@@ -110,7 +110,7 @@ const PLANNING_BASELINE = [
 	],
 	[
 		"work_items_self_contained",
-		"Work Items have stable ownership, outcomes, requirements, criteria, and bounded paths.",
+		"Work Items have stable ownership, outcomes, requirements, evidence obligations, and bounded paths.",
 	],
 	[
 		"cross_change_contribution_explicit",
@@ -122,7 +122,7 @@ const PLANNING_BASELINE = [
 	],
 	[
 		"acceptance_and_verification_testable",
-		"Acceptance criteria and verification are concrete and testable.",
+		"Acceptance requirements and verification are concrete and testable.",
 	],
 	[
 		"source_ownership_aligned",
@@ -181,7 +181,7 @@ const IMPLEMENTATION_BASELINE = [
 	],
 	[
 		"acceptance_evidence_complete",
-		"Every required criterion maps to structured evidence.",
+		"Every acceptance requirement maps to structured evidence.",
 	],
 	[
 		"verification_passed",
@@ -189,7 +189,7 @@ const IMPLEMENTATION_BASELINE = [
 	],
 	[
 		"tdd_evidence_valid",
-		"Required red and green proof maps to acceptance criteria.",
+		"Required red and green proof maps to acceptance requirements.",
 	],
 	[
 		"worker_claims_correlated",
@@ -433,7 +433,7 @@ function kernelRegistration(
 			id,
 			version: "1.0.0",
 			description,
-			criteria: [description],
+			requirement: description,
 			execution: { id: executionId, version: "1.0.0", kind },
 			measurement: {
 				kind: kind === "model" ? "qualitative" : "quantitative",
@@ -488,7 +488,6 @@ function normalizeRegistration(
 		...registration,
 		check: {
 			...registration.check,
-			criteria: unique(registration.check.criteria),
 			evidenceAdapterIds: unique(registration.check.evidenceAdapterIds),
 			execution: { ...registration.check.execution },
 			measurement: { ...registration.check.measurement },
@@ -525,13 +524,8 @@ function validateCheckShape(
 			`Check ${check.id} requires version and description.`,
 		);
 	}
-	if (
-		check.criteria.length === 0 ||
-		registration.loops.length === 0
-	) {
-		throw new Error(
-			`Check ${check.id} requires criteria and loops.`,
-		);
+	if (!check.requirement.trim() || registration.loops.length === 0) {
+		throw new Error(`Check ${check.id} requires one requirement and loops.`);
 	}
 }
 

@@ -29,7 +29,7 @@ export const implementationCommandResultCandidateSchema = Type.Object(
 		),
 		phase: Type.Optional(checkPhaseSchema),
 		tddPhase: Type.Optional(checkPhaseSchema),
-		criterionId: Type.Optional(Type.String()),
+		acceptanceRequirementId: Type.Optional(Type.String()),
 		exitCode: Type.Optional(Type.Integer()),
 		outputRef: Type.Optional(Type.String()),
 		summary: Type.Optional(Type.String()),
@@ -39,7 +39,7 @@ export const implementationCommandResultCandidateSchema = Type.Object(
 
 export const implementationAcceptanceEvidenceCandidateSchema = Type.Object(
 	{
-		criterionId: Type.Optional(Type.String()),
+		acceptanceRequirementId: Type.Optional(Type.String()),
 		summary: Type.Optional(Type.String()),
 		evidenceRefs: Type.Optional(stringArraySchema),
 	},

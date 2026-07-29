@@ -288,11 +288,12 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
   - [x] Rename the active Pi SDK role and coordinator lane from `implementation_review` to `implementation`; retain no standalone Implementation reviewer concept.
   - [x] Replace broad nested Planning/Implementation candidate records and SDK tool schemas with exact Loop-owned camel-case contracts, recursive unknown-field rejection, and closed enum/value checks; name non-authoritative Implementation observations `commands`/`commandResults` so canonical Check Results remain Runtime-owned.
 - [x] Replace the moved foundation's transitional `Quality*`, Standard, Assessment, Gate, `stage`, and `enforce` symbols under `src/loop-exit/**` with final Check, Check Result, Resolved Exit Policy, Exit Report, `loop`, and `require` contracts; retain no aliases.
-- [ ] Replace global-by-id registration with Loop-qualified Check identity binding exact criterion digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, and catalog digest.
+- [x] Correct formal Criterion drift: atomic Checks expose one `requirement`; Planning candidates expose `acceptanceRequirements`; Implementation candidate evidence uses `acceptanceRequirementId`; only explicit adapters into legacy production facades retain old field names pending those clean cuts.
+- [ ] Replace global-by-id registration with Loop-qualified Check identity binding exact requirement digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, and catalog digest.
 - [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.
 - [ ] Derive approved additions/exclusions, rollout progression, and frozen Planning minimums only from canonical runtime observations.
 - [ ] Make frozen Planning minimums independently digest-verifiable and bind Implementation to persisted Planning minimums.
-- [ ] Strictly validate loop, authority/enforcement, method-kind compatibility, criteria, repair targets, measurement bounds, thresholds, costs/timeouts, dependencies, and activation-rule refs.
+- [ ] Strictly validate loop, authority/enforcement, method-kind compatibility, requirements, repair targets, measurement bounds, thresholds, costs/timeouts, dependencies, and activation-rule refs.
 - [ ] Add startup validation for unique rule identities, known Loop-qualified Checks, KB/catalog agreement, implementation refs, and dependency acyclicity.
 - [ ] Add `ui_preview_targets_valid` to Planning and replace ambiguous cross-Loop release/security/accessibility/dependency semantics with Loop-specific Checks.
 - [x] Add strict shared canonical JSON/digest utilities and migrate the native policy identity off its local stable-stringify implementation.

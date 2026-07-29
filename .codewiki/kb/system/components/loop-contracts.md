@@ -93,8 +93,8 @@ WorkState is a disposable projection over Change Traces, Knowledge, source owner
 | Loop | Input focus | Candidate focus | Required exit meaning |
 | --- | --- | --- | --- |
 | Decision | Exact proposed/persisted Change revision, relevant WorkState/Knowledge/current-state refs, overlap, authority, route-back context. | Normalized intent, outcome, Knowledge delta, constraints, risks, delivery effects, overlap disposition, approval or terminal disposition facts. | Accepted interpretation is grounded, coherent, Knowledge-accounted, risk-aware, overlap-accounted, and exactly authorized. |
-| Planning | Bounded approved-Change portfolio, current Planning/Assignment/Integration state, ownership, constraints, prior plan revisions. | Globally coherent Sprints, worker-ready Work Items, dependencies, criteria, verification, path/component bounds, triggers, resolutions, Integration and Workbench requirements. | Every selected approved Change has coherent executable coverage or explicit authorized resolution. |
-| Implementation | Owning approved Change, accepted Work Items, Assignments/Worker Reports, Integration state, source ownership, source/tests/Git, prior evidence. | Exact realization, changed paths, criterion evidence, trusted check observations, worker provenance, Integration/content proof, outcome disposition, route-back questions. | Exact accepted obligations are realized, verified, integrated, provenance-bound, and ready for the requested semantic exit. |
+| Planning | Bounded approved-Change portfolio, current Planning/Assignment/Integration state, ownership, constraints, prior plan revisions. | Globally coherent Sprints, worker-ready Work Items, dependencies, acceptance requirements, verification, path/component bounds, triggers, resolutions, Integration and Workbench requirements. | Every selected approved Change has coherent executable coverage or explicit authorized resolution. |
+| Implementation | Owning approved Change, accepted Work Items, Assignments/Worker Reports, Integration state, source ownership, source/tests/Git, prior evidence. | Exact realization, changed paths, acceptance-requirement evidence, trusted check observations, worker provenance, Integration/content proof, outcome disposition, route-back questions. | Exact accepted obligations are realized, verified, integrated, provenance-bound, and ready for the requested semantic exit. |
 
 Downstream Loops consume only exact passed-and-appended upstream output. Failed and indeterminate attempts remain durable accountability, repair, and learning evidence.
 
@@ -121,7 +121,7 @@ Role-specific schemas replace broad arbitrary-record submissions and broad `Omit
 type Check = CodeCheck | ModelCheck;
 ```
 
-A Check is one atomic versioned requirement plus criterion, execution kind, measurement contract, evidence requirements, repair target, resource limits, and implementation identity. It is not an entire Loop policy.
+A Check is one atomic versioned requirement plus execution kind, measurement contract, evidence contract, repair target, resource limits, and implementation identity. It is not an entire Loop policy.
 
 ### Code Check
 
@@ -196,7 +196,7 @@ Actual candidate growth may add required Checks. It cannot silently lower risk o
 
 ### Check identity
 
-Binds Loop, Check id/version, criterion/content digest, execution kind, implementation/protocol identity, measurement schema, and evidence contract. Reusing an id under a different Loop or definition creates a different identity.
+Binds Loop, Check id/version, requirement/content digest, execution kind, implementation/protocol identity, measurement schema, and evidence contract. Reusing an id under a different Loop or definition creates a different identity.
 
 ### Check Result identity
 
@@ -285,12 +285,12 @@ Knowledge may intentionally lead source only when an exact active Change account
 
 ## Worker-owned execution evidence
 
-Planning assigns stable acceptance criterion ids to worker-ready Work Items. Workers may perform local test-first repair and report:
+Planning assigns stable acceptance-requirement ids to worker-ready Work Items. Workers may perform local test-first repair and report:
 
 ```text
 approved Change
 → Sprint/Work Item
-→ acceptance criterion
+→ acceptance requirement
 → pre-change failing evidence when required
 → post-change passing evidence
 → changed paths

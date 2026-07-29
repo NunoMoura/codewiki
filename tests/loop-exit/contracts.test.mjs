@@ -74,7 +74,7 @@ describe("Resolved Exit Policy contracts", () => {
 			id: "maintainability_reviewed",
 			version: "1.0.0",
 			description: "Review maintainability independently.",
-			criteria: ["Findings are specific and actionable."],
+			requirement: "Findings are specific and actionable.",
 			execution: {
 				id: "codewiki.model-check",
 				version: "1.0.0",

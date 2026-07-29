@@ -71,8 +71,8 @@ Production remains blocked until tests prove:
 - candidate-supplied aggregate proof can never override observed proof;
 - missing required review/evidence cannot silently produce no issue;
 - built-in/kernel Check registration is internal and project/caller cannot claim protected authority;
-- Check constructors reject unknown Loop, mismatched execution kind, blank criterion/repair target, invalid cost/timeout/bounds, and fabricated Planning minimums;
-- Loop-qualified Check identity prevents duplicate global ids from inheriting wrong criterion/repair target;
+- Check constructors reject unknown Loop, mismatched execution kind, blank requirement/repair target, invalid cost/timeout/bounds, and fabricated Planning minimums;
+- Loop-qualified Check identity prevents duplicate global ids from inheriting the wrong requirement or repair target;
 - Planning-specific UI preview validation activates when required;
 - release/effect Checks activate only from relevant accepted traits/effects;
 - independent Checks continue after unrelated failure;

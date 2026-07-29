@@ -21,7 +21,7 @@ Planning shapes coherent independently verifiable outcomes, not smallest tasks. 
 
 - one bounded outcome;
 - exactly one owning Change plus explicit contribution refs;
-- stable acceptance criteria and verification;
+- stable acceptance requirements and verification;
 - bounded component/path/test scope;
 - dependencies and Integration boundary;
 - resolvable source/context needs;
@@ -53,7 +53,7 @@ Omitted `skillScope` preserves normal Pi discovery. Planning may narrow but cann
 
 Before Claim append, Runtime resolves requirements against fresh WorkState and host capabilities. Private digest-bound manifest includes:
 
-- Assignment, Change, Planning, Work Item, and criterion identities;
+- Assignment, Change, Planning, Work Item, and acceptance-requirement identities;
 - exact repository/source base and mutable workspace identity;
 - bounded context/provenance refs, content digests, and ownership facts;
 - resolved Pi Skill ids/versions inside declared scope;

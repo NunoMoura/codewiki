@@ -35,7 +35,7 @@ Planning candidate
 Planning output supplies:
 
 - Work Item, owning/contributing Change, Sprint, and plan identities;
-- stable acceptance criteria;
+- stable acceptance requirements;
 - component/path/test ownership and Integration boundary;
 - dependencies/concurrency/rollback constraints;
 - verification and evidence requirements;

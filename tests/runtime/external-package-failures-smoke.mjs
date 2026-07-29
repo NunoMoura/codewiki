@@ -72,16 +72,6 @@ function assertToolResult(result, pattern) {
 	return result.details.result;
 }
 
-async function executeTool(tool, input, ctx, id = tool.name) {
-	return await tool.execute(
-		`external-failures-${id}`,
-		{ input },
-		undefined,
-		undefined,
-		ctx,
-	);
-}
-
 async function expectedBytes(tracePath) {
 	return (await stat(tracePath)).size;
 }
@@ -525,7 +515,7 @@ async function createReadyTrace(
 						title: "Exercise installed package runtime failure handling",
 						outcome: "Runtime failures produce deterministic remediation.",
 						technicalRequirements: ["Preserve Change Trace authority."],
-						acceptanceCriteria: ["Failure routes remain deterministic."],
+						acceptanceRequirements: ["Failure routes remain deterministic."],
 						componentRefs: ["source"],
 						pathScopes: [pathScope],
 						verification: [verification],

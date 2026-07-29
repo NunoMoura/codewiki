@@ -35,7 +35,7 @@ function projectRegistration() {
 			id: "project.documentation_current",
 			version: "1.0.0",
 			description: "Project documentation remains current.",
-			criteria: ["Affected documentation is updated."],
+			requirement: "Affected documentation is updated.",
 			execution: {
 				id: "codewiki.code-check",
 				version: "1.0.0",

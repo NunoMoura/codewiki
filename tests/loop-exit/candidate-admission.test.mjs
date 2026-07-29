@@ -93,7 +93,7 @@ describe("Loop-owned candidate content admission", () => {
 					title: "Tighten admission",
 					outcome: "Nested content is exact.",
 					technicalRequirements: ["Reject unknown fields."],
-					acceptanceCriteria: ["Malformed content fails."],
+					acceptanceRequirements: ["Malformed content fails."],
 					componentRefs: ["component:planning-loop"],
 					pathScopes: ["src/planning/**"],
 					verification: ["npm test"],
@@ -113,6 +113,16 @@ describe("Loop-owned candidate content admission", () => {
 					],
 				}),
 			/Runtime planning candidate received unsupported field planning_refs at \/workItems\/0\./,
+		);
+		assert.throws(
+			() =>
+				parsePlanningCandidateContent({
+					...candidate,
+					workItems: [
+						{ ...candidate.workItems[0], acceptanceCriteria: ["legacy"] },
+					],
+				}),
+			/Runtime planning candidate received unsupported field acceptanceCriteria/,
 		);
 	});
 
@@ -143,13 +153,13 @@ describe("Loop-owned candidate content admission", () => {
 							command: "npm test",
 							status: "pass",
 							phase: "verify",
-							criterionId: "AC-1",
+							acceptanceRequirementId: "AR-1",
 							exitCode: 0,
 						},
 					],
 					acceptanceEvidenceItems: [
 						{
-							criterionId: "AC-1",
+							acceptanceRequirementId: "AR-1",
 							summary: "Admission tests pass.",
 							evidenceRefs: ["check:npm-test"],
 						},
@@ -192,11 +202,23 @@ describe("Loop-owned candidate content admission", () => {
 					evidence: [
 						{
 							workItemId: "WI-1",
-							commandResults: [{ criterion_id: "AC-1" }],
+							commandResults: [{ criterionId: "legacy" }],
 						},
 					],
 				}),
-			/Runtime implementation candidate received unsupported field criterion_id at \/evidence\/0\/commandResults\/0\./,
+			/Runtime implementation candidate received unsupported field criterionId/,
+		);
+		assert.throws(
+			() =>
+				parseImplementationCandidateContent({
+					evidence: [
+						{
+							workItemId: "WI-1",
+							commandResults: [{ acceptance_requirement_id: "AR-1" }],
+						},
+					],
+				}),
+			/Runtime implementation candidate received unsupported field acceptance_requirement_id at \/evidence\/0\/commandResults\/0\./,
 		);
 	});
 });

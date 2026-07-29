@@ -192,7 +192,12 @@ describe("runtime semantic executor", () => {
 							workItemId: seeded.workItemId,
 							commands: ["npm test"],
 							commandResults: [
-								{ command: "npm test", status: "pass", exitCode: 0 },
+								{
+									command: "npm test",
+									status: "pass",
+									exitCode: 0,
+									acceptanceRequirementId: "AR-1",
+								},
 							],
 						},
 					],
@@ -203,7 +208,14 @@ describe("runtime semantic executor", () => {
 		assert.equal(result.outcomes[0].loop, "implementation");
 		assert.deepEqual(
 			result.outcomes[0].result.loopResult.changes[0].checkResults,
-			[{ command: "npm test", status: "pass", exitCode: 0 }],
+			[
+				{
+					command: "npm test",
+					status: "pass",
+					exitCode: 0,
+					criterionId: "AR-1",
+				},
+			],
 		);
 	});
 

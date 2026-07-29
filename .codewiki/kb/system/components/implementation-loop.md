@@ -67,7 +67,7 @@ Implementation owns semantic judgment over:
 
 - realization of exact approved Change/Planning obligations;
 - source, tests, package, README, and Knowledge updates inside scope;
-- acceptance-criterion coverage;
+- acceptance-requirement coverage;
 - worker evidence and conflict disposition;
 - component/path/test/source-ownership alignment;
 - maintainability, safety, accessibility, privacy, dependency, and compatibility semantics when activated;
@@ -84,7 +84,7 @@ Implementation does not own new Change meaning, alter accepted Knowledge semanti
 Implementation may have two phases:
 
 1. **Work Item realization:** validate Assignment scope and local evidence; repair source/tests/docs inside authority.
-2. **Combined realization exit:** evaluate integrated tree, shared dependencies, aggregate verification, cross-Change criteria, preview evidence, and content proof.
+2. **Combined realization exit:** evaluate integrated tree, shared dependencies, aggregate verification, cross-Change requirements, preview evidence, and content proof.
 
 These are phases inside one semantic Loop, not separate Loops or agents.
 
@@ -93,7 +93,7 @@ These are phases inside one semantic Loop, not separate Loops or agents.
 Implementation input binds:
 
 - owning approved Change and current realization state;
-- exact accepted Work Items and criteria;
+- exact accepted Work Items and acceptance requirements;
 - Sprint, dependency, Assignment, Claim, Workbench, and Integration projections;
 - immutable Worker Reports and provenance;
 - current source/test/Git tree and runtime-built content proof;
@@ -110,7 +110,7 @@ Runtime selects Change/Work Items, verifies correlation, loads canonical Plannin
 Loop-owned immutable `ImplementationCandidateContent` describes the exact realization under evaluation:
 
 - owning and contributing Changes;
-- covered Work Items and acceptance criteria;
+- covered Work Items and acceptance requirements;
 - exact changed source/docs/test paths and candidate Git/tree identity supplied by Runtime;
 - bounded evidence refs and trusted observations;
 - Worker Report/Assignment/Workbench provenance;
@@ -133,7 +133,7 @@ receive ready Work Item/Worker Report/Integration observation
 → construct immutable role-specific candidate
 → resolve candidate-specific Implementation Exit Policy
 → run bounded independent Code/Model Checks
-→ map Results to criteria and repair targets
+→ map Results to requirements and repair targets
 → build immutable Exit Report
 → repair or hand Report to Runtime
 → Runtime final freshness/authority/CAS guard and append
@@ -145,7 +145,7 @@ Private logs, prompts, reasoning, raw output, unrestricted diffs, and Workbench 
 
 Every Work Item has one owning Change; its canonical realization event belongs to that Change Trace. Explicit `contributingChangeIds` and evidence refs allow other Change views to resolve coverage without duplicating authority.
 
-A shared evidence artifact may be referenced by several Changes. Each owning Change still gets its own candidate-bound exit decision against approved outcome and criteria.
+A shared evidence artifact may be referenced by several Changes. Each owning Change still gets its own candidate-bound exit decision against approved outcomes and requirements.
 
 ## Baseline and adaptive Checks
 
@@ -154,7 +154,7 @@ A shared evidence artifact may be referenced by several Changes. Each owning Cha
 | Approved Change coverage | Candidate realizes current accepted requirements. |
 | Planning coverage | Every selected Work Item is known and dispositioned. |
 | Scope control | Changed paths/base stay inside accepted ownership and Assignment scope. |
-| Acceptance evidence | Every required criterion maps to structured evidence. |
+| Acceptance evidence | Every acceptance requirement maps to structured evidence. |
 | Verification | Required scoped and integrated checks are complete and passing. |
 | Worker correlation | Evidence binds exact Claim, Assignment, Workbench, worker, plan, and base. |
 | Integration conflict | No unresolved base/path/ownership/semantic conflict remains. |

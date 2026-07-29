@@ -58,7 +58,7 @@ Planning owns:
 - grouping/splitting work across Sprints;
 - semantic Sprint and Work Item identities;
 - exactly one owning Change per Work Item plus explicit contribution refs;
-- technical requirements and stable acceptance criteria;
+- technical and acceptance requirements;
 - dependency/order constraints across Changes and Sprints;
 - component/path scopes, source ownership, tests, preview targets, and Integration/rollback boundaries;
 - conflict, starvation, deferral, supersession, and route-back resolution;
@@ -171,7 +171,7 @@ Each Work Item includes:
 - stable semantic id and Sprint id;
 - exactly one owning Change plus optional contributions;
 - coherent outcome and technical requirements;
-- stable acceptance criteria and verification;
+- stable acceptance requirements and verification;
 - components/path/test scope and dependencies;
 - Workbench context/capability/Skill/tool/isolation needs;
 - minimum required Checks/evidence and budget class;
@@ -186,10 +186,10 @@ Omitted Skill scope preserves normal Pi discovery. Planning may narrow but canno
 | --- | --- |
 | Approved Change coverage | Every selected approved Change is covered or explicitly resolved. |
 | Sprint coherence | Goals, participants, rollback, Integration, and dependencies form safe execution groups. |
-| Worker-ready Work Items | Every item has one owner, coherent outcome, requirements, criteria, and bounded scope. |
+| Worker-ready Work Items | Every item has one owner, coherent outcome, technical and acceptance requirements, and bounded scope. |
 | Cross-Change contribution | Additional coverage is explicit without duplicate ownership. |
 | Technical requirements | Implementation can proceed without inventing accepted behavior. |
-| Acceptance and verification | Stable criteria and evidence obligations are executable. |
+| Acceptance and verification | Stable acceptance requirements and evidence obligations are executable. |
 | Source ownership | Components, paths, and tests fit accepted ownership. |
 | Dependency closure | References exist, graph is acyclic, and overlap is ordered. |
 | Claimed work stability | Replanning never silently mutates active Assignments. |

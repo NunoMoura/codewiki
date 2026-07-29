@@ -391,7 +391,7 @@ async function executeSelectedSemanticWork(
 			(entry) => entry.changeId,
 		);
 		const coreInput: RunWikiPlanInput = {
-			...candidate,
+			...runtimePlanningContent(candidate),
 			...requiredPlanningContext(context),
 			repoRoot,
 			expectedWorkStateDigest: observation.workState.snapshotDigest,
@@ -474,14 +474,51 @@ async function executeSelectedSemanticWork(
 	};
 }
 
+function runtimePlanningContent(candidate: PlanningCandidateContent) {
+	return {
+		...candidate,
+		workItems: candidate.workItems.map(
+			({ acceptanceRequirements, ...workItem }) => ({
+				...workItem,
+				acceptanceCriteria: acceptanceRequirements,
+			}),
+		),
+	};
+}
+
 function runtimeImplementationEvidence(
 	evidence: NonNullable<ImplementationCandidateContent["evidence"]>,
 ): ImplementationEvidenceSubmission[] {
-	return evidence.map(({ commands, commandResults, ...entry }) => ({
-		...entry,
-		...(commands ? { checks: commands } : {}),
-		...(commandResults ? { checkResults: commandResults } : {}),
-	}));
+	return evidence.map(
+		({ commands, commandResults, acceptanceEvidenceItems, ...entry }) => ({
+			...entry,
+			...(commands ? { checks: commands } : {}),
+			...(commandResults
+				? {
+						checkResults: commandResults.map(
+							({ acceptanceRequirementId, ...result }) => ({
+								...result,
+								...(acceptanceRequirementId
+									? { criterionId: acceptanceRequirementId }
+									: {}),
+							}),
+						),
+					}
+				: {}),
+			...(acceptanceEvidenceItems
+				? {
+						acceptanceEvidenceItems: acceptanceEvidenceItems.map(
+							({ acceptanceRequirementId, ...item }) => ({
+								...item,
+								...(acceptanceRequirementId
+									? { criterionId: acceptanceRequirementId }
+									: {}),
+							}),
+						),
+					}
+				: {}),
+		}),
+	);
 }
 
 function requiredChange(

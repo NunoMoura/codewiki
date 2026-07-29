@@ -52,7 +52,7 @@ export const planningWorkItemCandidateSchema = Type.Object(
 		title: requiredTextSchema,
 		outcome: requiredTextSchema,
 		technicalRequirements: stringArraySchema,
-		acceptanceCriteria: stringArraySchema,
+		acceptanceRequirements: stringArraySchema,
 		componentRefs: stringArraySchema,
 		pathScopes: stringArraySchema,
 		verification: stringArraySchema,
