@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
+import { createPiDecisionResearchClaimsTransport } from "../../src/pi/decision-research-claims-session.ts";
 import { createLoopExitRuntime } from "../../src/runtime/loop-exit-runtime.ts";
 
 const digest = (value) => `sha256:${value.repeat(64)}`;
@@ -262,6 +263,33 @@ describe("Decision research Runtime boundary", () => {
 });
 
 describe("Decision research claim-support Model Check", () => {
+	it("completes exact prepared input through isolated Pi transport", async () => {
+		const runtime = createLoopExitRuntime();
+		const fixture = claimsFixture(runtime);
+		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
+			fixture.input,
+		);
+		assert.equal(prepared.status, "ready");
+		const transport = createPiDecisionResearchClaimsTransport({
+			repoRoot: process.cwd(),
+			now: () => "2026-07-29T12:05:00.000Z",
+			sessionFactory: async ({ request }) => ({
+				async prompt() {},
+				readResponse: () => modelAssessmentResponse(request, "supported"),
+				dispose() {},
+			}),
+		});
+		const observation = await transport.execute(prepared.request);
+		const completion = runtime.completeDecisionResearchClaimsAssessment(
+			fixture.input,
+			observation,
+		);
+
+		assert.equal(completion.result.status, "pass");
+		assert.equal(completion.evidenceRecords.length, 1);
+		assert.equal(completion.evidenceRecords[0].kind, "model_assessment");
+	});
+
 	it("prepares one immutable, tool-free, exact-input model request", () => {
 		const runtime = createLoopExitRuntime();
 		const fixture = claimsFixture(runtime);

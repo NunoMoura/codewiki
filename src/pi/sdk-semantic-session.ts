@@ -28,6 +28,8 @@ import type {
 	RuntimeSemanticAdapters,
 } from "../runtime/semantic-executor.ts";
 
+export { createPiDecisionResearchClaimsTransport } from "./decision-research-claims-session.ts";
+
 const READ_ONLY_TOOL_NAMES = ["read", "grep", "find", "ls"] as const;
 const DEFAULT_TIMEOUT_MS = 120_000;
 const DEFAULT_MAX_INVOCATION_BYTES = 262_144;

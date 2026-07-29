@@ -7,7 +7,7 @@ tags:
   - system
   - decision
   - loop
-timestamp: 2026-07-29T21:00:05.000Z
+timestamp: 2026-07-29T21:24:38.000Z
 codewiki_component: decision
 codewiki_components:
   - decision
@@ -180,7 +180,9 @@ The native Runtime bridge now admits bounded citation material through one Decis
 
 The versioned `codewiki.decision.research-claims` protocol now prepares one immutable, tool-free request from the exact passing provenance Result, candidate, policy, route configuration, claims, and citation Evidence ids. A model does not report aggregate Check pass/fail. It must assess every exact claim digest once and echo the complete citation-id set. Runtime rejects missing, duplicate, foreign, or malformed claim assessments; derives aggregate `supported | unsupported | uncertain`; materializes only bounded normalized `model_assessment` Evidence; and creates the immutable Check Result. Unsupported dominates uncertainty. Timeout, provider failure, unavailability, cancellation, or malformed output is indeterminate without fabricated measurement or Evidence.
 
-Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. External research collection, isolated Pi SDK transport for the prepared protocol, native candidate/policy/report persistence, and replacement of that legacy path remain part of the clean Decision cut.
+The Pi adapter now executes that prepared protocol in one in-memory session selected by the exact Runtime route. It disables all tools and resource discovery, supplies no producer conversation or repository context, bounds request/response bytes and route timeout, propagates cancellation, parses only strict JSON, and discards transient assistant text after normalization. Missing models, provider failure, timeout, cancellation, and malformed output return typed operational observations for Runtime reduction; they never fabricate model Evidence.
+
+Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. External research collection, native candidate/policy/report persistence, production scheduling of the Pi transport, and replacement of that legacy path remain part of the clean Decision cut.
 
 ## Exit and route
 

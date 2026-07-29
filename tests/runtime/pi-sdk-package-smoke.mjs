@@ -38,8 +38,12 @@ try {
 	writeFileSync(
 		smokeScript,
 		`import assert from "node:assert/strict";
-import { createPiSdkRuntimeSemanticAdapters } from "@nunomoura/codewiki/pi-sdk";
+import {
+  createPiDecisionResearchClaimsTransport,
+  createPiSdkRuntimeSemanticAdapters,
+} from "@nunomoura/codewiki/pi-sdk";
 
+assert.equal(typeof createPiDecisionResearchClaimsTransport, "function");
 let sdkOptions;
 const adapters = createPiSdkRuntimeSemanticAdapters({
   repoRoot: process.cwd(),
@@ -51,7 +55,12 @@ const adapters = createPiSdkRuntimeSemanticAdapters({
         async prompt() {
           await sdkOptions.customTools[0].execute(
             "candidate-call",
-            { candidate: { candidateId: "packed-smoke" } },
+            {
+              candidate: {
+                disposition: "approve",
+                rationale: "Packed Pi SDK smoke candidate.",
+              },
+            },
             undefined,
             undefined,
             {},
@@ -74,7 +83,10 @@ const candidate = await adapters.decision({
     digest: "sha256:change",
   },
 });
-assert.deepEqual(candidate, { candidateId: "packed-smoke" });
+assert.deepEqual(candidate, {
+  disposition: "approve",
+  rationale: "Packed Pi SDK smoke candidate.",
+});
 assert.deepEqual(sdkOptions.tools, [
   "read",
   "grep",

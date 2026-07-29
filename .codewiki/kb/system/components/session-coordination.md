@@ -8,7 +8,7 @@ tags:
   - components
   - session
   - coordination
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-29T21:24:38.000Z
 ---
 # Session Coordination Component
 
@@ -19,7 +19,7 @@ Session coordination lets one project-scoped control plane run compatible work c
 ## Ownership
 
 - `src/runtime/**` owns harness-neutral lane, scheduling, claim, lifecycle, and session-adapter contracts.
-- `src/pi/**` owns Pi-specific embedded SDK and process-session adapters. `src/pi/sdk-semantic-session.ts` is exposed only through the entrypoint-isolated `./pi-sdk` package subpath.
+- `src/pi/**` owns Pi-specific embedded SDK and process-session adapters. Candidate production uses `src/pi/sdk-semantic-session.ts`; independent Decision claim support uses `src/pi/decision-research-claims-session.ts`. Pi SDK publication remains entrypoint-isolated.
 - implementation worker adapters may use child processes or containers, but must implement the runtime worker contract rather than leak host semantics into core.
 - `.codewiki/runtime/**` stores bounded private scratch, endpoint metadata, process observations, and recoverable session references only.
 
@@ -57,7 +57,7 @@ Each generation owns a bounded in-memory event journal with monotonic cursors. L
 
 ## Semantic session adapter
 
-Runtime invokes bounded semantic work through a harness-neutral adapter. The target Pi implementation embeds `createAgentSession()` through the Pi SDK and creates distinct sessions for Decision, Planning, Implementation candidate production, and Model Checks. Candidate producers and Model Checks never share conversational state.
+Runtime invokes bounded semantic work through a harness-neutral adapter. Pi candidate production embeds `createAgentSession()` and creates distinct sessions for Decision, Planning, and Implementation. Candidate producers and Model Checks never share conversational state. The implemented Decision research claim-support transport creates one additional in-memory Pi session for the exact prepared Model Check request, with all tools and resource discovery disabled, strict response bounds, exact route timeout, and cancellation cleanup. Production scheduler wiring remains pending.
 
 Semantic sessions:
 

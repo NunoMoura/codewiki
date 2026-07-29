@@ -6,7 +6,7 @@ tags:
   - codewiki
   - system
   - extension
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-29T21:24:38.000Z
 codewiki_component: pi
 codewiki_components:
   - pi
@@ -19,6 +19,7 @@ codewiki_test_patterns:
   - tests/runtime/pi-install-smoke.mjs
   - tests/runtime/pi-install-scope.test.mjs
   - tests/runtime/pi-process-session.test.mjs
+  - tests/runtime/pi-decision-research-claims-session.test.mjs
   - tests/runtime/process-worker-adapter.test.mjs
   - tests/runtime/pi-project-service-client.test.mjs
   - tests/runtime/pi-project-coordinator-daemon.test.mjs
@@ -42,6 +43,7 @@ codewiki_source_map:
       - tests/runtime/pi-install-smoke.mjs
       - tests/runtime/pi-install-scope.test.mjs
       - tests/runtime/pi-process-session.test.mjs
+      - tests/runtime/pi-decision-research-claims-session.test.mjs
       - tests/runtime/process-worker-adapter.test.mjs
       - tests/runtime/pi-project-service-client.test.mjs
       - tests/runtime/pi-project-coordinator-daemon.test.mjs
@@ -61,7 +63,7 @@ CodeWiki's approved primary boundary is the standalone CLI, Project Runtime, das
 
 Pi integration lives under `src/pi/**` and has two distinct roles. The extension is a thin conversational client of one project-scoped CodeWiki Runtime. The Pi execution adapter creates bounded agent sessions on Runtime request. Pi remains the provider/auth/session/tool/Skill engine, not CodeWiki core; harness-neutral runtime code must not import Pi SDK types.
 
-CodeWiki OS keeps bounded state, Change, and configuration capabilities available to clients while Project Runtime owns semantic selection and scheduling. Decision, Planning, Implementation candidate, and Model Check sessions are created through an embedded Pi SDK adapter with read-only repository tools and closed role-specific submission tools. Runtime injects versioned CodeWiki OS guidance plus the exact mandatory Loop Protocol. Normal Pi Skill discovery and progressive loading remain available unless Planning narrows Skill scope through one Workbench. Implementation Assignments use a separate harness-neutral worker contract. The default Pi adapter executes foreground child processes in explicit worktrees. An opt-in core OCI adapter executes the same contract through a host-selected digest-pinned Docker/Podman image and preserves the same Claim, Assignment, cancellation, immutable Worker report, recovery, review, Integration, and cleanup semantics. The executable Pi daemon does not select or provision that image automatically. Runtime supplies exact context, freshness, budgets, and append authority; sessions return judgment or evidence only.
+CodeWiki OS keeps bounded state, Change, and configuration capabilities available to clients while Project Runtime owns semantic selection and scheduling. Decision, Planning, and Implementation candidate sessions use isolated Pi SDK sessions with read-only repository tools and closed role-specific submission tools. Independent Model Checks never reuse producer sessions. The Decision research claim-support transport uses one stricter in-memory session with all tools and resource discovery disabled, an exact Runtime-selected route, and strict bounded JSON output. Runtime injects versioned CodeWiki OS guidance plus the exact mandatory Loop Protocol. Normal Pi Skill discovery and progressive loading remain available to candidate Workbenches unless Planning narrows Skill scope. Implementation Assignments use a separate harness-neutral worker contract. The default Pi adapter executes foreground child processes in explicit worktrees. An opt-in core OCI adapter executes the same contract through a host-selected digest-pinned Docker/Podman image and preserves the same Claim, Assignment, cancellation, immutable Worker report, recovery, review, Integration, and cleanup semantics. The executable Pi daemon does not select or provision that image automatically. Runtime supplies exact context, freshness, budgets, and append authority; sessions return judgment or evidence only.
 
 Current compatibility slash surface remains `/wiki-dashboard`, `/wiki-resume`, `/wiki-explain`, `/wiki-config`, and `/wiki-bootstrap`. An eligible Pi session ensures or connects to detached local Project Runtime and may open its dashboard once. `/wiki-dashboard` reopens, discovers, or explicitly stops the dashboard/Runtime service according to policy. Target standalone CLI becomes primary host; Pi commands remain thin client conveniences.
 

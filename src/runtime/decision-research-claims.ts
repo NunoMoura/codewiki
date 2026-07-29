@@ -67,19 +67,19 @@ interface DecisionResearchClaimsInput {
 	readonly sensitivity: EvidenceSensitivity;
 }
 
-interface CompletedModelObservation {
-	readonly status: "completed";
-	readonly requestDigest: Sha256Digest;
-	readonly observedAt: string;
-	readonly response: unknown;
-}
+export type DecisionResearchClaimsModelObservation =
+	| {
+			readonly status: "completed";
+			readonly requestDigest: Sha256Digest;
+			readonly observedAt: string;
+			readonly response: unknown;
+	  }
+	| {
+			readonly status: OperationalOutcome;
+			readonly requestDigest: Sha256Digest;
+	  };
 
-interface OperationalModelObservation {
-	readonly status: OperationalOutcome;
-	readonly requestDigest: Sha256Digest;
-}
-
-type ModelObservation = CompletedModelObservation | OperationalModelObservation;
+type ModelObservation = DecisionResearchClaimsModelObservation;
 
 interface NormalizedClaimAssessment {
 	readonly claimDigest: Sha256Digest;
@@ -131,6 +131,7 @@ interface PreparedRequest {
 	readonly outputLimits: {
 		readonly maxFindings: number;
 		readonly maxLimitations: number;
+		readonly maxResponseBytes: number;
 	};
 	readonly requestDigest: Sha256Digest;
 }
@@ -138,6 +139,8 @@ interface PreparedRequest {
 type PublicPreparation =
 	| { readonly status: "ready"; readonly request: PreparedRequest }
 	| { readonly status: "indeterminate"; readonly result: CheckResult };
+
+export type DecisionResearchClaimsRequest = PreparedRequest;
 
 interface TrustedClaimsCheck {
 	readonly check: CheckDefinition;
@@ -500,6 +503,8 @@ function researchClaimsRequest(options: {
 		outputLimits: {
 			maxFindings: MAX_FINDINGS,
 			maxLimitations: MAX_LIMITATIONS,
+			maxResponseBytes:
+				DECISION_RESEARCH_CLAIMS_PROTOCOL.outputLimits.maxResponseBytes,
 		},
 	};
 	return toCanonicalJsonValue({

@@ -8,7 +8,7 @@ tags:
   - evidence
   - provenance
   - approval
-timestamp: 2026-07-29T21:00:05.000Z
+timestamp: 2026-07-29T21:24:38.000Z
 codewiki_component: evidence
 codewiki_components:
   - evidence
@@ -187,7 +187,9 @@ Runtime now exposes a Decision-specific citation materialization boundary and a 
 
 The independent claim-support envelope binds the exact passing provenance Result, candidate, policy, route/configuration digest, protocol version, claim digests, and citation Evidence ids. Models return bounded per-claim observations, not Check status. Runtime validates complete claim and citation coverage, derives the aggregate conclusion, and materializes candidate-bound observed `model_assessment` Evidence with exact producer, route, protocol, configuration, and request provenance. Raw model output and private reasoning are discarded. Operational or malformed output produces an indeterminate Result and no fake model Evidence.
 
-Production Decision still uses broad `sourceRefs` and `proofRefs`. External collection adapters, isolated Pi SDK protocol transport, native candidate/policy/report persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
+The isolated Pi transport now executes the exact prepared request with no tools, Skills, extensions, prompt templates, context files, repository reads, or persisted session. It selects the exact provider/model/thinking route through Pi-owned credentials, bounds timeout and response bytes, supports cancellation, and returns only a typed operational observation plus transient parsed response. Runtime remains the sole materializer and interpreter of model-assessment Evidence.
+
+Production Decision still uses broad `sourceRefs` and `proofRefs`. External collection adapters, production scheduling of the Pi transport, native candidate/policy/report persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
 
 ## UI experience evidence
 
