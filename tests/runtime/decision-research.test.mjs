@@ -1,0 +1,191 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+
+import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
+import { createLoopExitRuntime } from "../../src/runtime/loop-exit-runtime.ts";
+
+const digest = (value) => `sha256:${value.repeat(64)}`;
+const subject = {
+	changeRefs: ["CHG-decision-research"],
+	changeRevisionDigests: [digest("1")],
+	acceptanceRequirementIds: [],
+};
+
+function policy() {
+	return resolveExitPolicy({
+		loop: "decision",
+		candidateDigest: digest("2"),
+		changes: [
+			{
+				changeId: "CHG-decision-research",
+				revision: 1,
+				digest: digest("1"),
+				kind: "improve",
+				type: "architecture_change",
+				risk: "high",
+				affectedLayers: ["runtime"],
+			},
+		],
+	});
+}
+
+function material(overrides = {}) {
+	return {
+		provenanceRefs: ["source:https://example.test/runtime"],
+		payload: {
+			claim: "The provider supports bounded retries.",
+			classification: "primary",
+			publisher: "Example Provider",
+			uri: "https://example.test/runtime",
+			title: "Runtime limits",
+			publicationDate: "2026-07-01",
+			passageDigest: digest("3"),
+			passageLocator: "section:retries",
+			stance: "supports",
+			limitations: [],
+		},
+		...overrides,
+	};
+}
+
+function context(overrides = {}) {
+	return {
+		subject,
+		observedAt: "2026-07-29T12:00:00.000Z",
+		producer: {
+			kind: "external_service",
+			id: "bounded-research-fetch",
+			version: "1.0.0",
+		},
+		coverage: "complete",
+		sensitivity: "project",
+		freshnessBoundary: digest("4"),
+		...overrides,
+	};
+}
+
+describe("Decision research Runtime boundary", () => {
+	it("materializes exact Change-revision citations and creates a passing provenance Result", () => {
+		const runtime = createLoopExitRuntime();
+		const evidence = runtime.materializeDecisionResearchCitation(
+			material(),
+			context(),
+		);
+		const result = runtime.evaluateDecisionResearchProvenance({
+			policy: policy(),
+			evidence: [evidence],
+			expectedSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+		});
+
+		assert.equal(evidence.kind, "research_citation");
+		assert.equal(evidence.authority, "observed");
+		assert.equal(result.checkId, "research_provenance_valid");
+		assert.equal(result.status, "pass");
+		assert.deepEqual(
+			{ ...result.measurement },
+			{ shape: "boolean", value: true },
+		);
+		assert.deepEqual(result.evidenceRecordIds, [evidence.evidenceId]);
+		assert.equal(result.evidenceResolutions[0].status, "ready");
+		assert.equal(result.execution.kind, "code");
+	});
+
+	it("keeps contradictory research stance while checking provenance independently", () => {
+		const runtime = createLoopExitRuntime();
+		const evidence = runtime.materializeDecisionResearchCitation(
+			material({
+				payload: {
+					...material().payload,
+					stance: "contradicts",
+					limitations: ["Applies only to hosted plans."],
+				},
+			}),
+			context(),
+		);
+		const result = runtime.evaluateDecisionResearchProvenance({
+			policy: policy(),
+			evidence: [evidence],
+			expectedSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+		});
+
+		assert.equal(evidence.payload.stance, "contradicts");
+		assert.equal(result.status, "pass");
+	});
+
+	it("returns fail for temporally impossible source metadata without discarding Evidence", () => {
+		const runtime = createLoopExitRuntime();
+		const evidence = runtime.materializeDecisionResearchCitation(
+			material({
+				payload: {
+					...material().payload,
+					publicationDate: "2026-07-30",
+				},
+			}),
+			context(),
+		);
+		const result = runtime.evaluateDecisionResearchProvenance({
+			policy: policy(),
+			evidence: [evidence],
+			expectedSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+		});
+
+		assert.equal(result.status, "fail");
+		assert.deepEqual(result.evidenceRecordIds, [evidence.evidenceId]);
+		assert.match(result.findings[0], /publicationDate 2026-07-30 follows observation/);
+	});
+
+	it("returns indeterminate for missing or stale citation inputs", () => {
+		const runtime = createLoopExitRuntime();
+		const missing = runtime.evaluateDecisionResearchProvenance({
+			policy: policy(),
+			evidence: [],
+			expectedSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+		});
+		assert.equal(missing.status, "indeterminate");
+		assert.equal(missing.measurement, undefined);
+		assert.match(missing.findings[0], /is missing/);
+
+		const staleEvidence = runtime.materializeDecisionResearchCitation(
+			material(),
+			context({ freshnessBoundary: digest("5") }),
+		);
+		const stale = runtime.evaluateDecisionResearchProvenance({
+			policy: policy(),
+			evidence: [staleEvidence],
+			expectedSubject: subject,
+			expectedFreshnessBoundary: digest("4"),
+		});
+		assert.equal(stale.status, "indeterminate");
+		assert.match(stale.findings[0], /exclusions=freshness/);
+		assert.deepEqual(stale.evidenceRecordIds, [staleEvidence.evidenceId]);
+	});
+
+	it("rejects caller-owned assurance and non-Change research subjects", () => {
+		const runtime = createLoopExitRuntime();
+		assert.throws(
+			() =>
+				runtime.materializeDecisionResearchCitation(material(), {
+					...context(),
+					authority: "verified",
+				}),
+			/Decision research observation context received unsupported field authority/,
+		);
+		assert.throws(
+			() =>
+				runtime.materializeDecisionResearchCitation(
+					material(),
+					context({
+						subject: {
+							...subject,
+							candidateDigest: digest("6"),
+						},
+					}),
+				),
+			/Decision research Evidence subject received unsupported field candidateDigest/,
+		);
+	});
+});

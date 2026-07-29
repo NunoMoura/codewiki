@@ -340,7 +340,8 @@ Current producer/consumer migration inventory:
 - [x] Add deterministic obligation reduction that preserves contradictions, detects duplicate input, and distinguishes `ready`, `missing`, and `indeterminate` without granting Check pass or Loop exit.
 - [x] Bind exact obligation resolutions and every considered Evidence Record identity into Check Results and Exit Reports; derive one canonical Evidence-input digest as the Evidence component of future cache identity.
 - [x] Register Decision-only research provenance and independent claim-support Checks with exact Change-revision/model Evidence obligations and deterministic high-risk, migration, dependency, and security/privacy activation.
-- [ ] Replace production Decision ref-count evidence sufficiency with typed research collection, trusted provenance/freshness and claim-support execution, immutable Results, and canonical trace persistence.
+- [x] Add the native Runtime bridge for exact Change-revision citation materialization and trusted deterministic provenance Check Result construction, including missing/stale indeterminate reduction and retained failing temporal evidence.
+- [ ] Replace production Decision ref-count evidence sufficiency with external typed research collection, independent claim-support Model execution, native Candidate/policy/report persistence, and canonical trace integration.
 - [ ] Extend preview capture with exact candidate/tree-bound screenshots and bounded MP4/WebM interaction recordings across required routes, states, scenarios, and viewports.
 - [ ] Add `ui_preview_evidence_valid`, bounded `ui_experience_reviewed`, and approval-backed `ui_experience_approved` with exact role, subject, artifact-bundle, and freshness semantics.
 - [ ] Add Runtime approval-receipt construction from authenticated CodeWiki actions and re-observed provider reviews; invalidate on candidate/tree/head/target/profile/manifest/media/bundle drift.

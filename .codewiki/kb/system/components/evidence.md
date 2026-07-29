@@ -8,7 +8,7 @@ tags:
   - evidence
   - provenance
   - approval
-timestamp: 2026-07-29T11:34:23.000Z
+timestamp: 2026-07-29T12:02:37.000Z
 codewiki_component: evidence
 codewiki_components:
   - evidence
@@ -183,7 +183,9 @@ Decision research activation remains deterministic and risk-based: unknown curre
 
 The native Check Catalog now provides Decision-only `research_provenance_valid` and `research_claims_supported` contracts. Their obligations require exact Change-revision research citations, exact freshness, complete coverage, Runtime/external-service observation provenance, and independent candidate-bound model assessment. Deterministic migration, dependency, security/privacy, accepted security-trait, and high-risk selectors activate both Checks. Research materialization rejects model-authored citations while retaining source claims, limitations, mixed support, and contradictions for trusted Check interpretation.
 
-Production Decision still uses broad `sourceRefs` and `proofRefs`. Direct research collection, Check execution, trace persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
+Runtime now exposes a Decision-specific citation materialization boundary and a closed deterministic provenance executor. The materializer fixes observation authority, enforces one exact Change revision, and rejects caller-owned assurance. The executor preserves all considered Evidence identities, reduces freshness and admissibility into one exact obligation resolution, fails impossible publication/observation ordering without dropping the record, and constructs the immutable provenance Check Result.
+
+Production Decision still uses broad `sourceRefs` and `proofRefs`. External collection adapters, independent claim-support Model execution, native candidate/policy/report persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
 
 ## UI experience evidence
 

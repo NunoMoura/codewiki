@@ -47,5 +47,7 @@ describe("Loop exit runtime composition", () => {
 		assert.ok(runtime.catalog.list("implementation").length > 0);
 		assert.equal(typeof runtime.createCheckResult, "function");
 		assert.equal(typeof runtime.createExitReport, "function");
+		assert.equal(typeof runtime.materializeDecisionResearchCitation, "function");
+		assert.equal(typeof runtime.evaluateDecisionResearchProvenance, "function");
 	});
 });

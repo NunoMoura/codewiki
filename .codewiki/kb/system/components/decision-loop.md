@@ -7,7 +7,7 @@ tags:
   - system
   - decision
   - loop
-timestamp: 2026-07-29T11:34:23.000Z
+timestamp: 2026-07-29T12:02:37.000Z
 codewiki_component: decision
 codewiki_components:
   - decision
@@ -176,7 +176,9 @@ Code Checks validate provenance, freshness, artifact availability, and source in
 
 The native closed Catalog now registers Decision-only `research_provenance_valid` and `research_claims_supported` Checks. Both activate deterministically for high-risk, migration, dependency, security/privacy, and accepted security-trait facts. Provenance requires fresh complete `research_citation` Evidence bound to the exact Change revision; claim support additionally binds independent candidate-bound `model_assessment` Evidence and depends on valid provenance. Citation contradictions remain available to the Model Check rather than being discarded or converted into readiness failure.
 
-Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. Research collection, trusted Check execution, trace persistence, and replacement of that legacy path remain part of the clean Decision cut.
+The native Runtime bridge now admits bounded citation material through one Decision-specific function, fixes observation authority to `observed`, requires exactly one Change-revision subject, rejects caller-owned assurance fields, and materializes immutable `research_citation` records. Its closed deterministic provenance executor reduces the exact obligation and creates a canonical passing, failing, or indeterminate Check Result. Stale/missing input remains indeterminate; temporally impossible source metadata fails without discarding the Evidence; contradictory citation stance remains available for the independent claim-support Check.
+
+Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. External research collection, independent Model Check execution, candidate/policy/report persistence, and replacement of that legacy path remain part of the clean Decision cut.
 
 ## Exit and route
 

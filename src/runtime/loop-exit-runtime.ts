@@ -10,12 +10,20 @@ import {
 	type LoopExitSuite,
 } from "../loop-exit/suite.ts";
 import { planningLoopExitDeclaration } from "../planning/exit/index.ts";
+import {
+	createDecisionResearchProvenanceExecutor,
+	materializeDecisionResearchCitation,
+} from "./decision-research.ts";
 
 interface LoopExitRuntime {
 	readonly suite: LoopExitSuite;
 	readonly catalog: ReturnType<typeof createCheckCatalog>;
 	readonly createCheckResult: typeof createCheckResult;
 	readonly createExitReport: typeof createExitReport;
+	readonly materializeDecisionResearchCitation: typeof materializeDecisionResearchCitation;
+	readonly evaluateDecisionResearchProvenance: ReturnType<
+		typeof createDecisionResearchProvenanceExecutor
+	>;
 }
 
 export const LOOP_EXIT_SUITE = createLoopExitSuite({
@@ -25,10 +33,14 @@ export const LOOP_EXIT_SUITE = createLoopExitSuite({
 });
 
 export function createLoopExitRuntime(): LoopExitRuntime {
+	const catalog = createCheckCatalog();
 	return Object.freeze({
 		suite: LOOP_EXIT_SUITE,
-		catalog: createCheckCatalog(),
+		catalog,
 		createCheckResult,
 		createExitReport,
+		materializeDecisionResearchCitation,
+		evaluateDecisionResearchProvenance:
+			createDecisionResearchProvenanceExecutor(catalog),
 	});
 }

@@ -6,7 +6,7 @@ tags:
   - codewiki
   - system
   - runtime
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-29T12:02:37.000Z
 codewiki_components:
   - error_handling
   - runtime
@@ -229,6 +229,8 @@ else                           → pass
 ```
 
 A passing Report permits exact Loop exit only. Append and every effect remain separately guarded.
+
+Native Decision research now has one Runtime-specific bridge under `src/runtime/decision-research.ts`. Runtime materializes bounded citation material as observed, immutable, exact Change-revision Evidence and runs the protected deterministic provenance Check against exact freshness and subject obligations. Missing or stale input becomes an indeterminate Result; invalid temporal provenance becomes a failing Result while retaining the Evidence. This bridge does not yet collect external research, execute the independent claim-support Model Check, persist native Decision reports, or replace production Decision ref-count evaluation.
 
 Independent Checks continue after unrelated failure. Resource-specific pools bound provider/model, CPU, test/build, and external-service work. Exact cache identity includes candidate, Check binding, implementation/configuration, and evidence inputs. TTL and path overlap can evict or invalidate, never authorize reuse.
 
