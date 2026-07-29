@@ -127,6 +127,90 @@ test("default Pi SDK factory enables only read tools and one closed candidate to
 	assert.deepEqual(sdkOptions.resourceLoader.getAgentsFiles().agentsFiles, []);
 });
 
+test("Pi SDK candidate tools expose exact recursive Planning and Implementation schemas", async () => {
+	const schemas = new Map();
+	const adapters = createPiSdkRuntimeSemanticAdapters({
+		repoRoot: process.cwd(),
+		createAgentSession: async (options) => ({
+			session: {
+				sessionId: "pi-sdk:exact-candidate-schema",
+				async prompt() {
+					const candidateTool = options.customTools[0];
+					schemas.set(candidateTool.name, candidateTool.parameters);
+					await candidateTool.execute(
+						"candidate-call",
+						candidateTool.name.includes("planning")
+							? {
+									candidate: {
+										sprints: [],
+										workItems: [],
+										rationale: "No work selected.",
+									},
+								}
+							: { candidate: { evidence: [] } },
+						undefined,
+						undefined,
+						{},
+					);
+				},
+				dispose() {},
+			},
+			extensionsResult: { extensions: [], errors: [], runtime: undefined },
+		}),
+	});
+
+	await adapters.planning(planningInvocation());
+	await adapters.implementation({
+		loop: "implementation",
+		observedWorkStateDigest: "sha256:work-state",
+		sprint: { id: "SPR-sdk" },
+		workItems: [],
+		assignments: [],
+		workerReports: [],
+	});
+
+	const planning = schemas.get("codewiki_submit_planning_candidate");
+	const planningCandidate = planning.properties.candidate;
+	assert.equal(planningCandidate.additionalProperties, false);
+	assert.equal(planningCandidate.properties.sprints.items.additionalProperties, false);
+	assert.deepEqual(
+		Object.keys(planningCandidate.properties.sprints.items.properties),
+		[
+			"id",
+			"goal",
+			"participatingChangeIds",
+			"workItemIds",
+			"rollbackBoundary",
+			"dependsOn",
+			"integrationRefs",
+			"uiPreviewTargets",
+		],
+	);
+	assert.equal(
+		planningCandidate.properties.workItems.items.additionalProperties,
+		false,
+	);
+
+	const implementation = schemas.get(
+		"codewiki_submit_implementation_candidate",
+	);
+	const implementationCandidate = implementation.properties.candidate;
+	assert.equal(implementationCandidate.additionalProperties, false);
+	assert.equal(
+		implementationCandidate.properties.evidence.items.additionalProperties,
+		false,
+	);
+	assert.equal(
+		implementationCandidate.properties.evidence.items.properties.commandResults
+			.items.additionalProperties,
+		false,
+	);
+	assert.equal(
+		implementationCandidate.properties.archiveDisposition.additionalProperties,
+		false,
+	);
+});
+
 test("Pi SDK semantic adapter maps implementation to its candidate role", async () => {
 	let observedRole;
 	const adapters = createPiSdkRuntimeSemanticAdapters({

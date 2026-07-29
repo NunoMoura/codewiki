@@ -458,6 +458,8 @@ async function createReadyTrace(
 	const decisionInput = {
 		disposition: "approve",
 		rationale: "Approve exact failure-handling Change.",
+	};
+	const decisionContext = {
 		authority: {
 			kind: "user",
 			actor: "external-package-failures-smoke",
@@ -474,6 +476,7 @@ async function createReadyTrace(
 		trigger,
 		mode: "preview",
 		maxIterations: 1,
+		context: { decision: decisionContext },
 		adapters: { decision: () => decisionInput },
 	});
 	await project.runRuntimeSemanticExecutor({
@@ -481,6 +484,7 @@ async function createReadyTrace(
 		trigger,
 		mode: "append",
 		maxIterations: 1,
+		context: { decision: decisionContext },
 		adapters: { decision: () => decisionInput },
 	});
 	const sprintId = `SPR-${suffix}`;
@@ -492,11 +496,15 @@ async function createReadyTrace(
 		trigger,
 		mode: "append",
 		maxIterations: 1,
+		context: {
+			planning: {
+				actor: "agent:external-package-failures-smoke",
+				createdAt: "2026-06-18T11:00:02.000Z",
+			},
+		},
 		adapters: {
 			planning: () => ({
-				actor: "agent:external-package-failures-smoke",
 				rationale: "Plan exact approved failure-handling Change.",
-				createdAt: "2026-06-18T11:00:02.000Z",
 				sprints: [
 					{
 						id: sprintId,

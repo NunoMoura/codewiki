@@ -277,7 +277,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 
 ## Next — exact identity and authority hardening
 
-- [ ] Define runtime-owned immutable Decision, Planning, and Implementation candidate schemas and content identities.
+- [ ] Complete Loop-owned immutable Decision, Planning, and Implementation content schemas plus Runtime-owned candidate envelope and content identities.
 - [x] Replace broad `Omit<RunWiki*Input, ...>` candidate types and SDK arbitrary-record submission with explicit role-specific top-level allowlists; parse direct adapters, Pi SDK submissions, and remote coordinator candidates through the same admission functions.
 - [x] Reject candidate control over authority, actor/time, review/TDD activation, snapshot/proof scope, aggregate content proof, runtime job identity, append guards, routing, and Check selection.
   - [x] Replace broad Implementation evidence `Omit` input with one normalized allowlist; reject caller proof, approval authority, runtime routing, and deprecated aliases.
@@ -286,6 +286,7 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
   - [x] Collapse canonical `ImplementationWorkerReportInput` and `ImplementationWorkerProofInput` to camel-case-only contracts, one `changeInputs` collection, and one nested `proof`; delete flattened proof fields and recursive wrappers.
   - [x] Move role-specific admission into Loop-owned `DecisionCandidateContent`, `PlanningCandidateContent`, and `ImplementationCandidateContent`; reserve Runtime for identity, context, freshness, and routing.
   - [x] Rename the active Pi SDK role and coordinator lane from `implementation_review` to `implementation`; retain no standalone Implementation reviewer concept.
+  - [x] Replace broad nested Planning/Implementation candidate records and SDK tool schemas with exact Loop-owned camel-case contracts, recursive unknown-field rejection, and closed enum/value checks; name non-authoritative Implementation observations `commands`/`commandResults` so canonical Check Results remain Runtime-owned.
 - [ ] Replace the moved foundation's transitional `Quality*`, Standard, Assessment, Gate, `stage`, and `enforce` symbols under `src/loop-exit/**` with final Check, Check Result, Resolved Exit Policy, Exit Report, `loop`, and `require` contracts; retain no aliases.
 - [ ] Replace global-by-id registration with Loop-qualified Check identity binding exact criterion digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, and catalog digest.
 - [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.

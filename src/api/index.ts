@@ -109,8 +109,20 @@ export type {
 	WorktreeRef,
 } from "../git/worktrees.ts";
 export type { DecisionCandidateContent } from "../decision/candidate-content.ts";
-export type { ImplementationCandidateContent } from "../implementation/candidate-content.ts";
-export type { PlanningCandidateContent } from "../planning/candidate-content.ts";
+export type {
+	ImplementationAcceptanceEvidenceCandidate,
+	ImplementationArchiveDispositionCandidate,
+	ImplementationAssessmentCandidate,
+	ImplementationCandidateContent,
+	ImplementationCommandResultCandidate,
+	ImplementationEvidenceCandidate,
+	ImplementationSensitiveSurfaceCandidate,
+} from "../implementation/candidate-content.ts";
+export type {
+	PlanningCandidateContent,
+	PlanningSprintCandidate,
+	PlanningWorkItemCandidate,
+} from "../planning/candidate-content.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
 export * from "../runtime/project-coordinator.ts";

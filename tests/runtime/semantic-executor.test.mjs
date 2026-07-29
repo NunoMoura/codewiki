@@ -10,6 +10,7 @@ import { readTraceFileSnapshot } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { runRuntimeSemanticExecutor } from "../../src/runtime/semantic-executor.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
+import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
 
 const roots = [];
 
@@ -171,6 +172,39 @@ describe("runtime semantic executor", () => {
 		assert.equal(result.casRetries, 1);
 		assert.equal(result.outcomes.length, 1);
 		assert.equal(result.outcomes[0].result.report.exit.status, "exit");
+	});
+
+	it("adapts non-authoritative command results into the legacy Implementation facade", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-semantic-implementation-"));
+		roots.push(root);
+		const seeded = await seedRuntimeImplementation(root, {
+			suffix: "semantic-command-results",
+		});
+		const result = await runRuntimeSemanticExecutor({
+			repoRoot: root,
+			trigger: { kind: "manual_resume" },
+			mode: "preview",
+			maxIterations: 1,
+			adapters: {
+				implementation: () => ({
+					evidence: [
+						{
+							workItemId: seeded.workItemId,
+							commands: ["npm test"],
+							commandResults: [
+								{ command: "npm test", status: "pass", exitCode: 0 },
+							],
+						},
+					],
+				}),
+			},
+		});
+
+		assert.equal(result.outcomes[0].loop, "implementation");
+		assert.deepEqual(
+			result.outcomes[0].result.loopResult.changes[0].checkResults,
+			[{ command: "npm test", status: "pass", exitCode: 0 }],
+		);
 	});
 
 	it("invokes only selected adapter and injects exact Change append authority", async () => {

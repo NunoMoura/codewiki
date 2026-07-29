@@ -1,18 +1,85 @@
+import { Type, type Static } from "typebox";
 import {
 	assertCandidateContentKeys,
+	assertCandidateSchema,
 	candidateContentRecord,
 	requiredCandidateText,
 } from "../loop-exit/admission.ts";
-import type {
-	PortfolioWorkItemInput,
-	SprintPlanInput,
-} from "./portfolio-quality.ts";
 
-export interface PlanningCandidateContent {
-	sprints: SprintPlanInput[];
-	workItems: PortfolioWorkItemInput[];
-	rationale: string;
-}
+const requiredTextSchema = Type.String({ minLength: 1, pattern: "\\S" });
+const stringArraySchema = Type.Array(Type.String());
+
+export const planningUiPreviewTargetCandidateSchema = Type.Object(
+	{
+		targetId: requiredTextSchema,
+		targetDigest: requiredTextSchema,
+		profileId: requiredTextSchema,
+		profileDigest: requiredTextSchema,
+		workItemIds: stringArraySchema,
+		contributingChangeIds: stringArraySchema,
+		required: Type.Boolean(),
+		activation: Type.Literal("implementation"),
+		autoOpen: Type.Union([
+			Type.Literal("once_per_target"),
+			Type.Literal("manual"),
+		]),
+	},
+	{ additionalProperties: false },
+);
+
+export const planningSprintCandidateSchema = Type.Object(
+	{
+		id: requiredTextSchema,
+		goal: requiredTextSchema,
+		participatingChangeIds: stringArraySchema,
+		workItemIds: stringArraySchema,
+		rollbackBoundary: requiredTextSchema,
+		dependsOn: stringArraySchema,
+		integrationRefs: stringArraySchema,
+		uiPreviewTargets: Type.Optional(
+			Type.Array(planningUiPreviewTargetCandidateSchema),
+		),
+	},
+	{ additionalProperties: false },
+);
+
+export const planningWorkItemCandidateSchema = Type.Object(
+	{
+		id: requiredTextSchema,
+		sprintId: requiredTextSchema,
+		owningChangeId: requiredTextSchema,
+		contributingChangeIds: stringArraySchema,
+		title: requiredTextSchema,
+		outcome: requiredTextSchema,
+		technicalRequirements: stringArraySchema,
+		acceptanceCriteria: stringArraySchema,
+		componentRefs: stringArraySchema,
+		pathScopes: stringArraySchema,
+		verification: stringArraySchema,
+		workerProfile: requiredTextSchema,
+		dependsOn: stringArraySchema,
+	},
+	{ additionalProperties: false },
+);
+
+export const planningCandidateContentSchema = Type.Object(
+	{
+		sprints: Type.Array(planningSprintCandidateSchema),
+		workItems: Type.Array(planningWorkItemCandidateSchema),
+		rationale: requiredTextSchema,
+	},
+	{ additionalProperties: false },
+);
+
+export type PlanningSprintCandidate = Static<
+	typeof planningSprintCandidateSchema
+>;
+export type PlanningWorkItemCandidate = Static<
+	typeof planningWorkItemCandidateSchema
+>;
+export type PlanningCandidateContent = Static<
+	typeof planningCandidateContentSchema
+>;
 
 const CANDIDATE_FIELDS = ["sprints", "workItems", "rationale"] as const;
 const RUNTIME_FIELDS = [
@@ -43,5 +110,10 @@ export function parsePlanningCandidateContent(
 		throw new Error("Runtime planning candidate workItems must be an array.");
 	}
 	requiredCandidateText(candidate.rationale, "planning", "rationale");
-	return candidate as unknown as PlanningCandidateContent;
+	assertCandidateSchema(
+		planningCandidateContentSchema,
+		candidate,
+		"Runtime planning candidate",
+	);
+	return candidate as PlanningCandidateContent;
 }

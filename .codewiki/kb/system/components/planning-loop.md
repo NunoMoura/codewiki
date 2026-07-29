@@ -127,7 +127,7 @@ Loop-owned immutable `PlanningCandidateContent` contains:
 - Workbench capability/Skill/tool/isolation/minimum-Check/budget requirements;
 - uncertainties and rationale.
 
-Candidate excludes canonical runtime job/event identity, observed timestamps, current snapshot digests supplied by Runtime, concrete provider/model credentials, activated Workbenches/Claims, Check Results, Exit Report, and final route.
+Candidate excludes canonical runtime job/event identity, observed timestamps, current snapshot digests supplied by Runtime, concrete provider/model credentials, activated Workbenches/Claims, Check Results, Exit Report, and final route. Executable Sprint, Work Item, and UI preview-target content uses exact camel-case schemas with recursive unknown-field and value validation; Pi SDK tools expose the same closed shape.
 
 Planning aims for **worker-ready**, not smallest. It avoids splitting work where boundaries create coordination overhead, incoherent verification, or shared-state risk.
 

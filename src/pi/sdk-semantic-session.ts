@@ -12,11 +12,13 @@ import {
 	type DecisionCandidateContent,
 } from "../decision/candidate-content.ts";
 import {
+	implementationCandidateContentSchema as implementationCandidateSchema,
 	parseImplementationCandidateContent,
 	type ImplementationCandidateContent,
 } from "../implementation/candidate-content.ts";
 import {
 	parsePlanningCandidateContent,
+	planningCandidateContentSchema as planningCandidateSchema,
 	type PlanningCandidateContent,
 } from "../planning/candidate-content.ts";
 import type {
@@ -53,30 +55,11 @@ const candidateSubmissionSchemas = {
 		{ additionalProperties: false },
 	),
 	planning: Type.Object(
-		{
-			candidate: Type.Object(
-				{
-					sprints: Type.Array(Type.Record(Type.String(), Type.Unknown())),
-					workItems: Type.Array(Type.Record(Type.String(), Type.Unknown())),
-					rationale: Type.String(),
-				},
-				{ additionalProperties: false },
-			),
-		},
+		{ candidate: planningCandidateSchema },
 		{ additionalProperties: false },
 	),
 	implementation: Type.Object(
-		{
-			candidate: Type.Object(
-				{
-					evidence: Type.Optional(
-						Type.Array(Type.Record(Type.String(), Type.Unknown())),
-					),
-					archiveDisposition: Type.Optional(Type.Unknown()),
-				},
-				{ additionalProperties: false },
-			),
-		},
+		{ candidate: implementationCandidateSchema },
 		{ additionalProperties: false },
 	),
 } as const;

@@ -5,6 +5,7 @@ import {
 } from "../api/wiki-decide.ts";
 import {
 	runRuntimeSelectedWikiImplement,
+	type ImplementationEvidenceSubmission,
 	type RunWikiImplementResult,
 } from "../api/wiki-implement.ts";
 import {
@@ -451,11 +452,15 @@ async function executeSelectedSemanticWork(
 			workerReports: selectedWorkerReports,
 		}),
 	);
+	const { evidence, ...candidateContent } = candidate;
 	return {
 		loop: "implementation",
 		result: await runRuntimeSelectedWikiImplement(
 			{
-				...candidate,
+				...candidateContent,
+				...(evidence
+					? { evidence: runtimeImplementationEvidence(evidence) }
+					: {}),
 				...context?.implementation,
 				repoRoot,
 				expectedWorkStateDigest: observation.workState.snapshotDigest,
@@ -467,6 +472,16 @@ async function executeSelectedSemanticWork(
 			beforeAppend,
 		),
 	};
+}
+
+function runtimeImplementationEvidence(
+	evidence: NonNullable<ImplementationCandidateContent["evidence"]>,
+): ImplementationEvidenceSubmission[] {
+	return evidence.map(({ commands, commandResults, ...entry }) => ({
+		...entry,
+		...(commands ? { checks: commands } : {}),
+		...(commandResults ? { checkResults: commandResults } : {}),
+	}));
 }
 
 function requiredChange(
