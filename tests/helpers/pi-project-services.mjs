@@ -41,6 +41,23 @@ export function testPiProjectServices() {
 				reaction,
 				runtimeJobId: runtimeSemanticJobId(reaction, mode),
 				adapters,
+				context: {
+					decision: {
+						authority: {
+							kind: "policy",
+							actor: "runtime:test",
+							ref: "policy:test-pi-project-services",
+						},
+						occurredAt: "2026-06-17T00:00:01.000Z",
+					},
+					planning: {
+						actor: "runtime:test",
+						createdAt: "2026-06-17T00:00:02.000Z",
+					},
+					implementation: {
+						createdAt: "2026-06-17T00:00:04.000Z",
+					},
+				},
 				mode,
 				reactor,
 			});

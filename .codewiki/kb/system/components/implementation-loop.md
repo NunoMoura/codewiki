@@ -107,7 +107,7 @@ Runtime selects Change/Work Items, verifies correlation, loads canonical Plannin
 
 ## Candidate
 
-One immutable Implementation candidate describes the exact realization under evaluation:
+Loop-owned immutable `ImplementationCandidateContent` describes the exact realization under evaluation:
 
 - owning and contributing Changes;
 - covered Work Items and acceptance criteria;

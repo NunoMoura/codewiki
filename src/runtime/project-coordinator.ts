@@ -20,7 +20,7 @@ export type ProjectCoordinatorLane =
 	| { kind: "decision"; changeId: string; revision: number }
 	| { kind: "planning" }
 	| { kind: "assignment"; workItemId: string }
-	| { kind: "implementation_review"; sprintId: string }
+	| { kind: "implementation"; sprintId: string }
 	| { kind: "integration"; targetRef: string; baseRef: string }
 	| { kind: "effect"; targetRef: string };
 
@@ -623,7 +623,7 @@ function normalizeLane(lane: ProjectCoordinatorLane): ProjectCoordinatorLane {
 				kind: lane.kind,
 				workItemId: requiredText(lane.workItemId, "workItemId"),
 			};
-		case "implementation_review":
+		case "implementation":
 			return {
 				kind: lane.kind,
 				sprintId: requiredText(lane.sprintId, "sprintId"),
@@ -683,8 +683,8 @@ function laneLockRefs(lane: ProjectCoordinatorLane): string[] {
 			return ["planning"];
 		case "assignment":
 			return [`assignment:${lane.workItemId}`];
-		case "implementation_review":
-			return [`implementation_review:${lane.sprintId}`];
+		case "implementation":
+			return [`implementation:${lane.sprintId}`];
 		case "integration":
 			return [
 				`integration:${lane.targetRef}:${lane.baseRef}`,

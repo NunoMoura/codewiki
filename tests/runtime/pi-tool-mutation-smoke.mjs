@@ -165,12 +165,6 @@ try {
 	const decisionInput = {
 		disposition: "approve",
 		rationale: "Approve exact Pi mutation Change.",
-		authority: {
-			kind: "user",
-			actor: "pi-tool-mutation-smoke",
-			ref: "approval:user:pi-tool-mutation-smoke",
-		},
-		occurredAt: "2026-06-17T00:00:01.000Z",
 	};
 	const preview = assertToolResult(
 		await decideTool.execute(
@@ -206,9 +200,7 @@ try {
 			{
 				input: {
 					mode: "append",
-					actor: "agent:planner",
 					rationale: "Plan exact approved Pi mutation Change.",
-					createdAt: "2026-06-17T00:00:02.000Z",
 					sprints: [
 						{
 							id: "SPR-pi-mutation-smoke",
@@ -339,7 +331,6 @@ try {
 			{
 				input: {
 					mode: "append",
-					createdAt: "2026-06-17T00:00:04.000Z",
 					evidence: [implementationEvidence()],
 				},
 			},

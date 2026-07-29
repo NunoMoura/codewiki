@@ -279,11 +279,14 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 
 - [ ] Define runtime-owned immutable Decision, Planning, and Implementation candidate schemas and content identities.
 - [x] Replace broad `Omit<RunWiki*Input, ...>` candidate types and SDK arbitrary-record submission with explicit role-specific top-level allowlists; parse direct adapters, Pi SDK submissions, and remote coordinator candidates through the same admission functions.
-- [ ] Reject candidate control over authority, actor/time, review/TDD activation, snapshot/proof scope, aggregate content proof, runtime job identity, append guards, routing, and Check selection.
+- [x] Reject candidate control over authority, actor/time, review/TDD activation, snapshot/proof scope, aggregate content proof, runtime job identity, append guards, routing, and Check selection.
   - [x] Replace broad Implementation evidence `Omit` input with one normalized allowlist; reject caller proof, approval authority, runtime routing, and deprecated aliases.
   - [x] Delete duplicate `archiveDispositionInput` and its snake-case aliases; retain one exact normalized archive disposition contract.
   - [x] Delete snake-case fields from canonical `ImplementationChangeInput`, its normalizers, worker-proof projection, and historical path explanation; reject unknown nested fields.
   - [x] Collapse canonical `ImplementationWorkerReportInput` and `ImplementationWorkerProofInput` to camel-case-only contracts, one `changeInputs` collection, and one nested `proof`; delete flattened proof fields and recursive wrappers.
+  - [x] Move role-specific admission into Loop-owned `DecisionCandidateContent`, `PlanningCandidateContent`, and `ImplementationCandidateContent`; reserve Runtime for identity, context, freshness, and routing.
+  - [x] Rename the active Pi SDK role and coordinator lane from `implementation_review` to `implementation`; retain no standalone Implementation reviewer concept.
+- [ ] Replace the moved foundation's transitional `Quality*`, Standard, Assessment, Gate, `stage`, and `enforce` symbols under `src/loop-exit/**` with final Check, Check Result, Resolved Exit Policy, Exit Report, `loop`, and `require` contracts; retain no aliases.
 - [ ] Replace global-by-id registration with Loop-qualified Check identity binding exact criterion digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, and catalog digest.
 - [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.
 - [ ] Derive approved additions/exclusions, rollout progression, and frozen Planning minimums only from canonical runtime observations.

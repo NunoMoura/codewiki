@@ -5,7 +5,6 @@ import {
 } from "../api/wiki-decide.ts";
 import {
 	runRuntimeSelectedWikiImplement,
-	type ImplementationEvidenceSubmission,
 	type RunWikiImplementResult,
 } from "../api/wiki-implement.ts";
 import {
@@ -13,17 +12,21 @@ import {
 	type RunWikiPlanInput,
 	type RunWikiPlanResult,
 } from "../api/wiki-plan.ts";
-import type { ContentProof } from "../git/content-proof.ts";
-import type { ChangeDecisionAuthority, ChangeDisposition } from "../decision/change-quality.ts";
+import {
+	parseDecisionCandidateContent,
+	type DecisionCandidateContent,
+} from "../decision/candidate-content.ts";
+import type { ChangeDecisionAuthority } from "../decision/change-quality.ts";
 import { TraceAppendConflictError } from "../error-handling/trace-errors.ts";
-import type { ImplementationEvidencePolicy } from "../implementation/evidence-policy.ts";
-import type { ImplementationEvidenceReportInput } from "../implementation/review/index.ts";
-import type { ImplementationArchiveDisposition } from "../implementation/types.ts";
+import {
+	parseImplementationCandidateContent,
+	type ImplementationCandidateContent,
+} from "../implementation/candidate-content.ts";
 import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
-import type {
-	PortfolioWorkItemInput,
-	SprintPlanInput,
-} from "../planning/portfolio-quality.ts";
+import {
+	parsePlanningCandidateContent,
+	type PlanningCandidateContent,
+} from "../planning/candidate-content.ts";
 import type {
 	WorkStateAssignment,
 	WorkStateChange,
@@ -40,172 +43,25 @@ import {
 
 export type RuntimeSemanticMode = "preview" | "append";
 
-export interface RuntimeDecisionCandidate {
-	disposition: ChangeDisposition;
-	rationale: string;
-	authority?: ChangeDecisionAuthority;
+export interface RuntimeDecisionContext {
+	authority: ChangeDecisionAuthority;
 	occurredAt?: string;
 }
 
-export interface RuntimePlanningCandidate {
-	sprints: SprintPlanInput[];
-	workItems: PortfolioWorkItemInput[];
+export interface RuntimePlanningContext {
 	actor: string;
-	rationale: string;
 	createdAt?: string;
 }
 
-export interface RuntimeImplementationCandidate {
-	evidence?: ImplementationEvidenceSubmission[];
-	reviewEvidenceReports?: ImplementationEvidenceReportInput[];
-	archiveDisposition?: ImplementationArchiveDisposition;
-	requireArchiveDisposition?: boolean;
-	evidencePolicy?: ImplementationEvidencePolicy;
-	includeCachedReviewEvidence?: boolean;
-	autoReviewEvidence?: boolean;
-	reviewTimeoutMs?: number;
-	requireTddEvidence?: boolean;
+export interface RuntimeImplementationContext {
 	createdAt?: string;
-	snapshotRoots?: string[];
-	snapshotExclude?: string[];
-	proofPaths?: string[];
-	changedPaths?: string[];
-	evidencePaths?: string[];
-	aggregateContentProof?: ContentProof;
 }
 
-const DECISION_CANDIDATE_FIELDS = [
-	"disposition",
-	"rationale",
-	"authority",
-	"occurredAt",
-] as const;
-const DECISION_RUNTIME_FIELDS = [
-	"repoRoot",
-	"changeId",
-	"expectedRevision",
-	"expectedChangeDigest",
-	"expectedWorkStateDigest",
-	"expectedBytes",
-	"runtimeJobId",
-	"mode",
-] as const;
-const PLANNING_CANDIDATE_FIELDS = [
-	"sprints",
-	"workItems",
-	"actor",
-	"rationale",
-	"createdAt",
-] as const;
-const PLANNING_RUNTIME_FIELDS = [
-	"repoRoot",
-	"expectedWorkStateDigest",
-	"expectedChangeIds",
-	"expectedBytesByChangeId",
-	"runtimeJobId",
-	"mode",
-] as const;
-const IMPLEMENTATION_CANDIDATE_FIELDS = [
-	"evidence",
-	"reviewEvidenceReports",
-	"archiveDisposition",
-	"requireArchiveDisposition",
-	"evidencePolicy",
-	"includeCachedReviewEvidence",
-	"autoReviewEvidence",
-	"reviewTimeoutMs",
-	"requireTddEvidence",
-	"createdAt",
-	"snapshotRoots",
-	"snapshotExclude",
-	"proofPaths",
-	"changedPaths",
-	"evidencePaths",
-	"aggregateContentProof",
-] as const;
-const IMPLEMENTATION_RUNTIME_FIELDS = [
-	"repoRoot",
-	"expectedWorkStateDigest",
-	"workerReports",
-	"runtimeJobId",
-	"traceId",
-	"planningEvents",
-	"changes",
-	"changeInputs",
-	"workerClaims",
-	"claimEvents",
-	"componentMap",
-	"parentId",
-	"expectedBytes",
-	"nextSequence",
-	"expectedTraceId",
-	"mode",
-] as const;
-
-export function parseRuntimeDecisionCandidate(
-	value: unknown,
-): RuntimeDecisionCandidate {
-	const candidate = candidateRecord(value, "decision");
-	assertCandidateKeys(
-		"decision",
-		candidate,
-		DECISION_CANDIDATE_FIELDS,
-		DECISION_RUNTIME_FIELDS,
-	);
-	if (!DECISION_DISPOSITIONS.includes(candidate.disposition as ChangeDisposition)) {
-		throw new Error("Runtime decision candidate disposition is invalid.");
-	}
-	requiredCandidateText(candidate.rationale, "decision", "rationale");
-	return candidate as unknown as RuntimeDecisionCandidate;
+export interface RuntimeSemanticContext {
+	decision?: RuntimeDecisionContext;
+	planning?: RuntimePlanningContext;
+	implementation?: RuntimeImplementationContext;
 }
-
-export function parseRuntimePlanningCandidate(
-	value: unknown,
-): RuntimePlanningCandidate {
-	const candidate = candidateRecord(value, "planning");
-	assertCandidateKeys(
-		"planning",
-		candidate,
-		PLANNING_CANDIDATE_FIELDS,
-		PLANNING_RUNTIME_FIELDS,
-	);
-	if (!Array.isArray(candidate.sprints)) {
-		throw new Error("Runtime planning candidate sprints must be an array.");
-	}
-	if (!Array.isArray(candidate.workItems)) {
-		throw new Error("Runtime planning candidate workItems must be an array.");
-	}
-	requiredCandidateText(candidate.actor, "planning", "actor");
-	requiredCandidateText(candidate.rationale, "planning", "rationale");
-	return candidate as unknown as RuntimePlanningCandidate;
-}
-
-export function parseRuntimeImplementationCandidate(
-	value: unknown,
-): RuntimeImplementationCandidate {
-	const candidate = candidateRecord(value, "implementation");
-	assertCandidateKeys(
-		"implementation",
-		candidate,
-		IMPLEMENTATION_CANDIDATE_FIELDS,
-		IMPLEMENTATION_RUNTIME_FIELDS,
-	);
-	for (const field of ["evidence", "reviewEvidenceReports"] as const) {
-		if (candidate[field] !== undefined && !Array.isArray(candidate[field])) {
-			throw new Error(
-				`Runtime implementation candidate ${field} must be an array.`,
-			);
-		}
-	}
-	return candidate as unknown as RuntimeImplementationCandidate;
-}
-
-const DECISION_DISPOSITIONS: ChangeDisposition[] = [
-	"approve",
-	"reject",
-	"defer",
-	"withdraw",
-];
 
 export interface RuntimeDecisionInvocation {
 	loop: "decision";
@@ -231,13 +87,13 @@ export interface RuntimeImplementationInvocation {
 export interface RuntimeSemanticAdapters {
 	decision?: (
 		input: RuntimeDecisionInvocation,
-	) => RuntimeDecisionCandidate | Promise<RuntimeDecisionCandidate>;
+	) => DecisionCandidateContent | Promise<DecisionCandidateContent>;
 	planning?: (
 		input: RuntimePlanningInvocation,
-	) => RuntimePlanningCandidate | Promise<RuntimePlanningCandidate>;
+	) => PlanningCandidateContent | Promise<PlanningCandidateContent>;
 	implementation?: (
 		input: RuntimeImplementationInvocation,
-	) => RuntimeImplementationCandidate | Promise<RuntimeImplementationCandidate>;
+	) => ImplementationCandidateContent | Promise<ImplementationCandidateContent>;
 }
 
 export type RuntimeSemanticOutcome =
@@ -249,6 +105,7 @@ export interface RunRuntimeSemanticExecutorInput {
 	repoRoot: string;
 	trigger: RuntimeTrigger;
 	adapters: RuntimeSemanticAdapters;
+	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxIterations?: number;
 	maxCasRetries?: number;
@@ -270,6 +127,7 @@ export interface RunRuntimeSelectedSemanticReactionInput {
 	reaction: RuntimeReaction;
 	runtimeJobId: string;
 	adapters: RuntimeSemanticAdapters;
+	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxCasRetries?: number;
 	reactor?: RuntimeReactor;
@@ -312,6 +170,7 @@ export async function runRuntimeSelectedSemanticReaction(
 				mode,
 				observation,
 				input.adapters,
+				input.context,
 				input.runtimeJobId,
 				input.beforeAppend,
 				input.implementationWorkerReports,
@@ -404,6 +263,7 @@ export async function runRuntimeSemanticExecutor(
 				mode,
 				observation,
 				input.adapters,
+				input.context,
 			);
 			outcomes.push(outcome);
 			iterations += 1;
@@ -469,6 +329,7 @@ async function executeSelectedSemanticWork(
 	mode: RuntimeSemanticMode,
 	observation: RuntimeObservation,
 	adapters: RuntimeSemanticAdapters,
+	context?: RuntimeSemanticContext,
 	runtimeJobId?: string,
 	beforeAppend?: () => void | Promise<void>,
 	implementationWorkerReports: ImplementationWorkerReportInput[] = [],
@@ -478,7 +339,7 @@ async function executeSelectedSemanticWork(
 	if (selection.loop === "decision") {
 		if (!adapters.decision) throw missingAdapter("decision");
 		const change = requiredChange(observation, selection.change.changeId);
-		const candidate = parseRuntimeDecisionCandidate(
+		const candidate = parseDecisionCandidateContent(
 			await adapters.decision({
 				loop: "decision",
 				observedWorkStateDigest: observation.workState.snapshotDigest,
@@ -487,6 +348,7 @@ async function executeSelectedSemanticWork(
 		);
 		const coreInput: RunWikiDecideInput = {
 			...candidate,
+			...requiredDecisionContext(context),
 			repoRoot,
 			changeId: selection.change.changeId,
 			expectedRevision: selection.change.changeRevision,
@@ -517,7 +379,7 @@ async function executeSelectedSemanticWork(
 		const changes = selection.planningHorizon.map((entry) =>
 			requiredChange(observation, entry.changeId),
 		);
-		const candidate = parseRuntimePlanningCandidate(
+		const candidate = parsePlanningCandidateContent(
 			await adapters.planning({
 				loop: "planning",
 				observedWorkStateDigest: observation.workState.snapshotDigest,
@@ -529,6 +391,7 @@ async function executeSelectedSemanticWork(
 		);
 		const coreInput: RunWikiPlanInput = {
 			...candidate,
+			...requiredPlanningContext(context),
 			repoRoot,
 			expectedWorkStateDigest: observation.workState.snapshotDigest,
 			expectedChangeIds,
@@ -578,7 +441,7 @@ async function executeSelectedSemanticWork(
 		assignments,
 		implementationWorkerReports,
 	);
-	const candidate = parseRuntimeImplementationCandidate(
+	const candidate = parseImplementationCandidateContent(
 		await adapters.implementation({
 			loop: "implementation",
 			observedWorkStateDigest: observation.workState.snapshotDigest,
@@ -593,6 +456,7 @@ async function executeSelectedSemanticWork(
 		result: await runRuntimeSelectedWikiImplement(
 			{
 				...candidate,
+				...context?.implementation,
 				repoRoot,
 				expectedWorkStateDigest: observation.workState.snapshotDigest,
 				workerReports: selectedWorkerReports,
@@ -704,46 +568,22 @@ function isCasConflict(error: unknown): boolean {
 	);
 }
 
-function candidateRecord(
-	value: unknown,
-	loop: string,
-): Record<string, unknown> {
-	if (!value || typeof value !== "object" || Array.isArray(value)) {
-		throw new Error(`Runtime ${loop} candidate must be an object.`);
+function requiredDecisionContext(
+	context: RuntimeSemanticContext | undefined,
+): RuntimeDecisionContext {
+	if (!context?.decision) {
+		throw new Error("Runtime decision context is required.");
 	}
-	return value as Record<string, unknown>;
+	return context.decision;
 }
 
-function assertCandidateKeys(
-	loop: string,
-	candidate: Record<string, unknown>,
-	allowedKeys: readonly string[],
-	runtimeKeys: readonly string[],
-): void {
-	const claimed = runtimeKeys.filter((key) => key in candidate);
-	if (claimed.length > 0) {
-		throw new Error(
-			`Runtime ${loop} candidate cannot supply runtime-owned fields: ${claimed.join(", ")}.`,
-		);
+function requiredPlanningContext(
+	context: RuntimeSemanticContext | undefined,
+): RuntimePlanningContext {
+	if (!context?.planning) {
+		throw new Error("Runtime planning context is required.");
 	}
-	const unsupported = Object.keys(candidate).filter(
-		(key) => !allowedKeys.includes(key),
-	);
-	if (unsupported.length > 0) {
-		throw new Error(
-			`Runtime ${loop} candidate received unsupported fields: ${unsupported.join(", ")}.`,
-		);
-	}
-}
-
-function requiredCandidateText(
-	value: unknown,
-	loop: string,
-	field: string,
-): asserts value is string {
-	if (typeof value !== "string" || !value.trim()) {
-		throw new Error(`Runtime ${loop} candidate ${field} is required.`);
-	}
+	return context.planning;
 }
 
 function missingAdapter(loop: string): Error {

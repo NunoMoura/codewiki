@@ -63,13 +63,14 @@ import {
 	scheduleRuntimeReactions,
 	type RuntimeReactionJobReceipt,
 } from "./runtime-reaction-jobs.ts";
-import {
-	parseRuntimeDecisionCandidate,
-	parseRuntimeImplementationCandidate,
-	parseRuntimePlanningCandidate,
-	type RunRuntimeSelectedSemanticReactionResult,
-	type RuntimeSemanticAdapters,
-	type RuntimeSemanticMode,
+import { parseDecisionCandidateContent } from "../decision/candidate-content.ts";
+import { parseImplementationCandidateContent } from "../implementation/candidate-content.ts";
+import { parsePlanningCandidateContent } from "../planning/candidate-content.ts";
+import type {
+	RunRuntimeSelectedSemanticReactionResult,
+	RuntimeSemanticAdapters,
+	RuntimeSemanticContext,
+	RuntimeSemanticMode,
 } from "./semantic-executor.ts";
 
 const DEFAULT_CLIENT_LEASE_MS = 30_000;
@@ -89,6 +90,7 @@ export interface ProjectCoordinatorServiceOptions
 	now?: () => string;
 	clock?: () => number;
 	semanticAdapters?: RuntimeSemanticAdapters;
+	semanticContext?: RuntimeSemanticContext;
 	maxReactions?: number;
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
@@ -176,6 +178,7 @@ interface ServiceRuntime {
 	reactor: RuntimeReactor;
 	workerDispatcher?: ImplementationWorkerDispatcher;
 	semanticAdapters?: RuntimeSemanticAdapters;
+	semanticContext?: RuntimeSemanticContext;
 	maxReactions?: number;
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
@@ -269,6 +272,7 @@ export async function startProjectCoordinatorService(
 			reactor,
 			workerDispatcher,
 			semanticAdapters: options.semanticAdapters,
+			semanticContext: options.semanticContext,
 			maxReactions: boundedOptionalInteger(
 				options.maxReactions,
 				1,
@@ -735,6 +739,7 @@ async function handleRuntimeCandidate(
 			reactor: runtime.reactor,
 			reaction: observation.reaction,
 			adapters: candidateAdapters(loop, candidate),
+			context: runtime.semanticContext,
 			mode,
 			maxCasRetries: runtime.maxCasRetries,
 			beforeAppend: () => assertCurrentGeneration(runtime),
@@ -798,6 +803,7 @@ async function handleRuntimeReaction(
 			reactor: runtime.reactor,
 			trigger,
 			adapters,
+			context: runtime.semanticContext,
 			mode,
 			maxReactions: runtime.maxReactions,
 			maxPlanningChanges: runtime.maxPlanningChanges,
@@ -841,14 +847,14 @@ function candidateAdapters(
 ): RuntimeSemanticAdapters {
 	try {
 		if (loop === "decision") {
-			const parsed = parseRuntimeDecisionCandidate(candidate);
+			const parsed = parseDecisionCandidateContent(candidate);
 			return { decision: () => parsed };
 		}
 		if (loop === "planning") {
-			const parsed = parseRuntimePlanningCandidate(candidate);
+			const parsed = parsePlanningCandidateContent(candidate);
 			return { planning: () => parsed };
 		}
-		const parsed = parseRuntimeImplementationCandidate(candidate);
+		const parsed = parseImplementationCandidateContent(candidate);
 		return { implementation: () => parsed };
 	} catch (error) {
 		throw new HttpError(400, errorMessage(error));

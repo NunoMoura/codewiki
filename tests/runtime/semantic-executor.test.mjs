@@ -91,6 +91,21 @@ describe("runtime semantic executor", () => {
 				}),
 			/Runtime decision candidate cannot supply runtime-owned fields: runtimeJobId/,
 		);
+		await assert.rejects(
+			() =>
+				runRuntimeSemanticExecutor({
+					repoRoot: root,
+					trigger: { kind: "manual_resume" },
+					mode: "preview",
+					adapters: {
+						decision: () => ({
+							disposition: "approve",
+							rationale: "No authenticated Runtime context exists.",
+						}),
+					},
+				}),
+			/Runtime decision context is required/,
+		);
 	});
 
 	it("re-observes and reruns selected semantic work after a CAS race", async () => {
@@ -102,6 +117,16 @@ describe("runtime semantic executor", () => {
 			mode: "append",
 			maxIterations: 1,
 			maxCasRetries: 1,
+			context: {
+				decision: {
+					authority: {
+						kind: "user",
+						actor: "user:maintainer",
+						ref: "confirmation:cas-rerun",
+					},
+					occurredAt: "2026-08-06T00:00:01.000Z",
+				},
+			},
 			adapters: {
 				async decision() {
 					calls += 1;
@@ -137,12 +162,6 @@ describe("runtime semantic executor", () => {
 					return {
 						disposition: "approve",
 						rationale: "Revalidated after concurrent trace movement.",
-						authority: {
-							kind: "user",
-							actor: "user:maintainer",
-							ref: "confirmation:cas-rerun",
-						},
-						occurredAt: "2026-08-06T00:00:01.000Z",
 					};
 				},
 			},
@@ -163,6 +182,16 @@ describe("runtime semantic executor", () => {
 			trigger: { kind: "manual_resume" },
 			mode: "append",
 			maxIterations: 1,
+			context: {
+				decision: {
+					authority: {
+						kind: "user",
+						actor: "user:maintainer",
+						ref: "confirmation:runtime-semantic",
+					},
+					occurredAt: "2026-08-06T00:00:01.000Z",
+				},
+			},
 			adapters: {
 				decision(invocation) {
 					assert.equal(invocation.change.id, record.change.id);
@@ -174,12 +203,6 @@ describe("runtime semantic executor", () => {
 					return {
 						disposition: "approve",
 						rationale: "Validated runtime-owned exact Change context.",
-						authority: {
-							kind: "user",
-							actor: "user:maintainer",
-							ref: "confirmation:runtime-semantic",
-						},
-						occurredAt: "2026-08-06T00:00:01.000Z",
 					};
 				},
 				planning() {

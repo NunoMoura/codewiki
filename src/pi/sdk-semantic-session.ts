@@ -8,16 +8,22 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import {
-	parseRuntimeDecisionCandidate,
-	parseRuntimeImplementationCandidate,
-	parseRuntimePlanningCandidate,
-	type RuntimeDecisionCandidate,
-	type RuntimeDecisionInvocation,
-	type RuntimeImplementationCandidate,
-	type RuntimeImplementationInvocation,
-	type RuntimePlanningCandidate,
-	type RuntimePlanningInvocation,
-	type RuntimeSemanticAdapters,
+	parseDecisionCandidateContent,
+	type DecisionCandidateContent,
+} from "../decision/candidate-content.ts";
+import {
+	parseImplementationCandidateContent,
+	type ImplementationCandidateContent,
+} from "../implementation/candidate-content.ts";
+import {
+	parsePlanningCandidateContent,
+	type PlanningCandidateContent,
+} from "../planning/candidate-content.ts";
+import type {
+	RuntimeDecisionInvocation,
+	RuntimeImplementationInvocation,
+	RuntimePlanningInvocation,
+	RuntimeSemanticAdapters,
 } from "../runtime/semantic-executor.ts";
 
 const READ_ONLY_TOOL_NAMES = ["read", "grep", "find", "ls"] as const;
@@ -40,20 +46,6 @@ const candidateSubmissionSchemas = {
 						Type.Literal("withdraw"),
 					]),
 					rationale: Type.String(),
-					authority: Type.Optional(
-						Type.Object(
-							{
-								kind: Type.Union([
-									Type.Literal("user"),
-									Type.Literal("policy"),
-								]),
-								actor: Type.String(),
-								ref: Type.String(),
-							},
-							{ additionalProperties: false },
-						),
-					),
-					occurredAt: Type.Optional(Type.String()),
 				},
 				{ additionalProperties: false },
 			),
@@ -66,39 +58,21 @@ const candidateSubmissionSchemas = {
 				{
 					sprints: Type.Array(Type.Record(Type.String(), Type.Unknown())),
 					workItems: Type.Array(Type.Record(Type.String(), Type.Unknown())),
-					actor: Type.String(),
 					rationale: Type.String(),
-					createdAt: Type.Optional(Type.String()),
 				},
 				{ additionalProperties: false },
 			),
 		},
 		{ additionalProperties: false },
 	),
-	implementation_review: Type.Object(
+	implementation: Type.Object(
 		{
 			candidate: Type.Object(
 				{
 					evidence: Type.Optional(
 						Type.Array(Type.Record(Type.String(), Type.Unknown())),
 					),
-					reviewEvidenceReports: Type.Optional(
-						Type.Array(Type.Record(Type.String(), Type.Unknown())),
-					),
 					archiveDisposition: Type.Optional(Type.Unknown()),
-					requireArchiveDisposition: Type.Optional(Type.Boolean()),
-					evidencePolicy: Type.Optional(Type.Unknown()),
-					includeCachedReviewEvidence: Type.Optional(Type.Boolean()),
-					autoReviewEvidence: Type.Optional(Type.Boolean()),
-					reviewTimeoutMs: Type.Optional(Type.Number()),
-					requireTddEvidence: Type.Optional(Type.Boolean()),
-					createdAt: Type.Optional(Type.String()),
-					snapshotRoots: Type.Optional(Type.Array(Type.String())),
-					snapshotExclude: Type.Optional(Type.Array(Type.String())),
-					proofPaths: Type.Optional(Type.Array(Type.String())),
-					changedPaths: Type.Optional(Type.Array(Type.String())),
-					evidencePaths: Type.Optional(Type.Array(Type.String())),
-					aggregateContentProof: Type.Optional(Type.Unknown()),
 				},
 				{ additionalProperties: false },
 			),
@@ -107,10 +81,7 @@ const candidateSubmissionSchemas = {
 	),
 } as const;
 
-export type PiSdkSemanticRole =
-	| "decision"
-	| "planning"
-	| "implementation_review";
+export type PiSdkSemanticRole = "decision" | "planning" | "implementation";
 
 export type PiSdkSemanticSessionState =
 	| "starting"
@@ -214,13 +185,13 @@ export function createPiSdkRuntimeSemanticAdapters(
 
 	return {
 		decision: (input) =>
-			runSemanticSession<RuntimeDecisionInvocation, RuntimeDecisionCandidate>(
+			runSemanticSession<RuntimeDecisionInvocation, DecisionCandidateContent>(
 				runner,
 				"decision",
 				input,
 			),
 		planning: (input) =>
-			runSemanticSession<RuntimePlanningInvocation, RuntimePlanningCandidate>(
+			runSemanticSession<RuntimePlanningInvocation, PlanningCandidateContent>(
 				runner,
 				"planning",
 				input,
@@ -228,8 +199,8 @@ export function createPiSdkRuntimeSemanticAdapters(
 		implementation: (input) =>
 			runSemanticSession<
 				RuntimeImplementationInvocation,
-				RuntimeImplementationCandidate
-			>(runner, "implementation_review", input),
+				ImplementationCandidateContent
+			>(runner, "implementation", input),
 	};
 }
 
@@ -482,10 +453,10 @@ function semanticInvocationPrompt(
 function parseSemanticCandidate(
 	role: PiSdkSemanticRole,
 	value: unknown,
-): RuntimeDecisionCandidate | RuntimePlanningCandidate | RuntimeImplementationCandidate {
-	if (role === "decision") return parseRuntimeDecisionCandidate(value);
-	if (role === "planning") return parseRuntimePlanningCandidate(value);
-	return parseRuntimeImplementationCandidate(value);
+): DecisionCandidateContent | PlanningCandidateContent | ImplementationCandidateContent {
+	if (role === "decision") return parseDecisionCandidateContent(value);
+	if (role === "planning") return parsePlanningCandidateContent(value);
+	return parseImplementationCandidateContent(value);
 }
 
 function cloneCandidate(

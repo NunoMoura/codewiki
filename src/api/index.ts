@@ -108,6 +108,9 @@ export type {
 	WorktreeProcessCommand,
 	WorktreeRef,
 } from "../git/worktrees.ts";
+export type { DecisionCandidateContent } from "../decision/candidate-content.ts";
+export type { ImplementationCandidateContent } from "../implementation/candidate-content.ts";
+export type { PlanningCandidateContent } from "../planning/candidate-content.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
 export * from "../runtime/project-coordinator.ts";
@@ -115,13 +118,14 @@ export { runRuntimeSemanticExecutor } from "../runtime/semantic-executor.ts";
 export type {
 	RunRuntimeSemanticExecutorInput,
 	RunRuntimeSemanticExecutorResult,
-	RuntimeDecisionCandidate,
+	RuntimeDecisionContext,
 	RuntimeDecisionInvocation,
-	RuntimeImplementationCandidate,
+	RuntimeImplementationContext,
 	RuntimeImplementationInvocation,
-	RuntimePlanningCandidate,
+	RuntimePlanningContext,
 	RuntimePlanningInvocation,
 	RuntimeSemanticAdapters,
+	RuntimeSemanticContext,
 	RuntimeSemanticMode,
 	RuntimeSemanticOutcome,
 } from "../runtime/semantic-executor.ts";

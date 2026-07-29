@@ -113,7 +113,7 @@ Runtime loads repository facts. Callers cannot replace current Knowledge, trace,
 
 ## Candidate
 
-One Decision candidate proposes:
+Loop-owned `DecisionCandidateContent` proposes:
 
 - complete normalized semantic revision and digestable content;
 - disposition request (`approve`, `reject`, `defer`, `withdraw`, or `route_back`);

@@ -114,7 +114,7 @@ Runtime loads canonical facts. Callers may propose observations or semantic plan
 
 ## Candidate
 
-One immutable Planning candidate contains:
+Loop-owned immutable `PlanningCandidateContent` contains:
 
 - participant Change revisions;
 - proposed Sprints and worker-ready Work Items;

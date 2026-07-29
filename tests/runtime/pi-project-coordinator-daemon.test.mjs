@@ -43,20 +43,25 @@ test("Pi coordinator daemon owns autonomous semantic adapter execution", async (
 			createdAt: "2026-08-10T00:00:00.000Z",
 		});
 		daemon = await startPiProjectCoordinatorDaemon(root, {
+			semanticContext: {
+				decision: {
+					authority: {
+						kind: "user",
+						actor: "user:maintainer",
+						ref: "confirmation:CHG-pi-daemon-semantic",
+					},
+					occurredAt: "2026-08-10T00:00:01.000Z",
+				},
+			},
 			loadSemanticAdapters: async (repoRoot) => {
 				assert.equal(repoRoot, root);
 				return {
 					decision(invocation) {
 						adapterCalls += 1;
+						assert.equal(invocation.change.id, "CHG-pi-daemon-semantic");
 						return {
 							disposition: "approve",
 							rationale: "Approve coordinator-owned semantic execution.",
-							authority: {
-								kind: "user",
-								actor: "user:maintainer",
-								ref: `confirmation:${invocation.change.id}`,
-							},
-							occurredAt: "2026-08-10T00:00:01.000Z",
 						};
 					},
 				};

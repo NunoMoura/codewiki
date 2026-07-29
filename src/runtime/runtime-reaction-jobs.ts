@@ -20,6 +20,7 @@ import { runtimeSemanticJobId } from "./semantic-job-id.ts";
 import {
 	runRuntimeSelectedSemanticReaction,
 	type RuntimeSemanticAdapters,
+	type RuntimeSemanticContext,
 	type RuntimeSemanticMode,
 	type RuntimeSemanticOutcome,
 	type RunRuntimeSelectedSemanticReactionResult,
@@ -45,6 +46,7 @@ export interface RuntimeReactionJobInput {
 	reactor: RuntimeReactor;
 	reaction: RuntimeReaction;
 	adapters: RuntimeSemanticAdapters;
+	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxCasRetries?: number;
 	implementationWorkerReports?: ImplementationWorkerReportInput[];
@@ -58,6 +60,7 @@ export interface ScheduleRuntimeReactionsInput {
 	reactor: RuntimeReactor;
 	trigger: RuntimeTrigger;
 	adapters: RuntimeSemanticAdapters;
+	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxReactions?: number;
 	maxPlanningChanges?: number;
@@ -92,6 +95,7 @@ export async function scheduleRuntimeReactions(
 				reactor: input.reactor,
 				reaction,
 				adapters: input.adapters,
+				context: input.context,
 				mode: input.mode,
 				implementationWorkerReports: workerReportsForReaction(
 					reaction,
@@ -166,6 +170,7 @@ export function runtimeReactionJob(
 				reaction: input.reaction,
 				runtimeJobId: jobId,
 				adapters: input.adapters,
+				context: input.context,
 				mode,
 				maxCasRetries: input.maxCasRetries,
 				reactor: input.reactor,
@@ -274,7 +279,7 @@ function reactionLane(reaction: RuntimeReaction): ProjectCoordinatorLane {
 		};
 	}
 	if (selection.loop === "planning") return { kind: "planning" };
-	return { kind: "implementation_review", sprintId: selection.sprintId };
+	return { kind: "implementation", sprintId: selection.sprintId };
 }
 
 function reactionConflictRefs(reaction: RuntimeReaction): string[] {

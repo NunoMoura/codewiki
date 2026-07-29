@@ -21,7 +21,10 @@ import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
 } from "../runtime/product-release-contract.ts";
-import type { RuntimeSemanticAdapters } from "../runtime/semantic-executor.ts";
+import type {
+	RuntimeSemanticAdapters,
+	RuntimeSemanticContext,
+} from "../runtime/semantic-executor.ts";
 import { createPiProcessImplementationWorkerAdapter } from "./process-worker-adapter.ts";
 
 export type PiSemanticAdapterLoader = (
@@ -30,6 +33,7 @@ export type PiSemanticAdapterLoader = (
 
 export interface PiProjectCoordinatorDaemonOptions {
 	loadSemanticAdapters?: PiSemanticAdapterLoader;
+	semanticContext?: RuntimeSemanticContext;
 	workerAdapter?: ImplementationWorkerAdapter;
 	worktreeExecFile?: WorktreeCommandExecFile;
 	mergeAuthority?: ProjectBranchMergeAuthority;
@@ -79,6 +83,9 @@ export async function startPiProjectCoordinatorDaemon(
 	)(canonicalRoot);
 	return startProjectCoordinatorDaemon(canonicalRoot, {
 		...(semanticAdapters ? { semanticAdapters } : {}),
+		...(options.semanticContext
+			? { semanticContext: options.semanticContext }
+			: {}),
 		...(options.mergeAuthority
 			? { mergeAuthority: options.mergeAuthority }
 			: {}),

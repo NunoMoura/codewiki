@@ -34,18 +34,25 @@ async function fixture(id) {
 	return { root, record };
 }
 
-function approvingAdapters(approvalRef = "confirmation:coordinator-runtime") {
+function approvingAdapters() {
 	return {
 		decision: () => ({
 			disposition: "approve",
 			rationale: "Approve exact coordinator-selected Change.",
+		}),
+	};
+}
+
+function decisionContext(ref = "confirmation:coordinator-runtime") {
+	return {
+		decision: {
 			authority: {
 				kind: "user",
 				actor: "user:maintainer",
-				ref: approvalRef,
+				ref,
 			},
 			occurredAt: "2026-08-09T00:00:01.000Z",
-		}),
+		},
 	};
 }
 
@@ -133,6 +140,7 @@ test("runtime reaction job binds exact trace evidence and recovers after restart
 			reactor,
 			reaction,
 			adapters: approvingAdapters(),
+			context: decisionContext(),
 		});
 		assert.equal(first.status, "completed");
 		assert.equal(first.loop, "decision");
@@ -231,7 +239,8 @@ test("runtime reaction job rechecks generation authority before append", async (
 					coordinator,
 					reactor,
 					reaction,
-					adapters: approvingAdapters("confirmation:fenced"),
+					adapters: approvingAdapters(),
+					context: decisionContext("confirmation:fenced"),
 					beforeAppend() {
 						fenceChecks += 1;
 						throw new Error("stale_generation");
@@ -276,9 +285,10 @@ test("elected service fences generation replacement after adapter return", async
 				async decision() {
 					markStarted();
 					await adapterRelease;
-					return approvingAdapters("confirmation:service-fence").decision();
+					return approvingAdapters().decision();
 				},
 			},
+			semanticContext: decisionContext("confirmation:service-fence"),
 		});
 		client = await connectProjectCoordinatorClient(root, {
 			clientId: "pi:fenced-client",
@@ -357,6 +367,7 @@ test("elected service runs compatible Decision adapters concurrently", async () 
 			generationId: "generation:batch",
 			maxConcurrentJobs: 2,
 			maxReactions: 2,
+			semanticContext: decisionContext("policy:batch-decision"),
 			semanticAdapters: {
 				async decision(invocation) {
 					active += 1;
@@ -365,15 +376,10 @@ test("elected service runs compatible Decision adapters concurrently", async () 
 					if (firstCalls === 2) resolveBoth();
 					if (firstCalls <= 2) await bothStarted;
 					active -= 1;
+					assert.ok(invocation.change.id);
 					return {
 						disposition: "approve",
 						rationale: "Approve compatible coordinator Change.",
-						authority: {
-							kind: "user",
-							actor: "user:maintainer",
-							ref: `confirmation:${invocation.change.id}`,
-						},
-						occurredAt: "2026-08-09T00:00:01.000Z",
 					};
 				},
 			},
@@ -406,6 +412,7 @@ test("authenticated remote client executes semantic work through elected service
 	try {
 		service = await startProjectCoordinatorService(root, {
 			generationId: "generation:transport",
+			semanticContext: decisionContext("confirmation:transport"),
 		});
 		client = await connectProjectCoordinatorClient(root, {
 			clientId: "pi:semantic-client",
@@ -414,7 +421,7 @@ test("authenticated remote client executes semantic work through elected service
 		});
 		const selected = await client.inspect({ kind: "manual_resume" });
 		assert.equal(selected.selection?.loop, "decision");
-		const candidate = approvingAdapters("confirmation:transport").decision();
+		const candidate = approvingAdapters().decision();
 		await assert.rejects(
 			() =>
 				client.submitCandidate(

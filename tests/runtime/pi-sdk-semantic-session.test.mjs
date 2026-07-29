@@ -127,7 +127,7 @@ test("default Pi SDK factory enables only read tools and one closed candidate to
 	assert.deepEqual(sdkOptions.resourceLoader.getAgentsFiles().agentsFiles, []);
 });
 
-test("Pi SDK semantic adapter maps implementation to a review role", async () => {
+test("Pi SDK semantic adapter maps implementation to its candidate role", async () => {
 	let observedRole;
 	const adapters = createPiSdkRuntimeSemanticAdapters({
 		repoRoot: process.cwd(),
@@ -157,7 +157,7 @@ test("Pi SDK semantic adapter maps implementation to a review role", async () =>
 		}),
 		{ evidence: [] },
 	);
-	assert.equal(observedRole, "implementation_review");
+	assert.equal(observedRole, "implementation");
 });
 
 test("Pi SDK semantic adapter requires exactly one object candidate", async () => {
