@@ -74,19 +74,6 @@ interface ApprovedCheckExclusion {
 	refs: string[];
 }
 
-interface FrozenMinimumCheckBinding {
-	checkId: string;
-	checkVersion: string;
-	enforcement: CheckEnforcement;
-	required: boolean;
-	parameters: Record<string, CheckJsonValue>;
-}
-
-interface FrozenMinimumPolicy {
-	planningPolicyDigest: string;
-	bindings: FrozenMinimumCheckBinding[];
-}
-
 interface ResolveExitPolicyInput {
 	loop: SemanticLoop;
 	candidateDigest: string;
@@ -96,7 +83,6 @@ interface ResolveExitPolicyInput {
 	paths?: string[];
 	approvedAdditions?: ApprovedCheckAddition[];
 	approvedExclusions?: ApprovedCheckExclusion[];
-	frozenMinimum?: FrozenMinimumPolicy;
 	projectRegistrations?: ProjectCheckRegistration[];
 }
 
@@ -131,7 +117,6 @@ interface NormalizedSelectorInput {
 	pathTraits: PathTrait[];
 	approvedAdditions: ApprovedCheckAddition[];
 	approvedExclusions: ApprovedCheckExclusion[];
-	frozenMinimum?: FrozenMinimumPolicy;
 }
 
 interface MutableBinding {
@@ -254,6 +239,24 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 	...rulesForAllLoops("check.path.ui", ["accessibility_ui_reviewed"], {
 		pathTraits: ["ui"],
 	}),
+	...rulesForLoop(
+		"check.project.web-ui.preview-targets",
+		"planning",
+		["ui_preview_targets_valid"],
+		{ projectTraits: ["web-ui"] },
+	),
+	...rulesForLoop(
+		"check.layer.ui.preview-targets",
+		"planning",
+		["ui_preview_targets_valid"],
+		{ affectedLayers: ["frontend", "ui", "web"] },
+	),
+	...rulesForLoop(
+		"check.path.ui.preview-targets",
+		"planning",
+		["ui_preview_targets_valid"],
+		{ pathTraits: ["ui"] },
+	),
 	...rulesForAllLoops(
 		"check.change.type.dependency",
 		["dependency_risk_controlled"],
@@ -269,20 +272,9 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 		["dependency_risk_controlled"],
 		{ pathTraits: ["dependency"] },
 	),
-	...rulesForAllLoops(
-		"check.change.type.release",
-		["release_safety_approved"],
-		{ changeTypes: ["release_change"] },
-	),
-	...rulesForAllLoops("check.project.release", ["release_safety_approved"], {
-		projectTraits: ["release-producing"],
-	}),
-	...rulesForAllLoops("check.layer.release", ["release_safety_approved"], {
-		affectedLayers: ["publication", "release"],
-	}),
-	...rulesForAllLoops("check.path.release", ["release_safety_approved"], {
-		pathTraits: ["release"],
-	}),
+	...releaseRulesForLoop("decision", "release_intent_authorized"),
+	...releaseRulesForLoop("planning", "release_plan_safe"),
+	...releaseRulesForLoop("implementation", "release_safety_approved"),
 	...rulesForAllLoops(
 		"check.project.public-api",
 		["api_contract_reviewed"],
@@ -329,7 +321,6 @@ export function resolveExitPolicy(
 	const active = new Map<string, MutableBinding>();
 	activateRules(active, catalog, selector);
 	activateApprovedAdditions(active, catalog, selector);
-	activateFrozenMinimum(active, catalog, selector);
 	activateDependencies(active, catalog, selector.loop);
 	applyApprovedExclusions(active, catalog, selector);
 	assertActiveDependencies(active);
@@ -377,38 +368,11 @@ function activateApprovedAdditions(
 	}
 }
 
-function activateFrozenMinimum(
-	active: Map<string, MutableBinding>,
-	catalog: CheckCatalog,
-	selector: NormalizedSelectorInput,
-): void {
-	if (!selector.frozenMinimum) return;
-	for (const minimum of selector.frozenMinimum.bindings) {
-		activate({
-			active,
-			catalog,
-			loop: selector.loop,
-			checkId: minimum.checkId,
-			checkVersion: minimum.checkVersion,
-			parameters: minimum.parameters,
-			enforcement: minimum.enforcement,
-			required: minimum.required,
-			activatedBy: [
-				`planning-minimum:${selector.frozenMinimum.planningPolicyDigest}`,
-			],
-			ruleRef: `check.planning-minimum@${EXIT_POLICY_SELECTOR_VERSION}`,
-		});
-	}
-}
-
 function applyApprovedExclusions(
 	active: Map<string, MutableBinding>,
 	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
-	const frozenIds = new Set(
-		selector.frozenMinimum?.bindings.map((binding) => binding.checkId) ?? [],
-	);
 	for (const exclusion of selector.approvedExclusions) {
 		const registration = requiredRegistration(
 			catalog,
@@ -416,10 +380,7 @@ function applyApprovedExclusions(
 			selector.loop,
 			exclusion.checkVersion,
 		);
-		if (
-			registration.authority === "kernel" ||
-			frozenIds.has(exclusion.checkId)
-		) {
+		if (registration.authority === "kernel") {
 			throw new Error(
 				`Check ${exclusion.checkId} cannot be excluded from ${selector.loop}.`,
 			);
@@ -520,21 +481,6 @@ function normalizeSelectorInput(
 		approvedExclusions: [...exclusions]
 			.map((exclusion) => ({ ...exclusion, refs: unique(exclusion.refs) }))
 			.sort((left, right) => left.checkId.localeCompare(right.checkId)),
-		...(input.frozenMinimum
-			? {
-					frozenMinimum: {
-						planningPolicyDigest: input.frozenMinimum.planningPolicyDigest,
-						bindings: [...input.frozenMinimum.bindings]
-							.map((binding) => ({
-								...binding,
-								parameters: sortObject(binding.parameters),
-							}))
-							.sort((left, right) =>
-								left.checkId.localeCompare(right.checkId),
-							),
-					},
-				}
-			: {}),
 	};
 }
 
@@ -543,10 +489,14 @@ function optionalValues<T>(values: T[] | undefined): T[] {
 }
 
 function assertValidSelectorInput(input: ResolveExitPolicyInput): void {
+	if ("frozenMinimum" in input) {
+		throw new Error(
+			"Resolved Exit Policy received unsupported field frozenMinimum; Runtime must derive Planning minimums from canonical Planning evidence.",
+		);
+	}
 	assertSelectorChanges(input);
 	assertSelectorTraits(input);
 	assertApprovedAdjustments(input);
-	assertFrozenMinimum(input);
 }
 
 function assertSelectorChanges(input: ResolveExitPolicyInput): void {
@@ -599,23 +549,6 @@ function assertApprovedAdjustments(input: ResolveExitPolicyInput): void {
 			);
 		}
 	}
-}
-
-function assertFrozenMinimum(input: ResolveExitPolicyInput): void {
-	if (!input.frozenMinimum) return;
-	if (input.loop !== "implementation") {
-		throw new Error(
-			"Only Implementation Resolved Exit Policy may carry a frozen Planning minimum.",
-		);
-	}
-	assertDigest(
-		input.frozenMinimum.planningPolicyDigest,
-		"planningPolicyDigest",
-	);
-	assertUnique(
-		input.frozenMinimum.bindings.map((binding) => binding.checkId),
-		"Planning minimum",
-	);
 }
 
 function activate(input: {
@@ -853,18 +786,51 @@ function classifyPathTraits(paths: string[]): PathTrait[] {
 	return [...traits].sort((left, right) => left.localeCompare(right));
 }
 
+function rulesForLoop(
+	id: string,
+	loop: SemanticLoop,
+	checkIds: string[],
+	match: CheckActivationRuleMatch,
+): CheckActivationRule[] {
+	return [
+		{
+			id: `${id}.${loop}`,
+			version: "1.0.0",
+			loop,
+			checkIds,
+			match,
+		},
+	];
+}
+
+function releaseRulesForLoop(
+	loop: SemanticLoop,
+	checkId: string,
+): CheckActivationRule[] {
+	return [
+		...rulesForLoop("check.change.type.release", loop, [checkId], {
+			changeTypes: ["release_change"],
+		}),
+		...rulesForLoop("check.project.release", loop, [checkId], {
+			projectTraits: ["release-producing"],
+		}),
+		...rulesForLoop("check.layer.release", loop, [checkId], {
+			affectedLayers: ["publication", "release"],
+		}),
+		...rulesForLoop("check.path.release", loop, [checkId], {
+			pathTraits: ["release"],
+		}),
+	];
+}
+
 function rulesForAllLoops(
 	id: string,
 	checkIds: string[],
 	match: CheckActivationRuleMatch,
 ): CheckActivationRule[] {
-	return (["decision", "planning", "implementation"] as const).map((loop) => ({
-		id: `${id}.${loop}`,
-		version: "1.0.0",
-		loop,
-		checkIds,
-		match,
-	}));
+	return (["decision", "planning", "implementation"] as const).flatMap(
+		(loop) => rulesForLoop(id, loop, checkIds, match),
+	);
 }
 
 function technologyRule(

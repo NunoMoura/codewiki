@@ -6,7 +6,6 @@ import { assertValidResolvedExitPolicy } from "../../src/loop-exit/contracts.ts"
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
-const PLANNING_POLICY_DIGEST = `sha256:${"c".repeat(64)}`;
 
 function selectorInput(loop = "decision") {
 	return {
@@ -137,6 +136,44 @@ describe("Resolved Exit Policy resolver", () => {
 		);
 	});
 
+	it("uses Loop-specific release Checks and Planning UI preview validation", () => {
+		const releaseChecks = {
+			decision: "release_intent_authorized",
+			planning: "release_plan_safe",
+			implementation: "release_safety_approved",
+		};
+		for (const [loop, expectedCheckId] of Object.entries(releaseChecks)) {
+			const input = selectorInput(loop);
+			input.changes[0].type = "release_change";
+			const resolution = resolveExitPolicy(input);
+			const releaseBindings = resolution.bindings.filter((binding) =>
+				Object.values(releaseChecks).includes(binding.checkId),
+			);
+			assert.deepEqual(
+				releaseBindings.map((binding) => binding.checkId),
+				[expectedCheckId],
+			);
+		}
+
+		const planningInput = selectorInput("planning");
+		planningInput.projectTraits = ["web-ui"];
+		const planning = resolveExitPolicy(planningInput);
+		const previewBinding = planning.bindings.find(
+			(binding) => binding.checkId === "ui_preview_targets_valid",
+		);
+		assert.ok(previewBinding);
+		assert.ok(previewBinding.activatedBy.includes("project-trait:web-ui"));
+
+		const decisionInput = selectorInput("decision");
+		decisionInput.projectTraits = ["web-ui"];
+		assert.equal(
+			resolveExitPolicy(decisionInput).bindings.some(
+				(binding) => binding.checkId === "ui_preview_targets_valid",
+			),
+			false,
+		);
+	});
+
 	it("normalizes selector ordering into stable policy identity", () => {
 		const left = selectorInput("implementation");
 		left.projectTraits = ["library", "web-ui"];
@@ -217,7 +254,7 @@ describe("Resolved Exit Policy resolver", () => {
 		assert.deepEqual(binding.parameters, { pathsRequired: true });
 	});
 
-	it("protects kernel Checks and frozen Planning minimums from exclusions", () => {
+	it("protects kernel Checks from exclusions", () => {
 		const kernelInput = selectorInput("implementation");
 		kernelInput.projectTraits = ["web-ui"];
 		kernelInput.approvedExclusions = [
@@ -233,47 +270,9 @@ describe("Resolved Exit Policy resolver", () => {
 			() => resolveExitPolicy(kernelInput),
 			/cannot be excluded from implementation/,
 		);
-
-		const minimumInput = selectorInput("implementation");
-		minimumInput.projectRegistrations = [projectRegistration()];
-		minimumInput.frozenMinimum = {
-			planningPolicyDigest: PLANNING_POLICY_DIGEST,
-			bindings: [
-				{
-					checkId: "project.documentation_current",
-					checkVersion: "1.0.0",
-					enforcement: "observe",
-					required: false,
-					parameters: {},
-				},
-			],
-		};
-		const elevatedInput = {
-			...minimumInput,
-			frozenMinimum: structuredClone(minimumInput.frozenMinimum),
-		};
-		elevatedInput.frozenMinimum.bindings[0].enforcement = "require";
-		assert.throws(
-			() => resolveExitPolicy(elevatedInput),
-			/cannot exceed catalog rollout observe/,
-		);
-
-		minimumInput.approvedExclusions = [
-			{
-				checkId: "project.documentation_current",
-				checkVersion: "1.0.0",
-				authorityRef: "trace:approval:2",
-				reason: "escalated_elsewhere",
-				refs: [],
-			},
-		];
-		assert.throws(
-			() => resolveExitPolicy(minimumInput),
-			/cannot be excluded from implementation/,
-		);
 	});
 
-	it("rejects unknown additions and non-Implementation Planning minimums", () => {
+	it("rejects unknown additions and caller-supplied Planning minimums", () => {
 		const unknown = selectorInput();
 		unknown.approvedAdditions = [
 			{
@@ -287,14 +286,14 @@ describe("Resolved Exit Policy resolver", () => {
 			/Unknown Check project.unknown/,
 		);
 
-		const wrongLoop = selectorInput("planning");
-		wrongLoop.frozenMinimum = {
-			planningPolicyDigest: PLANNING_POLICY_DIGEST,
+		const fabricatedMinimum = selectorInput("implementation");
+		fabricatedMinimum.frozenMinimum = {
+			planningPolicyDigest: `sha256:${"c".repeat(64)}`,
 			bindings: [],
 		};
 		assert.throws(
-			() => resolveExitPolicy(wrongLoop),
-			/Only Implementation Resolved Exit Policy may carry a frozen Planning minimum/,
+			() => resolveExitPolicy(fabricatedMinimum),
+			/unsupported field frozenMinimum; Runtime must derive Planning minimums/,
 		);
 	});
 });

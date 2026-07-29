@@ -201,7 +201,7 @@ Omitted Skill scope preserves normal Pi discovery. Planning may narrow but canno
 | Resolution accountability | Deferral, already-realized, Knowledge-only, supersession, and route-back carry evidence. |
 | Canonical traceability | Change, Knowledge, source/test, Git, trace, and digest refs are valid. |
 
-The executable Check catalog must include Planning-specific UI preview validation when UI scope activates it. Global Check ids cannot silently inherit another Loop's description or repair target.
+The executable Check Catalog includes Planning-only `ui_preview_targets_valid` when UI scope activates it. Release-producing work activates Planning-specific release-plan safety rather than Implementation effect approval. Global Check ids cannot silently inherit another Loop's description or repair target.
 
 Protected kernel Checks cannot be disabled. Planning minimums become frozen obligations for downstream Workbenches/Implementation; actual effects may add but never silently remove them.
 

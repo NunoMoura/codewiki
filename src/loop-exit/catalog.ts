@@ -269,10 +269,6 @@ const CONDITIONAL_CHECKS = [
 		"Dependency-surface changes include compatibility, provenance, and risk evidence.",
 	],
 	[
-		"release_safety_approved",
-		"Release or externally destructive effects have exact authority and safety evidence.",
-	],
-	[
 		"api_contract_reviewed",
 		"Public API behavior and compatibility are explicitly bounded.",
 	],
@@ -307,6 +303,31 @@ const CONDITIONAL_CHECKS = [
 	],
 ] as const;
 
+const LOOP_SPECIFIC_CONDITIONAL_CHECKS = {
+	decision: [
+		[
+			"release_intent_authorized",
+			"Release intent, authority boundary, and delivery constraints are explicitly accepted.",
+		],
+	],
+	planning: [
+		[
+			"release_plan_safe",
+			"Release sequencing, verification, rollback, and effect authority form a safe plan.",
+		],
+		[
+			"ui_preview_targets_valid",
+			"UI Work Items bind valid preview targets, profiles, and evidence obligations.",
+		],
+	],
+	implementation: [
+		[
+			"release_safety_approved",
+			"Release or externally destructive effects have exact authority and safety evidence.",
+		],
+	],
+} as const;
+
 const MODEL_CHECK_IDS = new Set([
 	"recommendation_justified",
 	"intention_validated",
@@ -317,9 +338,11 @@ const MODEL_CHECK_IDS = new Set([
 	"accessibility_ui_reviewed",
 	"api_contract_reviewed",
 	"library_contract_preserved",
+	"release_plan_safe",
 ]);
 const HUMAN_CHECK_IDS = new Set([
 	"approval_safety",
+	"release_intent_authorized",
 	"release_safety_approved",
 ]);
 const EXTERNAL_CHECK_IDS = new Set([
@@ -435,9 +458,16 @@ function builtInRegistrations(): CheckRegistration[] {
 	addDefinitions(
 		byId,
 		["decision", "planning", "implementation"],
-		CONDITIONAL_CHECKS.slice(0, 12),
+		CONDITIONAL_CHECKS.slice(0, 11),
 	);
-	addDefinitions(byId, "implementation", CONDITIONAL_CHECKS.slice(12));
+	addDefinitions(byId, "implementation", CONDITIONAL_CHECKS.slice(11));
+	addDefinitions(byId, "decision", LOOP_SPECIFIC_CONDITIONAL_CHECKS.decision);
+	addDefinitions(byId, "planning", LOOP_SPECIFIC_CONDITIONAL_CHECKS.planning);
+	addDefinitions(
+		byId,
+		"implementation",
+		LOOP_SPECIFIC_CONDITIONAL_CHECKS.implementation,
+	);
 	return [...byId.entries()].map(([id, definition]) =>
 		kernelRegistration(id, definition.description, [...definition.loops]),
 	);

@@ -51,6 +51,27 @@ describe("Check catalog", () => {
 			),
 		);
 		assert.ok(
+			decision.some(
+				(entry) => entry.check.id === "release_intent_authorized",
+			),
+		);
+		assert.ok(
+			planning.some((entry) => entry.check.id === "release_plan_safe"),
+		);
+		assert.ok(
+			planning.some(
+				(entry) => entry.check.id === "ui_preview_targets_valid",
+			),
+		);
+		assert.equal(
+			decision.some((entry) => entry.check.id === "release_safety_approved"),
+			false,
+		);
+		assert.equal(
+			planning.some((entry) => entry.check.id === "release_safety_approved"),
+			false,
+		);
+		assert.ok(
 			catalog
 				.list()
 				.every(

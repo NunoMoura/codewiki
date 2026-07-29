@@ -292,10 +292,12 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [x] Replace global-by-id registration with Loop-qualified Check identity binding exact requirement digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, configuration, and Catalog digest; allow independent same-id definitions only across disjoint Loops.
 - [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.
 - [ ] Derive approved additions/exclusions, rollout progression, and frozen Planning minimums only from canonical runtime observations.
+  - [x] Reject caller-supplied `frozenMinimum` input until Runtime can derive it from persisted Planning evidence.
 - [ ] Make frozen Planning minimums independently digest-verifiable and bind Implementation to persisted Planning minimums.
 - [ ] Strictly validate loop, authority/enforcement, method-kind compatibility, requirements, repair targets, measurement bounds, thresholds, costs/timeouts, dependencies, and activation-rule refs.
 - [ ] Add startup validation for unique rule identities, known Loop-qualified Checks, KB/catalog agreement, implementation refs, and dependency acyclicity.
-- [ ] Add `ui_preview_targets_valid` to Planning and replace ambiguous cross-Loop release/security/accessibility/dependency semantics with Loop-specific Checks.
+- [x] Add Planning-only `ui_preview_targets_valid` and replace universal `release_safety_approved` activation with `release_intent_authorized` for Decision, `release_plan_safe` for Planning, and `release_safety_approved` for Implementation.
+- [ ] Replace remaining ambiguous cross-Loop security, accessibility, and dependency semantics with Loop-specific Checks where requirements or repair targets differ.
 - [x] Add strict shared canonical JSON/digest utilities and migrate the native policy identity off its local stable-stringify implementation.
 - [x] Add immutable Runtime-owned Check Result and Exit Report constructors that derive canonical status and identity; reject caller-owned identity/status, missing or duplicate required Results, contradictory measurements, and wrong-candidate, wrong-policy, wrong-Check, wrong-execution, or wrong-measurement data.
 
