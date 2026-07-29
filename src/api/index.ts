@@ -4,6 +4,7 @@ export const sourceLayout = {
 	loopRoots: ["decision", "planning", "implementation"],
 	supportRoots: [
 		"api",
+		"evidence",
 		"loop-exit",
 		"loops",
 		"dashboard",
@@ -72,6 +73,33 @@ export type {
 	SourceMapValidationIssueCode,
 } from "../knowledge/source-map.ts";
 export type { ContentProof } from "../git/content-proof.ts";
+export type {
+	ApprovalReceiptPayload,
+	ApprovalReceiptProvider,
+	CommandExecutionPayload,
+	DeliveryAttestationPayload,
+	EvidenceArtifact,
+	EvidenceAuthority,
+	EvidenceCoverage,
+	EvidenceId,
+	EvidenceKind,
+	EvidenceMaterial,
+	EvidenceMeasurement,
+	EvidencePayloadByKind,
+	EvidenceProducer,
+	EvidenceProducerKind,
+	EvidenceRecord,
+	EvidenceSensitivity,
+	EvidenceSubject,
+	IntegrationProofPayload,
+	ModelAssessmentPayload,
+	OutcomeObservationPayload,
+	ResearchCitationPayload,
+	SourceObservationPayload,
+	UiCaptureArtifact,
+	UiCapturePayload,
+	WorkerReportPayload,
+} from "../evidence/contracts.ts";
 export type {
 	Change,
 	ChangeAssessment,

@@ -321,8 +321,21 @@ Maintainers treat Feedback Bundles as untrusted data and convert useful findings
 - [x] Ratify Evidence Record as a content-addressed cross-Loop entity represented by one immutable value record, with no separate workflow, mutable lifecycle, database, graph authority, or user-authored paperwork.
 - [x] Ratify CodeWiki as canonical dossier/approval authority and draft pull request as optional team review projection; one review action is normalized once rather than duplicated.
 - [x] Ratify guarded pre-exit review publication as a narrow evidence-gathering effect that cannot advance semantic state, move project/protected branches, auto-merge, or authorize later effects.
-- [ ] Add `src/evidence/**` with exact closed base Evidence Record envelope, Runtime-owned identity/time, authority/coverage/sensitivity semantics, discriminated payload schemas, package exports, source ownership, and tests.
-- [ ] Add versioned closed evidence-adapter contracts and strict materialization for research citations, source observations, command executions, UI captures, model assessments, Worker Reports, Integration proof, approval receipts, delivery attestations, and outcome observations.
+
+Current producer/consumer migration inventory:
+
+| Evidence area | Current executable source | Migration boundary |
+| --- | --- | --- |
+| Decision grounding | `src/changes/types.ts`, `src/decision/change-quality.ts` | Replace generic `sourceRefs`/`proofRefs` counting with typed citations and source observations. |
+| Commands and implementation review | `src/implementation/evidence.ts`, `src/implementation/review/evidence-report.ts` | Adapt bounded command/source/model observations; do not promote legacy verdicts into canonical Results. |
+| Preview/UI | `src/preview/evidence.ts` | Correlate existing capture manifests with exact Candidate/tree/route/state/viewport and add bounded video. |
+| Worker completion | `src/implementation/worker-proof.ts`, `src/runtime/implementation-worker-report-store.ts` | Materialize sanitized report metadata; keep private Workbench/raw report content outside traces. |
+| Integration and delivery | `src/runtime/implementation-worker-integration.ts`, branch push/merge and publication/release proof modules | Adapt exact Git/effect observations without granting Loop exit or later-effect authority. |
+| Persistence and projections | `src/implementation/iteration.ts`, `src/traces/**`, `src/views/quality.ts` | Append compact records once and project persisted identities rather than current legacy standards. |
+
+- [x] Add `src/evidence/**` with exact closed base Evidence Record envelope, Runtime-owned identity/subject/time/producer/authority/coverage/freshness/effective-sensitivity context, discriminated payload schemas, public contract type exports, source ownership, and tests.
+- [x] Add strict recursive materialization and tamper validation for research citations, source observations, command executions, UI captures, model assessments, Worker Reports, Integration proof, approval receipts, delivery attestations, and outcome observations.
+- [ ] Add a versioned closed evidence-adapter Catalog that maps trusted producers into Runtime authority/coverage/freshness decisions; no client-supplied adapter or authority metadata.
 - [ ] Bind Check evidence obligations to accepted kinds, producer/authority classes, freshness, coverage, artifact availability, privacy, and contradiction policy; bind consumed Evidence Record identities into Results/cache/report.
 - [ ] Replace Decision ref-count evidence sufficiency with exact research-citation provenance/freshness Code Checks, independent claim-support/contradiction Model Checks, and risk-proportional activation.
 - [ ] Extend preview capture with exact candidate/tree-bound screenshots and bounded MP4/WebM interaction recordings across required routes, states, scenarios, and viewports.

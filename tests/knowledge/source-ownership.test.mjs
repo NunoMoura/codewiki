@@ -75,6 +75,10 @@ describe("OKF-backed source ownership", () => {
 			components.get("dashboard")?.doc,
 			".codewiki/kb/product/uis/terminal.md",
 		);
+		assert.equal(
+			components.get("evidence")?.doc,
+			".codewiki/kb/system/components/evidence.md",
+		);
 		assert.equal(components.get("package")?.doc, "README.md");
 	});
 
@@ -90,6 +94,10 @@ describe("OKF-backed source ownership", () => {
 			sourceOwnershipOwnerForPath(bundle, "src/knowledge/source-ownership.ts")
 				?.id,
 			"knowledge",
+		);
+		assert.equal(
+			sourceOwnershipOwnerForPath(bundle, "src/evidence/materialize.ts")?.id,
+			"evidence",
 		);
 		for (const path of collectFiles("src")) {
 			if (sourceMapExcluded(ownership, path)) continue;

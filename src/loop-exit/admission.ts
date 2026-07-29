@@ -1,6 +1,6 @@
 import type { TSchema } from "typebox";
-import { Errors } from "typebox/value";
 import type { SemanticLoop } from "../semantic-loop.ts";
+import { assertTypeboxSchema } from "../utils/json.ts";
 
 export function candidateContentRecord(
 	value: unknown,
@@ -72,15 +72,5 @@ export function assertCandidateSchema(
 	value: unknown,
 	label: string,
 ): void {
-	const [error] = Errors(schema, value);
-	if (!error) return;
-	if (error.keyword === "additionalProperties") {
-		const field = (error.params.additionalProperties as string[])[0];
-		const location = error.instancePath || "/";
-		throw new Error(
-			`${label} received unsupported field ${field} at ${location}.`,
-		);
-	}
-	const location = error.instancePath || "/";
-	throw new Error(`${label} is invalid at ${location}: ${error.message}.`);
+	assertTypeboxSchema(schema, value, label);
 }

@@ -14,6 +14,7 @@ const apiIndex = readFileSync("src/api/index.ts", "utf8");
 
 const expectedSupportRoots = [
 	"api",
+	"evidence",
 	"loop-exit",
 	"loops",
 	"dashboard",

@@ -8,6 +8,21 @@ tags:
   - evidence
   - provenance
   - approval
+timestamp: 2026-07-29T07:09:20.000Z
+codewiki_component: evidence
+codewiki_components:
+  - evidence
+codewiki_responsibility: Define strict immutable cross-Loop Evidence Record contracts, content identity, Runtime materialization, provenance, authority, coverage, and privacy boundaries.
+codewiki_source_patterns:
+  - src/evidence/**
+codewiki_test_patterns:
+  - tests/evidence/**
+codewiki_source_map:
+  - id: evidence
+    source_patterns:
+      - src/evidence/**
+    test_patterns:
+      - tests/evidence/**
 ---
 # Evidence Records
 
@@ -90,7 +105,7 @@ interface EvidenceRecord<TKind extends EvidenceKind, TPayload> {
 }
 ```
 
-Runtime derives identity and observation time after validating exact keys, kind-specific payload, subject correlation, producer identity, artifact digest, provenance, freshness, and privacy policy. Producers cannot supply canonical identity, upgrade authority, claim complete coverage, or turn an artifact into acceptance.
+Producer-facing Evidence material contains only schema/kind, bounded payload, optional artifact metadata, and provenance refs. Runtime supplies the canonical subject, producer metadata, observation time, authority, coverage, freshness boundary, and effective sensitivity after validating correlation, artifact digest, provenance, freshness, and privacy policy. Producers cannot self-bind a Candidate or Change revision, supply canonical identity, upgrade authority, claim complete coverage, lower sensitivity, or turn an artifact into acceptance.
 
 Evidence created before a candidate, such as research against a pending Change revision, binds that exact revision. The later candidate binds the Evidence Record ids/digests in its observed base. Evidence created from a candidate, such as a UI capture, additionally binds the exact candidate and source tree. Check Results bind both candidate and consumed evidence identities.
 
@@ -220,7 +235,7 @@ If project policy forbids pre-exit review publication, required UI approval occu
 - Shared evidence has one owning observation record; other Changes cite its immutable identity without transferring acceptance.
 - Closure/compaction cannot delete the only required artifact before durable replacement or retention proof exists.
 
-## Target source boundary
+## Source boundary and current status
 
 Shared contracts belong under `src/evidence/**`, not under one semantic Loop or the Loop-exit runner:
 
@@ -232,6 +247,10 @@ src/evidence/
 ```
 
 Loop-owned packages declare admissible domain payload/obligation semantics. `src/loop-exit/**` imports Evidence contracts to bind Check inputs and Results. Runtime composes materialization, artifact/provider adapters, approval correlation, trace writes, and retention. Dependency direction stays one-way; Evidence code cannot import Decision, Planning, or Implementation implementations.
+
+Current foundation implements the closed envelope and ten payload kinds, strict recursive admission, canonical normalization, content identity, Runtime-owned subject/time/producer/authority/coverage/freshness/sensitivity context, semantic kind bindings, tamper validation, and public contract types. Existing evidence producers and trace writers are not migrated yet. Until that migration, legacy `sourceRefs`, `proofRefs`, preview captures, review reports, worker reports, and delivery proofs retain their current executable behavior and do not become canonical Evidence Records merely by resembling one.
+
+Canonical JSON/digest primitives live in `src/utils/canonical-json.ts` so Evidence and Loop-exit identity share exact serialization without reversing the dependency from Loop exit into Evidence.
 
 ## Non-goals
 
