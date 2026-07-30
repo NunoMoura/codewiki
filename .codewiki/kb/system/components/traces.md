@@ -19,7 +19,7 @@ codewiki_source_patterns:
 codewiki_test_patterns:
   - tests/traces/**
   - tests/fixtures/change-trace-v1/**
-  - tests/helpers/change-trace-v1.mjs
+  - tests/helpers/change-trace-*.mjs
   - tests/views/**
 codewiki_generated_views:
   - .codewiki/views/status.json
@@ -44,7 +44,7 @@ codewiki_source_map:
     test_patterns:
       - tests/traces/**
       - tests/fixtures/change-trace-v1/**
-      - tests/helpers/change-trace-v1.mjs
+      - tests/helpers/change-trace-*.mjs
     role: state_truth
   - id: views
     source_patterns:
@@ -483,7 +483,7 @@ Stable guidance enters Knowledge, Protocols, Checks, routes, config, source, or 
 
 ## Clean-cut status
 
-The standalone executable v1 protocol foundation now lives in `src/change-trace/**`: closed operation definitions, strict payload schemas, canonical serialization, SHA-256 identities, exact Planning epoch records, state commit manifests, archive manifests, and frozen byte fixtures. It grants no Runtime authority until deterministic reduction and Git acceptance consume it.
+The standalone executable v1 protocol foundation now lives in `src/change-trace/**`: closed operation definitions, strict payload schemas, canonical serialization, SHA-256 identities, exact Planning epoch/state/archive records, authority/base admission, typed operation reduction, atomic batch reduction, deterministic WorkState, a versioned Alignment Graph projector, and frozen/property fixtures. Full/incremental WorkState and graph projection are byte-equivalent. These pure foundations grant no Runtime mutation authority until provider-neutral Git acceptance consumes them.
 
 Existing Runtime paths still use local-linear `.codewiki/traces/TRACE-CHG-<id>.jsonl`, singular `parentId`, local `sequence`, formatted event IDs, snapshot-heavy records, and local rollback. Those contracts remain executable drift scheduled for deletion, not compatibility inputs to v1.
 

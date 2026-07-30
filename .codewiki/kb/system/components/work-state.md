@@ -13,8 +13,13 @@ codewiki_components:
   - work_state
 codewiki_source_patterns:
   - src/work-state/**
+  - src/change-trace/state.ts
+  - src/change-trace/builder.ts
+  - src/change-trace/reduce-operation.ts
+  - src/change-trace/reducer.ts
 codewiki_test_patterns:
   - tests/work-state/**
+  - tests/traces/change-trace-reducer-v1.test.mjs
 codewiki_generated_views:
   - .codewiki/views/work-state.json
 codewiki_role: generated_projection
@@ -22,8 +27,13 @@ codewiki_source_map:
   - id: work_state
     source_patterns:
       - src/work-state/**
+      - src/change-trace/state.ts
+      - src/change-trace/builder.ts
+      - src/change-trace/reduce-operation.ts
+      - src/change-trace/reducer.ts
     test_patterns:
       - tests/work-state/**
+      - tests/traces/change-trace-reducer-v1.test.mjs
     generated_views:
       - .codewiki/views/work-state.json
     role: generated_projection
@@ -71,9 +81,23 @@ Unsafe distributed mutation requires `fresh`. Private offline attempts may produ
 
 ## Deterministic reduction
 
-The reducer validates protocol version, canonical identity, parent availability, authority binding, base snapshot, pre-state digest, closed payload, and operation-specific preconditions before applying an operation.
+The executable pure reducer in `src/change-trace/**` validates protocol version, canonical identity, parent availability, authority capability, exact shared batch base, expected remote head, pre/post reduction digests, closed payload, atomic multi-Change bindings, manifest record order/tails, and operation-specific preconditions before applying an operation.
 
-Invalid or unknown history remains visible and blocks dependent progression. Duplicate operations are idempotent. Full replay and incremental replay must produce identical WorkState digests.
+Reduction digests form an authority-bound semantic hash chain without an operation-identity cycle:
+
+```text
+initial = sha256(canonical_json({ reduction protocol, Change ID }))
+
+next = sha256(canonical_json({
+  reduction protocol,
+  preStateDigest,
+  transition: operation body excluding postStateDigest
+}))
+```
+
+The materialized Change state then adds the accepted operation ID/tail and typed projections. `workStateDigest` hashes the complete normalized project projection body while excluding itself.
+
+Invalid or unknown history remains visible and blocks dependent progression. Repeated fetch of an already projected state head is cursor-idempotent in synchronization; a duplicate operation inside a new accepted batch is an explicit conflict and is rejected. Full replay and batch-by-batch incremental replay produce byte-identical WorkState and digest.
 
 Per-Change ordinary history remains single-tail. Global accepted order comes from the linear `codewiki/state` commit chain. Cross-Change relationships and Planning epochs are exact bindings, not causal-parent shortcuts.
 
@@ -207,7 +231,9 @@ A separate disposable index may retrieve applicable Repair Episodes and Repair P
 
 ## Current executable drift
 
-Current source projects local `.codewiki/traces/**` history and local coordinator state. Remote state freshness, accepted state-ref replay, v1 operation reduction, distributed Change Claims, distributed Work Item Claims, and versioned Alignment Graph projection remain planned clean-cut work.
+The standalone v1 reducer and versioned Alignment Graph projector are executable and property-tested, including malformed/duplicate/stale/unauthorized rejection, atomic Planning bindings, contradiction retention, and full/incremental equivalence. They are pure package foundations and do not yet grant Runtime mutation authority.
+
+Current Runtime paths still project local `.codewiki/traces/**` history and local coordinator state. Remote Git state acceptance, verified state-ref replay, distributed Change Claims, distributed Work Item Claims, and Runtime cutover remain clean-cut work. No compatibility or dual-write layer connects legacy Trace bytes to v1.
 
 ## Related docs
 

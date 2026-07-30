@@ -748,10 +748,10 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 - [x] Specify exact v1 operation, Planning epoch, state manifest, and archive schemas.
 - [x] Freeze canonical serialization and identity fixtures.
-- [ ] Implement a pure deterministic reducer.
-- [ ] Implement a pure versioned Alignment Graph projector.
-- [ ] Prove full/incremental replay equivalence.
-- [ ] Add adversarial and property tests for malformed bytes, hash mismatch, unknown versions, missing parents, unauthorized actors, stale bases, duplicate operations, contradictions, and projection equivalence.
+- [x] Implement a pure deterministic reducer.
+- [x] Implement a pure versioned Alignment Graph projector.
+- [x] Prove full/incremental replay equivalence.
+- [x] Add adversarial and property tests for malformed bytes, hash mismatch, unknown versions, missing parents, unauthorized actors, stale bases, duplicate operations, contradictions, and projection equivalence.
 
 ### Phase 2 — Disposable two-clone Git experiment
 

@@ -175,7 +175,9 @@ const changeIdSchema = Type.String({
 	pattern: "^CHG-[A-Za-z0-9][A-Za-z0-9._-]*$",
 });
 const refSchema = Type.String({ minLength: 1, maxLength: 2_048, pattern: "\\S" });
-const digestSchema = Type.String({ pattern: "^sha256:[0-9a-f]{64}$" });
+const digestSchema = Type.Unsafe<Sha256Digest>(
+	Type.String({pattern: "^sha256:[0-9a-f]{64}$"}),
+);
 const gitObjectIdSchema = Type.String({ pattern: "^[0-9a-f]{40}([0-9a-f]{24})?$" });
 const nullableGitObjectIdSchema = Type.Union([gitObjectIdSchema, Type.Null()]);
 const timestampSchema = Type.String({
@@ -1127,7 +1129,7 @@ export interface CanonicalObjectBinding {
 
 export interface OperationAdmissionRequest {
 	readonly operationId: OperationId;
-	readonly kind: ChangeOperationKind;
+	readonly kind: ChangeTraceOperationKind;
 	readonly capability: AuthorityCapability;
 	readonly authorityBinding: AuthorityBinding;
 	readonly baseSnapshot: BaseSnapshot;

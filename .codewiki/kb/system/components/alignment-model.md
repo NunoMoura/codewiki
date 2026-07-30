@@ -8,6 +8,21 @@ tags:
   - alignment
   - model
 timestamp: 2026-07-30T00:00:00Z
+codewiki_component: alignment_model
+codewiki_components:
+  - alignment_model
+codewiki_source_patterns:
+  - src/change-trace/alignment-graph.ts
+codewiki_test_patterns:
+  - tests/traces/alignment-graph-v1.test.mjs
+codewiki_role: generated_projection
+codewiki_source_map:
+  - id: alignment_model
+    source_patterns:
+      - src/change-trace/alignment-graph.ts
+    test_patterns:
+      - tests/traces/alignment-graph-v1.test.mjs
+    role: generated_projection
 ---
 # Alignment Model
 
@@ -105,7 +120,35 @@ accepted Change ledger head
 = Alignment Graph snapshot digest
 ```
 
-Every query result binds that digest.
+Every query result binds that digest. The executable projector shape is:
+
+```ts
+interface AlignmentGraphSnapshot {
+  projector: {
+    id: "codewiki.alignment-graph-projector";
+    version: "1.0.0";
+  };
+  graphSnapshotDigest: Sha256Digest;
+  graphContentDigest: Sha256Digest;
+  baseBinding: {
+    remoteStateHead: GitObjectId;
+    sourceHead: GitObjectId;
+    knowledgeDigest: Sha256Digest;
+    configDigest: Sha256Digest;
+    policyDigest: Sha256Digest;
+    workStateDigest: Sha256Digest;
+  };
+  status: "fresh";
+  projectedRecordIds: OperationId[];
+  nodes: AlignmentGraphNode[];
+  edges: AlignmentGraphEdge[];
+  coverage: AlignmentGraphCoverage;
+}
+```
+
+`graphSnapshotDigest` hashes the accepted state head, protected source head, Knowledge/config/policy digests, and projector identity/version. `graphContentDigest` independently hashes sorted normalized nodes and edges. Incremental projection accepts only an exact projected-record prefix and is byte-equivalent to full projection.
+
+The current pure projector covers canonical Change, revision, requirement, relationship, Loop, Candidate, Evidence, Result, Report, Route, Planning epoch, Sprint, Work Item, Claim, Assignment, Integration, Git effect, delivery, outcome, and contradiction facts. Source/OKF analysis adapters and bounded query APIs remain later clean-cut phases.
 
 ## Per-fact provenance
 
@@ -128,7 +171,7 @@ Function A → calls Function B   deterministic source analysis
 Concept A → likely concept B    inferred analysis with bounded confidence
 ```
 
-The graph may combine several classes in one result, so provenance attaches to each fact. No graph edge is independently authoritative. Contradictory, superseded, stale, partial, and unknown facts remain visible. Absence from partial coverage cannot prove non-existence.
+The graph may combine several classes in one result, so provenance attaches to each node and edge. Every edge has a content-derived fact ID over type, endpoints, attributes, and provenance. No graph edge is independently authoritative. Contradictory, superseded, stale, partial, and unknown facts remain visible. Absence from partial coverage cannot prove non-existence.
 
 ## Graph domains
 

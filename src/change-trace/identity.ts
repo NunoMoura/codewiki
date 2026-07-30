@@ -20,6 +20,7 @@ import {
 	type CanonicalChangeOperation,
 	type ChangeOperationBody,
 	type ChangeOperationKind,
+	type ChangeOperationPayload,
 	type ChangeRevision,
 	type ChangeRevisionContent,
 	type ChangedTraceTail,
@@ -894,6 +895,27 @@ function compareText(left: string, right: string): number {
 
 function canonicalObject<T>(value: unknown): T {
 	return toCanonicalJsonValue(value) as unknown as T;
+}
+
+export function operationPayload<K extends ChangeOperationKind>(
+	operation: CanonicalChangeOperation,
+	kind: K,
+): ChangeOperationPayload<K> {
+	if (operation.body.kind !== kind) {
+		throw new Error(`Expected ${kind}, received ${operation.body.kind}.`);
+	}
+	return operation.body.payload as ChangeOperationPayload<K>;
+}
+
+export function candidateOperationPayload(
+	operation: CanonicalChangeOperation,
+): ChangeOperationPayload<"decision.candidate_recorded"> {
+	if (!operation.body.kind.endsWith(".candidate_recorded")) {
+		throw new Error(
+			`Expected Candidate operation, received ${operation.body.kind}.`,
+		);
+	}
+	return operation.body.payload as ChangeOperationPayload<"decision.candidate_recorded">;
 }
 
 export function sameBaseSnapshot(left: BaseSnapshot, right: BaseSnapshot): boolean {
