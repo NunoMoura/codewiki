@@ -61,7 +61,7 @@ interface RunDecisionExitInput {
 	readonly signal?: AbortSignal;
 }
 
-interface DecisionRuntimeRoute {
+export interface DecisionRuntimeRoute {
 	readonly schemaVersion: "1.0.0";
 	readonly candidateDigest: Sha256Digest;
 	readonly exitReportDigest: Sha256Digest;
