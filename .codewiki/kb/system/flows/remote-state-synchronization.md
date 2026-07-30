@@ -16,9 +16,11 @@ codewiki_source_patterns:
   - src/change-trace/git-command.ts
   - src/change-trace/git-state.ts
   - src/change-trace/synchronization.ts
+  - src/change-trace/mutation.ts
 codewiki_test_patterns:
   - tests/traces/git-state-v1.test.mjs
   - tests/traces/synchronization-v1.test.mjs
+  - tests/traces/distributed-mutation-v1.test.mjs
   - tests/helpers/git-state-v1.mjs
 codewiki_role: git_state_acceptance
 codewiki_source_map:
@@ -27,9 +29,11 @@ codewiki_source_map:
       - src/change-trace/git-command.ts
       - src/change-trace/git-state.ts
       - src/change-trace/synchronization.ts
+      - src/change-trace/mutation.ts
     test_patterns:
       - tests/traces/git-state-v1.test.mjs
       - tests/traces/synchronization-v1.test.mjs
+      - tests/traces/distributed-mutation-v1.test.mjs
       - tests/helpers/git-state-v1.mjs
     role: git_state_acceptance
 ---
@@ -148,9 +152,11 @@ Measure contention before partitioning. If needed, partition non-exclusive contr
 
 The deliberately simultaneous two-writer cases measured one stale result per initial two-proposal race and one semantic retry only where the operation remained eligible. Exclusive Claim losers required no retry because reevaluation blocked them. This adversarial measurement proves serialization behavior but is not evidence of real workload contention, so v1 retains one `codewiki/state` ref and does not add partitioning.
 
-The transport, replay, read-only synchronization, materialization, polling/invalidation, and guarded push boundary are executable package foundations. Phase 4 adds typed distributed Claim mutation and stale semantic reevaluation through that boundary; no legacy Trace adapter or dual-write path exists.
+The transport, replay, read-only synchronization, materialization, polling/invalidation, guarded push boundary, and typed distributed Claim mutation are executable package foundations. `createDistributedMutationRuntime()` exposes only Change Claim and Work Item Claim acquire/release/takeover methods, never a generic operation DSL. Each mutation fetches and verifies fresh state, derives one canonical operation, preflights reduction, pushes with the exact lease, refetches, and verifies the accepted operation.
 
-`tests/traces/synchronization-v1.test.mjs` additionally proves exact team snapshot identity, deterministic local materialization, stale/offline fail-closed behavior, guarded pushes, coalesced invalidation including in-flight races, and structural rejection of malicious Git history.
+Stale rejection triggers fetch/replay and semantic reevaluation. A still-valid independent Claim retries with newly derived identity; an exclusive loser fails visibly with active authority. Retrying an already accepted exact intent returns `already_accepted` without a new commit. Release requires the current Claim actor. Takeover requires both an authentication Evidence binding and a configured Runtime verifier; timestamp age never grants release or takeover, and no automatic expiry path exists.
+
+`tests/traces/synchronization-v1.test.mjs` proves exact team snapshot identity, deterministic local materialization, stale/offline fail-closed behavior, guarded pushes, coalesced invalidation including in-flight races, and structural rejection of malicious Git history. `tests/traces/distributed-mutation-v1.test.mjs` proves independent stale reevaluation, exclusive Change Claim and Work Item Claim races, explicit release, idempotent crash-style retry, authenticated takeover, and persistence across a far-future untrusted local clock. No legacy Trace adapter or dual-write path exists.
 
 ## Related docs
 

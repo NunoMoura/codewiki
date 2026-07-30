@@ -777,12 +777,12 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 ### Phase 4 — Guarded distributed mutation
 
-- [ ] Add exact expected-head state append.
-- [ ] Add Change Claim acquire/release/authenticated takeover.
-- [ ] Add Work Item Claim acquire/release/authenticated takeover.
-- [ ] Add stale rejection fetch/replay/reevaluation.
-- [ ] Add crash-safe reconciliation and idempotent acceptance.
-- [ ] Keep automatic expiry disabled without trusted time.
+- [x] Add exact expected-head state append.
+- [x] Add Change Claim acquire/release/authenticated takeover.
+- [x] Add Work Item Claim acquire/release/authenticated takeover.
+- [x] Add stale rejection fetch/replay/reevaluation.
+- [x] Add crash-safe reconciliation and idempotent acceptance.
+- [x] Keep automatic expiry disabled without trusted time.
 
 ### Phase 5 — Rolling Planning
 

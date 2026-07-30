@@ -10,6 +10,21 @@ tags:
   - work-item
   - work-item-claim
 timestamp: 2026-07-30T00:00:00Z
+codewiki_component: distributed_work_item_claims
+codewiki_components:
+  - distributed_work_item_claims
+codewiki_source_patterns:
+  - src/change-trace/mutation.ts
+codewiki_test_patterns:
+  - tests/traces/distributed-mutation-v1.test.mjs
+codewiki_role: work_item_claim_authority
+codewiki_source_map:
+  - id: distributed_work_item_claims
+    source_patterns:
+      - src/change-trace/mutation.ts
+    test_patterns:
+      - tests/traces/distributed-mutation-v1.test.mjs
+    role: work_item_claim_authority
 ---
 # Runtime Work Item Claim Flow
 
@@ -51,6 +66,14 @@ Before `work_item_claim.acquired`, Runtime verifies:
 - exact actor/worker authority.
 
 Client and Git timestamps do not expire ownership.
+
+## Distributed mutation contract
+
+`createDistributedMutationRuntime()` performs Work Item Claim acquisition, release, and authenticated takeover against freshly verified `codewiki/state`. Callers provide typed Work Item fields only. Runtime derives operation identity, parents, base snapshot, authority binding, timestamp, state transition digest, manifest, and Git receipt.
+
+Every write follows fetch/verify/replay, semantic preflight, exact expected-head push, and accepted-operation refetch. Stale independent work is rebuilt only after reevaluation. A competing Claim loser receives an active-authority conflict and is never blind-rebased. Repeating an already accepted acquisition or release returns its existing operation receipt without appending another commit.
+
+Release requires the current Claim actor. Takeover requires an `authenticationEvidenceId` plus a configured authority verifier; Evidence presence alone is insufficient. No elapsed-time or heartbeat path expires a Claim.
 
 ## Terminal behavior
 
