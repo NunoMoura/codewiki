@@ -755,16 +755,16 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 ### Phase 2 — Disposable two-clone Git experiment
 
-- [ ] Use two disposable clones and one bare remote.
-- [ ] Race independent Changes.
-- [ ] Race same-Change writes.
-- [ ] Race Change Claim acquisition.
-- [ ] Race Work Item Claim acquisition.
-- [ ] Reject stale expected-head pushes.
-- [ ] Prove atomic Planning batches.
-- [ ] Exercise offline reconnect and crash recovery.
-- [ ] Prove duplicate/reordered notifications converge.
-- [ ] Measure contention before considering ref partitioning.
+- [x] Use two disposable clones and one bare remote.
+- [x] Race independent Changes.
+- [x] Race same-Change writes.
+- [x] Race Change Claim acquisition.
+- [x] Race Work Item Claim acquisition.
+- [x] Reject stale expected-head pushes.
+- [x] Prove atomic Planning batches.
+- [x] Exercise offline reconnect and crash recovery.
+- [x] Prove duplicate/reordered notifications converge.
+- [x] Measure contention before considering ref partitioning.
 
 ### Phase 3 — Read-only remote synchronization
 
