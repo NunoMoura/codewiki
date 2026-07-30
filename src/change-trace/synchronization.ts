@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { link, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import {
+	createGitStateCommit,
 	gitStateManifestPath,
 	gitStateRecordPath,
 	isGitStateTransportError,
@@ -14,7 +15,9 @@ import {
 } from "./git-state.ts";
 import type { GitCommandRunner } from "./git-command.ts";
 import {
+	reduceAcceptedStateBatch,
 	replayAcceptedStateBatches,
+	type AcceptedProtocolRecord,
 	type ReplayAdmissionPolicy,
 } from "./reducer.ts";
 import {
@@ -76,6 +79,32 @@ export interface SynchronizeGitStateInput extends ReadGitStateHistoryInput {
 	readonly policy: ReplayAdmissionPolicy;
 	readonly materializationRoot?: string;
 	readonly lastVerified?: SynchronizationObservation;
+}
+
+export interface SynchronizeCurrentGitStateInput
+	extends Omit<SynchronizeGitStateInput, "currentProject"> {
+	readonly currentProject: () =>
+		| ProjectAuthoritySnapshot
+		| Promise<ProjectAuthoritySnapshot>;
+}
+
+export interface CurrentGitSynchronization {
+	readonly currentProject: ProjectAuthoritySnapshot;
+	readonly observation: SynchronizationObservation;
+}
+
+export async function synchronizeCurrentGitState(
+	input: SynchronizeCurrentGitStateInput,
+): Promise<CurrentGitSynchronization> {
+	const currentProject = await input.currentProject();
+	const observation = await synchronizeGitState({...input, currentProject});
+	return Object.freeze({currentProject, observation});
+}
+
+export function createCurrentGitSynchronizer(
+	input: SynchronizeCurrentGitStateInput,
+): () => Promise<CurrentGitSynchronization> {
+	return () => synchronizeCurrentGitState(input);
 }
 
 export async function synchronizeGitState(
@@ -188,6 +217,56 @@ export function pushSynchronizedGitStateCommit(
 		runner: input.runner,
 		signal: input.signal,
 	});
+}
+
+export interface PushSynchronizedStateBatchInput {
+	readonly repoRoot: string;
+	readonly remote: string;
+	readonly state: ProjectWorkState;
+	readonly records: readonly AcceptedProtocolRecord[];
+	readonly policy: ReplayAdmissionPolicy;
+	readonly observation: SynchronizationObservation;
+	readonly runner?: GitCommandRunner;
+	readonly signal?: AbortSignal;
+}
+
+export interface SynchronizedStateBatchResult {
+	readonly proposal: GitStateCommitProposal;
+	readonly pushResult: GitStatePushResult;
+}
+
+export async function pushSynchronizedStateBatch(
+	input: PushSynchronizedStateBatchInput,
+): Promise<SynchronizedStateBatchResult> {
+	if (!input.observation.teamSnapshot) {
+		throw new Error("Synchronized state batch requires a verified team snapshot.");
+	}
+	const proposal = await createGitStateCommit({
+		repoRoot: input.repoRoot,
+		state: input.state,
+		records: input.records,
+		runner: input.runner,
+		signal: input.signal,
+	});
+	reduceAcceptedStateBatch(
+		input.state,
+		{
+			stateHead: proposal.stateCommit,
+			manifest: proposal.manifest,
+			records: proposal.records,
+		},
+		input.policy,
+	);
+	const pushResult = await pushSynchronizedGitStateCommit({
+		repoRoot: input.repoRoot,
+		remote: input.remote,
+		proposal,
+		observation: input.observation,
+		expectedSnapshotDigest: input.observation.teamSnapshot.snapshotDigest,
+		runner: input.runner,
+		signal: input.signal,
+	});
+	return Object.freeze({proposal, pushResult});
 }
 
 export interface SynchronizationPoller {

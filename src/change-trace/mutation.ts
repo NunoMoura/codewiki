@@ -5,16 +5,12 @@ import type {
 	OperationId,
 } from "./contracts.ts";
 import { createNextChangeOperation } from "./builder.ts";
-import {
-	createGitStateCommit,
-	type GitStateCommitProposal,
-} from "./git-state.ts";
 import type { GitCommandRunner } from "./git-command.ts";
-import { reduceAcceptedStateBatch, type ReplayAdmissionPolicy } from "./reducer.ts";
+import type { ReplayAdmissionPolicy } from "./reducer.ts";
 import type { ChangeWorkState, ProjectWorkState } from "./state.ts";
 import {
-	pushSynchronizedGitStateCommit,
-	synchronizeGitState,
+	createCurrentGitSynchronizer,
+	pushSynchronizedStateBatch,
 	type ProjectAuthoritySnapshot,
 	type SynchronizationObservation,
 } from "./synchronization.ts";
@@ -106,16 +102,11 @@ export function createDistributedMutationRuntime(
 	if (!Number.isInteger(maxStaleRetries) || maxStaleRetries < 0) {
 		throw new Error("maxStaleRetries must be a non-negative integer.");
 	}
-	const synchronize = async (): Promise<SynchronizationObservation> =>
-		synchronizeGitState({
-			repoRoot: input.repoRoot,
-			remote: input.remote,
-			repositoryIdentity: input.repositoryIdentity,
-			currentProject: await input.currentProject(),
-			policy: input.policy,
-			runner: input.runner,
-			materializationRoot: input.materializationRoot,
-		});
+	const synchronizeCurrent = createCurrentGitSynchronizer(input);
+	const synchronize = async (): Promise<SynchronizationObservation> => {
+		const current = await synchronizeCurrent();
+		return current.observation;
+	};
 	const execute = async <K extends ClaimMutationKind>(
 		changeId: string,
 		kind: K,
@@ -125,16 +116,7 @@ export function createDistributedMutationRuntime(
 	): Promise<MutationReceipt> => {
 		const recordedAt = clock();
 		for (let attempt = 1; attempt <= maxStaleRetries + 1; attempt += 1) {
-			const currentProject = await input.currentProject();
-			const observation = await synchronizeGitState({
-				repoRoot: input.repoRoot,
-				remote: input.remote,
-				repositoryIdentity: input.repositoryIdentity,
-				currentProject,
-				policy: input.policy,
-				runner: input.runner,
-				materializationRoot: input.materializationRoot,
-			});
+			const {currentProject, observation} = await synchronizeCurrent();
 			if (
 				observation.status !== "fresh" ||
 				!observation.teamSnapshot ||
@@ -182,22 +164,16 @@ export function createDistributedMutationRuntime(
 				recordedAt,
 				payload,
 			});
-			const proposal = await createGitStateCommit({
-				repoRoot: input.repoRoot,
-				state: observation.workState,
-				records: [operation],
-				runner: input.runner,
-			});
-			preflightProposal(observation.workState, proposal, input.policy);
-			const pushed = await pushSynchronizedGitStateCommit({
+			const {pushResult} = await pushSynchronizedStateBatch({
 				repoRoot: input.repoRoot,
 				remote: input.remote,
-				proposal,
+				state: observation.workState,
+				records: [operation],
+				policy: input.policy,
 				observation,
-				expectedSnapshotDigest: observation.teamSnapshot.snapshotDigest,
 				runner: input.runner,
 			});
-			if (pushed.status === "stale") continue;
+			if (pushResult.status === "stale") continue;
 			const verified = await synchronize();
 			if (
 				verified.status !== "fresh" ||
@@ -271,22 +247,6 @@ function workItemClaimPayload(
 		budgetDigest: request.budgetDigest,
 		obligationDigest: request.obligationDigest,
 	};
-}
-
-function preflightProposal(
-	state: ProjectWorkState,
-	proposal: GitStateCommitProposal,
-	policy: ReplayAdmissionPolicy,
-): void {
-	reduceAcceptedStateBatch(
-		state,
-		{
-			stateHead: proposal.stateCommit,
-			manifest: proposal.manifest,
-			records: proposal.records,
-		},
-		policy,
-	);
 }
 
 function findAlreadyAccepted<K extends ClaimMutationKind>(

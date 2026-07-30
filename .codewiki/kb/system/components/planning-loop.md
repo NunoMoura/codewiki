@@ -13,9 +13,12 @@ codewiki_components:
   - planning
 codewiki_source_patterns:
   - src/planning/**
+  - src/change-trace/rolling-planning.ts
+  - src/change-trace/planning-mutation.ts
 codewiki_test_patterns:
   - tests/planning/**
   - tests/helpers/planning-work.mjs
+  - tests/traces/rolling-planning-v1.test.mjs
 codewiki_trace_events:
   - planning.epoch_recorded
   - planning.epoch_bound
@@ -29,9 +32,12 @@ codewiki_source_map:
   - id: planning
     source_patterns:
       - src/planning/**
+      - src/change-trace/rolling-planning.ts
+      - src/change-trace/planning-mutation.ts
     test_patterns:
       - tests/planning/**
       - tests/helpers/planning-work.mjs
+      - tests/traces/rolling-planning-v1.test.mjs
     generated_views:
       - .codewiki/views/work-plan.json
       - .codewiki/views/work-queue.json
@@ -137,6 +143,8 @@ interface PlanningEpochRecord {
 
 Each Sprint binds ID, goal, participant Changes, Work Items, Sprint dependencies, and Integration boundary. Each Work Item binds ID, Sprint, title/outcome, owning and contributing Change revisions/tails, Work Item dependencies, requirement-to-Evidence/Check mappings, source/Knowledge/component scope, Workbench profile/tools/Skills/context/budget, and Integration target/Checks/rollback/review requirement. The graph digest hashes only exact participant and Work Item graph semantics. Runtime derives `operationId` from the complete body after validating sorted unique sets, referential integrity, and acyclic Sprint/Work Item dependencies.
 
+Planning Candidate content names participant, owning, and contributing Change IDs without predicting future Trace tails. After every participant has the exact passing Planning exit, Runtime derives current revision/tail bindings and materializes Work Items against them. This avoids an identity cycle in which a Candidate would need to contain operation IDs produced by its own evaluation.
+
 Runtime accepts `planning.epoch_recorded` once and atomically appends `planning.epoch_bound` to every participating Change through one state commit.
 
 A partial batch is not accepted Planning. Remote Git expected-head CAS makes the complete batch atomic.
@@ -153,7 +161,7 @@ pause
 migrate
 cancel
 block
-route back
+route_back
 ```
 
 Planning cannot silently edit an active Assignment or reinterpret completed worker output. Runtime enforces the accepted disposition.
@@ -179,7 +187,7 @@ Runtime loads current facts. Candidate producers cannot replace remote state hea
 
 - bounded selected Change set and explicit resolutions;
 - Sprints and worker-ready Work Items;
-- owning/contributing Change bindings;
+- owning/contributing Change IDs, which Runtime resolves to exact current revision/tail bindings after passing exit;
 - dependencies, ordering, conflict boundaries, and safe parallelism;
 - acceptance requirements and evidence obligations;
 - source/path/component/Knowledge scope;
@@ -238,9 +246,15 @@ Backlog, Planning graph, Sprint lanes, work queue, safe frontier, blockers, and 
 
 Graph position is presentation only. Every displayed relationship binds underlying facts and snapshot provenance.
 
+## Executable rolling foundation
+
+`createRollingPlanningCandidate()` creates strict immutable global Candidate identity without caller-supplied IDs or future participant tails. `resolveRollingPlanningEpoch()` validates exact participant exits, materializes current bindings, accounts for every active Work Item, preserves only unchanged semantic meaning, derives the safe frontier, and creates one epoch plus every Change binding. `commitRollingPlanningEpoch()` requires fresh synchronization and an unchanged WorkState digest, preflights the complete batch, uses exact expected-head CAS, and refuses stale retry without rerunning Planning. `projectRollingPlanningView()` derives current Sprint, frontier, and Work Item status from accepted state; no mutable backlog is written.
+
+`tests/traces/rolling-planning-v1.test.mjs` proves multi-Change atomic acceptance, dependency-derived readiness, stale global Candidate rejection when a new Change arrives, exact active Assignment preservation, explicit pause, and persistence despite a far-future untrusted timestamp.
+
 ## Current executable drift
 
-Current source still shapes a locally bounded approved set, writes per-Trace Planning events with deterministic local IDs, and repairs partial filesystem writes. It does not yet create project-scoped content-addressed Planning epochs or atomic remote state commits. The clean cut replaces that path rather than adding dual behavior.
+The v1 protocol and rolling Planning foundation are executable, but the production `wiki_plan`/coordinator path still shapes a locally bounded approved set and writes legacy per-Trace Planning events. Phase 7/9 performs the clean cut to this single global path rather than adding dual behavior.
 
 ## Related docs
 

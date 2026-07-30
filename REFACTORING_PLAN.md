@@ -786,12 +786,12 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 ### Phase 5 — Rolling Planning
 
-- [ ] Create immutable Planning Candidate and `PlanningEpochRecord` schemas.
-- [ ] Bind each participating Change atomically.
-- [ ] Preserve safe active Work Items and Assignments.
-- [ ] Require explicit pause/migration/cancellation/block/route-back for invalidated work.
-- [ ] Derive safe execution frontier from fresh WorkState.
-- [ ] Replace mutable Planning/backlog assumptions with projections.
+- [x] Create immutable Planning Candidate and `PlanningEpochRecord` schemas.
+- [x] Bind each participating Change atomically.
+- [x] Preserve safe active Work Items and Assignments.
+- [x] Require explicit pause/migration/cancellation/block/route-back for invalidated work.
+- [x] Derive safe execution frontier from fresh WorkState.
+- [x] Replace mutable Planning/backlog assumptions with projections.
 
 ### Phase 6 — Alignment Graph and bounded queries
 

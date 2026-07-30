@@ -312,8 +312,12 @@ export function planningWorkItemGraphDigest(
 		activeWorkDispositions: value.activeWorkDispositions.map((entry) => ({
 			workItemId: entry.workItemId,
 			disposition: entry.disposition,
-			activeAssignmentOperationId: entry.activeAssignmentOperationId,
-			replacementWorkItemId: entry.replacementWorkItemId,
+			...(entry.activeAssignmentOperationId
+				? {activeAssignmentOperationId: entry.activeAssignmentOperationId}
+				: {}),
+			...(entry.replacementWorkItemId
+				? {replacementWorkItemId: entry.replacementWorkItemId}
+				: {}),
 		})),
 	});
 }

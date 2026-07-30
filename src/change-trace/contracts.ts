@@ -844,7 +844,7 @@ export const canonicalChangeOperationSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
-const planningAcceptanceRequirementSchema = Type.Object(
+export const planningAcceptanceRequirementSchema = Type.Object(
 	{
 		id: idSchema,
 		statement: requiredTextSchema,
@@ -853,7 +853,7 @@ const planningAcceptanceRequirementSchema = Type.Object(
 	},
 	{ additionalProperties: false },
 );
-const planningScopeSchema = Type.Object(
+export const planningScopeSchema = Type.Object(
 	{
 		sourcePaths: refListSchema,
 		knowledgeRefs: refListSchema,
@@ -861,7 +861,7 @@ const planningScopeSchema = Type.Object(
 	},
 	{ additionalProperties: false },
 );
-const planningWorkbenchSchema = Type.Object(
+export const planningWorkbenchSchema = Type.Object(
 	{
 		profileId: idSchema,
 		toolIds: idListSchema,
@@ -871,7 +871,7 @@ const planningWorkbenchSchema = Type.Object(
 	},
 	{ additionalProperties: false },
 );
-const planningIntegrationSchema = Type.Object(
+export const planningIntegrationSchema = Type.Object(
 	{
 		targetRef: refSchema,
 		requiredCheckIds: idListSchema,
