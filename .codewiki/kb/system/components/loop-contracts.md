@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Loop Contracts
-description: "CodeWiki has exactly three semantic Loops: Decision, Planning, and Implementation. Every attempt proposes one exact candidate whose required Check Results deterministically reduce to an Exit Report."
+description: "CodeWiki has exactly three semantic Loops; every attempt follows exact Candidate, Evidence Records, Resolved Exit Policy, Checks, Check Results, Exit Report, and Runtime Route contracts."
 tags:
   - codewiki
   - system
   - loop
   - contracts
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: loop_exit
 codewiki_components:
   - loop_exit
@@ -50,29 +50,33 @@ Implementation
 
 Runtime is the outer control loop, while **Project Runtime** names the whole project control plane. Knowledge propagation belongs to Decision. Planning evaluates a bounded WorkState horizon rather than one Change in isolation. Check execution, learning, graph projection, recovery, Integration, publication, release, and feedback are machinery or effects—not additional semantic Loops.
 
-Write authority is surface-specific: semantic sessions, workers, tools, users, and providers return candidate or evidence material; Project Runtime alone materializes canonical Evidence Records, appends traces, and performs separately authorized effects.
+Write authority is surface-specific: semantic sessions, workers, tools, users, and providers return candidate or evidence material; Project Runtime alone materializes canonical Evidence Records, appends accepted Change operations, and performs separately authorized effects.
 
 Each Loop has:
 
 1. an exact typed input;
 2. a versioned mandatory Loop Protocol;
 3. one or more attempts;
-4. an immutable role-specific candidate for each attempt;
-5. one candidate-specific Resolved Exit Policy;
-6. one Check Result per active Check;
-7. one immutable Exit Report;
-8. one runtime-selected route after freshness and authority validation.
+4. an immutable role-specific Candidate for each attempt;
+5. exact immutable Evidence Records and obligation resolutions;
+6. one Candidate-specific Resolved Exit Policy;
+7. one Check Result per active Check;
+8. one immutable Exit Report;
+9. one Runtime-selected route after freshness and authority validation.
 
 ```text
 Change
 → Loop
 → Candidate
+→ Evidence Records
 → Resolved Exit Policy
-→ Code Checks + Model Checks
+→ Checks
 → Check Results
 → Exit Report
-→ Runtime route and guarded append/effect
+→ Runtime Route
 ```
+
+Canonical append and effects remain separate Runtime guards after this chain.
 
 ## Change, Planning, and execution relationships
 
@@ -86,14 +90,14 @@ Work Item 1 → * Assignment attempt
 
 Each Work Item has exactly one owning Change and may declare contribution to others. Runtime grants bounded Assignments. Worker completion is candidate evidence, never semantic acceptance.
 
-WorkState is a disposable projection over Change Traces, Knowledge, source ownership, source/tests/Git, configuration, and bounded observations. Relationship and learning views are also disposable.
+WorkState is a deterministic disposable projection over accepted Change operations, Knowledge, source ownership, source/tests/Git, configuration/policy, and bounded observations. The Alignment Graph is a deterministic first-class projection; indexes, rendering, and learning views remain disposable.
 
 ## Loop responsibilities
 
 | Loop | Input focus | Candidate focus | Required exit meaning |
 | --- | --- | --- | --- |
 | Decision | Exact proposed/persisted Change revision, relevant WorkState/Knowledge/current-state refs, overlap, authority, route-back context. | Normalized intent, outcome, Knowledge delta, constraints, risks, delivery effects, overlap disposition, approval or terminal disposition facts. | Accepted interpretation is grounded, coherent, Knowledge-accounted, risk-aware, overlap-accounted, and exactly authorized. |
-| Planning | Bounded approved-Change portfolio, current Planning/Assignment/Integration state, ownership, constraints, prior plan revisions. | Globally coherent Sprints, worker-ready Work Items, dependencies, acceptance requirements, verification, path/component bounds, triggers, resolutions, Integration and Workbench requirements. | Every selected approved Change has coherent executable coverage or explicit authorized resolution. |
+| Planning | Bounded selected Change set, current Planning/Assignment/Integration state, Change Claims, Work Item Claims, constraints, and prior epochs. | Globally coherent Sprints, worker-ready Work Items, dependencies, acceptance requirements, verification, path/component bounds, triggers, resolutions, Integration, and Worker Workbench requirements. | Every selected approved Change has coherent executable coverage or explicit authorized resolution, and active work is preserved or explicitly dispositioned. |
 | Implementation | Owning approved Change, accepted Work Items, Assignments/Worker Reports, Integration state, source ownership, source/tests/Git, prior evidence. | Exact realization, changed paths, acceptance-requirement evidence, trusted check observations, worker provenance, Integration/content proof, outcome disposition, route-back questions. | Exact accepted obligations are realized, verified, integrated, provenance-bound, and ready for the requested semantic exit. |
 
 Downstream Loops consume only exact passed-and-appended upstream output. Failed and indeterminate attempts remain durable accountability, repair, and learning evidence.
@@ -104,7 +108,7 @@ A candidate is exact immutable output proposed by one Loop attempt. Candidate id
 
 - Loop and candidate schema version;
 - normalized candidate content;
-- exact Change revision or approved portfolio;
+- exact Change revision or selected Change set;
 - WorkState and Knowledge snapshot;
 - relevant source/Git base;
 - runtime-derived facts required by candidate construction.
@@ -120,7 +124,7 @@ Role-specific schemas replace broad arbitrary-record submissions and broad `Omit
 An Evidence Record is one immutable content-addressed observation shared across Loops. Its small common envelope binds exact subject, producer, provenance, artifact, Runtime-owned observation/freshness, authority class, coverage, sensitivity, and one closed kind-specific payload. It has stable identity but no independent mutable lifecycle, CRUD service, central database, or semantic Loop.
 
 ```text
-Check requirement = claim
+Check requirement = assertion to establish
 Evidence Record   = supporting, contradicting, partial, or unknown observation
 Check Result      = interpretation under exact candidate, Check, and policy
 ```
@@ -191,7 +195,7 @@ Runtime resolves one immutable candidate-specific policy from:
 - Loop baseline;
 - accepted Change traits, risk, and affected layers;
 - project traits and technologies/paths;
-- frozen Planning minimums;
+- Runtime-derived minimums from canonical Planning evidence;
 - actual candidate effects;
 - approved project additions and permitted non-kernel exclusions;
 - model route/configuration and Check catalog/Loop Protocol identities.
@@ -238,7 +242,7 @@ else required indeterminate   → indeterminate
 else                           → pass
 ```
 
-`observe` and `warn` Results remain visible but do not block exit. A passing Exit Report permits semantic Loop exit only for that exact candidate. It does not authorize append under stale generation, Integration, merge, push, publication, release, deployment, or any other effect.
+`observe` and `warn` Results remain visible but do not block exit. A passing Exit Report permits semantic Loop exit only for that exact candidate. It does not authorize append under stale generation, a new Integration attempt, merge, push, publication, release, deployment, or any external effect.
 
 Runtime revalidates candidate freshness, generation, authority, and CAS, then chooses a separate route:
 
@@ -285,7 +289,7 @@ Pi-Lens, LSP, compilers, linters, test runners, browser tools, AST tools, format
 
 A trusted Code Check may run or normalize an approved tool under its exact implementation/configuration contract. Tool success never substitutes for planned acceptance coverage, exact candidate identity, or semantic Checks.
 
-Current legacy review-pack configuration and Pi hooks remain executable migration state. The clean Implementation cut decides which trusted adapters survive inside Code Checks and deletes CodeWiki-owned review machinery that does not meet the new contract. Pi-Lens remains optional and non-authoritative in v1.
+Current legacy review-pack configuration and Pi hooks remain executable drift. The clean Implementation cut decides which trusted adapters survive inside Code Checks and deletes CodeWiki-owned review machinery that does not meet the new contract. Pi-Lens remains optional and non-authoritative in v1.
 
 The source checkout does not load or dogfood its own extension during stabilization. Packed candidates exercise runtime behavior only in disposable external projects.
 
@@ -309,28 +313,27 @@ approved Change
 → post-change passing evidence
 → changed paths
 → local content proof
-→ aggregate Integration proof
 ```
 
-Runtime accepts a Worker Report only when worker, Assignment, Claim, Work Item, plan revision, base, and freshness match. Local worker success cannot exit Implementation. Aggregate merged-tree Checks and exact Integration proof remain required when the candidate spans workers.
+Runtime accepts a Worker Report only when worker, Assignment, Work Item Claim, Work Item, Planning revision, base, and freshness match. It then combines accepted output in the guarded Integration workspace, materializes exact `integration_proof` Evidence, and constructs the integrated Candidate. Local worker success cannot exit Implementation; aggregate integrated-tree Checks remain required.
 
-## Trace write and recovery
+## Change operation write and recovery
 
-One JSONL trace line is one durable semantic attempt/result or one runtime coordination event. Typed event data may contain compact Evidence Records. It is not full chat, private reasoning, raw tool output, Workbench state, media bytes, or an artifact dump.
+One canonical JSONL line represents one immutable typed content-addressed operation. It is not full chat, private reasoning, raw tool output, Worker Workbench state, media bytes, or an artifact dump.
 
-Trace events retain compact candidate identity, parent/repair lineage, policy and Check identities, Results, Exit Report, route, progress, canonical refs, Git/delivery evidence, and outcome observations. `refs` contain canonical artifacts; prose and remediation live in structured `data`.
+Accepted operations retain compact Candidate identity, parent/repair lineage, policy and Check identities, Results, Exit Report, Runtime Route, canonical refs, Git/delivery evidence, and outcome observations. Large/private bytes remain in their owning boundaries.
 
-A resume operation must answer:
+Hot operations become shared truth only through one exact `codewiki/state` state commit. A stale expected-head push requires fetch, deterministic replay, and semantic reevaluation. Recovery/resume inspection must answer:
 
 1. What exact candidate was last attempted in each Loop?
-2. Which upstream outputs passed and were appended?
+2. Which upstream outputs passed and were accepted?
 3. Which required Checks failed or became indeterminate?
 4. Which route/authority owns remediation?
 5. Which candidate repaired which earlier candidate?
 6. Which Knowledge/source/test/Git/delivery refs prove current state?
 7. What is the next safe action?
 
-Change Trace replay rebuilds semantic project state, not private agent cognition or exact model/tool execution.
+Change Trace replay rebuilds semantic project state and Alignment Graph facts, not private agent cognition or exact model/tool execution. Full replay and incremental projection must be equivalent.
 
 ## Learning boundary
 
@@ -344,7 +347,7 @@ Current executable source represents protected declarations as immutable `kernel
 
 Fast edit feedback is never enough for Implementation exit. Pi-tool autoload uses only package/host configuration in disposable external projects; this source checkout loads Pi-Lens only and never loads CodeWiki itself.
 
-**Review pack recipes (current migration):** `requiredPacks` may require a configured legacy evidence sensor to run, but pack success cannot attest semantic acceptance. Clean Implementation/config cuts replace these recipes with trusted Code Check bindings.
+**Review pack recipes (current executable drift):** `requiredPacks` may require a configured legacy evidence sensor to run, but pack success cannot attest semantic acceptance. Clean Implementation/config cuts replace these recipes with trusted Code Check bindings.
 
 ## Target source boundary
 
@@ -372,7 +375,7 @@ src/
 
 Shared `src/evidence/**` and `src/loop-exit/**` cannot import Loop implementations. Loop exit consumes Evidence contracts one way. Runtime composes Evidence materialization and one immutable `LoopExitSuite`. Clean cuts retain no old-path re-exports.
 
-The production-unwired native contracts, Catalog, resolver, shared canonical JSON/digests, strict role-specific Candidate admission, Runtime-owned Candidate/Check identity, immutable Result/Report constructors, and frozen `LoopExitSuite` occupy the target package/runtime boundaries without old-path exports. Loop-owned `exit/**` declarations currently bind exact Loop identity while the closed Catalog carries Check definitions; standardized Evidence Records, runner/cache, Loop-owned Check composition, and production Loop cuts remain pending. Current production `src/loops/**` graph/judge/evaluator machinery remains executable migration state until those clean cuts replace it in the ratified order.
+The production-unwired native contracts, Catalog, resolver, shared canonical JSON/digests, strict role-specific Candidate admission, Runtime-owned Candidate/Check identity, immutable Result/Report constructors, and frozen `LoopExitSuite` occupy the target package/runtime boundaries without old-path exports. Loop-owned `exit/**` declarations currently bind exact Loop identity while the closed Catalog carries Check definitions; standardized Evidence Records, runner/cache, Loop-owned Check composition, and production Loop cuts remain pending. Current production `src/loops/**` graph/judge/evaluator machinery remains executable drift until those clean cuts replace it in the ratified order.
 
 ## Token-efficiency rule
 

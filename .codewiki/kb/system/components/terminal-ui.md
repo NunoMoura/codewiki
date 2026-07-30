@@ -8,11 +8,11 @@ tags:
   - dashboard
   - pi
   - client
-timestamp: 2026-07-01T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Client and Dashboard Architecture
 
-The standalone CLI and dashboard are primary clients of one project-scoped CodeWiki Runtime; optional Pi extension is a thin conversational client. Project Runtime owns lifetime, WorkState, scheduling, session creation, worker supervision, Integration, guarded writes, and event projection. No active Pi conversation owns project pipeline.
+The standalone CLI and dashboard are primary clients of one project-scoped CodeWiki Runtime; optional Pi extension is a thin conversational client. Project Runtime owns local lifetime, verified `codewiki/state` synchronization, WorkState, scheduling, session creation, worker supervision, Integration, guarded writes, and deterministic projection. No active Pi conversation owns project progression.
 
 ## Client surfaces
 
@@ -43,8 +43,8 @@ Several clients may connect concurrently. Each request carries project identity,
 Work pages use distinct projections:
 
 - Backlog joins pending Change revisions, proposal provenance, Decision state, overlap, authority, and intervention.
-- Planning joins approved Changes, Planning epochs, Sprints, Work Items, dependencies, contribution, conflicts, integration boundaries, and readiness.
-- Implementation joins claims, Assignments, session observations, workers, isolation, integration, Evidence Records, Checks/Results, preview screenshots/videos, Validation Bundle, reviewer roles, approval freshness, Git proof, and remediation.
+- Planning joins the selected Change set, Planning epochs, Sprints, Work Items, dependencies, contribution, conflicts, Integration boundaries, active-work disposition, and safe execution frontier.
+- Implementation joins Work Item Claims, Assignments, session observations, workers, isolation, Integration, Evidence Records, Checks/Results, preview screenshots/videos, Validation Bundle, reviewer roles, approval freshness, Git proof, and remediation.
 
 Product, System, and Design routes render canonical Knowledge. Change detail is a cross-cutting dossier and never owns another copy of the runtime pipeline.
 
@@ -71,11 +71,11 @@ The local protocol exposes bounded capability groups:
 - optional guarded draft-pull-request review publication/status without merge authority;
 - diagnostics and bounded audit receipts.
 
-Clients cannot select semantic loops, create arbitrary model sessions, submit arbitrary shell strings, append trace/Evidence records, write source directly, merge, commit, publish review/product state, or relax policy. Review actions return bounded authority material; Runtime alone authenticates, correlates, and appends approval receipts. Runtime converts eligible canonical invariants into semantic and worker jobs.
+Clients cannot select semantic Loops, create arbitrary model sessions, submit arbitrary shell strings, append Change operations/Evidence Records, write source directly, merge, commit, publish review/product state, or relax policy. Review actions return bounded authority material; Runtime alone authenticates, correlates, and appends approval receipts. Runtime converts eligible canonical invariants into semantic and worker jobs.
 
 ## Pi execution
 
-The target semantic adapter embeds Pi through its published SDK. Each Decision, Planning, Implementation candidate, or Model Check job receives versioned CodeWiki OS guidance, one mandatory Loop Protocol, one Runtime-built bounded context, normal or Workbench-scoped Pi Skills, and a read-only tool set. Closed role-specific submission tools return typed candidates or Model Check outputs to Runtime. Runtime constructs exact identities, resolves Exit Policy, validates Result/Report consistency, and rechecks freshness, generation, authority, CAS, and append permission before durable write.
+The target semantic adapter embeds Pi through its published SDK. Each Decision, Planning, Implementation Candidate, or Model Check job receives versioned CodeWiki OS guidance, one mandatory Loop Protocol, one Runtime-built bounded context, normal or Worker-Workbench-scoped Pi Skills, and a read-only tool set. Closed role-specific submission tools return typed Candidates or Model Check outputs to Runtime. Runtime constructs exact identities, materializes Evidence Records, resolves Exit Policy, validates Result/Report consistency, and rechecks freshness, authority, expected-head CAS, and append permission before durable write.
 
 Implementation uses a separate harness-neutral worker adapter. Exact Assignment jobs run through coordinator lanes; the Pi compatibility adapter starts foreground child processes only in explicit isolated worktrees and persists bounded immutable Worker reports. Container-capable hosts may instead install the opt-in OCI adapter with a digest-pinned preinstalled image, explicit resource and egress policy, and the same report/recovery contract; the default Pi daemon does not provision or select an image. The elected service derives Assignments automatically and, after canonical Implementation acceptance, schedules guarded target/base Integration jobs that create exact local Git commit/tree proof without moving the project branch. Core runtime depends on adapter contracts, not Pi types.
 
@@ -89,7 +89,7 @@ Generated search, relationship, and graph indexes are disposable. Standard OKF l
 
 ## Live updates
 
-The current control plane streams coordinator lifecycle and runtime-confirmed WorkState observations. Semantic completion events follow durable append boundaries, while explicit client truth-change notifications cause runtime reinspection and publish the resulting WorkState digest. Future filesystem watchers will extend the same rescan contract to Knowledge/source/Git, claims, integration, preview, and worker state; notification payloads themselves will never be trusted as truth.
+The current control plane streams local coordinator lifecycle and Runtime-confirmed WorkState observations. Target semantic completion follows accepted `codewiki/state` boundaries. Client/provider notifications only invalidate a cursor; Runtime fetches and verifies Git before publishing new WorkState and Alignment Graph snapshot digests. Notification payloads are never trusted as truth.
 
 State streams use bounded generation-scoped replay with monotonic cursors. They are redacted, reconnectable, and generation-aware. Retention gaps and generation replacement cause canonical snapshot refresh. Raw prompts, private reasoning, credentials, unbounded logs, and raw source content are never broadcast.
 
@@ -120,7 +120,7 @@ The compact command surface remains:
 
 ## Rendering and accessibility
 
-Browser rendering is a projection over WorkState and canonical inputs. It never creates UI-owned lifecycle state. Every graph has a structured list/table equivalent. Custom controls implement pointer, touch, keyboard, focus return, assistive semantics, zoom, high contrast, and reduced motion.
+Browser rendering is a projection over WorkState, snapshot-bound Alignment Graph facts, and canonical inputs. It never creates UI-owned lifecycle state. Every graph has a structured list/table equivalent and exposes per-fact provenance/coverage. Custom controls implement pointer, touch, keyboard, focus return, assistive semantics, zoom, high contrast, and reduced motion.
 
 Pi TUI renderers remain compact read surfaces for bootstrap, configuration, explanation, resume, and status notices. They do not compete with the dashboard or become project truth.
 
@@ -132,7 +132,7 @@ Pi TUI renderers remain compact read surfaces for bootstrap, configuration, expl
 - No dashboard-created SDK/RPC session chosen by browser input.
 - No public network service or unauthenticated proposal endpoint.
 - No canonical dashboard database, graph store, session registry, or WorkState file.
-- No full Knowledge graph rendered by default.
+- No full Alignment Graph rendered by default.
 
 ## Related docs
 

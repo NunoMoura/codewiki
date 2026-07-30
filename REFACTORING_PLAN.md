@@ -1,470 +1,877 @@
-# Temporary CodeWiki Refactoring Plan
+# CodeWiki Refactoring Plan
 
-> **Status:** Temporary, non-authoritative working checklist.
->
-> CodeWiki is intentionally not active in this source checkout. This file temporarily preserves implementation sequencing across Pi compaction and fresh work slices. `.codewiki/kb/**` remains intended product/system truth; source and tests remain executable truth; Git remains checkpoint evidence. If this file conflicts with any of those sources, it loses. Delete it when the migration is complete and CodeWiki Change Traces can carry this coordination role.
+## Status
+
+Architecture review approved on 2026-07-30. This plan replaces the earlier local-linear Trace and partial multi-file recovery direction with a clean Change Trace Protocol v1, provider-neutral Git synchronization, rolling Planning, deterministic Alignment Graph projection, hot/archive handling, and measured repair learning.
+
+Latest synchronized executable checkpoint before this documentation cut:
+
+```text
+f7b01fa feat: transport decision claim checks through pi
+836 tests across 137 suites
+836 passed, 0 failed
+```
+
+The repository is pre-production. No legacy Trace migration, compatibility parser, deprecated aliases, dual-write path, or old/new contract bridge will be built.
 
 ## Goal
 
-Turn CodeWiki into a standalone intent-to-production alignment runtime whose three semantic loops produce exact candidates that may exit only through immutable Check Results and an Exit Report. Preserve Change as accountable intent and a durable dossier, then use exact Change history for project-local repair learning and optional privacy-preserving product feedback.
+Turn CodeWiki into a standalone, project-scoped intent-to-production alignment runtime whose exact project state advances only when required evidence is complete, fresh, and authorized.
 
-> **Change owns accountable intent and durable history. Runtime owns the portfolio pipeline.**
+> **Change owns accountable intent and durable history. Runtime owns project-wide scheduling and progression.**
 
-Target transition:
+The target coordination model is:
 
 ```text
-(Kₜ, Gₜ, Pₜ) + ΔIntent
-  ──CodeWiki──>
-(Kₜ₊₁, Gₜ₊₁, Pₜ₊₁, Evidence)
+typed Change operations
+→ accepted Git-backed history
+→ deterministic WorkState
+→ rolling global Planning
+→ first-class Alignment Graph
+→ local views and bounded agent queries
 ```
 
-`K` is accepted Knowledge, `G` is exact Git state, `P` is delivery state, and `Evidence` contains immutable typed Evidence Records, exact Check Results and Exit Reports, authority receipts, Integration proof, remote proof, and outcome observations.
+CodeWiki keeps exactly three semantic Loops:
 
-## Canonical vocabulary
+```text
+Decision
+Planning
+Implementation
+```
 
-Use one formal term for Decision, Planning, and Implementation: **Loop**. Do not use “stage” as a parallel architecture term.
+Runtime, checking, graph projection, synchronization, Integration, recovery, archive, delivery, learning, and feedback are not additional semantic Loops.
 
-| Superseded term | Canonical term |
-| --- | --- |
-| Semantic Stage | Semantic Loop |
-| Stage Protocol | Loop Protocol |
-| Quality Standard / Exit Criterion | Check |
-| Deterministic Verifier | Code Check |
-| Model Evaluator | Model Check |
-| Quality Assessment | Check Result |
-| Quality Policy Resolution | Resolved Exit Policy |
-| Quality Report | Exit Report |
-| Quality Gate / Gate Result | Deterministic `ExitReport.status` |
-| Failure regime | `issueClass` on a failed or indeterminate Check Result |
-
-`Quality` may remain an adjective or measured outcome, but it is not a package, lifecycle, policy, report, or graph noun. `Assessment`, `Standard`, `Gate`, and `Criterion` are removed from the target public contract.
-
-Core flow:
+The exact Loop-exit chain is:
 
 ```text
 Change
-└── Loop attempt
-    ├── Candidate
-    ├── Resolved Exit Policy
-    ├── Evidence Records
-    ├── Checks consuming exact Evidence Records
-    ├── Check Results
-    └── Exit Report
-
-Runtime
-└── revalidates freshness and authority
-    └── chooses route and guarded append/effect
+→ Loop
+→ Candidate
+→ Evidence Records
+→ Resolved Exit Policy
+→ Checks
+→ Check Results
+→ Exit Report
+→ Runtime Route
 ```
 
-An Evidence Record is the canonical immutable typed observation consumed across Loops. A Check is one versioned requirement plus its execution kind, measurement contract, Evidence Record obligations, repair target, limits, and trusted implementation identity:
+A passing Exit Report permits one exact Candidate to leave one Loop attempt. Runtime must still revalidate generation, freshness, authority, expected bases, and effect-specific policy before canonical append, any new Integration attempt, merge, push, publication, release, deployment, or an external effect.
+
+## Sources of truth
+
+- `.codewiki/kb/**` is intended product and system design truth.
+- `src/**` and `tests/**` are executable truth.
+- Git is checkpoint, source-history, acceptance-receipt, and synchronization evidence.
+- Generated views, graph indexes, Runtime scratch, and local materializations are disposable.
+- This source checkout does not load or dogfood its own CodeWiki extension during stabilization.
+- Packed candidates are tested only in disposable external projects with isolated Pi settings.
+
+Drift between Knowledge and executable truth remains explicit until an accountable Change closes it.
+
+## Non-negotiable boundaries
+
+### Runtime authority
+
+Runtime alone owns:
+
+- canonical identity and admission;
+- actor and authority binding;
+- canonical observation time;
+- WorkState and snapshot digests;
+- freshness and expected-head CAS;
+- scheduling and bounded concurrency;
+- Change Claims and Work Item Claims;
+- Assignments, Integration, recovery, and routing;
+- exact Evidence Record, Check Result, Exit Report, request, policy, and operation identity;
+- canonical writes and guarded effects.
+
+Clients, sessions, candidate producers, workers, Checks, provider events, graph adapters, and generated views cannot choose canonical identity, grant authority, lower policy, or route project state.
+
+Runtime-visible jobs, Checks, Change Claims, Work Item Claims, Assignments, Integration work, and guarded effects are the only durable concurrency model. Hidden sub-agent trees cannot own durable work or canonical writes.
+
+### Pi boundary
+
+Pi owns providers, authentication plumbing, model transport, sessions, compaction, tool mechanics, extensions, and normal Skill discovery. CodeWiki injects versioned CodeWiki OS guidance, one exact Loop Protocol, bounded current work, scoped historical repair guidance for producers/workers, and scoped tools/Skills.
+
+Candidate producers and independent Model Checks never share conversational state. Independent Model Checks remain tool-free where their protocol requires it and never receive producer repair-learning context.
+
+### Privacy boundary
+
+Raw prompts, private reasoning, credentials, unrestricted diffs, tool output, screenshots, videos, logs, pages, and provider payloads remain private or external. Canonical operations retain bounded typed metadata, digests, and references.
+
+## Target architecture
+
+### Canonical temporal layer
+
+Immutable typed Change operations are canonical history. Semantic truth belongs in operation bytes. Git commit author, message, and timestamp do not define semantic meaning or authority.
+
+Every v1 operation kind defines:
+
+```text
+schema
+admission authority
+preconditions
+state reduction
+conflict behavior
+graph projection
+supersession behavior
+```
+
+No arbitrary mutation patch, generic status operation, user-authored operation DSL, or arbitrary graph mutation is allowed.
+
+### Deterministic projection layer
+
+Accepted operation history reduces deterministically into WorkState and projects a versioned Alignment Graph. Full replay and incremental replay must produce identical state and graph snapshots.
+
+### Disposable presentation layer
+
+Backlog, Planning, Implementation, Change dossiers, dashboards, queues, graph layouts, search indexes, notifications, and repair-retrieval indexes are projections. They never become another truth store.
+
+## Change Trace Protocol v1
+
+### Canonical identity
+
+Use a versioned strict canonical JSON profile and SHA-256 for every authority-bearing identity.
+
+Conceptual Change-scoped envelope:
 
 ```ts
-type Check = CodeCheck | ModelCheck;
+interface CanonicalChangeOperation {
+  operationId: string; // sha256(canonical_json(body))
+  body: ChangeOperationBody;
+}
+
+interface ChangeOperationBody {
+  protocol: {
+    id: "codewiki.change-trace";
+    version: "1.0.0";
+  };
+  changeId: string;
+  kind: ChangeOperationKind;
+  kindVersion: string;
+  parents: string[];
+  baseSnapshot: BaseSnapshot;
+  authorityBinding: AuthorityBinding;
+  preStateDigest: string;
+  postStateDigest: string;
+  payload: ClosedTypedPayload;
+}
 ```
 
-Checks have three independent dimensions:
+`operationId` is excluded from its own hash input. Runtime derives all canonical fields. Unknown required versions, missing parents, invalid canonical bytes, digest mismatch, or unauthorized actors remain visible and block dependent progression.
+
+Use separate private attempt/job identity and accepted operation identity. A stale base can preserve private work correlation, but reevaluation creates a new canonical operation identity. Never alias two canonical IDs.
+
+### Base and authority binding
+
+```ts
+interface BaseSnapshot {
+  remoteStateHead: string;
+  sourceHead: string;
+  knowledgeDigest: string;
+  configDigest: string;
+  policyDigest: string;
+}
+
+interface AuthorityBinding {
+  actorId: string;
+  principalRef: string;
+  role: string;
+  actorPolicyDigest: string;
+  authenticationEvidenceId?: string;
+  runtimeProtocolDigest: string;
+}
+```
+
+Clients cannot supply either binding.
+
+Local single-user mode may use asserted actor identity. Protected team mode may require standard signed Git state commits for authority-bearing writes. External approvals and effects require authenticated provider receipts. CodeWiki will not invent a PKI.
+
+### Parent model
 
 ```text
-execution:   code | model
-measurement: qualitative | quantitative
-enforcement: observe | warn | require
+initial Trace root                     0 parents
+ordinary accepted Change operation    exactly 1 current Change tail
+explicit same-Change causal merge     2 or more parents
+cross-Change relationship             exact typed payload bindings
 ```
 
-Quantitative Checks bind exact value shape, unit, comparator, threshold, bounds, and aggregation. Runtime applies thresholds; candidates and models cannot choose them. Both measurement kinds may carry structured findings and evidence. Operational failure is always `indeterminate`, never fabricated failure evidence or score zero.
+Multiple parents are not generic conflict resolution. Cross-Change merge, split, relationship, and Planning semantics use exact revision bindings and atomic accepted batches.
 
-Exit Report reduction is deterministic:
+### Project-scoped Planning and structural records
+
+V1 has exactly two closed semantic scopes: ordinary Change-scoped operations and one project-scoped `PlanningEpochRecord`. A Planning epoch becomes relevant to each participating Change only through atomic `planning.epoch_bound` operations. No generic subject scope exists.
+
+V1 also defines separate closed content-addressed structural schemas for:
+
+- `StateCommitManifest`;
+- `ArchiveManifest`;
+- replay checkpoints that never replace operations.
+
+Structural manifests cannot mutate WorkState by existing alone.
+
+### State commit manifest
+
+```ts
+interface StateCommitManifest {
+  previousStateHead: string;
+  operationIds: string[];
+  changedTraceTails: {
+    changeId: string;
+    previousTail: string;
+    nextTail: string;
+  }[];
+  batchDigest: string;
+}
+```
+
+One Git state commit accepts the complete listed batch or none. Its parent supplies global accepted order; operation bytes supply semantics.
+
+### Closed v1 catalog
 
 ```text
-required failed Check Result exists        -> fail
-else required indeterminate Result exists  -> indeterminate
-else                                        -> pass
+trace.opened
+trace.closed
+trace.reopened
+
+change.proposed
+change.revised
+change.relationship_recorded
+change.relationship_superseded
+change.merge_recorded
+change.split_recorded
+change.withdrawal_recorded
+change.feedback_recorded
+
+change_claim.acquired
+change_claim.released
+change_claim.takeover_recorded
+
+loop.attempt_started
+loop.attempt_ended
+decision.candidate_recorded
+planning.candidate_recorded
+implementation.candidate_recorded
+loop.exit_policy_recorded
+evidence.recorded
+check.result_recorded
+loop.exit_report_recorded
+runtime.route_recorded
+
+planning.epoch_recorded
+planning.epoch_bound
+
+work_item_claim.acquired
+work_item_claim.released
+work_item_claim.takeover_recorded
+assignment.dispatched
+assignment.cancel_requested
+assignment.terminal_recorded
+worker.report_recorded
+
+integration.attempt_started
+integration.result_recorded
+source.branch_merge_recorded
+source.branch_push_recorded
+
+review_projection.published
+
+product.publication_recorded
+product.release_recorded
+delivery.observation_recorded
+outcome.observation_recorded
 ```
 
-A passing Exit Report permits semantic loop exit for that exact candidate. It does not authorize append under stale state, Integration, merge, push, publication, release, or deployment.
+`planning.epoch_recorded` accepts one immutable project-scoped Planning record. `planning.epoch_bound` is Change-scoped.
 
-## Product and execution boundary
+### Explicit non-operations
 
-The primary product is the standalone CodeWiki CLI, Project Runtime, and dashboard embedding the published Pi SDK. The Pi extension is an optional thin interactive client to the same runtime.
-
-Pi owns providers, credentials, model transport, sessions, compaction, tools, extensions, and ordinary Skills. CodeWiki owns Change Traces, WorkState, Loop Protocols, Checks, Workbench scope, scheduling, semantic authority, workers, Integration, routing, canonical writes, and guarded effects.
-
-Do not fork Pi, bundle its executable, copy provider/auth/session machinery, or host CodeWiki inside a competing outer runtime. A future OpenClaw integration is a client or worker adapter; CodeWiki remains canonical authority.
-
-Internally, “coordinator” names scheduling/election machinery only. Product and architecture prose names the whole control plane **Project Runtime**. Code symbol renames remain a later bounded cut.
-
-## Target ownership and source boundaries
-
-Keep `src/decision/**`, `src/planning/**`, and `src/implementation/**` as the three semantic Loop packages. Do not move them under a generic `src/loops/**` parent.
-
-Each Loop package owns:
-
-- its exact candidate schema and normalization;
-- its mandatory Loop Protocol;
-- Loop-specific Check semantics and deterministic activation declarations;
-- trusted Code Check and Model Check definitions;
-- Loop exit facts and repair/route-back context.
-
-A Loop may return failed or indeterminate Results, repair targets, or route-back facts. It does not choose final runtime routing or append canonical records.
-
-Shared Evidence machinery belongs under `src/evidence/**`: closed record/payload contracts, identity, materialization, provenance/freshness/privacy validation, and artifact/approval correlation. Shared Loop-exit machinery belongs under `src/loop-exit/**`: Check/policy/result contracts, exact identity, catalog validation, deterministic policy resolution, minimal admission, bounded scheduling, exact caching, and immutable Exit Report construction. Neither shared package may import Loop implementations; Loop exit consumes Evidence contracts one way.
-
-Runtime is the composition root. It composes one immutable `LoopExitSuite` and closed built-in catalog from the three Loop-owned declarations, adds only canonically approved Project Checks, derives selector and authority facts, owns candidate identity and freshness, injects exact model routes, performs final routing, fences elected generation, and appends canonical records.
-
-Views and dashboard projections read the Evidence Records, Resolved Exit Policy, Check Results, and Exit Report persisted with each Loop event. They never reinterpret historical events using today’s in-process Check catalog.
-
-## Evidence and review boundary
-
-Evidence is standardized across Loops as an immutable content-addressed `EvidenceRecord`, not as a fourth Loop, mutable aggregate, CRUD service, central database, or generic arbitrary-record SDK. A small common envelope binds exact subject, producer, provenance, artifact, Runtime-owned observation/freshness, authority class, coverage, sensitivity, and one closed kind-specific payload. Initial kinds cover research citations, source observations, command executions, UI captures, model assessments, Worker Reports, Integration proof, approval receipts, delivery attestations, and outcome observations.
-
-Runtime alone materializes canonical Evidence Record identity and time. Producers return bounded material and cannot upgrade authority/coverage, set Check status, select routes, or attest acceptance. Compact records live in owning Change Traces; source/tests, Git, provider events, and content-addressed media/log/page bytes remain in their existing authority/storage boundaries and are cited by digest. Contradictions remain visible. Missing, stale, partial, unavailable, or conflicting required evidence yields repair, waiting, or `indeterminate`.
-
-User-visible UI Changes normally bind exact screenshots, short interaction videos, states/viewports, live preview, manifest and artifact digests, objective preview validation, optional independent experience critique, and authenticated approval. CodeWiki is canonical dossier/review authority; a draft pull request is an optional mutable team surface. One dashboard or provider action becomes one Runtime-validated approval receipt—never duplicate approval.
-
-Required pull-request approval permits one narrowly guarded pre-exit **review-publication effect** after non-approval review-readiness Checks pass. Runtime may push only an isolated review ref and create/update a draft pull request with an exact Validation Bundle. It cannot move the project/protected branch, force-push, auto-merge, publish product state, or claim Loop exit. Provider review, head, candidate, or bundle drift invalidates approval. Merge, ordinary push, publication, release, and deployment remain post-exit separately guarded effects.
-
-Target shape:
+Do not create operations equivalent to:
 
 ```text
-src/
-  semantic-loop.ts
-  evidence/
-    contracts.ts
-    identity.ts
-    materialize.ts
-  loop-exit/
-    contracts.ts
-    identity.ts
-    catalog.ts
-    resolve-policy.ts
-    runner.ts
-    cache.ts
-    results.ts
-  decision/
-    candidate.ts
-    iteration.ts
-    exit/
-      checks.ts
-      activation.ts
-      code-checks.ts
-      model-checks.ts
-  planning/
-    candidate.ts
-    iteration.ts
-    exit/
-      checks.ts
-      activation.ts
-      code-checks.ts
-      model-checks.ts
-  implementation/
-    candidate.ts
-    iteration.ts
-    exit/
-      checks.ts
-      activation.ts
-      code-checks.ts
-      model-checks.ts
-  runtime/
-    loop-exit-runtime.ts
-
-tests/
-  loop-exit/
-  decision/
-  planning/
-  implementation/
+graph edge or node mutation
+lesson or memory persistence
+generic priority or status mutation
+Check disabling or threshold lowering
+heartbeat or session-message persistence
+prompt or raw-output persistence
+cache or view refresh
 ```
 
-Small Loop packages may combine files when one file is clearer. Dependency direction and authority boundaries are fixed. Do not retain old-path re-exports after clean cuts.
+## Provider-neutral Git synchronization
 
-## Alignment and Knowledge direction
+### Refs and paths
 
-Alignment is not permanent equality. Every discrepancy must be:
-
-1. resolved;
-2. accounted for by one exact active Change; or
-3. explicitly unknown and blocked from unsafe progression.
-
-Keep vertical, horizontal, temporal, and delivery alignment distinct. A point-in-time local proof cannot guarantee remote state indefinitely; ongoing remote claims require protected branches, required checks, attestations, artifact provenance, and deployment observations.
-
-CodeWiki moves from OKF v0.1 toward OKF v0.2:
-
-- produce v0.2 and consume v0.1 fallback plus best-effort unknown versions;
-- support `sources`, `generated`, `verified`, lifecycle, freshness, and Attested Computation definitions;
-- preserve unknown frontmatter;
-- use meaningful software concept types instead of universal `Concept`;
-- keep Change Traces outside OKF;
-- never treat OKF trust fields as CodeWiki authority;
-- never execute imported computation definitions automatically.
-
-Attested Computation remains a later closed, pinned mechanism for sanctioned production-outcome observation. It does not become arbitrary project verifier code.
-
-## Relationship and query projections
-
-Do not create canonical graph files or a graph database. Canonical authority remains in Change Traces, OKF Knowledge, source/tests, Git/remote evidence, and configuration.
-
-Expose disposable bounded relationship views:
-
-- **Work Graph:** Changes, Sprints, Work Items, dependencies, Assignments, Claims, blockers, and Integration state.
-- **Alignment Graph:** OKF concepts, provenance, components, source/test ownership, Change revisions, candidates, Evidence Records, Check Results, Git trees, remote artifacts, approvals, and outcome observations.
-- **Learning View:** temporal candidate → failed Check → repair candidate → later Result/outcome relationships derived from Change Traces.
-
-Check dependencies are internal runner metadata, not a public project graph or fourth loop.
-
-Agents may query scoped semantic operations over these projections. Do not expose arbitrary Cypher, a user-authored graph DSL, or graph mutation. Results bind snapshot digest, provenance, authority class, coverage/completeness, truncation, and staleness. Runtime preloads mandatory context; queries remain supplemental. Workers receive Assignment-scoped views and Model Checks read pinned candidate snapshots.
-
-## Change-driven learning and feedback
-
-> **Changes improve future Changes.**
-
-Persist reusable observations once in canonical Change Traces. Accepted implementation proof remains in Git/artifacts with exact refs. Full prompts, private reasoning, Workbenches, raw tool output, and private failed-candidate artifacts remain outside traces.
-
-Do not introduce first-class Lesson, Memory, Todo, or Quality Issue entities. Use:
+Protected source branch retains durable project material such as:
 
 ```text
-issueClass
-repairTarget
-Repair Episode   # derived attempt/result relationship
-Repair Pattern   # derived aggregate across episodes
+.codewiki/kb/**
+.codewiki/config.json
 ```
 
-Learning levels:
+Local hot materialization:
 
-1. same-Change repair context;
-2. project-local cross-Change retrieval;
-3. offline CodeWiki Lab calibration and promotion.
+```text
+.codewiki/changes/*.jsonl
+.codewiki/runtime/**
+.codewiki/views/**
+```
 
-Candidate producers may receive selected prior repair evidence. Independent Model Checks never share candidate-producer conversational state or learning context. Learning cannot suppress Checks, lower thresholds, mutate activation, or attest acceptance.
+Accepted hot state:
 
-Canonical observations live in `.codewiki/traces/TRACE-CHG-<id>.jsonl`. Build the learning projection in memory first. Add a disposable `.codewiki/runtime/learning/**` cache only after measured need. Stable promoted guidance enters Knowledge, configuration, or source only through an accountable Change.
+```text
+refs/heads/codewiki/state
+  .codewiki/changes/**
+  immutable current objects
+  state manifest
+```
 
-Persistent suspected CodeWiki failures may produce an explicit **Feedback Bundle**. Do not upload full “anonymous” traces. Generate a strict allowlisted, pseudonymized local artifact that excludes intent, Knowledge content, source/diffs, paths, repository/remotes, commits, trace ids, prompts, model responses, reasoning, raw tool output, credentials, exact timestamps, and Project Check content. Initial transport is user-reviewed local export/manual attachment only; no automatic telemetry endpoint.
+Immutable archive:
 
-Maintainers treat Feedback Bundles as untrusted data and convert useful findings into failing fixtures/tests before fixing the runtime. Project/candidate issues feed local learning; suspected runtime issues feed optional product feedback; environment and authority issues route to their proper owner.
+```text
+refs/heads/codewiki/archive
+  changes/<prefix>/<changeId>/<segmentDigest>.jsonl
+  changes/<prefix>/<changeId>/manifest.json
+```
 
-## Invariants
+`.codewiki/changes/**` never becomes protected-source-branch truth. Local copies remain provisional until accepted on `codewiki/state`.
 
-- Develop CodeWiki with Pi native tools and pi-lens only; never load or dogfood CodeWiki in this checkout.
-- Preserve exactly three semantic loops: Decision, Planning, and Implementation.
-- Keep runtime as sole owner of scheduling, candidate identity, freshness, CAS, recovery, routing, worker lifecycle, Integration, and canonical writes.
-- Keep Change Traces append-only canonical temporal truth; keep WorkState and relationship/learning indexes disposable.
-- Keep credentials, prompts, private reasoning, Workbenches, raw tool output, and private runtime artifacts out of canonical traces.
-- Never let Skills, candidates, workers, Checks, clients, or tools grant authority, widen scope, suppress required Checks, or attest acceptance.
-- Keep Code Checks closed and CodeWiki-owned in v1; no arbitrary executable Project Checks.
-- Keep Check selection deterministic and explainable through persisted `activatedBy` rule/trait/effect refs; learned activation is forbidden.
-- Keep kernel Checks non-disableable and move Project Checks only through `observe` → `warn` → explicitly approved `require`.
-- Keep candidate generation and Model Checks in independent sessions.
-- Keep effects separately guarded: only exact isolated review publication may occur before Implementation exit to gather required approval evidence; Integration advancement, project-branch merge, ordinary push, product publication, release, and deployment remain post-exit.
-- Preserve exact rejection text and existing guarded effect behavior unless one reviewed slice explicitly changes it.
-- Make clean Loop/package cuts: replace obsolete internal contracts, remove superseded source/tests/exports in the same slice, and avoid compatibility layers without real consumers.
-- Commit and push each green slice without absorbing unrelated worktree changes.
+### Acceptance protocol
 
-## Completed checkpoints
+```text
+local proposal
+→ validate against exact fetched snapshot
+→ Runtime creates operation and state manifest
+→ expected-head Git push
+→ shared acceptance
+→ fetch, verify, replay, and project
+```
 
-- [x] Implement core Change Traces, WorkState, Decision, global Planning, Claims, Assignments, isolated workers, immutable Worker Reports, semantic acceptance, and guarded Integration/effects.
-- [x] Implement elected ownership, generation fencing, authentication, semantic jobs, worker reconciliation, cancellation, recovery, and draining foundations.
-- [x] Add OCI worker, Integration, branch merge/push, publication, and release boundaries.
-- [x] Freeze the earlier CodeWiki OS, Stage Protocol, Quality Policy, Workbench, model-route, and asynchronous evaluation design. Commit `4d833f7`.
-- [x] Add common legacy Quality contracts. Commit `0f2f0f1`.
-- [x] Explore then remove an unnecessary compatibility adapter. Commits `d538092` and `48a1ff8`.
-- [x] Add the first native closed Standard registry and deterministic resolver. Commit `b72f81a`.
-- [x] Complete the bounded pre-evaluator audit and record durable actions. Commit `bce76e6`.
-- [x] Disable out-of-band pi-lens formatting through tracked `.pi-lens.json`.
-- [x] Research Pi/Pi-Lens/OpenClaw/SDD/OKF/ActiveGraph boundaries and ratify the standalone Runtime, alignment, Check, learning, graph-query, and Feedback Bundle direction.
-- [x] Back up the current four-file native-foundation working tree before the terminology/KB cut at `/home/nunoc/.cache/codewiki-baselines/2026-07-28-pre-loop-exit-kb/quality-foundation-working-tree.patch` (SHA-256 `3a3cffd609102b979218b518e01f06a7520d08aea6c8897c36fb6de6500587f9`).
+A rejected push requires:
 
-## Current — terminology and Knowledge cut
+```text
+fetch current state
+→ verify history
+→ rebuild WorkState and Alignment Graph
+→ reevaluate semantic eligibility
+→ create fresh valid operation or reject proposal
+```
 
-- [x] Replace the target Quality/Standard/Assessment/Gate vocabulary with Loop/Check/Check Result/Exit Report vocabulary in canonical Knowledge.
-- [x] Replace formal Stage terminology with Loop terminology and rename the Quality Policy concept to Loop Exit.
-- [x] Record the standalone Project Runtime, accountable alignment, OKF v0.2, relationship-query, Change-learning, and Feedback Bundle direction.
-- [x] Rewrite this plan around `src/loop-exit/**` and the revised implementation order.
-- [x] Validate all KB links, diagrams, OKF boundaries, stale terminology, generated indexes, full tests, build, diagnostics, and production dependency audit.
-- [x] Commit and push the green documentation checkpoint without absorbing the four unrelated native-foundation files.
+Never blind rebase and retry authority-bearing writes.
 
-## Next — Loop-exit package boundary cut
+### Freshness and notifications
 
-- [x] Preserve, validate, and checkpoint the four native-foundation files before moving them (`7763173`).
-- [x] Move and rename the unused native foundation from `src/loops/**` directly to `src/loop-exit/**`, with mirrored `tests/loop-exit/**`; no superseded `src/quality/**` target or old-path re-exports.
-- [x] Add shared `SemanticLoop` type independent of trace persistence types and retain `TraceLoop` as the persistence alias during trace migration.
-- [x] Establish identity-only Loop-owned `exit/**` declarations and `src/runtime/loop-exit-runtime.ts`, composing one frozen `LoopExitSuite` and closed catalog without changing current production behavior.
-- [x] Replace the moved foundation's Registry API with one Catalog surface, internal kernel registration, catalog-assigned project authority, closed verifier/adapter identities, and no resolver-injected catalog.
-- [x] Remove the `src/index.ts` ↔ `src/api/index.ts` barrel cycle by moving layout metadata into `src/api/index.ts` and keeping root re-export direction one-way.
-- [x] Update source ownership mappings for `src/semantic-loop.ts`, `src/loop-exit/**`, and `tests/loop-exit/**` after those paths exist.
+Team WorkState snapshot identity binds:
 
-## Next — exact identity and authority hardening
+```text
+repository identity
++ codewiki/state head
++ protected source head
++ Knowledge digest
++ config and policy digests
+```
 
-- [ ] Complete Loop-owned immutable Decision, Planning, and Implementation content schemas plus Runtime-owned candidate envelope and content identities.
-- [x] Replace broad `Omit<RunWiki*Input, ...>` candidate types and SDK arbitrary-record submission with explicit role-specific top-level allowlists; parse direct adapters, Pi SDK submissions, and remote coordinator candidates through the same admission functions.
-- [x] Reject candidate control over authority, actor/time, review/TDD activation, snapshot/proof scope, aggregate content proof, runtime job identity, append guards, routing, and Check selection.
-  - [x] Replace broad Implementation evidence `Omit` input with one normalized allowlist; reject caller proof, approval authority, runtime routing, and deprecated aliases.
-  - [x] Delete duplicate `archiveDispositionInput` and its snake-case aliases; retain one exact normalized archive disposition contract.
-  - [x] Delete snake-case fields from canonical `ImplementationChangeInput`, its normalizers, worker-proof projection, and historical path explanation; reject unknown nested fields.
-  - [x] Collapse canonical `ImplementationWorkerReportInput` and `ImplementationWorkerProofInput` to camel-case-only contracts, one `changeInputs` collection, and one nested `proof`; delete flattened proof fields and recursive wrappers.
-  - [x] Move role-specific admission into Loop-owned `DecisionCandidateContent`, `PlanningCandidateContent`, and `ImplementationCandidateContent`; reserve Runtime for identity, context, freshness, and routing.
-  - [x] Rename the active Pi SDK role and coordinator lane from `implementation_review` to `implementation`; retain no standalone Implementation reviewer concept.
-  - [x] Replace broad nested Planning/Implementation candidate records and SDK tool schemas with exact Loop-owned camel-case contracts, recursive unknown-field rejection, and closed enum/value checks; name non-authoritative Implementation observations `commands`/`commandResults` so canonical Check Results remain Runtime-owned.
-- [x] Replace the moved foundation's transitional `Quality*`, Standard, Assessment, Gate, `stage`, and `enforce` symbols under `src/loop-exit/**` with final Check, Check Result, Resolved Exit Policy, Exit Report, `loop`, and `require` contracts; retain no aliases.
-- [x] Correct formal Criterion drift: atomic Checks expose one `requirement`; Planning candidates expose `acceptanceRequirements`; Implementation candidate evidence uses `acceptanceRequirementId`; only explicit adapters into legacy production facades retain old field names pending those clean cuts.
-- [x] Replace global-by-id registration with Loop-qualified Check identity binding exact requirement digest, `code|model` kind, implementation/protocol identity, measurement schema, evidence contract, configuration, and Catalog digest; allow independent same-id definitions only across disjoint Loops.
-- [x] Keep kernel registration internal and make the Catalog assign project authority so caller data cannot self-claim authority.
-- [ ] Derive approved additions/exclusions, rollout progression, and frozen Planning minimums only from canonical runtime observations.
-  - [x] Reject caller-supplied `frozenMinimum` input until Runtime can derive it from persisted Planning evidence.
-- [ ] Make frozen Planning minimums independently digest-verifiable and bind Implementation to persisted Planning minimums.
-- [ ] Strictly validate loop, authority/enforcement, method-kind compatibility, requirements, repair targets, measurement bounds, thresholds, costs/timeouts, dependencies, and activation-rule refs.
-- [ ] Add startup validation for unique rule identities, known Loop-qualified Checks, KB/catalog agreement, implementation refs, and dependency acyclicity.
-- [x] Add Planning-only `ui_preview_targets_valid` and replace universal `release_safety_approved` activation with `release_intent_authorized` for Decision, `release_plan_safe` for Planning, and `release_safety_approved` for Implementation.
-- [ ] Replace remaining ambiguous cross-Loop security, accessibility, and dependency semantics with Loop-specific Checks where requirements or repair targets differ.
-- [x] Add strict shared canonical JSON/digest utilities and migrate the native policy identity off its local stable-stringify implementation.
-- [x] Add immutable Runtime-owned Check Result and Exit Report constructors that derive canonical status and identity; reject caller-owned identity/status, missing or duplicate required Results, contradictory measurements, and wrong-candidate, wrong-policy, wrong-Check, wrong-execution, or wrong-measurement data.
+Runtime exposes:
 
-## Next — Evidence Records and team review
+```text
+fresh | stale | offline
+```
 
-- [x] Ratify Evidence Record as a content-addressed cross-Loop entity represented by one immutable value record, with no separate workflow, mutable lifecycle, database, graph authority, or user-authored paperwork.
-- [x] Ratify CodeWiki as canonical dossier/approval authority and draft pull request as optional team review projection; one review action is normalized once rather than duplicated.
-- [x] Ratify guarded pre-exit review publication as a narrow evidence-gathering effect that cannot advance semantic state, move project/protected branches, auto-merge, or authorize later effects.
+Unsafe distributed mutation requires `fresh`. Offline work may create private attempts and artifacts but cannot gain shared acceptance.
 
-Current producer/consumer migration inventory:
+Polling, webhooks, SSE, and provider notifications only invalidate local state. Runtime fetches and verifies Git data. Duplicate, missed, or reordered notifications cannot change semantics.
 
-| Evidence area | Current executable source | Migration boundary |
-| --- | --- | --- |
-| Decision grounding | `src/changes/types.ts`, `src/decision/change-quality.ts` | Replace generic `sourceRefs`/`proofRefs` counting with typed citations and source observations. |
-| Commands and implementation review | `src/implementation/evidence.ts`, `src/implementation/review/evidence-report.ts` | Adapt bounded command/source/model observations; do not promote legacy verdicts into canonical Results. |
-| Preview/UI | `src/preview/evidence.ts` | Correlate existing capture manifests with exact Candidate/tree/route/state/viewport and add bounded video. |
-| Worker completion | `src/implementation/worker-proof.ts`, `src/runtime/implementation-worker-report-store.ts` | Materialize sanitized report metadata; keep private Workbench/raw report content outside traces. |
-| Integration and delivery | `src/runtime/implementation-worker-integration.ts`, branch push/merge and publication/release proof modules | Adapt exact Git/effect observations without granting Loop exit or later-effect authority. |
-| Persistence and projections | `src/implementation/iteration.ts`, `src/traces/**`, `src/views/quality.ts` | Append compact records once and project persisted identities rather than current legacy standards. |
+### Initial contention model
 
-- [x] Add `src/evidence/**` with exact closed base Evidence Record envelope, Runtime-owned identity/subject/time/producer/authority/coverage/freshness/effective-sensitivity context, discriminated payload schemas, public contract type exports, source ownership, and tests.
-- [x] Add strict recursive materialization and tamper validation for research citations, source observations, command executions, UI captures, model assessments, Worker Reports, Integration proof, approval receipts, delivery attestations, and outcome observations.
-- [x] Reject a separate Evidence-adapter Catalog. Keep trust in direct typed Runtime materialization with exact producer id/version and reviewed source; producer observation authority never becomes Loop-exit authority.
-- [x] Replace native Check `evidenceAdapterIds` with immutable versioned obligations over accepted kinds, producer/observation-authority classes, exact subjects, freshness, coverage, artifact availability, sensitivity, minimum count, and contradiction policy.
-- [x] Add deterministic obligation reduction that preserves contradictions, detects duplicate input, and distinguishes `ready`, `missing`, and `indeterminate` without granting Check pass or Loop exit.
-- [x] Bind exact obligation resolutions and every considered Evidence Record identity into Check Results and Exit Reports; derive one canonical Evidence-input digest as the Evidence component of future cache identity.
-- [x] Register Decision-only research provenance and independent claim-support Checks with exact Change-revision/model Evidence obligations and deterministic high-risk, migration, dependency, and security/privacy activation.
-- [x] Add the native Runtime bridge for exact Change-revision citation materialization and trusted deterministic provenance Check Result construction, including missing/stale indeterminate reduction and retained failing temporal evidence.
-- [x] Add the versioned, tool-free Decision claim-support Model Check envelope with exact provenance dependency, claim/citation coverage, route/configuration identity, Runtime-derived aggregate semantics, bounded model-assessment Evidence, and operational indeterminate reduction.
-- [x] Add isolated Pi SDK transport for exact prepared claim-support requests: exact route/model/thinking selection, no tools or resource discovery, in-memory session, strict bounded JSON, timeout/cancellation cleanup, and typed operational outcomes.
-- [ ] Replace production Decision ref-count evidence sufficiency with external typed research collection, production claim-support scheduling, native Candidate/policy/report persistence, and canonical trace integration.
-- [ ] Extend preview capture with exact candidate/tree-bound screenshots and bounded MP4/WebM interaction recordings across required routes, states, scenarios, and viewports.
-- [ ] Add `ui_preview_evidence_valid`, bounded `ui_experience_reviewed`, and approval-backed `ui_experience_approved` with exact role, subject, artifact-bundle, and freshness semantics.
-- [ ] Add Runtime approval-receipt construction from authenticated CodeWiki actions and re-observed provider reviews; invalidate on candidate/tree/head/target/profile/manifest/media/bundle drift.
-- [ ] Add bounded Validation Bundle projection for CodeWiki and draft pull requests with intent, requirements, candidate/head, Results, screenshots/videos, preview link, findings, required roles, and dossier link.
-- [ ] Add guarded review-ref push/draft-PR create-update adapter with exact CAS, idempotency, privacy, capability, post-operation observation, and no force-push/merge/product-publication authority.
-- [ ] Persist compact Evidence Records and repair/review lineage in Change Traces while keeping large/private artifacts out of JSONL; define durable artifact retention before close/compaction.
-- [ ] Prove dashboard-only, provider-team, stale-head, Request changes, unavailable-media, privacy-redaction, retry/recovery, and cleanup flows in disposable external projects.
+Start with one provider-neutral `codewiki/state` branch and exact expected-head CAS. Measure contention before partitioning. If measured need emerges, partition non-exclusive contribution streams first; keep Change Claim, Work Item Claim, Planning, Integration, and effects globally serialized.
 
-## Next — OKF v0.2 cut
+## Change Claims and Work Item Claims
 
-- [ ] Produce OKF v0.2 while consuming v0.1 fallback and best-effort unknown versions.
-- [ ] Parse and validate `sources`, `generated`, `verified`, `status`, `stale_after`, and Attested Computation shape without granting execution authority.
-- [ ] Migrate `timestamp` to truthful `generated` data and introduce meaningful software concept types without fabricating provenance or verification.
-- [ ] Preserve unknown fields and Change Trace boundary; add upstream v0.2 reference-bundle fixtures.
-- [ ] Keep standard provenance separate from CodeWiki authority and realization mappings.
+Keep separate domain contracts.
 
-## Next — native Check runner
+A Change Claim binds exact Change revision, semantic purpose, actor/authority, remote state head, and relevant project snapshot.
 
-- [ ] Implement minimal admission plus bounded asynchronous Code/Model Check fan-out, required-result fan-in, and immutable Exit Report construction.
-- [ ] Pass `AbortSignal` through semantic adapters and Check work; normalize timeout/provider/tool failure to `indeterminate`.
-- [ ] Use separate bounded pools for model/provider, CPU, test/build, and external-service work.
-- [ ] Continue independent Checks despite unrelated failure; skip only invalid/stale input, real dependencies, cancellation, or budget policy.
-- [ ] Bind exact cache identity to candidate, policy, Check, implementation/model, evidence, configuration, trial, aggregation, and threshold identity. TTL is eviction only.
-- [ ] Keep Resolved Exit Policy, Exit Report, canonical trace, private artifacts, and telemetry as separate planes.
-- [ ] Evaluate each immutable candidate once; preview and append must use the same candidate and exact evaluated Exit Report with no stochastic reevaluation.
-- [ ] Move elected-generation checks immediately before each canonical append.
+A Work Item Claim binds exact Work Item/Planning revision, Assignment attempt, worker, source base, Worker Workbench, scope, budgets, and obligations.
 
-## Named Loop cuts
+V1 lifecycle:
 
-- [ ] **Decision cut:** move candidate/report/exit construction out of `src/api/wiki-decide.ts`; reuse one observed WorkState; append exact report; delete `src/decision/change-quality.ts` and superseded types/tests/exports.
-- [ ] **Planning cut:** move candidate/report/exit construction out of `src/api/wiki-plan.ts`; reuse participant snapshots; make multi-trace append idempotently recoverable; delete `src/planning/portfolio-quality.ts` and superseded types/tests/exports.
-- [ ] **Implementation cut:** split `src/implementation/loop.ts` into candidate facts, focused Code/Model Checks, and exit facts; remove caller-owned review/TDD authority; eliminate duplicate sync/async iteration paths; replace path/TTL evidence reuse with exact cache identity.
-- [ ] **Legacy shared cut:** delete superseded `src/loops/evaluator.ts`, `feedback.ts`, `graph.ts`, `judge-prompts.ts`, `judge-provider.ts`, `judge.ts`, `quality-pack.ts`, `quality-profile.ts`, `quality-standards.ts`, and `runner.ts`, plus tests/aliases. Remove `src/loops/**` and `tests/loops/**` when empty.
-- [ ] **Trace/projection cut:** replace legacy `LoopQuality*`, graph, runner, diagnostics, `qualityStandards`, and assessment/gate fields with persisted Resolved Exit Policy, Check Result, and Exit Report contracts. Remove current-catalog fallback logic.
-- [ ] **Legacy config cut:** remove custom HTTP judge and independent `quality.review` authority. Pi model routes supply Model Check execution; resolved Checks determine evidence obligations. Fast feedback remains non-authoritative.
+```text
+explicit acquisition
+explicit release
+authenticated takeover
+```
 
-## Relationship query and learning checkpoints
+Client and Git timestamps cannot determine ownership. Automatic expiry requires trusted remote time and is deferred. Private heartbeats may inform UX but cannot grant, expire, or transfer authority.
 
-- [ ] Add one bounded Project relationship projector/query service over Work and Alignment views without creating another truth store.
-- [ ] Bind query results to snapshot, provenance, authority class, coverage, truncation, and staleness; enforce Assignment scope and pinned Model Check reads.
-- [ ] Add runtime-owned candidate repair lineage and passive Repair Episode projection from persisted Results.
-- [ ] Measure project-scale trace projection before adding any durable warm index; keep first implementation in memory.
-- [ ] Add fixed metrics and ablations comparing current feedback, raw history, retrieved episodes, and issue-class-routed patterns.
-- [ ] Add same-Change advisory repair context first; add cross-Change retrieval only after held-out benefit and non-regression proof.
-- [ ] Compile repeatedly validated patterns into deterministic mechanisms only through an accountable Change and sealed Lab evidence.
-- [ ] Add local allowlisted Feedback Bundle preview/export; no automatic network transport.
+## Rolling Planning
 
-## Later product/runtime checkpoints
+Decision proceeds independently per Change. A user may accept Change B while Change A executes.
 
-- [ ] Add versioned CodeWiki OS and Decision/Planning/Implementation Loop Protocol package resources; restore normal Pi Skill discovery while preserving read-only semantic-session boundaries.
-- [ ] Add model bindings for Decision, Planning, and Implementation `routine`, `standard`, and `complex`; do not add an Implementation review slot.
-- [ ] Extend Planning Work Items with worker-ready Workbench requirements and minimum required Checks.
-- [ ] Provision exact private Worker Workbench manifests before Claim, including fresh source, context, Skills/tools, selected route, Check minimums, isolation, budgets, and report contract.
-- [ ] Add deterministic Implementation tier selection, Exit-Report repair, fresh-attempt identity, and typed escalation/route-back.
-- [ ] Add visible and sealed cases, calibration, latency/token/false-pass/false-block metrics, and optional offline DSPy/GEPA experiments without runtime authority.
-- [ ] Project active Exit Policy, activation rationale, Check progress, Exit Reports, bounded Workbench summary, model tier, latency, and token summaries into WorkState and product surfaces.
-- [ ] Add bounded Worker Report discoveries with runtime sanitation/deduplication into pending Change intake after Workbench contracts stabilize.
-- [ ] Consolidate Lab after equivalent normal-pipeline gates exist.
-- [ ] Add cancellation-aware draining for active semantic SDK jobs.
-- [ ] Run packed external compatibility against Pi `0.82.1`; widen peer range only after proof.
-- [ ] Complete external real-provider/auth, trusted OCI image, release, and broader product gates.
+Planning is rolling and epoch-based:
 
-## Audit-derived work retained for owning cuts
+```text
+selected approved Change set
++ active Changes
++ active Change Claims
++ active Work Item Claims
++ Work Items and Assignments
++ source/Knowledge/config/policy snapshot
+→ new immutable Planning epoch
+```
 
-### Efficiency
+Each epoch stores one content-addressed `PlanningEpochRecord` and atomically binds exact participant revisions through `planning.epoch_bound` operations.
 
-- Reuse runtime-observed WorkState and trace snapshots throughout one candidate attempt.
-- Replace whole-repository Implementation scans with candidate-scoped shared facts or exact-repository-state caches.
-- Persist self-describing policy/report data; never project history from current catalog.
-- Keep default catalog immutable/runtime-owned rather than rebuilding it per resolution.
-- Keep sparse policy/report output bounded and measure trace bytes before compaction changes.
-- Consolidate language command/parsing scaffolding only while moving useful sensors into trusted Code Checks.
+New Planning preserves active Work Items and Assignments when safe. It cannot silently rewrite an active Assignment. Invalidated work must be explicitly preserved, paused, migrated, cancelled, blocked, or routed back.
 
-### Remove during named cuts
+Use these terms:
 
-- Legacy hard-gate fail-fast behavior that suppresses independent feedback.
-- Global path/TTL review cache without exact repository/candidate/command/config identity.
-- Custom HTTP judge transport and incomplete cache identity.
-- Duplicate current-Check catalogs in Loop evaluators, views, dashboard state, and assets.
-- Legacy graph/profile/pack aliases and stale exports.
+```text
+Planning horizon
+selected Change set
+active Changes
+safe execution frontier
+Change Claim
+Work Item Claim
+Work Item
+```
 
-### Defer with explicit owner
+Backlog, current Planning, work queue, ready frontier, and dashboard remain projections.
 
-- Break `implementation/types.ts` ↔ review-evidence type cycle during Implementation cut.
-- Break `git/worktrees.ts` ↔ runtime claim-selection type cycle during Workbench/Claim work.
-- Break Pi process-session ↔ trace-host-process type cycle during Loop Protocol/session work.
-- Split large dashboard/runtime/preview/config/WorkState modules only with their owning behavior change.
-- Add incremental trace-tail WorkState projection after Loop cuts and portfolio-scale measurement.
-- Rework unrelated JSON/object parsing duplication only in owning slices.
-- Rename coordinator code symbols during a dedicated runtime naming cut; do not mix with Loop-exit migration.
+## Evidence and Loop exit
 
-### Keep — intentional
+Initial closed Evidence kinds:
 
-- Keep ignored `node_modules`, `.pi-lens`, `.tmp-worktrees`, `dist`, `.codewiki/runtime`, and Lab-run state untracked/disposable.
-- Keep dynamic dashboard daemon resolution and source-covered release-engineering utilities without activating self-dogfood.
-- Keep sequential operations where ordering is semantic: Git effects, canonical effects, browser capture, cleanup, and rollback.
-- Keep Pi-Lens independent and optional in Workbenches/repair; do not add a Pi-Lens Check adapter in v1.
+```text
+research_citation
+source_observation
+command_execution
+ui_capture
+model_assessment
+worker_report
+integration_proof
+approval_receipt
+delivery_attestation
+outcome_observation
+```
 
-## Competitive survival rule
+Evidence authority describes observation strength only:
 
-If CodeWiki does not materially reduce intent drift, false acceptance, lost context, repeated repair, and integration errors enough to offset latency and ceremony, shrink it into a thin Pi/OpenClaw extension instead of maintaining a separate runtime.
+```text
+asserted | observed | verified | approved
+```
 
-## Current baseline
+It cannot grant Check pass, Loop exit, Integration, merge, release, or deployment.
 
-- Branch: `main`
-- Latest pre-cut synchronized checkpoint: `bce76e6bae368bcc7621d839750e1719d309d2d9`
-- Current checkpoint: consolidated architecture Knowledge and migration plan (this documentation commit)
-- Existing unrelated working tree: four native resolver/registry source/test files, backed up above
-- Core suite at checkpoint: 763/763 across 126 suites
-- Typecheck/build: passing
-- Source checkout Pi packages: `npm:pi-lens` only
-- Production dependency vulnerabilities: 0
-- Active Pi: `0.82.1`; CodeWiki peer range remains `<0.82.0` pending packed proof
+Evidence obligations are immutable, declarative, and non-executable. Missing, stale, partial, unavailable, contradictory, or unusable required Evidence produces waiting, repair, or `indeterminate`.
 
-## Update protocol
+Every considered Evidence identity—including excluded, stale, negative, and contradictory records—stays bound into each Result:
 
-After each green slice:
+```text
+evidenceResolutions
+evidenceRecordIds
+evidenceInputDigest
+```
 
-1. Record completed checkpoint and commit id on the next update.
-2. Move exactly one bounded next slice into **Current**.
-3. Update baseline counts only when materially changed.
-4. Commit and push source, tests, KB, and this checklist together when they belong to one behavior slice.
-5. Keep failed experiments and command logs out of this file; use disposable `/tmp` output.
-6. Delete this file after final migration and external gates complete.
+Workers produce asserted Worker Reports. Runtime materializes admitted Evidence Records. Final assurance evaluates the exact integrated Candidate and tree, never worker confidence.
+
+## Alignment Graph
+
+### Layers
+
+```text
+Change Trace operations       canonical temporal history
+Alignment Graph projection    deterministic and first-class
+indexes and rendering         disposable
+```
+
+The entire graph artifact is derived. Every fact retains one source provenance class:
+
+```text
+canonical_binding
+observed_binding
+deterministic_analysis
+inferred_analysis
+```
+
+No edge is independently authoritative. Contradictory, superseded, stale, partial, and unknown facts remain visible. Absence from a partial graph cannot prove non-existence.
+
+### Snapshot identity
+
+```text
+accepted Change ledger head
++ Knowledge digest
++ protected source head
++ config and policy digests
++ graph projector version
+= Alignment Graph snapshot digest
+```
+
+### Queries
+
+Expose bounded read-only semantic query families such as:
+
+```text
+what realizes this Change
+why does this source exist
+which Changes affect this concept
+what blocks this Change
+which Evidence supports this requirement
+what changed since this checkpoint
+what depends on this Work Item
+which outcomes followed this Change
+```
+
+Every returned fact includes snapshot digest, source provenance, underlying refs, coverage, truncation, and staleness. Do not expose arbitrary Cypher or generic graph mutation.
+
+### OKF relationship vocabulary
+
+OKF owns stable accepted Knowledge and authored Knowledge relationships:
+
+```text
+depends_on
+constrains
+refines
+realizes
+verifies
+supersedes
+derived_from
+```
+
+Ordinary Markdown links remain `references`. Reject vague `related_to`. Dynamic Change/source/evidence/delivery relationships stay in operations and graph projection. Imported OKF remains untrusted and cannot execute code, grant authority, pass Checks, or authorize exit.
+
+### Graphify
+
+Graphify remains optional derived analysis and a benchmark candidate. It may contribute stable IDs, typed relations, source locations, confidence, incremental hashes, and bounded analysis, but cannot become canonical storage or authority.
+
+## Hot history, archive, and hydration
+
+Archive only after:
+
+```text
+intended Integration completed
++ no active Change Claim
++ no active Work Item Claim
++ no pending required review or effect
++ no pending configured outcome obligation
++ terminal Trace closure recorded
+```
+
+Safe ordering:
+
+```text
+close Trace
+→ write immutable archive bundle
+→ push codewiki/archive
+→ fetch and verify remote digest
+→ remove hot copy from codewiki/state
+```
+
+Duplicate hot/archive content after a crash is safe. Premature deletion is not.
+
+Compaction may create replay checkpoints but cannot summarize away canonical operations.
+
+Inspection hydrates exact archived segments into read-only Runtime cache after Git fetch and digest verification. Reopening creates a new hot segment with `trace.reopened` referencing the archived tail and closure. Archive bytes remain immutable.
+
+## Historical repair learning
+
+Learning is a cycle, not another semantic Loop:
+
+```text
+completed Change history
+→ derived Repair Episodes
+→ derived Repair Patterns
+→ bounded retrieval for future producers/workers
+→ measured promotion or rejection
+```
+
+Historical guidance must be scoped, structured, bounded, provenance-bearing, and include harmful as well as successful approaches. It cannot enter independent Model Check context, disable Checks, lower thresholds, change deterministic activation, grant authority, or include raw Trace history.
+
+Required ablations:
+
+```text
+no history
+equal-token generic summary
+raw history
+scoped Repair Episodes
+held-out-validated Repair Patterns
+```
+
+Stable guidance is promoted only through Lab ablation, sealed holdout confirmation, and a normal accountable Change into Knowledge, Loop Protocol, Check, route, config, source, or tests.
+
+No first-class Lesson, Memory, Todo, persistent Agent, Evidence aggregate, or learning Loop is added.
+
+## Benchmark program
+
+### Primary stack
+
+```text
+SWE-bench Pro      long-horizon professional repository work
+FeatureBench       complex feature development
+SWE-bench Live     fresh multilingual generalization
+CodeWiki sealed    coordination, authority, recovery, graph value, learning
+```
+
+Required supporting tracks:
+
+```text
+SWE-bench Verified   stable public compatibility
+SWE-Explore          repository exploration and Alignment Graph value
+SWE-Cycle            environment/implementation/test full-cycle pilot
+SWE-Bench-CL         chronological learning methodology
+SWE-bench Multimodal later visual-input track
+```
+
+LiveCodeBench and SWE-rebench calibrate models, not CodeWiki product value. Terminal-Bench 2 and GitTaskBench are optional worker/tool supplements. SWE-EVO is a promising evolution pilot. SWE-Marathon is deferred until mature because of cost and reward-hacking risk.
+
+### Baselines
+
+```text
+plain Pi
+OpenClaw
+OpenSpec or Spec Kit
+CodeWiki
+```
+
+Required CodeWiki ablations:
+
+```text
+without rolling cross-Change Planning
+without independent Checks
+without historical retrieval
+raw history instead of Repair Episodes
+Repair Episodes without held-out validation
+validated Repair Patterns
+without Alignment Graph queries
+```
+
+Use the same model/provider/version, tools, repository snapshot, visible tests, budgets, seeds, and evaluator conditions wherever possible. Report pass@1, false passes, escaped regressions, unauthorized effects, wall time, tokens, provider cost, repair iterations, and human interventions separately.
+
+Any false-pass or escaped-regression increase blocks promotion regardless of aggregate score. If measured benefit does not offset ceremony, latency, cost, drift, repeated repair, lost context, false acceptance, and Integration risk, reduce CodeWiki to a thin Pi/OpenClaw extension.
+
+Paid runs, provider mutation, leaderboard submission, publication, release, and deployment require separate explicit approval.
+
+## Current implementation drift
+
+### Reusable foundation already present
+
+- strict canonical JSON and SHA-256 helpers;
+- Candidate admission and identity;
+- Check catalog and Loop-qualified Check identity;
+- Resolved Exit Policy resolution and validation;
+- immutable Check Results and Exit Reports;
+- immutable Evidence Records and obligations;
+- Decision research citation materialization;
+- deterministic research-provenance evaluation;
+- isolated claim-support Model Check protocol and Pi SDK transport.
+
+### Material gaps
+
+- current Trace remains local-linear with singular `parentId`, local `sequence`, formatted IDs, snapshot-heavy payloads, and local rollback;
+- current hot path remains `.codewiki/traces/TRACE-CHG-<id>.jsonl`;
+- separate clones cannot see shared Change Claims or Work Item Claims;
+- production Decision Candidate still contains only disposition and rationale;
+- production Decision still uses count/presence quality checks and reruns legacy evaluation;
+- native Decision research and claim-support transport are not wired into production execution;
+- command, Worker Report, Integration, UI, approval, delivery, and outcome Evidence producers remain incomplete;
+- rolling Planning, remote freshness, state-ref CAS, archive hydration, graph projection, and repair retrieval are not implemented;
+- OCI and real provider/auth execution remain externally unproven.
+
+This drift is intentional and visible. Do not add parallel authority while cutting over.
+
+## Named clean cuts
+
+Delete only after native replacements are authoritative:
+
+```text
+src/decision/change-quality.ts
+src/planning/portfolio-quality.ts
+src/implementation/quality-standards.ts
+src/loops/evaluator.ts
+src/loops/feedback.ts
+src/loops/graph.ts
+src/loops/judge-prompts.ts
+src/loops/judge-provider.ts
+src/loops/judge.ts
+src/loops/quality-pack.ts
+src/loops/quality-profile.ts
+src/loops/quality-standards.ts
+src/loops/runner.ts
+```
+
+The planning filename above is executable legacy debt, not accepted vocabulary.
+
+## Frozen rejection behavior
+
+Preserve exact messages where their contracts remain applicable:
+
+```text
+wiki_decide received unsupported input field traceId.
+wiki_plan received unsupported input field changeIds.
+Runtime decision candidate cannot supply runtime-owned fields: changeId.
+Runtime decision candidate cannot supply runtime-owned fields: runtimeJobId
+Runtime decision candidate received unsupported fields: candidateId.
+Trace record TRACE-CHG-pi-mutation-smoke:archive:close:6 has unknown parent TRACE-CHG-pi-mutation-smoke:implementation:checkpoint:4.
+Decision quality did not exit: active_change_overlap_accounted.
+Runtime did not select Planning for current WorkState.
+Implementation evidence received unsupported field <field>.
+Implementation change input 0 received unsupported field planning_refs.
+Implementation worker proof received unsupported field changed_files.
+Resolved Exit Policy received unsupported field frozenMinimum; Runtime must derive Planning minimums from canonical Planning evidence.
+```
+
+## Execution phases
+
+### Phase 0 — Architecture and Knowledge alignment
+
+- [x] Ratify log-canonical, graph-native, provider-neutral Git architecture.
+- [x] Resolve parent arity, identity, authority, state-commit, Planning epoch, archive, OKF relationship, contention, provenance, and clean-cut decisions.
+- [x] Select benchmark stack and sealed CodeWiki-native proof strategy.
+- [x] Update this plan and `.codewiki/kb/**` before production implementation.
+- [x] Regenerate and validate KB indexes, OKF export, links, diagrams, source ownership, and stale vocabulary.
+- [x] Preserve the documentation-only boundary and stop before production source changes.
+
+### Phase 1 — Executable protocol model
+
+- [ ] Specify exact v1 operation, Planning epoch, state manifest, and archive schemas.
+- [ ] Freeze canonical serialization and identity fixtures.
+- [ ] Implement a pure deterministic reducer.
+- [ ] Implement a pure versioned Alignment Graph projector.
+- [ ] Prove full/incremental replay equivalence.
+- [ ] Add adversarial and property tests for malformed bytes, hash mismatch, unknown versions, missing parents, unauthorized actors, stale bases, duplicate operations, contradictions, and projection equivalence.
+
+### Phase 2 — Disposable two-clone Git experiment
+
+- [ ] Use two disposable clones and one bare remote.
+- [ ] Race independent Changes.
+- [ ] Race same-Change writes.
+- [ ] Race Change Claim acquisition.
+- [ ] Race Work Item Claim acquisition.
+- [ ] Reject stale expected-head pushes.
+- [ ] Prove atomic Planning batches.
+- [ ] Exercise offline reconnect and crash recovery.
+- [ ] Prove duplicate/reordered notifications converge.
+- [ ] Measure contention before considering ref partitioning.
+
+### Phase 3 — Read-only remote synchronization
+
+- [ ] Fetch and verify `codewiki/state` without mutation.
+- [ ] Compute team snapshot identity.
+- [ ] Expose `fresh | stale | offline`.
+- [ ] Rebuild local hot materialization, WorkState, and Alignment Graph.
+- [ ] Add poll-based invalidation before optional webhooks.
+- [ ] Block unsafe distributed mutation when not fresh.
+
+### Phase 4 — Guarded distributed mutation
+
+- [ ] Add exact expected-head state append.
+- [ ] Add Change Claim acquire/release/authenticated takeover.
+- [ ] Add Work Item Claim acquire/release/authenticated takeover.
+- [ ] Add stale rejection fetch/replay/reevaluation.
+- [ ] Add crash-safe reconciliation and idempotent acceptance.
+- [ ] Keep automatic expiry disabled without trusted time.
+
+### Phase 5 — Rolling Planning
+
+- [ ] Create immutable Planning Candidate and `PlanningEpochRecord` schemas.
+- [ ] Bind each participating Change atomically.
+- [ ] Preserve safe active Work Items and Assignments.
+- [ ] Require explicit pause/migration/cancellation/block/route-back for invalidated work.
+- [ ] Derive safe execution frontier from fresh WorkState.
+- [ ] Replace mutable Planning/backlog assumptions with projections.
+
+### Phase 6 — Alignment Graph and bounded queries
+
+- [ ] Implement deterministic graph facts for every operation kind.
+- [ ] Bind graph snapshot to state, Knowledge, source, config/policy, and projector version.
+- [ ] Emit per-fact provenance.
+- [ ] Add bounded read-only semantic query families.
+- [ ] Report coverage, truncation, staleness, contradictions, and underlying refs.
+- [ ] Complete OKF v0.2 compatibility and closed authored relationship vocabulary.
+- [ ] Benchmark plain search, Pi-Lens, OKF/source projection, Alignment Graph, and optional Graphify analysis.
+
+### Phase 7 — Native Loop cuts
+
+- [ ] Wire Decision research collection and claim-support transport into production Decision.
+- [ ] Replace Decision count checks with native Candidate/Evidence/Result/Report path.
+- [ ] Create native Planning Candidate/Evidence/Result/Report path.
+- [ ] Create native Implementation Candidate/Evidence/Result/Report path.
+- [ ] Cut command, Worker Report, Integration, preview, approval, delivery, and outcome observations over to closed Evidence contracts.
+- [ ] Add bounded Check fan-out/fan-in, cancellation, exact caching, immutable Reports, and typed repair/escalation.
+- [ ] Delete legacy Quality modules only after parity and replacement tests pass.
+
+### Phase 8 — UI assurance and Integration
+
+- [ ] Add `ui_preview_evidence_valid`.
+- [ ] Add independent `ui_experience_reviewed`.
+- [ ] Add authenticated `ui_experience_approved`.
+- [ ] Bind review to exact Candidate/tree/head/preview/media/bundle identity.
+- [ ] Re-evaluate final assurance against exact integrated tree.
+- [ ] Keep merge, push, publication, release, deployment, and outcome observation separately authorized.
+
+### Phase 9 — Archive and repair learning
+
+- [ ] Enforce terminal archive eligibility.
+- [ ] Write immutable archive segments and manifests.
+- [ ] Push, fetch, and verify archive before hot removal.
+- [ ] Hydrate read-only history through provider-neutral Git.
+- [ ] Reopen through a new hot segment referencing archived closure.
+- [ ] Derive Repair Episodes and Repair Patterns.
+- [ ] Add bounded retrieval with negative-transfer controls.
+- [ ] Run no-history/summary/raw/Episode/Pattern ablations and sealed holdouts.
+
+### Phase 10 — Clean Trace cut
+
+- [ ] Replace `src/traces/**`, `src/changes/change-trace.ts`, and `src/changes/trace-store.ts` with v1 protocol implementation.
+- [ ] Move hot canonical materialization to `.codewiki/changes/**` on `codewiki/state`.
+- [ ] Delete legacy schema, parser, append, migration, alias, and dual-contract tests.
+- [ ] Delete obsolete source-checkout dogfood state while preserving `.codewiki/kb/**`.
+- [ ] Preserve Git history as checkpoint evidence only.
+
+### Phase 11 — External proof and release gates
+
+- [ ] Build and pack reviewed candidates.
+- [ ] Install only in disposable external projects with isolated Pi settings.
+- [ ] Verify prompts, tools, commands, dashboard, lifecycle writes, failures, and cleanup.
+- [ ] Prove real provider/auth and OCI execution.
+- [ ] Resolve Pi peer-range and optional dependency findings.
+- [ ] Run sealed CodeWiki-native coordination/learning suite.
+- [ ] Run approved external benchmark subsets, then full release gates.
+- [ ] Publish or release only after explicit maintainer approval.
+- [ ] Reconsider source-repository dogfood only after stable external gates pass.
+
+## Verification requirements
+
+Every implementation slice must satisfy relevant checks:
+
+```text
+npm test
+npm run build
+npm run test:pack
+npm run test:readiness
+npm run test:pi-sdk-package
+npm run test:pi-install
+npm run test:external-lifecycle
+npm run test:external-failures
+npm audit --omit=dev
+LSP/Pi-Lens diagnostics
+git diff --check
+```
+
+Use narrower tests while iterating; run full gates before each green production checkpoint. Real provider, OCI, paid benchmark, publication, release, deployment, and provider mutation require separate approval.
+
+## Completion criteria
+
+Refactor is complete only when:
+
+1. exactly three semantic Loops use one native Candidate/Evidence/Policy/Check/Result/Report path;
+2. every accepted Change fact is a valid content-addressed v1 operation;
+3. two machines converge through provider-neutral Git expected-head CAS;
+4. WorkState and Alignment Graph full/incremental replay are equivalent;
+5. rolling Planning safely incorporates newly accepted Changes without silently rewriting active Assignments;
+6. Change Claims and Work Item Claims prevent conflicting accepted ownership without client-clock authority;
+7. final Implementation assurance evaluates exact integrated content;
+8. hot/archive/hydration/reopen behavior cannot lose canonical history;
+9. historical guidance improves sealed sequential work without safety regression or negative transfer;
+10. external coding benchmarks and CodeWiki-native fixtures show enough value to justify Runtime ceremony and cost;
+11. legacy Trace/Quality/dogfood compatibility machinery is deleted;
+12. packed external projects—not this source checkout—prove extension behavior and production gates.

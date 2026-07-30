@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Planning Loop
-description: Planning turns a bounded portfolio of approved Changes into globally coherent Sprints, worker-ready Work Items, dependencies, resolutions, Integration boundaries, and verification obligations.
+description: Planning continuously turns a bounded selected Change set and current WorkState into immutable Planning epochs, worker-ready Work Items, dependencies, verification, Integration boundaries, and safe execution frontiers.
 tags:
   - codewiki
   - system
   - planning
   - loop
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: planning
 codewiki_components:
   - planning
@@ -17,9 +17,8 @@ codewiki_test_patterns:
   - tests/planning/**
   - tests/helpers/planning-work.mjs
 codewiki_trace_events:
-  - planning.change_planned
-  - planning.change_replanned
-  - planning.change_resolved
+  - planning.epoch_recorded
+  - planning.epoch_bound
 codewiki_generated_views:
   - .codewiki/views/work-plan.json
   - .codewiki/views/work-queue.json
@@ -39,243 +38,187 @@ codewiki_source_map:
       - .codewiki/views/triggers.json
       - .codewiki/views/loop-exit.json
     trace_events:
-      - planning.change_planned
-      - planning.change_replanned
-      - planning.change_resolved
+      - planning.epoch_recorded
+      - planning.epoch_bound
     role: semantic_loop
 ---
 # Planning Loop
 
-Planning is the project-wide execution optimizer and coherence-shaping Loop. It observes a bounded approved-Change portfolio and creates or revises Sprints, worker-ready Work Items, dependencies, resolutions, Integration constraints, and verification obligations that Runtime and Implementation can trust.
+Planning is the project-wide execution optimizer and coherence-shaping Loop. It continuously observes accepted Change revisions, active work, dependencies, conflicts, source/Knowledge state, policies, and capacity, then proposes one immutable Planning Candidate and epoch.
 
-Planning owns Sprint creation. A Sprint is an execution grouping, not a Decision artifact, separate trace, or scheduling process. One Change may span several Sprints; one Sprint may coordinate several Changes.
+Decision remains independent per Change. Planning does not wait for all Changes to finish Decision, and accepting a new Change does not silently rewrite active work.
+
+```text
+selected approved Change set
++ current WorkState
++ active Change Claims and Work Item Claims
++ active Work Items and Assignments
++ source/Knowledge/config/policy snapshot
+→ immutable Planning Candidate
+→ Evidence Records
+→ Resolved Exit Policy
+→ Planning Checks
+→ Check Results
+→ Exit Report
+→ Runtime Route
+→ atomic Planning epoch acceptance
+```
 
 ## Authority
 
-Planning owns:
+Planning owns Sprint creation, Work Item meaning, and project-wide execution coherence:
 
-- relevant approved-Change horizon and explicit participants;
-- grouping/splitting work across Sprints;
-- semantic Sprint and Work Item identities;
-- exactly one owning Change per Work Item plus explicit contribution refs;
-- technical and acceptance requirements;
-- dependency/order constraints across Changes and Sprints;
-- component/path scopes, source ownership, tests, preview targets, and Integration/rollback boundaries;
-- conflict, starvation, deferral, supersession, and route-back resolution;
-- worker-ready outcome boundaries and Workbench requirements;
-- optional narrowing of ordinary Pi Skill discovery;
-- triggers and concurrency requirements;
-- replanning after accepted implementation, Git, Knowledge, policy, or capacity changes.
+- Planning horizon and selected Change set;
+- Sprints and Work Items;
+- one owning Change per Work Item and explicit contributing Changes;
+- dependencies, ordering, concurrency, and safe execution frontier;
+- acceptance requirements and verification obligations;
+- path/component/Knowledge boundaries;
+- Integration, rollback, and release-order constraints;
+- Worker Workbench requirements;
+- explicit resolution for Changes not selected or not safely executable;
+- disposition of active work when new intent invalidates assumptions.
 
-Planning does not approve Change meaning, edit source, execute workers, accept realization, select concrete provider/model credentials, activate Claims, or perform Integration/effects.
+Planning does not approve Change meaning, implement source, select concrete provider credentials, grant Change Claim or Work Item Claim authority, accept Worker Reports, or perform Integration/effects.
 
-Runtime owns candidate/epoch/event/job identity envelopes, current-state observations, Check activation/thresholds, concrete model route, Workbench provisioning, capacity admission, generation/CAS, and append.
+Runtime owns candidate and epoch identity, exact participant revisions, WorkState/base digests, Change Claim and Work Item Claim lifecycle, scheduling, Check activation, accepted state commit, CAS, recovery, and routing.
 
-## Horizon and global coherence
+## Rolling epochs
 
-Planning sees relevant work globally, not one Change in isolation. Horizon includes:
+```text
+accept Change A
+→ Planning epoch P1
+→ Work Item A starts
 
-- approved/superseded Changes needing coverage;
-- semantic and technical dependencies;
-- overlapping Knowledge, UI refs, components, paths, tests, and delivery targets;
-- active Sprints, Claims, Assignments, and integrated work that constrain revision;
-- worker capacity, policy, budgets, preview targets, and rollback boundaries;
-- priority, deadline, triggers, and explicit authority.
+accept Change B while A executes
+→ Planning epoch P2 observes A, B, active work, conflicts, and source state
 
-Selection is deterministic, impact-bounded, and persisted with policy identity. Unrelated closed history is not loaded by default.
+accept Change C
+→ Planning epoch P3 repeats from a fresh snapshot
+```
 
-Planning optimizes lexicographically:
+One content-addressed `PlanningEpochRecord` stores:
 
-1. preserve approved meaning, authority, and safety;
-2. satisfy semantic/technical dependencies;
-3. preserve coherent rollback and Integration boundaries;
-4. avoid path/component/worktree/target conflicts;
-5. produce coherent independently verifiable worker-ready outcomes;
-6. maximize safe parallelism without harmful over-decomposition;
-7. batch shared setup, verification, preview, and Integration;
-8. reduce latency, model use, token cost, and repeated Checks.
+- Planning Candidate ID and Exit Report ID;
+- exact participant Change revisions;
+- source, Knowledge, config, policy, and WorkState snapshot;
+- Sprints, Work Items, dependencies, and requirements;
+- active-work preservation or invalidation decisions;
+- global Work Item graph digest;
+- safe execution frontier.
 
-Efficiency never overrides correctness, authority, or evidence.
+Runtime accepts `planning.epoch_recorded` once and atomically appends `planning.epoch_bound` to every participating Change through one state commit.
+
+A partial batch is not accepted Planning. Remote Git expected-head CAS makes the complete batch atomic.
+
+## In-flight stability
+
+New Planning preserves active Work Items and Assignments when their assumptions, scope, base, dependencies, and Integration boundary remain safe.
+
+If new intent invalidates active work, Planning must explicitly choose:
+
+```text
+preserve
+pause
+migrate
+cancel
+block
+route back
+```
+
+Planning cannot silently edit an active Assignment or reinterpret completed worker output. Runtime enforces the accepted disposition.
 
 ## Input
 
 Planning input binds:
 
-- exact approved Change revisions/approval refs;
-- bounded WorkState and relationship snapshot;
-- current Sprints, Work Items, Assignments, Claims, Integration, and conflicts;
-- Knowledge/source/test ownership and target contracts;
-- prior accepted Planning revisions;
-- trigger, authenticated authority, configuration, capacity, and budget refs;
-- exact route-back evidence from Implementation;
-- Loop Protocol and model-route identities.
+- exact approved Change revisions in the current horizon;
+- dependencies, overlaps, merge/split/supersession, and Knowledge relationships;
+- current Planning epoch and participant bindings;
+- active Change Claims, Work Item Claims, Work Items, Assignments, and Integration work;
+- current source/test/Git/ownership state;
+- config, policy, capacity, supervision, and delivery constraints;
+- prior Planning Candidates, Check Results, repair refs, and route-back context;
+- exact Loop Protocol and model route.
 
-Runtime loads canonical facts. Callers may propose observations or semantic plan content, never replacement repository state, activation, time, or authority.
+Runtime loads current facts. Candidate producers cannot replace remote state head, source/Knowledge/config/policy digests, authority, current ownership, or active Assignment state.
 
 ## Candidate
 
-Loop-owned immutable `PlanningCandidateContent` contains:
+`PlanningCandidateContent` proposes:
 
-- participant Change revisions;
-- proposed Sprints and worker-ready Work Items;
-- ownership and cross-Change contribution;
-- dependencies and global coverage;
-- explicit resolutions/deferrals/route-backs;
-- acceptance/verification obligations;
-- source ownership, path/component/test scope;
-- Integration, rollback, preview, and trigger requirements;
-- Workbench capability/Skill/tool/isolation/minimum-Check/budget requirements;
-- uncertainties and rationale.
+- bounded selected Change set and explicit resolutions;
+- Sprints and worker-ready Work Items;
+- owning/contributing Change bindings;
+- dependencies, ordering, conflict boundaries, and safe parallelism;
+- acceptance requirements and evidence obligations;
+- source/path/component/Knowledge scope;
+- verification and integrated-tree minimums;
+- Worker Workbench requirements and budgets;
+- Integration, rollback, preview, review, and delivery constraints;
+- disposition of active work;
+- unresolved questions requiring Decision or Runtime authority.
 
-Candidate excludes canonical runtime job/event identity, observed timestamps, current snapshot digests supplied by Runtime, concrete provider/model credentials, activated Workbenches/Claims, Check Results, Exit Report, and final route. Executable Sprint, Work Item, and UI preview-target content uses exact camel-case schemas with recursive unknown-field and value validation; Pi SDK tools expose the same closed shape.
+Candidate excludes canonical IDs, accepted epoch identity, actor/time, current snapshot digests supplied by Runtime, concrete credentials, activated Worker Workbenches, Change Claims, Work Item Claims, Check Results, Exit Report, and final route.
 
-Planning aims for **worker-ready**, not smallest. It avoids splitting work where boundaries create coordination overhead, incoherent verification, or shared-state risk.
-
-## Loop cycle
-
-```text
-refresh bounded portfolio horizon
-→ shape globally coherent Sprints and Work Items
-→ declare ownership, contribution, dependencies, verification, Integration, and Workbench requirements
-→ preserve claimed/integrated work or route explicit migration
-→ produce immutable Planning candidate
-→ resolve candidate-specific Planning Exit Policy
-→ run independent Code/Model Checks
-→ build Exit Report
-→ repair or hand Report to Runtime
-→ Runtime final freshness/authority/CAS guard and multi-trace append
-```
-
-## Planning candidate shape
-
-Conceptually:
-
-```ts
-interface PlanningCandidate {
-  participantChanges: ParticipantChange[];
-  sprints: SprintPlan[];
-  workItems: PlanningWorkItem[];
-  changeCoverage: ChangePlanningCoverage[];
-  dependencies: PlanningDependency[];
-  resolutions: ChangePlanningResolution[];
-  rationale: string[];
-}
-```
-
-Runtime wraps passed content in exact candidate, policy, Report, epoch, trace-slice, observation, and append identities.
-
-Each Sprint includes goal, participating Changes, rollback/Integration boundary, dependency/order refs, Knowledge/UI/preview targets, frozen target/profile obligations, and Work Item refs.
-
-Each Work Item includes:
-
-- stable semantic id and Sprint id;
-- exactly one owning Change plus optional contributions;
-- coherent outcome and technical requirements;
-- stable acceptance requirements and verification;
-- components/path/test scope and dependencies;
-- Workbench context/capability/Skill/tool/isolation needs;
-- minimum required Checks and typed Evidence Record obligations, including accepted kinds, producer/authority class, freshness, coverage, artifact and privacy requirements;
-- for user-visible UI work, exact routes/scenarios/states/viewports, screenshot/video obligations, required reviewer roles, and allowed review channel;
-- optional trigger;
-- uncertainty and worker-readiness rationale.
-
-Omitted Skill scope preserves normal Pi discovery. Planning may narrow but cannot invent/install Skills, grant tools/credentials, or let Skills widen authority.
+Work Items are immutable content inside an accepted Planning Candidate/epoch. A changed Work Item requires a new Candidate and epoch; no mutable Work Item CRUD API exists.
 
 ## Baseline Checks
 
 | Check intent | Required signal |
 | --- | --- |
-| Approved Change coverage | Every selected approved Change is covered or explicitly resolved. |
-| Sprint coherence | Goals, participants, rollback, Integration, and dependencies form safe execution groups. |
-| Worker-ready Work Items | Every item has one owner, coherent outcome, technical and acceptance requirements, and bounded scope. |
-| Cross-Change contribution | Additional coverage is explicit without duplicate ownership. |
-| Technical requirements | Implementation can proceed without inventing accepted behavior. |
-| Acceptance and verification | Stable acceptance requirements and evidence obligations are executable. |
-| Source ownership | Components, paths, and tests fit accepted ownership. |
-| Dependency closure | References exist, graph is acyclic, and overlap is ordered. |
-| Claimed work stability | Replanning never silently mutates active Assignments. |
-| Integration safety | Worktrees, combined-tree checks, preview, merge, and rollback are explicit where needed. |
-| UI preview targets | Every binding freezes canonical target/profile, route/scenario/state/viewport, media, freshness, privacy, and reviewer-role obligations within participant authority. |
-| Evidence obligations | Required kinds, producer/authority class, coverage, artifact availability, contradiction handling, and retention are explicit and executable. |
-| Workbench buildability | Context, capability, Skill/tool scope, isolation, minimum Checks, Evidence Records, and budget can form a bounded Workbench. |
-| Uncertainty ownership | Ambiguity is repaired or routed to Decision. |
-| Trigger validity | Scheduled/event/manual triggers have bounded execution/concurrency policy. |
-| Resolution accountability | Deferral, already-realized, Knowledge-only, supersession, and route-back carry evidence. |
-| Canonical traceability | Change, Knowledge, source/test, Git, trace, and digest refs are valid. |
+| Participant validity | Every selected Change revision is exact, approved, and current. |
+| Outcome coverage | Every selected Change has coherent executable coverage or explicit resolution. |
+| Cross-Change coherence | Dependencies, overlap, merge/split, and conflicts are accounted for. |
+| Active-work stability | Existing Work Items and Assignments are preserved or explicitly dispositioned. |
+| Work Item readiness | Each Work Item has one owner, bounded scope, requirements, verification, and Integration target. |
+| Dependency safety | No unresolved cycle or unsafe ordering remains. |
+| Concurrency safety | Parallel work has compatible source/Knowledge/Integration boundaries. |
+| Verification sufficiency | Requirements map to declarative Evidence obligations and exact Checks. |
+| Workbench completeness | Runtime can provision reproducible bounded execution. |
+| Integration safety | Combined-tree verification, rollback, and promotion boundaries are explicit. |
+| Decision authority | Meaning/risk ambiguity is routed to Decision rather than invented. |
 
-The executable Check Catalog includes Planning-only `ui_preview_targets_valid` when UI scope activates it. This Check validates that Work Items can produce exact candidate-bound screenshots/videos and approval evidence; it does not approve the eventual experience. Release-producing work activates Planning-specific release-plan safety rather than Implementation effect approval. Global Check ids cannot silently inherit another Loop's description or repair target.
+Resolved Exit Policy derives Planning minimums from canonical Planning evidence. Candidate input cannot supply or freeze Runtime-owned thresholds.
 
-Protected kernel Checks cannot be disabled. Planning minimums become frozen obligations for downstream Workbenches/Implementation; actual effects may add but never silently remove them.
+## Selection and scheduling boundary
 
-## Exit and route
+Planning proposes the safe execution frontier. Runtime admits work only after revalidating:
 
-Exit Report status is `pass | fail | indeterminate`.
+- current Planning epoch and exact Work Item;
+- fresh remote/source/Knowledge/config/policy snapshot;
+- dependencies and conflicts;
+- active Change Claim and Work Item Claim state;
+- capacity, supervision, budgets, and worker adapter availability;
+- Worker Workbench readiness.
 
-- `pass`: exact candidate has coherent executable coverage or explicit resolution for all participants.
-- `fail`: Planning candidate needs repair or route-back.
-- `indeterminate`: required checking or evidence is unavailable; Runtime retries/waits/blocks.
+Planning does not acquire ownership or start workers.
 
-Runtime route is separate. Semantic uncertainty about approved meaning, Product outcome, Knowledge, material risk, or authority routes to Decision. Operational capacity may block scheduling without making a coherent plan fail.
+## Route-back
 
-## Replanning rules
+Planning routes to Decision when accepted meaning, outcome, Product/System/Design impact, material risk, compatibility, or authority is insufficient or contradictory.
 
-- Unclaimed Work Items may be superseded by later passed-and-appended Planning output.
-- Claimed work remains bound to exact plan, Change, Check minimum, Workbench, and source base.
-- Claimed scope changes require release/cancel/migration.
-- Integrated work cannot disappear through silent replanning.
-- Meaning/outcome/Knowledge/material-risk changes route to Decision.
-- Unclaimed approved work may regroup when global execution improves without violating accepted constraints.
+Runtime handles stale snapshots, CAS rejection, unavailable capabilities, ownership races, worker capacity, and recovery.
 
-## Multi-trace append
+A materially different outcome becomes a linked Change. Existing approved revisions remain immutable.
 
-Planning runs once, then Runtime appends deterministic per-Change slices. One immutable candidate and Exit Report cover all slices. Epoch identity binds participants, exact base revisions/tails, policy/report, and slice digests.
+## Views
 
-A partial multi-trace write is not accepted complete Planning state. WorkState exposes incomplete epoch state; Runtime uses deterministic event ids and private recovery packet to append missing slices idempotently before Claims.
+Backlog, Planning graph, Sprint lanes, work queue, safe frontier, blockers, and Change coverage are projections over accepted operations plus current WorkState. No mutable current-plan or backlog file is synchronized.
 
-## Work queue relationship
+Graph position is presentation only. Every displayed relationship binds underlying facts and snapshot provenance.
 
-```text
-passed-and-appended Planning epoch
-→ WorkState
-→ Work/Sprint/queue projections
-→ Runtime tier and Workbench resolution
-→ guarded Claim and Assignment
-```
+## Current executable drift
 
-Runtime never invents Work Items directly from approved Changes. It selects only current accepted Planning items with satisfied dependencies and compatible Integration/policy state.
-
-## Trace target
-
-```json
-{
-  "event": "change_planned",
-  "loop": "planning",
-  "data": {
-    "iteration": 2,
-    "candidate": { "id": "candidate:...", "digest": "sha256:..." },
-    "resolvedExitPolicy": { "digest": "sha256:..." },
-    "exitReport": { "id": "report:...", "status": "pass" },
-    "planningEpoch": { "id": "PE-42", "participants": [] },
-    "route": { "kind": "advance" },
-    "progress": {}
-  },
-  "refs": []
-}
-```
-
-Current event names, payload fields, and legacy exit-view filename remain executable migration state until clean Planning/trace/view cuts replace them together.
+Current source still shapes a locally bounded approved set, writes per-Trace Planning events with deterministic local IDs, and repairs partial filesystem writes. It does not yet create project-scoped content-addressed Planning epochs or atomic remote state commits. The clean cut replaces that path rather than adding dual behavior.
 
 ## Related docs
 
-- [WorkState](work-state.md)
-- [CodeWiki OS and Loop Protocols](codewiki-os.md)
-- [Loop Exit](loop-exit.md)
-- [Evidence Records](evidence.md)
-- [Worker Workbench](worker-workbench.md)
-- [Model Routing](model-routing.md)
-- [Loop Model](loop-model.md)
-- [Loop Contracts](loop-contracts.md)
 - [Decision Loop](decision-loop.md)
 - [Implementation Loop](implementation-loop.md)
 - [Runtime](runtime.md)
-- [Source Map](source-map.md)
+- [WorkState](work-state.md)
+- [Change Traces](traces.md)
+- [Worker Workbench](worker-workbench.md)
+- [Loop Exit](loop-exit.md)
+- [Alignment Model](alignment-model.md)

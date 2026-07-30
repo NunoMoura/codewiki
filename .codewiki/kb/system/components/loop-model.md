@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Loop Model
-description: CodeWiki Project Runtime schedules compatible work across exactly three semantic Loops; each Loop produces an immutable candidate whose exact Checks fan into one Exit Report.
+description: Runtime schedules compatible work across exactly three semantic Loops; each Loop follows the exact Candidate-to-Evidence-to-Exit-Report chain while Runtime owns routing and writes.
 tags:
   - codewiki
   - system
   - loop
   - model
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Loop Model
 
@@ -32,13 +32,13 @@ Change is the stable accountable carrier of intent and the durable dossier for c
 Change intent
 → Decision candidate and approval
 → Planning coverage
-→ Work Items and Assignments
-→ Implementation realization candidate
-→ Integration and Git proof
-→ delivery and outcome disposition
+→ Work Items, Assignments, and Worker Reports
+→ guarded Integration and exact integrated-tree proof
+→ Implementation realization Candidate and exit
+→ separate Git effects, delivery, and outcome disposition
 ```
 
-One append-only JSONL Change Trace records the journey. Backlog, Planning, Implementation, Sprint, relationship, learning, and Change dossier screens are disposable views. No Change owns a private copy of the runtime pipeline.
+One logical Change Trace of immutable typed content-addressed operations records the journey. Backlog, Planning, Implementation, Sprint, relationship, learning, and Change dossier screens are projections. No Change owns a private copy of Runtime scheduling.
 
 ## Runtime control cycle
 
@@ -46,10 +46,12 @@ One append-only JSONL Change Trace records the journey. Backlog, Planning, Imple
 receive user/agent/worker/Knowledge/Git/schedule/preview trigger
 → refresh WorkState and bounded relationship projections
 → derive eligible semantic or mechanical jobs
-→ select compatible bounded set under lanes, claims, capacity, and budgets
+→ select compatible bounded set under lanes, Change Claims, Work Item Claims, capacity, and budgets
 → bind exact Loop Protocol, model route, context, and authority
-→ run semantic candidate producer or isolated worker
-→ resolve candidate-specific Exit Policy
+→ run semantic Candidate producer or isolated worker
+→ for worker output, perform guarded Integration and construct exact integrated Candidate
+→ materialize exact Evidence Records
+→ resolve Candidate-specific Exit Policy
 → run bounded Code/Model Checks
 → construct immutable Exit Report
 → revalidate generation, freshness, authority, and CAS
@@ -82,10 +84,11 @@ Each Loop receives one relevant exact slice. Callers provide intent, authority, 
 receive typed Loop input and mandatory Loop Protocol
 → observe bounded WorkState and relationship context
 → act inside Loop authority using ordinary scoped Pi Skills/tools
-→ produce one immutable typed candidate
-→ resolve exact Checks for that candidate
-→ run Code/Model Checks and build Exit Report
-→ runtime chooses repair, advance, route-back, retry, wait, or block
+→ produce one immutable typed Candidate
+→ bind exact Evidence Records
+→ resolve Candidate-specific Exit Policy
+→ run Checks and build Check Results/Exit Report
+→ Runtime chooses repair, advance, route-back, retry, wait, or block
 ```
 
 Noisy reading, editing, testing, model interaction, and worker execution stay in sessions or runtime artifacts until distilled into candidate facts, Check Results, canonical refs, and durable route evidence.
@@ -175,29 +178,24 @@ Repair Episodes are derived relationships between failed/indeterminate Results, 
 - Implementation routes to Decision for accepted intent, Product behavior, Knowledge, material risk, compatibility, or user authority changes.
 - Planning routes to Decision when approved Change meaning is insufficient or contradictory.
 
-Route-back appends a later attempt to the same Change Trace. Approved revisions remain immutable. Materially changed outcome creates a linked Change.
+Route-back appends typed later-attempt operations to the same Change Trace. Approved revisions remain immutable. Materially changed outcome creates a linked Change.
 
-## Trace iteration
+## Trace attempt operations
 
-One semantic attempt is one append-only durable boundary. Target trace shape keeps candidate, policy, Results, report, and runtime route distinct:
+One semantic attempt records separate immutable operations so no aggregate payload can blur authority:
 
-```json
-{
-  "loop": "implementation",
-  "event": "evidence_accepted",
-  "data": {
-    "iteration": 4,
-    "candidate": { "id": "candidate:...", "digest": "sha256:..." },
-    "resolvedExitPolicy": {},
-    "exitReport": { "status": "pass", "results": [] },
-    "route": { "kind": "advance" },
-    "progress": {}
-  },
-  "refs": ["src/example.ts", "tests/example.test.ts", "sha256:..."]
-}
+```text
+loop.attempt_started
+<loop>.candidate_recorded
+evidence.recorded
+loop.exit_policy_recorded
+check.result_recorded
+loop.exit_report_recorded
+runtime.route_recorded
+loop.attempt_ended
 ```
 
-Current trace schemas retain legacy fields until the named clean cut. Runtime coordination events may appear between semantic attempts but never create a fourth Loop.
+Hot operations become shared truth only after one accepted `codewiki/state` state commit. Current event schemas retain legacy fields until the named clean cut. Runtime coordination operations may appear between semantic attempts but never create a fourth Loop.
 
 ## Related docs
 

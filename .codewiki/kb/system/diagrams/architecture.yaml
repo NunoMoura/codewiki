@@ -2,19 +2,18 @@ schema_version: 1
 id: spec.system.diagrams.architecture
 title: CodeWiki Intent-to-Production Architecture
 kind: architecture_map
-purpose: Show standalone clients and team review, Project Runtime, Evidence Records, Pi-owned execution, exactly three semantic Loops, candidate-bound exit, canonical truth, derived views, and guarded review/delivery boundaries.
+purpose: Show log-canonical Change operations, provider-neutral Git acceptance, deterministic WorkState and Alignment Graph projection, rolling Planning, exactly three semantic Loops, isolated execution, archive, and guarded effects.
 source_docs:
   - .codewiki/kb/product/overview.md
   - .codewiki/kb/system/components/overview.md
-  - .codewiki/kb/system/components/loop-model.md
-  - .codewiki/kb/system/components/codewiki-os.md
-  - .codewiki/kb/system/components/loop-exit.md
-  - .codewiki/kb/system/components/evidence.md
-  - .codewiki/kb/system/components/worker-workbench.md
-  - .codewiki/kb/system/components/model-routing.md
+  - .codewiki/kb/system/components/alignment-model.md
+  - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/work-state.md
-  - .codewiki/kb/system/components/traces.md
+  - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/evidence.md
+  - .codewiki/kb/system/components/planning-loop.md
+  - .codewiki/kb/system/components/session-coordination.md
 renderer:
   preferred: layered_projection
   fallback: mermaid_flowchart
@@ -28,13 +27,13 @@ groups:
   - id: execution
     label: Pi and worker execution
   - id: loops
-    label: Semantic Loops
-  - id: truth
-    label: Canonical authorities
-  - id: derived
-    label: Disposable projections
+    label: Exactly three semantic Loops
+  - id: authority
+    label: Authority roots and Git synchronization
+  - id: projections
+    label: Deterministic and disposable projections
   - id: effects
-    label: Guarded delivery boundaries
+    label: Guarded review and delivery boundaries
 nodes:
   - id: user_agent
     label: User / agent / bounded integration
@@ -51,52 +50,47 @@ nodes:
     kind: client
     source: .codewiki/kb/product/uis/terminal.md
   - id: pi_client
-    label: Optional thin Pi conversational client
+    label: Optional thin Pi client
     group: clients
     kind: client_adapter
     source: .codewiki/kb/system/components/extension.md
-  - id: team_review
-    label: Optional draft pull-request team review
-    group: clients
-    kind: mutable_review_projection
-    source: .codewiki/kb/system/components/evidence.md
   - id: project_runtime
-    label: Project Runtime
+    label: Project Runtime authority and scheduler
     group: runtime
-    kind: coordination
+    kind: project_control_plane
     source: .codewiki/kb/system/components/runtime.md
-  - id: work_state
-    label: WorkState + relationship projector
+  - id: state_sync
+    label: Fresh / stale / offline Git synchronizer
     group: runtime
-    kind: generated_projection
+    kind: git_state_sync
+    source: .codewiki/kb/system/flows/remote-state-synchronization.md
+  - id: reducer
+    label: Change operation validator and WorkState reducer
+    group: runtime
+    kind: deterministic_reducer
     source: .codewiki/kb/system/components/work-state.md
+  - id: graph_projector
+    label: Versioned Alignment Graph projector
+    group: runtime
+    kind: deterministic_projector
+    source: .codewiki/kb/system/components/alignment-model.md
+  - id: loop_exit
+    label: Candidate / Evidence / Policy / Checks / Results / Report
+    group: runtime
+    kind: loop_exit_runtime
+    source: .codewiki/kb/system/components/loop-exit.md
   - id: protocols
     label: CodeWiki OS + Loop Protocols
     group: runtime
     kind: versioned_policy_resource
     source: .codewiki/kb/system/components/codewiki-os.md
-  - id: loop_exit
-    label: Candidate identity + Exit Policy + Check runner + Exit Report
-    group: runtime
-    kind: loop_exit_runtime
-    source: .codewiki/kb/system/components/loop-exit.md
-  - id: evidence_runtime
-    label: Evidence Record materialization + approval correlation
-    group: runtime
-    kind: evidence_runtime
-    source: .codewiki/kb/system/components/evidence.md
-  - id: model_routing
-    label: Loop routes + Implementation tier selector
-    group: runtime
-    kind: model_routing
-    source: .codewiki/kb/system/components/model-routing.md
   - id: pi_sdk
-    label: Published Pi SDK semantic / Model Check sessions
+    label: Independent Pi Candidate and Model Check sessions
     group: execution
     kind: execution_adapter
     source: .codewiki/kb/system/components/session-coordination.md
   - id: workbench
-    label: Private Worker Workbench
+    label: Exact private Worker Workbench
     group: execution
     kind: transient_execution_environment
     source: .codewiki/kb/system/components/worker-workbench.md
@@ -111,7 +105,7 @@ nodes:
     kind: semantic_loop
     source: .codewiki/kb/system/components/decision-loop.md
   - id: planning
-    label: Planning Loop
+    label: Rolling Planning Loop
     group: loops
     kind: semantic_loop
     source: .codewiki/kb/system/components/planning-loop.md
@@ -121,37 +115,53 @@ nodes:
     kind: semantic_loop
     source: .codewiki/kb/system/components/implementation-loop.md
   - id: knowledge
-    label: OKF Product / System / Design Knowledge
-    group: truth
+    label: OKF Knowledge + authored relationships
+    group: authority
     kind: durable_truth
     source: .codewiki/kb/system/components/knowledge.md
-  - id: traces
-    label: JSONL Change Traces
-    group: truth
+  - id: change_operations
+    label: Typed content-addressed Change operations
+    group: authority
     kind: durable_truth
     source: .codewiki/kb/system/components/traces.md
   - id: source_tests
     label: Source + tests
-    group: truth
+    group: authority
     kind: executable_truth
-  - id: git
-    label: Git commits / trees / refs
-    group: truth
-    kind: content_proof
-  - id: views
-    label: Work / Alignment / Learning / dashboard views
-    group: derived
-    kind: generated_projection
+  - id: git_state
+    label: codewiki/state expected-head acceptance
+    group: authority
+    kind: git_acceptance_receipt
+    source: .codewiki/kb/system/components/traces.md
+  - id: git_archive
+    label: codewiki/archive immutable segments
+    group: authority
+    kind: git_archive
+    source: .codewiki/kb/system/components/traces.md
+  - id: work_state
+    label: WorkState
+    group: projections
+    kind: deterministic_projection
     source: .codewiki/kb/system/components/work-state.md
-  - id: review_publication
-    label: Isolated review ref + draft PR Validation Bundle
+  - id: alignment_graph
+    label: Alignment Graph with per-fact provenance
+    group: projections
+    kind: deterministic_projection
+    source: .codewiki/kb/system/components/alignment-model.md
+  - id: views
+    label: Dashboard / Work / graph indexes / repair retrieval
+    group: projections
+    kind: disposable_projection
+    source: .codewiki/kb/system/components/work-state.md
+  - id: review
+    label: Isolated review projection + approval observation
     group: effects
-    kind: guarded_pre_exit_review_effect
+    kind: guarded_review_effect
     source: .codewiki/kb/system/components/evidence.md
   - id: delivery
-    label: Integration / project merge / ordinary push / publication / release / observation
+    label: Integration / merge / push / publication / release / outcome
     group: effects
-    kind: guarded_post_exit_effects
+    kind: guarded_effects
     source: .codewiki/kb/system/components/runtime.md
 edges:
   - from: user_agent
@@ -159,121 +169,112 @@ edges:
     label: operates project
   - from: user_agent
     to: dashboard
-    label: manages and inspects
+    label: inspects and grants exact authority
   - from: user_agent
     to: pi_client
-    label: discusses intent and authority
+    label: discusses intent and supervision
   - from: cli
     to: project_runtime
     label: authenticated bounded requests
   - from: dashboard
     to: project_runtime
-    label: authenticated bounded requests
+    label: guarded requests and queries
   - from: pi_client
     to: project_runtime
-    label: intent / authority / supervision / reads
+    label: thin client requests
   - from: project_runtime
+    to: state_sync
+    label: requires verified snapshot
+  - from: state_sync
+    to: git_state
+    label: fetches and expected-head pushes
+  - from: git_state
+    to: change_operations
+    label: atomically accepts exact batch
+  - from: change_operations
+    to: reducer
+    label: deterministic replay
+  - from: knowledge
+    to: reducer
+    label: accepted meaning and ownership
+  - from: source_tests
+    to: reducer
+    label: executable facts
+  - from: reducer
     to: work_state
-    label: refreshes exact project snapshot
+    label: current project snapshot
   - from: project_runtime
     to: protocols
-    label: binds versioned guidance
-  - from: project_runtime
-    to: model_routing
-    label: selects exact route and tier
-  - from: project_runtime
-    to: evidence_runtime
-    label: identities and validates bounded evidence material
+    label: binds exact versions
   - from: project_runtime
     to: pi_sdk
-    label: starts bounded candidate or Model Check sessions
-  - from: project_runtime
-    to: workbench
-    label: provisions before Claim
-  - from: workbench
-    to: workers
-    label: activates under exact Claim
+    label: starts bounded independent sessions
   - from: pi_sdk
     to: decision
-    label: proposes Decision candidate
+    label: typed Candidate
   - from: pi_sdk
     to: planning
-    label: proposes Planning candidate
+    label: typed Candidate
   - from: pi_sdk
     to: implementation
-    label: proposes candidate or Check output
-  - from: planning
-    to: workbench
-    label: declares worker-ready requirements
-  - from: workers
-    to: implementation
-    label: returns immutable Worker Report evidence material
-  - from: workers
-    to: evidence_runtime
-    label: bounded producer material
-  - from: evidence_runtime
-    to: loop_exit
-    label: exact candidate-bound Check inputs
+    label: typed Candidate or Model Check output
   - from: decision
     to: loop_exit
-    label: exact candidate
+    label: Candidate and Check declarations
   - from: planning
     to: loop_exit
-    label: exact candidate
+    label: Candidate and Check declarations
   - from: implementation
     to: loop_exit
-    label: exact candidate
+    label: Candidate and Check declarations
   - from: loop_exit
     to: project_runtime
-    label: immutable Exit Report
+    label: Exit Report then Runtime Route
+  - from: planning
+    to: workbench
+    label: Worker Workbench requirements
   - from: project_runtime
-    to: traces
-    label: guarded append
-  - from: decision
-    to: knowledge
-    label: accepted meaning update through Runtime
-  - from: implementation
-    to: source_tests
-    label: realizes accepted obligations
-  - from: source_tests
-    to: git
-    label: exact candidate tree
+    to: workbench
+    label: provisions before Work Item Claim acquisition
+  - from: workbench
+    to: workers
+    label: activates under exact Work Item Claim and Assignment
+  - from: workers
+    to: project_runtime
+    label: asserted Worker Report material
+  - from: project_runtime
+    to: implementation
+    label: exact integrated Candidate and Evidence
+  - from: change_operations
+    to: graph_projector
+    label: canonical bindings
   - from: knowledge
-    to: work_state
-    label: canonical intent
-  - from: traces
-    to: work_state
-    label: canonical progression and evidence
+    to: graph_projector
+    label: authored Knowledge relationships
   - from: source_tests
-    to: work_state
-    label: executable state
-  - from: git
-    to: work_state
-    label: exact content proof
+    to: graph_projector
+    label: deterministic analysis
+  - from: graph_projector
+    to: alignment_graph
+    label: snapshot-bound facts
   - from: work_state
     to: views
-    label: bounded derived projections
-  - from: views
-    to: cli
-    label: status and queries
-  - from: views
-    to: dashboard
-    label: state and relationship views
-  - from: views
-    to: pi_client
-    label: compact state and notifications
+    label: scheduling and status projections
+  - from: alignment_graph
+    to: views
+    label: bounded semantic queries
   - from: project_runtime
-    to: review_publication
-    label: explicit pre-exit review-readiness authority
-  - from: review_publication
-    to: team_review
-    label: exact Validation Bundle
-  - from: team_review
-    to: evidence_runtime
-    label: re-observed approval or request-changes event
+    to: review
+    label: separately authorized projection
+  - from: review
+    to: project_runtime
+    label: re-observed approval/request changes
   - from: project_runtime
     to: delivery
     label: separately authorizes exact effects
   - from: delivery
-    to: work_state
-    label: bounded observations and proofs
+    to: change_operations
+    label: bounded effect and outcome operations
+  - from: change_operations
+    to: git_archive
+    label: terminal verified segments

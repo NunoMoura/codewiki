@@ -8,7 +8,7 @@ tags:
   - preview
   - browser
   - dashboard
-timestamp: 2026-07-18T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: preview-runtime
 codewiki_components:
   - preview-runtime
@@ -47,7 +47,7 @@ The Live Preview Runtime creates an automatic, explicit relationship between fro
 
 Structured profiles, canonical `uiPreviewTargets[]`, deterministic profile/target digests, Planning-owned target bindings, Implementation Loop coordination, profile-level server deduplication across routes, package-script supervision, exact integration checkout state, contributor aggregation, readiness, browser adapters, side-effect-free Playwright preflight, cleanup, dashboard controls, source-only harness, and explicit target evidence capture are implemented. Legacy single-Sprint `preview` binding is removed.
 
-Capture currently automates accepted desktop/mobile viewports, records bounded redacted console and network observations, hashes each screenshot, and writes a correlated manifest under `.codewiki/runtime/preview-evidence/`. Capture remains operational evidence material and does not append semantic trace truth or grant approval. Candidate-bound short video capture, standardized Evidence Records, approval-backed UI Checks, and pull-request Validation Bundles are target work, not current executable behavior.
+Capture currently automates accepted desktop/mobile viewports, records bounded redacted console and network observations, hashes each screenshot, and writes a correlated manifest under `.codewiki/runtime/preview-evidence/`. Capture remains operational evidence material and does not append a canonical Change operation or grant approval. Candidate-bound short video capture, standardized Evidence Records, approval-backed UI Checks, and pull-request Validation Bundles are target work, not current executable behavior.
 
 ## Preview binding
 
@@ -93,11 +93,11 @@ Decision-approved Changes declare affected UI refs and visual outcome requiremen
 
 ## Lifecycle
 
-When a target's Change Trace reaches Implementation, Preview Coordinator validates its Planning binding against current target/profile digests and captures exact integration-root Git HEAD, committed tree, working-tree digest, dirty paths, and Change/Sprint/Work Item correlation before checking profile readiness. Disposable `.codewiki/runtime/**` artifacts and canonical `.codewiki/traces/**` workflow records are excluded from product-tree dirtiness because they belong to separate authority boundaries. A ready server is attached without ownership. Otherwise CodeWiki detects declared package manager, starts exact package script without shell, waits within timeout, and owns process group. Coordinator deduplicates server processes by profile/integration root while managing browser routes and evidence by UI target. Conflicting active bindings for one target id fail closed.
+When a target's Change Trace reaches Implementation, Preview Coordinator validates its Planning binding against current target/profile digests and captures exact integration-root Git HEAD, committed tree, working-tree digest, dirty paths, and Change/Sprint/Work Item correlation before checking profile readiness. Disposable `.codewiki/runtime/**` artifacts and local `.codewiki/changes/**` hot-state materialization are excluded from product-tree dirtiness because they belong to separate authority boundaries. A ready server is attached without ownership. Otherwise CodeWiki detects declared package manager, starts exact package script without shell, waits within timeout, and owns process group. Coordinator deduplicates server processes by profile/integration root while managing browser routes and evidence by UI target. Conflicting active bindings for one target id fail closed.
 
 Dashboard groups preview state by canonical UI target and displays profile/target identity and digests, URL/route, integration root, process ownership, browser capability, contributing Changes and Sprints, visibility/conflict state, viewports, failures, logs, and captures. Open, Capture, Restart, and Stop use guarded same-origin operational APIs. Capture requires ready Playwright profile, successful preflight, verified browser, and exact accepted target binding. Stop suppresses automatic restart for Pi session until explicit restart. Closing dashboard does not stop active preview; no-longer-needed target/profile usage, Pi shutdown, or explicit Stop cleans managed resources. Capture summaries survive restart/Stop for coordinator session.
 
-The dashboard is the user control and projection surface, but the Preview Coordinator owns process and browser lifecycle. Dashboard requests remain exact same-origin, capability-guarded operational mutations. Preview controls cannot append semantic trace records, approve an iteration, write source, raise runtime authority, expose a public tunnel, or connect to a non-loopback target.
+The dashboard is the user control and projection surface, but the Preview Coordinator owns process and browser lifecycle. Dashboard requests remain exact same-origin, capability-guarded operational mutations. Preview controls cannot append Change operations or Evidence Records, approve an iteration, write source, raise runtime authority, expose a public tunnel, or connect to a non-loopback target.
 
 ## Browser adapters
 

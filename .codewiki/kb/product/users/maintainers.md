@@ -7,7 +7,7 @@ tags:
   - product
   - users
   - maintainers
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Maintainers
 
@@ -30,7 +30,7 @@ Maintainers need CodeWiki to answer:
 - Worker completion, media capture, model output, and pull-request comments never self-attest acceptance.
 - Team reviewers can inspect one Validation Bundle and approve/request changes through CodeWiki or pull request without duplicate approval.
 - Approval becomes visibly stale when candidate, head, preview, or bundle changes.
-- Remote claims name exact observation boundary.
+- Remote effect assertions name exact observation boundary.
 - Brownfield unknowns stay explicit rather than fabricated.
 - Repair repetition falls without higher false-pass or escaped-regression rates.
 - Feedback Bundles can diagnose recurring CodeWiki defects without exporting project content by default.

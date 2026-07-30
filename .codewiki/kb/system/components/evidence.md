@@ -8,7 +8,7 @@ tags:
   - evidence
   - provenance
   - approval
-timestamp: 2026-07-29T21:24:38.000Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: evidence
 codewiki_components:
   - evidence
@@ -29,13 +29,18 @@ codewiki_source_map:
 CodeWiki turns accepted intent into accountable implementation by requiring evidence that the exact candidate satisfies exact obligations. An agent, worker, tool, model, or external provider cannot establish compliance by claiming success. Project Runtime materializes immutable **Evidence Records**, trusted Checks interpret them, and immutable Check Results state what was established.
 
 ```text
-accepted intent or observed state
-→ typed Evidence Records
-→ candidate-bound Checks
+Change
+→ Loop
+→ Candidate
+→ Evidence Records
+→ Resolved Exit Policy
+→ Checks
 → Check Results
 → Exit Report
-→ separately guarded Runtime route or effect
+→ Runtime Route
 ```
+
+Runtime may observe source/research material while constructing a Candidate, but exact exit identity preserves this chain.
 
 Evidence is a shared cross-Loop contract. It is not a fourth semantic Loop, a task, a mutable approval object, a generic document database, or another canonical store.
 
@@ -43,13 +48,13 @@ Evidence is a shared cross-Loop contract. It is not a fourth semantic Loop, a ta
 
 An Evidence Record is a content-addressed entity represented by one immutable value record with stable identity. It standardizes observation identity, subject, producer, provenance, artifact binding, freshness, authority class, coverage, privacy, and a kind-specific payload.
 
-It does **not** own an independent mutable lifecycle. There is no Evidence CRUD service, central Evidence database, or user-authored evidence paperwork. Compact canonical Evidence Record metadata is exhausted from doing work and persists inside the owning Change Trace; large or private bytes remain in their existing authority boundary and are cited by digest.
+It does **not** own an independent mutable lifecycle. There is no Evidence CRUD service, central Evidence database, or user-authored evidence paperwork. Compact canonical Evidence Record metadata is distilled from actual work and persists through `evidence.recorded` in the owning Change Trace; large or private bytes remain in their existing authority boundary and are cited by digest.
 
 The three contracts remain distinct:
 
 ```text
 Check requirement   = what must be true
-Evidence Record     = an observation that supports, contradicts, or leaves that claim unknown
+Evidence Record     = an observation that supports, contradicts, or leaves that assertion unknown
 Check Result        = Runtime-owned interpretation under one exact Check and policy
 ```
 
@@ -140,13 +145,13 @@ A small shared envelope does not flatten domain semantics. Each kind has an exac
 | `command_execution` | trusted command adapter, arguments/config digest, environment identity, exit/timeout, bounded output digest | Code Checks |
 | `ui_capture` | preview target/profile, route/scenario/state, viewport, screenshots/video, console/network summary, manifest digest | Implementation UI Checks and user review |
 | `model_assessment` | exact Model Check/protocol/route/config identity, structured measurement and findings | Model Check result construction |
-| `worker_report` | Assignment/Claim/Workbench/base correlation, changed paths and worker proof | Implementation admission and provenance Checks |
+| `worker_report` | Assignment/Work Item Claim/Worker Workbench/base correlation, changed paths and worker proof | Implementation admission and provenance Checks |
 | `integration_proof` | target/base/commit/tree/patch/paths and combined verification | Implementation and guarded Integration |
 | `approval_receipt` | authenticated actor, role, decision, exact subject/artifact/head, provider event, time | Approval-backed Code Checks |
 | `delivery_attestation` | remote target, commit/artifact/channel identity, operation and re-observation | Guarded delivery effects |
 | `outcome_observation` | metric/experience/user feedback, observation boundary, coverage and limits | Change outcome disposition |
 
-New kinds require a CodeWiki Change, schema, provenance rules, privacy review, exact Check consumer, tests, and migration plan. Unknown payloads remain untrusted data.
+New kinds require a CodeWiki Change, schema, provenance rules, privacy review, exact Check consumer, tests, and clean-cut or versioning plan. Unknown payloads remain untrusted data.
 
 ## Authority and strength
 
@@ -204,7 +209,7 @@ User-visible UI work normally requires more than source and test output. Plannin
 - live preview URL for inspection;
 - exact target/profile/scenario, candidate, Git tree, viewport, capture time, artifact and manifest digests.
 
-A live link supports inspection but is mutable and is never sole proof. Immutable captures prove what reviewers saw. Media bytes remain content-addressed artifacts outside JSONL; the Evidence Record and Change Trace retain exact digests and durable refs.
+A live link supports inspection but is mutable and is never sole proof. Immutable captures prove what reviewers saw. Media bytes remain content-addressed artifacts outside canonical operation payloads; the Evidence Record and Change Trace retain exact digests and durable refs.
 
 Implementation uses separate obligations:
 
@@ -256,7 +261,7 @@ If project policy forbids pre-exit review publication, required UI approval occu
 
 ## Storage and retention
 
-- Compact Evidence Record identity, subject, provenance, authority/coverage/sensitivity, payload summary, and artifact digests persist in the owning Change Trace.
+- Compact Evidence Record identity, subject, provenance, authority/coverage/sensitivity, payload summary, and artifact digests persist through `evidence.recorded` in the owning Change Trace.
 - Source/tests, Git commits/trees, provider review events, delivery systems, and accepted Knowledge remain in their own authority boundaries and are cited rather than duplicated.
 - Screenshots, videos, captured pages, bounded command output, and other large artifacts use content-addressed local or approved provider storage with explicit retention.
 - Raw prompts, private reasoning, credentials, unrestricted logs, private Workbenches, and sensitive browser content never enter canonical traces or public review bundles.
@@ -276,9 +281,9 @@ src/evidence/
   obligation-resolution.ts
 ```
 
-Loop-owned packages declare admissible domain payload/obligation semantics. `src/loop-exit/**` imports Evidence contracts to bind Check inputs and Results. Runtime composes materialization, artifact/provider adapters, approval correlation, trace writes, and retention. Dependency direction stays one-way; Evidence code cannot import Decision, Planning, or Implementation implementations.
+Loop-owned packages declare admissible domain payload/obligation semantics. `src/loop-exit/**` imports Evidence contracts to bind Check inputs and Results. Runtime composes materialization, artifact/provider adapters, approval correlation, Change operation writes, and retention. Dependency direction stays one-way; Evidence code cannot import Decision, Planning, or Implementation implementations.
 
-Current foundation implements the closed envelope and ten payload kinds, strict recursive admission, canonical normalization, content identity, required producer versions, Runtime-owned subject/time/producer/authority/coverage/freshness/sensitivity context, semantic kind bindings, tamper validation, declarative Check obligations, deterministic obligation reduction, strict resolution accounting, Runtime-derived Result Evidence bindings, and public Evidence Record contract types. Native Check identity binds exact obligation definitions instead of generic evidence-adapter names; Check Result and Exit Report identity now bind exact obligation resolutions, all considered Evidence Record ids, and the derived Evidence input digest. Existing evidence producers and trace writers are not migrated yet. Until that migration, legacy `sourceRefs`, `proofRefs`, preview captures, review reports, worker reports, and delivery proofs retain their current executable behavior and do not become canonical Evidence Records merely by resembling one.
+Current foundation implements the closed envelope and ten payload kinds, strict recursive admission, canonical normalization, content identity, required producer versions, Runtime-owned subject/time/producer/authority/coverage/freshness/sensitivity context, semantic kind bindings, tamper validation, declarative Check obligations, deterministic obligation reduction, strict resolution accounting, Runtime-derived Result Evidence bindings, and public Evidence Record contract types. Native Check identity binds exact obligation definitions instead of generic evidence-adapter names; Check Result and Exit Report identity now bind exact obligation resolutions, all considered Evidence Record ids, and the derived Evidence input digest. Existing evidence producers and Trace writers are not cut over yet. Until that clean cut, legacy `sourceRefs`, `proofRefs`, preview captures, review reports, worker reports, and delivery proofs retain their current executable behavior and do not become canonical Evidence Records merely by resembling one.
 
 Canonical JSON/digest primitives live in `src/utils/canonical-json.ts` so Evidence and Loop-exit identity share exact serialization without reversing the dependency from Loop exit into Evidence.
 

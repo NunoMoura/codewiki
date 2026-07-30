@@ -17,13 +17,13 @@ Each diagram should include:
 - renderer hints
 - diagram-specific raw data such as nodes, edges, participants, entities, states, transitions, and UI hints
 
-Agents should prefer small stable IDs, explicit source paths, and short labels. Long explanations belong in component Markdown docs, Product Knowledge, Loop candidate/Report data, trace attempts, or bounded private Runtime material.
+Agents should prefer small stable IDs, explicit source paths, and short labels. Long explanations belong in component Markdown docs, Product Knowledge, Loop Candidate/Report data, Change operations, or bounded private Runtime material.
 
 ## Diagram refs
 
-Each YAML node, entity, state, actor, adapter, artifact, policy, external system, edge, relationship, step, or transition becomes a diagram ref using `<diagram-file-stem>:<local-id>`; for example, `component-map:application` or `data-model:trace_iteration`. The parser also accepts `<diagram-id>:<local-id>` as an alternate ref when docs or trace data use the diagram `id` field.
+Each YAML node, entity, state, actor, adapter, artifact, policy, external system, edge, relationship, step, or transition becomes a diagram ref using `<diagram-file-stem>:<local-id>`; for example, `component-map:project_runtime` or `data-model:operation`. The parser also accepts `<diagram-id>:<local-id>` as an alternate ref when docs or Change operation data use the diagram `id` field.
 
-System Markdown uses OKF frontmatter for concept metadata. Diagram refs belong in diagram YAML, trace data, OKF ownership notes, or prose links when a human-readable relation is useful.
+System Markdown uses OKF frontmatter for concept metadata. Diagram refs belong in diagram YAML, Change operation payloads, OKF ownership notes, or prose links when a human-readable relation is useful.
 
 Nodes can set `requires_doc: true` when a diagram concept requires an owning Markdown doc. The owning-doc relation should be validated through OKF ownership metadata or diagram YAML, not duplicated in render artifacts.
 
@@ -35,8 +35,12 @@ Nodes can set `requires_doc: true` when a diagram concept requires an owning Mar
 | `context-map.yaml` | `context_map` | Show users, access surfaces, external systems, and the project boundary. | Graph/SVG or Mermaid flowchart. |
 | `component-map.yaml` | `component_map` | Show major runtime components, adapters, data stores, and dependency direction. | Layered graph, custom SVG, or Mermaid flowchart. |
 | `key-flow.yaml` | `sequence_flow` | Show the most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
-| `data-model.yaml` | `data_model` | Show durable entities, generated state, evidence, and ownership. | Mermaid ER/custom ER renderer. |
+| `data-model.yaml` | `data_model` | Show canonical operations, Git acceptance, exact exit, coordination, projections, archive, and learning. | Mermaid ER/custom ER renderer. |
 | `state-lifecycle.yaml` | `state_lifecycle` | Show semantic Loop attempts, Exit Report/Runtime routes, guarded delivery boundaries, outcome disposition, and retention. | Mermaid state diagram or custom state renderer. |
+
+## Alignment Graph boundary
+
+These authored YAML files describe accepted System architecture. They are not the runtime Alignment Graph artifact. Runtime deterministically projects that artifact from accepted Change operations, Knowledge, protected source, Git, and policy/config under one snapshot digest. Every projected fact retains source provenance; generated graph storage/layout remains disposable.
 
 ## Rendering boundaries
 

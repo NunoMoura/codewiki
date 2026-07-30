@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: CodeWiki Quiet Systems Atlas
-description: A warm, precise project interface for portfolio Work, Product knowledge, System topology, and Design guidance, grounded in canonical sources and calibrated evidence.
+description: A warm, precise project interface for accountable Work, Product knowledge, System topology, and Design guidance, grounded in canonical sources and calibrated evidence.
 colors:
   canvas: "#F5F1E8"
   surface: "#FFFDF8"
@@ -195,7 +195,7 @@ tags:
   - design-system
   - visual-identity
   - dashboard
-timestamp: 2026-07-20T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Design System: CodeWiki
 
@@ -203,7 +203,7 @@ timestamp: 2026-07-20T00:00:00Z
 
 CodeWiki should feel like a quiet systems atlas from 1968 rebuilt as a precise contemporary instrument. Warm paper, graphite typography, hairline structure, and restrained pastel coding make a complex project understandable without making it childish or ornamental. The interface is calm, optimistic, and visibly crafted.
 
-CodeWiki is a project-management application, not a marketing site, terminal transcript, or collection of Change cards. Runtime owns the portfolio work pipeline. The dashboard exposes that runtime through purpose-built Work surfaces and exposes canonical project knowledge through Product, System, and Design surfaces.
+CodeWiki is an intent-to-production alignment runtime with purpose-built project-management surfaces, not a marketing site, terminal transcript, task platform, or collection of Change cards. Runtime owns project-wide scheduling and progression. Dashboard exposes that Runtime through Work surfaces and exposes canonical project Knowledge through Product, System, and Design surfaces.
 
 The four primary destinations are:
 
@@ -214,13 +214,13 @@ The four primary destinations are:
 
 Work opens by default at Backlog. Change remains a canonical accountable entity and opens as a cross-cutting dossier from any destination. Product, System, Design, Change, Sprint, Work Item, and Assignment vocabulary remains literal; navigation labels never rename repository truth.
 
-The dashboard exists for the person managing software development. It renders canonical Knowledge, Change Traces, WorkState, source/tests, Git, and bounded runtime observations into concise explanations that help that person understand the project, direct work, and intervene only when exact human judgment or reserved authority is required.
+The dashboard exists for the person managing software development. It renders canonical Knowledge, Change Traces, WorkState, source/tests, Git, and bounded runtime observations into concise explanations that help that person understand the project, direct work, and intervene only when exact human judgment or explicit human authority is required.
 
 ## Truth and projection
 
-Product and System Markdown, System diagram YAML, source, tests, Git, Change Traces, configuration, and runtime observations retain separate authority. Dashboard layouts, search indexes, graph positions, session registries, and live activity are disposable projections.
+Product and System Markdown, System diagram YAML, source, tests, Git, accepted Change operations, configuration, and Runtime observations retain separate authority. Alignment Graph is a wholly derived, versioned, first-class projection whose every fact preserves source provenance. Dashboard layouts, search indexes, graph indexes/positions, session registries, and live activity are disposable.
 
-OKF is connective tissue, not a navigation destination. Standard Markdown links establish portable relationships. CodeWiki relationship metadata, diagram edges, source ownership, Planning refs, and evidence refs provide typed semantics where an untyped link is insufficient.
+OKF is connective tissue, not a navigation destination. Standard Markdown links remain `references`. Authored Knowledge relationships use the closed OKF vocabulary; dynamic Change, source, Evidence, delivery, and outcome relationships come from accepted operations and deterministic graph projection.
 
 The dashboard may edit canonical Markdown and YAML only through deterministic source patches, exact source digests, rendered diffs, validation, and guarded Change workflows. It never creates a hidden content database or dashboard-only taxonomy.
 
@@ -250,7 +250,7 @@ The canonical appearance is warm and light. It recalls uncoated paper and faded 
 - **Surface (`#FFFDF8`)** and **raised surface (`#FFFFFF`)** establish hierarchy through small tonal steps, not shadows.
 - **Ink (`#252622`)** is graphite. Secondary ink remains readable at normal text sizes.
 - **Primary (`#315F62`)** is the sole ordinary interaction color for links, selected controls, primary actions, and focus.
-- **Work coral (`#E9A294`)** identifies portfolio work and accountable Change impact.
+- **Work coral (`#E9A294`)** identifies accountable work and Change impact.
 - **Product apricot (`#F3C7A9`)** identifies users, stories, and product responsibility.
 - **System powder blue (`#BFD8E8`)** identifies components, flows, data, and technical relationships.
 - **Design lilac (`#D7C7DD`)** identifies guidelines and interface specifications.
@@ -320,25 +320,25 @@ Use an intake/triage composition: a compact proposal list or grouped queue besid
 
 Failed and indeterminate required Checks appear before passing Results. Completed Decision work becomes a receipt attached to the exact Change revision. Rejected, deferred, withdrawn, and superseded proposals remain searchable without competing with active intake.
 
-Human attention appears only for underdetermined meaning, materially different valid outcomes, semantic/risk/authority forks, or reserved destructive/external/publication authority. Routine validation, retry, tests, accessibility, preview, and repair remain autonomous.
+Human attention appears only for underdetermined meaning, materially different valid outcomes, semantic/risk/authority forks, or explicit destructive/external/publication authority. Routine validation, retry, tests, accessibility, preview, and repair remain autonomous.
 
 ### Planning
 
 Planning answers:
 
-- How does the approved portfolio become coherent executable work?
+- How does the selected Change set become coherent executable work?
 - What can run in parallel now?
 - What is blocked by dependency, overlap, capacity, or integration?
 - Which Changes lack coverage?
 - What changed between Planning epochs?
 
-Default presentation is a bounded planning-horizon graph, not the entire OKF or repository graph. It contains:
+Default presentation is a bounded snapshot-bound Planning-horizon subgraph, not the entire OKF, source, or Alignment Graph. It exposes coverage, staleness, and per-fact provenance and contains:
 
 - approved Change outcome nodes;
 - Sprint clusters;
 - Work Item nodes;
 - dependency, contribution, conflict, rollback, and integration edges;
-- ready, claimed/frozen, held, and completed distinctions.
+- ready, Work Item Claim active/frozen, held, and completed distinctions.
 
 Selection opens an adjacent or in-place inspector with authoritative inputs, coverage, active Checks and activation reasons, failed/indeterminate Results, exact refs, recovery, and relevant OKF/source neighborhood. Keep graph labels readable at final size. Never solve density by shrinking text below comfortable reading size.
 
@@ -357,9 +357,9 @@ Implementation answers:
 - What exact verification and evidence exist?
 - What recovery or route-back owns failure?
 
-Use execution lanes grouped by Sprint or integration target. Each Work Item owns one row or lane with Assignment attempts nested beneath it. Make queued, ready, claimed, running, waiting, blocked, integrating, accepted, failed, cancelled, and superseded states literal.
+Use execution lanes grouped by Sprint or Integration target. Each Work Item owns one row or lane with Assignment attempts nested beneath it. Make queued, ready, Work Item Claim active, running, waiting, blocked, integrating, accepted, failed, cancelled, and superseded states literal.
 
-Worker detail progressively discloses session, model, source base, worktree/container, claim, bounded activity, checks, output refs, and usage. Raw prompts, private reasoning, credentials, unbounded logs, and full source content never appear.
+Worker detail progressively discloses session, model, source base, worktree/container, Work Item Claim, bounded activity, Checks, output refs, and usage. Raw prompts, private reasoning, credentials, unbounded logs, and full source content never appear.
 
 Integrated product state must be visually distinct from isolated worker output. Commit and restore proof appear only after exact integration. Publication remains separate guarded authority and never follows automatically from Commit.
 
@@ -426,17 +426,17 @@ Use a focused impact bridge when helpful: Product/Design concepts on one side, C
 
 ## Assurance and evidence
 
-Proof-first assurance remains a shared inspector grammar, applied to the claim owner:
+Proof-first assurance remains a shared inspector grammar, applied to the exact assurance subject:
 
 - Backlog attaches Decision candidate, Check Results, Exit Report, and approval receipt to exact Change revision;
-- Planning attaches candidate/Report evidence to Planning epoch, Sprint, Work Item, dependency, or coverage claim;
+- Planning attaches Candidate/Report evidence to Planning epoch, Sprint, Work Item, dependency, or coverage assertion;
 - Implementation attaches Results and proof to exact candidate, Assignment evidence, Integration result, accepted realization, or Git boundary.
 
 Every assurance view explains:
 
 - what must be established;
 - authoritative input and authority boundary;
-- current claimed result;
+- current reported result;
 - failed, indeterminate, and pending required Checks before completed proof;
 - pass, fail, indeterminate, pending, skipped, and inapplicable Check state with enforcement and `activatedBy` reasons;
 - evidence bound to exact revision, digest, candidate, Check, Result, tree, or commit;
@@ -479,9 +479,9 @@ Project-wide notifications sit beside Settings. Badge count reflects unread inte
 
 ## Runtime state and activity
 
-Runtime activity uses concise user-facing language such as “Comparing two overlapping proposals,” “Rebuilding the execution graph,” “Running two independent checkout Work Items,” or “Holding integration until the shared schema change is accepted.”
+Runtime activity uses concise user-facing language such as “Comparing two overlapping proposals,” “Refreshing the alignment map,” “Running two independent checkout Work Items,” or “Holding integration until the shared schema change is accepted.”
 
-Live activity is a bounded projection over scheduler jobs, semantic-session phase, Assignment, worker phase, integration, progress, and freshness. Meaningful starts, terminal results, blockers, and accepted semantic facts may enter Change Traces. Noisy heartbeats stay outside semantic truth.
+Live activity is a bounded projection over scheduler jobs, semantic-session phase, Assignment, worker phase, integration, progress, and freshness. Meaningful starts, terminal results, blockers, and accepted semantic facts may enter typed Change operations. Noisy heartbeats stay outside semantic truth.
 
 Always distinguish:
 
@@ -575,7 +575,7 @@ Temporary screenshots and prototypes are review evidence, not lasting product tr
 - Do make Work, Product, System, and Design the four primary destinations, in that order.
 - Do open Work at Backlog by default.
 - Do give Backlog, Planning, and Implementation different information architectures.
-- Do make runtime own portfolio scheduling and expose exact held reasons.
+- Do make Runtime own project-wide scheduling and expose exact held reasons.
 - Do use Change detail as a dossier rather than a pipeline.
 - Do render and edit canonical Markdown/YAML through guarded source patches.
 - Do show integrated state separately from isolated worker output.

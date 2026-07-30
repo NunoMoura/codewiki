@@ -7,144 +7,194 @@ tags:
   - system
   - alignment
   - model
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Alignment Model
 
-Alignment is not permanent equality among durable sources. During active work, accepted future intent may deliberately lead source, Git, or delivery state.
+Alignment is a governed relationship among distinct authorities, not a score or one merged document.
 
-A project is accountably aligned when every relevant discrepancy is:
+```text
+accepted intent
+↔ accepted Knowledge
+↔ rolling Planning and active work
+↔ source and tests
+↔ exact Git and Integration state
+↔ delivery state
+↔ observed outcomes
+```
+
+A discrepancy is aligned only when it is:
 
 1. resolved;
-2. explained by one exact active Change and its current transition state; or
-3. explicitly unknown and blocked from unsafe progression.
+2. accounted for by an exact active Change; or
+3. explicitly unknown, with unsafe progression blocked.
 
-Unaccounted divergence is drift.
+## Product invariant
 
-```text
-resolved state
-or exact Change-accounted transition
-or explicit unknown with safe block
-= accountable alignment
-```
+CodeWiki exists to keep intent and project state aligned while both change over time. Knowledge may intentionally lead source while an accepted Change is being realized. Source may expose missing or stale Knowledge and trigger a Change. A contradiction is never hidden behind one aggregate confidence score.
 
-## Authority sources
+## Authority roots
 
-Durable sources retain separate authority:
+- `.codewiki/kb/**` owns accepted Product/System/Design Knowledge and authored Knowledge relationships.
+- Accepted Change Trace Protocol operations own accountable intent, revisions, attempts, Planning bindings, execution history, routes, reviews, effects, feedback, and outcomes.
+- Source and tests own executable implementation truth.
+- Git owns exact objects, trees, refs, Integration state, and accepted-state receipts.
+- Evidence Records own bounded immutable observations with explicit authority and provenance.
+- Review and delivery providers own external observations, not CodeWiki semantics.
+- Runtime owns identity, admission, freshness, authority, scheduling, routing, canonical writes, and effects.
 
-- `.codewiki/kb/**` owns accepted Product/System/Design Knowledge;
-- `.codewiki/traces/TRACE-CHG-*.jsonl` owns durable Change progression, Loop attempts, compact Evidence Records, Check Results, Exit Reports, approval/review lineage, runtime coordination, and outcome disposition in consuming projects;
-- source and tests own executable implementation truth;
-- Git commits, trees, refs, and artifact proofs own exact content and delivery-boundary facts;
-- protected remote checks, attestations, provider observations, and deployment observations own only their exact external boundary.
+Generated views, graph indexes, notifications, provider payloads, and local Runtime state do not become independent authority.
 
-Generated WorkState, relationship views, indexes, dashboards, and `.codewiki/views/**` are disposable alignment projections. They do not become another authority.
+## Exact exit chain
 
-The CodeWiki source repository does not self-host during stabilization. It carries no active dogfood Change Traces; Pi-native tools, canonical KB, source/tests, Git, and normal review remain its development authorities.
-
-## Four alignment dimensions
-
-### Vertical alignment
-
-Connects intent through realization:
+Every semantic Loop follows:
 
 ```text
-accepted Change intent
-→ Knowledge and invariants
-→ Planning obligations
-→ source/tests
-→ exact Git candidate
-→ delivery/outcome evidence
+Change
+→ Loop
+→ Candidate
+→ Evidence Records
+→ Resolved Exit Policy
+→ Checks
+→ Check Results
+→ Exit Report
+→ Runtime Route
 ```
 
-### Horizontal alignment
+A passing Exit Report is necessary but not sufficient for canonical state advancement. Runtime revalidates authority, freshness, exact bases, generation, and effect policy.
 
-Maintains coherence among concurrent Changes, shared invariants, components, dependencies, path Claims, Sprints, Work Items, integration boundaries, and conflicting outcomes.
-
-### Temporal alignment
-
-Preserves exact lineage across revisions, supersession, staleness, failed attempts, repairs, changed Checks, invalidated Evidence Records/approvals, and later observations. Historical meaning comes from persisted candidate, Evidence, policy, Result, and Report identity—not today's Catalog.
-
-### Delivery alignment
-
-Distinguishes local candidate, integrated tree, project-branch merge, remote push, published artifact, release, deployment, and observed user outcome. One boundary never implies another.
-
-## Accounted transitions
-
-An active Change may intentionally create temporary divergence:
+## Exactly three Loops
 
 ```text
-accepted Knowledge says target behavior B
-source still realizes behavior A
-Change CHG-B records approved intent, plan, current realization state,
-and exact work needed to close the gap
+Decision
+Planning
+Implementation
 ```
 
-This is aligned transition, not unexplained drift. If the Change is stale, contradictory, unowned, or missing required evidence, WorkState marks the relevant relationship suspect or blocked.
+Decision owns accepted meaning for one Change. Planning continuously shapes globally coherent Work Items across the selected Change set. Implementation evaluates exact realization and integrated content. Synchronization, graph projection, checking, recovery, archive, delivery, and learning remain Runtime functions or derived cycles.
 
-No user action should exist only because runtime needs a field it can derive safely. Change Trace exhaust should emerge from doing work, not from paperwork.
+## Log-canonical, graph-native architecture
 
-## Loop alignment
+```text
+typed Change operations
+→ accepted Git-backed history
+→ deterministic WorkState
+→ rolling global Planning
+→ first-class Alignment Graph
+→ local views and bounded agent queries
+```
 
-| Loop | Required alignment output |
-| --- | --- |
-| Decision | Exact accepted interpretation, outcome, Knowledge delta, constraints, risks, active-Change overlap, and authority. |
-| Planning | Global coverage of approved Changes through coherent Work Items, dependencies, verification, ownership, integration, and explicit resolutions. |
-| Implementation | Exact realization of accepted obligations in source/tests/Knowledge plus candidate-bound Checks, Git proof, Integration, and outcome disposition. |
+The architecture has three graph-related layers:
 
-Each Loop produces one immutable candidate while Runtime binds exact Evidence Records, Resolved Exit Policy, Check Results, and Exit Report. Runtime routes and appends only after final freshness and authority guards. Failed and indeterminate attempts remain evidence for repair and later learning.
+```text
+Change Trace operations       canonical temporal history
+Alignment Graph projection    deterministic and first-class
+indexes and rendering         disposable
+```
 
-## Relationship projection
+“First-class” means the Alignment Graph has a versioned schema, deterministic projector, stable snapshot identity, full/incremental equivalence tests, bounded query API, and explicit provenance. It does not mean graph storage becomes another authority.
 
-CodeWiki may derive one bounded relationship layer over canonical inputs with several views:
+## Alignment Graph snapshot
 
-- **Work Graph:** Changes, Sprints, Work Items, dependencies, Assignments, Claims, blockers, and Integration state.
-- **Alignment Graph:** OKF concepts, provenance, components, source/test ownership, Change revisions, candidates, Evidence Records, Check Results, approvals, Git trees, delivery artifacts, and outcome observations.
-- **Learning View:** temporal candidate-to-failed-Check-to-repair-to-outcome relationships derived from Change Traces.
+```text
+accepted Change ledger head
++ Knowledge digest
++ protected source head
++ config and policy digests
++ graph projector version
+= Alignment Graph snapshot digest
+```
 
-These views remain disposable. Agents query typed, scoped, snapshot-bound operations rather than arbitrary graph mutation or a general graph DSL. Query results name provenance, authority class, coverage, truncation, and staleness.
+Every query result binds that digest.
 
-## Knowledge alignment
+## Per-fact provenance
 
-A Change's Knowledge scope is the accepted Product/System/Design topic set for its exact revision. Decision binds the relevant concept versions and provenance. Runtime compares current concept digests and grounded findings against that accepted scope.
+Every projected or analyzed fact reports one source class:
 
-User-facing projection may show:
+```text
+canonical_binding
+observed_binding
+deterministic_analysis
+inferred_analysis
+```
 
-| State | Meaning |
-| --- | --- |
-| Aligned | Relevant relationships are resolved or validly accounted for by current Changes, with no grounded contradiction. |
-| Review Needed | Relevant content or evidence changed and dependent relationships are suspect pending semantic review. |
-| Misaligned | Grounded evidence proves an unaccounted contradiction and names affected layer, source refs, rationale, and owning Loop. |
-| Unknown | Scope, provenance, coverage, current evidence, or relationship grounding is insufficient. Unsafe progression remains blocked. |
+Examples:
 
-A digest change can establish only Review Needed. Misaligned requires grounded contradiction. Unknown is honest brownfield state, not failure to fabricate certainty.
+```text
+Change → Candidate              canonical binding
+Candidate → Evidence Record     canonical binding
+Commit → changed path           deterministic Git analysis
+Function A → calls Function B   deterministic source analysis
+Concept A → likely concept B    inferred analysis with bounded confidence
+```
 
-## Progressive brownfield adoption
+The graph may combine several classes in one result, so provenance attaches to each fact. No graph edge is independently authoritative. Contradictory, superseded, stale, partial, and unknown facts remain visible. Absence from partial coverage cannot prove non-existence.
 
-Projects may begin with sparse Knowledge and provisional source mappings. CodeWiki should:
+## Graph domains
 
-- preserve accepted known concepts;
-- label uncovered areas as unknown;
-- derive fine-grained source relationships from LSP/AST/Pi-Lens without making them canonical;
-- expand validated Knowledge and ownership through actual Changes;
-- persist stable semantic relationships only to outcome, behavior/invariant, system responsibility/interface, source ownership boundary, and tests/evidence.
+The Alignment Graph joins, without merging authority:
 
-No complete ontology or exhaustive symbol graph is required before useful work begins.
+- Change revisions, relationships, Candidates, attempts, and Runtime Routes;
+- Planning epochs, Work Items, dependencies, Change Claims, Work Item Claims, Assignments, and Integration;
+- Evidence Records, obligations, Check Results, and Exit Reports;
+- OKF concepts and authored Knowledge relationships;
+- source paths, tests, ownership, symbols, and deterministic analysis;
+- Git commits, trees, refs, review projections, delivery effects, and outcomes;
+- derived Repair Episodes and Repair Patterns.
 
-## Guarantee boundary
+Each typed operation kind has a deterministic graph projection. Users cannot inject arbitrary triples.
 
-CodeWiki can guarantee structural validity, exact identity, deterministic thresholding, required-result fan-in, progression integrity, Git/delivery provenance, and explicit uncertainty. Model Checks provide bounded semantic assurance, not proof of unknowable perfect intent interpretation.
+## Bounded semantic queries
 
-Ongoing remote claims require protected branches, required status checks, commit-bound attestations, artifact provenance, and deployment observations. Without those, CodeWiki reports only what it observed at one exact time.
+Agents and clients receive read-only, snapshot-bound query families such as:
+
+```text
+what realizes this Change
+why does this source exist
+which Changes affect this concept
+what blocks this Change
+which Evidence supports this requirement
+what changed since this checkpoint
+what depends on this Work Item
+which outcomes followed this Change
+```
+
+Every result includes exact facts, underlying refs, source provenance, coverage, truncation, and staleness. CodeWiki exposes no arbitrary Cypher or generic graph mutation DSL.
+
+## OKF relationship boundary
+
+OKF owns stable accepted Knowledge and authored Knowledge relationships:
+
+```text
+depends_on
+constrains
+refines
+realizes
+verifies
+supersedes
+derived_from
+```
+
+Ordinary Markdown links remain `references`. Vague `related_to` is rejected. Dynamic Change/source/evidence/delivery relationships belong in operations and graph projection. Imported OKF remains untrusted and cannot execute code, grant authority, pass Checks, or authorize Loop exit.
+
+## Graphify boundary
+
+Graphify may be evaluated as an optional disposable analysis adapter. Its stable IDs, typed relations, source locations, confidence, incremental hashes, and bounded queries are useful patterns. Graphify cannot become canonical storage, write accepted Knowledge, grant authority, or permit progression.
+
+## Learning boundary
+
+Completed history may derive Repair Episodes and Repair Patterns. Historical guidance is bounded, structured, provenance-bearing, and available only to relevant producers/workers. It cannot enter independent Model Check context, lower thresholds, disable Checks, grant authority, or become a fourth Loop.
+
+## Source-checkout boundary
+
+This repository uses `.codewiki/kb/**` as intended design truth, source/tests as executable truth, and Git as checkpoint evidence. It does not load or dogfood its own extension during stabilization. Packed external projects prove Runtime behavior.
 
 ## Related docs
 
+- [Change Traces](traces.md)
 - [WorkState](work-state.md)
-- [Loop Model](loop-model.md)
-- [Loop Exit](loop-exit.md)
-- [Evidence Records](evidence.md)
-- [Decision Loop](decision-loop.md)
-- [Planning Loop](planning-loop.md)
-- [Implementation Loop](implementation-loop.md)
+- [Runtime](runtime.md)
 - [Knowledge](knowledge.md)
-- [Traces](traces.md)
+- [Source Map](source-map.md)
+- [Loop Contracts](loop-contracts.md)
+- [Lab](lab.md)

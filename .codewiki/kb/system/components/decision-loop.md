@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Decision Loop
-description: Decision turns explicitly persisted intent into an exact approved, rejected, deferred, withdrawn, or route-back Change revision through candidate-bound Checks and an Exit Report.
+description: Decision turns persisted intent into one exact Evidence-backed Candidate, Exit Report, and accepted disposition without letting callers control Runtime identity or authority.
 tags:
   - codewiki
   - system
   - decision
   - loop
-timestamp: 2026-07-29T21:24:38.000Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: decision
 codewiki_components:
   - decision
@@ -21,11 +21,7 @@ codewiki_test_patterns:
   - tests/helpers/canonical-loop-events.mjs
   - tests/helpers/proposed-change.mjs
 codewiki_trace_events:
-  - decision.change_received
-  - decision.change_revised
-  - decision.change_approved
-  - decision.change_deferred
-  - decision.change_rejected
+  - decision.candidate_recorded
 codewiki_role: semantic_loop
 codewiki_source_map:
   - id: decision
@@ -39,11 +35,7 @@ codewiki_source_map:
       - tests/helpers/canonical-loop-events.mjs
       - tests/helpers/proposed-change.mjs
     trace_events:
-      - decision.change_received
-      - decision.change_revised
-      - decision.change_approved
-      - decision.change_deferred
-      - decision.change_rejected
+      - decision.candidate_recorded
     role: semantic_loop
 ---
 # Decision Loop
@@ -53,11 +45,14 @@ Decision owns the journey from explicitly persisted intent to one exact approved
 ```text
 persisted intent
 → grounded semantic revision
-→ immutable Decision candidate
+→ immutable Decision Candidate
+→ Evidence Records
+→ Resolved Exit Policy
 → Decision Checks
+→ Check Results
 → Exit Report
-→ Runtime authority/freshness guard
-→ exact disposition append
+→ Runtime Route
+→ authority/freshness/expected-head acceptance
 ```
 
 The first persisted revision creates one append-only Change Trace. Planning may receive only an exact approved Change revision after Runtime appends the same candidate/Report under final guards. Later attempts append revisions, failed/indeterminate Results, repair lineage, approval, route-back answers, or terminal disposition to the same dossier.
@@ -93,7 +88,7 @@ A semantic revision contains enough accepted meaning that Planning need not reco
 - risks, invariants, alternatives, rollback, and non-goals;
 - bounded Planning constraints where needed.
 
-Workflow status, Checks, Planning membership, Assignments, implementation, Git, and delivery facts belong to trace records/projections, not revision content.
+Workflow status, Checks, Planning membership, Assignments, implementation, Git, and delivery facts belong to accepted Change operations and projections, not revision content.
 
 Accepted revisions are immutable. A route-back may create a superseding revision while accountable outcome remains stable. Materially different outcome creates a linked Change.
 
@@ -142,7 +137,7 @@ Casual conversation remains conversation until explicitly persisted as Change in
 
 ## Baseline Checks
 
-Final Check definitions are Loop-qualified and versioned. Current legacy IDs are retained only where executable migration requires them.
+Final Check definitions are Loop-qualified and versioned. Current legacy IDs remain executable drift only until the clean Decision cut.
 
 | Check intent | Required signal |
 | --- | --- |
@@ -221,26 +216,22 @@ interface ChangeApproval {
 
 Candidate producer supplies none of the runtime-owned identity, actor, time, snapshot, or Report fields. Batch approval is a guarded command appending one exact fact per Change; it creates no bundled Decision entity.
 
-## Trace target
+## Operation target
 
-```json
-{
-  "event": "change_approved",
-  "loop": "decision",
-  "data": {
-    "iteration": 3,
-    "candidate": { "id": "candidate:...", "digest": "sha256:..." },
-    "resolvedExitPolicy": { "digest": "sha256:..." },
-    "exitReport": { "id": "report:...", "status": "pass" },
-    "approval": { "authorityRef": "authority:..." },
-    "route": { "kind": "advance" },
-    "progress": {}
-  },
-  "refs": []
-}
+One Decision attempt records distinct immutable operations:
+
+```text
+loop.attempt_started
+decision.candidate_recorded
+evidence.recorded
+loop.exit_policy_recorded
+check.result_recorded
+loop.exit_report_recorded
+runtime.route_recorded
+loop.attempt_ended
 ```
 
-Current trace event names and payloads remain executable migration state until clean Decision/trace cuts update source, tests, and projections together.
+Approval, rejection, or deferral derives from the exact passing Candidate disposition plus accepted Runtime Route and authority binding. There is no caller-controlled status operation. Current event names/payloads remain executable drift until the clean Decision/Trace cuts update source, tests, and projections together.
 
 ## Route-back
 

@@ -8,7 +8,7 @@ tags:
   - components
   - knowledge
   - base
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Knowledge Base Component
 
@@ -21,11 +21,12 @@ timestamp: 2026-07-28T00:00:00Z
 - Decision owns accepted Knowledge meaning and exact Change-accounted updates.
 - Planning consumes exact accepted concept revisions/digests.
 - Implementation realizes accepted obligations or routes ambiguity back.
-- Target emits OKF v0.2 and consumes v0.2 with v0.1 fallback while preserving unknown fields.
+- Target emits OKF v0.2; a bounded v0.1 reader remains only for imported generic bundles and preserves unknown fields.
 - Imported `sources`, `generated`, `verified`, lifecycle/freshness, and Attested Computation metadata remain advisory and inert.
-- Change Traces stay outside OKF.
+- Accepted Change operations, Planning epochs, Evidence, delivery, and outcomes stay outside OKF.
+- Authored Knowledge relationships use only `depends_on`, `constrains`, `refines`, `realizes`, `verifies`, `supersedes`, and `derived_from`; Markdown links remain `references`.
 - CodeWiki source-ownership extension maps stable responsibilities/interfaces to source/tests; fine-grained code relationships stay derived.
-- Generated indexes and Work/Alignment/Learning graphs are disposable.
+- The Alignment Graph is a deterministic first-class projection; generated indexes, layouts, and Work/Learning views are disposable.
 - Brownfield unknown coverage remains explicit and cannot prove absence/alignment.
 
 ## Related docs

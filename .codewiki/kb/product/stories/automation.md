@@ -7,7 +7,7 @@ tags:
   - product
   - stories
   - automation
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Use Loop-Governed Automation
 
@@ -21,9 +21,9 @@ As a user, I want Project Runtime to advance compatible work automatically while
 - Runtime stops/routes/retries/waits on ambiguity, required fail/indeterminate Results, budget exhaustion, no progress, stale state, missing capability, or authority.
 - Users see exact candidate, activated Checks and reasons, Report status, Runtime route, proof refs, and next safe action.
 - Independent Checks continue after unrelated failure and use bounded resource-specific pools.
-- Parallel workers use exact Claims/private Workbenches and never self-attest acceptance.
+- Parallel workers use exact Work Item Claims/private Worker Workbenches and never self-attest acceptance.
 - Integration, merge, push, publication, release, and deployment remain separately guarded effects.
-- Knowledge, Change Traces, source/tests, Git/delivery evidence, and generated views retain separate authority.
+- Knowledge, accepted Change operations, source/tests, Git/delivery evidence, and generated views retain separate authority.
 - Learned repair context cannot weaken Checks, thresholds, routing authority, or approval.
 
 ## Related docs

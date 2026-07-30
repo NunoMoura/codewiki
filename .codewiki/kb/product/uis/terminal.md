@@ -10,7 +10,7 @@ tags:
   - pi
   - observability
   - accessibility
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: dashboard
 codewiki_components:
   - dashboard
@@ -33,9 +33,9 @@ codewiki_source_map:
 ---
 # Project Dashboard and Optional Pi Client
 
-Standalone CLI and dashboard are primary Project Runtime clients. Dashboard is primary visual project-management workspace. Optional Pi client remains natural place to discuss intent, submit Changes, answer exact authority questions, and inspect or steer work. No client owns canonical truth or Runtime lifetime.
+Standalone CLI and dashboard are primary Project Runtime clients. Dashboard is primary visual intent-to-production alignment workspace. Optional Pi client remains natural place to discuss intent, submit Changes, answer exact authority questions, and inspect or steer work. No client owns canonical truth or Runtime lifetime.
 
-Project Runtime owns intake, WorkState, scheduling, semantic-session creation, worker lifecycle, Integration, guarded writes/effects, and live projections. CLI, several Pi sessions, dashboard, and future bounded clients may connect concurrently.
+Project Runtime owns intake, verified Git-state synchronization, WorkState, scheduling, semantic-session creation, worker lifecycle, Integration, guarded writes/effects, and deterministic projections. CLI, several Pi sessions, dashboard, and future bounded clients may connect concurrently.
 
 ## Primary navigation
 
@@ -75,7 +75,7 @@ The primary composition is an intake/triage list with one focused detail region,
 
 ## Work / Planning
 
-Planning shows one bounded project execution graph over approved Changes. It does not show one private plan per Change.
+Planning shows one bounded snapshot-bound Alignment Graph subgraph over the selected approved Change set. It does not show one private plan per Change.
 
 The default graph includes:
 
@@ -83,13 +83,13 @@ The default graph includes:
 - Sprint clusters;
 - owned and contributing Work Items;
 - dependency, conflict, contribution, rollback, and integration edges;
-- current ready parallel frontier;
-- claimed or frozen Work Items;
+- current safe execution frontier;
+- Work Item Claim active or frozen Work Items;
 - held Work Items with exact reason;
 - uncovered, deferred, or route-back Changes;
 - current Planning epoch and superseded history.
 
-Selection opens an inspector with authoritative inputs, active Checks and `activatedBy` reasons, failed/indeterminate Results, coverage, evidence, recovery, and exact source/OKF impact. The full repository knowledge graph is not drawn by default. Only the current planning horizon and selected context neighborhood appear.
+Selection opens an inspector with authoritative inputs, active Checks and `activatedBy` reasons, failed/indeterminate Results, coverage, evidence, recovery, and exact source/OKF impact. The full Alignment Graph is not drawn by default. Only current Planning horizon and selected context neighborhood appear, with coverage, staleness, and per-fact provenance.
 
 ## Work / Implementation
 
@@ -97,9 +97,9 @@ Implementation is an execution cockpit organized around Sprints, Work Items, Ass
 
 It shows:
 
-- queued, ready, claimed, running, waiting, blocked, integrating, accepted, and terminal work;
+- queued, ready, Work Item Claim active, running, waiting, blocked, integrating, accepted, and terminal work;
 - concurrent worker lanes and current bounded activity;
-- worker session, model, worktree/container, source base, claim, and freshness;
+- worker session, model, worktree/container, source base, Work Item Claim, and freshness;
 - path or integration conflicts that hold work;
 - isolated candidate output versus integrated product state;
 - exact Evidence Records, Checks, Results, preview media, content proof, and unmet acceptance requirements;
@@ -205,7 +205,7 @@ Trust remains calibrated. UI exposes authoritative basis, exact candidate, activ
 ## Success signals
 
 - Backlog accepts new proposals while Planning and workers continue.
-- Planning reveals one coherent cross-Change graph and ready parallel frontier.
+- Planning reveals one coherent cross-Change subgraph and safe execution frontier.
 - Implementation clearly separates queued, isolated, integrated, accepted, and published state.
 - Several Pi clients and dashboard views share one project runtime without competing owners.
 - Canonical Product/System/Design files are rendered and edited without duplicate state.

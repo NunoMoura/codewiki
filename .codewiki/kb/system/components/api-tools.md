@@ -7,7 +7,7 @@ tags:
   - system
   - api
   - tools
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: pi-tools
 codewiki_components:
   - pi-tools
@@ -50,7 +50,7 @@ Rules:
 
 - read operations use bounded selectors and report coverage/truncation/staleness;
 - write/effect operations distinguish preview from explicit apply/append;
-- Runtime holds exact trace bytes/sequence, generation, snapshot, candidate identity, CAS, canonical actor/time, and idempotency;
+- Runtime holds exact operation bytes/parents, remote state head, project snapshot, Candidate identity, authority/time, expected-head CAS, and idempotency;
 - client inputs contain only intent, evidence material, authority, or control facts they legitimately own; Runtime alone creates canonical Evidence Records;
 - mutation endpoints are sequential/idempotent and fail closed on stale state;
 - no mega-tool, user-authored Loop DSL, arbitrary shell, arbitrary model prompt, or generic graph mutation endpoint;
@@ -87,7 +87,7 @@ Runtime-created Pi semantic sessions receive:
 - read-only repository/query tools;
 - one closed role-specific candidate or Model Check submission tool.
 
-They do not receive trace append, source mutation, worker launch, config mutation, archive, Integration, publication, arbitrary shell, or unrelated semantic schemas.
+They do not receive canonical append, source mutation, worker launch, config mutation, archive, Integration, publication, arbitrary shell, or unrelated semantic schemas.
 
 Exact submission schemas include `DecisionCandidateSubmission`, `PlanningCandidateSubmission`, `ImplementationCandidateSubmission`, and `ModelCheckOutput`. Broad `Record<string, unknown>` and broad `Omit<RunWiki*Input, ...>` submissions are forbidden.
 
@@ -97,13 +97,13 @@ Runtime adds candidate/Result identity, snapshots, actor/time, policy, threshold
 
 Assignment execution uses separate harness-neutral worker adapter, not read-only semantic-session tool set. Worker receives one exact private Workbench and may mutate only assigned source/workspace through allowed capabilities. It returns immutable Worker Report.
 
-Worker cannot call semantic append, widen scope, alter Checks, select tier, integrate, publish, or mark acceptance. Runtime correlates Report with Claim/Assignment/Workbench/base before constructing Implementation candidate.
+Worker cannot call semantic append, widen scope, alter Checks, select tier, integrate, publish, or mark acceptance. Runtime correlates Report with Work Item Claim, Assignment, Worker Workbench, and source base, then performs guarded Integration before constructing the exact integrated Implementation Candidate.
 
 ## Project relationship queries
 
 Agents use typed bounded operations, not arbitrary Cypher or generic graph DSL. Query classes include:
 
-- blockers, dependencies, overlap, Claims, and Integration state;
+- blockers, dependencies, overlap, Change Claims, Work Item Claims, and Integration state;
 - Knowledge constraints and source/test realization;
 - reverse trace from source to accepted intent;
 - suspect/invalidation relationships;
@@ -114,11 +114,19 @@ Agents use typed bounded operations, not arbitrary Cypher or generic graph DSL. 
 Every result includes:
 
 ```ts
-{
-  snapshotDigest: string;
-  facts: StructuredFact[];
+interface AlignmentQueryFact {
+  fact: StructuredFact;
   provenanceRefs: string[];
-  authority: "canonical" | "derived" | "observed";
+  sourceProvenance:
+    | "canonical_binding"
+    | "observed_binding"
+    | "deterministic_analysis"
+    | "inferred_analysis";
+}
+
+interface AlignmentQueryResult {
+  snapshotDigest: string;
+  facts: AlignmentQueryFact[];
   coverage: "complete" | "partial" | "unknown";
   truncated: boolean;
   stale: boolean;
@@ -127,7 +135,7 @@ Every result includes:
 
 Runtime preloads mandatory context. Queries are supplemental and Assignment-scoped for workers. Model Checks read only pinned candidate evidence. Partial coverage never proves absence.
 
-Exact operation names and physical relationship index remain deferred. No canonical graph file/database may be introduced without measured need.
+Query families are closed and snapshot-bound. Physical graph/index representation remains deferred and disposable. No canonical graph file or database may be introduced without measured need.
 
 ## Current Pi compatibility tools
 
@@ -147,7 +155,7 @@ Compatibility tools preserve exact rejection of unsupported/runtime-owned fields
 
 `wiki_change` feedback intake may create or reinforce pending Change only. It rejects prompts, reasoning, credentials, private fields, unrestricted refs, and oversized content. It cannot approve, plan, implement, launch, publish, or advance.
 
-## Current facades and migration
+## Current facades and clean cut
 
 Current harness-neutral facades remain executable truth:
 
@@ -155,10 +163,10 @@ Current harness-neutral facades remain executable truth:
 - `buildWorkState()` derives current project state; `buildWikiState()` exposes bounded views.
 - `runWikiDecide()`, `runWikiPlan()`, and `runWikiImplement()` evaluate prepared inputs and preview/append legacy outputs.
 - exact Runtime reaction jobs own production selection, idempotency, recovery, and generation fencing.
-- `ImplementationWorkerDispatcher.reconcile()` derives ready Work Items, writes private Assignment packets, appends Claims, prepares worktrees, and schedules adapters.
+- `ImplementationWorkerDispatcher.reconcile()` currently derives ready Work Items, writes private Assignment packets, appends local Work Item ownership events, prepares worktrees, and schedules adapters.
 - `runWikiArchive()` and `runWikiConfig()` own retention/config compatibility behavior.
 
-Migration replaces broad candidate submission and preview/append reevaluation with exact immutable Candidate/Resolved Exit Policy/Check Result/Exit Report contracts. It also renames legacy state `quality` projections to Loop-exit projections and removes current-catalog historical reinterpretation.
+The clean cut replaces broad Candidate submission and preview/append reevaluation with exact immutable Candidate/Evidence/Resolved Exit Policy/Check Result/Exit Report contracts. It also replaces legacy state `quality` projections, local Trace mutation, and current-catalog historical reinterpretation.
 
 ## Runtime backend
 
@@ -167,8 +175,8 @@ Runtime backend, unavailable as normal model tool, owns:
 - eligible-job selection and typed lanes;
 - candidate/Check/Result/Report identity;
 - Check activation/thresholds/scheduling/caching/cancellation;
-- Claims, Workbenches, Assignments, Worker Reports, and Integration;
-- exact append, multi-trace recovery, merge/push/publication/release;
+- Change Claims, Work Item Claims, Worker Workbenches, Assignments, Worker Reports, and Integration;
+- expected-head state append, atomic Planning epochs, merge/push/publication/release;
 - retention and cleanup.
 
 Authenticated local service exposes generation-scoped state/event polling and bounded trigger/authority/control requests. Event gaps require canonical snapshot refresh. Event payloads never become truth.
@@ -190,9 +198,9 @@ Standalone CLI eventually exposes equivalent lifecycle/client capabilities witho
 ## Rendering
 
 ```text
-guarded append/effect
-→ canonical trace/Knowledge/Git fact
-→ WorkState/relationship projection
+guarded expected-head append/effect
+→ accepted operation/Knowledge/Git fact
+→ deterministic WorkState/Alignment Graph projection
 → dashboard/TUI/CLI renderer
 ```
 
@@ -219,7 +227,7 @@ If weight/version coupling warrants, optional client/execution adapters may spli
 - Browser writes require same-origin/capability/idempotency/freshness validation.
 - No public unauthenticated proposal endpoint or public tunnel by default.
 - No client-supplied shell, prompt, path widening, model route, Check, threshold, or effect authority.
-- No credentials/prompts/reasoning/raw output in traces/events.
+- No credentials/prompts/reasoning/raw output in canonical Change operations.
 - Source repository carries no active CodeWiki extension, commands, tools, controller, Skills, or Change Traces.
 - Packed candidates run only in disposable external projects.
 

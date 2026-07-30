@@ -2,16 +2,15 @@ schema_version: 1
 id: spec.system.diagrams.context-map
 title: CodeWiki Context Map
 kind: context_map
-purpose: Show who operates and reviews CodeWiki work, primary and optional clients, Project Runtime authority, Pi/worker execution, repository truth, draft pull-request review, and guarded external boundaries.
+purpose: Show users, clients, Project Runtime authority, Pi and worker execution, provider-neutral Git synchronization, repository authorities, review projection, archive, and guarded delivery boundaries.
 source_docs:
   - .codewiki/kb/product/users/maintainers.md
   - .codewiki/kb/product/users/agents.md
   - .codewiki/kb/product/overview.md
   - .codewiki/kb/system/components/runtime.md
-  - .codewiki/kb/system/components/codewiki-os.md
-  - .codewiki/kb/system/components/loop-exit.md
-  - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/extension.md
+  - .codewiki/kb/system/components/traces.md
+  - .codewiki/kb/system/flows/remote-state-synchronization.md
 renderer:
   preferred: graph
   fallback: mermaid_flowchart
@@ -25,10 +24,10 @@ actors:
   - id: adapter_author
     label: Client / worker adapter author
     source: .codewiki/kb/product/users/package-authors.md
-  - id: team_reviewer
+  - id: reviewer
     label: Intent / Product / Design / code / security reviewer
     source: .codewiki/kb/system/components/evidence.md
-  - id: future_external_user
+  - id: external_user
     label: Future external user
     source: .codewiki/kb/product/users/external-users.md
 systems:
@@ -50,36 +49,37 @@ systems:
     source: .codewiki/kb/system/components/adapters-and-ui.md
   - id: project_runtime
     label: CodeWiki Project Runtime
-    boundary: codewiki
+    boundary: codewiki_authority
     source: .codewiki/kb/system/components/runtime.md
   - id: pi_runtime
     label: Pi providers / auth / sessions / compaction / tools / Skills
     boundary: host_execution
     source: .codewiki/kb/system/components/codewiki-os.md
-  - id: pi_sdk_sessions
-    label: Candidate producer and Model Check sessions
+  - id: semantic_sessions
+    label: Independent Candidate and Model Check sessions
     boundary: codewiki_execution
     source: .codewiki/kb/system/components/session-coordination.md
-  - id: isolated_workers
-    label: Process / OCI implementation workers
+  - id: workers
+    label: Isolated process / OCI workers
     boundary: execution_sandbox
     source: .codewiki/kb/system/components/session-coordination.md
   - id: repository
-    label: Knowledge / Change Traces / source / tests / Git
-    boundary: repository
+    label: Knowledge / source / tests / protected Git
+    boundary: repository_authorities
     source: .codewiki/kb/system/components/knowledge.md
+  - id: git_state_remote
+    label: Git remote codewiki/state + codewiki/archive
+    boundary: synchronization_carrier
+    source: .codewiki/kb/system/components/traces.md
   - id: model_providers
     label: Configured model providers
     boundary: external
-  - id: git_remote
-    label: Git remotes
-    boundary: external
-  - id: pull_request
-    label: Optional draft pull-request review surface
+  - id: review_surface
+    label: Optional isolated review ref / draft pull request
     boundary: external_mutable_projection
     source: .codewiki/kb/system/components/evidence.md
   - id: delivery_targets
-    label: Publication / release / deployment / observations
+    label: Publication / release / deployment / outcome providers
     boundary: external
 relationships:
   - from: maintainer
@@ -92,18 +92,18 @@ relationships:
     to: pi_client
     label: discusses intent and supervision
   - from: agent
-    to: pi_client
-    label: proposes and inspects through bounded capabilities
-  - from: agent
     to: cli
     label: uses bounded automation contract
+  - from: agent
+    to: pi_client
+    label: proposes and inspects
   - from: adapter_author
     to: future_adapter
     label: implements compatible boundary
-  - from: team_reviewer
-    to: pull_request
-    label: reviews exact Validation Bundle and submits approval or requested changes
-  - from: future_external_user
+  - from: reviewer
+    to: review_surface
+    label: reviews exact Validation Bundle
+  - from: external_user
     to: dashboard
     label: inspects supported project state
   - from: cli
@@ -111,7 +111,7 @@ relationships:
     label: authenticated bounded requests
   - from: dashboard
     to: project_runtime
-    label: guarded local requests and state stream
+    label: guarded requests and state stream
   - from: pi_client
     to: project_runtime
     label: intent / authority / supervision / reads
@@ -120,36 +120,36 @@ relationships:
     label: typed client or Assignment protocol
   - from: project_runtime
     to: pi_runtime
-    label: binds CodeWiki OS, Loop Protocol, route, policy, and Workbench scope
+    label: binds protocols, routes, policy, and scope
   - from: pi_runtime
-    to: pi_sdk_sessions
+    to: semantic_sessions
     label: creates independent bounded sessions
   - from: project_runtime
-    to: isolated_workers
-    label: activates claimed private Workbenches
+    to: workers
+    label: dispatches exact Work Item Claim and Assignment
   - from: project_runtime
     to: repository
-    label: reads authority and performs guarded writes
+    label: reads authorities and performs guarded effects
+  - from: project_runtime
+    to: git_state_remote
+    label: fetches, verifies, and expected-head pushes accepted state
   - from: pi_runtime
     to: model_providers
     label: owns provider authentication and invocation
-  - from: isolated_workers
+  - from: workers
     to: repository
-    label: changes scoped isolated working state only
+    label: mutates scoped isolated working state only
   - from: project_runtime
-    to: pull_request
-    label: guarded isolated review publication and provider-event re-observation
-  - from: pull_request
+    to: review_surface
+    label: guarded review projection and re-observation
+  - from: review_surface
     to: project_runtime
-    label: untrusted review event materialized only after exact correlation
-  - from: project_runtime
-    to: git_remote
-    label: ordinary post-exit push under separate authority
+    label: untrusted event material until exact correlation
   - from: project_runtime
     to: delivery_targets
-    label: performs separately authorized exact effects
+    label: separately authorized exact effects
 ui_hints:
-  default_scope: codewiki_boundary
+  default_scope: codewiki_authority
   inspector_fields:
     - source
     - boundary

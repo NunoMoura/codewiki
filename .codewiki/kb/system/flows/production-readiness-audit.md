@@ -1,114 +1,193 @@
 ---
 type: Concept
 title: Production Readiness Audit
-description: CodeWiki remains private pre-production software; release requires clean Loop-exit migration, exact authority/identity, OKF v0.2, external Pi/provider/OCI proof, and separately approved publication.
+description: CodeWiki remains private pre-production software; release requires Change Trace Protocol v1, Git-synchronized coordination, native exact Loop exit, deterministic Alignment Graph projection, archive/learning safety, and external proof.
 tags:
   - codewiki
   - system
   - production
   - readiness
   - audit
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Production Readiness Audit
 
-Status: **not production-ready**. Package readiness is evaluated through source/tests and packed installs in disposable external projects. Source repository does not register, install, or load CodeWiki.
+Status: **not production-ready**.
 
-## Proven foundations
+This repository does not register, install, load, or dogfood CodeWiki. Package behavior is tested through packed installs in disposable external projects with isolated Pi settings.
+
+## Current green foundation
+
+Latest synchronized checkpoint before this architecture cut:
+
+```text
+f7b01fa feat: transport decision claim checks through pi
+836 tests across 137 suites
+836 passed, 0 failed
+```
 
 Current executable source/tests cover:
 
-- append-only Change Traces, guarded expected-byte/sequence writes, and WorkState projections;
-- Decision, global Planning, Work Items, Claims, Assignments, isolated workers, Worker Reports, semantic acceptance, and guarded Integration;
-- elected coordinator generation, authentication, fencing, leased clients, scheduling lanes, recovery, draining, cancellation for foreground process workers, and private runtime artifacts;
-- opt-in OCI adapter contract with digest-pinned/preinstalled image, strict mounts/resources/capabilities/network bounds, and pre-Claim availability probe;
-- separately guarded local branch merge, remote push, product publication, and release with exact predecessor proof, authority, CAS/idempotency, and post-operation observation;
-- packed external install, RPC, mutation, lifecycle, failure, dashboard, coordinator, Pi SDK, and project-local package smokes;
-- source-checkout non-dogfood boundary and repo-local Pi-Lens-only configuration;
-- private package metadata preventing accidental npm publication.
+- local append-only Change history and WorkState projections;
+- Decision, Planning, Work Items, local Work Item ownership, Assignments, workers, Worker Reports, Integration, and guarded effects;
+- detached local coordinator generation, authentication, fencing, leased clients, lanes, recovery, draining, and foreground cancellation;
+- opt-in OCI adapter contract with strict image/mount/resource/capability/network controls;
+- guarded branch merge, push, product publication, and release contracts;
+- immutable Candidate/Check/Result/Exit Report foundation and closed Evidence Records/obligations;
+- Decision research citation/provenance and isolated claim-support Model Check transport;
+- packed install, RPC, mutation, lifecycle, failure, dashboard, coordinator, and Pi SDK smokes;
+- source-checkout non-dogfood boundary and private package metadata.
 
-These proofs establish local contract behavior under tests. They do not establish semantic perfection, real provider/auth operation, real OCI execution, remote policy enforcement, deployment, or user outcomes.
+These prove bounded local contracts under tests. They do not prove distributed coordination, real provider/auth execution, real OCI execution, production delivery, or user outcomes.
 
 ## Ratified target not yet implemented
 
-Documentation defines target architecture:
+```text
+typed Change operations
+→ accepted Git-backed history
+→ deterministic WorkState
+→ rolling global Planning
+→ first-class Alignment Graph
+→ local views and bounded agent queries
+```
+
+Exact Loop exit:
 
 ```text
 Change
 → Loop
 → Candidate
+→ Evidence Records
 → Resolved Exit Policy
-→ Code Checks + Model Checks
+→ Checks
 → Check Results
 → Exit Report
-→ Runtime route
+→ Runtime Route
 ```
 
-Current source still contains legacy checking, graph, judge, review-pack, broad candidate, trace, and view contracts. They are migration state, not target authority.
+Required architecture cuts:
 
-Required clean cuts:
+1. exact Change Trace Protocol v1 schemas and canonical fixtures;
+2. pure deterministic reducer and versioned Alignment Graph projector;
+3. full/incremental replay equivalence and adversarial/property tests;
+4. two-clone provider-neutral Git expected-head CAS experiment;
+5. read-only remote synchronization and `fresh | stale | offline`;
+6. distributed Change Claims and Work Item Claims with explicit release/authenticated takeover;
+7. rolling atomic Planning epochs that preserve safe active Assignments;
+8. native Decision, Planning, and Implementation Candidate/Evidence/Policy/Check/Result/Report paths;
+9. exact final integrated-tree assurance and UI approval binding;
+10. immutable archive, hydration, reopening, and bounded repair retrieval;
+11. deletion of legacy Trace, Quality, compatibility, and source-checkout dogfood machinery.
 
-1. move shared foundation to `src/loop-exit/**` without old-path re-exports;
-2. add validated exact Candidate/Check/Result/Policy/Report identity;
-3. remove caller/candidate control of authority, actor/time, snapshots, activation, thresholds, proof scope, aggregate proof, and Runtime identity;
-4. implement bounded cancellation-aware Code/Model Check fan-out, required-result fan-in, exact caching, and immutable Reports;
-5. cut Decision, Planning, and Implementation individually;
-6. persist policy/Report history instead of interpreting old attempts through current catalog;
-7. remove obsolete legacy machinery/config/exports/tests;
-8. migrate Knowledge production/consumption to OKF v0.2 with v0.1 fallback and software-alignment extensions;
-9. add bounded Work/Alignment/Learning query views;
-10. validate passive Repair Episode projection before any learning-context injection;
-11. add local user-reviewed Feedback Bundle generation.
+Exact order lives in `REFACTORING_PLAN.md` and [Clean-Cut Audit](clean-cut-audit.md).
 
-Exact order and deletion map live in `REFACTORING_PLAN.md`.
-
-## Blocking authority and correctness defects
+## Blocking correctness requirements
 
 Production remains blocked until tests prove:
 
-- role-specific candidate schemas reject all runtime-owned fields;
-- runtime alone creates candidate, Result, Report, job, actor/time, generation, and route identity;
-- candidate-supplied aggregate proof can never override observed proof;
-- missing required review/evidence cannot silently produce no issue;
-- built-in/kernel Check registration is internal and project/caller cannot claim protected authority;
-- Check constructors reject unknown Loop, mismatched execution kind, blank requirement/repair target, invalid cost/timeout/bounds, and fabricated Planning minimums;
-- Loop-qualified Check identity prevents duplicate global ids from inheriting the wrong requirement or repair target;
-- Planning-specific UI preview validation activates when required;
-- release/effect Checks activate only from relevant accepted traits/effects;
-- independent Checks continue after unrelated failure;
-- preview/append use same immutable candidate/Report;
-- multi-trace Planning crash recovery completes before Claims;
-- stale/global cached evidence cannot authorize reuse;
-- exact rejection behavior at public authority boundaries remains stable where required.
+- strict canonical serialization and SHA-256 identity;
+- unknown required versions and missing parents block dependent progression;
+- unauthorized operations cannot affect WorkState or Alignment Graph;
+- stale expected-head push causes fetch/replay/semantic reevaluation, never blind retry;
+- independent Change operations converge across two clones;
+- Change Claim and Work Item Claim races select at most one accepted owner;
+- client and Git timestamps cannot grant ownership or progression;
+- multi-Change Planning epoch is accepted entirely or not at all;
+- new Planning preserves or explicitly dispositions active Assignments;
+- role-specific Candidate schemas reject Runtime-owned fields;
+- Runtime alone creates operation, Candidate, Evidence, Result, Report, policy, job, actor/time, snapshot, and route identity;
+- every considered Evidence identity remains bound into Results;
+- missing/stale/partial/unavailable/contradictory required Evidence yields repair/wait/`indeterminate`;
+- independent Checks continue when useful after unrelated failure;
+- exact cache identity includes Candidate, policy, Check implementation/model/config, Evidence, and freshness;
+- final Implementation assurance evaluates exact integrated content;
+- review/approval binds exact Candidate/tree/head/preview/media/bundle identity;
+- archive cannot lose canonical operations across crash/retry;
+- full replay equals incremental WorkState and Alignment Graph projection;
+- bounded queries preserve per-fact source provenance and partial coverage;
+- repair retrieval cannot weaken Checks, authority, or independent Model Check isolation.
 
 ## External blockers
 
 - Real Docker/Podman OCI execution is unproven on current host.
-- Real model/provider authentication and cancellation/cleanup proof remains required.
-- Current Pi peer range excludes active Pi `0.82.1`; packed compatibility must pass before widening.
-- Optional Pi SDK development dependency audit includes unresolved transitive vulnerabilities until upstream/fixed versions are available and validated.
+- Real model/provider authentication, cancellation, and cleanup proof remains required.
+- Active Pi is `0.82.1`; package peer range still excludes it (`>=0.80.10 <0.82.0`).
+- Optional Pi SDK dependency findings remain `brace-expansion@5.0.7` high severity and `protobufjs@7.6.4` moderate severity until fixed versions are validated.
 - Trusted worker image distribution is not defined.
-- Remote guarantees need protected branches, required status checks, commit-bound attestations, artifact provenance, and observations.
-- Generic deployment remains deferred until real hosted target exists.
-- Public npm publication, product release, or provider mutation requires separate maintainer approval.
+- Automatic distributed ownership expiry is blocked without trusted time.
+- Required pre-exit pull-request review is blocked until guarded publication/provider correlation is production-proven.
+- Generic deployment remains deferred until a concrete hosted target exists.
+- Public npm publication, product release, provider mutation, paid benchmark execution, and leaderboard submission require separate maintainer approval.
 
-## Learning and Lab gates
+## Benchmark gates
 
-No project-learning feature may ship merely because traces exist. Before advisory retrieval:
+### Primary stack
 
-- establish passive candidate-bound Repair Episode projection;
-- measure false passes, escaped regressions, false blocks, repair iterations, interventions, first useful feedback, authoritative-exit latency, tokens/cost, and first-pass Check success;
-- compare current feedback, raw history, scoped Repair Episodes, and issue-class-routed validated Repair Patterns;
-- use temporal/component holdouts and fixed Check identities;
-- prove no worsening of false passes or escaped regressions;
-- keep Model Checks isolated from producer repair context;
-- promote stable guidance only through accountable Change.
+```text
+SWE-bench Pro      long-horizon professional repository work
+FeatureBench       complex feature development
+SWE-bench Live     fresh multilingual generalization
+CodeWiki sealed    coordination, authority, recovery, graph value, learning
+```
 
-Feedback Bundles must be local, allowlisted, pseudonymized, previewed/redacted by user, and exported only under separate approval. Full traces and project content/identity remain excluded.
+Supporting tracks:
 
-## Release gates
+```text
+SWE-bench Verified   stable public compatibility
+SWE-Explore          repository exploration and Alignment Graph value
+SWE-Cycle            environment/implementation/test pilot
+SWE-Bench-CL         chronological learning methodology
+SWE-bench Multimodal later visual track
+```
 
-A release candidate requires:
+Competitive baselines:
+
+```text
+plain Pi
+OpenClaw
+OpenSpec or Spec Kit
+CodeWiki
+```
+
+Required ablations:
+
+```text
+without rolling cross-Change Planning
+without independent Checks
+without repair retrieval
+raw history instead of Repair Episodes
+Repair Episodes without held-out validation
+validated Repair Patterns
+without Alignment Graph queries
+```
+
+Use equal model/provider/version, tools, repository snapshot, visible tests, budgets, seeds, and evaluator conditions wherever possible. Report pass@1, false passes, escaped regressions, unauthorized effects, wall time, tokens, provider cost, repair iterations, and human interventions separately.
+
+Any false-pass or escaped-regression increase blocks promotion regardless of aggregate score.
+
+## Sealed CodeWiki fixture families
+
+- ambiguous or contradictory intent;
+- missing, stale, contradictory, partial, or unavailable Evidence;
+- Change B accepted while Change A executes;
+- overlapping source/Knowledge boundaries;
+- safe active-work preservation and explicit invalidation disposition;
+- two-machine Change Claim and Work Item Claim races;
+- independent concurrent Changes;
+- stale CAS and atomic Planning batches;
+- worker crash, cancellation, Integration conflict, and recovery;
+- notification loss/duplication/reordering and offline reconnect;
+- archive interruption, hydration, and reopening;
+- exact UI preview/review/approval;
+- unauthorized branch/publication/release/delivery attempt;
+- Knowledge/source drift in both directions;
+- useful Repair Episode transfer and harmful-history negative transfer;
+- helpful and misleading Alignment Graph query results;
+- delivery outcome contradicting earlier passing implementation Evidence.
+
+## Release validation
+
+A release candidate runs applicable repository gates:
 
 ```bash
 npm run typecheck
@@ -134,24 +213,25 @@ git diff --check
 
 Plus:
 
-- zero blocking LSP/pi-lens errors in changed source;
-- exact Loop-exit identity/authority fixtures;
-- OKF v0.2 upstream bundle fixture;
-- real provider/auth proof;
-- real OCI proof where OCI is claimed;
-- external dashboard/runtime lifecycle, recovery, cleanup, and guarded-effect proof;
-- competitive fixtures against plain Pi, OpenClaw where applicable, and at least one specification-driven system;
-- human review of package contents, security, privacy, latency, and authority;
+- zero blocking LSP/Pi-Lens diagnostics in changed files;
+- exact protocol/authority fixtures and replay equivalence;
+- OKF v0.2 Software Alignment Profile fixture;
+- real provider/auth and claimed OCI proof;
+- external dashboard/Runtime lifecycle, recovery, cleanup, and guarded-effect proof;
+- sealed CodeWiki-native suite;
+- approved external benchmark evidence;
+- human review of package contents, security, privacy, latency, cost, and authority;
 - explicit publication/release approval.
 
 ## Survival rule
 
-If benchmarks do not show materially lower drift, false acceptance, lost context, repeated repair, and Integration errors enough to offset latency and ceremony, CodeWiki should shrink into a thin Pi/OpenClaw extension rather than maintain separate Runtime.
+If benchmarks do not show materially lower drift, false acceptance, lost context, repeated repair, coordination failure, and Integration error enough to offset latency, cost, and ceremony, reduce CodeWiki to a thin Pi/OpenClaw extension.
 
 ## Related docs
 
 - [Product](../../product/overview.md)
-- [Loop Exit](../components/loop-exit.md)
+- [Clean-Cut Audit](clean-cut-audit.md)
+- [Change Traces](../components/traces.md)
 - [Runtime](../components/runtime.md)
 - [Lab](../components/lab.md)
 - [Package Boundary](../components/package.md)

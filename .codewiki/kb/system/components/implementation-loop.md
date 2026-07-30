@@ -1,13 +1,13 @@
 ---
 type: Concept
 title: Implementation Loop
-description: Implementation accepts realization only when one exact candidate binds planned obligations, source/tests, worker and Integration provenance, and complete required Check Results in an Exit Report.
+description: Implementation accepts realization only when one exact integrated Candidate binds planned obligations, source/tests, worker and Integration Evidence, required Check Results, and one Exit Report.
 tags:
   - codewiki
   - system
   - implementation
   - loop
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_components:
   - git
   - implementation
@@ -20,8 +20,7 @@ codewiki_test_patterns:
   - tests/runtime/worktrees.test.mjs
   - tests/helpers/implementation-change.mjs
 codewiki_trace_events:
-  - implementation.evidence_accepted
-  - implementation.evidence_rejected
+  - implementation.candidate_recorded
 codewiki_roles:
   - content_proof
   - semantic_loop
@@ -41,8 +40,7 @@ codewiki_source_map:
       - tests/implementation/**
       - tests/helpers/implementation-change.mjs
     trace_events:
-      - implementation.evidence_accepted
-      - implementation.evidence_rejected
+      - implementation.candidate_recorded
     role: semantic_loop
 ---
 # Implementation Loop
@@ -53,12 +51,15 @@ Workers perform Assignment attempts inside private Workbenches. They do not own 
 
 ```text
 planned obligation
-→ Assignment/worker Evidence Records or direct bounded realization
-→ exact source/test/Git candidate
+→ Assignment/worker material or direct bounded realization
+→ exact integrated source/test/Git Candidate
+→ Evidence Records
+→ Resolved Exit Policy
 → Implementation Checks and UI review when activated
+→ Check Results
 → Exit Report
-→ Runtime freshness/authority/CAS guard
-→ accepted realization or remediation append
+→ Runtime Route
+→ freshness/authority/expected-head acceptance
 ```
 
 ## Authority
@@ -75,7 +76,7 @@ Implementation owns semantic judgment over:
 - route-back questions to Planning or Decision;
 - outcome-observation disposition.
 
-Runtime owns Assignment/Claim/Workbench lifecycle, exact source/Git observations, candidate and Report identity, trusted evidence extraction, Check activation/thresholds, aggregate content/Integration proof, model routes, freshness, generation/CAS, append, and all effects.
+Runtime owns Work Item Claim, Assignment, Worker Workbench lifecycle, exact source/Git observations, Candidate and Report identity, trusted Evidence extraction, Check activation/thresholds, aggregate content/Integration proof, model routes, freshness, expected-head CAS, append, and all effects.
 
 Implementation does not own new Change meaning, alter accepted Knowledge semantics, redesign Work Items, choose authority, mutate assurance policy, merge/push/publish/release, or treat views/tool output as truth.
 
@@ -94,16 +95,16 @@ Implementation input binds:
 
 - owning approved Change and current realization state;
 - exact accepted Work Items and acceptance requirements;
-- Sprint, dependency, Assignment, Claim, Workbench, and Integration projections;
+- Sprint, dependency, Work Item Claim, Assignment, Worker Workbench, and Integration projections;
 - immutable Worker Reports and provenance;
 - current source/test/Git tree and runtime-built content proof;
-- source ownership and frozen Planning Check minimums;
+- source ownership and Runtime-derived Planning Check minimums from canonical Planning evidence;
 - relevant WorkState/relationship snapshot;
 - prior candidate/Result/repair refs;
 - trigger and route-back context;
 - exact Loop Protocol, route, and configuration identities.
 
-Runtime selects Change/Work Items, verifies correlation, loads canonical Planning/ownership/Git facts, and derives candidate identity and guards. Callers cannot replace trace id, Change ids, Planning events, Assignment identity, source map, sequence, parent, bytes, time, snapshot/proof scope, aggregate proof, evidence policy, or Check activation.
+Runtime selects Change/Work Items, verifies correlation, loads canonical Planning/ownership/Git facts, and derives candidate identity and guards. Callers cannot replace trace id, Change ids, Planning operations, Assignment identity, source map, sequence, parent, bytes, time, snapshot/proof scope, aggregate proof, evidence policy, or Check activation.
 
 ## Candidate
 
@@ -144,7 +145,7 @@ Private logs, prompts, reasoning, raw output, unrestricted diffs, and Workbench 
 
 ## Cross-Change realization
 
-Every Work Item has one owning Change; its canonical realization event belongs to that Change Trace. Explicit `contributingChangeIds` and evidence refs allow other Change views to resolve coverage without duplicating authority.
+Every Work Item has one owning Change; its canonical realization operation belongs to that Change Trace. Explicit `contributingChangeIds` and evidence refs allow other Change views to resolve coverage without duplicating authority.
 
 A shared evidence artifact may be referenced by several Changes. Each owning Change still gets its own candidate-bound exit decision against approved outcomes and requirements.
 
@@ -157,7 +158,7 @@ A shared evidence artifact may be referenced by several Changes. Each owning Cha
 | Scope control | Changed paths/base stay inside accepted ownership and Assignment scope. |
 | Acceptance evidence | Every acceptance requirement maps to structured evidence. |
 | Verification | Required scoped and integrated checks are complete and passing. |
-| Worker correlation | Evidence binds exact Claim, Assignment, Workbench, worker, plan, and base. |
+| Worker correlation | Evidence binds exact Work Item Claim, Assignment, Worker Workbench, worker, Planning epoch, and base. |
 | Integration conflict | No unresolved base/path/ownership/semantic conflict remains. |
 | Content proof | Runtime-observed local and aggregate tree proof exists where required. |
 | Source ownership | Source/test changes match stable ownership boundaries. |
@@ -168,7 +169,7 @@ A shared evidence artifact may be referenced by several Changes. Each owning Cha
 
 Adaptive activation may add Checks for TDD, security/privacy, accessibility/UI preview, dependency risk, compatibility/migration, performance, packaging, publication readiness, or other accepted traits/effects. Small diffs never imply low risk.
 
-Actual candidate effects may add required Checks but cannot silently remove frozen Planning minimums. Every active Check records `activatedBy`.
+Actual Candidate effects may add required Checks but cannot silently remove Runtime-derived Planning minimums. Every active Check records `activatedBy`.
 
 Tool output is evidence material only. Pi-Lens, LSP, compiler, linter, browser, AST, test, and Skill output becomes an Evidence Record only after Runtime validates a closed kind-specific contract; it becomes authoritative for exit only when an approved Check consumes it under exact implementation/configuration identity. Pi-Lens is not an authoritative Check adapter in v1.
 
@@ -189,11 +190,11 @@ When pull-request approval is required before exit, Runtime may perform an expli
 ## Repair cycle
 
 ```text
-agent/worker builds candidate
-→ Checks evaluate immutable candidate
+producer builds Candidate from direct realization or Runtime-integrated Worker Report material
+→ Checks evaluate immutable Candidate
 → Exit Report identifies failed/indeterminate Checks and repair targets
 → agent uses scoped tests/Pi-Lens/browser/AST/tools/Skills
-→ agent repairs within Assignment/Loop authority
+→ producer or assigned worker repairs within bounded authority
 → Runtime creates new candidate identity
 → Checks reevaluate exact new candidate
 ```
@@ -214,24 +215,25 @@ Runtime route is separate:
 - Decision owns behavior, Knowledge meaning, outcome, material risk, compatibility, or approval changes.
 - Runtime owns provider/environment/capability/recovery failures.
 
-A passing Exit Report permits semantic realization append only. Integration, merge, push, publication, release, and deployment remain separate guarded effects with exact authority.
+A passing Exit Report permits semantic realization append only. It does not authorize a new Integration attempt, source-branch merge, push, publication, release, or deployment. Runtime performs the isolated guarded Integration used by the exact Candidate before final assurance; later branch and delivery effects remain separate.
 
 ## Runtime and workers
 
 ```text
 accepted Planning Work Item
-→ Runtime tier/Workbench/Claim
+→ Runtime tier/Worker Workbench/Work Item Claim
 → isolated Assignment attempt
 → immutable Worker Report
-→ Implementation candidate
+→ guarded Integration and exact integrated-tree proof
+→ exact integrated Implementation Candidate
 → Resolved Exit Policy and Results
 → Exit Report
 → accepted trace fact or remediation
 ```
 
-Workers share no peer/private memory. Completion never implies acceptance. Claims remain owned by Work Item's Change. Release/cancellation/expiry remain operational coordination facts.
+Workers share no peer/private memory. Completion never implies acceptance. Work Item Claim remains bound to the Work Item's owning Change and exact Assignment. Release and authenticated takeover are canonical coordination facts; automatic expiry is deferred without trusted time.
 
-Planning-approved Integration workspaces combine accepted worker output. Dashboard/preview must distinguish integrated visible Changes, isolated output, pending merge, and conflict. Conceptual association cannot make isolated files one product state.
+Before final Implementation assurance, Planning-approved Integration workspaces combine accepted worker output and bind exact proof to the Candidate. Dashboard/preview must distinguish integrated visible Changes, isolated output, pending merge, and conflict. Conceptual association cannot make isolated files one product state.
 
 ## Repository and proof
 
@@ -254,26 +256,22 @@ Later outcome evidence may update the same Change dossier. A materially differen
 
 Attested Computation may later bind sanctioned production measurements, but only closed digest-pinned executors/attesters may run. Imported OKF definitions grant no execution or acceptance authority.
 
-## Trace target
+## Operation target
 
-```json
-{
-  "event": "evidence_accepted",
-  "loop": "implementation",
-  "data": {
-    "iteration": 4,
-    "candidate": { "id": "candidate:...", "digest": "sha256:..." },
-    "resolvedExitPolicy": { "digest": "sha256:..." },
-    "exitReport": { "id": "report:...", "status": "pass" },
-    "route": { "kind": "advance" },
-    "outcomeDisposition": {},
-    "progress": {}
-  },
-  "refs": []
-}
+One Implementation attempt records distinct immutable operations:
+
+```text
+loop.attempt_started
+implementation.candidate_recorded
+evidence.recorded
+loop.exit_policy_recorded
+check.result_recorded
+loop.exit_report_recorded
+runtime.route_recorded
+loop.attempt_ended
 ```
 
-Current event payloads still include legacy `qualityGraph`, `qualityStandards`, and `qualityDiagnostics`; current retention compatibility also recognizes `archive_disposition_ready` and `retain_hot`. Clean Implementation/trace cuts replace legacy exit fields with persisted candidate/policy/Result/Report identities while preserving explicit retention disposition through its owning contract.
+Integration and later effects use their own operation kinds and authority. Current event payloads still include legacy `qualityGraph`, `qualityStandards`, and `qualityDiagnostics`; retention compatibility also recognizes `archive_disposition_ready` and `retain_hot`. Clean Implementation/Trace cuts delete those legacy fields and persist exact native identities.
 
 ## Related docs
 

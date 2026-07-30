@@ -1,55 +1,62 @@
 ---
 type: Concept
 title: Change Lifecycle
-description: One Change carries accountable intent through Decision, global Planning, Implementation, Integration, Git/delivery boundaries, and outcome disposition while every discrepancy remains resolved, Change-accounted, or safely unknown.
+description: One Change carries accountable intent through immutable typed operations, exact Loop exits, rolling Planning, Implementation, Integration, delivery, outcomes, archive, and optional reopening.
 tags:
   - codewiki
   - system
   - change
   - lifecycle
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Change Lifecycle
 
-A Change begins when intent is explicitly persisted. One append-only Change Trace preserves complete dossier while Project Runtime owns portfolio progression.
+A Change begins when Runtime accepts explicit intent. Its complete logical Trace is immutable typed operation history; Runtime owns project-wide scheduling and progression.
 
 ```text
-intent
-→ Decision attempts and exact disposition
-→ global Planning coverage
-→ Work Items and Assignments
-→ Implementation attempts and realization
-→ Integration and exact Git proof
-→ optional delivery effects
-→ outcome disposition
-→ retention
+intent and revisions
+→ Decision Candidates and exact disposition
+→ rolling Planning epochs and Work Items
+→ Work Item Claims, Assignments, and Worker Reports
+→ guarded Integration and exact integrated-tree proof
+→ Implementation Candidates and realization
+→ optional separately authorized Git/delivery effects
+→ outcome observation
+→ terminal closure and archive
+→ optional hydration and reopening
 ```
 
 ## Flow
 
-1. Runtime persists bounded intent and creates one Change Trace.
-2. Decision produces immutable candidate; candidate-specific Checks fan into Exit Report.
-3. Runtime validates authority/freshness/generation/CAS and appends exact approval or terminal disposition.
-4. Global Planning observes bounded approved portfolio and produces coherent Sprints, worker-ready Work Items, dependencies, verification, Integration, and Workbench requirements.
-5. Planning Checks/Report pass; Runtime appends deterministic multi-trace epoch and repairs any partial crash before Claims.
-6. Runtime provisions private Workbenches, appends Claims, and starts compatible isolated Assignments under exact capacity/budget/isolation.
-7. Worker Reports supply candidate evidence only. Implementation constructs exact realization candidate over source/tests/Knowledge/Git/Integration facts.
-8. Implementation Checks/Report pass; Runtime appends exact realization after final guards.
-9. Separately authorized Integration, local merge, remote push, publication, release, and future deployment/observation boundaries may progress one exact proof at a time.
-10. Change records outcome observed, scheduled, not externally observable, deferred, not realized/abandoned, or indeterminate.
-11. WorkState and Work/Alignment/Learning views rebuild from canonical sources.
-12. Retention may close, compact, hydrate, or restore after no live dependency remains and Git restore refs preserve history.
+1. Runtime admits intent against exact project base/authority and accepts `trace.opened` plus `change.proposed` through `codewiki/state` expected-head CAS.
+2. Decision produces one immutable Candidate against exact Evidence Records.
+3. Runtime resolves Exit Policy, executes Checks, records Results/Exit Report, revalidates authority/freshness, and records Runtime Route.
+4. A passing authorized Decision disposition makes the exact Change revision eligible for rolling Planning; failed/indeterminate attempts remain durable.
+5. Planning observes the selected Change set, active Change Claims, active Work Item Claims, active work, dependencies, conflicts, and fresh project snapshot.
+6. Passing Planning accepts one immutable `PlanningEpochRecord` and atomic `planning.epoch_bound` operations for all participants.
+7. Runtime provisions exact private Worker Workbenches, acquires Work Item Claims, and dispatches compatible isolated Assignments.
+8. Worker Reports supply asserted producer material. Runtime integrates accepted output in an isolated workspace, materializes valid Evidence, and builds the exact Implementation Candidate over integrated source/tests/Knowledge/Git facts.
+9. If policy requires pre-exit review, Runtime may publish only an authorized isolated review projection after non-approval readiness Checks pass, then re-observe exact approval Evidence.
+10. Implementation follows Candidate → Evidence Records → Resolved Exit Policy → Checks → Check Results → Exit Report → Runtime Route against that exact integrated tree.
+11. Runtime atomically accepts the exact Integration result, final assurance records, route, and ownership disposition through expected-head CAS.
+12. Local branch merge, remote push, publication, release, delivery, and outcome observation progress only under separate authority and proof.
+13. `trace.closed` records terminal closure only after configured Integration, ownership, review/effect, and outcome obligations complete.
+14. Runtime pushes immutable archive, fetches/verifies digest, then removes hot state copy.
+15. Historical inspection hydrates read-only cache. Authorized reopening creates a new hot segment with `trace.reopened` referencing archived closure.
 
-Failed and indeterminate attempts persist compact candidate/Result/repair lineage. Full private material does not. Runtime route remains separate from Exit Report status.
+Local work remains provisional until accepted on `codewiki/state`. A stale push requires fetch, replay, and semantic reevaluation.
 
-Knowledge may intentionally lead source/delivery while exact active Change accounts for transition. Unaccounted divergence is drift; missing coverage is explicit unknown and blocks unsafe progression.
+Failed, indeterminate, stale, excluded, contradictory, withdrawn, superseded, and abandoned history remains visible. Raw private work does not become canonical by default.
 
-Chat history is continuity only. Pi native compaction may compress chat; CodeWiki Change Trace replays semantic project state, not private cognition.
+Knowledge may intentionally lead source/delivery while exact active Changes account for the transition. Unaccounted divergence is drift; unknown required coverage blocks unsafe progression.
+
+Pi owns chat/session compaction. CodeWiki resumes semantic work from accepted operations and current WorkState, not private cognition.
 
 ## Related docs
 
 - [Alignment Model](../components/alignment-model.md)
 - [Loop Model](../components/loop-model.md)
 - [Loop Exit](../components/loop-exit.md)
-- [Traces](../components/traces.md)
+- [Change Traces](../components/traces.md)
 - [Runtime](../components/runtime.md)
+- [Remote State Synchronization](remote-state-synchronization.md)

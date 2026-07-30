@@ -1,12 +1,12 @@
 ---
 type: Concept
 title: Runtime
-description: Runtime is CodeWiki's project-scoped control plane. Project Runtime derives WorkState, schedules compatible work, owns exact identities and lifecycles, executes Loop exit, guards canonical writes and effects, and quiesces safely.
+description: Runtime is CodeWiki's project-scoped authority and control plane for exact identity, admission, Git-synchronized state, WorkState, rolling Planning, bounded execution, Loop exit, Integration, recovery, archive, and guarded effects.
 tags:
   - codewiki
   - system
   - runtime
-timestamp: 2026-07-29T21:24:38.000Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_components:
   - error_handling
   - runtime
@@ -17,23 +17,26 @@ codewiki_test_patterns:
   - tests/runtime/**
   - tests/helpers/runtime-implementation.mjs
 codewiki_trace_events:
-  - runtime.work_unit.claimed
-  - runtime.work_unit.claim.released
-  - runtime.work_unit.claim.expired
-  - runtime.work_unit.claim.cancelled
-  - runtime.integration.proven
-  - runtime.project_branch.merged
-  - runtime.project_branch.pushed
-  - runtime.product.published
-  - runtime.product.released
-  - runtime.host.started
-  - runtime.host.observed
-  - runtime.host.blocked
-  - runtime.host.completed
-  - runtime.host.stopped
+  - change_claim.acquired
+  - change_claim.released
+  - change_claim.takeover_recorded
+  - work_item_claim.acquired
+  - work_item_claim.released
+  - work_item_claim.takeover_recorded
+  - assignment.dispatched
+  - assignment.cancel_requested
+  - assignment.terminal_recorded
+  - integration.attempt_started
+  - integration.result_recorded
+  - source.branch_merge_recorded
+  - source.branch_push_recorded
+  - product.publication_recorded
+  - product.release_recorded
+  - delivery.observation_recorded
+  - outcome.observation_recorded
 codewiki_roles:
   - shared_error_contracts
-  - outer_loop_coordination
+  - project_control_plane
 codewiki_source_map:
   - id: error_handling
     source_patterns:
@@ -48,353 +51,301 @@ codewiki_source_map:
       - tests/runtime/**
       - tests/helpers/runtime-implementation.mjs
     trace_events:
-      - runtime.work_unit.claimed
-      - runtime.work_unit.claim.released
-      - runtime.work_unit.claim.expired
-      - runtime.work_unit.claim.cancelled
-      - runtime.integration.proven
-      - runtime.project_branch.merged
-      - runtime.project_branch.pushed
-      - runtime.product.published
-      - runtime.product.released
-      - runtime.host.started
-      - runtime.host.observed
-      - runtime.host.blocked
-      - runtime.host.completed
-      - runtime.host.stopped
-    role: outer_loop_coordination
+      - change_claim.acquired
+      - change_claim.released
+      - change_claim.takeover_recorded
+      - work_item_claim.acquired
+      - work_item_claim.released
+      - work_item_claim.takeover_recorded
+      - assignment.dispatched
+      - assignment.cancel_requested
+      - assignment.terminal_recorded
+      - integration.attempt_started
+      - integration.result_recorded
+      - source.branch_merge_recorded
+      - source.branch_push_recorded
+      - product.publication_recorded
+      - product.release_recorded
+      - delivery.observation_recorded
+      - outcome.observation_recorded
+    role: project_control_plane
 ---
 # Runtime
 
-Project Runtime is CodeWiki's project-scoped control plane and outer control loop. It is logically available, event-driven, supervised, and physically quiescent when no eligible work exists. It owns workflow execution, not Product meaning or semantic acceptance.
+Project Runtime is CodeWiki's project-scoped control plane and outer control loop. It is the sole project-scoped composition, authority, scheduling, persistence, and effect boundary—not a fourth semantic Loop.
 
 ```text
-trigger or client request
-→ refresh WorkState and bounded relationship views
-→ derive eligible semantic/mechanical jobs
-→ select compatible bounded set
-→ acquire lanes, Claims, capacity, and effect guards
-→ bind exact input, CodeWiki OS, Loop Protocol, route, context, and authority
-→ run candidate producer or isolated worker
-→ resolve candidate-specific Exit Policy
-→ run bounded Code/Model Checks
-→ build immutable Exit Report
-→ revalidate freshness, generation, authority, and CAS
-→ append exact accepted/remediation facts
-→ schedule separately permitted effects
-→ repeat or quiesce
+clients and triggers
+→ Runtime admission and fresh WorkState
+→ eligible semantic/mechanical jobs
+→ bounded Candidate producers or workers
+→ guarded Integration for admitted worker output
+→ exact Evidence and Loop exit
+→ Runtime Route
+→ expected-head canonical acceptance or guarded effect
+→ deterministic replay and projection
 ```
 
-Exactly three semantic Loops exist: Decision, Planning, and Implementation. Runtime is not a fourth Loop. Several compatible invariants may progress concurrently, but one semantic owner governs each invariant.
+## Authority
 
-## Primary product boundary
+Runtime alone owns:
 
-```text
-CodeWiki CLI
-+ Project Runtime
-+ dashboard
-+ embedded published Pi SDK
-```
+- canonical Change, operation, Candidate, Evidence Record, Check Result, Exit Report, Planning epoch, request, policy, job, Assignment, and effect identity;
+- actor/principal/role binding and authentication correlation;
+- canonical observation time and protocol version;
+- remote state head, source head, Knowledge/config/policy digests, and state digests;
+- freshness, expected-head CAS, idempotency, and recovery;
+- scheduler lanes, budgets, capacity, and supervision;
+- Change Claim and Work Item Claim lifecycle;
+- Worker Workbench provisioning and Assignment dispatch;
+- Evidence normalization, provenance/freshness/privacy validation, contradiction preservation, and approval correlation;
+- Check activation, execution, cancellation, exact caching, and required-result fan-in;
+- deterministic Runtime Route;
+- canonical Git-backed writes;
+- Integration, branch effects, review projection, publication, release, delivery, and outcome observation;
+- archive eligibility, hydration, reopening, and cleanup.
 
-Pi extension is an optional thin client. Dashboard, CLI, Pi, tests, and future adapters connect to the same Runtime through bounded local capabilities. Client lifetime never defines Runtime lifetime.
+Clients, sessions, candidate producers, workers, Checks, provider events, graph adapters, and generated views cannot provide Runtime-owned fields or authorize progression. Runtime does not approve Change meaning; Decision owns that authority. Runtime does not create Sprint or Work Item truth; Planning owns their immutable semantic content.
 
-Pi owns providers, credentials, model transport, sessions, compaction, tools, extensions, and Skills. Runtime consumes published Pi SDK APIs and normalized capabilities; credentials never enter CodeWiki traces, prompts, manifests, or errors.
+## Exact Loop exit
 
-Future OpenClaw support may implement client or Assignment execution adapters. It cannot become semantic or canonical authority.
-
-## Runtime authority
-
-Runtime exclusively owns:
-
-- WorkState refresh, projection, invalidation, and impact-bounded Loop selection;
-- candidate, Evidence Record, Resolved Exit Policy, Check Result, Exit Report, semantic-job, and effect-job identity;
-- evidence normalization, artifact/provenance/freshness/privacy validation, approval-receipt correlation, and contradiction preservation;
-- Check activation, thresholds, freshness, scheduling, caching, cancellation, and required-result fan-in;
-- generation fencing, exact CAS, idempotency, and recovery;
-- append to `.codewiki/traces/**`;
-- Planning epoch preflight and partial-commit repair;
-- Work Item readiness, Claims, Assignments, Workbench activation, and worker lifecycle;
-- Integration workspace lifecycle and exact proof;
-- guarded pre-exit review publication plus post-exit merge, push, publication, release, and future deployment effects;
-- bounded budgets, capacity, retries, supervision, temporary artifacts, retention, and cleanup.
-
-Runtime cannot:
-
-- invent or approve Change meaning;
-- create Planning truth outside passed-and-appended Planning output;
-- accept worker completion as Implementation truth;
-- let candidates, clients, Skills, workers, tools, Checks, models, or adapters supply canonical identity, authority, CAS guards, runtime timestamps, activation, thresholds, or final routes;
-- interpret generated views as authority;
-- weaken protected Checks or broaden permissions because automation is enabled;
-- continue when required supervision, authority, capability, or safe certainty disappears.
-
-In short: Runtime does not approve Change meaning and does not create Sprint or Work Item truth. It schedules and guards semantic owners' exact outputs.
-
-## Elected ownership and clients
-
-One elected coordinator generation owns scheduling and durable write authority for one project. “Coordinator” names this internal scheduling/ownership role; Project Runtime names the whole control plane.
-
-The local service uses exclusive project ownership, loopback-only transport, private endpoint metadata, bearer authentication, leased clients, and generation-scoped capabilities. A dead owner may be replaced under a new generation. Stale processes are fenced before append/effect even if sockets remain alive.
-
-A bounded event journal exposes operational invalidations and lifecycle state to authenticated clients. Cursor gaps or generation changes require canonical snapshot refresh. Events are never semantic truth.
-
-Clients may submit bounded intent, authority, evidence, control requests, and trigger kinds. They cannot provide observation time, select semantic work, replace repository identity, or append directly.
-
-## Triggers and quiescence
-
-Triggers may come from user/agent intent, Change revisions, approval, Knowledge/source/test/Git/config changes, Work Item readiness, worker reports/timeouts/cancellation, Integration results/conflicts, preview observations, schedules, or explicit continue/stop requests.
-
-A trigger requests observation; it grants no semantic authority.
-
-Runtime quiesces or blocks when:
-
-- no eligible work exists;
-- user/external authority is required;
-- policy or supervision blocks action;
-- capacity/budget is exhausted;
-- guarded state changed and candidate is stale;
-- conflict needs Planning or Decision;
-- required capability or Check service is unavailable;
-- cancellation or stop applies.
-
-Quiescence is healthy and resumable.
-
-## WorkState-driven scheduling
+Runtime composes but does not redefine Loop meaning:
 
 ```text
-unapproved Change revision              → Decision eligible
-approved Changes lacking current plan   → Planning dirty
-ready Work Item                         → Assignment eligible
-matching Worker/Integration evidence    → Implementation eligible
-passed Integration proof                → guarded effect may become eligible
-no eligible job                         → quiescent
-```
-
-Eligibility and admission are separate. Runtime first derives candidate jobs, then admits a deterministic compatible set under lane, dependency, path/component conflict, target/base, capacity, budget, supervision, and authority constraints.
-
-Lane constraints:
-
-- one Decision writer per exact Change revision; unrelated Changes may run concurrently;
-- one accepted global Planning writer; read-only analysis may run concurrently;
-- one active Claim per Work Item;
-- multiple non-conflicting Assignments within capacity;
-- one Integration writer per exact target/base;
-- serialized commit, merge, push, publication, release, and other effect targets.
-
-Callers cannot self-label work `routine`. Runtime derives Implementation tier from accepted Change/Planning facts, risk, dependencies, actual candidate growth, capability, and configured policy. Derived risk may rise but cannot silently fall.
-
-## Semantic jobs
-
-Each selected semantic invariant becomes one exact runtime job with:
-
-- selected Loop and target;
-- coordinator generation;
-- observed WorkState/Knowledge/Git/config snapshots;
-- exact Change/Planning revisions;
-- CodeWiki OS and Loop Protocol identities;
-- model route and bounded context;
-- iteration, wall-clock, token, cost, and retry budgets;
-- cancellation and durable recovery probes.
-
-The job invokes only its selected Loop adapter. It cannot drift into another lane. Each Loop owns its role-specific `*CandidateContent` contract; Runtime owns the surrounding semantic context, identity, freshness, authority, actor/time, and route. Direct adapters, isolated Pi SDK sessions, and remote coordinator submissions pass through the same strict recursive candidate admission. Top-level and nested fields, arrays, values, and closed enums follow exact Loop-owned schemas; unknown fields and attempted Runtime-owned authority, actor/time, assurance, proof, or routing controls fail before core Loop invocation. Missing required Runtime semantic context fails closed. Route-back is appended as evidence and stops forward repetition until the target owner responds.
-
-A compare-and-swap race invalidates the observation. Runtime requeues or reruns against fresh state under budget; it never appends stale output. A replacement generation recovers exact completed event evidence before considering reinvocation.
-
-Current executable source retains one-shot and compatibility primitives while the standalone Runtime boundary is consolidated. Cancellation-aware draining of active semantic SDK jobs remains an explicit open migration item.
-
-## Loop-exit runtime
-
-Runtime owns the shared exit pipeline:
-
-```text
-immutable role-specific candidate
-→ admission
+Change
+→ Loop
+→ Candidate
+→ Evidence Records
 → Resolved Exit Policy
-→ shared fact extraction
-→ bounded resource-specific Check fan-out
-→ required-result fan-in
-→ immutable Exit Report
-→ route selection
-→ final generation/freshness/authority/CAS guard
+→ Checks
+→ Check Results
+→ Exit Report
+→ Runtime Route
 ```
 
-Code Checks execute trusted deterministic CodeWiki implementations. Model Checks run independent bounded Pi sessions with no producer conversational state. Timeout/provider/malformed/cancelled outcomes are `indeterminate`.
+Decision, Planning, and Implementation own Candidate semantics and Loop-specific Check declarations. Runtime constructs identity, resolves policy deterministically, schedules bounded independent Checks, validates complete Result fan-in, creates the immutable Exit Report, and chooses a route.
 
-Required Exit Report reduction is fixed:
+A passing Exit Report is not write or effect authority. Runtime revalidates current state, exact bases, generation, actor authority, CAS, and effect-specific policy immediately before action.
+
+## Project snapshot and freshness
+
+Team WorkState snapshot identity binds:
 
 ```text
-required fail exists          → fail
-else required indeterminate   → indeterminate
-else                           → pass
+repository identity
++ codewiki/state head
++ protected source head
++ Knowledge digest
++ config and policy digests
 ```
 
-A passing Report permits exact Loop exit only. Append and every effect remain separately guarded.
-
-Native Decision research uses Runtime-specific bridges under `src/runtime/decision-research.ts` and `src/runtime/decision-research-claims.ts`. Runtime materializes bounded citation material as observed, immutable, exact Change-revision Evidence and runs the protected deterministic provenance Check against exact freshness and subject obligations. Missing or stale input becomes an indeterminate Result; invalid temporal provenance becomes a failing Result while retaining the Evidence.
-
-For independent claim support, Runtime prepares an immutable tool-free request bound to the exact passing provenance Result, Candidate/policy, route configuration, protocol resource, claims, and citation ids. The isolated Pi SDK adapter selects that exact provider/model/thinking route, creates one in-memory no-discovery/no-tool session, bounds bytes and route timeout, propagates cancellation, and returns strict parsed output or a typed operational outcome. The model supplies one bounded assessment per exact claim; it cannot supply aggregate Check status. Runtime validates complete coverage, derives aggregate semantics, materializes candidate-bound observed model-assessment Evidence, and constructs the Result. Timeout, provider failure, unavailability, cancellation, and malformed output remain indeterminate without model Evidence or fabricated measurement. External collection, production scheduling, native Decision report persistence, and replacement of production ref-count evaluation remain pending.
-
-Independent Checks continue after unrelated failure. Resource-specific pools bound provider/model, CPU, test/build, and external-service work. Exact cache identity includes candidate, Check binding, implementation/configuration, and evidence inputs. TTL and path overlap can evict or invalidate, never authorize reuse.
-
-Preview and append use the same candidate and Report. Historical views use persisted identities rather than current catalog reinterpretation.
-
-## Global Planning
-
-Planning is a project lane, not a session attached to one Change. Runtime coalesces approved-portfolio changes into one bounded planning horizon and admits one accepted Planning writer while preserving claimed-work stability.
-
-For one Planning epoch Runtime:
-
-1. freezes participant Change revisions, trace tails, plan revisions, WorkState, Knowledge/config/Git/Integration refs;
-2. obtains one exact Planning candidate and Exit Report;
-3. validates Sprints, Work Items, ownership, contribution, dependencies, coverage, and protected claimed work;
-4. slices output by affected Change Trace;
-5. preflights every trace tail and event identity;
-6. appends deterministic epoch events;
-7. detects and repairs any partial multi-file commit before downstream Claims.
-
-Filesystem multi-trace append is not treated as atomic. Epoch id, participant set, batch digest, deterministic event ids, and private bounded recovery packet expose crash windows and permit idempotent repair.
-
-## Work Items, Workbenches, and Assignments
-
-Planning creates worker-ready Work Items and declares Workbench requirements. Runtime selects model tier/route, resolves Skills/tools, probes capabilities, provisions one private Workbench, and grants one bounded Assignment attempt.
-
-Before Claim append, Runtime creates an inert digest-bound Workbench manifest containing exact source/base, context, Skills/tools, tier/route, minimum Checks/evidence obligations, isolation, budgets, and report contract. Only a matching active Claim activates it.
-
-A Claim binds:
-
-- Work Item, Workbench, owning Change Trace, and worker;
-- accepted Change and Planning revisions;
-- source base and worktree/Integration refs;
-- exact path/component scope;
-- policy snapshot and lease, plus expected evidence contract;
-- deterministic runtime job and private packet digest.
-
-Runtime selects only current ready work. Overlapping paths, incompatible bases, dependencies, shared Integration targets, or stale approval hold otherwise-ready items.
-
-## Worker lifecycle and isolation
+Runtime exposes:
 
 ```text
-ready Work Item
-→ tier/Workbench resolution and capability probe
-→ guarded Claim append
-→ isolated worker start
-→ bounded observation/cancellation
-→ immutable Worker Report
-→ Implementation candidate and Checks
-→ accepted repair or remediation
-→ Integration proof
-→ release/cancel/expire
-→ proof-authorized cleanup
+fresh | stale | offline
 ```
 
-Workers receive CodeWiki OS, Implementation Loop Protocol, Assignment scope, bounded source/context, ordinary scoped Pi Skills/tools, and evidence requirements. They have no peer/shared private memory and cannot append semantic events, approve Changes, change Planning, widen paths/capabilities, choose tier, integrate outside authority, publish, or relax Checks.
+Unsafe distributed mutation requires `fresh`. Private attempts may continue offline, but cannot acquire accepted ownership or publish canonical operations.
 
-Pi process workers run in explicit Git worktrees. Opt-in OCI adapters use digest-pinned preinstalled images, structured Docker/Podman arguments, read-only root, dropped capabilities, no privilege escalation, bounded resources/output, exact mounts/environment, and no network unless a restricted network is explicitly authorized. No implicit pull occurs before Claim append.
+Polling, webhooks, SSE, and provider events only invalidate a cursor. WorkState refresh follows a Runtime fetch and verification of Git refs and operation bytes before rebuilding WorkState and the Alignment Graph.
 
-Worker liveness is operational observation. Raw logs/heartbeats remain private. Worker completion supplies evidence only; Implementation Exit Report determines semantic acceptance.
+## Canonical append
+
+Target shared carrier:
+
+```text
+refs/heads/codewiki/state
+```
+
+Append protocol:
+
+```text
+receive bounded proposal
+→ fetch and verify expected remote state
+→ admit against exact snapshot and authority
+→ derive operation bytes and state manifest
+→ create one Git state commit
+→ push with exact expected head
+→ accept all operations or none
+```
+
+A stale rejection triggers fetch, verification, full semantic reevaluation, and either a new operation or rejection. Runtime never blind-rebases and retries authority-bearing writes.
+
+Semantic truth remains in operation bytes. The Git commit supplies atomic batch receipt and global accepted order.
+
+## Scheduler
+
+Runtime-visible jobs, Checks, Change Claims, Work Item Claims, Assignments, Integration work, and guarded effects are the complete durable concurrency model. Hidden sub-agent trees cannot own durable work.
+
+Representative lanes:
+
+```text
+Decision candidate production
+Planning candidate production
+Implementation candidate production
+independent Model Checks
+Work Item execution
+Integration per target/base
+review projection
+source branch effects
+publication/release/delivery effects
+archive/hydration
+```
+
+Runtime selects the maximum safe useful set under dependencies, conflicts, current ownership, source/Knowledge boundaries, capacity, budgets, supervision, and provider capability. Agent count is not progress.
+
+## Change Claims
+
+A Change Claim grants exclusive authority for one exact Change revision and semantic purpose. It binds actor, authority, remote state head, source/Knowledge/config/policy snapshot, and acquisition operation.
+
+V1 supports explicit acquisition, explicit release, and authenticated takeover. Runtime does not use client or Git timestamps for automatic expiry.
+
+## Work Item Claims and Assignments
+
+A Work Item Claim binds exact Planning epoch, Work Item, Assignment attempt, worker, source base, Worker Workbench, scope, budgets, and obligations.
+
+Runtime must provision and validate the exact Worker Workbench before acquisition/dispatch. Worker completion does not imply Implementation acceptance. Runtime retains the Work Item Claim until explicit release or authenticated takeover according to terminal/Integration policy.
+
+## Rolling Planning
+
+Decision may approve new Changes while earlier Changes execute. Runtime marks Planning eligible when accepted intent or relevant project state changes.
+
+One Planning writer observes:
+
+- selected Change set and participant revisions;
+- current Planning epoch;
+- active Change Claims and Work Item Claims;
+- active Work Items and Assignments;
+- source/Knowledge/config/policy snapshot;
+- dependencies, conflicts, Integration state, capacity, and supervision.
+
+Runtime accepts one immutable `PlanningEpochRecord` plus atomic `planning.epoch_bound` operations through one state commit. New Planning preserves safe active Assignments and requires explicit pause, migration, cancellation, block, or route-back when assumptions change.
+
+## Sessions and workers
+
+Pi owns provider authentication, model transport, sessions, compaction, tool mechanics, extensions, and ordinary Skill discovery. Runtime starts bounded independent Pi SDK sessions for candidate production and Model Checks.
+
+Candidate producers receive versioned CodeWiki OS guidance, one exact Loop Protocol, current work, bounded relevant Repair Episodes/Patterns, and scoped tools/Skills. Independent Model Checks do not receive producer conversation or repair-learning context.
+
+Implementation workers run inside one exact private Worker Workbench per Assignment attempt. Process, worktree, OCI, or future adapters implement the same harness-neutral contract. Workers return asserted immutable Worker Reports; Runtime validates and integrates admitted output, materializes valid bounded Evidence, and evaluates the exact integrated Candidate.
+
+## Evidence and Checks
+
+Runtime materializes only closed Evidence kinds and fixes exact subject, authority, provenance, freshness, privacy, and digest. Raw provider/worker/tool payloads remain private.
+
+Evidence authority:
+
+```text
+asserted | observed | verified | approved
+```
+
+It cannot grant exit or effects.
+
+Every considered Evidence identity—including stale, excluded, unavailable, negative, and contradictory records—stays bound into Results. Operational failures are `indeterminate`; Runtime never fabricates candidate failure or passing Evidence.
+
+Checks may fan out concurrently under bounded budgets. Required Result fan-in remains complete and deterministic. A failed required Check does not cancel unrelated feedback-producing Checks unless explicit policy requires cancellation.
 
 ## Integration
 
-Independent worktrees are not combined product state. Planning declares Integration boundaries. Runtime serializes accepted worker outputs into one private Integration workspace per exact target/base, validates scope and patch application, runs trusted checks, and creates a local proof commit without moving the project checkout.
+Integration is Runtime work, not another semantic Loop. Runtime:
 
-`runtime.integration.proven` binds exact runtime job, Claim, Assignment, Worker Report, target refs, base/parent/commit/tree, changed paths, patch digest, and Check evidence. Digest-bound in-progress manifests plus commit trailers close merge-to-append crash windows. Cleanup requires canonical Integration proof.
+1. validates accepted Worker Report and Assignment provenance;
+2. combines output in an isolated Integration workspace;
+3. records exact base, changed paths, tree/commit, and conflict observations;
+4. materializes `integration_proof` Evidence;
+5. evaluates final Implementation Candidate against exact integrated content;
+6. records `integration.result_recorded`;
+7. performs separately authorized source branch effects if requested.
 
-Integration proof does not merge the project branch, push, publish, release, deploy, or prove user outcome.
+Worker-local verification cannot replace final combined-tree assurance.
 
-## Separately guarded effects
+## Review and human authority
 
-Every boundary below requires exact canonical predecessor proof, elected-generation ownership, target CAS, explicit capability, and its own authority. Review publication is the only permitted pre-exit external project-publication/mutation effect and exists solely to gather required human/team evidence; provider/model/research reads remain bounded observations, not project progression:
+CodeWiki dashboard remains the canonical dossier/review surface. Policy may additionally allow a guarded isolated review ref and draft pull request.
+
+`review_projection.published` records publication of an exact Validation Bundle but grants no approval or exit. Provider events remain untrusted until Runtime re-observes authenticated actor/role, repository, pull request, exact head, decision, bundle digest, event identity, and freshness into `approval_receipt` Evidence.
+
+Candidate, tree, head, preview, media, or bundle drift invalidates dependent approval. Request changes creates same-Change repair evidence while intent remains stable.
+
+## Guarded effects
+
+These are distinct effects with independent authority and proof:
 
 ```text
-exact pending Implementation candidate
-→ optional guarded review publication to isolated ref + draft pull request
-→ approval/request-changes Evidence Records
-→ final Implementation Exit Report
-→ Integration proof
-→ optional project-branch fast-forward merge
-→ optional remote push
-→ optional product publication
-→ optional release
-→ future deployment/observation
+Integration
+source branch merge
+source branch push
+review projection
+product publication
+product release
+delivery/deployment
+outcome observation
 ```
 
-### Review publication
+One effect never implies the next. No effect is authorized by worker completion or Loop exit alone.
 
-After all required non-approval work needed for safe review is complete, Runtime may publish an exact Validation Bundle under explicit project/user authority. It binds candidate/tree/head, destination CAS, provider adapter/configuration, idempotency, privacy policy, preview artifact digests, required reviewer roles, and post-operation observation. It may push only an isolated review ref and create or update a draft pull request. It cannot target the project/protected branch, force-push, auto-merge, publish a product artifact, claim semantic exit, or transfer provider authority into CodeWiki.
+## Alignment Graph
 
-Provider reviews are untrusted observations until Runtime revalidates repository, pull request, exact head, authenticated reviewer/role, decision, event identity, bundle digest, and freshness into an approval-receipt Evidence Record. Head/candidate/bundle drift invalidates approval. Projects that forbid review publication collect approval through CodeWiki and publish the pull request only after exit.
+Runtime projects every accepted operation through one versioned deterministic projector. Graph snapshot identity binds accepted state head, Knowledge, protected source, config/policy, and projector version.
 
-### Project branch merge
+Every fact retains source provenance:
 
-Requires exact Integration proof, expected checked-out local branch/head, matching tree/paths, bounded dirtiness, explicit authority, and fast-forward-only structured Git invocation. No candidate or remote client supplies authority.
+```text
+canonical_binding
+observed_binding
+deterministic_analysis
+inferred_analysis
+```
 
-### Push
+Runtime exposes bounded read-only semantic queries. No arbitrary graph write or Cypher surface is admitted.
 
-Requires canonical merge proof, exact local/remote state, safe configured credential-free remote reference, user authority, and structured non-force push. Prepared/pushed manifests and remote re-observation prove attribution. Ambiguous provider acceptance remains blocked.
+## Archive and hydration
 
-### Publication
+Archive eligibility requires terminal closure, completed configured Integration, no active Change Claim, no active Work Item Claim, and no pending required review/effect/outcome obligation.
 
-Requires exact push proof, bounded private artifact path, source commit/tree and digest, destination CAS, trusted adapter idempotency, explicit user authority, and post-operation observation. Credentials remain provider-owned.
+```text
+close Trace
+→ write immutable archive bundle
+→ push codewiki/archive
+→ fetch and verify digest
+→ remove hot state copy
+```
 
-### Release
+Hydration fetches and verifies exact archive manifests/segments into read-only Runtime cache. Reopening starts a new hot segment referencing archived closure; archive bytes remain immutable.
 
-Requires exact publication identity, artifact/revision/digest, channel CAS, trusted adapter idempotency, explicit user authority, and channel re-observation. Release cannot rebuild, republish, deploy, push, tag, announce, or prove adoption.
+## Repair learning
 
-Generic deployment remains deferred until CodeWiki has a real hosted target.
+Runtime may derive a disposable index of Repair Episodes and Repair Patterns from archived history. Retrieval is bounded by Loop, issue class, repair target, Check identity, source/Knowledge boundary, outcome, evidence strength, and recency.
 
-## Automation gates, supervision, and autonomy
+Historical guidance cannot enter independent Model Checks, lower thresholds, disable Checks, change activation, grant authority, or include raw history. Stable promotion requires Lab ablation, sealed holdout confirmation, and a normal Change.
 
-Unattended worker start remains gated until explicit project policy, supervision rules, external lifecycle/failure proof, and required capability evidence permit it.
+## Service boundary
 
-Automation is bounded by effective configuration, accepted Change constraints, Planning output, current host authority, and capabilities. Higher autonomy permits eligible mechanical continuation only. It never grants semantic approval, arbitrary shell, Check changes, publication, or irreversible authority.
+One local project Runtime may be hosted by the standalone CLI process or detached project daemon. CLI, dashboard, optional thin Pi client, and future adapters connect through authenticated bounded contracts. Client lifetime does not own Runtime lifetime.
 
-Under supervised policy, losing all approved supervisors blocks new starts and initiates explicit cancellation/grace behavior. Unattended continuation requires separate approved project policy.
-
-## Error contract
-
-Operational failures remain operational facts, not fabricated Check failures. Structured errors include stable code, kind, message, owning refs, retryability/terminality, evidence refs, and recommended Runtime or semantic route.
-
-Runtime preserves exact rejection behavior at public authority boundaries during clean cuts unless the ratified contract explicitly replaces that boundary.
-
-## Trace append contract
-
-Runtime is sole canonical trace writer. Before append it verifies:
-
-- known Change Trace and exact expected byte/tail/sequence;
-- exact entity, Change, Planning, Knowledge/config/Git/WorkState versions;
-- event schema and canonical refs;
-- candidate, policy, Results, Report, and Loop correspondence;
-- authority and generation;
-- deterministic event/batch idempotency;
-- no prior close record;
-- effect-specific predecessor proof when applicable.
-
-Semantic sessions and workers return candidate or evidence material. Runtime alone materializes canonical Evidence Records. Model Checks return bounded observations used to construct Results. None appends directly.
-
-## Retention, learning, and cleanup
-
-Private runtime material lives under bounded `.codewiki/runtime/**`. Failed patches, Workbenches, raw tool/model output, credentials, and private reasoning never enter Change Traces.
-
-Compact reusable Evidence Records persist in traces while exact source, Git, provider, and content-addressed artifact bytes remain in their owning boundaries. Screenshots/videos/captured pages and bounded outputs follow explicit retention and privacy policy; closure cannot delete the only required artifact before durable replacement or retention proof. Repair Episodes/Patterns and graph indexes are derived in memory or disposable `.codewiki/runtime/learning/**`. User-facing views and pull-request Validation Bundles remain projections, not authority.
-
-Cleanup failure cannot corrupt semantic state. Closed traces compact only after Git restore refs preserve full history and no live Planning, Assignment, Integration, preview, observation, or recovery dependency remains.
+No canonical database, graph database, message broker, hosted relay, blockchain, or self-hosted coordination service is required. Git is the provider-neutral synchronization carrier.
 
 ## Source-checkout boundary
 
-CodeWiki does not load or dogfood its own extension in this source repository during stabilization. Repo-local Pi uses native coding tools and Pi-Lens only. Packed candidates run in disposable external projects with isolated Pi settings. Those fixtures exercise Runtime, traces, workers, clients, failures, guarded effects, and cleanup without granting candidate code authority over its own checkout.
+This repository does not load or dogfood its own extension during stabilization. Pi native coding tools, Pi-Lens, Knowledge, source/tests, and Git remain development authorities. Packed external projects test Runtime, clients, workers, failures, effects, and cleanup.
+
+## Automation gates
+
+Unattended worker start requires explicit accepted policy, fresh shared state, available supervision/capability, bounded budgets, exact ownership, and guarded cancellation/recovery. Automation gates cannot weaken Loop exit or effect authority.
+
+## Current executable drift
+
+Current source has a detached local coordinator, local generation fencing, local Change Trace writes, isolated worker/Integration primitives, and guarded branch/publication operations. Current policy snapshot and lease behavior protects only local process coordination. Source still uses expected-byte/local-sequence mutation, local ownership events, and partial filesystem recovery. Separate clones cannot coordinate accepted ownership. The clean cut replaces those contracts after pure protocol and two-clone Git experiments pass.
 
 ## Related docs
 
+- [Change Traces](traces.md)
 - [WorkState](work-state.md)
-- [CodeWiki OS and Loop Protocols](codewiki-os.md)
+- [Session Coordination](session-coordination.md)
 - [Loop Exit](loop-exit.md)
 - [Evidence Records](evidence.md)
-- [Worker Workbench](worker-workbench.md)
-- [Model Routing](model-routing.md)
-- [Loop Model](loop-model.md)
-- [Loop Contracts](loop-contracts.md)
-- [Traces](traces.md)
-- [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
-- [Implementation Loop](implementation-loop.md)
+- [Worker Workbench](worker-workbench.md)
 - [Worktree Isolation](worktree-isolation.md)
+- [Alignment Model](alignment-model.md)
+- [Adapters and UI](adapters-and-ui.md)

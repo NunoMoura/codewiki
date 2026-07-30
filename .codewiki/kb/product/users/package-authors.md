@@ -8,7 +8,7 @@ tags:
   - users
   - adapters
   - authors
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Client and Execution Adapter Authors
 
@@ -18,19 +18,19 @@ Stable needs:
 
 - bounded authenticated state/intent/authority/query/control requests;
 - exact semantic-session candidate and Model Check contracts;
-- Assignment/Claim/Workbench/Worker Report correlation;
+- Assignment/Work Item Claim/Worker Workbench/Worker Report correlation;
 - capability, cancellation, budget, and isolation reporting;
 - generated-view rebuild semantics;
 - separately guarded external-effect adapters.
 
 ## Success signals
 
-- Adapters cannot choose Loop, candidate identity, Check activation/thresholds, Exit Report, Runtime route, append, or effect authority.
+- Adapters cannot choose Loop, Candidate identity, Check activation/thresholds, Exit Report, Runtime Route, canonical append, or effect authority.
 - Client events remain invalidations/observations, never truth.
 - Worker adapters mutate only exact Workbench scope and return immutable evidence.
-- Pi Skills/tools compose without replacing Change Traces, candidates/Reports, Knowledge, source/tests, or Git proof.
+- Pi Skills/tools compose without replacing Change operations, Candidates/Reports, Knowledge, source/tests, or Git proof.
 - Visual surfaces read canonical/derived state rather than creating hidden UI truth.
-- Provider credentials remain host-owned and never enter CodeWiki traces/manifests/errors.
+- Provider credentials remain host-owned and never enter CodeWiki operations/manifests/errors.
 
 ## Related docs
 

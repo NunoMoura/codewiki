@@ -1,43 +1,47 @@
 schema_version: 1
 id: spec.system.diagrams.data-model
-title: CodeWiki Data and Evidence Model
+title: CodeWiki Canonical and Projected Data Model
 kind: data_model
-purpose: Show canonical authority roots, exact Loop-exit identity chain, private runtime material, and disposable Work/Alignment/Learning projections.
+purpose: Show authority roots, Change Trace Protocol operations, Git acceptance, exact Loop-exit identity chain, rolling Planning, coordination, Alignment Graph projection, archive, and repair learning.
 source_docs:
   - .codewiki/kb/system/components/alignment-model.md
   - .codewiki/kb/system/components/knowledge.md
   - .codewiki/kb/system/components/traces.md
+  - .codewiki/kb/system/components/work-state.md
   - .codewiki/kb/system/components/loop-exit.md
   - .codewiki/kb/system/components/evidence.md
-  - .codewiki/kb/system/components/worker-workbench.md
+  - .codewiki/kb/system/components/planning-loop.md
 renderer:
   preferred: entity_relationship
   fallback: mermaid_flowchart
 entities:
-  - id: knowledge_doc
-    label: OKF Knowledge concept
+  - id: knowledge
+    label: OKF Knowledge concept and authored relationships
     storage: .codewiki/kb/**/*.md
     truth: true
-  - id: change_trace
-    label: Change Trace
-    storage: .codewiki/traces/TRACE-CHG-<id>.jsonl
+  - id: change
+    label: Change accountable intent and logical dossier
+    storage: derived aggregate over accepted operations
     truth: true
-  - id: trace_record
-    label: Trace record
-    storage: one JSON object per LF-delimited line
+  - id: operation
+    label: Immutable typed content-addressed Change operation
+    storage: JSONL hot/archive segment
     truth: true
-    record_types:
-      - trace_head
-      - trace_event
-      - tail_checkpoint
-      - trace_close
+  - id: state_commit
+    label: StateCommitManifest + Git acceptance commit
+    storage: refs/heads/codewiki/state
+    truth: true
+  - id: planning_epoch
+    label: Immutable PlanningEpochRecord
+    storage: project-scoped content-addressed record accepted by state commit
+    truth: true
   - id: candidate
-    label: Exact immutable Loop candidate identity
-    storage: compact identity/content refs in semantic trace attempt
+    label: Exact immutable Loop Candidate
+    storage: loop-specific candidate-recorded operation
     truth: true
-  - id: evidence_record
+  - id: evidence
     label: Immutable typed Evidence Record
-    storage: compact content-addressed metadata/payload in owning Change trace event data; large bytes remain behind exact artifact refs
+    storage: evidence.recorded operation; large bytes behind exact refs
     truth: true
     kinds:
       - research_citation
@@ -51,137 +55,170 @@ entities:
       - delivery_attestation
       - outcome_observation
   - id: exit_policy
-    label: Resolved Exit Policy identity
-    storage: candidate-specific Check bindings, thresholds, activation, exclusions, and digest
+    label: Resolved Exit Policy
+    storage: loop.exit_policy_recorded operation
     truth: true
   - id: check_result
     label: Check Result
-    storage: exact candidate/Check/evidence/measurement/threshold/findings/status identity
+    storage: check.result_recorded operation
     truth: true
   - id: exit_report
     label: Exit Report
-    storage: candidate + policy + complete Result set + reduction version + status
+    storage: loop.exit_report_recorded operation
     truth: true
   - id: runtime_route
-    label: Runtime route and final guard outcome
-    storage: separate trace event data after Exit Report
+    label: Runtime Route
+    storage: runtime.route_recorded operation
+    truth: true
+  - id: work_item
+    label: Immutable Work Item inside Planning Candidate/epoch
+    storage: PlanningEpochRecord
+    truth: true
+  - id: change_claim
+    label: Change Claim
+    storage: Change Claim operations
+    truth: true
+  - id: work_item_claim
+    label: Work Item Claim
+    storage: Work Item Claim operations
+    truth: true
+  - id: assignment
+    label: Assignment lifecycle
+    storage: Assignment operations plus private packet refs
+    truth: true
+  - id: worker_report
+    label: Asserted immutable Worker Report
+    storage: worker.report_recorded operation plus private artifact
     truth: true
   - id: source_test
-    label: Source / test / accepted package documentation
-    storage: src/**, tests/**, and source-owned files
+    label: Source / tests / source-owned docs
+    storage: protected source Git tree
     truth: true
-  - id: git_delivery_proof
-    label: Git / remote / artifact / outcome proof
-    storage: commits, trees, refs, receipts, attestations, and bounded observations
+  - id: git_effect
+    label: Integration / merge / push / publication / release / outcome proof
+    storage: Git/provider objects and bounded accepted operations
     truth: true
-  - id: review_bundle
-    label: CodeWiki / draft pull-request Validation Bundle
-    storage: mutable generated projection over exact candidate, Evidence Records, Results, media refs, and required reviewer roles
+  - id: archive_manifest
+    label: ArchiveManifest and immutable Trace segments
+    storage: refs/heads/codewiki/archive
+    truth: true
+  - id: work_state
+    label: WorkState snapshot
+    storage: memory or disposable local materialization
+    truth: false
+  - id: alignment_graph
+    label: Alignment Graph snapshot with per-fact provenance
+    storage: memory or disposable index
     truth: false
   - id: runtime_private
-    label: Workbench / Worker Report / media artifact / failed material / recovery / cache
+    label: Worker Workbench / raw artifact / cache / recovery
     storage: .codewiki/runtime/**
     truth: false
-    examples:
-      - endpoint and generation metadata
-      - Assignment packets and Workbench manifests
-      - Worker Reports and bounded raw observations
-      - screenshots, short videos, captured pages, and bounded output artifacts
-      - failed candidate material
-      - Planning recovery packets
-      - Check execution cache
-      - learning index cache
   - id: generated_view
-    label: Work / Alignment / Learning / dashboard view
+    label: Dashboard / Work / graph layout / query rendering
     storage: memory or .codewiki/views/**
     truth: false
   - id: repair_episode
-    label: Derived Repair Episode
-    storage: in-memory or disposable learning cache
-    truth: false
-  - id: feedback_bundle
-    label: User-approved allowlisted Feedback Bundle
-    storage: local explicit export file
+    label: Derived Repair Episode / Repair Pattern
+    storage: disposable archive-derived index
     truth: false
 relationships:
-  - from: change_trace
-    to: trace_record
-    label: contains append-only records
-  - from: trace_record
+  - from: change
+    to: operation
+    label: has ordered causal history
+  - from: state_commit
+    to: operation
+    label: atomically accepts exact batch
+  - from: operation
+    to: operation
+    label: declares typed causal parents
+  - from: planning_epoch
+    to: change
+    label: atomically binds exact participant revisions
+  - from: planning_epoch
+    to: work_item
+    label: defines immutable work
+  - from: change
     to: candidate
-    label: records exact attempt identity
-  - from: trace_record
-    to: evidence_record
-    label: contains compact canonical observation
-  - from: evidence_record
-    to: candidate
-    label: binds observed base or exact candidate-derived subject
+    label: evaluated through one semantic Loop attempt
+  - from: candidate
+    to: evidence
+    label: binds every considered observation
   - from: candidate
     to: exit_policy
-    label: selects deterministic candidate-specific policy
+    label: resolves exact active Checks
+  - from: evidence
+    to: check_result
+    label: exact supporting/contradicting/excluded input
   - from: exit_policy
     to: check_result
     label: requires one Result per active binding
   - from: candidate
     to: check_result
     label: exact subject
-  - from: evidence_record
-    to: check_result
-    label: exact consumed observation
   - from: check_result
     to: exit_report
-    label: complete fan-in
-  - from: candidate
-    to: exit_report
-    label: exact semantic exit subject
+    label: complete deterministic fan-in
   - from: exit_report
     to: runtime_route
-    label: informs but does not authorize route
-  - from: candidate
-    to: review_bundle
-    label: exact pending review subject
-  - from: evidence_record
-    to: review_bundle
-    label: projects screenshots, videos, findings, and approval state
-  - from: review_bundle
-    to: evidence_record
-    label: provider/user response is re-observed as approval or request-changes evidence
-  - from: knowledge_doc
-    to: candidate
-    label: exact snapshot/provenance input
+    label: informs but does not authorize effects
+  - from: change_claim
+    to: change
+    label: exclusive semantic-purpose authority
+  - from: work_item_claim
+    to: work_item
+    label: exclusive Assignment authority
+  - from: work_item_claim
+    to: assignment
+    label: activates exact attempt
+  - from: assignment
+    to: worker_report
+    label: produces asserted outcome
+  - from: worker_report
+    to: evidence
+    label: materializes bounded admitted observation
   - from: source_test
     to: candidate
     label: exact realization input
-  - from: git_delivery_proof
-    to: candidate
-    label: exact base/evidence input
-  - from: trace_record
-    to: generated_view
-    label: projects
-  - from: knowledge_doc
-    to: generated_view
-    label: projects
+  - from: git_effect
+    to: evidence
+    label: supplies observed Integration/delivery/outcome proof
+  - from: operation
+    to: work_state
+    label: deterministic reduction
+  - from: knowledge
+    to: work_state
+    label: accepted meaning and ownership
   - from: source_test
+    to: work_state
+    label: executable current state
+  - from: operation
+    to: alignment_graph
+    label: canonical binding projection
+  - from: knowledge
+    to: alignment_graph
+    label: authored Knowledge relationships
+  - from: source_test
+    to: alignment_graph
+    label: deterministic or inferred analysis
+  - from: work_state
     to: generated_view
-    label: projects
-  - from: git_delivery_proof
+    label: current status and scheduling
+  - from: alignment_graph
     to: generated_view
-    label: projects
+    label: bounded semantic query output
+  - from: operation
+    to: archive_manifest
+    label: terminal immutable segment
   - from: check_result
     to: repair_episode
-    label: starts failed or indeterminate episode
+    label: failed or indeterminate origin
   - from: candidate
     to: repair_episode
-    label: repairs earlier candidate
-  - from: git_delivery_proof
+    label: later repair Candidate
+  - from: git_effect
     to: repair_episode
-    label: supplies later outcome
+    label: later outcome Evidence
   - from: runtime_private
-    to: evidence_record
-    label: materializes bounded digest-bound observation before cleanup
-  - from: runtime_private
-    to: trace_record
-    label: distills bounded durable facts before cleanup
-  - from: repair_episode
-    to: feedback_bundle
-    label: may contribute sanitized CodeWiki issue metadata after review
+    to: evidence
+    label: materializes bounded digest-bound observation

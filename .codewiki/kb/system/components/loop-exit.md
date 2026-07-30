@@ -1,25 +1,29 @@
 ---
 type: Concept
 title: Loop Exit
-description: Each semantic Loop evaluates one exact immutable candidate through a deterministically resolved set of Code Checks and Model Checks, then records one immutable Exit Report.
+description: Each semantic Loop binds one exact Candidate to Evidence Records, a deterministic Resolved Exit Policy, immutable Check Results, one Exit Report, and a separate Runtime Route.
 tags:
   - codewiki
   - system
   - loop
   - exit
   - checks
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Loop Exit
 
 Loop exit is CodeWiki's common acceptance boundary across Decision, Planning, and Implementation. It replaces ad hoc acceptance logic and the superseded Quality/Standard/Assessment/Gate vocabulary with one compact model:
 
 ```text
-immutable Loop candidate
+Change
+→ Loop
+→ Candidate
+→ Evidence Records
 → Resolved Exit Policy
 → Checks
 → Check Results
 → Exit Report
-→ runtime route
+→ Runtime Route
 ```
 
 Checking is machinery inside the three semantic Loops. It is not a fourth Loop and does not create a standalone Implementation reviewer.
@@ -91,7 +95,7 @@ else                                        → pass
 
 `observe` and `warn` Results remain visible but do not block exit. Kernel Checks are required according to CodeWiki's closed policy and cannot be disabled. Project Checks progress from `observe`, to `warn`, to explicitly approved `require`.
 
-A passing Exit Report permits semantic Loop exit for that exact candidate. Runtime still owns final route, freshness, elected-generation fencing, compare-and-swap validation, and canonical append. Exit does not authorize Integration, branch merge, push, publication, release, deployment, or any other external effect.
+A passing Exit Report permits semantic Loop exit for that exact candidate. Runtime still owns final route, freshness, elected-generation fencing, compare-and-swap validation, and canonical append. Exit does not authorize a new Integration attempt, branch merge, push, publication, release, deployment, or any external effect.
 
 ## Policy resolution
 
@@ -231,7 +235,7 @@ They never retain raw prompts, private reasoning, credentials, system instructio
 
 Operational telemetry remains separate from candidate, policy, report, and canonical trace authority.
 
-## Current migration drift
+## Current executable drift
 
 Production Decision, Planning, Implementation, traces, and views still use legacy Quality, graph, judge, profile, pack, and review paths pending their clean Loop cuts. The production-unwired native foundation under `src/loop-exit/**` now uses only Check, Check Result, Resolved Exit Policy, Exit Report, Loop, and `require` contracts; no old contract aliases remain. Its closed Catalog owns kernel registration, assigns project authority to accepted project definitions, rejects caller-declared authority, and cannot be replaced through resolver input. Gate objects are gone: required Check Results will reduce directly to `ExitReport.status`. `src/loop-exit/identity.ts` provides strict canonical JSON, lowercase SHA-256 digest validation, deeply frozen canonical values, and Runtime-owned Candidate and Loop-qualified Check identity. Each Check binding now binds exact requirement, execution/protocol, measurement, declarative Evidence obligations, configuration, Loop, and Catalog content. Catalog and policy digests change when any bound content changes; independent same-id definitions are allowed only across disjoint Loops. Loop-owned strict content schemas cover Decision, nested Planning, and nested Implementation admission, while Runtime supplies trusted semantic context. Identity-only declarations live under each Loop's `exit/**` directory, and `src/runtime/loop-exit-runtime.ts` composes them into one frozen `LoopExitSuite` with the closed Catalog. Runtime-owned immutable Check Result and Exit Report constructors now derive exact identity, quantitative threshold outcomes, tri-state status, and deterministic failure-dominant reduction while rejecting caller-owned identity/status and mismatched data. Evidence obligations are normalized into Check and Catalog identity, and the native obligation reducer preserves missing, stale, partial, unavailable, duplicate, sensitive, wrong-subject, and contradictory observations without claiming semantic acceptance. Exact obligation resolutions and all considered Evidence Record ids now bind native Check Result and Exit Report identity; Runtime also derives an exact Evidence-input digest for future cache keys. Full runner cache identity and execution remain pending. Decision research activation now includes provenance and independent claim-support Checks for deterministic high-risk, migration, dependency, security/privacy, and accepted security-trait facts. Runtime has a Decision-specific observed citation materializer, closed deterministic provenance executor, and versioned independent claim-support Model Check envelope. The envelope binds exact claims and citation ids, requires a passing provenance dependency, derives aggregate status in Runtime, emits only bounded observed model-assessment Evidence, and maps operational/malformed output to indeterminate. Its isolated Pi SDK transport uses the exact route in a no-tool, no-discovery, in-memory session with bounded bytes, timeout, and cancellation. External collection, production scheduling, and production Decision integration remain pending. Planning UI activation now includes `ui_preview_targets_valid`. Release activation is Loop-specific: Decision checks accepted release intent/authority, Planning checks release-plan safety, and Implementation checks exact effect approval. Caller-supplied frozen Planning minima are rejected until Runtime can derive independently verifiable minima from persisted Planning evidence. The native runner and production Loop cuts remain pending.
 

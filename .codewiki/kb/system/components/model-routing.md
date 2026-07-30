@@ -54,7 +54,7 @@ Typed facts include:
 - prior attempt count and issue classes;
 - Resolved Exit Policy cost and Model Check needs.
 
-Rules are versioned, deterministic, monotonic for safety, and explainable. Resolution records input facts, matched rules, selected tier, route/configuration digest, and budget in private runtime state. Actual effects may raise tier or add Checks; they cannot silently lower frozen Planning minimums. Route/tier changes create new dependent identities and invalidate caches.
+Rules are versioned, deterministic, monotonic for safety, and explainable. Resolution records input facts, matched rules, selected tier, route/configuration digest, and budget in private runtime state. Actual effects may raise tier or add Checks; they cannot silently lower Runtime-derived minimums from canonical Planning evidence. Route/tier changes create new dependent identities and invalidate caches.
 
 Learned history may inform candidate repair context and offline calibration. It cannot activate Checks, lower thresholds, or select a cheaper tier automatically.
 
@@ -74,9 +74,9 @@ Every route has token, cost, wall-time, iteration, and concurrency budgets. Runt
 
 Route changes require calibration against visible and sealed fixtures. Compare false passes, escaped regressions, false blocks, repair iterations, interventions, tokens/cost, first useful feedback, and authoritative-exit latency. No optimizer/model promotes itself.
 
-## Current migration drift
+## Current executable drift
 
-Current configuration uses a generic route model and lacks all five semantic slots plus complete deterministic tier resolution. Migration preserves Pi-owned provider/auth/session behavior while adding slot validation, Runtime selection, Workbench binding, Model Check identity, cancellation, and observability.
+Current configuration uses a generic route model and lacks all five semantic slots plus complete deterministic tier resolution. The clean cut preserves Pi-owned provider/auth/session behavior while adding slot validation, Runtime selection, Workbench binding, Model Check identity, cancellation, and observability.
 
 ## Related docs
 

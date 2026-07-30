@@ -8,7 +8,7 @@ tags:
   - components
   - adapters
   - ui
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Adapters and UI Component
 
@@ -22,7 +22,7 @@ Adapters translate user, host, model, and browser operations into bounded Projec
 - `src/pi/**` owns Pi extension, embedded SDK, process-session, command, prompt, and tool integration. The embedded adapter is exposed through `./pi-sdk`, not the harness-neutral root entrypoint.
 - `src/dashboard/**` owns Work, Product, System, and Design projections, local transport, accessibility, and guarded user operations.
 - `src/preview/**` owns project-native preview and browser adapter boundaries.
-- `src/cli/**` is migration scaffold for the approved primary standalone CodeWiki CLI.
+- `src/cli/**` is the planned clean-cut boundary for the approved primary standalone CodeWiki CLI.
 
 ## Client topology
 
@@ -41,8 +41,8 @@ One Pi conversation may connect or disconnect without becoming Project Runtime o
 
 - Host-specific capabilities fail closed when unsupported.
 - Clients submit intent, evidence, authority, or explicit control requests; they never choose semantic routing or marshal repository-owned append authority.
-- Dashboard and Pi clients share one project identity, current WorkState generation, idempotency contract, and guarded command plane.
-- Dashboard actions never append trace events or write source directly. They call guarded control-plane capabilities with exact same-origin capability, expected revision/digest, bounded input, idempotency key, and audit receipt.
+- Dashboard and Pi clients share one project identity, current team WorkState snapshot, freshness status, idempotency contract, and guarded command plane.
+- Dashboard actions never append Change operations or write source directly. They call guarded control-plane capabilities with exact same-origin capability, expected revision/digest, bounded input, idempotency key, and audit receipt.
 - Product, System, and Design edits compile to deterministic Markdown/YAML patches, show a diff, validate canonical format, and enter the Change/Decision workflow before guarded application.
 - The dashboard cannot accept arbitrary prompts, shell commands, public URLs, credentials, semantic approval through message delivery, or authority-raising configuration.
 - The control plane—not browser JavaScript and not an attached Pi conversation—creates semantic sessions and implementation workers through configured adapters.
@@ -51,7 +51,7 @@ One Pi conversation may connect or disconnect without becoming Project Runtime o
 - Visual artifacts remain implementation evidence and never imply semantic approval or business outcomes.
 - A future pull-request review adapter may publish a bounded Validation Bundle to an explicitly authorized draft review ref and re-observe provider reviews. It cannot create canonical approval directly, move protected/project branches, auto-merge, or become workflow truth.
 - Provider review events become approval-receipt Evidence Records only after Runtime validates repository, pull request, exact head, authenticated actor/role, decision, bundle digest, event identity, and freshness. Dashboard and pull-request channels project one approval action rather than demanding duplicate approval.
-- Generated views, search indexes, graph layouts, and live observations remain disposable projections.
+- The Alignment Graph is a deterministic snapshot-bound projection; generated views, search indexes, graph layouts, and live observations remain disposable.
 - The CodeWiki source checkout never loads its own extension during stabilization. Packed artifacts are exercised in disposable external projects.
 
 ## Review surfaces
@@ -63,8 +63,8 @@ Review publication is a separately authorized pre-exit evidence-gathering effect
 ## Dashboard information architecture
 
 - **Work / Backlog** renders proposal provenance, Decision state, exact authority, overlap, missing information, and approval receipts.
-- **Work / Planning** renders the bounded approved-Change planning horizon, Sprints, Work Items, typed dependency/conflict/contribution edges, and ready parallel frontier.
-- **Work / Implementation** renders Assignments, worker sessions, isolation, live bounded activity, integration, verification, acceptance, and Git proof.
+- **Work / Planning** renders the bounded selected Change set, current Planning epoch, Sprints, Work Items, typed dependency/conflict/contribution edges, and safe execution frontier.
+- **Work / Implementation** renders Work Item Claims, Assignments, worker sessions, isolation, live bounded activity, Integration, verification, acceptance, and Git proof.
 - **Product / Users, Stories, and Dictionary** renders and edits canonical Product Markdown. Dictionary projects `.codewiki/kb/lexicon.md` directly and links exact terms from runtime explanations without creating another vocabulary store.
 - **System** renders and edits canonical topology YAML and linked System Markdown.
 - **Design / Guidelines and UIs** renders and edits the canonical design system and UI concepts.
@@ -77,7 +77,7 @@ Project Runtime binds only to loopback or an equivalent user-private local socke
 ## Flow links
 
 - [Resume context boundary](../flows/resume-context-boundary.md)
-- [Artifact claim wait/heartbeat](../flows/artifact-claim-wait-heartbeat.md)
+- [Remote State Synchronization](../flows/remote-state-synchronization.md)
 - [Live Preview Runtime](preview-runtime.md)
 
 ## Related docs

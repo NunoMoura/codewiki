@@ -54,7 +54,7 @@ describe("OKF index and log navigation", () => {
 		assert.equal(product.path, "product/index.md");
 		assert.match(
 			product.content,
-			/\* \[Product\]\(overview\.md\) - CodeWiki is a project-scoped development operating system/,
+			/\* \[Product\]\(overview\.md\) - CodeWiki is a project-scoped intent-to-production alignment runtime/,
 		);
 		assert.match(product.content, /\* \[Stories\]\(stories\/\) - 5 concepts/);
 
@@ -70,7 +70,7 @@ describe("OKF index and log navigation", () => {
 		);
 		assert.match(
 			components.content,
-			/\* \[Runtime\]\(runtime\.md\) - Runtime is CodeWiki's project-scoped control plane\./,
+			/\* \[Runtime\]\(runtime\.md\) - Runtime is CodeWiki's project-scoped authority and control plane/,
 		);
 	});
 

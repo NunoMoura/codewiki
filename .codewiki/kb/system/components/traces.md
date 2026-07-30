@@ -1,12 +1,12 @@
 ---
 type: Concept
 title: Change Traces
-description: One append-only JSONL Change Trace preserves the complete accountable dossier for one Change, including Loop attempts, candidate-bound exit evidence, repairs, Planning, realization, Git/delivery proof, and outcomes.
+description: Change Trace Protocol v1 preserves each Change as immutable typed content-addressed operations accepted through provider-neutral Git, with deterministic WorkState and Alignment Graph projection.
 tags:
   - codewiki
   - system
   - traces
-timestamp: 2026-07-28T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_components:
   - traces
   - views
@@ -18,11 +18,6 @@ codewiki_source_patterns:
 codewiki_test_patterns:
   - tests/traces/**
   - tests/views/**
-codewiki_trace_events:
-  - trace_head
-  - trace_event
-  - tail_checkpoint
-  - trace_close
 codewiki_generated_views:
   - .codewiki/views/status.json
   - .codewiki/views/resume.json
@@ -44,11 +39,6 @@ codewiki_source_map:
       - src/api/traces.ts
     test_patterns:
       - tests/traces/**
-    trace_events:
-      - trace_head
-      - trace_event
-      - tail_checkpoint
-      - trace_close
     role: state_truth
   - id: views
     source_patterns:
@@ -71,268 +61,368 @@ codewiki_source_map:
 ---
 # Change Traces
 
-One Change owns one Change Trace: the durable accountable dossier for one persisted intent. It begins when intent is explicitly retained and follows the same outcome through Decision, global Planning, Work Items/Assignments, Implementation attempts, repairs, Integration, Git/delivery boundaries, observations, and retention.
+## Responsibility
+
+One Change owns one Change Trace: the complete accountable history for that Change. It preserves intent, revisions, relationships, semantic attempts, Evidence Records, Check Results, Exit Reports, Runtime Routes, Planning bindings, Change Claim and Work Item Claim history, Assignments, Integration, review, delivery, feedback, outcomes, archive, and reopening.
+
+Change Trace Protocol v1 is:
 
 ```text
-intent
-→ Decision candidates and disposition
-→ Planning coverage
-→ Work Items and Assignments
-→ Implementation candidates and repairs
-→ Integration and Git proof
-→ delivery effects
-→ outcome disposition
+log-canonical
+content-addressed
+graph-projectable
+local-first
+Git-synchronized
 ```
 
-One Change owns one trace. Sprint state is a generated view over Planning facts and may span several traces. Change remains conceptual aggregate over records, not monolithic mutable object.
+The canonical unit is an immutable typed operation. JSONL is the append-friendly physical representation; it does not weaken typed domain semantics.
 
-Trace history answers what was intended, approved, attempted, checked, repaired, realized, integrated, delivered, observed, and still unknown. It is also canonical reusable-evidence substrate for derived project learning.
+## Authority boundary
 
-Source repository carries no active dogfood Change Traces during stabilization. Packed external projects test this behavior.
+Semantic truth belongs in operation bytes. A Git state commit atomically accepts an exact operation batch and acts as its acceptance receipt. Commit author, message, and timestamp do not define operation meaning or authority.
 
-## Canonical storage
+Runtime alone derives canonical operation identity, parents, exact base, authority binding, state digests, canonical observation time, and accepted tail. Clients submit only intent, evidence material, authority facts, or control facts they legitimately own.
+
+Current status, Backlog, Planning, Implementation, dashboards, queues, and graph layouts derive from accepted operations. Sprint state is a generated view across exact participating Change histories. Callers cannot directly set acceptance, readiness, completion, Integration, or delivery status.
+
+## Protocol scopes and envelope
+
+Authority-bearing identity uses versioned strict canonical JSON and SHA-256. V1 exposes exactly two closed semantic scopes:
 
 ```text
-.codewiki/traces/TRACE-CHG-<id>.jsonl
+Change-scoped operation
+  advances or records one exact Change history
+
+project-scoped Planning record
+  records one exact multi-Change Planning epoch
 ```
 
-Each LF-delimited line is one JSON record:
+A `PlanningEpochRecord` becomes relevant to each participating Change only through atomic `planning.epoch_bound` operations. `StateCommitManifest` and `ArchiveManifest` are separate structural verification records, not domain mutations; their existence alone cannot change WorkState. No generic subject scope exists.
 
-```text
-trace_head
-trace_event       # Decision, Planning, Implementation, or runtime coordination
-...
-tail_checkpoint  # optional derived replay aid
-trace_close       # terminal retention boundary
-```
+The ordinary Change-scoped envelope is conceptual pending the exact protocol-schema slice:
 
-No hidden Change Git refs, Sprint trace store, central catalog, Evidence database, mutable approval store, SQLite/graph authority, canonical WorkState, lesson store, or full session log exists. Backlog, Planning, Implementation, Change dossier, Work/Alignment/Learning graphs, and dashboard state are rebuildable projections.
+```ts
+interface CanonicalChangeOperation {
+  operationId: string; // sha256(canonical_json(body))
+  body: ChangeOperationBody;
+}
 
-## Identity
-
-`trace_head` binds immutable `changeId` and path-safe `traceId` one-to-one. Runtime creates identity and canonical time. User/candidate cannot replace them.
-
-```json
-{
-  "type": "trace_head",
-  "traceId": "TRACE-CHG-dashboard-search",
-  "changeId": "CHG-dashboard-search",
-  "title": "Search Changes and active work together",
-  "createdAt": "2026-07-28T00:00:00.000Z",
-  "origin": { "kind": "user", "refs": ["kb:product/uis/terminal.md"] }
+interface ChangeOperationBody {
+  protocol: {
+    id: "codewiki.change-trace";
+    version: "1.0.0";
+  };
+  changeId: string;
+  kind: ChangeOperationKind;
+  kindVersion: string;
+  parents: string[];
+  baseSnapshot: BaseSnapshot;
+  authorityBinding: AuthorityBinding;
+  preStateDigest: string;
+  postStateDigest: string;
+  payload: ClosedTypedPayload;
 }
 ```
 
-Materially different outcome creates linked Change. Refinement and route-back remain in same trace only while accountable outcome stays stable. Every accepted revision and attempt remains immutable.
+`operationId` is excluded from its own hash input. Any authority-bearing byte change changes identity. Project-scoped `PlanningEpochRecord`, `StateCommitManifest`, and `ArchiveManifest` use separate closed schemas and content identities.
 
-## Record types
+```ts
+interface BaseSnapshot {
+  remoteStateHead: string;
+  sourceHead: string;
+  knowledgeDigest: string;
+  configDigest: string;
+  policyDigest: string;
+}
 
-### `trace_head`
-
-Stable Change/trace identity, title, runtime timestamp, and bounded provenance. Trace exists before approval so rejection, deferral, withdrawal, and failed interpretation remain explainable.
-
-### `trace_event`
-
-One ordered durable fact. Semantic event `loop` is only `decision`, `planning`, or `implementation`. Runtime coordination uses `runtime.*` event names and no semantic Loop.
-
-One semantic attempt persists compact:
-
-- exact trigger/input/snapshot refs;
-- Loop Protocol identity;
-- candidate id/digest/schema and parent/repair candidate refs;
-- compact immutable Evidence Records with exact subject/provenance/artifact/authority/coverage/privacy metadata;
-- Resolved Exit Policy id/digest and Check bindings;
-- completed Check Results with measurements/status/findings/issue classes/repair targets/evidence refs;
-- immutable Exit Report id/status/reduction version;
-- separate Runtime route, authority/freshness outcome, and next action;
-- bounded latency/token/cache/budget summaries;
-- canonical Knowledge/source/test/Git/delivery refs.
-
-```json
-{
-  "type": "trace_event",
-  "id": "evt-decision-0003",
-  "parentId": "evt-decision-0002",
-  "traceId": "TRACE-CHG-dashboard-search",
-  "sequence": 3,
-  "loop": "decision",
-  "event": "change_approved",
-  "createdAt": "2026-07-28T00:03:00.000Z",
-  "refs": ["sha256:...", "kb:product/uis/terminal.md"],
-  "data": {
-    "iteration": 3,
-    "candidate": { "id": "candidate:...", "digest": "sha256:..." },
-    "resolvedExitPolicy": { "id": "policy:...", "digest": "sha256:..." },
-    "checkResults": [],
-    "exitReport": { "id": "report:...", "status": "pass" },
-    "route": { "kind": "advance" },
-    "progress": {}
-  }
+interface AuthorityBinding {
+  actorId: string;
+  principalRef: string;
+  role: string;
+  actorPolicyDigest: string;
+  authenticationEvidenceId?: string;
+  runtimeProtocolDigest: string;
 }
 ```
 
-Passed, failed, and indeterminate attempts persist. Full failed patches, prompts, reasoning, raw output, private Workbenches, and credentials do not.
+Runtime derives both bindings. Client and Git timestamps may support display but cannot determine ownership or progression.
 
-### Evidence Records inside trace events
+CodeWiki does not invent a PKI. Local single-user mode may use asserted actor identity. Protected team mode may require standard signed Git state commits for authority-bearing writes. External approvals and effects require authenticated provider receipts. Git author, message, and timestamp remain non-semantic.
 
-An Evidence Record is an immutable content-addressed entity represented in typed trace-event data, not a new top-level JSONL record type or separate store. It binds exact Change/revision and optional candidate/source-tree subject, acceptance requirements, producer, provenance, artifact digest/ref, Runtime-owned observation time, freshness, authority class, coverage, sensitivity, and closed kind-specific payload. Large or private bytes remain in source, Git, provider, or content-addressed artifact storage.
-
-Evidence created before candidate construction is later bound through candidate observed-base ids/digests. Candidate-derived evidence binds that candidate directly. Check Results cite exact consumed Evidence Record identities. Shared evidence has one owning observation record; other Changes cite it without inheriting acceptance.
-
-Pull-request Validation Bundles remain mutable projections. Authenticated provider review becomes canonical only as an approval-receipt Evidence Record after Runtime verifies exact repository, pull request, head, reviewer role, decision, provider event, bundle digest, and freshness. Request changes feedback remains attached to the exact candidate and later repair lineage.
-
-### `tail_checkpoint`
-
-Derived replay accelerator bound to exact source tail and schema/digests. It cannot override event history. Historical policy/Report meaning comes from persisted identities, never current catalog.
-
-### `trace_close`
-
-Terminal retention boundary. Closure requires exact realization plus outcome disposition: observed, scheduled, not externally observable with rationale, deferred under authority, not realized/failed/abandoned, or indeterminate under explicit policy.
-
-After close, appends reject. Regression or follow-up creates linked Change rather than reopening history.
-
-## Semantic and runtime events
-
-Exactly three semantic Loops:
+## Parent model
 
 ```text
-decision.*
-planning.*
-implementation.*
+initial Trace root                     0 parents
+ordinary accepted Change operation    exactly 1 current Change tail
+explicit same-Change causal merge     2 or more parents
+cross-Change relationship             exact typed payload bindings
 ```
 
-Detailed facts belong in typed data, not event-name proliferation.
+Multiple parents exist only for explicit causal convergence inside one Change. Cross-Change merge, split, dependency, overlap, and Planning semantics use exact revision bindings and atomic accepted batches rather than causal parents.
 
-Runtime coordination includes Claims, Assignment release/expiry/cancellation, worker/host observations, guarded review publication/observation, Integration proof, project-branch merge, push, product publication, release, and future bounded observation. Runtime events cannot approve Change meaning, invent Planning, or accept realization without exact passed semantic evidence.
+Missing parents, unknown required versions, invalid canonical bytes, digest mismatch, unauthorized authority, or inconsistent state digests remain visible and block dependent progression. Replay never silently repairs or omits invalid history.
 
-## Candidate and exit identity
+## Private attempt and accepted identity
 
-Trace must prove what was evaluated:
+Private Runtime attempts and canonical accepted operations use separate identities. A stale remote base may leave useful private evidence, but reevaluation creates a new canonical operation identity. Runtime may bind bounded Evidence digests from the private attempt; it never aliases canonical IDs or persists raw failed work by default.
 
-- Candidate binds Loop, schema/content, exact Change/Planning revision, Knowledge/WorkState snapshot, source/Git base, and runtime-derived facts.
-- Evidence Record binds exact subject, producer, provenance, artifact, observation/freshness, authority/coverage/sensitivity, and typed payload.
-- Check binding binds Loop, id/version/content, execution/measurement/evidence/implementation contracts, parameters, threshold, and enforcement.
-- Check Result binds candidate, resolved Check, implementation/model/configuration, exact Evidence Record inputs, measurement, threshold, findings/status, and trial identity.
-- Exit Report binds candidate, policy digest, complete Result set, deterministic reduction version, and status.
+## Closed v1 operation catalog
 
-Validated constructors reject missing/duplicate/wrong Results, contradictory status, invalid thresholds/measurements, stale policy, wrong candidate, and fabricated authority.
+Every kind defines schema, admission authority, preconditions, state reduction, conflict behavior, graph projection, and supersession behavior.
 
-Preview and append reference the same immutable candidate and Report. Any content/base change creates a new candidate and invalidates dependent evidence.
-
-## Global Planning batches
-
-One Planning candidate may affect several Changes. Runtime slices passed output into owning traces while preserving one policy/Report identity.
-
-Batch binds deterministic epoch id, participant revisions/tails, WorkState snapshot, Sprint/Work Item descriptors, per-trace slice digest, and event ids. Runtime preflights all tails.
-
-Filesystem multi-file writes are not assumed atomic. Surviving records expose missing participants; WorkState marks incomplete epoch; private recovery packet enables idempotent missing append before Claims. Partial epoch never appears fully accepted.
-
-## Lineage
-
-Inside one trace, event parent relationships preserve attempts, routes, retries, and branches. Candidate lineage directly records which candidate repairs which earlier candidate.
-
-Across traces, explicit links represent amendment, regression, duplicate, split, merge, discovery, or follow-up. Links never transfer approval or let one Change silently satisfy another.
-
-## Alignment and delivery evidence
-
-Trace keeps boundaries distinct:
+### Trace lifecycle
 
 ```text
-semantic realization
-→ Integration commit/tree proof
-→ project-branch merge
-→ remote push
-→ publication artifact
-→ release
-→ deployment
-→ observed outcome
+trace.opened
+trace.closed
+trace.reopened
 ```
 
-Each effect record binds exact predecessor, target/base CAS, operation identity, authority, commit/tree/artifact digest, and observation. One boundary never implies another. Remote claims describe one exact observation unless protected checks/attestations/provenance provide continuing guarantees.
-
-## WorkState and relationship views
-
-WorkState folds relevant traces with current Knowledge, source/test ownership, Git/delivery evidence, config, and Runtime observations. Derived views include Backlog, global Planning, Work queue, Implementation, Change dossier, Loop exit, blockers/conflicts, four-dimensional alignment, and learning.
-
-Relationship queries return snapshot digest, structured facts, provenance, authority class, coverage, truncation, and staleness. They cannot mutate traces/Knowledge or infer non-existence from partial coverage.
-
-## Repair evidence and learning
-
-Trace stores compact reusable observations once:
-
-- candidate and repair-parent identity;
-- policy/Check identity;
-- pass/fail/indeterminate Results;
-- `issueClass` and `repairTarget`;
-- Exit Report and Runtime route;
-- later Integration/delivery/outcome refs.
-
-A derived Repair Episode relates failed/indeterminate Result to subsequent candidate and later outcome. Repair Pattern aggregates applicable Episodes. Neither is canonical, another Loop, or authority.
-
-Candidate producers may receive bounded scoped successful and harmful evidence. Model Checks do not. Learned context cannot suppress Checks, lower thresholds, change activation, grant authority, or promote itself.
-
-## Refs and data boundary
-
-`refs` contain canonical identity only:
-
-- Change revision, trace, event, candidate, policy, Check, Result, and Report refs;
-- OKF Knowledge and provenance refs;
-- source/test paths and ownership refs;
-- Git commits/trees/restore refs;
-- Evidence Record, approval receipt, review publication/provider event, Integration, remote, artifact, delivery, and observation digests.
-
-Commands, summaries, findings, remediation, measurements, and outcome disposition belong in typed `data`. Credentials, prompts, private reasoning, full diffs, unrestricted paths, raw tool/model output, and Workbench contents belong in neither.
-
-## Private runtime material
+### Change intent and lineage
 
 ```text
-.codewiki/runtime/**
+change.proposed
+change.revised
+change.relationship_recorded
+change.relationship_superseded
+change.merge_recorded
+change.split_recorded
+change.withdrawal_recorded
+change.feedback_recorded
 ```
 
-May contain proposed/failed candidate material, Workbenches, Assignment packets, Worker Reports, bounded logs, screenshots/videos/captured pages, caches, and recovery packets. It is private, bounded, disposable after proof, and not authority.
+A discovered Change uses `change.proposed` with discovery provenance and an exact typed relationship. Decision disposition derives approval, rejection, or deferral; there is no direct generic status operation.
 
-Optional learning cache lives under `.codewiki/runtime/learning/**` and is fully reconstructible. User-facing generated views live under `.codewiki/views/**`.
+### Change Claims
 
-## Feedback privacy
+```text
+change_claim.acquired
+change_claim.released
+change_claim.takeover_recorded
+```
 
-CodeWiki never uploads supposedly anonymous full traces. Suspected recurring CodeWiki issues may generate a local allowlisted pseudonymized Feedback Bundle. User previews/redacts and separately approves export.
+### Loop attempts and exit
 
-Intent/Knowledge prose, source/diffs, paths, repository/remotes/branches, commit/trace ids, prompts/model responses/reasoning, raw output, credentials, exact timestamps, and project Check content are excluded by default.
+```text
+loop.attempt_started
+loop.attempt_ended
+decision.candidate_recorded
+planning.candidate_recorded
+implementation.candidate_recorded
+loop.exit_policy_recorded
+evidence.recorded
+check.result_recorded
+loop.exit_report_recorded
+runtime.route_recorded
+```
 
-## Retention
+The exact chain remains:
 
-Closed traces compact only after Git restore refs preserve full history and no active Sprint, Assignment, Integration, scheduled observation, or policy/recovery dependency needs hot detail. The compact hot stub retains identity, verified checkpoint, close metadata, lineage, and Git restore refs. Hydration verifies restored records.
+```text
+Change
+→ Loop
+→ Candidate
+→ Evidence Records
+→ Resolved Exit Policy
+→ Checks
+→ Check Results
+→ Exit Report
+→ Runtime Route
+```
 
-Rejected, withdrawn, deferred, failed, indeterminate, and abandoned Changes remain valuable because they prevent duplicate work and preserve repair evidence.
+### Planning coordination
 
-## OKF boundary
+```text
+planning.epoch_recorded
+planning.epoch_bound
+```
 
-OKF applies to `.codewiki/kb/**/*.md`, not Change Trace JSONL. OKF concepts may cite trace refs but cannot parse/rewrite/compact/hydrate/own traces. Imported OKF trust metadata cannot grant trace append or Loop exit.
+`planning.epoch_recorded` is the closed project-scoped record kind that accepts one immutable `PlanningEpochRecord`; it does not use the ordinary Change-scoped envelope. Each participating Change receives one atomic `planning.epoch_bound` operation. Work Items live inside the exact Planning Candidate and epoch; they are not mutable CRUD records.
 
-## Current migration drift
+### Work Item Claims and Assignments
 
-Current schemas still use legacy event names and Quality graph/Standard/diagnostic/report fields. Current views reinterpret some history through today's catalog. Clean Loop/trace/projection cuts replace those fields with persisted candidate/policy/Result/Report contracts and remove current-catalog reinterpretation without compatibility re-exports.
+```text
+work_item_claim.acquired
+work_item_claim.released
+work_item_claim.takeover_recorded
+assignment.dispatched
+assignment.cancel_requested
+assignment.terminal_recorded
+worker.report_recorded
+```
 
-## Non-goals
+Worker Reports are asserted producer material. Runtime may materialize admitted `worker_report` Evidence, but final assurance evaluates the exact integrated Candidate and tree.
 
-- No hidden Change store, Sprint trace, central catalog, Evidence database, mutable approval store, or canonical graph.
-- No full cognition replay or generic mutation patches.
-- No fourth semantic or learning Loop.
-- No first-class Lesson, Memory, Todo, or Quality Issue entity.
-- No automatic approval from replay/projection/learning state.
-- No raw-history prompt injection or automatic telemetry.
+### Integration and source effects
+
+```text
+integration.attempt_started
+integration.result_recorded
+source.branch_merge_recorded
+source.branch_push_recorded
+```
+
+### Review, publication, delivery, and outcomes
+
+```text
+review_projection.published
+product.publication_recorded
+product.release_recorded
+delivery.observation_recorded
+outcome.observation_recorded
+```
+
+Authenticated approval enters through `evidence.recorded` with `approval_receipt`. Review projection cannot grant approval or semantic exit by itself.
+
+## Explicit non-operations
+
+Protocol v1 does not admit operations equivalent to:
+
+```text
+graph edge or node mutation
+lesson or memory persistence
+generic priority or status mutation
+Check disabling or threshold lowering
+heartbeat or session-message persistence
+prompt or raw-output persistence
+cache or view refresh
+```
+
+Graph facts, status, priorities, repair guidance, caches, and views derive from legitimate accepted operations and current policy.
+
+## State commit acceptance
+
+One provider-neutral Git state commit accepts an exact batch:
+
+```ts
+interface StateCommitManifest {
+  previousStateHead: string;
+  operationIds: string[];
+  changedTraceTails: {
+    changeId: string;
+    previousTail: string;
+    nextTail: string;
+  }[];
+  batchDigest: string;
+}
+```
+
+Acceptance protocol:
+
+```text
+local proposal
+→ validate against exact fetched snapshot
+→ create operations and manifest
+→ expected-head push
+→ shared acceptance
+```
+
+A rejected push requires fetch, history verification, WorkState and Alignment Graph rebuild, and semantic reevaluation. Runtime never blind-rebases and retries an authority-bearing write.
+
+## Physical layout
+
+Protected source branch keeps durable project Knowledge/config such as:
+
+```text
+.codewiki/kb/**
+.codewiki/config.json
+```
+
+Local readable hot materialization:
+
+```text
+.codewiki/changes/*.jsonl
+```
+
+Accepted hot state:
+
+```text
+refs/heads/codewiki/state
+  .codewiki/changes/**
+  immutable current objects
+  state manifest
+```
+
+Local files are provisional until accepted on `codewiki/state`. They are not committed to the protected source branch.
+
+## WorkState and Alignment Graph projection
+
+Every valid operation deterministically reduces WorkState and emits a closed set of permitted graph facts. Full replay and incremental projection must be equivalent.
+
+The entire Alignment Graph artifact is derived. Every fact preserves underlying source provenance:
+
+```text
+canonical_binding
+observed_binding
+deterministic_analysis
+inferred_analysis
+```
+
+No edge is independently authoritative. Contradictory, superseded, stale, partial, and unknown facts remain queryable. Partial graph absence does not prove non-existence.
+
+## Evidence retention
+
+Canonical operations retain compact typed Evidence identities, authority, subjects, provenance, digests, and refs. Raw prompts, private reasoning, credentials, unrestricted output, screenshots, videos, logs, pages, provider payloads, and full failed patches remain private or external.
+
+Negative, stale, partial, unavailable, excluded, and contradictory Evidence remains bound into exact Check Results. Compaction cannot summarize away canonical operations.
+
+## Archive
+
+Immutable terminal segments live on:
+
+```text
+refs/heads/codewiki/archive
+  changes/<prefix>/<changeId>/<segmentDigest>.jsonl
+  changes/<prefix>/<changeId>/manifest.json
+```
+
+Archive eligibility requires:
+
+```text
+intended Integration completed
++ no active Change Claim
++ no active Work Item Claim
++ no pending required review or effect
++ no pending configured outcome obligation
++ terminal Trace closure recorded
+```
+
+Safe ordering:
+
+```text
+close Trace
+→ write archive bundle
+→ push archive
+→ fetch and verify remote digest
+→ remove hot state copy
+```
+
+A crash may leave duplicate hot/archive bytes, which is safe. Premature hot deletion is not.
+
+`ArchiveManifest` binds Change ID, protocol version, segment digests, root/tail operation IDs, closure reason, Integration/delivery/outcome refs, accepted state commits, and archive commit identity.
+
+Hydration fetches `codewiki/archive`, verifies manifests and operation chains, and materializes read-only Runtime cache. This archive Git ref replaces the legacy per-Trace Git restore ref. V1 retains no compact hot stub after verified hot-copy removal. Reopening creates a new hot segment through `trace.reopened` referencing the archived tail and closure; archive bytes remain immutable.
+
+## Repair learning
+
+Repair Episodes and Repair Patterns derive from completed history. They are scoped analytical projections, not operations, authority, or another semantic Loop. Retrieval supplies bounded structured successful and harmful guidance to future producers/workers, never raw Trace history or independent Model Checks.
+
+Stable guidance enters Knowledge, Protocols, Checks, routes, config, source, or tests only through Lab ablation, sealed holdout confirmation, and an accountable Change.
+
+## Clean-cut status
+
+Executable source still uses local-linear `.codewiki/traces/TRACE-CHG-<id>.jsonl`, singular `parentId`, local `sequence`, formatted event IDs, snapshot-heavy records, and local rollback. Those contracts are executable drift, not the target protocol.
+
+The clean cut preserves `.codewiki/kb/**`, deletes obsolete dogfood/runtime state and legacy schemas/adapters/tests, and starts fresh v1 Change history. No migration or compatibility layer is authorized.
 
 ## Related docs
 
-- [WorkState](work-state.md)
 - [Alignment Model](alignment-model.md)
-- [Loop Exit](loop-exit.md)
-- [Evidence Records](evidence.md)
-- [Loop Model](loop-model.md)
-- [Loop Contracts](loop-contracts.md)
-- [Decision Loop](decision-loop.md)
-- [Planning Loop](planning-loop.md)
-- [Implementation Loop](implementation-loop.md)
 - [Runtime](runtime.md)
+- [WorkState](work-state.md)
+- [Loop Contracts](loop-contracts.md)
+- [Evidence Records](evidence.md)
+- [Planning Loop](planning-loop.md)
+- [Session Coordination](session-coordination.md)
 - [Knowledge](knowledge.md)
-- [Source Map](source-map.md)
+- [Lab](lab.md)

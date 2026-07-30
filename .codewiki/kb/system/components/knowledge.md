@@ -6,7 +6,7 @@ tags:
   - codewiki
   - system
   - knowledge
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 codewiki_component: knowledge
 codewiki_components:
   - knowledge
@@ -39,7 +39,7 @@ Hot Knowledge lives under:
 
 Git preserves history. Change Traces preserve accountable transitions. Source/tests/Git preserve implementation truth.
 
-Accepted Knowledge may describe future intent before source realizes it, but only one exact active Change may account for that discrepancy. Unaccounted divergence is drift; insufficient coverage remains explicitly unknown.
+Accepted Knowledge may describe future intent before source realizes it, but one or more exact active Changes must account for that discrepancy. Unaccounted divergence is drift; insufficient coverage remains explicitly unknown.
 
 ## Product structure
 
@@ -76,28 +76,29 @@ A Change may originate in any layer:
 - Implementation discoveries can route to Planning or Decision.
 - Source/Knowledge divergence can create a Decision question.
 
-Decision records exact Knowledge impact and provenance in the Change candidate and Trace. It may exit only when affected Knowledge is updated, explicitly unaffected, grounded as an accounted transition, deferred with authority, or routed to the proper owner.
+Decision records exact Knowledge impact and provenance in the Change Candidate and accepted operations. It may exit only when affected Knowledge is updated, explicitly unaffected, grounded as an accounted transition, deferred with authority, or routed to the proper owner.
 
 Planning consumes exact approved Change revisions and current Knowledge refs. Implementation realizes accepted obligations and may not invent new Knowledge meaning during coding.
 
-## Current executable compatibility
+## Current executable drift
 
-Until the OKF cut, `.codewiki/kb/**` is an **OKF v0.1 markdown/frontmatter bundle** and durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections. OKF concept frontmatter is the active KB-code-test ownership source. These compatibility facts do not change the v0.2 target or make generated views authoritative.
+Current `.codewiki/kb/**` export is an OKF v0.1 markdown/frontmatter bundle. Current executable durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Target emits OKF v0.2 and accepts hot Change operations through `codewiki/state`, with local `.codewiki/changes/**` only a materialization. Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections throughout the cut. OKF concept frontmatter is the active KB-code-test ownership source.
 
 ## OKF compatibility
 
-CodeWiki targets OKF v0.2 for `.codewiki/kb/**/*.md` while retaining v0.1 fallback consumption during migration. Current executable source still emits and validates v0.1; that is explicit migration drift until the named OKF cut updates source, tests, and this bundle together.
+CodeWiki targets OKF v0.2 for `.codewiki/kb/**/*.md`. Generic imported bundles may use a bounded v0.1 fallback reader, but CodeWiki does not emit two internal Knowledge contracts or preserve legacy Change Trace compatibility.
 
 Target support includes:
 
-- `sources` for document- or claim-level provenance;
+- `sources` for document- or assertion-level provenance;
 - `generated` for truthful producer/time metadata;
 - `verified` as advisory confirmation metadata;
 - `status` and `stale_after` lifecycle/freshness hints;
 - Attested Computation definitions;
 - meaningful software-domain `type` values;
 - unknown frontmatter round-trip preservation;
-- progressive disclosure through generated indexes.
+- progressive disclosure through generated indexes;
+- authored Knowledge relationships limited to `depends_on`, `constrains`, `refines`, `realizes`, `verifies`, `supersedes`, and `derived_from`.
 
 CodeWiki does not treat OKF claims as runtime authority:
 
@@ -122,19 +123,19 @@ Keep two directions distinct:
 sources / accepted Change provenance
 → why Knowledge exists
 
-CodeWiki source ownership and trace/Git evidence
+CodeWiki source ownership and Change-operation/Git evidence
 → where Knowledge is realized
 ```
 
 Standard OKF `sources` describes upstream provenance. CodeWiki's structured source-map extension describes downstream component/source/test realization. One must not replace the other.
 
-Current `codewiki_source_map` is the canonical structured CodeWiki ownership extension. Existing flat convenience fields remain executable migration state; a clean Knowledge cut may remove duplicate authority once source/tests move to one structured profile.
+Current `codewiki_source_map` is the canonical structured CodeWiki ownership extension. Existing flat convenience fields are executable drift; the clean Knowledge cut removes duplicate authority once source/tests use one structured profile.
 
-## Links and generated relationships
+## Links and Alignment Graph projection
 
-Knowledge docs use sparse intentional Markdown links. They do not encode every relationship manually.
+Knowledge docs use sparse intentional Markdown links. Ordinary links remain `references`; vague `related_to` is rejected. Closed authored relationships carry only stable accepted Knowledge semantics and do not encode every dynamic relationship manually.
 
-Disposable relationship views derive from:
+The wholly derived Alignment Graph projects:
 
 - OKF concept metadata and links;
 - provenance refs;
@@ -145,7 +146,7 @@ Disposable relationship views derive from:
 
 Stable semantic persistence should stop at outcome, behavior/invariant, system responsibility/interface, source ownership boundary, and tests/evidence. Fine-grained symbol relationships remain derived from LSP, AST, or Pi-Lens.
 
-Agents may query bounded Work, Alignment, and Learning views. Query output names provenance, authority, completeness, truncation, and staleness. Queries cannot mutate Knowledge or grant progression authority.
+Agents may query bounded Work, Alignment, and Learning views. Every returned graph fact names underlying refs and `canonical_binding`, `observed_binding`, `deterministic_analysis`, or `inferred_analysis` provenance plus coverage, truncation, and staleness. Queries cannot mutate Knowledge, operations, or progression authority.
 
 ## Progressive brownfield adoption
 
@@ -164,7 +165,7 @@ No complete ontology is required before useful work begins.
 
 Change, Change Trace, Decision, Planning, Implementation, WorkState, Sprint, Work Item, Assignment, Check, and Exit Report are defined as Knowledge concepts. Their live instances are not KB documents.
 
-One Change's workflow truth remains JSONL under `.codewiki/traces/TRACE-CHG-*.jsonl`. Backlog, Planning, Implementation, Change dossier, relationship, and learning screens remain projections over traces plus current Knowledge/source/Git/runtime facts.
+One Change's workflow truth is its accepted typed operation history. Hot segments are accepted through `codewiki/state`; terminal immutable segments live on `codewiki/archive`; local `.codewiki/changes/**` is a materialization. Backlog, Planning, Implementation, Change dossier, relationship, and learning screens remain projections over operations plus current Knowledge/source/Git/Runtime facts.
 
 ## Rules
 
@@ -174,7 +175,7 @@ One Change's workflow truth remains JSONL under `.codewiki/traces/TRACE-CHG-*.js
 - Use generated views for navigation, status, freshness, backlinks, relationship queries, and learning retrieval.
 - Use source/tests for executable truth and Git for exact content/delivery identity.
 - Prefer sparse intentional links over exhaustive meshes.
-- Keep generated graph/search indexes disposable.
+- Keep the Alignment Graph artifact derived and every graph/search index disposable.
 - Do not reintroduce roadmap, graph, artifact, validation, or telemetry roots as project truth.
 - Do not fabricate provenance, verification, freshness, or semantic coverage.
 

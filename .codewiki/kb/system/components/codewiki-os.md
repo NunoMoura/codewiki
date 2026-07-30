@@ -28,13 +28,13 @@ CodeWiki OS guidance is one compact versioned package resource injected into eve
 
 - exactly three semantic Loops exist: Decision, Planning, and Implementation;
 - Change is accountable intent and a durable dossier;
-- Project Runtime owns portfolio scheduling and progression;
-- Knowledge, Change Traces, source/tests, Git, and external observations retain distinct authority;
-- WorkState and relationship/learning views are disposable;
-- runtime alone owns candidate identity, freshness, CAS, recovery, routing, and canonical writes;
+- Project Runtime owns project-wide scheduling and progression;
+- Knowledge, accepted Change operations, source/tests, Git, and external observations retain distinct authority;
+- WorkState and the Alignment Graph are deterministic projections; indexes/rendering/learning views are disposable;
+- Runtime alone owns identity, authority binding, freshness, expected-head CAS, recovery, routing, and canonical writes;
 - candidates, Skills, workers, Checks, clients, and tools cannot grant authority;
-- private reasoning, credentials, raw tool output, Workbenches, and package prompt text never enter canonical traces;
-- Loop exit requires an exact Resolved Exit Policy and immutable Exit Report;
+- private reasoning, credentials, raw tool output, Worker Workbenches, and package prompt text never enter canonical operations;
+- Loop exit follows exact Candidate → Evidence Records → Resolved Exit Policy → Checks → Check Results → Exit Report → Runtime Route;
 - guarded effects require separate exact authority after semantic exit.
 
 The resource has stable id, semantic version, and content digest. Runtime records only those identifiers needed for recovery and audit, never private prompt text.
@@ -46,7 +46,7 @@ A Loop Protocol is mandatory CodeWiki instruction for one semantic Loop. It defi
 | Protocol | Required behavior |
 | --- | --- |
 | Decision | Refine one exact Change revision against current project truth, preserve user/Decision authority, account for Knowledge and active-Change overlap, and return a typed candidate without runtime-owned fields. |
-| Planning | Shape a bounded approved-Change portfolio into globally coherent worker-ready Work Items, dependencies, verification, integration boundaries, and Workbench requirements without choosing concrete providers or runtime routes. |
+| Planning | Shape one bounded selected Change set and current WorkState into globally coherent worker-ready Work Items, dependencies, verification, Integration boundaries, and Worker Workbench requirements without choosing concrete providers or Runtime Routes. |
 | Implementation | Realize accepted scope or assess exact realization evidence, follow Assignment and Check minimums, return bounded candidate evidence, and route semantic uncertainty to Planning or Decision. |
 
 Each Protocol is independently versioned. Runtime binds exact id/version/digest before execution. Protocol changes invalidate only dependent candidate and cache identities.
@@ -81,15 +81,15 @@ Runtime rejects candidates relying on lower-authority guidance to violate higher
 
 ## Prompt and context boundaries
 
-CodeWiki supplies minimum sufficient context. OS and Loop Protocol resources should remain stable and cache-friendly. Runtime identity, WorkState slices, Change/Planning facts, Resolved Exit Policy, selected Repair Episodes, and Workbench manifests remain separate typed inputs instead of one mutable prose prompt.
+CodeWiki supplies minimum sufficient context. OS and Loop Protocol resources should remain stable and cache-friendly. Runtime identity, WorkState slices, Change/Planning/Assignment facts, Resolved Exit Policy, selected successful and harmful Repair Episodes/Patterns, and Worker Workbench manifests remain separate typed inputs instead of one mutable prose prompt.
 
 Prompts/context exclude credentials, bearer tokens, private provider configuration, unrelated source, raw traces, unrestricted runtime artifacts, and hidden authority fields. Candidate outputs remain compact typed data; transcript and private reasoning are never canonical evidence.
 
 Candidate producers may receive bounded project-local repair evidence. Independent Model Checks never share producer conversational state or learning context.
 
-## Current migration drift
+## Current clean-cut drift
 
-Current Pi SDK semantic sessions still hardcode role guidance and disable Skills with `noSkills: true`. Executable source/tests still retain superseded checking vocabulary and paths. Migration must introduce versioned CodeWiki OS and Loop Protocol resources, restore normal Pi Skill discovery, preserve read-only semantic-session boundaries, and adopt exact Candidate/Check/Result/Exit Report contracts.
+Current Pi SDK semantic sessions still hardcode role guidance and disable Skills with `noSkills: true`. Executable source/tests still retain superseded checking vocabulary and paths. The clean cut introduces versioned CodeWiki OS and Loop Protocol resources, restores normal Pi Skill discovery where scope allows, preserves read-only semantic-session boundaries, and adopts exact Candidate/Evidence/Policy/Check/Result/Report contracts.
 
 ## Related docs
 

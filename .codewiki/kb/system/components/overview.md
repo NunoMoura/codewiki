@@ -1,20 +1,27 @@
 ---
 type: Concept
 title: System Overview
-description: CodeWiki is an intent-to-production alignment runtime built as a standalone CLI, Project Runtime, and dashboard over Pi, with exactly three semantic Loops and candidate-bound exit Checks.
+description: CodeWiki is a log-canonical, graph-native, local-first, Git-synchronized intent-to-production alignment runtime with exactly three semantic Loops.
 tags:
   - codewiki
   - system
   - overview
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # System Overview
 
-CodeWiki turns accepted intent into accountable project change. Primary boundary is standalone CLI, Project Runtime, dashboard, and embedded published Pi SDK. Optional Pi extension is a thin client.
+CodeWiki turns accepted intent into accountable project change. Primary boundary is a standalone CLI, Project Runtime, and dashboard built over the published Pi SDK. Optional Pi extension remains a thin client/execution adapter.
 
-Source checkout uses `.codewiki/kb/**` as intended design truth, source/tests as executable truth, and Git as history/checkpoint proof. It does not load or dogfood its own extension during stabilization.
+```text
+typed Change operations
+→ accepted Git-backed history
+→ deterministic WorkState
+→ rolling global Planning
+→ first-class Alignment Graph
+→ local views and bounded agent queries
+```
 
-## Mental model
+## Product model
 
 ```text
 (Kₜ, Gₜ, Pₜ) + ΔIntent
@@ -22,7 +29,11 @@ Source checkout uses `.codewiki/kb/**` as intended design truth, source/tests as
 (Kₜ₊₁, Gₜ₊₁, Pₜ₊₁, Evidence)
 ```
 
-`K` is accepted Knowledge, `G` exact Git state, `P` delivery state, and Evidence includes immutable typed Evidence Records, exact Check Results and Exit Reports, authority receipts, Integration proof, and observations.
+`K` is accepted Knowledge, `G` exact Git/source state, `P` delivery state, and Evidence includes immutable typed Evidence Records, Check Results, Exit Reports, authority receipts, Integration proof, and outcomes.
+
+A discrepancy remains aligned only while it is resolved, accounted for by an exact active Change, or explicitly unknown with unsafe progression blocked.
+
+## Exactly three semantic Loops
 
 ```text
 Project Runtime
@@ -31,94 +42,123 @@ Project Runtime
 └── Implementation Loop
 ```
 
-Each Loop has versioned Loop Protocol, exact typed input, immutable candidate, candidate-specific Resolved Exit Policy, Code/Model Checks, Check Results, and immutable Exit Report.
+Runtime, checking, synchronization, graph projection, Integration, recovery, archive, delivery, learning, and feedback are not additional Loops.
+
+Exact exit chain:
 
 ```text
 Change
 → Loop
 → Candidate
+→ Evidence Records
 → Resolved Exit Policy
 → Checks
 → Check Results
 → Exit Report
-→ Runtime route
+→ Runtime Route
 ```
 
-Runtime validates freshness, generation, authority, and CAS before append/effect. A passing Report permits exact Loop exit only.
+A passing Exit Report permits exact Loop exit only. Runtime then revalidates freshness, authority, expected bases, generation, and effect policy.
 
-## Ownership boundary
+## Truth and projection
 
-Pi owns providers, credentials, model transport, sessions, compaction, tools, extensions, and Skills.
+- `.codewiki/kb/**` owns accepted Product/System/Design Knowledge and authored Knowledge relationships.
+- Accepted Change Trace Protocol operations own accountable temporal history.
+- source/tests own executable truth.
+- Git owns exact objects, refs, Integration state, and accepted-state receipts.
+- Evidence Records own bounded observations with explicit authority and provenance.
+- configuration owns approved policy and capabilities.
+- review/delivery providers own external observations, not CodeWiki semantics.
 
-CodeWiki owns Change Traces, WorkState, Loops, Loop Protocols, Checks/exit, Workbenches, workers, Integration, routing, and guarded effects. Future harness adapters cannot replace semantic authority.
+WorkState, Alignment Graph artifact, indexes, dashboards, queues, notifications, repair retrieval, `.codewiki/views/**`, and most `.codewiki/runtime/**` are deterministic or bounded projections.
 
-## Truth and projections
+## Change Trace Protocol and Git
 
-- `.codewiki/kb/**`: accepted Product/System/Design Knowledge, portable through OKF.
-- `.codewiki/traces/TRACE-CHG-*.jsonl`: append-only Change progression and reusable evidence in consuming projects.
-- source/tests: executable truth.
-- Git/remote/artifact observations: exact content and delivery-boundary proof.
-- configuration: approved policy and capabilities.
+Authority-bearing operation identity uses strict canonical JSON and SHA-256. Ordinary accepted operations have one current Change tail; only explicit same-Change causal convergence has several parents. Cross-Change semantics use typed revision bindings.
 
-WorkState, Work/Alignment/Learning graphs, indexes, dashboard state, `.codewiki/views/**`, and `.codewiki/runtime/learning/**` are disposable projections/caches. Private Workbenches, raw model/tool output, failed patches, credentials, and reasoning stay under bounded runtime storage and never become trace truth.
-
-Alignment means every discrepancy is resolved, tied to an exact active Change, or explicitly unknown and blocked from unsafe progression.
-
-## Target source roots
+Semantic bytes are accepted through one initial provider-neutral carrier:
 
 ```text
-src/
-  semantic-loop.ts
-  loop-exit/**
-  decision/**
-  planning/**
-  implementation/**
-  runtime/loop-exit-runtime.ts
-  dashboard/**
-  traces/**
-  views/**
-  knowledge/**
-  git/**
-  runtime/**
-  error-handling/**
-  pi/**
-  project/**
-  utils/**
-  api/**
+refs/heads/codewiki/state
 ```
 
-Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Current `src/loops/**` checking/judge/graph machinery is migration state and will be deleted by clean cuts without old-path re-exports.
+Local work remains provisional until exact expected-head push succeeds. A stale push triggers fetch, verification, WorkState/graph rebuild, and semantic reevaluation—not blind retry.
 
-## Work and execution
+Team snapshot freshness is:
 
-Decision creates accepted semantic revisions and Knowledge impact. Planning globally shapes approved Changes into Sprints and worker-ready Work Items. Runtime provisions bounded Workbenches and Assignments, materializes typed Evidence Records, and correlates exact approval. Implementation accepts exact realization candidates. For required team review, Runtime may publish an isolated draft-pull-request Validation Bundle before final exit solely to gather evidence. Runtime then serializes post-exit Integration and separately guarded project merge, ordinary push, publication, release, and future deployment effects.
+```text
+fresh | stale | offline
+```
 
-Workers and Model Checks are isolated and non-authoritative. Worker completion, screenshots/videos, and provider comments are evidence material until Runtime validates typed records and trusted Checks consume them. Model Check operational failure is indeterminate. Pi-Lens/tools/Skills help build and repair candidates but cannot attest acceptance.
+Notifications only invalidate local state; Runtime fetches and verifies Git data.
 
-## Learning and feedback
+## Rolling Planning and execution
 
-Compact candidate/Check/repair/outcome lineage persists in Change Traces. Repair Episodes and Repair Patterns are derived project-local views, not truth or another Loop. Learned context cannot alter activation, thresholds, authority, or exit.
+Decision proceeds independently per Change. Planning continuously incorporates newly accepted Changes, active Change Claims, active Work Item Claims, Work Items, Assignments, dependencies, conflicts, and current project state.
 
-Suspected CodeWiki defects may produce local allowlisted Feedback Bundles only after user preview/redaction and separate approval. No full-trace telemetry or automatic upload.
+One immutable `PlanningEpochRecord` is accepted once and atomically bound to each participating Change. New Planning preserves safe active work and explicitly pauses, migrates, cancels, blocks, or routes back invalidated work.
 
-## Guarantee boundary
+Runtime provisions one exact private Worker Workbench per Implementation Assignment attempt. Workers return asserted Worker Reports. Final Implementation assurance evaluates exact integrated content.
 
-CodeWiki guarantees bounded process integrity, exact identity, independent checking, deterministic threshold/reduction, guarded progression, provenance, and explicit uncertainty. It does not guarantee unknowable semantic perfection or permanent remote state.
+## Alignment Graph
+
+```text
+Change Trace operations       canonical temporal history
+Alignment Graph projection    deterministic and first-class
+indexes and rendering         disposable
+```
+
+Graph snapshot identity binds accepted Change ledger head, Knowledge, protected source, config/policy, and projector version. Every fact reports one source class:
+
+```text
+canonical_binding
+observed_binding
+deterministic_analysis
+inferred_analysis
+```
+
+No edge is independently authoritative. Queries are bounded, read-only, snapshot-bound, provenance-bearing, and explicit about coverage, truncation, and staleness.
+
+## OKF
+
+OKF stores accepted Knowledge and a closed authored relationship vocabulary:
+
+```text
+depends_on
+constrains
+refines
+realizes
+verifies
+supersedes
+derived_from
+```
+
+Ordinary Markdown links remain `references`. Dynamic workflow/source/evidence/delivery relationships stay in Change operations and graph projection. Imported OKF is untrusted and cannot execute code, grant authority, pass Checks, or authorize exit.
+
+## Archive and learning
+
+Terminal immutable Trace segments archive on `refs/heads/codewiki/archive` only after configured Integration, review, effect, outcome, and ownership obligations complete. Runtime pushes and verifies archive before removing hot state. Inspection hydrates read-only cache; reopening starts a new hot segment referencing archived closure.
+
+Repair Episodes and Repair Patterns derive from archived history. Bounded relevant successful and harmful guidance may help future producers/workers, but cannot enter independent Model Checks, lower thresholds, disable Checks, grant authority, or become another Loop.
+
+## Rejected architecture
+
+V1 requires no blockchain, canonical database, graph database, message broker, hosted CodeWiki relay, self-hosted coordination service, mutable backlog/current plan, arbitrary graph mutation, or provider-specific semantic truth.
+
+## Source-checkout boundary
+
+This repository uses `.codewiki/kb/**` as intended design truth, source/tests as executable truth, and Git as history/checkpoint evidence. It does not load or dogfood its own extension during stabilization. Packed candidates run only in disposable external projects with isolated Pi settings.
 
 ## Related docs
 
 - [Alignment Model](alignment-model.md)
+- [Change Traces](traces.md)
+- [Runtime](runtime.md)
+- [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
-- [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
 - [Evidence Records](evidence.md)
-- [Worker Workbench](worker-workbench.md)
-- [Model Routing](model-routing.md)
-- [Decision Loop](decision-loop.md)
 - [Planning Loop](planning-loop.md)
-- [Implementation Loop](implementation-loop.md)
-- [Traces](traces.md)
-- [Runtime](runtime.md)
-- [Migration Audit](../flows/migration-audit.md)
-- [Source Map](source-map.md)
-- [API Tool Surface](api-tools.md)
+- [Session Coordination](session-coordination.md)
+- [Knowledge](knowledge.md)
+- [Clean-Cut Audit](../flows/clean-cut-audit.md)

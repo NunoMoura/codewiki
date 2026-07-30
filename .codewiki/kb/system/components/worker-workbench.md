@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Worker Workbench
-description: Planning declares reproducible Workbench requirements and Runtime provisions one exact private Worker Workbench for each isolated Assignment attempt.
+description: Planning declares reproducible requirements and Runtime provisions one exact private Worker Workbench bound to one Work Item Claim and isolated Assignment attempt.
 tags:
   - codewiki
   - system
@@ -27,7 +27,7 @@ Planning shapes coherent independently verifiable outcomes, not smallest tasks. 
 - resolvable source/context needs;
 - required capabilities and isolation;
 - optional narrowed Skill scope;
-- frozen minimum Check/evidence obligations;
+- declarative minimum Check/Evidence obligations that Runtime resolves from canonical Planning evidence;
 - Workbench buildability rationale.
 
 Planning avoids splits that increase semantic coupling, duplicate setup, Integration risk, or unverifiable partial state. Product/Knowledge uncertainty routes to Decision.
@@ -51,7 +51,7 @@ Omitted `skillScope` preserves normal Pi discovery. Planning may narrow but cann
 
 ## Runtime manifest
 
-Before Claim append, Runtime resolves requirements against fresh WorkState and host capabilities. Private digest-bound manifest includes:
+Before Work Item Claim acquisition, Runtime resolves requirements against fresh WorkState and host capabilities. Private digest-bound manifest includes:
 
 - Assignment, Change, Planning, Work Item, and acceptance-requirement identities;
 - exact repository/source base and mutable workspace identity;
@@ -59,7 +59,7 @@ Before Claim append, Runtime resolves requirements against fresh WorkState and h
 - resolved Pi Skill ids/versions inside declared scope;
 - exact allowed/denied tool capabilities;
 - selected Implementation tier and Pi route/configuration identity;
-- frozen minimum Check bindings and evidence obligations;
+- Runtime-derived minimum Check bindings and Evidence obligations from canonical Planning evidence;
 - process/worktree/OCI isolation;
 - time/token/cost/process/output budgets;
 - Worker Report schema, destination, and digest contract;
@@ -67,7 +67,7 @@ Before Claim append, Runtime resolves requirements against fresh WorkState and h
 
 No credentials, bearer capabilities, private prompt body, unrestricted environment, unrelated source, or repair history outside bounded applicability enters manifest. Provider authentication remains inside Pi/trusted adapter.
 
-Runtime probes capabilities before Claim append. Digest-pinned preinstalled OCI image is required; no implicit pull. Pre-Claim Workbench is inert scratch. Exact active canonical Claim activates it, and Runtime rechecks generation/freshness before append/start.
+Runtime probes capabilities before Work Item Claim acquisition. Digest-pinned preinstalled OCI image is required; no implicit pull. Pre-acquisition Worker Workbench is inert scratch. Exact accepted Work Item Claim plus `assignment.dispatched` activates it, and Runtime rechecks generation/freshness before start.
 
 ## Worker authority
 
@@ -78,17 +78,17 @@ Worker cannot:
 - revise Decision/Planning truth;
 - widen paths, capabilities, model route, isolation, or budget;
 - activate/suppress Checks or change thresholds;
-- write traces/WorkState;
+- append Change operations or mutate WorkState;
 - integrate, merge, push, publish, release, or deploy;
 - treat local checks or completion as acceptance.
 
-Worker returns one immutable Worker Report. Runtime validates report/Assignment/Workbench/base/Claim identity. `completed` means candidate evidence exists only.
+Worker returns one immutable Worker Report. Runtime validates report, Assignment, Worker Workbench, source base, and Work Item Claim identity. `completed` means potential Candidate material exists only; Runtime must still integrate and verify it.
 
 ## Check feedback and repair
 
 Implementation evaluates one immutable realization candidate. Exit Report names failed/indeterminate Checks, evidence gaps, issue classes, repair targets, and allowed scope. Runtime creates a new candidate identity for every repair attempt and may raise tier or route to Planning/Decision.
 
-Candidate producer may receive bounded applicable same-Change or project-local Repair Episodes. Model Checks never receive producer conversation or repair-learning context. Learned evidence cannot lower tier, suppress Checks, or weaken authority.
+Candidate producer may receive bounded applicable same-Change or project-local successful and harmful Repair Episodes/Patterns. Independent Model Checks never receive producer conversation or repair-learning context. Learned evidence cannot lower tier, suppress Checks, or weaken authority.
 
 No worker sees peer-private report/scratch by default. Shared facts enter only through accepted Planning, current WorkState, Integration evidence, or new Runtime-built context.
 
@@ -98,13 +98,13 @@ Worker Report may contain bounded discoveries outside assigned acceptance. Runti
 
 ## Recovery and sanitation
 
-Manifests/environments live under private `.codewiki/runtime/**`. Replacement generation resumes only when manifest digest, job identity, active Claim, base, and adapter capability match.
+Manifests/environments live under private `.codewiki/runtime/**`. Replacement Runtime resumes only when manifest digest, job identity, active Work Item Claim, source base, and adapter capability match accepted state.
 
-Runtime removes stale pre-Claim, terminal unsuccessful, and proof-authorized completed material idempotently. Active-Claim, unintegrated completed, and ambiguous evidence remain. Change Traces retain bounded identities, Results, receipts, refs, and outcomes—not Workbench contents.
+Runtime removes stale pre-acquisition, terminal unsuccessful, and proof-authorized completed material idempotently. Active Work Item Claim, unintegrated completed, and ambiguous evidence remain. Change operations retain bounded identities, Results, receipts, refs, and outcomes—not Worker Workbench contents.
 
-## Current migration drift
+## Current clean-cut drift
 
-Current Assignments bind paths, WorkState, source base, context digest, prompt, isolation, and execution policy, but not complete Workbench manifest. Migration adds Planning requirements, capability/model/Skill binding, frozen Check minimums, Loop Protocol identity, pre-Claim manifest identity, and guarded activation while preserving Claim/recovery behavior.
+Current Assignments bind paths, WorkState, source base, context digest, prompt, isolation, and execution policy, but not a complete Worker Workbench manifest. The clean cut adds Planning requirements, capability/model/Skill binding, Runtime-derived Check minimums, Loop Protocol identity, pre-acquisition manifest identity, accepted Work Item Claim activation, and remote-state recovery.
 
 ## Related docs
 

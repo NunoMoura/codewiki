@@ -5,11 +5,11 @@ description: This file is CodeWiki's active vocabulary contract. It governs Prod
 tags:
   - codewiki
   - lexicon
-timestamp: 2026-06-30T00:00:00Z
+timestamp: 2026-07-30T00:00:00Z
 ---
 # Lexicon
 
-This file is CodeWiki's active vocabulary contract. Desired-state docs, source, APIs, Loop Protocols, trace summaries, and user-facing views use these terms. Superseded terms appear only in the migration table.
+This file is CodeWiki's active vocabulary contract. Intended-state docs, source, APIs, Loop Protocols, Change operation summaries, and user-facing views use these terms. Superseded terms appear only in the clean-cut table.
 
 ## Product identity
 
@@ -19,11 +19,23 @@ CodeWiki's product category. It turns accepted intent into accountable transitio
 
 ### Change
 
-One accountable intent and durable dossier. Change includes exact semantic revisions, every Loop attempt, Planning coverage, realization, repair, Git/delivery proof, and outcome observation. It is a conceptual aggregate over append-only records, not one mutable object.
+One accountable intent and durable dossier. Change includes exact semantic revisions, every Loop attempt, Planning coverage, realization, repair, Git/delivery proof, and outcome observation. It is a conceptual aggregate over append-only typed operations, not one mutable object.
 
 ### Change Trace
 
-One append-only JSONL dossier under `.codewiki/traces/TRACE-CHG-<id>.jsonl`, bound one-to-one to Change. It contains semantic attempts, Runtime coordination, exact evidence identities, route-backs, delivery boundaries, observations, checkpoints, and retention facts.
+Logical append-only dossier of immutable typed Change operations, bound one-to-one to Change. Hot accepted segments synchronize through `codewiki/state`; terminal immutable segments move to `codewiki/archive` and hydrate on demand.
+
+### Change Trace Protocol
+
+Closed versioned grammar defining each operation kind's schema, admission authority, preconditions, state reduction, conflict behavior, Alignment Graph projection, and supersession behavior. V1 uses strict canonical JSON and SHA-256.
+
+### Change operation
+
+Immutable typed content-addressed fact in one Change Trace. Runtime derives identity, parents, exact base, authority binding, state digests, and canonical observation time. Semantic truth lives in operation bytes; Git state commits supply atomic acceptance receipt and order.
+
+### State commit
+
+Git commit on `refs/heads/codewiki/state` that atomically accepts one exact operation batch against one expected previous state head. Commit metadata is non-semantic.
 
 ### Change dossier
 
@@ -49,11 +61,11 @@ Content-addressed cross-Loop entity represented by one immutable value record wi
 
 ### Project Runtime
 
-CodeWiki's project-scoped outer control plane. It derives WorkState, selects compatible jobs, owns identity/freshness/CAS, runs Loop exit, supervises sessions/workers, guards canonical writes/effects, and quiesces safely. It is not semantic Loop.
+CodeWiki's project-scoped outer control plane. It derives WorkState, selects compatible jobs, owns identity/freshness/CAS, runs Loop exit, supervises sessions/workers, guards canonical writes/effects, and quiesces safely. It is not a semantic Loop.
 
 ### Coordinator
 
-Internal elected scheduling/ownership role inside Project Runtime. One generation owns durable write/effect authority. Do not use “coordinator” as name for whole product/runtime.
+Internal local scheduling/ownership role inside Project Runtime. One generation fences local writes/effects; shared acceptance still requires exact authority and Git expected-head CAS. Do not use “coordinator” as the name for the whole product or Runtime.
 
 ### Semantic Loop
 
@@ -83,7 +95,7 @@ One bounded effort to produce/evaluate exact candidate. Passed, failed, and inde
 
 ### Candidate
 
-Exact immutable role-specific output proposed by one Loop attempt. Candidate identity binds content and observed base/snapshots. Runtime creates identity. Any candidate or guarded-base change creates new identity and invalidates dependent Results.
+Exact immutable role-specific output proposed by one Loop attempt. Candidate identity binds content and observed bases/snapshots. Runtime creates identity. Any Candidate or guarded-base change creates new identity and invalidates dependent Results.
 
 ### Runtime route
 
@@ -179,11 +191,11 @@ Interprets persisted intent, grounds current/desired state, owns accepted Knowle
 
 ### Planning
 
-Globally shapes bounded approved-Change portfolio into coherent Sprints, worker-ready Work Items, dependencies, acceptance requirements, verification, Integration/rollback boundaries, resolutions, and Workbench requirements.
+Continuously shapes one bounded selected Change set and current WorkState into immutable Planning epochs, coherent Sprints, worker-ready Work Items, dependencies, acceptance requirements, verification, Integration/rollback boundaries, resolutions, and Worker Workbench requirements.
 
 ### Implementation
 
-Realizes accepted obligations in source/tests/Knowledge and judges exact realization candidate through Implementation Checks. No standalone reviewer exists.
+Realizes accepted obligations in source/tests/Knowledge and judges the exact integrated realization Candidate through Implementation Checks. No standalone reviewer exists.
 
 ## Work model
 
@@ -193,35 +205,51 @@ Generated Work workspace for intake and Change revisions not yet approved/termin
 
 ### Sprint
 
-Planning-created execution grouping across one or more Changes under coherent dependency, Integration, rollback, and verification boundaries. Generated view joins facts from participating traces.
+Planning-created execution grouping across one or more Changes under coherent dependency, Integration, rollback, and verification boundaries. Generated view joins facts from participating accepted Change histories.
+
+### Planning horizon
+
+Bounded current scope that Planning observes: selected Change set, active Changes, Change Claims, Work Item Claims, active Work Items/Assignments, dependencies, conflicts, and project snapshot.
+
+### Selected Change set
+
+Exact Change revisions considered by one Planning Candidate. Selection is immutable inside that Candidate and does not imply immediate execution.
 
 ### Planning epoch
 
-One global Planning candidate/append batch over bounded participant set. May create/revise several Sprints and Work Items.
+One immutable content-addressed project-scoped Planning record plus atomic bindings to exact participant Change revisions. It may create or revise several Sprints and Work Items while preserving or explicitly dispositioning active work.
+
+### Safe execution frontier
+
+Work Items Runtime may currently admit after revalidating Planning, dependencies, ownership, conflicts, capacity, supervision, capabilities, and fresh project state.
 
 ### Work Item
 
 Planning-created worker-ready execution outcome with exactly one owning Change, optional contribution refs, acceptance requirements, scope, dependencies, verification, Integration, and Workbench requirements.
 
-### Claim
+### Change Claim
 
-Canonical temporary reservation granting exact Assignment attempt bounded execution right and preventing unsafe overlap. Claim never grants semantic acceptance.
+Canonical exclusive authority for one exact Change revision and semantic purpose. It binds actor/authority and exact project snapshot. V1 uses explicit acquisition, explicit release, and authenticated takeover; it never grants semantic acceptance.
+
+### Work Item Claim
+
+Canonical exclusive execution authority for one exact Work Item revision and Assignment attempt. It binds worker, source base, Worker Workbench, scope, budgets, and obligations. Client/Git timestamps cannot expire it.
 
 ### Assignment
 
-Runtime-derived binding of one Work Item, worker attempt, Claim, source base, scope, Workbench, isolation, budgets, and report contract.
+Runtime-derived binding of one Work Item, worker attempt, Work Item Claim, source base, scope, Worker Workbench, isolation, budgets, and report contract.
 
 ### Assignment packet
 
-Private digest-bound serialization under `.codewiki/runtime/**` used by execution adapters and recovery. Inert without exact matching active Claim.
+Private digest-bound serialization under `.codewiki/runtime/**` used by execution adapters and recovery. Inert without an exact matching active Work Item Claim.
 
 ### Worker Workbench
 
-Private complete environment for one Assignment: source, context, Loop Protocol, Skills, tools, model route, frozen Check/evidence obligations, isolation, budgets, and report contract.
+Private complete environment for one Assignment: source, context, Loop Protocol, Skills, tools, model route, Runtime-derived declarative Check/Evidence obligations, isolation, budgets, and report contract.
 
 ### Worker Report
 
-Immutable normalized outcome (`completed | blocked | failed | cancelled`) for one Assignment attempt. Completion is candidate evidence, never Implementation acceptance.
+Immutable normalized outcome (`completed | blocked | failed | cancelled`) for one Assignment attempt. Completion is potential Candidate material, never Implementation acceptance.
 
 ### Implementation tier
 
@@ -231,7 +259,15 @@ Runtime-selected `routine | standard | complex` model/capability class. Caller/w
 
 ### WorkState
 
-Disposable typed projection over Change Traces, Knowledge, source/tests/Git, configuration, delivery evidence, and Runtime observations. Used for bounded scheduling/context; never authority.
+Deterministic disposable typed projection over accepted Change operations, Knowledge, source/tests/Git, configuration/policy, delivery evidence, and bounded Runtime observations. Used for scheduling, guards, and Loop context; never independent authority.
+
+### Team WorkState snapshot
+
+Snapshot identity binding repository, `codewiki/state` head, protected source head, Knowledge digest, config digest, and policy digest.
+
+### Fresh / stale / offline
+
+Runtime-visible distributed snapshot status. Unsafe shared mutation requires `fresh`; `stale` or `offline` permits only bounded private work without shared acceptance.
 
 ### Alignment
 
@@ -247,7 +283,7 @@ Intent → Knowledge/invariant → Planning → source/tests → Git/delivery/ou
 
 ### Horizontal alignment
 
-Coherence among concurrent Changes, components, dependencies, Claims, and Integration boundaries.
+Coherence among concurrent Changes, components, dependencies, Change Claims, Work Item Claims, and Integration boundaries.
 
 ### Temporal alignment
 
@@ -259,19 +295,27 @@ Distinct local candidate, integrated tree, branch, remote, artifact, release/dep
 
 ### Work Graph
 
-Disposable projection of Changes, Sprints, Work Items, dependencies, Assignments, Claims, blockers, and Integration.
+Disposable current-work projection of Changes, Sprints, Work Items, dependencies, Assignments, Change Claims, Work Item Claims, blockers, and Integration.
 
 ### Alignment Graph
 
-Disposable projection connecting OKF Knowledge/provenance, components, source/test ownership, Changes/candidates/Results, Git/delivery proof, and outcomes.
+Versioned deterministic first-class projection connecting accepted Change history, OKF Knowledge, source/tests, Git, Evidence, delivery, and outcomes. The whole artifact is derived; no edge is independently authoritative.
+
+### Alignment Graph snapshot
+
+Digest binding accepted Change ledger head, Knowledge digest, protected source head, config/policy digests, and graph projector version.
+
+### Graph source provenance
+
+Per-fact classification preserving underlying authority: `canonical_binding | observed_binding | deterministic_analysis | inferred_analysis`.
 
 ### Learning View
 
-Disposable temporal projection of candidate failures, repairs, and later outcomes. Not separate truth graph.
+Disposable temporal projection of Candidate failures, repairs, and later outcomes. Not a separate truth graph or semantic Loop.
 
 ### Relationship query result
 
-Bounded read-only semantic facts plus snapshot digest, provenance, authority class, coverage, truncation, and staleness. No arbitrary Cypher/graph mutation.
+Bounded read-only semantic facts with per-fact source provenance, underlying refs, snapshot digest, coverage, truncation, and staleness. No arbitrary Cypher or graph mutation.
 
 ## Knowledge
 
@@ -281,7 +325,7 @@ Accepted durable Product/System/Design intent under `.codewiki/kb/**`. Distinct 
 
 ### OKF
 
-Open Knowledge Format used for portable Knowledge concepts/provenance. CodeWiki targets v0.2 with v0.1 fallback. Imported metadata remains untrusted.
+Open Knowledge Format used for portable Knowledge concepts/provenance. CodeWiki targets v0.2 with v0.1 fallback. Authored relationship vocabulary is `depends_on | constrains | refines | realizes | verifies | supersedes | derived_from`; Markdown links remain `references`. Imported metadata remains untrusted and inert.
 
 ### Source ownership
 
@@ -299,7 +343,7 @@ Hot: current accepted Knowledge. Cold: history reachable through Git/restore ref
 
 ### Integration proof
 
-Canonical Runtime evidence that accepted worker output was applied under exact Planning target/base into guarded Integration tree. Binds Claim, Assignment, Worker Report, commits/trees, paths, patch digest, and checks. Grants no merge/push/publication authority.
+Canonical Runtime evidence that accepted worker output was applied under exact Planning target/base into guarded Integration tree. Binds Work Item Claim, Assignment, Worker Report, commits/trees, paths, patch digest, and Checks. Grants no merge, push, or publication authority.
 
 ### Project-branch merge proof
 
@@ -325,11 +369,11 @@ Runtime-observed exact merged/tree/package digest for candidate. Worker-local pr
 
 ### Repair Episode
 
-Derived relation from failed/indeterminate Result through subsequent repair candidate to later Check/Integration/delivery/outcome evidence.
+Scoped derived account from failed/indeterminate Result through subsequent repair Candidate to later Check, Integration, delivery, or outcome evidence. It records applicability and harmful as well as successful approaches without becoming canonical authority.
 
 ### Repair Pattern
 
-Derived aggregation of applicable successful and harmful Repair Episodes. Advisory until held-out validated and promoted through accountable Change.
+Derived scoped aggregation of applicable successful and harmful Repair Episodes. Advisory until Lab ablation, sealed holdout validation, and promotion through an accountable Change.
 
 ### Feedback Bundle
 
@@ -369,11 +413,23 @@ Disposable projection under `.codewiki/views/**`. Examples: status, Work, Change
 
 ### `refs`
 
-Canonical trace artifact references only. Commands/prose/findings belong in structured `data`; private material belongs in neither.
+Canonical Change-operation artifact references only. Commands/prose/findings belong in structured `data`; private material belongs in neither.
+
+### Hot Trace segment
+
+Current accepted Change operation segment carried on `refs/heads/codewiki/state` and materialized locally under `.codewiki/changes/**`.
+
+### Archive segment
+
+Immutable terminal Change operation segment carried on `refs/heads/codewiki/archive` after configured Integration, ownership, review/effect, outcome, and closure obligations complete.
+
+### Hydration
+
+Provider-neutral Git fetch, manifest/operation digest verification, and read-only Runtime materialization of archived history.
 
 ### Retention
 
-Close/compact/hydrate/restore lifecycle using traces and Git restore refs. Not generic garbage collection.
+Close, archive, hydrate, reopen, compact-checkpoint, and cleanup lifecycle. Compaction never summarizes away canonical operations.
 
 ## User-facing statuses
 
@@ -407,14 +463,16 @@ Close/compact/hydrate/restore lifecycle using traces and Git restore refs. Not g
 | Generic gate / gateway | Check or Exit Report status, whichever is exact |
 | Validation report | Check Result or Exit Report |
 | Board / trace board | Specific Backlog, Planning, Implementation, Alignment, or Change view |
-| Task / work unit | Work Item |
-| Roadmap | Work/Planning projection over canonical traces |
-| Graph truth | Disposable relationship view over canonical sources |
+| Legacy task-unit term | Work Item |
+| Generic ownership term | Change Claim or Work Item Claim, whichever is exact |
+| Approved-change collection term | Planning horizon or selected Change set |
+| Roadmap | Work/Planning projection over accepted Change history |
+| Graph truth | Snapshot-bound Alignment Graph projection with per-fact provenance |
 | Lesson / Memory entity | Derived Repair Episode/Pattern or promoted Knowledge through Change |
 | Telemetry trace | Change Trace or explicit Feedback Bundle, never automatic telemetry |
 | Garbage collection | Retention/cleanup |
 
-Legacy names may remain temporarily in executable source/tests and migration documentation only. Clean cuts remove old paths/exports rather than adding adapters.
+Legacy names may remain temporarily in executable source/tests and explicit executable-drift tables only. Clean cuts remove old paths/exports rather than adding adapters.
 
 ## Related docs
 
