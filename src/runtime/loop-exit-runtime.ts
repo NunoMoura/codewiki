@@ -1,10 +1,15 @@
 import { decisionLoopExitDeclaration } from "../decision/exit/index.ts";
 import { implementationLoopExitDeclaration } from "../implementation/exit/index.ts";
+import { createLoopExitResultCache } from "../loop-exit/cache.ts";
 import { createCheckCatalog } from "../loop-exit/catalog.ts";
 import {
 	createCheckResult,
 	createExitReport,
 } from "../loop-exit/results.ts";
+import {
+	createLoopExitRunner,
+	type CreateLoopExitRunnerInput,
+} from "../loop-exit/runner.ts";
 import {
 	createLoopExitSuite,
 	type LoopExitSuite,
@@ -21,6 +26,10 @@ interface LoopExitRuntime {
 	readonly catalog: ReturnType<typeof createCheckCatalog>;
 	readonly createCheckResult: typeof createCheckResult;
 	readonly createExitReport: typeof createExitReport;
+	readonly createResultCache: typeof createLoopExitResultCache;
+	readonly createRunner: (
+		input: Omit<CreateLoopExitRunnerInput, "catalog">,
+	) => ReturnType<typeof createLoopExitRunner>;
 	readonly materializeDecisionResearchCitation: typeof materializeDecisionResearchCitation;
 	readonly evaluateDecisionResearchProvenance: ReturnType<
 		typeof createDecisionResearchProvenanceExecutor
@@ -47,6 +56,9 @@ export function createLoopExitRuntime(): LoopExitRuntime {
 		catalog,
 		createCheckResult,
 		createExitReport,
+		createResultCache: createLoopExitResultCache,
+		createRunner: (input: Omit<CreateLoopExitRunnerInput, "catalog">) =>
+			createLoopExitRunner({...input, catalog}),
 		materializeDecisionResearchCitation,
 		evaluateDecisionResearchProvenance:
 			createDecisionResearchProvenanceExecutor(catalog),
