@@ -1,11 +1,11 @@
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
-import type {EvidenceObligationResolution} from "../../evidence/obligation-resolution.ts";
 import {
 	createLoopExitResultCache,
 	type LoopExitResultCache,
 } from "../../loop-exit/cache.ts";
 import {createCheckCatalog} from "../../loop-exit/catalog.ts";
 import type {ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
+import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {resolveExitPolicy} from "../../loop-exit/resolve-policy.ts";
 import {
 	createLoopExitRunner,
@@ -14,20 +14,30 @@ import {
 } from "../../loop-exit/runner.ts";
 import type {DecisionCandidate} from "./candidate.ts";
 import {createDecisionCodeExecutors} from "./code-executors.ts";
+import {
+	decisionEvidenceSubject,
+	resolveDecisionEvidenceObligations,
+} from "./evidence.ts";
+import {
+	createDecisionModelCheckExecutors,
+	type DecisionModelCheckTransport,
+} from "./model-checks.ts";
 
 interface CreateDecisionExitRuntimeInput {
 	readonly additionalExecutors?: readonly LoopCheckExecutor[];
 	readonly cache?: LoopExitResultCache;
 	readonly limits?: LoopExitRunnerLimits;
+	readonly modelChecks?: {
+		readonly route: WikiModelRouteConfig;
+		readonly transport: DecisionModelCheckTransport;
+	};
 }
 
 interface RunDecisionExitInput {
 	readonly candidate: DecisionCandidate;
 	readonly changeRef: string;
-	readonly evidenceResolutionsByCheck?: Readonly<
-		Record<string, readonly EvidenceObligationResolution[]>
-	>;
 	readonly evidenceRecords?: readonly EvidenceRecord[];
+	readonly researchFreshnessBoundary?: string;
 	readonly signal?: AbortSignal;
 }
 
@@ -46,32 +56,50 @@ export function createDecisionExitRuntime(
 } {
 	const catalog = createCheckCatalog();
 	const cache = input.cache ?? createLoopExitResultCache();
-	const runner = createLoopExitRunner({
-		catalog,
-		cache,
-		limits: input.limits,
-		executors: [
-			...createDecisionCodeExecutors(catalog),
-			...(input.additionalExecutors ?? []),
-		],
-	});
 	return Object.freeze({
 		cache,
 		async run(runInput: RunDecisionExitInput): Promise<DecisionExitRun> {
 			assertRunInput(runInput);
 			const policy = decisionExitPolicy(runInput.candidate, runInput.changeRef);
+			const subject = decisionEvidenceSubject(
+				runInput.candidate,
+				runInput.changeRef,
+			);
+			const runner = createLoopExitRunner({
+				catalog,
+				cache,
+				limits: input.limits,
+				executors: [
+					...createDecisionCodeExecutors(catalog),
+					...(input.modelChecks
+						? createDecisionModelCheckExecutors({
+								catalog,
+								route: input.modelChecks.route,
+								subject,
+								transport: input.modelChecks.transport,
+							})
+						: []),
+					...(input.additionalExecutors ?? []),
+				],
+			});
+			const evidenceRecords = runInput.evidenceRecords ?? [];
+			const evidenceResolutionsByCheck = resolveDecisionEvidenceObligations({
+				catalog,
+				policy,
+				subject,
+				evidenceRecords,
+				...(runInput.researchFreshnessBoundary
+					? {
+							researchFreshnessBoundary:
+								runInput.researchFreshnessBoundary,
+						}
+					: {}),
+			});
 			const result = await runner.run({
 				candidate: runInput.candidate,
 				policy,
-				...(runInput.evidenceResolutionsByCheck
-					? {
-							evidenceResolutionsByCheck:
-								runInput.evidenceResolutionsByCheck,
-						}
-					: {}),
-				...(runInput.evidenceRecords
-					? {evidenceRecords: runInput.evidenceRecords}
-					: {}),
+				evidenceResolutionsByCheck,
+				evidenceRecords,
 				...(runInput.signal ? {signal: runInput.signal} : {}),
 			});
 			return Object.freeze({policy, result});

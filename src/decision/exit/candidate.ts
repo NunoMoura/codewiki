@@ -21,6 +21,7 @@ import {
 import {
 	toCanonicalJsonValue,
 	type CanonicalJsonValue,
+	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 import type {WorkState} from "../../work-state/types.ts";
 import type {
@@ -45,7 +46,7 @@ export interface DecisionSemanticRevision {
 }
 
 export interface DecisionValidationBinding {
-	readonly revisionDigest: string;
+	readonly revisionDigest: Sha256Digest;
 	readonly state: "unknown" | "valid" | "invalid";
 	readonly validatedRevision: number | null;
 	readonly validatedDigest: string | null;

@@ -179,7 +179,7 @@ The versioned `codewiki.decision.research-claims` protocol now prepares one immu
 
 The Pi adapter now executes that prepared protocol in one in-memory session selected by the exact Runtime route. It disables all tools and resource discovery, supplies no producer conversation or repository context, bounds request/response bytes and route timeout, propagates cancellation, parses only strict JSON, and discards transient assistant text after normalization. Missing models, provider failure, timeout, cancellation, and malformed output return typed operational observations for Runtime reduction; they never fabricate model Evidence.
 
-A production-unwired native Decision path now materializes the full Runtime-owned Candidate from persisted Change/WorkState facts, resolves the exact closed Decision policy, and runs trusted Code Check executors through the bounded native runner. Missing approval/model/research Evidence or execution remains explicit `indeterminate`, while semantic Code Check failures remain failure-dominant. External research collection, independent general Model Check transport, canonical Candidate/policy/Result/Report persistence, and replacement of the legacy `runWikiDecide()` count path remain part of the clean Decision cut.
+A production-unwired native Decision path now materializes the full Runtime-owned Candidate from persisted Change/WorkState facts, resolves the exact closed Decision policy, and runs trusted Code and independent general Model Check executors through the bounded native runner. The `codewiki.decision.model-check` protocol creates one tool-free, snapshot-bound request per Check, validates an exact bounded response, preserves supported, unsupported, and uncertain conclusions distinctly, and materializes normalized `model_assessment` Evidence. Runtime can also materialize authenticated approval-receipt Evidence for the exact candidate and deterministically resolve Decision obligations from persisted Evidence. Model-produced Evidence and its exact resolution return with the run for canonical persistence; malformed or unavailable execution remains `indeterminate`, and semantic failures remain failure-dominant. A production Pi transport for the general protocol, external research collection/scheduling, canonical Candidate/policy/Evidence/Result/Report operations, and replacement of the legacy `runWikiDecide()` count path remain part of the clean Decision cut.
 
 ## Exit and route
 
@@ -201,7 +201,7 @@ Imported OKF provenance, generated/verified/status/freshness metadata, and Attes
 
 ## Approval fact
 
-Runtime constructs approval receipt after candidate pass and final guard. Conceptually it binds:
+Runtime materializes authenticated approval-receipt Evidence before the approval-safety Check, then records the accepted approval operation only after Candidate pass and final guards. Conceptually the accepted fact binds:
 
 ```ts
 interface ChangeApproval {

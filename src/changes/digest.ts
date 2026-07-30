@@ -1,13 +1,14 @@
 import { createHash } from "node:crypto";
+import type { Sha256Digest } from "../utils/canonical-json.ts";
 import type { Change } from "./types.ts";
 
-export function changeContentDigest(change: Change): string {
+export function changeContentDigest(change: Change): Sha256Digest {
 	return `sha256:${createHash("sha256")
 		.update(stableJson(changeContent(change)))
 		.digest("hex")}`;
 }
 
-export function changeContent(change: Change): Record<string, unknown> {
+function changeContent(change: Change): Record<string, unknown> {
 	return {
 		schemaVersion: change.schemaVersion,
 		id: change.id,

@@ -42,6 +42,8 @@ export interface CheckExecutorObservation {
 	readonly findings?: readonly string[];
 	readonly issueClass?: string;
 	readonly feedback?: string;
+	readonly producedEvidenceRecords?: readonly EvidenceRecord[];
+	readonly producedEvidenceResolutions?: readonly EvidenceObligationResolution[];
 }
 
 export interface LoopCheckExecutorContext {
@@ -60,6 +62,7 @@ export interface LoopCheckExecutor {
 	readonly checkId: string;
 	readonly checkVersion: string;
 	readonly execution: CheckExecutionIdentity;
+	readonly producesEvidenceObligationIds?: readonly string[];
 	readonly execute: (
 		context: LoopCheckExecutorContext,
 	) => CheckExecutorObservation | Promise<CheckExecutorObservation>;
@@ -90,6 +93,9 @@ interface RunLoopExitInput {
 		result: CheckResult,
 		source: "executed" | "cache" | "precomputed",
 	) => void | Promise<void>;
+	readonly onProducedEvidence?: (
+		record: EvidenceRecord,
+	) => void | Promise<void>;
 }
 
 type LoopExitNextAction =
@@ -108,6 +114,7 @@ interface LoopExitRun {
 	readonly report: ExitReport;
 	readonly nextAction: LoopExitNextAction;
 	readonly cacheHitCheckIds: readonly string[];
+	readonly producedEvidenceRecords: readonly EvidenceRecord[];
 }
 
 interface LoopExitRunner {
@@ -122,6 +129,11 @@ interface ExecutionBoundaryFailure {
 		| "evidence_unavailable"
 		| "operational_failure";
 	readonly finding: string;
+}
+
+interface ExecutedBinding {
+	readonly result: CheckResult;
+	readonly producedEvidenceRecords: readonly EvidenceRecord[];
 }
 
 interface ExecuteBindingInput {
@@ -173,19 +185,26 @@ interface RunLoopExitContext {
 interface CheckSchedulerContext extends RunLoopExitContext {
 	readonly evidenceRecords: ReadonlyMap<string, EvidenceRecord>;
 	readonly precomputedResults: ReadonlyMap<string, CheckResult>;
+	readonly producedEvidenceRecords: Map<string, EvidenceRecord>;
 	readonly cacheHits: Set<string>;
 }
 
 async function runLoopExit(options: RunLoopExitContext): Promise<LoopExitRun> {
 	assertRunInput(options.input, options.catalog);
 	const cacheHits = new Set<string>();
+	const producedEvidenceRecords = new Map<string, EvidenceRecord>();
+	const evidenceRecords = normalizedEvidenceRecords(
+		options.input.evidenceRecords ?? [],
+	);
 	const execute = createCheckScheduler({
 		...options,
-		evidenceRecords: normalizedEvidenceRecords(options.input.evidenceRecords ?? []),
+		evidenceRecords,
 		precomputedResults: normalizedPrecomputedResults(
 			options.input.precomputedResults ?? [],
 			options.input.policy,
+			evidenceRecords,
 		),
+		producedEvidenceRecords,
 		cacheHits,
 	});
 	const results = await Promise.all(options.input.policy.bindings.map(execute));
@@ -194,6 +213,9 @@ async function runLoopExit(options: RunLoopExitContext): Promise<LoopExitRun> {
 		report,
 		nextAction: nextAction(report, options.input.policy),
 		cacheHitCheckIds: [...cacheHits].sort(compareText),
+		producedEvidenceRecords: [...producedEvidenceRecords.values()].sort((left, right) =>
+			compareText(left.evidenceId, right.evidenceId),
+		),
 	});
 }
 
@@ -257,7 +279,7 @@ async function executeScheduledCheck(
 		await context.input.onResult?.(cached, "cache");
 		return cached;
 	}
-	const result = await executeBinding({
+	const executed = await executeBinding({
 		candidate: context.input.candidate,
 		policy: context.input.policy,
 		binding,
@@ -269,39 +291,188 @@ async function executeScheduledCheck(
 		signal: context.input.signal,
 		semaphore: context.semaphores[check.execution.kind],
 	});
-	if (result.status !== "indeterminate") context.cache.set(cacheKey, result);
-	await context.input.onResult?.(result, "executed");
-	return result;
+	for (const record of executed.producedEvidenceRecords) {
+		if (
+			context.evidenceRecords.has(record.evidenceId) ||
+			context.producedEvidenceRecords.has(record.evidenceId)
+		) {
+			throw new Error(`Produced Evidence ${record.evidenceId} is duplicated.`);
+		}
+		context.producedEvidenceRecords.set(record.evidenceId, record);
+	}
+	await Promise.all(
+		executed.producedEvidenceRecords.map((record) =>
+			context.input.onProducedEvidence?.(record),
+		),
+	);
+	if (
+		executed.producedEvidenceRecords.length === 0 &&
+		executed.result.status !== "indeterminate"
+	) {
+		context.cache.set(cacheKey, executed.result);
+	}
+	await context.input.onResult?.(executed.result, "executed");
+	return executed.result;
 }
 
-async function executeBinding(input: ExecuteBindingInput): Promise<CheckResult> {
+async function executeBinding(input: ExecuteBindingInput): Promise<ExecutedBinding> {
 	const unavailable = unavailableFinding(input);
-	if (unavailable) return indeterminateResult(input, unavailable);
+	if (unavailable) {
+		return {result: indeterminateResult(input, unavailable), producedEvidenceRecords: []};
+	}
 	const executor = input.executor as LoopCheckExecutor;
 	const outcome = await input.semaphore.run(() =>
 		executeWithBoundary(executor, input, input.check.timeoutMs),
 	);
-	if ("kind" in outcome) return indeterminateResult(input, outcome);
+	if ("kind" in outcome) {
+		return {result: indeterminateResult(input, outcome), producedEvidenceRecords: []};
+	}
 	try {
 		const observation = normalizedObservation(outcome, input.check);
-		return createCheckResult({
+		const produced = normalizedProducedEvidence(input, observation);
+		return {
+			result: createCheckResult({
 			loop: input.policy.loop,
 			policy: input.policy,
 			check: input.check,
 			disposition: observation.disposition,
 			...(observation.measurement ? {measurement: observation.measurement} : {}),
-			evidenceResolutions: [...input.resolutions],
+			evidenceResolutions: [...produced.resolutions],
 			findings: [...(observation.findings ?? [])],
 			...(observation.issueClass ? {issueClass: observation.issueClass} : {}),
 			...(observation.feedback ? {feedback: observation.feedback} : {}),
 			execution: executor.execution,
-		});
+			}),
+			producedEvidenceRecords: produced.records,
+		};
 	} catch {
-		return indeterminateResult(input, {
-			kind: "operational_failure",
-			finding: `Check executor ${input.check.id} returned invalid output; details were redacted.`,
-		});
+		return {
+			result: indeterminateResult(input, {
+				kind: "operational_failure",
+				finding: `Check executor ${input.check.id} returned invalid output; details were redacted.`,
+			}),
+			producedEvidenceRecords: [],
+		};
 	}
+}
+
+function normalizedProducedEvidence(
+	input: ExecuteBindingInput,
+	observation: CheckExecutorObservation,
+): {
+	readonly records: readonly EvidenceRecord[];
+	readonly resolutions: readonly EvidenceObligationResolution[];
+} {
+	const producedIds = new Set(input.executor?.producesEvidenceObligationIds ?? []);
+	const records = normalizedEvidenceRecords(
+		observation.producedEvidenceRecords ?? [],
+	);
+	const supplied = suppliedProducedResolutions(input, observation, producedIds);
+	const merged = mergedProducedResolutions(
+		input,
+		observation,
+		producedIds,
+		supplied,
+	);
+	assertProducedEvidenceReferences(input, records, supplied);
+	return {
+		records: [...records.values()].sort((left, right) =>
+			compareText(left.evidenceId, right.evidenceId),
+		),
+		resolutions: merged,
+	};
+}
+
+function suppliedProducedResolutions(
+	input: ExecuteBindingInput,
+	observation: CheckExecutorObservation,
+	producedIds: ReadonlySet<string>,
+): ReadonlyMap<string, EvidenceObligationResolution> {
+	const supplied = new Map<string, EvidenceObligationResolution>();
+	for (const resolution of observation.producedEvidenceResolutions ?? []) {
+		if (!producedIds.has(resolution.obligationId)) {
+			throw new Error(
+				`Check executor ${input.check.id} produced undeclared Evidence obligation ${resolution.obligationId}.`,
+			);
+		}
+		if (supplied.has(resolution.obligationId)) {
+			throw new Error(
+				`Check executor ${input.check.id} duplicated Evidence obligation ${resolution.obligationId}.`,
+			);
+		}
+		const obligation = requiredEvidenceObligation(
+			input.check,
+			resolution.obligationId,
+		);
+		assertValidEvidenceObligationResolution(resolution, obligation);
+		supplied.set(resolution.obligationId, resolution);
+	}
+	return supplied;
+}
+
+function mergedProducedResolutions(
+	input: ExecuteBindingInput,
+	observation: CheckExecutorObservation,
+	producedIds: ReadonlySet<string>,
+	supplied: ReadonlyMap<string, EvidenceObligationResolution>,
+): readonly EvidenceObligationResolution[] {
+	return input.resolutions.map((resolution) => {
+		if (!producedIds.has(resolution.obligationId)) return resolution;
+		const replacement = supplied.get(resolution.obligationId);
+		if (replacement) return replacement;
+		if (
+			resolution.status === "ready" ||
+			observation.disposition === "indeterminate"
+		) {
+			return resolution;
+		}
+		throw new Error(
+			`Check executor ${input.check.id} did not resolve produced Evidence obligation ${resolution.obligationId}.`,
+		);
+	});
+}
+
+function assertProducedEvidenceReferences(
+	input: ExecuteBindingInput,
+	records: ReadonlyMap<string, EvidenceRecord>,
+	supplied: ReadonlyMap<string, EvidenceObligationResolution>,
+): void {
+	const availableIds = new Set([
+		...input.evidenceRecords.map((record) => record.evidenceId),
+		...records.keys(),
+	]);
+	for (const resolution of supplied.values()) {
+		for (const evidenceId of resolution.inputEvidenceIds) {
+			if (!availableIds.has(evidenceId)) {
+				throw new Error(
+					`Produced Evidence resolution ${resolution.obligationId} references unavailable Evidence ${evidenceId}.`,
+				);
+			}
+		}
+	}
+	const referencedIds = new Set<string>(
+		[...supplied.values()].flatMap((resolution) => resolution.inputEvidenceIds),
+	);
+	for (const evidenceId of records.keys()) {
+		if (!referencedIds.has(evidenceId)) {
+			throw new Error(`Produced Evidence ${evidenceId} is not bound by a resolution.`);
+		}
+	}
+}
+
+function requiredEvidenceObligation(
+	check: CheckDefinition,
+	obligationId: string,
+): EvidenceObligation {
+	const obligation = check.evidenceObligations.find(
+		(candidate) => candidate.id === obligationId,
+	);
+	if (!obligation) {
+		throw new Error(
+			`Check executor ${check.id} produced unknown Evidence obligation ${obligationId}.`,
+		);
+	}
+	return obligation;
 }
 
 function unavailableFinding(
@@ -310,7 +481,11 @@ function unavailableFinding(
 	if (input.signal?.aborted) {
 		return {kind: "cancelled", finding: `Check ${input.check.id} was cancelled.`};
 	}
-	const blocked = input.resolutions.filter((resolution) => resolution.status !== "ready");
+	const producedIds = new Set(input.executor?.producesEvidenceObligationIds ?? []);
+	const blocked = input.resolutions.filter(
+		(resolution) =>
+			resolution.status !== "ready" && !producedIds.has(resolution.obligationId),
+	);
 	if (blocked.length > 0) {
 		return {
 			kind: "evidence_unavailable",
@@ -431,6 +606,12 @@ function normalizedObservation(
 		findings,
 		...(value.issueClass ? {issueClass: requiredText(value.issueClass, "issueClass")} : {}),
 		...(value.feedback ? {feedback: requiredText(value.feedback, "feedback")} : {}),
+		...(value.producedEvidenceRecords
+			? {producedEvidenceRecords: value.producedEvidenceRecords}
+			: {}),
+		...(value.producedEvidenceResolutions
+			? {producedEvidenceResolutions: value.producedEvidenceResolutions}
+			: {}),
 	};
 }
 
@@ -440,7 +621,15 @@ function assertObservationShape(value: CheckExecutorObservation): void {
 	}
 	assertExactKeys(
 		value,
-		["disposition", "measurement", "findings", "issueClass", "feedback"],
+		[
+			"disposition",
+			"measurement",
+			"findings",
+			"issueClass",
+			"feedback",
+			"producedEvidenceRecords",
+			"producedEvidenceResolutions",
+		],
 		"Check executor observation",
 	);
 	if (
@@ -517,6 +706,7 @@ function missingResolution(
 function normalizedPrecomputedResults(
 	values: readonly CheckResult[],
 	policy: ResolvedExitPolicy,
+	evidenceRecords: ReadonlyMap<string, EvidenceRecord>,
 ): ReadonlyMap<string, CheckResult> {
 	const active = new Map(policy.bindings.map((binding) => [binding.checkId, binding]));
 	const results = new Map<string, CheckResult>();
@@ -537,6 +727,13 @@ function normalizedPrecomputedResults(
 			throw new Error(`Loop exit precomputed Check ${result.checkId} is stale.`);
 		}
 		assertSha256Digest(result.resultDigest, "Precomputed Check Result digest");
+		for (const evidenceId of result.evidenceRecordIds) {
+			if (!evidenceRecords.has(evidenceId)) {
+				throw new Error(
+					`Precomputed Check ${result.checkId} references unavailable Evidence ${evidenceId}.`,
+				);
+			}
+		}
 		results.set(result.checkId, result);
 	}
 	return results;
@@ -612,11 +809,26 @@ function executorRegistry(
 		) {
 			throw new Error(`Check executor ${executor.checkId} identity does not match Catalog.`);
 		}
+		const producedIds = normalizedProducedObligationIds(
+			executor.producesEvidenceObligationIds ?? [],
+			executor.checkId,
+		);
+		for (const obligationId of producedIds) {
+			requiredEvidenceObligation(registration.check, obligationId);
+		}
 		const key = executorKey(executor.loop, executor.checkId, executor.checkVersion);
 		if (registry.has(key)) {
 			throw new Error(`Check executor ${executor.checkId} is duplicated for ${executor.loop}.`);
 		}
-		registry.set(key, Object.freeze({...executor}));
+		registry.set(
+			key,
+			Object.freeze({
+				...executor,
+				...(producedIds.length > 0
+					? {producesEvidenceObligationIds: Object.freeze(producedIds)}
+					: {}),
+			}),
+		);
 	}
 	return registry;
 }
@@ -738,6 +950,25 @@ function requiredBinding(
 	const binding = bindings.get(checkId);
 	if (!binding) throw new Error(`Loop exit dependency ${checkId} is inactive.`);
 	return binding;
+}
+
+function normalizedProducedObligationIds(
+	values: readonly string[],
+	checkId: string,
+): string[] {
+	if (!Array.isArray(values) || values.length > 16) {
+		throw new Error(
+			`Check executor ${checkId} produced Evidence obligation list is invalid.`,
+		);
+	}
+	const normalized = values.map((value) => requiredText(value, "obligation id"));
+	const unique = [...new Set(normalized)].sort(compareText);
+	if (unique.length !== normalized.length) {
+		throw new Error(
+			`Check executor ${checkId} produced Evidence obligation list contains duplicates.`,
+		);
+	}
+	return unique;
 }
 
 function executorKey(

@@ -1,12 +1,15 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
+import {materializeEvidenceRecord} from "../../src/evidence/materialize.ts";
+import {reduceEvidenceObligation} from "../../src/evidence/obligations.ts";
 import {createLoopExitResultCache} from "../../src/loop-exit/cache.ts";
 import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {createLoopCandidate} from "../../src/loop-exit/identity.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
 import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
+import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 
 const DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
@@ -99,6 +102,12 @@ function executor(catalog, checkId, execute, options = {}) {
 				? {configurationDigest: options.configurationDigest}
 				: {}),
 		},
+		...(options.producesEvidenceObligationIds
+			? {
+					producesEvidenceObligationIds:
+						options.producesEvidenceObligationIds,
+				}
+			: {}),
 		execute,
 	};
 }
@@ -131,6 +140,40 @@ function modelRegistration(id, dependsOn = [], timeoutMs = 50) {
 
 const delay = (milliseconds) =>
 	new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+function modelAssessmentEvidence(setup, check) {
+	return materializeEvidenceRecord(
+		{
+			schemaVersion: "1.0.0",
+			kind: "model_assessment",
+			provenanceRefs: ["model-request:runner"],
+			payload: {
+				checkId: check.id,
+				checkVersion: check.version,
+				protocolId: "codewiki.test.model-check",
+				protocolVersion: "1.0.0",
+				routeId: "test-model",
+				configurationDigest: canonicalJsonDigest({route: "test-model"}),
+				measurement: {kind: "boolean", value: true},
+				findings: [],
+				limitations: [],
+			},
+		},
+		{
+			subject: {
+				changeRefs: ["change:CHG-runner"],
+				changeRevisionDigests: [CHANGE_DIGEST],
+				candidateDigest: setup.candidate.digest,
+				acceptanceRequirementIds: [],
+			},
+			observedAt: "2026-07-28T12:00:00.000Z",
+			producer: {kind: "model", id: "test-model", version: "1.0.0"},
+			authority: "observed",
+			coverage: "complete",
+			sensitivity: "project",
+		},
+	);
+}
 
 describe("bounded Loop exit runner", () => {
 	it("bounds fan-out, fans every Result in, and reuses only an exact cache key", async () => {
@@ -250,6 +293,51 @@ describe("bounded Loop exit runner", () => {
 		const retry = await runner.run({candidate: setup.candidate, policy: setup.policy});
 		assert.deepEqual(retry.cacheHitCheckIds, [ids[0], ids[2]].sort());
 		assert.equal(calls.filter((checkId) => checkId === ids[1]).length, 2);
+	});
+
+	it("admits Runtime-produced Evidence from an isolated Model executor", async () => {
+		const setup = foundation(["intention_validated"]);
+		const check = setup.catalog.get("intention_validated", "decision").check;
+		const obligation = check.evidenceObligations[0];
+		const evidence = modelAssessmentEvidence(setup, check);
+		const resolution = reduceEvidenceObligation({
+			obligation,
+			evidence: [{evidence, relation: "supporting"}],
+			expectedSubject: evidence.subject,
+		});
+		const streamedEvidence = [];
+		const runner = createLoopExitRunner({
+			catalog: setup.catalog,
+			executors: [
+				executor(
+					setup.catalog,
+					"intention_validated",
+					(context) => {
+						assert.equal(context.evidenceResolutions[0].status, "missing");
+						return {
+							disposition: "satisfied",
+							measurement: {shape: "boolean", value: true},
+							producedEvidenceRecords: [evidence],
+							producedEvidenceResolutions: [resolution],
+						};
+					},
+					{producesEvidenceObligationIds: ["model-assessment"]},
+				),
+			],
+		});
+		const result = await runner.run({
+			candidate: setup.candidate,
+			policy: setup.policy,
+			onProducedEvidence: (record) => streamedEvidence.push(record.evidenceId),
+		});
+		assert.equal(result.report.status, "pass");
+		assert.deepEqual(result.producedEvidenceRecords, [evidence]);
+		assert.deepEqual(streamedEvidence, [evidence.evidenceId]);
+		assert.deepEqual(result.report.checkResults[0].evidenceRecordIds, [
+			evidence.evidenceId,
+		]);
+		assert.deepEqual(result.cacheHitCheckIds, []);
+		assert.equal(Object.isFrozen(result.producedEvidenceRecords), true);
 	});
 
 	it("turns missing Evidence, missing executors, and cancellation into indeterminate Results", async () => {
