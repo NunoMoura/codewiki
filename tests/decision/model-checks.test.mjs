@@ -10,7 +10,10 @@ import {
 	DECISION_MODEL_CHECK_PROTOCOL,
 	createDecisionModelCheckExecutors,
 } from "../../src/decision/exit/model-checks.ts";
-import {createDecisionExitRuntime} from "../../src/decision/exit/runtime.ts";
+import {
+	createDecisionExitRuntime,
+	deriveDecisionRuntimeRoute,
+} from "../../src/decision/exit/runtime.ts";
 import {materializeDecisionResearchCitation} from "../../src/runtime/decision-research.ts";
 import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
@@ -268,6 +271,9 @@ describe("native Decision Model Checks", () => {
 			evidenceRecords: [approval],
 		});
 		assert.equal(result.result.report.status, "pass");
+		assert.equal(result.route.route, "planning");
+		assert.equal(result.route.reasonCode, "decision-approved");
+		assert.match(result.route.routeDigest, /^sha256:[0-9a-f]{64}$/);
 		assert.equal(calls, 2);
 		assert.equal(result.result.producedEvidenceRecords.length, 2);
 		assert.equal(
@@ -297,6 +303,7 @@ describe("native Decision Model Checks", () => {
 			],
 		});
 		assert.equal(replay.result.report.reportDigest, result.result.report.reportDigest);
+		assert.equal(replay.route.routeDigest, result.route.routeDigest);
 		assert.equal(calls, 2);
 		assert.deepEqual(replay.result.producedEvidenceRecords, []);
 	});
@@ -527,6 +534,10 @@ describe("native Decision Model Checks", () => {
 			assert.equal(
 				result.report.status,
 				scenario === "unsupported" ? "fail" : "indeterminate",
+			);
+			assert.equal(
+				deriveDecisionRuntimeRoute(setup.candidate, result.report).route,
+				scenario === "unsupported" ? "repair" : "waiting",
 			);
 			assert.equal(
 				result.producedEvidenceRecords.length,

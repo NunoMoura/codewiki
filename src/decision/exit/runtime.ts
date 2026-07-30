@@ -4,8 +4,13 @@ import {
 	type LoopExitResultCache,
 } from "../../loop-exit/cache.ts";
 import {createCheckCatalog} from "../../loop-exit/catalog.ts";
-import type {ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
+import type {ExitReport, ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
+import {
+	canonicalJsonDigest,
+	toCanonicalJsonValue,
+	type Sha256Digest,
+} from "../../utils/canonical-json.ts";
 import type {
 	DecisionResearchClaimsModelObservation,
 	DecisionResearchClaimsRequest,
@@ -56,11 +61,22 @@ interface RunDecisionExitInput {
 	readonly signal?: AbortSignal;
 }
 
+interface DecisionRuntimeRoute {
+	readonly schemaVersion: "1.0.0";
+	readonly candidateDigest: Sha256Digest;
+	readonly exitReportDigest: Sha256Digest;
+	readonly requestedDisposition: DecisionCandidate["content"]["disposition"];
+	readonly route: "planning" | "repair" | "waiting" | "complete" | "withdrawn";
+	readonly reasonCode: string;
+	readonly routeDigest: Sha256Digest;
+}
+
 interface DecisionExitRun {
 	readonly policy: ResolvedExitPolicy;
 	readonly result: Awaited<
 		ReturnType<ReturnType<typeof createLoopExitRunner>["run"]>
 	>;
+	readonly route: DecisionRuntimeRoute;
 }
 
 export function createDecisionExitRuntime(
@@ -128,9 +144,68 @@ export function createDecisionExitRuntime(
 				evidenceRecords,
 				...(runInput.signal ? {signal: runInput.signal} : {}),
 			});
-			return Object.freeze({policy, result});
+			return Object.freeze({
+				policy,
+				result,
+				route: deriveDecisionRuntimeRoute(
+					runInput.candidate,
+					result.report,
+				),
+			});
 		},
 	});
+}
+
+export function deriveDecisionRuntimeRoute(
+	candidate: DecisionCandidate,
+	report: ExitReport,
+): DecisionRuntimeRoute {
+	if (
+		report.loop !== "decision" ||
+		report.candidateDigest !== candidate.digest
+	) {
+		throw new Error("Decision Runtime Route requires the exact Candidate Exit Report.");
+	}
+	let route: DecisionRuntimeRoute["route"];
+	let reasonCode: string;
+	if (report.status === "fail") {
+		route = "repair";
+		reasonCode = "decision-checks-failed";
+	} else if (report.status === "indeterminate") {
+		route = "waiting";
+		reasonCode = "decision-assurance-indeterminate";
+	} else {
+		({route, reasonCode} = passedDecisionRoute(candidate.content.disposition));
+	}
+	const body = {
+		schemaVersion: "1.0.0" as const,
+		candidateDigest: candidate.digest,
+		exitReportDigest: report.reportDigest,
+		requestedDisposition: candidate.content.disposition,
+		route,
+		reasonCode,
+	};
+	return toCanonicalJsonValue({
+		...body,
+		routeDigest: canonicalJsonDigest(body),
+	}) as unknown as DecisionRuntimeRoute;
+}
+
+function passedDecisionRoute(
+	disposition: DecisionCandidate["content"]["disposition"],
+): Pick<DecisionRuntimeRoute, "route" | "reasonCode"> {
+	switch (disposition) {
+		case "approve":
+			return {route: "planning", reasonCode: "decision-approved"};
+		case "defer":
+			return {route: "waiting", reasonCode: "decision-deferred"};
+		case "withdraw":
+			return {route: "withdrawn", reasonCode: "decision-withdrawn"};
+		case "reject":
+			return {route: "complete", reasonCode: "decision-rejected"};
+		default:
+			throw new Error(`Decision disposition ${String(disposition)} is unsupported.`);
+	}
 }
 
 function decisionExitPolicy(

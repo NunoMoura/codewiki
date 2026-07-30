@@ -6,7 +6,10 @@ import {createChangeRecord} from "../../src/changes/records.ts";
 import {parseDecisionCandidateProposal} from "../../src/decision/candidate-proposal.ts";
 import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
 import {createDecisionCodeExecutors} from "../../src/decision/exit/code-executors.ts";
-import {createDecisionExitRuntime} from "../../src/decision/exit/runtime.ts";
+import {
+	createDecisionExitRuntime,
+	deriveDecisionRuntimeRoute,
+} from "../../src/decision/exit/runtime.ts";
 import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
@@ -59,14 +62,18 @@ function workState(records) {
 	};
 }
 
-function decisionCandidate(change, records = [createChangeRecord(change)]) {
+function decisionCandidate(
+	change,
+	records = [createChangeRecord(change)],
+	disposition = "approve",
+) {
 	const record = records.find((entry) => entry.change.id === change.id);
 	return createDecisionCandidate({
 		record,
 		workState: workState(records),
 		proposal: parseDecisionCandidateProposal({
-			disposition: "approve",
-			rationale: "Approve exact grounded semantic revision.",
+			disposition,
+			rationale: "Apply exact grounded semantic disposition.",
 		}),
 		observedBase: {
 			workStateDigest: WORK_STATE_DIGEST,
@@ -160,6 +167,33 @@ describe("native Decision Candidate and Code Checks", () => {
 			"evidence_input",
 		);
 		assert.equal(native.result.nextAction.kind, "retry_or_wait");
+		assert.equal(native.route.route, "waiting");
+		assert.equal(native.route.reasonCode, "decision-assurance-indeterminate");
+	});
+
+	it("derives terminal and waiting routes only after passing assurance", async () => {
+		const change = acceptedChangeFixture({id: "CHG-native-decision"});
+		for (const [disposition, expectedRoute] of [
+			["defer", "waiting"],
+			["reject", "complete"],
+			["withdraw", "withdrawn"],
+		]) {
+			const candidate = decisionCandidate(
+				change,
+				[createChangeRecord(change)],
+				disposition,
+			);
+			const {catalog, policy} = policyFor(candidate);
+			const result = await createLoopExitRunner({
+				catalog,
+				executors: createDecisionCodeExecutors(catalog),
+			}).run({candidate, policy});
+			assert.equal(result.report.status, "pass");
+			assert.equal(
+				deriveDecisionRuntimeRoute(candidate, result.report).route,
+				expectedRoute,
+			);
+		}
 	});
 
 	it("retains unaccounted overlap and incomplete Knowledge as native failures", async () => {
