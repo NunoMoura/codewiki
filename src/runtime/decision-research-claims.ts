@@ -9,6 +9,7 @@ import type {
 } from "../evidence/contracts.ts";
 import { EVIDENCE_SCHEMA_VERSION } from "../evidence/contracts.ts";
 import { materializeEvidenceRecord } from "../evidence/materialize.ts";
+import { modelConclusionEvidenceMeasurement } from "../evidence/model-assessment.ts";
 import type { EvidenceObligationResolution } from "../evidence/obligation-resolution.ts";
 import type { EvidenceObligation } from "../evidence/obligations.ts";
 import { reduceEvidenceObligation } from "../evidence/obligations.ts";
@@ -23,7 +24,7 @@ import { assertValidResolvedExitPolicy } from "../loop-exit/contracts.ts";
 import { loopQualifiedCheckDigest } from "../loop-exit/identity.ts";
 import { createCheckResult } from "../loop-exit/results.ts";
 import type { WikiModelRouteConfig } from "../project/model-routing.ts";
-import { resolveWikiModelRoutingConfig } from "../project/model-routing.ts";
+import { validateNoToolModelRoute } from "../project/model-route-validation.ts";
 import type { Sha256Digest } from "../utils/canonical-json.ts";
 import {
 	canonicalJsonDigest,
@@ -46,6 +47,11 @@ const {
 	maxLimitations: MAX_LIMITATIONS,
 } = DECISION_RESEARCH_CLAIMS_PROTOCOL.outputLimits;
 const SENSITIVITIES = ["public", "project", "private"] as const;
+const MODEL_CONCLUSION_VOCABULARY_DIGEST = canonicalJsonDigest({
+	protocolId: PROTOCOL_ID,
+	protocolVersion: PROTOCOL_VERSION,
+	labels: ["uncertain"],
+});
 const OPERATIONAL_OUTCOMES = [
 	"timeout",
 	"provider_failure",
@@ -301,7 +307,10 @@ function prepareClaims(
 	) {
 		throw new Error("Decision research claims Check binding is stale or invalid.");
 	}
-	const route = validatedRoute(input.route);
+	const route = validateNoToolModelRoute(
+		input.route,
+		"Decision research Model Check",
+	);
 	const configurationDigest = modelConfigurationDigest(trusted.check, route);
 	const execution: CheckExecutionIdentity = {
 		...trusted.check.execution,
@@ -526,10 +535,10 @@ function materializeModelAssessment(
 		protocolVersion: PROTOCOL_VERSION,
 		routeId: request.route.id,
 		configurationDigest: request.configurationDigest,
-		measurement: {
-			kind: "boolean",
-			value: response.conclusion === "supported",
-		},
+		measurement: modelConclusionEvidenceMeasurement(
+			response.conclusion,
+			MODEL_CONCLUSION_VOCABULARY_DIGEST,
+		),
 		findings: response.findings,
 		limitations: response.limitations,
 	};
@@ -663,17 +672,6 @@ function assertProvenanceResult(
 			"Decision research claims executor requires the exact provenance Result for its Evidence input.",
 		);
 	}
-}
-
-function validatedRoute(route: WikiModelRouteConfig): WikiModelRouteConfig {
-	const validated = resolveWikiModelRoutingConfig({
-		qualityFloor: route.quality,
-		routes: [route],
-	}).routes[0];
-	if (!validated || validated.allowedTools.length !== 0) {
-		throw new Error("Decision research Model Check route must disable all tools.");
-	}
-	return validated;
 }
 
 function assertModelObservation(

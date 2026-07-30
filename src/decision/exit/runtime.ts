@@ -6,6 +6,11 @@ import {
 import {createCheckCatalog} from "../../loop-exit/catalog.ts";
 import type {ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
+import type {
+	DecisionResearchClaimsModelObservation,
+	DecisionResearchClaimsRequest,
+} from "../../runtime/decision-research-claims.ts";
+import {createNativeDecisionResearchExecutors} from "../../runtime/native-decision-research.ts";
 import {resolveExitPolicy} from "../../loop-exit/resolve-policy.ts";
 import {
 	createLoopExitRunner,
@@ -30,6 +35,16 @@ interface CreateDecisionExitRuntimeInput {
 	readonly modelChecks?: {
 		readonly route: WikiModelRouteConfig;
 		readonly transport: DecisionModelCheckTransport;
+	};
+	readonly researchChecks?: {
+		readonly route: WikiModelRouteConfig;
+		readonly sensitivity: "public" | "project" | "private";
+		readonly transport: {
+			readonly execute: (
+				request: DecisionResearchClaimsRequest,
+				options: {readonly signal: AbortSignal},
+			) => Promise<DecisionResearchClaimsModelObservation>;
+		};
 	};
 }
 
@@ -77,6 +92,17 @@ export function createDecisionExitRuntime(
 								route: input.modelChecks.route,
 								subject,
 								transport: input.modelChecks.transport,
+							})
+						: []),
+					...(input.researchChecks && runInput.researchFreshnessBoundary
+						? createNativeDecisionResearchExecutors({
+								catalog,
+								route: input.researchChecks.route,
+								candidateSubject: subject,
+								expectedFreshnessBoundary:
+									runInput.researchFreshnessBoundary,
+								sensitivity: input.researchChecks.sensitivity,
+								transport: input.researchChecks.transport,
 							})
 						: []),
 					...(input.additionalExecutors ?? []),

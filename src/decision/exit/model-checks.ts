@@ -1,10 +1,10 @@
 import {
 	EVIDENCE_SCHEMA_VERSION,
-	type EvidenceMeasurement,
 	type EvidenceRecord,
 	type EvidenceSubject,
 } from "../../evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../evidence/materialize.ts";
+import {modelConclusionEvidenceMeasurement} from "../../evidence/model-assessment.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
 import type {CheckCatalog} from "../../loop-exit/catalog.ts";
 import type {CheckDefinition} from "../../loop-exit/contracts.ts";
@@ -13,10 +13,8 @@ import type {
 	LoopCheckExecutor,
 	LoopCheckExecutorContext,
 } from "../../loop-exit/runner.ts";
-import {
-	resolveWikiModelRoutingConfig,
-	type WikiModelRouteConfig,
-} from "../../project/model-routing.ts";
+import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
+import {validateNoToolModelRoute} from "../../project/model-route-validation.ts";
 import {
 	canonicalJson,
 	canonicalJsonDigest,
@@ -106,7 +104,7 @@ const MODEL_CONCLUSION_VOCABULARY_DIGEST = canonicalJsonDigest({
 export function createDecisionModelCheckExecutors(
 	input: CreateDecisionModelCheckExecutorsInput,
 ): readonly LoopCheckExecutor[] {
-	const route = validatedRoute(input.route);
+	const route = validateNoToolModelRoute(input.route, "Decision Model Check");
 	const subject = normalizedSubject(input.subject);
 	return Object.freeze(
 		input.catalog.list("decision").flatMap((registration) =>
@@ -276,7 +274,10 @@ function modelAssessmentEvidence(input: {
 				protocolVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
 				routeId: input.route.id,
 				configurationDigest: input.request.configurationDigest,
-				measurement: evidenceMeasurement(input.response.conclusion),
+				measurement: modelConclusionEvidenceMeasurement(
+					input.response.conclusion,
+					MODEL_CONCLUSION_VOCABULARY_DIGEST,
+				),
 				findings: [...input.response.findings],
 				limitations: [...input.response.limitations],
 			},
@@ -294,18 +295,6 @@ function modelAssessmentEvidence(input: {
 			sensitivity: "project",
 		},
 	);
-}
-
-function evidenceMeasurement(
-	conclusion: DecisionModelCheckResponse["conclusion"],
-): EvidenceMeasurement {
-	if (conclusion === "supported") return {kind: "boolean", value: true};
-	if (conclusion === "unsupported") return {kind: "boolean", value: false};
-	return {
-		kind: "label",
-		value: "uncertain",
-		vocabularyDigest: MODEL_CONCLUSION_VOCABULARY_DIGEST,
-	};
 }
 
 function responseObservation(
@@ -490,18 +479,6 @@ function normalizedTextList(
 		}
 		return entry.trim();
 	});
-}
-
-function validatedRoute(route: WikiModelRouteConfig): WikiModelRouteConfig {
-	const routing = resolveWikiModelRoutingConfig({
-		qualityFloor: route.quality,
-		routes: [route],
-	});
-	const [validated] = routing.routes;
-	if (routing.routes.length !== 1 || validated.allowedTools[0] !== undefined) {
-		throw new Error("Decision Model Check route must disable all tools.");
-	}
-	return validated;
 }
 
 function normalizedSubject(subject: EvidenceSubject): EvidenceSubject {

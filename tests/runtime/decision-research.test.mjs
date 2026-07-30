@@ -344,10 +344,10 @@ describe("Decision research claim-support Model Check", () => {
 			assert.equal(assessment.kind, "model_assessment");
 			assert.equal(assessment.authority, "observed");
 			assert.equal(assessment.payload.checkId, "research_claims_supported");
-			assert.equal(
-				assessment.payload.measurement.value,
-				conclusion === "supported",
-			);
+			assert.deepEqual({...assessment.payload.measurement}, {
+				kind: "boolean",
+				value: conclusion === "supported",
+			});
 			assert.ok(completion.result.evidenceRecordIds.includes(assessment.evidenceId));
 			assert.equal(completion.result.execution.modelRef, "test-provider/test-model-high");
 		}
@@ -378,6 +378,14 @@ describe("Decision research claim-support Model Check", () => {
 		assert.equal(completion.result.status, "indeterminate");
 		assert.equal(completion.result.measurement, undefined);
 		assert.equal(completion.evidenceRecords.length, 1);
+		assert.equal(
+			completion.evidenceRecords[0].payload.measurement.kind,
+			"label",
+		);
+		assert.equal(
+			completion.evidenceRecords[0].payload.measurement.value,
+			"uncertain",
+		);
 	});
 
 	it("maps provider and malformed-output failures to indeterminate without fake Evidence", () => {

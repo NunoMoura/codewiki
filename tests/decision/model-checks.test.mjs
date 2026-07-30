@@ -11,6 +11,7 @@ import {
 	createDecisionModelCheckExecutors,
 } from "../../src/decision/exit/model-checks.ts";
 import {createDecisionExitRuntime} from "../../src/decision/exit/runtime.ts";
+import {materializeDecisionResearchCitation} from "../../src/runtime/decision-research.ts";
 import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
@@ -20,9 +21,13 @@ import {acceptedChangeFixture} from "../helpers/accepted-change.mjs";
 const WORK_STATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const KNOWLEDGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const MODEL_CHECK_IDS = ["intention_validated", "recommendation_justified"];
+const digest = (character) => `sha256:${character.repeat(64)}`;
 
-function fixture() {
-	const change = acceptedChangeFixture({id: "CHG-decision-model"});
+function fixture(changeOverrides = {}) {
+	const change = acceptedChangeFixture({
+		id: "CHG-decision-model",
+		...changeOverrides,
+	});
 	const record = createChangeRecord(change);
 	const candidate = createDecisionCandidate({
 		record,
@@ -294,6 +299,187 @@ describe("native Decision Model Checks", () => {
 		assert.equal(replay.result.report.reportDigest, result.result.report.reportDigest);
 		assert.equal(calls, 2);
 		assert.deepEqual(replay.result.producedEvidenceRecords, []);
+	});
+
+	it("runs high-risk research Checks and replays their exact Evidence", async () => {
+		const setup = fixture({
+			risk: "high",
+			proofRefs: ["tests/decision/a.test.mjs", "tests/decision/b.test.mjs"],
+			rollbackPlan: "Revert the exact accepted revision.",
+			safetyBoundary: "Do not mutate provider or delivery state.",
+			negativeTestPlan: "Reject stale and contradictory research Evidence.",
+		});
+		const approval = materializeDecisionApprovalReceipt({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			actorId: "maintainer-1",
+			authenticatedIdentityRef: "identity:test:maintainer-1",
+			role: "maintainer",
+			channel: "codewiki",
+			decidedAt: "2026-07-28T11:59:00.000Z",
+			observedAt: "2026-07-28T12:00:00.000Z",
+			producer: {kind: "user", id: "maintainer-1", version: "1.0.0"},
+		});
+		const freshnessBoundary = digest("9");
+		const citation = materializeDecisionResearchCitation(
+			{
+				provenanceRefs: ["source:https://example.test/runtime"],
+				payload: {
+					claim: "The provider supports bounded retries.",
+					classification: "primary",
+					publisher: "Example Provider",
+					uri: "https://example.test/runtime",
+					title: "Runtime limits",
+					publicationDate: "2026-07-01",
+					passageDigest: digest("8"),
+					passageLocator: "section:retries",
+					stance: "supports",
+					limitations: [],
+				},
+			},
+			{
+				subject: {
+					changeRefs: setup.subject.changeRefs,
+					changeRevisionDigests: setup.subject.changeRevisionDigests,
+					acceptanceRequirementIds: [],
+				},
+				observedAt: "2026-07-28T12:00:00.000Z",
+				producer: {
+					kind: "external_service",
+					id: "bounded-research-fetch",
+					version: "1.0.0",
+				},
+				coverage: "complete",
+				sensitivity: "project",
+				freshnessBoundary,
+			},
+		);
+		let modelCalls = 0;
+		let researchCalls = 0;
+		let researchConclusion = "supported";
+		const runtime = createDecisionExitRuntime({
+			modelChecks: {
+				route: route(),
+				transport: {
+					async execute(request) {
+						modelCalls += 1;
+						return {
+							status: "completed",
+							observedAt: "2026-07-28T12:01:00.000Z",
+							response: response(request),
+						};
+					},
+				},
+			},
+			researchChecks: {
+				route: route({id: "decision-research"}),
+				sensitivity: "project",
+				transport: {
+					async execute(request) {
+						researchCalls += 1;
+						return {
+							status: "completed",
+							requestDigest: request.requestDigest,
+							observedAt: "2026-07-28T12:01:00.000Z",
+							response: {
+								claimAssessments: request.claims.map((claim) => ({
+									claimDigest: claim.claimDigest,
+									evidenceIds: claim.citations.map(
+										(citation) => citation.evidenceId,
+									),
+									conclusion: researchConclusion,
+									findings:
+										researchConclusion === "supported"
+											? []
+											: ["Citation coverage remains uncertain."],
+									limitations: [],
+								})),
+							},
+						};
+					},
+				},
+			},
+		});
+		const first = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [approval, citation],
+			researchFreshnessBoundary: freshnessBoundary,
+		});
+		assert.equal(
+			first.result.report.status,
+			"pass",
+			JSON.stringify(
+				first.result.report.checkResults.filter((check) => check.status !== "pass"),
+			),
+		);
+		assert.equal(researchCalls, 1);
+		assert.equal(
+			first.result.report.checkResults.find(
+				(check) => check.checkId === "research_provenance_valid",
+			).status,
+			"pass",
+		);
+		assert.equal(
+			first.result.report.checkResults.find(
+				(check) => check.checkId === "research_claims_supported",
+			).status,
+			"pass",
+		);
+		const replay = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [
+				approval,
+				citation,
+				...first.result.producedEvidenceRecords,
+			],
+			researchFreshnessBoundary: freshnessBoundary,
+		});
+		assert.equal(replay.result.report.reportDigest, first.result.report.reportDigest);
+		assert.equal(researchCalls, 1);
+		assert.equal(modelCalls > 0, true);
+		assert.deepEqual(replay.result.producedEvidenceRecords, []);
+
+		researchConclusion = "uncertain";
+		const uncertain = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [approval, citation],
+			researchFreshnessBoundary: freshnessBoundary,
+		});
+		assert.equal(uncertain.result.report.status, "indeterminate");
+		assert.equal(researchCalls, 2);
+		const uncertainAssessment = uncertain.result.producedEvidenceRecords.find(
+			(record) =>
+				record.kind === "model_assessment" &&
+				record.payload.checkId === "research_claims_supported",
+		);
+		assert.ok(
+			uncertainAssessment,
+			JSON.stringify({
+				records: uncertain.result.producedEvidenceRecords,
+				check: uncertain.result.report.checkResults.find(
+					(result) => result.checkId === "research_claims_supported",
+				),
+			}),
+		);
+		assert.equal(uncertainAssessment.payload.measurement.kind, "label");
+		const uncertainReplay = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [
+				approval,
+				citation,
+				...uncertain.result.producedEvidenceRecords,
+			],
+			researchFreshnessBoundary: freshnessBoundary,
+		});
+		assert.equal(
+			uncertainReplay.result.report.reportDigest,
+			uncertain.result.report.reportDigest,
+		);
+		assert.equal(researchCalls, 2);
 	});
 
 	it("keeps unsupported, unavailable, and malformed outcomes explicit", async () => {
