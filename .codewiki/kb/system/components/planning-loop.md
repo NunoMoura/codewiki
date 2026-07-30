@@ -107,6 +107,36 @@ One content-addressed `PlanningEpochRecord` stores:
 - global Work Item graph digest;
 - safe execution frontier.
 
+Its executable closed shape is:
+
+```ts
+interface PlanningEpochRecord {
+  operationId: Sha256Digest;
+  body: {
+    protocol: {
+      id: "codewiki.planning-epoch";
+      version: "1.0.0";
+      canonicalJson: "codewiki.canonical-json/1.0.0";
+    };
+    kind: "planning.epoch_recorded";
+    kindVersion: "1.0.0";
+    recordedAt: ExactUtcTimestamp;
+    baseSnapshot: BaseSnapshot & { workStateDigest: Sha256Digest };
+    authorityBinding: AuthorityBinding;
+    planningCandidateId: StableId;
+    exitReportId: StableId;
+    participants: ChangeBinding[];
+    sprints: PlanningSprint[];
+    workItems: PlanningWorkItem[];
+    activeWorkDispositions: ActiveWorkDisposition[];
+    safeExecutionFrontier: WorkItemId[];
+    globalWorkItemGraphDigest: Sha256Digest;
+  };
+}
+```
+
+Each Sprint binds ID, goal, participant Changes, Work Items, Sprint dependencies, and Integration boundary. Each Work Item binds ID, Sprint, title/outcome, owning and contributing Change revisions/tails, Work Item dependencies, requirement-to-Evidence/Check mappings, source/Knowledge/component scope, Workbench profile/tools/Skills/context/budget, and Integration target/Checks/rollback/review requirement. The graph digest hashes only exact participant and Work Item graph semantics. Runtime derives `operationId` from the complete body after validating sorted unique sets, referential integrity, and acyclic Sprint/Work Item dependencies.
+
 Runtime accepts `planning.epoch_recorded` once and atomically appends `planning.epoch_bound` to every participating Change through one state commit.
 
 A partial batch is not accepted Planning. Remote Git expected-head CAS makes the complete batch atomic.

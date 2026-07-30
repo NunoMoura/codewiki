@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 
+export const CANONICAL_JSON_PROFILE = "codewiki.canonical-json/1.0.0" as const;
+
 export type Sha256Digest = `sha256:${string}`;
 export type CanonicalJsonPrimitive = null | boolean | number | string;
 export type CanonicalJsonValue =
@@ -16,7 +18,31 @@ export function canonicalJson(value: unknown): string {
 }
 
 export function canonicalJsonDigest(value: unknown): Sha256Digest {
-	return `sha256:${createHash("sha256").update(canonicalJson(value)).digest("hex")}`;
+	return sha256Digest(canonicalJson(value));
+}
+
+export function sha256Digest(value: string | Uint8Array): Sha256Digest {
+	return `sha256:${createHash("sha256").update(value).digest("hex")}`;
+}
+
+export function parseCanonicalJson(text: string): CanonicalJsonValue {
+	if (typeof text !== "string") {
+		throw new Error("Canonical JSON input must be a string.");
+	}
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(text);
+	} catch (error) {
+		const reason = error instanceof Error ? error.message : String(error);
+		throw new Error(`Invalid canonical JSON: ${reason}`);
+	}
+	const value = toCanonicalJsonValue(parsed);
+	if (JSON.stringify(value) !== text) {
+		throw new Error(
+			`Canonical JSON input does not conform to ${CANONICAL_JSON_PROFILE}.`,
+		);
+	}
+	return value;
 }
 
 export function assertSha256Digest(

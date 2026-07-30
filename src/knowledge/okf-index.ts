@@ -12,7 +12,7 @@ import {
 } from "./okf-frontmatter.ts";
 import type { OkfBundleFile } from "./okf-validation.ts";
 
-export interface OkfIndexEntry {
+interface OkfIndexEntry {
 	title: string;
 	path: string;
 	description: string;
@@ -20,7 +20,7 @@ export interface OkfIndexEntry {
 	conceptCount?: number;
 }
 
-export interface OkfDirectoryIndex {
+interface OkfDirectoryIndex {
 	path: string;
 	directory: string;
 	content: string;
@@ -28,19 +28,19 @@ export interface OkfDirectoryIndex {
 	directories: OkfIndexEntry[];
 }
 
-export interface GenerateOkfDirectoryIndexOptions {
+interface GenerateOkfDirectoryIndexOptions {
 	directory?: string;
 	title?: string;
 	includeRootVersion?: boolean;
 }
 
-export interface GenerateOkfLogInput {
+interface GenerateOkfLogInput {
 	title?: string;
 	date: string;
 	entries: OkfLogEntry[];
 }
 
-export interface OkfLogEntry {
+interface OkfLogEntry {
 	kind: string;
 	text: string;
 }
@@ -95,6 +95,7 @@ export function generateOkfLog(input: GenerateOkfLogInput): string {
 		`# ${input.title || "Directory Update Log"}`,
 		"",
 		`## ${input.date}`,
+		"",
 		...input.entries.map(
 			(entry) => `* **${entry.kind}**: ${entry.text.trim()}`,
 		),
@@ -135,13 +136,18 @@ function directConceptEntries(
 	directory: string,
 ): OkfIndexEntry[] {
 	return documents
-		.filter((document) => okfDocumentDirectory(document.path) === directory)
-		.map((document) => ({
-			title: documentTitle(document),
-			path: relativePathFromDirectory(directory, document.path),
-			description: documentDescription(document),
-			kind: "concept" as const,
-		}))
+		.flatMap((document) =>
+			okfDocumentDirectory(document.path) === directory
+				? [
+						{
+							title: documentTitle(document),
+							path: relativePathFromDirectory(directory, document.path),
+							description: documentDescription(document),
+							kind: "concept" as const,
+						},
+					]
+				: [],
+		)
 		.sort(compareEntries);
 }
 
@@ -175,24 +181,25 @@ function reservedIndexChildDirectories(
 	directory: string,
 ): string[] {
 	return files
-		.map((file) => normalizeOkfPath(file.path))
-		.filter((path) => path.endsWith("/index.md"))
-		.map((path) => path.replace(/\/index\.md$/, ""))
-		.filter(
-			(path) => childDirectoryFor(`${path}/placeholder.md`, directory) === path,
-		)
-		.sort();
+		.flatMap((file) => {
+			const path = normalizeOkfPath(file.path);
+			if (!path.endsWith("/index.md")) return [];
+			const child = path.replace(/\/index\.md$/, "");
+			return childDirectoryFor(`${child}/placeholder.md`, directory) === child
+				? [child]
+				: [];
+		})
+		.sort(compareText);
 }
 
 function conceptDocuments(files: OkfBundleFile[]): OkfDocument[] {
-	return files
-		.filter((file) => isOkfMarkdownPath(file.path))
-		.map((file) => ({
-			path: normalizeOkfPath(file.path),
-			content: file.content,
-		}))
-		.filter((file) => okfDocumentKind(file.path) === "concept")
-		.map((file) => parseOkfDocument(file.path, file.content));
+	return files.flatMap((file) => {
+		if (!isOkfMarkdownPath(file.path)) return [];
+		const path = normalizeOkfPath(file.path);
+		return okfDocumentKind(path) === "concept"
+			? [parseOkfDocument(path, file.content)]
+			: [];
+	});
 }
 
 function normalizeOkfDirectory(directory: string): string {
@@ -246,8 +253,7 @@ function indexTitle(directory: string): string {
 function titleFromPathSegment(segment: string): string {
 	return segment
 		.split(/[-_\s]+/)
-		.filter(Boolean)
-		.map(titleWord)
+		.flatMap((word) => (word ? [titleWord(word)] : []))
 		.join(" ");
 }
 
@@ -270,7 +276,17 @@ function renderIndexEntry(entry: OkfIndexEntry): string {
 }
 
 function escapeMarkdownLabel(value: string): string {
-	return value.replace(/]/g, "\\]").replace(/\s+/g, " ").trim();
+	return value
+		.replace(/\\/g, "\\\\")
+		.replace(/]/g, "\\]")
+		.replace(/\s+/g, " ")
+		.trim();
+}
+
+function compareText(left: string, right: string): number {
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
 }
 
 function compareEntries(left: OkfIndexEntry, right: OkfIndexEntry): number {

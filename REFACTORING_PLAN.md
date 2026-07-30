@@ -133,11 +133,11 @@ Backlog, Planning, Implementation, Change dossiers, dashboards, queues, graph la
 
 Use a versioned strict canonical JSON profile and SHA-256 for every authority-bearing identity.
 
-Conceptual Change-scoped envelope:
+Executable Change-scoped envelope:
 
 ```ts
 interface CanonicalChangeOperation {
-  operationId: string; // sha256(canonical_json(body))
+  operationId: Sha256Digest;
   body: ChangeOperationBody;
 }
 
@@ -145,20 +145,24 @@ interface ChangeOperationBody {
   protocol: {
     id: "codewiki.change-trace";
     version: "1.0.0";
+    canonicalJson: "codewiki.canonical-json/1.0.0";
   };
-  changeId: string;
+  changeId: ChangeId;
   kind: ChangeOperationKind;
-  kindVersion: string;
-  parents: string[];
+  kindVersion: "1.0.0";
+  parents: OperationId[];
   baseSnapshot: BaseSnapshot;
   authorityBinding: AuthorityBinding;
-  preStateDigest: string;
-  postStateDigest: string;
-  payload: ClosedTypedPayload;
+  recordedAt: ExactUtcTimestamp;
+  preStateDigest: Sha256Digest;
+  postStateDigest: Sha256Digest;
+  payload: PayloadByKind[ChangeOperationKind];
 }
 ```
 
-`operationId` is excluded from its own hash input. Runtime derives all canonical fields. Unknown required versions, missing parents, invalid canonical bytes, digest mismatch, or unauthorized actors remain visible and block dependent progression.
+`operationId` is excluded from its own hash input. Runtime derives all canonical fields. The strict JSON profile rejects alternate byte encodings, duplicate keys, unknown fields, non-data values, and non-canonical numbers. Unknown required versions, missing parents, invalid canonical bytes, digest mismatch, or unauthorized actors remain visible and block dependent progression.
+
+Reduction digests bind canonical semantic Change state while excluding operation ID, accepted-tail metadata, diagnostics, caches, and graph layout. This avoids a cycle between `postStateDigest` and `operationId`; accepted tail and full WorkState digest derive after identity exists.
 
 Use separate private attempt/job identity and accepted operation identity. A stale base can preserve private work correlation, but reevaluation creates a new canonical operation identity. Never alias two canonical IDs.
 
@@ -166,11 +170,11 @@ Use separate private attempt/job identity and accepted operation identity. A sta
 
 ```ts
 interface BaseSnapshot {
-  remoteStateHead: string;
-  sourceHead: string;
-  knowledgeDigest: string;
-  configDigest: string;
-  policyDigest: string;
+  remoteStateHead: GitObjectId | null;
+  sourceHead: GitObjectId;
+  knowledgeDigest: Sha256Digest;
+  configDigest: Sha256Digest;
+  policyDigest: Sha256Digest;
 }
 
 interface AuthorityBinding {
@@ -190,13 +194,13 @@ Local single-user mode may use asserted actor identity. Protected team mode may 
 ### Parent model
 
 ```text
-initial Trace root                     0 parents
-ordinary accepted Change operation    exactly 1 current Change tail
-explicit same-Change causal merge     2 or more parents
+initial or reopened hot-segment root   0 parents
+ordinary accepted Change operation     exactly 1 current Change tail
+explicit same-Change causal merge      1 to 64 exact parents
 cross-Change relationship             exact typed payload bindings
 ```
 
-Multiple parents are not generic conflict resolution. Cross-Change merge, split, relationship, and Planning semantics use exact revision bindings and atomic accepted batches.
+`trace.opened` and `trace.reopened` are roots. Reopening binds verified archive manifest/tail/closure IDs in its payload instead of making cold archive bytes hot parents. Multiple parents are not generic conflict resolution. Cross-Change merge, split, relationship, and Planning semantics use exact revision bindings and atomic accepted batches.
 
 ### Project-scoped Planning and structural records
 
@@ -214,14 +218,22 @@ Structural manifests cannot mutate WorkState by existing alone.
 
 ```ts
 interface StateCommitManifest {
-  previousStateHead: string;
-  operationIds: string[];
-  changedTraceTails: {
-    changeId: string;
-    previousTail: string;
-    nextTail: string;
-  }[];
-  batchDigest: string;
+  manifestId: Sha256Digest;
+  body: {
+    protocol: {
+      id: "codewiki.state-commit-manifest";
+      version: "1.0.0";
+      canonicalJson: "codewiki.canonical-json/1.0.0";
+    };
+    previousStateHead: GitObjectId | null;
+    operationIds: OperationId[];
+    changedTraceTails: {
+      changeId: ChangeId;
+      previousTail: OperationId | null;
+      nextTail: OperationId;
+    }[];
+    batchDigest: Sha256Digest;
+  };
 }
 ```
 
@@ -568,6 +580,8 @@ close Trace
 
 Duplicate hot/archive content after a crash is safe. Premature deletion is not.
 
+`ArchiveManifest` hashes exact segment bytes, boundaries, closure, accepted state commits, and the expected previous archive head. It cannot contain its own Git commit ID because that commit depends on manifest bytes. The verified containing archive commit is the external atomic acceptance receipt observed after push.
+
 Compaction may create replay checkpoints but cannot summarize away canonical operations.
 
 Inspection hydrates exact archived segments into read-only Runtime cache after Git fetch and digest verification. Reopening creates a new hot segment with `trace.reopened` referencing the archived tail and closure. Archive bytes remain immutable.
@@ -732,8 +746,8 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 ### Phase 1 — Executable protocol model
 
-- [ ] Specify exact v1 operation, Planning epoch, state manifest, and archive schemas.
-- [ ] Freeze canonical serialization and identity fixtures.
+- [x] Specify exact v1 operation, Planning epoch, state manifest, and archive schemas.
+- [x] Freeze canonical serialization and identity fixtures.
 - [ ] Implement a pure deterministic reducer.
 - [ ] Implement a pure versioned Alignment Graph projector.
 - [ ] Prove full/incremental replay equivalence.

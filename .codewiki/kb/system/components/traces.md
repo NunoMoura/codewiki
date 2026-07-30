@@ -11,12 +11,15 @@ codewiki_components:
   - traces
   - views
 codewiki_source_patterns:
+  - src/change-trace/**
   - src/traces/**
   - src/api/traces.ts
   - src/views/**
   - src/api/views.ts
 codewiki_test_patterns:
   - tests/traces/**
+  - tests/fixtures/change-trace-v1/**
+  - tests/helpers/change-trace-v1.mjs
   - tests/views/**
 codewiki_generated_views:
   - .codewiki/views/status.json
@@ -35,10 +38,13 @@ codewiki_roles:
 codewiki_source_map:
   - id: traces
     source_patterns:
+      - src/change-trace/**
       - src/traces/**
       - src/api/traces.ts
     test_patterns:
       - tests/traces/**
+      - tests/fixtures/change-trace-v1/**
+      - tests/helpers/change-trace-v1.mjs
     role: state_truth
   - id: views
     source_patterns:
@@ -99,11 +105,11 @@ project-scoped Planning record
 
 A `PlanningEpochRecord` becomes relevant to each participating Change only through atomic `planning.epoch_bound` operations. `StateCommitManifest` and `ArchiveManifest` are separate structural verification records, not domain mutations; their existence alone cannot change WorkState. No generic subject scope exists.
 
-The ordinary Change-scoped envelope is conceptual pending the exact protocol-schema slice:
+The executable Change-scoped envelope is:
 
 ```ts
 interface CanonicalChangeOperation {
-  operationId: string; // sha256(canonical_json(body))
+  operationId: Sha256Digest;
   body: ChangeOperationBody;
 }
 
@@ -111,39 +117,43 @@ interface ChangeOperationBody {
   protocol: {
     id: "codewiki.change-trace";
     version: "1.0.0";
+    canonicalJson: "codewiki.canonical-json/1.0.0";
   };
-  changeId: string;
+  changeId: ChangeId;
   kind: ChangeOperationKind;
-  kindVersion: string;
-  parents: string[];
+  kindVersion: "1.0.0";
+  parents: OperationId[];
   baseSnapshot: BaseSnapshot;
   authorityBinding: AuthorityBinding;
-  preStateDigest: string;
-  postStateDigest: string;
-  payload: ClosedTypedPayload;
+  recordedAt: ExactUtcTimestamp;
+  preStateDigest: Sha256Digest;
+  postStateDigest: Sha256Digest;
+  payload: PayloadByKind[ChangeOperationKind];
 }
 ```
 
-`operationId` is excluded from its own hash input. Any authority-bearing byte change changes identity. Project-scoped `PlanningEpochRecord`, `StateCommitManifest`, and `ArchiveManifest` use separate closed schemas and content identities.
+`operationId` is `sha256(canonical_json(body))` and is excluded from its own hash input. Any authority-bearing byte change changes identity. Canonical JSON admits no insignificant whitespace, alternate key ordering, duplicate keys, non-finite numbers, negative zero, sparse arrays, accessors, symbols, or non-data prototypes. Project-scoped `PlanningEpochRecord`, `StateCommitManifest`, and `ArchiveManifest` use separate closed schemas and content identities.
 
 ```ts
 interface BaseSnapshot {
-  remoteStateHead: string;
-  sourceHead: string;
-  knowledgeDigest: string;
-  configDigest: string;
-  policyDigest: string;
+  remoteStateHead: GitObjectId | null;
+  sourceHead: GitObjectId;
+  knowledgeDigest: Sha256Digest;
+  configDigest: Sha256Digest;
+  policyDigest: Sha256Digest;
 }
 
 interface AuthorityBinding {
-  actorId: string;
-  principalRef: string;
-  role: string;
-  actorPolicyDigest: string;
-  authenticationEvidenceId?: string;
-  runtimeProtocolDigest: string;
+  actorId: StableId;
+  principalRef: Ref;
+  role: StableId;
+  actorPolicyDigest: Sha256Digest;
+  authenticationEvidenceId?: StableId;
+  runtimeProtocolDigest: Sha256Digest;
 }
 ```
+
+`preStateDigest` and `postStateDigest` bind the canonical semantic Change reduction state. That digest excludes operation identity, accepted-tail metadata, diagnostics, caches, and graph layout; otherwise `postStateDigest` and `operationId` would form a hash cycle. The accepted tail and full WorkState snapshot digest are derived after operation identity exists.
 
 Runtime derives both bindings. Client and Git timestamps may support display but cannot determine ownership or progression.
 
@@ -152,19 +162,19 @@ CodeWiki does not invent a PKI. Local single-user mode may use asserted actor id
 ## Parent model
 
 ```text
-initial Trace root                     0 parents
-ordinary accepted Change operation    exactly 1 current Change tail
-explicit same-Change causal merge     2 or more parents
+initial or reopened hot-segment root   0 parents
+ordinary accepted Change operation     exactly 1 current Change tail
+explicit same-Change causal merge      1 to 64 exact parents
 cross-Change relationship             exact typed payload bindings
 ```
 
-Multiple parents exist only for explicit causal convergence inside one Change. Cross-Change merge, split, dependency, overlap, and Planning semantics use exact revision bindings and atomic accepted batches rather than causal parents.
+`trace.opened` and `trace.reopened` are root operations. Reopening binds the verified archive manifest, archived tail, and closure in its payload rather than requiring archived bytes in the hot parent chain. Multiple parents exist only for explicit causal convergence inside one Change. Cross-Change merge, split, dependency, overlap, and Planning semantics use exact revision bindings and atomic accepted batches rather than causal parents.
 
 Missing parents, unknown required versions, invalid canonical bytes, digest mismatch, unauthorized authority, or inconsistent state digests remain visible and block dependent progression. Replay never silently repairs or omits invalid history.
 
 ## Private attempt and accepted identity
 
-Private Runtime attempts and canonical accepted operations use separate identities. A stale remote base may leave useful private evidence, but reevaluation creates a new canonical operation identity. Runtime may bind bounded Evidence digests from the private attempt; it never aliases canonical IDs or persists raw failed work by default.
+Private Runtime attempts and canonical accepted operations use separate identities. Accepted Change Claims, Work Item Claims, Loop attempts, Assignments, Integration attempts, publications, releases, deliveries, and outcomes use their creating operation ID as canonical identity; later operations bind that exact operation ID. A stale remote base may leave useful private evidence, but reevaluation creates a new canonical operation identity. Runtime may bind bounded Evidence digests from the private attempt; it never aliases canonical IDs or persists raw failed work by default.
 
 ## Closed v1 operation catalog
 
@@ -274,6 +284,58 @@ outcome.observation_recorded
 
 Authenticated approval enters through `evidence.recorded` with `approval_receipt`. Review projection cannot grant approval or semantic exit by itself.
 
+## Executable payload grammar
+
+Every payload is a closed object with no extra fields. `?` marks the only optional fields. IDs for accepted Claims, attempts, Assignments, Integration attempts, review projections, publications, releases, deliveries, and outcomes are the creating operation ID; later payloads reference that ID rather than introducing a mutable secondary identity.
+
+| Kind | Exact payload fields |
+| --- | --- |
+| `trace.opened` | `origin`, `provenanceRefs` |
+| `trace.closed` | `reason`, `finalRouteOperationId?` |
+| `trace.reopened` | `archiveManifestId`, `archivedTailOperationId`, `closureOperationId`, `reason` |
+| `change.proposed` | `revision`, `provenance` |
+| `change.revised` | `previousRevisionId`, `revision`, `reason` |
+| `change.relationship_recorded` | `relationshipId`, `relationship` |
+| `change.relationship_superseded` | `relationshipOperationId`, `replacementOperationId?`, `reason` |
+| `change.merge_recorded` | `mergeId`, `role`, `sources`, `result`, `rationale` |
+| `change.split_recorded` | `splitId`, `role`, `source`, `results`, `rationale` |
+| `change.withdrawal_recorded` | `revisionId`, `reason` |
+| `change.feedback_recorded` | `revisionId`, `classification`, `summary`, `provenanceRefs` |
+| `change_claim.acquired` | `revisionId`, `purpose` |
+| `change_claim.released` | `claimOperationId`, `reason` |
+| `change_claim.takeover_recorded` | `priorClaimOperationId`, `revisionId`, `purpose`, `reason` |
+| `loop.attempt_started` | `loop`, `changeRevisionId`, `loopProtocolDigest`, `routeId`, `privateAttemptDigest?` |
+| `loop.attempt_ended` | `attemptOperationId`, `status`, `exitReportId?`, `routeOperationId?` |
+| `decision.candidate_recorded` | `attemptOperationId`, `candidate`, `observedBaseDigest` |
+| `planning.candidate_recorded` | `attemptOperationId`, `candidate`, `observedBaseDigest` |
+| `implementation.candidate_recorded` | `attemptOperationId`, `candidate`, `observedBaseDigest` |
+| `loop.exit_policy_recorded` | `attemptOperationId`, `candidateId`, `policy` |
+| `evidence.recorded` | `attemptOperationId`, `candidateId?`, `evidence`, `evidenceKind`, `authority`, `coverage` |
+| `check.result_recorded` | `attemptOperationId`, `candidateId`, `result`, `checkId`, `checkVersion`, `status`, `evidenceRecordIds`, `evidenceInputDigest` |
+| `loop.exit_report_recorded` | `attemptOperationId`, `candidateId`, `report`, `status`, `resultIds` |
+| `runtime.route_recorded` | `attemptOperationId`, `exitReportId`, `route`, `reasonCode`, `targetChangeId?` |
+| `planning.epoch_bound` | `planningEpochId`, `participantRevisionId`, `planningCandidateId`, `exitReportId`, `workItemIds` |
+| `work_item_claim.acquired` | `planningEpochId`, `workItemId`, `assignmentAttemptId`, `workerId`, `workbenchId`, `sourceBase`, `scopeDigest`, `budgetDigest`, `obligationDigest` |
+| `work_item_claim.released` | `claimOperationId`, `reason` |
+| `work_item_claim.takeover_recorded` | `priorClaimOperationId`, `planningEpochId`, `workItemId`, `assignmentAttemptId`, `workerId`, `workbenchId`, `sourceBase`, `scopeDigest`, `budgetDigest`, `obligationDigest`, `reason` |
+| `assignment.dispatched` | `claimOperationId`, `planningEpochId`, `workItemId`, `assignmentAttemptId`, `workerId`, `workbenchId`, `sourceBase`, `scopeDigest`, `budgetDigest`, `obligationDigest` |
+| `assignment.cancel_requested` | `assignmentOperationId`, `reason` |
+| `assignment.terminal_recorded` | `assignmentOperationId`, `status`, `workerReportEvidenceId?`, `resultTreeDigest?`, `reason` |
+| `worker.report_recorded` | `assignmentOperationId`, `claimOperationId`, `workerReportEvidenceId`, `reportDigest`, `reportRef` |
+| `integration.attempt_started` | `assignmentOperationIds`, `baseCommit`, `targetRef`, `sourceCandidateIds` |
+| `integration.result_recorded` | `integrationAttemptOperationId`, `status`, `resultCommit?`, `resultTreeDigest?`, `integrationEvidenceId?`, `conflictRefs` |
+| `source.branch_merge_recorded` | `integrationAttemptOperationId`, `targetRef`, `baseCommit`, `resultCommit`, `resultTreeDigest`, `providerReceiptRef?` |
+| `source.branch_push_recorded` | `targetRef`, `expectedRemoteHead`, `sourceCommit`, `observedRemoteHead`, `receiptEvidenceId` |
+| `review_projection.published` | `candidateId`, `sourceTreeDigest`, `providerId`, `providerRef`, `headCommit`, `publicationEvidenceId` |
+| `product.publication_recorded` | `candidateId`, `artifactDigest`, `channel`, `receiptEvidenceId`, `status` |
+| `product.release_recorded` | `publicationOperationId?`, `version`, `artifactDigest`, `channel`, `receiptEvidenceId`, `status` |
+| `delivery.observation_recorded` | `effect`, `subjectOperationId`, `status`, `evidenceId`, `targetRef` |
+| `outcome.observation_recorded` | `deliveryOperationId?`, `status`, `evidenceId`, `obligationId?` |
+
+Shared nested records are also closed. A Change revision contains `revisionId` and semantic `content`; `revisionId` hashes canonical content. A Change binding contains exact `changeId`, `revisionId`, and `tailOperationId`. Candidate, policy, Evidence, Result, and Report bindings contain `id`, `digest`, `schemaVersion`, and immutable `ref`. Relationship, merge, and split IDs hash their exact semantic bodies. Semantically set-valued arrays are sorted and unique before identity derivation.
+
+`OPERATION_DEFINITIONS` binds all 42 kinds to exact scope, payload schema, authority capability, parent policy where Change-scoped, precondition, reduction key, conflict behavior, graph projection list, and supersession behavior.
+
 ## Explicit non-operations
 
 Protocol v1 does not admit operations equivalent to:
@@ -296,14 +358,22 @@ One provider-neutral Git state commit accepts an exact batch:
 
 ```ts
 interface StateCommitManifest {
-  previousStateHead: string;
-  operationIds: string[];
-  changedTraceTails: {
-    changeId: string;
-    previousTail: string;
-    nextTail: string;
-  }[];
-  batchDigest: string;
+  manifestId: Sha256Digest;
+  body: {
+    protocol: {
+      id: "codewiki.state-commit-manifest";
+      version: "1.0.0";
+      canonicalJson: "codewiki.canonical-json/1.0.0";
+    };
+    previousStateHead: GitObjectId | null;
+    operationIds: OperationId[];
+    changedTraceTails: {
+      changeId: ChangeId;
+      previousTail: OperationId | null;
+      nextTail: OperationId;
+    }[];
+    batchDigest: Sha256Digest;
+  };
 }
 ```
 
@@ -316,6 +386,8 @@ local proposal
 → expected-head push
 → shared acceptance
 ```
+
+`batchDigest` is the canonical digest of the ordered `operationIds`; `changedTraceTails` is sorted by Change ID. `manifestId` hashes the whole manifest body. Git author, message, timestamp, and containing commit ID are excluded from semantic identity.
 
 A rejected push requires fetch, history verification, WorkState and Alignment Graph rebuild, and semantic reevaluation. Runtime never blind-rebases and retries an authority-bearing write.
 
@@ -399,7 +471,7 @@ close Trace
 
 A crash may leave duplicate hot/archive bytes, which is safe. Premature hot deletion is not.
 
-`ArchiveManifest` binds Change ID, protocol version, segment digests, root/tail operation IDs, closure reason, Integration/delivery/outcome refs, accepted state commits, and archive commit identity.
+`ArchiveManifest` binds Change ID, protocol version, previous archive head, exact segment byte digests and lengths, root/tail/closure operation IDs, closure reason, Integration/delivery/outcome operation IDs, and the ordered accepted state commits ending at `sourceStateHead`. Its content identity cannot contain its own Git commit ID: the verified containing archive commit is the external atomic acceptance receipt observed after push.
 
 Hydration fetches `codewiki/archive`, verifies manifests and operation chains, and materializes read-only Runtime cache. This archive Git ref replaces the legacy per-Trace Git restore ref. V1 retains no compact hot stub after verified hot-copy removal. Reopening creates a new hot segment through `trace.reopened` referencing the archived tail and closure; archive bytes remain immutable.
 
@@ -411,9 +483,11 @@ Stable guidance enters Knowledge, Protocols, Checks, routes, config, source, or 
 
 ## Clean-cut status
 
-Executable source still uses local-linear `.codewiki/traces/TRACE-CHG-<id>.jsonl`, singular `parentId`, local `sequence`, formatted event IDs, snapshot-heavy records, and local rollback. Those contracts are executable drift, not the target protocol.
+The standalone executable v1 protocol foundation now lives in `src/change-trace/**`: closed operation definitions, strict payload schemas, canonical serialization, SHA-256 identities, exact Planning epoch records, state commit manifests, archive manifests, and frozen byte fixtures. It grants no Runtime authority until deterministic reduction and Git acceptance consume it.
 
-The clean cut preserves `.codewiki/kb/**`, deletes obsolete dogfood/runtime state and legacy schemas/adapters/tests, and starts fresh v1 Change history. No migration or compatibility layer is authorized.
+Existing Runtime paths still use local-linear `.codewiki/traces/TRACE-CHG-<id>.jsonl`, singular `parentId`, local `sequence`, formatted event IDs, snapshot-heavy records, and local rollback. Those contracts remain executable drift scheduled for deletion, not compatibility inputs to v1.
+
+The clean cut preserves `.codewiki/kb/**`, deletes obsolete dogfood/runtime state and legacy schemas/adapters/tests, and starts fresh v1 Change history. No migration, fallback parser, alias, or dual-write layer is authorized.
 
 ## Related docs
 
