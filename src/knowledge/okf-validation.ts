@@ -4,7 +4,9 @@ import {
 	isOkfRootIndexPath,
 	isOkfReservedPath,
 	normalizeOkfPath,
+	OKF_SUPPORTED_VERSIONS,
 	OKF_VERSION,
+	type OkfSupportedVersion,
 } from "./okf.ts";
 import {
 	parseOkfDocument,
@@ -39,7 +41,7 @@ export interface OkfValidationIssue {
 }
 
 export interface OkfBundleValidationResult {
-	version: typeof OKF_VERSION;
+	version: OkfSupportedVersion;
 	conceptCount: number;
 	reservedCount: number;
 	issues: OkfValidationIssue[];
@@ -64,7 +66,7 @@ export function validateOkfBundle(
 		issues.push(...validateOkfDocument(parsed));
 	}
 	return {
-		version: OKF_VERSION,
+		version: declaredOkfVersion(documents),
 		conceptCount: documents.filter((document) => document.kind === "concept")
 			.length,
 		reservedCount: documents.filter((document) => document.kind !== "concept")
@@ -72,6 +74,15 @@ export function validateOkfBundle(
 		issues,
 		documents,
 	};
+}
+
+function declaredOkfVersion(documents: readonly OkfDocument[]): OkfSupportedVersion {
+	const declared = documents.find(
+		(document) => document.kind === "index" && isOkfRootIndexPath(document.path),
+	)?.frontmatter?.okf_version;
+	return OKF_SUPPORTED_VERSIONS.includes(declared as OkfSupportedVersion)
+		? (declared as OkfSupportedVersion)
+		: OKF_VERSION;
 }
 
 export function validateOkfDocument(
@@ -83,11 +94,11 @@ export function validateOkfDocument(
 }
 
 export function okfConceptDocuments(files: OkfBundleFile[]): OkfDocument[] {
-	return files
-		.filter(
-			(file) => isOkfMarkdownPath(file.path) && !isOkfReservedPath(file.path),
-		)
-		.map((file) => parseOkfDocument(file.path, file.content));
+	return files.flatMap((file) =>
+		isOkfMarkdownPath(file.path) && !isOkfReservedPath(file.path)
+			? [parseOkfDocument(file.path, file.content)]
+			: [],
+	);
 }
 
 function validateConceptDocument(document: OkfDocument): OkfValidationIssue[] {
@@ -252,7 +263,9 @@ function rootIndexFrontmatterIssues(
 	}
 	if (
 		frontmatter.okf_version !== undefined &&
-		frontmatter.okf_version !== OKF_VERSION
+		!OKF_SUPPORTED_VERSIONS.includes(
+			frontmatter.okf_version as (typeof OKF_SUPPORTED_VERSIONS)[number],
+		)
 	) {
 		return [
 			issue(

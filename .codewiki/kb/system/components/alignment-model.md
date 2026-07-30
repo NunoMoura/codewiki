@@ -13,15 +13,25 @@ codewiki_components:
   - alignment_model
 codewiki_source_patterns:
   - src/change-trace/alignment-graph.ts
+  - src/change-trace/alignment-knowledge.ts
+  - src/change-trace/alignment-query.ts
+  - src/benchmarks/**
 codewiki_test_patterns:
   - tests/traces/alignment-graph-v1.test.mjs
+  - tests/traces/alignment-query-v1.test.mjs
+  - tests/benchmarks/**
 codewiki_role: generated_projection
 codewiki_source_map:
   - id: alignment_model
     source_patterns:
       - src/change-trace/alignment-graph.ts
+      - src/change-trace/alignment-knowledge.ts
+      - src/change-trace/alignment-query.ts
+      - src/benchmarks/**
     test_patterns:
       - tests/traces/alignment-graph-v1.test.mjs
+      - tests/traces/alignment-query-v1.test.mjs
+      - tests/benchmarks/**
     role: generated_projection
 ---
 # Alignment Model
@@ -126,7 +136,7 @@ Every query result binds that digest. The executable projector shape is:
 interface AlignmentGraphSnapshot {
   projector: {
     id: "codewiki.alignment-graph-projector";
-    version: "1.0.0";
+    version: "1.1.0";
   };
   graphSnapshotDigest: Sha256Digest;
   graphContentDigest: Sha256Digest;
@@ -148,7 +158,7 @@ interface AlignmentGraphSnapshot {
 
 `graphSnapshotDigest` hashes the accepted state head, protected source head, Knowledge/config/policy digests, and projector identity/version. `graphContentDigest` independently hashes sorted normalized nodes and edges. Incremental projection accepts only an exact projected-record prefix and is byte-equivalent to full projection.
 
-The current pure projector covers canonical Change, revision, requirement, relationship, Loop, Candidate, Evidence, Result, Report, Route, Planning epoch, Sprint, Work Item, Claim, Assignment, Integration, Git effect, delivery, outcome, and contradiction facts. Source/OKF analysis adapters and bounded query APIs remain later clean-cut phases.
+The current pure projector covers canonical Change, revision, requirement, relationship, Loop, Candidate, Evidence, Result, Report, Route, Planning epoch, Sprint, Work Item, Claim, Assignment, Integration, Git effect, delivery, outcome, and contradiction facts. A deterministic Knowledge augmentation projects OKF concepts, Markdown references, closed authored relationships, source provenance, and source/test ownership without turning imported metadata into authority. Synchronization can materialize the augmented graph after verified Git replay. Incremental operation projection rejects a Knowledge-augmented base so stale external facts cannot leak across snapshots.
 
 ## Per-fact provenance
 
@@ -189,20 +199,18 @@ Each typed operation kind has a deterministic graph projection. Users cannot inj
 
 ## Bounded semantic queries
 
-Agents and clients receive read-only, snapshot-bound query families such as:
+Agents and clients receive six closed, read-only, snapshot-bound query families:
 
 ```text
-what realizes this Change
-why does this source exist
-which Changes affect this concept
-what blocks this Change
-which Evidence supports this requirement
-what changed since this checkpoint
-what depends on this Work Item
-which outcomes followed this Change
+change_context
+work_item_readiness
+loop_assurance
+knowledge_impact
+delivery_chain
+contradictions
 ```
 
-Every result includes exact facts, underlying refs, source provenance, coverage, truncation, and staleness. CodeWiki exposes no arbitrary Cypher or generic graph mutation DSL.
+Requests must bind the exact graph snapshot digest and may traverse at most four hops while returning at most 200 facts. Results rank roots before adjacent relationships, bind the graph content digest, and report exact facts, underlying refs, per-fact provenance, graph and match coverage, truncation, synchronization staleness, and retained contradiction identities. Unknown roots return explicit zero-root coverage rather than pretending absence proves non-existence. CodeWiki rejects unsupported fields and exposes no arbitrary Cypher or generic graph mutation DSL.
 
 ## OKF relationship boundary
 
@@ -220,9 +228,11 @@ derived_from
 
 Ordinary Markdown links remain `references`. Vague `related_to` is rejected. Dynamic Change/source/evidence/delivery relationships belong in operations and graph projection. Imported OKF remains untrusted and cannot execute code, grant authority, pass Checks, or authorize Loop exit.
 
-## Graphify boundary
+## Retrieval benchmark and Graphify boundary
 
-Graphify may be evaluated as an optional disposable analysis adapter. Its stable IDs, typed relations, source locations, confidence, incremental hashes, and bounded queries are useful patterns. Graphify cannot become canonical storage, write accepted Knowledge, grant authority, or permit progression.
+The retrieval benchmark harness lives under `src/benchmarks/**`, separate from Change Trace production semantics. It compares plain lexical search, recorded Pi-Lens results, OKF/source projection, Alignment Graph queries, and optional Graphify results under one snapshot identity, case set, and result cap. It reports recall, precision, false-positive rate, success-at-one, and wall time as separate dimensions; it does not hide safety regressions in an aggregate score. Missing adapters and adapter failures remain explicit results. Current Graphify comparison is reported as unavailable because its dependencies are not installed.
+
+Graphify remains an optional disposable analysis adapter. Its stable IDs, typed relations, source locations, confidence, incremental hashes, and bounded queries are useful patterns. Graphify cannot become canonical storage, write accepted Knowledge, grant authority, or permit progression.
 
 ## Learning boundary
 

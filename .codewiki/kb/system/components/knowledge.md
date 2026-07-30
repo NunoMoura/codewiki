@@ -82,19 +82,20 @@ Planning consumes exact approved Change revisions and current Knowledge refs. Im
 
 ## Current executable drift
 
-Current `.codewiki/kb/**` export is an OKF v0.1 markdown/frontmatter bundle. Current executable durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`. Target emits OKF v0.2 and accepts hot Change operations through `codewiki/state`, with local `.codewiki/changes/**` only a materialization. Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections throughout the cut. OKF concept frontmatter is the active KB-code-test ownership source.
+Current `.codewiki/kb/**` content remains an OKF v0.1 markdown/frontmatter bundle until the Knowledge clean cut. The executable consumer now accepts declared OKF v0.1 and v0.2 bundles, provides a bounded v0.1 fallback profile, and emits strict CodeWiki v0.2 frontmatter without dual internal contracts. Current executable durable workflow truth remains JSONL under `.codewiki/traces/TRACE-*.jsonl`; the target accepts hot Change operations through `codewiki/state`, with local `.codewiki/changes/**` only a materialization. Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections throughout the cut. OKF concept frontmatter is the active KB-code-test ownership source.
 
 ## OKF compatibility
 
 CodeWiki targets OKF v0.2 for `.codewiki/kb/**/*.md`. Generic imported bundles may use a bounded v0.1 fallback reader, but CodeWiki does not emit two internal Knowledge contracts or preserve legacy Change Trace compatibility.
 
-Target support includes:
+Executable v0.2 support includes:
 
-- `sources` for document- or assertion-level provenance;
+- `sources`, shared/per-source `usage_window`, and source credibility signals for provenance;
 - `generated` for truthful producer/time metadata;
-- `verified` as advisory confirmation metadata;
+- bare-map or list `verified` events as advisory confirmation metadata;
+- derived `unverified`, `machine-confirmed`, and `human-reviewed` trust tiers;
 - `status` and `stale_after` lifecycle/freshness hints;
-- Attested Computation definitions;
+- inert, validated Attested Computation definitions that never execute during parsing or projection;
 - meaningful software-domain `type` values;
 - unknown frontmatter round-trip preservation;
 - progressive disclosure through generated indexes;
@@ -137,12 +138,15 @@ Knowledge docs use sparse intentional Markdown links. Ordinary links remain `ref
 
 The wholly derived Alignment Graph projects:
 
-- OKF concept metadata and links;
-- provenance refs;
-- CodeWiki source ownership;
+- accepted or imported OKF concept metadata and ordinary Markdown `references` links;
+- the closed authored relationship vocabulary;
+- upstream `sources` provenance declarations;
+- CodeWiki source/test ownership and Planning source/Knowledge/component scopes;
 - accepted Change and Planning refs;
 - source/test/Git facts;
-- Check Results and delivery evidence.
+- requirements, Evidence obligations, Checks, Results, delivery evidence, and outcomes.
+
+Accepted bundle facts use `canonical_binding`; imported bundle facts use `observed_binding`. Augmentation verifies the Knowledge digest against the graph base, rejects duplicate concepts and stale re-augmentation, sorts all facts, and recomputes the graph content digest. Imported metadata remains inert regardless of its `verified`, lifecycle, or Attested Computation fields.
 
 Stable semantic persistence should stop at outcome, behavior/invariant, system responsibility/interface, source ownership boundary, and tests/evidence. Fine-grained symbol relationships remain derived from LSP, AST, or Pi-Lens.
 

@@ -6,6 +6,8 @@ export * from "./builder.ts";
 export * from "./reduce-operation.ts";
 export * from "./reducer.ts";
 export * from "./alignment-graph.ts";
+export * from "./alignment-knowledge.ts";
+export * from "./alignment-query.ts";
 export * from "./git-command.ts";
 export * from "./git-state.ts";
 export * from "./synchronization.ts";

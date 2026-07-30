@@ -29,6 +29,10 @@ import {
 	projectAlignmentGraph,
 	type AlignmentGraphSnapshot,
 } from "./alignment-graph.ts";
+import {
+	augmentAlignmentGraphWithKnowledge,
+	type KnowledgeAlignmentProjection,
+} from "./alignment-knowledge.ts";
 import type { PlanningEpochRecord } from "./contracts.ts";
 import type { ProjectWorkState } from "./state.ts";
 import {
@@ -77,6 +81,7 @@ export interface SynchronizeGitStateInput extends ReadGitStateHistoryInput {
 	readonly repositoryIdentity: Sha256Digest;
 	readonly currentProject: ProjectAuthoritySnapshot;
 	readonly policy: ReplayAdmissionPolicy;
+	readonly knowledgeProjection?: KnowledgeAlignmentProjection;
 	readonly materializationRoot?: string;
 	readonly lastVerified?: SynchronizationObservation;
 }
@@ -119,16 +124,30 @@ export async function synchronizeGitState(
 		return offlineObservation(input.lastVerified);
 	}
 	const workState = replayAcceptedStateBatches(history.batches, input.policy);
-	const alignmentGraph = workState.stateHead
+	const staleReasons = staleReasonsFor(workState, input.currentProject);
+	const status = staleReasons.length === 0 ? "fresh" : "stale";
+	const operationGraph = workState.stateHead
 		? projectAlignmentGraph(workState)
 		: null;
+	const projectionMatchesGraph =
+		operationGraph &&
+		input.knowledgeProjection?.knowledgeDigest ===
+			operationGraph.baseBinding.knowledgeDigest;
+	const skipDriftedKnowledge =
+		staleReasons.includes("knowledge_digest_mismatch") &&
+		!projectionMatchesGraph;
+	const alignmentGraph =
+		operationGraph && input.knowledgeProjection && !skipDriftedKnowledge
+			? augmentAlignmentGraphWithKnowledge(
+					operationGraph,
+					input.knowledgeProjection,
+				)
+			: operationGraph;
 	const teamSnapshot = createTeamSnapshot(
 		input.repositoryIdentity,
 		history.remoteStateHead,
 		input.currentProject,
 	);
-	const staleReasons = staleReasonsFor(workState, input.currentProject);
-	const status = staleReasons.length === 0 ? "fresh" : "stale";
 	const observation = canonicalValue<SynchronizationObservation>({
 		status,
 		canMutate: status === "fresh",

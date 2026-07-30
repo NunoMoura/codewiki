@@ -59,8 +59,29 @@ describe("read-only Git synchronization", () => {
 		const fixture = await createTwoCloneFixture();
 		try {
 			const seeded = await seedRemote(fixture, "CHG-sync-fresh");
+			const knowledgeProjection = {
+				knowledgeDigest: seeded.projected.observedBase.knowledgeDigest,
+				concepts: [
+					{
+						conceptId: "kb:system/synchronization",
+						path: ".codewiki/kb/system/synchronization.md",
+						authority: "accepted",
+						type: "System Responsibility",
+						title: "Synchronization",
+						status: "stable",
+						trustTier: "human-reviewed",
+						stale: false,
+						markdownReferences: [],
+						sourceResources: [],
+						relationships: [],
+						sourcePatterns: ["src/change-trace/synchronization.ts"],
+						testPatterns: ["tests/traces/synchronization-v1.test.mjs"],
+					},
+				],
+			};
 			const observation = await synchronizeGitState(
 				synchronizationInput(fixture, seeded.projected, {
+					knowledgeProjection,
 					materializationRoot: fixture.cloneB,
 				}),
 			);
@@ -72,6 +93,7 @@ describe("read-only Git synchronization", () => {
 			);
 			assert.equal(observation.workState.changes[0].changeId, "CHG-sync-fresh");
 			assert.ok(observation.alignmentGraph.graphSnapshotDigest);
+			assert.equal(observation.alignmentGraph.coverage.knowledgeConceptCount, 1);
 			assertFreshSynchronization(
 				observation,
 				observation.teamSnapshot.snapshotDigest,
@@ -97,6 +119,7 @@ describe("read-only Git synchronization", () => {
 			assert.equal(pointer.workStateDigest, observation.workState.workStateDigest);
 			const repeated = await synchronizeGitState(
 				synchronizationInput(fixture, seeded.projected, {
+					knowledgeProjection,
 					materializationRoot: fixture.cloneB,
 				}),
 			);
@@ -140,7 +163,13 @@ describe("read-only Git synchronization", () => {
 				knowledgeDigest: `sha256:${"9".repeat(64)}`,
 			};
 			const observation = await synchronizeGitState(
-				synchronizationInput(fixture, seeded.projected, {currentProject}),
+				synchronizationInput(fixture, seeded.projected, {
+					currentProject,
+					knowledgeProjection: {
+						knowledgeDigest: currentProject.knowledgeDigest,
+						concepts: [],
+					},
+				}),
 			);
 			assert.equal(observation.status, "stale");
 			assert.equal(observation.canMutate, false);
@@ -148,6 +177,7 @@ describe("read-only Git synchronization", () => {
 				"knowledge_digest_mismatch",
 				"source_head_mismatch",
 			]);
+			assert.equal(observation.alignmentGraph.coverage.knowledgeConceptCount, 0);
 			assert.throws(
 				() => assertFreshSynchronization(observation),
 				/Unsafe distributed mutation requires fresh synchronization/,

@@ -1,6 +1,12 @@
 import { basename } from "node:path/posix";
 
 export const OKF_VERSION = "0.1" as const;
+const OKF_TARGET_VERSION = "0.2" as const;
+export const OKF_SUPPORTED_VERSIONS = Object.freeze([
+	OKF_VERSION,
+	OKF_TARGET_VERSION,
+] as const);
+export type OkfSupportedVersion = (typeof OKF_SUPPORTED_VERSIONS)[number];
 export const OKF_RESERVED_FILENAMES = ["index.md", "log.md"] as const;
 
 export type OkfReservedFilename = (typeof OKF_RESERVED_FILENAMES)[number];

@@ -131,6 +131,16 @@ describe("Alignment Graph projector v1", () => {
 			() => projectAlignmentGraphIncremental(wrongVersion, journey.states[1]),
 			/version mismatch/,
 		);
+		const knowledgeAugmented = structuredClone(previous);
+		knowledgeAugmented.coverage.knowledgeConceptCount = 1;
+		assert.throws(
+			() =>
+				projectAlignmentGraphIncremental(
+					knowledgeAugmented,
+					journey.states[1],
+				),
+			/Knowledge-augmented base/,
+		);
 	});
 
 	it("projects retained contradictions as deterministic analysis, never authority", () => {

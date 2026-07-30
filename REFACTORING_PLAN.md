@@ -795,13 +795,15 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 ### Phase 6 — Alignment Graph and bounded queries
 
-- [ ] Implement deterministic graph facts for every operation kind.
-- [ ] Bind graph snapshot to state, Knowledge, source, config/policy, and projector version.
-- [ ] Emit per-fact provenance.
-- [ ] Add bounded read-only semantic query families.
-- [ ] Report coverage, truncation, staleness, contradictions, and underlying refs.
-- [ ] Complete OKF v0.2 compatibility and closed authored relationship vocabulary.
-- [ ] Benchmark plain search, Pi-Lens, OKF/source projection, Alignment Graph, and optional Graphify analysis.
+- [x] Implement deterministic graph facts for every operation kind.
+- [x] Bind graph snapshot to state, Knowledge, source, config/policy, and projector version.
+- [x] Emit per-fact provenance.
+- [x] Add bounded read-only semantic query families.
+- [x] Report coverage, truncation, staleness, contradictions, and underlying refs.
+- [x] Complete OKF v0.2 compatibility and closed authored relationship vocabulary.
+- [x] Benchmark plain search, Pi-Lens, OKF/source projection, Alignment Graph, and optional Graphify analysis.
+
+Phase 6 uses Alignment Graph projector `1.1.0`, deterministic OKF/source augmentation, and six closed query families capped at four hops and 200 facts. The colocated `src/benchmarks/**` harness binds every method to one snapshot, case set, and result cap; reports recall, precision, false-positive rate, success-at-one, and wall time separately; and exposes missing or failed adapters. Graphify remains explicitly unavailable until its optional dependencies are installed, so no Graphify quality claim is made.
 
 ### Phase 7 — Native Loop cuts
 
