@@ -15,8 +15,10 @@ codewiki_components:
 codewiki_source_patterns:
   - src/change-trace/git-command.ts
   - src/change-trace/git-state.ts
+  - src/change-trace/synchronization.ts
 codewiki_test_patterns:
   - tests/traces/git-state-v1.test.mjs
+  - tests/traces/synchronization-v1.test.mjs
   - tests/helpers/git-state-v1.mjs
 codewiki_role: git_state_acceptance
 codewiki_source_map:
@@ -24,8 +26,10 @@ codewiki_source_map:
     source_patterns:
       - src/change-trace/git-command.ts
       - src/change-trace/git-state.ts
+      - src/change-trace/synchronization.ts
     test_patterns:
       - tests/traces/git-state-v1.test.mjs
+      - tests/traces/synchronization-v1.test.mjs
       - tests/helpers/git-state-v1.mjs
     role: git_state_acceptance
 ---
@@ -43,7 +47,7 @@ repository identity
 + config and policy digests
 ```
 
-Status is `fresh | stale | offline`. Unsafe shared mutation requires `fresh`.
+Runtime hashes that exact tuple into `snapshotDigest`. Status is `fresh | stale | offline`. Unsafe shared mutation requires `fresh`, an unchanged snapshot digest, and a proposal expected head equal to the verified remote state head.
 
 ## Accepted append
 
@@ -66,6 +70,18 @@ git push --force-with-lease=refs/heads/codewiki/state:<expected-head>
 ```
 
 The proposal commit is built through a temporary Git index, so it never checks out or mutates the developer's source worktree. Canonical operation, Planning, and manifest bytes live at digest-addressed paths under `.codewiki/changes/**` and `.codewiki/state/**`. Commit author, message, and timestamp remain non-semantic receipt metadata.
+
+## Read-only synchronization
+
+`synchronizeGitState()` fetches `codewiki/state`, validates every commit, manifest, record path, canonical identity, parent, transition digest, and projected state digest, then deterministically rebuilds WorkState and the Alignment Graph. It classifies the result:
+
+- `fresh`: accepted state and current protected source/Knowledge/config/policy bindings match;
+- `stale`: Git state verified, but one or more current authority bindings differ;
+- `offline`: remote transport unavailable; last verified projections may remain readable but grant no mutation authority.
+
+Materialization writes immutable canonical operation and manifest files to `.codewiki/changes/**` and `.codewiki/state/**`, digest-addressed WorkState and graph snapshots under `.codewiki/runtime/snapshots/**`, then atomically updates `.codewiki/runtime/synchronization.json`. Extra cache files carry no authority; the verified snapshot pointer and Git history govern use.
+
+`createSynchronizationPoller()` coalesces concurrent polls and duplicate invalidations. An invalidation immediately hides the current fresh observation, including when it arrives during a fetch. `pushSynchronizedGitStateCommit()` is the guarded shared-mutation boundary; stale, offline, invalidated, snapshot-mismatched, or expected-head-mismatched proposals fail before push.
 
 ## Stale rejection
 
@@ -132,7 +148,9 @@ Measure contention before partitioning. If needed, partition non-exclusive contr
 
 The deliberately simultaneous two-writer cases measured one stale result per initial two-proposal race and one semantic retry only where the operation remained eligible. Exclusive Claim losers required no retry because reevaluation blocked them. This adversarial measurement proves serialization behavior but is not evidence of real workload contention, so v1 retains one `codewiki/state` ref and does not add partitioning.
 
-The transport and replay code are now executable package foundations. Runtime freshness state, polling/invalidation, and guarded mutation routing remain separate Phase 3/4 cutovers; no legacy Trace adapter or dual-write path exists.
+The transport, replay, read-only synchronization, materialization, polling/invalidation, and guarded push boundary are executable package foundations. Phase 4 adds typed distributed Claim mutation and stale semantic reevaluation through that boundary; no legacy Trace adapter or dual-write path exists.
+
+`tests/traces/synchronization-v1.test.mjs` additionally proves exact team snapshot identity, deterministic local materialization, stale/offline fail-closed behavior, guarded pushes, coalesced invalidation including in-flight races, and structural rejection of malicious Git history.
 
 ## Related docs
 

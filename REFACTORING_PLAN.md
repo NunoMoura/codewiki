@@ -768,12 +768,12 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 ### Phase 3 — Read-only remote synchronization
 
-- [ ] Fetch and verify `codewiki/state` without mutation.
-- [ ] Compute team snapshot identity.
-- [ ] Expose `fresh | stale | offline`.
-- [ ] Rebuild local hot materialization, WorkState, and Alignment Graph.
-- [ ] Add poll-based invalidation before optional webhooks.
-- [ ] Block unsafe distributed mutation when not fresh.
+- [x] Fetch and verify `codewiki/state` without mutation.
+- [x] Compute team snapshot identity.
+- [x] Expose `fresh | stale | offline`.
+- [x] Rebuild local hot materialization, WorkState, and Alignment Graph.
+- [x] Add poll-based invalidation before optional webhooks.
+- [x] Block unsafe distributed mutation when not fresh.
 
 ### Phase 4 — Guarded distributed mutation
 

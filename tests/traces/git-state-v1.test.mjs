@@ -1,48 +1,25 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-	createGitStateCommit,
 	createInitialProjectWorkState,
-	pushGitStateCommit,
 	readGitStateHistory,
-	reduceAcceptedStateBatch,
-	replayGitStateHistory,
 } from "../../src/change-trace/index.ts";
 import {authorityBinding} from "../helpers/change-trace-v1.mjs";
 import {
-	allowAllReplayPolicy,
 	baseSnapshotFor,
 	buildOperationSequence,
 	buildPassingPlanningExit,
 	buildPlanningEpochRecords,
 	planningArtifacts,
-	revisionFor,
 } from "../helpers/change-trace-replay-v1.mjs";
-import {createTwoCloneFixture, git} from "../helpers/git-state-v1.mjs";
-
-function buildOpenRecords(state, changeId, actorId = "runtime-main") {
-	const revision = revisionFor(changeId);
-	return buildOperationSequence({
-		changeId,
-		baseSnapshot: baseSnapshotFor(state),
-		authority: authorityBinding({actorId}),
-		specifications: [
-			{
-				kind: "trace.opened",
-				recordedAt: "2026-07-30T15:00:00.000Z",
-				payload: {origin: "user", provenanceRefs: [`request:${changeId}`]},
-			},
-			{
-				kind: "change.proposed",
-				recordedAt: "2026-07-30T15:00:01.000Z",
-				payload: {
-					revision,
-					provenance: {kind: "user", refs: [`request:${changeId}`]},
-				},
-			},
-		],
-	}).operations;
-}
+import {
+	buildOpenChangeRecords as buildOpenRecords,
+	createGitProposal as propose,
+	createTwoCloneFixture,
+	git,
+	pushGitProposal as push,
+	synchronizeTestState as sync,
+} from "../helpers/git-state-v1.mjs";
 
 function buildFeedbackRecord(state, changeId, suffix, actorId) {
 	const change = state.changes.find((entry) => entry.changeId === changeId);
@@ -112,31 +89,6 @@ function buildWorkItemClaimRecord(state, changeId, epoch, workItemId, actorId) {
 			},
 		],
 	}).operations;
-}
-
-async function propose(repoRoot, state, records) {
-	const proposal = await createGitStateCommit({repoRoot, state, records});
-	const projected = reduceAcceptedStateBatch(
-		state,
-		{
-			stateHead: proposal.stateCommit,
-			manifest: proposal.manifest,
-			records: proposal.records,
-		},
-		allowAllReplayPolicy,
-	);
-	return {proposal, projected};
-}
-
-async function push(repoRoot, proposal) {
-	return pushGitStateCommit({repoRoot, remote: "origin", proposal});
-}
-
-async function sync(repoRoot) {
-	return replayGitStateHistory(
-		{repoRoot, remote: "origin"},
-		allowAllReplayPolicy,
-	);
 }
 
 describe("provider-neutral Git state CAS", () => {

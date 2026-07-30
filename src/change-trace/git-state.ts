@@ -23,6 +23,7 @@ import type {
 	StateCommitManifest,
 } from "./contracts.ts";
 import type { ProjectWorkState } from "./state.ts";
+import { throwProtocolFailure } from "./errors.ts";
 import {
 	createGitCommandRunner,
 	type GitCommandRequest,
@@ -91,11 +92,11 @@ export async function createGitStateCommit(
 	const expectedStateHead = input.state.stateHead;
 	const entries = [
 		...input.records.map((record) => ({
-			path: recordPath(record),
+			path: gitStateRecordPath(record),
 			bytes: serializeRecord(record),
 		})),
 		{
-			path: manifestPath(manifest),
+			path: gitStateManifestPath(manifest),
 			bytes: serializeStateCommitManifest(manifest),
 		},
 	].sort((left, right) => compareText(left.path, right.path));
@@ -377,7 +378,7 @@ async function readStateBatch(
 	if (manifest.body.previousStateHead !== previousStateHead) {
 		throw new Error(`State commit ${commit} parent does not match its manifest.`);
 	}
-	if (manifestPaths[0] !== manifestPath(manifest)) {
+	if (manifestPaths[0] !== gitStateManifestPath(manifest)) {
 		throw new Error(`State commit ${commit} manifest path does not match identity.`);
 	}
 	const recordPaths = outputLines(
@@ -419,7 +420,10 @@ async function readStateBatch(
 			)
 				? parsePlanningEpochRecord(recordResult.stdout)
 				: parseCanonicalChangeOperation(recordResult.stdout);
-			if (record.operationId !== operationId || recordPath(record) !== path) {
+			if (
+				record.operationId !== operationId ||
+				gitStateRecordPath(record) !== path
+			) {
 				throw new Error(`State record ${operationId} path or identity mismatch.`);
 			}
 			return record;
@@ -428,14 +432,14 @@ async function readStateBatch(
 	return {stateHead: commit, manifest, records};
 }
 
-function recordPath(record: AcceptedProtocolRecord): string {
+export function gitStateRecordPath(record: AcceptedProtocolRecord): string {
 	if (isPlanningEpoch(record)) {
 		return `${PLANNING_RECORD_DIRECTORY}/${digestHex(record.operationId)}.json`;
 	}
 	return `${CHANGE_DIRECTORY}/${record.body.changeId}/operations/${digestHex(record.operationId)}.json`;
 }
 
-function manifestPath(manifest: StateCommitManifest): string {
+export function gitStateManifestPath(manifest: StateCommitManifest): string {
 	return `${STATE_MANIFEST_DIRECTORY}/${digestHex(manifest.manifestId)}.json`;
 }
 
@@ -470,13 +474,37 @@ async function runGitChecked(
 	request: GitCommandRequest,
 	operation: string,
 ): Promise<GitCommandResult> {
-	const result = await runner(request);
+	let result: GitCommandResult;
+	try {
+		result = await runner(request);
+	} catch (error) {
+		if (request.signal?.aborted) throw error;
+		return throwProtocolFailure(
+			"GitStateTransportError",
+			"GIT_COMMAND_UNAVAILABLE",
+			null,
+			`Git ${operation} was unavailable; command output was redacted.`,
+		);
+	}
 	if (result.exitCode !== 0) {
-		throw new Error(
+		return throwProtocolFailure(
+			"GitStateTransportError",
+			"GIT_COMMAND_FAILED",
+			null,
 			`Git ${operation} failed (${result.exitCode}); command output was redacted.`,
 		);
 	}
 	return result;
+}
+
+export function isGitStateTransportError(error: unknown): boolean {
+	return (
+		error instanceof Error &&
+		error.name === "GitStateTransportError" &&
+		"code" in error &&
+		(error.code === "GIT_COMMAND_FAILED" ||
+			error.code === "GIT_COMMAND_UNAVAILABLE")
+	);
 }
 
 function gitObjectId(result: GitCommandResult, label: string): GitObjectId {
