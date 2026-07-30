@@ -28,6 +28,7 @@ import type {
 	RuntimeSemanticAdapters,
 } from "../runtime/semantic-executor.ts";
 
+export { createPiDecisionModelCheckTransport } from "./decision-model-check-session.ts";
 export { createPiDecisionResearchClaimsTransport } from "./decision-research-claims-session.ts";
 
 const READ_ONLY_TOOL_NAMES = ["read", "grep", "find", "ls"] as const;
@@ -243,12 +244,10 @@ async function runSemanticSession<TInvocation, TCandidate>(
 			() => undefined,
 		);
 		session = await Promise.race([sessionPromise, timeout]);
-		emitObservation(options, {
-			role,
-			state: "running",
-			...(session.sessionId ? { sessionId: session.sessionId } : {}),
-			...(session.sessionFile ? { sessionFile: session.sessionFile } : {}),
-		});
+		emitObservation(
+			options,
+			semanticSessionObservation(role, "running", session),
+		);
 		await Promise.race([
 			session.prompt(semanticInvocationPrompt(role, invocationJson)),
 			timeout,
@@ -258,29 +257,50 @@ async function runSemanticSession<TInvocation, TCandidate>(
 				`Pi SDK ${role} session did not submit exactly one candidate.`,
 			);
 		}
-		emitObservation(options, {
-			role,
-			state: "completed",
-			...(session.sessionId ? { sessionId: session.sessionId } : {}),
-			...(session.sessionFile ? { sessionFile: session.sessionFile } : {}),
-		});
+		emitObservation(
+			options,
+			semanticSessionObservation(role, "completed", session),
+		);
 		return parseSemanticCandidate(role, candidate) as TCandidate;
 	} catch (error) {
-		emitObservation(options, {
-			role,
-			state: timedOut ? "cancelled" : "failed",
-			...(session?.sessionId ? { sessionId: session.sessionId } : {}),
-			...(session?.sessionFile ? { sessionFile: session.sessionFile } : {}),
-			message: boundedMessage(error),
-		});
+		emitObservation(
+			options,
+			semanticSessionObservation(
+				role,
+				timedOut ? "cancelled" : "failed",
+				session,
+				boundedMessage(error),
+			),
+		);
 		throw error;
 	} finally {
 		if (timer) clearTimeout(timer);
-		if (session) {
-			if (timedOut) await disposeSessionQuietly(session);
-			else await session.dispose();
-		}
+		await closeSemanticSession(session, timedOut);
 	}
+}
+
+function semanticSessionObservation(
+	role: PiSdkSemanticRole,
+	state: PiSdkSemanticSessionState,
+	session: PiSdkBoundedSession | undefined,
+	message?: string,
+): PiSdkSemanticSessionObservation {
+	return {
+		role,
+		state,
+		...(session?.sessionId ? {sessionId: session.sessionId} : {}),
+		...(session?.sessionFile ? {sessionFile: session.sessionFile} : {}),
+		...(message ? {message} : {}),
+	};
+}
+
+async function closeSemanticSession(
+	session: PiSdkBoundedSession | undefined,
+	timedOut: boolean,
+): Promise<void> {
+	if (!session) return;
+	if (timedOut) await disposeSessionQuietly(session);
+	else await session.dispose();
 }
 
 function createDefaultPiSdkSessionFactory(
