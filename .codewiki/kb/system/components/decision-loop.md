@@ -109,15 +109,17 @@ Runtime loads repository facts. Callers cannot replace current Knowledge, trace,
 
 ## Candidate
 
-Loop-owned `DecisionCandidateContent` proposes:
+A semantic-session producer returns only a strict `DecisionCandidateProposal`: requested disposition and rationale. It cannot repeat or replace Runtime-owned Change, WorkState, Knowledge, authority, time, or append fields. Runtime combines that proposal with the exact persisted Change revision and current WorkState to materialize immutable `DecisionCandidateContent` containing:
 
-- complete normalized semantic revision and digestable content;
-- disposition request (`approve`, `reject`, `defer`, `withdraw`, or `route_back`);
+- complete normalized semantic revision and Runtime-observed revision-validation binding;
+- disposition request (`approve`, `reject`, `defer`, or `withdraw`) and rationale;
 - grounded current-state and Knowledge impact refs;
 - outcome, risks, alternatives, invariants, constraints, and questions;
-- concise unresolved facts and recommended semantic route.
+- canonical authored Change relationships;
+- active overlap facts with explicit relationship accounting;
+- concise unresolved fact codes.
 
-It does not contain canonical candidate id, approval receipt, actor identity, approval time, WorkState digest, Check activation, Exit Report, or final Runtime route. Runtime materializes identity and authenticated disposition facts around accepted candidate content.
+Candidate identity binds this content to exact WorkState, Knowledge, source/Git when present, and canonical Change refs. Content does not contain approval receipt, actor identity, approval time, Check activation, Exit Report, or final Runtime route. Runtime materializes identity and authenticated disposition facts around accepted candidate content.
 
 ## Loop cycle
 
@@ -177,7 +179,7 @@ The versioned `codewiki.decision.research-claims` protocol now prepares one immu
 
 The Pi adapter now executes that prepared protocol in one in-memory session selected by the exact Runtime route. It disables all tools and resource discovery, supplies no producer conversation or repository context, bounds request/response bytes and route timeout, propagates cancellation, parses only strict JSON, and discards transient assistant text after normalization. Missing models, provider failure, timeout, cancellation, and malformed output return typed operational observations for Runtime reduction; they never fabricate model Evidence.
 
-Production Decision execution still relies on broad `sourceRefs`/`proofRefs` and rough count-based sufficiency. External research collection, native candidate/policy/report persistence, production scheduling of the Pi transport, and replacement of that legacy path remain part of the clean Decision cut.
+A production-unwired native Decision path now materializes the full Runtime-owned Candidate from persisted Change/WorkState facts, resolves the exact closed Decision policy, and runs trusted Code Check executors through the bounded native runner. Missing approval/model/research Evidence or execution remains explicit `indeterminate`, while semantic Code Check failures remain failure-dominant. External research collection, independent general Model Check transport, canonical Candidate/policy/Result/Report persistence, and replacement of the legacy `runWikiDecide()` count path remain part of the clean Decision cut.
 
 ## Exit and route
 

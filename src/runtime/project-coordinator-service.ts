@@ -63,7 +63,7 @@ import {
 	scheduleRuntimeReactions,
 	type RuntimeReactionJobReceipt,
 } from "./runtime-reaction-jobs.ts";
-import { parseDecisionCandidateContent } from "../decision/candidate-content.ts";
+import { parseDecisionCandidateProposal } from "../decision/candidate-proposal.ts";
 import { parseImplementationCandidateContent } from "../implementation/candidate-content.ts";
 import { parsePlanningCandidateContent } from "../planning/candidate-content.ts";
 import type {
@@ -847,7 +847,7 @@ function candidateAdapters(
 ): RuntimeSemanticAdapters {
 	try {
 		if (loop === "decision") {
-			const parsed = parseDecisionCandidateContent(candidate);
+			const parsed = parseDecisionCandidateProposal(candidate);
 			return { decision: () => parsed };
 		}
 		if (loop === "planning") {

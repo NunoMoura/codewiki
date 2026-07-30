@@ -1,12 +1,13 @@
-import type { ChangeDisposition } from "./change-quality.ts";
 import {
 	assertCandidateContentKeys,
 	candidateContentRecord,
 	requiredCandidateText,
 } from "../loop-exit/admission.ts";
 
-export interface DecisionCandidateContent {
-	disposition: ChangeDisposition;
+export type DecisionDisposition = "approve" | "reject" | "defer" | "withdraw";
+
+export interface DecisionCandidateProposal {
+	disposition: DecisionDisposition;
 	rationale: string;
 }
 
@@ -23,16 +24,16 @@ const RUNTIME_FIELDS = [
 	"runtimeJobId",
 	"mode",
 ] as const;
-const DISPOSITIONS: ChangeDisposition[] = [
+const DISPOSITIONS: DecisionDisposition[] = [
 	"approve",
 	"reject",
 	"defer",
 	"withdraw",
 ];
 
-export function parseDecisionCandidateContent(
+export function parseDecisionCandidateProposal(
 	value: unknown,
-): DecisionCandidateContent {
+): DecisionCandidateProposal {
 	const candidate = candidateContentRecord(value, "decision");
 	assertCandidateContentKeys(
 		"decision",
@@ -40,9 +41,9 @@ export function parseDecisionCandidateContent(
 		CANDIDATE_FIELDS,
 		RUNTIME_FIELDS,
 	);
-	if (!DISPOSITIONS.includes(candidate.disposition as ChangeDisposition)) {
+	if (!DISPOSITIONS.includes(candidate.disposition as DecisionDisposition)) {
 		throw new Error("Runtime decision candidate disposition is invalid.");
 	}
 	requiredCandidateText(candidate.rationale, "decision", "rationale");
-	return candidate as unknown as DecisionCandidateContent;
+	return candidate as unknown as DecisionCandidateProposal;
 }

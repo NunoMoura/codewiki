@@ -84,10 +84,11 @@ interface RunLoopExitInput {
 		Record<string, readonly EvidenceObligationResolution[]>
 	>;
 	readonly evidenceRecords?: readonly EvidenceRecord[];
+	readonly precomputedResults?: readonly CheckResult[];
 	readonly signal?: AbortSignal;
 	readonly onResult?: (
 		result: CheckResult,
-		source: "executed" | "cache",
+		source: "executed" | "cache" | "precomputed",
 	) => void | Promise<void>;
 }
 
@@ -171,6 +172,7 @@ interface RunLoopExitContext {
 
 interface CheckSchedulerContext extends RunLoopExitContext {
 	readonly evidenceRecords: ReadonlyMap<string, EvidenceRecord>;
+	readonly precomputedResults: ReadonlyMap<string, CheckResult>;
 	readonly cacheHits: Set<string>;
 }
 
@@ -180,6 +182,10 @@ async function runLoopExit(options: RunLoopExitContext): Promise<LoopExitRun> {
 	const execute = createCheckScheduler({
 		...options,
 		evidenceRecords: normalizedEvidenceRecords(options.input.evidenceRecords ?? []),
+		precomputedResults: normalizedPrecomputedResults(
+			options.input.precomputedResults ?? [],
+			options.input.policy,
+		),
 		cacheHits,
 	});
 	const results = await Promise.all(options.input.policy.bindings.map(execute));
@@ -218,6 +224,11 @@ async function executeScheduledCheck(
 	binding: CheckBinding,
 	dependencyResults: readonly CheckResult[],
 ): Promise<CheckResult> {
+	const precomputed = context.precomputedResults.get(binding.checkId);
+	if (precomputed) {
+		await context.input.onResult?.(precomputed, "precomputed");
+		return precomputed;
+	}
 	const check = requiredCatalogRegistration(
 		context.catalog,
 		binding.checkId,
@@ -501,6 +512,34 @@ function missingResolution(
 		...withoutDigest,
 		resolutionDigest: canonicalJsonDigest(withoutDigest),
 	});
+}
+
+function normalizedPrecomputedResults(
+	values: readonly CheckResult[],
+	policy: ResolvedExitPolicy,
+): ReadonlyMap<string, CheckResult> {
+	const active = new Map(policy.bindings.map((binding) => [binding.checkId, binding]));
+	const results = new Map<string, CheckResult>();
+	for (const result of values) {
+		const binding = active.get(result.checkId);
+		if (!binding) {
+			throw new Error(`Loop exit received precomputed inactive Check ${result.checkId}.`);
+		}
+		if (results.has(result.checkId)) {
+			throw new Error(`Loop exit precomputed Check ${result.checkId} is duplicated.`);
+		}
+		if (
+			result.candidateDigest !== policy.candidateDigest ||
+			result.policyDigest !== policy.policyDigest ||
+			result.checkVersion !== binding.checkVersion ||
+			result.checkDigest !== binding.checkDigest
+		) {
+			throw new Error(`Loop exit precomputed Check ${result.checkId} is stale.`);
+		}
+		assertSha256Digest(result.resultDigest, "Precomputed Check Result digest");
+		results.set(result.checkId, result);
+	}
+	return results;
 }
 
 function normalizedEvidenceRecords(

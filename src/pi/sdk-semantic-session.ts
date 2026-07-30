@@ -8,9 +8,9 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import {
-	parseDecisionCandidateContent,
-	type DecisionCandidateContent,
-} from "../decision/candidate-content.ts";
+	parseDecisionCandidateProposal,
+	type DecisionCandidateProposal,
+} from "../decision/candidate-proposal.ts";
 import {
 	implementationCandidateContentSchema as implementationCandidateSchema,
 	parseImplementationCandidateContent,
@@ -170,7 +170,7 @@ export function createPiSdkRuntimeSemanticAdapters(
 
 	return {
 		decision: (input) =>
-			runSemanticSession<RuntimeDecisionInvocation, DecisionCandidateContent>(
+			runSemanticSession<RuntimeDecisionInvocation, DecisionCandidateProposal>(
 				runner,
 				"decision",
 				input,
@@ -438,8 +438,8 @@ function semanticInvocationPrompt(
 function parseSemanticCandidate(
 	role: PiSdkSemanticRole,
 	value: unknown,
-): DecisionCandidateContent | PlanningCandidateContent | ImplementationCandidateContent {
-	if (role === "decision") return parseDecisionCandidateContent(value);
+): DecisionCandidateProposal | PlanningCandidateContent | ImplementationCandidateContent {
+	if (role === "decision") return parseDecisionCandidateProposal(value);
 	if (role === "planning") return parsePlanningCandidateContent(value);
 	return parseImplementationCandidateContent(value);
 }

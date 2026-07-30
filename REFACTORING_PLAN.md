@@ -815,7 +815,9 @@ Phase 6 uses Alignment Graph projector `1.1.0`, deterministic OKF/source augment
 - [x] Add bounded Check fan-out/fan-in, cancellation, exact caching, immutable Reports, and typed repair/escalation.
 - [ ] Delete legacy Quality modules only after parity and replacement tests pass.
 
-Phase 7 runner foundation uses separate bounded Code/Model pools, explicit Check dependencies, timeout/cancellation propagation, complete active-Result fan-in, failure-dominant immutable Reports, exact in-memory cache identity, and typed repair/retry summaries. Operationally indeterminate Results are never cached, and runner guidance cannot select Runtime Route.
+Phase 7 runner foundation uses separate bounded Code/Model pools, explicit Check dependencies, timeout/cancellation propagation, complete active-Result fan-in, failure-dominant immutable Reports, exact in-memory cache identity, and typed repair/retry summaries. Operationally indeterminate Results are never cached, specialized closed protocols may supply only exact precomputed Results, and runner guidance cannot select Runtime Route.
+
+The native Decision path now separates the producer's strict disposition/rationale proposal from Runtime-materialized full Candidate content, binds the exact persisted revision and WorkState, resolves the closed policy, and evaluates all deterministic Decision Code Checks. The current production facade remains legacy until approval/model/research Evidence and canonical operation persistence are wired, so the Decision cut checkboxes remain open.
 
 ### Phase 8 — UI assurance and Integration
 

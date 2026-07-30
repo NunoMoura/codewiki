@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { parseDecisionCandidateContent } from "../../src/decision/candidate-content.ts";
+import { parseDecisionCandidateProposal } from "../../src/decision/candidate-proposal.ts";
 import { parseImplementationCandidateContent } from "../../src/implementation/candidate-content.ts";
 import { parsePlanningCandidateContent } from "../../src/planning/candidate-content.ts";
 
 describe("Loop-owned candidate content admission", () => {
 	it("keeps Decision authority and time outside candidate content", () => {
 		assert.deepEqual(
-			parseDecisionCandidateContent({
+			parseDecisionCandidateProposal({
 				disposition: "defer",
 				rationale: "Await authenticated authority.",
 			}),
@@ -18,7 +18,7 @@ describe("Loop-owned candidate content admission", () => {
 		);
 		assert.throws(
 			() =>
-				parseDecisionCandidateContent({
+				parseDecisionCandidateProposal({
 					disposition: "approve",
 					rationale: "Candidate attempted approval authority.",
 					authority: {

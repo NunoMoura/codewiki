@@ -170,6 +170,19 @@ describe("bounded Loop exit runner", () => {
 		assert.equal(Object.isFrozen(first), true);
 		assert.equal(Object.isFrozen(first.report), true);
 
+		const precomputedSources = [];
+		const precomputed = await createLoopExitRunner({
+			catalog: setup.catalog,
+			executors: [],
+		}).run({
+			candidate: setup.candidate,
+			policy: setup.policy,
+			precomputedResults: first.report.checkResults,
+			onResult: (_result, source) => precomputedSources.push(source),
+		});
+		assert.equal(precomputed.report.reportDigest, first.report.reportDigest);
+		assert.deepEqual(precomputedSources, Array(4).fill("precomputed"));
+
 		const second = await runner.run({
 			candidate: setup.candidate,
 			policy: setup.policy,

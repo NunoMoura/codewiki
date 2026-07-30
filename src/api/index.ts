@@ -136,7 +136,7 @@ export type {
 	WorktreeProcessCommand,
 	WorktreeRef,
 } from "../git/worktrees.ts";
-export type { DecisionCandidateContent } from "../decision/candidate-content.ts";
+export type { DecisionCandidateProposal } from "../decision/candidate-proposal.ts";
 export type {
 	ImplementationAcceptanceEvidenceCandidate,
 	ImplementationArchiveDispositionCandidate,

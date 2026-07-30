@@ -14,9 +14,9 @@ import {
 	type RunWikiPlanResult,
 } from "../api/wiki-plan.ts";
 import {
-	parseDecisionCandidateContent,
-	type DecisionCandidateContent,
-} from "../decision/candidate-content.ts";
+	parseDecisionCandidateProposal,
+	type DecisionCandidateProposal,
+} from "../decision/candidate-proposal.ts";
 import type { ChangeDecisionAuthority } from "../decision/change-quality.ts";
 import { TraceAppendConflictError } from "../error-handling/trace-errors.ts";
 import {
@@ -88,7 +88,7 @@ export interface RuntimeImplementationInvocation {
 export interface RuntimeSemanticAdapters {
 	decision?: (
 		input: RuntimeDecisionInvocation,
-	) => DecisionCandidateContent | Promise<DecisionCandidateContent>;
+	) => DecisionCandidateProposal | Promise<DecisionCandidateProposal>;
 	planning?: (
 		input: RuntimePlanningInvocation,
 	) => PlanningCandidateContent | Promise<PlanningCandidateContent>;
@@ -340,7 +340,7 @@ async function executeSelectedSemanticWork(
 	if (selection.loop === "decision") {
 		if (!adapters.decision) throw missingAdapter("decision");
 		const change = requiredChange(observation, selection.change.changeId);
-		const candidate = parseDecisionCandidateContent(
+		const candidate = parseDecisionCandidateProposal(
 			await adapters.decision({
 				loop: "decision",
 				observedWorkStateDigest: observation.workState.snapshotDigest,
