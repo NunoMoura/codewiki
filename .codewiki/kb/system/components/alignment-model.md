@@ -130,13 +130,13 @@ accepted Change ledger head
 = Alignment Graph snapshot digest
 ```
 
-Every query result binds that digest. The executable projector shape is:
+Every query result binds that digest. Projector `1.2.0` preserves both each semantic artifact-owned digest and the complete inline-artifact content digest on Candidate, policy, Result, Report, and Route graph facts. The executable projector shape is:
 
 ```ts
 interface AlignmentGraphSnapshot {
   projector: {
     id: "codewiki.alignment-graph-projector";
-    version: "1.1.0";
+    version: "1.2.0";
   };
   graphSnapshotDigest: Sha256Digest;
   graphContentDigest: Sha256Digest;

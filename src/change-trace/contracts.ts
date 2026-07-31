@@ -280,12 +280,14 @@ export const changeBindingSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
-const objectBindingSchema = Type.Object(
+const inlineSemanticArtifactSchema = Type.Object(
 	{
 		id: idSchema,
 		digest: digestSchema,
 		schemaVersion: idSchema,
-		ref: refSchema,
+		artifact: Type.Unsafe<CanonicalJsonValue>(
+			Type.Object({}, {additionalProperties: true}),
+		),
 	},
 	{ additionalProperties: false },
 );
@@ -316,7 +318,7 @@ const changeRelationshipSchema = Type.Object(
 const candidatePayloadSchema = Type.Object(
 	{
 		attemptOperationId: digestSchema,
-		candidate: objectBindingSchema,
+		candidate: inlineSemanticArtifactSchema,
 		observedBaseDigest: digestSchema,
 	},
 	{ additionalProperties: false },
@@ -473,7 +475,7 @@ const loopExitPolicyPayloadSchema = Type.Object(
 	{
 		attemptOperationId: digestSchema,
 		candidateId: idSchema,
-		policy: objectBindingSchema,
+		policy: inlineSemanticArtifactSchema,
 	},
 	{ additionalProperties: false },
 );
@@ -481,7 +483,7 @@ const evidenceRecordedPayloadSchema = Type.Object(
 	{
 		attemptOperationId: digestSchema,
 		candidateId: Type.Optional(idSchema),
-		evidence: objectBindingSchema,
+		evidence: inlineSemanticArtifactSchema,
 		evidenceKind: idSchema,
 		authority: Type.Union([
 			Type.Literal("asserted"),
@@ -501,7 +503,7 @@ const checkResultRecordedPayloadSchema = Type.Object(
 	{
 		attemptOperationId: digestSchema,
 		candidateId: idSchema,
-		result: objectBindingSchema,
+		result: inlineSemanticArtifactSchema,
 		checkId: idSchema,
 		checkVersion: idSchema,
 		status: Type.Union([
@@ -519,7 +521,7 @@ const loopExitReportRecordedPayloadSchema = Type.Object(
 	{
 		attemptOperationId: digestSchema,
 		candidateId: idSchema,
-		report: objectBindingSchema,
+		report: inlineSemanticArtifactSchema,
 		status: Type.Union([
 			Type.Literal("passed"),
 			Type.Literal("failed"),
@@ -544,6 +546,7 @@ const runtimeRouteRecordedPayloadSchema = Type.Object(
 			Type.Literal("withdrawn"),
 		]),
 		reasonCode: idSchema,
+		runtimeRoute: inlineSemanticArtifactSchema,
 		targetChangeId: Type.Optional(changeIdSchema),
 	},
 	{ additionalProperties: false },
@@ -1120,11 +1123,11 @@ export const archiveManifestSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
-export interface CanonicalObjectBinding {
+export interface CanonicalInlineSemanticArtifact {
 	readonly id: string;
 	readonly digest: Sha256Digest;
 	readonly schemaVersion: string;
-	readonly ref: string;
+	readonly artifact: CanonicalJsonValue;
 }
 
 export interface OperationAdmissionRequest {

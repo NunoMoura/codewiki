@@ -33,6 +33,10 @@ Closed versioned grammar defining each operation kind's schema, admission author
 
 Immutable typed content-addressed fact in one Change Trace. Runtime derives identity, parents, exact base, authority binding, state digests, and canonical observation time. Semantic truth lives in operation bytes; Git state commits supply atomic acceptance receipt and order.
 
+### Inline semantic artifact
+
+Bounded immutable Candidate, Resolved Exit Policy, Evidence Record, Check Result, Exit Report, or Runtime Route embedded directly in its typed Change operation. Its envelope binds stable id, complete-content digest, schema version, and exact artifact bytes; Runtime also validates artifact-owned semantic identity. It has no mutable/dangling object ref. Large/private bytes remain external Evidence artifacts behind exact digests and refs.
+
 ### State commit
 
 Git commit on `refs/heads/codewiki/state` that atomically accepts one exact operation batch against one expected previous state head. Commit metadata is non-semantic.

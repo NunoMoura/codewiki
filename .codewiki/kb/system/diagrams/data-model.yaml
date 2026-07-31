@@ -42,11 +42,11 @@ entities:
     truth: true
   - id: candidate
     label: Exact immutable Loop Candidate
-    storage: loop-specific candidate-recorded operation
+    storage: bounded inline artifact in loop-specific candidate-recorded operation
     truth: true
   - id: evidence
     label: Immutable typed Evidence Record
-    storage: evidence.recorded operation; large bytes behind exact refs
+    storage: bounded inline artifact in evidence.recorded operation; large/private bytes behind exact refs
     truth: true
     kinds:
       - research_citation
@@ -61,19 +61,19 @@ entities:
       - outcome_observation
   - id: exit_policy
     label: Resolved Exit Policy
-    storage: loop.exit_policy_recorded operation
+    storage: bounded inline artifact in loop.exit_policy_recorded operation
     truth: true
   - id: check_result
     label: Check Result
-    storage: check.result_recorded operation
+    storage: bounded inline artifact in check.result_recorded operation
     truth: true
   - id: exit_report
     label: Exit Report
-    storage: loop.exit_report_recorded operation
+    storage: bounded inline artifact in loop.exit_report_recorded operation
     truth: true
   - id: runtime_route
     label: Runtime Route
-    storage: runtime.route_recorded operation
+    storage: bounded inline artifact plus normalized routing fields in runtime.route_recorded operation
     truth: true
   - id: work_item
     label: Immutable Work Item inside Planning Candidate/epoch

@@ -71,6 +71,15 @@ describe("Alignment Graph projector v1", () => {
 			graph.edges.every((edge) => edge.provenance.class !== "inferred_analysis"),
 			true,
 		);
+		const candidateNode = graph.nodes.find(
+			(node) => node.id === `candidate:${journey.candidate.id}`,
+		);
+		assert.equal(candidateNode.attributes.digest, journey.candidate.artifact.digest);
+		assert.equal(candidateNode.attributes.contentDigest, journey.candidate.digest);
+		assert.notEqual(
+			candidateNode.attributes.digest,
+			candidateNode.attributes.contentDigest,
+		);
 		const nodeIds = new Set(graph.nodes.map((node) => node.id));
 		for (const edge of graph.edges) {
 			const {factId, ...body} = edge;

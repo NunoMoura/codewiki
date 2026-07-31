@@ -14,6 +14,7 @@ import {
 	buildOperationSequence,
 	buildPassingPlanningExit,
 	buildPlanningEpochRecords,
+	inlineSemanticArtifact,
 	planningArtifacts,
 } from "../helpers/change-trace-replay-v1.mjs";
 import {
@@ -85,18 +86,14 @@ function createCandidate(state, content) {
 }
 
 async function acceptPlanningExits(fixture, state, candidate, suffix) {
-	const report = {id: `exit-report-${suffix}`, digest: digest("e")};
 	const defaults = planningArtifacts(suffix);
+	const report = {
+		id: defaults.report.id,
+		digest: defaults.report.artifact.reportDigest,
+	};
 	const artifacts = {
 		...defaults,
-		candidate: {
-			...defaults.candidate,
-			id: candidate.id,
-			digest: candidate.digest,
-			schemaVersion: candidate.schemaVersion,
-			ref: `candidate:${candidate.id}`,
-		},
-		report: {...defaults.report, ...report},
+		candidate: inlineSemanticArtifact(candidate.id, candidate),
 	};
 	const records = candidate.content.participantChangeIds.flatMap(
 		(changeId) => buildPassingPlanningExit(state, changeId, artifacts).operations,

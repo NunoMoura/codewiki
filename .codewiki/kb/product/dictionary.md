@@ -35,6 +35,7 @@ User-facing explanations distinguish:
 
 - **Change**: accountable intent and complete durable dossier;
 - **Change operation**: immutable typed content-addressed canonical fact;
+- **Inline semantic artifact**: bounded exact Candidate/policy/Evidence/Result/Report/Route bytes carried by their operation, not a generic object-store ref;
 - **Change intake material**: bounded source finding/proposal with no authority by itself;
 - **Backlog Triage Projection**: explainable snapshot-bound Decision-attention view, not priority truth;
 - **Defect profile**: structured defect impact/classification distinct from risk and priority;

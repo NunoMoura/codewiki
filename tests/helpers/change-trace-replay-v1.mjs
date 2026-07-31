@@ -7,6 +7,7 @@ import {
 	reduceAcceptedStateBatch,
 	reduceChangeOperation,
 } from "../../src/change-trace/index.ts";
+import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 import {authorityBinding, digest, gitObject} from "./change-trace-v1.mjs";
 
 export const allowAllReplayPolicy = Object.freeze({
@@ -122,21 +123,75 @@ export function openProposedChange(state, changeId, stateHead = gitObject("a")) 
 	};
 }
 
-export function objectBinding(id, character) {
+export function inlineSemanticArtifact(id, artifact) {
 	return {
 		id,
-		digest: digest(character),
-		schemaVersion: "1.0.0",
-		ref: `state:objects/${id}`,
+		digest: canonicalJsonDigest(artifact),
+		schemaVersion: String(artifact.schemaVersion),
+		artifact,
 	};
 }
 
+export function runtimeRouteArtifact(loop, route, reasonCode) {
+	const body = {schemaVersion: "1.0.0", loop, route, reasonCode};
+	const routeDigest = canonicalJsonDigest(body);
+	return inlineSemanticArtifact(
+		`runtime-route:${loop}:${routeDigest.slice("sha256:".length)}`,
+		{...body, routeDigest},
+	);
+}
+
 export function planningArtifacts(suffix = "reducer") {
+	const candidateBody = {
+		loop: "planning",
+		schemaVersion: "1.0.0",
+		content: {fixture: suffix},
+		observedBase: {
+			workStateDigest: digest("1"),
+			knowledgeSnapshotDigest: digest("2"),
+			canonicalRefs: [`fixture:${suffix}`],
+		},
+	};
+	const candidateDigest = canonicalJsonDigest(candidateBody);
+	const candidateId = `candidate:planning:${candidateDigest.slice("sha256:".length)}`;
+	const candidateArtifact = {
+		...candidateBody,
+		id: candidateId,
+		digest: candidateDigest,
+	};
+	const policyBody = {
+		schemaVersion: 1,
+		loop: "planning",
+		candidateDigest,
+		fixture: suffix,
+	};
+	const policyDigest = canonicalJsonDigest(policyBody);
+	const policyId = `exit-policy:planning:${policyDigest.slice("sha256:".length)}`;
+	const policyArtifact = {...policyBody, policyDigest};
+	const resultBody = {
+		schemaVersion: 1,
+		checkId: "planning-coherence",
+		status: "pass",
+		fixture: suffix,
+	};
+	const resultDigest = canonicalJsonDigest(resultBody);
+	const resultId = `check-result:planning:${resultDigest.slice("sha256:".length)}`;
+	const resultArtifact = {...resultBody, resultDigest};
+	const reportBody = {
+		schemaVersion: 1,
+		loop: "planning",
+		candidateDigest,
+		policyDigest,
+		checkResults: [resultArtifact],
+		fixture: suffix,
+	};
+	const reportDigest = canonicalJsonDigest(reportBody);
+	const reportId = `exit-report:planning:${reportDigest.slice("sha256:".length)}`;
 	return {
-		candidate: objectBinding(`candidate:planning:${suffix}`, "b"),
-		policy: objectBinding(`exit-policy:planning:${suffix}`, "c"),
-		result: objectBinding(`check-result:planning:${suffix}`, "d"),
-		report: objectBinding(`exit-report:planning:${suffix}`, "e"),
+		candidate: inlineSemanticArtifact(candidateId, candidateArtifact),
+		policy: inlineSemanticArtifact(policyId, policyArtifact),
+		result: inlineSemanticArtifact(resultId, resultArtifact),
+		report: inlineSemanticArtifact(reportId, {...reportBody, reportDigest}),
 	};
 }
 
@@ -169,7 +224,7 @@ export function buildPassingPlanningExit(
 				payload: ({operations}) => ({
 					attemptOperationId: operations[0].operationId,
 					candidate,
-					observedBaseDigest: state.workStateDigest,
+					observedBaseDigest: canonicalJsonDigest(candidate.artifact.observedBase),
 				}),
 			},
 			{
@@ -214,6 +269,11 @@ export function buildPassingPlanningExit(
 					exitReportId: report.id,
 					route: "implementation",
 					reasonCode: "planning-passed",
+					runtimeRoute: runtimeRouteArtifact(
+						"planning",
+						"implementation",
+						"planning-passed",
+					),
 				}),
 			},
 			{
@@ -374,10 +434,49 @@ export function appendContradictoryDecisionResults(
 	stateHead = gitObject("d"),
 ) {
 	const change = state.changes[0];
-	const candidate = objectBinding("candidate:decision:contradiction", "8");
-	const policy = objectBinding("exit-policy:decision:contradiction", "9");
-	const passResult = objectBinding("result:decision:pass", "a");
-	const failResult = objectBinding("result:decision:fail", "b");
+	const candidateBody = {
+		loop: "decision",
+		schemaVersion: "1.0.0",
+		content: {fixture: "contradiction"},
+		observedBase: {
+			workStateDigest: state.workStateDigest,
+			knowledgeSnapshotDigest: state.observedBase.knowledgeDigest,
+			canonicalRefs: [change.currentRevision.revisionId],
+		},
+	};
+	const candidateDigest = canonicalJsonDigest(candidateBody);
+	const candidateId = `candidate:decision:${candidateDigest.slice("sha256:".length)}`;
+	const candidate = inlineSemanticArtifact(candidateId, {
+		...candidateBody,
+		id: candidateId,
+		digest: candidateDigest,
+	});
+	const policyBody = {
+		schemaVersion: 1,
+		loop: "decision",
+		candidateDigest,
+		fixture: "contradiction",
+	};
+	const policyDigest = canonicalJsonDigest(policyBody);
+	const policy = inlineSemanticArtifact(
+		`exit-policy:decision:${policyDigest.slice("sha256:".length)}`,
+		{...policyBody, policyDigest},
+	);
+	const result = (status) => {
+		const body = {
+			schemaVersion: 1,
+			checkId: "decision-result",
+			status,
+			fixture: "contradiction",
+		};
+		const resultDigest = canonicalJsonDigest(body);
+		return inlineSemanticArtifact(
+			`check-result:decision:${resultDigest.slice("sha256:".length)}`,
+			{...body, resultDigest},
+		);
+	};
+	const passResult = result("pass");
+	const failResult = result("fail");
 	const built = buildOperationSequence({
 		change,
 		changeId: change.changeId,
@@ -399,7 +498,7 @@ export function appendContradictoryDecisionResults(
 				payload: ({operations}) => ({
 					attemptOperationId: operations[0].operationId,
 					candidate,
-					observedBaseDigest: state.workStateDigest,
+					observedBaseDigest: canonicalJsonDigest(candidate.artifact.observedBase),
 				}),
 			},
 			{

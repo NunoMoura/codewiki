@@ -18,6 +18,7 @@ import {
 	type AuthorityBinding,
 	type BaseSnapshot,
 	type CanonicalChangeOperation,
+	type CanonicalInlineSemanticArtifact,
 	type ChangeOperationBody,
 	type ChangeOperationKind,
 	type ChangeOperationPayload,
@@ -34,6 +35,7 @@ import {
 	canonicalJsonDigest,
 	parseCanonicalJson,
 	toCanonicalJsonValue,
+	type CanonicalJsonValue,
 } from "../utils/canonical-json.ts";
 import { assertTypeboxSchema } from "../utils/json.ts";
 
@@ -452,6 +454,7 @@ function assertParentPolicy(body: ChangeOperationBody): void {
 
 function assertPayloadIdentities(body: ChangeOperationBody): void {
 	const payload = body.payload as Record<string, unknown>;
+	if (assertInlinePayloadIdentity(body.kind, payload)) return;
 	switch (body.kind) {
 		case "change.proposed":
 		case "change.revised":
@@ -472,6 +475,188 @@ function assertPayloadIdentities(body: ChangeOperationBody): void {
 			return;
 		default:
 			return;
+	}
+}
+
+function assertInlinePayloadIdentity(
+	kind: ChangeOperationKind,
+	payload: Record<string, unknown>,
+): boolean {
+	switch (kind) {
+		case "decision.candidate_recorded":
+		case "planning.candidate_recorded":
+		case "implementation.candidate_recorded":
+			assertInlineSemanticArtifact(payload, "candidate", "Candidate", "candidate");
+			return true;
+		case "loop.exit_policy_recorded":
+			assertInlineSemanticArtifact(
+				payload,
+				"policy",
+				"Resolved Exit Policy",
+				"policy",
+			);
+			return true;
+		case "evidence.recorded":
+			assertInlineSemanticArtifact(
+				payload,
+				"evidence",
+				"Evidence Record",
+				"evidence",
+			);
+			return true;
+		case "check.result_recorded":
+			assertInlineSemanticArtifact(payload, "result", "Check Result", "result");
+			return true;
+		case "loop.exit_report_recorded":
+			assertInlineSemanticArtifact(payload, "report", "Exit Report", "report");
+			return true;
+		case "runtime.route_recorded":
+			assertInlineSemanticArtifact(
+				payload,
+				"runtimeRoute",
+				"Runtime Route",
+				"route",
+			);
+			return true;
+		default:
+			return false;
+	}
+}
+
+const MAX_INLINE_SEMANTIC_ARTIFACT_BYTES = 262_144;
+
+type InlineSemanticArtifactKind =
+	| "candidate"
+	| "policy"
+	| "evidence"
+	| "result"
+	| "report"
+	| "route";
+
+function assertInlineSemanticArtifact(
+	payload: Record<string, unknown>,
+	field: string,
+	label: string,
+	kind: InlineSemanticArtifactKind,
+): void {
+	const inline = payload[field] as CanonicalInlineSemanticArtifact;
+	const expectedDigest = canonicalJsonDigest(inline.artifact);
+	if (inline.digest !== expectedDigest) {
+		throw new Error(`${label} inline artifact digest mismatch: expected ${expectedDigest}.`);
+	}
+	const artifact = inline.artifact as Record<string, CanonicalJsonValue>;
+	if (!Object.hasOwn(artifact, "schemaVersion")) {
+		throw new Error(`${label} inline artifact must contain schemaVersion.`);
+	}
+	if (String(artifact.schemaVersion) !== inline.schemaVersion) {
+		throw new Error(`${label} inline artifact schemaVersion mismatch.`);
+	}
+	assertInlineSemanticIdentity(inline, artifact, label, kind);
+	const byteLength = new TextEncoder().encode(canonicalJson(inline.artifact)).byteLength;
+	if (byteLength > MAX_INLINE_SEMANTIC_ARTIFACT_BYTES) {
+		throw new Error(
+			`${label} inline artifact exceeds ${MAX_INLINE_SEMANTIC_ARTIFACT_BYTES} bytes.`,
+		);
+	}
+}
+
+function assertInlineSemanticIdentity(
+	inline: CanonicalInlineSemanticArtifact,
+	artifact: Record<string, CanonicalJsonValue>,
+	label: string,
+	kind: InlineSemanticArtifactKind,
+): void {
+	const semanticDigest = inlineSemanticDigest(artifact, label, kind);
+	const digestHex = semanticDigest.slice("sha256:".length);
+	const expectedId = expectedInlineSemanticId(artifact, kind, digestHex);
+	assertArtifactOwnedIdentity(artifact, label, kind, expectedId);
+	const hasExpectedGenericPrefix =
+		(kind !== "result" || inline.id.startsWith("check-result:")) &&
+		(kind !== "route" || inline.id.startsWith("runtime-route:"));
+	if (
+		!hasExpectedGenericPrefix ||
+		(expectedId ? inline.id !== expectedId : !inline.id.endsWith(`:${digestHex}`))
+	) {
+		throw new Error(`${label} inline artifact identity mismatch.`);
+	}
+}
+
+function inlineSemanticDigest(
+	artifact: Record<string, CanonicalJsonValue>,
+	label: string,
+	kind: InlineSemanticArtifactKind,
+): string {
+	if (kind === "evidence") {
+		return canonicalJsonDigest(
+			Object.fromEntries(
+				Object.entries(artifact).filter(([key]) => key !== "evidenceId"),
+			),
+		);
+	}
+	const digestField = semanticDigestField(kind);
+	if (!digestField || typeof artifact[digestField] !== "string") {
+		throw new Error(`${label} inline artifact is missing semantic digest.`);
+	}
+	const semanticDigest = artifact[digestField] as string;
+	const excluded = new Set([
+		digestField,
+		...(kind === "candidate" ? ["id"] : []),
+	]);
+	const body = Object.fromEntries(
+		Object.entries(artifact).filter(([key]) => !excluded.has(key)),
+	);
+	const expected = canonicalJsonDigest(body);
+	if (semanticDigest !== expected) {
+		throw new Error(`${label} semantic identity mismatch: expected ${expected}.`);
+	}
+	return semanticDigest;
+}
+
+function expectedInlineSemanticId(
+	artifact: Record<string, CanonicalJsonValue>,
+	kind: InlineSemanticArtifactKind,
+	digestHex: string,
+): string | null {
+	const loop = typeof artifact.loop === "string" ? artifact.loop : null;
+	if (kind === "candidate" && loop) return `candidate:${loop}:${digestHex}`;
+	if (kind === "policy" && loop) return `exit-policy:${loop}:${digestHex}`;
+	if (kind === "evidence" && typeof artifact.kind === "string") {
+		return `evidence:${artifact.kind}:${digestHex}`;
+	}
+	if (kind === "report" && loop) return `exit-report:${loop}:${digestHex}`;
+	return null;
+}
+
+function assertArtifactOwnedIdentity(
+	artifact: Record<string, CanonicalJsonValue>,
+	label: string,
+	kind: InlineSemanticArtifactKind,
+	expectedId: string | null,
+): void {
+	if (
+		(kind === "candidate" && artifact.id !== expectedId) ||
+		(kind === "evidence" && artifact.evidenceId !== expectedId)
+	) {
+		throw new Error(`${label} artifact-owned identity mismatch.`);
+	}
+}
+
+function semanticDigestField(kind: InlineSemanticArtifactKind): string | null {
+	switch (kind) {
+		case "candidate":
+			return "digest";
+		case "policy":
+			return "policyDigest";
+		case "result":
+			return "resultDigest";
+		case "report":
+			return "reportDigest";
+		case "route":
+			return "routeDigest";
+		case "evidence":
+			return null;
+		default:
+			throw new Error(`Unsupported inline semantic artifact kind ${String(kind)}.`);
 	}
 }
 

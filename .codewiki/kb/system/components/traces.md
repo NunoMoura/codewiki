@@ -288,6 +288,8 @@ Authenticated approval enters through `evidence.recorded` with `approval_receipt
 
 Every payload is a closed object with no extra fields. `?` marks the only optional fields. IDs for accepted Claims, attempts, Assignments, Integration attempts, review projections, publications, releases, deliveries, and outcomes are the creating operation ID; later payloads reference that ID rather than introducing a mutable secondary identity.
 
+Bounded Candidate, Resolved Exit Policy, Evidence Record, Check Result, Exit Report, and Runtime Route semantics are inline in their exact typed operation payload. Each inline envelope contains `id`, a digest of the complete inline artifact, `schemaVersion`, and `artifact`; it has no mutable or dangling `ref`. Runtime additionally validates artifact-owned semantic identities such as candidate digest/id, policy digest, Evidence id, Result digest, Report digest, and Route digest. One inline artifact is capped at 262,144 canonical UTF-8 bytes. Large/private prompts, reasoning, tool output, logs, pages, screenshots, videos, and provider payloads remain external; bounded Evidence metadata retains exact digests and refs.
+
 | Kind | Exact payload fields |
 | --- | --- |
 | `trace.opened` | `origin`, `provenanceRefs` |
@@ -313,7 +315,7 @@ Every payload is a closed object with no extra fields. `?` marks the only option
 | `evidence.recorded` | `attemptOperationId`, `candidateId?`, `evidence`, `evidenceKind`, `authority`, `coverage` |
 | `check.result_recorded` | `attemptOperationId`, `candidateId`, `result`, `checkId`, `checkVersion`, `status`, `evidenceRecordIds`, `evidenceInputDigest` |
 | `loop.exit_report_recorded` | `attemptOperationId`, `candidateId`, `report`, `status`, `resultIds` |
-| `runtime.route_recorded` | `attemptOperationId`, `exitReportId`, `route`, `reasonCode`, `targetChangeId?` |
+| `runtime.route_recorded` | `attemptOperationId`, `exitReportId`, `route`, `reasonCode`, `runtimeRoute`, `targetChangeId?` |
 | `planning.epoch_bound` | `planningEpochId`, `participantRevisionId`, `planningCandidateId`, `exitReportId`, `workItemIds` |
 | `work_item_claim.acquired` | `planningEpochId`, `workItemId`, `assignmentAttemptId`, `workerId`, `workbenchId`, `sourceBase`, `scopeDigest`, `budgetDigest`, `obligationDigest` |
 | `work_item_claim.released` | `claimOperationId`, `reason` |
@@ -410,8 +412,7 @@ Accepted hot state:
 
 ```text
 refs/heads/codewiki/state
-  .codewiki/changes/**
-  immutable current objects
+  .codewiki/changes/**  # operations include bounded inline semantic artifacts
   state manifest
 ```
 

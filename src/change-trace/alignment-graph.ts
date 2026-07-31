@@ -1,6 +1,7 @@
 import {
 	CHANGE_OPERATION_KINDS,
 	type CanonicalChangeOperation,
+	type CanonicalInlineSemanticArtifact,
 	type ChangeOperationKind,
 	type ChangeOperationPayload,
 	type OperationId,
@@ -26,7 +27,7 @@ import {
 
 export const ALIGNMENT_GRAPH_PROJECTOR = Object.freeze({
 	id: "codewiki.alignment-graph-projector",
-	version: "1.1.0",
+	version: "1.2.0",
 } as const);
 
 export type AlignmentGraphProvenanceClass =
@@ -806,7 +807,10 @@ function projectCandidate(
 		id: candidateNode,
 		type: "candidate",
 		label: payload.candidate.id,
-		attributes: {digest: payload.candidate.digest},
+		attributes: {
+			digest: inlineArtifactAttribute(payload.candidate, "digest"),
+			contentDigest: payload.candidate.digest,
+		},
 		provenance,
 	});
 	graph.edge(
@@ -828,7 +832,10 @@ function projectExitPolicy(
 		id: policyNode,
 		type: "exit_policy",
 		label: payload.policy.id,
-		attributes: {digest: payload.policy.digest},
+		attributes: {
+			digest: inlineArtifactAttribute(payload.policy, "policyDigest"),
+			contentDigest: payload.policy.digest,
+		},
 		provenance,
 	});
 	graph.edge(
@@ -878,7 +885,11 @@ function projectCheckResult(
 		id: resultNode,
 		type: "check_result",
 		label: `${payload.checkId}@${payload.checkVersion}`,
-		attributes: {status: payload.status, digest: payload.result.digest},
+		attributes: {
+			status: payload.status,
+			digest: inlineArtifactAttribute(payload.result, "resultDigest"),
+			contentDigest: payload.result.digest,
+		},
 		provenance,
 	});
 	graph.edge(
@@ -908,7 +919,11 @@ function projectExitReport(
 		id: reportNode,
 		type: "exit_report",
 		label: payload.report.id,
-		attributes: {status: payload.status, digest: payload.report.digest},
+		attributes: {
+			status: payload.status,
+			digest: inlineArtifactAttribute(payload.report, "reportDigest"),
+			contentDigest: payload.report.digest,
+		},
 		provenance,
 	});
 	graph.edge(
@@ -933,7 +948,12 @@ function projectRuntimeRoute(
 		id: routeNode,
 		type: "runtime_route",
 		label: payload.route,
-		attributes: {route: payload.route, reasonCode: payload.reasonCode},
+		attributes: {
+			route: payload.route,
+			reasonCode: payload.reasonCode,
+			routeDigest: inlineArtifactAttribute(payload.runtimeRoute, "routeDigest"),
+			contentDigest: payload.runtimeRoute.digest,
+		},
 		provenance,
 	});
 	graph.edge(
@@ -1575,6 +1595,14 @@ function assignmentNodeId(operationId: string): string {
 
 function integrationNodeId(operationId: string): string {
 	return `integration:${operationId}`;
+}
+
+function inlineArtifactAttribute(
+	inline: CanonicalInlineSemanticArtifact,
+	field: string,
+): CanonicalJsonValue {
+	const artifact = inline.artifact as Record<string, CanonicalJsonValue>;
+	return artifact[field] ?? null;
 }
 
 function canonicalValue<T>(value: unknown): T {

@@ -31,6 +31,7 @@ import {
 } from "../loop-exit/identity.ts";
 import {
 	canonicalJson,
+	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type CanonicalJsonValue,
 	type Sha256Digest,
@@ -590,10 +591,11 @@ function hasExactCandidateBinding(
 			return false;
 		}
 		const payload = operationPayload(operation, "planning.candidate_recorded");
+		const artifact = payload.candidate.artifact as Record<string, unknown>;
 		return (
 			payload.candidate.id === candidate.id &&
-			payload.candidate.digest === candidate.digest &&
-			payload.observedBaseDigest === candidate.observedBase.workStateDigest
+			artifact.digest === candidate.digest &&
+			payload.observedBaseDigest === canonicalJsonDigest(candidate.observedBase)
 		);
 	});
 }
@@ -608,10 +610,11 @@ function hasExactReportBinding(
 	);
 	if (operation?.body.kind !== "loop.exit_report_recorded") return false;
 	const report = operationPayload(operation, "loop.exit_report_recorded");
+	const artifact = report.report.artifact as Record<string, unknown>;
 	return (
 		report.status === "passed" &&
 		report.report.id === exitReport.id &&
-		report.report.digest === exitReport.digest
+		artifact.reportDigest === exitReport.digest
 	);
 }
 
