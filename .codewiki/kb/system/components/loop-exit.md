@@ -189,9 +189,9 @@ Project input cannot register arbitrary JavaScript, shell, tool-defined Checks, 
 
 ## Model Checks
 
-Model Checks use independent bounded Pi sessions. Candidate producer and Model Check never share conversational state, even when they resolve to the same provider/model. Runtime supplies exact candidate, evidence, Loop Protocol context, model route, output schema, and limits.
+Model Checks use independent bounded Pi sessions. Candidate producer and Model Check never share conversational state, even when they resolve to the same provider/model. Runtime supplies the exact Candidate, Check requirement, declared prerequisite Results, considered Evidence identities, Loop Protocol context, model route, output schema, and limits. The model returns `supported | unsupported | uncertain`; Runtime validates positive basis, findings, Evidence coverage, and limitations before deriving `pass | fail | indeterminate`.
 
-Related Model Checks may share a coherent transport/context envelope for latency and prompt-cache reuse. Each retains distinct Check and Result identity. Model execution is stochastic; CodeWiki makes the invocation envelope, evidence binding, threshold, aggregation, and final report reduction exact.
+Every Model Check uses the same identity, considered-Evidence, conclusion, findings, and limitations envelope while retaining a Check-specific structured measurement payload where required. Raw chain-of-thought is not retained. Related Model Checks may share a coherent transport/context envelope for latency and prompt-cache reuse, but each retains distinct Check and Result identity. Model execution is stochastic; CodeWiki makes the invocation envelope, Evidence binding, enforcement, aggregation, and final report reduction exact. No model performs a final review that can override Code or human-authority Results.
 
 There is no `implementation.review` model slot. Model Checks inherit calibrated Loop routes unless a CodeWiki-owned Check declares another approved route.
 

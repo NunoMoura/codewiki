@@ -141,6 +141,7 @@ const payloads = {
 		routeId: "implementation-model",
 		configurationDigest: digest("f"),
 		measurement: { kind: "score", value: 0.8, minimum: 0, maximum: 1 },
+		consideredEvidenceIds: [],
 		findings: ["Hierarchy is clear."],
 		limitations: ["Model cannot grant user approval."],
 	},

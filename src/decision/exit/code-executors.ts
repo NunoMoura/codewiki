@@ -103,6 +103,7 @@ const DECISION_CODE_EVALUATORS: Readonly<Record<string, DecisionCodeEvaluator>> 
 						"Release intent requires explicit delivery constraints and evidence expectations.",
 					),
 		risks_and_alternatives_considered: riskAndAlternatives,
+		security_surface_requirements_complete: securitySurfaceRequirements,
 		user_value_clear: (content) =>
 			hasText(content.revision.impact.user)
 				? satisfied()
@@ -224,6 +225,38 @@ function riskAndAlternatives(
 		: unsatisfied(
 				"High risk requires invariants, a safety boundary, and a negative-test plan.",
 			);
+}
+
+function securitySurfaceRequirements(
+	content: DecisionCandidateContent,
+): DecisionCodeEvaluation {
+	const safety = content.revision.safety;
+	if (
+		safety.invariants.length === 0 ||
+		safety.failureModes.length === 0 ||
+		!hasText(safety.safetyBoundary) ||
+		!hasText(safety.negativeTestPlan)
+	) {
+		return unsatisfied(
+			"Activated security surfaces require invariants, failure modes, a trust boundary, and a negative-test plan.",
+		);
+	}
+	const persistenceRelevant =
+		content.revision.classification.kind === "migrate" ||
+		content.revision.classification.affectedLayers.some((layer) =>
+			["data", "database", "storage", "persistence"].includes(
+				layer.toLowerCase(),
+			),
+		);
+	if (
+		persistenceRelevant &&
+		(!hasText(safety.rollbackPlan) || !hasText(safety.regressionPlan))
+	) {
+		return unsatisfied(
+			"Persistent security surfaces require rollback and regression plans.",
+		);
+	}
+	return satisfied();
 }
 
 function kindClassified(

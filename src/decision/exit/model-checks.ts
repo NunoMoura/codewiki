@@ -1,13 +1,19 @@
 import {
 	EVIDENCE_SCHEMA_VERSION,
+	type EvidenceId,
 	type EvidenceRecord,
 	type EvidenceSubject,
+	type ModelSecurityChallengeFinding,
 } from "../../evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../evidence/materialize.ts";
 import {modelConclusionEvidenceMeasurement} from "../../evidence/model-assessment.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
 import type {CheckCatalog} from "../../loop-exit/catalog.ts";
 import type {CheckDefinition} from "../../loop-exit/contracts.ts";
+import {
+	assertSecuritySurfaceClassification,
+	type SecuritySurfaceClassification,
+} from "../../loop-exit/security-surfaces.ts";
 import type {
 	CheckExecutorObservation,
 	LoopCheckExecutor,
@@ -26,7 +32,7 @@ import type {DecisionCandidate} from "./candidate.ts";
 
 export const DECISION_MODEL_CHECK_PROTOCOL = Object.freeze({
 	id: "codewiki.decision.model-check",
-	version: "1.0.0",
+	version: "1.1.0",
 	maxRequestBytes: 262_144,
 	maxFindings: 32,
 	maxLimitations: 32,
@@ -52,6 +58,19 @@ export interface DecisionModelCheckRequest {
 		readonly thinking: WikiModelRouteConfig["thinking"];
 	};
 	readonly configurationDigest: Sha256Digest;
+	readonly review: {
+		readonly mode: "balanced" | "security_challenge";
+		readonly consideredEvidenceIds: readonly EvidenceId[];
+		readonly evidenceRecords: readonly EvidenceRecord[];
+		readonly dependencyResults: readonly {
+			readonly checkId: string;
+			readonly checkVersion: string;
+			readonly status: "pass" | "fail" | "indeterminate";
+			readonly evidenceRecordIds: readonly string[];
+			readonly findings: readonly string[];
+		}[];
+		readonly securitySurfaceClassification: SecuritySurfaceClassification | null;
+	};
 }
 
 interface DecisionModelCheckResponse {
@@ -61,8 +80,10 @@ interface DecisionModelCheckResponse {
 	readonly checkId: string;
 	readonly checkVersion: string;
 	readonly conclusion: "supported" | "unsupported" | "uncertain";
+	readonly consideredEvidenceIds: readonly EvidenceId[];
 	readonly findings: readonly string[];
 	readonly limitations: readonly string[];
+	readonly securityFindings?: readonly ModelSecurityChallengeFinding[];
 }
 
 export type DecisionModelCheckObservation =
@@ -243,6 +264,7 @@ function modelCheckRequest(input: {
 			thinking: input.route.thinking,
 		},
 		configurationDigest: input.configurationDigest,
+		review: modelCheckReview(input.context),
 	};
 	const request = toCanonicalJsonValue({
 		...body,
@@ -252,6 +274,50 @@ function modelCheckRequest(input: {
 		throw new Error("Decision Model Check request exceeds protocol limit.");
 	}
 	return request;
+}
+
+function modelCheckReview(
+	context: LoopCheckExecutorContext,
+): DecisionModelCheckRequest["review"] {
+	const dependencyResults = [...context.dependencyResults]
+		.map((result) => ({
+			checkId: result.checkId,
+			checkVersion: result.checkVersion,
+			status: result.status,
+			evidenceRecordIds: [...result.evidenceRecordIds].sort(compareText),
+			findings: [...result.findings],
+		}))
+		.sort((left, right) => left.checkId.localeCompare(right.checkId));
+	const dependencyEvidenceIds = new Set(
+		dependencyResults.flatMap((result) => result.evidenceRecordIds),
+	);
+	const evidenceRecords = context.evidenceRecords
+		.filter(
+			(record) =>
+				dependencyEvidenceIds.has(record.evidenceId) &&
+				record.sensitivity !== "private",
+		)
+		.sort((left, right) => left.evidenceId.localeCompare(right.evidenceId));
+	const consideredEvidenceIds = evidenceRecords.map((record) => record.evidenceId);
+	let securitySurfaceClassification: SecuritySurfaceClassification | null = null;
+	if (context.check.id === "security_privacy_reviewed") {
+		const configured = context.binding.parameters.securitySurfaceClassification;
+		if (configured !== undefined) {
+			securitySurfaceClassification =
+				configured as unknown as SecuritySurfaceClassification;
+			assertSecuritySurfaceClassification(securitySurfaceClassification);
+		}
+	}
+	return {
+		mode:
+			context.check.id === "security_privacy_reviewed"
+				? "security_challenge"
+				: "balanced",
+		consideredEvidenceIds,
+		evidenceRecords,
+		dependencyResults,
+		securitySurfaceClassification,
+	};
 }
 
 function modelAssessmentEvidence(input: {
@@ -278,8 +344,12 @@ function modelAssessmentEvidence(input: {
 					input.response.conclusion,
 					MODEL_CONCLUSION_VOCABULARY_DIGEST,
 				),
+				consideredEvidenceIds: [...input.response.consideredEvidenceIds],
 				findings: [...input.response.findings],
 				limitations: [...input.response.limitations],
+				...(input.response.securityFindings
+					? {securityFindings: [...input.response.securityFindings]}
+					: {}),
 			},
 		},
 		{
@@ -290,7 +360,10 @@ function modelAssessmentEvidence(input: {
 				id: `${input.route.provider}/${input.route.model}`,
 				version: DECISION_MODEL_CHECK_PROTOCOL.version,
 			},
-			authority: "observed",
+			authority:
+				input.context.check.id === "security_privacy_reviewed"
+					? "asserted"
+					: "observed",
 			coverage: "complete",
 			sensitivity: "project",
 		},
@@ -410,20 +483,21 @@ function normalizedResponse(
 	value: unknown,
 	request: DecisionModelCheckRequest,
 ): DecisionModelCheckResponse {
-	assertExactKeys(
-		value,
-		[
-			"protocolId",
-			"protocolVersion",
-			"requestDigest",
-			"checkId",
-			"checkVersion",
-			"conclusion",
-			"findings",
-			"limitations",
-		],
-		"Decision Model Check response",
-	);
+	const responseKeys = [
+		"protocolId",
+		"protocolVersion",
+		"requestDigest",
+		"checkId",
+		"checkVersion",
+		"conclusion",
+		"consideredEvidenceIds",
+		"findings",
+		"limitations",
+	];
+	if (request.review.mode === "security_challenge") {
+		responseKeys.push("securityFindings");
+	}
+	assertExactKeys(value, responseKeys, "Decision Model Check response");
 	const response = value as Record<string, unknown>;
 	if (
 		response.protocolId !== DECISION_MODEL_CHECK_PROTOCOL.id ||
@@ -441,6 +515,38 @@ function normalizedResponse(
 	) {
 		throw new Error("Decision Model Check response conclusion is invalid.");
 	}
+	const consideredEvidenceIds = normalizedEvidenceIds(
+		response.consideredEvidenceIds,
+	);
+	if (
+		JSON.stringify(consideredEvidenceIds) !==
+		JSON.stringify(request.review.consideredEvidenceIds)
+	) {
+		throw new Error("Decision Model Check considered Evidence does not match request.");
+	}
+	const findings = normalizedTextList(
+		response.findings,
+		DECISION_MODEL_CHECK_PROTOCOL.maxFindings,
+		"findings",
+	);
+	const limitations = normalizedTextList(
+		response.limitations,
+		DECISION_MODEL_CHECK_PROTOCOL.maxLimitations,
+		"limitations",
+	);
+	const securityFindings =
+		request.review.mode === "security_challenge"
+			? normalizedSecurityFindings(
+					response.securityFindings,
+					consideredEvidenceIds,
+				)
+			: undefined;
+	assertAssessmentBasis(
+		response.conclusion,
+		findings,
+		limitations,
+		securityFindings,
+	);
 	return {
 		protocolId: response.protocolId,
 		protocolVersion: response.protocolVersion,
@@ -448,17 +554,135 @@ function normalizedResponse(
 		checkId: response.checkId as string,
 		checkVersion: response.checkVersion as string,
 		conclusion: response.conclusion,
-		findings: normalizedTextList(
-			response.findings,
-			DECISION_MODEL_CHECK_PROTOCOL.maxFindings,
-			"findings",
-		),
-		limitations: normalizedTextList(
-			response.limitations,
-			DECISION_MODEL_CHECK_PROTOCOL.maxLimitations,
-			"limitations",
-		),
+		consideredEvidenceIds,
+		findings,
+		limitations,
+		...(securityFindings ? {securityFindings} : {}),
 	};
+}
+
+function compareText(left: string, right: string): number {
+	return left.localeCompare(right);
+}
+
+function normalizedSecurityFindings(
+	value: unknown,
+	consideredEvidenceIds: readonly EvidenceId[],
+): ModelSecurityChallengeFinding[] {
+	if (!Array.isArray(value) || value.length > DECISION_MODEL_CHECK_PROTOCOL.maxFindings) {
+		throw new Error("Decision Model Check securityFindings are invalid.");
+	}
+	return value.map((entry, index) =>
+		normalizedSecurityFinding(entry, index, consideredEvidenceIds),
+	);
+}
+
+function normalizedSecurityFinding(
+	value: unknown,
+	index: number,
+	consideredEvidenceIds: readonly EvidenceId[],
+): ModelSecurityChallengeFinding {
+	const label = `securityFindings[${index}]`;
+	assertExactKeys(
+		value,
+		[
+			"threatGoal",
+			"preconditions",
+			"attackPath",
+			"violatedInvariants",
+			"candidateRefs",
+			"evidenceIds",
+			"claimedSeverity",
+			"confidence",
+			"mitigations",
+			"limitations",
+		],
+		`Decision Model Check ${label}`,
+	);
+	const finding = value as Record<string, unknown>;
+	const threatGoal = normalizedRequiredText(finding.threatGoal, `${label}.threatGoal`);
+	const attackPath = normalizedRequiredText(finding.attackPath, `${label}.attackPath`);
+	const evidenceIds = normalizedEvidenceIds(finding.evidenceIds);
+	if (evidenceIds.some((id) => !consideredEvidenceIds.includes(id))) {
+		throw new Error(`Decision Model Check ${label} cites unconsidered Evidence.`);
+	}
+	if (
+		finding.claimedSeverity !== "unknown" &&
+		finding.claimedSeverity !== "low" &&
+		finding.claimedSeverity !== "medium" &&
+		finding.claimedSeverity !== "high" &&
+		finding.claimedSeverity !== "critical"
+	) {
+		throw new Error(`Decision Model Check ${label}.claimedSeverity is invalid.`);
+	}
+	if (
+		finding.confidence !== "low" &&
+		finding.confidence !== "medium" &&
+		finding.confidence !== "high"
+	) {
+		throw new Error(`Decision Model Check ${label}.confidence is invalid.`);
+	}
+	return {
+		threatGoal,
+		preconditions: normalizedTextList(finding.preconditions, 32, `${label}.preconditions`),
+		attackPath,
+		violatedInvariants: normalizedTextList(
+			finding.violatedInvariants,
+			32,
+			`${label}.violatedInvariants`,
+		),
+		candidateRefs: normalizedTextList(finding.candidateRefs, 64, `${label}.candidateRefs`),
+		evidenceIds,
+		claimedSeverity: finding.claimedSeverity,
+		confidence: finding.confidence,
+		mitigations: normalizedTextList(finding.mitigations, 32, `${label}.mitigations`),
+		limitations: normalizedTextList(finding.limitations, 32, `${label}.limitations`),
+	};
+}
+
+function normalizedRequiredText(value: unknown, label: string): string {
+	if (
+		typeof value !== "string" ||
+		!value.trim() ||
+		value.length > DECISION_MODEL_CHECK_PROTOCOL.maxTextLength
+	) {
+		throw new Error(`Decision Model Check ${label} is invalid.`);
+	}
+	return value.trim();
+}
+
+function normalizedEvidenceIds(value: unknown): EvidenceId[] {
+	const ids = normalizedTextList(value, 256, "consideredEvidenceIds");
+	if (
+		ids.some((id) => !/^evidence:[a-z_]+:[0-9a-f]{64}$/.test(id)) ||
+		new Set(ids).size !== ids.length
+	) {
+		throw new Error("Decision Model Check consideredEvidenceIds are invalid.");
+	}
+	return ids as EvidenceId[];
+}
+
+function assertAssessmentBasis(
+	conclusion: DecisionModelCheckResponse["conclusion"],
+	findings: readonly string[],
+	limitations: readonly string[],
+	securityFindings: readonly ModelSecurityChallengeFinding[] | undefined,
+): void {
+	if (conclusion === "supported" && findings.length === 0) {
+		throw new Error("Supported Decision Model Check response requires positive basis.");
+	}
+	if (conclusion === "unsupported" && findings.length === 0) {
+		throw new Error("Unsupported Decision Model Check response requires a finding.");
+	}
+	if (conclusion === "uncertain" && findings.length === 0 && limitations.length === 0) {
+		throw new Error("Uncertain Decision Model Check response requires an Evidence gap or limitation.");
+	}
+	if (conclusion === "supported" && securityFindings?.length) {
+		throw new Error("Supported security challenge cannot include attack-path findings.");
+	}
+	if (conclusion === "unsupported" && securityFindings && securityFindings.length === 0) {
+		throw new Error("Unsupported security challenge requires an attack-path finding.");
+	}
 }
 
 function normalizedTextList(

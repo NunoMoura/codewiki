@@ -139,7 +139,7 @@ Trusted deterministic CodeWiki-owned implementation of Check. “Code” names i
 
 ### Model Check
 
-Independent bounded Pi model session evaluating one semantic requirement over immutable candidate-bound Evidence Records. It shares no producer conversation, returns structured output, and cannot append/route/attest acceptance. Operational failure yields `indeterminate`.
+Independent bounded Pi model session evaluating one semantic requirement over an immutable Candidate, declared prerequisite Results, and exact considered Evidence identities. It returns `supported | unsupported | uncertain` with bounded findings and limitations; Runtime derives `pass | fail | indeterminate`. Check-specific payloads may add structured security challenge or claim-support detail. It shares no producer conversation and cannot override deterministic Results, aggregate exit, append, route, or attest acceptance. Operational failure yields `indeterminate`.
 
 ### Check binding
 

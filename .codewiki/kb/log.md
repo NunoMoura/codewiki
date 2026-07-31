@@ -2,4 +2,5 @@
 
 ## 2026-07-31
 
+* **Update**: Added deterministic revision-bound Decision security-surface classification, targeted policy activation and prerequisite boundary checking, standardized considered-Evidence Model Check assessments, and structured asserted security challenge findings without granting model output final Check or exit authority.
 * **Update**: Inlined bounded Candidate, Resolved Exit Policy, Evidence Record, Check Result, Exit Report, and Runtime Route artifacts into canonical operation bytes, removed dangling semantic object refs, added full content and artifact-owned identity validation, and proved fresh expected-head Git admission plus post-push verification for the exact native Decision chain.

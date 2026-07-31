@@ -13,7 +13,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "1.0.0";
+export const CHECK_CATALOG_VERSION = "1.1.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -249,6 +249,10 @@ const CONDITIONAL_CHECKS = [
 		"Migration candidates preserve declared invariants or bounded equivalence.",
 	],
 	[
+		"security_surface_requirements_complete",
+		"Activated security surfaces have explicit trust boundaries, invariants, failure modes, and negative assurance requirements.",
+	],
+	[
 		"security_privacy_reviewed",
 		"Security and privacy implications are explicitly assessed for this loop.",
 	],
@@ -361,6 +365,7 @@ const EXTERNAL_CHECK_IDS = new Set([
 
 const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
 	research_claims_supported: ["research_provenance_valid"],
+	security_privacy_reviewed: ["security_surface_requirements_complete"],
 };
 
 const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
@@ -456,9 +461,9 @@ function builtInRegistrations(): CheckRegistration[] {
 	addDefinitions(
 		byId,
 		["decision", "planning", "implementation"],
-		CONDITIONAL_CHECKS.slice(0, 11),
+		CONDITIONAL_CHECKS.slice(0, 12),
 	);
-	addDefinitions(byId, "implementation", CONDITIONAL_CHECKS.slice(11));
+	addDefinitions(byId, "implementation", CONDITIONAL_CHECKS.slice(12));
 	addDefinitions(byId, "decision", LOOP_SPECIFIC_CONDITIONAL_CHECKS.decision);
 	addDefinitions(byId, "planning", LOOP_SPECIFIC_CONDITIONAL_CHECKS.planning);
 	addDefinitions(
@@ -552,6 +557,20 @@ function evidenceObligations(
 				kinds: ["model_assessment"],
 				producerKinds: ["model"],
 				authorities: ["observed"],
+				coverages: ["complete"],
+				subject: "candidate",
+				freshness: "none",
+				artifact: "optional",
+			}),
+		];
+	}
+	if (id === "security_privacy_reviewed") {
+		return [
+			obligation({
+				id: "model-assessment",
+				kinds: ["model_assessment"],
+				producerKinds: ["model"],
+				authorities: ["asserted"],
 				coverages: ["complete"],
 				subject: "candidate",
 				freshness: "none",

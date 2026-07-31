@@ -147,11 +147,30 @@ function response(request, conclusion = "supported") {
 		checkId: request.check.id,
 		checkVersion: request.check.version,
 		conclusion,
+		consideredEvidenceIds: [...request.review.consideredEvidenceIds],
 		findings:
 			conclusion === "supported"
 				? [`${request.check.id} is supported by Candidate content.`]
 				: [`${request.check.id} remains unsupported.`],
 		limitations: [],
+		...(request.review.mode === "security_challenge"
+			? {securityFindings: []}
+			: {}),
+	};
+}
+
+function securityFinding() {
+	return {
+		threatGoal: "Read another user's protected record.",
+		preconditions: ["Attacker has a valid account."],
+		attackPath: "Supply another user's record identifier without an ownership check.",
+		violatedInvariants: ["Unauthorized actors cannot read personal data."],
+		candidateRefs: ["revision.safety.invariants"],
+		evidenceIds: [],
+		claimedSeverity: "high",
+		confidence: "medium",
+		mitigations: ["Require object-level authorization."],
+		limitations: ["No integrated source tree was supplied."],
 	};
 }
 
@@ -220,6 +239,110 @@ describe("native Decision Model Checks", () => {
 		assert.equal(replay.report.reportDigest, first.report.reportDigest);
 		assert.equal(requests.length, 2);
 		assert.deepEqual(replay.producedEvidenceRecords, []);
+	});
+
+	it("runs classified security review as an asserted dependency-bound challenge", async () => {
+		const setup = fixture({
+			question: "How should authorization protect personal data?",
+			currentState: "Authorization boundaries are implicit.",
+			desiredState: "Explicit access control protects personal data.",
+			rationale: "Prevent authorization bypass.",
+			risk: "medium",
+			invariants: ["Unauthorized actors cannot read personal data."],
+			failureModes: ["An authorization bypass exposes personal data."],
+			safetyBoundary: "Authenticated actor to protected record boundary.",
+			negativeTestPlan: "Attempt cross-user record access.",
+			rollbackPlan: "Restore previous authorization policy.",
+		});
+		const approval = materializeDecisionApprovalReceipt({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			actorId: "maintainer-security",
+			authenticatedIdentityRef: "identity:test:maintainer-security",
+			role: "maintainer",
+			channel: "codewiki",
+			decidedAt: "2026-07-28T11:59:00.000Z",
+			observedAt: "2026-07-28T12:00:00.000Z",
+			producer: {kind: "user", id: "maintainer-security", version: "1.0.0"},
+		});
+		const requests = [];
+		const runtime = createDecisionExitRuntime({
+			modelChecks: {
+				route: route(),
+				transport: {
+					async execute(request) {
+						requests.push(request);
+						return {
+							status: "completed",
+							observedAt: "2026-07-28T12:00:00.000Z",
+							response: response(request),
+						};
+					},
+				},
+			},
+		});
+		const result = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [approval],
+		});
+
+		assert.equal(result.result.report.status, "pass");
+		const securityRequest = requests.find(
+			(request) => request.check.id === "security_privacy_reviewed",
+		);
+		assert.equal(securityRequest.review.mode, "security_challenge");
+		assert.ok(
+			securityRequest.review.securitySurfaceClassification.surfaces.includes(
+				"authentication_authorization",
+			),
+		);
+		assert.deepEqual(
+			securityRequest.review.dependencyResults.map((entry) => [
+				entry.checkId,
+				entry.status,
+			]),
+			[["security_surface_requirements_complete", "pass"]],
+		);
+		const assessment = result.result.producedEvidenceRecords.find(
+			(record) => record.payload.checkId === "security_privacy_reviewed",
+		);
+		assert.equal(assessment.authority, "asserted");
+		assert.deepEqual(assessment.payload.securityFindings, []);
+
+		const challenged = createDecisionExitRuntime({
+			modelChecks: {
+				route: route(),
+				transport: {
+					async execute(request) {
+						const base = response(request);
+						return request.review.mode !== "security_challenge"
+							? {status: "completed", observedAt: "2026-07-28T12:02:00.000Z", response: base}
+							: {
+									status: "completed",
+									observedAt: "2026-07-28T12:02:00.000Z",
+									response: {
+										...response(request, "unsupported"),
+										securityFindings: [securityFinding()],
+									},
+								};
+					},
+				},
+			},
+		});
+		const challengedResult = await challenged.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [approval],
+		});
+		assert.equal(challengedResult.result.report.status, "fail");
+		const challengeEvidence = challengedResult.result.producedEvidenceRecords.find(
+			(record) => record.payload.checkId === "security_privacy_reviewed",
+		);
+		assert.equal(
+			challengeEvidence.payload.securityFindings[0].claimedSeverity,
+			"high",
+		);
 	});
 
 	it("wires model Evidence into complete native Decision execution", async () => {
@@ -495,6 +618,8 @@ describe("native Decision Model Checks", () => {
 			"uncertain",
 			"unavailable",
 			"malformed",
+			"evidence_mismatch",
+			"missing_basis",
 		]) {
 			const setup = fixture();
 			const transport = {
@@ -511,10 +636,21 @@ describe("native Decision Model Checks", () => {
 						response:
 							scenario === "malformed"
 								? {...response(request), requestDigest: `sha256:${"0".repeat(64)}`}
-								: response(
-										request,
-										scenario === "uncertain" ? "uncertain" : "unsupported",
-									),
+								: scenario === "evidence_mismatch"
+									? {
+											...response(request),
+											consideredEvidenceIds: [
+												`evidence:source_observation:${"1".repeat(64)}`,
+											],
+										}
+									: scenario === "missing_basis"
+										? {...response(request), findings: []}
+										: response(
+												request,
+												scenario === "uncertain"
+													? "uncertain"
+													: "unsupported",
+											),
 					};
 				},
 			};

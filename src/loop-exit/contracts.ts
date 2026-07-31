@@ -156,7 +156,7 @@ export interface ResolvedExitPolicy {
 	policyDigest: string;
 }
 
-export interface CreateResolvedExitPolicyInput {
+interface CreateResolvedExitPolicyInput {
 	loop: SemanticLoop;
 	candidateDigest: string;
 	catalogDigest: string;
@@ -208,7 +208,7 @@ function normalizePolicyInput(
 		bindings: [...input.bindings]
 			.map((binding) => ({
 				...binding,
-				parameters: sortObject(binding.parameters),
+				parameters: sortedCheckJsonObject(binding.parameters),
 				dependsOn: sortedUnique(binding.dependsOn),
 				activatedBy: sortedUnique(binding.activatedBy),
 				ruleRefs: sortedUnique(binding.ruleRefs),
@@ -330,7 +330,7 @@ function sortedUnique(values: string[]): string[] {
 	return [...new Set(values)].sort((left, right) => left.localeCompare(right));
 }
 
-function sortObject(
+export function sortedCheckJsonObject(
 	value: Record<string, CheckJsonValue>,
 ): Record<string, CheckJsonValue> {
 	return Object.fromEntries(

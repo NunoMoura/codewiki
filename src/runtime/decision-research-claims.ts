@@ -539,6 +539,7 @@ function materializeModelAssessment(
 			response.conclusion,
 			MODEL_CONCLUSION_VOCABULARY_DIGEST,
 		),
+		consideredEvidenceIds: [...request.researchEvidenceIds],
 		findings: response.findings,
 		limitations: response.limitations,
 	};

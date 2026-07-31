@@ -8,6 +8,10 @@ import {
 } from "../changes/types.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import {
+	toCanonicalJsonValue,
+	type CanonicalJsonValue,
+} from "../utils/canonical-json.ts";
+import {
 	createResolvedExitPolicy,
 	resolvedExitPolicyDigest,
 	type CheckEnforcement,
@@ -15,6 +19,7 @@ import {
 	type CheckExclusionReason,
 	type ResolvedExitPolicy,
 	type CheckBinding,
+	sortedCheckJsonObject,
 } from "./contracts.ts";
 import {
 	createCheckCatalog,
@@ -23,8 +28,14 @@ import {
 	type CheckCatalog,
 } from "./catalog.ts";
 import { loopQualifiedCheckDigest } from "./identity.ts";
+import {
+	SECURITY_SURFACES,
+	assertSecuritySurfaceClassification,
+	type SecuritySurface,
+	type SecuritySurfaceClassification,
+} from "./security-surfaces.ts";
 
-const EXIT_POLICY_SELECTOR_VERSION = "1.0.0";
+const EXIT_POLICY_SELECTOR_VERSION = "1.1.0";
 
 const PROJECT_TRAITS = [
 	"web-ui",
@@ -78,6 +89,7 @@ interface ResolveExitPolicyInput {
 	loop: SemanticLoop;
 	candidateDigest: string;
 	changes: ChangeSelectorFacts[];
+	securitySurfaceClassification?: SecuritySurfaceClassification;
 	projectTraits?: ProjectTrait[];
 	technologies?: Technology[];
 	paths?: string[];
@@ -94,6 +106,7 @@ interface CheckActivationRuleMatch {
 	projectTraits?: ProjectTrait[];
 	technologies?: Technology[];
 	pathTraits?: PathTrait[];
+	securitySurfaces?: SecuritySurface[];
 }
 
 interface CheckActivationRule {
@@ -115,6 +128,8 @@ interface NormalizedSelectorInput {
 	technologies: Technology[];
 	paths: string[];
 	pathTraits: PathTrait[];
+	securitySurfaceClassification?: SecuritySurfaceClassification;
+	securitySurfaces: SecuritySurface[];
 	approvedAdditions: ApprovedCheckAddition[];
 	approvedExclusions: ApprovedCheckExclusion[];
 }
@@ -266,6 +281,30 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 		["security_privacy_reviewed"],
 		{ changeTypes: ["security_change"] },
 	),
+	...rulesForLoop(
+		"check.security.surface.detected",
+		"decision",
+		["security_privacy_reviewed"],
+		{securitySurfaces: [...SECURITY_SURFACES]},
+	),
+	...rulesForLoop(
+		"check.security.surface.dependency",
+		"decision",
+		["dependency_risk_controlled"],
+		{securitySurfaces: ["dependency_supply_chain"]},
+	),
+	...rulesForLoop(
+		"check.security.surface.public-api",
+		"decision",
+		["api_contract_reviewed"],
+		{securitySurfaces: ["network_public_api"]},
+	),
+	...rulesForLoop(
+		"check.security.surface.persistence",
+		"decision",
+		["persistent_data_safety_reviewed"],
+		{securitySurfaces: ["persistence_migration"]},
+	),
 	...rulesForAllLoops(
 		"check.change.risk.high",
 		["security_privacy_reviewed"],
@@ -395,6 +434,7 @@ function activateRules(
 				catalog,
 				loop: selector.loop,
 				checkId,
+				parameters: activationParameters(checkId, selector),
 				activatedBy: reasons,
 				ruleRef: `${rule.id}@${rule.version}`,
 			});
@@ -509,6 +549,12 @@ function normalizeSelectorInput(
 	const additions = optionalValues(input.approvedAdditions);
 	const exclusions = optionalValues(input.approvedExclusions);
 	const paths = unique(optionalValues(input.paths).map(normalizePath));
+	if (input.securitySurfaceClassification) {
+		assertSecuritySurfaceClassification(input.securitySurfaceClassification);
+	}
+	const securitySurfaces = input.securitySurfaceClassification
+		? [...input.securitySurfaceClassification.surfaces]
+		: [];
 	return {
 		selectorVersion: EXIT_POLICY_SELECTOR_VERSION,
 		catalogVersion,
@@ -525,10 +571,14 @@ function normalizeSelectorInput(
 		technologies: unique(optionalValues(input.technologies)),
 		paths,
 		pathTraits: classifyPathTraits(paths),
+		...(input.securitySurfaceClassification
+			? {securitySurfaceClassification: input.securitySurfaceClassification}
+			: {}),
+		securitySurfaces,
 		approvedAdditions: [...additions]
 			.map((addition) => ({
 				...addition,
-				parameters: sortObject(addition.parameters ?? {}),
+				parameters: sortedCheckJsonObject(addition.parameters ?? {}),
 			}))
 			.sort((left, right) => left.checkId.localeCompare(right.checkId)),
 		approvedExclusions: [...exclusions]
@@ -715,7 +765,7 @@ function toBinding(
 		}),
 		enforcement: binding.enforcement,
 		required: binding.required,
-		parameters: sortObject(binding.parameters),
+		parameters: sortedCheckJsonObject(binding.parameters),
 		dependsOn: binding.registration.dependsOn,
 		activatedBy: [...binding.activatedBy],
 		ruleRefs: [...binding.ruleRefs],
@@ -760,6 +810,9 @@ function ruleReasons(
 		optionalRuleReasons(rule.match.pathTraits, (values) =>
 			selectedReasons("path-trait", selector.pathTraits, values),
 		),
+		optionalRuleReasons(rule.match.securitySurfaces, (values) =>
+			selectedReasons("security-surface", selector.securitySurfaces, values),
+		),
 	];
 	const reasons = [`loop:${rule.loop}`];
 	for (const match of matches) {
@@ -769,11 +822,41 @@ function ruleReasons(
 	return unique(reasons);
 }
 
+function mutableCheckJsonValue(value: CanonicalJsonValue): CheckJsonValue {
+	if (Array.isArray(value)) return value.map(mutableCheckJsonValue);
+	if (value !== null && typeof value === "object") {
+		return Object.fromEntries(
+			Object.entries(value).map(([key, entry]) => [
+				key,
+				mutableCheckJsonValue(entry),
+			]),
+		);
+	}
+	return value;
+}
+
 function optionalRuleReasons<T>(
 	configured: T[] | undefined,
 	resolve: (values: T[]) => string[],
 ): string[] | undefined {
 	return configured ? resolve(configured) : undefined;
+}
+
+function activationParameters(
+	checkId: string,
+	selector: NormalizedSelectorInput,
+): Record<string, CheckJsonValue> | undefined {
+	if (
+		checkId !== "security_privacy_reviewed" ||
+		!selector.securitySurfaceClassification
+	) {
+		return undefined;
+	}
+	return {
+		securitySurfaceClassification: mutableCheckJsonValue(
+			toCanonicalJsonValue(selector.securitySurfaceClassification),
+		),
+	};
 }
 
 function layerReasons(
@@ -992,14 +1075,6 @@ function strongerEnforcement(
 		require: 2,
 	};
 	return rank[left] >= rank[right] ? left : right;
-}
-
-function sortObject(
-	value: Record<string, CheckJsonValue>,
-): Record<string, CheckJsonValue> {
-	return Object.fromEntries(
-		Object.entries(value).sort(([left], [right]) => left.localeCompare(right)),
-	);
 }
 
 function assertUnique(values: string[], label: string): void {

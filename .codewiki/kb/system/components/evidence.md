@@ -144,7 +144,7 @@ A small shared envelope does not flatten domain semantics. Each kind has an exac
 | `source_observation` | source/test/Knowledge/Git identity, paths or symbols, ownership and coverage | Any Loop's grounding Checks |
 | `command_execution` | trusted command adapter, arguments/config digest, environment identity, exit/timeout, bounded output digest | Code Checks |
 | `ui_capture` | preview target/profile, route/scenario/state, viewport, screenshots/video, console/network summary, manifest digest | Implementation UI Checks and user review |
-| `model_assessment` | exact Model Check/protocol/route/config identity, structured measurement and findings | Model Check result construction |
+| `model_assessment` | exact Model Check/protocol/route/config identity, considered Evidence ids, structured measurement, findings, limitations, and optional security challenge paths | Model Check result construction |
 | `worker_report` | Assignment/Work Item Claim/Worker Workbench/base correlation, changed paths and worker proof | Implementation admission and provenance Checks |
 | `integration_proof` | target/base/commit/tree/patch/paths and combined verification | Implementation and guarded Integration |
 | `approval_receipt` | authenticated actor, role, decision, exact subject/artifact/head, provider event, time | Approval-backed Code Checks |
@@ -160,7 +160,7 @@ Authority is contextual; no single ranking proves every requirement.
 - Agent or worker assertions are candidate material, not acceptance.
 - Runtime observations establish what Runtime actually saw.
 - Deterministic Code Checks verify declared machine-testable requirements.
-- Independent Model Checks provide bounded semantic judgment but cannot approve intent or effects.
+- Independent Model Checks provide bounded three-valued semantic judgment but cannot approve intent, override deterministic Results, aggregate Loop exit, or authorize effects.
 - Authenticated users or delegated roles approve subjective intent and reserved risk decisions.
 - External provider observations establish one exact remote state, not a permanent guarantee.
 
@@ -193,6 +193,8 @@ Runtime now exposes a Decision-specific citation materialization boundary and a 
 The independent claim-support envelope binds the exact passing provenance Result, candidate, policy, route/configuration digest, protocol version, claim digests, and citation Evidence ids. Models return bounded per-claim observations, not Check status. Runtime validates complete claim and citation coverage, derives the aggregate conclusion, and materializes candidate-bound observed `model_assessment` Evidence with exact producer, route, protocol, configuration, and request provenance. Raw model output and private reasoning are discarded. Operational or malformed output produces an indeterminate Result and no fake model Evidence.
 
 The isolated Pi transport now executes the exact prepared request with no tools, Skills, extensions, prompt templates, context files, repository reads, or persisted session. It selects the exact provider/model/thinking route through Pi-owned credentials, bounds timeout and response bytes, supports cancellation, and returns only a typed operational observation plus transient parsed response. Runtime remains the sole materializer and interpreter of model-assessment Evidence.
+
+The shared model-assessment payload now records the complete considered Evidence identity set. Decision Model Check protocol `1.1.0` requires exact Evidence echo and bounded positive basis, finding, or uncertainty justification. Security challenge assessments additionally retain structured threat goals, preconditions, attack paths, violated invariants, Candidate/Evidence refs, claimed severity/confidence, mitigations, and limitations with `asserted` authority. These observations remain inputs to one Check Result; they cannot become canonical risk, exploit verification, or final Exit Report authority.
 
 Production Decision still uses broad `sourceRefs` and `proofRefs`. External collection adapters, production scheduling of the Pi transport, native candidate/policy/report persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
 

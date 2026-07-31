@@ -1,7 +1,7 @@
 import { Type, type TSchema } from "typebox";
 import type { Sha256Digest } from "../utils/canonical-json.ts";
 
-export const EVIDENCE_SCHEMA_VERSION = "1.0.0" as const;
+export const EVIDENCE_SCHEMA_VERSION = "1.1.0" as const;
 
 export const EVIDENCE_KINDS = [
 	"research_citation",
@@ -136,6 +136,19 @@ export type EvidenceMeasurement =
 			readonly vocabularyDigest: Sha256Digest;
 	  };
 
+export interface ModelSecurityChallengeFinding {
+	readonly threatGoal: string;
+	readonly preconditions: readonly string[];
+	readonly attackPath: string;
+	readonly violatedInvariants: readonly string[];
+	readonly candidateRefs: readonly string[];
+	readonly evidenceIds: readonly EvidenceId[];
+	readonly claimedSeverity: "unknown" | "low" | "medium" | "high" | "critical";
+	readonly confidence: "low" | "medium" | "high";
+	readonly mitigations: readonly string[];
+	readonly limitations: readonly string[];
+}
+
 export interface ModelAssessmentPayload {
 	readonly checkId: string;
 	readonly checkVersion: string;
@@ -144,8 +157,10 @@ export interface ModelAssessmentPayload {
 	readonly routeId: string;
 	readonly configurationDigest: Sha256Digest;
 	readonly measurement: EvidenceMeasurement;
+	readonly consideredEvidenceIds: readonly EvidenceId[];
 	readonly findings: readonly string[];
 	readonly limitations: readonly string[];
+	readonly securityFindings?: readonly ModelSecurityChallengeFinding[];
 }
 
 export interface WorkerReportPayload {
@@ -472,6 +487,31 @@ const uiCapturePayloadSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
+const modelSecurityChallengeFindingSchema = Type.Object(
+	{
+		threatGoal: requiredTextSchema,
+		preconditions: findingListSchema,
+		attackPath: requiredTextSchema,
+		violatedInvariants: findingListSchema,
+		candidateRefs: refListSchema,
+		evidenceIds: Type.Array(
+			Type.String({pattern: "^evidence:[a-z_]+:[0-9a-f]{64}$"}),
+			{maxItems: 256, uniqueItems: true},
+		),
+		claimedSeverity: Type.Union(
+			["unknown", "low", "medium", "high", "critical"].map((value) =>
+				Type.Literal(value),
+			),
+		),
+		confidence: Type.Union(
+			["low", "medium", "high"].map((value) => Type.Literal(value)),
+		),
+		mitigations: findingListSchema,
+		limitations: findingListSchema,
+	},
+	{additionalProperties: false},
+);
+
 const modelAssessmentPayloadSchema = Type.Object(
 	{
 		checkId: idSchema,
@@ -481,8 +521,15 @@ const modelAssessmentPayloadSchema = Type.Object(
 		routeId: idSchema,
 		configurationDigest: digestSchema,
 		measurement: measurementSchema,
+		consideredEvidenceIds: Type.Array(
+			Type.String({pattern: "^evidence:[a-z_]+:[0-9a-f]{64}$"}),
+			{maxItems: 256, uniqueItems: true},
+		),
 		findings: findingListSchema,
 		limitations: findingListSchema,
+		securityFindings: Type.Optional(
+			Type.Array(modelSecurityChallengeFindingSchema, {maxItems: 32}),
+		),
 	},
 	{ additionalProperties: false },
 );

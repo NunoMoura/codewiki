@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 
 import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
 import { assertValidResolvedExitPolicy } from "../../src/loop-exit/contracts.ts";
+import {classifySecuritySurfaces} from "../../src/loop-exit/security-surfaces.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
@@ -199,6 +200,51 @@ describe("Resolved Exit Policy resolver", () => {
 				);
 			}
 		}
+	});
+
+	it("activates explainable Decision security and targeted Checks from classified surfaces", () => {
+		const input = selectorInput("decision");
+		input.securitySurfaceClassification = classifySecuritySurfaces({
+			changeId: input.changes[0].changeId,
+			revision: input.changes[0].revision,
+			revisionDigest: input.changes[0].digest,
+			kind: input.changes[0].kind,
+			type: input.changes[0].type,
+			scope: "system",
+			risk: input.changes[0].risk,
+			affectedLayers: ["api", "database"],
+			targetRefs: [],
+			knowledgeRefs: [],
+			sourceRefs: [],
+			signals: [],
+		});
+		const resolution = resolveExitPolicy(input);
+		const byId = new Map(
+			resolution.bindings.map((binding) => [binding.checkId, binding]),
+		);
+
+		for (const checkId of [
+			"security_surface_requirements_complete",
+			"security_privacy_reviewed",
+			"api_contract_reviewed",
+			"persistent_data_safety_reviewed",
+		]) {
+			assert.ok(byId.has(checkId), `missing ${checkId}`);
+		}
+		const security = byId.get("security_privacy_reviewed");
+		assert.ok(
+			security.activatedBy.includes("security-surface:network_public_api"),
+		);
+		assert.ok(
+			security.activatedBy.includes("security-surface:persistence_migration"),
+		);
+		assert.deepEqual(security.dependsOn, [
+			"security_surface_requirements_complete",
+		]);
+		assert.equal(
+			security.parameters.securitySurfaceClassification.classificationDigest,
+			input.securitySurfaceClassification.classificationDigest,
+		);
 	});
 
 	it("uses Loop-specific release Checks and Planning UI preview validation", () => {

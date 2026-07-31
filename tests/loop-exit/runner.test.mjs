@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
+import {EVIDENCE_SCHEMA_VERSION} from "../../src/evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../src/evidence/materialize.ts";
 import {reduceEvidenceObligation} from "../../src/evidence/obligations.ts";
 import {createLoopExitResultCache} from "../../src/loop-exit/cache.ts";
@@ -144,7 +145,7 @@ const delay = (milliseconds) =>
 function modelAssessmentEvidence(setup, check) {
 	return materializeEvidenceRecord(
 		{
-			schemaVersion: "1.0.0",
+			schemaVersion: EVIDENCE_SCHEMA_VERSION,
 			kind: "model_assessment",
 			provenanceRefs: ["model-request:runner"],
 			payload: {
@@ -155,6 +156,7 @@ function modelAssessmentEvidence(setup, check) {
 				routeId: "test-model",
 				configurationDigest: canonicalJsonDigest({route: "test-model"}),
 				measurement: {kind: "boolean", value: true},
+				consideredEvidenceIds: [],
 				findings: [],
 				limitations: [],
 			},

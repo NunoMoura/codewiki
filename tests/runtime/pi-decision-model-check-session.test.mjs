@@ -36,6 +36,13 @@ function request() {
 			thinking: "high",
 		},
 		configurationDigest: digest("5"),
+		review: {
+			mode: "balanced",
+			consideredEvidenceIds: [],
+			evidenceRecords: [],
+			dependencyResults: [],
+			securitySurfaceClassification: null,
+		},
 	};
 	return {...body, requestDigest: canonicalJsonDigest(body)};
 }
@@ -48,6 +55,7 @@ function response(preparedRequest) {
 		checkId: preparedRequest.check.id,
 		checkVersion: preparedRequest.check.version,
 		conclusion: "supported",
+		consideredEvidenceIds: [],
 		findings: ["Intent is grounded."],
 		limitations: [],
 	};
