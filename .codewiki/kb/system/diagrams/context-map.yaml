@@ -2,11 +2,12 @@ schema_version: 1
 id: spec.system.diagrams.context-map
 title: CodeWiki Context Map
 kind: context_map
-purpose: Show users, clients, Project Runtime authority, Pi and worker execution, provider-neutral Git synchronization, repository authorities, review projection, archive, and guarded delivery boundaries.
+purpose: Show users, multi-source Change intake, clients, Project Runtime authority, Pi and worker execution, provider-neutral Git synchronization, repository authorities, review projection, archive, and guarded delivery boundaries.
 source_docs:
   - .codewiki/kb/product/users/maintainers.md
   - .codewiki/kb/product/users/agents.md
   - .codewiki/kb/product/overview.md
+  - .codewiki/kb/system/components/change-intake.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/extension.md
   - .codewiki/kb/system/components/traces.md
@@ -25,7 +26,7 @@ actors:
     label: Client / worker adapter author
     source: .codewiki/kb/product/users/package-authors.md
   - id: reviewer
-    label: Intent / Product / Design / code / security reviewer
+    label: Configured human or agent intent / Product / Design / code / security reviewer
     source: .codewiki/kb/system/components/evidence.md
   - id: external_user
     label: Future external user
@@ -75,9 +76,9 @@ systems:
     label: Configured model providers
     boundary: external
   - id: review_surface
-    label: Optional isolated review ref / draft pull request
+    label: Optional isolated review ref / draft pull request / ordinary review findings
     boundary: external_mutable_projection
-    source: .codewiki/kb/system/components/evidence.md
+    source: .codewiki/kb/system/components/adapters-and-ui.md
   - id: delivery_targets
     label: Publication / release / deployment / outcome providers
     boundary: external
@@ -139,15 +140,24 @@ relationships:
   - from: workers
     to: repository
     label: mutates scoped isolated working state only
+  - from: workers
+    to: project_runtime
+    label: asserted Worker Report and bounded Assignment-bound discoveries
+  - from: repository
+    to: project_runtime
+    label: exact regression scanner and Knowledge-drift intake material
   - from: project_runtime
     to: review_surface
     label: guarded review projection and re-observation
   - from: review_surface
     to: project_runtime
-    label: untrusted event material until exact correlation
+    label: findings and approval remain untrusted until exact actor/head/bundle correlation
   - from: project_runtime
     to: delivery_targets
     label: separately authorized exact effects
+  - from: delivery_targets
+    to: project_runtime
+    label: exact delivery/outcome observations may become bounded intake
 ui_hints:
   default_scope: codewiki_authority
   inspector_fields:

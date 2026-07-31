@@ -49,7 +49,7 @@ describe("OKF index and log navigation", () => {
 			/\* \[Lexicon\]\(lexicon\.md\) - This file is CodeWiki's active vocabulary contract\./,
 		);
 		assert.match(root.content, /\* \[Product\]\(product\/\) - 13 concepts/);
-		assert.match(root.content, /\* \[System\]\(system\/\) - 37 concepts/);
+		assert.match(root.content, /\* \[System\]\(system\/\) - 38 concepts/);
 
 		assert.equal(product.path, "product/index.md");
 		assert.match(
@@ -61,9 +61,13 @@ describe("OKF index and log navigation", () => {
 		assert.equal(system.path, "system/index.md");
 		assert.match(
 			system.content,
-			/\* \[Components\]\(components\/\) - 29 concepts/,
+			/\* \[Components\]\(components\/\) - 30 concepts/,
 		);
 		assert.match(system.content, /\* \[Diagrams\]\(diagrams\/\) - 0 concepts/);
+		assert.match(
+			components.content,
+			/\* \[Change Intake and Backlog Triage\]\(change-intake\.md\) - Change intake converts bounded findings and suggestions/,
+		);
 		assert.match(
 			components.content,
 			/\* \[Evidence Records\]\(evidence\.md\) - Evidence Records give every Loop one immutable, typed, content-addressed way/,
@@ -85,15 +89,11 @@ describe("OKF index and log navigation", () => {
 		assert.equal(
 			readFileSync(".codewiki/kb/log.md", "utf8"),
 			generateOkfLog({
-				date: "2026-06-30",
+				date: "2026-07-31",
 				entries: [
 					{
 						kind: "Update",
-						text: "Migrated CodeWiki KB concepts to OKF v0.1 frontmatter.",
-					},
-					{
-						kind: "Creation",
-						text: "Added progressive-disclosure navigation through [root](index.md), [Product](product/index.md), and [System](system/index.md) indexes.",
+						text: "Ratified one provider-neutral, source-specific Change intake boundary for user suggestions, pull-request review findings, Worker Report discoveries, regressions/scanners, delivery/outcome observations, and Knowledge drift. Backlog triage is an explainable snapshot-bound Change projection for Decision attention, with defect/security classification, impact/effort/urgency/confidence dimensions, deterministic security-surface activation, and isolated adversarial Model Checks; it is not another Loop or priority authority.",
 					},
 				],
 			}),
@@ -107,7 +107,7 @@ describe("OKF index and log navigation", () => {
 		);
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 51);
+		assert.equal(result.conceptCount, 52);
 		assert.equal(result.reservedCount, 10);
 		assert.deepEqual(documentsByPath.get("index.md")?.frontmatter, {
 			okf_version: "0.1",

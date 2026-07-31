@@ -127,6 +127,39 @@ Accepted operation history reduces deterministically into WorkState and projects
 
 Backlog, Planning, Implementation, Change dossiers, dashboards, queues, graph layouts, search indexes, notifications, and repair-retrieval indexes are projections. They never become another truth store.
 
+### Change intake and Backlog triage
+
+One closed Change intake boundary accepts bounded authenticated material from users, ordinary pull-request reviews by any configured human or agent, CodeWiki workers, regression/security/scanner runs, delivery/outcome observations, and Knowledge drift:
+
+```ts
+type ChangeIntakeMaterial =
+  | UserSuggestionMaterial
+  | PullRequestFindingMaterial
+  | WorkerDiscoveryMaterial
+  | RegressionFindingMaterial
+  | SecurityScannerFindingMaterial
+  | DeliveryObservationMaterial
+  | OutcomeFindingMaterial
+  | KnowledgeDriftMaterial;
+```
+
+Each source member requires exact source-specific actor/provider/Assignment/run/tree/Trace bindings. Producers may submit observed/expected behavior, affected refs, source evidence, and claimed category/severity/confidence. They cannot supply canonical Change/operation identity, authority, time, priority, risk, route, or Check outcome.
+
+Runtime authenticates, sanitizes, normalizes, deduplicates, classifies source claims, and scope-routes each item. Current Candidate violations become current-Change repair feedback; scope/dependency changes route to Planning; intent/risk/authority changes route to Decision; independent discrepancies become pending Changes with `discovered_from`; duplicates reinforce existing Changes; non-actionable, stale, or unauthorized material creates no new Change. Sensitive security findings are redacted or held for authorized handling.
+
+Backlog triage is a snapshot-bound disposable projection over pending/deferred Changes, WorkState, Alignment Graph facts, source observations, config, and policy. It exposes provenance-bearing Decision readiness, urgency, expected impact/improvement, estimated effort, risk of inaction, change risk, confidence, overlap, freshness, work unblocked, and explainable ordering. Unknown remains unknown. Evidence authority (`asserted | observed | verified | approved`) remains distinct from graph/projection provenance (`canonical_binding | observed_binding | deterministic_analysis | inferred_analysis`). No opaque overall score may hide safety or uncertainty.
+
+Backlog ordering chooses Decision attention only. Decision accepts exact Change meaning independently; rolling Planning alone owns project-wide execution ordering across accepted Changes.
+
+Target source placement keeps this inside the Change domain rather than creating a fourth top-level subsystem:
+
+```text
+src/changes/intake/**
+src/changes/triage/**
+```
+
+Runtime orchestration remains under `src/runtime/**`. The clean cut replaces legacy `src/changes/intake.ts`; no `src/triage/**`, compatibility alias, dual contract, or separate triage authority is added.
+
 ## Change Trace Protocol v1
 
 ### Canonical identity
@@ -486,6 +519,24 @@ evidenceInputDigest
 
 Workers produce asserted Worker Reports. Runtime materializes admitted Evidence Records. Final assurance evaluates the exact integrated Candidate and tree, never worker confidence.
 
+## Cross-Loop security assurance
+
+Security is layered across exactly three Loops:
+
+```text
+Decision        unsafe intent, incomplete trust/data/authorization boundaries, abuse potential
+Planning        required security work, isolation, sequencing, reviewer and rollback obligations
+Implementation  exact integrated-tree scanners, tests, adversarial review, and residual-risk Evidence
+```
+
+Every Change receives a cheap deterministic security-surface classification derived from exact revision, Knowledge/component/layer, source ownership, dependency, data-flow, public-interface, and source-scope facts—not only caller-supplied type or risk. Initial surfaces include authentication/authorization, sensitive data, secrets, network/public API, dependencies/supply chain, parsing/deserialization, process execution, filesystem, cryptography, persistence/migration, infrastructure/configuration, and browser trust boundaries.
+
+Where possible, Code Checks run first: required-field/invariant validation, dependency advisory matching, lockfile integrity, secret/SAST/AST/unsafe-API rules, configuration/IaC/container scans, authorization and migration tests, source ownership, qualified reviewer obligations, and exact scanner/tree/configuration freshness. A detector activates assurance; it does not pass security. Missing required scanner capability or stale advisory data is `indeterminate`.
+
+Activated adversarial Model Checks use isolated candidate-bound context and attempt to falsify safety through attacker goals, misuse/abuse cases, trust-boundary and authorization bypasses, privacy minimization/retention, confused-deputy paths, supply-chain assumptions, rollback, and missing controls. They return bounded attack-path, invariant, claimed severity/confidence, Evidence-gap, mitigation, and limitation observations. Their authority remains `asserted`; they cannot assign canonical CVSS, verify exploitability, accept residual risk, pass themselves, or prioritize a Change.
+
+High/critical policy may require independent model routes, deterministic reproduction, qualified research, authenticated security approval, or explicit residual-risk acceptance. Candidate producers and adversarial Model Checks never share conversational state. Findings route through the same Change intake boundary: current Candidate defects repair current Change; independent vulnerabilities become redacted linked pending Changes; uncertainty remains an Evidence gap or `indeterminate`; duplicates reinforce existing work.
+
 ## Alignment Graph
 
 ### Layers
@@ -682,12 +733,15 @@ Paid runs, provider mutation, leaderboard submission, publication, release, and 
 
 - current Trace remains local-linear with singular `parentId`, local `sequence`, formatted IDs, snapshot-heavy payloads, and local rollback;
 - current hot path remains `.codewiki/traces/TRACE-CHG-<id>.jsonl`;
-- separate clones cannot see shared Change Claims or Work Item Claims;
+- provider-neutral Git CAS, verified synchronization, and distributed Change/Work Item Claim mutation are proven in v1, but production coordinator paths still use legacy local state;
 - production Decision Candidate still contains only disposition and rationale;
 - production Decision still uses count/presence quality checks and reruns legacy evaluation;
 - native Decision research and claim-support transport are not wired into production execution;
 - command, Worker Report, Integration, UI, approval, delivery, and outcome Evidence producers remain incomplete;
-- rolling Planning, remote freshness, state-ref CAS, archive hydration, graph projection, and repair retrieval are not implemented;
+- generic native Change intake remains absent: legacy input is restricted to `user | runtime | lab`, requires caller-authored classification, and lacks provider-neutral review findings, structured worker discoveries, regression/scanner producers, defect/security profiles, and native expected-head admission;
+- no snapshot-bound shared Backlog Triage Projection/query exposes Decision readiness, impact, effort, urgency, risk of inaction, confidence, overlap, provenance, or explainable ordering to both user and agent;
+- Decision security assurance has one broad `security_privacy_reviewed` Model Check but no always-on deterministic security-surface activation, dedicated adversarial protocol, or exact scanner suite;
+- rolling Planning, remote freshness, state-ref CAS, and Alignment Graph projection have executable v1 foundations but production cutover remains; verified archive hydration and repair retrieval are not implemented;
 - OCI and real provider/auth execution remain externally unproven.
 
 This drift is intentional and visible. Do not add parallel authority while cutting over.
@@ -805,8 +859,15 @@ Resolved Exit Policy received unsupported field frozenMinimum; Runtime must deri
 
 Phase 6 uses Alignment Graph projector `1.1.0`, deterministic OKF/source augmentation, and six closed query families capped at four hops and 200 facts. The colocated `src/benchmarks/**` harness binds every method to one snapshot, case set, and result cap; reports recall, precision, false-positive rate, success-at-one, and wall time separately; and exposes missing or failed adapters. Graphify remains explicitly unavailable until its optional dependencies are installed, so no Graphify quality claim is made.
 
-### Phase 7 — Native Loop cuts
+### Phase 7 — Native Change intake, triage, and Loop cuts
 
+- [ ] Replace legacy `src/changes/intake.ts` with the closed source-specific `ChangeIntakeMaterial` union under `src/changes/intake/**`; do not add `src/triage/**` or a compatibility alias.
+- [ ] Add Runtime-owned source authentication/correlation, privacy sanitation, normalization, idempotency, deduplication, current-scope versus independent-scope routing, and exact expected-head Git admission.
+- [ ] Add Change-revision defect/security profile fields that keep severity, likelihood, exposure, risk, priority, and confidence distinct and preserve qualified SARIF/CWE/CVE/GHSA/OSV/CVSS/KEV refs without trusting them as authority.
+- [ ] Add user-suggestion, provider-neutral PR-review, Worker Report discovery, regression/scanner, delivery/outcome, and Knowledge-drift intake producers.
+- [ ] Implement `src/changes/triage/**` as one snapshot-bound Backlog Triage Projection with provenance-bearing readiness, urgency, impact, effort, risk-of-inaction, confidence, overlap, freshness, Pareto/frontier, fairness, and explainable ordering dimensions.
+- [ ] Expose one bounded user/agent triage query and Backlog list/detail view; no opaque overall score, mutable priority, arbitrary query DSL, or canonical triage store.
+- [ ] Add always-on deterministic security-surface classification, targeted Code Checks, and isolated adversarial Model Checks; route findings through native Change intake and require stronger independent Evidence/authority for high/critical residual risk.
 - [ ] Wire Decision research collection and claim-support transport into production Decision.
 - [ ] Replace Decision count checks with native Candidate/Evidence/Result/Report path.
 - [ ] Create native Planning Candidate/Evidence/Result/Report path.

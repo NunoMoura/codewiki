@@ -309,14 +309,18 @@ Work is the first destination and uses three purpose-built pages. It is not one 
 
 Backlog answers:
 
-- What was proposed?
-- Where did it come from?
-- What Product, System, or Design context does it affect?
-- Is it duplicate, overlapping, contradictory, or incomplete?
-- What exact Decision question remains?
-- Which revision and authority support its disposition?
+- What was proposed or discovered, and through which authenticated source?
+- Is the material current-Change feedback, independent pending intent, duplicate, overlapping, contradictory, sensitive, stale, or incomplete?
+- What Product, System, Design, source, user, data, or security boundary does it affect?
+- What are the bounded urgency, expected impact/improvement, estimated effort, risk of inaction, implementation risk, confidence, and work-unblocked dimensions?
+- What exact Decision question remains, and is the revision ready for Decision attention?
+- Which revision, snapshot, Evidence, provenance, and authority support its disposition?
 
-Use an intake/triage composition: a compact proposal list or grouped queue beside one focused detail region on desktop, and a list-to-detail transition on mobile. Rows prioritize title, origin, age/freshness, affected concepts, and current Decision state. They do not show a miniature lifecycle pipeline.
+Use an intake/triage composition: a compact proposal list or grouped queue beside one focused detail region on desktop, and a list-to-detail transition on mobile. Rows prioritize title, origin, Decision readiness, protected escalation, expected impact, estimated effort, confidence, age/freshness, affected concepts/components, and current Decision state. They do not show a miniature lifecycle pipeline.
+
+Filters cover source, readiness, concept/component, defect category, severity, security sensitivity, regression/incident state, effort, impact, confidence, overlap, blocked work, freshness, and age. Ordering is selectable and explainable. Default order places protected security/incident/data-loss/regulatory escalation first, then escaped regressions and active-work blockers, Decision-ready Pareto-frontier candidates, high-value low-cost clarifications, bounded age fairness, and incomplete/speculative material. Do not hide safety or uncertainty inside one overall score.
+
+User and agent views consume the same snapshot-bound triage projection and reasons. Backlog order directs Decision attention only; Decision accepts meaning independently per Change, while rolling Planning owns execution priority across accepted Changes.
 
 Failed and indeterminate required Checks appear before passing Results. Completed Decision work becomes a receipt attached to the exact Change revision. Rejected, deferred, withdrawn, and superseded proposals remain searchable without competing with active intake.
 

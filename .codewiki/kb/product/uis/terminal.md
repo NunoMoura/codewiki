@@ -59,19 +59,22 @@ Work opens by default at Backlog. Every route is deep-linkable. Search, filters,
 
 ## Work / Backlog
 
-Backlog accepts proposals from authenticated users, agents, and future bounded integrations while other work continues. New proposals become persisted pending Changes with source attribution and idempotency protection. Submission never grants approval or execution authority.
+Backlog accepts bounded intake from authenticated users, ordinary pull-request reviews by any configured human or agent, CodeWiki worker discoveries, exact regression/security/scanner findings, delivery/outcome observations, and Knowledge drift while other work continues. Runtime authenticates and correlates each source, sanitizes, deduplicates, and routes it either to an existing Change or to a new persisted pending Change. Submission never grants approval, priority, or execution authority.
 
 The Backlog workspace emphasizes:
 
-- proposal title, outcome, origin, and current revision;
+- proposal title, outcome, origin, current revision, and source corroboration;
 - related Product, System, and Design concepts;
-- possible duplicate, overlap, or conflict;
-- missing clarification and exact Decision question;
-- active Decision work and freshness;
-- approval, defer, rejection, withdrawal, or supersession receipt;
+- possible duplicate, overlap, contradiction, or conflict;
+- missing clarification, Decision readiness, and exact Decision question;
+- claimed defect category/severity and protected security handling where applicable;
+- explainable urgency, expected impact/improvement, estimated effort, risk of inaction, confidence, freshness, and work unblocked;
+- active Decision work and approval, defer, rejection, withdrawal, or supersession receipt;
 - human attention only when meaning, risk, or reserved authority is genuinely underdetermined.
 
-The primary composition is an intake/triage list with one focused detail region, not a grid of lifecycle cards. Approval assurance remains attached to the exact Change revision and evidence that support it.
+The primary composition is an intake/triage list with one focused detail region, not a grid of lifecycle cards. Filters cover source, readiness, affected concept/component, category, severity, security sensitivity, regression/incident state, effort, impact, confidence, overlap, blocked work, freshness, and age. Ordering may emphasize urgency, risk of inaction, impact, effort, readiness, confidence, work unblocked, newest, or oldest. Default ordering explains protected escalations, active regressions, Pareto-frontier candidates, and bounded age fairness rather than hiding tradeoffs in one score.
+
+User and agent queries consume the same exact snapshot-bound projection and ordering reasons. Approval assurance remains attached to the exact Change revision and evidence that support it. Backlog ordering chooses Decision attention only; rolling Planning owns execution priority after Decision acceptance.
 
 ## Work / Planning
 

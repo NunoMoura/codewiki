@@ -2,9 +2,10 @@ schema_version: 1
 id: spec.system.diagrams.data-model
 title: CodeWiki Canonical and Projected Data Model
 kind: data_model
-purpose: Show authority roots, Change Trace Protocol operations, Git acceptance, exact Loop-exit identity chain, rolling Planning, coordination, Alignment Graph projection, archive, and repair learning.
+purpose: Show bounded intake material, Change/operation authority, Backlog triage projection, Git acceptance, exact Loop-exit identity chain, rolling Planning, coordination, Alignment Graph projection, archive, and repair learning.
 source_docs:
   - .codewiki/kb/system/components/alignment-model.md
+  - .codewiki/kb/system/components/change-intake.md
   - .codewiki/kb/system/components/knowledge.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/work-state.md
@@ -15,6 +16,10 @@ renderer:
   preferred: entity_relationship
   fallback: mermaid_flowchart
 entities:
+  - id: intake_material
+    label: Bounded source-specific Change intake material
+    storage: private/external source plus transient normalized material
+    truth: false
   - id: knowledge
     label: OKF Knowledge concept and authored relationships
     storage: .codewiki/kb/**/*.md
@@ -110,6 +115,10 @@ entities:
     label: Alignment Graph snapshot with per-fact provenance
     storage: memory or disposable index
     truth: false
+  - id: backlog_triage
+    label: Backlog Triage Projection
+    storage: memory or disposable snapshot-bound index
+    truth: false
   - id: runtime_private
     label: Worker Workbench / raw artifact / cache / recovery
     storage: .codewiki/runtime/**
@@ -123,6 +132,9 @@ entities:
     storage: disposable archive-derived index
     truth: false
 relationships:
+  - from: intake_material
+    to: change
+    label: may propose reinforce or route exact feedback
   - from: change
     to: operation
     label: has ordered causal history
@@ -202,11 +214,26 @@ relationships:
     to: alignment_graph
     label: deterministic or inferred analysis
   - from: work_state
+    to: backlog_triage
+    label: pending readiness and freshness
+  - from: alignment_graph
+    to: backlog_triage
+    label: impact overlap and dependency facts
+  - from: intake_material
+    to: backlog_triage
+    label: bounded source provenance and classification
+  - from: backlog_triage
+    to: change
+    label: orders Decision attention without priority authority
+  - from: work_state
     to: generated_view
     label: current status and scheduling
   - from: alignment_graph
     to: generated_view
     label: bounded semantic query output
+  - from: backlog_triage
+    to: generated_view
+    label: shared user and agent filters and ordering
   - from: operation
     to: archive_manifest
     label: terminal immutable segment

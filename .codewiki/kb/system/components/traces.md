@@ -201,7 +201,7 @@ change.withdrawal_recorded
 change.feedback_recorded
 ```
 
-A discovered Change uses `change.proposed` with discovery provenance and an exact typed relationship. Decision disposition derives approval, rejection, or deferral; there is no direct generic status operation.
+Bounded source-specific intake material is transient and untrusted; it is not appended as a generic issue record or caller-authored operation. Runtime authenticates, sanitizes, deduplicates, and scope-routes it, then constructs `change.proposed`, `change.feedback_recorded`, and any exact typed `discovered_from` relationship. Decision disposition derives approval, rejection, or deferral; there is no direct generic status or priority operation.
 
 ### Change Claims
 
@@ -492,6 +492,7 @@ The clean cut preserves `.codewiki/kb/**`, deletes obsolete dogfood/runtime stat
 ## Related docs
 
 - [Alignment Model](alignment-model.md)
+- [Change Intake and Backlog Triage](change-intake.md)
 - [Runtime](runtime.md)
 - [WorkState](work-state.md)
 - [Loop Contracts](loop-contracts.md)

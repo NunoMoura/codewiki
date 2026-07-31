@@ -94,7 +94,9 @@ No worker sees peer-private report/scratch by default. Shared facts enter only t
 
 ## Discoveries
 
-Worker Report may contain bounded discoveries outside assigned acceptance. Runtime sanitizes/deduplicates and may submit them as pending Change intake. Discovery grants no approval, Planning coverage, priority, or implementation authority.
+Worker Report may contain a bounded `WorkerDiscoveryMaterial` list for discrepancies outside assigned acceptance. Each item binds the exact Assignment, Work Item Claim, base/result tree, affected refs, observed versus expected behavior, claimed category/severity/confidence, and proof refs. Worker cannot assign Change identity, canonical risk, priority, route, or authority.
+
+Runtime sanitizes, deduplicates, and scope-routes each discovery. A defect in the assigned Candidate becomes current-Change repair feedback; a Planning or Decision assumption routes back to that authority; a genuinely independent discrepancy may become a linked pending Change with `discovered_from`; a duplicate reinforces existing work. Discovery grants no approval, Planning coverage, priority, or implementation authority, and worker completion cannot suppress an unresolved in-scope finding.
 
 ## Recovery and sanitation
 
@@ -110,6 +112,7 @@ Current Assignments bind paths, WorkState, source base, context digest, prompt, 
 
 - [Planning Loop](planning-loop.md)
 - [Implementation Loop](implementation-loop.md)
+- [Change Intake and Backlog Triage](change-intake.md)
 - [Runtime](runtime.md)
 - [Session Coordination](session-coordination.md)
 - [Loop Exit](loop-exit.md)

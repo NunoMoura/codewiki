@@ -49,20 +49,21 @@ One Pi conversation may connect or disconnect without becoming Project Runtime o
 - Embedded semantic sessions remain read-only and return role-specific Candidates or Model Check outputs. Isolated implementation workers receive only Assignment-scoped mutation capability.
 - Preview runners accept structured commands, approved profile digests, exact integration state, bounded loopback URLs, isolated browser session identifiers, and lifecycle cleanup.
 - Visual artifacts remain implementation evidence and never imply semantic approval or business outcomes.
-- A future pull-request review adapter may publish a bounded Validation Bundle to an explicitly authorized draft review ref and re-observe provider reviews. It cannot create canonical approval directly, move protected/project branches, auto-merge, or become workflow truth.
+- A future provider-level pull-request adapter may publish a bounded Validation Bundle to an explicitly authorized draft review ref and re-observe ordinary reviews, inline comments, top-level comments, and Check annotations. CodeWiki does not implement one adapter per reviewer agent. The adapter cannot create canonical approval directly, move protected/project branches, auto-merge, or become workflow truth.
+- Actionable provider review findings enter the same bounded Change intake used by user suggestions, Worker Report discoveries, and regressions. Runtime binds repository, pull request, exact head, actor, provider event, location, and source refs before deduplication and current-Change versus independent-Change routing. Reviewer severity/approval remains an asserted source claim.
 - Provider review events become approval-receipt Evidence Records only after Runtime validates repository, pull request, exact head, authenticated actor/role, decision, bundle digest, event identity, and freshness. Dashboard and pull-request channels project one approval action rather than demanding duplicate approval.
 - The Alignment Graph is a deterministic snapshot-bound projection; generated views, search indexes, graph layouts, and live observations remain disposable.
 - The CodeWiki source checkout never loads its own extension during stabilization. Packed artifacts are exercised in disposable external projects.
 
 ## Review surfaces
 
-CodeWiki dashboard is the canonical dossier and local review surface. Team projects may additionally use draft pull requests for broad visibility, inline code discussion, CODEOWNERS, CI, screenshots, short videos, preview links, and Approve / Request changes actions. Pull requests remain mutable provider projections; CodeWiki retains exact Evidence Record, Result, approval freshness, and Change lineage authority.
+CodeWiki dashboard is the canonical dossier and local review surface. Team projects may additionally use draft pull requests for broad visibility, inline code discussion, CODEOWNERS, CI, screenshots, short videos, preview links, arbitrary configured human/agent reviewers, and Approve / Request changes actions. Pull requests remain mutable provider projections; CodeWiki retains exact Evidence Record, Result, approval freshness, and Change lineage authority. Reviewer findings can propose or reinforce Changes but cannot become semantic pass, human approval, canonical severity, or priority by themselves.
 
 Review publication is a separately authorized pre-exit evidence-gathering effect, not Integration, merge, release, or semantic acceptance. Projects without a provider, network, or team review policy remain fully functional through CodeWiki alone.
 
 ## Dashboard information architecture
 
-- **Work / Backlog** renders proposal provenance, Decision state, exact authority, overlap, missing information, and approval receipts.
+- **Work / Backlog** renders source provenance, Decision readiness/state, defect/security classification, exact authority, overlap, missing information, urgency, expected impact, estimated effort, risk of inaction, confidence, freshness, explainable ordering, and approval receipts from one snapshot-bound Triage Projection.
 - **Work / Planning** renders the bounded selected Change set, current Planning epoch, Sprints, Work Items, typed dependency/conflict/contribution edges, and safe execution frontier.
 - **Work / Implementation** renders Work Item Claims, Assignments, worker sessions, isolation, live bounded activity, Integration, verification, acceptance, and Git proof.
 - **Product / Users, Stories, and Dictionary** renders and edits canonical Product Markdown. Dictionary projects `.codewiki/kb/lexicon.md` directly and links exact terms from runtime explanations without creating another vocabulary store.
@@ -79,6 +80,7 @@ Project Runtime binds only to loopback or an equivalent user-private local socke
 - [Resume context boundary](../flows/resume-context-boundary.md)
 - [Remote State Synchronization](../flows/remote-state-synchronization.md)
 - [Live Preview Runtime](preview-runtime.md)
+- [Change Intake and Backlog Triage](change-intake.md)
 
 ## Related docs
 

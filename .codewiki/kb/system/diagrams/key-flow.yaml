@@ -2,9 +2,10 @@ schema_version: 1
 id: spec.system.diagrams.key-flow
 title: CodeWiki Intent-to-Production Flow
 kind: sequence_flow
-purpose: Show exact Decision, rolling Planning, Work Item Claim execution, integrated Implementation assurance, provider-neutral Git acceptance, deterministic projections, archive, and separately guarded effects.
+purpose: Show bounded multi-source Change intake, explainable Backlog triage, exact Decision, rolling Planning, Work Item Claim execution, integrated Implementation assurance, provider-neutral Git acceptance, deterministic projections, archive, and separately guarded effects.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/change-intake.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/work-state.md
@@ -59,7 +60,7 @@ participants:
     label: Knowledge / source / tests / Integration / delivery providers
     kind: authority_roots
   - id: projections
-    label: WorkState + Alignment Graph + views
+    label: WorkState + Alignment Graph + Backlog Triage + views
     kind: deterministic_and_disposable_projections
     source: .codewiki/kb/system/components/work-state.md
 steps:
@@ -70,11 +71,27 @@ steps:
   - id: submit_intent
     from: client
     to: runtime
-    message: submits bounded authenticated intent; request grants no semantic authority
+    message: submits bounded authenticated user suggestion or selected review material; request grants no semantic authority
+  - id: observe_intake
+    from: project_state
+    to: runtime
+    message: supplies exact-head provider review, regression/scanner, delivery/outcome, or Knowledge-drift material
+  - id: route_intake
+    from: runtime
+    to: runtime
+    message: authenticates, sanitizes, deduplicates, classifies source claims, and routes current-scope feedback versus independent Change
   - id: open_change
     from: runtime
     to: git_state
-    message: expected-head accepts trace.opened and change.proposed or rejects stale proposal
+    message: expected-head accepts pending Change or exact current-Change feedback operations; stale admission fetches and reevaluates
+  - id: project_backlog
+    from: git_state
+    to: projections
+    message: builds exact WorkState, Alignment Graph, and snapshot-bound explainable Backlog Triage Projection
+  - id: select_decision_attention
+    from: projections
+    to: runtime
+    message: offers eligible pending revisions for bounded user or scheduler selection without assigning execution priority
   - id: produce_decision
     from: runtime
     to: sessions
@@ -134,7 +151,11 @@ steps:
   - id: worker_report
     from: workers
     to: runtime
-    message: returns immutable asserted Worker Report material only
+    message: returns immutable asserted Worker Report plus bounded Assignment-bound discoveries only
+  - id: route_worker_discoveries
+    from: runtime
+    to: runtime
+    message: keeps in-scope defects on current Change and may propose linked pending Changes for independent discrepancies
   - id: integrate
     from: runtime
     to: project_state
@@ -146,7 +167,11 @@ steps:
   - id: optional_review_projection
     from: runtime
     to: project_state
-    message: after non-approval readiness Checks, may publish isolated review projection and re-observe exact approval Evidence
+    message: after non-approval readiness Checks, may publish isolated review projection and re-observe ordinary reviewer findings plus exact approval Evidence
+  - id: route_review_findings
+    from: project_state
+    to: runtime
+    message: correlates any configured human or agent reviewer at exact head and routes actionable findings through Change intake
   - id: implementation_exit
     from: implementation
     to: loop_exit

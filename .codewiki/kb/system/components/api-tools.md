@@ -63,8 +63,8 @@ Target capability groups:
 
 | Capability | Purpose | Authority boundary |
 | --- | --- | --- |
-| State | Read bounded WorkState, Change dossier, Loop exit, blockers, delivery, and next-safe-action projections. | Read-only derived data. |
-| Change | Submit/revise/link/split/merge/defer/reject/withdraw pending intent. | Creates Decision intake only; no approval/execution. |
+| State | Read bounded WorkState, Backlog Triage Projection, Change dossier, Loop exit, blockers, delivery, and next-safe-action projections. | Read-only derived data with snapshot/provenance/ordering reasons. |
+| Change | Submit bounded user suggestions or source-specific review/worker/regression/scanner/delivery/outcome/Knowledge-drift findings; revise/link/split/merge/defer/reject/withdraw pending intent. | Runtime authenticates, sanitizes, deduplicates, scope-routes, and creates Decision intake only; no approval/priority/execution. |
 | Authority | Submit exact user/maintainer approval or intervention response. | Runtime authenticates and binds exact candidate/revision/effect into approval-receipt Evidence Record. |
 | Evidence | Submit bounded kind-specific material or read exact Evidence Record/artifact projections. | Runtime owns identity/time/authority/coverage/freshness; no verdict or route in payload. |
 | Review | Read Validation Bundle; Approve / Request changes; request explicitly authorized draft-PR publication. | One correlated action; no direct append, merge, branch movement, or acceptance. |
@@ -153,7 +153,7 @@ Current packed extension exposes these compatibility capabilities while standalo
 
 Compatibility tools preserve exact rejection of unsupported/runtime-owned fields. Target moves candidate submission into Runtime-created sessions and keeps main Pi client focused on state, intent, authority, explanation, supervision, and dashboard access.
 
-`wiki_change` feedback intake may create or reinforce pending Change only. It rejects prompts, reasoning, credentials, private fields, unrestricted refs, and oversized content. It cannot approve, plan, implement, launch, publish, or advance.
+`wiki_change` and non-Pi clients submit the same closed source-specific intake material union. Runtime may create or reinforce pending Change, record current-Change feedback, or reject non-actionable/unauthorized material. Intake rejects prompts, reasoning, credentials, private fields, unrestricted refs, caller-owned identity/risk/priority/route fields, and oversized content. It cannot approve, plan, implement, launch, publish, or advance. Provider-level pull-request observation consumes ordinary review/comment/Check primitives without one adapter per reviewer agent.
 
 ## Current facades and clean cut
 

@@ -45,6 +45,14 @@ Cross-cutting read-only projection of one Change Trace joined with current Knowl
 
 Immutable semantic version of Change meaning. Refinement may supersede revision while outcome remains same. Materially different outcome creates linked Change.
 
+### Change intake material
+
+Bounded source-specific proposal or finding submitted by an authenticated user, review provider, worker, regression analyzer, scanner, delivery/outcome observer, or Knowledge-drift detector. It is untrusted input to Runtime normalization, deduplication, scope routing, and canonical Change operation construction—not a Change, Quality Issue, verdict, priority, or authority-bearing fact by itself.
+
+### Defect profile
+
+Optional structured classification attached to a Change revision when observed behavior is defective. It keeps category, severity, confidence, reproducibility, regression status, affected refs, and qualified security references distinct from Runtime-derived risk and Planning-owned priority. External issue containers and reviewer labels are source claims, not canonical profile authority.
+
 ### Approval
 
 Runtime-created fact that authenticated authority accepted one exact subject under an allowed role and policy after exact freshness/correlation guards. Decision approval accepts Change meaning; UI experience approval accepts exact candidate-bound experience evidence; effect approval authorizes only its named boundary. One approval never implies another.
@@ -201,7 +209,15 @@ Realizes accepted obligations in source/tests/Knowledge and judges the exact int
 
 ### Backlog
 
-Generated Work workspace for intake and Change revisions not yet approved/terminal. Not truth or semantic Loop.
+Generated Work workspace for pending/deferred Change revisions and their Decision-facing intake state. It admits several bounded source kinds, but is not truth, canonical queue, mutable priority store, or semantic Loop.
+
+### Backlog Triage Projection
+
+Disposable snapshot-bound view over pending/deferred Changes, WorkState, Alignment Graph facts, source observations, and policy. It exposes Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, and explainable ordering without granting disposition or execution priority.
+
+### Priority
+
+Project-wide execution ordering derived by rolling Planning over accepted Changes and current WorkState. Intake sources and Backlog triage may assert or estimate urgency, impact, and effort, but cannot assign canonical priority.
 
 ### Sprint
 

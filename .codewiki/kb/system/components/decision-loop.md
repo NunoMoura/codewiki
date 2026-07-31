@@ -83,6 +83,7 @@ A semantic revision contains enough accepted meaning that Planning need not reco
 - intent and observable desired outcome;
 - current state and evidence/provenance;
 - classification, scope, affected boundaries, and Knowledge delta;
+- optional defect profile with category, severity, confidence, reproducibility, regression status, affected refs, and qualified security identifiers;
 - success signals and outcome-observation expectations;
 - compatibility, safety, privacy, and delivery constraints;
 - risks, invariants, alternatives, rollback, and non-goals;
@@ -162,6 +163,27 @@ Final Check definitions are Loop-qualified and versioned. Current legacy IDs rem
 Protected kernel Checks cannot be disabled. Project Checks begin `observe`, then `warn`, and become `require` only through explicit approval. Runtime records `activatedBy` for every binding.
 
 Decision uses the `decision` model route for candidate production. Model Checks run independently and inherit calibrated Loop routes unless an approved Check definition says otherwise. No caller-selected review slot exists.
+
+## Security and adversarial assurance
+
+No Decision Check can prove the absence of every vulnerability. Decision prevents unsafe or materially under-specified intent from being approved; Planning owns required security work, isolation, sequencing, and reviewer obligations; Implementation evaluates the exact integrated tree through activated scanners, tests, and adversarial assurance.
+
+Every Change first receives a cheap deterministic security-surface classification. Activation does not trust only caller-supplied kind or risk. Runtime derives relevant traits from the exact revision, affected Knowledge/components/layers, source ownership, dependency changes, data flows, public interfaces, and observed source scope. Initial security surfaces include authentication/authorization, personal or sensitive data, credentials/secrets, network/public API, dependency/supply chain, parsing/deserialization, command/process execution, filesystem, cryptography, persistence/migration, infrastructure/configuration, and browser trust boundaries.
+
+Where facts permit, Code Checks run before Model Checks and validate bounded requirements or exact observations such as:
+
+- declared trust boundaries, authorization invariants, data classes, retention, rollback, and negative scope;
+- dependency advisory/version matches, lockfile integrity, secret scans, SAST/AST rules, unsafe APIs, configuration/IaC scans, and security-focused tests;
+- required source ownership, independent reviewer roles, authenticated residual-risk authority, and qualified security Evidence;
+- exact scanner/source/tree/configuration identity, freshness, limitations, and contradiction retention.
+
+A deterministic surface detector activates expensive assurance; it does not itself pass security. Unavailable required scanners or stale advisory data produce `indeterminate`, not fabricated safety.
+
+Activated adversarial Model Checks receive one immutable candidate plus bounded candidate-bound Evidence and are instructed to falsify safety rather than confirm the producer. They challenge attacker goals, misuse/abuse cases, trust boundaries, authorization bypasses, privacy minimization/retention, confused-deputy paths, supply-chain assumptions, migration/rollback, and missing controls. Structured output preserves proposed attack paths, violated invariants, claimed severity/confidence, Evidence gaps, mitigations, and limitations.
+
+Adversarial output has `asserted` authority. It cannot assign canonical CVSS, verify exploitability, accept residual risk, pass its own Check, or create canonical Change priority. High/critical policy may require independent model routes, deterministic reproduction, qualified research Evidence, authenticated security approval, or explicit residual-risk acceptance. Candidate producer and adversarial Model Checks never share conversational state.
+
+A finding that invalidates the current Candidate routes to current-Change repair. A genuinely independent vulnerability becomes redacted linked pending Change intake. Uncertain material remains an Evidence gap or `indeterminate`; duplicate findings reinforce existing work. Sensitive exploit detail stays private/external under policy.
 
 ## Research evidence
 
@@ -249,5 +271,6 @@ Planning or Implementation cites exact originating candidate/event and required 
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)
 - [Planning Loop](planning-loop.md)
+- [Change Intake and Backlog Triage](change-intake.md)
 - [Traces](traces.md)
 - [Knowledge](knowledge.md)

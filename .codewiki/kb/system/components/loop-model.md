@@ -20,7 +20,7 @@ Project Runtime
 └── Implementation Loop
 ```
 
-Runtime is the outer project control plane, not another semantic Loop. Learning, checking, graph projection, recovery, publication, and feedback are also not semantic Loops.
+Runtime is the outer project control plane, not another semantic Loop. Change intake, Backlog triage, learning, checking, graph projection, recovery, publication, and feedback are also not semantic Loops. Triage orders Decision attention through a disposable snapshot projection; rolling Planning owns execution priority after Change acceptance.
 
 Each Loop owns typed input, one mandatory Loop Protocol, exact immutable candidate semantics, Loop-specific Checks, and exit facts. Shared Loop-exit machinery schedules Checks and constructs Exit Reports without owning Decision, Planning, or Implementation meaning.
 

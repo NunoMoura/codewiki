@@ -85,9 +85,9 @@ Change status derives from accepted operations. Users and agents cannot directly
 
 ## Work model
 
-Backlog is a generated intake/Decision surface. Concurrent proposal submission grants no approval, ownership, filesystem, model, or execution authority.
+Backlog is a generated intake/Decision surface. It accepts bounded authenticated user suggestions, ordinary pull-request review findings, worker discoveries, regression/scanner findings, delivery/outcome observations, and Knowledge drift through one Change intake boundary. Concurrent submission grants no approval, ownership, filesystem, model, priority, or execution authority.
 
-Decision proceeds independently per Change. Users may accept Change B while Change A executes.
+A snapshot-bound Backlog Triage Projection exposes Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, and provenance. It helps users and Runtime choose Decision attention without becoming a canonical queue or global priority store. Decision proceeds independently per Change. Users may accept Change B while Change A executes; rolling Planning alone determines execution ordering across accepted Changes.
 
 Planning is rolling and project-wide. Each immutable Planning epoch observes the selected Change set, active Changes, Change Claims, Work Item Claims, Work Items, Assignments, dependencies, conflicts, current source/Knowledge state, capacity, and policy. It preserves safe active work and explicitly pauses, migrates, cancels, blocks, or routes back invalidated work.
 

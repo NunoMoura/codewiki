@@ -31,7 +31,8 @@ No session file, process registry, local service lease, or Runtime scratch becom
 
 | Lane | Concurrency contract |
 | --- | --- |
-| Proposal intake | Concurrent and idempotent. |
+| Change intake | Concurrent and idempotent after exact source correlation; stale admission is reevaluated against fresh WorkState. |
+| Backlog triage | Read-only snapshot-bound projection/query; several readers may rank/filter without ownership or canonical mutation. |
 | Decision for one Change | One active semantic owner per exact revision and purpose. |
 | Decision across independent Changes | Concurrent within budgets. |
 | Project Planning | One accepted Planning writer; read-only analysis may run concurrently. |

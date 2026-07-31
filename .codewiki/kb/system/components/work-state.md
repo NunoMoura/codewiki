@@ -132,7 +132,7 @@ Client and Git timestamps do not expire ownership. Private heartbeat observation
 - explicit pause, migration, cancellation, block, or route-back disposition;
 - safe execution frontier.
 
-Backlog, current Planning, and work queue are generated views over this state.
+Backlog Triage, current Planning, and work queue are generated views over this state. Backlog Triage also consumes exact Alignment Graph impact/overlap/dependency facts, source observations, config, and policy; it remains disposable and selects Decision attention rather than execution priority.
 
 ### Loop-exit state
 
@@ -238,6 +238,7 @@ Current Runtime paths still project local `.codewiki/traces/**` history and loca
 ## Related docs
 
 - [Change Traces](traces.md)
+- [Change Intake and Backlog Triage](change-intake.md)
 - [Runtime](runtime.md)
 - [Planning Loop](planning-loop.md)
 - [Alignment Model](alignment-model.md)

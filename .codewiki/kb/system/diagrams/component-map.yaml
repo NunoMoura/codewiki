@@ -7,6 +7,7 @@ source_docs:
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/api.md
   - .codewiki/kb/system/components/api-tools.md
+  - .codewiki/kb/system/components/change-intake.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/work-state.md
@@ -58,6 +59,11 @@ nodes:
     group: core
     kind: read_only_capability
     source: .codewiki/kb/system/components/api-tools.md
+  - id: change_intake
+    label: Closed Change intake domain
+    group: core
+    kind: bounded_domain_service
+    source: .codewiki/kb/system/components/change-intake.md
   - id: change_protocol
     label: Change Trace Protocol validator and identity
     group: core
@@ -114,9 +120,9 @@ nodes:
     kind: execution_adapter
     source: .codewiki/kb/system/components/session-coordination.md
   - id: review_adapter
-    label: Guarded review provider adapter
+    label: Guarded provider-level review observer / publisher
     group: adapters
-    kind: review_adapter
+    kind: provider_review_adapter
     source: .codewiki/kb/system/components/adapters-and-ui.md
   - id: delivery_adapters
     label: Git / publication / release / delivery adapters
@@ -166,6 +172,11 @@ nodes:
     group: projections
     kind: deterministic_projection
     source: .codewiki/kb/system/components/alignment-model.md
+  - id: backlog_triage
+    label: Backlog Triage Projection
+    group: projections
+    kind: disposable_snapshot_projection
+    source: .codewiki/kb/system/components/change-intake.md
   - id: private_runtime
     label: Worker Workbenches / reports / caches / recovery
     group: projections
@@ -186,8 +197,23 @@ edges:
     to: core_api
     label: thin client requests
   - from: core_api
+    to: change_intake
+    label: bounded suggestions and findings
+  - from: core_api
     to: project_runtime
     label: intent / authority / control
+  - from: worker_adapters
+    to: change_intake
+    label: Assignment-bound discoveries
+  - from: review_adapter
+    to: change_intake
+    label: ordinary provider review findings
+  - from: change_intake
+    to: project_runtime
+    label: normalized deduplicated scope route
+  - from: project_runtime
+    to: change_protocol
+    label: Runtime-owned operation construction
   - from: project_runtime
     to: git_sync
     label: fetches and expected-head pushes
@@ -224,6 +250,21 @@ edges:
   - from: query_api
     to: alignment_graph
     label: bounded semantic reads
+  - from: work_state
+    to: backlog_triage
+    label: pending state and freshness
+  - from: alignment_graph
+    to: backlog_triage
+    label: impact overlap and dependency facts
+  - from: change_intake
+    to: backlog_triage
+    label: source provenance and classification
+  - from: query_api
+    to: backlog_triage
+    label: bounded filters and explainable ordering
+  - from: backlog_triage
+    to: project_runtime
+    label: Decision-attention candidates only
   - from: project_runtime
     to: scheduler
     label: selects compatible jobs
@@ -275,3 +316,6 @@ edges:
   - from: alignment_graph
     to: views
     label: semantic relationship projection
+  - from: backlog_triage
+    to: views
+    label: shared user and agent intake view

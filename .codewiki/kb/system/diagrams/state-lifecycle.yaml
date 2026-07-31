@@ -5,6 +5,7 @@ kind: state_lifecycle
 purpose: Show one Change's derived lifecycle across exact Loop attempts, rolling Planning, Work Item Claim execution, review, Integration, delivery, outcome, archive, hydration, and reopening without making status caller-controlled.
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
+  - .codewiki/kb/system/components/change-intake.md
   - .codewiki/kb/system/components/loop-exit.md
   - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/traces.md
@@ -54,7 +55,7 @@ states:
 transitions:
   - from: proposed
     to: decision_active
-    trigger: Runtime accepts Change proposal against exact base and authority
+    trigger: Runtime admits exact pending revision from bounded authenticated intake and selects it from current Backlog Triage Projection
     operation: change.proposed
   - from: decision_active
     to: planning_eligible

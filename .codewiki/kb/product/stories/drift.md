@@ -18,6 +18,7 @@ As a maintainer, I want every discrepancy among intent, Knowledge, Planning, sou
 - Alignment distinguishes vertical, horizontal, temporal, and delivery dimensions.
 - Changed Knowledge/source/Check/evidence makes dependent relationships suspect without fabricating contradiction.
 - Grounded misalignment names affected layer, authority refs, rationale, and owning Loop.
+- Exact regression, scanner, worker, review, delivery/outcome, or Knowledge-drift findings enter one authenticated bounded intake path and become current-Change feedback or linked pending Changes without source-owned authority.
 - Active intentional lag is valid only when exact Change revision accounts for it.
 - Decision, Planning, and Implementation candidates are checked against immutable grounded evidence before downstream use.
 - Failed/indeterminate attempts, route-backs, and repair lineage remain durable.
@@ -31,5 +32,6 @@ As a maintainer, I want every discrepancy among intent, Knowledge, Planning, sou
 
 - [Maintainers](../users/maintainers.md)
 - [Alignment Model](../../system/components/alignment-model.md)
+- [Change Intake and Backlog Triage](../../system/components/change-intake.md)
 - [Loop Exit](../../system/components/loop-exit.md)
 - [WorkState](../../system/components/work-state.md)

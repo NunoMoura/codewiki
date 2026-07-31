@@ -77,6 +77,7 @@ Planning owns Sprint creation, Work Item meaning, and project-wide execution coh
 - Planning horizon and selected Change set;
 - Sprints and Work Items;
 - one owning Change per Work Item and explicit contributing Changes;
+- project-wide execution priority across accepted Changes, including explicit urgency/risk-of-inaction/impact/effort tradeoffs refreshed from current WorkState;
 - dependencies, ordering, concurrency, and safe execution frontier;
 - acceptance requirements and verification obligations;
 - path/component/Knowledge boundaries;
@@ -85,7 +86,7 @@ Planning owns Sprint creation, Work Item meaning, and project-wide execution coh
 - explicit resolution for Changes not selected or not safely executable;
 - disposition of active work when new intent invalidates assumptions.
 
-Planning does not approve Change meaning, implement source, select concrete provider credentials, grant Change Claim or Work Item Claim authority, accept Worker Reports, or perform Integration/effects.
+Planning does not approve Change meaning, implement source, select concrete provider credentials, grant Change Claim or Work Item Claim authority, accept Worker Reports, or perform Integration/effects. Backlog Triage may order pending revisions for Decision attention using asserted and derived urgency/impact/effort dimensions, but that order is not execution priority and does not constrain Planning.
 
 Runtime owns candidate and epoch identity, exact participant revisions, WorkState/base digests, Change Claim and Work Item Claim lifecycle, scheduling, Check activation, accepted state commit, CAS, recovery, and routing.
 
@@ -259,6 +260,7 @@ The v1 protocol and rolling Planning foundation are executable, but the producti
 ## Related docs
 
 - [Decision Loop](decision-loop.md)
+- [Change Intake and Backlog Triage](change-intake.md)
 - [Implementation Loop](implementation-loop.md)
 - [Runtime](runtime.md)
 - [WorkState](work-state.md)

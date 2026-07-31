@@ -2,10 +2,11 @@ schema_version: 1
 id: spec.system.diagrams.architecture
 title: CodeWiki Intent-to-Production Architecture
 kind: architecture_map
-purpose: Show log-canonical Change operations, provider-neutral Git acceptance, deterministic WorkState and Alignment Graph projection, rolling Planning, exactly three semantic Loops, isolated execution, archive, and guarded effects.
+purpose: Show bounded multi-source Change intake, explainable Backlog triage, log-canonical Change operations, provider-neutral Git acceptance, deterministic WorkState and Alignment Graph projection, rolling Planning, exactly three semantic Loops, isolated execution, archive, and guarded effects.
 source_docs:
   - .codewiki/kb/product/overview.md
   - .codewiki/kb/system/components/overview.md
+  - .codewiki/kb/system/components/change-intake.md
   - .codewiki/kb/system/components/alignment-model.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
@@ -59,6 +60,11 @@ nodes:
     group: runtime
     kind: project_control_plane
     source: .codewiki/kb/system/components/runtime.md
+  - id: change_intake
+    label: Closed Change intake and scope routing
+    group: runtime
+    kind: bounded_domain_service
+    source: .codewiki/kb/system/components/change-intake.md
   - id: state_sync
     label: Fresh / stale / offline Git synchronizer
     group: runtime
@@ -148,15 +154,20 @@ nodes:
     group: projections
     kind: deterministic_projection
     source: .codewiki/kb/system/components/alignment-model.md
+  - id: backlog_triage
+    label: Backlog Triage Projection
+    group: projections
+    kind: disposable_snapshot_projection
+    source: .codewiki/kb/system/components/change-intake.md
   - id: views
     label: Dashboard / Work / graph indexes / repair retrieval
     group: projections
     kind: disposable_projection
     source: .codewiki/kb/system/components/work-state.md
   - id: review
-    label: Isolated review projection + approval observation
+    label: Provider-level review projection + findings / approval observation
     group: effects
-    kind: guarded_review_effect
+    kind: guarded_provider_review_effect
     source: .codewiki/kb/system/components/evidence.md
   - id: delivery
     label: Integration / merge / push / publication / release / outcome
@@ -182,6 +193,12 @@ edges:
   - from: pi_client
     to: project_runtime
     label: thin client requests
+  - from: project_runtime
+    to: change_intake
+    label: authenticates sanitizes and scope-routes intake
+  - from: change_intake
+    to: project_runtime
+    label: deduplicated pending Change or feedback proposal
   - from: project_runtime
     to: state_sync
     label: requires verified snapshot
@@ -242,6 +259,9 @@ edges:
   - from: workers
     to: project_runtime
     label: asserted Worker Report material
+  - from: workers
+    to: change_intake
+    label: Assignment-bound independent discoveries
   - from: project_runtime
     to: implementation
     label: exact integrated Candidate and Evidence
@@ -258,6 +278,21 @@ edges:
     to: alignment_graph
     label: snapshot-bound facts
   - from: work_state
+    to: backlog_triage
+    label: pending state readiness and freshness
+  - from: alignment_graph
+    to: backlog_triage
+    label: impact overlap and dependency facts
+  - from: change_intake
+    to: backlog_triage
+    label: source provenance and classification
+  - from: backlog_triage
+    to: project_runtime
+    label: explainable Decision-attention candidates only
+  - from: backlog_triage
+    to: views
+    label: shared user and agent filters and ordering
+  - from: work_state
     to: views
     label: scheduling and status projections
   - from: alignment_graph
@@ -269,6 +304,9 @@ edges:
   - from: review
     to: project_runtime
     label: re-observed approval/request changes
+  - from: review
+    to: change_intake
+    label: ordinary reviewer findings at exact head
   - from: project_runtime
     to: delivery
     label: separately authorizes exact effects

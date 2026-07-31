@@ -96,6 +96,8 @@ Runtime alone owns:
 - remote state head, source head, Knowledge/config/policy digests, and state digests;
 - freshness, expected-head CAS, idempotency, and recovery;
 - scheduler lanes, budgets, capacity, and supervision;
+- intake source authentication/correlation, privacy sanitation, idempotency, deduplication, scope routing, and canonical Change proposal construction;
+- snapshot-bound Backlog Triage Projection scheduling inputs and explainable Decision-attention selection;
 - Change Claim and Work Item Claim lifecycle;
 - Worker Workbench provisioning and Assignment dispatch;
 - Evidence normalization, provenance/freshness/privacy validation, contradiction preservation, and approval correlation;
@@ -180,6 +182,8 @@ Runtime-visible jobs, Checks, Change Claims, Work Item Claims, Assignments, Inte
 Representative lanes:
 
 ```text
+concurrent idempotent Change intake
+Decision-attention selection from Backlog Triage Projection
 Decision candidate production
 Planning candidate production
 Implementation candidate production
@@ -193,6 +197,16 @@ archive/hydration
 ```
 
 Runtime selects the maximum safe useful set under dependencies, conflicts, current ownership, source/Knowledge boundaries, capacity, budgets, supervision, and provider capability. Agent count is not progress.
+
+## Change intake and Decision attention
+
+Runtime accepts one closed union of bounded user suggestions, provider-neutral pull-request findings, worker discoveries, regression/scanner findings, delivery/outcome observations, and Knowledge drift. Source-specific contracts require exact actor/provider/Assignment/run/tree/Trace bindings. Producers cannot supply canonical identity, authority, time, risk, priority, route, or operation fields.
+
+Against a fresh snapshot, Runtime authenticates, sanitizes, normalizes, deduplicates, classifies source claims, and determines whether material belongs to current-Change repair/route-back, reinforces existing work, or proposes an independent pending Change. Expected-head Git admission makes accepted intake concurrent and idempotent. Sensitive security material is redacted or held for authorized handling.
+
+Runtime rebuilds the Backlog Triage Projection from accepted pending/deferred revisions, WorkState, Alignment Graph facts, source observations, config, and policy. The projection exposes provenance-bearing Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, and bounded ordering reasons. Unknown remains unknown; Evidence authority remains distinct from canonical/observed graph bindings and deterministic/inferred analysis provenance.
+
+This projection selects Decision attention only. It is not canonical priority, cannot disposition a Change, and cannot schedule implementation. Explicit user selection may choose any eligible pending revision. Rolling Planning alone orders execution across accepted Changes.
 
 ## Change Claims
 

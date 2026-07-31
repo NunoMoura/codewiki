@@ -212,6 +212,8 @@ contradictions
 
 Requests must bind the exact graph snapshot digest and may traverse at most four hops while returning at most 200 facts. Results rank roots before adjacent relationships, bind the graph content digest, and report exact facts, underlying refs, per-fact provenance, graph and match coverage, truncation, synchronization staleness, and retained contradiction identities. Unknown roots return explicit zero-root coverage rather than pretending absence proves non-existence. CodeWiki rejects unsupported fields and exposes no arbitrary Cypher or generic graph mutation DSL.
 
+Backlog Triage is not a seventh generic graph query family. It is a dedicated Change-domain projection that consumes bounded impact, overlap, dependency, ownership, and affected-scope facts from an exact Alignment Graph snapshot alongside WorkState, intake provenance, config, and policy. Its own closed query exposes Decision-attention dimensions and reasons without granting graph mutation or Planning priority.
+
 ## OKF relationship boundary
 
 OKF owns stable accepted Knowledge and authored Knowledge relationships:
@@ -245,6 +247,7 @@ This repository uses `.codewiki/kb/**` as intended design truth, source/tests as
 ## Related docs
 
 - [Change Traces](traces.md)
+- [Change Intake and Backlog Triage](change-intake.md)
 - [WorkState](work-state.md)
 - [Runtime](runtime.md)
 - [Knowledge](knowledge.md)

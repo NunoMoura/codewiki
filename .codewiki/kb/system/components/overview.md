@@ -33,6 +33,12 @@ typed Change operations
 
 A discrepancy remains aligned only while it is resolved, accounted for by an exact active Change, or explicitly unknown with unsafe progression blocked.
 
+## Change intake and Backlog triage
+
+Authenticated user suggestions, ordinary pull-request review findings, Worker Report discoveries, regression/scanner findings, delivery/outcome observations, and Knowledge drift enter one closed Change intake boundary. Runtime correlates exact source and snapshot, sanitizes, classifies, deduplicates, and scope-routes material into either current-Change feedback or a pending Change. Intake material grants no disposition, priority, or execution authority.
+
+Backlog is a disposable projection over pending/deferred Changes. Its snapshot-bound Triage Projection exposes Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, provenance, and explainable ordering. It guides Decision attention only. Decision accepts Change meaning independently; rolling Planning owns execution ordering across accepted Changes.
+
 ## Exactly three semantic Loops
 
 ```text
