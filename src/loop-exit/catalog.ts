@@ -5,6 +5,18 @@ import {
 import type { EvidenceObligation } from "../evidence/obligations.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import type {
+	CustomCheckDefinition,
+} from "./custom-checks/contracts.ts";
+import {
+	assertCustomCheckDefinition,
+	customCheckDefinitionCheckId,
+	normalizeCustomCheckDefinitions,
+} from "./custom-checks/contracts.ts";
+import {
+	CUSTOM_CHECK_TYPE_CATALOG_VERSION,
+	getCustomCheckType,
+} from "./custom-checks/check-types.ts";
+import type {
 	CheckEnforcement,
 	CheckDefinition,
 } from "./contracts.ts";
@@ -13,7 +25,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "1.1.0";
+export const CHECK_CATALOG_VERSION = "2.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -35,24 +47,20 @@ export interface CheckRegistration {
 	rolloutHistory: CheckEnforcement[];
 	approval?: CheckRolloutApproval;
 	dependsOn: string[];
+	customCheck?: {
+		definition: CustomCheckDefinition;
+		checkTypeVersion: string;
+		evaluatorId: string;
+	};
 }
 
 export interface CheckCatalog {
 	version: typeof CHECK_CATALOG_VERSION;
+	customCheckTypeCatalogVersion: typeof CUSTOM_CHECK_TYPE_CATALOG_VERSION;
 	digest: string;
 	get(checkId: string, loop?: SemanticLoop): CheckRegistration | undefined;
 	list(loop?: SemanticLoop): CheckRegistration[];
 }
-
-export type ProjectCheckRegistration = Omit<
-	CheckRegistration,
-	"authority" | "check"
-> & {
-	authority?: never;
-	check: Omit<CheckDefinition, "requirementDigest"> & {
-		requirementDigest?: never;
-	};
-};
 
 const DECISION_BASELINE = [
 	[
@@ -371,26 +379,14 @@ const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
 const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
 
 export function createCheckCatalog(
-	additional: ProjectCheckRegistration[] = [],
+	customChecks: readonly CustomCheckDefinition[] = [],
 ): CheckCatalog {
-	for (const registration of additional) {
-		assertProjectRegistrationAuthority(registration);
-	}
-	const projectRegistrations: CheckRegistration[] = additional.map(
-		(registration) => ({
-			...registration,
-			check: {
-				...registration.check,
-				requirementDigest: checkRequirementDigest(
-					registration.check.requirement,
-				),
-			},
-			authority: "project" as const,
-		}),
-	);
+	const customRegistrations = normalizeCustomCheckDefinitions(customChecks)
+		.filter((definition) => definition.lifecycle === "active")
+		.flatMap(customCheckRegistrations);
 	const registrations = [
 		...CODEWIKI_CHECK_REGISTRATIONS,
-		...projectRegistrations,
+		...customRegistrations,
 	]
 		.map(normalizeRegistration)
 		.sort(compareRegistrations);
@@ -421,10 +417,12 @@ export function createCheckCatalog(
 	assertAcyclicCatalog(registrations);
 	const digest = canonicalJsonDigest({
 		version: CHECK_CATALOG_VERSION,
+		customCheckTypeCatalogVersion: CUSTOM_CHECK_TYPE_CATALOG_VERSION,
 		registrations,
 	});
 	return Object.freeze({
 		version: CHECK_CATALOG_VERSION,
+		customCheckTypeCatalogVersion: CUSTOM_CHECK_TYPE_CATALOG_VERSION,
 		digest,
 		get: (checkId: string, loop?: SemanticLoop) => {
 			if (loop) {
@@ -448,6 +446,54 @@ export function createCheckCatalog(
 					: [];
 			}),
 	});
+}
+
+function customCheckRegistrations(
+	definition: CustomCheckDefinition,
+): CheckRegistration[] {
+	const checkType = getCustomCheckType(definition.checkTypeId);
+	const loops = definition.appliesWhen.loops?.length
+		? definition.appliesWhen.loops
+		: checkType.loops;
+	const checkId = customCheckDefinitionCheckId(definition);
+	return loops.map((loop) => ({
+		check: {
+			id: checkId,
+			version: `${definition.revision}.0.0`,
+			description: `Custom Check: ${definition.name}`,
+			requirement: definition.requirement,
+			requirementDigest: checkRequirementDigest(definition.requirement),
+			execution: {
+				id: "codewiki.model-check",
+				version: "1.0.0",
+				kind: "model",
+			},
+			measurement: { kind: "qualitative", shape: "boolean" },
+			evidenceObligations: evidenceObligations(checkId, "model"),
+			repairTarget: "custom-check",
+			cost: checkCost("model"),
+			timeoutMs: checkTimeout("model"),
+			protected: false,
+		},
+		loops: [loop],
+		authority: "project",
+		rollout: definition.rollout,
+		rolloutHistory: [...definition.rolloutHistory],
+		...(definition.approval
+			? {
+					approval: {
+						status: "approved" as const,
+						refs: [...definition.approval.refs],
+					},
+				}
+			: {}),
+		dependsOn: [...(checkType.prerequisites[loop] ?? [])],
+		customCheck: {
+			definition,
+			checkTypeVersion: checkType.version,
+			evaluatorId: checkType.evaluatorId,
+		},
+	}));
 }
 
 function builtInRegistrations(): CheckRegistration[] {
@@ -721,22 +767,17 @@ function normalizeRegistration(
 					},
 				}
 			: {}),
+		...(registration.customCheck
+			? {
+					customCheck: {
+						...registration.customCheck,
+						definition: normalizeCustomCheckDefinitions([
+							registration.customCheck.definition,
+						])[0],
+					},
+				}
+			: {}),
 	};
-}
-
-function assertProjectRegistrationAuthority(
-	registration: ProjectCheckRegistration,
-): void {
-	if ("authority" in registration) {
-		throw new Error(
-			`Caller-supplied Check ${registration.check.id} cannot declare authority; the catalog assigns project authority.`,
-		);
-	}
-	if ("requirementDigest" in registration.check) {
-		throw new Error(
-			`Caller-supplied Check ${registration.check.id} cannot supply runtime-owned requirementDigest.`,
-		);
-	}
 }
 
 function validateRegistration(registration: CheckRegistration): void {
@@ -790,6 +831,9 @@ function validateCheckAuthority(
 ): void {
 	const check = registration.check;
 	if (registration.authority === "kernel") {
+		if (registration.customCheck) {
+			throw new Error(`Kernel Check ${check.id} cannot carry Custom Check data.`);
+		}
 		if (!check.protected || registration.rollout !== "require") {
 			throw new Error(
 				`Kernel Check ${check.id} must be protected and required.`,
@@ -802,30 +846,35 @@ function validateCheckAuthority(
 			`Only kernel Checks may be protected: ${check.id}.`,
 		);
 	}
-	if (registration.authority === "project")
-		validateProjectRollout(registration);
+	validateCustomCheckRegistration(registration);
 }
 
-function validateProjectRollout(
+function validateCustomCheckRegistration(
 	registration: CheckRegistration,
 ): void {
-	const checkId = registration.check.id;
-	const expectedHistory = expectedProjectRolloutHistory(registration.rollout);
-	if (
-		JSON.stringify(registration.rolloutHistory) !==
-		JSON.stringify(expectedHistory)
-	) {
+	const customCheck = registration.customCheck;
+	if (!customCheck) {
 		throw new Error(
-			`Project Check ${checkId} must progress through ${expectedHistory.join(" -> ") || "no prior rollout"} before ${registration.rollout}.`,
+			`Project-authority Check ${registration.check.id} requires Custom Check data.`,
+		);
+	}
+	assertCustomCheckDefinition(customCheck.definition);
+	if (customCheck.definition.lifecycle !== "active") {
+		throw new Error(
+			`Custom Check ${customCheck.definition.customCheckId} must be active before registration.`,
 		);
 	}
 	if (
-		registration.rollout === "require" &&
-		!registration.approval?.refs.length
+		registration.check.id !==
+		customCheckDefinitionCheckId(customCheck.definition)
 	) {
-		throw new Error(
-			`Project Check ${checkId} requires approval before require.`,
-		);
+		throw new Error("Custom Check registration identity does not match definition.");
+	}
+	if (registration.check.execution.kind !== "model") {
+		throw new Error("V1 Custom Checks must execute as Model Checks.");
+	}
+	if (registration.rollout !== customCheck.definition.rollout) {
+		throw new Error("Custom Check registration rollout does not match definition.");
 	}
 }
 
@@ -855,14 +904,6 @@ function assertAcyclicCatalog(
 		visited.add(key);
 	};
 	for (const key of byKey.keys()) visit(key);
-}
-
-function expectedProjectRolloutHistory(
-	rollout: CheckEnforcement,
-): CheckEnforcement[] {
-	if (rollout === "observe") return [];
-	if (rollout === "warn") return ["observe"];
-	return ["observe", "warn"];
 }
 
 function cloneRegistration(

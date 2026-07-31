@@ -32,7 +32,7 @@ import type {DecisionCandidate} from "./candidate.ts";
 
 export const DECISION_MODEL_CHECK_PROTOCOL = Object.freeze({
 	id: "codewiki.decision.model-check",
-	version: "1.1.0",
+	version: "1.2.0",
 	maxRequestBytes: 262_144,
 	maxFindings: 32,
 	maxLimitations: 32,
@@ -50,6 +50,16 @@ export interface DecisionModelCheckRequest {
 		readonly digest: Sha256Digest;
 		readonly description: string;
 		readonly requirement: string;
+		readonly customCheck?: {
+			readonly customCheckId: string;
+			readonly revision: number;
+			readonly contentDigest: Sha256Digest;
+			readonly checkTypeId: string;
+			readonly checkTypeVersion: string;
+			readonly evaluatorId: string;
+			readonly knowledgeRefs: readonly string[];
+			readonly repairGuidance?: string;
+		};
 	};
 	readonly route: {
 		readonly id: string;
@@ -256,6 +266,7 @@ function modelCheckRequest(input: {
 			digest: input.context.binding.checkDigest,
 			description: input.context.check.description,
 			requirement: input.context.check.requirement,
+			...customCheckRequestMetadata(input.context),
 		},
 		route: {
 			id: input.route.id,
@@ -274,6 +285,67 @@ function modelCheckRequest(input: {
 		throw new Error("Decision Model Check request exceeds protocol limit.");
 	}
 	return request;
+}
+
+function customCheckRequestMetadata(
+	context: LoopCheckExecutorContext,
+): Pick<DecisionModelCheckRequest["check"], "customCheck"> | Record<string, never> {
+	const parameters = context.binding.parameters;
+	if (parameters.customCheckId === undefined) return {};
+	const customCheckId = requiredParameterText(parameters.customCheckId, "customCheckId");
+	const revision = parameters.customCheckRevision;
+	if (!Number.isInteger(revision) || Number(revision) < 1) {
+		throw new Error("Custom Check Model request has invalid revision.");
+	}
+	const contentDigest = requiredParameterText(
+		parameters.customCheckContentDigest,
+		"customCheckContentDigest",
+	) as Sha256Digest;
+	if (!/^sha256:[0-9a-f]{64}$/u.test(contentDigest)) {
+		throw new Error("Custom Check Model request has invalid content digest.");
+	}
+	const knowledgeRefs = parameters.knowledgeRefs;
+	if (!Array.isArray(knowledgeRefs)) {
+		throw new Error("Custom Check Model request has invalid Knowledge refs.");
+	}
+	const normalizedKnowledgeRefs = knowledgeRefs.map((value) => {
+		if (typeof value !== "string") {
+			throw new Error("Custom Check Model request has invalid Knowledge refs.");
+		}
+		return value;
+	});
+	const repairGuidance = parameters.repairGuidance;
+	if (repairGuidance !== undefined && typeof repairGuidance !== "string") {
+		throw new Error("Custom Check Model request has invalid repair guidance.");
+	}
+	return {
+		customCheck: {
+			customCheckId,
+			revision: Number(revision),
+			contentDigest,
+			checkTypeId: requiredParameterText(
+				parameters.customCheckTypeId,
+				"customCheckTypeId",
+			),
+			checkTypeVersion: requiredParameterText(
+				parameters.customCheckTypeVersion,
+				"customCheckTypeVersion",
+			),
+			evaluatorId: requiredParameterText(
+				parameters.checkEvaluatorId,
+				"checkEvaluatorId",
+			),
+			knowledgeRefs: normalizedKnowledgeRefs,
+			...(repairGuidance ? { repairGuidance } : {}),
+		},
+	};
+}
+
+function requiredParameterText(value: unknown, field: string): string {
+	if (typeof value !== "string" || !value.trim()) {
+		throw new Error(`Custom Check Model request has invalid ${field}.`);
+	}
+	return value;
 }
 
 function modelCheckReview(
@@ -300,7 +372,10 @@ function modelCheckReview(
 		.sort((left, right) => left.evidenceId.localeCompare(right.evidenceId));
 	const consideredEvidenceIds = evidenceRecords.map((record) => record.evidenceId);
 	let securitySurfaceClassification: SecuritySurfaceClassification | null = null;
-	if (context.check.id === "security_privacy_reviewed") {
+	const securityChallenge =
+		context.check.id === "security_privacy_reviewed" ||
+		context.binding.parameters.customCheckTypeId === "security_and_privacy";
+	if (securityChallenge) {
 		const configured = context.binding.parameters.securitySurfaceClassification;
 		if (configured !== undefined) {
 			securitySurfaceClassification =
@@ -309,10 +384,7 @@ function modelCheckReview(
 		}
 	}
 	return {
-		mode:
-			context.check.id === "security_privacy_reviewed"
-				? "security_challenge"
-				: "balanced",
+		mode: securityChallenge ? "security_challenge" : "balanced",
 		consideredEvidenceIds,
 		evidenceRecords,
 		dependencyResults,

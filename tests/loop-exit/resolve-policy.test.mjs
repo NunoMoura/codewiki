@@ -3,6 +3,11 @@ import { describe, it } from "node:test";
 
 import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
 import { assertValidResolvedExitPolicy } from "../../src/loop-exit/contracts.ts";
+import {
+	activateCustomCheckDefinition,
+	createCustomCheckDefinition,
+	customCheckDefinitionCheckId,
+} from "../../src/loop-exit/custom-checks/index.ts";
 import {classifySecuritySurfaces} from "../../src/loop-exit/security-surfaces.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
@@ -29,30 +34,15 @@ function selectorInput(loop = "decision") {
 	};
 }
 
-function projectRegistration() {
-	return {
-		check: {
-			id: "project.documentation_current",
-			version: "1.0.0",
-			description: "Project documentation remains current.",
+function customCheck() {
+	return activateCustomCheckDefinition(
+		createCustomCheckDefinition({
+			checkTypeId: "organization_policy",
+			name: "Documentation remains current",
 			requirement: "Affected documentation is updated.",
-			execution: {
-				id: "codewiki.code-check",
-				version: "1.0.0",
-				kind: "code",
-			},
-			measurement: { kind: "quantitative", shape: "boolean" },
-			evidenceObligations: [],
-			repairTarget: "source",
-			cost: 1,
-			timeoutMs: 5_000,
-			protected: false,
-		},
-		loops: ["implementation"],
-		rollout: "observe",
-		rolloutHistory: [],
-		dependsOn: [],
-	};
+			appliesWhen: {loops: ["implementation"]},
+		}),
+	);
 }
 
 describe("Resolved Exit Policy resolver", () => {
@@ -315,7 +305,7 @@ describe("Resolved Exit Policy resolver", () => {
 	it("binds policy identity to exact Catalog content", () => {
 		const baselineInput = selectorInput("implementation");
 		const changedCatalogInput = selectorInput("implementation");
-		changedCatalogInput.projectRegistrations = [projectRegistration()];
+		changedCatalogInput.customChecks = [customCheck()];
 
 		const baseline = resolveExitPolicy(baselineInput);
 		const changedCatalog = resolveExitPolicy(changedCatalogInput);
@@ -344,25 +334,19 @@ describe("Resolved Exit Policy resolver", () => {
 		assert.notEqual(decisionBinding.checkDigest, implementationBinding.checkDigest);
 	});
 
-	it("activates approved project Checks without granting progression authority", () => {
+	it("activates Custom Checks without granting progression authority", () => {
+		const definition = customCheck();
 		const input = selectorInput("implementation");
-		input.projectRegistrations = [projectRegistration()];
-		input.approvedAdditions = [
-			{
-				checkId: "project.documentation_current",
-				checkVersion: "1.0.0",
-				authorityRef: "trace:decision:approval:4",
-				parameters: { pathsRequired: true },
-			},
-		];
+		input.customChecks = [definition];
 		const resolution = resolveExitPolicy(input);
 		const binding = resolution.bindings.find(
-			(entry) => entry.checkId === "project.documentation_current",
+			(entry) => entry.checkId === customCheckDefinitionCheckId(definition),
 		);
 
 		assert.equal(binding.enforcement, "observe");
 		assert.equal(binding.required, false);
-		assert.deepEqual(binding.parameters, { pathsRequired: true });
+		assert.equal(binding.parameters.customCheckId, definition.customCheckId);
+		assert.equal(binding.parameters.customCheckRevision, definition.revision);
 	});
 
 	it("protects kernel Checks from exclusions", () => {

@@ -1,6 +1,7 @@
 import { decisionLoopExitDeclaration } from "../decision/exit/index.ts";
 import { implementationLoopExitDeclaration } from "../implementation/exit/index.ts";
 import { createLoopExitResultCache } from "../loop-exit/cache.ts";
+import type { CustomCheckDefinition } from "../loop-exit/custom-checks/index.ts";
 import { createCheckCatalog } from "../loop-exit/catalog.ts";
 import {
 	createCheckResult,
@@ -48,8 +49,10 @@ export const LOOP_EXIT_SUITE = createLoopExitSuite({
 	implementation: implementationLoopExitDeclaration,
 });
 
-export function createLoopExitRuntime(): LoopExitRuntime {
-	const catalog = createCheckCatalog();
+export function createLoopExitRuntime(
+	input: {readonly customChecks?: readonly CustomCheckDefinition[]} = {},
+): LoopExitRuntime {
+	const catalog = createCheckCatalog(input.customChecks);
 	const claimsExecutor = createDecisionResearchClaimsExecutor(catalog);
 	return Object.freeze({
 		suite: LOOP_EXIT_SUITE,

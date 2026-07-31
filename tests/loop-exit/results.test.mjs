@@ -2,7 +2,17 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { createCheckCatalog } from "../../src/loop-exit/catalog.ts";
-import { canonicalJsonDigest } from "../../src/loop-exit/identity.ts";
+import {
+	canonicalJsonDigest,
+	checkRequirementDigest,
+	loopQualifiedCheckDigest,
+} from "../../src/loop-exit/identity.ts";
+import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
+import {
+	activateCustomCheckDefinition,
+	createCustomCheckDefinition,
+	customCheckDefinitionCheckId,
+} from "../../src/loop-exit/custom-checks/index.ts";
 import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
 import {
 	assertValidExitReport,
@@ -133,35 +143,70 @@ function allRequiredResults(policy, catalog) {
 		.map((binding) => resultFor(policy, catalog, binding));
 }
 
-function projectScoreRegistration() {
-	return {
-		check: {
-			id: "project.documentation_score",
+function quantitativeFoundation() {
+	const requirement = "Documentation coverage score is at least 0.8.";
+	const check = {
+		id: "test.documentation_score",
+		version: "1.0.0",
+		description: "Documentation coverage remains sufficient.",
+		requirement,
+		requirementDigest: checkRequirementDigest(requirement),
+		execution: {
+			id: "codewiki.code-check",
 			version: "1.0.0",
-			description: "Documentation coverage remains sufficient.",
-			requirement: "Documentation coverage score is at least 0.8.",
-			execution: {
-				id: "codewiki.code-check",
-				version: "1.0.0",
-				kind: "code",
-			},
-			measurement: {
-				kind: "quantitative",
-				shape: "score",
-				minimum: 0.8,
-				maximum: 1,
-			},
-			evidenceObligations: [],
-			repairTarget: "source",
-			cost: 1,
-			timeoutMs: 5_000,
-			protected: false,
+			kind: "code",
 		},
-		loops: ["implementation"],
-		rollout: "observe",
-		rolloutHistory: [],
-		dependsOn: [],
+		measurement: {
+			kind: "quantitative",
+			shape: "score",
+			minimum: 0.8,
+			maximum: 1,
+		},
+		evidenceObligations: [],
+		repairTarget: "source",
+		cost: 1,
+		timeoutMs: 5_000,
+		protected: false,
 	};
+	const catalogDigest = canonicalJsonDigest({catalog: "quantitative-test"});
+	const parameters = {minimum: 0.9};
+	const binding = {
+		checkId: check.id,
+		checkVersion: check.version,
+		requirementDigest: check.requirementDigest,
+		checkDigest: loopQualifiedCheckDigest({
+			loop: "implementation",
+			check,
+			configuration: parameters,
+			catalogDigest,
+		}),
+		enforcement: "observe",
+		required: false,
+		parameters,
+		dependsOn: [],
+		activatedBy: ["test:quantitative"],
+		ruleRefs: ["test:quantitative"],
+	};
+	const policy = createResolvedExitPolicy({
+		loop: "implementation",
+		candidateDigest: CANDIDATE_DIGEST,
+		catalogDigest,
+		selectorInputDigest: canonicalJsonDigest({selector: "quantitative-test"}),
+		bindings: [binding],
+		protectedCheckIds: [],
+	});
+	return {check, policy, binding};
+}
+
+function observedCustomCheck() {
+	return activateCustomCheckDefinition(
+		createCustomCheckDefinition({
+			checkTypeId: "organization_policy",
+			name: "Documentation current",
+			requirement: "Affected documentation remains current.",
+			appliesWhen: {loops: ["implementation"]},
+		}),
+	);
 }
 
 describe("immutable Check Result", () => {
@@ -285,22 +330,7 @@ describe("immutable Check Result", () => {
 	});
 
 	it("applies Runtime-owned quantitative thresholds", () => {
-		const input = selectorInput();
-		input.projectRegistrations = [projectScoreRegistration()];
-		input.approvedAdditions = [
-			{
-				checkId: "project.documentation_score",
-				checkVersion: "1.0.0",
-				authorityRef: "trace:approval:score",
-				parameters: { minimum: 0.9 },
-			},
-		];
-		const policy = resolveExitPolicy(input);
-		const catalog = createCheckCatalog([projectScoreRegistration()]);
-		const binding = policy.bindings.find(
-			(entry) => entry.checkId === "project.documentation_score",
-		);
-		const check = catalog.get(binding.checkId, policy.loop).check;
+		const {policy, check} = quantitativeFoundation();
 		const result = createCheckResult({
 			loop: policy.loop,
 			policy,
@@ -388,19 +418,13 @@ describe("immutable Exit Report", () => {
 	});
 
 	it("keeps observe and warn failures visible without blocking exit", () => {
+		const definition = observedCustomCheck();
 		const input = selectorInput();
-		input.projectRegistrations = [projectScoreRegistration()];
-		input.approvedAdditions = [
-			{
-				checkId: "project.documentation_score",
-				checkVersion: "1.0.0",
-				authorityRef: "trace:approval:score",
-			},
-		];
+		input.customChecks = [definition];
 		const policy = resolveExitPolicy(input);
-		const catalog = createCheckCatalog([projectScoreRegistration()]);
+		const catalog = createCheckCatalog([definition]);
 		const binding = policy.bindings.find(
-			(entry) => entry.checkId === "project.documentation_score",
+			(entry) => entry.checkId === customCheckDefinitionCheckId(definition),
 		);
 		const check = catalog.get(binding.checkId, policy.loop).check;
 		const observedFailure = createCheckResult({
@@ -408,9 +432,9 @@ describe("immutable Exit Report", () => {
 			policy,
 			check,
 			disposition: "unsatisfied",
-			measurement: { shape: "score", value: 0.5 },
-			evidenceResolutions: [],
-			findings: ["Observed project Check failed."],
+			measurement: { shape: "boolean", value: false },
+			evidenceResolutions: readyEvidenceResolutions(check),
+			findings: ["Observed Custom Check failed."],
 			execution: { ...check.execution },
 		});
 		const report = createExitReport({

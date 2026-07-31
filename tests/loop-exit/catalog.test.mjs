@@ -1,52 +1,7 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import {describe, it} from "node:test";
 
-import { createCheckCatalog } from "../../src/loop-exit/catalog.ts";
-
-function evidenceObligation(overrides = {}) {
-	return {
-		id: "source-proof",
-		version: "1.0.0",
-		kinds: ["source_observation"],
-		producerKinds: ["runtime"],
-		authorities: ["verified"],
-		coverages: ["complete"],
-		sensitivities: ["project"],
-		minimumCount: 1,
-		subject: "candidate",
-		freshness: "none",
-		artifact: "optional",
-		contradiction: "indeterminate",
-		...overrides,
-	};
-}
-
-function projectRegistration(overrides = {}) {
-	return {
-		check: {
-			id: "project.documentation_current",
-			version: "1.0.0",
-			description: "Project documentation remains current.",
-			requirement: "Affected documentation is updated.",
-			execution: {
-				id: "codewiki.code-check",
-				version: "1.0.0",
-				kind: "code",
-			},
-			measurement: { kind: "quantitative", shape: "boolean" },
-			evidenceObligations: [],
-			repairTarget: "source",
-			cost: 1,
-			timeoutMs: 5_000,
-			protected: false,
-		},
-		loops: ["implementation"],
-		rollout: "observe",
-		rolloutHistory: [],
-		dependsOn: [],
-		...overrides,
-	};
-}
+import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 
 describe("Check catalog", () => {
 	it("provides closed versioned kernel Checks for all three loops", () => {
@@ -96,7 +51,8 @@ describe("Check catalog", () => {
 					(entry) =>
 						entry.authority === "kernel" &&
 						entry.rollout === "require" &&
-						entry.check.protected,
+						entry.check.protected &&
+						entry.customCheck === undefined,
 				),
 		);
 		assert.deepEqual(
@@ -121,7 +77,7 @@ describe("Check catalog", () => {
 		);
 		assert.equal(researchProvenance.check.execution.kind, "code");
 		assert.deepEqual(
-			{ ...researchProvenance.check.evidenceObligations[0] },
+			{...researchProvenance.check.evidenceObligations[0]},
 			{
 				id: "research-citations",
 				version: "1.0.0",
@@ -164,6 +120,7 @@ describe("Check catalog", () => {
 				.map((entry) => entry.check.id)
 				.toSorted((left, right) => left.localeCompare(right)),
 		);
+		assert.equal(catalog.version, "2.0.0");
 		assert.match(catalog.digest, /^sha256:[0-9a-f]{64}$/);
 		assert.ok(
 			catalog
@@ -171,189 +128,6 @@ describe("Check catalog", () => {
 				.every((entry) =>
 					/^sha256:[0-9a-f]{64}$/.test(entry.check.requirementDigest),
 				),
-		);
-	});
-
-	it("supports independent same-id Check definitions in disjoint Loops", () => {
-		const decision = projectRegistration({
-			loops: ["decision"],
-			check: {
-				...projectRegistration().check,
-				requirement: "Decision documentation intent is complete.",
-			},
-		});
-		const implementation = projectRegistration({
-			loops: ["implementation"],
-			check: {
-				...projectRegistration().check,
-				requirement: "Implementation documentation is current.",
-			},
-		});
-		const catalog = createCheckCatalog([decision, implementation]);
-		const reversed = createCheckCatalog([implementation, decision]);
-
-		assert.equal(catalog.digest, reversed.digest);
-		assert.equal(
-			catalog.get("project.documentation_current", "decision").check.requirement,
-			"Decision documentation intent is complete.",
-		);
-		assert.equal(
-			catalog.get("project.documentation_current", "implementation").check
-				.requirement,
-			"Implementation documentation is current.",
-		);
-		assert.throws(
-			() => catalog.get("project.documentation_current"),
-			/loop is required/,
-		);
-	});
-
-	it("allows only closed execution and declarative Evidence obligations", () => {
-		assert.throws(
-			() =>
-				createCheckCatalog([
-					projectRegistration({
-						check: {
-							...projectRegistration().check,
-							execution: {
-								id: "project.javascript",
-								version: "1.0.0",
-								kind: "code",
-							},
-						},
-					}),
-				]),
-			/unknown execution project.javascript/,
-		);
-		assert.throws(
-			() =>
-				createCheckCatalog([
-					projectRegistration({
-						check: {
-							...projectRegistration().check,
-							evidenceObligations: [
-								{ ...evidenceObligation(), adapterId: "arbitrary-shell" },
-							],
-						},
-					}),
-				]),
-			/Evidence obligation received unsupported field adapterId/,
-		);
-		assert.throws(
-			() =>
-				createCheckCatalog([
-					projectRegistration({
-						check: {
-							...projectRegistration().check,
-							evidenceObligations: [
-								evidenceObligation(),
-								evidenceObligation({ version: "1.1.0" }),
-							],
-						},
-					}),
-				]),
-			/evidence obligation ids must be unique/,
-		);
-	});
-
-	it("rejects caller-owned identity and authority", () => {
-		assert.throws(
-			() =>
-				createCheckCatalog([
-					projectRegistration({
-						check: {
-							...projectRegistration().check,
-							requirementDigest: `sha256:${"f".repeat(64)}`,
-						},
-					}),
-				]),
-			/cannot supply runtime-owned requirementDigest/,
-		);
-		for (const authority of ["project", "kernel", "official"]) {
-			assert.throws(
-				() =>
-					createCheckCatalog([
-						projectRegistration({ authority }),
-					]),
-				/cannot declare authority; the catalog assigns project authority/,
-			);
-		}
-	});
-
-	it("requires project rollout progression and approval", () => {
-		assert.doesNotThrow(() =>
-			createCheckCatalog([projectRegistration()]),
-		);
-		assert.doesNotThrow(() =>
-			createCheckCatalog([
-				projectRegistration({ rollout: "warn", rolloutHistory: ["observe"] }),
-			]),
-		);
-		assert.doesNotThrow(() =>
-			createCheckCatalog([
-				projectRegistration({
-					rollout: "require",
-					rolloutHistory: ["observe", "warn"],
-					approval: { status: "approved", refs: ["trace:approval:1"] },
-				}),
-			]),
-		);
-		assert.throws(
-			() =>
-				createCheckCatalog([
-					projectRegistration({
-						rollout: "require",
-						rolloutHistory: ["observe"],
-					}),
-				]),
-			/must progress through observe -> warn before require/,
-		);
-		assert.throws(
-			() =>
-				createCheckCatalog([
-					projectRegistration({
-						rollout: "require",
-						rolloutHistory: ["observe", "warn"],
-					}),
-				]),
-			/requires approval before require/,
-		);
-	});
-
-	it("prevents project Checks from replacing protected kernel identity", () => {
-		assert.throws(
-			() =>
-				createCheckCatalog([
-					projectRegistration({
-						check: {
-							...projectRegistration().check,
-							id: "scope_controlled",
-						},
-					}),
-				]),
-			/Duplicate Check registration scope_controlled/,
-		);
-	});
-
-	it("rejects catalog dependency cycles before policy resolution", () => {
-		const first = projectRegistration({
-			check: {
-				...projectRegistration().check,
-				id: "project.first",
-			},
-			dependsOn: ["project.second"],
-		});
-		const second = projectRegistration({
-			check: {
-				...projectRegistration().check,
-				id: "project.second",
-			},
-			dependsOn: ["project.first"],
-		});
-
-		assert.throws(
-			() => createCheckCatalog([first, second]),
-			/catalog dependency cycle includes implementation:project.first/,
 		);
 	});
 });

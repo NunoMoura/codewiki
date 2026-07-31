@@ -23,10 +23,10 @@ import {
 } from "./contracts.ts";
 import {
 	createCheckCatalog,
-	type ProjectCheckRegistration,
 	type CheckRegistration,
 	type CheckCatalog,
 } from "./catalog.ts";
+import type { CustomCheckDefinition } from "./custom-checks/contracts.ts";
 import { loopQualifiedCheckDigest } from "./identity.ts";
 import {
 	SECURITY_SURFACES,
@@ -95,7 +95,7 @@ interface ResolveExitPolicyInput {
 	paths?: string[];
 	approvedAdditions?: ApprovedCheckAddition[];
 	approvedExclusions?: ApprovedCheckExclusion[];
-	projectRegistrations?: ProjectCheckRegistration[];
+	customChecks?: CustomCheckDefinition[];
 }
 
 interface CheckActivationRuleMatch {
@@ -404,7 +404,7 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 export function resolveExitPolicy(
 	input: ResolveExitPolicyInput,
 ): ResolvedExitPolicy {
-	const catalog = createCheckCatalog(input.projectRegistrations);
+	const catalog = createCheckCatalog(input.customChecks);
 	const selector = normalizeSelectorInput(
 		input,
 		catalog.version,
@@ -412,6 +412,7 @@ export function resolveExitPolicy(
 	);
 	const active = new Map<string, MutableBinding>();
 	activateRules(active, catalog, selector);
+	activateCustomChecks(active, catalog, selector);
 	activateApprovedAdditions(active, catalog, selector);
 	activateDependencies(active, catalog, selector.loop);
 	applyApprovedExclusions(active, catalog, selector);
@@ -440,6 +441,91 @@ function activateRules(
 			});
 		}
 	}
+}
+
+function activateCustomChecks(
+	active: Map<string, MutableBinding>,
+	catalog: CheckCatalog,
+	selector: NormalizedSelectorInput,
+): void {
+	for (const registration of catalog.list(selector.loop)) {
+		const customCheck = registration.customCheck;
+		if (!customCheck) continue;
+		const applicabilityReasons = customCheckApplicabilityReasons(
+			customCheck.definition,
+			selector,
+		);
+		if (!applicabilityReasons) continue;
+		const definition = customCheck.definition;
+		const parameters: Record<string, CheckJsonValue> = {
+			customCheckId: definition.customCheckId,
+			customCheckRevision: definition.revision,
+			customCheckContentDigest: definition.contentDigest,
+			customCheckTypeId: definition.checkTypeId,
+			customCheckTypeVersion: customCheck.checkTypeVersion,
+			checkEvaluatorId: customCheck.evaluatorId,
+			knowledgeRefs: [...(definition.knowledgeRefs ?? [])],
+			...(definition.repairGuidance
+				? { repairGuidance: definition.repairGuidance }
+				: {}),
+		};
+		if (
+			definition.checkTypeId === "security_and_privacy" &&
+			selector.securitySurfaceClassification
+		) {
+			parameters.securitySurfaceClassification = mutableCheckJsonValue(
+				toCanonicalJsonValue(selector.securitySurfaceClassification),
+			);
+		}
+		activate({
+			active,
+			catalog,
+			loop: selector.loop,
+			checkId: registration.check.id,
+			checkVersion: registration.check.version,
+			parameters,
+			activatedBy: [
+				`custom_check:${definition.customCheckId}@${definition.revision}`,
+				`custom_check_type:${definition.checkTypeId}@${customCheck.checkTypeVersion}`,
+				...applicabilityReasons,
+			],
+			ruleRef: `custom-check:${definition.customCheckId}:revision:${definition.revision}`,
+		});
+	}
+}
+
+function customCheckApplicabilityReasons(
+	definition: CustomCheckDefinition,
+	selector: NormalizedSelectorInput,
+): string[] | undefined {
+	const applicability = definition.appliesWhen;
+	const reasons: string[] = [];
+	if (applicability.changeKinds?.length) {
+		const matched = selector.changes
+			.map((change) => change.kind)
+			.filter((kind) => applicability.changeKinds?.includes(kind));
+		if (matched.length === 0) return undefined;
+		reasons.push(...unique(matched).map((kind) => `custom_change_kind:${kind}`));
+	}
+	if (applicability.affectedLayers?.length) {
+		const layers = selector.changes.flatMap((change) => change.affectedLayers);
+		const matched = layers.filter((layer) =>
+			applicability.affectedLayers?.includes(layer),
+		);
+		if (matched.length === 0) return undefined;
+		reasons.push(...unique(matched).map((layer) => `custom_affected_layer:${layer}`));
+	}
+	if (applicability.pathScopes?.length) {
+		const matched = applicability.pathScopes.filter((scope) =>
+			selector.paths.some(
+				(path) => path === scope || path.startsWith(`${scope}/`),
+			),
+		);
+		if (matched.length === 0) return undefined;
+		reasons.push(...matched.map((scope) => `custom_path_scope:${scope}`));
+	}
+	if (reasons.length === 0) reasons.push("custom_project_default");
+	return reasons.sort(compareSelectorValue);
 }
 
 function activateApprovedAdditions(
@@ -592,6 +678,11 @@ function optionalValues<T>(values: T[] | undefined): T[] {
 }
 
 function assertValidSelectorInput(input: ResolveExitPolicyInput): void {
+	if ("projectRegistrations" in input) {
+		throw new Error(
+			"Resolved Exit Policy received unsupported field projectRegistrations; use bounded Custom Checks.",
+		);
+	}
 	if ("frozenMinimum" in input) {
 		throw new Error(
 			"Resolved Exit Policy received unsupported field frozenMinimum; Runtime must derive Planning minimums from canonical Planning evidence.",

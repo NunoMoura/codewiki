@@ -9,6 +9,21 @@ tags:
   - policy
   - dashboard
 timestamp: 2026-07-31T00:00:00Z
+codewiki_component: custom_checks
+codewiki_components:
+  - custom_checks
+codewiki_source_patterns:
+  - src/loop-exit/custom-checks/**
+codewiki_test_patterns:
+  - tests/loop-exit/custom-checks.test.mjs
+codewiki_role: custom_check_policy
+codewiki_source_map:
+  - id: custom_checks
+    source_patterns:
+      - src/loop-exit/custom-checks/**
+    test_patterns:
+      - tests/loop-exit/custom-checks.test.mjs
+    role: custom_check_policy
 ---
 # Custom Checks
 
@@ -103,7 +118,7 @@ name                         80 Unicode code points
 requirement               2,000 Unicode code points
 optional repair guidance  1,000 Unicode code points
 Knowledge refs                8
-active Custom Checks          64 per project
+stored current definitions    64 per project
 active Custom Checks          16 per Check Type
 canonical Custom Check    16,384 UTF-8 bytes
 ```
@@ -250,9 +265,11 @@ The clean cut replaces dashboard/public use of the broad `ProjectCheckRegistrati
 
 ## Current executable drift
 
-Source currently has a low-level `ProjectCheckRegistration` accepted by `createCheckCatalog()`, but native Decision and shared Loop-exit runtimes construct the catalog without project registrations. The low-level shape exposes execution, measurement, Evidence, limits, rollout history, and dependency fields that should not be dashboard-authored. No Custom Check config, guarded Dashboard editor, protected-base activation, Check Type catalog, or Check Evaluator grouping exists yet.
+Source now cleanly removes `ProjectCheckRegistration` and provides `src/loop-exit/custom-checks/**` contracts for the closed Check Type catalog, bounded proposal materialization, Runtime-owned stable id/revision/content digest, immutable draft/active/disabled lifecycle, observe/warn/approved-require promotion, normalization, limits, and tamper rejection. Project config persists only complete materialized definitions. Check Catalog `2.0.0` emits active Custom Checks only as project-authority Model Checks with CodeWiki-owned execution, measurement, Evidence obligations, timeout, cost, dependencies, and evaluator identity. Resolved Exit Policy deterministically applies loop, Change-kind, affected-layer, and path-scope filters and binds exact Custom Check/type/evaluator/Knowledge metadata.
 
-Implementation therefore remains pending. This intended design narrows rather than expands project authority: users author bounded requirements and applicability while CodeWiki retains all execution and acceptance machinery.
+The shared Loop-exit runtime and native Decision runtime can receive exact Custom Check definitions. Decision Model Check protocol `1.2.0` carries exact Custom Check metadata, and security/privacy Custom Checks select the existing structured challenge envelope. Focused model calls remain the execution baseline.
+
+Production config-to-runtime loading, protected-base policy selection, dedicated guarded Dashboard proposal/promotion commands, Check Type route binding, Knowledge-content resolution, type-level batching/sharding, calibration, Planning/Implementation evaluator cuts, and production `wiki_decide` cutover remain pending. Generic dashboard config patching intentionally does not expose Custom Checks as editable settings.
 
 ## Related docs
 

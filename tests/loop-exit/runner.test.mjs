@@ -6,6 +6,11 @@ import {materializeEvidenceRecord} from "../../src/evidence/materialize.ts";
 import {reduceEvidenceObligation} from "../../src/evidence/obligations.ts";
 import {createLoopExitResultCache} from "../../src/loop-exit/cache.ts";
 import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
+import {
+	activateCustomCheckDefinition,
+	createCustomCheckDefinition,
+	customCheckDefinitionCheckId,
+} from "../../src/loop-exit/custom-checks/index.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {createLoopCandidate} from "../../src/loop-exit/identity.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
@@ -37,7 +42,7 @@ function candidate(salt = "default") {
 	});
 }
 
-function selectorInput(loopCandidate, projectRegistrations = []) {
+function selectorInput(loopCandidate, customChecks = []) {
 	return {
 		loop: "decision",
 		candidateDigest: loopCandidate.digest,
@@ -55,24 +60,15 @@ function selectorInput(loopCandidate, projectRegistrations = []) {
 		projectTraits: [],
 		technologies: [],
 		paths: [],
-		...(projectRegistrations.length > 0
-			? {
-					projectRegistrations,
-					approvedAdditions: projectRegistrations.map((registration) => ({
-						checkId: registration.check.id,
-						checkVersion: registration.check.version,
-						authorityRef: "trace:decision:approval:runner",
-					})),
-				}
-			: {}),
+		...(customChecks.length > 0 ? {customChecks} : {}),
 	};
 }
 
 function foundation(checkIds = CODE_CHECK_IDS, options = {}) {
 	const loopCandidate = options.candidate ?? candidate();
-	const registrations = options.projectRegistrations ?? [];
-	const catalog = createCheckCatalog(registrations);
-	const resolved = resolveExitPolicy(selectorInput(loopCandidate, registrations));
+	const customChecks = options.customChecks ?? [];
+	const catalog = createCheckCatalog(customChecks);
+	const resolved = resolveExitPolicy(selectorInput(loopCandidate, customChecks));
 	const bindings = resolved.bindings.filter((binding) =>
 		checkIds.includes(binding.checkId),
 	);
@@ -113,30 +109,15 @@ function executor(catalog, checkId, execute, options = {}) {
 	};
 }
 
-function modelRegistration(id, dependsOn = [], timeoutMs = 50) {
-	return {
-		check: {
-			id,
-			version: "1.0.0",
-			description: `Bounded ${id} model check.`,
-			requirement: `The ${id} requirement is established.`,
-			execution: {
-				id: "codewiki.model-check",
-				version: "1.0.0",
-				kind: "model",
-			},
-			measurement: {kind: "qualitative", shape: "boolean"},
-			evidenceObligations: [],
-			repairTarget: "candidate",
-			cost: 1,
-			timeoutMs,
-			protected: false,
-		},
-		loops: ["decision"],
-		rollout: "observe",
-		rolloutHistory: [],
-		dependsOn,
-	};
+function customModelCheck(name) {
+	return activateCustomCheckDefinition(
+		createCustomCheckDefinition({
+			checkTypeId: "organization_policy",
+			name,
+			requirement: `${name} is established.`,
+			appliesWhen: {loops: ["decision"]},
+		}),
+	);
 }
 
 const delay = (milliseconds) =>
@@ -402,66 +383,57 @@ describe("bounded Loop exit runner", () => {
 		assert.equal(calls, 0);
 	});
 
-	it("runs dependency-bound model Checks in their own pool and times out explicitly", async () => {
-		const registrations = [
-			modelRegistration("project.model_a"),
-			modelRegistration("project.model_b", ["project.model_a"], 20),
-		];
-		const setup = foundation(
-			registrations.map((registration) => registration.check.id),
-			{projectRegistrations: registrations, candidate: candidate("model")},
-		);
+	it("runs Custom Model Checks in their bounded model pool", async () => {
+		const customChecks = [customModelCheck("Policy A"), customModelCheck("Policy B")];
+		const checkIds = customChecks.map(customCheckDefinitionCheckId);
+		const setup = foundation(checkIds, {
+			customChecks,
+			candidate: candidate("custom-model"),
+		});
 		const order = [];
 		let active = 0;
 		let maximumActive = 0;
+		const executors = checkIds.map((checkId) => {
+			const check = setup.catalog.get(checkId, "decision").check;
+			const evidence = modelAssessmentEvidence(setup, check);
+			const resolution = reduceEvidenceObligation({
+				obligation: check.evidenceObligations[0],
+				evidence: [{evidence, relation: "supporting"}],
+				expectedSubject: evidence.subject,
+			});
+			return executor(
+				setup.catalog,
+				checkId,
+				async () => {
+					active += 1;
+					maximumActive = Math.max(maximumActive, active);
+					await delay(5);
+					active -= 1;
+					order.push(checkId);
+					return {
+						disposition: "satisfied",
+						producedEvidenceRecords: [evidence],
+						producedEvidenceResolutions: [resolution],
+					};
+				},
+				{
+					configurationDigest: DIGEST,
+					producesEvidenceObligationIds: ["model-assessment"],
+				},
+			);
+		});
 		const runner = createLoopExitRunner({
 			catalog: setup.catalog,
 			limits: {codeConcurrency: 2, modelConcurrency: 1},
-			executors: [
-				executor(
-					setup.catalog,
-					"project.model_a",
-					async () => {
-						active += 1;
-						maximumActive = Math.max(maximumActive, active);
-						await delay(5);
-						active -= 1;
-						order.push("project.model_a");
-						return {disposition: "satisfied"};
-					},
-					{configurationDigest: DIGEST},
-				),
-				executor(
-					setup.catalog,
-					"project.model_b",
-					({dependencyResults, signal}) => {
-						assert.equal(dependencyResults[0].status, "pass");
-						order.push("project.model_b");
-						active += 1;
-						maximumActive = Math.max(maximumActive, active);
-						return new Promise((resolve) => {
-							signal.addEventListener(
-								"abort",
-								() => {
-									active -= 1;
-									resolve({disposition: "indeterminate"});
-								},
-								{once: true},
-							);
-						});
-					},
-					{configurationDigest: DIGEST},
-				),
-			],
+			executors,
 		});
 		const result = await runner.run({candidate: setup.candidate, policy: setup.policy});
-		assert.deepEqual(order, ["project.model_a", "project.model_b"]);
+		assert.deepEqual([...order].sort(), [...checkIds].sort());
 		assert.equal(maximumActive, 1);
-		assert.equal(
-			result.report.checkResults.find(
-				(entry) => entry.checkId === "project.model_b",
-			).issueClass,
-			"runtime_timeout",
+		assert.ok(
+			result.report.checkResults
+				.filter((entry) => checkIds.includes(entry.checkId))
+				.every((entry) => entry.status === "pass"),
 		);
 		assert.equal(result.report.status, "pass");
 	});

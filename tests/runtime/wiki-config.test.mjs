@@ -9,6 +9,10 @@ import {
 	runWikiConfig,
 } from "../../src/api/wiki-config.ts";
 import {
+	activateCustomCheckDefinition,
+	createCustomCheckDefinition,
+} from "../../src/loop-exit/custom-checks/index.ts";
+import {
 	loadWikiConfigFile,
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
@@ -64,6 +68,44 @@ describe("wiki_config core facade", () => {
 			"shell.shellcheck",
 		]);
 		assert.deepEqual(result.config.quality.review.requiredPacks, []);
+		assert.deepEqual(result.config.customChecks, []);
+	});
+
+	it("persists only materialized bounded Custom Check definitions", () => {
+		const definition = activateCustomCheckDefinition(
+			createCustomCheckDefinition({
+				checkTypeId: "design_system",
+				name: "Use design tokens",
+				requirement: "User-facing spacing must use accepted design tokens.",
+				appliesWhen: {loops: ["decision"], affectedLayers: ["ui"]},
+				knowledgeRefs: ["knowledge:design-system"],
+			}),
+		);
+		const config = resolveWikiConfig({customChecks: [definition]});
+
+		assert.deepEqual(config.customChecks, [definition]);
+		assert.throws(
+			() =>
+				runWikiConfig({
+					current: config,
+					patch: {customChecks: []},
+				}),
+			/use the guarded Custom Check command/,
+		);
+		assert.throws(
+			() =>
+				resolveWikiConfig({
+					customChecks: [
+						{
+							checkTypeId: "design_system",
+							name: "Unmaterialized",
+							requirement: "This lacks Runtime-owned identity.",
+							appliesWhen: {},
+						},
+					],
+				}),
+			/unsupported field|schemaVersion/,
+		);
 	});
 
 	it("documents review pack configuration recipes", async () => {

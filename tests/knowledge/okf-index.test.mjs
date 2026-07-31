@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Implemented the Custom Check contract/config/catalog/policy foundation: removed broad project registrations, added ten closed Check Types, Runtime-owned immutable lifecycle and rollout identities, Check Catalog `2.0.0`, deterministic applicability, exact evaluator metadata, project-config persistence, and Decision Model Check protocol `1.2.0` focused execution without claiming Dashboard or production cutover completion.",
+					},
+					{
+						kind: "Update",
 						text: "Ratified project-bound Custom Checks under closed CodeWiki-owned Check Types, bounded declarative text and applicability, Dashboard-first protected Git rollout, type-specific Check Evaluators, atomic per-Check Assessments/Results, protected-base anti-self-disable policy, and calibration-gated per-type batching without changing Code Check or Model Check execution kinds.",
 					},
 					{

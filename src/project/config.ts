@@ -1,5 +1,9 @@
 import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
 import {
+	normalizeCustomCheckDefinitions,
+	type CustomCheckDefinition,
+} from "../loop-exit/custom-checks/index.ts";
+import {
 	DEFAULT_WIKI_PREVIEW_CONFIG,
 	type PartialWikiPreviewConfig,
 	resolveWikiPreviewConfig,
@@ -107,6 +111,7 @@ export interface WikiConfig {
 	retention: WikiRetentionConfig;
 	hosts: WikiHostConfig;
 	quality: WikiQualityConfig;
+	customChecks: CustomCheckDefinition[];
 }
 
 export interface RunWikiConfigInput {
@@ -126,6 +131,7 @@ export type PartialWikiConfig = {
 	retention?: Partial<WikiRetentionConfig>;
 	hosts?: PartialHostConfig;
 	quality?: PartialQualityConfig;
+	customChecks?: CustomCheckDefinition[];
 };
 
 export type PartialRuntimeConfig = Partial<
@@ -188,6 +194,7 @@ export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 		pi: { enabled: false },
 		mcp: { enabled: false },
 	},
+	customChecks: [],
 	quality: {
 		judge: {
 			enabled: false,
@@ -224,6 +231,17 @@ export function runWikiConfig(
 	input: RunWikiConfigInput = {},
 ): RunWikiConfigResult {
 	assertKnownKeys(input, "wiki_config", ["current", "patch"]);
+	if (
+		input.patch &&
+		Object.hasOwn(input.patch, "customChecks")
+	) {
+		throw createCodewikiConfigError({
+			path: "customChecks",
+			code: "invalid_value",
+			message:
+				"wiki_config patch cannot change customChecks; use the guarded Custom Check command.",
+		});
+	}
 	if (input.current !== undefined)
 		validatePartialWikiConfigKeys(input.current, "wiki_config.current");
 	if (input.patch !== undefined)
@@ -271,6 +289,7 @@ export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
 				...(input.hosts?.mcp || {}),
 			},
 		},
+		customChecks: normalizeCustomCheckDefinitions(input.customChecks ?? []),
 		quality: {
 			judge: {
 				...DEFAULT_WIKI_CONFIG.quality.judge,
@@ -356,6 +375,7 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 	);
 	validateHosts(config.hosts);
 	validateQuality(config.quality);
+	const customChecks = normalizeCustomCheckDefinitions(config.customChecks);
 	const preview = resolveWikiPreviewConfig(config.preview);
 	return {
 		project: config.project.trim(),
@@ -375,6 +395,7 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 			pi: { ...config.hosts.pi },
 			mcp: { ...config.hosts.mcp },
 		},
+		customChecks,
 		quality: {
 			judge: {
 				...config.quality.judge,
@@ -419,6 +440,9 @@ function mergeWikiConfigPatch(
 			pi: { ...current.hosts.pi, ...(patch.hosts?.pi || {}) },
 			mcp: { ...current.hosts.mcp, ...(patch.hosts?.mcp || {}) },
 		},
+		customChecks: patch.customChecks
+			? normalizeCustomCheckDefinitions(patch.customChecks)
+			: normalizeCustomCheckDefinitions(current.customChecks),
 		quality: {
 			judge: {
 				...current.quality.judge,
@@ -693,9 +717,15 @@ function validatePartialWikiConfigKeys(value: unknown, path: string): void {
 		"retention",
 		"hosts",
 		"quality",
+		"customChecks",
 	]);
 	if (config.preview !== undefined) {
 		resolveWikiPreviewConfig(config.preview as PartialWikiPreviewConfig);
+	}
+	if (config.customChecks !== undefined) {
+		normalizeCustomCheckDefinitions(
+			config.customChecks as CustomCheckDefinition[],
+		);
 	}
 	const runtime = optionalConfigObject(config.runtime, `${path}.runtime`);
 	if (runtime) {

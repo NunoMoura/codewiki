@@ -98,6 +98,7 @@ export function configFileToPartialWikiConfig(
 		retention: objectRecord(record.retention),
 		hosts: objectRecord(record.hosts),
 		quality: objectRecord(record.quality),
+		customChecks: record.customChecks as PartialWikiConfig["customChecks"],
 	};
 }
 
@@ -110,6 +111,7 @@ function validateConfigFileKeys(value: unknown): Record<string, unknown> {
 		"retention",
 		"hosts",
 		"quality",
+		"customChecks",
 		"project_name",
 		"codewiki",
 	]);

@@ -17,6 +17,11 @@ import {
 import {materializeDecisionResearchCitation} from "../../src/runtime/decision-research.ts";
 import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
+import {
+	activateCustomCheckDefinition,
+	createCustomCheckDefinition,
+	customCheckDefinitionCheckId,
+} from "../../src/loop-exit/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
 import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
 import {acceptedChangeFixture} from "../helpers/accepted-change.mjs";
@@ -239,6 +244,85 @@ describe("native Decision Model Checks", () => {
 		assert.equal(replay.report.reportDigest, first.report.reportDigest);
 		assert.equal(requests.length, 2);
 		assert.deepEqual(replay.producedEvidenceRecords, []);
+	});
+
+	it("binds exact Custom Check metadata into one independent Model Check request", async () => {
+		const setup = fixture();
+		const definition = activateCustomCheckDefinition(
+			createCustomCheckDefinition({
+				checkTypeId: "organization_policy",
+				name: "Document API ownership",
+				requirement: "Every changed public API names its owning team.",
+				repairGuidance: "Add one accepted owning-team reference.",
+				appliesWhen: {loops: ["decision"]},
+				knowledgeRefs: ["knowledge:api-ownership"],
+			}),
+		);
+		const checkId = customCheckDefinitionCheckId(definition);
+		const catalog = createCheckCatalog([definition]);
+		const revision = setup.candidate.content.revision;
+		const resolved = resolveExitPolicy({
+			loop: "decision",
+			candidateDigest: setup.candidate.digest,
+			changes: [
+				{
+					changeId: setup.subject.changeRefs[0].slice("change:".length),
+					revision: revision.revision,
+					digest: setup.candidate.content.validation.revisionDigest,
+					kind: revision.classification.kind,
+					type: revision.classification.type,
+					risk: revision.safety.risk,
+					affectedLayers: [...revision.classification.affectedLayers],
+				},
+			],
+			projectTraits: [],
+			technologies: [],
+			paths: [...revision.classification.targetRefs],
+			customChecks: [definition],
+		});
+		const binding = resolved.bindings.find((entry) => entry.checkId === checkId);
+		const policy = createResolvedExitPolicy({
+			loop: "decision",
+			candidateDigest: setup.candidate.digest,
+			catalogDigest: resolved.catalogDigest,
+			selectorInputDigest: resolved.selectorInputDigest,
+			bindings: [binding],
+			protectedCheckIds: [],
+		});
+		const requests = [];
+		const runner = createLoopExitRunner({
+			catalog,
+			executors: createDecisionModelCheckExecutors({
+				catalog,
+				route: route(),
+				subject: setup.subject,
+				transport: {
+					async execute(request) {
+						requests.push(request);
+						return {
+							status: "completed",
+							observedAt: "2026-07-28T12:00:00.000Z",
+							response: response(request),
+						};
+					},
+				},
+			}),
+		});
+		const result = await runner.run({candidate: setup.candidate, policy});
+
+		assert.equal(result.report.checkResults[0].status, "pass");
+		assert.equal(requests.length, 1);
+		assert.deepEqual({...requests[0].check.customCheck}, {
+			customCheckId: definition.customCheckId,
+			revision: definition.revision,
+			contentDigest: definition.contentDigest,
+			checkTypeId: "organization_policy",
+			checkTypeVersion: "1.0.0",
+			evaluatorId: "codewiki.check-evaluator.organization_policy",
+			knowledgeRefs: ["knowledge:api-ownership"],
+			repairGuidance: "Add one accepted owning-team reference.",
+		});
+		assert.equal(requests[0].review.mode, "balanced");
 	});
 
 	it("runs classified security review as an asserted dependency-bound challenge", async () => {
