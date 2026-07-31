@@ -160,7 +160,9 @@ Global chrome contains repository identity, current destination and subpage, con
 
 Notifications contain only genuine project-wide intervention questions. Routine test failure, retry, accessibility checking, automated preview capture/critique, and Planning-owned repair remain autonomous. Required subjective approval or reserved risk acceptance is explicit human attention.
 
-Settings exposes bounded capacity, model routing, isolation, automation, budgets, preview profiles, and effective supervision. It cannot raise authority beyond active policy or accept raw arbitrary execution configuration.
+Settings exposes bounded capacity, model routing, isolation, automation, budgets, preview profiles, effective supervision, and Assurance. It cannot raise authority beyond active policy or accept raw arbitrary execution configuration.
+
+Assurance / Custom Checks is the primary authoring surface for repository-bound semantic policy. It groups Custom Checks by closed Check Type; accepts bounded name, atomic requirement, optional repair guidance, closed applicability, and Knowledge refs; previews activation, Evidence needs, Check Evaluator route, and estimated cost; shows exact revision and per-Check Assessment/Result history; and guards draft, `observe`, `warn`, and approved `require` rollout. The browser sends an expected-config-digest proposal to Project Runtime and renders the generated Git-backed diff. It never stores policy in dashboard state, treats Custom Check text as a system prompt, or lets a policy-changing Candidate disable its protected-base Checks.
 
 ## Pi client
 
@@ -175,7 +177,7 @@ Optional Pi extension connects active conversation to existing Project Runtime. 
 
 The extension does not own the dashboard server, scheduler, Planning session, or worker pool. Dashboard actions do not inject arbitrary prompts into whichever Pi conversation happens to be active.
 
-Runtime creates bounded read-only Decision, Planning, Implementation candidate, and Model Check sessions through embedded published Pi SDK adapter. Implementation workers run through isolated process or container adapters. Main user conversations remain independent.
+Runtime creates bounded read-only Decision, Planning, Implementation candidate, and Check Evaluator/Model Check sessions through embedded published Pi SDK adapter. Implementation workers run through isolated process or container adapters. Main user conversations remain independent.
 
 ## Local-private host
 

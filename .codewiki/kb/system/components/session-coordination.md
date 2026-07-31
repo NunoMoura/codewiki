@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Session Coordination Component
-description: Session coordination gives Project Runtime safe concurrent candidate and independent Model Check sessions plus isolated Implementation workers without making session state canonical.
+description: Session coordination gives Project Runtime safe concurrent candidate and Check Evaluator/Model Check sessions plus isolated Implementation workers without making session state canonical.
 tags:
   - codewiki
   - system
@@ -59,7 +59,7 @@ Runtime creates independent bounded Pi SDK sessions for:
 - Decision Candidate production;
 - Planning Candidate production;
 - Implementation Candidate production;
-- each activated independent Model Check.
+- each activated independent Model Check or one Runtime-approved bounded group of related Checks under the same Check Evaluator.
 
 Candidate producers receive:
 
@@ -73,9 +73,9 @@ versioned CodeWiki OS guidance
 
 Decision and Planning use bounded session context. Worker Workbench is exclusive to one exact Implementation Assignment attempt.
 
-Candidate producers and independent Model Checks never share conversational state. Independent Model Checks receive only their closed exact request; they do not receive producer messages, repair guidance, mutable session context, or tools unless a future approved Check protocol explicitly requires a trusted adapter.
+Candidate producers and independent Model Checks never share conversational state. Model Checks receive only their closed exact request; they do not receive producer messages, repair guidance, mutable session context, or tools unless a future approved Check protocol explicitly requires a trusted adapter. A Check Evaluator may assess several Custom Checks of one type in one fresh physical request only after calibration; it must return one exact separate Assessment per Check and cannot reuse conversation across attempts.
 
-Semantic sessions cannot supply canonical identity, authority, current snapshots, Check activation, thresholds, Results, Runtime Route, or append guards. They return bounded typed Candidate or Model Check output only.
+Semantic sessions cannot supply canonical identity, authority, current snapshots, Check activation, thresholds, Results, Runtime Route, or append guards. They return bounded typed Candidate or Model Check Assessment output only.
 
 Pi retains provider/auth/model transport, session, compaction, extension, tool, and normal Skill mechanics. Runtime receives capabilities, route/configuration digests, usage, and normalized outcomes, never credentials.
 
@@ -143,6 +143,7 @@ Current source implements a detached local coordinator, generation fencing, leas
 - [WorkState](work-state.md)
 - [Change Traces](traces.md)
 - [Worker Workbench](worker-workbench.md)
+- [Custom Checks](custom-checks.md)
 - [Worktree Isolation](worktree-isolation.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)

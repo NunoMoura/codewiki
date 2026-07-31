@@ -196,6 +196,8 @@ The isolated Pi transport now executes the exact prepared request with no tools,
 
 The shared model-assessment payload now records the complete considered Evidence identity set. Decision Model Check protocol `1.1.0` requires exact Evidence echo and bounded positive basis, finding, or uncertainty justification. Security challenge assessments additionally retain structured threat goals, preconditions, attack paths, violated invariants, Candidate/Evidence refs, claimed severity/confidence, mitigations, and limitations with `asserted` authority. These observations remain inputs to one Check Result; they cannot become canonical risk, exploit verification, or final Exit Report authority.
 
+Target Custom Checks use the same authority boundary. Every type-specific Check Evaluator Assessment binds one exact Custom Check id/revision/digest, Check Type/protocol/route/config identity, Candidate, prerequisite Results, and considered Evidence ids. A physical type-level model request may return several Assessments, but Runtime materializes and validates separate `model_assessment` Evidence and Check Result identity for every Custom Check. Missing, duplicate, cross-boundary, or malformed batch members become `indeterminate`; passing siblings cannot hide them.
+
 Production Decision still uses broad `sourceRefs` and `proofRefs`. External collection adapters, production scheduling of the Pi transport, native candidate/policy/report persistence, and deletion of ref-count sufficiency remain pending until the clean Decision cut.
 
 ## UI experience evidence
@@ -301,6 +303,7 @@ Canonical JSON/digest primitives live in `src/utils/canonical-json.ts` so Eviden
 ## Related docs
 
 - [Loop Exit](loop-exit.md)
+- [Custom Checks](custom-checks.md)
 - [Loop Contracts](loop-contracts.md)
 - [Implementation Loop](implementation-loop.md)
 - [Live Preview Runtime](preview-runtime.md)

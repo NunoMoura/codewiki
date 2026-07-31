@@ -43,8 +43,12 @@ User-facing explanations distinguish:
 - **Candidate**: exact immutable output proposed by one Loop attempt;
 - **Evidence Record**: immutable typed observation with no verdict or route authority;
 - **Check**: one versioned requirement/execution/measurement/evidence contract;
-- **Code Check** versus **Model Check**: deterministic CodeWiki code versus independent bounded Pi session;
-- **Check Result**: one exact Check outcome;
+- **Check Type**: closed CodeWiki-owned semantic family, applicability, Evidence, evaluator, route-capability, and limit contract;
+- **Custom Check**: one repository-bound project-authored bounded declarative atomic requirement under one Check Type;
+- **Code Check** versus **Model Check**: deterministic CodeWiki code versus bounded independent model Assessment;
+- **Check Evaluator**: type-specific CodeWiki-owned model capability returning one separate Assessment per active Custom Check;
+- **Assessment**: one exact `supported | unsupported | uncertain` model output without Result or exit authority;
+- **Check Result**: one exact Runtime-derived Check outcome;
 - **Resolved Exit Policy**: candidate-specific active Check contract;
 - **Exit Report**: complete deterministic aggregate for exact candidate;
 - **Validation Bundle**: mutable CodeWiki/pull-request review projection, not approval;

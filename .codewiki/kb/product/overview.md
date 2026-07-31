@@ -62,7 +62,15 @@ Dashboard destinations remain:
 
 Change detail remains available from every destination as a cross-cutting dossier. It explains exact intent, revisions, authority, Product/System/Design impact, Planning coverage, semantic attempts, Evidence, Checks, realization, Git/delivery proof, route-backs, repair provenance, and outcomes.
 
-Dashboard state is a projection. It cannot become a hidden backlog, plan, graph, or workflow database.
+Dashboard state is a projection. It cannot become a hidden backlog, plan, graph, workflow, or policy database.
+
+## Custom project assurance
+
+Settings / Assurance lets maintainers define repository-bound Custom Checks for company policy, design systems, API conventions, accessibility, compatibility, and delivery expectations that Skills may guide but cannot enforce. Each Custom Check is one bounded declarative atomic requirement under a closed CodeWiki-owned Check Type. V1 Custom Checks execute as Model Checks through a type-specific Check Evaluator; Code Checks and Model Checks remain distinct execution kinds.
+
+Custom Check configuration remains protected Git-backed project truth. Dashboard provides bounded authoring, activation/Evidence/cost preview, exact per-Check Assessment and Result history, and staged `draft → observe → warn → explicitly approved require` rollout. Runtime owns identity, applicability, activation, policy, model route, verdict derivation, and exit. A policy-changing Candidate cannot disable the protected-base Checks evaluating itself.
+
+One Check Evaluator may use focused calls or calibrated type-level batches, but every Custom Check retains a separate Assessment, Result, enforcement, Evidence binding, and repair target. Model output never grants acceptance.
 
 ## Change model
 

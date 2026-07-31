@@ -6,6 +6,7 @@ purpose: Show bounded multi-source Change intake, explainable Backlog triage, ex
 source_docs:
   - .codewiki/kb/system/components/loop-model.md
   - .codewiki/kb/system/components/change-intake.md
+  - .codewiki/kb/system/components/custom-checks.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/work-state.md
@@ -29,7 +30,7 @@ participants:
     kind: synchronization_carrier
     source: .codewiki/kb/system/components/traces.md
   - id: sessions
-    label: Independent Pi Candidate and Model Check sessions
+    label: Independent Pi Candidate and Check Evaluator sessions
     kind: execution_adapter
     source: .codewiki/kb/system/components/session-coordination.md
   - id: decision
@@ -103,7 +104,7 @@ steps:
   - id: decision_exit
     from: decision
     to: loop_exit
-    message: Candidate then Evidence Records, Resolved Exit Policy, Checks, Check Results, and Exit Report
+    message: Candidate then protected-base Custom Check activation, Evidence Records, Resolved Exit Policy, Checks, Check Results, and Exit Report
   - id: decision_route
     from: loop_exit
     to: runtime
@@ -127,7 +128,7 @@ steps:
   - id: planning_exit
     from: planning
     to: loop_exit
-    message: evaluates exact Planning Candidate through Evidence, policy, Checks, Results, and Exit Report
+    message: evaluates exact Planning Candidate through protected-base Custom Check activation, Evidence, policy, Checks, Results, and Exit Report
   - id: accept_epoch
     from: runtime
     to: git_state
@@ -175,7 +176,7 @@ steps:
   - id: implementation_exit
     from: implementation
     to: loop_exit
-    message: runs final candidate-specific Checks including UI review/approval when activated
+    message: runs final candidate-specific kernel and Custom Checks including UI review/approval when activated
   - id: implementation_route
     from: loop_exit
     to: runtime

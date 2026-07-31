@@ -133,13 +133,29 @@ type Check = CodeCheck | ModelCheck;
 
 Check is not complete Loop policy.
 
+### Check Type
+
+Closed versioned CodeWiki-owned semantic family for Custom Checks. It defines eligible Loops, deterministic applicability inputs, prerequisites, Evidence profile, Check Evaluator protocol/response schema, route capability, limits, and repair shape. Projects select a Check Type but cannot author one.
+
+### Custom Check
+
+One repository-bound, project-authored, bounded declarative atomic requirement under one Check Type. V1 text-based Custom Checks execute as Model Checks. Runtime owns identity, revision, digest, activation, rollout, authority, and Result. “Custom” never means arbitrary code, shell, system prompt, tool, or verdict logic. Supersedes “Project Check.”
+
+### Check Evaluator
+
+CodeWiki-owned type-specific model capability that assesses active Custom Checks against exact Candidate-bound Evidence. It may use focused calls or calibrated deterministic batches, but returns one separate Assessment per Custom Check. It is not a persistent agent, final judge, semantic Loop, or authority.
+
+### Assessment
+
+Bounded `supported | unsupported | uncertain` output for one exact Model Check, Custom Check revision, Candidate, prerequisite Result set, and considered Evidence set. Runtime validates the Assessment, may materialize `model_assessment` Evidence, and derives `pass | fail | indeterminate`; Assessment itself has no exit or route authority.
+
 ### Code Check
 
 Trusted deterministic CodeWiki-owned implementation of Check. “Code” names implementation, not subject. Initial catalog is closed; projects cannot inject arbitrary JavaScript/shell/executors.
 
 ### Model Check
 
-Independent bounded Pi model session evaluating one semantic requirement over an immutable Candidate, declared prerequisite Results, and exact considered Evidence identities. It returns `supported | unsupported | uncertain` with bounded findings and limitations; Runtime derives `pass | fail | indeterminate`. Check-specific payloads may add structured security challenge or claim-support detail. It shares no producer conversation and cannot override deterministic Results, aggregate exit, append, route, or attest acceptance. Operational failure yields `indeterminate`.
+One atomic semantic requirement evaluated through a bounded independent model Assessment over an immutable Candidate, declared prerequisite Results, and exact considered Evidence identities. It returns `supported | unsupported | uncertain` with bounded findings and limitations; Runtime derives `pass | fail | indeterminate`. Check-specific payloads may add structured security challenge or claim-support detail. Related Model Checks may share one physical type-level call or deterministic batch while retaining separate Assessment and Result identity. They share no producer conversation and cannot override deterministic Results, aggregate exit, append, route, or attest acceptance. Operational failure yields `indeterminate`.
 
 ### Check binding
 
@@ -181,7 +197,7 @@ Check dimension: `qualitative | quantitative`. Quantitative contract names shape
 
 ### Enforcement
 
-Check dimension: `observe | warn | require`. Execution kind does not imply enforcement. Kernel Checks cannot be disabled. Project Checks progress through explicit approval.
+Check dimension: `observe | warn | require`. Execution kind does not imply enforcement. Kernel Checks cannot be disabled. Custom Checks progress from draft through `observe`, `warn`, and explicitly approved `require`.
 
 ### `activatedBy`
 
@@ -472,7 +488,8 @@ Close, archive, hydrate, reopen, compact-checkpoint, and cleanup lifecycle. Comp
 | Stage candidate / stage exit | Loop candidate / Loop exit |
 | Quality Standard / Exit Criterion | Check |
 | Deterministic Verifier | Code Check |
-| Model Evaluator | Model Check |
+| Model Evaluator | Model Check, or Check Evaluator when referring to type-specific Custom Check execution |
+| Project Check | Custom Check |
 | Quality Assessment | Check Result |
 | Quality Policy Resolution | Resolved Exit Policy |
 | Quality Report | Exit Report |
@@ -501,6 +518,7 @@ Legacy names may remain temporarily in executable source/tests and explicit exec
 - [Loop Model](system/components/loop-model.md)
 - [CodeWiki OS and Loop Protocols](system/components/codewiki-os.md)
 - [Loop Exit](system/components/loop-exit.md)
+- [Custom Checks](system/components/custom-checks.md)
 - [Worker Workbench](system/components/worker-workbench.md)
 - [Model Routing](system/components/model-routing.md)
 - [Decision Loop](system/components/decision-loop.md)

@@ -34,6 +34,9 @@ describe("OKF index and log navigation", () => {
 		const indexes = generateOkfDirectoryIndexes(bundle);
 		const root = indexes.find((index) => index.path === "index.md");
 		const product = indexes.find((index) => index.path === "product/index.md");
+		const stories = indexes.find(
+			(index) => index.path === "product/stories/index.md",
+		);
 		const system = indexes.find((index) => index.path === "system/index.md");
 		const components = indexes.find(
 			(index) => index.path === "system/components/index.md",
@@ -48,25 +51,33 @@ describe("OKF index and log navigation", () => {
 			root.content,
 			/\* \[Lexicon\]\(lexicon\.md\) - This file is CodeWiki's active vocabulary contract\./,
 		);
-		assert.match(root.content, /\* \[Product\]\(product\/\) - 13 concepts/);
-		assert.match(root.content, /\* \[System\]\(system\/\) - 38 concepts/);
+		assert.match(root.content, /\* \[Product\]\(product\/\) - 14 concepts/);
+		assert.match(root.content, /\* \[System\]\(system\/\) - 39 concepts/);
 
 		assert.equal(product.path, "product/index.md");
 		assert.match(
 			product.content,
 			/\* \[Product\]\(overview\.md\) - CodeWiki is a project-scoped intent-to-production alignment runtime/,
 		);
-		assert.match(product.content, /\* \[Stories\]\(stories\/\) - 5 concepts/);
+		assert.match(product.content, /\* \[Stories\]\(stories\/\) - 6 concepts/);
+		assert.match(
+			stories.content,
+			/\* \[Enforce Project-Specific Expectations\]\(custom-checks\.md\) - As a maintainer, I want bounded Custom Checks/,
+		);
 
 		assert.equal(system.path, "system/index.md");
 		assert.match(
 			system.content,
-			/\* \[Components\]\(components\/\) - 30 concepts/,
+			/\* \[Components\]\(components\/\) - 31 concepts/,
 		);
 		assert.match(system.content, /\* \[Diagrams\]\(diagrams\/\) - 0 concepts/);
 		assert.match(
 			components.content,
 			/\* \[Change Intake and Backlog Triage\]\(change-intake\.md\) - Change intake converts bounded findings and suggestions/,
+		);
+		assert.match(
+			components.content,
+			/\* \[Custom Checks\]\(custom-checks\.md\) - Custom Checks let a project define bounded semantic requirements/,
 		);
 		assert.match(
 			components.content,
@@ -93,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Ratified project-bound Custom Checks under closed CodeWiki-owned Check Types, bounded declarative text and applicability, Dashboard-first protected Git rollout, type-specific Check Evaluators, atomic per-Check Assessments/Results, protected-base anti-self-disable policy, and calibration-gated per-type batching without changing Code Check or Model Check execution kinds.",
+					},
+					{
+						kind: "Update",
 						text: "Added deterministic revision-bound Decision security-surface classification, targeted policy activation and prerequisite boundary checking, standardized considered-Evidence Model Check assessments, and structured asserted security challenge findings without granting model output final Check or exit authority.",
 					},
 					{
@@ -111,7 +126,7 @@ describe("OKF index and log navigation", () => {
 		);
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 52);
+		assert.equal(result.conceptCount, 54);
 		assert.equal(result.reservedCount, 10);
 		assert.deepEqual(documentsByPath.get("index.md")?.frontmatter, {
 			okf_version: "0.1",

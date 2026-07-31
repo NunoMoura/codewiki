@@ -23,6 +23,7 @@ As a user, I want Project Runtime to advance compatible work automatically while
 - Runtime stops/routes/retries/waits on ambiguity, required fail/indeterminate Results, budget exhaustion, no progress, stale state, missing capability, or authority.
 - Users see exact candidate, activated Checks and reasons, Report status, Runtime route, proof refs, and next safe action.
 - Independent Checks continue after unrelated failure and use bounded resource-specific pools.
+- Project-bound Custom Checks add bounded company, design, API, accessibility, compatibility, or delivery requirements under closed Check Types; Runtime preserves protected-base policy, staged enforcement, and one separate Result per Check.
 - Cheap deterministic security-surface and vulnerability checks run before activated isolated falsification-oriented security challenge Model Checks; unknown or unavailable required assurance remains explicit.
 - Parallel workers use exact Work Item Claims/private Worker Workbenches and never self-attest acceptance.
 - Integration, merge, push, publication, release, and deployment remain separately guarded effects.
@@ -36,4 +37,5 @@ As a user, I want Project Runtime to advance compatible work automatically while
 - [Loop Model](../../system/components/loop-model.md)
 - [Loop Exit](../../system/components/loop-exit.md)
 - [Runtime](../../system/components/runtime.md)
+- [Custom Checks](../../system/components/custom-checks.md)
 - [Worker Workbench](../../system/components/worker-workbench.md)

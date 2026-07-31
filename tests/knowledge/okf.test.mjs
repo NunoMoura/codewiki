@@ -99,7 +99,7 @@ describe("Open Knowledge Format v0.1", () => {
 		);
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 52);
+		assert.equal(result.conceptCount, 54);
 		assert.equal(result.reservedCount, 10);
 		for (const extension of generateOkfSourceMapExtensions(sourceMap).filter(
 			(candidate) => candidate.path.startsWith(".codewiki/kb/"),

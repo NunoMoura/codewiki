@@ -66,6 +66,8 @@ Change
 
 A passing Exit Report permits exact Loop exit only. Runtime then revalidates freshness, authority, expected bases, generation, and effect policy.
 
+Projects may add bounded declarative Custom Checks under closed CodeWiki-owned Check Types. V1 Custom Checks remain Model Checks evaluated by type-specific Check Evaluators, with one separate Assessment and Runtime-owned Result per atomic requirement. Protected Git-backed configuration and staged approval control rollout; a policy-changing Candidate cannot weaken its protected-base assurance. Custom Checks do not add a Loop, executable project policy, model authority, or another truth store.
+
 ## Truth and projection
 
 - `.codewiki/kb/**` owns accepted Product/System/Design Knowledge and authored Knowledge relationships.
@@ -160,6 +162,7 @@ This repository uses `.codewiki/kb/**` as intended design truth, source/tests as
 - [Alignment Model](alignment-model.md)
 - [Change Traces](traces.md)
 - [Runtime](runtime.md)
+- [Custom Checks](custom-checks.md)
 - [WorkState](work-state.md)
 - [Loop Model](loop-model.md)
 - [Loop Exit](loop-exit.md)

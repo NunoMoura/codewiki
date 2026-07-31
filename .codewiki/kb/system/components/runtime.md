@@ -101,7 +101,8 @@ Runtime alone owns:
 - Change Claim and Work Item Claim lifecycle;
 - Worker Workbench provisioning and Assignment dispatch;
 - Evidence normalization, provenance/freshness/privacy validation, contradiction preservation, and approval correlation;
-- Check activation, execution, cancellation, exact caching, and required-result fan-in;
+- Custom Check proposal validation, Runtime-owned identity/revision, protected-config rollout, deterministic activation, and policy binding;
+- Check activation, Check Evaluator scheduling, Assessment validation, execution, cancellation, exact caching, and required-result fan-in;
 - deterministic Runtime Route;
 - canonical Git-backed writes;
 - Integration, branch effects, review projection, publication, release, delivery, and outcome observation;
@@ -125,7 +126,7 @@ Change
 → Runtime Route
 ```
 
-Decision, Planning, and Implementation own Candidate semantics and Loop-specific Check declarations. Runtime constructs identity, resolves policy deterministically, schedules bounded independent Checks, validates complete Result fan-in, creates the immutable Exit Report, and chooses a route.
+Decision, Planning, and Implementation own Candidate semantics and Loop-specific kernel Check declarations. Closed Check Types constrain project-authored Custom Checks. Runtime constructs identity, resolves protected-base and candidate-specific policy deterministically, schedules bounded independent Code Checks and type-specific Check Evaluators, validates one Assessment and Result per active Check, creates the immutable Exit Report, and chooses a route.
 
 A passing Exit Report is not write or effect authority. Runtime revalidates current state, exact bases, generation, actor authority, CAS, and effect-specific policy immediately before action.
 

@@ -10,6 +10,7 @@ source_docs:
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/work-state.md
   - .codewiki/kb/system/components/loop-exit.md
+  - .codewiki/kb/system/components/custom-checks.md
   - .codewiki/kb/system/components/evidence.md
   - .codewiki/kb/system/components/planning-loop.md
 renderer:
@@ -39,6 +40,14 @@ entities:
   - id: planning_epoch
     label: Immutable PlanningEpochRecord
     storage: project-scoped content-addressed record accepted by state commit
+    truth: true
+  - id: check_type
+    label: Closed versioned Check Type
+    storage: CodeWiki-owned source/package contract
+    truth: true
+  - id: custom_check
+    label: Repository-bound immutable Custom Check revision
+    storage: protected Git-backed .codewiki/config.json
     truth: true
   - id: candidate
     label: Exact immutable Loop Candidate
@@ -156,6 +165,12 @@ relationships:
   - from: candidate
     to: evidence
     label: binds every considered observation
+  - from: check_type
+    to: custom_check
+    label: constrains protocol applicability Evidence and route capability
+  - from: custom_check
+    to: exit_policy
+    label: exact protected-base revision activates one atomic binding
   - from: candidate
     to: exit_policy
     label: resolves exact active Checks

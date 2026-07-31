@@ -152,11 +152,11 @@ A Code Check is trusted deterministic CodeWiki-owned code. “Code” describes 
 - exact authority and active-Change overlap;
 - Git tree correspondence and Integration proof.
 
-The initial catalog is closed. Projects cannot inject arbitrary JavaScript, shell, executors, or third-party verifiers. Project Checks are declarative and may use only approved contracts/adapters.
+The initial executable catalog is closed. Projects cannot inject arbitrary JavaScript, shell, executors, or third-party verifiers. Text-based Custom Checks are declarative Model Checks under closed CodeWiki-owned Check Types. Future Custom Code Checks may instantiate only approved deterministic templates or adapters with structured parameters.
 
 ### Model Check
 
-A Model Check is one independent bounded Pi model session evaluating one semantic requirement against immutable evidence.
+A Model Check is one atomic semantic requirement evaluated through an independent bounded model assessment against immutable evidence.
 
 - It shares no conversational state with the candidate producer.
 - Runtime chooses model route and configuration.
@@ -164,17 +164,19 @@ A Model Check is one independent bounded Pi model session evaluating one semanti
 - Timeout, provider failure, malformed output, cancellation, or unavailable service is `indeterminate`.
 - It cannot append, route, change policy, or attest acceptance.
 
-Related Model Checks may share transport/context envelopes for efficiency, but every Check retains distinct Result identity.
+Related Model Checks may share one physical transport/context envelope or deterministic batch for efficiency, but every Check retains a separate Assessment and Result identity. Physical call topology is an implementation and calibration choice, not semantic aggregation.
 
 ### Orthogonal dimensions
 
 ```text
+origin:      kernel | custom
 execution:   code | model
+check type:  intent | security | design | API | policy | ...
 measurement: qualitative | quantitative
 enforcement: observe | warn | require
 ```
 
-Execution kind never implies enforcement.
+Requirement origin, project/kernel authority, execution kind, semantic Check Type, measurement, and enforcement remain independent. V1 text-based Custom Checks execute as Model Checks.
 
 Quantitative Checks declare exact value shape, unit, comparator, threshold, allowed bounds, and aggregation policy. Runtime applies the threshold. Candidate and model cannot choose or reinterpret it.
 
@@ -197,18 +199,19 @@ Runtime resolves one immutable candidate-specific policy from:
 - project traits and technologies/paths;
 - Runtime-derived minimums from canonical Planning evidence;
 - actual candidate effects;
-- approved project additions and permitted non-kernel exclusions;
+- approved Custom Checks and permitted non-kernel exclusions;
+- protected-base Custom Check configuration and Check Type identities;
 - model route/configuration and Check catalog/Loop Protocol identities.
 
 Every active Check records `activatedBy`, rule refs, version, parameters, threshold, enforcement, dependencies, and permitted exclusions. Selection is deterministic and explainable. Learned or neural activation is forbidden.
 
-Kernel Checks cannot be disabled. Project Checks progress:
+Kernel Checks cannot be disabled. Custom Checks progress:
 
 ```text
-observe → warn → explicitly approved require
+draft → observe → warn → explicitly approved require
 ```
 
-Actual candidate growth may add required Checks. It cannot silently lower risk or remove Planning minimums.
+A Candidate changing Custom Check configuration is evaluated under the protected-base policy snapshot and cannot weaken its own assurance. Accepted policy changes activate only from the next protected config snapshot. Actual candidate growth may add required Checks. It cannot silently lower risk or remove Planning minimums.
 
 ## Identity chain
 
@@ -363,6 +366,7 @@ src/
     suite.ts
     identity.ts
     catalog.ts
+    custom-checks/**
     resolve-policy.ts
     runner.ts
     cache.ts
@@ -386,6 +390,7 @@ Do not add Loops to compensate for weak candidates or Checks. Use exact refs, co
 - [WorkState](work-state.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
+- [Custom Checks](custom-checks.md)
 - [Evidence Records](evidence.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)

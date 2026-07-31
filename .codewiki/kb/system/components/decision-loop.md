@@ -160,9 +160,9 @@ Final Check definitions are Loop-qualified and versioned. Current legacy IDs rem
 | Delivery constraints | Constraints do not smuggle Planning design or unsafe bypasses. |
 | Active Change overlap | Duplicate, contradictory, overlapping, or superseding work is merged, linked, ordered, superseded, deferred, or blocked. |
 
-Protected kernel Checks cannot be disabled. Project Checks begin `observe`, then `warn`, and become `require` only through explicit approval. Runtime records `activatedBy` for every binding.
+Protected kernel Checks cannot be disabled. Custom Checks begin as draft, then progress through `observe`, `warn`, and explicitly approved `require`. Runtime records exact Custom Check revision, protected config snapshot, Check Type, and `activatedBy` facts for every active binding. A Decision Candidate changing Custom Check configuration remains subject to the protected-base policy and cannot weaken its own assurance.
 
-Decision uses the `decision` model route for candidate production. Model Checks run independently and inherit calibrated Loop routes unless an approved Check definition says otherwise. No caller-selected review slot exists.
+Decision uses the `decision` model route for candidate production. Kernel Model Checks run independently and inherit calibrated Loop routes unless a CodeWiki-owned Check declares otherwise. Custom Checks use the Check Evaluator for their closed Check Type and an authorized calibrated type-level route binding. No caller-selected review slot exists.
 
 ## Security classification and challenge assurance
 
@@ -278,6 +278,7 @@ Planning or Implementation cites exact originating candidate/event and required 
 - [Model Routing](model-routing.md)
 - [Loop Model](loop-model.md)
 - [Loop Contracts](loop-contracts.md)
+- [Custom Checks](custom-checks.md)
 - [Planning Loop](planning-loop.md)
 - [Change Intake and Backlog Triage](change-intake.md)
 - [Traces](traces.md)

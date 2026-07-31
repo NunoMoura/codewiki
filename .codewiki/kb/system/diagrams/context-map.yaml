@@ -8,6 +8,7 @@ source_docs:
   - .codewiki/kb/product/users/agents.md
   - .codewiki/kb/product/overview.md
   - .codewiki/kb/system/components/change-intake.md
+  - .codewiki/kb/system/components/custom-checks.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/extension.md
   - .codewiki/kb/system/components/traces.md
@@ -88,7 +89,7 @@ relationships:
     label: operates lifecycle and grants exact authority
   - from: maintainer
     to: dashboard
-    label: manages Work, Product, System, and Design
+    label: manages Work Product System Design and Custom Checks
   - from: maintainer
     to: pi_client
     label: discusses intent and supervision
@@ -121,7 +122,7 @@ relationships:
     label: typed client or Assignment protocol
   - from: project_runtime
     to: pi_runtime
-    label: binds protocols, routes, policy, and scope
+    label: binds protocols Check Evaluators routes policy and scope
   - from: pi_runtime
     to: semantic_sessions
     label: creates independent bounded sessions

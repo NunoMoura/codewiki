@@ -17,6 +17,7 @@ Maintainers need CodeWiki to answer:
 - Which discrepancies are resolved, Change-accounted, suspect, contradictory, or unknown?
 - What does global Planning require and what can run safely in parallel?
 - Which exact candidate was checked, which Evidence Records support or contradict it, and why did each Check activate?
+- Which bounded repository-specific company, design, API, accessibility, compatibility, or delivery expectations should become Custom Checks, and what rollout is approved?
 - Which failed/indeterminate Result owns repair or authority?
 - For user-visible work, what exact screenshots, short videos, preview state, reviewer role, and fresh approval exist?
 - What Git, Integration, remote, artifact, release, or outcome evidence exists?

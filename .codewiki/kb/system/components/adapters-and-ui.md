@@ -44,7 +44,7 @@ One Pi conversation may connect or disconnect without becoming Project Runtime o
 - Dashboard and Pi clients share one project identity, current team WorkState snapshot, freshness status, idempotency contract, and guarded command plane.
 - Dashboard actions never append Change operations or write source directly. They call guarded control-plane capabilities with exact same-origin capability, expected revision/digest, bounded input, idempotency key, and audit receipt.
 - Product, System, and Design edits compile to deterministic Markdown/YAML patches, show a diff, validate canonical format, and enter the Change/Decision workflow before guarded application.
-- The dashboard cannot accept arbitrary prompts, shell commands, public URLs, credentials, semantic approval through message delivery, or authority-raising configuration.
+- The dashboard cannot accept arbitrary prompts, shell commands, public URLs, credentials, semantic approval through message delivery, or unguarded authority-raising configuration. Its dedicated Custom Check editor accepts only bounded declarative policy text, closed applicability fields, and Knowledge refs under a CodeWiki-owned Check Type; this text is never a trusted system prompt or executable input.
 - The control plane—not browser JavaScript and not an attached Pi conversation—creates semantic sessions and implementation workers through configured adapters.
 - Embedded semantic sessions remain read-only and return role-specific Candidates or Model Check outputs. Isolated implementation workers receive only Assignment-scoped mutation capability.
 - Preview runners accept structured commands, approved profile digests, exact integration state, bounded loopback URLs, isolated browser session identifiers, and lifecycle cleanup.
@@ -69,7 +69,10 @@ Review publication is a separately authorized pre-exit evidence-gathering effect
 - **Product / Users, Stories, and Dictionary** renders and edits canonical Product Markdown. Dictionary projects `.codewiki/kb/lexicon.md` directly and links exact terms from runtime explanations without creating another vocabulary store.
 - **System** renders and edits canonical topology YAML and linked System Markdown.
 - **Design / Guidelines and UIs** renders and edits the canonical design system and UI concepts.
+- **Settings / Assurance / Custom Checks** groups repository-bound Custom Checks by closed Check Type; supports bounded requirement/applicability/Knowledge-ref authoring; previews activation, Evidence needs, route, and cost; shows exact per-Check Assessments and Results; and guards draft, `observe`, `warn`, and approved `require` rollout through Project Runtime.
 - Change detail is a cross-cutting dossier rather than a private pipeline.
+
+Custom Check configuration remains protected Git-backed project truth, not dashboard state. Browser actions carry expected config digest, idempotency key, authenticated actor, and bounded proposal to Project Runtime. Dashboard renders the generated diff and policy consequences before acceptance. A Candidate changing Custom Check policy remains evaluated under the protected-base policy and cannot disable its own assurance.
 
 ## Local transport and security
 
@@ -81,6 +84,7 @@ Project Runtime binds only to loopback or an equivalent user-private local socke
 - [Remote State Synchronization](../flows/remote-state-synchronization.md)
 - [Live Preview Runtime](preview-runtime.md)
 - [Change Intake and Backlog Triage](change-intake.md)
+- [Custom Checks](custom-checks.md)
 
 ## Related docs
 

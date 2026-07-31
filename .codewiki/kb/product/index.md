@@ -8,6 +8,6 @@
 
 ## Directories
 
-* [Stories](stories/) - 5 concepts under `product/stories/`.
+* [Stories](stories/) - 6 concepts under `product/stories/`.
 * [UIs](uis/) - 1 concept under `product/uis/`.
 * [Users](users/) - 4 concepts under `product/users/`.

@@ -7,6 +7,7 @@ source_docs:
   - .codewiki/kb/product/overview.md
   - .codewiki/kb/system/components/overview.md
   - .codewiki/kb/system/components/change-intake.md
+  - .codewiki/kb/system/components/custom-checks.md
   - .codewiki/kb/system/components/alignment-model.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/runtime.md
@@ -85,6 +86,11 @@ nodes:
     group: runtime
     kind: loop_exit_runtime
     source: .codewiki/kb/system/components/loop-exit.md
+  - id: custom_checks
+    label: Check Types / Custom Checks / Check Evaluators
+    group: runtime
+    kind: protected_project_policy
+    source: .codewiki/kb/system/components/custom-checks.md
   - id: protocols
     label: CodeWiki OS + Loop Protocols
     group: runtime
@@ -223,6 +229,12 @@ edges:
   - from: project_runtime
     to: protocols
     label: binds exact versions
+  - from: project_runtime
+    to: custom_checks
+    label: validates proposals rollout and protected-base policy
+  - from: custom_checks
+    to: loop_exit
+    label: exact active bindings and type-specific evaluator contracts
   - from: project_runtime
     to: pi_sdk
     label: starts bounded independent sessions

@@ -8,6 +8,7 @@ source_docs:
   - .codewiki/kb/system/components/api.md
   - .codewiki/kb/system/components/api-tools.md
   - .codewiki/kb/system/components/change-intake.md
+  - .codewiki/kb/system/components/custom-checks.md
   - .codewiki/kb/system/components/runtime.md
   - .codewiki/kb/system/components/traces.md
   - .codewiki/kb/system/components/work-state.md
@@ -99,6 +100,11 @@ nodes:
     group: runtime
     kind: loop_exit_runtime
     source: .codewiki/kb/system/components/loop-exit.md
+  - id: custom_checks
+    label: Closed Check Types / Custom Checks / Check Evaluators
+    group: runtime
+    kind: versioned_project_policy
+    source: .codewiki/kb/system/components/custom-checks.md
   - id: protocols
     label: CodeWiki OS + Loop Protocols
     group: runtime
@@ -271,6 +277,12 @@ edges:
   - from: project_runtime
     to: protocols
     label: binds exact versions
+  - from: project_runtime
+    to: custom_checks
+    label: validates proposals revisions rollout and protected-base policy
+  - from: custom_checks
+    to: loop_exit
+    label: exact active Custom Check bindings and Check Evaluator contracts
   - from: scheduler
     to: pi_sdk
     label: Candidate and Model Check sessions
