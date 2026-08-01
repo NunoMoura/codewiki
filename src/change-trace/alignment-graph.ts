@@ -92,6 +92,70 @@ export interface AlignmentGraphSnapshot {
 	readonly coverage: AlignmentGraphCoverage;
 }
 
+export function assertValidAlignmentGraphSnapshot(
+	graph: AlignmentGraphSnapshot,
+): void {
+	assertAlignmentGraphIdentity(graph);
+	assertAlignmentGraphFacts(graph);
+	assertAlignmentGraphCoverage(graph);
+}
+
+function assertAlignmentGraphIdentity(graph: AlignmentGraphSnapshot): void {
+	if (
+		graph.projector.id !== ALIGNMENT_GRAPH_PROJECTOR.id ||
+		graph.projector.version !== ALIGNMENT_GRAPH_PROJECTOR.version
+	) {
+		throw new Error("Alignment Graph projector is unsupported.");
+	}
+	const expectedSnapshotDigest = canonicalJsonDigest({
+		remoteStateHead: graph.baseBinding.remoteStateHead,
+		sourceHead: graph.baseBinding.sourceHead,
+		knowledgeDigest: graph.baseBinding.knowledgeDigest,
+		configDigest: graph.baseBinding.configDigest,
+		policyDigest: graph.baseBinding.policyDigest,
+		projector: ALIGNMENT_GRAPH_PROJECTOR,
+	});
+	if (graph.graphSnapshotDigest !== expectedSnapshotDigest) {
+		throw new Error("Alignment Graph snapshot identity is invalid.");
+	}
+	if (
+		graph.graphContentDigest !==
+		canonicalJsonDigest({nodes: graph.nodes, edges: graph.edges})
+	) {
+		throw new Error("Alignment Graph content digest is invalid.");
+	}
+}
+
+function assertAlignmentGraphFacts(graph: AlignmentGraphSnapshot): void {
+	const nodeIds = new Set(graph.nodes.map((node) => node.id));
+	const edgeIds = new Set(graph.edges.map((edge) => edge.factId));
+	if (nodeIds.size !== graph.nodes.length || edgeIds.size !== graph.edges.length) {
+		throw new Error("Alignment Graph contains duplicate fact identities.");
+	}
+	for (const edge of graph.edges) {
+		const {factId, ...body} = edge;
+		if (
+			canonicalJsonDigest(body) !== factId ||
+			!nodeIds.has(edge.from) ||
+			!nodeIds.has(edge.to)
+		) {
+			throw new Error(`Alignment Graph edge ${factId} is invalid.`);
+		}
+	}
+}
+
+function assertAlignmentGraphCoverage(graph: AlignmentGraphSnapshot): void {
+	if (
+		graph.status !== "fresh" ||
+		graph.coverage.nodeCount !== graph.nodes.length ||
+		graph.coverage.edgeCount !== graph.edges.length ||
+		graph.coverage.projectedRecordCount !== graph.projectedRecordIds.length ||
+		graph.coverage.acceptedRecordCount !== graph.projectedRecordIds.length
+	) {
+		throw new Error("Alignment Graph coverage is invalid.");
+	}
+}
+
 type GraphAccumulator = ReturnType<typeof createAccumulator>;
 type PlanningWorkItem = PlanningEpochBody["workItems"][number];
 type OperationGraphProjector = (

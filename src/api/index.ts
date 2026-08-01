@@ -146,6 +146,12 @@ export {
 	normalizeChangeIntakeContent,
 	normalizeChangeIntakeMaterial,
 } from "../changes/intake/normalize.ts";
+export * from "../changes/triage/contracts.ts";
+export {
+	buildBacklogTriageProjection,
+	type BuildBacklogTriageProjectionInput,
+} from "../changes/triage/projection.ts";
+export {queryBacklogTriage} from "../changes/triage/query.ts";
 export {
 	createDeliveryObservationMaterial,
 	createDeliveryObservationMaterialFromEvidence,

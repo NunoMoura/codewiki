@@ -1,5 +1,5 @@
 import {
-	ALIGNMENT_GRAPH_PROJECTOR,
+	assertValidAlignmentGraphSnapshot,
 	type AlignmentGraphEdge,
 	type AlignmentGraphFactProvenance,
 	type AlignmentGraphSnapshot,
@@ -194,7 +194,7 @@ export function queryAlignmentGraph(
 	request: AlignmentQueryRequest,
 	synchronizationStatus: SynchronizationStatus,
 ): AlignmentQueryResult {
-	assertValidGraphSnapshot(graph);
+	assertValidAlignmentGraphSnapshot(graph);
 	assertQueryRequest(request);
 	assertSynchronizationStatus(synchronizationStatus);
 	if (request.graphSnapshotDigest !== graph.graphSnapshotDigest) {
@@ -419,65 +419,6 @@ function edgeTypesFor(
 	family: AlignmentQueryFamily,
 ): ReadonlySet<string> | null {
 	return family === "change_context" ? null : FAMILY_EDGE_TYPES[family];
-}
-
-function assertValidGraphSnapshot(graph: AlignmentGraphSnapshot): void {
-	assertGraphIdentity(graph);
-	assertGraphFacts(graph);
-	assertGraphCoverage(graph);
-}
-
-function assertGraphIdentity(graph: AlignmentGraphSnapshot): void {
-	if (
-		graph.projector.id !== ALIGNMENT_GRAPH_PROJECTOR.id ||
-		graph.projector.version !== ALIGNMENT_GRAPH_PROJECTOR.version
-	) {
-		throw new Error("Alignment query graph projector is unsupported.");
-	}
-	const expectedSnapshotDigest = canonicalJsonDigest({
-		remoteStateHead: graph.baseBinding.remoteStateHead,
-		sourceHead: graph.baseBinding.sourceHead,
-		knowledgeDigest: graph.baseBinding.knowledgeDigest,
-		configDigest: graph.baseBinding.configDigest,
-		policyDigest: graph.baseBinding.policyDigest,
-		projector: ALIGNMENT_GRAPH_PROJECTOR,
-	});
-	if (graph.graphSnapshotDigest !== expectedSnapshotDigest) {
-		throw new Error("Alignment query graph snapshot identity is invalid.");
-	}
-	if (graph.graphContentDigest !== canonicalJsonDigest({nodes: graph.nodes, edges: graph.edges})) {
-		throw new Error("Alignment query graph content digest is invalid.");
-	}
-}
-
-function assertGraphFacts(graph: AlignmentGraphSnapshot): void {
-	const nodeIds = new Set(graph.nodes.map((node) => node.id));
-	const edgeIds = new Set(graph.edges.map((edge) => edge.factId));
-	if (nodeIds.size !== graph.nodes.length || edgeIds.size !== graph.edges.length) {
-		throw new Error("Alignment query graph contains duplicate fact identities.");
-	}
-	for (const edge of graph.edges) {
-		const {factId, ...body} = edge;
-		if (
-			canonicalJsonDigest(body) !== factId ||
-			!nodeIds.has(edge.from) ||
-			!nodeIds.has(edge.to)
-		) {
-			throw new Error(`Alignment query graph edge ${factId} is invalid.`);
-		}
-	}
-}
-
-function assertGraphCoverage(graph: AlignmentGraphSnapshot): void {
-	if (
-		graph.status !== "fresh" ||
-		graph.coverage.nodeCount !== graph.nodes.length ||
-		graph.coverage.edgeCount !== graph.edges.length ||
-		graph.coverage.projectedRecordCount !== graph.projectedRecordIds.length ||
-		graph.coverage.acceptedRecordCount !== graph.projectedRecordIds.length
-	) {
-		throw new Error("Alignment query graph coverage is invalid.");
-	}
 }
 
 const QUERY_FAMILY_FIELDS: Readonly<

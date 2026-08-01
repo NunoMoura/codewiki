@@ -129,7 +129,7 @@ Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain 
 
 ## Work and project control plane
 
-Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority.
+Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Runtime exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Triage never creates an overall score or execution priority.
 
 One Change owns one append-only JSONL dossier:
 

@@ -20,6 +20,7 @@ codewiki_source_patterns:
   - src/runtime/implementation-worker-adapter.ts
   - src/pi/worker-reports.ts
   - src/pi/process-worker-adapter.ts
+  - src/changes/triage/**
   - src/dashboard/changes-state.ts
   - src/dashboard/state.ts
   - src/dashboard/assets.ts
@@ -29,6 +30,7 @@ codewiki_test_patterns:
   - tests/changes/change-intake-producers.test.mjs
   - tests/changes/defect-profile.test.mjs
   - tests/runtime/process-worker-adapter.test.mjs
+  - tests/changes/backlog-triage.test.mjs
   - tests/dashboard/changes-state.test.mjs
   - tests/dashboard/dashboard-state.test.mjs
 codewiki_trace_events:
@@ -64,10 +66,12 @@ codewiki_source_map:
     role: change_intake_domain
   - id: change_triage
     source_patterns:
+      - src/changes/triage/**
       - src/dashboard/changes-state.ts
       - src/dashboard/state.ts
       - src/dashboard/assets.ts
     test_patterns:
+      - tests/changes/backlog-triage.test.mjs
       - tests/dashboard/changes-state.test.mjs
       - tests/dashboard/dashboard-state.test.mjs
     role: backlog_triage_projection
@@ -100,13 +104,14 @@ src/changes/
     deduplicate.ts
     route.ts
   triage/
+    contracts.ts
     projection.ts
     estimates.ts
     ordering.ts
     query.ts
 ```
 
-Do not create `src/triage/**`. A top-level package would imply a project-wide meaning or scheduling authority that triage does not own. Runtime orchestrates admission, persistence, and scheduling under `src/runtime/**`; `src/changes/intake/**` owns pure bounded intake semantics; `src/changes/triage/**` owns derived Change-facing projection and query logic. The clean cut replaced the legacy single-file `src/changes/intake.ts` without preserving an alias or dual path. OKF source ownership names only executable artifacts; future triage files enter the source map when implemented.
+Do not create `src/triage/**`. A top-level package would imply a project-wide meaning or scheduling authority that triage does not own. Runtime orchestrates admission, persistence, and scheduling under `src/runtime/**`; `src/changes/intake/**` owns pure bounded intake semantics; `src/changes/triage/**` owns derived Change-facing projection and query logic. The clean cut replaced the legacy single-file `src/changes/intake.ts` without preserving an alias or dual path. OKF source ownership names the executable intake and triage artifacts directly.
 
 ## Closed intake material
 
@@ -225,9 +230,11 @@ Unknown values remain unknown rather than becoming zero. Every estimate identifi
 
 Model estimates use ranges or buckets, confidence, assumptions, and exact snapshot binding. They never become silent facts. Historical estimates may be calibrated against observed completed-Change effort and outcomes through derived analysis without creating a first-class Lesson, Memory, or priority record.
 
+Executable protocol `codewiki.backlog-triage-projection@1.0.0` validates exact WorkState and Alignment Graph identities, binds remote/source/Knowledge/config/policy/graph content, and projects at most 500 candidates at one canonical `asOf` timestamp. Each supported dimension carries Evidence authority separately from deterministic or inferred analysis provenance and retains canonical, observed, Evidence, analysis, and assumption refs. Estimate authority above `asserted` must resolve to at least that authority in an exact Evidence node in the bound graph. Missing support produces explicit `unknown`; declared Change risk is not silently reused as urgency, impact, implementation risk, or risk of inaction. Exact relationships identify confirmed overlap and active-work blocking, shared affected refs identify only possible overlap, and absence remains unknown. Pareto membership compares only Decision-ready candidates with known expected impact and effort. Fixed freshness bands and bounded age fairness are explicit protocol behavior, not a hidden score.
+
 ## Filtering, ordering, and selection
 
-User and agent views consume the same bounded query contract. Supported filters include source kind, Decision readiness, affected Knowledge/component, defect category, severity, security sensitivity, regression/incident state, effort, expected impact, confidence, overlap, blocked work, freshness, and age.
+User and agent views consume the same bounded `codewiki.backlog-triage-query@1.0.0` contract. Requests bind the exact projection digest, return at most 100 candidates, report matched/returned/truncated coverage, and carry per-item ordering reasons. Unsupported fields, generic query expressions, priority inputs, stale projection identity, tampered candidate bytes, duplicate filters, and unsafe bounds fail closed. Supported filters include source kind, Decision readiness, affected Knowledge/component, defect category, severity, security sensitivity, regression/incident state, urgency, risk of inaction, effort, expected impact, confidence, overlap, frontier membership, blocked work, freshness, and age.
 
 Supported ordering families include urgency, risk of inaction, impact, effort, Decision readiness, confidence, work unblocked, newest, and oldest. A derived impact/effort view may be offered when dimensions are comparable, but it is not canonical priority.
 
@@ -252,7 +259,7 @@ A Model Check finding is asserted analysis, not verified vulnerability fact. Run
 
 ## Current clean-cut drift
 
-The closed source-specific material contract and strict normalizer now replace legacy `user | runtime | lab` feedback. Runtime authenticates exact source material through an injected source adapter, validates optional correlation against fresh WorkState, records the complete normalized inline material plus durable request/source/semantic fingerprints, replays exact accepted requests, reinforces open source or semantic matches, routes exact current-scope feedback, creates linked independent Changes, and verifies expected-head Git acceptance without blind retry. Authenticated CLI/API/Pi admission transport, real provider/scanner collection adapters, and shared triage projections remain incomplete. `wiki_change` no longer accepts the removed feedback shape. Native Worker Reports still lack structured discoveries. Current dashboard filtering and ordering remain presentation-local and do not provide a shared user/agent triage contract.
+The closed source-specific material contract and strict normalizer now replace legacy `user | runtime | lab` feedback. Runtime authenticates exact source material through an injected source adapter, validates optional correlation against fresh WorkState, records the complete normalized inline material plus durable request/source/semantic fingerprints, replays exact accepted requests, reinforces open source or semantic matches, routes exact current-scope feedback, creates linked independent Changes, and verifies expected-head Git acceptance without blind retry. Native Worker Reports preserve bounded structured discovery proposals, and Runtime adds exact Assignment, Work Item Claim, and tree bindings before admission. The shared snapshot-bound triage projection and bounded user/agent query are executable; current dashboard filtering and ordering remain presentation-local until the final Dashboard phase consumes that contract. Authenticated CLI/API/Pi admission transport and real provider/scanner collection adapters remain incomplete. `wiki_change` no longer accepts the removed feedback shape.
 
 ## Related docs
 

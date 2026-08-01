@@ -108,6 +108,10 @@ describe("OKF index and log navigation", () => {
 					},
 					{
 						kind: "Update",
+						text: "Added `codewiki.backlog-triage-projection@1.0.0` and bounded shared user/agent query `codewiki.backlog-triage-query@1.0.0`. Exact WorkState/Alignment Graph/config/policy bindings now produce provenance-bearing readiness, supported estimates, overlap, active-work blocking, freshness, Pareto, fairness, and explainable Decision-attention order without an overall score or Planning priority.",
+					},
+					{
+						kind: "Update",
 						text: "Added `codewiki.change-defect-profile@1.0.0` and Change Trace Protocol `1.2.0`. Exact revisions may preserve closed defect dimensions and qualified SARIF/CWE/CVE/GHSA/OSV/CVSS/KEV references with explicit Evidence authority while keeping unknown values, risk, and Planning priority separate.",
 					},
 					{

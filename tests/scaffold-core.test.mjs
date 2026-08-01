@@ -105,6 +105,8 @@ describe("fresh scaffold", () => {
 
 	it("keeps the package API surface facade runtime- and contract-only", () => {
 		assert.deepEqual(Object.keys(publicApi).sort(), [
+			"BACKLOG_TRIAGE_PROJECTION_PROTOCOL",
+			"BACKLOG_TRIAGE_QUERY_PROTOCOL",
 			"CHANGE_DEFECT_PROFILE_PROTOCOL",
 			"CHANGE_INTAKE_MATERIAL_PROTOCOL",
 			"CHANGE_INTAKE_MATERIAL_TYPES",
@@ -112,6 +114,12 @@ describe("fresh scaffold", () => {
 			"CODEWIKI_EXTENSION_AVAILABLE",
 			"DEFAULT_WIKI_CONFIG",
 			"ProjectCoordinator",
+			"TRIAGE_CONFIDENCE",
+			"TRIAGE_EFFORTS",
+			"TRIAGE_LEVELS",
+			"TRIAGE_ORDERINGS",
+			"TRIAGE_REVERSIBILITY",
+			"buildBacklogTriageProjection",
 			"buildProjectWorkState",
 			"buildWikiState",
 			"buildWorkState",
@@ -132,6 +140,7 @@ describe("fresh scaffold", () => {
 			"normalizeChangeIntakeContent",
 			"normalizeChangeIntakeMaterial",
 			"normalizeChangeSecurityProfile",
+			"queryBacklogTriage",
 			"resolveWikiConfig",
 			"runRuntimeSemanticExecutor",
 			"runWikiArchive",

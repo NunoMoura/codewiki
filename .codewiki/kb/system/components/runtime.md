@@ -209,6 +209,8 @@ Against a fresh snapshot, Runtime authenticates, sanitizes, normalizes, deduplic
 
 Runtime rebuilds the Backlog Triage Projection from accepted pending/deferred revisions, WorkState, Alignment Graph facts, source observations, config, and policy. The projection exposes provenance-bearing Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, and bounded ordering reasons. Unknown remains unknown; Evidence authority remains distinct from canonical/observed graph bindings and deterministic/inferred analysis provenance.
 
+Executable protocols `codewiki.backlog-triage-projection@1.0.0` and `codewiki.backlog-triage-query@1.0.0` validate exact WorkState/graph/config/policy bindings, retain per-dimension support and assumptions, derive no opaque score, and cap shared user/agent results at 100. Projection and query are pure and disposable; repeated readers require no ownership and write no triage state.
+
 This projection selects Decision attention only. It is not canonical priority, cannot disposition a Change, and cannot schedule implementation. Explicit user selection may choose any eligible pending revision. Rolling Planning alone orders execution across accepted Changes.
 
 ## Change Claims
