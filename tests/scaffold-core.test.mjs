@@ -105,6 +105,7 @@ describe("fresh scaffold", () => {
 
 	it("keeps the package API surface facade runtime- and contract-only", () => {
 		assert.deepEqual(Object.keys(publicApi).sort(), [
+			"CHANGE_DEFECT_PROFILE_PROTOCOL",
 			"CHANGE_INTAKE_MATERIAL_PROTOCOL",
 			"CHANGE_INTAKE_MATERIAL_TYPES",
 			"CHANGE_INTAKE_RUNTIME_PROTOCOL",
@@ -115,6 +116,7 @@ describe("fresh scaffold", () => {
 			"buildWikiState",
 			"buildWorkState",
 			"createChangeIntakeRuntime",
+			"normalizeChangeDefectProfile",
 			"normalizeChangeIntakeMaterial",
 			"resolveWikiConfig",
 			"runRuntimeSemanticExecutor",

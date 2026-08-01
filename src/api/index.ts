@@ -116,6 +116,28 @@ export type {
 } from "../changes/types.ts";
 export type { ChangeRecord } from "../changes/records.ts";
 export {
+	CHANGE_DEFECT_PROFILE_PROTOCOL,
+	normalizeChangeDefectProfile,
+} from "../changes/defect-profile.ts";
+export type {
+	ChangeCvssReference,
+	ChangeDefectCategory,
+	ChangeDefectConfidence,
+	ChangeDefectExposure,
+	ChangeDefectLikelihood,
+	ChangeDefectProfile,
+	ChangeDefectProfileProvenance,
+	ChangeDefectRegressionStatus,
+	ChangeDefectReproducibility,
+	ChangeDefectSeverity,
+	ChangeKevReference,
+	ChangeSarifReference,
+	ChangeSecurityClassification,
+	ChangeSecurityIdentifier,
+	ChangeSecurityIdentifierScheme,
+	ChangeSecurityProfile,
+} from "../changes/defect-profile.ts";
+export {
 	CHANGE_INTAKE_MATERIAL_PROTOCOL,
 	CHANGE_INTAKE_MATERIAL_TYPES,
 } from "../changes/intake/contracts.ts";

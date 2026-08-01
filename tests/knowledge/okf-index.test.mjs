@@ -108,6 +108,10 @@ describe("OKF index and log navigation", () => {
 					},
 					{
 						kind: "Update",
+						text: "Added `codewiki.change-defect-profile@1.0.0` and Change Trace Protocol `1.2.0`. Exact revisions may preserve closed defect dimensions and qualified SARIF/CWE/CVE/GHSA/OSV/CVSS/KEV references with explicit Evidence authority while keeping unknown values, risk, and Planning priority separate.",
+					},
+					{
+						kind: "Update",
 						text: "Replaced legacy `user | runtime | lab` feedback with strict `codewiki.change-intake-material@1.0.0` contracts under `src/changes/intake/**`. Eight closed source members carry bounded normalized semantic content and exact source-specific bindings without caller-owned Change identity, authority, time, priority, risk, route, or Check outcomes. Runtime now authenticates and correlates the exact material, records durable request/source/semantic fingerprints, deterministically routes current feedback or linked independent discovery, and verifies fresh expected-head Git acceptance.",
 					},
 					{

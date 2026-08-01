@@ -25,6 +25,12 @@ import {
 	type ProjectAuthoritySnapshot,
 	type SynchronizationObservation,
 } from "../change-trace/synchronization.ts";
+import {
+	normalizeChangeDefectProfile,
+	type ChangeDefectCategory,
+	type ChangeDefectProfile,
+	type ChangeSecurityClassification,
+} from "../changes/defect-profile.ts";
 import type {ChangeIntakeMaterial} from "../changes/intake/contracts.ts";
 import {
 	changeIntakeProvenanceRefs,
@@ -150,26 +156,19 @@ export function createChangeIntakeRuntime(options: {
 	});
 }
 
+interface PreparedIntakeRequest {
+	readonly material: ChangeIntakeMaterial;
+	readonly authorityBinding: AuthorityBinding;
+	readonly fingerprints: ChangeIntakeFingerprints;
+	readonly expectedStateHead: string | null;
+}
+
 async function executeIntake(
 	options: Parameters<typeof createChangeIntakeRuntime>[0],
 	command: ChangeIntakeCommand,
 	signal?: AbortSignal,
 ): Promise<ChangeIntakeReceipt> {
-	signal?.throwIfAborted();
-	const parsedCommand = normalizeCommand(command);
-	const material = normalizeChangeIntakeMaterial(parsedCommand.material);
-	const authorityBinding = normalizeAuthorityBinding(
-		parsedCommand.authorityBinding,
-	);
-	const fingerprints = createChangeIntakeFingerprints(material, authorityBinding);
-	await authenticateSource(
-		options.authenticateSource,
-		material,
-		authorityBinding,
-		fingerprints,
-		signal,
-	);
-	assertExpectedStateHead(parsedCommand.expectedStateHead);
+	const prepared = await prepareIntakeRequest(options, command, signal);
 	const synchronizeCurrent = createCurrentGitSynchronizer({
 		repoRoot: options.repoRoot,
 		remote: options.remote,
@@ -184,84 +183,142 @@ async function executeIntake(
 	const state = requireFreshState(observation);
 	const accepted = findAcceptedChangeIntakeRequest(
 		state,
-		fingerprints.requestRef,
+		prepared.fingerprints.requestRef,
 	);
 	if (accepted) {
-		return replayReceipt(accepted, fingerprints, observation);
+		return replayReceipt(accepted, prepared.fingerprints, observation);
 	}
-	if (state.stateHead !== parsedCommand.expectedStateHead) {
+	if (state.stateHead !== prepared.expectedStateHead) {
 		throw new Error(
 			"Change intake state head is stale; synchronize and semantically reevaluate the material.",
 		);
 	}
-	const directCorrelation = directSourceCorrelation(state, material);
-	const suppliedCorrelation = options.correlateSource
+	const route = await routePreparedIntake(options, prepared, state, signal);
+	if (route.kind === "exact_replay") {
+		return replayReceipt(route.accepted, prepared.fingerprints, observation);
+	}
+	const sequence = createIntakeOperationSequence({
+		state,
+		route,
+		material: prepared.material,
+		fingerprints: prepared.fingerprints,
+		baseSnapshot: baseSnapshot(observation),
+		authorityBinding: prepared.authorityBinding,
+		recordedAt: runtimeTimestamp(options.now?.() ?? new Date()),
+	});
+	return commitIntakeSequence({
+		options,
+		state,
+		observation,
+		sequence,
+		fingerprints: prepared.fingerprints,
+		synchronizeCurrent,
+		signal,
+	});
+}
+
+async function prepareIntakeRequest(
+	options: Parameters<typeof createChangeIntakeRuntime>[0],
+	command: ChangeIntakeCommand,
+	signal?: AbortSignal,
+): Promise<PreparedIntakeRequest> {
+	signal?.throwIfAborted();
+	const parsed = normalizeCommand(command);
+	const material = normalizeChangeIntakeMaterial(parsed.material);
+	const authorityBinding = normalizeAuthorityBinding(parsed.authorityBinding);
+	const fingerprints = createChangeIntakeFingerprints(material, authorityBinding);
+	await authenticateSource(options.authenticateSource, {
+		material,
+		materialDigest: fingerprints.materialDigest,
+		authorityBinding,
+		signal,
+	});
+	assertExpectedStateHead(parsed.expectedStateHead);
+	return Object.freeze({
+		material,
+		authorityBinding,
+		fingerprints,
+		expectedStateHead: parsed.expectedStateHead,
+	});
+}
+
+async function routePreparedIntake(
+	options: Parameters<typeof createChangeIntakeRuntime>[0],
+	prepared: PreparedIntakeRequest,
+	state: ProjectWorkState,
+	signal?: AbortSignal,
+): Promise<ChangeIntakeRoute> {
+	const direct = directSourceCorrelation(state, prepared.material);
+	const supplied = options.correlateSource
 		? await options.correlateSource({
-				material,
-				materialDigest: fingerprints.materialDigest,
-				authorityBinding,
+				material: prepared.material,
+				materialDigest: prepared.fingerprints.materialDigest,
+				authorityBinding: prepared.authorityBinding,
 				state,
 				signal,
 			})
 		: null;
 	const correlation = reconcileCorrelation(
-		directCorrelation,
-		suppliedCorrelation === null
-			? null
-			: normalizeCorrelation(suppliedCorrelation),
+		direct,
+		supplied === null ? null : normalizeCorrelation(supplied),
 	);
-	const route = resolveChangeIntakeRoute({
+	return resolveChangeIntakeRoute({
 		state,
-		fingerprints,
+		fingerprints: prepared.fingerprints,
 		correlation,
-		newChangeId: intakeChangeId(material, fingerprints.materialDigest),
+		newChangeId: intakeChangeId(
+			prepared.material,
+			prepared.fingerprints.materialDigest,
+		),
 	});
-	if (route.kind === "exact_replay") {
-		return replayReceipt(route.accepted, fingerprints, observation);
-	}
-	const recordedAt = runtimeTimestamp(options.now?.() ?? new Date());
-	const sequence = createIntakeOperationSequence({
-		state,
-		route,
-		material,
-		fingerprints,
-		baseSnapshot: baseSnapshot(observation),
-		authorityBinding,
-		recordedAt,
-	});
+}
+
+async function commitIntakeSequence(input: {
+	readonly options: Parameters<typeof createChangeIntakeRuntime>[0];
+	readonly state: ProjectWorkState;
+	readonly observation: SynchronizationObservation;
+	readonly sequence: IntakeOperationSequence;
+	readonly fingerprints: ChangeIntakeFingerprints;
+	readonly synchronizeCurrent: ReturnType<typeof createCurrentGitSynchronizer>;
+	readonly signal?: AbortSignal;
+}): Promise<ChangeIntakeReceipt> {
 	const {pushResult} = await pushSynchronizedStateBatch({
-		repoRoot: options.repoRoot,
-		remote: options.remote,
-		state,
-		records: sequence.operations,
-		policy: options.replayPolicy,
-		observation,
-		runner: options.runner,
-		signal,
+		repoRoot: input.options.repoRoot,
+		remote: input.options.remote,
+		state: input.state,
+		records: input.sequence.operations,
+		policy: input.options.replayPolicy,
+		observation: input.observation,
+		runner: input.options.runner,
+		signal: input.signal,
 	});
 	if (pushResult.status === "stale") {
-		const {observation: raced} = await synchronizeCurrent();
+		const {observation: raced} = await input.synchronizeCurrent();
 		const racedState = requireFreshState(raced);
 		const racedRequest = findAcceptedChangeIntakeRequest(
 			racedState,
-			fingerprints.requestRef,
+			input.fingerprints.requestRef,
 		);
 		if (racedRequest) {
-			return replayReceipt(racedRequest, fingerprints, raced);
+			return replayReceipt(racedRequest, input.fingerprints, raced);
 		}
 		throw new Error(
 			"Change intake push became stale; Runtime must refetch and semantically reevaluate the material.",
 		);
 	}
-	const {observation: verified} = await synchronizeCurrent();
+	const {observation: verified} = await input.synchronizeCurrent();
 	const verifiedState = requireFreshState(verified);
 	const acceptedIds = new Set(verifiedState.acceptedOperationIds);
-	if (!sequence.operations.every((operation) => acceptedIds.has(operation.operationId))) {
+	if (
+		!input.sequence.operations.every((operation) =>
+			acceptedIds.has(operation.operationId),
+		)
+	) {
 		throw new Error(
-			`Accepted Change intake request ${fingerprints.requestDigest} could not be verified.`,
+			`Accepted Change intake request ${input.fingerprints.requestDigest} could not be verified.`,
 		);
 	}
-	return intakeReceipt(sequence, fingerprints, verified);
+	return intakeReceipt(input.sequence, input.fingerprints, verified);
 }
 
 interface IntakeOperationSequence {
@@ -347,7 +404,11 @@ function createNewChangeSequence(input: {
 		input.material,
 		input.fingerprints,
 	);
-	const revision = intakeRevision(input.material, provenanceRefs);
+	const revision = intakeRevision(
+		input.material,
+		provenanceRefs,
+		input.authorityBinding.authenticationEvidenceId,
+	);
 	const opened = createNextChangeOperation(null, {
 		changeId: input.route.changeId,
 		kind: "trace.opened",
@@ -425,6 +486,7 @@ function createNewChangeSequence(input: {
 function intakeRevision(
 	material: ChangeIntakeMaterial,
 	provenanceRefs: readonly string[],
+	authenticationEvidenceId: string | undefined,
 ): ChangeRevision {
 	const desiredOutcome =
 		material.content.desiredBehavior ??
@@ -444,6 +506,7 @@ function intakeRevision(
 	if (material.content.claimedConfidence) {
 		constraints.push(`Source claimed confidence: ${material.content.claimedConfidence}.`);
 	}
+	const defectProfile = intakeDefectProfile(material, authenticationEvidenceId);
 	return createChangeRevision({
 		title: material.content.summary.split("\n", 1)[0],
 		summary: material.content.observedBehavior,
@@ -458,8 +521,124 @@ function intakeRevision(
 		nonGoals: [],
 		knowledgeRefs: material.content.affectedRefs.filter(isKnowledgeRef),
 		sourceRefs: provenanceRefs,
-		risk: "moderate",
+		...(defectProfile ? {defectProfile} : {}),
+		risk: "unknown",
 	});
+}
+
+function intakeDefectProfile(
+	material: ChangeIntakeMaterial,
+	authenticationEvidenceId: string | undefined,
+): ChangeDefectProfile | undefined {
+	if (
+		material.materialType === "user_suggestion" &&
+		!material.content.claimedCategory &&
+		!material.content.claimedSeverity &&
+		!material.content.claimedConfidence &&
+		!material.content.reproduction
+	) {
+		return undefined;
+	}
+	const category = intakeDefectCategory(material);
+	const securityClassification = intakeSecurityClassification(category, material);
+	return normalizeChangeDefectProfile({
+		protocolId: "codewiki.change-defect-profile",
+		protocolVersion: "1.0.0",
+		category,
+		severity: material.content.claimedSeverity ?? "unknown",
+		likelihood: "unknown",
+		exposure: "unknown",
+		confidence: material.content.claimedConfidence ?? "unknown",
+		reproducibility: material.content.reproduction ? "reported" : "unknown",
+		regressionStatus:
+			material.materialType === "regression_finding" ? "suspected" : "unknown",
+		affectedVersions: [],
+		affectedTrees: intakeAffectedTrees(material),
+		affectedComponents: material.content.affectedRefs.filter(isKnowledgeRef),
+		observedBehavior: material.content.observedBehavior,
+		...(material.content.desiredBehavior
+			? {expectedBehavior: material.content.desiredBehavior}
+			: {}),
+		sourceLocations: material.content.affectedRefs.filter(isSourceLocation),
+		ruleRefs: intakeRuleRefs(material),
+		...(securityClassification
+			? {
+					security: {
+						classification: securityClassification,
+						identifiers: [],
+						cvss: [],
+						sarif: [],
+						kev: [],
+					},
+				}
+			: {}),
+		provenance: {
+			authority: "asserted",
+			evidenceIds: authenticationEvidenceId ? [authenticationEvidenceId] : [],
+			sourceRefs: [...material.content.sourceRefs],
+		},
+	});
+}
+
+function intakeDefectCategory(
+	material: ChangeIntakeMaterial,
+): ChangeDefectCategory {
+	if (material.content.claimedCategory) return material.content.claimedCategory;
+	switch (material.materialType) {
+		case "security_scanner_finding":
+			return "security";
+		case "regression_finding":
+			return "reliability";
+		case "delivery_observation":
+			return "delivery";
+		case "outcome_finding":
+			return "outcome";
+		case "knowledge_drift":
+			return "knowledge";
+		default:
+			return "behavior";
+	}
+}
+
+function intakeSecurityClassification(
+	category: ChangeDefectCategory,
+	material: ChangeIntakeMaterial,
+): ChangeSecurityClassification | null {
+	if (category === "privacy") return "privacy_finding";
+	if (category === "dependency") return "dependency_advisory";
+	if (category === "configuration") return "misconfiguration";
+	if (category === "security") {
+		return material.materialType === "security_scanner_finding"
+			? "weakness"
+			: "suspected_vulnerability";
+	}
+	return null;
+}
+
+function intakeAffectedTrees(material: ChangeIntakeMaterial): readonly string[] {
+	switch (material.materialType) {
+		case "worker_discovery":
+		case "regression_finding":
+			return [material.binding.baseTree, material.binding.resultTree];
+		case "security_scanner_finding":
+			return [material.binding.tree];
+		default:
+			return [];
+	}
+}
+
+function intakeRuleRefs(material: ChangeIntakeMaterial): readonly string[] {
+	switch (material.materialType) {
+		case "pull_request_finding":
+			return [`${material.binding.providerId}:${material.binding.findingId}`];
+		case "worker_discovery":
+			return [material.binding.workerReportId];
+		case "regression_finding":
+		case "security_scanner_finding":
+			return [material.binding.findingId];
+		default:
+			return [];
+	}
 }
 
 function intakeMaterialArtifact(
@@ -474,36 +653,14 @@ function intakeMaterialArtifact(
 	});
 }
 
-function operationRevision(revision: ChangeRevision): {
-	revisionId: ChangeRevisionId;
-	content: {
-		title: string;
-		summary: string;
-		desiredOutcome: string;
-		acceptanceRequirements: {id: string; statement: string}[];
-		constraints: string[];
-		nonGoals: string[];
-		knowledgeRefs: string[];
-		sourceRefs: string[];
-		risk: "low" | "moderate" | "high" | "critical";
-	};
-} {
-	return {
-		revisionId: revision.revisionId,
-		content: {
-			title: revision.content.title,
-			summary: revision.content.summary,
-			desiredOutcome: revision.content.desiredOutcome,
-			acceptanceRequirements: revision.content.acceptanceRequirements.map(
-				(requirement) => ({...requirement}),
-			),
-			constraints: [...revision.content.constraints],
-			nonGoals: [...revision.content.nonGoals],
-			knowledgeRefs: [...revision.content.knowledgeRefs],
-			sourceRefs: [...revision.content.sourceRefs],
-			risk: revision.content.risk,
-		},
-	};
+function operationRevision(
+	revision: ChangeRevision,
+): Parameters<
+	typeof createNextChangeOperation<"change.proposed">
+>[1]["payload"]["revision"] {
+	return structuredClone(revision) as Parameters<
+		typeof createNextChangeOperation<"change.proposed">
+	>[1]["payload"]["revision"];
 }
 
 function directSourceCorrelation(
@@ -603,18 +760,10 @@ function reconcileCorrelation(
 
 async function authenticateSource(
 	authenticator: ChangeIntakeSourceAuthenticator,
-	material: ChangeIntakeMaterial,
-	authorityBinding: AuthorityBinding,
-	fingerprints: ChangeIntakeFingerprints,
-	signal?: AbortSignal,
+	request: ChangeIntakeAuthenticationRequest,
 ): Promise<void> {
 	const result = canonicalRecord(
-		await authenticator({
-			material,
-			materialDigest: fingerprints.materialDigest,
-			authorityBinding,
-			signal,
-		}),
+		await authenticator(request),
 		"Change intake authentication",
 	);
 	assertExactKeys(
@@ -631,7 +780,7 @@ async function authenticateSource(
 	}
 	if (
 		result.authenticationEvidenceId !==
-		authorityBinding.authenticationEvidenceId
+		request.authorityBinding.authenticationEvidenceId
 	) {
 		throw new Error(
 			"Change intake authentication Evidence does not match authority binding.",
@@ -890,7 +1039,9 @@ function assertExactKeys(
 	const allowedSet = new Set(allowed);
 	const extra = Object.keys(value).filter((key) => !allowedSet.has(key));
 	if (extra.length > 0) {
-		throw new Error(`${label} received unsupported field ${extra.sort()[0]}.`);
+		throw new Error(
+			`${label} received unsupported field ${extra.sort(compareText)[0]}.`,
+		);
 	}
 	for (const key of allowed) {
 		if (!Object.hasOwn(value, key)) {
@@ -915,6 +1066,23 @@ function canonicalRecord(
 	return canonical as Record<string, CanonicalJsonValue>;
 }
 
+function compareText(left: string, right: string): number {
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
+}
+
 function isKnowledgeRef(ref: string): boolean {
 	return ref.startsWith("kb:") || ref.startsWith(".codewiki/kb/");
+}
+
+function isSourceLocation(ref: string): boolean {
+	return (
+		ref.startsWith("src/") ||
+		ref.startsWith("tests/") ||
+		ref.startsWith("lab/") ||
+		ref === ".codewiki/config.json" ||
+		ref === "package.json" ||
+		ref === "package-lock.json"
+	);
 }

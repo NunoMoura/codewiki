@@ -4,10 +4,14 @@ import type {
 	Sha256Digest,
 } from "../utils/canonical-json.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
+import {
+	changeDefectProfileSchema,
+	type ChangeDefectProfile,
+} from "../changes/defect-profile.ts";
 
 export const CHANGE_TRACE_PROTOCOL = Object.freeze({
 	id: "codewiki.change-trace",
-	version: "1.1.0",
+	version: "1.2.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 
@@ -140,7 +144,8 @@ export interface ChangeRevisionContent {
 	readonly nonGoals: readonly string[];
 	readonly knowledgeRefs: readonly string[];
 	readonly sourceRefs: readonly string[];
-	readonly risk: "low" | "moderate" | "high" | "critical";
+	readonly defectProfile?: ChangeDefectProfile;
+	readonly risk: "unknown" | "low" | "moderate" | "high" | "critical";
 }
 
 export interface ChangeRevision {
@@ -256,7 +261,9 @@ export const changeRevisionContentSchema = Type.Object(
 		nonGoals: textListSchema,
 		knowledgeRefs: refListSchema,
 		sourceRefs: refListSchema,
+		defectProfile: Type.Optional(changeDefectProfileSchema),
 		risk: Type.Union([
+			Type.Literal("unknown"),
 			Type.Literal("low"),
 			Type.Literal("moderate"),
 			Type.Literal("high"),

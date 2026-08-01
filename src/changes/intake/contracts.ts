@@ -1,4 +1,9 @@
 import type {Sha256Digest} from "../../utils/canonical-json.ts";
+import {
+	CHANGE_DEFECT_CATEGORIES,
+	CHANGE_DEFECT_CONFIDENCES,
+	CHANGE_DEFECT_SEVERITIES,
+} from "../defect-profile.ts";
 
 export const CHANGE_INTAKE_MATERIAL_PROTOCOL = Object.freeze({
 	id: "codewiki.change-intake-material",
@@ -20,38 +25,9 @@ export const CHANGE_INTAKE_MATERIAL_TYPES = [
 	"knowledge_drift",
 ] as const;
 
-export const CHANGE_INTAKE_CLAIMED_CATEGORIES = [
-	"accessibility",
-	"behavior",
-	"compatibility",
-	"configuration",
-	"data",
-	"delivery",
-	"dependency",
-	"documentation",
-	"knowledge",
-	"outcome",
-	"performance",
-	"privacy",
-	"reliability",
-	"security",
-] as const;
-
-export const CHANGE_INTAKE_CLAIMED_SEVERITIES = [
-	"unknown",
-	"informational",
-	"low",
-	"medium",
-	"high",
-	"critical",
-] as const;
-
-export const CHANGE_INTAKE_CLAIMED_CONFIDENCES = [
-	"unknown",
-	"low",
-	"medium",
-	"high",
-] as const;
+export const CHANGE_INTAKE_CLAIMED_CATEGORIES = CHANGE_DEFECT_CATEGORIES;
+export const CHANGE_INTAKE_CLAIMED_SEVERITIES = CHANGE_DEFECT_SEVERITIES;
+export const CHANGE_INTAKE_CLAIMED_CONFIDENCES = CHANGE_DEFECT_CONFIDENCES;
 
 export type ChangeIntakeMaterialType =
 	(typeof CHANGE_INTAKE_MATERIAL_TYPES)[number];

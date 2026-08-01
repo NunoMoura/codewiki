@@ -15,6 +15,7 @@ codewiki_components:
   - change_triage
 codewiki_source_patterns:
   - src/changes/intake/**
+  - src/changes/defect-profile.ts
   - src/runtime/change-intake.ts
   - src/dashboard/changes-state.ts
   - src/dashboard/state.ts
@@ -22,6 +23,7 @@ codewiki_source_patterns:
 codewiki_test_patterns:
   - tests/changes/change-intake.test.mjs
   - tests/changes/change-intake-runtime.test.mjs
+  - tests/changes/defect-profile.test.mjs
   - tests/dashboard/changes-state.test.mjs
   - tests/dashboard/dashboard-state.test.mjs
 codewiki_trace_events:
@@ -37,10 +39,12 @@ codewiki_source_map:
   - id: change_intake
     source_patterns:
       - src/changes/intake/**
+      - src/changes/defect-profile.ts
       - src/runtime/change-intake.ts
     test_patterns:
       - tests/changes/change-intake.test.mjs
       - tests/changes/change-intake-runtime.test.mjs
+      - tests/changes/defect-profile.test.mjs
     trace_events:
       - trace.opened
       - change.proposed
@@ -157,6 +161,8 @@ A resolved provider thread, passing worker confidence, or reviewer approval does
 
 `issue` is an external container, not a Change type. A defect normally uses Change kind `fix`; its semantic type still describes the affected boundary, such as behavior, security, dependency, data, or incident resolution. An optional defect profile records why the Change exists and its observed impact.
 
+Executable protocol `codewiki.change-defect-profile@1.0.0` is optional on an exact Change revision and therefore participates in revision identity. It carries closed category, severity, likelihood, exposure, confidence, reproducibility, regression-status, affected-version/tree/component, behavior, source-location, rule, security-reference, and provenance fields. Profile provenance records `asserted | observed | verified | approved` authority plus exact Evidence and source refs. The profile deliberately has no risk or priority field.
+
 The profile distinguishes:
 
 ```text
@@ -181,6 +187,8 @@ risk        policy interpretation of severity, likelihood, and exposure
 priority    rolling Planning decision over accepted Changes and current WorkState
 confidence  strength of current evidence
 ```
+
+Unknown severity, likelihood, exposure, confidence, reproducibility, regression status, and revision risk remain `unknown`; Runtime does not convert missing evidence to a low value. Authenticated intake maps source claims to an `asserted` profile while retaining unknown likelihood, exposure, and risk until stronger Evidence and policy resolve them.
 
 Generic findings use a closed CodeWiki category and severity vocabulary. SARIF 2.1 is an import/export format for machine findings, not canonical Change semantics. Security findings may preserve exact CWE identifiers, CVE/GHSA/OSV aliases, CVSS version/vector/score, and CISA Known Exploited Vulnerability references when supplied by qualified evidence. Identifiers and model claims do not prove exploitability or canonical severity.
 
@@ -232,7 +240,7 @@ A Model Check finding is asserted analysis, not verified vulnerability fact. Run
 
 ## Current clean-cut drift
 
-The closed source-specific material contract and strict normalizer now replace legacy `user | runtime | lab` feedback. Runtime authenticates exact source material through an injected source adapter, validates optional correlation against fresh WorkState, records the complete normalized inline material plus durable request/source/semantic fingerprints, replays exact accepted requests, reinforces open source or semantic matches, routes exact current-scope feedback, creates linked independent Changes, and verifies expected-head Git acceptance without blind retry. Dedicated CLI/API/Pi and provider/worker/scanner/delivery/outcome/Knowledge producers, structured defect/security profiles, and shared triage projections remain incomplete. `wiki_change` no longer accepts the removed feedback shape. Native Worker Reports still lack structured discoveries. Current dashboard filtering and ordering remain presentation-local and do not provide a shared user/agent triage contract.
+The closed source-specific material contract and strict normalizer now replace legacy `user | runtime | lab` feedback. Runtime authenticates exact source material through an injected source adapter, validates optional correlation against fresh WorkState, records the complete normalized inline material plus durable request/source/semantic fingerprints, replays exact accepted requests, reinforces open source or semantic matches, routes exact current-scope feedback, creates linked independent Changes, and verifies expected-head Git acceptance without blind retry. Dedicated CLI/API/Pi and provider/worker/scanner/delivery/outcome/Knowledge producers and shared triage projections remain incomplete. `wiki_change` no longer accepts the removed feedback shape. Native Worker Reports still lack structured discoveries. Current dashboard filtering and ordering remain presentation-local and do not provide a shared user/agent triage contract.
 
 ## Related docs
 

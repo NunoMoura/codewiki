@@ -168,6 +168,8 @@ Decision uses the `decision` model route for candidate production. Kernel Model 
 
 No Decision Check can prove the absence of every vulnerability. Decision prevents unsafe or materially under-specified intent from being approved; Planning owns required security work, isolation, sequencing, and reviewer obligations; Implementation evaluates the exact integrated tree through activated scanners, tests, and falsification-oriented security challenge assurance.
 
+An exact Change revision may carry `codewiki.change-defect-profile@1.0.0`. The profile preserves closed defect dimensions and qualified SARIF/CWE/CVE/GHSA/OSV/CVSS/KEV references with explicit Evidence authority, but it has no risk or priority field and cannot prove exploitability or Check satisfaction. Unknown remains explicit.
+
 Every Change first receives a cheap deterministic security-surface classification. Activation does not trust only caller-supplied kind or risk. Runtime derives relevant traits from the exact revision, affected Knowledge/components/layers, source ownership, dependency changes, data flows, public interfaces, and observed source scope. Initial security surfaces include authentication/authorization, personal or sensitive data, credentials/secrets, network/public API, dependency/supply chain, parsing/deserialization, command/process execution, filesystem, cryptography, persistence/migration, infrastructure/configuration, and browser trust boundaries.
 
 Where facts permit, Code Checks run before Model Checks and validate bounded requirements or exact observations such as:

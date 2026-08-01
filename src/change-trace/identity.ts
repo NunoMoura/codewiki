@@ -38,6 +38,7 @@ import {
 	type CanonicalJsonValue,
 } from "../utils/canonical-json.ts";
 import { assertTypeboxSchema } from "../utils/json.ts";
+import { normalizeChangeDefectProfile } from "../changes/defect-profile.ts";
 import { CHANGE_INTAKE_MATERIAL_PROTOCOL } from "../changes/intake/contracts.ts";
 import { normalizeChangeIntakeMaterial } from "../changes/intake/normalize.ts";
 
@@ -945,6 +946,9 @@ function normalizeChangeRevisionContent(
 		nonGoals: sortedUnique(content.nonGoals),
 		knowledgeRefs: sortedUnique(content.knowledgeRefs),
 		sourceRefs: sortedUnique(content.sourceRefs),
+		...(content.defectProfile
+			? {defectProfile: normalizeChangeDefectProfile(content.defectProfile)}
+			: {}),
 	});
 }
 

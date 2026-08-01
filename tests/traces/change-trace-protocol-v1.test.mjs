@@ -286,10 +286,10 @@ describe("frozen protocol fixtures", () => {
 		const archive = archiveManifest(operation);
 		const documents = {operation, epoch, state, archive};
 		const expectedIds = {
-			operation: "sha256:64611234a374447eac1d32fef14a21784bb7cde929322288b2e23eb742d84920",
-			epoch: "sha256:cfa43451c292b0cc83e674ffa0117e00ecaf138ec1bd72dd969e0839b3a1e143",
-			state: "sha256:ee1a82e77d43082ae420c3f13a15ed9eeee4d6e60d119fb0ed795ed51ff1d6bc",
-			archive: "sha256:93825018312a1977b909b237902cbe622f0bd4200689c13cf9c6480e87239a2e",
+			operation: "sha256:8893f2728661be2bd087237513bd46e8ca8d369a5e41c42417453f44f28bff53",
+			epoch: "sha256:f4340b9a4d8a50675b48c3c5182d1acc8b604d6912c6c800f5d2556b91135c88",
+			state: "sha256:0e0e188ff163a72d7b5e76c4d4455ffc315f2ab6ca15f5df3e00212f439c08df",
+			archive: "sha256:971868c93fae58fca65dd1424f6dc14530903ca97fe54a7e06e1af27fba06fed",
 		};
 		for (const [name, document] of Object.entries(documents)) {
 			const bytes = await readFile(new URL(`${name}.json`, fixtureDirectory), "utf8");

@@ -68,10 +68,12 @@ const criterionEvidence = {
 			"closed-source-union",
 			"authenticated-admission",
 			"deduplicated-routing",
+			"qualified-defect-profile",
 			"privacy-boundary",
 			"git-cas",
 		],
 		source: [
+			"src/changes/defect-profile.ts",
 			"src/changes/intake/contracts.ts",
 			"src/changes/intake/normalize.ts",
 			"src/changes/intake/deduplicate.ts",
@@ -81,6 +83,7 @@ const criterionEvidence = {
 		tests: [
 			"tests/changes/change-intake.test.mjs",
 			"tests/changes/change-intake-runtime.test.mjs",
+			"tests/changes/defect-profile.test.mjs",
 		],
 	},
 	"WU-worker-execution-policy-integration-v1": {

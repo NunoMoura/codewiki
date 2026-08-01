@@ -22,6 +22,7 @@ Behavior remains owned by Decision, Planning, Implementation, Loop Exit, WorkSta
 
 - Use exact role-specific schemas; no arbitrary candidate records or universal mega-tool.
 - Change intake exposes the closed material protocol, strict client preflight normalizer, and Runtime factory; only Runtime authenticates, correlates, deduplicates, routes, timestamps, identifies, and admits material.
+- Defect/security profile protocol and normalizer expose closed revision semantics and qualified external-reference validation without granting callers canonical risk, priority, Evidence authority, or security verdicts.
 - Read/query results are compact, snapshot-bound, provenance-bearing, and explicit about coverage/staleness/truncation.
 - Candidate/Check/Result/Report identity, activation, thresholds, actor/time, generation, CAS, and route remain Runtime-owned.
 - Preview and apply/append/effect are distinct; passing Exit Report is not effect authority.
