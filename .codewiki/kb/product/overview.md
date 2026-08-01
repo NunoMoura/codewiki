@@ -64,13 +64,15 @@ Change detail remains available from every destination as a cross-cutting dossie
 
 Dashboard state is a projection. It cannot become a hidden backlog, plan, graph, workflow, or policy database.
 
-## Custom project assurance
+## User Standards and project assurance
 
-Settings / Assurance lets maintainers define repository-bound Custom Checks for company policy, design systems, API conventions, accessibility, compatibility, and delivery expectations that Skills may guide but cannot enforce. Each Custom Check is one bounded declarative atomic requirement under a closed CodeWiki-owned Check Type. V1 Custom Checks execute as Model Checks through a type-specific Check Evaluator; Code Checks and Model Checks remain distinct execution kinds.
+Settings / Assurance lets maintainers provide User Standards as bounded text or exact source bindings for company policy, design systems, API conventions, accessibility, resource limits, compatibility, and delivery expectations. Runtime snapshots and sanitizes the selected source, and CodeWiki distills atomic clauses into Default Check coverage, Custom Model Checks, approved-template Custom Code Checks, and explicit unresolved items. Direct requirement text is an inline User Standard rather than a parallel manual-Check path.
 
-Custom Check configuration remains protected Git-backed project truth. Dashboard provides bounded authoring, activation/Evidence/cost/agent-feedback preview, and exact per-Check Assessment and Result history. Lifecycle is `draft | active | disabled`; every applicable active Custom Check is required. Runtime owns stable identity, definition/config digests, applicability, activation, policy, model route, verdict derivation, and exit. A policy-changing Candidate cannot disable the protected-base Checks evaluating itself.
+Default versus Custom describes requirement origin; Code versus Model describes evaluation; Decision, Planning, and Implementation describe applicability. Every Custom Check binds exact accepted Standard snapshots and passages under a closed CodeWiki-owned Check Type. Distillation models cannot activate policy, assign authority or Results, or inject executable code, shell, prompts, tools, schemas, dependencies, or verdict logic.
 
-One Check Evaluator may use focused calls or calibrated type-level batches, but every Custom Check retains a separate Assessment, Result, enforcement, Evidence binding, and repair target. Model output never grants acceptance.
+Accepted Standard snapshots and Custom Check configuration remain protected Git-backed project truth. Dashboard provides source-to-Check review, activation/Evidence/guard/cost preview, and exact per-Check Assessment and Result history. Lifecycle is `draft | active | disabled`; every applicable active Custom Check is required. Runtime owns source/definition/config digests, applicability, activation, evaluator/template, verdict derivation, and exit. A policy-changing Candidate cannot disable the protected-base Checks evaluating itself.
+
+Custom Model Checks receive separate Assessments through independent Check Evaluators. Custom Code Checks instantiate only approved deterministic templates with bounded parameters. Hard resource Checks may configure matching Runtime preflight/meter/cancellation guards before exact usage Evidence yields one Result. Model output never grants acceptance or attests quantitative usage.
 
 ## Change model
 
@@ -95,7 +97,7 @@ Change status derives from accepted operations. Users and agents cannot directly
 
 Backlog is a generated intake/Decision surface. It accepts bounded authenticated user suggestions, ordinary pull-request review findings, worker discoveries, regression/scanner findings, delivery/outcome observations, and Knowledge drift through one Change intake boundary. Concurrent submission grants no approval, ownership, filesystem, model, priority, or execution authority.
 
-A snapshot-bound Backlog Triage Projection exposes Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, and provenance. It helps users and Runtime choose Decision attention without becoming a canonical queue or global priority store. Decision proceeds independently per Change. Users may accept Change B while Change A executes; rolling Planning alone determines execution ordering across accepted Changes.
+A snapshot-bound Backlog Triage Projection exposes Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, and provenance. Accepted User Standard preferences may influence its protected deterministic ordering, but lower order is not Check failure and no model supplies an opaque priority score. The projection helps users choose exact Changes for Decision attention without becoming a canonical queue or global priority store. Selection starts evaluation; it grants no disposition. Decision proceeds independently per Change. Rolling Planning decomposes approved Changes and alone determines Work Item execution ordering across current accepted work.
 
 Planning is rolling and project-wide. Each immutable Planning epoch observes the selected Change set, active Changes, Change Claims, Work Item Claims, Work Items, Assignments, dependencies, conflicts, current source/Knowledge state, capacity, and policy. It preserves safe active work and explicitly pauses, migrates, cancels, blocks, or routes back invalidated work.
 

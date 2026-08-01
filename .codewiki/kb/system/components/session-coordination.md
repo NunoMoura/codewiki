@@ -73,7 +73,7 @@ versioned CodeWiki OS guidance
 
 Decision and Planning use bounded session context. Worker Workbench is exclusive to one exact Implementation Assignment attempt.
 
-Candidate producers and independent Model Checks never share conversational state. Model Checks receive only their closed exact request; they do not receive producer messages, repair guidance, mutable session context, or tools unless a future approved Check protocol explicitly requires a trusted adapter. A Check Evaluator may assess several Custom Checks of one type in one fresh physical request only after calibration; it must return one exact separate Assessment per Check and cannot reuse conversation across attempts.
+User Standard distillers, Candidate producers, and independent Model Checks never share conversational state. Distillers receive Runtime-sanitized bounded source snapshots and return proposals only. Model Checks receive only their closed exact request; they do not receive distiller/producer messages, repair guidance, mutable session context, source credentials, or tools unless an approved Check protocol explicitly requires a trusted adapter. A Check Evaluator may assess several Custom Model Checks of one type in one fresh physical request only after calibration; it must return one exact separate Assessment per Check and cannot reuse conversation across attempts.
 
 Semantic sessions cannot supply canonical identity, authority, current snapshots, Check activation, thresholds, Results, Runtime Route, or append guards. They return bounded typed Candidate or Model Check Assessment output only.
 

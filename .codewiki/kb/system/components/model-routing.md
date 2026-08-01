@@ -38,13 +38,13 @@ Decision and Planning candidate producers use their selected Loop route. Runtime
 
 Planning declares Workbench/model requirements but cannot choose provider/model. Candidate, worker, Skill, client, or caller cannot self-label work `routine` or lower its tier.
 
-Kernel Model Checks normally inherit calibrated routes for their owning Loop. Implementation Model Checks use `implementation.complex` unless a trusted versioned Check binding establishes another calibrated route. Runtime records exact model, configuration, Check, trial, and aggregation identity in each Result.
+Default Model Checks normally inherit calibrated routes for their owning Loop. Implementation Model Checks use `implementation.complex` unless a trusted versioned Check binding establishes another calibrated route. Runtime records exact model, configuration, Check, trial, and aggregation identity in each Result.
 
 ## Check Evaluator routes
 
 Each closed Check Type owns one versioned Check Evaluator protocol and model capability class. Product surfaces use domain labels such as Security Evaluator, Design Evaluator, API Evaluator, and Policy Evaluator. A Check Evaluator is not a persistent model agent or final reviewer.
 
-Custom Checks default to the calibrated route inherited from their owning Loop. An authorized maintainer may bind a Check Type—not each individual Custom Check—to one configured Pi route whose capabilities and calibration satisfy the type. Runtime validates the route, binds its safe configuration digest into every Assessment and Result, and falls back to the calibrated strong route when no approved type binding exists. Custom Check authors cannot provide a provider, model, system prompt, tool list, or route in requirement text.
+Custom Model Checks default to the calibrated route inherited from their owning Loop. An authorized maintainer may bind a Check Type—not each individual Custom Check—to one configured Pi route whose capabilities and calibration satisfy the type. Runtime validates the route, binds its safe configuration digest into every Assessment and Result, and falls back to the calibrated strong route when no approved type binding exists. User Standard authors and distillation models cannot provide a provider, model, system prompt, tool list, or route in requirement text. Custom Code Checks select an approved deterministic template rather than a model route.
 
 One Check Evaluator may physically run one focused call per Custom Check, one call for all active Custom Checks of its type, or deterministic bounded batches. This call topology never merges semantic identity: every Custom Check receives one separate Assessment and Check Result. Candidate producers, workers, and Check Evaluators still use separate fresh conversational state.
 

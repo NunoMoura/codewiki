@@ -152,7 +152,7 @@ A Code Check is trusted deterministic CodeWiki-owned code. “Code” describes 
 - exact authority and active-Change overlap;
 - Git tree correspondence and Integration proof.
 
-The initial executable catalog is closed. Projects cannot inject arbitrary JavaScript, shell, executors, or third-party verifiers. Text-based Custom Checks are declarative Model Checks under closed CodeWiki-owned Check Types. Future Custom Code Checks may instantiate only approved deterministic templates or adapters with structured parameters.
+The executable catalog is closed. Projects cannot inject arbitrary JavaScript, shell, executors, or third-party verifiers. Default Checks are CodeWiki-provided. Custom Checks are distilled from exact accepted User Standards under closed CodeWiki-owned Check Types. Custom Model Checks use declarative requirements; Custom Code Checks may instantiate only approved deterministic templates or adapters with structured parameters.
 
 ### Model Check
 
@@ -169,14 +169,14 @@ Related Model Checks may share one physical transport/context envelope or determ
 ### Orthogonal dimensions
 
 ```text
-origin:      kernel | custom
+origin:      default | custom
 execution:   code | model
 check type:  intent | security | design | API | policy | ...
 measurement: qualitative | quantitative
 enforcement: observe | warn | require
 ```
 
-Requirement origin, project/kernel authority, execution kind, semantic Check Type, and measurement remain independent. Resolved policy owns enforcement; every applicable active Custom Check resolves to `require`. V1 text-based Custom Checks execute as Model Checks.
+Requirement origin, CodeWiki/project authority, execution kind, semantic Check Type, and measurement remain independent. Resolved policy owns enforcement; every applicable active Custom Check resolves to `require`. Every Custom Check binds exact accepted User Standard snapshots. Custom Code Checks select only approved deterministic templates with bounded structured parameters.
 
 Quantitative Checks declare exact value shape, unit, comparator, threshold, allowed bounds, and aggregation policy. Runtime applies the threshold. Candidate and model cannot choose or reinterpret it.
 
@@ -193,7 +193,7 @@ Operational failure never fabricates a failing measurement or score zero.
 
 Runtime resolves one immutable candidate-specific policy from:
 
-- protected kernel Checks;
+- protected Default Checks;
 - Loop baseline;
 - accepted Change traits, risk, and affected layers;
 - project traits and technologies/paths;
@@ -205,13 +205,15 @@ Runtime resolves one immutable candidate-specific policy from:
 
 Every active Check records `activatedBy`, rule refs, version, parameters, threshold, enforcement, and dependencies. Active Custom Checks cannot be excluded per Candidate; maintainers change their lifecycle only through guarded protected configuration. Selection is deterministic and explainable. Learned or neural activation is forbidden.
 
-Kernel Checks cannot be disabled. Custom Checks use:
+Default Checks cannot be disabled. Custom Checks use:
 
 ```text
 draft → active → disabled
 ```
 
-Every applicable active Custom Check is required; `fail` or `indeterminate` blocks exit and feeds bounded repair or Evidence-gap guidance. A Candidate changing Custom Check configuration is evaluated under the protected-base policy snapshot and cannot weaken its own assurance. Accepted policy changes activate only from the next protected config snapshot. Actual candidate growth may add required Checks. It cannot silently lower risk or remove Planning minimums.
+Every applicable active Custom Check is required; `fail` or `indeterminate` blocks exit and feeds bounded repair or Evidence-gap guidance. A Candidate changing User Standard or Custom Check configuration is evaluated under the protected-base policy snapshot and cannot weaken its own assurance. Accepted policy changes activate only from the next protected config snapshot. Actual candidate growth may add required Checks. It cannot silently lower risk or remove Planning minimums.
+
+An exact active Custom Code Check may also resolve a CodeWiki-owned preflight, meter, or cancellation guard when its deterministic template requires enforcement before Loop exit. Guard identity, parameters, executor capability, telemetry, and final Result bind the same Check definition and policy snapshot. Missing enforcement or measurement capability cannot fall back to model judgment.
 
 ## Identity chain
 
@@ -391,7 +393,7 @@ Do not add Loops to compensate for weak candidates or Checks. Use exact refs, co
 - [WorkState](work-state.md)
 - [CodeWiki OS and Loop Protocols](codewiki-os.md)
 - [Loop Exit](loop-exit.md)
-- [Custom Checks](custom-checks.md)
+- [User Standards and Custom Checks](./custom-checks.md)
 - [Evidence Records](evidence.md)
 - [Worker Workbench](worker-workbench.md)
 - [Model Routing](model-routing.md)

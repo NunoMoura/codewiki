@@ -1,7 +1,7 @@
 ---
 type: Concept
-title: Custom Checks
-description: "Custom Checks let a project define bounded required semantic policy under closed CodeWiki-owned Check Types while Runtime preserves exact lifecycle, evaluation, evidence, and exit authority."
+title: User Standards and Custom Checks
+description: "Users provide source-backed Standards that CodeWiki distills into bounded Custom Checks while Runtime preserves exact provenance, lifecycle, evaluation, evidence, guards, and exit authority."
 tags:
   - codewiki
   - system
@@ -27,33 +27,37 @@ codewiki_source_map:
       - tests/loop-exit/custom-checks/**
     role: custom_check_policy
 ---
-# Custom Checks
+# User Standards and Custom Checks
 
-Custom Checks let maintainers enforce project-specific semantic requirements that a Skill can encourage but cannot independently verify or gate. Examples include company policy, API conventions, design-system rules, accessibility expectations, compatibility promises, and release requirements.
+Users provide Standards as bounded text or exact source bindings to project, company, Product, System, Design, security, compatibility, resource, and delivery expectations. CodeWiki distills accepted Standards into atomic Custom Checks instead of asking users to author evaluator machinery. Directly entered requirement text is an inline User Standard, not a separate manual-Check path.
 
-A Custom Check is bound to one repository and remains declarative. “Custom” never means arbitrary executable code, a custom system prompt, or caller-owned acceptance logic.
+A User Standard is source material and grants no Check Result or authority by itself. A Custom Check is the executable requirement derived from one or more exact accepted User Standard snapshots. “Custom” never means arbitrary executable code, a custom system prompt, caller-owned acceptance logic, or direct authority.
+
+Company policy, execution guidance, quality criteria, and resource instructions describe User Standard content; they are not separate canonical artifact types. Public assurance vocabulary uses User Standard, Default Check, Custom Check, Code Check, and Model Check. Internal Resolved Exit Policy, Runtime execution policy, resource guards, Evidence obligations, and triage projection policy remain distinct implementation contracts.
 
 ## Vocabulary
 
-Four contracts remain distinct:
+Five contracts remain distinct:
 
 | Contract | Meaning |
 | --- | --- |
+| User Standard | Project-accepted source-backed user expectation from bounded text or an exact source snapshot. |
 | Check Type | Closed, versioned CodeWiki-owned semantic family and evaluation contract. |
-| Custom Check | One project-authored atomic requirement instantiated under one Check Type. |
-| Check Evaluator | CodeWiki-owned type-specific model capability that assesses active Custom Checks against exact Candidate-bound Evidence. |
-| Check Result | Runtime-owned `pass | fail | indeterminate` result for one exact Custom Check. |
+| Default Check | CodeWiki-provided atomic requirement. |
+| Custom Check | One atomic requirement distilled from accepted User Standards under one Check Type. |
+| Check Result | Runtime-owned `pass | fail | indeterminate` result for one exact Check. |
 
-Code Check and Model Check remain execution kinds. Kernel versus Custom describes who defines the requirement; `code | model` describes how it is evaluated; Check Type describes the semantic family. Every applicable active Custom Check is required.
+Default versus Custom describes requirement origin. Code Check versus Model Check describes evaluation. Check Type describes semantic family. Loop applicability remains `decision | planning | implementation`. Every applicable active Custom Check is required.
 
 ```text
-origin:       kernel | custom
+origin:       default | custom
 execution:    code | model
 type:         intent | security | design | API | policy | ...
+loop:         decision | planning | implementation
 lifecycle:    draft | active | disabled
 ```
 
-V1 text-based Custom Checks execute as Model Checks. Future Custom Code Checks may only instantiate approved deterministic templates or adapters with structured parameters. Projects cannot paste JavaScript, shell, commands, arbitrary regex engines, tool definitions, or executable policy.
+Custom Model Checks use a CodeWiki-owned type-specific Check Evaluator. Custom Code Checks may only instantiate approved deterministic templates or adapters with structured parameters. Projects and distillation models cannot paste or generate JavaScript, shell, commands, arbitrary regex engines, tool definitions, prompts, response schemas, dependencies, or verdict logic. If no approved deterministic template can measure a clause, Runtime proposes a Custom Model Check or reports the clause unsupported; it never fabricates deterministic enforcement.
 
 ## Check Types
 
@@ -83,31 +87,28 @@ delivery_and_release
 organization_policy
 ```
 
-Dashboard labels may use friendlier names such as Security, Design, API, and Company policy. Stable stored ids remain versioned. Adding or changing a Check Type requires a CodeWiki source release and calibration; project users cannot mint a new evaluator protocol.
+Dashboard labels may use domain names such as Security, Design, API, and Company policy, but these remain source descriptions or Check Types rather than additional artifact classes. Stable stored ids remain versioned. Adding or changing a Check Type or deterministic template requires a CodeWiki source release and calibration; project users cannot mint an evaluator protocol.
 
-## Custom Check proposal
+## Standard distillation and Check proposal
 
-Dashboard, CLI, and bounded clients submit only a narrow proposal:
+Dashboard, CLI, and bounded clients submit a User Standard proposal as bounded inline text or a source reference selected by the user. Runtime owns source retrieval, sanitation, exact snapshot/content identity, freshness, credential isolation, and privacy handling. A model never receives source credentials or unrestricted connector tools.
 
-```ts
-interface CustomCheckProposal {
-  checkTypeId: string;
-  name: string;
-  requirement: string;
-  repairGuidance?: string;
-  appliesWhen: {
-    loops?: Array<"decision" | "planning" | "implementation">;
-    changeKinds?: string[];
-    affectedLayers?: string[];
-    pathScopes?: string[];
-  };
-  knowledgeRefs?: string[];
-}
-```
+Distillation produces a bounded review bundle containing:
 
-The Check Type constrains which applicability values are legal. Applicability is a closed structured filter, not an arbitrary query language. Runtime derives the stable Custom Check id, semantic definition digest, Check identity, lifecycle/config identity, activation, policy digest, and model route/configuration.
+- exact User Standard and source snapshot bindings;
+- atomic clause and passage refs;
+- whether an existing Default Check already covers each clause;
+- proposed Custom Model or approved-template Custom Code Checks;
+- closed Loop, Change-kind, affected-layer, and path applicability;
+- optional repair guidance and bounded Knowledge refs;
+- unsupported, ambiguous, contradictory, stale, or excluded clauses;
+- any deterministic triage or Runtime behavior implied by clauses that are not pass/fail requirements.
 
-One accepted Custom Check materializes one atomic Model Check requirement. Renaming or editing its requirement, repair guidance, applicability, or Knowledge refs preserves the stable Custom Check id but creates a new `definitionDigest`, invalidating dependent policy, cache, Assessment, Result, and Exit Report identities. Check Type cannot change within one Custom Check lineage; selecting another type creates a new draft Check. Lifecycle changes preserve `definitionDigest` but change the protected Custom Check configuration and Check Catalog digests. Git history orders accepted definitions and preserves earlier exact policy; no integer Custom Check revision exists.
+Every generated Check remains a narrow proposal. Distillation cannot activate a Standard or Check, choose authority, assign a Result, or mutate protected configuration. The distillation session shares no conversation with later Check Evaluators. Protected review must show the exact source passage and explain why each clause maps to a Default Check, Custom Check, deterministic Runtime behavior, or unresolved item.
+
+The Check Type constrains which applicability and evaluator templates are legal. Applicability is a closed structured filter, not an arbitrary query language. Runtime derives stable User Standard and Custom Check identities, source and semantic digests, lifecycle/config identity, activation, policy digest, and evaluator configuration.
+
+One accepted User Standard may yield several atomic Custom Checks across the three Loops. Every Custom Check binds its exact accepted Standard snapshots and passages. Renaming or editing a requirement, repair guidance, applicability, Standard bindings, or Knowledge refs preserves stable Custom Check lineage but creates a new `definitionDigest`, invalidating dependent policy, cache, Assessment, Result, guard, and Exit Report identities. Check Type cannot change within one Custom Check lineage; selecting another type creates a new draft Check. Lifecycle-only changes preserve `definitionDigest` but change protected configuration and Check Catalog digests. Git history orders accepted definitions and source snapshots; no integer revision exists.
 
 ## Text contract and bounds
 
@@ -127,36 +128,38 @@ canonical Custom Check    16,384 UTF-8 bytes
 
 Runtime normalizes Unicode to NFC and line endings to LF, rejects prohibited control characters and unsupported fields, and applies both code-point and UTF-8 byte limits. Line breaks are allowed; Markdown, template, mention, URL, and instruction-like syntax has no special execution meaning.
 
-Long company or design policy belongs in accepted Knowledge. A Custom Check should state one concise atomic requirement and cite bounded exact Knowledge refs rather than copying an entire handbook into model context.
+Long or private Standard bytes remain in accepted Knowledge or an authorized external source. Canonical policy retains bounded source metadata, exact content digests, passage refs, and permitted excerpts. A Custom Check states one concise atomic requirement and cites bounded exact Standard/Knowledge refs rather than copying an entire handbook into model context.
 
 ## User-controlled and Runtime-owned fields
 
 Maintainers may propose:
 
-- Check Type;
-- bounded name and requirement text;
-- optional repair guidance;
+- bounded inline Standard text or an exact source binding;
+- source purpose and intended scope;
+- corrections to proposed clause boundaries;
+- bounded name, requirement, and optional repair guidance;
 - closed applicability filters;
 - bounded Knowledge refs.
 
-Guarded Runtime commands control `draft | active | disabled` lifecycle and an authorized type-level route binding from configured Pi routes. Proposal text cannot select whether an active Check blocks exit.
+Guarded Runtime commands control accepted Standard snapshots, Check `draft | active | disabled` lifecycle, and authorized type-level route bindings from configured Pi routes. User text cannot choose Check Result, authority, arbitrary execution, or whether an active Check blocks exit.
 
 Runtime and CodeWiki-owned Check Types retain:
 
-- execution kind and Check Evaluator protocol;
+- source retrieval, sanitation, snapshot identity, freshness, and credential handling;
+- execution kind, approved Code template or Check Evaluator protocol;
 - system instructions, tools, and output schema;
 - Evidence obligations and deterministic dependencies;
-- timeout, token, cost, concurrency, and response ceilings;
-- stable identity, definition/config/policy digests, protocol versions, timestamps, and freshness;
+- timeout, token, cost, concurrency, response, compute, and storage ceilings;
+- stable identity, source/definition/config/policy digests, protocol versions, timestamps, and freshness;
 - canonical risk, severity, priority, status, and authority;
 - Assessment validation and `pass | fail | indeterminate` derivation;
 - final policy reduction, Exit Report, Runtime Route, append, and effects.
 
-Custom Checks cannot disable protected kernel Checks, weaken Planning-derived minimums, suppress contradictory Evidence, or override deterministic Code Check Results.
+Custom Checks cannot disable protected Default Checks, weaken Planning-derived minimums, suppress contradictory Evidence, or override deterministic Code Check Results.
 
 ## Persistence and lifecycle
 
-Accepted Custom Check configuration is project truth in protected Git-backed `.codewiki/config.json`, bound into Team WorkState and Resolved Exit Policy digests. No dashboard database, mutable check registry, model memory, or provider object becomes canonical.
+Accepted User Standard snapshots and Custom Check configuration are project truth in protected Git-backed `.codewiki/config.json`, bound into Team WorkState, triage policy where applicable, Runtime execution policy where applicable, and Resolved Exit Policy digests. Large/private source bytes remain external and content-addressed. No dashboard database, mutable Standard/Check registry, model memory, or provider object becomes canonical.
 
 Lifecycle is explicit:
 
@@ -183,6 +186,7 @@ Runtime activates Custom Checks deterministically from exact Candidate, Change, 
 Each active binding records:
 
 - exact Custom Check id and semantic `definitionDigest`;
+- exact accepted User Standard/source snapshot and passage bindings;
 - exact Custom Check configuration and Check Catalog digests;
 - Check Type id/version;
 - Candidate and protected config snapshot;
@@ -194,9 +198,9 @@ Each active binding records:
 
 Absence of a Custom Check activation is not evidence that its requirement passed. Unsupported or unresolved applicability fails closed according to policy; a required ambiguous binding becomes `indeterminate` rather than silently disappearing.
 
-## Check Evaluators
+## Check Evaluators and deterministic templates
 
-A Check Evaluator is the CodeWiki-owned semantic model capability for one Check Type. Product surfaces may use domain names such as Security Evaluator, Design Evaluator, API Evaluator, or Policy Evaluator.
+A Check Evaluator is the CodeWiki-owned semantic model capability for one Check Type. Product surfaces may use domain names such as Security Evaluator, Design Evaluator, API Evaluator, or Policy Evaluator. An approved deterministic template is the corresponding CodeWiki-owned implementation option for Custom Code Checks; it exposes only closed structured parameters and exact Evidence requirements.
 
 A Check Evaluator is not a persistent agent, final judge, new Loop, or authority. It receives exact immutable Candidate content, bounded relevant Evidence, declared prerequisite Results, and one or more active Custom Check definitions. It shares no conversational state with Candidate producers, workers, repair sessions, or earlier Evaluator runs.
 
@@ -230,26 +234,33 @@ CodeWiki must compare these topologies with identical model/provider/version, Ca
 
 ## Dashboard experience
 
-Dashboard is the primary Custom Check authoring and administration surface:
+Dashboard is the primary User Standard and Custom Check authoring and administration surface:
 
 ```text
-choose Check Type
-→ name one atomic requirement
-→ add optional applicability and Knowledge refs
-→ preview exact activation, Evidence needs, agent feedback, and estimated cost
-→ save draft
+paste text or select an exact source
+→ Runtime snapshots and sanitizes source
+→ distill atomic clauses
+→ show Default Check coverage, proposed Custom Checks, and unresolved clauses
+→ review exact passages, evaluator kind, applicability, Evidence, guards, and cost
+→ save protected draft
 → inspect simulated per-Check Assessment and Result
-→ authorize activation against exact protected config digest
-→ active Check becomes required from next protected snapshot
+→ authorize exact Standard and generated Check bundle
+→ active applicable Checks become required from next protected snapshot
 ```
 
-Dashboard groups Custom Checks by Check Type and shows lifecycle, `definitionDigest`, activation scope, route, latest exact Results, Evidence gaps, estimated cost, and Git-backed policy-change history. It must distinguish draft simulation from authoritative Candidate evaluation and must not present model confidence as canonical severity or approval.
+Dashboard groups Custom Checks by source Standard and Check Type and shows source freshness, lifecycle, `definitionDigest`, activation scope, evaluator/template, latest exact Results, Evidence gaps, estimated cost, and Git-backed policy-change history. It must distinguish draft distillation and simulation from authoritative Candidate evaluation and must not present model confidence as canonical severity, source authority, priority, or approval.
 
-## Relationship to Skills and Knowledge
+## Relationship to Skills, Knowledge, triage, and Runtime guards
 
-Skills guide how producers and workers perform work. They cannot independently activate, disable, or pass Checks or change exit policy. Active Custom Checks independently evaluate the exact Candidate and are always required when applicable.
+Skills guide how producers and workers perform work. They cannot independently distill, activate, disable, or pass Checks or change exit policy. Active Custom Checks independently evaluate the exact Candidate and are always required when applicable.
 
-Knowledge holds durable company, Product, System, and Design meaning. Custom Checks cite and enforce atomic expectations from that Knowledge without duplicating the full policy corpus. If a Custom Check changes intended Product/System/Design meaning rather than merely enforcing it, the related Knowledge change must travel through the same accountable Change and Decision path.
+Knowledge and authorized external sources hold durable company, Product, System, and Design meaning. User Standards bind exact snapshots of that meaning; Custom Checks enforce atomic expectations without duplicating the full corpus. If a Standard changes intended Product/System/Design meaning rather than merely enforcing it, the related Knowledge change travels through the same accountable Change and Decision path.
+
+Most normative clauses become Decision Custom Checks. Planning and Implementation Custom Checks verify accepted execution requirements without independently reinterpreting the broad company corpus. If Planning discovers an accepted policy-derived invariant cannot be met, Runtime routes the semantic conflict to Decision rather than allowing Planning to waive it.
+
+A hard resource clause may generate Custom Code Checks for Planning feasibility and Implementation usage. Runtime may derive a preflight/meter/cancellation guard from that exact active Check so a hard token, cost, latency, compute, storage, concurrency, iteration, changed-file, or trace-size limit is enforced before or during work rather than discovered only at exit. Missing required telemetry or enforcement capability blocks the route or yields `indeterminate`; a model cannot attest quantitative usage.
+
+A Standard preference such as “prioritize critical security regressions” influences the deterministic snapshot-bound Backlog Triage Projection rather than producing a passing/failing Check. Lower priority is not failure. The compiled ordering behavior remains protected and digest-bound but is not another user-facing artifact.
 
 ## Target source boundary
 
@@ -258,7 +269,7 @@ src/loop-exit/custom-checks/**
 tests/loop-exit/custom-checks/**
 src/dashboard/**                 # primary authoring projection and guarded commands
 src/project/config.ts            # bounded persisted project configuration
-src/loop-exit/catalog.ts         # kernel Check Type integration
+src/loop-exit/catalog.ts         # Default and Custom Check integration
 src/loop-exit/resolve-policy.ts  # deterministic activation
 src/runtime/loop-exit-runtime.ts # scheduling, Assessment validation, Results
 ```
@@ -267,7 +278,9 @@ The clean cut replaces dashboard/public use of the broad `ProjectCheckRegistrati
 
 ## Current executable drift
 
-Source now cleanly removes `ProjectCheckRegistration` and provides `src/loop-exit/custom-checks/**` contracts for the closed Check Type catalog, bounded proposal materialization, Runtime-owned stable id and semantic `definitionDigest`, draft/active/disabled lifecycle, exact Custom Check configuration digest, normalization, limits, and tamper rejection. Project config persists only complete materialized definitions. Check Catalog `4.0.0` emits active Custom Checks only as required project-authority Model Checks with CodeWiki-owned execution, measurement, Evidence obligations, timeout, cost, dependencies, and evaluator identity. Resolved Exit Policy deterministically applies loop, Change-kind, affected-layer, and path-scope filters and binds exact Custom Check/type/evaluator/Knowledge metadata.
+Source now cleanly removes `ProjectCheckRegistration` and provides `src/loop-exit/custom-checks/**` contracts for the closed Check Type catalog, bounded direct proposal materialization, Runtime-owned stable id and semantic `definitionDigest`, draft/active/disabled lifecycle, exact Custom Check configuration digest, normalization, limits, and tamper rejection. Project config persists only complete materialized definitions. Check Catalog `4.0.0` emits active Custom Checks only as required project-authority Model Checks with CodeWiki-owned execution, measurement, Evidence obligations, timeout, cost, dependencies, and evaluator identity. Resolved Exit Policy deterministically applies loop, Change-kind, affected-layer, and path-scope filters and binds exact Custom Check/type/evaluator/Knowledge metadata.
+
+This executable foundation predates User Standards. It still permits direct source-unbound `CustomCheckProposal`, has no Standard source snapshot/distillation contract, supports no Custom Code Check template, and cannot derive resource guards or protected triage behavior from accepted Standards. The next clean cut replaces that direct path rather than adding an alias or dual authoring contract.
 
 The guarded `codewiki.custom-check-mutation@1.0.0` Runtime command now supports strict create, update, activate, and disable actions with exact current/protected config CAS, authenticated authority verification, bounded idempotency, semantic before/after bindings, and content-addressed receipts. The project adapter derives the complete canonical project-config digest, serializes cross-process writes with an exclusive lock, verifies persisted output, and can load Custom Check policy from an exact protected Git commit while working-tree changes prepare the next snapshot.
 

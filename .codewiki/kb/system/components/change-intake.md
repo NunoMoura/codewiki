@@ -78,7 +78,7 @@ codewiki_source_map:
 ---
 # Change Intake and Backlog Triage
 
-Change intake is the bounded domain boundary through which a potential discrepancy becomes accountable Change material. Backlog triage is the snapshot-bound projection that helps a human or Runtime choose which pending Change deserves Decision attention next. Neither is a semantic Loop, canonical queue, mutable priority store, or independent authority.
+Change intake is the bounded domain boundary through which a potential discrepancy becomes accountable Change material. Backlog triage is the snapshot-bound projection that helps users choose which pending Change deserves Decision attention next. Neither is a semantic Loop, canonical queue, mutable priority store, or independent authority.
 
 ```text
 bounded source material
@@ -89,7 +89,8 @@ bounded source material
 → pending Change or exact current-Change feedback
 → deterministic WorkState/Alignment Graph replay
 → Backlog Triage Projection
-→ bounded user or Runtime Decision selection
+→ authenticated user selection of an exact Change revision
+→ Decision attempt
 ```
 
 ## Source placement
@@ -238,7 +239,7 @@ User and agent views consume the same bounded `codewiki.backlog-triage-query@1.0
 
 Supported ordering families include urgency, risk of inaction, impact, effort, Decision readiness, confidence, work unblocked, newest, and oldest. A derived impact/effort view may be offered when dimensions are comparable, but it is not canonical priority.
 
-Default ordering is explainable and lexicographic:
+Default ordering is explainable and lexicographic. Accepted User Standards may add protected deterministic ordering clauses, but a model may only materialize source-bound dimensions or relationships; it cannot emit the final rank or an opaque score. Standard-derived ordering configuration binds exact source/config/projection digests and remains triage behavior rather than a pass/fail Check.
 
 1. confirmed critical security, active incident, data-loss, regulatory, or other protected escalation;
 2. escaped regressions and findings blocking active accepted work;
@@ -247,7 +248,7 @@ Default ordering is explainable and lexicographic:
 5. bounded age-based fairness to prevent starvation;
 6. incomplete or speculative intake.
 
-No opaque `overallScore` may hide safety, uncertainty, or effort tradeoffs. The view states why each item appears where it does. Explicit user selection may choose any eligible pending Change, but still grants no Decision disposition.
+No opaque `overallScore` may hide safety, uncertainty, or effort tradeoffs. The view states why each item appears where it does. Authenticated user selection may choose any eligible pending Change and binds the exact Change revision, WorkState, triage projection, and policy digest. Selection starts one independent Decision attempt; it grants no Decision disposition.
 
 Backlog triage asks which pending Change should receive Decision attention. Decision asks whether that exact intent is acceptable. Rolling Planning decides which accepted Changes execute, in what order, and through which Work Items. These boundaries must not collapse.
 

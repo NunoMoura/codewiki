@@ -66,7 +66,7 @@ Change
 
 A passing Exit Report permits exact Loop exit only. Runtime then revalidates freshness, authority, expected bases, generation, and effect policy.
 
-Projects may add bounded declarative Custom Checks under closed CodeWiki-owned Check Types. V1 Custom Checks remain Model Checks evaluated by type-specific Check Evaluators, with one separate Assessment and Runtime-owned Result per atomic requirement. Protected Git-backed configuration controls `draft | active | disabled` lifecycle; every applicable active Custom Check is required, and a policy-changing Candidate cannot weaken its protected-base assurance. Custom Checks do not add a Loop, executable project policy, model authority, or another truth store.
+Users provide source-backed Standards that CodeWiki distills into atomic Custom Checks under closed CodeWiki-owned Check Types. Default versus Custom describes requirement origin; Code versus Model describes evaluation. Custom Model Checks receive separate Assessments, while Custom Code Checks instantiate only approved deterministic templates and may drive matching Runtime guards. Protected Git-backed configuration controls exact source bindings and `draft | active | disabled` lifecycle; every applicable active Custom Check is required, and a policy-changing Candidate cannot weaken its protected-base assurance. User Standards and Custom Checks add no Loop, arbitrary executable policy, model authority, or truth store.
 
 ## Truth and projection
 

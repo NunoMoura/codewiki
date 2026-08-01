@@ -101,7 +101,7 @@ Runtime alone owns:
 - Change Claim and Work Item Claim lifecycle;
 - Worker Workbench provisioning and Assignment dispatch;
 - Evidence normalization, provenance/freshness/privacy validation, contradiction preservation, and approval correlation;
-- Custom Check proposal validation, Runtime-owned stable identity and definition/config digests, guarded lifecycle changes, deterministic required activation, and policy binding;
+- User Standard source registration/snapshot sanitation, bounded distillation, Default Check coverage, Custom Check proposal validation, Runtime-owned source/definition/config digests, guarded lifecycle changes, deterministic required activation, and policy binding;
 - Check activation, Check Evaluator scheduling, Assessment validation, execution, cancellation, exact caching, and required-result fan-in;
 - deterministic Runtime Route;
 - canonical Git-backed writes;
@@ -126,11 +126,11 @@ Change
 → Runtime Route
 ```
 
-Decision, Planning, and Implementation own Candidate semantics and Loop-specific kernel Check declarations. Closed Check Types constrain project-authored Custom Checks. Runtime constructs identity, resolves protected-base and candidate-specific policy deterministically, schedules bounded independent Code Checks and type-specific Check Evaluators, validates one Assessment and Result per active Check, creates the immutable Exit Report, and chooses a route.
+Decision, Planning, and Implementation own Candidate semantics and Loop-specific Default Check declarations. Closed Check Types constrain User Standard-derived Custom Checks. Runtime constructs identity, resolves protected-base and candidate-specific policy deterministically, schedules bounded independent Code Checks and type-specific Check Evaluators, derives required resource guards, validates one Assessment and Result per active Check, creates the immutable Exit Report, and chooses a route.
 
 A passing Exit Report is not write or effect authority. Runtime revalidates current state, exact bases, generation, actor authority, CAS, and effect-specific policy immediately before action.
 
-Custom Check policy acceptance follows that split explicitly. Required policy-review `pass` remains Evidence, not Git authority. Runtime separately authenticates acceptance authority, binds repository identity and configured protected ref, creates a config-only child of the reviewed protected head, holds the shared config lock for final working-state revalidation, pushes under exact expected-head Git CAS, and re-observes accepted config bytes. Stale or rejected effects are never blindly rebased or retried.
+User Standard and Custom Check policy acceptance follows that split explicitly. Required policy-review `pass` remains Evidence, not Git authority. Runtime separately authenticates acceptance authority, binds repository identity and configured protected ref, creates a config-only child of the reviewed protected head, holds the shared config lock for final working-state revalidation, pushes under exact expected-head Git CAS, and re-observes accepted config bytes. Stale or rejected effects are never blindly rebased or retried.
 
 ## Project snapshot and freshness
 
@@ -186,7 +186,7 @@ Representative lanes:
 
 ```text
 concurrent idempotent Change intake
-Decision-attention selection from Backlog Triage Projection
+authenticated user selection from Backlog Triage Projection
 Decision candidate production
 Planning candidate production
 Implementation candidate production

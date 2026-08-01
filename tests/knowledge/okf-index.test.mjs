@@ -62,7 +62,7 @@ describe("OKF index and log navigation", () => {
 		assert.match(product.content, /\* \[Stories\]\(stories\/\) - 6 concepts/);
 		assert.match(
 			stories.content,
-			/\* \[Enforce Project-Specific Expectations\]\(custom-checks\.md\) - As a maintainer, I want bounded Custom Checks/,
+			/\* \[Enforce User Standards\]\(custom-checks\.md\) - As a maintainer, I want CodeWiki to distill source-backed User Standards/,
 		);
 
 		assert.equal(system.path, "system/index.md");
@@ -77,7 +77,7 @@ describe("OKF index and log navigation", () => {
 		);
 		assert.match(
 			components.content,
-			/\* \[Custom Checks\]\(custom-checks\.md\) - Custom Checks let a project define bounded required semantic policy/,
+			/\* \[User Standards and Custom Checks\]\(custom-checks\.md\) - Users provide source-backed Standards/,
 		);
 		assert.match(
 			components.content,
@@ -102,6 +102,10 @@ describe("OKF index and log navigation", () => {
 			generateOkfLog({
 				date: "2026-08-01",
 				entries: [
+					{
+						kind: "Decision",
+						text: "Ratified source-backed User Standards as the only project-specific assurance input. CodeWiki provides Default Checks and distills accepted Standards into atomic Custom Model or approved-template Custom Code Checks; Default/Custom origin remains independent from Code/Model evaluation and Loop applicability. Company policy, execution guidance, quality criteria, and resource instructions are Standard content rather than separate artifact types. Hard resource Code Checks may derive matching Runtime guards, while non-pass/fail preferences influence protected deterministic Backlog Triage behavior. Direct source-unbound Custom Check authoring will be clean-cut away without a dual path. Backlog Triage only recommends attention; authenticated exact-revision user selection must start Decision, while Planning alone orders executable Work Items.",
+					},
 					{
 						kind: "Update",
 						text: "Added closed `codewiki.security-scanner-suite@1.0.0` and protected Decision Check `security_scanners_valid`; advanced Check Catalog to `4.0.0`. Deterministic surface selection, strict source/tree/environment/config/advisory requests, observed command/source Evidence, sanitized scanner finding intake, stale/unavailable `indeterminate` reduction, dependency-bound model input, exact persisted-Evidence replay, and external-state cache bypass are now executable. Production collectors, sealed calibration, deeper source/Knowledge analysis, and high/critical residual-risk authority remain pending.",

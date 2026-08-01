@@ -69,7 +69,7 @@ Target capability groups:
 | Evidence | Submit bounded kind-specific material or read exact Evidence Record/artifact projections. | Runtime owns identity/time/authority/coverage/freshness; no verdict or route in payload. |
 | Review | Read Validation Bundle; Approve / Request changes; request explicitly authorized draft-PR publication. | One correlated action; no direct append, merge, branch movement, or acceptance. |
 | Project query | Read bounded Work, Alignment, and Learning relationships. | Snapshot-bound, read-only, provenance-bearing. |
-| Configuration | Read/propose schema-defined changes below authority ceilings. | No Check suppression, threshold lowering, credential mutation, or hidden execution. |
+| Configuration | Read/propose bounded User Standard sources and schema-defined changes below authority ceilings; inspect generated Default Check coverage and Custom Check proposals. | No direct source credentials, Check suppression, threshold lowering, authority mutation, or hidden execution. |
 | Runtime control | Inspect/pause/resume/cancel according to policy. | No semantic selection or truth mutation by payload. |
 | Preview | Manage declared local preview targets and screenshot/video capture. | Evidence material only; no acceptance. |
 | Feedback Bundle | Generate local allowlisted diagnostic preview. | Export requires separate user approval. |

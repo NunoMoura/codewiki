@@ -42,11 +42,13 @@ User-facing explanations distinguish:
 - **Semantic Loop**: Decision, Planning, or Implementation only;
 - **Candidate**: exact immutable output proposed by one Loop attempt;
 - **Evidence Record**: immutable typed observation with no verdict or route authority;
+- **User Standard**: project-accepted source-backed user expectation from bounded text or an exact source snapshot; company policy, execution guidance, quality criteria, and resource instructions are Standard content rather than separate artifacts;
 - **Check**: one versioned requirement/execution/measurement/evidence contract;
 - **Check Type**: closed CodeWiki-owned semantic family, applicability, Evidence, evaluator, route-capability, and limit contract;
-- **Custom Check**: one repository-bound project-authored bounded declarative atomic requirement under one Check Type;
-- **Code Check** versus **Model Check**: deterministic CodeWiki code versus bounded independent model Assessment;
-- **Check Evaluator**: type-specific CodeWiki-owned model capability returning one separate Assessment per active Custom Check;
+- **Default Check**: CodeWiki-provided atomic requirement;
+- **Custom Check**: one bounded atomic requirement distilled from exact accepted User Standard snapshots under one Check Type;
+- **Code Check** versus **Model Check**: deterministic CodeWiki evaluation versus bounded independent model Assessment, orthogonal to Default versus Custom origin;
+- **Check Evaluator**: type-specific CodeWiki-owned model capability returning one separate Assessment per Model Check;
 - **Assessment**: one exact `supported | unsupported | uncertain` model output without Result or exit authority;
 - **Check Result**: one exact Runtime-derived Check outcome;
 - **Resolved Exit Policy**: candidate-specific active Check contract;

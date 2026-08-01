@@ -122,7 +122,7 @@ Failed and indeterminate attempts remain durable accountability, repair, and lea
 
 ## Checks and exit
 
-Runtime deterministically resolves one candidate-specific Exit Policy from protected kernel Checks, Loop baseline, Change traits/risk/layers, project traits, technologies/paths, Planning minimums, actual effects, and approved additions/exclusions.
+Runtime deterministically resolves one candidate-specific Exit Policy from protected Default Checks, applicable User Standard-derived Custom Checks, Loop baseline, Change traits/risk/layers, project traits, technologies/paths, Planning minimums, actual effects, and approved additions/exclusions.
 
 ```ts
 type Check = CodeCheck | ModelCheck;

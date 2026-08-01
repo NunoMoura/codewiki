@@ -108,6 +108,7 @@ A Check is one atomic versioned requirement plus execution, measurement, evidenc
 Check dimensions are independent:
 
 ```text
+origin:      default | custom
 execution:   code | model
 measurement: qualitative | quantitative
 enforcement: observe | warn | require
@@ -123,13 +124,13 @@ else                           → pass
 
 A passing Exit Report permits exact semantic Loop exit only. Runtime separately revalidates generation, freshness, authority, and CAS before append or any effect.
 
-Initial Code Check catalog is closed. Projects cannot inject arbitrary JavaScript, shell, or executable verifiers. Kernel Checks cannot be disabled. Project-authored Custom Checks use `draft | active | disabled`; every applicable active Custom Check is required. Activation is deterministic and records `activatedBy`; learned activation and threshold changes are forbidden.
+Initial Check catalog is closed. Default Checks are CodeWiki-provided and cannot be disabled. Users provide source-backed Standards; CodeWiki distills them into atomic Custom Model Checks or approved-template Custom Code Checks. Projects cannot inject arbitrary JavaScript, shell, prompts, tools, schemas, dependencies, or verdict logic. Custom Checks use `draft | active | disabled`; every applicable active Custom Check is required. Activation is deterministic and records `activatedBy`; learned activation and threshold changes are forbidden. Hard resource Code Checks may configure matching Runtime guards before exact usage Evidence yields a Result.
 
 Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain Workbench/repair capabilities. Their output is not automatically authoritative Check evidence. Classified or high-risk native Decision assurance now activates a closed scanner suite before independent security challenge review. Runtime fixes exact source/tree/environment/configuration/advisory bindings and materializes observed Evidence; findings fail, while unavailable scanners or stale advisory data remain `indeterminate`.
 
 ## Work and project control plane
 
-Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Runtime exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Triage never creates an overall score or execution priority.
+Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Runtime exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Accepted User Standard preferences may influence protected deterministic triage ordering, but lower order is not Check failure and no model emits final rank. An authenticated user selects an exact revision to start Decision; selection grants no disposition. Planning later decomposes approved Changes and owns Work Item execution ordering.
 
 One Change owns one append-only JSONL dossier:
 

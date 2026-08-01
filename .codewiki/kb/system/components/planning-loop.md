@@ -86,9 +86,11 @@ Planning owns Sprint creation, Work Item meaning, and project-wide execution coh
 - explicit resolution for Changes not selected or not safely executable;
 - disposition of active work when new intent invalidates assumptions.
 
-Planning does not approve Change meaning, implement source, select concrete provider credentials, grant Change Claim or Work Item Claim authority, accept Worker Reports, or perform Integration/effects. Backlog Triage may order pending revisions for Decision attention using asserted and derived urgency/impact/effort dimensions, but that order is not execution priority and does not constrain Planning.
+Planning does not approve Change meaning, re-evaluate broad company sources, implement source, select concrete provider credentials, grant Change Claim or Work Item Claim authority, accept Worker Reports, or perform Integration/effects. Backlog Triage may order pending revisions for Decision attention using asserted and derived urgency/impact/effort dimensions, but that order is not execution priority and does not constrain Planning.
 
-Runtime owns candidate and epoch identity, exact participant revisions, WorkState/base digests, Change Claim and Work Item Claim lifecycle, scheduling, Check activation, accepted state commit, CAS, recovery, and routing.
+Planning consumes approved Change meaning, exact Decision Results, accepted User Standard bindings, and policy-derived invariants. Planning Custom Checks verify complete decomposition, feasibility, resource allocation, sequencing, verification, and rollback without granting Planning authority to reinterpret or waive the underlying policy. If decomposition exposes a new semantic conflict or makes an accepted invariant impossible, Runtime routes the Change to Decision. Hard resource Custom Code Checks may require a compatible worker route and bounded Runtime guard before Work Items become executable.
+
+Runtime owns candidate and epoch identity, exact participant revisions, WorkState/base digests, Change Claim and Work Item Claim lifecycle, scheduling, Check activation, guard derivation, accepted state commit, CAS, recovery, and routing.
 
 ## Rolling epochs
 

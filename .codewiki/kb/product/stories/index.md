@@ -2,7 +2,7 @@
 
 ## Concepts
 
-* [Enforce Project-Specific Expectations](custom-checks.md) - As a maintainer, I want bounded Custom Checks for company policy, design style, API conventions, and other project-specific expectations so exact candidates are evaluated independently of producer Skills.
+* [Enforce User Standards](custom-checks.md) - As a maintainer, I want CodeWiki to distill source-backed User Standards into bounded Custom Checks so project-specific expectations are evaluated independently of producer Skills.
 * [Maintain Fresh Intent](intent.md) - As a maintainer or agent, I want CodeWiki to capture and challenge current project intent before planning or code changes, so future work uses agreed solutions instead of rediscovering goals from chat history or raw diffs.
 * [Navigate With Low Token Cost](navigation.md) - As an agent or maintainer, I want compact trace-backed and relationship state first so I can load only exact context needed for next safe action.
 * [Prevent Unaccounted Drift](drift.md) - As a maintainer, I want every discrepancy among intent, Knowledge, Planning, source/tests, Git, delivery, and outcomes resolved, tied to exact active Change, or explicitly unknown and safely blocked.

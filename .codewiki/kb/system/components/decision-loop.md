@@ -160,9 +160,9 @@ Final Check definitions are Loop-qualified and versioned. Current legacy IDs rem
 | Delivery constraints | Constraints do not smuggle Planning design or unsafe bypasses. |
 | Active Change overlap | Duplicate, contradictory, overlapping, or superseding work is merged, linked, ordered, superseded, deferred, or blocked. |
 
-Protected kernel Checks cannot be disabled. Custom Checks use `draft | active | disabled` lifecycle. Every applicable active Custom Check is required; Runtime records its exact stable id, semantic `definitionDigest`, protected config snapshot, Check Type, and `activatedBy` facts. A Decision Candidate changing Custom Check configuration remains subject to the protected-base policy and cannot weaken its own assurance.
+Protected Default Checks cannot be disabled. Custom Checks are distilled from exact accepted User Standards and use `draft | active | disabled` lifecycle. Every applicable active Custom Check is required; Runtime records its exact stable id, Standard/source snapshot, passage bindings, semantic `definitionDigest`, protected config snapshot, Check Type, evaluator kind, and `activatedBy` facts. Company policy and other normative Standard clauses normally become atomic Decision Custom Checks. A Decision Candidate changing User Standard or Custom Check configuration remains subject to protected-base policy and cannot weaken its own assurance.
 
-Decision uses the `decision` model route for candidate production. Kernel Model Checks run independently and inherit calibrated Loop routes unless a CodeWiki-owned Check declares otherwise. Custom Checks use the Check Evaluator for their closed Check Type and an authorized calibrated type-level route binding. No caller-selected review slot exists.
+Decision uses the `decision` model route for candidate production. Default Model Checks run independently and inherit calibrated Loop routes unless a CodeWiki-owned Check declares otherwise. Custom Model Checks use the Check Evaluator for their closed Check Type and an authorized calibrated type-level route binding. Custom Code Checks use only approved deterministic templates. No caller-selected review slot exists.
 
 ## Security classification and challenge assurance
 

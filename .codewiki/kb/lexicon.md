@@ -123,6 +123,10 @@ Separately authorized pre-exit evidence-gathering effect that may push only an i
 
 ## Loop exit
 
+### User Standard
+
+Project-accepted, source-backed user expectation supplied as bounded inline text or an exact user-selected source snapshot. Company policy, execution guidance, quality criteria, resource instructions, and design conventions are Standard content rather than separate artifact types. Runtime distills one Standard into zero or more atomic Custom Checks, reports Default Check coverage and unresolved clauses, and may compile non-pass/fail ordering behavior or deterministic guards. A Standard grants no Result, priority, authority, or effect by itself.
+
 ### Check
 
 One atomic versioned requirement plus execution kind, measurement contract, Evidence Record requirements, repair target, resource limits, and implementation identity.
@@ -131,7 +135,11 @@ One atomic versioned requirement plus execution kind, measurement contract, Evid
 type Check = CodeCheck | ModelCheck;
 ```
 
-Check is not complete Loop policy.
+Check is not complete Loop policy. Requirement origin is independently `default | custom`.
+
+### Default Check
+
+CodeWiki-provided atomic Check. Default Checks belong to the closed versioned catalog, cannot be disabled by User Standards or Custom Checks, and may use Code or Model evaluation.
 
 ### Check Type
 
@@ -139,11 +147,11 @@ Closed versioned CodeWiki-owned semantic family for Custom Checks. It defines el
 
 ### Custom Check
 
-One repository-bound, project-authored, bounded declarative atomic requirement under one Check Type. V1 text-based Custom Checks execute as Model Checks. Runtime owns stable identity, semantic definition digest, lifecycle/config identity, activation, authority, and Result. Every applicable active Custom Check is required. “Custom” never means arbitrary code, shell, system prompt, tool, or verdict logic. Supersedes “Project Check.”
+One repository-bound bounded declarative atomic requirement distilled from one or more exact accepted User Standard snapshots under one Check Type. A Custom Check may use a CodeWiki-owned Model Evaluator or an approved deterministic Code template with structured parameters. Runtime owns stable identity, source and semantic definition digests, lifecycle/config identity, activation, authority, guards, and Result. Every applicable active Custom Check is required. “Custom” never means arbitrary code, shell, system prompt, tool, schema, dependency, or verdict logic. Supersedes “Project Check.”
 
 ### Check Evaluator
 
-CodeWiki-owned type-specific model capability that assesses active Custom Checks against exact Candidate-bound Evidence. It may use focused calls or calibrated deterministic batches, but returns one separate Assessment per Custom Check. It is not a persistent agent, final judge, semantic Loop, or authority.
+CodeWiki-owned type-specific model capability that assesses Model Checks against exact Candidate-bound Evidence. It may use focused calls or calibrated deterministic batches, but returns one separate Assessment per Check. It is not a persistent agent, final judge, semantic Loop, or authority.
 
 ### Assessment
 
@@ -151,7 +159,7 @@ Bounded `supported | unsupported | uncertain` output for one exact Model Check, 
 
 ### Code Check
 
-Trusted deterministic CodeWiki-owned implementation of Check. “Code” names implementation, not subject. Initial catalog is closed; projects cannot inject arbitrary JavaScript/shell/executors.
+Trusted deterministic CodeWiki-owned implementation of Check. “Code” names evaluation, not requirement origin or subject. Default and Custom Code Checks remain closed: a Custom Code Check may only instantiate an approved deterministic template/adapter with bounded structured parameters, and projects cannot inject arbitrary JavaScript, shell, executors, prompts, tools, schemas, dependencies, or verdict logic.
 
 ### Model Check
 
@@ -197,7 +205,7 @@ Check dimension: `qualitative | quantitative`. Quantitative contract names shape
 
 ### Enforcement
 
-Resolved Check dimension: `observe | warn | require`. Execution kind does not imply enforcement. Kernel Checks cannot be disabled. Custom Check lifecycle is separately `draft | active | disabled`; every applicable active Custom Check resolves directly to `require` without an enforcement-stage progression.
+Resolved Check dimension: `observe | warn | require`. Execution kind does not imply enforcement. Default Checks cannot be disabled. Custom Check lifecycle is separately `draft | active | disabled`; every applicable active Custom Check resolves directly to `require` without an enforcement-stage progression. Runtime may derive a preflight or during-execution resource guard from an exact active Code Check binding, but the guard remains an implementation mechanism rather than another user-facing artifact.
 
 ### `activatedBy`
 
@@ -486,9 +494,11 @@ Close, archive, hydrate, reopen, compact-checkpoint, and cleanup lifecycle. Comp
 | Semantic Stage | Semantic Loop |
 | Stage Protocol | Loop Protocol |
 | Stage candidate / stage exit | Loop candidate / Loop exit |
-| Quality Standard / Exit Criterion | Check |
+| Company policy / Execution Standard | User Standard when naming source material; generated Custom Check when naming an executable requirement |
+| Quality Standard / Exit Criterion | User Standard when naming source material; Check when naming an executable requirement |
+| Kernel Check | Default Check |
 | Deterministic Verifier | Code Check |
-| Model Evaluator | Model Check, or Check Evaluator when referring to type-specific Custom Check execution |
+| Model Evaluator | Model Check, or Check Evaluator when referring to model execution |
 | Project Check | Custom Check |
 | Quality Assessment | Check Result |
 | Quality Policy Resolution | Resolved Exit Policy |
