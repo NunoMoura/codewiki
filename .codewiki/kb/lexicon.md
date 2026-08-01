@@ -139,7 +139,7 @@ Closed versioned CodeWiki-owned semantic family for Custom Checks. It defines el
 
 ### Custom Check
 
-One repository-bound, project-authored, bounded declarative atomic requirement under one Check Type. V1 text-based Custom Checks execute as Model Checks. Runtime owns identity, revision, digest, activation, rollout, authority, and Result. “Custom” never means arbitrary code, shell, system prompt, tool, or verdict logic. Supersedes “Project Check.”
+One repository-bound, project-authored, bounded declarative atomic requirement under one Check Type. V1 text-based Custom Checks execute as Model Checks. Runtime owns stable identity, semantic definition digest, lifecycle/config identity, activation, authority, and Result. Every applicable active Custom Check is required. “Custom” never means arbitrary code, shell, system prompt, tool, or verdict logic. Supersedes “Project Check.”
 
 ### Check Evaluator
 
@@ -147,7 +147,7 @@ CodeWiki-owned type-specific model capability that assesses active Custom Checks
 
 ### Assessment
 
-Bounded `supported | unsupported | uncertain` output for one exact Model Check, Custom Check revision, Candidate, prerequisite Result set, and considered Evidence set. Runtime validates the Assessment, may materialize `model_assessment` Evidence, and derives `pass | fail | indeterminate`; Assessment itself has no exit or route authority.
+Bounded `supported | unsupported | uncertain` output for one exact Model Check, Custom Check definition digest, Candidate, prerequisite Result set, and considered Evidence set. Runtime validates the Assessment, may materialize `model_assessment` Evidence, and derives `pass | fail | indeterminate`; Assessment itself has no exit or route authority.
 
 ### Code Check
 
@@ -197,7 +197,7 @@ Check dimension: `qualitative | quantitative`. Quantitative contract names shape
 
 ### Enforcement
 
-Check dimension: `observe | warn | require`. Execution kind does not imply enforcement. Kernel Checks cannot be disabled. Custom Checks progress from draft through `observe`, `warn`, and explicitly approved `require`.
+Resolved Check dimension: `observe | warn | require`. Execution kind does not imply enforcement. Kernel Checks cannot be disabled. Custom Check lifecycle is separately `draft | active | disabled`; every applicable active Custom Check resolves directly to `require` without an enforcement-stage progression.
 
 ### `activatedBy`
 

@@ -198,7 +198,7 @@ function quantitativeFoundation() {
 	return {check, policy, binding};
 }
 
-function observedCustomCheck() {
+function requiredCustomCheck() {
 	return activateCustomCheckDefinition(
 		createCustomCheckDefinition({
 			checkTypeId: "organization_policy",
@@ -417,8 +417,8 @@ describe("immutable Exit Report", () => {
 		);
 	});
 
-	it("keeps observe and warn failures visible without blocking exit", () => {
-		const definition = observedCustomCheck();
+	it("blocks exit when an active Custom Check fails or is indeterminate", () => {
+		const definition = requiredCustomCheck();
 		const input = selectorInput();
 		input.customChecks = [definition];
 		const policy = resolveExitPolicy(input);
@@ -427,28 +427,42 @@ describe("immutable Exit Report", () => {
 			(entry) => entry.checkId === customCheckDefinitionCheckId(definition),
 		);
 		const check = catalog.get(binding.checkId, policy.loop).check;
-		const observedFailure = createCheckResult({
+		const customFailure = createCheckResult({
 			loop: policy.loop,
 			policy,
 			check,
 			disposition: "unsatisfied",
 			measurement: { shape: "boolean", value: false },
 			evidenceResolutions: readyEvidenceResolutions(check),
-			findings: ["Observed Custom Check failed."],
+			findings: ["Required Custom Check failed."],
 			execution: { ...check.execution },
 		});
-		const report = createExitReport({
+		const customIndeterminate = createCheckResult({
+			loop: policy.loop,
 			policy,
-			checkResults: [
-				...allRequiredResults(policy, catalog),
-				observedFailure,
-			],
+			check,
+			disposition: "indeterminate",
+			evidenceResolutions: readyEvidenceResolutions(check),
+			findings: ["Required Custom Check lacks sufficient Evidence."],
+			execution: { ...check.execution },
 		});
+		const passing = allRequiredResults(policy, catalog);
+		const reportFor = (customResult) =>
+			createExitReport({
+				policy,
+				checkResults: passing.map((result) =>
+					result.checkId === binding.checkId ? customResult : result,
+				),
+			});
+		const failedReport = reportFor(customFailure);
+		const indeterminateReport = reportFor(customIndeterminate);
 
-		assert.equal(binding.required, false);
-		assert.equal(report.status, "pass");
+		assert.equal(binding.required, true);
+		assert.equal(binding.enforcement, "require");
+		assert.equal(failedReport.status, "fail");
+		assert.equal(indeterminateReport.status, "indeterminate");
 		assert.ok(
-			report.checkResults.some(
+			failedReport.checkResults.some(
 				(result) => result.checkId === binding.checkId && result.status === "fail",
 			),
 		);

@@ -101,7 +101,7 @@ Runtime alone owns:
 - Change Claim and Work Item Claim lifecycle;
 - Worker Workbench provisioning and Assignment dispatch;
 - Evidence normalization, provenance/freshness/privacy validation, contradiction preservation, and approval correlation;
-- Custom Check proposal validation, Runtime-owned identity/revision, protected-config rollout, deterministic activation, and policy binding;
+- Custom Check proposal validation, Runtime-owned stable identity and definition/config digests, guarded lifecycle changes, deterministic required activation, and policy binding;
 - Check activation, Check Evaluator scheduling, Assessment validation, execution, cancellation, exact caching, and required-result fan-in;
 - deterministic Runtime Route;
 - canonical Git-backed writes;

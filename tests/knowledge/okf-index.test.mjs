@@ -77,7 +77,7 @@ describe("OKF index and log navigation", () => {
 		);
 		assert.match(
 			components.content,
-			/\* \[Custom Checks\]\(custom-checks\.md\) - Custom Checks let a project define bounded semantic requirements/,
+			/\* \[Custom Checks\]\(custom-checks\.md\) - Custom Checks let a project define bounded required semantic policy/,
 		);
 		assert.match(
 			components.content,
@@ -102,6 +102,10 @@ describe("OKF index and log navigation", () => {
 			generateOkfLog({
 				date: "2026-07-31",
 				entries: [
+					{
+						kind: "Update",
+						text: "Simplified executable Custom Check policy: removed integer revisions and observe/warn/require rollout, separated semantic `definitionDigest` from exact lifecycle/config digest, made every applicable active Custom Check required, advanced Check Catalog to `3.0.0` and Decision Model Check protocol to `2.0.0`, and preserved blocking Results as bounded agent repair feedback.",
+					},
 					{
 						kind: "Update",
 						text: "Implemented the Custom Check contract/config/catalog/policy foundation: removed broad project registrations, added ten closed Check Types, Runtime-owned immutable lifecycle and rollout identities, Check Catalog `2.0.0`, deterministic applicability, exact evaluator metadata, project-config persistence, and Decision Model Check protocol `1.2.0` focused execution without claiming Dashboard or production cutover completion.",

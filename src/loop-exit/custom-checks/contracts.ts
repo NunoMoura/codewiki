@@ -8,14 +8,13 @@ import {
 	canonicalJsonDigest,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import type { CheckEnforcement } from "../contracts.ts";
 import {
 	getCustomCheckType,
 	isCustomCheckTypeId,
 	type CustomCheckTypeId,
 } from "./check-types.ts";
 
-export const CUSTOM_CHECK_SCHEMA_VERSION = "1.0.0" as const;
+export const CUSTOM_CHECK_SCHEMA_VERSION = "2.0.0" as const;
 export const MAX_CUSTOM_CHECKS = 64;
 export const MAX_CUSTOM_CHECKS_PER_TYPE = 16;
 export const MAX_CUSTOM_CHECK_BYTES = 16_384;
@@ -26,11 +25,6 @@ const SEMANTIC_LOOPS: readonly SemanticLoop[] = [
 	"implementation",
 ];
 const CUSTOM_CHECK_LIFECYCLES = ["draft", "active", "disabled"] as const;
-const CHECK_ENFORCEMENTS: readonly CheckEnforcement[] = [
-	"observe",
-	"warn",
-	"require",
-];
 const CUSTOM_CHECK_ID = /^custom-check:[0-9a-f]{64}$/;
 const DIGEST = /^sha256:[0-9a-f]{64}$/;
 const PROHIBITED_TEXT = /[\u0000-\u0009\u000b-\u001f\u007f]/u;
@@ -53,20 +47,11 @@ export interface CustomCheckProposal {
 	readonly knowledgeRefs?: readonly string[];
 }
 
-export interface CustomCheckApproval {
-	readonly status: "approved";
-	readonly refs: readonly string[];
-}
-
 export interface CustomCheckDefinition extends CustomCheckProposal {
 	readonly schemaVersion: typeof CUSTOM_CHECK_SCHEMA_VERSION;
 	readonly customCheckId: string;
-	readonly revision: number;
-	readonly contentDigest: Sha256Digest;
+	readonly definitionDigest: Sha256Digest;
 	readonly lifecycle: CustomCheckLifecycle;
-	readonly rollout: CheckEnforcement;
-	readonly rolloutHistory: readonly CheckEnforcement[];
-	readonly approval?: CustomCheckApproval;
 }
 
 export function createCustomCheckDefinition(
@@ -80,26 +65,24 @@ export function createCustomCheckDefinition(
 		...normalized,
 		schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
 		customCheckId,
-		revision: 1,
 		lifecycle: "draft",
-		rollout: "observe",
-		rolloutHistory: [],
 	});
 }
 
-export function reviseCustomCheckDefinition(
+export function updateCustomCheckDefinition(
 	current: CustomCheckDefinition,
 	proposal: CustomCheckProposal,
 ): CustomCheckDefinition {
 	assertCustomCheckDefinition(current);
+	const normalized = normalizeProposal(proposal);
+	if (normalized.checkTypeId !== current.checkTypeId) {
+		throw new Error("Custom Check Type cannot change after creation.");
+	}
 	return materializeDefinition({
-		...normalizeProposal(proposal),
+		...normalized,
 		schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
 		customCheckId: current.customCheckId,
-		revision: current.revision + 1,
-		lifecycle: "draft",
-		rollout: "observe",
-		rolloutHistory: [],
+		lifecycle: current.lifecycle,
 	});
 }
 
@@ -112,45 +95,7 @@ export function activateCustomCheckDefinition(
 			`Custom Check ${current.customCheckId} must be draft before activation.`,
 		);
 	}
-	return nextDefinition(current, {
-		lifecycle: "active",
-		rollout: "observe",
-		rolloutHistory: [],
-		approval: undefined,
-	});
-}
-
-export function promoteCustomCheckDefinition(
-	current: CustomCheckDefinition,
-	approval?: CustomCheckApproval,
-): CustomCheckDefinition {
-	assertCustomCheckDefinition(current);
-	if (current.lifecycle !== "active") {
-		throw new Error(
-			`Custom Check ${current.customCheckId} must be active before promotion.`,
-		);
-	}
-	if (current.rollout === "observe") {
-		if (approval !== undefined) {
-			throw new Error("Custom Check warn promotion cannot include approval.");
-		}
-		return nextDefinition(current, {
-			rollout: "warn",
-			rolloutHistory: ["observe"],
-			approval: undefined,
-		});
-	}
-	if (current.rollout === "warn") {
-		if (!approval) {
-			throw new Error("Custom Check require promotion needs approval.");
-		}
-		return nextDefinition(current, {
-			rollout: "require",
-			rolloutHistory: ["observe", "warn"],
-			approval: normalizeApproval(approval),
-		});
-	}
-	throw new Error(`Custom Check ${current.customCheckId} is already required.`);
+	return withLifecycle(current, "active");
 }
 
 export function disableCustomCheckDefinition(
@@ -160,7 +105,7 @@ export function disableCustomCheckDefinition(
 	if (current.lifecycle === "disabled") {
 		throw new Error(`Custom Check ${current.customCheckId} is already disabled.`);
 	}
-	return nextDefinition(current, { lifecycle: "disabled" });
+	return withLifecycle(current, "disabled");
 }
 
 export function normalizeCustomCheckDefinitions(
@@ -170,7 +115,9 @@ export function normalizeCustomCheckDefinitions(
 		throw new Error("Custom Checks must be an array.");
 	}
 	if (value.length > MAX_CUSTOM_CHECKS) {
-		throw new Error(`Custom Checks cannot exceed ${MAX_CUSTOM_CHECKS}.`);
+		throw new Error(
+			`Custom Checks cannot exceed ${MAX_CUSTOM_CHECKS} definitions per project.`,
+		);
 	}
 	const normalized = value.map((definition) => {
 		assertCustomCheckDefinition(definition);
@@ -195,8 +142,17 @@ export function normalizeCustomCheckDefinitions(
 		}
 	}
 	return normalized.sort((left, right) =>
-		left.customCheckId.localeCompare(right.customCheckId),
+		compareText(left.customCheckId, right.customCheckId),
 	);
+}
+
+export function customCheckConfigurationDigest(
+	definitions: readonly CustomCheckDefinition[],
+): Sha256Digest {
+	return canonicalJsonDigest({
+		schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
+		definitions: normalizeCustomCheckDefinitions(definitions),
+	});
 }
 
 export function assertCustomCheckDefinition(
@@ -206,18 +162,14 @@ export function assertCustomCheckDefinition(
 	assertKnownKeys(value, "Custom Check definition", [
 		"schemaVersion",
 		"customCheckId",
-		"revision",
-		"contentDigest",
+		"definitionDigest",
+		"lifecycle",
 		"checkTypeId",
 		"name",
 		"requirement",
 		"repairGuidance",
 		"appliesWhen",
 		"knowledgeRefs",
-		"lifecycle",
-		"rollout",
-		"rolloutHistory",
-		"approval",
 	]);
 	if (value.schemaVersion !== CUSTOM_CHECK_SCHEMA_VERSION) {
 		throw new Error(
@@ -227,36 +179,27 @@ export function assertCustomCheckDefinition(
 	if (!CUSTOM_CHECK_ID.test(value.customCheckId)) {
 		throw new Error("Custom Check customCheckId is invalid.");
 	}
-	if (!Number.isInteger(value.revision) || value.revision < 1) {
-		throw new Error("Custom Check revision must be a positive integer.");
+	if (!DIGEST.test(value.definitionDigest)) {
+		throw new Error("Custom Check definitionDigest is invalid.");
 	}
-	if (!DIGEST.test(value.contentDigest)) {
-		throw new Error("Custom Check contentDigest is invalid.");
-	}
-	const normalized = normalizeProposal(value, true);
 	if (!CUSTOM_CHECK_LIFECYCLES.includes(value.lifecycle)) {
-		throw new Error(`Custom Check lifecycle ${String(value.lifecycle)} is invalid.`);
-	}
-	if (!CHECK_ENFORCEMENTS.includes(value.rollout)) {
-		throw new Error(`Custom Check rollout ${String(value.rollout)} is invalid.`);
-	}
-	assertRollout(value);
-	const expectedDigest = definitionDigest({
-		...normalized,
-		schemaVersion: value.schemaVersion,
-		customCheckId: value.customCheckId,
-		revision: value.revision,
-		lifecycle: value.lifecycle,
-		rollout: value.rollout,
-		rolloutHistory: [...value.rolloutHistory],
-		...(value.approval ? { approval: normalizeApproval(value.approval) } : {}),
-	});
-	if (value.contentDigest !== expectedDigest) {
 		throw new Error(
-			`Custom Check ${value.customCheckId} contentDigest does not match content.`,
+			`Custom Check lifecycle ${String(value.lifecycle)} is invalid.`,
 		);
 	}
-	if (Buffer.byteLength(canonicalJson(value), "utf8") > MAX_CUSTOM_CHECK_BYTES) {
+	const normalizedProposal = normalizeProposal(value, true);
+	const expectedDigest = definitionDigest({
+		...normalizedProposal,
+		schemaVersion: value.schemaVersion,
+		customCheckId: value.customCheckId,
+	});
+	if (value.definitionDigest !== expectedDigest) {
+		throw new Error(
+			`Custom Check ${value.customCheckId} definitionDigest does not match definition.`,
+		);
+	}
+	const bytes = Buffer.byteLength(canonicalJson(value), "utf8");
+	if (bytes > MAX_CUSTOM_CHECK_BYTES) {
 		throw new Error(
 			`Custom Check ${value.customCheckId} exceeds ${MAX_CUSTOM_CHECK_BYTES} UTF-8 bytes.`,
 		);
@@ -272,44 +215,29 @@ export function customCheckDefinitionCheckId(
 	return `custom.${definition.customCheckId.slice("custom-check:".length)}`;
 }
 
-function nextDefinition(
+function withLifecycle(
 	current: CustomCheckDefinition,
-	changes: Partial<
-		Pick<
-			CustomCheckDefinition,
-			"lifecycle" | "rollout" | "rolloutHistory" | "approval"
-		>
-	>,
+	lifecycle: CustomCheckLifecycle,
 ): CustomCheckDefinition {
-	const withoutDigest = {
+	return materializeDefinition({
 		...cloneDefinition(current),
-		...changes,
-		revision: current.revision + 1,
-	};
-	delete (withoutDigest as { contentDigest?: Sha256Digest }).contentDigest;
-	if ("approval" in changes && changes.approval === undefined) {
-		delete (withoutDigest as { approval?: CustomCheckApproval }).approval;
-	}
-	return materializeDefinition(withoutDigest);
+		lifecycle,
+	});
 }
 
 function materializeDefinition(
-	input: Omit<CustomCheckDefinition, "contentDigest">,
+	input: Omit<CustomCheckDefinition, "definitionDigest">,
 ): CustomCheckDefinition {
 	const normalizedProposal = normalizeProposal(input, true);
-	const normalized = {
+	const semanticDefinition = {
 		...normalizedProposal,
 		schemaVersion: input.schemaVersion,
 		customCheckId: input.customCheckId,
-		revision: input.revision,
-		lifecycle: input.lifecycle,
-		rollout: input.rollout,
-		rolloutHistory: [...input.rolloutHistory],
-		...(input.approval ? { approval: normalizeApproval(input.approval) } : {}),
 	};
 	const definition = {
-		...normalized,
-		contentDigest: definitionDigest(normalized),
+		...semanticDefinition,
+		definitionDigest: definitionDigest(semanticDefinition),
+		lifecycle: input.lifecycle,
 	} as CustomCheckDefinition;
 	assertCustomCheckDefinition(definition);
 	return Object.freeze(cloneDefinition(definition));
@@ -328,16 +256,7 @@ function normalizeProposal(
 		"appliesWhen",
 		"knowledgeRefs",
 		...(allowRuntimeFields
-			? [
-					"schemaVersion",
-					"customCheckId",
-					"revision",
-					"contentDigest",
-					"lifecycle",
-					"rollout",
-					"rolloutHistory",
-					"approval",
-				]
+			? ["schemaVersion", "customCheckId", "definitionDigest", "lifecycle"]
 			: []),
 	]);
 	if (!isCustomCheckTypeId(value.checkTypeId)) {
@@ -390,9 +309,7 @@ function normalizeApplicability(
 	);
 	for (const loop of loops) {
 		if (!eligibleLoops.includes(loop)) {
-			throw new Error(
-				`Custom Check Type is not eligible for ${loop}.`,
-			);
+			throw new Error(`Custom Check Type is not eligible for ${loop}.`);
 		}
 	}
 	const changeKinds = normalizeEnumList(
@@ -424,55 +341,8 @@ function normalizeApplicability(
 	};
 }
 
-function assertRollout(definition: CustomCheckDefinition): void {
-	if (!Array.isArray(definition.rolloutHistory)) {
-		throw new Error("Custom Check rolloutHistory must be an array.");
-	}
-	const expected =
-		definition.rollout === "observe"
-			? []
-			: definition.rollout === "warn"
-				? ["observe"]
-				: ["observe", "warn"];
-	if (JSON.stringify(definition.rolloutHistory) !== JSON.stringify(expected)) {
-		throw new Error(
-			`Custom Check ${definition.customCheckId} rolloutHistory must be ${expected.join(" -> ") || "empty"}.`,
-		);
-	}
-	if (definition.rollout === "require") {
-		if (!definition.approval) {
-			throw new Error(
-				`Custom Check ${definition.customCheckId} requires approval.`,
-			);
-		}
-		normalizeApproval(definition.approval);
-	} else if (definition.approval !== undefined) {
-		throw new Error(
-			`Custom Check ${definition.customCheckId} can include approval only when required.`,
-		);
-	}
-}
-
-function normalizeApproval(value: CustomCheckApproval): CustomCheckApproval {
-	assertRecord(value, "Custom Check approval");
-	assertKnownKeys(value, "Custom Check approval", ["status", "refs"]);
-	if (value.status !== "approved") {
-		throw new Error("Custom Check approval status must be approved.");
-	}
-	const refs = normalizeStringList(
-		value.refs,
-		"Custom Check approval.refs",
-		8,
-		512,
-	);
-	if (refs.length === 0) {
-		throw new Error("Custom Check approval requires at least one ref.");
-	}
-	return { status: "approved", refs };
-}
-
 function definitionDigest(
-	value: Omit<CustomCheckDefinition, "contentDigest">,
+	value: Omit<CustomCheckDefinition, "definitionDigest" | "lifecycle">,
 ): Sha256Digest {
 	return canonicalJsonDigest(value);
 }
@@ -499,15 +369,14 @@ function cloneDefinition(
 		...(definition.knowledgeRefs
 			? { knowledgeRefs: [...definition.knowledgeRefs] }
 			: {}),
-		rolloutHistory: [...definition.rolloutHistory],
-		...(definition.approval
-			? { approval: { ...definition.approval, refs: [...definition.approval.refs] } }
-			: {}),
 	};
 }
 
 function normalizePathScope(value: string): string {
-	const normalized = value.replaceAll("\\", "/").replace(/^\.\//u, "").replace(/\/+$/u, "");
+	const normalized = value
+		.replaceAll("\\", "/")
+		.replace(/^\.\//u, "")
+		.replace(/\/+$/u, "");
 	if (
 		!normalized ||
 		normalized.startsWith("/") ||
@@ -537,7 +406,8 @@ function optionalBoundedText(
 	label: string,
 	maximum: number,
 ): string | undefined {
-	return value === undefined ? undefined : boundedText(value, label, maximum);
+	if (value === undefined) return undefined;
+	return boundedText(value, label, maximum);
 }
 
 function normalizeStringList(
@@ -577,9 +447,11 @@ function assertKnownKeys(
 	label: string,
 	allowed: readonly string[],
 ): void {
-	const extra = Object.keys(value).filter((key) => !allowed.includes(key));
-	if (extra.length > 0) {
-		throw new Error(`${label} received unsupported field ${extra.sort()[0]}.`);
+	const unsupported = Object.keys(value).filter((key) => !allowed.includes(key));
+	if (unsupported.length > 0) {
+		throw new Error(
+			`${label} received unsupported field${unsupported.length === 1 ? "" : "s"} ${unsupported.join(", ")}.`,
+		);
 	}
 }
 
@@ -591,10 +463,10 @@ function assertRecord(value: unknown, label: string): asserts value is object {
 
 function assertUnique(values: readonly string[], label: string): void {
 	if (new Set(values).size !== values.length) {
-		throw new Error(`${label} must be unique.`);
+		throw new Error(`${label} cannot contain duplicates.`);
 	}
 }
 
 function compareText(left: string, right: string): number {
-	return left.localeCompare(right);
+	return left < right ? -1 : left > right ? 1 : 0;
 }

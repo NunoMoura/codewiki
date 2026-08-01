@@ -5,12 +5,12 @@ import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
+	customCheckConfigurationDigest,
 	customCheckDefinitionCheckId,
 	disableCustomCheckDefinition,
 	listCustomCheckTypes,
 	normalizeCustomCheckDefinitions,
-	promoteCustomCheckDefinition,
-	reviseCustomCheckDefinition,
+	updateCustomCheckDefinition,
 } from "../../src/loop-exit/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
 
@@ -79,53 +79,56 @@ describe("Custom Check contracts", () => {
 		});
 
 		assert.equal(definition.customCheckId, equivalent.customCheckId);
-		assert.equal(definition.contentDigest, equivalent.contentDigest);
-		assert.equal(definition.schemaVersion, "1.0.0");
-		assert.equal(definition.revision, 1);
+		assert.equal(definition.definitionDigest, equivalent.definitionDigest);
+		assert.equal(definition.schemaVersion, "2.0.0");
 		assert.equal(definition.lifecycle, "draft");
-		assert.equal(definition.rollout, "observe");
 		assert.deepEqual(definition.appliesWhen.affectedLayers, ["api"]);
 		assert.match(definition.customCheckId, /^custom-check:[0-9a-f]{64}$/);
-		assert.match(definition.contentDigest, /^sha256:[0-9a-f]{64}$/);
+		assert.match(definition.definitionDigest, /^sha256:[0-9a-f]{64}$/);
 		assert.equal(Object.isFrozen(definition), true);
 	});
 
-	it("keeps revision and rollout transitions immutable and approval-bound", () => {
+	it("separates semantic identity from draft, active, and disabled lifecycle", () => {
 		const draft = createCustomCheckDefinition(proposal());
 		const active = activateCustomCheckDefinition(draft);
-		const warned = promoteCustomCheckDefinition(active);
-		const required = promoteCustomCheckDefinition(warned, {
-			status: "approved",
-			refs: ["approval:custom-check:1"],
-		});
-		const disabled = disableCustomCheckDefinition(required);
-		const revised = reviseCustomCheckDefinition(disabled, {
+		const disabled = disableCustomCheckDefinition(active);
+		const updated = updateCustomCheckDefinition(active, {
 			...proposal(),
 			requirement: "Every public API must name an accountable owning team.",
 		});
 
 		assert.deepEqual(
-			[draft, active, warned, required, disabled, revised].map((entry) => [
-				entry.revision,
-				entry.lifecycle,
-				entry.rollout,
-			]),
-			[
-				[1, "draft", "observe"],
-				[2, "active", "observe"],
-				[3, "active", "warn"],
-				[4, "active", "require"],
-				[5, "disabled", "require"],
-				[6, "draft", "observe"],
-			],
+			[draft, active, disabled, updated].map((entry) => entry.lifecycle),
+			["draft", "active", "disabled", "active"],
 		);
-		assert.deepEqual(required.rolloutHistory, ["observe", "warn"]);
-		assert.deepEqual(required.approval.refs, ["approval:custom-check:1"]);
-		assert.equal(revised.customCheckId, draft.customCheckId);
-		assert.notEqual(revised.contentDigest, disabled.contentDigest);
+		assert.equal(active.customCheckId, draft.customCheckId);
+		assert.equal(disabled.customCheckId, draft.customCheckId);
+		assert.equal(updated.customCheckId, draft.customCheckId);
+		assert.equal(active.definitionDigest, draft.definitionDigest);
+		assert.equal(disabled.definitionDigest, draft.definitionDigest);
+		assert.notEqual(updated.definitionDigest, draft.definitionDigest);
+		assert.notEqual(
+			customCheckConfigurationDigest([draft]),
+			customCheckConfigurationDigest([active]),
+		);
+		assert.notEqual(
+			customCheckConfigurationDigest([active]),
+			customCheckConfigurationDigest([updated]),
+		);
+		assert.equal("revision" in active, false);
+		assert.equal("rollout" in active, false);
+		assert.equal("approval" in active, false);
 		assert.throws(
-			() => promoteCustomCheckDefinition(warned),
-			/require promotion needs approval/,
+			() => activateCustomCheckDefinition(active),
+			/must be draft before activation/,
+		);
+		assert.throws(
+			() =>
+				updateCustomCheckDefinition(active, {
+					...proposal(),
+					checkTypeId: "security_and_privacy",
+				}),
+			/Custom Check Type cannot change after creation/,
 		);
 	});
 
@@ -154,7 +157,15 @@ describe("Custom Check contracts", () => {
 				normalizeCustomCheckDefinitions([
 					{...active, requirement: "Tampered requirement."},
 				]),
-			/contentDigest does not match content/,
+			/definitionDigest does not match definition/,
+		);
+		assert.throws(
+			() => normalizeCustomCheckDefinitions([{...active, revision: 2}]),
+			/unsupported field revision/,
+		);
+		assert.throws(
+			() => normalizeCustomCheckDefinitions([{...active, rollout: "require"}]),
+			/unsupported field rollout/,
 		);
 	});
 
@@ -193,8 +204,12 @@ describe("Custom Check catalog and policy", () => {
 		assert.equal(registration.check.execution.kind, "model");
 		assert.equal(registration.check.requirement, active.requirement);
 		assert.equal(registration.check.version, "2.0.0");
-		assert.equal(registration.rollout, "observe");
-		assert.equal(registration.customCheck.definition.contentDigest, active.contentDigest);
+		assert.equal(registration.rollout, "require");
+		assert.equal(
+			registration.customCheck.definition.definitionDigest,
+			active.definitionDigest,
+		);
+		assert.notEqual(catalog.customCheckConfigDigest, draftCatalog.customCheckConfigDigest);
 		assert.equal(
 			registration.customCheck.evaluatorId,
 			"codewiki.check-evaluator.organization_policy",
@@ -206,18 +221,20 @@ describe("Custom Check catalog and policy", () => {
 		assert.equal(draftCatalog.get(checkId, "decision"), undefined);
 	});
 
-	it("activates matching Custom Checks with exact type and revision bindings", () => {
+	it("activates matching Custom Checks as required with exact definition bindings", () => {
 		const active = activeDefinition();
 		const checkId = customCheckDefinitionCheckId(active);
 		const policy = resolveExitPolicy(selectorInput([active]));
 		const binding = policy.bindings.find((entry) => entry.checkId === checkId);
 
 		assert.ok(binding);
-		assert.equal(binding.required, false);
-		assert.equal(binding.enforcement, "observe");
+		assert.equal(binding.required, true);
+		assert.equal(binding.enforcement, "require");
 		assert.equal(binding.parameters.customCheckId, active.customCheckId);
-		assert.equal(binding.parameters.customCheckRevision, active.revision);
-		assert.equal(binding.parameters.customCheckContentDigest, active.contentDigest);
+		assert.equal(
+			binding.parameters.customCheckDefinitionDigest,
+			active.definitionDigest,
+		);
 		assert.equal(binding.parameters.customCheckTypeId, "organization_policy");
 		assert.equal(
 			binding.parameters.checkEvaluatorId,

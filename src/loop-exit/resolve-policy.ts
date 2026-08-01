@@ -459,8 +459,7 @@ function activateCustomChecks(
 		const definition = customCheck.definition;
 		const parameters: Record<string, CheckJsonValue> = {
 			customCheckId: definition.customCheckId,
-			customCheckRevision: definition.revision,
-			customCheckContentDigest: definition.contentDigest,
+			customCheckDefinitionDigest: definition.definitionDigest,
 			customCheckTypeId: definition.checkTypeId,
 			customCheckTypeVersion: customCheck.checkTypeVersion,
 			checkEvaluatorId: customCheck.evaluatorId,
@@ -484,12 +483,14 @@ function activateCustomChecks(
 			checkId: registration.check.id,
 			checkVersion: registration.check.version,
 			parameters,
+			enforcement: "require",
+			required: true,
 			activatedBy: [
-				`custom_check:${definition.customCheckId}@${definition.revision}`,
+				`custom_check:${definition.customCheckId}@${definition.definitionDigest}`,
 				`custom_check_type:${definition.checkTypeId}@${customCheck.checkTypeVersion}`,
 				...applicabilityReasons,
 			],
-			ruleRef: `custom-check:${definition.customCheckId}:revision:${definition.revision}`,
+			ruleRef: `custom-check:${definition.customCheckId}:definition:${definition.definitionDigest}`,
 		});
 	}
 }
@@ -559,7 +560,7 @@ function applyApprovedExclusions(
 			selector.loop,
 			exclusion.checkVersion,
 		);
-		if (registration.authority === "kernel") {
+		if (registration.authority === "kernel" || registration.customCheck) {
 			throw new Error(
 				`Check ${exclusion.checkId} cannot be excluded from ${selector.loop}.`,
 			);

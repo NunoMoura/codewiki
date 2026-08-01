@@ -334,7 +334,7 @@ describe("Resolved Exit Policy resolver", () => {
 		assert.notEqual(decisionBinding.checkDigest, implementationBinding.checkDigest);
 	});
 
-	it("activates Custom Checks without granting progression authority", () => {
+	it("activates applicable Custom Checks as required policy", () => {
 		const definition = customCheck();
 		const input = selectorInput("implementation");
 		input.customChecks = [definition];
@@ -343,13 +343,16 @@ describe("Resolved Exit Policy resolver", () => {
 			(entry) => entry.checkId === customCheckDefinitionCheckId(definition),
 		);
 
-		assert.equal(binding.enforcement, "observe");
-		assert.equal(binding.required, false);
+		assert.equal(binding.enforcement, "require");
+		assert.equal(binding.required, true);
 		assert.equal(binding.parameters.customCheckId, definition.customCheckId);
-		assert.equal(binding.parameters.customCheckRevision, definition.revision);
+		assert.equal(
+			binding.parameters.customCheckDefinitionDigest,
+			definition.definitionDigest,
+		);
 	});
 
-	it("protects kernel Checks from exclusions", () => {
+	it("protects kernel and active Custom Checks from exclusions", () => {
 		const kernelInput = selectorInput("implementation");
 		kernelInput.projectTraits = ["web-ui"];
 		kernelInput.approvedExclusions = [
@@ -363,6 +366,23 @@ describe("Resolved Exit Policy resolver", () => {
 		];
 		assert.throws(
 			() => resolveExitPolicy(kernelInput),
+			/cannot be excluded from implementation/,
+		);
+
+		const definition = customCheck();
+		const customInput = selectorInput("implementation");
+		customInput.customChecks = [definition];
+		customInput.approvedExclusions = [
+			{
+				checkId: customCheckDefinitionCheckId(definition),
+				checkVersion: definition.schemaVersion,
+				authorityRef: "trace:approval:custom-check",
+				reason: "not_applicable",
+				refs: [],
+			},
+		];
+		assert.throws(
+			() => resolveExitPolicy(customInput),
 			/cannot be excluded from implementation/,
 		);
 	});

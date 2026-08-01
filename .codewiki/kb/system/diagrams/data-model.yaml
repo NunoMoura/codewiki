@@ -46,7 +46,7 @@ entities:
     storage: CodeWiki-owned source/package contract
     truth: true
   - id: custom_check
-    label: Repository-bound immutable Custom Check revision
+    label: Repository-bound Custom Check definition plus guarded lifecycle
     storage: protected Git-backed .codewiki/config.json
     truth: true
   - id: candidate
@@ -170,7 +170,7 @@ relationships:
     label: constrains protocol applicability Evidence and route capability
   - from: custom_check
     to: exit_policy
-    label: exact protected-base revision activates one atomic binding
+    label: exact protected-base definition and config digest activate one required atomic binding
   - from: candidate
     to: exit_policy
     label: resolves exact active Checks

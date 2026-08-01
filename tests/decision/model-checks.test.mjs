@@ -312,10 +312,10 @@ describe("native Decision Model Checks", () => {
 
 		assert.equal(result.report.checkResults[0].status, "pass");
 		assert.equal(requests.length, 1);
+		assert.equal(requests[0].protocolVersion, "2.0.0");
 		assert.deepEqual({...requests[0].check.customCheck}, {
 			customCheckId: definition.customCheckId,
-			revision: definition.revision,
-			contentDigest: definition.contentDigest,
+			definitionDigest: definition.definitionDigest,
 			checkTypeId: "organization_policy",
 			checkTypeVersion: "1.0.0",
 			evaluatorId: "codewiki.check-evaluator.organization_policy",

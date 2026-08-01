@@ -17,11 +17,11 @@ As a maintainer, I want bounded Custom Checks for company policy, design style, 
 - Dashboard is the primary authoring surface and groups Custom Checks by closed CodeWiki-owned Check Type.
 - One Custom Check contains one concise plain-text requirement, optional repair guidance, closed applicability fields, and bounded Knowledge refs.
 - Custom text cannot define executable code, tools, prompts, response schemas, authority, or verdict logic.
-- Runtime owns Custom Check identity, immutable revision, digest, activation, route, approval, Assessment validation, Check Result, and exit behavior.
+- Runtime owns stable Custom Check identity, semantic definition and protected-config digests, guarded lifecycle, activation, route, Assessment validation, Check Result, and exit behavior.
 - V1 Custom Checks execute as Model Checks; Code Checks and Model Checks remain distinct execution kinds.
 - Each Check Type uses a type-specific Check Evaluator and may bind an authorized calibrated Pi route.
 - Every Custom Check receives a separate `supported | unsupported | uncertain` Assessment and Runtime-derived `pass | fail | indeterminate` Result, even when model transport batches related Checks.
-- Rollout progresses from draft through `observe`, `warn`, and explicitly approved `require`.
+- Lifecycle is `draft | active | disabled`; every applicable active Custom Check is required and its `fail` or `indeterminate` Result blocks Loop exit.
 - Accepted configuration is protected Git-backed project truth, not browser state or a mutable registry.
 - A Candidate changing Custom Check policy remains evaluated against the protected-base policy and cannot disable its own assurance.
 - Per-type batching is promoted only when sealed comparisons against focused calls preserve safety while improving measured latency or cost.

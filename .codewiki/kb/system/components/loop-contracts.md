@@ -176,7 +176,7 @@ measurement: qualitative | quantitative
 enforcement: observe | warn | require
 ```
 
-Requirement origin, project/kernel authority, execution kind, semantic Check Type, measurement, and enforcement remain independent. V1 text-based Custom Checks execute as Model Checks.
+Requirement origin, project/kernel authority, execution kind, semantic Check Type, and measurement remain independent. Resolved policy owns enforcement; every applicable active Custom Check resolves to `require`. V1 text-based Custom Checks execute as Model Checks.
 
 Quantitative Checks declare exact value shape, unit, comparator, threshold, allowed bounds, and aggregation policy. Runtime applies the threshold. Candidate and model cannot choose or reinterpret it.
 
@@ -199,19 +199,19 @@ Runtime resolves one immutable candidate-specific policy from:
 - project traits and technologies/paths;
 - Runtime-derived minimums from canonical Planning evidence;
 - actual candidate effects;
-- approved Custom Checks and permitted non-kernel exclusions;
+- applicable active Custom Checks from protected project configuration;
 - protected-base Custom Check configuration and Check Type identities;
 - model route/configuration and Check catalog/Loop Protocol identities.
 
-Every active Check records `activatedBy`, rule refs, version, parameters, threshold, enforcement, dependencies, and permitted exclusions. Selection is deterministic and explainable. Learned or neural activation is forbidden.
+Every active Check records `activatedBy`, rule refs, version, parameters, threshold, enforcement, and dependencies. Active Custom Checks cannot be excluded per Candidate; maintainers change their lifecycle only through guarded protected configuration. Selection is deterministic and explainable. Learned or neural activation is forbidden.
 
-Kernel Checks cannot be disabled. Custom Checks progress:
+Kernel Checks cannot be disabled. Custom Checks use:
 
 ```text
-draft → observe → warn → explicitly approved require
+draft → active → disabled
 ```
 
-A Candidate changing Custom Check configuration is evaluated under the protected-base policy snapshot and cannot weaken its own assurance. Accepted policy changes activate only from the next protected config snapshot. Actual candidate growth may add required Checks. It cannot silently lower risk or remove Planning minimums.
+Every applicable active Custom Check is required; `fail` or `indeterminate` blocks exit and feeds bounded repair or Evidence-gap guidance. A Candidate changing Custom Check configuration is evaluated under the protected-base policy snapshot and cannot weaken its own assurance. Accepted policy changes activate only from the next protected config snapshot. Actual candidate growth may add required Checks. It cannot silently lower risk or remove Planning minimums.
 
 ## Identity chain
 

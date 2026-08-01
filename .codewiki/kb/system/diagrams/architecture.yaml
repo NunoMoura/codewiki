@@ -231,7 +231,7 @@ edges:
     label: binds exact versions
   - from: project_runtime
     to: custom_checks
-    label: validates proposals rollout and protected-base policy
+    label: validates proposals guarded lifecycle and protected-base policy
   - from: custom_checks
     to: loop_exit
     label: exact active bindings and type-specific evaluator contracts

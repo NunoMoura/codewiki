@@ -383,7 +383,7 @@ describe("bounded Loop exit runner", () => {
 		assert.equal(calls, 0);
 	});
 
-	it("runs Custom Model Checks in their bounded model pool", async () => {
+	it("runs required Custom Model Checks in their bounded pool and returns repair feedback", async () => {
 		const customChecks = [customModelCheck("Policy A"), customModelCheck("Policy B")];
 		const checkIds = customChecks.map(customCheckDefinitionCheckId);
 		const setup = foundation(checkIds, {
@@ -411,7 +411,11 @@ describe("bounded Loop exit runner", () => {
 					active -= 1;
 					order.push(checkId);
 					return {
-						disposition: "satisfied",
+						disposition:
+							checkId === checkIds[1] ? "unsatisfied" : "satisfied",
+						...(checkId === checkIds[1]
+							? {findings: ["Policy B needs an accountable owner."]}
+							: {}),
 						producedEvidenceRecords: [evidence],
 						producedEvidenceResolutions: [resolution],
 					};
@@ -430,11 +434,18 @@ describe("bounded Loop exit runner", () => {
 		const result = await runner.run({candidate: setup.candidate, policy: setup.policy});
 		assert.deepEqual([...order].sort(), [...checkIds].sort());
 		assert.equal(maximumActive, 1);
-		assert.ok(
+		assert.deepEqual(
 			result.report.checkResults
 				.filter((entry) => checkIds.includes(entry.checkId))
-				.every((entry) => entry.status === "pass"),
+				.map((entry) => [entry.checkId, entry.status]),
+			[
+				[checkIds[0], "pass"],
+				[checkIds[1], "fail"],
+			].sort(([left], [right]) => left.localeCompare(right)),
 		);
-		assert.equal(result.report.status, "pass");
+		assert.equal(result.report.status, "fail");
+		assert.equal(result.nextAction.kind, "repair_candidate");
+		assert.deepEqual(result.nextAction.failedCheckIds, [checkIds[1]]);
+		assert.deepEqual(result.nextAction.repairTargets, ["custom-check"]);
 	});
 });

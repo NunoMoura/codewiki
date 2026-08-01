@@ -2,6 +2,7 @@
 
 ## 2026-07-31
 
+* **Update**: Simplified executable Custom Check policy: removed integer revisions and observe/warn/require rollout, separated semantic `definitionDigest` from exact lifecycle/config digest, made every applicable active Custom Check required, advanced Check Catalog to `3.0.0` and Decision Model Check protocol to `2.0.0`, and preserved blocking Results as bounded agent repair feedback.
 * **Update**: Implemented the Custom Check contract/config/catalog/policy foundation: removed broad project registrations, added ten closed Check Types, Runtime-owned immutable lifecycle and rollout identities, Check Catalog `2.0.0`, deterministic applicability, exact evaluator metadata, project-config persistence, and Decision Model Check protocol `1.2.0` focused execution without claiming Dashboard or production cutover completion.
 * **Update**: Ratified project-bound Custom Checks under closed CodeWiki-owned Check Types, bounded declarative text and applicability, Dashboard-first protected Git rollout, type-specific Check Evaluators, atomic per-Check Assessments/Results, protected-base anti-self-disable policy, and calibration-gated per-type batching without changing Code Check or Model Check execution kinds.
 * **Update**: Added deterministic revision-bound Decision security-surface classification, targeted policy activation and prerequisite boundary checking, standardized considered-Evidence Model Check assessments, and structured asserted security challenge findings without granting model output final Check or exit authority.

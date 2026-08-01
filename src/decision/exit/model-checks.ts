@@ -32,7 +32,7 @@ import type {DecisionCandidate} from "./candidate.ts";
 
 export const DECISION_MODEL_CHECK_PROTOCOL = Object.freeze({
 	id: "codewiki.decision.model-check",
-	version: "1.2.0",
+	version: "2.0.0",
 	maxRequestBytes: 262_144,
 	maxFindings: 32,
 	maxLimitations: 32,
@@ -52,8 +52,7 @@ export interface DecisionModelCheckRequest {
 		readonly requirement: string;
 		readonly customCheck?: {
 			readonly customCheckId: string;
-			readonly revision: number;
-			readonly contentDigest: Sha256Digest;
+			readonly definitionDigest: Sha256Digest;
 			readonly checkTypeId: string;
 			readonly checkTypeVersion: string;
 			readonly evaluatorId: string;
@@ -293,16 +292,12 @@ function customCheckRequestMetadata(
 	const parameters = context.binding.parameters;
 	if (parameters.customCheckId === undefined) return {};
 	const customCheckId = requiredParameterText(parameters.customCheckId, "customCheckId");
-	const revision = parameters.customCheckRevision;
-	if (!Number.isInteger(revision) || Number(revision) < 1) {
-		throw new Error("Custom Check Model request has invalid revision.");
-	}
-	const contentDigest = requiredParameterText(
-		parameters.customCheckContentDigest,
-		"customCheckContentDigest",
+	const definitionDigest = requiredParameterText(
+		parameters.customCheckDefinitionDigest,
+		"customCheckDefinitionDigest",
 	) as Sha256Digest;
-	if (!/^sha256:[0-9a-f]{64}$/u.test(contentDigest)) {
-		throw new Error("Custom Check Model request has invalid content digest.");
+	if (!/^sha256:[0-9a-f]{64}$/u.test(definitionDigest)) {
+		throw new Error("Custom Check Model request has invalid definition digest.");
 	}
 	const knowledgeRefs = parameters.knowledgeRefs;
 	if (!Array.isArray(knowledgeRefs)) {
@@ -321,8 +316,7 @@ function customCheckRequestMetadata(
 	return {
 		customCheck: {
 			customCheckId,
-			revision: Number(revision),
-			contentDigest,
+			definitionDigest,
 			checkTypeId: requiredParameterText(
 				parameters.customCheckTypeId,
 				"customCheckTypeId",

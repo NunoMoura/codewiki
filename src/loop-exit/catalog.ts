@@ -4,11 +4,10 @@ import {
 } from "../evidence/obligations.ts";
 import type { EvidenceObligation } from "../evidence/obligations.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
-import type {
-	CustomCheckDefinition,
-} from "./custom-checks/contracts.ts";
+import type { CustomCheckDefinition } from "./custom-checks/contracts.ts";
 import {
 	assertCustomCheckDefinition,
+	customCheckConfigurationDigest,
 	customCheckDefinitionCheckId,
 	normalizeCustomCheckDefinitions,
 } from "./custom-checks/contracts.ts";
@@ -25,7 +24,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "2.0.0";
+export const CHECK_CATALOG_VERSION = "3.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -34,18 +33,11 @@ const CHECK_EXECUTOR_IDS = [
 
 export type CheckAuthority = "kernel" | "project";
 
-export interface CheckRolloutApproval {
-	status: "approved";
-	refs: string[];
-}
-
 export interface CheckRegistration {
 	check: CheckDefinition;
 	loops: SemanticLoop[];
 	authority: CheckAuthority;
 	rollout: CheckEnforcement;
-	rolloutHistory: CheckEnforcement[];
-	approval?: CheckRolloutApproval;
 	dependsOn: string[];
 	customCheck?: {
 		definition: CustomCheckDefinition;
@@ -57,6 +49,7 @@ export interface CheckRegistration {
 export interface CheckCatalog {
 	version: typeof CHECK_CATALOG_VERSION;
 	customCheckTypeCatalogVersion: typeof CUSTOM_CHECK_TYPE_CATALOG_VERSION;
+	customCheckConfigDigest: string;
 	digest: string;
 	get(checkId: string, loop?: SemanticLoop): CheckRegistration | undefined;
 	list(loop?: SemanticLoop): CheckRegistration[];
@@ -381,7 +374,11 @@ const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
 export function createCheckCatalog(
 	customChecks: readonly CustomCheckDefinition[] = [],
 ): CheckCatalog {
-	const customRegistrations = normalizeCustomCheckDefinitions(customChecks)
+	const normalizedCustomChecks = normalizeCustomCheckDefinitions(customChecks);
+	const customCheckConfigDigest = customCheckConfigurationDigest(
+		normalizedCustomChecks,
+	);
+	const customRegistrations = normalizedCustomChecks
 		.filter((definition) => definition.lifecycle === "active")
 		.flatMap(customCheckRegistrations);
 	const registrations = [
@@ -418,11 +415,13 @@ export function createCheckCatalog(
 	const digest = canonicalJsonDigest({
 		version: CHECK_CATALOG_VERSION,
 		customCheckTypeCatalogVersion: CUSTOM_CHECK_TYPE_CATALOG_VERSION,
+		customCheckConfigDigest,
 		registrations,
 	});
 	return Object.freeze({
 		version: CHECK_CATALOG_VERSION,
 		customCheckTypeCatalogVersion: CUSTOM_CHECK_TYPE_CATALOG_VERSION,
+		customCheckConfigDigest,
 		digest,
 		get: (checkId: string, loop?: SemanticLoop) => {
 			if (loop) {
@@ -459,7 +458,7 @@ function customCheckRegistrations(
 	return loops.map((loop) => ({
 		check: {
 			id: checkId,
-			version: `${definition.revision}.0.0`,
+			version: definition.schemaVersion,
 			description: `Custom Check: ${definition.name}`,
 			requirement: definition.requirement,
 			requirementDigest: checkRequirementDigest(definition.requirement),
@@ -477,16 +476,7 @@ function customCheckRegistrations(
 		},
 		loops: [loop],
 		authority: "project",
-		rollout: definition.rollout,
-		rolloutHistory: [...definition.rolloutHistory],
-		...(definition.approval
-			? {
-					approval: {
-						status: "approved" as const,
-						refs: [...definition.approval.refs],
-					},
-				}
-			: {}),
+		rollout: "require",
 		dependsOn: [...(checkType.prerequisites[loop] ?? [])],
 		customCheck: {
 			definition,
@@ -565,7 +555,6 @@ function kernelRegistration(
 		loops,
 		authority: "kernel",
 		rollout: "require",
-		rolloutHistory: ["observe", "warn"],
 		dependsOn: [...(CHECK_DEPENDENCIES[id] ?? [])],
 	};
 }
@@ -757,16 +746,7 @@ function normalizeRegistration(
 			measurement: { ...registration.check.measurement },
 		},
 		loops: unique(registration.loops).sort(compareText),
-		rolloutHistory: [...registration.rolloutHistory],
 		dependsOn: unique(registration.dependsOn).sort(compareText),
-		...(registration.approval
-			? {
-					approval: {
-						status: "approved",
-						refs: unique(registration.approval.refs).sort(compareText),
-					},
-				}
-			: {}),
 		...(registration.customCheck
 			? {
 					customCheck: {
@@ -873,8 +853,8 @@ function validateCustomCheckRegistration(
 	if (registration.check.execution.kind !== "model") {
 		throw new Error("V1 Custom Checks must execute as Model Checks.");
 	}
-	if (registration.rollout !== customCheck.definition.rollout) {
-		throw new Error("Custom Check registration rollout does not match definition.");
+	if (registration.rollout !== "require") {
+		throw new Error("Active Custom Checks must be required.");
 	}
 }
 
