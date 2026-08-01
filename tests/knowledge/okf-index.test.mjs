@@ -103,6 +103,10 @@ describe("OKF index and log navigation", () => {
 				date: "2026-08-01",
 				entries: [
 					{
+						kind: "Update",
+						text: "Added closed `codewiki.security-scanner-suite@1.0.0` and protected Decision Check `security_scanners_valid`; advanced Check Catalog to `4.0.0`. Deterministic surface selection, strict source/tree/environment/config/advisory requests, observed command/source Evidence, sanitized scanner finding intake, stale/unavailable `indeterminate` reduction, dependency-bound model input, exact persisted-Evidence replay, and external-state cache bypass are now executable. Production collectors, sealed calibration, deeper source/Knowledge analysis, and high/critical residual-risk authority remain pending.",
+					},
+					{
 						kind: "Decision",
 						text: "Deferred the complete Dashboard refactor until Runtime admission, native Loops, Evidence and assurance, archive/hydration, stable projections, and the legacy Trace clean cut are complete. Backend client contracts may proceed earlier, but visual patching of the legacy dashboard does not.",
 					},

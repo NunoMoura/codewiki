@@ -280,6 +280,7 @@ Rules:
 - provider/model, CPU, test/build, and external-service work use separate bounded pools;
 - cancellation signals reach underlying work;
 - cache reuse requires exact candidate, Check binding, implementation/configuration, and evidence identity;
+- executors that depend on external Runtime state not represented by that identity must disable generic Result caching and revalidate exact persisted Evidence instead;
 - TTL controls eviction only;
 - path overlap may invalidate evidence but never authorize reuse;
 - historical projections read persisted policy/Report identity, never today's catalog.

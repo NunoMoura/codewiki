@@ -31,6 +31,67 @@ const WORK_STATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const KNOWLEDGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const MODEL_CHECK_IDS = ["intention_validated", "recommendation_justified"];
 const digest = (character) => `sha256:${character.repeat(64)}`;
+const SECURITY_SCANNER_TYPES = [
+	"static_analysis",
+	"dependency_advisory",
+	"secret_detection",
+	"configuration",
+	"authorization_test",
+	"migration_test",
+];
+
+function securityScannerConfiguration(scannerFinding = null, onExecute = () => undefined) {
+	return {
+		sensitivity: "project",
+		adapters: SECURITY_SCANNER_TYPES.map((scannerType) => ({
+			scannerType,
+			scannerId: `scanner.${scannerType}`,
+			scannerVersion: "1.0.0",
+			configurationDigest: digest("c"),
+			async execute(request) {
+				onExecute(scannerType, request);
+				const findings =
+					scannerType === "static_analysis" && scannerFinding
+						? [scannerFinding]
+						: [];
+				return {
+					requestDigest: request.requestDigest,
+					runId: `run:${scannerType}:decision`,
+					startedAt: "2026-07-28T11:58:00.000Z",
+					completedAt: "2026-07-28T11:58:01.000Z",
+					termination: "exited",
+					exitCode: findings.length > 0 ? 1 : 0,
+					outcome: findings.length > 0 ? "findings" : "clean",
+					coverage: "complete",
+					findings,
+					limitations: [],
+				};
+			},
+		})),
+	};
+}
+
+function securityScanContext() {
+	return {
+		sourceSnapshotDigest: digest("d"),
+		sourceTree: "a".repeat(40),
+		sourceTreeDigest: digest("e"),
+		environmentDigest: digest("f"),
+		sourceRefs: ["src/security"],
+		knowledgeRefs: ["kb:system/security"],
+		ownershipRefs: ["kb:system/security#source"],
+		observedAt: "2026-07-28T12:00:00.000Z",
+		advisorySnapshots: [
+			{
+				scannerType: "dependency_advisory",
+				snapshotDigest: digest("1"),
+				observedAt: "2026-07-27T12:00:00.000Z",
+				validUntil: "2026-07-29T12:00:00.000Z",
+				sourceRefs: ["advisory:decision:test"],
+			},
+		],
+	};
+}
 
 function protectedConfig(customChecks) {
 	return createProtectedCustomCheckConfigSnapshot({
@@ -185,6 +246,22 @@ function securityFinding() {
 		confidence: "medium",
 		mitigations: ["Require object-level authorization."],
 		limitations: ["No integrated source tree was supplied."],
+	};
+}
+
+function scannerFinding() {
+	return {
+		findingId: "authorization-bypass",
+		content: {
+			summary: "Authorization check can be bypassed",
+			observedBehavior: "Protected data can reach a handler without object authorization.",
+			desiredBehavior: "Protected data requires object authorization before handler execution.",
+			affectedRefs: ["src/security/authorization.ts"],
+			sourceRefs: ["trace:scanner:authorization-bypass"],
+			claimedCategory: "security",
+			claimedSeverity: "critical",
+			claimedConfidence: "high",
+		},
 	};
 }
 
@@ -369,6 +446,7 @@ describe("native Decision Model Checks", () => {
 		});
 		const requests = [];
 		const runtime = createDecisionExitRuntime({
+			securityScanners: securityScannerConfiguration(),
 			modelChecks: {
 				route: route(),
 				transport: {
@@ -387,6 +465,7 @@ describe("native Decision Model Checks", () => {
 			candidate: setup.candidate,
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: [approval],
+			securityScan: securityScanContext(),
 		});
 
 		assert.equal(result.result.report.status, "pass");
@@ -404,15 +483,67 @@ describe("native Decision Model Checks", () => {
 				entry.checkId,
 				entry.status,
 			]),
-			[["security_surface_requirements_complete", "pass"]],
+			[
+				["security_scanners_valid", "pass"],
+				["security_surface_requirements_complete", "pass"],
+			],
+		);
+		assert.ok(
+			securityRequest.review.evidenceRecords.some(
+				(record) => record.kind === "command_execution",
+			),
+		);
+		assert.ok(
+			securityRequest.review.evidenceRecords.some(
+				(record) => record.kind === "source_observation",
+			),
 		);
 		const assessment = result.result.producedEvidenceRecords.find(
 			(record) => record.payload.checkId === "security_privacy_reviewed",
 		);
 		assert.equal(assessment.authority, "asserted");
 		assert.deepEqual(assessment.payload.securityFindings, []);
+		assert.deepEqual(result.securityFindingIntakeMaterials, []);
+
+		const blockedModelCheckIds = [];
+		const scannerBlocked = createDecisionExitRuntime({
+			securityScanners: securityScannerConfiguration(scannerFinding()),
+			modelChecks: {
+				route: route(),
+				transport: {
+					async execute(request) {
+						blockedModelCheckIds.push(request.check.id);
+						return {
+							status: "completed",
+							observedAt: "2026-07-28T12:01:00.000Z",
+							response: response(request),
+						};
+					},
+				},
+			},
+		});
+		const scannerBlockedResult = await scannerBlocked.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [approval],
+			securityScan: securityScanContext(),
+		});
+		assert.equal(scannerBlockedResult.result.report.status, "fail");
+		assert.equal(
+			scannerBlockedResult.result.report.checkResults.find(
+				(check) => check.checkId === "security_scanners_valid",
+			).status,
+			"fail",
+		);
+		assert.equal(blockedModelCheckIds.includes("security_privacy_reviewed"), true);
+		assert.equal(scannerBlockedResult.securityFindingIntakeMaterials.length, 1);
+		assert.equal(
+			scannerBlockedResult.securityFindingIntakeMaterials[0].content.claimedSeverity,
+			"critical",
+		);
 
 		const challenged = createDecisionExitRuntime({
+			securityScanners: securityScannerConfiguration(),
 			modelChecks: {
 				route: route(),
 				transport: {
@@ -436,6 +567,7 @@ describe("native Decision Model Checks", () => {
 			candidate: setup.candidate,
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: [approval],
+			securityScan: securityScanContext(),
 		});
 		assert.equal(challengedResult.result.report.status, "fail");
 		const challengeEvidence = challengedResult.result.producedEvidenceRecords.find(
@@ -588,8 +720,12 @@ describe("native Decision Model Checks", () => {
 		);
 		let modelCalls = 0;
 		let researchCalls = 0;
+		let scannerCalls = 0;
 		let researchConclusion = "supported";
 		const runtime = createDecisionExitRuntime({
+			securityScanners: securityScannerConfiguration(null, () => {
+				scannerCalls += 1;
+			}),
 			modelChecks: {
 				route: route(),
 				transport: {
@@ -637,6 +773,7 @@ describe("native Decision Model Checks", () => {
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: [approval, citation],
 			researchFreshnessBoundary: freshnessBoundary,
+			securityScan: securityScanContext(),
 		});
 		assert.equal(
 			first.result.report.status,
@@ -646,6 +783,7 @@ describe("native Decision Model Checks", () => {
 			),
 		);
 		assert.equal(researchCalls, 1);
+		assert.equal(scannerCalls, 1);
 		assert.equal(
 			first.result.report.checkResults.find(
 				(check) => check.checkId === "research_provenance_valid",
@@ -667,11 +805,49 @@ describe("native Decision Model Checks", () => {
 				...first.result.producedEvidenceRecords,
 			],
 			researchFreshnessBoundary: freshnessBoundary,
+			securityScan: securityScanContext(),
 		});
 		assert.equal(replay.result.report.reportDigest, first.result.report.reportDigest);
 		assert.equal(researchCalls, 1);
 		assert.equal(modelCalls > 0, true);
+		assert.equal(scannerCalls, 1);
 		assert.deepEqual(replay.result.producedEvidenceRecords, []);
+
+		const changedEnvironment = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [
+				approval,
+				citation,
+				...first.result.producedEvidenceRecords,
+			],
+			researchFreshnessBoundary: freshnessBoundary,
+			securityScan: {
+				...securityScanContext(),
+				environmentDigest: digest("d"),
+			},
+		});
+		assert.equal(scannerCalls, 2);
+		assert.notEqual(
+			changedEnvironment.result.report.reportDigest,
+			first.result.report.reportDigest,
+		);
+		const priorScannerEvidenceIds = first.result.producedEvidenceRecords
+			.filter(
+				(record) =>
+					record.kind === "command_execution" ||
+					record.kind === "source_observation",
+			)
+			.map((record) => record.evidenceId);
+		const changedScannerResult = changedEnvironment.result.report.checkResults.find(
+			(check) => check.checkId === "security_scanners_valid",
+		);
+		assert.equal(
+			priorScannerEvidenceIds.some((evidenceId) =>
+				changedScannerResult.evidenceRecordIds.includes(evidenceId),
+			),
+			false,
+		);
 
 		researchConclusion = "uncertain";
 		const uncertain = await runtime.run({
@@ -679,9 +855,11 @@ describe("native Decision Model Checks", () => {
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: [approval, citation],
 			researchFreshnessBoundary: freshnessBoundary,
+			securityScan: securityScanContext(),
 		});
 		assert.equal(uncertain.result.report.status, "indeterminate");
 		assert.equal(researchCalls, 2);
+		assert.equal(scannerCalls, 3);
 		const uncertainAssessment = uncertain.result.producedEvidenceRecords.find(
 			(record) =>
 				record.kind === "model_assessment" &&
@@ -706,12 +884,14 @@ describe("native Decision Model Checks", () => {
 				...uncertain.result.producedEvidenceRecords,
 			],
 			researchFreshnessBoundary: freshnessBoundary,
+			securityScan: securityScanContext(),
 		});
 		assert.equal(
 			uncertainReplay.result.report.reportDigest,
 			uncertain.result.report.reportDigest,
 		);
 		assert.equal(researchCalls, 2);
+		assert.equal(scannerCalls, 3);
 	});
 
 	it("keeps unsupported, unavailable, and malformed outcomes explicit", async () => {

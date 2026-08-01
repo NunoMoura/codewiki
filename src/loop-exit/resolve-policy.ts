@@ -294,7 +294,7 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 	...rulesForLoop(
 		"check.security.surface.detected",
 		"decision",
-		["security_privacy_reviewed"],
+		["security_scanners_valid", "security_privacy_reviewed"],
 		{securitySurfaces: [...SECURITY_SURFACES]},
 	),
 	...rulesForLoop(

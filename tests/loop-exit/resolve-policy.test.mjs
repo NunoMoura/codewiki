@@ -224,6 +224,7 @@ describe("Resolved Exit Policy resolver", () => {
 
 		for (const checkId of [
 			"security_surface_requirements_complete",
+			"security_scanners_valid",
 			"security_privacy_reviewed",
 			"api_contract_reviewed",
 			"persistent_data_safety_reviewed",
@@ -238,6 +239,7 @@ describe("Resolved Exit Policy resolver", () => {
 			security.activatedBy.includes("security-surface:persistence_migration"),
 		);
 		assert.deepEqual(security.dependsOn, [
+			"security_scanners_valid",
 			"security_surface_requirements_complete",
 		]);
 		assert.equal(

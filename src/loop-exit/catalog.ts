@@ -24,7 +24,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "3.0.0";
+export const CHECK_CATALOG_VERSION = "4.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -254,6 +254,10 @@ const CONDITIONAL_CHECKS = [
 		"Activated security surfaces have explicit trust boundaries, invariants, failure modes, and negative assurance requirements.",
 	],
 	[
+		"security_scanners_valid",
+		"Every activated security surface has complete fresh deterministic scanner and advisory Evidence for the exact Candidate/source snapshot.",
+	],
+	[
 		"security_privacy_reviewed",
 		"Security and privacy implications are explicitly assessed for this loop.",
 	],
@@ -366,7 +370,10 @@ const EXTERNAL_CHECK_IDS = new Set([
 
 const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
 	research_claims_supported: ["research_provenance_valid"],
-	security_privacy_reviewed: ["security_surface_requirements_complete"],
+	security_privacy_reviewed: [
+		"security_surface_requirements_complete",
+		"security_scanners_valid",
+	],
 };
 
 const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
@@ -497,9 +504,9 @@ function builtInRegistrations(): CheckRegistration[] {
 	addDefinitions(
 		byId,
 		["decision", "planning", "implementation"],
-		CONDITIONAL_CHECKS.slice(0, 12),
+		CONDITIONAL_CHECKS.slice(0, 13),
 	);
-	addDefinitions(byId, "implementation", CONDITIONAL_CHECKS.slice(12));
+	addDefinitions(byId, "implementation", CONDITIONAL_CHECKS.slice(13));
 	addDefinitions(byId, "decision", LOOP_SPECIFIC_CONDITIONAL_CHECKS.decision);
 	addDefinitions(byId, "planning", LOOP_SPECIFIC_CONDITIONAL_CHECKS.planning);
 	addDefinitions(
@@ -593,6 +600,30 @@ function evidenceObligations(
 				producerKinds: ["model"],
 				authorities: ["observed"],
 				coverages: ["complete"],
+				subject: "candidate",
+				freshness: "none",
+				artifact: "optional",
+			}),
+		];
+	}
+	if (id === "security_scanners_valid") {
+		return [
+			obligation({
+				id: "scanner-command-execution",
+				kinds: ["command_execution"],
+				producerKinds: ["runtime"],
+				authorities: ["observed"],
+				coverages: ["complete", "partial", "unknown"],
+				subject: "candidate",
+				freshness: "none",
+				artifact: "optional",
+			}),
+			obligation({
+				id: "scanner-source-observation",
+				kinds: ["source_observation"],
+				producerKinds: ["runtime"],
+				authorities: ["observed"],
+				coverages: ["complete", "partial", "unknown"],
 				subject: "candidate",
 				freshness: "none",
 				artifact: "optional",

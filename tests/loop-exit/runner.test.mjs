@@ -110,6 +110,7 @@ function executor(catalog, checkId, execute, options = {}) {
 				? {configurationDigest: options.configurationDigest}
 				: {}),
 		},
+		...(options.cacheable === false ? {cacheable: false} : {}),
 		...(options.producesEvidenceObligationIds
 			? {
 					producesEvidenceObligationIds:
@@ -242,6 +243,33 @@ describe("bounded Loop exit runner", () => {
 		now = 11;
 		await runner.run({candidate: setup.candidate, policy: setup.policy});
 		assert.equal(executions, CODE_CHECK_IDS.length * 3);
+	});
+
+	it("bypasses cache for executors bound to changing external state", async () => {
+		const checkId = CODE_CHECK_IDS[0];
+		const setup = foundation([checkId]);
+		let executions = 0;
+		const runner = createLoopExitRunner({
+			catalog: setup.catalog,
+			executors: [
+				executor(
+					setup.catalog,
+					checkId,
+					() => {
+						executions += 1;
+						return {disposition: "satisfied"};
+					},
+					{cacheable: false},
+				),
+			],
+		});
+		await runner.run({candidate: setup.candidate, policy: setup.policy});
+		const replay = await runner.run({
+			candidate: setup.candidate,
+			policy: setup.policy,
+		});
+		assert.equal(executions, 2);
+		assert.deepEqual(replay.cacheHitCheckIds, []);
 	});
 
 	it("keeps independent Checks running and derives failure-dominant repair", async () => {

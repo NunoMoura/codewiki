@@ -29,7 +29,7 @@ import {
 	type LoopExitResultCache,
 } from "./cache.ts";
 
-const LOOP_EXIT_RUNNER_VERSION = "1.0.0" as const;
+const LOOP_EXIT_RUNNER_VERSION = "1.1.0" as const;
 
 export type CheckObservationDisposition =
 	| "satisfied"
@@ -62,6 +62,7 @@ export interface LoopCheckExecutor {
 	readonly checkId: string;
 	readonly checkVersion: string;
 	readonly execution: CheckExecutionIdentity;
+	readonly cacheable?: boolean;
 	readonly producesEvidenceObligationIds?: readonly string[];
 	readonly execute: (
 		context: LoopCheckExecutorContext,
@@ -256,10 +257,11 @@ async function executeScheduledCheck(
 		binding.checkId,
 		context.input.policy.loop,
 	).check;
+	const availableEvidence = availableEvidenceRecords(context);
 	const resolutions = evidenceResolutions(
 		check,
 		context.input.evidenceResolutionsByCheck?.[binding.checkId],
-		context.evidenceRecords,
+		availableEvidence,
 	);
 	const executor = context.executors.get(
 		executorKey(context.input.policy.loop, binding.checkId, binding.checkVersion),
@@ -273,7 +275,7 @@ async function executeScheduledCheck(
 		dependencyResults,
 		execution,
 	});
-	const cached = context.cache.get(cacheKey);
+	const cached = executor?.cacheable === false ? undefined : context.cache.get(cacheKey);
 	if (cached) {
 		context.cacheHits.add(binding.checkId);
 		await context.input.onResult?.(cached, "cache");
@@ -285,7 +287,11 @@ async function executeScheduledCheck(
 		binding,
 		check,
 		resolutions,
-		evidenceRecords: evidenceForResolutions(resolutions, context.evidenceRecords),
+		evidenceRecords: evidenceForCheck(
+			resolutions,
+			dependencyResults,
+			availableEvidence,
+		),
 		dependencyResults,
 		executor,
 		signal: context.input.signal,
@@ -306,6 +312,7 @@ async function executeScheduledCheck(
 		),
 	);
 	if (
+		executor?.cacheable !== false &&
 		executed.producedEvidenceRecords.length === 0 &&
 		executed.result.status !== "indeterminate"
 	) {
@@ -752,14 +759,31 @@ function normalizedEvidenceRecords(
 	return records;
 }
 
-function evidenceForResolutions(
+function availableEvidenceRecords(
+	context: Pick<CheckSchedulerContext, "evidenceRecords" | "producedEvidenceRecords">,
+): ReadonlyMap<string, EvidenceRecord> {
+	return new Map([
+		...context.evidenceRecords.entries(),
+		...context.producedEvidenceRecords.entries(),
+	]);
+}
+
+function evidenceForCheck(
 	resolutions: readonly EvidenceObligationResolution[],
+	dependencyResults: readonly CheckResult[],
 	records: ReadonlyMap<string, EvidenceRecord>,
 ): EvidenceRecord[] {
-	const ids = new Set(resolutions.flatMap((resolution) => resolution.inputEvidenceIds));
-	return [...ids]
-		.sort(compareText)
-		.map((id) => records.get(id) as EvidenceRecord);
+	const ids = new Set([
+		...resolutions.flatMap((resolution) => resolution.inputEvidenceIds),
+		...dependencyResults.flatMap((result) => result.evidenceRecordIds),
+	]);
+	return [...ids].sort(compareText).map((id) => {
+		const record = records.get(id);
+		if (!record) {
+			throw new Error(`Check dependency references unavailable Evidence ${id}.`);
+		}
+		return record;
+	});
 }
 
 function checkResultCacheKey(input: {

@@ -123,9 +123,9 @@ else                           → pass
 
 A passing Exit Report permits exact semantic Loop exit only. Runtime separately revalidates generation, freshness, authority, and CAS before append or any effect.
 
-Initial Code Check catalog is closed. Projects cannot inject arbitrary JavaScript, shell, or executable verifiers. Kernel Checks cannot be disabled. Project Checks progress from `observe` to `warn` to explicitly approved `require`. Activation is deterministic and records `activatedBy`; learned activation and threshold changes are forbidden.
+Initial Code Check catalog is closed. Projects cannot inject arbitrary JavaScript, shell, or executable verifiers. Kernel Checks cannot be disabled. Project-authored Custom Checks use `draft | active | disabled`; every applicable active Custom Check is required. Activation is deterministic and records `activatedBy`; learned activation and threshold changes are forbidden.
 
-Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain Workbench/repair capabilities. Their output is not automatically authoritative Check evidence.
+Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain Workbench/repair capabilities. Their output is not automatically authoritative Check evidence. Classified or high-risk native Decision assurance now activates a closed scanner suite before independent security challenge review. Runtime fixes exact source/tree/environment/configuration/advisory bindings and materializes observed Evidence; findings fail, while unavailable scanners or stale advisory data remain `indeterminate`.
 
 ## Work and project control plane
 

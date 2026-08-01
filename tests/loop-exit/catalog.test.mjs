@@ -120,7 +120,7 @@ describe("Check catalog", () => {
 				.map((entry) => entry.check.id)
 				.toSorted((left, right) => left.localeCompare(right)),
 		);
-		assert.equal(catalog.version, "3.0.0");
+		assert.equal(catalog.version, "4.0.0");
 		assert.match(catalog.digest, /^sha256:[0-9a-f]{64}$/);
 		assert.ok(
 			catalog
