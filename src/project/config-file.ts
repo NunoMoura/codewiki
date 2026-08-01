@@ -36,23 +36,22 @@ export async function resolveWikiConfigFile(
 	return { ...result, path: WIKI_CONFIG_PATH, written: false };
 }
 
+export function serializeWikiConfigFile(config: WikiConfig): string {
+	return `${JSON.stringify(resolveWikiConfig(config), null, "\t")}\n`;
+}
+
 export async function writeWikiConfigFile(
 	repoRoot: string,
 	config: WikiConfig,
 ): Promise<void> {
-	const resolved = resolveWikiConfig(config);
 	const path = configPath(repoRoot);
 	const temporaryPath = `${path}.tmp-${process.pid}-${randomUUID()}`;
 	await mkdir(dirname(path), { recursive: true });
 	try {
-		await writeFile(
-			temporaryPath,
-			`${JSON.stringify(resolved, null, "\t")}\n`,
-			{
-				encoding: "utf8",
-				mode: 0o600,
-			},
-		);
+		await writeFile(temporaryPath, serializeWikiConfigFile(config), {
+			encoding: "utf8",
+			mode: 0o600,
+		});
 		await rename(temporaryPath, path);
 	} finally {
 		await rm(temporaryPath, { force: true });

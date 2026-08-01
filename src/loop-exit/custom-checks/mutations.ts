@@ -22,6 +22,8 @@ import {
 	type CustomCheckConfigState,
 	type ProtectedCustomCheckConfigSnapshot,
 } from "./configuration.ts";
+import {createSerializedIdempotencyGate} from "./serialized-idempotency.ts";
+import {canonicalIsoTimestamp} from "./validation.ts";
 
 export const CUSTOM_CHECK_MUTATION_PROTOCOL = Object.freeze({
 	id: "codewiki.custom-check-mutation",
@@ -159,14 +161,119 @@ export class CustomCheckMutationError extends Error {
 	}
 }
 
-interface CompletedMutation {
-	readonly payloadDigest: Sha256Digest;
-	readonly result: CustomCheckMutationResult;
-}
-
-interface PendingMutation {
-	readonly payloadDigest: Sha256Digest;
-	readonly result: Promise<CustomCheckMutationResult>;
+export function assertCustomCheckMutationReceipt(
+	value: CustomCheckMutationReceipt,
+): void {
+	try {
+		assertExactKeys(
+			value,
+			[
+				"receiptId",
+				"protocolId",
+				"protocolVersion",
+				"idempotencyKey",
+				"action",
+				"recordedAt",
+				"authority",
+				"authorizationDigest",
+				"protectedBaseSnapshotDigest",
+				"protectedSourceHead",
+				"protectedConfigDigest",
+				"configDigestBefore",
+				"configDigestAfter",
+				"customCheckConfigDigestBefore",
+				"customCheckConfigDigestAfter",
+				"definitionBefore",
+				"definitionAfter",
+				"effectiveFrom",
+			],
+			"Custom Check mutation receipt",
+		);
+		if (value.protocolId !== CUSTOM_CHECK_MUTATION_PROTOCOL.id) {
+			throw new Error("Custom Check mutation receipt protocolId is invalid.");
+		}
+		if (value.protocolVersion !== CUSTOM_CHECK_MUTATION_PROTOCOL.version) {
+			throw new Error("Custom Check mutation receipt protocolVersion is invalid.");
+		}
+		const action = mutationAction(value.action);
+		const recordedAt = canonicalIsoTimestamp(
+			value.recordedAt,
+			"receipt.recordedAt",
+		);
+		const authority = normalizeAuthenticatedCustomCheckAuthority(value.authority);
+		const definitionBefore = value.definitionBefore
+			? normalizeReceiptDefinitionBinding(value.definitionBefore, "definitionBefore")
+			: null;
+		const definitionAfter = normalizeReceiptDefinitionBinding(
+			value.definitionAfter,
+			"definitionAfter",
+		);
+		assertReceiptTransition(action, definitionBefore, definitionAfter);
+		const payload = {
+			protocolId: CUSTOM_CHECK_MUTATION_PROTOCOL.id,
+			protocolVersion: CUSTOM_CHECK_MUTATION_PROTOCOL.version,
+			idempotencyKey: idempotencyKey(value.idempotencyKey),
+			action,
+			recordedAt,
+			authority,
+			authorizationDigest: sha256Digest(
+				value.authorizationDigest,
+				"receipt.authorizationDigest",
+			),
+			protectedBaseSnapshotDigest: sha256Digest(
+				value.protectedBaseSnapshotDigest,
+				"receipt.protectedBaseSnapshotDigest",
+			),
+			protectedSourceHead: gitObjectId(
+				value.protectedSourceHead,
+				"receipt.protectedSourceHead",
+			),
+			protectedConfigDigest: sha256Digest(
+				value.protectedConfigDigest,
+				"receipt.protectedConfigDigest",
+			),
+			configDigestBefore: sha256Digest(
+				value.configDigestBefore,
+				"receipt.configDigestBefore",
+			),
+			configDigestAfter: sha256Digest(
+				value.configDigestAfter,
+				"receipt.configDigestAfter",
+			),
+			customCheckConfigDigestBefore: sha256Digest(
+				value.customCheckConfigDigestBefore,
+				"receipt.customCheckConfigDigestBefore",
+			),
+			customCheckConfigDigestAfter: sha256Digest(
+				value.customCheckConfigDigestAfter,
+				"receipt.customCheckConfigDigestAfter",
+			),
+			definitionBefore,
+			definitionAfter,
+			effectiveFrom: value.effectiveFrom,
+		};
+		if (payload.effectiveFrom !== "next_protected_snapshot") {
+			throw new Error("Custom Check mutation receipt effectiveFrom is invalid.");
+		}
+		if (
+			payload.configDigestBefore === payload.configDigestAfter ||
+			payload.customCheckConfigDigestBefore === payload.customCheckConfigDigestAfter
+		) {
+			throw new Error("Custom Check mutation receipt must describe a config change.");
+		}
+		const {receiptId: _receiptId, ...rawPayload} = value;
+		const expectedReceiptId = `custom-check-mutation:${canonicalJsonDigest(payload).slice("sha256:".length)}`;
+		const rawReceiptId = `custom-check-mutation:${canonicalJsonDigest(rawPayload).slice("sha256:".length)}`;
+		if (
+			value.receiptId !== expectedReceiptId ||
+			value.receiptId !== rawReceiptId
+		) {
+			throw new Error("Custom Check mutation receipt id does not match its content.");
+		}
+	} catch (error) {
+		if (error instanceof CustomCheckMutationError) throw error;
+		throw badRequest(error instanceof Error ? error.message : String(error));
+	}
 }
 
 export function createCustomCheckMutationRuntime(options: {
@@ -177,44 +284,24 @@ export function createCustomCheckMutationRuntime(options: {
 	) => boolean | Promise<boolean>;
 	readonly now?: () => Date;
 }): CustomCheckMutationRuntime {
-	const completed = new Map<string, CompletedMutation>();
-	const pending = new Map<string, PendingMutation>();
 	const now = options.now ?? (() => new Date());
-	let sequence: Promise<unknown> = Promise.resolve();
+	const idempotency = createSerializedIdempotencyGate<CustomCheckMutationResult>({
+		maxCompleted: CUSTOM_CHECK_MUTATION_PROTOCOL.maxCompletedCommands,
+		conflict: (state) =>
+			conflict(`Idempotency key is ${state} with different input.`),
+	});
 	return Object.freeze({
 		async execute(
 			value: unknown,
 			suppliedAuthority: AuthenticatedCustomCheckAuthority,
 		) {
 			const command = parseCustomCheckMutationCommand(value);
-			const authority = normalizeAuthority(suppliedAuthority);
-			const payloadDigest = canonicalJsonDigest({command, authority});
-			const existing = completed.get(command.idempotencyKey);
-			if (existing) {
-				assertIdempotentPayload(existing.payloadDigest, payloadDigest, "completed");
-				return Object.freeze({...existing.result, replayed: true});
-			}
-			const inFlight = pending.get(command.idempotencyKey);
-			if (inFlight) {
-				assertIdempotentPayload(inFlight.payloadDigest, payloadDigest, "running");
-				return Object.freeze({...await inFlight.result, replayed: true});
-			}
-			const result = sequence.then(() =>
-				executeMutation(options, command, authority, now),
-			);
-			sequence = result.then(
-				() => undefined,
-				() => undefined,
-			);
-			pending.set(command.idempotencyKey, {payloadDigest, result});
-			try {
-				const resolved = await result;
-				completed.set(command.idempotencyKey, {payloadDigest, result: resolved});
-				trimCompleted(completed);
-				return resolved;
-			} finally {
-				pending.delete(command.idempotencyKey);
-			}
+			const authority = normalizeAuthenticatedCustomCheckAuthority(suppliedAuthority);
+			return idempotency.run({
+				key: command.idempotencyKey,
+				payloadDigest: canonicalJsonDigest({command, authority}),
+				execute: () => executeMutation(options, command, authority, now),
+			});
 		},
 	});
 }
@@ -556,7 +643,7 @@ function normalizedProposal(value: unknown): CustomCheckProposal {
 	});
 }
 
-function normalizeAuthority(
+export function normalizeAuthenticatedCustomCheckAuthority(
 	value: AuthenticatedCustomCheckAuthority,
 ): AuthenticatedCustomCheckAuthority {
 	try {
@@ -570,7 +657,7 @@ function normalizeAuthority(
 				"authenticationEvidenceId",
 				"runtimeProtocolDigest",
 			],
-			"Custom Check mutation authority",
+			"Custom Check authenticated authority",
 		);
 		return Object.freeze({
 			actorId: boundedText(value.actorId, "authority.actorId", 200),
@@ -663,21 +750,56 @@ function boundedText(value: unknown, field: string, max: number): string {
 	return value.trim();
 }
 
-function assertIdempotentPayload(
-	previous: Sha256Digest,
-	current: Sha256Digest,
-	state: "completed" | "running",
-): void {
-	if (previous !== current) {
-		throw conflict(`Idempotency key is ${state} with different input.`);
+function normalizeReceiptDefinitionBinding(
+	value: CustomCheckMutationDefinitionBinding,
+	label: string,
+): CustomCheckMutationDefinitionBinding {
+	assertExactKeys(
+		value,
+		["customCheckId", "definitionDigest", "lifecycle"],
+		`Custom Check mutation receipt ${label}`,
+	);
+	if (!["draft", "active", "disabled"].includes(value.lifecycle)) {
+		throw new Error(`Custom Check mutation receipt ${label} lifecycle is invalid.`);
 	}
+	return Object.freeze({
+		customCheckId: boundedText(value.customCheckId, `${label}.customCheckId`, 200),
+		definitionDigest: sha256Digest(
+			value.definitionDigest,
+			`${label}.definitionDigest`,
+		),
+		lifecycle: value.lifecycle,
+	});
 }
 
-function trimCompleted(entries: Map<string, CompletedMutation>): void {
-	while (entries.size > CUSTOM_CHECK_MUTATION_PROTOCOL.maxCompletedCommands) {
-		const first = entries.keys().next().value;
-		if (first === undefined) return;
-		entries.delete(first);
+function assertReceiptTransition(
+	action: CustomCheckMutationAction,
+	before: CustomCheckMutationDefinitionBinding | null,
+	after: CustomCheckMutationDefinitionBinding,
+): void {
+	if (action === "create") {
+		if (before || after.lifecycle !== "draft") {
+			throw new Error("Custom Check create receipt has an invalid lifecycle transition.");
+		}
+		return;
+	}
+	if (!before || before.customCheckId !== after.customCheckId) {
+		throw new Error("Custom Check mutation receipt changed definition lineage.");
+	}
+	if (
+		(action === "update" && before.lifecycle !== after.lifecycle) ||
+		(action === "activate" &&
+			(before.lifecycle !== "draft" || after.lifecycle !== "active")) ||
+		(action === "disable" &&
+			(before.lifecycle === "disabled" || after.lifecycle !== "disabled"))
+	) {
+		throw new Error(`Custom Check ${action} receipt has an invalid lifecycle transition.`);
+	}
+	if (
+		(action === "activate" || action === "disable") &&
+		before.definitionDigest !== after.definitionDigest
+	) {
+		throw new Error(`Custom Check ${action} receipt changed definition semantics.`);
 	}
 }
 

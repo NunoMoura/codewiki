@@ -24,6 +24,8 @@ As a maintainer, I want bounded Custom Checks for company policy, design style, 
 - Lifecycle is `draft | active | disabled`; every applicable active Custom Check is required and its `fail` or `indeterminate` Result blocks Loop exit.
 - Accepted configuration is protected Git-backed project truth, not browser state or a mutable registry.
 - Guarded create, update, activate, and disable commands require exact current/protected config CAS, protected source head, authenticated authority, bounded idempotency, and a content-addressed receipt.
+- Protected acceptance requires one exact authenticated policy-review receipt with `pass`, separate authenticated acceptance authority, repository/protected-ref binding, a config-only child commit, expected-head Git CAS, and exact post-push verification.
+- Failed, indeterminate, stale, unauthenticated, drifted, branch-rejected, or non-config-only policy acceptance fails closed without blind rebase/retry; exact accepted retries are idempotent.
 - A Candidate changing Custom Check policy remains evaluated against the exact config loaded from its protected Git base and cannot disable its own assurance; accepted changes apply only from the next protected snapshot.
 - Per-type batching is promoted only when sealed comparisons against focused calls preserve safety while improving measured latency or cost.
 - Skills may help producers satisfy Custom Checks but cannot activate, pass, disable, or weaken them.

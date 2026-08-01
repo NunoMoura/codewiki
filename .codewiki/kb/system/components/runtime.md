@@ -130,6 +130,8 @@ Decision, Planning, and Implementation own Candidate semantics and Loop-specific
 
 A passing Exit Report is not write or effect authority. Runtime revalidates current state, exact bases, generation, actor authority, CAS, and effect-specific policy immediately before action.
 
+Custom Check policy acceptance follows that split explicitly. Required policy-review `pass` remains Evidence, not Git authority. Runtime separately authenticates acceptance authority, binds repository identity and configured protected ref, creates a config-only child of the reviewed protected head, holds the shared config lock for final working-state revalidation, pushes under exact expected-head Git CAS, and re-observes accepted config bytes. Stale or rejected effects are never blindly rebased or retried.
+
 ## Project snapshot and freshness
 
 Team WorkState snapshot identity binds:

@@ -49,7 +49,7 @@ export function createWikiConfigCustomCheckStore(
 		async compareAndSwap(
 			input: Parameters<CustomCheckMutationStore["compareAndSwap"]>[0],
 		) {
-			return withConfigLock(repoRoot, async () => {
+			return withCustomCheckConfigLock(repoRoot, async () => {
 				const current = await loadWikiConfigFile(repoRoot);
 				if (wikiConfigDigest(current) !== input.expectedConfigDigest) {
 					throw conflict("Project configuration changed before mutation commit.");
@@ -128,7 +128,7 @@ function configState(config: WikiConfig): CustomCheckConfigState {
 	});
 }
 
-async function withConfigLock<T>(
+export async function withCustomCheckConfigLock<T>(
 	repoRoot: string,
 	run: () => Promise<T>,
 ): Promise<T> {
