@@ -30,9 +30,9 @@ import {
 import {assertExactKeys} from "../../utils/json.ts";
 import type {DecisionCandidate} from "./candidate.ts";
 
-export const DECISION_MODEL_CHECK_PROTOCOL = Object.freeze({
-	id: "codewiki.decision.model-check",
-	version: "2.0.0",
+export const DECISION_MODEL_CHECK_REQUEST_PROTOCOL = Object.freeze({
+	id: "codewiki.decision.model-check-request",
+	version: "3.0.0",
 	maxRequestBytes: 262_144,
 	maxFindings: 32,
 	maxLimitations: 32,
@@ -40,8 +40,8 @@ export const DECISION_MODEL_CHECK_PROTOCOL = Object.freeze({
 });
 
 export interface DecisionModelCheckRequest {
-	readonly protocolId: typeof DECISION_MODEL_CHECK_PROTOCOL.id;
-	readonly protocolVersion: typeof DECISION_MODEL_CHECK_PROTOCOL.version;
+	readonly protocolId: typeof DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id;
+	readonly protocolVersion: typeof DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version;
 	readonly requestDigest: Sha256Digest;
 	readonly candidate: DecisionCandidate;
 	readonly check: {
@@ -53,6 +53,10 @@ export interface DecisionModelCheckRequest {
 		readonly customCheck?: {
 			readonly customCheckId: string;
 			readonly definitionDigest: Sha256Digest;
+			readonly protectedSourceHead: string;
+			readonly protectedConfigDigest: Sha256Digest;
+			readonly customCheckConfigDigest: Sha256Digest;
+			readonly protectedConfigSnapshotDigest: Sha256Digest;
 			readonly checkTypeId: string;
 			readonly checkTypeVersion: string;
 			readonly evaluatorId: string;
@@ -83,8 +87,8 @@ export interface DecisionModelCheckRequest {
 }
 
 interface DecisionModelCheckResponse {
-	readonly protocolId: typeof DECISION_MODEL_CHECK_PROTOCOL.id;
-	readonly protocolVersion: typeof DECISION_MODEL_CHECK_PROTOCOL.version;
+	readonly protocolId: typeof DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id;
+	readonly protocolVersion: typeof DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version;
 	readonly requestDigest: Sha256Digest;
 	readonly checkId: string;
 	readonly checkVersion: string;
@@ -126,8 +130,8 @@ interface CreateDecisionModelCheckExecutorsInput {
 
 const SPECIALIZED_MODEL_CHECK_IDS = new Set(["research_claims_supported"]);
 const MODEL_CONCLUSION_VOCABULARY_DIGEST = canonicalJsonDigest({
-	protocolId: DECISION_MODEL_CHECK_PROTOCOL.id,
-	protocolVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
+	protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
+	protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 	labels: ["uncertain"],
 });
 
@@ -168,7 +172,7 @@ function modelCheckExecutor(input: {
 		);
 	}
 	const configurationDigest = canonicalJsonDigest({
-		protocol: DECISION_MODEL_CHECK_PROTOCOL,
+		protocol: DECISION_MODEL_CHECK_REQUEST_PROTOCOL,
 		execution: input.check.execution,
 		route: input.route,
 	});
@@ -178,7 +182,7 @@ function modelCheckExecutor(input: {
 		checkVersion: input.check.version,
 		execution: {
 			...input.check.execution,
-			adapterVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
+			adapterVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 			modelRef: `${input.route.provider}/${input.route.model}`,
 			configurationDigest,
 		},
@@ -256,8 +260,8 @@ function modelCheckRequest(input: {
 	readonly configurationDigest: Sha256Digest;
 }): DecisionModelCheckRequest {
 	const body = {
-		protocolId: DECISION_MODEL_CHECK_PROTOCOL.id,
-		protocolVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
+		protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
+		protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 		candidate: input.context.candidate,
 		check: {
 			id: input.context.check.id,
@@ -280,7 +284,7 @@ function modelCheckRequest(input: {
 		...body,
 		requestDigest: canonicalJsonDigest(body),
 	}) as unknown as DecisionModelCheckRequest;
-	if (Buffer.byteLength(canonicalJson(request), "utf8") > DECISION_MODEL_CHECK_PROTOCOL.maxRequestBytes) {
+	if (Buffer.byteLength(canonicalJson(request), "utf8") > DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxRequestBytes) {
 		throw new Error("Decision Model Check request exceeds protocol limit.");
 	}
 	return request;
@@ -292,13 +296,29 @@ function customCheckRequestMetadata(
 	const parameters = context.binding.parameters;
 	if (parameters.customCheckId === undefined) return {};
 	const customCheckId = requiredParameterText(parameters.customCheckId, "customCheckId");
-	const definitionDigest = requiredParameterText(
+	const definitionDigest = requiredDigestParameter(
 		parameters.customCheckDefinitionDigest,
 		"customCheckDefinitionDigest",
-	) as Sha256Digest;
-	if (!/^sha256:[0-9a-f]{64}$/u.test(definitionDigest)) {
-		throw new Error("Custom Check Model request has invalid definition digest.");
+	);
+	const protectedSourceHead = requiredParameterText(
+		parameters.protectedSourceHead,
+		"protectedSourceHead",
+	);
+	if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(protectedSourceHead)) {
+		throw new Error("Custom Check Model request has invalid protected source head.");
 	}
+	const protectedConfigDigest = requiredDigestParameter(
+		parameters.protectedConfigDigest,
+		"protectedConfigDigest",
+	);
+	const customCheckConfigDigest = requiredDigestParameter(
+		parameters.customCheckConfigDigest,
+		"customCheckConfigDigest",
+	);
+	const protectedConfigSnapshotDigest = requiredDigestParameter(
+		parameters.protectedCustomCheckConfigSnapshotDigest,
+		"protectedCustomCheckConfigSnapshotDigest",
+	);
 	const knowledgeRefs = parameters.knowledgeRefs;
 	if (!Array.isArray(knowledgeRefs)) {
 		throw new Error("Custom Check Model request has invalid Knowledge refs.");
@@ -317,6 +337,10 @@ function customCheckRequestMetadata(
 		customCheck: {
 			customCheckId,
 			definitionDigest,
+			protectedSourceHead,
+			protectedConfigDigest,
+			customCheckConfigDigest,
+			protectedConfigSnapshotDigest,
 			checkTypeId: requiredParameterText(
 				parameters.customCheckTypeId,
 				"customCheckTypeId",
@@ -340,6 +364,17 @@ function requiredParameterText(value: unknown, field: string): string {
 		throw new Error(`Custom Check Model request has invalid ${field}.`);
 	}
 	return value;
+}
+
+function requiredDigestParameter(
+	value: unknown,
+	field: string,
+): Sha256Digest {
+	const digest = requiredParameterText(value, field);
+	if (!/^sha256:[0-9a-f]{64}$/u.test(digest)) {
+		throw new Error(`Custom Check Model request has invalid ${field}.`);
+	}
+	return digest as Sha256Digest;
 }
 
 function modelCheckReview(
@@ -402,8 +437,8 @@ function modelAssessmentEvidence(input: {
 			payload: {
 				checkId: input.context.check.id,
 				checkVersion: input.context.check.version,
-				protocolId: DECISION_MODEL_CHECK_PROTOCOL.id,
-				protocolVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
+				protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
+				protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 				routeId: input.route.id,
 				configurationDigest: input.request.configurationDigest,
 				measurement: modelConclusionEvidenceMeasurement(
@@ -424,7 +459,7 @@ function modelAssessmentEvidence(input: {
 			producer: {
 				kind: "model",
 				id: `${input.route.provider}/${input.route.model}`,
-				version: DECISION_MODEL_CHECK_PROTOCOL.version,
+				version: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 			},
 			authority:
 				input.context.check.id === "security_privacy_reviewed"
@@ -566,8 +601,8 @@ function normalizedResponse(
 	assertExactKeys(value, responseKeys, "Decision Model Check response");
 	const response = value as Record<string, unknown>;
 	if (
-		response.protocolId !== DECISION_MODEL_CHECK_PROTOCOL.id ||
-		response.protocolVersion !== DECISION_MODEL_CHECK_PROTOCOL.version ||
+		response.protocolId !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id ||
+		response.protocolVersion !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version ||
 		response.requestDigest !== request.requestDigest ||
 		response.checkId !== request.check.id ||
 		response.checkVersion !== request.check.version
@@ -592,12 +627,12 @@ function normalizedResponse(
 	}
 	const findings = normalizedTextList(
 		response.findings,
-		DECISION_MODEL_CHECK_PROTOCOL.maxFindings,
+		DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxFindings,
 		"findings",
 	);
 	const limitations = normalizedTextList(
 		response.limitations,
-		DECISION_MODEL_CHECK_PROTOCOL.maxLimitations,
+		DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxLimitations,
 		"limitations",
 	);
 	const securityFindings =
@@ -635,7 +670,7 @@ function normalizedSecurityFindings(
 	value: unknown,
 	consideredEvidenceIds: readonly EvidenceId[],
 ): ModelSecurityChallengeFinding[] {
-	if (!Array.isArray(value) || value.length > DECISION_MODEL_CHECK_PROTOCOL.maxFindings) {
+	if (!Array.isArray(value) || value.length > DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxFindings) {
 		throw new Error("Decision Model Check securityFindings are invalid.");
 	}
 	return value.map((entry, index) =>
@@ -710,7 +745,7 @@ function normalizedRequiredText(value: unknown, label: string): string {
 	if (
 		typeof value !== "string" ||
 		!value.trim() ||
-		value.length > DECISION_MODEL_CHECK_PROTOCOL.maxTextLength
+		value.length > DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxTextLength
 	) {
 		throw new Error(`Decision Model Check ${label} is invalid.`);
 	}
@@ -763,7 +798,7 @@ function normalizedTextList(
 		if (
 			typeof entry !== "string" ||
 			entry.trim().length === 0 ||
-			entry.length > DECISION_MODEL_CHECK_PROTOCOL.maxTextLength
+			entry.length > DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxTextLength
 		) {
 			throw new Error(`Decision Model Check ${label} entry is invalid.`);
 		}

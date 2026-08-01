@@ -7,7 +7,7 @@ import {parseDecisionCandidateProposal} from "../../src/decision/candidate-propo
 import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
 import {materializeDecisionApprovalReceipt} from "../../src/decision/exit/evidence.ts";
 import {
-	DECISION_MODEL_CHECK_PROTOCOL,
+	DECISION_MODEL_CHECK_REQUEST_PROTOCOL,
 	createDecisionModelCheckExecutors,
 } from "../../src/decision/exit/model-checks.ts";
 import {
@@ -20,6 +20,7 @@ import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
+	createProtectedCustomCheckConfigSnapshot,
 	customCheckDefinitionCheckId,
 } from "../../src/loop-exit/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
@@ -30,6 +31,14 @@ const WORK_STATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const KNOWLEDGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const MODEL_CHECK_IDS = ["intention_validated", "recommendation_justified"];
 const digest = (character) => `sha256:${character.repeat(64)}`;
+
+function protectedConfig(customChecks) {
+	return createProtectedCustomCheckConfigSnapshot({
+		protectedSourceHead: "f".repeat(40),
+		projectConfigDigest: digest("e"),
+		customChecks,
+	});
+}
 
 function fixture(changeOverrides = {}) {
 	const change = acceptedChangeFixture({
@@ -146,8 +155,8 @@ function route(overrides = {}) {
 
 function response(request, conclusion = "supported") {
 	return {
-		protocolId: DECISION_MODEL_CHECK_PROTOCOL.id,
-		protocolVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
+		protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
+		protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 		requestDigest: request.requestDigest,
 		checkId: request.check.id,
 		checkVersion: request.check.version,
@@ -259,6 +268,7 @@ describe("native Decision Model Checks", () => {
 			}),
 		);
 		const checkId = customCheckDefinitionCheckId(definition);
+		const protectedBase = protectedConfig([definition]);
 		const catalog = createCheckCatalog([definition]);
 		const revision = setup.candidate.content.revision;
 		const resolved = resolveExitPolicy({
@@ -278,7 +288,7 @@ describe("native Decision Model Checks", () => {
 			projectTraits: [],
 			technologies: [],
 			paths: [...revision.classification.targetRefs],
-			customChecks: [definition],
+			protectedBaseCustomCheckConfig: protectedBase,
 		});
 		const binding = resolved.bindings.find((entry) => entry.checkId === checkId);
 		const policy = createResolvedExitPolicy({
@@ -312,10 +322,18 @@ describe("native Decision Model Checks", () => {
 
 		assert.equal(result.report.checkResults[0].status, "pass");
 		assert.equal(requests.length, 1);
-		assert.equal(requests[0].protocolVersion, "2.0.0");
+		assert.equal(
+			requests[0].protocolId,
+			"codewiki.decision.model-check-request",
+		);
+		assert.equal(requests[0].protocolVersion, "3.0.0");
 		assert.deepEqual({...requests[0].check.customCheck}, {
 			customCheckId: definition.customCheckId,
 			definitionDigest: definition.definitionDigest,
+			protectedSourceHead: protectedBase.protectedSourceHead,
+			protectedConfigDigest: protectedBase.projectConfigDigest,
+			customCheckConfigDigest: protectedBase.customCheckConfigDigest,
+			protectedConfigSnapshotDigest: protectedBase.snapshotDigest,
 			checkTypeId: "organization_policy",
 			checkTypeVersion: "1.0.0",
 			evaluatorId: "codewiki.check-evaluator.organization_policy",

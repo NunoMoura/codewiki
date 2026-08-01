@@ -1,7 +1,7 @@
 import { decisionLoopExitDeclaration } from "../decision/exit/index.ts";
 import { implementationLoopExitDeclaration } from "../implementation/exit/index.ts";
 import { createLoopExitResultCache } from "../loop-exit/cache.ts";
-import type { CustomCheckDefinition } from "../loop-exit/custom-checks/index.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../loop-exit/custom-checks/index.ts";
 import { createCheckCatalog } from "../loop-exit/catalog.ts";
 import {
 	createCheckResult,
@@ -50,9 +50,18 @@ export const LOOP_EXIT_SUITE = createLoopExitSuite({
 });
 
 export function createLoopExitRuntime(
-	input: {readonly customChecks?: readonly CustomCheckDefinition[]} = {},
+	input: {
+		readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
+	} = {},
 ): LoopExitRuntime {
-	const catalog = createCheckCatalog(input.customChecks);
+	if ("customChecks" in input) {
+		throw new Error(
+			"Loop Exit Runtime received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
+		);
+	}
+	const catalog = createCheckCatalog(
+		input.protectedBaseCustomCheckConfig?.customChecks,
+	);
 	const claimsExecutor = createDecisionResearchClaimsExecutor(catalog);
 	return Object.freeze({
 		suite: LOOP_EXIT_SUITE,

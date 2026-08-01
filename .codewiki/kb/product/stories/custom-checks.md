@@ -23,7 +23,8 @@ As a maintainer, I want bounded Custom Checks for company policy, design style, 
 - Every Custom Check receives a separate `supported | unsupported | uncertain` Assessment and Runtime-derived `pass | fail | indeterminate` Result, even when model transport batches related Checks.
 - Lifecycle is `draft | active | disabled`; every applicable active Custom Check is required and its `fail` or `indeterminate` Result blocks Loop exit.
 - Accepted configuration is protected Git-backed project truth, not browser state or a mutable registry.
-- A Candidate changing Custom Check policy remains evaluated against the protected-base policy and cannot disable its own assurance.
+- Guarded create, update, activate, and disable commands require exact current/protected config CAS, protected source head, authenticated authority, bounded idempotency, and a content-addressed receipt.
+- A Candidate changing Custom Check policy remains evaluated against the exact config loaded from its protected Git base and cannot disable its own assurance; accepted changes apply only from the next protected snapshot.
 - Per-type batching is promoted only when sealed comparisons against focused calls preserve safety while improving measured latency or cost.
 - Skills may help producers satisfy Custom Checks but cannot activate, pass, disable, or weaken them.
 

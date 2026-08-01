@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 
-import {DECISION_MODEL_CHECK_PROTOCOL} from "../../src/decision/exit/model-checks.ts";
+import {DECISION_MODEL_CHECK_REQUEST_PROTOCOL} from "../../src/decision/exit/model-checks.ts";
 import {createPiDecisionModelCheckTransport} from "../../src/pi/decision-model-check-session.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 
@@ -9,8 +9,8 @@ const digest = (character) => `sha256:${character.repeat(64)}`;
 
 function request() {
 	const body = {
-		protocolId: DECISION_MODEL_CHECK_PROTOCOL.id,
-		protocolVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
+		protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
+		protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 		candidate: {
 			schemaVersion: 1,
 			loop: "decision",
@@ -49,8 +49,8 @@ function request() {
 
 function response(preparedRequest) {
 	return {
-		protocolId: DECISION_MODEL_CHECK_PROTOCOL.id,
-		protocolVersion: DECISION_MODEL_CHECK_PROTOCOL.version,
+		protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
+		protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 		requestDigest: preparedRequest.requestDigest,
 		checkId: preparedRequest.check.id,
 		checkVersion: preparedRequest.check.version,

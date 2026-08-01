@@ -2,7 +2,7 @@ import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
 import {
 	normalizeCustomCheckDefinitions,
 	type CustomCheckDefinition,
-} from "../loop-exit/custom-checks/index.ts";
+} from "../loop-exit/custom-checks/contracts.ts";
 import {
 	DEFAULT_WIKI_PREVIEW_CONFIG,
 	type PartialWikiPreviewConfig,
@@ -398,9 +398,13 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 		customChecks,
 		quality: {
 			judge: {
-				...config.quality.judge,
-				endpoint: text(config.quality.judge.endpoint) || undefined,
+				enabled: config.quality.judge.enabled,
+				provider: config.quality.judge.provider,
+				...(text(config.quality.judge.endpoint)
+					? {endpoint: text(config.quality.judge.endpoint)}
+					: {}),
 				promptVersion: text(config.quality.judge.promptVersion),
+				timeoutMs: config.quality.judge.timeoutMs,
 			},
 			review: {
 				...config.quality.review,

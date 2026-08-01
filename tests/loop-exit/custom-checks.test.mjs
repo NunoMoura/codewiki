@@ -7,6 +7,7 @@ import {
 	createCustomCheckDefinition,
 	customCheckConfigurationDigest,
 	customCheckDefinitionCheckId,
+	createProtectedCustomCheckConfigSnapshot,
 	disableCustomCheckDefinition,
 	listCustomCheckTypes,
 	normalizeCustomCheckDefinitions,
@@ -40,6 +41,14 @@ function activeDefinition(overrides = {}) {
 	);
 }
 
+function protectedConfig(customChecks) {
+	return createProtectedCustomCheckConfigSnapshot({
+		protectedSourceHead: "f".repeat(40),
+		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		customChecks,
+	});
+}
+
 function selectorInput(customChecks, overrides = {}) {
 	return {
 		loop: "decision",
@@ -58,7 +67,7 @@ function selectorInput(customChecks, overrides = {}) {
 		projectTraits: [],
 		technologies: [],
 		paths: ["src/api/users.ts"],
-		customChecks,
+		protectedBaseCustomCheckConfig: protectedConfig(customChecks),
 		...overrides,
 	};
 }
@@ -267,7 +276,15 @@ describe("Custom Check catalog and policy", () => {
 		assert.equal(disabledPolicy.bindings.some((entry) => entry.checkId === checkId), false);
 	});
 
-	it("cleanly rejects the removed project registration path", () => {
+	it("cleanly rejects removed unprotected Custom Check inputs", () => {
+		assert.throws(
+			() =>
+				resolveExitPolicy({
+					...selectorInput([]),
+					customChecks: [],
+				}),
+			/unsupported field customChecks; use protectedBaseCustomCheckConfig/,
+		);
 		assert.throws(
 			() =>
 				resolveExitPolicy({

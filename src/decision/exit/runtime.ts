@@ -5,7 +5,7 @@ import {
 } from "../../loop-exit/cache.ts";
 import {createCheckCatalog} from "../../loop-exit/catalog.ts";
 import type {ExitReport, ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
-import type {CustomCheckDefinition} from "../../loop-exit/custom-checks/index.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../../loop-exit/custom-checks/index.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {
 	canonicalJsonDigest,
@@ -41,7 +41,7 @@ import {
 
 interface CreateDecisionExitRuntimeInput {
 	readonly additionalExecutors?: readonly LoopCheckExecutor[];
-	readonly customChecks?: readonly CustomCheckDefinition[];
+	readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
 	readonly cache?: LoopExitResultCache;
 	readonly limits?: LoopExitRunnerLimits;
 	readonly modelChecks?: {
@@ -92,7 +92,14 @@ export function createDecisionExitRuntime(
 	readonly run: (runInput: RunDecisionExitInput) => Promise<DecisionExitRun>;
 	readonly cache: LoopExitResultCache;
 } {
-	const catalog = createCheckCatalog(input.customChecks);
+	if ("customChecks" in input) {
+		throw new Error(
+			"Decision Exit Runtime received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
+		);
+	}
+	const catalog = createCheckCatalog(
+		input.protectedBaseCustomCheckConfig?.customChecks,
+	);
 	const cache = input.cache ?? createLoopExitResultCache();
 	return Object.freeze({
 		cache,
@@ -101,7 +108,7 @@ export function createDecisionExitRuntime(
 			const policy = decisionExitPolicy(
 				runInput.candidate,
 				runInput.changeRef,
-				input.customChecks,
+				input.protectedBaseCustomCheckConfig,
 			);
 			const subject = decisionEvidenceSubject(
 				runInput.candidate,
@@ -222,7 +229,7 @@ function passedDecisionRoute(
 function decisionExitPolicy(
 	candidate: DecisionCandidate,
 	changeRef: string,
-	customChecks: readonly CustomCheckDefinition[] = [],
+	protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot,
 ): ResolvedExitPolicy {
 	const changeId = changeRef.slice("change:".length);
 	return resolveExitPolicy({
@@ -248,7 +255,9 @@ function decisionExitPolicy(
 		projectTraits: [],
 		technologies: [],
 		paths: [...candidate.content.revision.classification.targetRefs],
-		customChecks: [...customChecks],
+		...(protectedBaseCustomCheckConfig
+			? {protectedBaseCustomCheckConfig}
+			: {}),
 	});
 }
 

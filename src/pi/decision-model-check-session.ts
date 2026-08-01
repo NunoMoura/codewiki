@@ -1,5 +1,5 @@
 import {
-	DECISION_MODEL_CHECK_PROTOCOL,
+	DECISION_MODEL_CHECK_REQUEST_PROTOCOL,
 	type DecisionModelCheckObservation,
 	type DecisionModelCheckRequest,
 } from "../decision/exit/model-checks.ts";
@@ -30,8 +30,8 @@ const RESPONSE_SCHEMA_JSON = JSON.stringify({
 		"limitations",
 	],
 	properties: {
-		protocolId: {const: DECISION_MODEL_CHECK_PROTOCOL.id},
-		protocolVersion: {const: DECISION_MODEL_CHECK_PROTOCOL.version},
+		protocolId: {const: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id},
+		protocolVersion: {const: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version},
 		requestDigest: {type: "string"},
 		checkId: {type: "string"},
 		checkVersion: {type: "string"},
@@ -47,23 +47,23 @@ const RESPONSE_SCHEMA_JSON = JSON.stringify({
 		},
 		findings: {
 			type: "array",
-			maxItems: DECISION_MODEL_CHECK_PROTOCOL.maxFindings,
+			maxItems: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxFindings,
 			items: {
 				type: "string",
-				maxLength: DECISION_MODEL_CHECK_PROTOCOL.maxTextLength,
+				maxLength: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxTextLength,
 			},
 		},
 		limitations: {
 			type: "array",
-			maxItems: DECISION_MODEL_CHECK_PROTOCOL.maxLimitations,
+			maxItems: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxLimitations,
 			items: {
 				type: "string",
-				maxLength: DECISION_MODEL_CHECK_PROTOCOL.maxTextLength,
+				maxLength: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxTextLength,
 			},
 		},
 		securityFindings: {
 			type: "array",
-			maxItems: DECISION_MODEL_CHECK_PROTOCOL.maxFindings,
+			maxItems: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxFindings,
 			items: {
 				type: "object",
 				additionalProperties: false,
@@ -80,9 +80,9 @@ const RESPONSE_SCHEMA_JSON = JSON.stringify({
 					"limitations",
 				],
 				properties: {
-					threatGoal: {type: "string", maxLength: DECISION_MODEL_CHECK_PROTOCOL.maxTextLength},
+					threatGoal: {type: "string", maxLength: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxTextLength},
 					preconditions: textListSchema(),
-					attackPath: {type: "string", maxLength: DECISION_MODEL_CHECK_PROTOCOL.maxTextLength},
+					attackPath: {type: "string", maxLength: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxTextLength},
 					violatedInvariants: textListSchema(),
 					candidateRefs: textListSchema(64),
 					evidenceIds: {
@@ -106,7 +106,7 @@ function textListSchema(maxItems = 32) {
 		maxItems,
 		items: {
 			type: "string",
-			maxLength: DECISION_MODEL_CHECK_PROTOCOL.maxTextLength,
+			maxLength: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxTextLength,
 		},
 	};
 }
@@ -205,10 +205,10 @@ function modelCheckInvocationPrompt(request: DecisionModelCheckRequest): string 
 
 function assertTransportRequest(request: DecisionModelCheckRequest): void {
 	if (
-		request.protocolId !== DECISION_MODEL_CHECK_PROTOCOL.id ||
-		request.protocolVersion !== DECISION_MODEL_CHECK_PROTOCOL.version
+		request.protocolId !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id ||
+		request.protocolVersion !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version
 	) {
-		throw new Error("Decision Model Check protocol identity is invalid.");
+		throw new Error("Decision Model Check Request Protocol identity is invalid.");
 	}
 	const {requestDigest, ...body} = request;
 	if (canonicalJsonDigest(body) !== requestDigest) {
@@ -216,7 +216,7 @@ function assertTransportRequest(request: DecisionModelCheckRequest): void {
 	}
 	if (
 		Buffer.byteLength(JSON.stringify(request), "utf8") >
-		DECISION_MODEL_CHECK_PROTOCOL.maxRequestBytes
+		DECISION_MODEL_CHECK_REQUEST_PROTOCOL.maxRequestBytes
 	) {
 		throw new Error("Decision Model Check request exceeds protocol limit.");
 	}

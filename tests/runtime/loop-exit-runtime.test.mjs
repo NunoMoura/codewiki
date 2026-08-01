@@ -60,5 +60,9 @@ describe("Loop exit runtime composition", () => {
 			typeof runtime.completeDecisionResearchClaimsAssessment,
 			"function",
 		);
+		assert.throws(
+			() => createLoopExitRuntime({customChecks: []}),
+			/unsupported field customChecks; use protectedBaseCustomCheckConfig/,
+		);
 	});
 });

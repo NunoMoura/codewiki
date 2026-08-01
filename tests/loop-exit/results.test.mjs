@@ -11,6 +11,7 @@ import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
+	createProtectedCustomCheckConfigSnapshot,
 	customCheckDefinitionCheckId,
 } from "../../src/loop-exit/custom-checks/index.ts";
 import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
@@ -23,6 +24,14 @@ import {
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const EVIDENCE_DIGEST = `sha256:${"c".repeat(64)}`;
+
+function protectedConfig(customChecks) {
+	return createProtectedCustomCheckConfigSnapshot({
+		protectedSourceHead: "f".repeat(40),
+		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		customChecks,
+	});
+}
 
 function selectorInput() {
 	return {
@@ -420,7 +429,7 @@ describe("immutable Exit Report", () => {
 	it("blocks exit when an active Custom Check fails or is indeterminate", () => {
 		const definition = requiredCustomCheck();
 		const input = selectorInput();
-		input.customChecks = [definition];
+		input.protectedBaseCustomCheckConfig = protectedConfig([definition]);
 		const policy = resolveExitPolicy(input);
 		const catalog = createCheckCatalog([definition]);
 		const binding = policy.bindings.find(

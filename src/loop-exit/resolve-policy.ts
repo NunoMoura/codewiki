@@ -26,7 +26,11 @@ import {
 	type CheckRegistration,
 	type CheckCatalog,
 } from "./catalog.ts";
-import type { CustomCheckDefinition } from "./custom-checks/contracts.ts";
+import {
+	assertProtectedCustomCheckConfigSnapshot,
+	type ProtectedCustomCheckConfigSnapshot,
+} from "./custom-checks/configuration.ts";
+import type {CustomCheckDefinition} from "./custom-checks/contracts.ts";
 import { loopQualifiedCheckDigest } from "./identity.ts";
 import {
 	SECURITY_SURFACES,
@@ -35,7 +39,7 @@ import {
 	type SecuritySurfaceClassification,
 } from "./security-surfaces.ts";
 
-const EXIT_POLICY_SELECTOR_VERSION = "1.1.0";
+const EXIT_POLICY_SELECTOR_VERSION = "2.0.0";
 
 const PROJECT_TRAITS = [
 	"web-ui",
@@ -95,7 +99,7 @@ interface ResolveExitPolicyInput {
 	paths?: string[];
 	approvedAdditions?: ApprovedCheckAddition[];
 	approvedExclusions?: ApprovedCheckExclusion[];
-	customChecks?: CustomCheckDefinition[];
+	protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
 }
 
 interface CheckActivationRuleMatch {
@@ -132,6 +136,12 @@ interface NormalizedSelectorInput {
 	securitySurfaces: SecuritySurface[];
 	approvedAdditions: ApprovedCheckAddition[];
 	approvedExclusions: ApprovedCheckExclusion[];
+	protectedBaseCustomCheckConfig?: {
+		protectedSourceHead: string;
+		projectConfigDigest: string;
+		customCheckConfigDigest: string;
+		snapshotDigest: string;
+	};
 }
 
 interface MutableBinding {
@@ -404,7 +414,14 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 export function resolveExitPolicy(
 	input: ResolveExitPolicyInput,
 ): ResolvedExitPolicy {
-	const catalog = createCheckCatalog(input.customChecks);
+	if (input.protectedBaseCustomCheckConfig) {
+		assertProtectedCustomCheckConfigSnapshot(
+			input.protectedBaseCustomCheckConfig,
+		);
+	}
+	const catalog = createCheckCatalog(
+		input.protectedBaseCustomCheckConfig?.customChecks,
+	);
 	const selector = normalizeSelectorInput(
 		input,
 		catalog.version,
@@ -457,8 +474,18 @@ function activateCustomChecks(
 		);
 		if (!applicabilityReasons) continue;
 		const definition = customCheck.definition;
+		const protectedConfig = selector.protectedBaseCustomCheckConfig;
+		if (!protectedConfig) {
+			throw new Error(
+				`Custom Check ${definition.customCheckId} has no protected-base configuration binding.`,
+			);
+		}
 		const parameters: Record<string, CheckJsonValue> = {
 			customCheckId: definition.customCheckId,
+			protectedSourceHead: protectedConfig.protectedSourceHead,
+			protectedConfigDigest: protectedConfig.projectConfigDigest,
+			customCheckConfigDigest: protectedConfig.customCheckConfigDigest,
+			protectedCustomCheckConfigSnapshotDigest: protectedConfig.snapshotDigest,
 			customCheckDefinitionDigest: definition.definitionDigest,
 			customCheckTypeId: definition.checkTypeId,
 			customCheckTypeVersion: customCheck.checkTypeVersion,
@@ -662,6 +689,20 @@ function normalizeSelectorInput(
 			? {securitySurfaceClassification: input.securitySurfaceClassification}
 			: {}),
 		securitySurfaces,
+		...(input.protectedBaseCustomCheckConfig
+			? {
+					protectedBaseCustomCheckConfig: {
+						protectedSourceHead:
+							input.protectedBaseCustomCheckConfig.protectedSourceHead,
+						projectConfigDigest:
+							input.protectedBaseCustomCheckConfig.projectConfigDigest,
+						customCheckConfigDigest:
+							input.protectedBaseCustomCheckConfig.customCheckConfigDigest,
+						snapshotDigest:
+							input.protectedBaseCustomCheckConfig.snapshotDigest,
+					},
+				}
+			: {}),
 		approvedAdditions: [...additions]
 			.map((addition) => ({
 				...addition,
@@ -679,6 +720,11 @@ function optionalValues<T>(values: T[] | undefined): T[] {
 }
 
 function assertValidSelectorInput(input: ResolveExitPolicyInput): void {
+	if ("customChecks" in input) {
+		throw new Error(
+			"Resolved Exit Policy received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
+		);
+	}
 	if ("projectRegistrations" in input) {
 		throw new Error(
 			"Resolved Exit Policy received unsupported field projectRegistrations; use bounded Custom Checks.",

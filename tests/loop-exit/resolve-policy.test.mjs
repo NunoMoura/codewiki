@@ -6,6 +6,7 @@ import { assertValidResolvedExitPolicy } from "../../src/loop-exit/contracts.ts"
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
+	createProtectedCustomCheckConfigSnapshot,
 	customCheckDefinitionCheckId,
 } from "../../src/loop-exit/custom-checks/index.ts";
 import {classifySecuritySurfaces} from "../../src/loop-exit/security-surfaces.ts";
@@ -32,6 +33,14 @@ function selectorInput(loop = "decision") {
 		technologies: [],
 		paths: ["src/loop-exit/contracts.ts"],
 	};
+}
+
+function protectedConfig(customChecks) {
+	return createProtectedCustomCheckConfigSnapshot({
+		protectedSourceHead: "f".repeat(40),
+		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		customChecks,
+	});
 }
 
 function customCheck() {
@@ -305,7 +314,9 @@ describe("Resolved Exit Policy resolver", () => {
 	it("binds policy identity to exact Catalog content", () => {
 		const baselineInput = selectorInput("implementation");
 		const changedCatalogInput = selectorInput("implementation");
-		changedCatalogInput.customChecks = [customCheck()];
+		changedCatalogInput.protectedBaseCustomCheckConfig = protectedConfig([
+			customCheck(),
+		]);
 
 		const baseline = resolveExitPolicy(baselineInput);
 		const changedCatalog = resolveExitPolicy(changedCatalogInput);
@@ -336,8 +347,9 @@ describe("Resolved Exit Policy resolver", () => {
 
 	it("activates applicable Custom Checks as required policy", () => {
 		const definition = customCheck();
+		const protectedBase = protectedConfig([definition]);
 		const input = selectorInput("implementation");
-		input.customChecks = [definition];
+		input.protectedBaseCustomCheckConfig = protectedBase;
 		const resolution = resolveExitPolicy(input);
 		const binding = resolution.bindings.find(
 			(entry) => entry.checkId === customCheckDefinitionCheckId(definition),
@@ -349,6 +361,22 @@ describe("Resolved Exit Policy resolver", () => {
 		assert.equal(
 			binding.parameters.customCheckDefinitionDigest,
 			definition.definitionDigest,
+		);
+		assert.equal(
+			binding.parameters.protectedSourceHead,
+			protectedBase.protectedSourceHead,
+		);
+		assert.equal(
+			binding.parameters.protectedConfigDigest,
+			protectedBase.projectConfigDigest,
+		);
+		assert.equal(
+			binding.parameters.customCheckConfigDigest,
+			protectedBase.customCheckConfigDigest,
+		);
+		assert.equal(
+			binding.parameters.protectedCustomCheckConfigSnapshotDigest,
+			protectedBase.snapshotDigest,
 		);
 	});
 
@@ -371,7 +399,7 @@ describe("Resolved Exit Policy resolver", () => {
 
 		const definition = customCheck();
 		const customInput = selectorInput("implementation");
-		customInput.customChecks = [definition];
+		customInput.protectedBaseCustomCheckConfig = protectedConfig([definition]);
 		customInput.approvedExclusions = [
 			{
 				checkId: customCheckDefinitionCheckId(definition),

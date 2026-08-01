@@ -16,6 +16,7 @@ codewiki_source_patterns:
   - src/loop-exit/custom-checks/**
 codewiki_test_patterns:
   - tests/loop-exit/custom-checks.test.mjs
+  - tests/loop-exit/custom-checks/**
 codewiki_role: custom_check_policy
 codewiki_source_map:
   - id: custom_checks
@@ -23,6 +24,7 @@ codewiki_source_map:
       - src/loop-exit/custom-checks/**
     test_patterns:
       - tests/loop-exit/custom-checks.test.mjs
+      - tests/loop-exit/custom-checks/**
     role: custom_check_policy
 ---
 # Custom Checks
@@ -164,11 +166,11 @@ draft → active → disabled
 
 A draft can be edited and previewed but does not enter authoritative Resolved Exit Policy. Every applicable active Custom Check is required: `fail` or `indeterminate` blocks Loop exit. Disabled definitions remain historical project policy but do not execute. No advisory active mode, enforcement-stage progression, rollout history, approval field, or integer revision exists.
 
-Activation and disabling require authenticated guarded project authority bound to the exact expected protected config digest. Authorization belongs to the mutation receipt and accepted Git history rather than to mutable fields inside the Custom Check definition.
+Creating, editing, activating, and disabling require authenticated guarded project authority bound to the exact expected current config digest, protected config digest, and protected source head. Runtime serializes commands, rejects stale compare-and-swap attempts, verifies an authentication Evidence binding, asks the configured authority verifier to authorize the exact before/after mutation, and emits a content-addressed receipt. Authorization belongs to that receipt and accepted Git history rather than to mutable fields inside the Custom Check definition.
 
-Dashboard changes use Project Runtime commands with exact current config digest, idempotency key, bounded proposal, authenticated actor, generated diff, validation, and receipt. Browser code never writes repository files directly. CLI/API automation uses the same command contract.
+Dashboard changes use Project Runtime commands with an idempotency key, bounded proposal, authenticated actor, generated semantic before/after binding, validation, and receipt. Browser code never writes repository files directly. The project-config adapter acquires an exclusive local mutation lock, re-reads the complete config under that lock, atomically writes `.codewiki/config.json`, and verifies the resulting semantic config digest. CLI/API automation uses the same command contract.
 
-A Candidate that changes Custom Check configuration is evaluated under the protected-base policy snapshot. It cannot disable, remove, or rewrite the Checks evaluating itself. Accepted policy changes become authoritative only from the next protected config snapshot after required policy-change review and authority. Editing an active definition preserves active lifecycle in the newly accepted snapshot while changing `definitionDigest`; an unaccepted Dashboard edit remains only a preview and cannot replace the protected active definition. Rollback restores an earlier exact Git/config identity rather than mutating history.
+A Candidate that changes Custom Check configuration is evaluated under the exact protected-base policy snapshot loaded from a full Git commit id, not from the mutable working-tree file. It cannot disable, remove, or rewrite the Checks evaluating itself. Accepted policy changes become authoritative only from the next protected config snapshot after required policy-change review and authority. Mutation receipts therefore state `effectiveFrom: next_protected_snapshot`. Editing an active definition preserves active lifecycle in the newly accepted snapshot while changing `definitionDigest`; an unaccepted working-tree edit cannot replace the protected active definition. Rollback restores an earlier exact Git/config identity rather than mutating history.
 
 ## Activation and policy resolution
 
@@ -263,9 +265,11 @@ The clean cut replaces dashboard/public use of the broad `ProjectCheckRegistrati
 
 Source now cleanly removes `ProjectCheckRegistration` and provides `src/loop-exit/custom-checks/**` contracts for the closed Check Type catalog, bounded proposal materialization, Runtime-owned stable id and semantic `definitionDigest`, draft/active/disabled lifecycle, exact Custom Check configuration digest, normalization, limits, and tamper rejection. Project config persists only complete materialized definitions. Check Catalog `3.0.0` emits active Custom Checks only as required project-authority Model Checks with CodeWiki-owned execution, measurement, Evidence obligations, timeout, cost, dependencies, and evaluator identity. Resolved Exit Policy deterministically applies loop, Change-kind, affected-layer, and path-scope filters and binds exact Custom Check/type/evaluator/Knowledge metadata.
 
-The shared Loop-exit runtime and native Decision runtime can receive exact Custom Check definitions. Decision Model Check protocol `2.0.0` carries exact Custom Check id and definition digest metadata, and security/privacy Custom Checks select the existing structured challenge envelope. Focused model calls remain the execution baseline. Failing or indeterminate active Custom Checks block exit and remain available for bounded agent repair feedback.
+The guarded `codewiki.custom-check-mutation@1.0.0` Runtime command now supports strict create, update, activate, and disable actions with exact current/protected config CAS, authenticated authority verification, bounded idempotency, semantic before/after bindings, and content-addressed receipts. The project adapter derives the complete canonical project-config digest, serializes cross-process writes with an exclusive lock, verifies persisted output, and can load Custom Check policy from an exact protected Git commit while working-tree changes prepare the next snapshot.
 
-Production config-to-runtime loading, protected-base policy selection, dedicated guarded Dashboard proposal/activation commands, Check Type route binding, Knowledge-content resolution, type-level batching/sharding, calibration, Planning/Implementation evaluator cuts, and production `wiki_decide` cutover remain pending. Generic dashboard config patching intentionally does not expose Custom Checks as editable settings.
+Resolved Exit Policy, the shared Loop-exit runtime, and native Decision runtime now accept only a validated `ProtectedCustomCheckConfigSnapshot`; the removed raw `customChecks` input is rejected. Active bindings carry the protected source head, complete project-config digest, Custom Check config digest, protected snapshot digest, Custom Check id, and `definitionDigest`. Decision Model Check Request Protocol `3.0.0` (`codewiki.decision.model-check-request`) carries those exact bindings, and security/privacy Custom Checks select the existing structured challenge envelope. Focused model calls remain the execution baseline. Failing or indeterminate active Custom Checks block exit and remain available for bounded agent repair feedback.
+
+Dashboard/CLI/API command transport, policy-change review UI, accepted Git commit/branch orchestration, Check Type route binding, Knowledge-content resolution, type-level batching/sharding, calibration, Planning/Implementation evaluator cuts, and production `wiki_decide` cutover remain pending. Generic dashboard config patching intentionally does not expose Custom Checks as editable settings.
 
 ## Related docs
 

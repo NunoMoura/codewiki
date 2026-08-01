@@ -9,6 +9,7 @@ import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
+	createProtectedCustomCheckConfigSnapshot,
 	customCheckDefinitionCheckId,
 } from "../../src/loop-exit/custom-checks/index.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
@@ -42,6 +43,14 @@ function candidate(salt = "default") {
 	});
 }
 
+function protectedConfig(customChecks) {
+	return createProtectedCustomCheckConfigSnapshot({
+		protectedSourceHead: "f".repeat(40),
+		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		customChecks,
+	});
+}
+
 function selectorInput(loopCandidate, customChecks = []) {
 	return {
 		loop: "decision",
@@ -60,7 +69,9 @@ function selectorInput(loopCandidate, customChecks = []) {
 		projectTraits: [],
 		technologies: [],
 		paths: [],
-		...(customChecks.length > 0 ? {customChecks} : {}),
+		...(customChecks.length > 0
+			? {protectedBaseCustomCheckConfig: protectedConfig(customChecks)}
+			: {}),
 	};
 }
 

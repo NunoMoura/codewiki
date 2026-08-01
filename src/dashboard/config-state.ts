@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import {
 	previewProfileDigest,
 	type PreviewProfile,
@@ -11,6 +10,7 @@ import {
 	loadWikiConfigFile,
 	WIKI_CONFIG_PATH,
 } from "../project/config-file.ts";
+import {wikiConfigDigest} from "../project/config-digest.ts";
 import type {
 	WikiConfig,
 	WikiConfigAgencyLevel,
@@ -19,6 +19,7 @@ import type {
 	WikiRuntimeBudgetConfig,
 	WikiModelRoutingConfig,
 } from "../project/config.ts";
+import {canonicalJsonDigest} from "../utils/canonical-json.ts";
 
 export interface DashboardEditableConfig {
 	runtime: {
@@ -103,9 +104,7 @@ export async function loadDashboardConfigState(
 		validation: "valid",
 		configDigest,
 		activeConfigDigest,
-		stateDigest: `sha256:${createHash("sha256")
-			.update(JSON.stringify({ configDigest, activeConfigDigest }))
-			.digest("hex")}`,
+		stateDigest: canonicalJsonDigest({configDigest, activeConfigDigest}),
 		restartRequired,
 		restartReasons: restartRequired
 			? [
@@ -144,9 +143,7 @@ export async function loadDashboardConfigState(
 }
 
 export function dashboardConfigDigest(config: WikiConfig): string {
-	return `sha256:${createHash("sha256")
-		.update(JSON.stringify(config))
-		.digest("hex")}`;
+	return wikiConfigDigest(config);
 }
 
 function editableConfig(config: WikiConfig): DashboardEditableConfig {
