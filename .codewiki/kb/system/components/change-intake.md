@@ -17,13 +17,18 @@ codewiki_source_patterns:
   - src/changes/intake/**
   - src/changes/defect-profile.ts
   - src/runtime/change-intake.ts
+  - src/runtime/implementation-worker-adapter.ts
+  - src/pi/worker-reports.ts
+  - src/pi/process-worker-adapter.ts
   - src/dashboard/changes-state.ts
   - src/dashboard/state.ts
   - src/dashboard/assets.ts
 codewiki_test_patterns:
   - tests/changes/change-intake.test.mjs
   - tests/changes/change-intake-runtime.test.mjs
+  - tests/changes/change-intake-producers.test.mjs
   - tests/changes/defect-profile.test.mjs
+  - tests/runtime/process-worker-adapter.test.mjs
   - tests/dashboard/changes-state.test.mjs
   - tests/dashboard/dashboard-state.test.mjs
 codewiki_trace_events:
@@ -41,10 +46,15 @@ codewiki_source_map:
       - src/changes/intake/**
       - src/changes/defect-profile.ts
       - src/runtime/change-intake.ts
+      - src/runtime/implementation-worker-adapter.ts
+      - src/pi/worker-reports.ts
+      - src/pi/process-worker-adapter.ts
     test_patterns:
       - tests/changes/change-intake.test.mjs
       - tests/changes/change-intake-runtime.test.mjs
+      - tests/changes/change-intake-producers.test.mjs
       - tests/changes/defect-profile.test.mjs
+      - tests/runtime/process-worker-adapter.test.mjs
     trace_events:
       - trace.opened
       - change.proposed
@@ -114,7 +124,7 @@ type ChangeIntakeMaterial =
   | KnowledgeDriftMaterial;
 ```
 
-Each member has source-specific required bindings and one bounded shared semantic core. Protocol `codewiki.change-intake-material@1.0.0` caps canonical input at 16,384 UTF-8 bytes, normalizes text to NFC and LF, rejects unknown fields, credentials, unsupported controls, malformed exact bindings, and duplicate refs, and exposes only the eight closed source members. A producer may provide observed behavior, desired behavior, affected refs, claimed category/severity/confidence, reproduction material, and source refs. It cannot provide canonical Change, revision, operation, actor, time, authority, priority, risk, route, or Check outcome fields.
+Each member has source-specific required bindings and one bounded shared semantic core. Protocol `codewiki.change-intake-material@1.1.0` caps canonical input at 16,384 UTF-8 bytes, normalizes text to NFC and LF, rejects unknown fields, credentials, unsupported controls, malformed exact bindings, and duplicate refs, and exposes only the eight closed source members. A producer may provide observed behavior, desired behavior, affected refs, claimed category/severity/confidence, reproduction material, and source refs. It cannot provide canonical Change, revision, operation, actor, time, authority, priority, risk, route, or Check outcome fields.
 
 Initial sources include:
 
@@ -128,9 +138,11 @@ Initial sources include:
 
 Provider-specific reviewer semantics are unnecessary. A provider-level observer correlates ordinary review primitives, actor identity, provider event, repository, pull request, and exact head. CodeWiki does not require one adapter per reviewer agent.
 
+Executable producers now cover every closed source member. Each producer injects only its exact source binding and delegates all semantic normalization to the shared material contract; unsupported authority, priority, risk, route, and identity fields fail rather than being ignored. Delivery and outcome producers can bind validated Evidence Records directly. The Knowledge-drift producer binds exact linter issues and snapshot digests. Pi process Worker Reports may retain at most sixteen normalized discovery proposals; `createWorkerReportDiscoveryMaterials()` requires Runtime to add exact Worker Report, Assignment operation, Work Item Claim operation, and base/result tree bindings before admission.
+
 ## Runtime admission
 
-Runtime derives idempotency and canonical identity from exact authenticated source material and the current fresh project snapshot. Under Change Trace Protocol `1.1.0`, accepted `change.proposed` and `change.feedback_recorded` operations carry the complete normalized material as a digest- and schema-validated inline artifact; source, semantic, and request fingerprints support bounded correlation and replay without replacing those exact bytes. Admission performs:
+Runtime derives idempotency and canonical identity from exact authenticated source material and the current fresh project snapshot. Under Change Trace Protocol `1.3.0`, accepted `change.proposed` and `change.feedback_recorded` operations carry the complete normalized material as a digest- and schema-validated inline artifact; source, semantic, and request fingerprints support bounded correlation and replay without replacing those exact bytes. Admission performs:
 
 1. schema and size validation;
 2. source authentication and exact subject correlation;
@@ -240,7 +252,7 @@ A Model Check finding is asserted analysis, not verified vulnerability fact. Run
 
 ## Current clean-cut drift
 
-The closed source-specific material contract and strict normalizer now replace legacy `user | runtime | lab` feedback. Runtime authenticates exact source material through an injected source adapter, validates optional correlation against fresh WorkState, records the complete normalized inline material plus durable request/source/semantic fingerprints, replays exact accepted requests, reinforces open source or semantic matches, routes exact current-scope feedback, creates linked independent Changes, and verifies expected-head Git acceptance without blind retry. Dedicated CLI/API/Pi and provider/worker/scanner/delivery/outcome/Knowledge producers and shared triage projections remain incomplete. `wiki_change` no longer accepts the removed feedback shape. Native Worker Reports still lack structured discoveries. Current dashboard filtering and ordering remain presentation-local and do not provide a shared user/agent triage contract.
+The closed source-specific material contract and strict normalizer now replace legacy `user | runtime | lab` feedback. Runtime authenticates exact source material through an injected source adapter, validates optional correlation against fresh WorkState, records the complete normalized inline material plus durable request/source/semantic fingerprints, replays exact accepted requests, reinforces open source or semantic matches, routes exact current-scope feedback, creates linked independent Changes, and verifies expected-head Git acceptance without blind retry. Authenticated CLI/API/Pi admission transport, real provider/scanner collection adapters, and shared triage projections remain incomplete. `wiki_change` no longer accepts the removed feedback shape. Native Worker Reports still lack structured discoveries. Current dashboard filtering and ordering remain presentation-local and do not provide a shared user/agent triage contract.
 
 ## Related docs
 

@@ -1,5 +1,9 @@
 import {isCanonicalTraceRef} from "../../traces/refs.ts";
 import {
+	normalizeChangeSecurityProfile,
+	type ChangeSecurityProfile,
+} from "../defect-profile.ts";
+import {
 	assertSha256Digest,
 	toCanonicalJsonValue,
 	type CanonicalJsonValue,
@@ -44,6 +48,7 @@ const CONTENT_FIELDS = [
 	"claimedCategory",
 	"claimedSeverity",
 	"claimedConfidence",
+	"claimedSecurity",
 ] as const;
 
 const BINDING_FIELDS = Object.freeze({
@@ -128,7 +133,7 @@ export function normalizeChangeIntakeMaterial(
 		BINDING_FIELDS[materialType],
 		`${materialType} binding`,
 	);
-	const content = normalizeContent(value.content);
+	const content = normalizeChangeIntakeContent(value.content);
 	return material(materialType, binding, content);
 }
 
@@ -196,7 +201,9 @@ function material(
 	}
 }
 
-function normalizeContent(value: unknown): ChangeIntakeContent {
+export function normalizeChangeIntakeContent(
+	value: unknown,
+): ChangeIntakeContent {
 	const content = record(value, "content");
 	assertExactKeys(
 		content,
@@ -214,6 +221,7 @@ function normalizeContent(value: unknown): ChangeIntakeContent {
 		claimedCategory?: ChangeIntakeClaimedCategory;
 		claimedSeverity?: ChangeIntakeClaimedSeverity;
 		claimedConfidence?: ChangeIntakeClaimedConfidence;
+		claimedSecurity?: ChangeSecurityProfile;
 	} = {
 		summary: text(content.summary, "content.summary", 500),
 		observedBehavior: text(
@@ -267,6 +275,11 @@ function normalizeContent(value: unknown): ChangeIntakeContent {
 			content.claimedConfidence,
 			CHANGE_INTAKE_CLAIMED_CONFIDENCES,
 			"content.claimedConfidence",
+		);
+	}
+	if (content.claimedSecurity !== undefined) {
+		result.claimedSecurity = normalizeChangeSecurityProfile(
+			content.claimedSecurity,
 		);
 	}
 	return Object.freeze(result);

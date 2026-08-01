@@ -535,12 +535,23 @@ function intakeDefectProfile(
 		!material.content.claimedCategory &&
 		!material.content.claimedSeverity &&
 		!material.content.claimedConfidence &&
+		!material.content.claimedSecurity &&
 		!material.content.reproduction
 	) {
 		return undefined;
 	}
 	const category = intakeDefectCategory(material);
 	const securityClassification = intakeSecurityClassification(category, material);
+	const security = material.content.claimedSecurity ??
+		(securityClassification
+			? {
+					classification: securityClassification,
+					identifiers: [],
+					cvss: [],
+					sarif: [],
+					kev: [],
+				}
+			: undefined);
 	return normalizeChangeDefectProfile({
 		protocolId: "codewiki.change-defect-profile",
 		protocolVersion: "1.0.0",
@@ -561,17 +572,7 @@ function intakeDefectProfile(
 			: {}),
 		sourceLocations: material.content.affectedRefs.filter(isSourceLocation),
 		ruleRefs: intakeRuleRefs(material),
-		...(securityClassification
-			? {
-					security: {
-						classification: securityClassification,
-						identifiers: [],
-						cvss: [],
-						sarif: [],
-						kev: [],
-					},
-				}
-			: {}),
+		...(security ? {security} : {}),
 		provenance: {
 			authority: "asserted",
 			evidenceIds: authenticationEvidenceId ? [authenticationEvidenceId] : [],
@@ -584,6 +585,7 @@ function intakeDefectCategory(
 	material: ChangeIntakeMaterial,
 ): ChangeDefectCategory {
 	if (material.content.claimedCategory) return material.content.claimedCategory;
+	if (material.content.claimedSecurity) return "security";
 	switch (material.materialType) {
 		case "security_scanner_finding":
 			return "security";

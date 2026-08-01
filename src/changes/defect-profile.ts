@@ -300,7 +300,9 @@ export function normalizeChangeDefectProfile(value: unknown): ChangeDefectProfil
 			: {}),
 		sourceLocations: normalizedRefSet(input.sourceLocations, "sourceLocations"),
 		ruleRefs: normalizedIdentifierSet(input.ruleRefs, "ruleRefs"),
-		...(input.security ? {security: normalizeSecurityProfile(input.security)} : {}),
+		...(input.security
+			? {security: normalizeChangeSecurityProfile(input.security)}
+			: {}),
 		provenance: {
 			authority: input.provenance.authority,
 			evidenceIds: normalizedIdentifierSet(
@@ -316,8 +318,16 @@ export function normalizeChangeDefectProfile(value: unknown): ChangeDefectProfil
 	return toCanonicalJsonValue(normalized) as unknown as ChangeDefectProfile;
 }
 
-function normalizeSecurityProfile(value: ChangeSecurityProfile): ChangeSecurityProfile {
-	const identifiers = value.identifiers.map((entry) => {
+export function normalizeChangeSecurityProfile(
+	value: unknown,
+): ChangeSecurityProfile {
+	assertTypeboxSchema(
+		securityProfileSchema,
+		value,
+		"Change security profile",
+	);
+	const input = value as ChangeSecurityProfile;
+	const identifiers = input.identifiers.map((entry) => {
 		const identifierValue = normalizedSecurityIdentifierValue(entry);
 		assertSecurityIdentifier(entry.scheme, identifierValue);
 		return {
@@ -326,7 +336,7 @@ function normalizeSecurityProfile(value: ChangeSecurityProfile): ChangeSecurityP
 			sourceRef: canonicalRef(entry.sourceRef, "security identifier sourceRef"),
 		};
 	});
-	const cvss = value.cvss.map((entry) => {
+	const cvss = input.cvss.map((entry) => {
 		assertCvss(entry);
 		return {
 			version: entry.version,
@@ -335,13 +345,13 @@ function normalizeSecurityProfile(value: ChangeSecurityProfile): ChangeSecurityP
 			sourceRef: canonicalRef(entry.sourceRef, "CVSS sourceRef"),
 		};
 	});
-	const sarif = value.sarif.map((entry) => ({
+	const sarif = input.sarif.map((entry) => ({
 		version: entry.version,
 		toolId: identifier(entry.toolId, "SARIF toolId"),
 		ruleId: identifier(entry.ruleId, "SARIF ruleId"),
 		resultRef: canonicalRef(entry.resultRef, "SARIF resultRef"),
 	}));
-	const kev = value.kev.map((entry) => {
+	const kev = input.kev.map((entry) => {
 		if (!/^CVE-\d{4}-\d{4,}$/u.test(entry.cveId)) {
 			throw new Error("KEV cveId must be a qualified CVE identifier.");
 		}
@@ -351,7 +361,7 @@ function normalizeSecurityProfile(value: ChangeSecurityProfile): ChangeSecurityP
 		};
 	});
 	return toCanonicalJsonValue({
-		classification: value.classification,
+		classification: input.classification,
 		identifiers: sortedObjects(identifiers, securityIdentifierKey),
 		cvss: sortedObjects(cvss, cvssKey),
 		sarif: sortedObjects(sarif, sarifKey),

@@ -3,11 +3,12 @@ import {
 	CHANGE_DEFECT_CATEGORIES,
 	CHANGE_DEFECT_CONFIDENCES,
 	CHANGE_DEFECT_SEVERITIES,
+	type ChangeSecurityProfile,
 } from "../defect-profile.ts";
 
 export const CHANGE_INTAKE_MATERIAL_PROTOCOL = Object.freeze({
 	id: "codewiki.change-intake-material",
-	version: "1.0.0",
+	version: "1.1.0",
 	maxCanonicalBytes: 16_384,
 	maxAffectedRefs: 16,
 	maxSourceRefs: 16,
@@ -49,6 +50,7 @@ export interface ChangeIntakeContent {
 	readonly claimedCategory?: ChangeIntakeClaimedCategory;
 	readonly claimedSeverity?: ChangeIntakeClaimedSeverity;
 	readonly claimedConfidence?: ChangeIntakeClaimedConfidence;
+	readonly claimedSecurity?: ChangeSecurityProfile;
 }
 
 interface ChangeIntakeMaterialBase<TType extends ChangeIntakeMaterialType> {

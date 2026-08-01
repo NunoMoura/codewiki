@@ -118,6 +118,7 @@ export type { ChangeRecord } from "../changes/records.ts";
 export {
 	CHANGE_DEFECT_PROFILE_PROTOCOL,
 	normalizeChangeDefectProfile,
+	normalizeChangeSecurityProfile,
 } from "../changes/defect-profile.ts";
 export type {
 	ChangeCvssReference,
@@ -141,7 +142,38 @@ export {
 	CHANGE_INTAKE_MATERIAL_PROTOCOL,
 	CHANGE_INTAKE_MATERIAL_TYPES,
 } from "../changes/intake/contracts.ts";
-export { normalizeChangeIntakeMaterial } from "../changes/intake/normalize.ts";
+export {
+	normalizeChangeIntakeContent,
+	normalizeChangeIntakeMaterial,
+} from "../changes/intake/normalize.ts";
+export {
+	createDeliveryObservationMaterial,
+	createDeliveryObservationMaterialFromEvidence,
+	createKnowledgeDriftMaterial,
+	createKnowledgeDriftMaterialFromIssue,
+	createOutcomeFindingMaterial,
+	createOutcomeFindingMaterialFromEvidence,
+	createPullRequestFindingMaterial,
+	createRegressionFindingMaterial,
+	createSecurityScannerFindingMaterial,
+	createUserSuggestionMaterial,
+	createWorkerDiscoveryMaterial,
+	createWorkerReportDiscoveryMaterials,
+} from "../changes/intake/producers.ts";
+export type {
+	DeliveryEvidenceProducerInput,
+	DeliveryObservationProducerInput,
+	KnowledgeDriftIssueProducerInput,
+	KnowledgeDriftProducerInput,
+	OutcomeEvidenceProducerInput,
+	OutcomeFindingProducerInput,
+	PullRequestFindingProducerInput,
+	RegressionFindingProducerInput,
+	SecurityScannerFindingProducerInput,
+	UserSuggestionProducerInput,
+	WorkerDiscoveryProducerInput,
+	WorkerReportDiscoveryProducerInput,
+} from "../changes/intake/producers.ts";
 export type {
 	ChangeIntakeClaimedCategory,
 	ChangeIntakeClaimedConfidence,

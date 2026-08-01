@@ -113,7 +113,7 @@ describe("closed Change intake material", () => {
 		);
 		for (const entry of normalized) {
 			assert.equal(entry.protocolId, "codewiki.change-intake-material");
-			assert.equal(entry.protocolVersion, "1.0.0");
+			assert.equal(entry.protocolVersion, "1.1.0");
 			assert.equal(Object.isFrozen(entry), true);
 			assert.equal(Object.isFrozen(entry.binding), true);
 			assert.equal(Object.isFrozen(entry.content), true);
@@ -153,7 +153,7 @@ describe("closed Change intake material", () => {
 				/materialType is invalid/,
 			],
 			[
-				{...valid, protocolVersion: "0.1.0"},
+				{...valid, protocolVersion: "1.0.0"},
 				/protocolVersion is invalid/,
 			],
 		]) {

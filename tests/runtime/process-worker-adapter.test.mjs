@@ -61,6 +61,18 @@ function workerReport() {
 			blockers: [],
 			notes: "Completed in isolated worktree.",
 			changes: [],
+			discoveries: [
+				{
+					summary: "Out-of-scope runtime discrepancy",
+					observedBehavior: "A neighboring runtime path violates the documented invariant.",
+					desiredBehavior: "Runtime paths preserve the documented invariant.",
+					affectedRefs: ["src/runtime/neighbor.ts"],
+					sourceRefs: ["trace:worker:discovery:1"],
+					claimedCategory: "behavior",
+					claimedSeverity: "medium",
+					claimedConfidence: "high",
+				},
+			],
 		}),
 		"```",
 	].join("\n");
@@ -94,6 +106,11 @@ test("Pi process worker adapter persists and recovers normalized Worker reports"
 		assert.equal(result.status, "completed");
 		assert.equal(result.pid, 4242);
 		assert.equal(result.implementationEvidence?.workUnitId, input.workItemId);
+		assert.equal(result.discoveries?.length, 1);
+		assert.equal(
+			result.discoveries?.[0].summary,
+			"Out-of-scope runtime discrepancy",
+		);
 		assert.match(result.reportRef, /^runtime-worker-report:[a-f0-9]{64}$/);
 		assert.equal(executions, 1);
 		const persisted = JSON.parse(await readFile(input.reportPath, "utf8"));

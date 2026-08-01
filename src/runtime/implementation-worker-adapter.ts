@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
+import type { ChangeIntakeContent } from "../changes/intake/contracts.ts";
+import { normalizeChangeIntakeContent } from "../changes/intake/normalize.ts";
 import type { WorktreeRef } from "../git/worktrees.ts";
 import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
@@ -36,6 +38,7 @@ export interface ImplementationWorkerReport {
 	status: "completed" | "blocked" | "failed" | "cancelled";
 	reportRef: string;
 	implementationEvidence?: ImplementationWorkerReportInput;
+	discoveries?: readonly ChangeIntakeContent[];
 	sessionId?: string;
 	sessionFile?: string;
 	outputFile?: string;
@@ -189,6 +192,14 @@ export function assertImplementationWorkerReport(
 			throw new Error(
 				"Implementation worker evidence status does not match report.",
 			);
+		}
+	}
+	if (report.discoveries) {
+		if (!Array.isArray(report.discoveries) || report.discoveries.length > 16) {
+			throw new Error("Implementation worker report may contain at most 16 discoveries.");
+		}
+		for (const discovery of report.discoveries) {
+			normalizeChangeIntakeContent(discovery);
 		}
 	}
 	if (

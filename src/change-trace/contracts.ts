@@ -11,7 +11,7 @@ import {
 
 export const CHANGE_TRACE_PROTOCOL = Object.freeze({
 	id: "codewiki.change-trace",
-	version: "1.2.0",
+	version: "1.3.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 

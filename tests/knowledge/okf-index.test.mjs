@@ -112,6 +112,10 @@ describe("OKF index and log navigation", () => {
 					},
 					{
 						kind: "Update",
+						text: "Added closed user, provider-review, Worker Report, regression/scanner, delivery/outcome Evidence, and Knowledge-drift producers; advanced Change Intake Material to `1.1.0` and Change Trace to `1.3.0` for bounded claimed-security metadata. Pi process Worker Reports preserve bounded discovery proposals while Runtime alone adds exact Assignment, Claim, and tree bindings.",
+					},
+					{
+						kind: "Update",
 						text: "Replaced legacy `user | runtime | lab` feedback with strict `codewiki.change-intake-material@1.0.0` contracts under `src/changes/intake/**`. Eight closed source members carry bounded normalized semantic content and exact source-specific bindings without caller-owned Change identity, authority, time, priority, risk, route, or Check outcomes. Runtime now authenticates and correlates the exact material, records durable request/source/semantic fingerprints, deterministically routes current feedback or linked independent discovery, and verifies fresh expected-head Git acceptance.",
 					},
 					{

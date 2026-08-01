@@ -1,4 +1,6 @@
 import { readFile } from "node:fs/promises";
+import type { ChangeIntakeContent } from "../changes/intake/contracts.ts";
+import { normalizeChangeIntakeContent } from "../changes/intake/normalize.ts";
 import type { ImplementationChangeInput } from "../implementation/types.ts";
 import type { ImplementationWorkerProofInput } from "../implementation/worker-proof.ts";
 import type {
@@ -31,6 +33,23 @@ export function collectPiWorkerReports(
 	inputs: PiWorkerCompletionInput[],
 ): ImplementationWorkerReportInput[] {
 	return inputs.map(normalizePiWorkerCompletion);
+}
+
+export function collectPiWorkerDiscoveries(
+	inputs: PiWorkerCompletionInput[],
+): readonly ChangeIntakeContent[] {
+	const discoveries: ChangeIntakeContent[] = [];
+	for (const input of inputs) {
+		const value = parseCompletionOutput(input.output).data.discoveries;
+		if (value === undefined) continue;
+		if (!Array.isArray(value) || value.length > 16) {
+			throw new Error("Worker completion may contain at most 16 discoveries.");
+		}
+		for (const discovery of value) {
+			discoveries.push(normalizeChangeIntakeContent(discovery));
+		}
+	}
+	return Object.freeze(discoveries);
 }
 
 async function collectPiWorkerOutputFile(

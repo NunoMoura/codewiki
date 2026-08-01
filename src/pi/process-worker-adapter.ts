@@ -16,8 +16,10 @@ import {
 	type PiProcessSessionFactoryOptions,
 } from "./process-session.ts";
 import {
+	collectPiWorkerDiscoveries,
 	collectPiWorkerOutputFiles,
 	collectPiWorkerReports,
+	type PiWorkerCompletionInput,
 } from "./worker-reports.ts";
 import {
 	startPiWorkerAssignment,
@@ -86,24 +88,28 @@ async function executePiProcessWorker(
 			promptOptions: options.promptOptions,
 		},
 	});
+	let completions: PiWorkerCompletionInput[];
 	let implementationEvidence;
 	try {
 		await assertBoundedFile(outputFile, 2 * 1024 * 1024, "worker output");
-		const completions = await collectPiWorkerOutputFiles([workerStart]);
+		completions = await collectPiWorkerOutputFiles([workerStart]);
 		implementationEvidence = collectPiWorkerReports(completions)[0];
 	} catch (error) {
 		if (workerStart.status !== "cancelled" || !isNotFound(error)) throw error;
-		implementationEvidence = collectPiWorkerReports([{ workerStart }])[0];
+		completions = [{workerStart}];
+		implementationEvidence = collectPiWorkerReports(completions)[0];
 	}
 	if (!implementationEvidence) {
 		throw new Error("Pi process worker did not produce a normalized report.");
 	}
+	const discoveries = collectPiWorkerDiscoveries(completions);
 	const reportWithoutRef = {
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
 		workItemId: assignment.workItemId,
 		status: implementationWorkerReportStatus(implementationEvidence.status),
 		implementationEvidence,
+		...(discoveries.length > 0 ? {discoveries} : {}),
 		...(workerStart.sessionId ? { sessionId: workerStart.sessionId } : {}),
 		...(workerStart.sessionFile
 			? { sessionFile: workerStart.sessionFile }
