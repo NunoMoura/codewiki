@@ -14,12 +14,14 @@ codewiki_components:
   - change_intake
   - change_triage
 codewiki_source_patterns:
-  - src/changes/intake.ts
+  - src/changes/intake/**
+  - src/runtime/change-intake.ts
   - src/dashboard/changes-state.ts
   - src/dashboard/state.ts
   - src/dashboard/assets.ts
 codewiki_test_patterns:
   - tests/changes/change-intake.test.mjs
+  - tests/changes/change-intake-runtime.test.mjs
   - tests/dashboard/changes-state.test.mjs
   - tests/dashboard/dashboard-state.test.mjs
 codewiki_trace_events:
@@ -34,9 +36,11 @@ codewiki_roles:
 codewiki_source_map:
   - id: change_intake
     source_patterns:
-      - src/changes/intake.ts
+      - src/changes/intake/**
+      - src/runtime/change-intake.ts
     test_patterns:
       - tests/changes/change-intake.test.mjs
+      - tests/changes/change-intake-runtime.test.mjs
     trace_events:
       - trace.opened
       - change.proposed
@@ -88,7 +92,7 @@ src/changes/
     query.ts
 ```
 
-Do not create `src/triage/**`. A top-level package would imply a project-wide meaning or scheduling authority that triage does not own. Runtime orchestrates admission, persistence, and scheduling under `src/runtime/**`; `src/changes/intake/**` owns pure bounded intake semantics; `src/changes/triage/**` owns derived Change-facing projection and query logic. The clean cut replaces the legacy single-file `src/changes/intake.ts` rather than preserving an alias or dual path. Until that cut, OKF source ownership points to the executable legacy intake and dashboard projection files rather than claiming nonexistent target artifacts.
+Do not create `src/triage/**`. A top-level package would imply a project-wide meaning or scheduling authority that triage does not own. Runtime orchestrates admission, persistence, and scheduling under `src/runtime/**`; `src/changes/intake/**` owns pure bounded intake semantics; `src/changes/triage/**` owns derived Change-facing projection and query logic. The clean cut replaced the legacy single-file `src/changes/intake.ts` without preserving an alias or dual path. OKF source ownership names only executable artifacts; future triage files enter the source map when implemented.
 
 ## Closed intake material
 
@@ -106,7 +110,7 @@ type ChangeIntakeMaterial =
   | KnowledgeDriftMaterial;
 ```
 
-Each member has source-specific required bindings and one bounded shared semantic core. A producer may provide observed behavior, desired behavior, affected refs, claimed category/severity/confidence, reproduction material, and source refs. It cannot provide canonical Change, revision, operation, actor, time, authority, priority, risk, route, or Check outcome fields.
+Each member has source-specific required bindings and one bounded shared semantic core. Protocol `codewiki.change-intake-material@1.0.0` caps canonical input at 16,384 UTF-8 bytes, normalizes text to NFC and LF, rejects unknown fields, credentials, unsupported controls, malformed exact bindings, and duplicate refs, and exposes only the eight closed source members. A producer may provide observed behavior, desired behavior, affected refs, claimed category/severity/confidence, reproduction material, and source refs. It cannot provide canonical Change, revision, operation, actor, time, authority, priority, risk, route, or Check outcome fields.
 
 Initial sources include:
 
@@ -122,7 +126,7 @@ Provider-specific reviewer semantics are unnecessary. A provider-level observer 
 
 ## Runtime admission
 
-Runtime derives idempotency and canonical identity from exact authenticated source material and the current fresh project snapshot. Admission performs:
+Runtime derives idempotency and canonical identity from exact authenticated source material and the current fresh project snapshot. Under Change Trace Protocol `1.1.0`, accepted `change.proposed` and `change.feedback_recorded` operations carry the complete normalized material as a digest- and schema-validated inline artifact; source, semantic, and request fingerprints support bounded correlation and replay without replacing those exact bytes. Admission performs:
 
 1. schema and size validation;
 2. source authentication and exact subject correlation;
@@ -228,7 +232,7 @@ A Model Check finding is asserted analysis, not verified vulnerability fact. Run
 
 ## Current clean-cut drift
 
-Current `src/changes/intake.ts` accepts only legacy `user | runtime | lab` feedback and requires callers to supply much of the Change classification. Native Worker Reports do not carry structured discoveries. No provider-neutral review-finding intake, regression producer, defect/security profile, snapshot-bound triage projection, bounded triage query, or explainable multi-dimensional ordering exists. Current dashboard filtering and ordering are presentation-local and do not provide a shared user/agent triage contract.
+The closed source-specific material contract and strict normalizer now replace legacy `user | runtime | lab` feedback. Runtime authenticates exact source material through an injected source adapter, validates optional correlation against fresh WorkState, records the complete normalized inline material plus durable request/source/semantic fingerprints, replays exact accepted requests, reinforces open source or semantic matches, routes exact current-scope feedback, creates linked independent Changes, and verifies expected-head Git acceptance without blind retry. Dedicated CLI/API/Pi and provider/worker/scanner/delivery/outcome/Knowledge producers, structured defect/security profiles, and shared triage projections remain incomplete. `wiki_change` no longer accepts the removed feedback shape. Native Worker Reports still lack structured discoveries. Current dashboard filtering and ordering remain presentation-local and do not provide a shared user/agent triage contract.
 
 ## Related docs
 

@@ -103,14 +103,19 @@ describe("fresh scaffold", () => {
 		);
 	});
 
-	it("keeps the package API surface facade and runtime-only", () => {
+	it("keeps the package API surface facade runtime- and contract-only", () => {
 		assert.deepEqual(Object.keys(publicApi).sort(), [
+			"CHANGE_INTAKE_MATERIAL_PROTOCOL",
+			"CHANGE_INTAKE_MATERIAL_TYPES",
+			"CHANGE_INTAKE_RUNTIME_PROTOCOL",
 			"CODEWIKI_EXTENSION_AVAILABLE",
 			"DEFAULT_WIKI_CONFIG",
 			"ProjectCoordinator",
 			"buildProjectWorkState",
 			"buildWikiState",
 			"buildWorkState",
+			"createChangeIntakeRuntime",
+			"normalizeChangeIntakeMaterial",
 			"resolveWikiConfig",
 			"runRuntimeSemanticExecutor",
 			"runWikiArchive",

@@ -7,7 +7,7 @@ import type { SemanticLoop } from "../semantic-loop.ts";
 
 export const CHANGE_TRACE_PROTOCOL = Object.freeze({
 	id: "codewiki.change-trace",
-	version: "1.0.0",
+	version: "1.1.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 
@@ -350,6 +350,7 @@ const traceReopenedPayloadSchema = Type.Object(
 const changeProposedPayloadSchema = Type.Object(
 	{
 		revision: changeRevisionSchema,
+		intakeMaterial: Type.Optional(inlineSemanticArtifactSchema),
 		provenance: Type.Object(
 			{
 				kind: Type.Union([Type.Literal("user"), Type.Literal("discovered")]),
@@ -407,6 +408,7 @@ const changeWithdrawalRecordedPayloadSchema = Type.Object(
 const changeFeedbackRecordedPayloadSchema = Type.Object(
 	{
 		revisionId: digestSchema,
+		intakeMaterial: Type.Optional(inlineSemanticArtifactSchema),
 		classification: Type.Union([
 			Type.Literal("clarification"),
 			Type.Literal("concern"),

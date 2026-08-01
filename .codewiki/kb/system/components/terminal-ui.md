@@ -26,6 +26,10 @@ The standalone CLI and dashboard are primary clients of one project-scoped CodeW
 
 Several clients may connect concurrently. Each request carries project identity, capability, idempotency, and expected state where mutation is possible.
 
+## Implementation sequencing
+
+Runtime admission, native Loop contracts, Evidence production, assurance, archive/hydration, projections, and the legacy Trace clean cut must stabilize before the dashboard is rebuilt. Backend query, command, and event contracts may be implemented earlier, but they do not justify incremental visual patching of the legacy dashboard. The final dashboard refactor is one projection-only cut over the completed architecture, followed by external package proof and release gates.
+
 ## Dashboard routes
 
 ```text

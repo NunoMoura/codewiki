@@ -38,6 +38,8 @@ import {
 	type CanonicalJsonValue,
 } from "../utils/canonical-json.ts";
 import { assertTypeboxSchema } from "../utils/json.ts";
+import { CHANGE_INTAKE_MATERIAL_PROTOCOL } from "../changes/intake/contracts.ts";
+import { normalizeChangeIntakeMaterial } from "../changes/intake/normalize.ts";
 
 export type CreateChangeOperationInput<K extends ChangeOperationKind> = Omit<
 	ChangeOperationBody<K>,
@@ -457,8 +459,14 @@ function assertPayloadIdentities(body: ChangeOperationBody): void {
 	if (assertInlinePayloadIdentity(body.kind, payload)) return;
 	switch (body.kind) {
 		case "change.proposed":
+			assertChangeRevisionIdentity(payload);
+			assertOptionalIntakeMaterial(payload);
+			return;
 		case "change.revised":
 			assertChangeRevisionIdentity(payload);
+			return;
+		case "change.feedback_recorded":
+			assertOptionalIntakeMaterial(payload);
 			return;
 		case "change.relationship_recorded":
 			assertRelationshipIdentity(payload);
@@ -520,6 +528,28 @@ function assertInlinePayloadIdentity(
 			return true;
 		default:
 			return false;
+	}
+}
+
+function assertOptionalIntakeMaterial(payload: Record<string, unknown>): void {
+	if (!Object.hasOwn(payload, "intakeMaterial")) return;
+	const inline = payload.intakeMaterial as CanonicalInlineSemanticArtifact;
+	const normalized = normalizeChangeIntakeMaterial(inline.artifact);
+	if (canonicalJson(normalized) !== canonicalJson(inline.artifact)) {
+		throw new Error("Change intake inline material is not canonically normalized.");
+	}
+	const expectedDigest = canonicalJsonDigest(normalized);
+	if (inline.digest !== expectedDigest) {
+		throw new Error(
+			`Change intake inline material digest mismatch: expected ${expectedDigest}.`,
+		);
+	}
+	if (inline.schemaVersion !== CHANGE_INTAKE_MATERIAL_PROTOCOL.version) {
+		throw new Error("Change intake inline material schemaVersion mismatch.");
+	}
+	const expectedId = `intake-material:${expectedDigest.slice("sha256:".length)}`;
+	if (inline.id !== expectedId) {
+		throw new Error("Change intake inline material identity mismatch.");
 	}
 }
 

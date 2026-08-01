@@ -115,6 +115,35 @@ export type {
 	ChangeValidation,
 } from "../changes/types.ts";
 export type { ChangeRecord } from "../changes/records.ts";
+export {
+	CHANGE_INTAKE_MATERIAL_PROTOCOL,
+	CHANGE_INTAKE_MATERIAL_TYPES,
+} from "../changes/intake/contracts.ts";
+export { normalizeChangeIntakeMaterial } from "../changes/intake/normalize.ts";
+export type {
+	ChangeIntakeClaimedCategory,
+	ChangeIntakeClaimedConfidence,
+	ChangeIntakeClaimedSeverity,
+	ChangeIntakeContent,
+	ChangeIntakeMaterial,
+	ChangeIntakeMaterialType,
+	DeliveryObservationBinding,
+	DeliveryObservationMaterial,
+	KnowledgeDriftBinding,
+	KnowledgeDriftMaterial,
+	OutcomeFindingBinding,
+	OutcomeFindingMaterial,
+	PullRequestFindingBinding,
+	PullRequestFindingMaterial,
+	RegressionFindingBinding,
+	RegressionFindingMaterial,
+	SecurityScannerFindingBinding,
+	SecurityScannerFindingMaterial,
+	UserSuggestionBinding,
+	UserSuggestionMaterial,
+	WorkerDiscoveryBinding,
+	WorkerDiscoveryMaterial,
+} from "../changes/intake/contracts.ts";
 export type {
 	ChangeQuery,
 	ChangeStore,
@@ -154,6 +183,20 @@ export type {
 export type { ProjectSnapshot } from "../project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
 export * from "../runtime/project-coordinator.ts";
+export {
+	CHANGE_INTAKE_RUNTIME_PROTOCOL,
+	createChangeIntakeRuntime,
+} from "../runtime/change-intake.ts";
+export type {
+	AuthenticatedChangeIntakeSource,
+	ChangeIntakeAuthenticationRequest,
+	ChangeIntakeCommand,
+	ChangeIntakeCorrelationRequest,
+	ChangeIntakeReceipt,
+	ChangeIntakeRuntime,
+	ChangeIntakeSourceAuthenticator,
+	ChangeIntakeSourceCorrelator,
+} from "../runtime/change-intake.ts";
 export { runRuntimeSemanticExecutor } from "../runtime/semantic-executor.ts";
 export type {
 	RunRuntimeSemanticExecutorInput,

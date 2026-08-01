@@ -103,6 +103,14 @@ describe("OKF index and log navigation", () => {
 				date: "2026-08-01",
 				entries: [
 					{
+						kind: "Decision",
+						text: "Deferred the complete Dashboard refactor until Runtime admission, native Loops, Evidence and assurance, archive/hydration, stable projections, and the legacy Trace clean cut are complete. Backend client contracts may proceed earlier, but visual patching of the legacy dashboard does not.",
+					},
+					{
+						kind: "Update",
+						text: "Replaced legacy `user | runtime | lab` feedback with strict `codewiki.change-intake-material@1.0.0` contracts under `src/changes/intake/**`. Eight closed source members carry bounded normalized semantic content and exact source-specific bindings without caller-owned Change identity, authority, time, priority, risk, route, or Check outcomes. Runtime now authenticates and correlates the exact material, records durable request/source/semantic fingerprints, deterministically routes current feedback or linked independent discovery, and verifies fresh expected-head Git acceptance.",
+					},
+					{
 						kind: "Update",
 						text: "Added provider-neutral protected Custom Check policy review and acceptance: exact authenticated review receipt, separate acceptance authority, repository/ref/config binding, deterministic config-only child commit, expected-head Git CAS, exact post-push verification, stale/drift rejection, and idempotent accepted-commit replay.",
 					},

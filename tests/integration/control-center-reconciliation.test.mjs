@@ -63,17 +63,24 @@ const criterionEvidence = {
 			"tests/runtime/wiki-config.test.mjs",
 		],
 	},
-	"WU-feedback-change-intake-v1": {
-		criteria: ["deduplicated-intake", "pending-only", "privacy-boundary"],
+	"WU-change-intake-contract-v1": {
+		criteria: [
+			"closed-source-union",
+			"authenticated-admission",
+			"deduplicated-routing",
+			"privacy-boundary",
+			"git-cas",
+		],
 		source: [
-			"src/changes/intake.ts",
-			"src/changes/deduplication.ts",
-			"lab/runner/change-proposal.ts",
+			"src/changes/intake/contracts.ts",
+			"src/changes/intake/normalize.ts",
+			"src/changes/intake/deduplicate.ts",
+			"src/changes/intake/route.ts",
+			"src/runtime/change-intake.ts",
 		],
 		tests: [
 			"tests/changes/change-intake.test.mjs",
-			"tests/changes/change-deduplication.test.mjs",
-			"tests/lab/change-proposal.test.mjs",
+			"tests/changes/change-intake-runtime.test.mjs",
 		],
 	},
 	"WU-worker-execution-policy-integration-v1": {
@@ -201,7 +208,7 @@ describe("control-center reconciliation integration", () => {
 		for (const required of [
 			"Changes Backlog",
 			"exact validated Change",
-			"pending unvalidated Change",
+			"Change intake material",
 			"execution policy",
 		]) {
 			assert.match(activeText, new RegExp(required, "i"), required);

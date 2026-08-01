@@ -12,10 +12,6 @@ import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
 import type { RuntimeSemanticMode } from "../../runtime/semantic-executor.ts";
 import type { RuntimeReaction } from "../../runtime/reactor.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
-import {
-	intakeChangeFeedback,
-	type IntakeChangeFeedbackResult,
-} from "../../changes/intake.ts";
 import { buildChangeValidationCard } from "../../changes/validation-view.ts";
 import {
 	resolveWikiConfigFile,
@@ -316,7 +312,7 @@ function wikiChangeTool(): CodewikiToolDefinition {
 			"Capture and refine intent in the owning Change Trace without widening the active Work Item.",
 		promptGuidelines: [
 			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
-			"Use operation intake only for bounded user, runtime, or lab feedback; it creates or reinforces pending unvalidated Changes.",
+			"Change intake uses the dedicated Runtime-owned source-specific admission contract, not wiki_change.",
 			"wiki_change cannot approve Changes, create Planning-owned Sprints or Work Items, launch workers, edit source, publish, or advance controllers.",
 			"Mutations require exact Change Trace store-head and record-revision guards; list, get, and validate are read-only.",
 		],
@@ -345,15 +341,10 @@ function wikiChangeTool(): CodewikiToolDefinition {
 				"input",
 			]);
 			assertOptionalBoolean("wiki_change", args, "allowNonProjectInstall");
-			const input = requiredInput<
-				RunWikiChangeInput & {
-					feedback?: unknown;
-				}
-			>("wiki_change", args.input);
+			const input = requiredInput<RunWikiChangeInput>("wiki_change", args.input);
 			const root = await requireCodewikiRoot(ctx);
 			const operation = String(input.operation || "");
-			const mutates =
-				operation === "intake" || wikiChangeOperationMutates(operation);
+			const mutates = wikiChangeOperationMutates(operation);
 			if (mutates) {
 				assertProjectLocalMutationAllowed({
 					toolName: "wiki_change",
@@ -364,19 +355,6 @@ function wikiChangeTool(): CodewikiToolDefinition {
 						allowNonProjectInstall: args.allowNonProjectInstall,
 					},
 				});
-			}
-			if (operation === "intake") {
-				const result = await intakeChangeFeedback({
-					repoRoot: root,
-					expectedHead: input.expectedHead as string | null,
-					feedback: input.feedback,
-				});
-				return toolResult(
-					`wiki_change: completed ${result.action} feedback intake.`,
-					result,
-					undefined,
-					wikiChangeIntakeModelPayload(result),
-				);
 			}
 			const prepared = withRepoRoot(
 				input,
@@ -390,19 +368,6 @@ function wikiChangeTool(): CodewikiToolDefinition {
 				wikiChangeModelPayload(result),
 			);
 		},
-	};
-}
-
-function wikiChangeIntakeModelPayload(
-	result: IntakeChangeFeedbackResult,
-): unknown {
-	const changeCard = buildChangeValidationCard(result.record);
-	return {
-		action: result.action,
-		head: result.head,
-		match: result.match,
-		receipt: result.receipt,
-		lines: renderPiChangeValidationCard(changeCard),
 	};
 }
 

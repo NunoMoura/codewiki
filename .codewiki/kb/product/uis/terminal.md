@@ -37,6 +37,8 @@ Standalone CLI and dashboard are primary Project Runtime clients. Dashboard is p
 
 Project Runtime owns intake, verified Git-state synchronization, WorkState, scheduling, semantic-session creation, worker lifecycle, Integration, guarded writes/effects, and deterministic projections. CLI, several Pi sessions, dashboard, and future bounded clients may connect concurrently.
 
+The complete Dashboard implementation is deliberately last. Runtime, assurance, archive/hydration, projection, and clean-cut contracts must stabilize first; then the legacy dashboard is replaced as one projection-only UX and design cut. This avoids encoding transitional architecture into navigation, interaction, or local presentation state.
+
 ## Primary navigation
 
 The dashboard has four primary destinations:
