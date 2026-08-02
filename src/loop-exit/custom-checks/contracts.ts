@@ -13,8 +13,14 @@ import {
 	isCustomCheckTypeId,
 	type CustomCheckTypeId,
 } from "./check-types.ts";
+import {
+	isUserStandardId,
+	isUserStandardPassageId,
+	normalizeUserStandardDefinitions,
+	type UserStandardDefinition,
+} from "./user-standards.ts";
 
-export const CUSTOM_CHECK_SCHEMA_VERSION = "2.0.0" as const;
+export const CUSTOM_CHECK_SCHEMA_VERSION = "3.0.0" as const;
 export const MAX_CUSTOM_CHECKS = 64;
 export const MAX_CUSTOM_CHECKS_PER_TYPE = 16;
 export const MAX_CUSTOM_CHECK_BYTES = 16_384;
@@ -38,12 +44,19 @@ export interface CustomCheckApplicability {
 	readonly pathScopes?: readonly string[];
 }
 
+export interface CustomCheckStandardRef {
+	readonly userStandardId: string;
+	readonly standardDigest: Sha256Digest;
+	readonly passageIds: readonly string[];
+}
+
 export interface CustomCheckProposal {
 	readonly checkTypeId: CustomCheckTypeId;
 	readonly name: string;
 	readonly requirement: string;
 	readonly repairGuidance?: string;
 	readonly appliesWhen: CustomCheckApplicability;
+	readonly standardRefs: readonly CustomCheckStandardRef[];
 	readonly knowledgeRefs?: readonly string[];
 }
 
@@ -54,62 +67,85 @@ export interface CustomCheckDefinition extends CustomCheckProposal {
 	readonly lifecycle: CustomCheckLifecycle;
 }
 
+export function normalizeCustomCheckProposal(
+	proposal: CustomCheckProposal,
+): CustomCheckProposal {
+	return Object.freeze(cloneProposal(normalizeProposal(proposal)));
+}
+
 export function createCustomCheckDefinition(
 	proposal: CustomCheckProposal,
+	userStandards: readonly UserStandardDefinition[],
 ): CustomCheckDefinition {
+	const standards = normalizeUserStandardDefinitions(userStandards);
 	const normalized = normalizeProposal(proposal);
+	assertAcceptedStandardRefs(normalized.standardRefs, standards);
 	const customCheckId = `custom-check:${canonicalJsonDigest(normalized).slice(
 		"sha256:".length,
 	)}`;
-	return materializeDefinition({
-		...normalized,
-		schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
-		customCheckId,
-		lifecycle: "draft",
-	});
+	return materializeDefinition(
+		{
+			...normalized,
+			schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
+			customCheckId,
+			lifecycle: "draft",
+		},
+		standards,
+	);
 }
 
 export function updateCustomCheckDefinition(
 	current: CustomCheckDefinition,
 	proposal: CustomCheckProposal,
+	userStandards: readonly UserStandardDefinition[],
 ): CustomCheckDefinition {
-	assertCustomCheckDefinition(current);
+	const standards = normalizeUserStandardDefinitions(userStandards);
+	assertCustomCheckDefinition(current, standards);
 	const normalized = normalizeProposal(proposal);
+	assertAcceptedStandardRefs(normalized.standardRefs, standards);
 	if (normalized.checkTypeId !== current.checkTypeId) {
 		throw new Error("Custom Check Type cannot change after creation.");
 	}
-	return materializeDefinition({
-		...normalized,
-		schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
-		customCheckId: current.customCheckId,
-		lifecycle: current.lifecycle,
-	});
+	return materializeDefinition(
+		{
+			...normalized,
+			schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
+			customCheckId: current.customCheckId,
+			lifecycle: current.lifecycle,
+		},
+		standards,
+	);
 }
 
 export function activateCustomCheckDefinition(
 	current: CustomCheckDefinition,
+	userStandards: readonly UserStandardDefinition[],
 ): CustomCheckDefinition {
-	assertCustomCheckDefinition(current);
+	const standards = normalizeUserStandardDefinitions(userStandards);
+	assertCustomCheckDefinition(current, standards);
 	if (current.lifecycle !== "draft") {
 		throw new Error(
 			`Custom Check ${current.customCheckId} must be draft before activation.`,
 		);
 	}
-	return withLifecycle(current, "active");
+	return withLifecycle(current, "active", standards);
 }
 
 export function disableCustomCheckDefinition(
 	current: CustomCheckDefinition,
+	userStandards: readonly UserStandardDefinition[],
 ): CustomCheckDefinition {
-	assertCustomCheckDefinition(current);
+	const standards = normalizeUserStandardDefinitions(userStandards);
+	assertCustomCheckDefinition(current, standards);
 	if (current.lifecycle === "disabled") {
 		throw new Error(`Custom Check ${current.customCheckId} is already disabled.`);
 	}
-	return withLifecycle(current, "disabled");
+	return withLifecycle(current, "disabled", standards);
 }
 
 export function normalizeCustomCheckDefinitions(
 	value: readonly CustomCheckDefinition[],
+	userStandards: readonly UserStandardDefinition[],
 ): CustomCheckDefinition[] {
 	if (!Array.isArray(value)) {
 		throw new Error("Custom Checks must be an array.");
@@ -119,9 +155,10 @@ export function normalizeCustomCheckDefinitions(
 			`Custom Checks cannot exceed ${MAX_CUSTOM_CHECKS} definitions per project.`,
 		);
 	}
+	const standards = normalizeUserStandardDefinitions(userStandards);
 	const normalized = value.map((definition) => {
-		assertCustomCheckDefinition(definition);
-		return materializeDefinition(cloneDefinition(definition));
+		assertCustomCheckDefinition(definition, standards);
+		return materializeDefinition(cloneDefinition(definition), standards);
 	});
 	assertUnique(
 		normalized.map((definition) => definition.customCheckId),
@@ -146,17 +183,21 @@ export function normalizeCustomCheckDefinitions(
 	);
 }
 
-export function customCheckConfigurationDigest(
-	definitions: readonly CustomCheckDefinition[],
-): Sha256Digest {
+export function customCheckConfigurationDigest(input: {
+	readonly userStandards: readonly UserStandardDefinition[];
+	readonly customChecks: readonly CustomCheckDefinition[];
+}): Sha256Digest {
+	const userStandards = normalizeUserStandardDefinitions(input.userStandards);
 	return canonicalJsonDigest({
 		schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
-		definitions: normalizeCustomCheckDefinitions(definitions),
+		userStandards,
+		definitions: normalizeCustomCheckDefinitions(input.customChecks, userStandards),
 	});
 }
 
 export function assertCustomCheckDefinition(
 	value: CustomCheckDefinition,
+	userStandards: readonly UserStandardDefinition[],
 ): void {
 	assertRecord(value, "Custom Check definition");
 	assertKnownKeys(value, "Custom Check definition", [
@@ -169,6 +210,7 @@ export function assertCustomCheckDefinition(
 		"requirement",
 		"repairGuidance",
 		"appliesWhen",
+		"standardRefs",
 		"knowledgeRefs",
 	]);
 	if (value.schemaVersion !== CUSTOM_CHECK_SCHEMA_VERSION) {
@@ -187,7 +229,9 @@ export function assertCustomCheckDefinition(
 			`Custom Check lifecycle ${String(value.lifecycle)} is invalid.`,
 		);
 	}
+	const standards = normalizeUserStandardDefinitions(userStandards);
 	const normalizedProposal = normalizeProposal(value, true);
+	assertAcceptedStandardRefs(normalizedProposal.standardRefs, standards);
 	const expectedDigest = definitionDigest({
 		...normalizedProposal,
 		schemaVersion: value.schemaVersion,
@@ -218,17 +262,23 @@ export function customCheckDefinitionCheckId(
 function withLifecycle(
 	current: CustomCheckDefinition,
 	lifecycle: CustomCheckLifecycle,
+	userStandards: readonly UserStandardDefinition[],
 ): CustomCheckDefinition {
-	return materializeDefinition({
-		...cloneDefinition(current),
-		lifecycle,
-	});
+	return materializeDefinition(
+		{
+			...cloneDefinition(current),
+			lifecycle,
+		},
+		userStandards,
+	);
 }
 
 function materializeDefinition(
 	input: Omit<CustomCheckDefinition, "definitionDigest">,
+	userStandards: readonly UserStandardDefinition[],
 ): CustomCheckDefinition {
 	const normalizedProposal = normalizeProposal(input, true);
+	assertAcceptedStandardRefs(normalizedProposal.standardRefs, userStandards);
 	const semanticDefinition = {
 		...normalizedProposal,
 		schemaVersion: input.schemaVersion,
@@ -239,7 +289,7 @@ function materializeDefinition(
 		definitionDigest: definitionDigest(semanticDefinition),
 		lifecycle: input.lifecycle,
 	} as CustomCheckDefinition;
-	assertCustomCheckDefinition(definition);
+	assertCustomCheckDefinition(definition, userStandards);
 	return Object.freeze(cloneDefinition(definition));
 }
 
@@ -254,6 +304,7 @@ function normalizeProposal(
 		"requirement",
 		"repairGuidance",
 		"appliesWhen",
+		"standardRefs",
 		"knowledgeRefs",
 		...(allowRuntimeFields
 			? ["schemaVersion", "customCheckId", "definitionDigest", "lifecycle"]
@@ -275,6 +326,7 @@ function normalizeProposal(
 		1_000,
 	);
 	const appliesWhen = normalizeApplicability(value.appliesWhen, checkType.loops);
+	const standardRefs = normalizeCustomCheckStandardRefs(value.standardRefs);
 	const knowledgeRefs = normalizeStringList(
 		value.knowledgeRefs ?? [],
 		"Custom Check knowledgeRefs",
@@ -287,8 +339,101 @@ function normalizeProposal(
 		requirement,
 		...(repairGuidance ? { repairGuidance } : {}),
 		appliesWhen,
+		standardRefs,
 		...(knowledgeRefs.length > 0 ? { knowledgeRefs } : {}),
 	};
+}
+
+export function normalizeCustomCheckStandardRefs(
+	value: readonly CustomCheckStandardRef[],
+): CustomCheckStandardRef[] {
+	if (!Array.isArray(value) || value.length === 0) {
+		throw new Error(
+			"Custom Check standardRefs must contain at least one accepted User Standard binding.",
+		);
+	}
+	if (value.length > 8) {
+		throw new Error("Custom Check standardRefs cannot exceed 8 entries.");
+	}
+	const normalized = value.map((reference) => {
+		assertRecord(reference, "Custom Check standardRef");
+		const record = reference as unknown as Record<string, unknown>;
+		assertKnownKeys(record, "Custom Check standardRef", [
+			"userStandardId",
+			"standardDigest",
+			"passageIds",
+		]);
+		if (!isUserStandardId(record.userStandardId)) {
+			throw new Error("Custom Check standardRef userStandardId is invalid.");
+		}
+		if (typeof record.standardDigest !== "string" || !DIGEST.test(record.standardDigest)) {
+			throw new Error("Custom Check standardRef standardDigest is invalid.");
+		}
+		if (!Array.isArray(record.passageIds) || record.passageIds.length === 0) {
+			throw new Error(
+				"Custom Check standardRef passageIds must contain at least one passage.",
+			);
+		}
+		if (record.passageIds.length > 8) {
+			throw new Error(
+				"Custom Check standardRef passageIds cannot exceed 8 entries.",
+			);
+		}
+		for (const passageId of record.passageIds) {
+			if (!isUserStandardPassageId(passageId)) {
+				throw new Error("Custom Check standardRef contains an invalid passageId.");
+			}
+		}
+		const passageIds = record.passageIds as string[];
+		assertUnique(passageIds, "Custom Check standardRef passageIds");
+		return {
+			userStandardId: record.userStandardId,
+			standardDigest: record.standardDigest as Sha256Digest,
+			passageIds: [...passageIds].sort(compareText),
+		};
+	});
+	assertUnique(
+		normalized.map((reference) => reference.userStandardId),
+		"Custom Check standardRef User Standard ids",
+	);
+	return normalized.sort((left, right) =>
+		compareText(left.userStandardId, right.userStandardId),
+	);
+}
+
+function assertAcceptedStandardRefs(
+	references: readonly CustomCheckStandardRef[],
+	userStandards: readonly UserStandardDefinition[],
+): void {
+	const standardsById = new Map(
+		normalizeUserStandardDefinitions(userStandards).map((standard) => [
+			standard.userStandardId,
+			standard,
+		]),
+	);
+	for (const reference of references) {
+		const standard = standardsById.get(reference.userStandardId);
+		if (!standard) {
+			throw new Error(
+				`Custom Check User Standard ${reference.userStandardId} does not exist in accepted User Standards.`,
+			);
+		}
+		if (reference.standardDigest !== standard.standardDigest) {
+			throw new Error(
+				`Custom Check User Standard ${reference.userStandardId} standardDigest does not match accepted User Standard.`,
+			);
+		}
+		const acceptedPassageIds = new Set(
+			standard.passages.map((passage) => passage.passageId),
+		);
+		for (const passageId of reference.passageIds) {
+			if (!acceptedPassageIds.has(passageId)) {
+				throw new Error(
+					`Custom Check User Standard ${reference.userStandardId} references unknown passage ${passageId}.`,
+				);
+			}
+		}
+	}
 }
 
 function normalizeApplicability(
@@ -366,8 +511,26 @@ function cloneDefinition(
 				? { pathScopes: [...definition.appliesWhen.pathScopes] }
 				: {}),
 		},
+		standardRefs: definition.standardRefs.map((reference) => ({
+			...reference,
+			passageIds: [...reference.passageIds],
+		})),
 		...(definition.knowledgeRefs
 			? { knowledgeRefs: [...definition.knowledgeRefs] }
+			: {}),
+	};
+}
+
+function cloneProposal(proposal: CustomCheckProposal): CustomCheckProposal {
+	return {
+		...proposal,
+		appliesWhen: {...proposal.appliesWhen},
+		standardRefs: proposal.standardRefs.map((reference) => ({
+			...reference,
+			passageIds: [...reference.passageIds],
+		})),
+		...(proposal.knowledgeRefs
+			? {knowledgeRefs: [...proposal.knowledgeRefs]}
 			: {}),
 	};
 }
@@ -468,5 +631,7 @@ function assertUnique(values: readonly string[], label: string): void {
 }
 
 function compareText(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
 }

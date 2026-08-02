@@ -11,11 +11,13 @@ import {
 	customCheckConfigurationDigest,
 	disableCustomCheckDefinition,
 	normalizeCustomCheckDefinitions,
+	normalizeCustomCheckProposal,
 	updateCustomCheckDefinition,
 	type CustomCheckDefinition,
 	type CustomCheckLifecycle,
 	type CustomCheckProposal,
 } from "./contracts.ts";
+import type {UserStandardDefinition} from "./user-standards.ts";
 import {
 	assertProtectedCustomCheckConfigSnapshot,
 	createCustomCheckConfigState,
@@ -27,7 +29,7 @@ import {canonicalIsoTimestamp} from "./validation.ts";
 
 export const CUSTOM_CHECK_MUTATION_PROTOCOL = Object.freeze({
 	id: "codewiki.custom-check-mutation",
-	version: "1.0.0",
+	version: "2.0.0",
 	maxIdempotencyKeyLength: 128,
 	maxCompletedCommands: 64,
 });
@@ -83,11 +85,13 @@ export interface CustomCheckMutationStore {
 	readonly load: () => Promise<CustomCheckConfigState>;
 	readonly preview: (input: {
 		readonly current: CustomCheckConfigState;
+		readonly userStandards: readonly UserStandardDefinition[];
 		readonly customChecks: readonly CustomCheckDefinition[];
 	}) => Promise<CustomCheckConfigState>;
 	readonly compareAndSwap: (input: {
 		readonly expectedConfigDigest: Sha256Digest;
 		readonly expectedNextConfigDigest: Sha256Digest;
+		readonly userStandards: readonly UserStandardDefinition[];
 		readonly customChecks: readonly CustomCheckDefinition[];
 	}) => Promise<CustomCheckConfigState>;
 }
@@ -347,6 +351,8 @@ export function parseCustomCheckMutationCommand(
 					action,
 					customCheckId: customCheckId(value.customCheckId),
 				});
+			default:
+				throw new Error("Custom Check mutation action is unsupported.");
 		}
 	} catch (error) {
 		if (error instanceof CustomCheckMutationError) throw error;
@@ -367,10 +373,15 @@ async function executeMutation(
 	const before = normalizedState(beforeValue);
 	assertProtectedCustomCheckConfigSnapshot(protectedBase);
 	assertExpectedState(command, before, protectedBase);
-	const mutation = applyMutation(command, before.customChecks);
+	const mutation = applyMutation({
+		command,
+		definitions: before.customChecks,
+		userStandards: before.userStandards,
+	});
 	const projected = normalizedState(
 		await options.store.preview({
 			current: before,
+			userStandards: before.userStandards,
 			customChecks: mutation.customChecks,
 		}),
 	);
@@ -413,6 +424,7 @@ async function executeMutation(
 		await options.store.compareAndSwap({
 			expectedConfigDigest: before.projectConfigDigest,
 			expectedNextConfigDigest: projected.projectConfigDigest,
+			userStandards: before.userStandards,
 			customChecks: mutation.customChecks,
 		}),
 	);
@@ -441,55 +453,69 @@ async function executeMutation(
 	});
 }
 
-function applyMutation(
-	command: CustomCheckMutationCommand,
-	definitions: readonly CustomCheckDefinition[],
-): {
+function applyMutation(input: {
+	readonly command: CustomCheckMutationCommand;
+	readonly definitions: readonly CustomCheckDefinition[];
+	readonly userStandards: readonly UserStandardDefinition[];
+}): {
 	readonly customChecks: readonly CustomCheckDefinition[];
 	readonly customCheckConfigDigest: Sha256Digest;
 	readonly definitionBefore: CustomCheckDefinition | null;
 	readonly definitionAfter: CustomCheckDefinition;
 } {
+	const {command, definitions, userStandards} = input;
 	let definitionBefore: CustomCheckDefinition | null = null;
 	let definitionAfter: CustomCheckDefinition;
 	if (command.action === "create") {
-		definitionAfter = createCustomCheckDefinition(command.proposal);
+		definitionAfter = createCustomCheckDefinition(
+			command.proposal,
+			userStandards,
+		);
 		if (definitions.some((entry) => entry.customCheckId === definitionAfter.customCheckId)) {
 			throw conflict(`Custom Check ${definitionAfter.customCheckId} already exists.`);
 		}
 	} else {
 		definitionBefore = requireDefinition(definitions, command.customCheckId);
 		try {
-			switch (command.action) {
-				case "update":
-					if (definitionBefore.lifecycle === "disabled") {
-						throw new Error("Disabled Custom Checks cannot be edited.");
-					}
-					definitionAfter = updateCustomCheckDefinition(
-						definitionBefore,
-						command.proposal,
-					);
-					break;
-				case "activate":
-					definitionAfter = activateCustomCheckDefinition(definitionBefore);
-					break;
-				case "disable":
-					definitionAfter = disableCustomCheckDefinition(definitionBefore);
-					break;
+			if (command.action === "update") {
+				if (definitionBefore.lifecycle === "disabled") {
+					throw new Error("Disabled Custom Checks cannot be edited.");
+				}
+				definitionAfter = updateCustomCheckDefinition(
+					definitionBefore,
+					command.proposal,
+					userStandards,
+				);
+			} else if (command.action === "activate") {
+				definitionAfter = activateCustomCheckDefinition(
+					definitionBefore,
+					userStandards,
+				);
+			} else {
+				definitionAfter = disableCustomCheckDefinition(
+					definitionBefore,
+					userStandards,
+				);
 			}
 		} catch (error) {
 			throw badRequest(error instanceof Error ? error.message : String(error));
 		}
 	}
-	const customChecks = normalizeCustomCheckDefinitions([
-		...definitions.filter(
-			(entry) => entry.customCheckId !== definitionAfter.customCheckId,
-		),
-		definitionAfter,
-	]);
+	const customChecks = normalizeCustomCheckDefinitions(
+		[
+			...definitions.filter(
+				(entry) => entry.customCheckId !== definitionAfter.customCheckId,
+			),
+			definitionAfter,
+		],
+		userStandards,
+	);
 	return {
 		customChecks,
-		customCheckConfigDigest: customCheckConfigurationDigest(customChecks),
+		customCheckConfigDigest: customCheckConfigurationDigest({
+			userStandards,
+			customChecks,
+		}),
 		definitionBefore,
 		definitionAfter,
 	};
@@ -506,6 +532,10 @@ function mutationReceipt(input: {
 	readonly definitionAfter: CustomCheckDefinition;
 	readonly recordedAt: string;
 }): CustomCheckMutationReceipt {
+	const definitionAfter = definitionBinding(input.definitionAfter);
+	if (!definitionAfter) {
+		throw new Error("Custom Check mutation requires a resulting definition.");
+	}
 	const payload = {
 		protocolId: CUSTOM_CHECK_MUTATION_PROTOCOL.id,
 		protocolVersion: CUSTOM_CHECK_MUTATION_PROTOCOL.version,
@@ -522,7 +552,7 @@ function mutationReceipt(input: {
 		customCheckConfigDigestBefore: input.before.customCheckConfigDigest,
 		customCheckConfigDigestAfter: input.after.customCheckConfigDigest,
 		definitionBefore: definitionBinding(input.definitionBefore),
-		definitionAfter: definitionBinding(input.definitionAfter)!,
+		definitionAfter,
 		effectiveFrom: "next_protected_snapshot" as const,
 	};
 	const receiptDigest = canonicalJsonDigest(payload);
@@ -563,6 +593,7 @@ function definitionBinding(
 function normalizedState(value: CustomCheckConfigState): CustomCheckConfigState {
 	const normalized = createCustomCheckConfigState({
 		projectConfigDigest: value.projectConfigDigest,
+		userStandards: value.userStandards,
 		customChecks: value.customChecks,
 	});
 	if (normalized.customCheckConfigDigest !== value.customCheckConfigDigest) {
@@ -615,30 +646,20 @@ function parseCommandBase(
 }
 
 function normalizedProposal(value: unknown): CustomCheckProposal {
-	const definition = createCustomCheckDefinition(value as CustomCheckProposal);
+	const proposal = normalizeCustomCheckProposal(value as CustomCheckProposal);
 	return Object.freeze({
-		checkTypeId: definition.checkTypeId,
-		name: definition.name,
-		requirement: definition.requirement,
-		...(definition.repairGuidance
-			? {repairGuidance: definition.repairGuidance}
-			: {}),
-		appliesWhen: Object.freeze({
-			...(definition.appliesWhen.loops
-				? {loops: Object.freeze([...definition.appliesWhen.loops])}
-				: {}),
-			...(definition.appliesWhen.changeKinds
-				? {changeKinds: Object.freeze([...definition.appliesWhen.changeKinds])}
-				: {}),
-			...(definition.appliesWhen.affectedLayers
-				? {affectedLayers: Object.freeze([...definition.appliesWhen.affectedLayers])}
-				: {}),
-			...(definition.appliesWhen.pathScopes
-				? {pathScopes: Object.freeze([...definition.appliesWhen.pathScopes])}
-				: {}),
-		}),
-		...(definition.knowledgeRefs
-			? {knowledgeRefs: Object.freeze([...definition.knowledgeRefs])}
+		...proposal,
+		appliesWhen: Object.freeze({...proposal.appliesWhen}),
+		standardRefs: Object.freeze(
+			proposal.standardRefs.map((reference) =>
+				Object.freeze({
+					...reference,
+					passageIds: Object.freeze([...reference.passageIds]),
+				}),
+			),
+		),
+		...(proposal.knowledgeRefs
+			? {knowledgeRefs: Object.freeze([...proposal.knowledgeRefs])}
 			: {}),
 	});
 }

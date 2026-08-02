@@ -17,7 +17,13 @@ import {createLoopCandidate} from "../../src/loop-exit/identity.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
 import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "./custom-checks/user-standard-fixture.mjs";
 
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 const DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const CODE_CHECK_IDS = [
@@ -47,6 +53,7 @@ function protectedConfig(customChecks) {
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		userStandards: USER_STANDARDS,
 		customChecks,
 	});
 }
@@ -78,7 +85,10 @@ function selectorInput(loopCandidate, customChecks = []) {
 function foundation(checkIds = CODE_CHECK_IDS, options = {}) {
 	const loopCandidate = options.candidate ?? candidate();
 	const customChecks = options.customChecks ?? [];
-	const catalog = createCheckCatalog(customChecks);
+	const catalog = createCheckCatalog({
+		userStandards: customChecks.length > 0 ? USER_STANDARDS : [],
+		customChecks,
+	});
 	const resolved = resolveExitPolicy(selectorInput(loopCandidate, customChecks));
 	const bindings = resolved.bindings.filter((binding) =>
 		checkIds.includes(binding.checkId),
@@ -128,7 +138,9 @@ function customModelCheck(name) {
 			name,
 			requirement: `${name} is established.`,
 			appliesWhen: {loops: ["decision"]},
-		}),
+			standardRefs: standardRefsFor(USER_STANDARD),
+		}, USER_STANDARDS),
+		USER_STANDARDS,
 	);
 }
 

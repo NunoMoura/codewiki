@@ -419,8 +419,14 @@ export function resolveExitPolicy(
 			input.protectedBaseCustomCheckConfig,
 		);
 	}
+	const protectedConfig = input.protectedBaseCustomCheckConfig;
 	const catalog = createCheckCatalog(
-		input.protectedBaseCustomCheckConfig?.customChecks,
+		protectedConfig
+			? {
+					userStandards: protectedConfig.userStandards,
+					customChecks: protectedConfig.customChecks,
+				}
+			: undefined,
 	);
 	const selector = normalizeSelectorInput(
 		input,
@@ -490,6 +496,10 @@ function activateCustomChecks(
 			customCheckTypeId: definition.checkTypeId,
 			customCheckTypeVersion: customCheck.checkTypeVersion,
 			checkEvaluatorId: customCheck.evaluatorId,
+			standardRefs: definition.standardRefs.map((reference) => ({
+				...reference,
+				passageIds: [...reference.passageIds],
+			})),
 			knowledgeRefs: [...(definition.knowledgeRefs ?? [])],
 			...(definition.repairGuidance
 				? { repairGuidance: definition.repairGuidance }

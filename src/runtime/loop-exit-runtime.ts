@@ -59,8 +59,14 @@ export function createLoopExitRuntime(
 			"Loop Exit Runtime received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
 		);
 	}
+	const protectedConfig = input.protectedBaseCustomCheckConfig;
 	const catalog = createCheckCatalog(
-		input.protectedBaseCustomCheckConfig?.customChecks,
+		protectedConfig
+			? {
+					userStandards: protectedConfig.userStandards,
+					customChecks: protectedConfig.customChecks,
+				}
+			: undefined,
 	);
 	const claimsExecutor = createDecisionResearchClaimsExecutor(catalog);
 	return Object.freeze({

@@ -21,6 +21,7 @@ import {
 	type ProtectedCustomCheckConfigSnapshot,
 } from "./configuration.ts";
 import type {CustomCheckDefinition} from "./contracts.ts";
+import type {UserStandardDefinition} from "./user-standards.ts";
 import {
 	CustomCheckMutationError,
 	type CustomCheckMutationStore,
@@ -44,7 +45,13 @@ export function createWikiConfigCustomCheckStore(
 			if (wikiConfigDigest(current) !== input.current.projectConfigDigest) {
 				throw conflict("Project configuration changed while preparing the mutation.");
 			}
-			return configState(nextConfig(current, input.customChecks));
+			return configState(
+				nextConfig({
+					current,
+					userStandards: input.userStandards,
+					customChecks: input.customChecks,
+				}),
+			);
 		},
 		async compareAndSwap(
 			input: Parameters<CustomCheckMutationStore["compareAndSwap"]>[0],
@@ -54,7 +61,11 @@ export function createWikiConfigCustomCheckStore(
 				if (wikiConfigDigest(current) !== input.expectedConfigDigest) {
 					throw conflict("Project configuration changed before mutation commit.");
 				}
-				const next = nextConfig(current, input.customChecks);
+				const next = nextConfig({
+					current,
+					userStandards: input.userStandards,
+					customChecks: input.customChecks,
+				});
 				if (wikiConfigDigest(next) !== input.expectedNextConfigDigest) {
 					throw conflict("Prepared Custom Check configuration no longer matches.");
 				}
@@ -107,23 +118,27 @@ export async function loadProtectedCustomCheckConfigSnapshot(input: {
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: input.protectedSourceHead,
 		projectConfigDigest: wikiConfigDigest(config),
+		userStandards: config.userStandards,
 		customChecks: config.customChecks,
 	});
 }
 
-function nextConfig(
-	current: WikiConfig,
-	customChecks: readonly CustomCheckDefinition[],
-): WikiConfig {
+function nextConfig(input: {
+	readonly current: WikiConfig;
+	readonly userStandards: readonly UserStandardDefinition[];
+	readonly customChecks: readonly CustomCheckDefinition[];
+}): WikiConfig {
 	return resolveWikiConfig({
-		...current,
-		customChecks: [...customChecks],
+		...input.current,
+		userStandards: [...input.userStandards],
+		customChecks: [...input.customChecks],
 	});
 }
 
 function configState(config: WikiConfig): CustomCheckConfigState {
 	return createCustomCheckConfigState({
 		projectConfigDigest: wikiConfigDigest(config),
+		userStandards: config.userStandards,
 		customChecks: config.customChecks,
 	});
 }

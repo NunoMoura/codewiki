@@ -26,7 +26,13 @@ import {
 import {wikiConfigDigest} from "../../../src/project/config-digest.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "./user-standard-fixture.mjs";
 
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 const execFileAsync = promisify(execFile);
 const SOURCE_HEAD = "f".repeat(40);
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
@@ -39,6 +45,7 @@ function proposal(overrides = {}) {
 		requirement: "Every changed public API names its accountable owning team.",
 		repairGuidance: "Add one accepted owning-team reference.",
 		appliesWhen: {loops: ["decision"]},
+		standardRefs: standardRefsFor(USER_STANDARD),
 		knowledgeRefs: ["knowledge:api-ownership"],
 		...overrides,
 	};
@@ -56,12 +63,14 @@ function authority(overrides = {}) {
 	};
 }
 
-function stateFor(customChecks) {
+function stateFor(customChecks, userStandards = USER_STANDARDS) {
 	return createCustomCheckConfigState({
 		projectConfigDigest: canonicalJsonDigest({
 			project: "test",
+			userStandards,
 			customChecks,
 		}),
+		userStandards,
 		customChecks,
 	});
 }
@@ -76,13 +85,13 @@ function memoryStore(initialCustomChecks = []) {
 			},
 			async preview(input) {
 				assert.equal(input.current.projectConfigDigest, state.projectConfigDigest);
-				return stateFor(input.customChecks);
+				return stateFor(input.customChecks, input.userStandards);
 			},
 			async compareAndSwap(input) {
 				if (input.expectedConfigDigest !== state.projectConfigDigest) {
 					throw new Error("stale memory configuration");
 				}
-				const next = stateFor(input.customChecks);
+				const next = stateFor(input.customChecks, input.userStandards);
 				assert.equal(next.projectConfigDigest, input.expectedNextConfigDigest);
 				state = next;
 				writes += 1;
@@ -98,6 +107,7 @@ function protectedBase(customChecks = [], projectConfigDigest = stateFor(customC
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: SOURCE_HEAD,
 		projectConfigDigest,
+		userStandards: USER_STANDARDS,
 		customChecks,
 	});
 }
@@ -270,7 +280,7 @@ describe("guarded Custom Check configuration mutations", () => {
 			() =>
 				parseCustomCheckMutationCommand({
 					...createCommand,
-					protocolVersion: "2.0.0",
+					protocolVersion: "1.0.0",
 				}),
 			/protocolVersion is invalid/,
 		);
@@ -301,6 +311,7 @@ describe("guarded Custom Check configuration mutations", () => {
 		const movedProtectedSnapshot = createProtectedCustomCheckConfigSnapshot({
 			protectedSourceHead: "e".repeat(40),
 			projectConfigDigest: protectedSnapshot.projectConfigDigest,
+			userStandards: USER_STANDARDS,
 			customChecks: [],
 		});
 		let protectedLoads = 0;
@@ -325,7 +336,10 @@ describe("guarded Custom Check configuration mutations", () => {
 	});
 
 	it("keeps protected-base Checks active while a disabling config change is pending", async () => {
-		const active = activateCustomCheckDefinition(createCustomCheckDefinition(proposal()));
+		const active = activateCustomCheckDefinition(
+			createCustomCheckDefinition(proposal(), USER_STANDARDS),
+			USER_STANDARDS,
+		);
 		const memory = memoryStore([active]);
 		const protectedSnapshot = protectedBase(
 			[active],
@@ -364,6 +378,7 @@ describe("guarded Custom Check configuration mutations", () => {
 		const nextProtectedSnapshot = createProtectedCustomCheckConfigSnapshot({
 			protectedSourceHead: "e".repeat(40),
 			projectConfigDigest: disabled.state.projectConfigDigest,
+			userStandards: disabled.state.userStandards,
 			customChecks: disabled.state.customChecks,
 		});
 		const nextPolicy = resolveExitPolicy(policyInput(nextProtectedSnapshot));
@@ -381,9 +396,14 @@ describe("guarded Custom Check configuration mutations", () => {
 			await execFileAsync("git", ["-C", root, "config", "user.name", "CodeWiki Test"]);
 			await execFileAsync("git", ["-C", root, "config", "user.email", "test@codewiki.local"]);
 			const active = activateCustomCheckDefinition(
-				createCustomCheckDefinition(proposal()),
+				createCustomCheckDefinition(proposal(), USER_STANDARDS),
+				USER_STANDARDS,
 			);
-			const config = resolveWikiConfig({project: "protected-test", customChecks: [active]});
+			const config = resolveWikiConfig({
+				project: "protected-test",
+				userStandards: USER_STANDARDS,
+				customChecks: [active],
+			});
 			await writeWikiConfigFile(root, config);
 			await execFileAsync("git", ["-C", root, "add", ".codewiki/config.json"]);
 			await execFileAsync("git", ["-C", root, "commit", "-q", "-m", "protected config"]);
@@ -398,11 +418,16 @@ describe("guarded Custom Check configuration mutations", () => {
 
 			const store = createWikiConfigCustomCheckStore(root);
 			const before = await store.load();
-			const disabled = disableCustomCheckDefinition(active);
-			const preview = await store.preview({current: before, customChecks: [disabled]});
+			const disabled = disableCustomCheckDefinition(active, USER_STANDARDS);
+			const preview = await store.preview({
+				current: before,
+				userStandards: USER_STANDARDS,
+				customChecks: [disabled],
+			});
 			const after = await store.compareAndSwap({
 				expectedConfigDigest: before.projectConfigDigest,
 				expectedNextConfigDigest: preview.projectConfigDigest,
+				userStandards: USER_STANDARDS,
 				customChecks: [disabled],
 			});
 			assert.equal(after.customChecks[0].lifecycle, "disabled");
@@ -418,6 +443,7 @@ describe("guarded Custom Check configuration mutations", () => {
 					store.compareAndSwap({
 						expectedConfigDigest: before.projectConfigDigest,
 						expectedNextConfigDigest: preview.projectConfigDigest,
+						userStandards: USER_STANDARDS,
 						customChecks: [disabled],
 					}),
 				(error) => error.code === "conflict" && /changed before/.test(error.message),

@@ -43,7 +43,7 @@ import {createSerializedIdempotencyGate} from "./serialized-idempotency.ts";
 
 export const CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL = Object.freeze({
 	id: "codewiki.custom-check-policy-acceptance",
-	version: "1.0.0",
+	version: "2.0.0",
 	maxIdempotencyKeyLength: 128,
 	maxCompletedCommands: 64,
 });
@@ -256,6 +256,7 @@ async function executeAcceptance(
 	const config = await loadWikiConfigFile(options.repoRoot);
 	const proposedConfig = createCustomCheckConfigState({
 		projectConfigDigest: wikiConfigDigest(config),
+		userStandards: config.userStandards,
 		customChecks: config.customChecks,
 	});
 	assertProposedConfig(command.mutationReceipt, proposedConfig);
@@ -501,6 +502,7 @@ async function assertWorkingConfigUnchanged(
 	const current = await loadWikiConfigFile(repoRoot);
 	const currentState = createCustomCheckConfigState({
 		projectConfigDigest: wikiConfigDigest(current),
+		userStandards: current.userStandards,
 		customChecks: current.customChecks,
 	});
 	if (

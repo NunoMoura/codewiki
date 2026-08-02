@@ -14,7 +14,13 @@ import {
 	updateCustomCheckDefinition,
 } from "../../src/loop-exit/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "./custom-checks/user-standard-fixture.mjs";
 
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 
@@ -30,6 +36,7 @@ function proposal(overrides = {}) {
 			affectedLayers: ["API"],
 			pathScopes: ["src/api"],
 		},
+		standardRefs: standardRefsFor(USER_STANDARD),
 		knowledgeRefs: ["knowledge:company-api-policy"],
 		...overrides,
 	};
@@ -37,7 +44,8 @@ function proposal(overrides = {}) {
 
 function activeDefinition(overrides = {}) {
 	return activateCustomCheckDefinition(
-		createCustomCheckDefinition(proposal(overrides)),
+		createCustomCheckDefinition(proposal(overrides), USER_STANDARDS),
+		USER_STANDARDS,
 	);
 }
 
@@ -45,6 +53,7 @@ function protectedConfig(customChecks) {
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		userStandards: USER_STANDARDS,
 		customChecks,
 	});
 }
@@ -80,16 +89,17 @@ describe("Custom Check contracts", () => {
 				requirement:
 					"Every changed public API must name its owning team.\r\nNo exceptions.",
 			}),
+			USER_STANDARDS,
 		);
 		const equivalent = createCustomCheckDefinition({
 			...proposal(),
 			requirement:
 				"Every changed public API must name its owning team.\nNo exceptions.",
-		});
+		}, USER_STANDARDS);
 
 		assert.equal(definition.customCheckId, equivalent.customCheckId);
 		assert.equal(definition.definitionDigest, equivalent.definitionDigest);
-		assert.equal(definition.schemaVersion, "2.0.0");
+		assert.equal(definition.schemaVersion, "3.0.0");
 		assert.equal(definition.lifecycle, "draft");
 		assert.deepEqual(definition.appliesWhen.affectedLayers, ["api"]);
 		assert.match(definition.customCheckId, /^custom-check:[0-9a-f]{64}$/);
@@ -98,13 +108,13 @@ describe("Custom Check contracts", () => {
 	});
 
 	it("separates semantic identity from draft, active, and disabled lifecycle", () => {
-		const draft = createCustomCheckDefinition(proposal());
-		const active = activateCustomCheckDefinition(draft);
-		const disabled = disableCustomCheckDefinition(active);
+		const draft = createCustomCheckDefinition(proposal(), USER_STANDARDS);
+		const active = activateCustomCheckDefinition(draft, USER_STANDARDS);
+		const disabled = disableCustomCheckDefinition(active, USER_STANDARDS);
 		const updated = updateCustomCheckDefinition(active, {
 			...proposal(),
 			requirement: "Every public API must name an accountable owning team.",
-		});
+		}, USER_STANDARDS);
 
 		assert.deepEqual(
 			[draft, active, disabled, updated].map((entry) => entry.lifecycle),
@@ -117,18 +127,18 @@ describe("Custom Check contracts", () => {
 		assert.equal(disabled.definitionDigest, draft.definitionDigest);
 		assert.notEqual(updated.definitionDigest, draft.definitionDigest);
 		assert.notEqual(
-			customCheckConfigurationDigest([draft]),
-			customCheckConfigurationDigest([active]),
+			customCheckConfigurationDigest({userStandards: USER_STANDARDS, customChecks: [draft]}),
+			customCheckConfigurationDigest({userStandards: USER_STANDARDS, customChecks: [active]}),
 		);
 		assert.notEqual(
-			customCheckConfigurationDigest([active]),
-			customCheckConfigurationDigest([updated]),
+			customCheckConfigurationDigest({userStandards: USER_STANDARDS, customChecks: [active]}),
+			customCheckConfigurationDigest({userStandards: USER_STANDARDS, customChecks: [updated]}),
 		);
 		assert.equal("revision" in active, false);
 		assert.equal("rollout" in active, false);
 		assert.equal("approval" in active, false);
 		assert.throws(
-			() => activateCustomCheckDefinition(active),
+			() => activateCustomCheckDefinition(active, USER_STANDARDS),
 			/must be draft before activation/,
 		);
 		assert.throws(
@@ -136,20 +146,21 @@ describe("Custom Check contracts", () => {
 				updateCustomCheckDefinition(active, {
 					...proposal(),
 					checkTypeId: "security_and_privacy",
-				}),
+				}, USER_STANDARDS),
 			/Custom Check Type cannot change after creation/,
 		);
 	});
 
 	it("rejects unsupported, executable, oversized, and tampered input", () => {
 		assert.throws(
-			() => createCustomCheckDefinition({...proposal(), timeoutMs: 1}),
+			() => createCustomCheckDefinition({...proposal(), timeoutMs: 1}, USER_STANDARDS),
 			/unsupported field timeoutMs/,
 		);
 		assert.throws(
 			() =>
 				createCustomCheckDefinition(
 					proposal({requirement: `x${"y".repeat(2_000)}`}),
+					USER_STANDARDS,
 				),
 			/cannot exceed 2000 Unicode code points/,
 		);
@@ -157,6 +168,7 @@ describe("Custom Check contracts", () => {
 			() =>
 				createCustomCheckDefinition(
 					proposal({appliesWhen: {pathScopes: ["../secrets"]}}),
+					USER_STANDARDS,
 				),
 			/path scope .* is invalid/,
 		);
@@ -165,15 +177,15 @@ describe("Custom Check contracts", () => {
 			() =>
 				normalizeCustomCheckDefinitions([
 					{...active, requirement: "Tampered requirement."},
-				]),
+				], USER_STANDARDS),
 			/definitionDigest does not match definition/,
 		);
 		assert.throws(
-			() => normalizeCustomCheckDefinitions([{...active, revision: 2}]),
+			() => normalizeCustomCheckDefinitions([{...active, revision: 2}], USER_STANDARDS),
 			/unsupported field revision/,
 		);
 		assert.throws(
-			() => normalizeCustomCheckDefinitions([{...active, rollout: "require"}]),
+			() => normalizeCustomCheckDefinitions([{...active, rollout: "require"}], USER_STANDARDS),
 			/unsupported field rollout/,
 		);
 	});
@@ -202,17 +214,17 @@ describe("Custom Check contracts", () => {
 
 describe("Custom Check catalog and policy", () => {
 	it("materializes active Custom Checks as project-authority Model Checks", () => {
-		const draft = createCustomCheckDefinition(proposal());
-		const active = activateCustomCheckDefinition(draft);
-		const catalog = createCheckCatalog([active]);
-		const draftCatalog = createCheckCatalog([draft]);
+		const draft = createCustomCheckDefinition(proposal(), USER_STANDARDS);
+		const active = activateCustomCheckDefinition(draft, USER_STANDARDS);
+		const catalog = createCheckCatalog({userStandards: USER_STANDARDS, customChecks: [active]});
+		const draftCatalog = createCheckCatalog({userStandards: USER_STANDARDS, customChecks: [draft]});
 		const checkId = customCheckDefinitionCheckId(active);
 		const registration = catalog.get(checkId, "decision");
 
 		assert.equal(registration.authority, "project");
 		assert.equal(registration.check.execution.kind, "model");
 		assert.equal(registration.check.requirement, active.requirement);
-		assert.equal(registration.check.version, "2.0.0");
+		assert.equal(registration.check.version, "3.0.0");
 		assert.equal(registration.rollout, "require");
 		assert.equal(
 			registration.customCheck.definition.definitionDigest,
@@ -249,6 +261,7 @@ describe("Custom Check catalog and policy", () => {
 			binding.parameters.checkEvaluatorId,
 			"codewiki.check-evaluator.organization_policy",
 		);
+		assert.deepEqual(binding.parameters.standardRefs, standardRefsFor(USER_STANDARD));
 		assert.deepEqual(binding.parameters.knowledgeRefs, [
 			"knowledge:company-api-policy",
 		]);
@@ -261,9 +274,9 @@ describe("Custom Check catalog and policy", () => {
 	});
 
 	it("does not activate nonmatching, draft, or disabled Custom Checks", () => {
-		const draft = createCustomCheckDefinition(proposal());
-		const active = activateCustomCheckDefinition(draft);
-		const disabled = disableCustomCheckDefinition(active);
+		const draft = createCustomCheckDefinition(proposal(), USER_STANDARDS);
+		const active = activateCustomCheckDefinition(draft, USER_STANDARDS);
+		const disabled = disableCustomCheckDefinition(active, USER_STANDARDS);
 		const checkId = customCheckDefinitionCheckId(active);
 		const nonmatching = resolveExitPolicy(
 			selectorInput([active], {paths: ["src/core/runtime.ts"]}),

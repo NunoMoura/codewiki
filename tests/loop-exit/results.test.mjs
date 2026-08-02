@@ -20,7 +20,13 @@ import {
 	createCheckResult,
 	createExitReport,
 } from "../../src/loop-exit/results.ts";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "./custom-checks/user-standard-fixture.mjs";
 
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const EVIDENCE_DIGEST = `sha256:${"c".repeat(64)}`;
@@ -29,6 +35,7 @@ function protectedConfig(customChecks) {
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		userStandards: USER_STANDARDS,
 		customChecks,
 	});
 }
@@ -214,7 +221,9 @@ function requiredCustomCheck() {
 			name: "Documentation current",
 			requirement: "Affected documentation remains current.",
 			appliesWhen: {loops: ["implementation"]},
-		}),
+			standardRefs: standardRefsFor(USER_STANDARD),
+		}, USER_STANDARDS),
+		USER_STANDARDS,
 	);
 }
 
@@ -431,7 +440,10 @@ describe("immutable Exit Report", () => {
 		const input = selectorInput();
 		input.protectedBaseCustomCheckConfig = protectedConfig([definition]);
 		const policy = resolveExitPolicy(input);
-		const catalog = createCheckCatalog([definition]);
+		const catalog = createCheckCatalog({
+			userStandards: USER_STANDARDS,
+			customChecks: [definition],
+		});
 		const binding = policy.bindings.find(
 			(entry) => entry.checkId === customCheckDefinitionCheckId(definition),
 		);

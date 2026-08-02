@@ -6,6 +6,10 @@ import type { EvidenceObligation } from "../evidence/obligations.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import type { CustomCheckDefinition } from "./custom-checks/contracts.ts";
 import {
+	normalizeUserStandardDefinitions,
+	type UserStandardDefinition,
+} from "./custom-checks/user-standards.ts";
+import {
 	assertCustomCheckDefinition,
 	customCheckConfigurationDigest,
 	customCheckDefinitionCheckId,
@@ -24,7 +28,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "4.0.0";
+export const CHECK_CATALOG_VERSION = "5.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -378,13 +382,19 @@ const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
 
 const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
 
-export function createCheckCatalog(
-	customChecks: readonly CustomCheckDefinition[] = [],
-): CheckCatalog {
-	const normalizedCustomChecks = normalizeCustomCheckDefinitions(customChecks);
-	const customCheckConfigDigest = customCheckConfigurationDigest(
-		normalizedCustomChecks,
+export function createCheckCatalog(input: {
+	readonly userStandards: readonly UserStandardDefinition[];
+	readonly customChecks: readonly CustomCheckDefinition[];
+} = {userStandards: [], customChecks: []}): CheckCatalog {
+	const userStandards = normalizeUserStandardDefinitions(input.userStandards);
+	const normalizedCustomChecks = normalizeCustomCheckDefinitions(
+		input.customChecks,
+		userStandards,
 	);
+	const customCheckConfigDigest = customCheckConfigurationDigest({
+		userStandards,
+		customChecks: normalizedCustomChecks,
+	});
 	const customRegistrations = normalizedCustomChecks
 		.filter((definition) => definition.lifecycle === "active")
 		.flatMap(customCheckRegistrations);
@@ -392,11 +402,11 @@ export function createCheckCatalog(
 		...CODEWIKI_CHECK_REGISTRATIONS,
 		...customRegistrations,
 	]
-		.map(normalizeRegistration)
+		.map((registration) => normalizeRegistration({registration, userStandards}))
 		.sort(compareRegistrations);
 	const byKey = new Map<string, CheckRegistration>();
 	for (const registration of registrations) {
-		validateRegistration(registration);
+		validateRegistration(registration, userStandards);
 		for (const loop of registration.loops) {
 			const key = registrationKey(loop, registration.check.id);
 			if (byKey.has(key)) {
@@ -432,7 +442,10 @@ export function createCheckCatalog(
 		digest,
 		get: (checkId: string, loop?: SemanticLoop) => {
 			if (loop) {
-				return cloneRegistration(byKey.get(registrationKey(loop, checkId)));
+				return cloneRegistration({
+					registration: byKey.get(registrationKey(loop, checkId)),
+					userStandards,
+				});
 			}
 			const matches = registrations.filter(
 				(registration) => registration.check.id === checkId,
@@ -442,11 +455,14 @@ export function createCheckCatalog(
 					`Check ${checkId} is registered independently for multiple loops; loop is required.`,
 				);
 			}
-			return cloneRegistration(matches[0]);
+			return cloneRegistration({
+				registration: matches[0],
+				userStandards,
+			});
 		},
 		list: (loop?: SemanticLoop) =>
 			registrations.flatMap((registration) => {
-				const clone = cloneRegistration(registration);
+				const clone = cloneRegistration({registration, userStandards});
 				return (!loop || registration.loops.includes(loop)) && clone
 					? [clone]
 					: [];
@@ -763,9 +779,11 @@ function compareRegistrations(
 	);
 }
 
-function normalizeRegistration(
-	registration: CheckRegistration,
-): CheckRegistration {
+function normalizeRegistration(input: {
+	readonly registration: CheckRegistration;
+	readonly userStandards: readonly UserStandardDefinition[];
+}): CheckRegistration {
+	const {registration, userStandards} = input;
 	return {
 		...registration,
 		check: {
@@ -782,19 +800,23 @@ function normalizeRegistration(
 			? {
 					customCheck: {
 						...registration.customCheck,
-						definition: normalizeCustomCheckDefinitions([
-							registration.customCheck.definition,
-						])[0],
+						definition: normalizeCustomCheckDefinitions(
+							[registration.customCheck.definition],
+							userStandards,
+						)[0],
 					},
 				}
 			: {}),
 	};
 }
 
-function validateRegistration(registration: CheckRegistration): void {
+function validateRegistration(
+	registration: CheckRegistration,
+	userStandards: readonly UserStandardDefinition[],
+): void {
 	validateCheckShape(registration);
 	validateClosedExecutionInputs(registration);
-	validateCheckAuthority(registration);
+	validateCheckAuthority(registration, userStandards);
 }
 
 function validateCheckShape(
@@ -839,6 +861,7 @@ function validateClosedExecutionInputs(
 
 function validateCheckAuthority(
 	registration: CheckRegistration,
+	userStandards: readonly UserStandardDefinition[],
 ): void {
 	const check = registration.check;
 	if (registration.authority === "kernel") {
@@ -857,11 +880,12 @@ function validateCheckAuthority(
 			`Only kernel Checks may be protected: ${check.id}.`,
 		);
 	}
-	validateCustomCheckRegistration(registration);
+	validateCustomCheckRegistration(registration, userStandards);
 }
 
 function validateCustomCheckRegistration(
 	registration: CheckRegistration,
+	userStandards: readonly UserStandardDefinition[],
 ): void {
 	const customCheck = registration.customCheck;
 	if (!customCheck) {
@@ -869,7 +893,7 @@ function validateCustomCheckRegistration(
 			`Project-authority Check ${registration.check.id} requires Custom Check data.`,
 		);
 	}
-	assertCustomCheckDefinition(customCheck.definition);
+	assertCustomCheckDefinition(customCheck.definition, userStandards);
 	if (customCheck.definition.lifecycle !== "active") {
 		throw new Error(
 			`Custom Check ${customCheck.definition.customCheckId} must be active before registration.`,
@@ -917,10 +941,16 @@ function assertAcyclicCatalog(
 	for (const key of byKey.keys()) visit(key);
 }
 
-function cloneRegistration(
-	registration: CheckRegistration | undefined,
-): CheckRegistration | undefined {
-	return registration ? normalizeRegistration(registration) : undefined;
+function cloneRegistration(input: {
+	readonly registration: CheckRegistration | undefined;
+	readonly userStandards: readonly UserStandardDefinition[];
+}): CheckRegistration | undefined {
+	return input.registration
+		? normalizeRegistration({
+				registration: input.registration,
+				userStandards: input.userStandards,
+			})
+		: undefined;
 }
 
 function asArray<T>(value: T | T[]): T[] {

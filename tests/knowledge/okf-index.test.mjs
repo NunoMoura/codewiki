@@ -103,6 +103,10 @@ describe("OKF index and log navigation", () => {
 				date: "2026-08-01",
 				entries: [
 					{
+						kind: "Update",
+						text: "Added User Standard schema `1.0.0`, Custom Check schema `3.0.0`, protected configuration `2.0.0`, Check Catalog `5.0.0`, Decision Model Check Request Protocol `4.0.0`, and guarded policy protocols `2.0.0`. Immutable bounded inline/HTTPS snapshots now bind normalized source bytes, observed time, passage identities, Standard/definition/config digests, and independent model input. Source-unbound Custom Checks fail closed. Source retrieval/distillation, atomic Standard-plus-Check mutation, Custom Code templates/guards, and Standard-derived triage remain pending.",
+					},
+					{
 						kind: "Decision",
 						text: "Ratified source-backed User Standards as the only project-specific assurance input. CodeWiki provides Default Checks and distills accepted Standards into atomic Custom Model or approved-template Custom Code Checks; Default/Custom origin remains independent from Code/Model evaluation and Loop applicability. Company policy, execution guidance, quality criteria, and resource instructions are Standard content rather than separate artifact types. Hard resource Code Checks may derive matching Runtime guards, while non-pass/fail preferences influence protected deterministic Backlog Triage behavior. Direct source-unbound Custom Check authoring will be clean-cut away without a dual path. Backlog Triage only recommends attention; authenticated exact-revision user selection must start Decision, while Planning alone orders executable Work Items.",
 					},

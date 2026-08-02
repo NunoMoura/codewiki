@@ -23,7 +23,13 @@ import {
 } from "../../../src/loop-exit/custom-checks/index.ts";
 import {writeWikiConfigFile} from "../../../src/project/config-file.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "./user-standard-fixture.mjs";
 
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 const execFileAsync = promisify(execFile);
 
 function proposal(overrides = {}) {
@@ -33,6 +39,7 @@ function proposal(overrides = {}) {
 		requirement: "Every changed public API names its accountable owning team.",
 		repairGuidance: "Add one accepted owning-team reference.",
 		appliesWhen: {loops: ["decision"]},
+		standardRefs: standardRefsFor(USER_STANDARD),
 		knowledgeRefs: ["knowledge:api-ownership"],
 		...overrides,
 	};
@@ -67,11 +74,16 @@ async function createFixture() {
 	await git(repo, ["config", "user.email", "test@codewiki.local"]);
 	await git(repo, ["remote", "add", "origin", remote]);
 	const active = activateCustomCheckDefinition(
-		createCustomCheckDefinition(proposal()),
+		createCustomCheckDefinition(proposal(), USER_STANDARDS),
+		USER_STANDARDS,
 	);
 	await writeWikiConfigFile(
 		repo,
-		resolveWikiConfig({project: "policy-acceptance", customChecks: [active]}),
+		resolveWikiConfig({
+			project: "policy-acceptance",
+			userStandards: USER_STANDARDS,
+			customChecks: [active],
+		}),
 	);
 	await git(repo, ["add", ".codewiki/config.json"]);
 	await git(repo, ["commit", "--quiet", "-m", "protected config"]);
@@ -294,7 +306,7 @@ describe("Custom Check protected policy acceptance", () => {
 				() =>
 					parseCustomCheckPolicyAcceptanceCommand({
 						...fixture.command,
-						protocolVersion: "2.0.0",
+						protocolVersion: "1.0.0",
 					}),
 				/protocolVersion is invalid/,
 			);
@@ -391,6 +403,7 @@ describe("Custom Check protected policy acceptance", () => {
 						fixture.repo,
 						resolveWikiConfig({
 							project: "drifted-policy",
+							userStandards: fixture.mutation.state.userStandards,
 							customChecks: fixture.mutation.state.customChecks,
 						}),
 					);

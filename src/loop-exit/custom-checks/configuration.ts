@@ -9,12 +9,17 @@ import {
 	normalizeCustomCheckDefinitions,
 	type CustomCheckDefinition,
 } from "./contracts.ts";
+import {
+	normalizeUserStandardDefinitions,
+	type UserStandardDefinition,
+} from "./user-standards.ts";
 
-export const PROTECTED_CUSTOM_CHECK_CONFIG_SCHEMA_VERSION = "1.0.0" as const;
+export const PROTECTED_CUSTOM_CHECK_CONFIG_SCHEMA_VERSION = "2.0.0" as const;
 
 export interface CustomCheckConfigState {
 	readonly projectConfigDigest: Sha256Digest;
 	readonly customCheckConfigDigest: Sha256Digest;
+	readonly userStandards: readonly UserStandardDefinition[];
 	readonly customChecks: readonly CustomCheckDefinition[];
 }
 
@@ -27,13 +32,22 @@ export interface ProtectedCustomCheckConfigSnapshot
 
 export function createCustomCheckConfigState(input: {
 	readonly projectConfigDigest: Sha256Digest;
+	readonly userStandards: readonly UserStandardDefinition[];
 	readonly customChecks: readonly CustomCheckDefinition[];
 }): CustomCheckConfigState {
 	assertSha256Digest(input.projectConfigDigest, "projectConfigDigest");
-	const customChecks = normalizeCustomCheckDefinitions(input.customChecks);
+	const userStandards = normalizeUserStandardDefinitions(input.userStandards);
+	const customChecks = normalizeCustomCheckDefinitions(
+		input.customChecks,
+		userStandards,
+	);
 	return Object.freeze({
 		projectConfigDigest: input.projectConfigDigest,
-		customCheckConfigDigest: customCheckConfigurationDigest(customChecks),
+		customCheckConfigDigest: customCheckConfigurationDigest({
+			userStandards,
+			customChecks,
+		}),
+		userStandards: Object.freeze(userStandards),
 		customChecks: Object.freeze(customChecks),
 	});
 }
@@ -41,6 +55,7 @@ export function createCustomCheckConfigState(input: {
 export function createProtectedCustomCheckConfigSnapshot(input: {
 	readonly protectedSourceHead: string;
 	readonly projectConfigDigest: Sha256Digest;
+	readonly userStandards: readonly UserStandardDefinition[];
 	readonly customChecks: readonly CustomCheckDefinition[];
 }): ProtectedCustomCheckConfigSnapshot {
 	const state = createCustomCheckConfigState(input);
@@ -53,6 +68,7 @@ export function createProtectedCustomCheckConfigSnapshot(input: {
 	};
 	return Object.freeze({
 		...identity,
+		userStandards: state.userStandards,
 		customChecks: state.customChecks,
 		snapshotDigest: canonicalJsonDigest(identity),
 	});
@@ -71,6 +87,7 @@ export function assertProtectedCustomCheckConfigSnapshot(
 			"protectedSourceHead",
 			"projectConfigDigest",
 			"customCheckConfigDigest",
+			"userStandards",
 			"customChecks",
 			"snapshotDigest",
 		],
@@ -84,6 +101,7 @@ export function assertProtectedCustomCheckConfigSnapshot(
 	const expected = createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: value.protectedSourceHead,
 		projectConfigDigest: value.projectConfigDigest,
+		userStandards: value.userStandards,
 		customChecks: value.customChecks,
 	});
 	if (value.customCheckConfigDigest !== expected.customCheckConfigDigest) {

@@ -17,6 +17,13 @@ import {
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 } from "../../src/project/config-file.ts";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "../loop-exit/custom-checks/user-standard-fixture.mjs";
+
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 
 describe("wiki_config core facade", () => {
 	it("resolves defaults and deep patches config", () => {
@@ -68,6 +75,7 @@ describe("wiki_config core facade", () => {
 			"shell.shellcheck",
 		]);
 		assert.deepEqual(result.config.quality.review.requiredPacks, []);
+		assert.deepEqual(result.config.userStandards, []);
 		assert.deepEqual(result.config.customChecks, []);
 	});
 
@@ -78,11 +86,17 @@ describe("wiki_config core facade", () => {
 				name: "Use design tokens",
 				requirement: "User-facing spacing must use accepted design tokens.",
 				appliesWhen: {loops: ["decision"], affectedLayers: ["ui"]},
+				standardRefs: standardRefsFor(USER_STANDARD),
 				knowledgeRefs: ["knowledge:design-system"],
-			}),
+			}, USER_STANDARDS),
+			USER_STANDARDS,
 		);
-		const config = resolveWikiConfig({customChecks: [definition]});
+		const config = resolveWikiConfig({
+			userStandards: USER_STANDARDS,
+			customChecks: [definition],
+		});
 
+		assert.deepEqual(config.userStandards, USER_STANDARDS);
 		assert.deepEqual(config.customChecks, [definition]);
 		assert.throws(
 			() =>
@@ -90,11 +104,12 @@ describe("wiki_config core facade", () => {
 					current: config,
 					patch: {customChecks: []},
 				}),
-			/use the guarded Custom Check command/,
+			/guarded Standards and Checks policy mutation/,
 		);
 		assert.throws(
 			() =>
 				resolveWikiConfig({
+					userStandards: USER_STANDARDS,
 					customChecks: [
 						{
 							checkTypeId: "design_system",

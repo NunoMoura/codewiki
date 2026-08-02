@@ -9,6 +9,10 @@ import {materializeEvidenceRecord} from "../../evidence/materialize.ts";
 import {modelConclusionEvidenceMeasurement} from "../../evidence/model-assessment.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
 import type {CheckCatalog} from "../../loop-exit/catalog.ts";
+import {
+	normalizeCustomCheckStandardRefs,
+	type CustomCheckStandardRef,
+} from "../../loop-exit/custom-checks/contracts.ts";
 import type {CheckDefinition} from "../../loop-exit/contracts.ts";
 import {
 	assertSecuritySurfaceClassification,
@@ -32,7 +36,7 @@ import type {DecisionCandidate} from "./candidate.ts";
 
 export const DECISION_MODEL_CHECK_REQUEST_PROTOCOL = Object.freeze({
 	id: "codewiki.decision.model-check-request",
-	version: "3.0.0",
+	version: "4.0.0",
 	maxRequestBytes: 262_144,
 	maxFindings: 32,
 	maxLimitations: 32,
@@ -60,6 +64,7 @@ export interface DecisionModelCheckRequest {
 			readonly checkTypeId: string;
 			readonly checkTypeVersion: string;
 			readonly evaluatorId: string;
+			readonly standardRefs: readonly CustomCheckStandardRef[];
 			readonly knowledgeRefs: readonly string[];
 			readonly repairGuidance?: string;
 		};
@@ -319,6 +324,9 @@ function customCheckRequestMetadata(
 		parameters.protectedCustomCheckConfigSnapshotDigest,
 		"protectedCustomCheckConfigSnapshotDigest",
 	);
+	const standardRefs = normalizeCustomCheckStandardRefs(
+		parameters.standardRefs as unknown as readonly CustomCheckStandardRef[],
+	);
 	const knowledgeRefs = parameters.knowledgeRefs;
 	if (!Array.isArray(knowledgeRefs)) {
 		throw new Error("Custom Check Model request has invalid Knowledge refs.");
@@ -353,6 +361,7 @@ function customCheckRequestMetadata(
 				parameters.checkEvaluatorId,
 				"checkEvaluatorId",
 			),
+			standardRefs,
 			knowledgeRefs: normalizedKnowledgeRefs,
 			...(repairGuidance ? { repairGuidance } : {}),
 		},

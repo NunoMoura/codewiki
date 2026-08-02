@@ -10,7 +10,13 @@ import {
 	customCheckDefinitionCheckId,
 } from "../../src/loop-exit/custom-checks/index.ts";
 import {classifySecuritySurfaces} from "../../src/loop-exit/security-surfaces.ts";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "./custom-checks/user-standard-fixture.mjs";
 
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 
@@ -39,6 +45,7 @@ function protectedConfig(customChecks) {
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: `sha256:${"e".repeat(64)}`,
+		userStandards: USER_STANDARDS,
 		customChecks,
 	});
 }
@@ -50,7 +57,9 @@ function customCheck() {
 			name: "Documentation remains current",
 			requirement: "Affected documentation is updated.",
 			appliesWhen: {loops: ["implementation"]},
-		}),
+			standardRefs: standardRefsFor(USER_STANDARD),
+		}, USER_STANDARDS),
+		USER_STANDARDS,
 	);
 }
 

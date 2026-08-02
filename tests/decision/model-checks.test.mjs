@@ -26,7 +26,13 @@ import {
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
 import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
 import {acceptedChangeFixture} from "../helpers/accepted-change.mjs";
+import {
+	createTestUserStandard,
+	standardRefsFor,
+} from "../loop-exit/custom-checks/user-standard-fixture.mjs";
 
+const USER_STANDARD = createTestUserStandard();
+const USER_STANDARDS = [USER_STANDARD];
 const WORK_STATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const KNOWLEDGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const MODEL_CHECK_IDS = ["intention_validated", "recommendation_justified"];
@@ -97,6 +103,7 @@ function protectedConfig(customChecks) {
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: digest("e"),
+		userStandards: USER_STANDARDS,
 		customChecks,
 	});
 }
@@ -341,12 +348,17 @@ describe("native Decision Model Checks", () => {
 				requirement: "Every changed public API names its owning team.",
 				repairGuidance: "Add one accepted owning-team reference.",
 				appliesWhen: {loops: ["decision"]},
+				standardRefs: standardRefsFor(USER_STANDARD),
 				knowledgeRefs: ["knowledge:api-ownership"],
-			}),
+			}, USER_STANDARDS),
+			USER_STANDARDS,
 		);
 		const checkId = customCheckDefinitionCheckId(definition);
 		const protectedBase = protectedConfig([definition]);
-		const catalog = createCheckCatalog([definition]);
+		const catalog = createCheckCatalog({
+			userStandards: USER_STANDARDS,
+			customChecks: [definition],
+		});
 		const revision = setup.candidate.content.revision;
 		const resolved = resolveExitPolicy({
 			loop: "decision",
@@ -403,8 +415,14 @@ describe("native Decision Model Checks", () => {
 			requests[0].protocolId,
 			"codewiki.decision.model-check-request",
 		);
-		assert.equal(requests[0].protocolVersion, "3.0.0");
-		assert.deepEqual({...requests[0].check.customCheck}, {
+		assert.equal(requests[0].protocolVersion, "4.0.0");
+		assert.deepEqual({
+			...requests[0].check.customCheck,
+			standardRefs: requests[0].check.customCheck.standardRefs.map((reference) => ({
+				...reference,
+				passageIds: [...reference.passageIds],
+			})),
+		}, {
 			customCheckId: definition.customCheckId,
 			definitionDigest: definition.definitionDigest,
 			protectedSourceHead: protectedBase.protectedSourceHead,
@@ -414,6 +432,7 @@ describe("native Decision Model Checks", () => {
 			checkTypeId: "organization_policy",
 			checkTypeVersion: "1.0.0",
 			evaluatorId: "codewiki.check-evaluator.organization_policy",
+			standardRefs: standardRefsFor(USER_STANDARD),
 			knowledgeRefs: ["knowledge:api-ownership"],
 			repairGuidance: "Add one accepted owning-team reference.",
 		});
