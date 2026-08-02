@@ -27,7 +27,7 @@ const ROUTE = Object.freeze({
 function unresolvedOutput(request) {
 	return {
 		protocolId: "codewiki.user-standard-distillation",
-		protocolVersion: "1.0.0",
+		protocolVersion: "2.0.0",
 		requestDigest: request.requestDigest,
 		clauses: [
 			{

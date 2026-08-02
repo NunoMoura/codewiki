@@ -64,14 +64,20 @@ function authority(overrides = {}) {
 	};
 }
 
-function stateFor(customChecks, userStandards = USER_STANDARDS) {
+function stateFor(
+	customChecks,
+	userStandards = USER_STANDARDS,
+	triagePreferences = [],
+) {
 	return createCustomCheckConfigState({
 		projectConfigDigest: canonicalJsonDigest({
 			project: "test",
 			userStandards,
+			triagePreferences,
 			customChecks,
 		}),
 		userStandards,
+		triagePreferences,
 		customChecks,
 	});
 }
@@ -86,13 +92,21 @@ function memoryStore(initialCustomChecks = []) {
 			},
 			async preview(input) {
 				assert.equal(input.current.projectConfigDigest, state.projectConfigDigest);
-				return stateFor(input.customChecks, input.userStandards);
+				return stateFor(
+					input.customChecks,
+					input.userStandards,
+					input.triagePreferences,
+				);
 			},
 			async compareAndSwap(input) {
 				if (input.expectedConfigDigest !== state.projectConfigDigest) {
 					throw new Error("stale memory configuration");
 				}
-				const next = stateFor(input.customChecks, input.userStandards);
+				const next = stateFor(
+					input.customChecks,
+					input.userStandards,
+					input.triagePreferences,
+				);
 				assert.equal(next.projectConfigDigest, input.expectedNextConfigDigest);
 				state = next;
 				writes += 1;
@@ -109,6 +123,7 @@ function protectedBase(customChecks = [], projectConfigDigest = stateFor(customC
 		protectedSourceHead: SOURCE_HEAD,
 		projectConfigDigest,
 		userStandards: USER_STANDARDS,
+		triagePreferences: [],
 		customChecks,
 	});
 }
@@ -171,7 +186,7 @@ describe("guarded Custom Check configuration mutations", () => {
 		);
 		assert.equal(created.changedCustomChecks[0].lifecycle, "draft");
 		assert.equal(created.receipt.effectiveFrom, "next_protected_snapshot");
-		assert.equal(created.receipt.protocolVersion, "4.0.0");
+		assert.equal(created.receipt.protocolVersion, "5.0.0");
 		assert.equal(created.receipt.distillationReceipt, null);
 		assert.deepEqual(created.receipt.selectedProposalIds, []);
 		assert.deepEqual(created.receipt.standardChanges, []);
@@ -319,6 +334,7 @@ describe("guarded Custom Check configuration mutations", () => {
 			protectedSourceHead: "e".repeat(40),
 			projectConfigDigest: protectedSnapshot.projectConfigDigest,
 			userStandards: USER_STANDARDS,
+			triagePreferences: [],
 			customChecks: [],
 		});
 		let protectedLoads = 0;
@@ -386,6 +402,7 @@ describe("guarded Custom Check configuration mutations", () => {
 			protectedSourceHead: "e".repeat(40),
 			projectConfigDigest: disabled.state.projectConfigDigest,
 			userStandards: disabled.state.userStandards,
+			triagePreferences: disabled.state.triagePreferences,
 			customChecks: disabled.state.customChecks,
 		});
 		const nextPolicy = resolveExitPolicy(policyInput(nextProtectedSnapshot));
@@ -429,12 +446,14 @@ describe("guarded Custom Check configuration mutations", () => {
 			const preview = await store.preview({
 				current: before,
 				userStandards: USER_STANDARDS,
+				triagePreferences: before.triagePreferences,
 				customChecks: [disabled],
 			});
 			const after = await store.compareAndSwap({
 				expectedConfigDigest: before.projectConfigDigest,
 				expectedNextConfigDigest: preview.projectConfigDigest,
 				userStandards: USER_STANDARDS,
+				triagePreferences: before.triagePreferences,
 				customChecks: [disabled],
 			});
 			assert.equal(after.customChecks[0].lifecycle, "disabled");
@@ -451,6 +470,7 @@ describe("guarded Custom Check configuration mutations", () => {
 						expectedConfigDigest: before.projectConfigDigest,
 						expectedNextConfigDigest: preview.projectConfigDigest,
 						userStandards: USER_STANDARDS,
+						triagePreferences: before.triagePreferences,
 						customChecks: [disabled],
 					}),
 				(error) => error.code === "conflict" && /changed before/.test(error.message),

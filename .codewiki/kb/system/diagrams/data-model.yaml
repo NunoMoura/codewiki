@@ -45,6 +45,14 @@ entities:
     label: Closed versioned Check Type
     storage: CodeWiki-owned source/package contract
     truth: true
+  - id: user_standard
+    label: Immutable source-backed User Standard and exact passages
+    storage: protected Git-backed .codewiki/config.json
+    truth: true
+  - id: triage_preference_binding
+    label: Protected Standard-derived triage dimension binding
+    storage: protected Git-backed .codewiki/config.json
+    truth: true
   - id: custom_check
     label: Repository-bound Custom Check definition plus guarded lifecycle
     storage: protected Git-backed .codewiki/config.json
@@ -168,6 +176,15 @@ relationships:
   - from: check_type
     to: custom_check
     label: constrains protocol applicability Evidence and route capability
+  - from: user_standard
+    to: custom_check
+    label: exact accepted source and passage requirement
+  - from: user_standard
+    to: triage_preference_binding
+    label: exact accepted source passage and distilled closed dimensions
+  - from: triage_preference_binding
+    to: backlog_triage
+    label: fixed Runtime-owned lexicographic comparator after safety tiers
   - from: custom_check
     to: exit_policy
     label: exact protected-base definition and config digest activate one required atomic binding

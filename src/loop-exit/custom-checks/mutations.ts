@@ -1,5 +1,10 @@
 import type {AuthorityBinding} from "../../change-trace/contracts.ts";
 import {
+	createTriagePreferenceBinding,
+	normalizeTriagePreferenceBindings,
+	type TriagePreferenceBinding,
+} from "../../changes/triage/policy.ts";
+import {
 	assertSha256Digest,
 	canonicalJsonDigest,
 	type Sha256Digest,
@@ -50,7 +55,7 @@ import {
 
 export const CUSTOM_CHECK_MUTATION_PROTOCOL = Object.freeze({
 	id: "codewiki.custom-check-mutation",
-	version: "4.0.0",
+	version: "5.0.0",
 	maxIdempotencyKeyLength: 128,
 	maxCompletedCommands: 64,
 	maxBundleCustomChecks: 16,
@@ -126,12 +131,14 @@ export interface CustomCheckMutationStore {
 	readonly preview: (input: {
 		readonly current: CustomCheckConfigState;
 		readonly userStandards: readonly UserStandardDefinition[];
+		readonly triagePreferences: readonly TriagePreferenceBinding[];
 		readonly customChecks: readonly CustomCheckDefinition[];
 	}) => Promise<CustomCheckConfigState>;
 	readonly compareAndSwap: (input: {
 		readonly expectedConfigDigest: Sha256Digest;
 		readonly expectedNextConfigDigest: Sha256Digest;
 		readonly userStandards: readonly UserStandardDefinition[];
+		readonly triagePreferences: readonly TriagePreferenceBinding[];
 		readonly customChecks: readonly CustomCheckDefinition[];
 	}) => Promise<CustomCheckConfigState>;
 }
@@ -525,12 +532,14 @@ async function executeMutation(input: {
 		command,
 		definitions: before.customChecks,
 		userStandards: before.userStandards,
+		triagePreferences: before.triagePreferences,
 		capabilitySnapshot,
 	});
 	const projected = normalizedState(
 		await options.store.preview({
 			current: before,
 			userStandards: mutation.userStandards,
+			triagePreferences: mutation.triagePreferences,
 			customChecks: mutation.customChecks,
 		}),
 	);
@@ -576,6 +585,7 @@ async function executeMutation(input: {
 			expectedConfigDigest: before.projectConfigDigest,
 			expectedNextConfigDigest: projected.projectConfigDigest,
 			userStandards: mutation.userStandards,
+			triagePreferences: mutation.triagePreferences,
 			customChecks: mutation.customChecks,
 		}),
 	);
@@ -645,6 +655,7 @@ async function activationCapabilityContext(input: {
 
 interface AppliedCustomCheckMutation {
 	readonly userStandards: readonly UserStandardDefinition[];
+	readonly triagePreferences: readonly TriagePreferenceBinding[];
 	readonly customChecks: readonly CustomCheckDefinition[];
 	readonly customCheckConfigDigest: Sha256Digest;
 	readonly standardChanges: readonly CustomCheckMutationStandardDefinitionChange[];
@@ -655,11 +666,17 @@ function applyMutation(input: {
 	readonly command: CustomCheckMutationCommand;
 	readonly definitions: readonly CustomCheckDefinition[];
 	readonly userStandards: readonly UserStandardDefinition[];
+	readonly triagePreferences: readonly TriagePreferenceBinding[];
 	readonly capabilitySnapshot: CustomCodeCapabilitySnapshot | null;
 }): AppliedCustomCheckMutation {
-	const {command, definitions, userStandards} = input;
+	const {command, definitions, userStandards, triagePreferences} = input;
 	if (command.action === "create_distilled_bundle") {
-		return applyDistilledBundleMutation({command, definitions, userStandards});
+		return applyDistilledBundleMutation({
+			command,
+			definitions,
+			userStandards,
+			triagePreferences,
+		});
 	}
 	let definitionBefore: CustomCheckDefinition | null = null;
 	let definitionAfter: CustomCheckDefinition;
@@ -707,6 +724,7 @@ function applyMutation(input: {
 	);
 	return Object.freeze({
 		userStandards,
+		triagePreferences,
 		customChecks,
 		customCheckConfigDigest: customCheckConfigurationDigest({
 			userStandards,
@@ -723,8 +741,9 @@ function applyDistilledBundleMutation(input: {
 	readonly command: CreateDistilledCustomCheckBundleCommand;
 	readonly definitions: readonly CustomCheckDefinition[];
 	readonly userStandards: readonly UserStandardDefinition[];
+	readonly triagePreferences: readonly TriagePreferenceBinding[];
 }): AppliedCustomCheckMutation {
-	const {command, definitions, userStandards} = input;
+	const {command, definitions, userStandards, triagePreferences} = input;
 	const bundle = materializeUserStandardDistillationBundle(
 		command.distillationReceipt,
 	);
@@ -742,6 +761,23 @@ function applyDistilledBundleMutation(input: {
 		...userStandards,
 		bundle.userStandard,
 	]);
+	const changedTriagePreferences = bundle.clauses.flatMap((clause) =>
+		clause.disposition === "triage_preference"
+			? [
+					createTriagePreferenceBinding({
+						distillationReceiptId: bundle.distillationReceiptId,
+						clauseId: clause.clauseId,
+						userStandard: bundle.userStandard,
+						passageId: clause.passageId,
+						dimensions: clause.dimensions,
+					}),
+				]
+			: [],
+	);
+	const nextTriagePreferences = normalizeTriagePreferenceBindings(
+		[...triagePreferences, ...changedTriagePreferences],
+		nextUserStandards,
+	);
 	const selected = new Set(command.selectedProposalIds);
 	const changedCustomChecks: CustomCheckDefinition[] = [];
 	for (const proposal of bundle.customCheckProposals) {
@@ -778,6 +814,7 @@ function applyDistilledBundleMutation(input: {
 	);
 	return Object.freeze({
 		userStandards: nextUserStandards,
+		triagePreferences: nextTriagePreferences,
 		customChecks,
 		customCheckConfigDigest: customCheckConfigurationDigest({
 			userStandards: nextUserStandards,
@@ -923,6 +960,7 @@ function normalizedState(value: CustomCheckConfigState): CustomCheckConfigState 
 	const normalized = createCustomCheckConfigState({
 		projectConfigDigest: value.projectConfigDigest,
 		userStandards: value.userStandards,
+		triagePreferences: value.triagePreferences,
 		customChecks: value.customChecks,
 	});
 	if (normalized.customCheckConfigDigest !== value.customCheckConfigDigest) {

@@ -265,6 +265,9 @@ edges:
   - from: change_intake
     to: backlog_triage
     label: source provenance and classification
+  - from: custom_checks
+    to: backlog_triage
+    label: protected Standard-derived fixed ordering criteria
   - from: query_api
     to: backlog_triage
     label: bounded filters and explainable ordering

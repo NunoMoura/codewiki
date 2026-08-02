@@ -9,8 +9,17 @@ import {
 import {normalizeChangeDefectProfile} from "../../src/changes/defect-profile.ts";
 import {createUserSuggestionMaterial} from "../../src/changes/intake/producers.ts";
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../src/changes/triage/contracts.ts";
-import {buildBacklogTriageProjection} from "../../src/changes/triage/projection.ts";
+import {compareTriageCandidates} from "../../src/changes/triage/ordering.ts";
+import {
+	createBacklogTriagePolicy,
+	createTriagePreferenceBinding,
+} from "../../src/changes/triage/policy.ts";
+import {buildBacklogTriageProjection as buildBoundBacklogTriageProjection} from "../../src/changes/triage/projection.ts";
 import {queryBacklogTriage} from "../../src/changes/triage/query.ts";
+import {
+	createUserStandardDefinition,
+	createUserStandardSourceSnapshot,
+} from "../../src/loop-exit/custom-checks/user-standards.ts";
 import {
 	canonicalJson,
 	canonicalJsonDigest,
@@ -22,6 +31,45 @@ import {
 	reduceBatch,
 } from "../helpers/change-trace-replay-v1.mjs";
 import {gitObject} from "../helpers/change-trace-v1.mjs";
+
+function buildBacklogTriageProjection(input) {
+	return buildBoundBacklogTriageProjection({
+		...input,
+		policy:
+			input.policy ??
+			createBacklogTriagePolicy({
+				projectConfigDigest: input.workState.observedBase.configDigest,
+				userStandards: [],
+				bindings: [],
+			}),
+	});
+}
+
+function protectedPreferencePolicy(state) {
+	const passage = "Higher-severity broad-exposure defects receive earlier Decision attention.";
+	const standard = createUserStandardDefinition({
+		name: "Decision attention policy",
+		source: createUserStandardSourceSnapshot({
+			kind: "inline",
+			mediaType: "text/markdown",
+			content: passage,
+			observedAt: "2026-09-30T09:00:00.000Z",
+		}),
+		passages: [{text: passage}],
+	});
+	const binding = createTriagePreferenceBinding({
+		distillationReceiptId: `user-standard-distillation-receipt:${"a".repeat(64)}`,
+		clauseId: `user-standard-clause:${"b".repeat(64)}`,
+		userStandard: standard,
+		passageId: standard.passages[0].passageId,
+		dimensions: ["severity", "exposure", "age_fairness"],
+	});
+	return createBacklogTriagePolicy({
+		projectConfigDigest: state.observedBase.configDigest,
+		userStandards: [standard],
+		bindings: [binding],
+	});
+}
 
 function inlineMaterial(material) {
 	const digest = canonicalJsonDigest(material);
@@ -239,6 +287,7 @@ function fixture() {
 			dimensions: {
 				urgency: supported("moderate", feature.revisionId, "feature-urgency"),
 				expectedImpact: supported("high", feature.revisionId, "feature-impact"),
+				strategicValue: supported("high", feature.revisionId, "feature-strategic"),
 				effort: supported("tiny", feature.revisionId, "feature-effort"),
 				riskOfInaction: supported("moderate", feature.revisionId, "feature-inaction"),
 			},
@@ -286,6 +335,8 @@ describe("snapshot-bound Backlog Triage Projection", () => {
 		assert.equal(security.dimensions.protectedEscalation.value, true);
 		assert.equal(security.dimensions.protectedEscalation.basis.authority, "verified");
 		assert.equal(security.declaredChangeRisk, "critical");
+		assert.equal(security.defect.exposure, "broad");
+		assert.equal(security.dimensions.strategicValue.value, "unknown");
 		assert.equal(security.dimensions.implementationRisk.value, "unknown");
 		assert.equal("overallScore" in security, false);
 		assert.equal("priority" in security, false);
@@ -297,6 +348,7 @@ describe("snapshot-bound Backlog Triage Projection", () => {
 		assert.equal(feature.defaultOrdering.tier, 3);
 		assert.equal(feature.fairness.band, "established");
 		assert.equal(feature.dimensions.expectedImpact.basis.authority, "asserted");
+		assert.equal(feature.dimensions.strategicValue.value, "high");
 		assert.deepEqual(feature.sourceKinds, ["user_suggestion"]);
 
 		const cleanup = projection.candidates[2];
@@ -317,6 +369,73 @@ describe("snapshot-bound Backlog Triage Projection", () => {
 			estimates,
 		});
 		assert.equal(canonicalJson(replay), canonicalJson(projection));
+	});
+
+	it("applies protected source-bound preferences through fixed lexicographic criteria", () => {
+		const {state, graph, estimates} = fixture();
+		const policy = protectedPreferencePolicy(state);
+		const projection = buildBacklogTriageProjection({
+			workState: state,
+			graph,
+			policy,
+			asOf: "2026-09-30T10:00:00.000Z",
+			estimates,
+		});
+		assert.equal(projection.binding.triagePolicyDigest, policy.policyDigest);
+		assert.equal("rank" in policy, false);
+		assert.equal("score" in policy, false);
+		assert.deepEqual(
+			policy.criteria.map(({dimension, direction}) => ({dimension, direction})),
+			[
+				{dimension: "severity", direction: "descending"},
+				{dimension: "exposure", direction: "descending"},
+				{dimension: "age_fairness", direction: "descending"},
+			],
+		);
+
+		const template = projection.candidates.find(
+			(candidate) => candidate.changeId === "CHG-feature",
+		);
+		const defect = projection.candidates.find(
+			(candidate) => candidate.changeId === "CHG-security",
+		).defect;
+		const lowerSeverity = structuredClone(template);
+		lowerSeverity.changeId = "CHG-a-lower-severity";
+		lowerSeverity.defect = {...defect, severity: "low"};
+		const higherSeverity = structuredClone(template);
+		higherSeverity.changeId = "CHG-z-higher-severity";
+		higherSeverity.defect = {...defect, severity: "high"};
+		assert.ok(compareTriageCandidates(lowerSeverity, higherSeverity) < 0);
+		assert.ok(
+			compareTriageCandidates(
+				higherSeverity,
+				lowerSeverity,
+				"default",
+				policy,
+			) < 0,
+		);
+
+		const result = queryBacklogTriage(projection, {
+			protocol: BACKLOG_TRIAGE_QUERY_PROTOCOL,
+			projectionDigest: projection.projectionDigest,
+			orderBy: "default",
+			limit: 3,
+		});
+		assert.equal(result.triagePolicyDigest, policy.policyDigest);
+		assert.match(
+			result.items[0].orderingReasons[1].code,
+			/^standard_preference_severity_/,
+		);
+		assert.ok(
+			result.items[0].orderingReasons[1].refs.includes(
+				policy.bindings[0].passageId,
+			),
+		);
+		assert.ok(
+			result.items[0].orderingReasons[1].refs.includes(
+				result.items[0].candidate.defect.profileId,
+			),
+		);
 	});
 
 	it("keeps absence unknown and excludes Changes already routed into execution", () => {
@@ -424,6 +543,34 @@ describe("snapshot-bound Backlog Triage Projection", () => {
 					estimates: [forgedAuthority],
 				}),
 			/lacks approved Evidence in the bound graph/,
+		);
+		const policy = protectedPreferencePolicy(state);
+		const tamperedPolicy = structuredClone(policy);
+		tamperedPolicy.criteria[0].direction = "ascending";
+		assert.throws(
+			() =>
+				buildBacklogTriageProjection({
+					workState: state,
+					graph,
+					policy: tamperedPolicy,
+					asOf: "2026-09-30T10:00:00.000Z",
+				}),
+			/criteria are invalid/,
+		);
+		const wrongConfigPolicy = createBacklogTriagePolicy({
+			projectConfigDigest: `sha256:${"e".repeat(64)}`,
+			userStandards: [],
+			bindings: [],
+		});
+		assert.throws(
+			() =>
+				buildBacklogTriageProjection({
+					workState: state,
+					graph,
+					policy: wrongConfigPolicy,
+					asOf: "2026-09-30T10:00:00.000Z",
+				}),
+			/does not match the WorkState config digest/,
 		);
 		const tamperedGraph = structuredClone(graph);
 		tamperedGraph.edges[0].type = "tampered";

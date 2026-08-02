@@ -98,6 +98,8 @@ export function configFileToPartialWikiConfig(
 		hosts: objectRecord(record.hosts),
 		quality: objectRecord(record.quality),
 		userStandards: record.userStandards as PartialWikiConfig["userStandards"],
+		triagePreferences:
+			record.triagePreferences as PartialWikiConfig["triagePreferences"],
 		customChecks: record.customChecks as PartialWikiConfig["customChecks"],
 	};
 }
@@ -112,6 +114,7 @@ function validateConfigFileKeys(value: unknown): Record<string, unknown> {
 		"hosts",
 		"quality",
 		"userStandards",
+		"triagePreferences",
 		"customChecks",
 		"project_name",
 		"codewiki",

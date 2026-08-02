@@ -27,6 +27,7 @@ import {
 	compareTriageCandidates,
 	orderingReasonsFor,
 } from "./ordering.ts";
+import {assertBacklogTriagePolicy} from "./policy.ts";
 
 const REQUEST_FIELDS = ["protocol", "projectionDigest", "filters", "orderBy", "limit"] as const;
 const FILTER_FIELDS = [
@@ -105,7 +106,14 @@ export function queryBacklogTriage(
 	const limit = normalizedRequest.limit ?? 50;
 	const matched = projection.candidates
 		.filter((candidate) => matchesFilters(candidate, normalizedRequest.filters))
-		.sort((left, right) => compareTriageCandidates(left, right, orderBy));
+		.sort((...candidates) =>
+			compareTriageCandidates(
+				candidates[0],
+				candidates[1],
+				orderBy,
+				projection.policy,
+			),
+		);
 	const returned = matched.slice(0, limit);
 	const queryDigest = canonicalJsonDigest(normalizedRequest);
 	const body = {
@@ -114,12 +122,17 @@ export function queryBacklogTriage(
 		workStateDigest: projection.binding.workStateDigest,
 		graphSnapshotDigest: projection.binding.graphSnapshotDigest,
 		graphContentDigest: projection.binding.graphContentDigest,
+		triagePolicyDigest: projection.binding.triagePolicyDigest,
 		orderBy,
 		queryDigest,
 		items: returned.map((candidate, index) => ({
 			rank: index + 1,
 			candidate,
-			orderingReasons: orderingReasonsFor(candidate, orderBy),
+			orderingReasons: orderingReasonsFor(
+				candidate,
+				orderBy,
+				projection.policy,
+			),
 		})),
 		coverage: {
 			projectedCandidateCount: projection.candidates.length,
@@ -264,6 +277,34 @@ function assertValidProjection(projection: BacklogTriageProjection): void {
 		throw new Error("Backlog triage projection must be an object.");
 	}
 	assertExactKeys(
+		projection,
+		[
+			"protocol",
+			"asOf",
+			"binding",
+			"policy",
+			"candidates",
+			"coverage",
+			"projectionDigest",
+		],
+		"Backlog triage projection",
+	);
+	assertExactKeys(
+		projection.binding,
+		[
+			"remoteStateHead",
+			"sourceHead",
+			"knowledgeDigest",
+			"configDigest",
+			"policyDigest",
+			"triagePolicyDigest",
+			"workStateDigest",
+			"graphSnapshotDigest",
+			"graphContentDigest",
+		],
+		"Backlog triage projection binding",
+	);
+	assertExactKeys(
 		projection.protocol,
 		["id", "version", "maxCandidates", "freshDays", "staleDays"],
 		"Backlog triage projection protocol",
@@ -277,6 +318,13 @@ function assertValidProjection(projection: BacklogTriageProjection): void {
 		projection.protocol.staleDays !== BACKLOG_TRIAGE_PROJECTION_PROTOCOL.staleDays
 	) {
 		throw new Error("Backlog triage projection protocol is unsupported.");
+	}
+	assertBacklogTriagePolicy(projection.policy);
+	if (
+		projection.binding.triagePolicyDigest !== projection.policy.policyDigest ||
+		projection.binding.configDigest !== projection.policy.projectConfigDigest
+	) {
+		throw new Error("Backlog triage projection policy binding is invalid.");
 	}
 	const {projectionDigest, ...body} = projection;
 	assertSha256Digest(projectionDigest, "Backlog triage projectionDigest");

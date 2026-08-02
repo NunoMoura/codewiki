@@ -36,6 +36,10 @@ import {
 } from "./contracts.ts";
 import {normalizeTriageEstimates} from "./estimates.ts";
 import {
+	assertBacklogTriagePolicy,
+	type BacklogTriagePolicy,
+} from "./policy.ts";
+import {
 	compareTriageCandidates,
 	projectDefaultTriageOrdering,
 	projectTriageFairness,
@@ -52,6 +56,7 @@ const SENSITIVE_SECURITY_CLASSIFICATIONS = new Set([
 export interface BuildBacklogTriageProjectionInput {
 	readonly workState: ProjectWorkState;
 	readonly graph: AlignmentGraphSnapshot;
+	readonly policy: BacklogTriagePolicy;
 	readonly asOf: string;
 	readonly estimates?: readonly TriageEstimateInput[];
 }
@@ -81,6 +86,7 @@ type CandidateDraft = Omit<
 interface PreparedTriageProjection {
 	readonly asOf: string;
 	readonly binding: BacklogTriageProjectionBinding;
+	readonly policy: BacklogTriagePolicy;
 	readonly contexts: readonly CandidateContext[];
 	readonly estimates: readonly NormalizedTriageEstimate[];
 	readonly estimatesByRevision: ReadonlyMap<string, NormalizedTriageEstimate>;
@@ -99,6 +105,7 @@ export function buildBacklogTriageProjection(
 		protocol: BACKLOG_TRIAGE_PROJECTION_PROTOCOL,
 		asOf: prepared.asOf,
 		binding: prepared.binding,
+		policy: prepared.policy,
 		candidates: projected,
 		coverage: projectionCoverage(input, prepared, projected, candidates.length),
 	};
@@ -112,7 +119,12 @@ function prepareTriageProjection(
 	input: BuildBacklogTriageProjectionInput,
 ): PreparedTriageProjection {
 	const asOf = canonicalIsoTimestamp(input.asOf, "Backlog triage asOf");
-	const binding = assertProjectionBinding(input.workState, input.graph);
+	assertBacklogTriagePolicy(input.policy);
+	const binding = assertProjectionBinding(
+		input.workState,
+		input.graph,
+		input.policy,
+	);
 	const contexts = input.workState.changes.flatMap((change) => {
 		const context = candidateContext(change);
 		return context ? [context] : [];
@@ -123,6 +135,7 @@ function prepareTriageProjection(
 	return {
 		asOf,
 		binding,
+		policy: input.policy,
 		contexts,
 		estimates,
 		estimatesByRevision: new Map(
@@ -170,7 +183,14 @@ function projectTriageCandidates(
 			candidateDigest: canonicalJsonDigest(withOrdering),
 		});
 	});
-	return candidates.sort((left, right) => compareTriageCandidates(left, right));
+	return candidates.sort((...candidatesToCompare) =>
+		compareTriageCandidates(
+			candidatesToCompare[0],
+			candidatesToCompare[1],
+			"default",
+			prepared.policy,
+		),
+	);
 }
 
 function projectionCoverage(
@@ -440,6 +460,10 @@ function projectDimensions(input: {
 	return {
 		urgency: supportedOrUnknown(estimate?.urgency, "urgency"),
 		expectedImpact: supportedOrUnknown(estimate?.expectedImpact, "expected impact"),
+		strategicValue: supportedOrUnknown(
+			estimate?.strategicValue,
+			"strategic value",
+		),
 		effort: supportedOrUnknown(estimate?.effort, "effort"),
 		riskOfInaction: supportedOrUnknown(estimate?.riskOfInaction, "risk of inaction"),
 		implementationRisk: supportedOrUnknown(
@@ -723,6 +747,7 @@ function defectSummary(profile: ChangeDefectProfile): TriageDefectSummary {
 		profileId: canonicalJsonDigest(profile),
 		category: profile.category,
 		severity: profile.severity,
+		exposure: profile.exposure,
 		confidence: profile.confidence,
 		regressionStatus: profile.regressionStatus,
 		securityClassifications: profile.security
@@ -913,6 +938,7 @@ function assertEstimateTargets(
 function assertProjectionBinding(
 	state: ProjectWorkState,
 	graph: AlignmentGraphSnapshot,
+	policy: BacklogTriagePolicy,
 ): BacklogTriageProjectionBinding {
 	const {workStateDigest, ...stateBody} = state;
 	if (canonicalJsonDigest(stateBody) !== workStateDigest) {
@@ -935,12 +961,16 @@ function assertProjectionBinding(
 	if (!sameText(graph.projectedRecordIds, state.acceptedOperationIds)) {
 		throw new Error("Backlog triage Alignment Graph record coverage does not match WorkState.");
 	}
+	if (policy.projectConfigDigest !== state.observedBase.configDigest) {
+		throw new Error("Backlog triage policy does not match the WorkState config digest.");
+	}
 	return {
 		remoteStateHead: state.stateHead,
 		sourceHead: state.observedBase.sourceHead,
 		knowledgeDigest: state.observedBase.knowledgeDigest,
 		configDigest: state.observedBase.configDigest,
 		policyDigest: state.observedBase.policyDigest,
+		triagePolicyDigest: policy.policyDigest,
 		workStateDigest: state.workStateDigest,
 		graphSnapshotDigest: graph.graphSnapshotDigest,
 		graphContentDigest: graph.graphContentDigest,
@@ -967,18 +997,11 @@ function freshnessStatus(ageDays: number): TriageFreshnessProjection["status"] {
 }
 
 function authorityRank(authority: TriageDimensionBasis["authority"]): number {
-	switch (authority) {
-		case "approved":
-			return 4;
-		case "verified":
-			return 3;
-		case "observed":
-			return 2;
-		case "asserted":
-			return 1;
-		default:
-			return 0;
-	}
+	if (authority === "approved") return 4;
+	if (authority === "verified") return 3;
+	if (authority === "observed") return 2;
+	if (authority === "asserted") return 1;
+	return 0;
 }
 
 function sortedUnique<T extends string>(values: readonly T[]): T[] {

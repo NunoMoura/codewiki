@@ -29,6 +29,7 @@ const ESTIMATE_FIELDS = [
 const DIMENSION_FIELDS = [
 	"urgency",
 	"expectedImpact",
+	"strategicValue",
 	"effort",
 	"riskOfInaction",
 	"implementationRisk",
@@ -154,6 +155,7 @@ function normalizeDimensionValue(name: string, value: unknown, label: string): u
 	if (
 		name === "urgency" ||
 		name === "expectedImpact" ||
+		name === "strategicValue" ||
 		name === "riskOfInaction" ||
 		name === "implementationRisk"
 	) {

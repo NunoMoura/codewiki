@@ -1,5 +1,9 @@
 import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
 import {
+	normalizeTriagePreferenceBindings,
+	type TriagePreferenceBinding,
+} from "../changes/triage/policy.ts";
+import {
 	normalizeCustomCheckDefinitions,
 	type CustomCheckDefinition,
 } from "../loop-exit/custom-checks/contracts.ts";
@@ -116,6 +120,7 @@ export interface WikiConfig {
 	hosts: WikiHostConfig;
 	quality: WikiQualityConfig;
 	userStandards: UserStandardDefinition[];
+	triagePreferences: TriagePreferenceBinding[];
 	customChecks: CustomCheckDefinition[];
 }
 
@@ -137,6 +142,7 @@ export type PartialWikiConfig = {
 	hosts?: PartialHostConfig;
 	quality?: PartialQualityConfig;
 	userStandards?: UserStandardDefinition[];
+	triagePreferences?: TriagePreferenceBinding[];
 	customChecks?: CustomCheckDefinition[];
 };
 
@@ -201,6 +207,7 @@ export const DEFAULT_WIKI_CONFIG: WikiConfig = {
 		mcp: { enabled: false },
 	},
 	userStandards: [],
+	triagePreferences: [],
 	customChecks: [],
 	quality: {
 		judge: {
@@ -241,13 +248,14 @@ export function runWikiConfig(
 	if (
 		input.patch &&
 		(Object.hasOwn(input.patch, "userStandards") ||
+			Object.hasOwn(input.patch, "triagePreferences") ||
 			Object.hasOwn(input.patch, "customChecks"))
 	) {
 		throw createCodewikiConfigError({
 			path: "userStandards",
 			code: "invalid_value",
 			message:
-				"wiki_config patch cannot change userStandards or customChecks; use guarded Standards and Checks policy mutation.",
+				"wiki_config patch cannot change userStandards, triagePreferences, or customChecks; use guarded Standards and Checks policy mutation.",
 		});
 	}
 	if (input.current !== undefined)
@@ -301,6 +309,10 @@ export function resolveWikiConfig(input: PartialWikiConfig = {}): WikiConfig {
 			},
 		},
 		userStandards,
+		triagePreferences: [...normalizeTriagePreferenceBindings(
+			input.triagePreferences ?? [],
+			userStandards,
+		)],
 		customChecks: normalizeCustomCheckDefinitions(
 			input.customChecks ?? [],
 			userStandards,
@@ -391,6 +403,9 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 	validateHosts(config.hosts);
 	validateQuality(config.quality);
 	const userStandards = normalizeUserStandardDefinitions(config.userStandards);
+	const triagePreferences = [
+		...normalizeTriagePreferenceBindings(config.triagePreferences, userStandards),
+	];
 	const customChecks = normalizeCustomCheckDefinitions(
 		config.customChecks,
 		userStandards,
@@ -415,6 +430,7 @@ export function validateWikiConfig(config: WikiConfig): WikiConfig {
 			mcp: { ...config.hosts.mcp },
 		},
 		userStandards,
+		triagePreferences,
 		customChecks,
 		quality: {
 			judge: {
@@ -467,6 +483,8 @@ function mergeWikiConfigPatch(
 		userStandards: patch.userStandards
 			? normalizeUserStandardDefinitions(patch.userStandards)
 			: normalizeUserStandardDefinitions(current.userStandards),
+		triagePreferences:
+			patch.triagePreferences ?? current.triagePreferences,
 		customChecks: patch.customChecks ?? current.customChecks,
 		quality: {
 			judge: {
@@ -743,6 +761,7 @@ function validatePartialWikiConfigKeys(value: unknown, path: string): void {
 		"hosts",
 		"quality",
 		"userStandards",
+		"triagePreferences",
 		"customChecks",
 	]);
 	if (config.preview !== undefined) {
@@ -751,6 +770,12 @@ function validatePartialWikiConfigKeys(value: unknown, path: string): void {
 	const userStandards = normalizeUserStandardDefinitions(
 		(config.userStandards as UserStandardDefinition[] | undefined) ?? [],
 	);
+	if (config.triagePreferences !== undefined) {
+		normalizeTriagePreferenceBindings(
+			config.triagePreferences as TriagePreferenceBinding[],
+			userStandards,
+		);
+	}
 	if (config.customChecks !== undefined) {
 		normalizeCustomCheckDefinitions(
 			config.customChecks as CustomCheckDefinition[],

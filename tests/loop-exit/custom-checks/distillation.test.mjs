@@ -65,7 +65,7 @@ async function requestFixture() {
 function completedOutput(request) {
 	return {
 		protocolId: "codewiki.user-standard-distillation",
-		protocolVersion: "1.0.0",
+		protocolVersion: "2.0.0",
 		requestDigest: request.requestDigest,
 		clauses: [
 			{
@@ -150,7 +150,20 @@ describe("User Standard distillation", () => {
 		});
 		const bundle = materializeUserStandardDistillationBundle(receipt);
 
-		assert.equal(request.protocolVersion, "1.0.0");
+		assert.equal(request.protocolVersion, "2.0.0");
+		assert.deepEqual(request.triageDimensions, [
+			"severity",
+			"exposure",
+			"regression",
+			"urgency",
+			"risk_of_inaction",
+			"impact",
+			"strategic_value",
+			"effort",
+			"confidence",
+			"freshness",
+			"age_fairness",
+		]);
 		assert.equal(request.checkTypes.length, 10);
 		assert.equal(calls.length, 1);
 		assert.equal(Object.hasOwn(calls[0], "credentials"), false);
@@ -236,6 +249,14 @@ describe("User Standard distillation", () => {
 		assert.throws(
 			() => assertUserStandardDistillationReceipt({...valid, recordedAt: "2026-08-04T10:00:00.000Z"}),
 			/identity is invalid/,
+		);
+		assert.throws(
+			() =>
+				assertUserStandardDistillationRequest({
+					...request,
+					triageDimensions: [...request.triageDimensions, "priority"],
+				}),
+			/triage dimensions are invalid|request identity is invalid/,
 		);
 		assert.throws(
 			() => assertUserStandardDistillationRequest({...request, traceId: "forbidden"}),

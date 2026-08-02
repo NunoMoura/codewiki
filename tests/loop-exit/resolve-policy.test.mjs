@@ -46,6 +46,7 @@ function protectedConfig(customChecks) {
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: `sha256:${"e".repeat(64)}`,
 		userStandards: USER_STANDARDS,
+		triagePreferences: [],
 		customChecks,
 	});
 }

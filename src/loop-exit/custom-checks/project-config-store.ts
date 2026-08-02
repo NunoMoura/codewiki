@@ -1,5 +1,6 @@
 import {mkdir, open, rm} from "node:fs/promises";
 import {dirname, join} from "node:path";
+import type {TriagePreferenceBinding} from "../../changes/triage/policy.ts";
 import {
 	createGitCommandRunner,
 	type GitCommandRunner,
@@ -49,6 +50,7 @@ export function createWikiConfigCustomCheckStore(
 				nextConfig({
 					current,
 					userStandards: input.userStandards,
+					triagePreferences: input.triagePreferences,
 					customChecks: input.customChecks,
 				}),
 			);
@@ -64,6 +66,7 @@ export function createWikiConfigCustomCheckStore(
 				const next = nextConfig({
 					current,
 					userStandards: input.userStandards,
+					triagePreferences: input.triagePreferences,
 					customChecks: input.customChecks,
 				});
 				if (wikiConfigDigest(next) !== input.expectedNextConfigDigest) {
@@ -119,6 +122,7 @@ export async function loadProtectedCustomCheckConfigSnapshot(input: {
 		protectedSourceHead: input.protectedSourceHead,
 		projectConfigDigest: wikiConfigDigest(config),
 		userStandards: config.userStandards,
+		triagePreferences: config.triagePreferences,
 		customChecks: config.customChecks,
 	});
 }
@@ -126,11 +130,13 @@ export async function loadProtectedCustomCheckConfigSnapshot(input: {
 function nextConfig(input: {
 	readonly current: WikiConfig;
 	readonly userStandards: readonly UserStandardDefinition[];
+	readonly triagePreferences: readonly TriagePreferenceBinding[];
 	readonly customChecks: readonly CustomCheckDefinition[];
 }): WikiConfig {
 	return resolveWikiConfig({
 		...input.current,
 		userStandards: [...input.userStandards],
+		triagePreferences: [...input.triagePreferences],
 		customChecks: [...input.customChecks],
 	});
 }
@@ -139,6 +145,7 @@ function configState(config: WikiConfig): CustomCheckConfigState {
 	return createCustomCheckConfigState({
 		projectConfigDigest: wikiConfigDigest(config),
 		userStandards: config.userStandards,
+		triagePreferences: config.triagePreferences,
 		customChecks: config.customChecks,
 	});
 }

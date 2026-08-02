@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added protected Standard-derived Backlog Triage policy through `codewiki.backlog-triage-policy@1.0.0`, Projection/Query Protocols `2.0.0`, User Standard Distillation Protocol `2.0.0`, protected configuration schema `3.0.0`, and guarded Mutation/Review/Acceptance Protocols `5.0.0`. Accepted `triage_preference` clauses now persist immutable distillation/Standard/source/passage-bound dimensions in protected config. Runtime derives fixed lexicographic precedence and comparator directions after safety tiers, merges repeated dimension refs without weight, preserves unknown values, and emits exact source-bearing ordering reasons without model-authored rank, score, queue state, Check outcome, or Planning priority.",
+					},
+					{
+						kind: "Update",
 						text: "Added approved-template Custom Code Checks through Custom Check schema `4.0.0`, Check Catalog `6.0.0`, and `codewiki.custom-code-template@1.0.0`. The only initial template is `resource_usage_limit`, with closed model-token, cost, latency, changed-file, and trace-byte metrics over exact Decision, Planning, and Implementation scopes. Runtime derives every template/configuration field, requires an exact `codewiki.custom-code-capability-snapshot@1.0.0` before activation, emits candidate-bound complete-window `resource_usage` Evidence under Evidence schema `1.2.0`, executes independent quantitative reduction, and exposes matching fail-closed preflight, meter, cancellation, and route-admission guards. Mutation, Policy Review, and Protected Acceptance Protocols `4.0.0` bind exact source proposal selection, separately approved typed template parameters, activation capability snapshot digest, protected configuration, and Standard/definition transitions. Models and users cannot supply executable code or verdict logic; production meter collectors and full Loop scheduling remain pending.",
 					},
 					{

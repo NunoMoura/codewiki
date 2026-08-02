@@ -1,6 +1,10 @@
 import type {WikiModelThinking} from "../../project/model-routing.ts";
 import type {SemanticLoop} from "../../semantic-loop.ts";
 import {
+	TRIAGE_PREFERENCE_DIMENSIONS,
+	type TriagePreferenceDimension,
+} from "../../changes/triage/policy.ts";
+import {
 	canonicalJson,
 	canonicalJsonDigest,
 	type Sha256Digest,
@@ -33,7 +37,7 @@ import {
 
 export const USER_STANDARD_DISTILLATION_PROTOCOL = Object.freeze({
 	id: "codewiki.user-standard-distillation",
-	version: "1.0.0",
+	version: "2.0.0",
 	maxRequestBytes: 262_144,
 	maxResponseBytes: 131_072,
 	maxClauses: 32,
@@ -76,19 +80,7 @@ const UNRESOLVED_REASONS = [
 	"retracted",
 	"superseded",
 ] as const;
-const TRIAGE_DIMENSIONS = [
-	"severity",
-	"likelihood",
-	"exposure",
-	"risk",
-	"priority",
-	"effort",
-	"urgency",
-	"strategic_value",
-	"confidence",
-	"freshness",
-	"age_fairness",
-] as const;
+export const USER_STANDARD_TRIAGE_DIMENSIONS = TRIAGE_PREFERENCE_DIMENSIONS;
 const THRESHOLD_OPERATORS = ["lt", "lte", "gt", "gte", "eq"] as const;
 const THINKING_VALUES: readonly WikiModelThinking[] = [
 	"off",
@@ -109,7 +101,7 @@ const OPERATIONAL_REASONS = [
 
 export type UserStandardClauseDisposition = (typeof DISPOSITIONS)[number];
 export type UserStandardUnresolvedReason = (typeof UNRESOLVED_REASONS)[number];
-export type UserStandardTriageDimension = (typeof TRIAGE_DIMENSIONS)[number];
+export type UserStandardTriageDimension = TriagePreferenceDimension;
 export type UserStandardDistillationOperationalReason =
 	(typeof OPERATIONAL_REASONS)[number];
 
@@ -141,6 +133,7 @@ export interface UserStandardDistillationRequest {
 	>;
 	readonly defaultChecks: readonly UserStandardDefaultCheckDescriptor[];
 	readonly checkTypes: readonly CustomCheckTypeDefinition[];
+	readonly triageDimensions: readonly UserStandardTriageDimension[];
 	readonly route: UserStandardDistillationRoute;
 	readonly limits: {
 		readonly maxClauses: number;
@@ -305,6 +298,7 @@ export function createUserStandardDistillationRequest(input: {
 		sourceReceipt: input.sourceReceipt,
 		defaultChecks: normalizeDefaultChecks(input.defaultChecks),
 		checkTypes: listCustomCheckTypes(),
+		triageDimensions: USER_STANDARD_TRIAGE_DIMENSIONS,
 		route: normalizeRoute(input.route),
 		limits: protocolLimits(),
 	};
@@ -328,6 +322,7 @@ export function assertUserStandardDistillationRequest(
 			"sourceReceipt",
 			"defaultChecks",
 			"checkTypes",
+			"triageDimensions",
 			"route",
 			"limits",
 			"requestDigest",
@@ -342,6 +337,12 @@ export function assertUserStandardDistillationRequest(
 	});
 	if (canonicalJson(expected.checkTypes) !== canonicalJson(value.checkTypes)) {
 		throw new Error("User Standard distillation Check Types are invalid.");
+	}
+	if (
+		canonicalJson(expected.triageDimensions) !==
+		canonicalJson(value.triageDimensions)
+	) {
+		throw new Error("User Standard distillation triage dimensions are invalid.");
 	}
 	if (canonicalJson(expected.limits) !== canonicalJson(value.limits)) {
 		throw new Error("User Standard distillation limits are invalid.");
@@ -1085,7 +1086,7 @@ function operationalReason(value: unknown): UserStandardDistillationOperationalR
 function triageDimensions(value: unknown): UserStandardTriageDimension[] {
 	const dimensions = textArray(value, "Standard triage dimensions", 8);
 	for (const dimension of dimensions) {
-		if (!(TRIAGE_DIMENSIONS as readonly string[]).includes(dimension)) {
+		if (!(USER_STANDARD_TRIAGE_DIMENSIONS as readonly string[]).includes(dimension)) {
 			throw new Error("Standard triage dimension is invalid.");
 		}
 	}

@@ -76,6 +76,7 @@ describe("wiki_config core facade", () => {
 		]);
 		assert.deepEqual(result.config.quality.review.requiredPacks, []);
 		assert.deepEqual(result.config.userStandards, []);
+		assert.deepEqual(result.config.triagePreferences, []);
 		assert.deepEqual(result.config.customChecks, []);
 	});
 
@@ -104,6 +105,14 @@ describe("wiki_config core facade", () => {
 				runWikiConfig({
 					current: config,
 					patch: {customChecks: []},
+				}),
+			/guarded Standards and Checks policy mutation/,
+		);
+		assert.throws(
+			() =>
+				runWikiConfig({
+					current: config,
+					patch: {triagePreferences: []},
 				}),
 			/guarded Standards and Checks policy mutation/,
 		);

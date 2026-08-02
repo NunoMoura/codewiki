@@ -32,14 +32,16 @@ function authority() {
 	};
 }
 
-function stateFor(userStandards, customChecks) {
+function stateFor(userStandards, customChecks, triagePreferences = []) {
 	return createCustomCheckConfigState({
 		projectConfigDigest: canonicalJsonDigest({
 			project: "bundle-mutation",
 			userStandards,
+			triagePreferences,
 			customChecks,
 		}),
 		userStandards,
+		triagePreferences,
 		customChecks,
 	});
 }
@@ -52,11 +54,19 @@ function memoryStore() {
 			return current;
 		},
 		async preview(input) {
-			return stateFor(input.userStandards, input.customChecks);
+			return stateFor(
+				input.userStandards,
+				input.customChecks,
+				input.triagePreferences,
+			);
 		},
 		async compareAndSwap(input) {
 			assert.equal(current.projectConfigDigest, input.expectedConfigDigest);
-			const next = stateFor(input.userStandards, input.customChecks);
+			const next = stateFor(
+				input.userStandards,
+				input.customChecks,
+				input.triagePreferences,
+			);
 			assert.equal(next.projectConfigDigest, input.expectedNextConfigDigest);
 			current = next;
 			writes += 1;
@@ -91,6 +101,7 @@ describe("atomic distilled User Standard bundle mutation", () => {
 			protectedSourceHead: HEAD,
 			projectConfigDigest: store.current().projectConfigDigest,
 			userStandards: [],
+			triagePreferences: [],
 			customChecks: [],
 		});
 		const authorizationRequests = [];
@@ -114,11 +125,17 @@ describe("atomic distilled User Standard bundle mutation", () => {
 		);
 		const result = await runtime.execute(mutationCommand, authority());
 
-		assert.equal(CUSTOM_CHECK_MUTATION_PROTOCOL.version, "4.0.0");
+		assert.equal(CUSTOM_CHECK_MUTATION_PROTOCOL.version, "5.0.0");
 		assert.equal(result.changedUserStandards.length, 1);
 		assert.equal(result.changedCustomChecks.length, 2);
 		assert.equal(result.changedCustomChecks.every((check) => check.lifecycle === "draft"), true);
 		assert.equal(result.state.userStandards.length, 1);
+		assert.equal(result.state.triagePreferences.length, 1);
+		assert.deepEqual(result.state.triagePreferences[0].dimensions, [
+			"severity",
+			"exposure",
+			"age_fairness",
+		]);
 		assert.equal(result.state.customChecks.length, 2);
 		assert.equal(store.writes(), 1);
 		assert.equal(authorizationRequests.length, 1);
@@ -154,8 +171,8 @@ describe("atomic distilled User Standard bundle mutation", () => {
 			summary: "Every selected source-to-Check mapping and unresolved clause was reviewed.",
 			reviewedAt: "2026-08-05T11:05:00.000Z",
 		});
-		assert.equal(reviewRequest.protocolVersion, "4.0.0");
-		assert.equal(CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL.version, "4.0.0");
+		assert.equal(reviewRequest.protocolVersion, "5.0.0");
+		assert.equal(CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL.version, "5.0.0");
 		assert.match(reviewReceipt.receiptId, /^custom-check-policy-review:/);
 
 		const replay = await runtime.execute(mutationCommand, authority());
@@ -171,6 +188,7 @@ describe("atomic distilled User Standard bundle mutation", () => {
 			protectedSourceHead: HEAD,
 			projectConfigDigest: store.current().projectConfigDigest,
 			userStandards: [],
+			triagePreferences: [],
 			customChecks: [],
 		});
 		const runtime = createCustomCheckMutationRuntime({
@@ -195,6 +213,7 @@ describe("atomic distilled User Standard bundle mutation", () => {
 		);
 		assert.equal(standardOnly.changedUserStandards.length, 1);
 		assert.equal(standardOnly.changedCustomChecks.length, 0);
+		assert.equal(standardOnly.state.triagePreferences.length, 1);
 		assert.equal(standardOnly.state.customChecks.length, 0);
 		assert.equal(standardOnly.receipt.definitionChanges.length, 0);
 
@@ -233,6 +252,7 @@ describe("atomic distilled User Standard bundle mutation", () => {
 			protectedSourceHead: HEAD,
 			projectConfigDigest: store.current().projectConfigDigest,
 			userStandards: [],
+			triagePreferences: [],
 			customChecks: [],
 		});
 		const createRuntime = createCustomCheckMutationRuntime({
@@ -366,7 +386,7 @@ describe("atomic distilled User Standard bundle mutation", () => {
 			mutationReceipt: activated.receipt,
 			proposedConfig: activated.state,
 		});
-		assert.equal(reviewRequest.protocolVersion, "4.0.0");
+		assert.equal(reviewRequest.protocolVersion, "5.0.0");
 		assert.equal(
 			reviewRequest.mutationReceipt.activationCapabilitySnapshotDigest,
 			capabilitySnapshot.snapshotDigest,

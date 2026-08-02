@@ -13,6 +13,7 @@ const SOURCE = [
 	"# Service policy",
 	"Every changed public API names its accountable owner.",
 	"Every released migration documents its rollback owner.",
+	"Security defects receive earlier Decision attention than cosmetic requests.",
 	"Legacy owner guidance is ambiguous and requires protected review.",
 ].join("\n");
 
@@ -40,7 +41,7 @@ export async function createCompletedDistillationFixture() {
 	});
 	const response = {
 		protocolId: "codewiki.user-standard-distillation",
-		protocolVersion: "1.0.0",
+		protocolVersion: "2.0.0",
 		requestDigest: request.requestDigest,
 		clauses: [
 			{
@@ -64,6 +65,13 @@ export async function createCompletedDistillationFixture() {
 					requirement: "Every released migration documents its rollback owner.",
 					appliesWhen: {loops: ["implementation"], affectedLayers: ["data"]},
 				},
+			},
+			{
+				passage: "Security defects receive earlier Decision attention than cosmetic requests.",
+				explanation: "This source passage defines triage behavior rather than pass/fail assurance.",
+				disposition: "triage_preference",
+				preference: "Prefer higher-severity and broader-exposure defects within the same safety tier.",
+				dimensions: ["severity", "exposure", "age_fairness"],
 			},
 			{
 				passage: "Legacy owner guidance is ambiguous and requires protected review.",
@@ -120,7 +128,7 @@ export async function createCompletedResourceDistillationFixture() {
 	});
 	const response = {
 		protocolId: "codewiki.user-standard-distillation",
-		protocolVersion: "1.0.0",
+		protocolVersion: "2.0.0",
 		requestDigest: request.requestDigest,
 		clauses: [
 			{

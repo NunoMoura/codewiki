@@ -88,7 +88,7 @@ steps:
   - id: project_backlog
     from: git_state
     to: projections
-    message: builds exact WorkState, Alignment Graph, and snapshot-bound explainable Backlog Triage Projection
+    message: builds exact WorkState, Alignment Graph, protected Standard-derived triage policy, and snapshot-bound explainable Backlog Triage Projection
   - id: select_decision_attention
     from: projections
     to: runtime

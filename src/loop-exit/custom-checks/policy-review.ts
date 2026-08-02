@@ -18,7 +18,7 @@ import {canonicalIsoTimestamp} from "./validation.ts";
 
 export const CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL = Object.freeze({
 	id: "codewiki.custom-check-policy-review",
-	version: "4.0.0",
+	version: "5.0.0",
 	maxEvidenceIds: 16,
 	maxSummaryLength: 1_000,
 });
@@ -88,6 +88,7 @@ export function createCustomCheckPolicyReviewRequest(input: {
 		standardChanges: input.mutationReceipt.standardChanges,
 		definitionChanges: input.mutationReceipt.definitionChanges,
 		proposedUserStandards: proposedConfig.userStandards,
+		proposedTriagePreferences: proposedConfig.triagePreferences,
 		proposedCustomChecks: proposedConfig.customChecks,
 	};
 	return Object.freeze({
@@ -250,6 +251,7 @@ function normalizeConfigState(value: CustomCheckConfigState): CustomCheckConfigS
 			"proposedConfig.projectConfigDigest",
 		),
 		userStandards: value.userStandards,
+		triagePreferences: value.triagePreferences,
 		customChecks: value.customChecks,
 	});
 	if (normalized.customCheckConfigDigest !== value.customCheckConfigDigest) {

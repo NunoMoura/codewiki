@@ -104,6 +104,7 @@ function protectedConfig(customChecks) {
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: digest("e"),
 		userStandards: USER_STANDARDS,
+		triagePreferences: [],
 		customChecks,
 	});
 }

@@ -83,6 +83,7 @@ function fixture() {
 		protectedSourceHead: "f".repeat(40),
 		projectConfigDigest: canonicalJsonDigest({project: "custom-code-test"}),
 		userStandards: [standard],
+		triagePreferences: [],
 		customChecks: [definition],
 	});
 	return {standard, draft, definition, snapshot, protectedConfig};

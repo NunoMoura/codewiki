@@ -2,16 +2,18 @@ import type {AlignmentGraphProvenanceClass} from "../../change-trace/alignment-g
 import type {EvidenceAuthority} from "../../evidence/contracts.ts";
 import type {Sha256Digest} from "../../utils/canonical-json.ts";
 import type {ChangeIntakeMaterialType} from "../intake/contracts.ts";
+import type {BacklogTriagePolicy} from "./policy.ts";
 import type {
 	ChangeDefectCategory,
 	ChangeDefectConfidence,
+	ChangeDefectExposure,
 	ChangeDefectRegressionStatus,
 	ChangeDefectSeverity,
 } from "../defect-profile.ts";
 
 export const BACKLOG_TRIAGE_PROJECTION_PROTOCOL = Object.freeze({
 	id: "codewiki.backlog-triage-projection",
-	version: "1.0.0",
+	version: "2.0.0",
 	maxCandidates: 500,
 	freshDays: 7,
 	staleDays: 30,
@@ -19,7 +21,7 @@ export const BACKLOG_TRIAGE_PROJECTION_PROTOCOL = Object.freeze({
 
 export const BACKLOG_TRIAGE_QUERY_PROTOCOL = Object.freeze({
 	id: "codewiki.backlog-triage-query",
-	version: "1.0.0",
+	version: "2.0.0",
 	maxResults: 100,
 } as const);
 
@@ -83,6 +85,7 @@ export interface TriageSupportedValue<T> {
 export interface TriageDimensions {
 	readonly urgency: TriageSupportedValue<TriageLevel>;
 	readonly expectedImpact: TriageSupportedValue<TriageLevel>;
+	readonly strategicValue: TriageSupportedValue<TriageLevel>;
 	readonly effort: TriageSupportedValue<TriageEffort>;
 	readonly riskOfInaction: TriageSupportedValue<TriageLevel>;
 	readonly implementationRisk: TriageSupportedValue<TriageLevel>;
@@ -101,6 +104,7 @@ export interface TriageEstimateInput {
 	readonly dimensions: Partial<{
 		readonly urgency: TriageSupportedValue<Exclude<TriageLevel, "unknown">>;
 		readonly expectedImpact: TriageSupportedValue<Exclude<TriageLevel, "unknown">>;
+		readonly strategicValue: TriageSupportedValue<Exclude<TriageLevel, "unknown">>;
 		readonly effort: TriageSupportedValue<Exclude<TriageEffort, "unknown">>;
 		readonly riskOfInaction: TriageSupportedValue<Exclude<TriageLevel, "unknown">>;
 		readonly implementationRisk: TriageSupportedValue<Exclude<TriageLevel, "unknown">>;
@@ -188,6 +192,7 @@ export interface TriageDefectSummary {
 	readonly profileId: Sha256Digest;
 	readonly category: ChangeDefectCategory;
 	readonly severity: ChangeDefectSeverity;
+	readonly exposure: ChangeDefectExposure;
 	readonly confidence: ChangeDefectConfidence;
 	readonly regressionStatus: ChangeDefectRegressionStatus;
 	readonly securityClassifications: readonly string[];
@@ -237,6 +242,7 @@ export interface BacklogTriageProjectionBinding {
 	readonly knowledgeDigest: Sha256Digest;
 	readonly configDigest: Sha256Digest;
 	readonly policyDigest: Sha256Digest;
+	readonly triagePolicyDigest: Sha256Digest;
 	readonly workStateDigest: Sha256Digest;
 	readonly graphSnapshotDigest: Sha256Digest;
 	readonly graphContentDigest: Sha256Digest;
@@ -258,6 +264,7 @@ export interface BacklogTriageProjection {
 	readonly protocol: typeof BACKLOG_TRIAGE_PROJECTION_PROTOCOL;
 	readonly asOf: string;
 	readonly binding: BacklogTriageProjectionBinding;
+	readonly policy: BacklogTriagePolicy;
 	readonly candidates: readonly BacklogTriageCandidate[];
 	readonly coverage: BacklogTriageProjectionCoverage;
 	readonly projectionDigest: Sha256Digest;
@@ -328,6 +335,7 @@ export interface BacklogTriageQueryResult {
 	readonly workStateDigest: Sha256Digest;
 	readonly graphSnapshotDigest: Sha256Digest;
 	readonly graphContentDigest: Sha256Digest;
+	readonly triagePolicyDigest: Sha256Digest;
 	readonly orderBy: TriageOrdering;
 	readonly queryDigest: Sha256Digest;
 	readonly items: readonly BacklogTriageQueryItem[];

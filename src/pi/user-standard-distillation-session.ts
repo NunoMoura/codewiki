@@ -71,6 +71,7 @@ function distillationSystemPrompt(): string {
 		"Use only supplied Default Check ids and Check Type ids.",
 		"Custom Model proposals may contain only checkTypeId, name, requirement, optional repairGuidance, appliesWhen, and optional knowledgeRefs.",
 		"Custom Code proposals are inert intents only: include checkTypeId, name, requirement, appliesWhen, templateIntent, and requiredCapabilities. Never emit code, shell, commands, regex programs, prompts, tools, schemas, dependencies, or verdict logic.",
+		"Triage preferences may use only supplied triageDimensions. Never emit comparator direction, precedence, weight, score, or final rank.",
 		"Runtime guards require exact metric, unit, scope, accountingWindow, operator, threshold, enforcement, measurementSource, and requiredCapability.",
 		"Preserve ambiguous, contradictory, stale, partial, excluded, unavailable, negative, retracted, and superseded clauses as unresolved instead of silently dropping them.",
 		"Do not activate policy, assign authority, priority, severity, Results, approval, or final triage order.",

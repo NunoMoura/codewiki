@@ -21,6 +21,7 @@ import {
 	loadProtectedCustomCheckConfigSnapshot,
 	parseCustomCheckPolicyAcceptanceCommand,
 } from "../../../src/loop-exit/custom-checks/index.ts";
+import {createBacklogTriagePolicy} from "../../../src/changes/triage/policy.ts";
 import {writeWikiConfigFile} from "../../../src/project/config-file.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
 import {
@@ -278,9 +279,19 @@ describe("Custom Check protected policy acceptance", () => {
 				fixture.command,
 				authority("policy-acceptor", "policy_acceptor"),
 			);
-			assert.equal(CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.version, "4.0.0");
+			assert.equal(CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.version, "5.0.0");
 			assert.equal(accepted.protectedConfig.userStandards.length, 2);
+			assert.equal(accepted.protectedConfig.triagePreferences.length, 1);
 			assert.equal(accepted.protectedConfig.customChecks.length, 3);
+			const triagePolicy = createBacklogTriagePolicy({
+				projectConfigDigest: accepted.protectedConfig.projectConfigDigest,
+				userStandards: accepted.protectedConfig.userStandards,
+				bindings: accepted.protectedConfig.triagePreferences,
+			});
+			assert.deepEqual(
+				triagePolicy.criteria.map((criterion) => criterion.dimension),
+				["severity", "exposure", "age_fairness"],
+			);
 			assert.equal(
 				accepted.protectedConfig.userStandards.some(
 					(standard) =>
