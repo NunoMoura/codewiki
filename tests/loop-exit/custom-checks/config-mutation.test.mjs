@@ -41,6 +41,7 @@ const CANDIDATE_DIGEST = `sha256:${"c".repeat(64)}`;
 function proposal(overrides = {}) {
 	return {
 		checkTypeId: "organization_policy",
+		evaluator: "model",
 		name: "Public API ownership",
 		requirement: "Every changed public API names its accountable owning team.",
 		repairGuidance: "Add one accepted owning-team reference.",
@@ -170,7 +171,7 @@ describe("guarded Custom Check configuration mutations", () => {
 		);
 		assert.equal(created.changedCustomChecks[0].lifecycle, "draft");
 		assert.equal(created.receipt.effectiveFrom, "next_protected_snapshot");
-		assert.equal(created.receipt.protocolVersion, "3.0.0");
+		assert.equal(created.receipt.protocolVersion, "4.0.0");
 		assert.equal(created.receipt.distillationReceipt, null);
 		assert.deepEqual(created.receipt.selectedProposalIds, []);
 		assert.deepEqual(created.receipt.standardChanges, []);

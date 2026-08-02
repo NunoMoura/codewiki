@@ -27,6 +27,7 @@ const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 function proposal(overrides = {}) {
 	return {
 		checkTypeId: "organization_policy",
+		evaluator: "model",
 		name: "Public API ownership",
 		requirement: "Every changed public API must name its owning team.",
 		repairGuidance: "Add the owning team to accepted API documentation.",
@@ -99,7 +100,7 @@ describe("Custom Check contracts", () => {
 
 		assert.equal(definition.customCheckId, equivalent.customCheckId);
 		assert.equal(definition.definitionDigest, equivalent.definitionDigest);
-		assert.equal(definition.schemaVersion, "3.0.0");
+		assert.equal(definition.schemaVersion, "4.0.0");
 		assert.equal(definition.lifecycle, "draft");
 		assert.deepEqual(definition.appliesWhen.affectedLayers, ["api"]);
 		assert.match(definition.customCheckId, /^custom-check:[0-9a-f]{64}$/);
@@ -224,7 +225,7 @@ describe("Custom Check catalog and policy", () => {
 		assert.equal(registration.authority, "project");
 		assert.equal(registration.check.execution.kind, "model");
 		assert.equal(registration.check.requirement, active.requirement);
-		assert.equal(registration.check.version, "3.0.0");
+		assert.equal(registration.check.version, "4.0.0");
 		assert.equal(registration.rollout, "require");
 		assert.equal(
 			registration.customCheck.definition.definitionDigest,

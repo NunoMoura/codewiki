@@ -11,6 +11,7 @@ import {
 	type CustomCheckApplicability,
 	type CustomCheckProposal,
 } from "./contracts.ts";
+import type {CustomCodeTemplateSelection} from "./code-templates.ts";
 import {
 	listCustomCheckTypes,
 	type CustomCheckTypeDefinition,
@@ -46,6 +47,7 @@ const DIGEST = /^sha256:[0-9a-f]{64}$/u;
 const RECEIPT_ID = /^user-standard-distillation-receipt:[0-9a-f]{64}$/u;
 const CLAUSE_ID = /^user-standard-clause:[0-9a-f]{64}$/u;
 const PROPOSAL_ID = /^custom-check-proposal:[0-9a-f]{64}$/u;
+const CODE_PROPOSAL_ID = /^custom-code-check-proposal:[0-9a-f]{64}$/u;
 const IDENTIFIER = /^[a-z0-9][a-z0-9._-]{2,127}$/u;
 const SEMVER = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/u;
 const CHECK_ID = /^[a-z][a-z0-9_]{2,127}$/u;
@@ -163,7 +165,9 @@ export interface UserStandardCustomCodeDraft {
 	readonly checkTypeId: CustomCheckTypeId;
 	readonly name: string;
 	readonly requirement: string;
+	readonly repairGuidance?: string;
 	readonly appliesWhen: CustomCheckApplicability;
+	readonly knowledgeRefs?: readonly string[];
 	readonly templateIntent: string;
 	readonly requiredCapabilities: readonly string[];
 }
@@ -270,11 +274,18 @@ export interface UserStandardDistilledCustomCheckProposal {
 	readonly proposal: CustomCheckProposal;
 }
 
+export interface UserStandardDistilledCustomCodeProposal {
+	readonly proposalId: string;
+	readonly clauseId: string;
+	readonly proposal: UserStandardCustomCodeDraft;
+}
+
 export interface UserStandardDistillationBundle {
 	readonly distillationReceiptId: string;
 	readonly userStandard: UserStandardDefinition;
 	readonly clauses: readonly UserStandardMaterializedClause[];
 	readonly customCheckProposals: readonly UserStandardDistilledCustomCheckProposal[];
+	readonly customCodeCheckProposals: readonly UserStandardDistilledCustomCodeProposal[];
 }
 
 export function createUserStandardDistillationRequest(input: {
@@ -493,6 +504,7 @@ export function materializeUserStandardDistillationBundle(
 		if (clause.disposition !== "custom_model") continue;
 		const proposal = normalizeCustomCheckProposal({
 			...clause.proposal,
+			evaluator: "model",
 			standardRefs: [
 				{
 					userStandardId: userStandard.userStandardId,
@@ -516,15 +528,37 @@ export function materializeUserStandardDistillationBundle(
 		clauses.map((clause) => clause.clauseId),
 		"User Standard distillation clause ids",
 	);
+	const customCodeCheckProposals: UserStandardDistilledCustomCodeProposal[] = [];
+	for (const clause of clauses) {
+		if (clause.disposition !== "custom_code") continue;
+		customCodeCheckProposals.push(
+			Object.freeze({
+				proposalId: `custom-code-check-proposal:${canonicalJsonDigest({
+					clauseId: clause.clauseId,
+					proposal: clause.proposal,
+				}).slice("sha256:".length)}`,
+				clauseId: clause.clauseId,
+				proposal: clause.proposal,
+			}),
+		);
+	}
+	customCodeCheckProposals.sort((...values) =>
+		compareText(values[0].proposalId, values[1].proposalId),
+	);
 	assertUnique(
 		customCheckProposals.map((proposal) => proposal.proposalId),
 		"User Standard distillation proposal ids",
+	);
+	assertUnique(
+		customCodeCheckProposals.map((proposal) => proposal.proposalId),
+		"User Standard distillation Custom Code proposal ids",
 	);
 	return deepFreeze({
 		distillationReceiptId: receipt.receiptId,
 		userStandard,
 		clauses,
 		customCheckProposals,
+		customCodeCheckProposals,
 	});
 }
 
@@ -703,17 +737,30 @@ function normalizeClauseSemantics(
 	if (clause.disposition === "custom_model") {
 		const normalized = normalizeCustomCheckProposal({
 			...clause.proposal,
+			evaluator: "model",
 			standardRefs,
 		});
-		const {standardRefs: _standardRefs, ...proposal} = normalized;
+		const {
+			standardRefs: _standardRefs,
+			evaluator: _evaluator,
+			codeTemplate: _codeTemplate,
+			...proposal
+		} = normalized;
 		return {...clause, proposal};
 	}
 	const normalized = normalizeCustomCheckProposal({
 		checkTypeId: clause.proposal.checkTypeId,
+		evaluator: "model",
 		name: clause.proposal.name,
 		requirement: clause.proposal.requirement,
+		...(clause.proposal.repairGuidance
+			? {repairGuidance: clause.proposal.repairGuidance}
+			: {}),
 		appliesWhen: clause.proposal.appliesWhen,
 		standardRefs,
+		...(clause.proposal.knowledgeRefs
+			? {knowledgeRefs: clause.proposal.knowledgeRefs}
+			: {}),
 	});
 	return {
 		...clause,
@@ -722,7 +769,13 @@ function normalizeClauseSemantics(
 			checkTypeId: normalized.checkTypeId,
 			name: normalized.name,
 			requirement: normalized.requirement,
+			...(normalized.repairGuidance
+				? {repairGuidance: normalized.repairGuidance}
+				: {}),
 			appliesWhen: normalized.appliesWhen,
+			...(normalized.knowledgeRefs
+				? {knowledgeRefs: normalized.knowledgeRefs}
+				: {}),
 		},
 	};
 }
@@ -777,7 +830,9 @@ function normalizeCustomCodeDraft(value: unknown): UserStandardCustomCodeDraft {
 			"checkTypeId",
 			"name",
 			"requirement",
+			"repairGuidance",
 			"appliesWhen",
+			"knowledgeRefs",
 			"templateIntent",
 			"requiredCapabilities",
 		],
@@ -787,7 +842,25 @@ function normalizeCustomCodeDraft(value: unknown): UserStandardCustomCodeDraft {
 		checkTypeId: checkTypeId(value.checkTypeId),
 		name: boundedText(value.name, "Custom Code Check name", 80),
 		requirement: boundedText(value.requirement, "Custom Code Check requirement", 2_000),
+		...(value.repairGuidance !== undefined
+			? {
+					repairGuidance: boundedText(
+						value.repairGuidance,
+						"Custom Code Check repair guidance",
+						1_000,
+					),
+				}
+			: {}),
 		appliesWhen: value.appliesWhen as CustomCheckApplicability,
+		...(value.knowledgeRefs !== undefined
+			? {
+					knowledgeRefs: textArray(
+						value.knowledgeRefs,
+						"Custom Code Check Knowledge refs",
+						8,
+					),
+				}
+			: {}),
 		templateIntent: boundedText(value.templateIntent, "Custom Code Check template intent", 1_000),
 		requiredCapabilities: textArray(
 			value.requiredCapabilities,
@@ -1081,6 +1154,52 @@ export function isUserStandardDistillationClauseId(value: unknown): value is str
 	return typeof value === "string" && CLAUSE_ID.test(value);
 }
 
+export function materializeUserStandardDistilledCodeCheck(input: {
+	readonly bundle: UserStandardDistillationBundle;
+	readonly proposalId: string;
+	readonly codeTemplate: CustomCodeTemplateSelection;
+}): CustomCheckProposal {
+	const distilled = input.bundle.customCodeCheckProposals.find(
+		(proposal) => proposal.proposalId === input.proposalId,
+	);
+	if (!distilled) {
+		throw new Error(`Unknown distilled Custom Code Check proposal ${input.proposalId}.`);
+	}
+	const clause = input.bundle.clauses.find(
+		(entry) => entry.clauseId === distilled.clauseId,
+	);
+	if (!clause || clause.disposition !== "custom_code") {
+		throw new Error("Distilled Custom Code Check clause binding is invalid.");
+	}
+	return normalizeCustomCheckProposal({
+		checkTypeId: distilled.proposal.checkTypeId,
+		evaluator: "code",
+		name: distilled.proposal.name,
+		requirement: distilled.proposal.requirement,
+		...(distilled.proposal.repairGuidance
+			? {repairGuidance: distilled.proposal.repairGuidance}
+			: {}),
+		appliesWhen: distilled.proposal.appliesWhen,
+		standardRefs: [
+			{
+				userStandardId: input.bundle.userStandard.userStandardId,
+				standardDigest: input.bundle.userStandard.standardDigest,
+				passageIds: [clause.passageId],
+			},
+		],
+		...(distilled.proposal.knowledgeRefs
+			? {knowledgeRefs: distilled.proposal.knowledgeRefs}
+			: {}),
+		codeTemplate: input.codeTemplate,
+	});
+}
+
 export function isUserStandardDistilledProposalId(value: unknown): value is string {
 	return typeof value === "string" && PROPOSAL_ID.test(value);
+}
+
+export function isUserStandardDistilledCodeProposalId(
+	value: unknown,
+): value is string {
+	return typeof value === "string" && CODE_PROPOSAL_ID.test(value);
 }

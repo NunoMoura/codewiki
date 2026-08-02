@@ -102,6 +102,7 @@ Runtime alone owns:
 - Worker Workbench provisioning and Assignment dispatch;
 - Evidence normalization, provenance/freshness/privacy validation, contradiction preservation, and approval correlation;
 - User Standard source registration/snapshot sanitation, bounded distillation, Default Check coverage, Custom Check proposal validation, Runtime-owned source/definition/config digests, guarded lifecycle changes, deterministic required activation, and policy binding;
+- approved Custom Code template normalization, capability snapshot admission, exact executor/template/configuration identity, quantitative Evidence materialization, and matching preflight, meter, and cancellation guard decisions;
 - Check activation, Check Evaluator scheduling, Assessment validation, execution, cancellation, exact caching, and required-result fan-in;
 - deterministic Runtime Route;
 - canonical Git-backed writes;
@@ -263,6 +264,8 @@ It cannot grant exit or effects.
 Every considered Evidence identity—including stale, excluded, unavailable, negative, and contradictory records—stays bound into Results. Operational failures are `indeterminate`; Runtime never fabricates candidate failure or passing Evidence.
 
 Checks may fan out concurrently under bounded budgets. Required Result fan-in remains complete and deterministic. A failed required Check does not cancel unrelated feedback-producing Checks unless explicit policy requires cancellation.
+
+The initial approved `resource_usage_limit` Custom Code template is enforced at both execution and exit. Runtime admits activation only against an exact `codewiki.custom-code-capability-snapshot@1.0.0`, resolves active definitions into digest-bound preflight/meter/cancellation guards, blocks preflight when an exact estimate is unavailable or above the accepted maximum, cancels an exact live scope when measured usage exceeds that maximum, and also cancels fail-safe when the required live meter observation is missing or malformed. Final `resource_usage` Evidence binds the exact Candidate, meter configuration, environment, capability snapshot, template binding, and Custom Check definition. Missing route capability blocks runner admission; missing, stale, duplicate, partial, or mismatched Evidence remains `indeterminate` rather than falling back to model judgment.
 
 ## Integration
 

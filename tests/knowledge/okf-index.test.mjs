@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added approved-template Custom Code Checks through Custom Check schema `4.0.0`, Check Catalog `6.0.0`, and `codewiki.custom-code-template@1.0.0`. The only initial template is `resource_usage_limit`, with closed model-token, cost, latency, changed-file, and trace-byte metrics over exact Decision, Planning, and Implementation scopes. Runtime derives every template/configuration field, requires an exact `codewiki.custom-code-capability-snapshot@1.0.0` before activation, emits candidate-bound complete-window `resource_usage` Evidence under Evidence schema `1.2.0`, executes independent quantitative reduction, and exposes matching fail-closed preflight, meter, cancellation, and route-admission guards. Mutation, Policy Review, and Protected Acceptance Protocols `4.0.0` bind exact source proposal selection, separately approved typed template parameters, activation capability snapshot digest, protected configuration, and Standard/definition transitions. Models and users cannot supply executable code or verdict logic; production meter collectors and full Loop scheduling remain pending.",
+					},
+					{
+						kind: "Update",
 						text: "Added atomic distilled User Standard bundle mutation and advanced guarded Mutation, Policy Review, and Protected Acceptance Protocols to `3.0.0`. One authenticated command selects exact proposal ids from one completed distillation receipt, then adds the immutable Standard and selected draft Checks through complete-config CAS. Authorization, review, Git acceptance, and content-addressed receipts retain the full source-to-Check/unresolved bundle, selected ids, exact transitions, protected base, and before/after config. Standard-only bundles are valid; distillation and review grant no Check activation. Standard replacement/redistillation remains pending.",
 					},
 					{

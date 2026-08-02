@@ -66,6 +66,9 @@ function runtimeFor(kind, overrides = {}) {
 					? "verified"
 					: "observed",
 		coverage: "complete",
+		...(kind === "resource_usage"
+			? {freshnessBoundary: "decision-attempt:1"}
+			: {}),
 		sensitivity: "project",
 		...overrides,
 	};
@@ -102,6 +105,22 @@ const payloads = {
 		durationMs: 42,
 		stdoutDigest: digest("9"),
 		diagnosticRefs: ["test:unit"],
+	},
+	resource_usage: {
+		metric: "model_tokens",
+		unit: "tokens",
+		scope: "decision_attempt",
+		accountingWindow: "one Decision attempt",
+		value: 512,
+		aggregation: "complete_window",
+		meterId: "codewiki.model-usage-meter",
+		meterVersion: "1.0.0",
+		meterConfigurationDigest: digest("9"),
+		environmentDigest: digest("a"),
+		capabilitySnapshotDigest: digest("b"),
+		templateBindingDigest: digest("c"),
+		customCheckDefinitionDigest: digest("d"),
+		protectedCustomCheckConfigSnapshotDigest: digest("e"),
 	},
 	ui_capture: {
 		previewTargetId: "web",

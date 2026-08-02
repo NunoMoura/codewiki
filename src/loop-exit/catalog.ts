@@ -19,6 +19,12 @@ import {
 	CUSTOM_CHECK_TYPE_CATALOG_VERSION,
 	getCustomCheckType,
 } from "./custom-checks/check-types.ts";
+import {
+	customCodeTemplateEvidenceObligations,
+	customCodeTemplateExecutionIdentity,
+	resourceUsageMeasurementShape,
+	resourceUsageTemplateSemantics,
+} from "./custom-checks/code-templates.ts";
 import type {
 	CheckEnforcement,
 	CheckDefinition,
@@ -28,11 +34,12 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "5.0.0";
+export const CHECK_CATALOG_VERSION = "6.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
 	"codewiki.model-check",
+	"codewiki.custom-code.resource_usage_limit",
 ] as const;
 
 export type CheckAuthority = "kernel" | "project";
@@ -478,6 +485,18 @@ function customCheckRegistrations(
 		? definition.appliesWhen.loops
 		: checkType.loops;
 	const checkId = customCheckDefinitionCheckId(definition);
+	const codeTemplate = definition.evaluator === "code"
+		? definition.codeTemplate
+		: undefined;
+	if (definition.evaluator === "code" && !codeTemplate) {
+		throw new Error(`Custom Code Check ${definition.customCheckId} has no template.`);
+	}
+	const execution = codeTemplate
+		? customCodeTemplateExecutionIdentity(codeTemplate)
+		: {id: "codewiki.model-check", version: "1.0.0", kind: "model" as const};
+	const semantics = codeTemplate
+		? resourceUsageTemplateSemantics(codeTemplate.parameters)
+		: undefined;
 	return loops.map((loop) => ({
 		check: {
 			id: checkId,
@@ -485,16 +504,21 @@ function customCheckRegistrations(
 			description: `Custom Check: ${definition.name}`,
 			requirement: definition.requirement,
 			requirementDigest: checkRequirementDigest(definition.requirement),
-			execution: {
-				id: "codewiki.model-check",
-				version: "1.0.0",
-				kind: "model",
-			},
-			measurement: { kind: "qualitative", shape: "boolean" },
-			evidenceObligations: evidenceObligations(checkId, "model"),
+			execution,
+			measurement: semantics
+				? {
+						kind: "quantitative",
+						shape: resourceUsageMeasurementShape(semantics.metric),
+						minimum: 0,
+						maximum: semantics.maximum,
+					}
+				: {kind: "qualitative", shape: "boolean"},
+			evidenceObligations: codeTemplate
+				? [...customCodeTemplateEvidenceObligations(codeTemplate)]
+				: evidenceObligations(checkId, "model"),
 			repairTarget: "custom-check",
-			cost: checkCost("model"),
-			timeoutMs: checkTimeout("model"),
+			cost: codeTemplate ? 1 : checkCost("model"),
+			timeoutMs: codeTemplate ? 5_000 : checkTimeout("model"),
 			protected: false,
 		},
 		loops: [loop],
@@ -504,7 +528,7 @@ function customCheckRegistrations(
 		customCheck: {
 			definition,
 			checkTypeVersion: checkType.version,
-			evaluatorId: checkType.evaluatorId,
+			evaluatorId: codeTemplate ? execution.id : checkType.evaluatorId,
 		},
 	}));
 }
@@ -905,8 +929,24 @@ function validateCustomCheckRegistration(
 	) {
 		throw new Error("Custom Check registration identity does not match definition.");
 	}
-	if (registration.check.execution.kind !== "model") {
-		throw new Error("V1 Custom Checks must execute as Model Checks.");
+	if (registration.check.execution.kind !== customCheck.definition.evaluator) {
+		throw new Error("Custom Check execution kind does not match its evaluator.");
+	}
+	if (customCheck.definition.evaluator === "code") {
+		if (!customCheck.definition.codeTemplate) {
+			throw new Error("Custom Code Check registration requires a template binding.");
+		}
+		const expected = customCodeTemplateExecutionIdentity(
+			customCheck.definition.codeTemplate,
+		);
+		if (
+			registration.check.execution.id !== expected.id ||
+			registration.check.execution.version !== expected.version
+		) {
+			throw new Error(
+				"Custom Code Check execution identity does not match its template binding.",
+			);
+		}
 	}
 	if (registration.rollout !== "require") {
 		throw new Error("Active Custom Checks must be required.");

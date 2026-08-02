@@ -1,4 +1,6 @@
 export * from "./check-types.ts";
+export * from "./code-executor.ts";
+export * from "./code-templates.ts";
 export * from "./configuration.ts";
 export * from "./contracts.ts";
 export * from "./distillation.ts";
@@ -6,5 +8,6 @@ export * from "./mutations.ts";
 export * from "./policy-acceptance.ts";
 export * from "./policy-review.ts";
 export * from "./project-config-store.ts";
+export * from "./resource-guards.ts";
 export * from "./source-retrieval.ts";
 export * from "./user-standards.ts";

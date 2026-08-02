@@ -36,6 +36,7 @@ const execFileAsync = promisify(execFile);
 function proposal(overrides = {}) {
 	return {
 		checkTypeId: "organization_policy",
+		evaluator: "model",
 		name: "Public API ownership",
 		requirement: "Every changed public API names its accountable owning team.",
 		repairGuidance: "Add one accepted owning-team reference.",
@@ -268,6 +269,7 @@ describe("Custom Check protected policy acceptance", () => {
 					selectedProposalIds: distilled.bundle.customCheckProposals.map(
 						(proposal) => proposal.proposalId,
 					),
+					codeTemplateSelections: [],
 				};
 			},
 		});
@@ -276,7 +278,7 @@ describe("Custom Check protected policy acceptance", () => {
 				fixture.command,
 				authority("policy-acceptor", "policy_acceptor"),
 			);
-			assert.equal(CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.version, "3.0.0");
+			assert.equal(CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.version, "4.0.0");
 			assert.equal(accepted.protectedConfig.userStandards.length, 2);
 			assert.equal(accepted.protectedConfig.customChecks.length, 3);
 			assert.equal(

@@ -218,6 +218,7 @@ function requiredCustomCheck() {
 	return activateCustomCheckDefinition(
 		createCustomCheckDefinition({
 			checkTypeId: "organization_policy",
+			evaluator: "model",
 			name: "Documentation current",
 			requirement: "Affected documentation remains current.",
 			appliesWhen: {loops: ["implementation"]},

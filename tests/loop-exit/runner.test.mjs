@@ -135,6 +135,7 @@ function customModelCheck(name) {
 	return activateCustomCheckDefinition(
 		createCustomCheckDefinition({
 			checkTypeId: "organization_policy",
+			evaluator: "model",
 			name,
 			requirement: `${name} is established.`,
 			appliesWhen: {loops: ["decision"]},

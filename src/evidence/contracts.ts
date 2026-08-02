@@ -1,12 +1,13 @@
 import { Type, type TSchema } from "typebox";
 import type { Sha256Digest } from "../utils/canonical-json.ts";
 
-export const EVIDENCE_SCHEMA_VERSION = "1.1.0" as const;
+export const EVIDENCE_SCHEMA_VERSION = "1.2.0" as const;
 
 export const EVIDENCE_KINDS = [
 	"research_citation",
 	"source_observation",
 	"command_execution",
+	"resource_usage",
 	"ui_capture",
 	"model_assessment",
 	"worker_report",
@@ -88,6 +89,32 @@ export interface CommandExecutionPayload {
 	readonly stdoutDigest?: Sha256Digest;
 	readonly stderrDigest?: Sha256Digest;
 	readonly diagnosticRefs: readonly string[];
+}
+
+export interface ResourceUsagePayload {
+	readonly metric:
+		| "model_tokens"
+		| "cost_usd"
+		| "latency_ms"
+		| "changed_files"
+		| "trace_bytes";
+	readonly unit: "tokens" | "usd" | "milliseconds" | "files" | "bytes";
+	readonly scope:
+		| "decision_attempt"
+		| "planning_attempt"
+		| "implementation_assignment"
+		| "implementation_attempt";
+	readonly accountingWindow: string;
+	readonly value: number;
+	readonly aggregation: "complete_window";
+	readonly meterId: string;
+	readonly meterVersion: string;
+	readonly meterConfigurationDigest: Sha256Digest;
+	readonly environmentDigest: Sha256Digest;
+	readonly capabilitySnapshotDigest: Sha256Digest;
+	readonly templateBindingDigest: Sha256Digest;
+	readonly customCheckDefinitionDigest: Sha256Digest;
+	readonly protectedCustomCheckConfigSnapshotDigest: Sha256Digest;
 }
 
 export interface UiCaptureArtifact extends EvidenceArtifact {
@@ -236,6 +263,7 @@ export interface EvidencePayloadByKind {
 	readonly research_citation: ResearchCitationPayload;
 	readonly source_observation: SourceObservationPayload;
 	readonly command_execution: CommandExecutionPayload;
+	readonly resource_usage: ResourceUsagePayload;
 	readonly ui_capture: UiCapturePayload;
 	readonly model_assessment: ModelAssessmentPayload;
 	readonly worker_report: WorkerReportPayload;
@@ -435,6 +463,43 @@ const commandExecutionPayloadSchema = Type.Object(
 		diagnosticRefs: refListSchema,
 	},
 	{ additionalProperties: false },
+);
+
+const resourceUsagePayloadSchema = Type.Object(
+	{
+		metric: Type.Union([
+			Type.Literal("model_tokens"),
+			Type.Literal("cost_usd"),
+			Type.Literal("latency_ms"),
+			Type.Literal("changed_files"),
+			Type.Literal("trace_bytes"),
+		]),
+		unit: Type.Union([
+			Type.Literal("tokens"),
+			Type.Literal("usd"),
+			Type.Literal("milliseconds"),
+			Type.Literal("files"),
+			Type.Literal("bytes"),
+		]),
+		scope: Type.Union([
+			Type.Literal("decision_attempt"),
+			Type.Literal("planning_attempt"),
+			Type.Literal("implementation_assignment"),
+			Type.Literal("implementation_attempt"),
+		]),
+		accountingWindow: requiredTextSchema,
+		value: Type.Number({minimum: 0}),
+		aggregation: Type.Literal("complete_window"),
+		meterId: idSchema,
+		meterVersion: idSchema,
+		meterConfigurationDigest: digestSchema,
+		environmentDigest: digestSchema,
+		capabilitySnapshotDigest: digestSchema,
+		templateBindingDigest: digestSchema,
+		customCheckDefinitionDigest: digestSchema,
+		protectedCustomCheckConfigSnapshotDigest: digestSchema,
+	},
+	{additionalProperties: false},
 );
 
 const uiCaptureArtifactSchema = Type.Object(
@@ -657,6 +722,7 @@ export const evidencePayloadSchemas: Readonly<Record<EvidenceKind, TSchema>> =
 		research_citation: researchCitationPayloadSchema,
 		source_observation: sourceObservationPayloadSchema,
 		command_execution: commandExecutionPayloadSchema,
+		resource_usage: resourceUsagePayloadSchema,
 		ui_capture: uiCapturePayloadSchema,
 		model_assessment: modelAssessmentPayloadSchema,
 		worker_report: workerReportPayloadSchema,

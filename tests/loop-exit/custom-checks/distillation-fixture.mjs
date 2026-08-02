@@ -94,3 +94,69 @@ export async function createCompletedDistillationFixture() {
 		bundle: materializeUserStandardDistillationBundle(receipt),
 	};
 }
+
+export async function createCompletedResourceDistillationFixture() {
+	const passage = "Each Decision attempt uses no more than 1000 model tokens.";
+	const sourceReceipt = await retrieveUserStandardSource({
+		request: createUserStandardSourceRequest({
+			kind: "inline",
+			mediaType: "text/markdown",
+			content: `# Runtime resource policy\n${passage}`,
+		}),
+		now: NOW,
+	});
+	const request = createUserStandardDistillationRequest({
+		name: "Runtime resource policy",
+		sourceReceipt,
+		defaultChecks: [],
+		route: {
+			id: "decision-reviewer",
+			provider: "test-provider",
+			model: "test-model",
+			thinking: "high",
+			timeoutMs: 60_000,
+			configurationDigest: canonicalJsonDigest({route: "decision-reviewer"}),
+		},
+	});
+	const response = {
+		protocolId: "codewiki.user-standard-distillation",
+		protocolVersion: "1.0.0",
+		requestDigest: request.requestDigest,
+		clauses: [
+			{
+				passage,
+				explanation: "Quantitative resource policy requires an approved deterministic template.",
+				disposition: "custom_code",
+				proposal: {
+					checkTypeId: "organization_policy",
+					name: "Decision model token limit",
+					requirement: passage,
+					repairGuidance: "Reduce bounded Decision context before retrying.",
+					appliesWhen: {loops: ["decision"]},
+					knowledgeRefs: ["knowledge:runtime-resource-policy"],
+					templateIntent: "Measure exact model tokens for one Decision attempt.",
+					requiredCapabilities: ["codewiki.model-usage-meter"],
+				},
+			},
+		],
+	};
+	const receipt = await runUserStandardDistillation({
+		request,
+		now: NOW,
+		distiller: {
+			binding: {
+				id: "codewiki.test-distiller",
+				version: "1.0.0",
+				configurationDigest: canonicalJsonDigest({fixture: "resource-distillation"}),
+			},
+			async execute() {
+				return {status: "completed", response};
+			},
+		},
+	});
+	return {
+		request,
+		receipt,
+		bundle: materializeUserStandardDistillationBundle(receipt),
+	};
+}

@@ -4,6 +4,10 @@ import {
 	type LoopExitResultCache,
 } from "../../loop-exit/cache.ts";
 import {createCheckCatalog} from "../../loop-exit/catalog.ts";
+import {
+	createCustomCodeCheckExecutors,
+	type CustomCodeCapabilitySnapshot,
+} from "../../loop-exit/custom-checks/index.ts";
 import type {ExitReport, ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {
@@ -41,6 +45,7 @@ import {
 
 interface CreateDecisionExitRuntimeInput {
 	readonly additionalExecutors?: readonly LoopCheckExecutor[];
+	readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
 	readonly protectedBaseCustomCheckConfig?: DecisionProtectedCustomCheckConfig;
 	readonly cache?: LoopExitResultCache;
 	readonly limits?: LoopExitRunnerLimits;
@@ -134,6 +139,12 @@ export function createDecisionExitRuntime(
 				limits: input.limits,
 				executors: [
 					...createDecisionCodeExecutors(catalog),
+					...createCustomCodeCheckExecutors({
+						catalog,
+						...(input.customCodeCapabilitySnapshot
+							? {capabilitySnapshot: input.customCodeCapabilitySnapshot}
+							: {}),
+					}),
 					...security.executors,
 					...(input.modelChecks
 						? createDecisionModelCheckExecutors({

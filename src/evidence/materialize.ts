@@ -16,6 +16,7 @@ import type {
 	ModelAssessmentPayload,
 	OutcomeObservationPayload,
 	ResearchCitationPayload,
+	ResourceUsagePayload,
 	SourceObservationPayload,
 	UiCapturePayload,
 	WorkerReportPayload,
@@ -276,44 +277,55 @@ function assertKindSemantics(
 	material: EvidenceMaterial,
 	runtime: EvidenceRuntimeContext,
 ): void {
-	switch (material.kind) {
-		case "research_citation":
-			assertResearchCitation(material.payload, runtime.producer.kind);
-			break;
-		case "source_observation":
-			assertSourceObservation(material.payload);
-			break;
-		case "command_execution":
-			assertCommandExecution(material.payload);
-			break;
-		case "ui_capture":
-			assertUiCapture(material.payload, runtime.producer.kind);
-			break;
-		case "model_assessment":
-			assertModelAssessment(material.payload, runtime.producer.kind);
-			break;
-		case "worker_report":
-			assertProducerKind(runtime.producer.kind, "worker", "Worker report");
-			break;
-		case "integration_proof":
-			assertIntegrationProof(material.payload);
-			break;
-		case "approval_receipt":
-			assertApprovalReceipt(
-				material.payload,
-				runtime.producer.kind,
-				runtime.observedAt,
-			);
-			break;
-		case "delivery_attestation":
-			assertDeliveryProducer(runtime.producer.kind);
-			break;
-		case "outcome_observation":
-			assertOutcomeObservation(material.payload);
-			break;
-		default:
-			throw new Error("Evidence kind has no semantic validator.");
+	if (material.kind === "research_citation") {
+		assertResearchCitation(material.payload, runtime.producer.kind);
+		return;
 	}
+	if (material.kind === "source_observation") {
+		assertSourceObservation(material.payload);
+		return;
+	}
+	if (material.kind === "command_execution") {
+		assertCommandExecution(material.payload);
+		return;
+	}
+	if (material.kind === "resource_usage") {
+		assertResourceUsage(material.payload, runtime);
+		return;
+	}
+	if (material.kind === "ui_capture") {
+		assertUiCapture(material.payload, runtime.producer.kind);
+		return;
+	}
+	if (material.kind === "model_assessment") {
+		assertModelAssessment(material.payload, runtime.producer.kind);
+		return;
+	}
+	if (material.kind === "worker_report") {
+		assertProducerKind(runtime.producer.kind, "worker", "Worker report");
+		return;
+	}
+	if (material.kind === "integration_proof") {
+		assertIntegrationProof(material.payload);
+		return;
+	}
+	if (material.kind === "approval_receipt") {
+		assertApprovalReceipt(
+			material.payload,
+			runtime.producer.kind,
+			runtime.observedAt,
+		);
+		return;
+	}
+	if (material.kind === "delivery_attestation") {
+		assertDeliveryProducer(runtime.producer.kind);
+		return;
+	}
+	if (material.kind === "outcome_observation") {
+		assertOutcomeObservation(material.payload);
+		return;
+	}
+	throw new Error("Evidence kind has no semantic validator.");
 }
 
 function assertResearchCitation(
@@ -452,8 +464,48 @@ function assertMeasurement(
 	}
 }
 
+function assertResourceUsage(
+	payload: ResourceUsagePayload,
+	runtime: EvidenceRuntimeContext,
+): void {
+	if (
+		runtime.producer.kind !== "runtime" &&
+		runtime.producer.kind !== "external_service"
+	) {
+		throw new Error("Resource usage must be produced by Runtime or an external service.");
+	}
+	if (runtime.authority !== "observed" && runtime.authority !== "verified") {
+		throw new Error("Resource usage must have observed or verified authority.");
+	}
+	if (runtime.coverage !== "complete") {
+		throw new Error("Resource usage must cover one complete accounting window.");
+	}
+	if (!runtime.freshnessBoundary) {
+		throw new Error("Resource usage requires an exact freshness boundary.");
+	}
+	const expectedUnit = {
+		model_tokens: "tokens",
+		cost_usd: "usd",
+		latency_ms: "milliseconds",
+		changed_files: "files",
+		trace_bytes: "bytes",
+	} as const;
+	if (payload.unit !== expectedUnit[payload.metric]) {
+		throw new Error("Resource usage metric and unit do not match.");
+	}
+	if (
+		(payload.metric === "model_tokens" ||
+			payload.metric === "changed_files" ||
+			payload.metric === "trace_bytes") &&
+		!Number.isSafeInteger(payload.value)
+	) {
+		throw new Error(`Resource usage ${payload.metric} value must be a safe integer.`);
+	}
+}
+
 function candidateBoundKind(kind: EvidenceKind): boolean {
 	return (
+		kind === "resource_usage" ||
 		kind === "ui_capture" ||
 		kind === "model_assessment" ||
 		kind === "integration_proof" ||

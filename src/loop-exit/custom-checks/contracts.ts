@@ -14,13 +14,20 @@ import {
 	type CustomCheckTypeId,
 } from "./check-types.ts";
 import {
+	assertCustomCodeTemplateCapability,
+	normalizeCustomCodeTemplateBinding,
+	type CustomCodeCapabilitySnapshot,
+	type CustomCodeTemplateBinding,
+	type CustomCodeTemplateSelection,
+} from "./code-templates.ts";
+import {
 	isUserStandardId,
 	isUserStandardPassageId,
 	normalizeUserStandardDefinitions,
 	type UserStandardDefinition,
 } from "./user-standards.ts";
 
-export const CUSTOM_CHECK_SCHEMA_VERSION = "3.0.0" as const;
+export const CUSTOM_CHECK_SCHEMA_VERSION = "4.0.0" as const;
 export const MAX_CUSTOM_CHECKS = 64;
 export const MAX_CUSTOM_CHECKS_PER_TYPE = 16;
 export const MAX_CUSTOM_CHECK_BYTES = 16_384;
@@ -31,11 +38,13 @@ const SEMANTIC_LOOPS: readonly SemanticLoop[] = [
 	"implementation",
 ];
 const CUSTOM_CHECK_LIFECYCLES = ["draft", "active", "disabled"] as const;
+const CUSTOM_CHECK_EVALUATORS = ["model", "code"] as const;
 const CUSTOM_CHECK_ID = /^custom-check:[0-9a-f]{64}$/;
 const DIGEST = /^sha256:[0-9a-f]{64}$/;
 const PROHIBITED_TEXT = /[\u0000-\u0009\u000b-\u001f\u007f]/u;
 
 export type CustomCheckLifecycle = (typeof CUSTOM_CHECK_LIFECYCLES)[number];
+export type CustomCheckEvaluator = (typeof CUSTOM_CHECK_EVALUATORS)[number];
 
 export interface CustomCheckApplicability {
 	readonly loops?: readonly SemanticLoop[];
@@ -52,25 +61,45 @@ export interface CustomCheckStandardRef {
 
 export interface CustomCheckProposal {
 	readonly checkTypeId: CustomCheckTypeId;
+	readonly evaluator: CustomCheckEvaluator;
 	readonly name: string;
 	readonly requirement: string;
 	readonly repairGuidance?: string;
 	readonly appliesWhen: CustomCheckApplicability;
 	readonly standardRefs: readonly CustomCheckStandardRef[];
 	readonly knowledgeRefs?: readonly string[];
+	readonly codeTemplate?: CustomCodeTemplateSelection | CustomCodeTemplateBinding;
 }
 
-export interface CustomCheckDefinition extends CustomCheckProposal {
+export type CustomCheckDefinition = Omit<CustomCheckProposal, "codeTemplate"> & {
+	readonly codeTemplate?: CustomCodeTemplateBinding;
 	readonly schemaVersion: typeof CUSTOM_CHECK_SCHEMA_VERSION;
 	readonly customCheckId: string;
 	readonly definitionDigest: Sha256Digest;
 	readonly lifecycle: CustomCheckLifecycle;
-}
+};
+
+type NormalizedCustomCheckProposal = Omit<CustomCheckProposal, "codeTemplate"> & {
+	readonly codeTemplate?: CustomCodeTemplateBinding;
+};
 
 export function normalizeCustomCheckProposal(
 	proposal: CustomCheckProposal,
 ): CustomCheckProposal {
-	return Object.freeze(cloneProposal(normalizeProposal(proposal)));
+	const normalized = normalizeProposal(proposal);
+	return Object.freeze(
+		cloneProposal({
+			...normalized,
+			...(normalized.codeTemplate
+				? {
+						codeTemplate: {
+							templateId: normalized.codeTemplate.templateId,
+							parameters: {...normalized.codeTemplate.parameters},
+						},
+					}
+				: {}),
+		}),
+	);
 }
 
 export function createCustomCheckDefinition(
@@ -106,6 +135,15 @@ export function updateCustomCheckDefinition(
 	if (normalized.checkTypeId !== current.checkTypeId) {
 		throw new Error("Custom Check Type cannot change after creation.");
 	}
+	if (normalized.evaluator !== current.evaluator) {
+		throw new Error("Custom Check evaluator cannot change after creation.");
+	}
+	if (
+		normalized.evaluator === "code" &&
+		normalized.codeTemplate?.templateId !== current.codeTemplate?.templateId
+	) {
+		throw new Error("Custom Code Check template cannot change after creation.");
+	}
 	return materializeDefinition(
 		{
 			...normalized,
@@ -120,9 +158,21 @@ export function updateCustomCheckDefinition(
 export function activateCustomCheckDefinition(
 	current: CustomCheckDefinition,
 	userStandards: readonly UserStandardDefinition[],
+	capabilitySnapshot?: CustomCodeCapabilitySnapshot,
 ): CustomCheckDefinition {
 	const standards = normalizeUserStandardDefinitions(userStandards);
 	assertCustomCheckDefinition(current, standards);
+	if (current.evaluator === "code") {
+		if (!current.codeTemplate || !capabilitySnapshot) {
+			throw new Error(
+				`Custom Code Check ${current.customCheckId} requires an executor capability snapshot before activation.`,
+			);
+		}
+		assertCustomCodeTemplateCapability({
+			binding: current.codeTemplate,
+			capabilitySnapshot,
+		});
+	}
 	if (current.lifecycle !== "draft") {
 		throw new Error(
 			`Custom Check ${current.customCheckId} must be draft before activation.`,
@@ -206,6 +256,8 @@ export function assertCustomCheckDefinition(
 		"definitionDigest",
 		"lifecycle",
 		"checkTypeId",
+		"evaluator",
+		"codeTemplate",
 		"name",
 		"requirement",
 		"repairGuidance",
@@ -232,7 +284,7 @@ export function assertCustomCheckDefinition(
 	const standards = normalizeUserStandardDefinitions(userStandards);
 	const normalizedProposal = normalizeProposal(value, true);
 	assertAcceptedStandardRefs(normalizedProposal.standardRefs, standards);
-	const expectedDigest = definitionDigest({
+	const expectedDigest = canonicalJsonDigest({
 		...normalizedProposal,
 		schemaVersion: value.schemaVersion,
 		customCheckId: value.customCheckId,
@@ -286,7 +338,7 @@ function materializeDefinition(
 	};
 	const definition = {
 		...semanticDefinition,
-		definitionDigest: definitionDigest(semanticDefinition),
+		definitionDigest: canonicalJsonDigest(semanticDefinition),
 		lifecycle: input.lifecycle,
 	} as CustomCheckDefinition;
 	assertCustomCheckDefinition(definition, userStandards);
@@ -296,10 +348,12 @@ function materializeDefinition(
 function normalizeProposal(
 	value: CustomCheckProposal,
 	allowRuntimeFields = false,
-): CustomCheckProposal {
+): NormalizedCustomCheckProposal {
 	assertRecord(value, "Custom Check proposal");
 	assertKnownKeys(value, "Custom Check proposal", [
 		"checkTypeId",
+		"evaluator",
+		"codeTemplate",
 		"name",
 		"requirement",
 		"repairGuidance",
@@ -314,6 +368,9 @@ function normalizeProposal(
 		throw new Error(`Unknown Custom Check Type ${String(value.checkTypeId)}.`);
 	}
 	const checkType = getCustomCheckType(value.checkTypeId);
+	if (!CUSTOM_CHECK_EVALUATORS.includes(value.evaluator)) {
+		throw new Error("Custom Check evaluator must be model or code.");
+	}
 	const name = boundedText(value.name, "Custom Check name", 80);
 	const requirement = boundedText(
 		value.requirement,
@@ -326,6 +383,22 @@ function normalizeProposal(
 		1_000,
 	);
 	const appliesWhen = normalizeApplicability(value.appliesWhen, checkType.loops);
+	let codeTemplate: CustomCodeTemplateBinding | undefined;
+	if (value.evaluator === "model") {
+		if (value.codeTemplate !== undefined) {
+			throw new Error("Custom Model Check cannot define codeTemplate.");
+		}
+	} else {
+		if (value.codeTemplate === undefined) {
+			throw new Error("Custom Code Check requires one approved codeTemplate.");
+		}
+		codeTemplate = normalizeCustomCodeTemplateBinding({
+			value: value.codeTemplate,
+			checkTypeId: value.checkTypeId,
+			applicabilityLoops: appliesWhen.loops ?? [],
+			allowRuntimeFields,
+		});
+	}
 	const standardRefs = normalizeCustomCheckStandardRefs(value.standardRefs);
 	const knowledgeRefs = normalizeStringList(
 		value.knowledgeRefs ?? [],
@@ -335,6 +408,8 @@ function normalizeProposal(
 	);
 	return {
 		checkTypeId: value.checkTypeId,
+		evaluator: value.evaluator,
+		...(codeTemplate ? {codeTemplate} : {}),
 		name,
 		requirement,
 		...(repairGuidance ? { repairGuidance } : {}),
@@ -486,17 +561,20 @@ function normalizeApplicability(
 	};
 }
 
-function definitionDigest(
-	value: Omit<CustomCheckDefinition, "definitionDigest" | "lifecycle">,
-): Sha256Digest {
-	return canonicalJsonDigest(value);
-}
-
 function cloneDefinition(
 	definition: CustomCheckDefinition,
 ): CustomCheckDefinition {
 	return {
 		...definition,
+		...(definition.codeTemplate
+			? {
+					codeTemplate: {
+						...definition.codeTemplate,
+						parameters: {...definition.codeTemplate.parameters},
+						enforcement: [...(definition.codeTemplate.enforcement ?? [])],
+					},
+				}
+			: {}),
 		appliesWhen: {
 			...(definition.appliesWhen.loops
 				? { loops: [...definition.appliesWhen.loops] }
@@ -522,8 +600,10 @@ function cloneDefinition(
 }
 
 function cloneProposal(proposal: CustomCheckProposal): CustomCheckProposal {
+	const codeTemplate = cloneCodeTemplate(proposal.codeTemplate);
 	return {
 		...proposal,
+		...(codeTemplate ? {codeTemplate} : {}),
 		appliesWhen: {...proposal.appliesWhen},
 		standardRefs: proposal.standardRefs.map((reference) => ({
 			...reference,
@@ -533,6 +613,19 @@ function cloneProposal(proposal: CustomCheckProposal): CustomCheckProposal {
 			? {knowledgeRefs: [...proposal.knowledgeRefs]}
 			: {}),
 	};
+}
+
+function cloneCodeTemplate(
+	template: CustomCheckProposal["codeTemplate"],
+): CustomCheckProposal["codeTemplate"] {
+	if (!template) return undefined;
+	const clone = {
+		...template,
+		parameters: {...template.parameters},
+	};
+	return template.enforcement
+		? {...clone, enforcement: [...template.enforcement]}
+		: clone;
 }
 
 function normalizePathScope(value: string): string {

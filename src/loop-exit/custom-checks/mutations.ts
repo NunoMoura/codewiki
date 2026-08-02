@@ -18,10 +18,19 @@ import {
 	type CustomCheckProposal,
 } from "./contracts.ts";
 import {
+	normalizeCustomCodeTemplateBinding,
+	type CustomCodeCapabilitySnapshot,
+	type CustomCodeTemplateBinding,
+	type CustomCodeTemplateSelection,
+} from "./code-templates.ts";
+import {
 	assertUserStandardDistillationReceipt,
+	isUserStandardDistilledCodeProposalId,
 	isUserStandardDistilledProposalId,
 	materializeUserStandardDistillationBundle,
+	materializeUserStandardDistilledCodeCheck,
 	type UserStandardDistillationReceipt,
+	type UserStandardDistilledCustomCodeProposal,
 } from "./distillation.ts";
 import {
 	normalizeUserStandardDefinitions,
@@ -41,7 +50,7 @@ import {
 
 export const CUSTOM_CHECK_MUTATION_PROTOCOL = Object.freeze({
 	id: "codewiki.custom-check-mutation",
-	version: "3.0.0",
+	version: "4.0.0",
 	maxIdempotencyKeyLength: 128,
 	maxCompletedCommands: 64,
 	maxBundleCustomChecks: 16,
@@ -85,6 +94,11 @@ export interface DisableCustomCheckCommand extends CustomCheckMutationCommandBas
 	readonly customCheckId: string;
 }
 
+export interface CustomCheckMutationCodeTemplateSelection {
+	readonly proposalId: string;
+	readonly templateBinding: CustomCodeTemplateBinding;
+}
+
 export interface CreateDistilledCustomCheckBundleCommand
 	extends CustomCheckMutationCommandBase {
 	readonly action: "create_distilled_bundle";
@@ -93,6 +107,7 @@ export interface CreateDistilledCustomCheckBundleCommand
 		{readonly status: "completed"}
 	>;
 	readonly selectedProposalIds: readonly string[];
+	readonly codeTemplateSelections: readonly CustomCheckMutationCodeTemplateSelection[];
 }
 
 export type CustomCheckMutationCommand =
@@ -141,6 +156,7 @@ export interface CustomCheckAuthorizationRequest {
 	readonly after: CustomCheckConfigState;
 	readonly standardChanges: readonly CustomCheckMutationStandardDefinitionChange[];
 	readonly definitionChanges: readonly CustomCheckMutationDefinitionChangeMaterial[];
+	readonly capabilitySnapshot: CustomCodeCapabilitySnapshot | null;
 	readonly authorizationDigest: Sha256Digest;
 }
 
@@ -159,6 +175,8 @@ export interface CustomCheckMutationDefinitionBinding {
 	readonly customCheckId: string;
 	readonly definitionDigest: Sha256Digest;
 	readonly lifecycle: CustomCheckLifecycle;
+	readonly evaluator: "model" | "code";
+	readonly templateBindingDigest: Sha256Digest | null;
 }
 
 export interface CustomCheckMutationDefinitionChange {
@@ -184,6 +202,8 @@ export interface CustomCheckMutationReceipt {
 	readonly customCheckConfigDigestAfter: Sha256Digest;
 	readonly distillationReceipt: UserStandardDistillationReceipt | null;
 	readonly selectedProposalIds: readonly string[];
+	readonly codeTemplateSelections: readonly CustomCheckMutationCodeTemplateSelection[];
+	readonly activationCapabilitySnapshotDigest: Sha256Digest | null;
 	readonly standardChanges: readonly CustomCheckMutationStandardChange[];
 	readonly definitionChanges: readonly CustomCheckMutationDefinitionChange[];
 	readonly effectiveFrom: "next_protected_snapshot";
@@ -243,6 +263,8 @@ export function assertCustomCheckMutationReceipt(
 				"customCheckConfigDigestAfter",
 				"distillationReceipt",
 				"selectedProposalIds",
+				"codeTemplateSelections",
+				"activationCapabilitySnapshotDigest",
 				"standardChanges",
 				"definitionChanges",
 				"effectiveFrom",
@@ -261,21 +283,8 @@ export function assertCustomCheckMutationReceipt(
 			"receipt.recordedAt",
 		);
 		const authority = normalizeAuthenticatedCustomCheckAuthority(value.authority);
-		const distillationReceipt = normalizedDistillationReceipt(
-			value.distillationReceipt,
-		);
-		const selectedIds = selectedProposalIds(value.selectedProposalIds);
-		const standardChanges = normalizeReceiptStandardChanges(value.standardChanges);
-		const definitionChanges = normalizeReceiptDefinitionChanges(
-			value.definitionChanges,
-		);
-		assertReceiptTransition({
-			action,
-			distillationReceipt,
-			selectedProposalIds: selectedIds,
-			standardChanges,
-			definitionChanges,
-		});
+		const bundleFields = normalizeReceiptBundleFields(value);
+		assertReceiptTransition({action, ...bundleFields});
 		const payload = {
 			protocolId: CUSTOM_CHECK_MUTATION_PROTOCOL.id,
 			protocolVersion: CUSTOM_CHECK_MUTATION_PROTOCOL.version,
@@ -315,10 +324,7 @@ export function assertCustomCheckMutationReceipt(
 				value.customCheckConfigDigestAfter,
 				"receipt.customCheckConfigDigestAfter",
 			),
-			distillationReceipt,
-			selectedProposalIds: selectedIds,
-			standardChanges,
-			definitionChanges,
+			...bundleFields,
 			effectiveFrom: value.effectiveFrom,
 		};
 		if (payload.effectiveFrom !== "next_protected_snapshot") {
@@ -345,9 +351,40 @@ export function assertCustomCheckMutationReceipt(
 	}
 }
 
+function normalizeReceiptBundleFields(
+	value: CustomCheckMutationReceipt,
+): ReceiptTransitionFields {
+	const distillationReceipt = normalizedDistillationReceipt(
+		value.distillationReceipt,
+	);
+	const selectedIds = selectedProposalIds(value.selectedProposalIds);
+	const receiptBundle = distillationReceipt?.status === "completed"
+		? materializeUserStandardDistillationBundle(distillationReceipt)
+		: null;
+	return {
+		distillationReceipt,
+		selectedProposalIds: selectedIds,
+		codeTemplateSelections: normalizeCodeTemplateSelections({
+			value: value.codeTemplateSelections,
+			proposals: receiptBundle?.customCodeCheckProposals ?? [],
+			selectedProposalIds: selectedIds,
+			allowRuntimeFields: true,
+		}),
+		activationCapabilitySnapshotDigest: nullableDigest(
+			value.activationCapabilitySnapshotDigest,
+			"receipt.activationCapabilitySnapshotDigest",
+		),
+		standardChanges: normalizeReceiptStandardChanges(value.standardChanges),
+		definitionChanges: normalizeReceiptDefinitionChanges(
+			value.definitionChanges,
+		),
+	};
+}
+
 export function createCustomCheckMutationRuntime(options: {
 	readonly store: CustomCheckMutationStore;
 	readonly loadProtectedBase: () => Promise<ProtectedCustomCheckConfigSnapshot>;
+	readonly loadCustomCodeCapabilitySnapshot?: () => Promise<CustomCodeCapabilitySnapshot>;
 	readonly authorize: (
 		request: CustomCheckAuthorizationRequest,
 	) => boolean | Promise<boolean>;
@@ -420,7 +457,11 @@ export function parseCustomCheckMutationCommand(
 		}
 		assertExactKeys(
 			value,
-			baseCommandKeys("distillationReceipt", "selectedProposalIds"),
+			baseCommandKeys(
+				"distillationReceipt",
+				"selectedProposalIds",
+				"codeTemplateSelections",
+			),
 			"Custom Check mutation command",
 		);
 		const distillationReceipt = normalizedDistillationReceipt(
@@ -432,20 +473,27 @@ export function parseCustomCheckMutationCommand(
 			);
 		}
 		const selectedIds = selectedProposalIds(value.selectedProposalIds);
-		const availableIds = new Set(
-			materializeUserStandardDistillationBundle(distillationReceipt)
-				.customCheckProposals.map((proposal) => proposal.proposalId),
-		);
+		const bundle = materializeUserStandardDistillationBundle(distillationReceipt);
+		const availableIds = new Set([
+			...bundle.customCheckProposals.map((proposal) => proposal.proposalId),
+			...bundle.customCodeCheckProposals.map((proposal) => proposal.proposalId),
+		]);
 		for (const proposalId of selectedIds) {
 			if (!availableIds.has(proposalId)) {
 				throw new Error(`Unknown distilled Custom Check proposal ${proposalId}.`);
 			}
 		}
+		const codeTemplateSelections = normalizeCodeTemplateSelections({
+			value: value.codeTemplateSelections,
+			proposals: bundle.customCodeCheckProposals,
+			selectedProposalIds: selectedIds,
+		});
 		return Object.freeze({
 			...base,
 			action,
 			distillationReceipt,
 			selectedProposalIds: Object.freeze(selectedIds),
+			codeTemplateSelections,
 		});
 	} catch (error) {
 		if (error instanceof CustomCheckMutationError) throw error;
@@ -467,10 +515,17 @@ async function executeMutation(input: {
 	const before = normalizedState(beforeValue);
 	assertProtectedCustomCheckConfigSnapshot(protectedBase);
 	assertExpectedState({command, before, protectedBase});
+	const {capabilitySnapshot, recordedAt} = await activationCapabilityContext({
+		options,
+		command,
+		before,
+		now,
+	});
 	const mutation = applyMutation({
 		command,
 		definitions: before.customChecks,
 		userStandards: before.userStandards,
+		capabilitySnapshot,
 	});
 	const projected = normalizedState(
 		await options.store.preview({
@@ -493,6 +548,7 @@ async function executeMutation(input: {
 		after: projected,
 		standardChanges: mutation.standardChanges,
 		definitionChanges: mutation.definitionChanges,
+		capabilitySnapshot,
 	});
 	const authorizationRequest: CustomCheckAuthorizationRequest = Object.freeze({
 		protocolId: CUSTOM_CHECK_MUTATION_PROTOCOL.id,
@@ -504,6 +560,7 @@ async function executeMutation(input: {
 		after: projected,
 		standardChanges: mutation.standardChanges,
 		definitionChanges: mutation.definitionChanges,
+		capabilitySnapshot,
 		authorizationDigest,
 	});
 	if (!await options.authorize(authorizationRequest)) {
@@ -537,7 +594,9 @@ async function executeMutation(input: {
 		after: state,
 		standardChanges: mutation.standardChanges,
 		definitionChanges: mutation.definitionChanges,
-		recordedAt: now().toISOString(),
+		activationCapabilitySnapshotDigest:
+			capabilitySnapshot?.snapshotDigest ?? null,
+		recordedAt,
 	});
 	return Object.freeze({
 		replayed: false,
@@ -552,73 +611,55 @@ async function executeMutation(input: {
 	});
 }
 
-function applyMutation(input: {
+async function activationCapabilityContext(input: {
+	readonly options: Parameters<typeof createCustomCheckMutationRuntime>[0];
 	readonly command: CustomCheckMutationCommand;
-	readonly definitions: readonly CustomCheckDefinition[];
-	readonly userStandards: readonly UserStandardDefinition[];
-}): {
+	readonly before: CustomCheckConfigState;
+	readonly now: () => Date;
+}): Promise<{
+	readonly capabilitySnapshot: CustomCodeCapabilitySnapshot | null;
+	readonly recordedAt: string;
+}> {
+	const {options, command, before, now} = input;
+	const activationDefinition = command.action === "activate"
+		? before.customChecks.find(
+				(definition) => definition.customCheckId === command.customCheckId,
+			)
+		: undefined;
+	const capabilitySnapshot =
+		activationDefinition?.evaluator === "code" &&
+		options.loadCustomCodeCapabilitySnapshot
+			? await options.loadCustomCodeCapabilitySnapshot()
+			: null;
+	const recordedAt = now().toISOString();
+	if (
+		capabilitySnapshot &&
+		Date.parse(capabilitySnapshot.observedAt) > Date.parse(recordedAt)
+	) {
+		throw badRequest(
+			"Custom Code capability snapshot cannot postdate its activation mutation.",
+		);
+	}
+	return {capabilitySnapshot, recordedAt};
+}
+
+interface AppliedCustomCheckMutation {
 	readonly userStandards: readonly UserStandardDefinition[];
 	readonly customChecks: readonly CustomCheckDefinition[];
 	readonly customCheckConfigDigest: Sha256Digest;
 	readonly standardChanges: readonly CustomCheckMutationStandardDefinitionChange[];
 	readonly definitionChanges: readonly CustomCheckMutationDefinitionChangeMaterial[];
-} {
+}
+
+function applyMutation(input: {
+	readonly command: CustomCheckMutationCommand;
+	readonly definitions: readonly CustomCheckDefinition[];
+	readonly userStandards: readonly UserStandardDefinition[];
+	readonly capabilitySnapshot: CustomCodeCapabilitySnapshot | null;
+}): AppliedCustomCheckMutation {
 	const {command, definitions, userStandards} = input;
 	if (command.action === "create_distilled_bundle") {
-		const bundle = materializeUserStandardDistillationBundle(
-			command.distillationReceipt,
-		);
-		if (
-			userStandards.some(
-				(standard) =>
-					standard.userStandardId === bundle.userStandard.userStandardId,
-			)
-		) {
-			throw conflict(
-				`User Standard ${bundle.userStandard.userStandardId} already exists.`,
-			);
-		}
-		const nextUserStandards = normalizeUserStandardDefinitions([
-			...userStandards,
-			bundle.userStandard,
-		]);
-		const selected = new Set(command.selectedProposalIds);
-		const changedCustomChecks: CustomCheckDefinition[] = [];
-		for (const proposal of bundle.customCheckProposals) {
-			if (!selected.has(proposal.proposalId)) continue;
-			changedCustomChecks.push(
-				createCustomCheckDefinition(proposal.proposal, nextUserStandards),
-			);
-		}
-		const existingIds = new Set(
-			definitions.map((definition) => definition.customCheckId),
-		);
-		for (const definition of changedCustomChecks) {
-			if (existingIds.has(definition.customCheckId)) {
-				throw conflict(`Custom Check ${definition.customCheckId} already exists.`);
-			}
-			existingIds.add(definition.customCheckId);
-		}
-		const customChecks = normalizeCustomCheckDefinitions(
-			[...definitions, ...changedCustomChecks],
-			nextUserStandards,
-		);
-		return Object.freeze({
-			userStandards: nextUserStandards,
-			customChecks,
-			customCheckConfigDigest: customCheckConfigurationDigest({
-				userStandards: nextUserStandards,
-				customChecks,
-			}),
-			standardChanges: Object.freeze([
-				Object.freeze({before: null, after: bundle.userStandard}),
-			]),
-			definitionChanges: Object.freeze(
-				changedCustomChecks.map((definition) =>
-					Object.freeze({before: null, after: definition}),
-				),
-			),
-		});
+		return applyDistilledBundleMutation({command, definitions, userStandards});
 	}
 	let definitionBefore: CustomCheckDefinition | null = null;
 	let definitionAfter: CustomCheckDefinition;
@@ -643,6 +684,7 @@ function applyMutation(input: {
 				definitionAfter = activateCustomCheckDefinition(
 					definitionBefore,
 					userStandards,
+					input.capabilitySnapshot ?? undefined,
 				);
 			} else {
 				definitionAfter = disableCustomCheckDefinition(
@@ -677,6 +719,81 @@ function applyMutation(input: {
 	});
 }
 
+function applyDistilledBundleMutation(input: {
+	readonly command: CreateDistilledCustomCheckBundleCommand;
+	readonly definitions: readonly CustomCheckDefinition[];
+	readonly userStandards: readonly UserStandardDefinition[];
+}): AppliedCustomCheckMutation {
+	const {command, definitions, userStandards} = input;
+	const bundle = materializeUserStandardDistillationBundle(
+		command.distillationReceipt,
+	);
+	if (
+		userStandards.some(
+			(standard) =>
+				standard.userStandardId === bundle.userStandard.userStandardId,
+		)
+	) {
+		throw conflict(
+			`User Standard ${bundle.userStandard.userStandardId} already exists.`,
+		);
+	}
+	const nextUserStandards = normalizeUserStandardDefinitions([
+		...userStandards,
+		bundle.userStandard,
+	]);
+	const selected = new Set(command.selectedProposalIds);
+	const changedCustomChecks: CustomCheckDefinition[] = [];
+	for (const proposal of bundle.customCheckProposals) {
+		if (!selected.has(proposal.proposalId)) continue;
+		changedCustomChecks.push(
+			createCustomCheckDefinition(proposal.proposal, nextUserStandards),
+		);
+	}
+	for (const selection of command.codeTemplateSelections) {
+		const proposal = materializeUserStandardDistilledCodeCheck({
+			bundle,
+			proposalId: selection.proposalId,
+			codeTemplate: {
+				templateId: selection.templateBinding.templateId,
+				parameters: selection.templateBinding.parameters,
+			},
+		});
+		changedCustomChecks.push(
+			createCustomCheckDefinition(proposal, nextUserStandards),
+		);
+	}
+	const existingIds = new Set(
+		definitions.map((definition) => definition.customCheckId),
+	);
+	for (const definition of changedCustomChecks) {
+		if (existingIds.has(definition.customCheckId)) {
+			throw conflict(`Custom Check ${definition.customCheckId} already exists.`);
+		}
+		existingIds.add(definition.customCheckId);
+	}
+	const customChecks = normalizeCustomCheckDefinitions(
+		[...definitions, ...changedCustomChecks],
+		nextUserStandards,
+	);
+	return Object.freeze({
+		userStandards: nextUserStandards,
+		customChecks,
+		customCheckConfigDigest: customCheckConfigurationDigest({
+			userStandards: nextUserStandards,
+			customChecks,
+		}),
+		standardChanges: Object.freeze([
+			Object.freeze({before: null, after: bundle.userStandard}),
+		]),
+		definitionChanges: Object.freeze(
+			changedCustomChecks.map((definition) =>
+				Object.freeze({before: null, after: definition}),
+			),
+		),
+	});
+}
+
 function mutationReceipt(input: {
 	readonly command: CustomCheckMutationCommand;
 	readonly authority: AuthenticatedCustomCheckAuthority;
@@ -686,6 +803,7 @@ function mutationReceipt(input: {
 	readonly after: CustomCheckConfigState;
 	readonly standardChanges: readonly CustomCheckMutationStandardDefinitionChange[];
 	readonly definitionChanges: readonly CustomCheckMutationDefinitionChangeMaterial[];
+	readonly activationCapabilitySnapshotDigest: Sha256Digest | null;
 	readonly recordedAt: string;
 }): CustomCheckMutationReceipt {
 	const standardChanges = Object.freeze(
@@ -725,6 +843,12 @@ function mutationReceipt(input: {
 			input.command.action === "create_distilled_bundle"
 				? input.command.selectedProposalIds
 				: Object.freeze([]),
+		codeTemplateSelections:
+			input.command.action === "create_distilled_bundle"
+				? input.command.codeTemplateSelections
+				: Object.freeze([]),
+		activationCapabilitySnapshotDigest:
+			input.activationCapabilitySnapshotDigest,
 		standardChanges,
 		definitionChanges,
 		effectiveFrom: "next_protected_snapshot" as const,
@@ -749,6 +873,8 @@ function authorizationIdentity(
 		configDigestAfter: input.after.projectConfigDigest,
 		standardChanges: input.standardChanges.map(standardChangeBinding),
 		definitionChanges: input.definitionChanges.map(definitionChangeBinding),
+		capabilitySnapshotDigest:
+			input.capabilitySnapshot?.snapshotDigest ?? null,
 		effectiveFrom: "next_protected_snapshot",
 	});
 }
@@ -780,6 +906,8 @@ function definitionBinding(
 		customCheckId: definition.customCheckId,
 		definitionDigest: definition.definitionDigest,
 		lifecycle: definition.lifecycle,
+		evaluator: definition.evaluator,
+		templateBindingDigest: definition.codeTemplate?.bindingDigest ?? null,
 	});
 }
 
@@ -979,6 +1107,11 @@ function boundedText(...input: [unknown, string, number]): string {
 	return value.trim();
 }
 
+function nullableDigest(...input: [unknown, string]): Sha256Digest | null {
+	const [value, field] = input;
+	return value === null ? null : assertSha256Digest(value, field);
+}
+
 function normalizedDistillationReceipt(
 	value: UserStandardDistillationReceipt | null | unknown,
 ): UserStandardDistillationReceipt | null {
@@ -991,6 +1124,83 @@ function normalizedDistillationReceipt(
 	return receipt;
 }
 
+function normalizeCodeTemplateSelections(input: {
+	readonly value: unknown;
+	readonly proposals: readonly UserStandardDistilledCustomCodeProposal[];
+	readonly selectedProposalIds: readonly string[];
+	readonly allowRuntimeFields?: boolean;
+}): readonly CustomCheckMutationCodeTemplateSelection[] {
+	const {
+		value,
+		proposals,
+		selectedProposalIds: selectedProposalIdList,
+		allowRuntimeFields = false,
+	} = input;
+	if (!Array.isArray(value) || value.length > CUSTOM_CHECK_MUTATION_PROTOCOL.maxBundleCustomChecks) {
+		throw new Error(
+			`codeTemplateSelections cannot exceed ${CUSTOM_CHECK_MUTATION_PROTOCOL.maxBundleCustomChecks} entries.`,
+		);
+	}
+	const proposalById = new Map(
+		proposals.map((proposal) => [proposal.proposalId, proposal] as const),
+	);
+	const selectedIds = new Set(selectedProposalIdList);
+	const selections: CustomCheckMutationCodeTemplateSelection[] = [];
+	for (let index = 0; index < value.length; index += 1) {
+		const entry = value[index];
+		if (!isRecord(entry)) {
+			throw new Error(`codeTemplateSelections[${index}] must be an object.`);
+		}
+		assertExactKeys(
+			entry,
+			["proposalId", "templateBinding"],
+			`codeTemplateSelections[${index}]`,
+		);
+		if (!isUserStandardDistilledCodeProposalId(entry.proposalId)) {
+			throw new Error(`codeTemplateSelections[${index}].proposalId is invalid.`);
+		}
+		const proposal = proposalById.get(entry.proposalId);
+		if (!proposal || !selectedIds.has(entry.proposalId)) {
+			throw new Error(
+				`Code template selection ${entry.proposalId} is not a selected distilled Custom Code Check proposal.`,
+			);
+		}
+		const templateBinding = normalizeCustomCodeTemplateBinding({
+			value: entry.templateBinding as CustomCodeTemplateSelection,
+			checkTypeId: proposal.proposal.checkTypeId,
+			applicabilityLoops: proposal.proposal.appliesWhen.loops ?? [],
+			allowRuntimeFields,
+		});
+		selections.push(
+			Object.freeze({proposalId: entry.proposalId, templateBinding}),
+		);
+	}
+	if (new Set(selections.map((selection) => selection.proposalId)).size !== selections.length) {
+		throw new Error("codeTemplateSelections cannot contain duplicate proposal ids.");
+	}
+	const selectedCodeIds = proposals
+		.flatMap((proposal) =>
+			selectedIds.has(proposal.proposalId) ? [proposal.proposalId] : [],
+		)
+		.sort(compareText);
+	const selectionIds = selections
+		.map((selection) => selection.proposalId)
+		.sort(compareText);
+	if (canonicalJsonDigest(selectedCodeIds) !== canonicalJsonDigest(selectionIds)) {
+		throw new Error(
+			"Every selected distilled Custom Code Check proposal requires one approved code template selection.",
+		);
+	}
+	return Object.freeze(
+		selections.sort((...selectionsToCompare) =>
+			compareText(
+				selectionsToCompare[0].proposalId,
+				selectionsToCompare[1].proposalId,
+			),
+		),
+	);
+}
+
 function selectedProposalIds(value: unknown): string[] {
 	if (
 		!Array.isArray(value) ||
@@ -1001,7 +1211,10 @@ function selectedProposalIds(value: unknown): string[] {
 		);
 	}
 	const ids = value.map((entry) => {
-		if (!isUserStandardDistilledProposalId(entry)) {
+		if (
+			!isUserStandardDistilledProposalId(entry) &&
+			!isUserStandardDistilledCodeProposalId(entry)
+		) {
 			throw new Error("selectedProposalIds contains an invalid proposal id.");
 		}
 		return entry;
@@ -1126,11 +1339,32 @@ function normalizeReceiptDefinitionBinding(
 	}
 	assertExactKeys(
 		value,
-		["customCheckId", "definitionDigest", "lifecycle"],
+		[
+			"customCheckId",
+			"definitionDigest",
+			"lifecycle",
+			"evaluator",
+			"templateBindingDigest",
+		],
 		`Custom Check mutation receipt ${label}`,
 	);
 	if (!["draft", "active", "disabled"].includes(value.lifecycle)) {
 		throw new Error(`Custom Check mutation receipt ${label} lifecycle is invalid.`);
+	}
+	if (value.evaluator !== "model" && value.evaluator !== "code") {
+		throw new Error(`Custom Check mutation receipt ${label} evaluator is invalid.`);
+	}
+	const templateBindingDigest = nullableDigest(
+		value.templateBindingDigest,
+		`${label}.templateBindingDigest`,
+	);
+	if (
+		(value.evaluator === "model" && templateBindingDigest !== null) ||
+		(value.evaluator === "code" && templateBindingDigest === null)
+	) {
+		throw new Error(
+			`Custom Check mutation receipt ${label} template binding is invalid.`,
+		);
 	}
 	return Object.freeze({
 		customCheckId: customCheckId(value.customCheckId),
@@ -1139,38 +1373,57 @@ function normalizeReceiptDefinitionBinding(
 			`${label}.definitionDigest`,
 		),
 		lifecycle: value.lifecycle,
+		evaluator: value.evaluator,
+		templateBindingDigest,
 	});
 }
 
-function assertReceiptTransition(input: {
-	readonly action: CustomCheckMutationAction;
+interface ReceiptTransitionFields {
 	readonly distillationReceipt: UserStandardDistillationReceipt | null;
 	readonly selectedProposalIds: readonly string[];
+	readonly codeTemplateSelections: readonly CustomCheckMutationCodeTemplateSelection[];
+	readonly activationCapabilitySnapshotDigest: Sha256Digest | null;
 	readonly standardChanges: readonly CustomCheckMutationStandardChange[];
 	readonly definitionChanges: readonly CustomCheckMutationDefinitionChange[];
-}): void {
+}
+
+type ReceiptTransitionInput = ReceiptTransitionFields & (
+	| {readonly action: "create_distilled_bundle"}
+	| {
+			readonly action: Exclude<
+				CustomCheckMutationAction,
+				"create_distilled_bundle"
+			>;
+	  }
+);
+
+function assertReceiptTransition(input: ReceiptTransitionInput): void {
 	if (input.action === "create_distilled_bundle") {
 		assertDistilledBundleReceiptTransition(input);
 		return;
 	}
-	assertSingleCheckReceiptTransition({
-		action: input.action,
-		distillationReceipt: input.distillationReceipt,
-		selectedProposalIds: input.selectedProposalIds,
-		standardChanges: input.standardChanges,
-		definitionChanges: input.definitionChanges,
+	assertSingleCheckReceiptTransition(input);
+}
+
+function assertDistilledBundleReceiptTransition(
+	input: ReceiptTransitionFields,
+): void {
+	const bundle = assertedDistilledReceiptBundle(input);
+	const expectedDefinitions = expectedDistilledDefinitionBindings({
+		transition: input,
+		bundle,
+	});
+	assertDistilledDefinitionChanges({
+		changes: input.definitionChanges,
+		expectedDefinitions,
 	});
 }
 
-function assertDistilledBundleReceiptTransition(input: {
-	readonly distillationReceipt: UserStandardDistillationReceipt | null;
-	readonly selectedProposalIds: readonly string[];
-	readonly standardChanges: readonly CustomCheckMutationStandardChange[];
-	readonly definitionChanges: readonly CustomCheckMutationDefinitionChange[];
-}): void {
+function assertedDistilledReceiptBundle(input: ReceiptTransitionFields) {
 	if (
 		!input.distillationReceipt ||
 		input.distillationReceipt.status !== "completed" ||
+		input.activationCapabilitySnapshotDigest !== null ||
 		input.standardChanges.length !== 1 ||
 		input.standardChanges[0].before !== null
 	) {
@@ -1187,7 +1440,15 @@ function assertDistilledBundleReceiptTransition(input: {
 	) {
 		throw new Error("Distilled bundle receipt changed User Standard identity.");
 	}
-	const selectedIds = new Set(input.selectedProposalIds);
+	return bundle;
+}
+
+function expectedDistilledDefinitionBindings(input: {
+	readonly transition: ReceiptTransitionFields;
+	readonly bundle: ReturnType<typeof materializeUserStandardDistillationBundle>;
+}): Map<string, CustomCheckMutationDefinitionBinding | null> {
+	const {transition, bundle} = input;
+	const selectedIds = new Set(transition.selectedProposalIds);
 	const expectedDefinitions = new Map<
 		string,
 		CustomCheckMutationDefinitionBinding | null
@@ -1202,10 +1463,38 @@ function assertDistilledBundleReceiptTransition(input: {
 			definitionBinding(definition),
 		);
 	}
-	if (expectedDefinitions.size !== input.definitionChanges.length) {
+	for (const selection of transition.codeTemplateSelections) {
+		const proposal = materializeUserStandardDistilledCodeCheck({
+			bundle,
+			proposalId: selection.proposalId,
+			codeTemplate: {
+				templateId: selection.templateBinding.templateId,
+				parameters: selection.templateBinding.parameters,
+			},
+		});
+		const definition = createCustomCheckDefinition(proposal, [
+			bundle.userStandard,
+		]);
+		expectedDefinitions.set(
+			definition.customCheckId,
+			definitionBinding(definition),
+		);
+	}
+	return expectedDefinitions;
+}
+
+function assertDistilledDefinitionChanges(input: {
+	readonly changes: readonly CustomCheckMutationDefinitionChange[];
+	readonly expectedDefinitions: ReadonlyMap<
+		string,
+		CustomCheckMutationDefinitionBinding | null
+	>;
+}): void {
+	const {changes, expectedDefinitions} = input;
+	if (expectedDefinitions.size !== changes.length) {
 		throw new Error("Distilled bundle receipt omitted selected Custom Check proposals.");
 	}
-	for (const change of input.definitionChanges) {
+	for (const change of changes) {
 		const expected = expectedDefinitions.get(change.after.customCheckId);
 		if (
 			change.before !== null ||
@@ -1218,53 +1507,104 @@ function assertDistilledBundleReceiptTransition(input: {
 	}
 }
 
-function assertSingleCheckReceiptTransition(input: {
-	readonly action: Exclude<CustomCheckMutationAction, "create_distilled_bundle">;
-	readonly distillationReceipt: UserStandardDistillationReceipt | null;
-	readonly selectedProposalIds: readonly string[];
-	readonly standardChanges: readonly CustomCheckMutationStandardChange[];
-	readonly definitionChanges: readonly CustomCheckMutationDefinitionChange[];
-}): void {
-	const {
-		action,
-		distillationReceipt,
-		selectedProposalIds: selectedIds,
-		standardChanges,
-		definitionChanges,
-	} = input;
-	if (
-		distillationReceipt ||
-		selectedIds.length !== 0 ||
-		standardChanges.length !== 0 ||
-		definitionChanges.length !== 1
-	) {
-		throw new Error("Custom Check mutation receipt has unexpected bundle changes.");
-	}
-	const {before, after} = definitionChanges[0];
-	if (action === "create") {
-		if (before || after.lifecycle !== "draft") {
-			throw new Error("Custom Check create receipt has an invalid lifecycle transition.");
-		}
+function assertSingleCheckReceiptTransition(
+	input: ReceiptTransitionFields & {
+		readonly action: Exclude<
+			CustomCheckMutationAction,
+			"create_distilled_bundle"
+		>;
+	},
+): void {
+	assertSingleReceiptEnvelope(input);
+	const change = input.definitionChanges[0];
+	assertActivationCapabilityBinding({transition: input, after: change.after});
+	if (input.action === "create") {
+		assertCreateReceiptChange(change);
 		return;
 	}
-	if (!before || before.customCheckId !== after.customCheckId) {
-		throw new Error("Custom Check mutation receipt changed definition lineage.");
-	}
-	if (action === "update") {
-		if (before.lifecycle !== after.lifecycle) {
+	const before = assertedPriorDefinitionBinding(change);
+	if (input.action === "update") {
+		if (before.lifecycle !== change.after.lifecycle) {
 			throw new Error("Custom Check update receipt changed lifecycle.");
 		}
 		return;
 	}
-	if (action === "activate") {
-		if (before.lifecycle !== "draft" || after.lifecycle !== "active") {
-			throw new Error("Custom Check activate receipt has an invalid lifecycle transition.");
-		}
-		if (before.definitionDigest !== after.definitionDigest) {
-			throw new Error("Custom Check activate receipt changed definition semantics.");
-		}
+	if (input.action === "activate") {
+		assertActivationReceiptChange({before, after: change.after});
 		return;
 	}
+	assertDisableReceiptChange({before, after: change.after});
+}
+
+function assertSingleReceiptEnvelope(input: ReceiptTransitionFields): void {
+	if (
+		input.distillationReceipt ||
+		input.selectedProposalIds.length !== 0 ||
+		input.codeTemplateSelections.length !== 0 ||
+		input.standardChanges.length !== 0 ||
+		input.definitionChanges.length !== 1
+	) {
+		throw new Error("Custom Check mutation receipt has unexpected bundle changes.");
+	}
+}
+
+function assertActivationCapabilityBinding(input: {
+	readonly transition: ReceiptTransitionFields & {
+		readonly action: CustomCheckMutationAction;
+	};
+	readonly after: CustomCheckMutationDefinitionBinding;
+}): void {
+	const {transition, after} = input;
+	const requiresCapability =
+		transition.action === "activate" && after.evaluator === "code";
+	if (
+		(requiresCapability && transition.activationCapabilitySnapshotDigest === null) ||
+		(!requiresCapability && transition.activationCapabilitySnapshotDigest !== null)
+	) {
+		throw new Error(
+			"Custom Check mutation receipt activation capability binding is invalid.",
+		);
+	}
+}
+
+function assertCreateReceiptChange(
+	change: CustomCheckMutationDefinitionChange,
+): void {
+	if (change.before || change.after.lifecycle !== "draft") {
+		throw new Error("Custom Check create receipt has an invalid lifecycle transition.");
+	}
+}
+
+function assertedPriorDefinitionBinding(
+	change: CustomCheckMutationDefinitionChange,
+): CustomCheckMutationDefinitionBinding {
+	if (
+		!change.before ||
+		change.before.customCheckId !== change.after.customCheckId
+	) {
+		throw new Error("Custom Check mutation receipt changed definition lineage.");
+	}
+	return change.before;
+}
+
+function assertActivationReceiptChange(input: {
+	readonly before: CustomCheckMutationDefinitionBinding;
+	readonly after: CustomCheckMutationDefinitionBinding;
+}): void {
+	const {before, after} = input;
+	if (before.lifecycle !== "draft" || after.lifecycle !== "active") {
+		throw new Error("Custom Check activate receipt has an invalid lifecycle transition.");
+	}
+	if (before.definitionDigest !== after.definitionDigest) {
+		throw new Error("Custom Check activate receipt changed definition semantics.");
+	}
+}
+
+function assertDisableReceiptChange(input: {
+	readonly before: CustomCheckMutationDefinitionBinding;
+	readonly after: CustomCheckMutationDefinitionBinding;
+}): void {
+	const {before, after} = input;
 	if (before.lifecycle === "disabled" || after.lifecycle !== "disabled") {
 		throw new Error("Custom Check disable receipt has an invalid lifecycle transition.");
 	}

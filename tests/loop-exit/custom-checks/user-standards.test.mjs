@@ -38,6 +38,7 @@ function standardProposal(overrides = {}) {
 function checkProposal(standard, overrides = {}) {
 	return {
 		checkTypeId: "organization_policy",
+		evaluator: "model",
 		name: "Public API ownership",
 		requirement: "Every changed public API must name its accountable owning team.",
 		appliesWhen: {loops: ["decision"]},
@@ -160,7 +161,7 @@ describe("User Standard contracts", () => {
 		const standard = createUserStandardDefinition(standardProposal());
 		const definition = createCustomCheckDefinition(checkProposal(standard), [standard]);
 
-		assert.equal(definition.schemaVersion, "3.0.0");
+		assert.equal(definition.schemaVersion, "4.0.0");
 		assert.deepEqual(definition.standardRefs, [
 			{
 				userStandardId: standard.userStandardId,

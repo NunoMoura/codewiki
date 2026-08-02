@@ -344,6 +344,7 @@ describe("native Decision Model Checks", () => {
 		const definition = activateCustomCheckDefinition(
 			createCustomCheckDefinition({
 				checkTypeId: "organization_policy",
+				evaluator: "model",
 				name: "Document API ownership",
 				requirement: "Every changed public API names its owning team.",
 				repairGuidance: "Add one accepted owning-team reference.",

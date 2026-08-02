@@ -158,6 +158,11 @@ describe("User Standard distillation", () => {
 		assert.match(receipt.receiptId, /^user-standard-distillation-receipt:[0-9a-f]{64}$/);
 		assert.equal(bundle.userStandard.passages.length, 6);
 		assert.equal(bundle.customCheckProposals.length, 1);
+		assert.equal(bundle.customCodeCheckProposals.length, 1);
+		assert.match(
+			bundle.customCodeCheckProposals[0].proposalId,
+			/^custom-code-check-proposal:/,
+		);
 		assert.equal(bundle.customCheckProposals[0].proposal.lifecycle, undefined);
 		assert.deepEqual(bundle.customCheckProposals[0].proposal.standardRefs, [
 			{

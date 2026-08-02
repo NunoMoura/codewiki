@@ -488,6 +488,25 @@ function activateCustomChecks(
 		}
 		const parameters: Record<string, CheckJsonValue> = {
 			customCheckId: definition.customCheckId,
+			customCheckEvaluator: definition.evaluator,
+			...(definition.codeTemplate
+				? {
+						customCodeTemplate: {
+							templateId: definition.codeTemplate.templateId,
+							templateVersion: definition.codeTemplate.templateVersion,
+							parameters: {...definition.codeTemplate.parameters},
+							parametersDigest: definition.codeTemplate.parametersDigest,
+							bindingDigest: definition.codeTemplate.bindingDigest,
+							unit: definition.codeTemplate.unit,
+							accountingWindow: definition.codeTemplate.accountingWindow,
+							requiredCapabilityId:
+								definition.codeTemplate.requiredCapabilityId,
+							requiredCapabilityVersion:
+								definition.codeTemplate.requiredCapabilityVersion,
+							enforcement: [...definition.codeTemplate.enforcement],
+						},
+					}
+				: {}),
 			protectedSourceHead: protectedConfig.protectedSourceHead,
 			protectedConfigDigest: protectedConfig.projectConfigDigest,
 			customCheckConfigDigest: protectedConfig.customCheckConfigDigest,

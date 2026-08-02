@@ -83,6 +83,7 @@ describe("wiki_config core facade", () => {
 		const definition = activateCustomCheckDefinition(
 			createCustomCheckDefinition({
 				checkTypeId: "design_system",
+				evaluator: "model",
 				name: "Use design tokens",
 				requirement: "User-facing spacing must use accepted design tokens.",
 				appliesWhen: {loops: ["decision"], affectedLayers: ["ui"]},

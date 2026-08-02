@@ -1,7 +1,15 @@
 import { decisionLoopExitDeclaration } from "../decision/exit/index.ts";
 import { implementationLoopExitDeclaration } from "../implementation/exit/index.ts";
 import { createLoopExitResultCache } from "../loop-exit/cache.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../loop-exit/custom-checks/index.ts";
+import {createCustomCodeCheckExecutors} from "../loop-exit/custom-checks/code-executor.ts";
+import type {CustomCodeCapabilitySnapshot} from "../loop-exit/custom-checks/code-templates.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../loop-exit/custom-checks/configuration.ts";
+import {
+	createResourceUsageEvidenceMaterial,
+	evaluateRuntimeResourceMeter,
+	preflightRuntimeResourceGuards,
+	resolveRuntimeResourceGuards,
+} from "../loop-exit/custom-checks/resource-guards.ts";
 import { createCheckCatalog } from "../loop-exit/catalog.ts";
 import {
 	createCheckResult,
@@ -28,6 +36,10 @@ interface LoopExitRuntime {
 	readonly createCheckResult: typeof createCheckResult;
 	readonly createExitReport: typeof createExitReport;
 	readonly createResultCache: typeof createLoopExitResultCache;
+	readonly resourceGuards: ReturnType<typeof resolveRuntimeResourceGuards>;
+	readonly preflightResourceGuards: typeof preflightRuntimeResourceGuards;
+	readonly evaluateResourceMeter: typeof evaluateRuntimeResourceMeter;
+	readonly createResourceUsageEvidenceMaterial: typeof createResourceUsageEvidenceMaterial;
 	readonly createRunner: (
 		input: Omit<CreateLoopExitRunnerInput, "catalog">,
 	) => ReturnType<typeof createLoopExitRunner>;
@@ -52,6 +64,7 @@ export const LOOP_EXIT_SUITE = createLoopExitSuite({
 export function createLoopExitRuntime(
 	input: {
 		readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
+		readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
 	} = {},
 ): LoopExitRuntime {
 	if ("customChecks" in input) {
@@ -69,14 +82,43 @@ export function createLoopExitRuntime(
 			: undefined,
 	);
 	const claimsExecutor = createDecisionResearchClaimsExecutor(catalog);
+	const resourceGuards = resolveRuntimeResourceGuards({
+		...(protectedConfig ? {protectedConfig} : {}),
+		...(input.customCodeCapabilitySnapshot
+			? {capabilitySnapshot: input.customCodeCapabilitySnapshot}
+			: {}),
+	});
+	let customCodeExecutors: ReturnType<typeof createCustomCodeCheckExecutors> = [];
+	if (resourceGuards.status === "ready") {
+		customCodeExecutors = createCustomCodeCheckExecutors({
+			catalog,
+			...(input.customCodeCapabilitySnapshot
+				? {capabilitySnapshot: input.customCodeCapabilitySnapshot}
+				: {}),
+		});
+	}
 	return Object.freeze({
 		suite: LOOP_EXIT_SUITE,
 		catalog,
 		createCheckResult,
 		createExitReport,
 		createResultCache: createLoopExitResultCache,
-		createRunner: (input: Omit<CreateLoopExitRunnerInput, "catalog">) =>
-			createLoopExitRunner({...input, catalog}),
+		resourceGuards,
+		preflightResourceGuards: preflightRuntimeResourceGuards,
+		evaluateResourceMeter: evaluateRuntimeResourceMeter,
+		createResourceUsageEvidenceMaterial,
+		createRunner: (runnerInput: Omit<CreateLoopExitRunnerInput, "catalog">) => {
+			if (resourceGuards.status === "blocked") {
+				throw new Error(
+					`Runtime resource guard admission blocked: ${resourceGuards.findings.join("; ")}`,
+				);
+			}
+			return createLoopExitRunner({
+				...runnerInput,
+				catalog,
+				executors: [...runnerInput.executors, ...customCodeExecutors],
+			});
+		},
 		materializeDecisionResearchCitation,
 		evaluateDecisionResearchProvenance:
 			createDecisionResearchProvenanceExecutor(catalog),
