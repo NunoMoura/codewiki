@@ -3,7 +3,11 @@ import {
 	canonicalJsonDigest,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import {canonicalIsoTimestamp} from "./validation.ts";
+import {
+	canonicalIsoTimestamp,
+	compareCanonicalText as compareText,
+	deepFreezeValue as deepFreeze,
+} from "./validation.ts";
 
 export const USER_STANDARD_SCHEMA_VERSION = "1.0.0" as const;
 export const MAX_USER_STANDARDS = 64;
@@ -27,7 +31,7 @@ const PRIVATE_DATA_PATTERNS = [
 export type UserStandardSourceKind = (typeof SOURCE_KINDS)[number];
 export type UserStandardMediaType = (typeof MEDIA_TYPES)[number];
 
-export interface UserStandardSourceProposal {
+export interface UserStandardSourceMaterial {
 	readonly kind: UserStandardSourceKind;
 	readonly mediaType: UserStandardMediaType;
 	readonly content: string;
@@ -39,14 +43,14 @@ export interface UserStandardPassageProposal {
 	readonly text: string;
 }
 
-export interface UserStandardProposal {
-	readonly name: string;
-	readonly source: UserStandardSourceProposal;
-	readonly passages: readonly UserStandardPassageProposal[];
+export interface UserStandardSourceSnapshot extends UserStandardSourceMaterial {
+	readonly contentDigest: Sha256Digest;
 }
 
-export interface UserStandardSourceSnapshot extends UserStandardSourceProposal {
-	readonly contentDigest: Sha256Digest;
+export interface UserStandardProposal {
+	readonly name: string;
+	readonly source: UserStandardSourceSnapshot;
+	readonly passages: readonly UserStandardPassageProposal[];
 }
 
 export interface UserStandardPassage {
@@ -61,6 +65,14 @@ export interface UserStandardDefinition {
 	readonly name: string;
 	readonly source: UserStandardSourceSnapshot;
 	readonly passages: readonly UserStandardPassage[];
+}
+
+export function createUserStandardSourceSnapshot(
+	material: UserStandardSourceMaterial,
+): UserStandardSourceSnapshot {
+	return deepFreeze(
+		normalizeSource({value: material, allowRuntimeFields: false}),
+	);
 }
 
 export function createUserStandardDefinition(
@@ -181,7 +193,7 @@ function normalizeUserStandardProposal(input: {
 	});
 	const source = normalizeSource({
 		value: value.source,
-		allowRuntimeFields,
+		allowRuntimeFields: true,
 	});
 	const passages = normalizePassages({value: value.passages, source});
 	return {
@@ -192,7 +204,7 @@ function normalizeUserStandardProposal(input: {
 }
 
 function normalizeSource(input: {
-	readonly value: UserStandardSourceProposal | UserStandardSourceSnapshot;
+	readonly value: UserStandardSourceMaterial | UserStandardSourceSnapshot;
 	readonly allowRuntimeFields: boolean;
 }): UserStandardSourceSnapshot {
 	const {value, allowRuntimeFields} = input;
@@ -222,7 +234,7 @@ function normalizeSource(input: {
 		value.observedAt,
 		"User Standard source observedAt",
 	);
-	const uri = value.kind === "url" ? normalizeHttpsUri(value.uri) : undefined;
+	const uri = value.kind === "url" ? normalizeUserStandardHttpsUri(value.uri) : undefined;
 	if (value.kind === "inline" && value.uri !== undefined) {
 		throw new Error("Inline User Standard source cannot contain uri.");
 	}
@@ -234,6 +246,11 @@ function normalizeSource(input: {
 		...(uri ? {uri} : {}),
 	};
 	const contentDigest = canonicalJsonDigest(semanticSource);
+	if (allowRuntimeFields && !("contentDigest" in value)) {
+		throw new Error(
+			"User Standard proposal requires a Runtime-materialized source snapshot.",
+		);
+	}
 	if (
 		allowRuntimeFields &&
 		("contentDigest" in value) &&
@@ -327,7 +344,7 @@ function cloneDefinition(
 	};
 }
 
-function normalizeHttpsUri(value: unknown): string {
+export function normalizeUserStandardHttpsUri(value: unknown): string {
 	if (typeof value !== "string" || !value.trim() || value.length > 2_048) {
 		throw new Error("URL User Standard source must contain a bounded HTTPS URI.");
 	}
@@ -399,21 +416,6 @@ function assertUnique(input: {
 	if (new Set(values).size !== values.length) {
 		throw new Error(`${label} cannot contain duplicates.`);
 	}
-}
-
-function compareText(...values: [string, string]): number {
-	const [left, right] = values;
-	if (left < right) return -1;
-	if (left > right) return 1;
-	return 0;
-}
-
-function deepFreeze<T>(value: T): T {
-	if (value && typeof value === "object") {
-		Object.freeze(value);
-		for (const nested of Object.values(value)) deepFreeze(nested);
-	}
-	return value;
 }
 
 export function isUserStandardId(value: unknown): value is string {

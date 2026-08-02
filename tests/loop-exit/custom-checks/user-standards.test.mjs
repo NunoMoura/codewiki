@@ -4,6 +4,7 @@ import {describe, it} from "node:test";
 import {
 	createCustomCheckDefinition,
 	createUserStandardDefinition,
+	createUserStandardSourceSnapshot,
 	customCheckConfigurationDigest,
 	normalizeUserStandardDefinitions,
 } from "../../../src/loop-exit/custom-checks/index.ts";
@@ -16,18 +17,21 @@ function standardProposal(overrides = {}) {
 		"Every changed public API must name its accountable owning team.",
 		"Every public API must document one escalation owner.",
 	].join("\n");
+	const {source: sourceOverrides = {}, ...proposalOverrides} = overrides;
+	const {contentDigest: _contentDigest, ...sourceMaterialOverrides} = sourceOverrides;
 	return {
 		name: "Company API policy",
-		source: {
+		source: createUserStandardSourceSnapshot({
 			kind: "inline",
 			mediaType: "text/markdown",
 			content,
 			observedAt: OBSERVED_AT,
-		},
+			...sourceMaterialOverrides,
+		}),
 		passages: [
 			{ text: "Every changed public API must name its accountable owning team." },
 		],
-		...overrides,
+		...proposalOverrides,
 	};
 }
 
@@ -62,11 +66,13 @@ describe("User Standard contracts", () => {
 		const equivalent = createUserStandardDefinition(standardProposal());
 		const url = createUserStandardDefinition({
 			...standardProposal(),
-			source: {
-				...standardProposal().source,
+			source: createUserStandardSourceSnapshot({
 				kind: "url",
+				mediaType: standardProposal().source.mediaType,
+				content: standardProposal().source.content,
+				observedAt: standardProposal().source.observedAt,
 				uri: "https://example.com/company/api-policy",
-			},
+			}),
 		});
 
 		assert.equal(inline.userStandardId, equivalent.userStandardId);
@@ -204,11 +210,12 @@ describe("User Standard contracts", () => {
 		const second = createUserStandardDefinition({
 			...standardProposal(),
 			name: "Updated company API policy",
-			source: {
-				...standardProposal().source,
+			source: createUserStandardSourceSnapshot({
+				kind: "inline",
+				mediaType: standardProposal().source.mediaType,
 				content: `${standardProposal().source.content}\nPublic API owners must review quarterly.`,
 				observedAt: "2026-08-02T12:00:00.000Z",
-			},
+			}),
 		});
 		const firstCheck = createCustomCheckDefinition(checkProposal(first), [first]);
 		const secondCheck = createCustomCheckDefinition(checkProposal(second), [second]);

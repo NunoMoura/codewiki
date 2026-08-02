@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added User Standard Source Retrieval Protocol `1.0.0` and User Standard Distillation Protocol `1.0.0`. Runtime now produces exact sanitized source receipts for bounded inline text or credential-isolated HTTPS adapters, preserves unavailable and malformed states, and runs one fresh tool-free Pi distiller against the exact source, kernel Default Checks, closed Check Types, route, and limits. Tamper-checked review bundles preserve exact passages, Default coverage, source-bound Custom Model proposals, inert Custom Code intents, quantitative guard requirements, triage preferences, and unresolved clauses without granting activation, Result, ordering, configuration, or Git authority. Atomic protected bundle mutation and production source connectors remain pending.",
+					},
+					{
+						kind: "Update",
 						text: "Added User Standard schema `1.0.0`, Custom Check schema `3.0.0`, protected configuration `2.0.0`, Check Catalog `5.0.0`, Decision Model Check Request Protocol `4.0.0`, and guarded policy protocols `2.0.0`. Immutable bounded inline/HTTPS snapshots now bind normalized source bytes, observed time, passage identities, Standard/definition/config digests, and independent model input. Source-unbound Custom Checks fail closed. Source retrieval/distillation, atomic Standard-plus-Check mutation, Custom Code templates/guards, and Standard-derived triage remain pending.",
 					},
 					{

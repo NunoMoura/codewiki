@@ -1,4 +1,7 @@
-import {createUserStandardDefinition} from "../../../src/loop-exit/custom-checks/index.ts";
+import {
+	createUserStandardDefinition,
+	createUserStandardSourceSnapshot,
+} from "../../../src/loop-exit/custom-checks/index.ts";
 
 export function createTestUserStandard(overrides = {}) {
 	const passage =
@@ -7,12 +10,12 @@ export function createTestUserStandard(overrides = {}) {
 	const content = overrides.content ?? `# Company policy\n${passage}`;
 	return createUserStandardDefinition({
 		name: overrides.name ?? "Company API policy",
-		source: {
+		source: createUserStandardSourceSnapshot({
 			kind: "inline",
 			mediaType: "text/markdown",
 			content,
 			observedAt: overrides.observedAt ?? "2026-08-01T12:00:00.000Z",
-		},
+		}),
 		passages: [{text: passage}],
 	});
 }
