@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added atomic distilled User Standard bundle mutation and advanced guarded Mutation, Policy Review, and Protected Acceptance Protocols to `3.0.0`. One authenticated command selects exact proposal ids from one completed distillation receipt, then adds the immutable Standard and selected draft Checks through complete-config CAS. Authorization, review, Git acceptance, and content-addressed receipts retain the full source-to-Check/unresolved bundle, selected ids, exact transitions, protected base, and before/after config. Standard-only bundles are valid; distillation and review grant no Check activation. Standard replacement/redistillation remains pending.",
+					},
+					{
+						kind: "Update",
 						text: "Added User Standard Source Retrieval Protocol `1.0.0` and User Standard Distillation Protocol `1.0.0`. Runtime now produces exact sanitized source receipts for bounded inline text or credential-isolated HTTPS adapters, preserves unavailable and malformed states, and runs one fresh tool-free Pi distiller against the exact source, kernel Default Checks, closed Check Types, route, and limits. Tamper-checked review bundles preserve exact passages, Default coverage, source-bound Custom Model proposals, inert Custom Code intents, quantitative guard requirements, triage preferences, and unresolved clauses without granting activation, Result, ordering, configuration, or Git authority. Atomic protected bundle mutation and production source connectors remain pending.",
 					},
 					{

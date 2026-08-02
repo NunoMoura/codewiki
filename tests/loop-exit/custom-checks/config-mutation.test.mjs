@@ -168,8 +168,14 @@ describe("guarded Custom Check configuration mutations", () => {
 			}),
 			authority(),
 		);
-		assert.equal(created.definition.lifecycle, "draft");
+		assert.equal(created.changedCustomChecks[0].lifecycle, "draft");
 		assert.equal(created.receipt.effectiveFrom, "next_protected_snapshot");
+		assert.equal(created.receipt.protocolVersion, "3.0.0");
+		assert.equal(created.receipt.distillationReceipt, null);
+		assert.deepEqual(created.receipt.selectedProposalIds, []);
+		assert.deepEqual(created.receipt.standardChanges, []);
+		assert.equal(created.receipt.definitionChanges.length, 1);
+		assert.equal(Object.hasOwn(created.receipt, "definitionAfter"), false);
 		assert.equal(
 			created.receipt.protectedBaseSnapshotDigest,
 			protectedSnapshot.snapshotDigest,
@@ -178,19 +184,19 @@ describe("guarded Custom Check configuration mutations", () => {
 
 		const activated = await runtime.execute(
 			command("activate", memory.current(), protectedSnapshot, {
-				customCheckId: created.definition.customCheckId,
+				customCheckId: created.changedCustomChecks[0].customCheckId,
 			}),
 			authority(),
 		);
-		assert.equal(activated.definition.lifecycle, "active");
+		assert.equal(activated.changedCustomChecks[0].lifecycle, "active");
 		assert.equal(
-			activated.definition.definitionDigest,
-			created.definition.definitionDigest,
+			activated.changedCustomChecks[0].definitionDigest,
+			created.changedCustomChecks[0].definitionDigest,
 		);
 
 		const updated = await runtime.execute(
 			command("update", memory.current(), protectedSnapshot, {
-				customCheckId: created.definition.customCheckId,
+				customCheckId: created.changedCustomChecks[0].customCheckId,
 				proposal: proposal({
 					requirement:
 						"Every changed public API names its accountable team and escalation owner.",
@@ -198,21 +204,21 @@ describe("guarded Custom Check configuration mutations", () => {
 			}),
 			authority(),
 		);
-		assert.equal(updated.definition.lifecycle, "active");
-		assert.equal(updated.definition.customCheckId, created.definition.customCheckId);
+		assert.equal(updated.changedCustomChecks[0].lifecycle, "active");
+		assert.equal(updated.changedCustomChecks[0].customCheckId, created.changedCustomChecks[0].customCheckId);
 		assert.notEqual(
-			updated.definition.definitionDigest,
-			created.definition.definitionDigest,
+			updated.changedCustomChecks[0].definitionDigest,
+			created.changedCustomChecks[0].definitionDigest,
 		);
 
 		const disabled = await runtime.execute(
 			command("disable", memory.current(), protectedSnapshot, {
-				customCheckId: created.definition.customCheckId,
+				customCheckId: created.changedCustomChecks[0].customCheckId,
 			}),
 			authority(),
 		);
-		assert.equal(disabled.definition.lifecycle, "disabled");
-		assert.equal(disabled.definition.definitionDigest, updated.definition.definitionDigest);
+		assert.equal(disabled.changedCustomChecks[0].lifecycle, "disabled");
+		assert.equal(disabled.changedCustomChecks[0].definitionDigest, updated.changedCustomChecks[0].definitionDigest);
 		assert.equal(memory.writes(), 4);
 		assert.deepEqual(
 			authorizations.map((entry) => entry.command.action),
@@ -269,7 +275,7 @@ describe("guarded Custom Check configuration mutations", () => {
 			() =>
 				runtime.execute(
 					command("disable", stateFor([]), protectedSnapshot, {
-						customCheckId: created.definition.customCheckId,
+						customCheckId: created.changedCustomChecks[0].customCheckId,
 					}),
 					authority(),
 				),
@@ -300,7 +306,7 @@ describe("guarded Custom Check configuration mutations", () => {
 			() =>
 				runtime.execute(
 					command("activate", memory.current(), protectedSnapshot, {
-						customCheckId: created.definition.customCheckId,
+						customCheckId: created.changedCustomChecks[0].customCheckId,
 					}),
 					{...authority(), authenticationEvidenceId: ""},
 				),
@@ -357,7 +363,7 @@ describe("guarded Custom Check configuration mutations", () => {
 			}),
 			authority(),
 		);
-		assert.equal(disabled.definition.lifecycle, "disabled");
+		assert.equal(disabled.changedCustomChecks[0].lifecycle, "disabled");
 		const currentPolicy = resolveExitPolicy(policyInput(protectedSnapshot));
 		assert.throws(
 			() =>

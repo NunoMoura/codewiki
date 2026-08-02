@@ -18,7 +18,7 @@ import {canonicalIsoTimestamp} from "./validation.ts";
 
 export const CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL = Object.freeze({
 	id: "codewiki.custom-check-policy-review",
-	version: "2.0.0",
+	version: "3.0.0",
 	maxEvidenceIds: 16,
 	maxSummaryLength: 1_000,
 });
@@ -80,8 +80,9 @@ export function createCustomCheckPolicyReviewRequest(input: {
 		customCheckConfigDigestBefore:
 			input.mutationReceipt.customCheckConfigDigestBefore,
 		customCheckConfigDigestAfter: proposedConfig.customCheckConfigDigest,
-		definitionBefore: input.mutationReceipt.definitionBefore,
-		definitionAfter: input.mutationReceipt.definitionAfter,
+		distillationReceipt: input.mutationReceipt.distillationReceipt,
+		standardChanges: input.mutationReceipt.standardChanges,
+		definitionChanges: input.mutationReceipt.definitionChanges,
 		proposedUserStandards: proposedConfig.userStandards,
 		proposedCustomChecks: proposedConfig.customChecks,
 	};
@@ -136,7 +137,7 @@ export function createCustomCheckPolicyReviewReceipt(input: {
 	const payload = {
 		protocolId: CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL.id,
 		protocolVersion: CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL.version,
-		requestDigest: sha256Digest(input.request.requestDigest, "review.requestDigest"),
+		requestDigest: assertSha256Digest(input.request.requestDigest, "review.requestDigest"),
 		mutationReceiptId: boundedText(
 			input.request.mutationReceipt.receiptId,
 			"review.mutationReceiptId",
@@ -146,11 +147,11 @@ export function createCustomCheckPolicyReviewReceipt(input: {
 			input.request.mutationReceipt.protectedSourceHead,
 			"review.protectedSourceHead",
 		),
-		configDigestAfter: sha256Digest(
+		configDigestAfter: assertSha256Digest(
 			input.request.proposedConfig.projectConfigDigest,
 			"review.configDigestAfter",
 		),
-		customCheckConfigDigestAfter: sha256Digest(
+		customCheckConfigDigestAfter: assertSha256Digest(
 			input.request.proposedConfig.customCheckConfigDigest,
 			"review.customCheckConfigDigestAfter",
 		),
@@ -201,7 +202,7 @@ export function assertCustomCheckPolicyReviewReceipt(
 	const payload = {
 		protocolId: CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL.id,
 		protocolVersion: CUSTOM_CHECK_POLICY_REVIEW_PROTOCOL.version,
-		requestDigest: sha256Digest(value.requestDigest, "review.requestDigest"),
+		requestDigest: assertSha256Digest(value.requestDigest, "review.requestDigest"),
 		mutationReceiptId: boundedText(
 			value.mutationReceiptId,
 			"review.mutationReceiptId",
@@ -211,11 +212,11 @@ export function assertCustomCheckPolicyReviewReceipt(
 			value.protectedSourceHead,
 			"review.protectedSourceHead",
 		),
-		configDigestAfter: sha256Digest(
+		configDigestAfter: assertSha256Digest(
 			value.configDigestAfter,
 			"review.configDigestAfter",
 		),
-		customCheckConfigDigestAfter: sha256Digest(
+		customCheckConfigDigestAfter: assertSha256Digest(
 			value.customCheckConfigDigestAfter,
 			"review.customCheckConfigDigestAfter",
 		),
@@ -240,7 +241,7 @@ export function assertCustomCheckPolicyReviewReceipt(
 
 function normalizeConfigState(value: CustomCheckConfigState): CustomCheckConfigState {
 	const normalized = createCustomCheckConfigState({
-		projectConfigDigest: sha256Digest(
+		projectConfigDigest: assertSha256Digest(
 			value.projectConfigDigest,
 			"proposedConfig.projectConfigDigest",
 		),
@@ -290,10 +291,6 @@ function gitObjectId(value: unknown, field: string): string {
 		throw new Error(`${field} must be a Git object id.`);
 	}
 	return id;
-}
-
-function sha256Digest(value: unknown, field: string): Sha256Digest {
-	return assertSha256Digest(value, field);
 }
 
 function compareText(left: string, right: string): number {

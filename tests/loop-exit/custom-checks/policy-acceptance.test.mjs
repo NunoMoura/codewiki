@@ -27,6 +27,7 @@ import {
 	createTestUserStandard,
 	standardRefsFor,
 } from "./user-standard-fixture.mjs";
+import {createCompletedDistillationFixture} from "./distillation-fixture.mjs";
 
 const USER_STANDARD = createTestUserStandard();
 const USER_STANDARDS = [USER_STANDARD];
@@ -64,7 +65,7 @@ async function git(cwd, args) {
 	});
 }
 
-async function createFixture() {
+async function createFixture(options = {}) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-custom-check-acceptance-"));
 	const remote = join(root, "remote.git");
 	const repo = join(root, "repo");
@@ -101,16 +102,21 @@ async function createFixture() {
 		authorize: () => true,
 		now: () => new Date("2026-08-01T12:00:00.000Z"),
 	});
+	const mutationFields = options.mutationFields
+		? await options.mutationFields({current, protectedBase, expectedHead, active})
+		: {
+				action: "disable",
+				idempotencyKey: "disable-public-api-ownership",
+				customCheckId: active.customCheckId,
+			};
 	const mutation = await mutationRuntime.execute(
 		{
 			protocolId: CUSTOM_CHECK_MUTATION_PROTOCOL.id,
 			protocolVersion: CUSTOM_CHECK_MUTATION_PROTOCOL.version,
-			action: "disable",
-			idempotencyKey: "disable-public-api-ownership",
 			expectedConfigDigest: current.projectConfigDigest,
 			expectedProtectedSourceHead: expectedHead,
 			expectedProtectedConfigDigest: protectedBase.projectConfigDigest,
-			customCheckId: active.customCheckId,
+			...mutationFields,
 		},
 		authority("policy-editor"),
 	);
@@ -129,7 +135,8 @@ async function createFixture() {
 	const command = {
 		protocolId: CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.id,
 		protocolVersion: CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.version,
-		idempotencyKey: "accept-disable-public-api-ownership",
+		idempotencyKey:
+			options.acceptanceIdempotencyKey ?? "accept-disable-public-api-ownership",
 		mutationReceipt: mutation.receipt,
 		reviewReceipt,
 	};
@@ -242,6 +249,122 @@ describe("Custom Check protected policy acceptance", () => {
 			assert.equal(
 				restartedReplay.receipt.acceptedProtectedSourceHead,
 				accepted.receipt.acceptedProtectedSourceHead,
+			);
+		} finally {
+			await fixture.cleanup();
+		}
+	});
+
+	it("accepts one reviewed distilled Standard-plus-Check bundle atomically", async () => {
+		let distilled;
+		const fixture = await createFixture({
+			acceptanceIdempotencyKey: "accept-service-policy-bundle",
+			async mutationFields() {
+				distilled = await createCompletedDistillationFixture();
+				return {
+					action: "create_distilled_bundle",
+					idempotencyKey: "create-service-policy-bundle",
+					distillationReceipt: distilled.receipt,
+					selectedProposalIds: distilled.bundle.customCheckProposals.map(
+						(proposal) => proposal.proposalId,
+					),
+				};
+			},
+		});
+		try {
+			const accepted = await acceptanceRuntime(fixture).execute(
+				fixture.command,
+				authority("policy-acceptor", "policy_acceptor"),
+			);
+			assert.equal(CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.version, "3.0.0");
+			assert.equal(accepted.protectedConfig.userStandards.length, 2);
+			assert.equal(accepted.protectedConfig.customChecks.length, 3);
+			assert.equal(
+				accepted.protectedConfig.userStandards.some(
+					(standard) =>
+						standard.userStandardId === distilled.bundle.userStandard.userStandardId,
+				),
+				true,
+			);
+			assert.equal(
+				accepted.protectedConfig.customChecks.filter(
+					(check) => check.lifecycle === "draft",
+				).length,
+				2,
+			);
+			assert.equal(
+				fixture.mutation.receipt.distillationReceipt.receiptId,
+				distilled.receipt.receiptId,
+			);
+			assert.equal(
+				accepted.receipt.acceptedProtectedSourceHead,
+				await remoteHead(fixture),
+			);
+		} finally {
+			await fixture.cleanup();
+		}
+	});
+
+	it("rejects stacked working policy changes that did not start from protected base", async () => {
+		const fixture = await createFixture();
+		try {
+			const store = createWikiConfigCustomCheckStore(fixture.repo);
+			const current = await store.load();
+			const mutationRuntime = createCustomCheckMutationRuntime({
+				store,
+				loadProtectedBase: async () => fixture.protectedBase,
+				authorize: () => true,
+				now: () => new Date("2026-08-01T12:06:00.000Z"),
+			});
+			const stackedMutation = await mutationRuntime.execute(
+				{
+					protocolId: CUSTOM_CHECK_MUTATION_PROTOCOL.id,
+					protocolVersion: CUSTOM_CHECK_MUTATION_PROTOCOL.version,
+					action: "create",
+					idempotencyKey: "stack-unreviewed-policy",
+					expectedConfigDigest: current.projectConfigDigest,
+					expectedProtectedSourceHead: fixture.expectedHead,
+					expectedProtectedConfigDigest:
+						fixture.protectedBase.projectConfigDigest,
+					proposal: proposal({
+						name: "Public API escalation owner",
+						requirement:
+							"Every changed public API names its escalation owner.",
+					}),
+				},
+				authority("policy-editor"),
+			);
+			const reviewRequest = createCustomCheckPolicyReviewRequest({
+				mutationReceipt: stackedMutation.receipt,
+				proposedConfig: stackedMutation.state,
+			});
+			const reviewReceipt = createCustomCheckPolicyReviewReceipt({
+				request: reviewRequest,
+				status: "pass",
+				reviewer: authority("policy-reviewer", "policy_reviewer"),
+				evidenceIds: ["evidence:stacked-review:1"],
+				summary: "Latest change reviewed, but prior working mutation remains stacked.",
+				reviewedAt: "2026-08-01T12:07:00.000Z",
+			});
+			const stackedFixture = {
+				...fixture,
+				mutation: stackedMutation,
+				reviewRequest,
+				reviewReceipt,
+			};
+			await assert.rejects(
+				acceptanceRuntime(stackedFixture).execute(
+					{
+						protocolId: CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.id,
+						protocolVersion:
+							CUSTOM_CHECK_POLICY_ACCEPTANCE_PROTOCOL.version,
+						idempotencyKey: "reject-stacked-policy",
+						mutationReceipt: stackedMutation.receipt,
+						reviewReceipt,
+					},
+					authority("policy-acceptor", "policy_acceptor"),
+				),
+				/does not start from the exact protected base/,
 			);
 		} finally {
 			await fixture.cleanup();
