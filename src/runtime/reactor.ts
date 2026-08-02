@@ -177,29 +177,11 @@ export function selectRuntimeReactions(
 	const planningLimit = boundedPlanningLimit(options.maxPlanningChanges);
 	const candidates = eligibleChanges(workState, trigger);
 	const reactions: RuntimeReaction[] = [];
-	const selectedDecisions: WorkStateChange[] = [];
 	const selectedSprints = new Set<string>();
 	let planningSelected = false;
 
 	for (const candidate of candidates) {
 		if (reactions.length >= maxReactions) break;
-		if (candidate.currentLoop === "decision") {
-			if (
-				selectedDecisions.some((selected) =>
-					changesOverlap(selected.record, candidate.record),
-				)
-			) {
-				continue;
-			}
-			selectedDecisions.push(candidate);
-			reactions.push(
-				readyReaction(workState, trigger, {
-					loop: "decision",
-					change: runtimeChangeRef(candidate),
-				}),
-			);
-			continue;
-		}
 		if (candidate.currentLoop === "planning") {
 			if (planningSelected) continue;
 			planningSelected = true;
@@ -243,18 +225,10 @@ function eligibleChanges(
 	workState: WorkState,
 	trigger: RuntimeTrigger,
 ): WorkStateChange[] {
-	const pendingDecision = workState.changes.filter(
-		(change) => change.currentLoop === "decision",
-	);
-	return workState.changes
-		.filter((change) => change.currentLoop !== undefined)
-		.filter(
-			(change) =>
-				change.currentLoop !== "planning" ||
-				!pendingDecision.some((pending) =>
-					changesOverlap(change.record, pending.record),
-				),
-		)
+	return workState.changes.filter(
+		(change) =>
+			change.currentLoop !== undefined && change.currentLoop !== "decision",
+	)
 		.sort((left, right) => {
 			const relevance =
 				triggerRelevance(right, trigger) - triggerRelevance(left, trigger);

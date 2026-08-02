@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: API and Client Surface
-description: CodeWiki exposes bounded client and query capabilities while Project Runtime alone selects semantic work, owns exact identity, and performs guarded writes and effects.
+description: CodeWiki exposes bounded client and query capabilities while authenticated users select exact Decision attention and Project Runtime owns admission, identity, remaining scheduling, guarded writes, and effects.
 tags:
   - codewiki
   - system
@@ -36,7 +36,7 @@ CodeWiki's standalone CLI, dashboard, optional Pi extension, tests, and future a
 CLI / dashboard / thin Pi extension / future client
 → authenticated bounded Runtime API
 → WorkState and relationship queries
-→ Runtime-selected semantic session or isolated Assignment
+→ authenticated exact-revision Decision selection, Runtime-selected later semantic session, or isolated Assignment
 → guarded append/effect
 ```
 
@@ -65,12 +65,13 @@ Target capability groups:
 | --- | --- | --- |
 | State | Read bounded WorkState, Backlog Triage Projection, Change dossier, Loop exit, blockers, delivery, and next-safe-action projections. | Read-only derived data with snapshot/provenance/ordering reasons. |
 | Change | Submit bounded user suggestions or source-specific review/worker/regression/scanner/delivery/outcome/Knowledge-drift findings; revise/link/split/merge/defer/reject/withdraw pending intent. | Runtime authenticates, sanitizes, deduplicates, scope-routes, and creates Decision intake only; no approval/priority/execution. |
+| Decision attention | Select one exact eligible current Change revision from the bound Backlog Triage Projection. | Dedicated authenticated command binds native WorkState, projection, protected config/policy, triage Candidate and revision, authority Evidence, and idempotency before one Decision job; no disposition or priority. |
 | Authority | Submit exact user/maintainer approval or intervention response. | Runtime authenticates and binds exact candidate/revision/effect into approval-receipt Evidence Record. |
 | Evidence | Submit bounded kind-specific material or read exact Evidence Record/artifact projections. | Runtime owns identity/time/authority/coverage/freshness; no verdict or route in payload. |
 | Review | Read Validation Bundle; Approve / Request changes; request explicitly authorized draft-PR publication. | One correlated action; no direct append, merge, branch movement, or acceptance. |
 | Project query | Read bounded Work, Alignment, and Learning relationships. | Snapshot-bound, read-only, provenance-bearing. |
 | Configuration | Read/propose bounded User Standard sources and schema-defined changes below authority ceilings; inspect generated Default Check coverage and Custom Check proposals. | No direct source credentials, Check suppression, threshold lowering, authority mutation, or hidden execution. |
-| Runtime control | Inspect/pause/resume/cancel according to policy. | No semantic selection or truth mutation by payload. |
+| Runtime control | Inspect/pause/resume/cancel according to policy. | No generic semantic selection or truth mutation by payload; Decision selection uses only its dedicated exact-revision contract. |
 | Preview | Manage declared local preview targets and screenshot/video capture. | Evidence material only; no acceptance. |
 | Feedback Bundle | Generate local allowlisted diagnostic preview. | Export requires separate user approval. |
 
@@ -145,7 +146,7 @@ Current packed extension exposes these compatibility capabilities while standalo
 | --- | --- |
 | `wiki_state` | Read WorkState-backed Change, Sprint, work, exit, and blocker projections. |
 | `wiki_change` | Guarded Change intake/revision/link/split/merge/defer/reject/withdraw. |
-| `wiki_decide` | Submit Decision candidate/authority evidence for Runtime-selected Change. |
+| `wiki_decide` | Submit Decision candidate material only for an already authenticated exact-revision selected Decision job; direct invocation cannot select a Change. |
 | `wiki_plan` | Submit Planning candidate for Runtime-selected approved horizon. |
 | `wiki_implement` | Submit Worker Reports or explicit evidence for Runtime-selected Work Items. |
 | `wiki_archive` | Guarded retention preview/close/hydrate planning. |
@@ -162,7 +163,8 @@ Current harness-neutral facades remain executable truth:
 - `runWikiChange()` performs guarded Change intake/mutation.
 - `buildWorkState()` derives current project state; `buildWikiState()` exposes bounded views.
 - `runWikiDecide()`, `runWikiPlan()`, and `runWikiImplement()` evaluate prepared inputs and preview/append legacy outputs.
-- exact Runtime reaction jobs own production selection, idempotency, recovery, and generation fencing.
+- `codewiki.decision-attention-selection@1.0.0` gives authenticated users exact pending-revision selection while Runtime validates current native state/config/policy, owns deterministic job identity, and rejects generic trigger/candidate substitution.
+- exact Runtime reaction jobs own Planning/Implementation selection plus idempotency, recovery, and generation fencing.
 - `ImplementationWorkerDispatcher.reconcile()` currently derives ready Work Items, writes private Assignment packets, appends local Work Item ownership events, prepares worktrees, and schedules adapters.
 - `runWikiArchive()` and `runWikiConfig()` own retention/config compatibility behavior.
 
@@ -172,7 +174,7 @@ The clean cut replaces broad Candidate submission and preview/append reevaluatio
 
 Runtime backend, unavailable as normal model tool, owns:
 
-- eligible-job selection and typed lanes;
+- exact Decision selection admission plus eligible later-job selection and typed lanes;
 - candidate/Check/Result/Report identity;
 - Check activation/thresholds/scheduling/caching/cancellation;
 - Change Claims, Work Item Claims, Worker Workbenches, Assignments, Worker Reports, and Integration;

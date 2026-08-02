@@ -152,6 +152,11 @@ export async function runRuntimeSelectedSemanticReaction(
 	if (input.reaction.status !== "ready" || !input.reaction.selection) {
 		throw new Error("Runtime selected semantic reaction must be ready.");
 	}
+	if (input.reaction.selection.loop === "decision") {
+		throw new Error(
+			"Runtime Decision execution requires authenticated exact-revision selection.",
+		);
+	}
 	const mode = input.mode || "append";
 	const maxCasRetries = boundedInteger(
 		input.maxCasRetries,
@@ -162,20 +167,23 @@ export async function runRuntimeSelectedSemanticReaction(
 	);
 	const reactor = input.reactor || new RuntimeReactor(input.repoRoot);
 	let casRetries = 0;
-	let observation = await observeSelectedReaction(reactor, input.reaction);
+	let observation = await observeSelectedReaction({
+		reactor,
+		expected: input.reaction,
+	});
 	while (observation) {
 		input.signal?.throwIfAborted();
 		try {
-			const outcome = await executeSelectedSemanticWork(
-				input.repoRoot,
+			const outcome = await executeSelectedSemanticWork({
+				repoRoot: input.repoRoot,
 				mode,
 				observation,
-				input.adapters,
-				input.context,
-				input.runtimeJobId,
-				input.beforeAppend,
-				input.implementationWorkerReports,
-			);
+				adapters: input.adapters,
+				context: input.context,
+				runtimeJobId: input.runtimeJobId,
+				beforeAppend: input.beforeAppend,
+				implementationWorkerReports: input.implementationWorkerReports,
+			});
 			if (mode === "preview") {
 				return {
 					status: "previewed",
@@ -196,7 +204,10 @@ export async function runRuntimeSelectedSemanticReaction(
 			if (!isCasConflict(error) || casRetries >= maxCasRetries) throw error;
 			casRetries += 1;
 			reactor.invalidate();
-			observation = await observeSelectedReaction(reactor, input.reaction);
+			observation = await observeSelectedReaction({
+				reactor,
+				expected: input.reaction,
+			});
 		}
 	}
 	return {
@@ -259,13 +270,13 @@ export async function runRuntimeSemanticExecutor(
 			);
 		}
 		try {
-			const outcome = await executeSelectedSemanticWork(
-				input.repoRoot,
+			const outcome = await executeSelectedSemanticWork({
+				repoRoot: input.repoRoot,
 				mode,
 				observation,
-				input.adapters,
-				input.context,
-			);
+				adapters: input.adapters,
+				context: input.context,
+			});
 			outcomes.push(outcome);
 			iterations += 1;
 			if (mode === "preview") {
@@ -312,29 +323,39 @@ export async function runRuntimeSemanticExecutor(
 	);
 }
 
-async function observeSelectedReaction(
-	reactor: RuntimeReactor,
-	expected: RuntimeReaction,
-): Promise<RuntimeObservation | undefined> {
-	const observation = await reactor.observeMany(expected.trigger, {
+async function observeSelectedReaction(input: {
+	readonly reactor: RuntimeReactor;
+	readonly expected: RuntimeReaction;
+}): Promise<RuntimeObservation | undefined> {
+	const observation = await input.reactor.observeMany(input.expected.trigger, {
 		maxReactions: 32,
 	});
 	const reaction = observation.reactions.find((candidate) =>
-		runtimeReactionsShareInvariant(expected, candidate),
+		runtimeReactionsShareInvariant(input.expected, candidate),
 	);
-	return reaction ? { ...observation, reaction } : undefined;
+	return reaction ? {...observation, reaction} : undefined;
 }
 
-async function executeSelectedSemanticWork(
-	repoRoot: string,
-	mode: RuntimeSemanticMode,
-	observation: RuntimeObservation,
-	adapters: RuntimeSemanticAdapters,
-	context?: RuntimeSemanticContext,
-	runtimeJobId?: string,
-	beforeAppend?: () => void | Promise<void>,
-	implementationWorkerReports: ImplementationWorkerReportInput[] = [],
-): Promise<RuntimeSemanticOutcome> {
+async function executeSelectedSemanticWork(input: {
+	readonly repoRoot: string;
+	readonly mode: RuntimeSemanticMode;
+	readonly observation: RuntimeObservation;
+	readonly adapters: RuntimeSemanticAdapters;
+	readonly context?: RuntimeSemanticContext;
+	readonly runtimeJobId?: string;
+	readonly beforeAppend?: () => void | Promise<void>;
+	readonly implementationWorkerReports?: ImplementationWorkerReportInput[];
+}): Promise<RuntimeSemanticOutcome> {
+	const {
+		repoRoot,
+		mode,
+		observation,
+		adapters,
+		context,
+		runtimeJobId,
+		beforeAppend,
+	} = input;
+	const implementationWorkerReports = input.implementationWorkerReports || [];
 	const selection = observation.reaction.selection;
 	if (!selection) throw new Error("Runtime ready reaction has no selection.");
 	if (selection.loop === "decision") {

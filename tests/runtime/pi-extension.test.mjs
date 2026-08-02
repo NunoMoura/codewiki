@@ -468,30 +468,29 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("keeps append CAS authority inside runtime-owned semantic tools", async () => {
+	it("rejects direct Decision append without authenticated selection", async () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
 			registerTestExtension(pi.api);
-			await seedChangeAcceptance(root, { id: "CHG-pi-runtime-append" });
-			const result = await toolByName(pi, "wiki_decide").execute(
-				"tool-call-decide-append",
-				{
-					input: {
-						mode: "append",
-						disposition: "approve",
-						rationale: "Approve runtime-selected exact Change.",
-					},
-				},
-				undefined,
-				undefined,
-				{ cwd: root },
+			await seedChangeAcceptance(root, {id: "CHG-pi-runtime-append"});
+			await assert.rejects(
+				() =>
+					toolByName(pi, "wiki_decide").execute(
+						"tool-call-decide-append",
+						{
+							input: {
+								mode: "append",
+								disposition: "approve",
+								rationale: "Attempt unselected Decision append.",
+							},
+						},
+						undefined,
+						undefined,
+						{cwd: root},
+					),
+				/decision_attention_selection_required/,
 			);
-			const execution = assertToolResult(
-				result,
-				/wiki_decide: coordinator completed with 1 durable event/,
-			);
-			assert.equal(execution.outcomes[0].result.append.records.length, 1);
 			await assert.rejects(
 				() =>
 					toolByName(pi, "wiki_archive").execute(
@@ -508,7 +507,7 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("runs exact Change Decision preview without mutating trace files", async () => {
+	it("rejects unselected Decision preview without mutating trace files", async () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
@@ -522,28 +521,23 @@ describe("Pi extension adapter", () => {
 				traceFilePath(changeTraceId(record.change.id)),
 			);
 			const before = await readFile(changeTracePath, "utf8");
-			const decidedResult = await toolByName(pi, "wiki_decide").execute(
-				"tool-call-decide-preview",
-				{
-					input: {
-						mode: "preview",
-						disposition: "approve",
-						rationale: "Approve exact Pi preview Change.",
-					},
-				},
-				undefined,
-				undefined,
-				ctx,
+			await assert.rejects(
+				() =>
+					toolByName(pi, "wiki_decide").execute(
+						"tool-call-decide-preview",
+						{
+							input: {
+								mode: "preview",
+								disposition: "approve",
+								rationale: "Attempt unselected Decision preview.",
+							},
+						},
+						undefined,
+						undefined,
+						ctx,
+					),
+				/decision_attention_selection_required/,
 			);
-			const execution = assertToolResult(
-				decidedResult,
-				/wiki_decide: coordinator previewed with 0 durable event\(s\)\./,
-			);
-			const decided = execution.outcomes[0].result;
-			assert.equal(decided.report.exit.status, "exit");
-			assert.equal(decided.report.approval.changeId, undefined);
-			assert.equal(decided.event.event, "change_approved");
-			assert.equal(decided.append, undefined);
 			assert.equal(await readFile(changeTracePath, "utf8"), before);
 		} finally {
 			await rm(root, { recursive: true, force: true });

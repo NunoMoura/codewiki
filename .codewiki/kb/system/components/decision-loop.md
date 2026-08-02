@@ -76,6 +76,14 @@ Decision does not own Sprints, Work Items, scheduling, Assignment execution, imp
 
 Runtime owns Change/candidate identity construction, canonical actor/time, authenticated authority validation, Check activation/thresholds, generation/CAS, Exit Report validation, route, and append. Candidate producers cannot supply those fields.
 
+## Decision attention admission
+
+Pending Change presence does not select Decision work. Backlog Triage is a disposable recommendation, and Runtime starts one independent Decision attempt only after an authenticated user selects one exact eligible current revision through `codewiki.decision-attention-selection@1.0.0`.
+
+The strict selection command binds one idempotency key, native content-addressed Change revision ID, triage Candidate digest, WorkState digest, Backlog Triage Projection digest, protected project-config digest, and compiled triage-policy digest. Runtime validates the complete projection/WorkState/config/policy chain, authorizes the exact immutable request against authentication Evidence, and reloads the context after authorization. Stale revision, triage Candidate, WorkState, projection, config, policy, or authorization context fails closed.
+
+The receipt preserves exact authority, source/Knowledge/Git/graph/config/policy bindings, deterministic scope-conflict refs, and one native revision-bound Decision job ID. Same authenticated input replays; reuse of the idempotency key for different semantic or authority input conflicts. Selection grants neither approval nor priority. Generic Runtime triggers, direct semantic-candidate submission, and the legacy numeric approval revision cannot create or impersonate a Decision job.
+
 ## Change revision
 
 A semantic revision contains enough accepted meaning that Planning need not reconstruct intent from chat:
@@ -97,6 +105,7 @@ Accepted revisions are immutable. A route-back may create a superseding revision
 
 Decision input binds:
 
+- exact authenticated Decision attention selection receipt and native revision-bound job identity;
 - exact proposed/persisted revision;
 - relevant WorkState and relationship snapshot;
 - current trace tail and prior revision refs;

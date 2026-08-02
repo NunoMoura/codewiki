@@ -130,7 +130,7 @@ Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain 
 
 ## Work and project control plane
 
-Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Runtime exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Accepted User Standard preferences may influence protected deterministic triage ordering, but lower order is not Check failure and no model emits final rank. An authenticated user selects an exact revision to start Decision; selection grants no disposition. Planning later decomposes approved Changes and owns Work Item execution ordering.
+Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Runtime exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Accepted User Standard preferences may influence protected deterministic triage ordering, but lower order is not Check failure and no model emits final rank. An authenticated user selects an exact revision to start Decision; selection grants no disposition. `codewiki.decision-attention-selection@1.0.0` binds that command to exact native WorkState, triage projection, protected config/policy, triage Candidate and revision, authority Evidence, and idempotency before Runtime creates one revision-bound job. Pending Changes and generic triggers remain quiescent until selection. Planning later decomposes approved Changes and owns Work Item execution ordering.
 
 One Change owns one append-only JSONL dossier:
 
@@ -149,7 +149,7 @@ Dashboard destinations are:
 
 Change detail is a cross-cutting dossier, not a private copy of the pipeline.
 
-Project Runtime derives a compatible bounded job set from WorkState, admits exact lanes/Claims/capacity, invokes semantic sessions or workers, runs candidate-bound exit, and guards writes/effects. It allows unrelated Decision and Work Item work concurrently while serializing one accepted Planning writer, overlapping paths, shared Integration targets, and external effects.
+Project Runtime derives a compatible bounded job set from WorkState, admits exact lanes/Claims/capacity, invokes semantic sessions or workers, runs candidate-bound exit, and guards writes/effects. It allows unrelated authenticated selected Decision jobs and Work Item work concurrently while serializing overlapping selected scopes, one accepted Planning writer, overlapping paths, shared Integration targets, and external effects.
 
 `WorkState` is a disposable projection over Change Traces, Knowledge, source/test ownership, source/tests/Git, configuration, delivery evidence, and bounded Runtime observations. JSONL is streamed and indexed in memory; process loss causes rebuild. No SQLite or graph database belongs to the current architecture.
 

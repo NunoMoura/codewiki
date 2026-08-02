@@ -243,6 +243,10 @@ Generated Work workspace for pending/deferred Change revisions and their Decisio
 
 Disposable snapshot-bound view over pending/deferred Changes, WorkState, Alignment Graph facts, source observations, and policy. It exposes Decision readiness, urgency, expected impact, estimated effort, risk of inaction, confidence, overlap, freshness, and explainable ordering without granting disposition or execution priority.
 
+### Decision Attention Selection
+
+Authenticated user authorization to start one Decision attempt for one exact eligible current Change revision. It binds native WorkState, Backlog Triage Projection, protected project config and policy, triage Candidate, revision, authority Evidence, idempotency, conflict scope, and the resulting Decision job identity. It grants no disposition or Planning priority. Pending Change presence and generic Runtime triggers are not selection.
+
 ### Priority
 
 Project-wide execution ordering derived by rolling Planning over accepted Changes and current WorkState. Intake sources and Backlog triage may assert or estimate urgency, impact, and effort, but cannot assign canonical priority.

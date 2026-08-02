@@ -97,7 +97,7 @@ export function queryBacklogTriage(
 	projection: BacklogTriageProjection,
 	request: BacklogTriageQueryRequest,
 ): BacklogTriageQueryResult {
-	assertValidProjection(projection);
+	assertBacklogTriageProjection(projection);
 	const normalizedRequest = normalizeQueryRequest(request);
 	if (normalizedRequest.projectionDigest !== projection.projectionDigest) {
 		throw new Error("Backlog triage query projectionDigest does not match current projection.");
@@ -272,7 +272,9 @@ function matches(filter: readonly unknown[] | undefined, values: readonly unknow
 	return !filter || values.some((value) => filter.includes(value));
 }
 
-function assertValidProjection(projection: BacklogTriageProjection): void {
+export function assertBacklogTriageProjection(
+	projection: BacklogTriageProjection,
+): void {
 	if (!projection || typeof projection !== "object" || Array.isArray(projection)) {
 		throw new Error("Backlog triage projection must be an object.");
 	}

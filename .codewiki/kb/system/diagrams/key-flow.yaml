@@ -89,10 +89,14 @@ steps:
     from: git_state
     to: projections
     message: builds exact WorkState, Alignment Graph, protected Standard-derived triage policy, and snapshot-bound explainable Backlog Triage Projection
-  - id: select_decision_attention
+  - id: offer_decision_attention
     from: projections
+    to: client
+    message: offers eligible pending revisions and exact source-bearing ordering reasons without assigning execution priority
+  - id: select_decision_attention
+    from: client
     to: runtime
-    message: offers eligible pending revisions for bounded user or scheduler selection without assigning execution priority
+    message: authenticates one exact current revision against WorkState, projection, protected config and policy, authority Evidence, and idempotency before creating its Decision job
   - id: produce_decision
     from: runtime
     to: sessions

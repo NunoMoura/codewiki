@@ -1,4 +1,8 @@
 import { randomUUID } from "node:crypto";
+import type {
+	DecisionAttentionSelectionCommand,
+	DecisionAttentionSelectionReceipt,
+} from "../changes/triage/selection.ts";
 import {
 	connectEnsuredProjectCoordinatorClient,
 	type EnsureProjectCoordinatorServiceOptions,
@@ -35,6 +39,14 @@ export interface PiProjectServiceClientProvider {
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
 	): Promise<ProjectCoordinatorSemanticExecution>;
+	selectDecision(input: {
+		readonly repoRoot: string;
+		readonly context: Pick<
+			CodewikiExtensionContext,
+			"mode" | "sessionManager"
+		>;
+		readonly command: DecisionAttentionSelectionCommand;
+	}): Promise<DecisionAttentionSelectionReceipt>;
 	react(
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
@@ -149,6 +161,11 @@ export function createPiProjectServiceClients(
 		},
 		semanticExecution(repoRoot, ctx) {
 			return invoke(repoRoot, ctx, async (client) => client.semanticExecution);
+		},
+		selectDecision(input) {
+			return invoke(input.repoRoot, input.context, (client) =>
+				client.selectDecision(input.command),
+			);
 		},
 		react(repoRoot, ctx, trigger, mode = "append") {
 			return invoke(repoRoot, ctx, (client) => client.react(trigger, mode));

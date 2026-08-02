@@ -273,10 +273,10 @@ edges:
     label: bounded filters and explainable ordering
   - from: backlog_triage
     to: project_runtime
-    label: Decision-attention candidates only
+    label: exact Decision-attention candidates for authenticated user selection only
   - from: project_runtime
     to: scheduler
-    label: selects compatible jobs
+    label: creates one native revision-bound Decision job only after exact selection; otherwise selects compatible Planning, Implementation, Integration, and effect jobs
   - from: project_runtime
     to: protocols
     label: binds exact versions

@@ -116,7 +116,7 @@ Current API still exposes `buildWorkState()`, `buildWikiState()`, `runWikiChange
 
 `runWikiOkf()` remains a format facade, not a semantic Loop. Target emits OKF v0.2; a bounded v0.1 reader is allowed only for imported generic bundles and preserves unknown fields.
 
-`@nunomoura/codewiki/coordinator` currently exposes detached local service host/client behavior. `@nunomoura/codewiki/pi-sdk` exposes optional embedded semantic sessions. Local generation fencing remains process safety; provider-neutral Git state acceptance becomes shared team authority.
+`@nunomoura/codewiki/coordinator` currently exposes detached local service host/client behavior plus `selectDecision()`, a dedicated authenticated exact-revision selection method. Its strict `codewiki.decision-attention-selection@1.0.0` command and receipt bind native WorkState, Backlog Triage Projection, protected project config and triage policy, triage Candidate and revision identity, caller authority Evidence, idempotency, conflict scope, and the resulting native Decision job ID. Generic trigger and semantic-candidate endpoints cannot select Decision work. `@nunomoura/codewiki/pi-sdk` exposes optional embedded semantic sessions. Local generation fencing remains process safety; provider-neutral Git state acceptance becomes shared team authority.
 
 ## Boundaries
 

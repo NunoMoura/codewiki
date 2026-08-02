@@ -85,7 +85,11 @@ export async function scheduleRuntimeReactions(
 	});
 	const blocked = new Set(input.blockedImplementationWorkItemIds || []);
 	const reactions = observation.reactions.filter(
-		(reaction) => !blockedImplementationReaction(reaction, blocked),
+		(reaction) =>
+			!blockedImplementationReaction({
+				reaction,
+				blockedWorkItemIds: blocked,
+			}),
 	);
 	return Promise.all(
 		reactions.map((reaction) =>
@@ -97,10 +101,10 @@ export async function scheduleRuntimeReactions(
 				adapters: input.adapters,
 				context: input.context,
 				mode: input.mode,
-				implementationWorkerReports: workerReportsForReaction(
+				implementationWorkerReports: workerReportsForReaction({
 					reaction,
-					input.implementationWorkerReports || [],
-				),
+					workerReports: input.implementationWorkerReports || [],
+				}),
 				maxCasRetries: input.maxCasRetries,
 				beforeAppend: input.beforeAppend,
 			}),
@@ -108,20 +112,25 @@ export async function scheduleRuntimeReactions(
 	);
 }
 
-function workerReportsForReaction(
-	reaction: RuntimeReaction,
-	workerReports: ImplementationWorkerReportInput[],
-): ImplementationWorkerReportInput[] {
-	const selection = reaction.selection;
+function workerReportsForReaction(input: {
+	readonly reaction: RuntimeReaction;
+	readonly workerReports: ImplementationWorkerReportInput[];
+}): ImplementationWorkerReportInput[] {
+	const selection = input.reaction.selection;
 	if (selection?.loop !== "implementation") return [];
 	const selected = new Set(selection.workItemIds);
-	return workerReports
+	return input.workerReports
 		.filter((result) => selected.has(result.workUnitId))
-		.sort((left, right) =>
-			`${left.workUnitId}:${left.workerId}`.localeCompare(
-				`${right.workUnitId}:${right.workerId}`,
-			),
-		);
+		.sort(compareWorkerReports);
+}
+
+function compareWorkerReports(
+	...values: [ImplementationWorkerReportInput, ImplementationWorkerReportInput]
+): number {
+	const [left, right] = values;
+	return `${left.workUnitId}:${left.workerId}`.localeCompare(
+		`${right.workUnitId}:${right.workerId}`,
+	);
 }
 
 function workerReportContextDigest(
@@ -131,15 +140,15 @@ function workerReportContextDigest(
 	return createHash("sha256").update(stableJson(workerReports)).digest("hex");
 }
 
-function blockedImplementationReaction(
-	reaction: RuntimeReaction,
-	blockedWorkItemIds: Set<string>,
-): boolean {
-	const selection = reaction.selection;
+function blockedImplementationReaction(input: {
+	readonly reaction: RuntimeReaction;
+	readonly blockedWorkItemIds: Set<string>;
+}): boolean {
+	const selection = input.reaction.selection;
 	return Boolean(
 		selection?.loop === "implementation" &&
 			selection.workItemIds.some((workItemId) =>
-				blockedWorkItemIds.has(workItemId),
+				input.blockedWorkItemIds.has(workItemId),
 			),
 	);
 }
@@ -151,6 +160,11 @@ export function runtimeReactionJob(
 	if (input.reaction.status !== "ready" || !selection) {
 		throw new Error(
 			"Runtime coordinator cannot schedule a quiescent reaction.",
+		);
+	}
+	if (selection.loop === "decision") {
+		throw new Error(
+			"Runtime Decision jobs require authenticated exact-revision selection.",
 		);
 	}
 	const mode = input.mode || "append";
@@ -191,11 +205,11 @@ export function runtimeReactionJob(
 	};
 	if (mode === "append") {
 		job.recover = async () => {
-			const events = await persistedRuntimeJobEvents(
-				input.repoRoot,
-				input.reaction,
+			const events = await persistedRuntimeJobEvents({
+				repoRoot: input.repoRoot,
+				reaction: input.reaction,
 				jobId,
-			);
+			});
 			const evidence = events.map(eventEvidence).sort(compareEvidence);
 			return evidence.length > 0
 				? {
@@ -213,24 +227,24 @@ export function runtimeReactionJob(
 	return job;
 }
 
-export async function persistedRuntimeJobEvidence(
-	repoRoot: string,
-	reaction: RuntimeReaction,
-	jobId: string,
-): Promise<RuntimeReactionJobEvidence[]> {
-	const events = await persistedRuntimeJobEvents(repoRoot, reaction, jobId);
+export async function persistedRuntimeJobEvidence(input: {
+	readonly repoRoot: string;
+	readonly reaction: RuntimeReaction;
+	readonly jobId: string;
+}): Promise<RuntimeReactionJobEvidence[]> {
+	const events = await persistedRuntimeJobEvents(input);
 	return events.map(eventEvidence).sort(compareEvidence);
 }
 
-async function persistedRuntimeJobEvents(
-	repoRoot: string,
-	reaction: RuntimeReaction,
-	jobId: string,
-): Promise<TraceEvent[]> {
+async function persistedRuntimeJobEvents(input: {
+	readonly repoRoot: string;
+	readonly reaction: RuntimeReaction;
+	readonly jobId: string;
+}): Promise<TraceEvent[]> {
 	const events: TraceEvent[] = [];
-	for (const traceId of reactionTraceIds(reaction)) {
+	for (const traceId of reactionTraceIds(input.reaction)) {
 		const records = await readTraceFile(
-			join(repoRoot, traceFilePath(traceId)),
+			join(input.repoRoot, traceFilePath(traceId)),
 		).catch((error: unknown) => {
 			if (isNotFound(error)) return [];
 			throw error;
@@ -238,17 +252,21 @@ async function persistedRuntimeJobEvents(
 		for (const record of records) {
 			if (
 				record.type === "trace_event" &&
-				objectRecord(record.data).runtimeJobId === jobId
+				objectRecord(record.data).runtimeJobId === input.jobId
 			) {
 				events.push(record);
 			}
 		}
 	}
-	return events.sort(
-		(left, right) =>
-			left.traceId.localeCompare(right.traceId) ||
-			left.sequence - right.sequence ||
-			left.id.localeCompare(right.id),
+	return events.sort(compareTraceEvents);
+}
+
+function compareTraceEvents(...values: [TraceEvent, TraceEvent]): number {
+	const [left, right] = values;
+	return (
+		left.traceId.localeCompare(right.traceId) ||
+		left.sequence - right.sequence ||
+		left.id.localeCompare(right.id)
 	);
 }
 
@@ -272,11 +290,9 @@ function reactionLane(reaction: RuntimeReaction): ProjectCoordinatorLane {
 	const selection = reaction.selection;
 	if (!selection) throw new Error("Runtime reaction selection is required.");
 	if (selection.loop === "decision") {
-		return {
-			kind: "decision",
-			changeId: selection.change.changeId,
-			revision: selection.change.changeRevision,
-		};
+		throw new Error(
+			"Runtime Decision lane requires authenticated exact-revision selection.",
+		);
 	}
 	if (selection.loop === "planning") return { kind: "planning" };
 	return { kind: "implementation", sprintId: selection.sprintId };

@@ -1,4 +1,3 @@
-import assert from "node:assert/strict";
 import { RuntimeReactor } from "../../src/runtime/reactor.ts";
 import { runtimeSemanticJobId } from "../../src/runtime/semantic-job-id.ts";
 import { runRuntimeSelectedSemanticReaction } from "../../src/runtime/semantic-executor.ts";
@@ -29,7 +28,12 @@ export function testPiProjectServices() {
 		async submitCandidate(root, _ctx, trigger, loop, candidate, mode) {
 			const reactor = reactorFor(root);
 			const reaction = await reactor.inspect(trigger);
-			assert.equal(reaction.selection?.loop, loop);
+			if (loop === "decision" && reaction.selection?.loop !== "decision") {
+				throw new Error("decision_attention_selection_required");
+			}
+			if (reaction.selection?.loop !== loop) {
+				throw new Error("runtime_reaction_mismatch");
+			}
 			const adapters =
 				loop === "decision"
 					? { decision: () => candidate }

@@ -69,15 +69,9 @@ async function setupApprovedPortfolio() {
 	});
 	records[0] = linked;
 	for (let index = 0; index < records.length; index += 1) {
-		const workState = await buildProjectWorkState({ repoRoot: root });
-		const reaction = selectRuntimeReaction(workState, {
-			kind: "manual_resume",
-		});
-		assert.equal(reaction.selection.loop, "decision");
-		const changeId = reaction.selection.change.changeId;
-		const record = records.find(
-			(candidate) => candidate.change.id === changeId,
-		);
+		const workState = await buildProjectWorkState({repoRoot: root});
+		const record = records[index];
+		const changeId = record.change.id;
 		const path = join(root, traceFilePath(changeTraceId(changeId)));
 		await runWikiDecide({
 			repoRoot: root,

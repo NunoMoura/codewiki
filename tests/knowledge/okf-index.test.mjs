@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added `codewiki.decision-attention-selection@1.0.0` for authenticated exact-revision Decision admission. One strict idempotent command binds native WorkState, Backlog Triage Projection, protected project config, compiled triage policy, triage Candidate, content-addressed Change revision, and authority Evidence. Runtime authorizes and then revalidates the complete context, emits a tamper-checked receipt with exact Git/source/Knowledge/graph/config/policy bindings and deterministic conflict refs, and creates one native revision-bound Decision job identity. The coordinator exposes dedicated local/remote selection, serializes overlapping selected scopes, revalidates freshness before execution, and supports durable recovery. Same-key changed input conflicts. Pending Changes, generic triggers, and direct candidate submission no longer select Decision work; selection grants no disposition or Planning priority.",
+					},
+					{
+						kind: "Update",
 						text: "Added protected Standard-derived Backlog Triage policy through `codewiki.backlog-triage-policy@1.0.0`, Projection/Query Protocols `2.0.0`, User Standard Distillation Protocol `2.0.0`, protected configuration schema `3.0.0`, and guarded Mutation/Review/Acceptance Protocols `5.0.0`. Accepted `triage_preference` clauses now persist immutable distillation/Standard/source/passage-bound dimensions in protected config. Runtime derives fixed lexicographic precedence and comparator directions after safety tiers, merges repeated dimension refs without weight, preserves unknown values, and emits exact source-bearing ordering reasons without model-authored rank, score, queue state, Check outcome, or Planning priority.",
 					},
 					{

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { realpathSync } from "node:fs";
+import type { Sha256Digest } from "../utils/canonical-json.ts";
 
 const DEFAULT_MAX_CONCURRENT_JOBS = 4;
 const DEFAULT_MAX_COMPLETED_JOBS = 1_024;
@@ -17,7 +18,7 @@ export type ProjectCoordinatorExecutionPolicy =
 	| "paused";
 
 export type ProjectCoordinatorLane =
-	| { kind: "decision"; changeId: string; revision: number }
+	| { kind: "decision"; changeId: string; changeRevisionId: Sha256Digest }
 	| { kind: "planning" }
 	| { kind: "assignment"; workItemId: string }
 	| { kind: "implementation"; sprintId: string }
@@ -31,7 +32,9 @@ export interface ProjectCoordinatorClientInput {
 }
 
 export interface ProjectCoordinatorClientConnection {
-	clientId: string;
+	readonly clientId: string;
+	readonly kind: ProjectCoordinatorClientKind;
+	readonly supervision: "observer" | "approved";
 	disconnect(): void;
 }
 
@@ -209,6 +212,8 @@ export class ProjectCoordinator {
 		let connected = true;
 		return {
 			clientId,
+			kind,
+			supervision,
 			disconnect: () => {
 				if (!connected) return;
 				connected = false;
@@ -609,41 +614,53 @@ function normalizeLane(lane: ProjectCoordinatorLane): ProjectCoordinatorLane {
 	if (!lane || typeof lane !== "object") {
 		throw new Error("Project coordinator lane is required.");
 	}
-	switch (lane.kind) {
-		case "decision":
-			return {
-				kind: lane.kind,
-				changeId: requiredText(lane.changeId, "changeId"),
-				revision: requiredInteger(lane.revision, 1, 1_000_000, "revision"),
-			};
-		case "planning":
-			return lane;
-		case "assignment":
-			return {
-				kind: lane.kind,
-				workItemId: requiredText(lane.workItemId, "workItemId"),
-			};
-		case "implementation":
-			return {
-				kind: lane.kind,
-				sprintId: requiredText(lane.sprintId, "sprintId"),
-			};
-		case "integration":
-			return {
-				kind: lane.kind,
-				targetRef: requiredText(lane.targetRef, "targetRef"),
-				baseRef: requiredText(lane.baseRef, "baseRef"),
-			};
-		case "effect":
-			return {
-				kind: lane.kind,
-				targetRef: requiredText(lane.targetRef, "targetRef"),
-			};
-		default:
-			throw new Error(
-				`Unsupported project coordinator lane: ${String((lane as { kind?: unknown }).kind)}.`,
-			);
+	if (lane.kind === "decision") return normalizeDecisionLane(lane);
+	if (lane.kind === "planning") return lane;
+	if (lane.kind === "assignment") {
+		return {
+			kind: lane.kind,
+			workItemId: requiredText(lane.workItemId, "workItemId"),
+		};
 	}
+	if (lane.kind === "implementation") {
+		return {
+			kind: lane.kind,
+			sprintId: requiredText(lane.sprintId, "sprintId"),
+		};
+	}
+	if (lane.kind === "integration") {
+		return {
+			kind: lane.kind,
+			targetRef: requiredText(lane.targetRef, "targetRef"),
+			baseRef: requiredText(lane.baseRef, "baseRef"),
+		};
+	}
+	if (lane.kind === "effect") {
+		return {
+			kind: lane.kind,
+			targetRef: requiredText(lane.targetRef, "targetRef"),
+		};
+	}
+	throw new Error(
+		`Unsupported project coordinator lane: ${String((lane as { kind?: unknown }).kind)}.`,
+	);
+}
+
+function normalizeDecisionLane(
+	lane: Extract<ProjectCoordinatorLane, {readonly kind: "decision"}>,
+): ProjectCoordinatorLane {
+	assertLaneKeys({
+		lane,
+		allowed: ["kind", "changeId", "changeRevisionId"],
+	});
+	return {
+		kind: lane.kind,
+		changeId: requiredText(lane.changeId, "changeId"),
+		changeRevisionId: requiredSha256Digest({
+			value: lane.changeRevisionId,
+			field: "changeRevisionId",
+		}),
+	};
 }
 
 function jobFingerprint(job: ProjectCoordinatorJob<unknown>): string {
@@ -673,26 +690,24 @@ function jobLockRefs(job: ProjectCoordinatorJob<unknown>): string[] {
 }
 
 function laneLockRefs(lane: ProjectCoordinatorLane): string[] {
-	switch (lane.kind) {
-		case "decision":
-			return [
-				`decision-change:${lane.changeId}`,
-				`decision:${lane.changeId}:${lane.revision}`,
-			];
-		case "planning":
-			return ["planning"];
-		case "assignment":
-			return [`assignment:${lane.workItemId}`];
-		case "implementation":
-			return [`implementation:${lane.sprintId}`];
-		case "integration":
-			return [
-				`integration:${lane.targetRef}:${lane.baseRef}`,
-				`target-writer:${lane.targetRef}`,
-			];
-		case "effect":
-			return [`effect:${lane.targetRef}`, `target-writer:${lane.targetRef}`];
+	if (lane.kind === "decision") {
+		return [
+			`decision-change:${lane.changeId}`,
+			`decision:${lane.changeId}:${lane.changeRevisionId}`,
+		];
 	}
+	if (lane.kind === "planning") return ["planning"];
+	if (lane.kind === "assignment") return [`assignment:${lane.workItemId}`];
+	if (lane.kind === "implementation") {
+		return [`implementation:${lane.sprintId}`];
+	}
+	if (lane.kind === "integration") {
+		return [
+			`integration:${lane.targetRef}:${lane.baseRef}`,
+			`target-writer:${lane.targetRef}`,
+		];
+	}
+	return [`effect:${lane.targetRef}`, `target-writer:${lane.targetRef}`];
 }
 
 function activeResourceConflict(
@@ -757,6 +772,33 @@ function requiredText(value: string, field: string): string {
 	return normalized;
 }
 
+function requiredSha256Digest(input: {
+	readonly value: unknown;
+	readonly field: string;
+}): Sha256Digest {
+	if (
+		typeof input.value !== "string" ||
+		!/^sha256:[0-9a-f]{64}$/u.test(input.value)
+	) {
+		throw new Error(`${input.field} must be a SHA-256 digest.`);
+	}
+	return input.value as Sha256Digest;
+}
+
+function assertLaneKeys(input: {
+	readonly lane: {readonly kind: string};
+	readonly allowed: readonly string[];
+}): void {
+	const extra = Object.keys(input.lane).filter(
+		(key) => !input.allowed.includes(key),
+	);
+	if (extra.length > 0) {
+		throw new Error(
+			`Project coordinator ${input.lane.kind} lane received unsupported field ${extra.sort(compareText).join(", ")}.`,
+		);
+	}
+}
+
 function boundedText(value: string | undefined, field: string): string {
 	const normalized = typeof value === "string" ? value.trim() : "";
 	if (normalized.length > 512) {
@@ -799,16 +841,6 @@ function normalizeSupervision(
 function normalizeEffect(value: "read" | "write"): "read" | "write" {
 	if (value === "read" || value === "write") return value;
 	throw new Error(`Unsupported project coordinator effect: ${String(value)}.`);
-}
-
-function requiredInteger(
-	value: number | undefined,
-	minimum: number,
-	maximum: number,
-	field: string,
-): number {
-	if (value === undefined) throw new Error(`${field} is required.`);
-	return boundedInteger(value, minimum, minimum, maximum, field);
 }
 
 function boundedInteger(

@@ -29,20 +29,21 @@ intent and revisions
 ## Flow
 
 1. Runtime admits intent against exact project base/authority and accepts `trace.opened` plus `change.proposed` through `codewiki/state` expected-head CAS.
-2. Decision produces one immutable Candidate against exact Evidence Records.
-3. Runtime resolves Exit Policy, executes Checks, records Results/Exit Report, revalidates authority/freshness, and records Runtime Route.
-4. A passing authorized Decision disposition makes the exact Change revision eligible for rolling Planning; failed/indeterminate attempts remain durable.
-5. Planning observes the selected Change set, active Change Claims, active Work Item Claims, active work, dependencies, conflicts, and fresh project snapshot.
-6. Passing Planning accepts one immutable `PlanningEpochRecord` and atomic `planning.epoch_bound` operations for all participants.
-7. Runtime provisions exact private Worker Workbenches, acquires Work Item Claims, and dispatches compatible isolated Assignments.
-8. Worker Reports supply asserted producer material. Runtime integrates accepted output in an isolated workspace, materializes valid Evidence, and builds the exact Implementation Candidate over integrated source/tests/Knowledge/Git facts.
-9. If policy requires pre-exit review, Runtime may publish only an authorized isolated review projection after non-approval readiness Checks pass, then re-observe exact approval Evidence.
-10. Implementation follows Candidate → Evidence Records → Resolved Exit Policy → Checks → Check Results → Exit Report → Runtime Route against that exact integrated tree.
-11. Runtime atomically accepts the exact Integration result, final assurance records, route, and ownership disposition through expected-head CAS.
-12. Local branch merge, remote push, publication, release, delivery, and outcome observation progress only under separate authority and proof.
-13. `trace.closed` records terminal closure only after configured Integration, ownership, review/effect, and outcome obligations complete.
-14. Runtime pushes immutable archive, fetches/verifies digest, then removes hot state copy.
-15. Historical inspection hydrates read-only cache. Authorized reopening creates a new hot segment with `trace.reopened` referencing archived closure.
+2. Backlog Triage recommends attention, then an authenticated user selects one exact eligible current revision against the current WorkState, projection, protected config and policy, authority Evidence, and idempotency key. Pending Change presence alone starts no Decision work.
+3. Decision produces one immutable Candidate against exact Evidence Records.
+4. Runtime resolves Exit Policy, executes Checks, records Results/Exit Report, revalidates authority/freshness, and records Runtime Route.
+5. A passing authorized Decision disposition makes the exact Change revision eligible for rolling Planning; failed/indeterminate attempts remain durable.
+6. Planning observes the selected Change set, active Change Claims, active Work Item Claims, active work, dependencies, conflicts, and fresh project snapshot.
+7. Passing Planning accepts one immutable `PlanningEpochRecord` and atomic `planning.epoch_bound` operations for all participants.
+8. Runtime provisions exact private Worker Workbenches, acquires Work Item Claims, and dispatches compatible isolated Assignments.
+9. Worker Reports supply asserted producer material. Runtime integrates accepted output in an isolated workspace, materializes valid Evidence, and builds the exact Implementation Candidate over integrated source/tests/Knowledge/Git facts.
+10. If policy requires pre-exit review, Runtime may publish only an authorized isolated review projection after non-approval readiness Checks pass, then re-observe exact approval Evidence.
+11. Implementation follows Candidate → Evidence Records → Resolved Exit Policy → Checks → Check Results → Exit Report → Runtime Route against that exact integrated tree.
+12. Runtime atomically accepts the exact Integration result, final assurance records, route, and ownership disposition through expected-head CAS.
+13. Local branch merge, remote push, publication, release, delivery, and outcome observation progress only under separate authority and proof.
+14. `trace.closed` records terminal closure only after configured Integration, ownership, review/effect, and outcome obligations complete.
+15. Runtime pushes immutable archive, fetches/verifies digest, then removes hot state copy.
+16. Historical inspection hydrates read-only cache. Authorized reopening creates a new hot segment with `trace.reopened` referencing archived closure.
 
 Local work remains provisional until accepted on `codewiki/state`. A stale push requires fetch, replay, and semantic reevaluation.
 

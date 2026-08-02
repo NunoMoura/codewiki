@@ -199,7 +199,11 @@ test("coordinator service authenticates loopback clients and shares supervision"
 
 		const result = await service.coordinator.schedule({
 			idempotencyKey: "decision:service",
-			lane: { kind: "decision", changeId: "CHG-service", revision: 1 },
+			lane: {
+				kind: "decision",
+				changeId: "CHG-service",
+				changeRevisionId: `sha256:${"1".repeat(64)}`,
+			},
 			run: () => "executed",
 		});
 		assert.equal(result, "executed");
@@ -208,7 +212,11 @@ test("coordinator service authenticates loopback clients and shares supervision"
 		let started = false;
 		const held = service.coordinator.schedule({
 			idempotencyKey: "decision:held",
-			lane: { kind: "decision", changeId: "CHG-held", revision: 1 },
+			lane: {
+				kind: "decision",
+				changeId: "CHG-held",
+				changeRevisionId: `sha256:${"2".repeat(64)}`,
+			},
 			async run() {
 				started = true;
 				await release.promise;

@@ -94,20 +94,23 @@ function state(overrides = {}) {
 const trigger = { kind: "change_trace_appended", refs: ["z", "a", "a"] };
 
 describe("runtime reactor", () => {
-	it("selects deterministically across eligible semantic loops", () => {
+	it("does not auto-select pending Decision attention", () => {
 		const reaction = selectRuntimeReaction(
 			state({
 				changes: [
-					change("CHG-plan", "planning"),
-					change("CHG-decide", "decision"),
+					change("CHG-plan", "planning", ["src/shared.ts"]),
+					change("CHG-decide", "decision", ["src/shared.ts"]),
 				],
 			}),
 			trigger,
 		);
 
 		assert.equal(reaction.status, "ready");
-		assert.equal(reaction.selection.loop, "decision");
-		assert.equal(reaction.selection.change.changeId, "CHG-decide");
+		assert.equal(reaction.selection.loop, "planning");
+		assert.deepEqual(
+			reaction.selection.planningHorizon.map((entry) => entry.changeId),
+			["CHG-plan"],
+		);
 		assert.deepEqual(reaction.trigger.refs, ["a", "z"]);
 	});
 
@@ -191,7 +194,7 @@ describe("runtime reactor", () => {
 		assert.deepEqual(reaction.selection.workItemIds, ["WI-ready"]);
 	});
 
-	it("selects a bounded compatible batch without overlapping Decisions", () => {
+	it("keeps a pending-Change-only WorkState quiescent", () => {
 		const reactions = selectRuntimeReactions(
 			state({
 				changes: [
@@ -201,20 +204,10 @@ describe("runtime reactor", () => {
 				],
 			}),
 			trigger,
-			{ maxReactions: 4 },
+			{maxReactions: 4},
 		);
 
-		assert.deepEqual(
-			reactions.map((reaction) => reaction.selection.change.changeId),
-			["CHG-a", "CHG-c"],
-		);
-		assert.equal(
-			reactions.every(
-				(reaction) =>
-					reaction.observedWorkStateDigest === "sha256:work-state",
-			),
-			true,
-		);
+		assert.deepEqual(reactions, []);
 	});
 
 	it("coalesces one Planning horizon and one reaction per Sprint", () => {

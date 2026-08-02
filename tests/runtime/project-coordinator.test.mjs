@@ -27,7 +27,11 @@ async function turn() {
 function decisionJob(id, changeId, run) {
 	return {
 		idempotencyKey: id,
-		lane: { kind: "decision", changeId, revision: 1 },
+		lane: {
+			kind: "decision",
+			changeId,
+			changeRevisionId: `sha256:${"1".repeat(64)}`,
+		},
 		run,
 	};
 }
@@ -337,7 +341,11 @@ test("write jobs recover from durable evidence after coordinator restart", async
 		let runs = 0;
 		const job = () => ({
 			idempotencyKey: "write:decision:CHG-restart:1",
-			lane: { kind: "decision", changeId: "CHG-restart", revision: 1 },
+			lane: {
+				kind: "decision",
+				changeId: "CHG-restart",
+				changeRevisionId: `sha256:${"2".repeat(64)}`,
+			},
 			effect: "write",
 			recover() {
 				try {
@@ -451,10 +459,32 @@ test("coordinator validates external inputs and keeps observation non-authoritat
 			() =>
 				coordinator.schedule({
 					idempotencyKey: "invalid-lane",
-					lane: { kind: "unsupported" },
+					lane: {kind: "unsupported"},
 					run: () => "never",
 				}),
 			/Unsupported project coordinator lane/,
+		);
+		assert.throws(
+			() =>
+				coordinator.schedule({
+					idempotencyKey: "legacy-decision-revision",
+					lane: {kind: "decision", changeId: "CHG-old", revision: 1},
+					run: () => "never",
+				}),
+			/decision lane received unsupported field revision/,
+		);
+		assert.throws(
+			() =>
+				coordinator.schedule({
+					idempotencyKey: "invalid-decision-revision",
+					lane: {
+						kind: "decision",
+						changeId: "CHG-invalid",
+						changeRevisionId: "sha256:not-a-digest",
+					},
+					run: () => "never",
+				}),
+			/changeRevisionId must be a SHA-256 digest/,
 		);
 		await assert.rejects(
 			coordinator.schedule({

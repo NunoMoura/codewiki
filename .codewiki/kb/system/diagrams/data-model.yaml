@@ -256,7 +256,7 @@ relationships:
     label: bounded source provenance and classification
   - from: backlog_triage
     to: change
-    label: orders Decision attention without priority authority
+    label: offers exact eligible revisions; authenticated user selection binds one revision and current projection before Decision without granting disposition or priority
   - from: work_state
     to: generated_view
     label: current status and scheduling

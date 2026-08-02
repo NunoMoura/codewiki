@@ -6,6 +6,13 @@ import type { Server } from "node:http";
 
 import type { WorktreeCommandRunner } from "../git/worktrees.ts";
 import {
+	assertDecisionAttentionSelectionReceipt,
+	DecisionAttentionSelectionError,
+	parseDecisionAttentionSelectionCommand,
+	type DecisionAttentionSelectionCommand,
+	type DecisionAttentionSelectionReceipt,
+} from "../changes/triage/selection.ts";
+import {
 	ImplementationWorkerDispatcher,
 	type ImplementationWorkerDispatchResult,
 } from "./implementation-worker-dispatch.ts";
@@ -104,6 +111,25 @@ export interface ProjectCoordinatorServiceOptions
 	releasePlan?: ProductReleasePlan;
 	releaseAdapter?: ProductReleaseAdapter;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
+	decisionAttentionSelection?: ProjectCoordinatorDecisionAttentionSelectionAdapter;
+}
+
+export interface ProjectCoordinatorDecisionAttentionCaller {
+	readonly clientId: string;
+	readonly clientKind: ProjectCoordinatorClientInput["kind"];
+	readonly supervision: "observer" | "approved";
+	readonly connectionId: string;
+	readonly generationId: string;
+}
+
+export interface ProjectCoordinatorDecisionAttentionSelectionAdapter {
+	selectAndSchedule(input: {
+		readonly command: DecisionAttentionSelectionCommand;
+		readonly caller: ProjectCoordinatorDecisionAttentionCaller;
+		readonly coordinator: ProjectCoordinator;
+	}):
+		| DecisionAttentionSelectionReceipt
+		| Promise<DecisionAttentionSelectionReceipt>;
 }
 
 export interface ProjectCoordinatorServiceHandle {
@@ -137,6 +163,9 @@ export interface ProjectCoordinatorRemoteClient {
 	semanticExecution: ProjectCoordinatorSemanticExecution;
 	state(): Promise<ProjectCoordinatorSnapshot>;
 	inspect(trigger: ProjectCoordinatorRemoteTrigger): Promise<RuntimeReaction>;
+	selectDecision(
+		command: DecisionAttentionSelectionCommand,
+	): Promise<DecisionAttentionSelectionReceipt>;
 	submitCandidate(
 		trigger: ProjectCoordinatorRemoteTrigger,
 		loop: RuntimeCandidateLoop,
@@ -182,6 +211,7 @@ interface ServiceRuntime {
 	maxReactions?: number;
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
+	decisionAttentionSelection?: ProjectCoordinatorDecisionAttentionSelectionAdapter;
 	clients: Map<string, RemoteClientLease>;
 	clientLeaseMs: number;
 	clock: () => number;
@@ -291,6 +321,7 @@ export async function startProjectCoordinatorService(
 				8,
 				"maxCasRetries",
 			),
+			decisionAttentionSelection: options.decisionAttentionSelection,
 			clients,
 			clientLeaseMs: boundedClientLease(options.clientLeaseMs),
 			clock: options.clock || Date.now,
@@ -400,6 +431,18 @@ export async function connectProjectCoordinatorClient(
 				{
 					method: "POST",
 					body: { connectionId: response.connectionId, trigger },
+					timeoutMs: options.timeoutMs,
+				},
+			);
+		},
+		selectDecision(command) {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<DecisionAttentionSelectionReceipt>(
+				endpoint,
+				"/v1/runtime/decision-selection",
+				{
+					method: "POST",
+					body: {connectionId: response.connectionId, command},
 					timeoutMs: options.timeoutMs,
 				},
 			);
@@ -618,6 +661,10 @@ async function routeServiceRequest(
 		await handleRuntimeInspection(runtime, request, response);
 		return;
 	}
+	if (method === "POST" && url.pathname === "/v1/runtime/decision-selection") {
+		await handleDecisionAttentionSelection(runtime, request, response);
+		return;
+	}
 	if (method === "POST" && url.pathname === "/v1/runtime/candidate") {
 		await handleRuntimeCandidate(runtime, request, response);
 		return;
@@ -705,6 +752,57 @@ async function handleRuntimeInspection(
 	}
 }
 
+async function handleDecisionAttentionSelection(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+): Promise<void> {
+	const adapter = runtime.decisionAttentionSelection;
+	if (!adapter) {
+		throw new HttpError(503, "decision_attention_selection_unavailable");
+	}
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, ["connectionId", "command"]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	let command: DecisionAttentionSelectionCommand;
+	try {
+		command = parseDecisionAttentionSelectionCommand(body.command);
+	} catch (error) {
+		throw new HttpError(400, errorMessage(error));
+	}
+	lease.activeRequests += 1;
+	try {
+		await assertCurrentGeneration(runtime);
+		let receipt: DecisionAttentionSelectionReceipt;
+		try {
+			receipt = await adapter.selectAndSchedule({
+				command,
+				caller: {
+					clientId: lease.clientId,
+					clientKind: lease.connection.kind,
+					supervision: lease.connection.supervision,
+					connectionId: lease.connectionId,
+					generationId: runtime.endpoint.generationId,
+				},
+				coordinator: runtime.coordinator,
+			});
+		} catch (error) {
+			if (error instanceof DecisionAttentionSelectionError) {
+				let status = 409;
+				if (error.code === "bad_request") status = 400;
+				else if (error.code === "forbidden") status = 403;
+				throw new HttpError(status, error.message);
+			}
+			throw error;
+		}
+		assertDecisionAttentionSelectionReceipt(receipt);
+		await assertCurrentGeneration(runtime);
+		writeJson(response, 200, receipt);
+	} finally {
+		extendLease(runtime, lease);
+	}
+}
+
 async function handleRuntimeCandidate(
 	runtime: ServiceRuntime,
 	request: IncomingMessage,
@@ -722,6 +820,10 @@ async function handleRuntimeCandidate(
 	const trigger = runtimeTrigger(body.trigger, runtime.clock());
 	const loop = runtimeCandidateLoop(body.loop);
 	const candidate = objectBody(body.candidate);
+	const adapters = candidateAdapters(loop, candidate);
+	if (loop === "decision") {
+		throw new HttpError(409, "decision_attention_selection_required");
+	}
 	const mode = runtimeSemanticMode(body.mode);
 	lease.activeRequests += 1;
 	try {
@@ -738,7 +840,7 @@ async function handleRuntimeCandidate(
 			coordinator: runtime.coordinator,
 			reactor: runtime.reactor,
 			reaction: observation.reaction,
-			adapters: candidateAdapters(loop, candidate),
+			adapters,
 			context: runtime.semanticContext,
 			mode,
 			maxCasRetries: runtime.maxCasRetries,

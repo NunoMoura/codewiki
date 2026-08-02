@@ -25,7 +25,7 @@ test("Pi coordinator daemon loads entrypoint-isolated SDK adapters", async () =>
 	}
 });
 
-test("Pi coordinator daemon owns autonomous semantic adapter execution", async () => {
+test("Pi coordinator daemon does not auto-execute pending Decisions", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-pi-daemon-"));
 	let daemon;
 	let client;
@@ -73,11 +73,9 @@ test("Pi coordinator daemon owns autonomous semantic adapter execution", async (
 			supervision: "approved",
 		});
 		assert.equal(client.semanticExecution, "service");
-		const receipts = await client.react({ kind: "manual_resume" });
-		assert.equal(adapterCalls, 1);
-		assert.equal(receipts.length, 1);
-		assert.equal(receipts[0].status, "completed");
-		assert.equal(receipts[0].evidence.length, 1);
+		const receipts = await client.react({kind: "manual_resume"});
+		assert.equal(adapterCalls, 0);
+		assert.deepEqual(receipts, []);
 		await client.disconnect();
 		client = undefined;
 		await daemon.close();

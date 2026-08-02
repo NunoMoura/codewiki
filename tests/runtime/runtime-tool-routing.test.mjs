@@ -59,7 +59,7 @@ function projectServices() {
 }
 
 describe("runtime tool routing", () => {
-	it("keeps only the runtime-selected semantic loop active", async () => {
+	it("keeps pending Decision tools inactive until exact user selection", async () => {
 		const root = await project();
 		const store = new ChangeTraceStore({ repoRoot: root });
 		const record = createChangeRecord(
@@ -99,13 +99,7 @@ describe("runtime tool routing", () => {
 		);
 
 		await handlers.get("before_agent_start")({}, { cwd: root });
-		assert.deepEqual(activeTools, [
-			"read",
-			"bash",
-			"wiki_state",
-			"wiki_change",
-			"wiki_decide",
-		]);
+		assert.deepEqual(activeTools, ["read", "bash", "wiki_state", "wiki_change"]);
 
 		const accepted = acceptChangeRecord(record, {
 			changedBy: "maintainer",
@@ -133,7 +127,7 @@ describe("runtime tool routing", () => {
 		]);
 	});
 
-	it("delegates selected work to service semantic execution without exposing candidate tools", async () => {
+	it("does not delegate service execution for unselected pending Decisions", async () => {
 		const root = await project();
 		const store = new ChangeTraceStore({ repoRoot: root });
 		await store.write({
@@ -186,7 +180,7 @@ describe("runtime tool routing", () => {
 
 		await handlers.get("before_agent_start")({}, { cwd: root });
 		assert.deepEqual(activeTools, ["read", "wiki_state", "wiki_change"]);
-		assert.deepEqual(triggers, [{ kind: "manual_resume" }]);
+		assert.deepEqual(triggers, []);
 	});
 
 	it("refreshes routing after event replay reset without trusting event payloads", async () => {
