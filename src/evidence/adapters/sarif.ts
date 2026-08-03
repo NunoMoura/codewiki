@@ -10,6 +10,22 @@ import {
 	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
+import {
+	admitAdapterArtifact,
+	assertOnlyKeys,
+	boundedText,
+	buildCommandExecutionMaterial,
+	compareText,
+	digestValue as digest,
+	enumValue,
+	integerValue as integer,
+	normalizedProjectPath as normalizedOptionalPath,
+	normalizedRefList as normalizedRefs,
+	objectValue as object,
+	optionalIntegerValue as optionalInteger,
+	safeOpaqueRef as safeRef,
+	sortedUnique,
+} from "./shared.ts";
 
 export const SARIF_EVIDENCE_ADAPTER_PROTOCOL = Object.freeze({
 	id: "codewiki.evidence-adapter.sarif",
@@ -91,46 +107,33 @@ export function ingestSarif21Evidence(
 	input: SarifEvidenceIngestionInput,
 ): SarifEvidenceIngestionResult {
 	const admitted = admittedInput(input);
-	const {artifactBytes, artifact} = admittedArtifact(admitted.artifact);
+	const {artifactBytes, artifact} = admitAdapterArtifact(admitted.artifact, {
+		label: "SARIF",
+		maximumBytes: MAX_SARIF_BYTES,
+		mediaType: "application/sarif+json",
+	});
 	const document = parseSarifDocument(artifactBytes);
 	const runs = requiredArray(document.runs, "SARIF runs", 1, MAX_RUNS);
-	const observedTools = normalizedObservedTools(runs);
-	if (JSON.stringify(observedTools) !== JSON.stringify(admitted.expectedTools)) {
-		throw new Error("SARIF tool identity does not match the Runtime binding.");
-	}
+	const observedTools = validatedObservedTools(runs, admitted.expectedTools);
 	const collectedResults = collectResults(runs);
 	const findings = collectedResults.results.map(parseFinding);
 	const truncatedFindingCount = Math.max(
 		0,
 		collectedResults.totalCount - findings.length,
 	);
-	const unsafeLocationCount = findings.filter(
-		(finding) => finding.unsafeLocation,
-	).length;
+	const findingProjection = projectFindings(findings, admitted.scannedPaths);
 	const summary = summarizeFindings({
 		runCount: runs.length,
 		resultCount: collectedResults.totalCount,
 		findings,
-		unsafeLocationCount,
+		unsafeLocationCount: findingProjection.unsafeLocationCount,
 		truncatedFindingCount,
 	});
-	const findingObservations = findings
-		.slice(0, MAX_OBSERVATIONS - 1)
-		.map(renderFinding);
-	const omittedObservationCount = Math.max(
-		0,
-		findings.length - findingObservations.length,
-	);
-	const allSourcePaths = sortedUnique([
-		...admitted.scannedPaths,
-		...findings.flatMap((finding) => (finding.path ? [finding.path] : [])),
-	]);
-	const sourcePathTruncated = allSourcePaths.length > MAX_REFS;
 	const structuralCoverage: EvidenceCoverage =
 		truncatedFindingCount > 0 ||
-		unsafeLocationCount > 0 ||
-		omittedObservationCount > 0 ||
-		sourcePathTruncated
+		findingProjection.unsafeLocationCount > 0 ||
+		findingProjection.omittedObservationCount > 0 ||
+		findingProjection.sourcePathTruncated
 			? "partial"
 			: "complete";
 	let coverage: EvidenceCoverage = structuralCoverage;
@@ -148,29 +151,14 @@ export function ingestSarif21Evidence(
 		`sarif-artifact:${artifact.digest}`,
 		`sarif-binding:${bindingDigest}`,
 	]);
-	const diagnosticRefs = sortedUnique(findings.map((finding) => finding.ref)).slice(
-		0,
-		MAX_REFS,
-	);
-	const sourcePaths = allSourcePaths.slice(0, MAX_REFS);
-	const commandExecution: EvidenceMaterial<"command_execution"> = Object.freeze({
-		schemaVersion: EVIDENCE_SCHEMA_VERSION,
-		kind: "command_execution",
+	const diagnosticRefs = findingProjection.diagnosticRefs;
+	const sourcePaths = findingProjection.sourcePaths;
+	const commandExecution = buildCommandExecutionMaterial({
 		artifact,
 		provenanceRefs,
-		payload: {
-			adapterId: admitted.execution.adapterId,
-			adapterVersion: admitted.execution.adapterVersion,
-			invocationDigest: admitted.execution.invocationDigest,
-			environmentDigest: admitted.execution.environmentDigest,
-			termination: admitted.execution.termination,
-			...(admitted.execution.exitCode === undefined
-				? {}
-				: {exitCode: admitted.execution.exitCode}),
-			durationMs: admitted.execution.durationMs,
-			stdoutDigest: artifact.digest,
-			diagnosticRefs,
-		},
+		execution: admitted.execution,
+		diagnosticRefs,
+		stdoutDigest: artifact.digest,
 	});
 	const sourceObservation: EvidenceMaterial<"source_observation"> = Object.freeze({
 		schemaVersion: EVIDENCE_SCHEMA_VERSION,
@@ -184,8 +172,8 @@ export function ingestSarif21Evidence(
 			symbols: [],
 			ownershipRefs: admitted.ownershipRefs,
 			observations: [
-				renderSummary(summary, omittedObservationCount),
-				...findingObservations,
+				renderSummary(summary, findingProjection.omittedObservationCount),
+				...findingProjection.observations,
 			],
 		},
 	});
@@ -202,27 +190,6 @@ export function ingestSarif21Evidence(
 	return Object.freeze({...body, receiptDigest: canonicalJsonDigest(body)});
 }
 
-function admittedArtifact(input: {
-	readonly bytes: string | Uint8Array;
-	readonly ref: string;
-}): {readonly artifactBytes: Uint8Array; readonly artifact: EvidenceArtifact} {
-	const artifactBytes = Buffer.from(input.bytes);
-	if (artifactBytes.byteLength === 0 || artifactBytes.byteLength > MAX_SARIF_BYTES) {
-		throw new Error(
-			`SARIF artifact must contain 1..${MAX_SARIF_BYTES} UTF-8 bytes.`,
-		);
-	}
-	return Object.freeze({
-		artifactBytes,
-		artifact: Object.freeze({
-			digest: sha256Digest(artifactBytes),
-			mediaType: "application/sarif+json",
-			ref: input.ref,
-			sizeBytes: artifactBytes.byteLength,
-		}),
-	});
-}
-
 function admittedInput(
 	value: SarifEvidenceIngestionInput,
 ): Omit<SarifEvidenceIngestionInput, "ownershipRefs" | "provenanceRefs"> & {
@@ -230,17 +197,21 @@ function admittedInput(
 	readonly provenanceRefs: readonly string[];
 } {
 	const root = object(value, "SARIF ingestion input");
-	assertOnlyKeys(root, [
-		"artifact",
-		"sourceSnapshotDigest",
-		"scannedPaths",
-		"ownershipRefs",
-		"expectedTools",
-		"execution",
-		"provenanceRefs",
-	]);
+	assertOnlyKeys(
+		root,
+		[
+			"artifact",
+			"sourceSnapshotDigest",
+			"scannedPaths",
+			"ownershipRefs",
+			"expectedTools",
+			"execution",
+			"provenanceRefs",
+		],
+		"SARIF ingestion",
+	);
 	const artifact = object(root.artifact, "SARIF artifact");
-	assertOnlyKeys(artifact, ["bytes", "ref"]);
+	assertOnlyKeys(artifact, ["bytes", "ref"], "SARIF ingestion");
 	if (typeof artifact.bytes !== "string" && !(artifact.bytes instanceof Uint8Array)) {
 		throw new Error("SARIF artifact bytes must be a string or Uint8Array.");
 	}
@@ -283,18 +254,22 @@ function admittedInput(
 
 function admittedExecution(value: unknown): SarifExecutionBinding {
 	const execution = object(value, "SARIF execution binding");
-	assertOnlyKeys(execution, [
-		"adapterId",
-		"adapterVersion",
-		"requestDigest",
-		"invocationDigest",
-		"environmentDigest",
-		"configurationDigest",
-		"advisoryDatabaseDigest",
-		"termination",
-		"exitCode",
-		"durationMs",
-	]);
+	assertOnlyKeys(
+		execution,
+		[
+			"adapterId",
+			"adapterVersion",
+			"requestDigest",
+			"invocationDigest",
+			"environmentDigest",
+			"configurationDigest",
+			"advisoryDatabaseDigest",
+			"termination",
+			"exitCode",
+			"durationMs",
+		],
+		"SARIF ingestion",
+	);
 	const termination = enumValue(
 		execution.termination,
 		["exited", "timed_out", "cancelled", "unavailable"] as const,
@@ -382,6 +357,17 @@ function collectResults(runs: readonly Record<string, unknown>[]): {
 	return Object.freeze({totalCount, results});
 }
 
+function validatedObservedTools(
+	...input: [readonly Record<string, unknown>[], readonly SarifExpectedTool[]]
+): SarifExpectedTool[] {
+	const [runs, expectedTools] = input;
+	const observedTools = normalizedObservedTools(runs);
+	if (JSON.stringify(observedTools) !== JSON.stringify(expectedTools)) {
+		throw new Error("SARIF tool identity does not match the Runtime binding.");
+	}
+	return observedTools;
+}
+
 function normalizedObservedTools(
 	runs: readonly Record<string, unknown>[],
 ): SarifExpectedTool[] {
@@ -401,7 +387,7 @@ function admittedExpectedTool(
 	...input: [Record<string, unknown>, string]
 ): SarifExpectedTool {
 	const [value, label] = input;
-	assertOnlyKeys(value, ["name", "version"]);
+	assertOnlyKeys(value, ["name", "version"], "SARIF ingestion");
 	return admittedTool(value, label);
 }
 
@@ -475,6 +461,37 @@ function parseFinding(
 	});
 }
 
+function projectFindings(
+	...input: [readonly ParsedFinding[], readonly string[]]
+): {
+	readonly unsafeLocationCount: number;
+	readonly omittedObservationCount: number;
+	readonly sourcePathTruncated: boolean;
+	readonly observations: readonly string[];
+	readonly diagnosticRefs: readonly string[];
+	readonly sourcePaths: readonly string[];
+} {
+	const [findings, scannedPaths] = input;
+	const observations = findings
+		.slice(0, MAX_OBSERVATIONS - 1)
+		.map(renderFinding);
+	const allSourcePaths = sortedUnique([
+		...scannedPaths,
+		...findings.flatMap((finding) => (finding.path ? [finding.path] : [])),
+	]);
+	return Object.freeze({
+		unsafeLocationCount: findings.filter((finding) => finding.unsafeLocation).length,
+		omittedObservationCount: Math.max(0, findings.length - observations.length),
+		sourcePathTruncated: allSourcePaths.length > MAX_REFS,
+		observations,
+		diagnosticRefs: sortedUnique(findings.map((finding) => finding.ref)).slice(
+			0,
+			MAX_REFS,
+		),
+		sourcePaths: allSourcePaths.slice(0, MAX_REFS),
+	});
+}
+
 function summarizeFindings(input: {
 	readonly runCount: number;
 	readonly resultCount: number;
@@ -525,30 +542,6 @@ function renderFinding(finding: ParsedFinding): string {
 	].join(" ");
 }
 
-function normalizedOptionalPath(value: unknown): {
-	readonly path?: string;
-	readonly unsafe: boolean;
-} {
-	if (value === undefined) return {unsafe: false};
-	if (typeof value !== "string") return {unsafe: true};
-	const trimmed = value.trim().replaceAll("\\", "/");
-	if (
-		trimmed.length === 0 ||
-		trimmed.length > 1_024 ||
-		trimmed.startsWith("/") ||
-		trimmed.includes("%") ||
-		trimmed.includes("?") ||
-		trimmed.includes("#") ||
-		/^[A-Za-z]:\//.test(trimmed) ||
-		/^[A-Za-z][A-Za-z0-9+.-]*:/.test(trimmed) ||
-		trimmed.split("/").some((part) => part === "..") ||
-		/[\u0000-\u001f\u007f]/u.test(trimmed)
-	) {
-		return {unsafe: true};
-	}
-	return {path: trimmed.replace(/^\.\//, ""), unsafe: false};
-}
-
 function normalizedPaths(
 	...input: [unknown, string, boolean]
 ): string[] {
@@ -570,32 +563,17 @@ function normalizedPaths(
 function normalizedTexts(...input: [unknown, string, number]): string[] {
 	const [value, label, maximum] = input;
 	if (value === undefined) return [];
-	if (!Array.isArray(value) || value.length > maximum) {
-		throw new Error(`${label} must contain 0..${maximum} entries.`);
+	if (!Array.isArray(value)) throw new Error(`${label} must be an array.`);
+	if (value.length > maximum) {
+		throw new Error(`${label} cannot exceed ${maximum} entries.`);
 	}
 	const values = Array.from(value.entries(), ([index, entry]) =>
 		boundedText(entry, `${label}[${index}]`, 1_024),
 	);
-	if (sortedUnique(values).length !== values.length) {
+	if (new Set(values).size !== values.length) {
 		throw new Error(`${label} must not contain duplicates.`);
 	}
 	return values;
-}
-
-function normalizedRefs(...input: [unknown, string, number]): string[] {
-	const [value, label, maximum] = input;
-	return normalizedTexts(value, label, maximum).map((entry) =>
-		safeRef(entry, label),
-	);
-}
-
-function safeRef(...input: [unknown, string]): string {
-	const [value, label] = input;
-	const ref = boundedText(value, label, 1_024);
-	if (!/^[A-Za-z][A-Za-z0-9._-]*:[A-Za-z0-9._:/-]+$/.test(ref)) {
-		throw new Error(`${label} must be an opaque credential-free ref.`);
-	}
-	return ref;
 }
 
 function sortedTools(tools: readonly SarifExpectedTool[]): SarifExpectedTool[] {
@@ -608,29 +586,11 @@ function sortedTools(tools: readonly SarifExpectedTool[]): SarifExpectedTool[] {
 	});
 }
 
-function object(...input: [unknown, string]): Record<string, unknown> {
-	const [value, label] = input;
-	if (typeof value !== "object" || value === null || Array.isArray(value)) {
-		throw new Error(`${label} must be an object.`);
-	}
-	return value as Record<string, unknown>;
-}
-
 function optionalObject(
 	...input: [unknown, string]
 ): Record<string, unknown> | undefined {
 	const [value, label] = input;
 	return value === undefined ? undefined : object(value, label);
-}
-
-function assertOnlyKeys(
-	...input: [Record<string, unknown>, readonly string[]]
-): void {
-	const [value, allowed] = input;
-	const allowedKeys = new Set(allowed);
-	for (const key of Object.keys(value)) {
-		if (!allowedKeys.has(key)) throw new Error(`SARIF ingestion received unsupported field ${key}.`);
-	}
 }
 
 function requiredArray(
@@ -655,66 +615,8 @@ function firstOptionalObject(
 	return object(value[0], `${label}[0]`);
 }
 
-function boundedText(...input: [unknown, string, number]): string {
-	const [value, label, maximum] = input;
-	if (typeof value !== "string") throw new Error(`${label} must be text.`);
-	const normalized = value.trim();
-	if (
-		normalized.length === 0 ||
-		[...normalized].length > maximum ||
-		/[\u0000-\u001f\u007f]/u.test(normalized)
-	) {
-		throw new Error(`${label} is invalid or exceeds ${maximum} code points.`);
-	}
-	return normalized;
-}
-
-function digest(...input: [unknown, string]): Sha256Digest {
-	const [value, label] = input;
-	if (typeof value !== "string" || !/^sha256:[0-9a-f]{64}$/.test(value)) {
-		throw new Error(`${label} must be a lowercase sha256 digest.`);
-	}
-	return value as Sha256Digest;
-}
-
-function integer(...input: [unknown, string, number]): number {
-	const [value, label, minimum] = input;
-	if (!Number.isSafeInteger(value) || (value as number) < minimum) {
-		throw new Error(`${label} must be an integer >= ${minimum}.`);
-	}
-	return value as number;
-}
-
-function optionalInteger(...input: [unknown, string]): number | undefined {
-	const [value, label] = input;
-	if (value === undefined) return undefined;
-	if (!Number.isSafeInteger(value)) throw new Error(`${label} must be an integer.`);
-	return value as number;
-}
-
 function optionalPositiveInteger(value: unknown): number | undefined {
 	return Number.isSafeInteger(value) && (value as number) > 0
 		? (value as number)
 		: undefined;
-}
-
-function enumValue<const T extends readonly string[]>(
-	...input: [unknown, T, string]
-): T[number] {
-	const [value, values, label] = input;
-	if (typeof value !== "string" || !values.includes(value)) {
-		throw new Error(`${label} is unsupported.`);
-	}
-	return value as T[number];
-}
-
-function sortedUnique(values: readonly string[]): string[] {
-	return [...new Set(values)].sort(compareText);
-}
-
-function compareText(...values: [string, string]): number {
-	const [left, right] = values;
-	if (left < right) return -1;
-	if (left > right) return 1;
-	return 0;
 }

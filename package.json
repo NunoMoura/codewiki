@@ -123,6 +123,8 @@
 		"typebox": "*"
 	},
 	"dependencies": {
+		"fast-xml-parser": "^5.10.1",
+		"fast-xml-validator": "^1.4.1",
 		"yaml": "^2.9.0"
 	},
 	"private": true,

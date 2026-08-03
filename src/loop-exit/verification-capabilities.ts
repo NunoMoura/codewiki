@@ -181,7 +181,7 @@ export function buildVerificationCapabilityMatrix(
 			(entry) => entry.status === "capability_required",
 		).length,
 		standardAdapterCount: STANDARD_FORMAT_BINDINGS.length,
-		implementedStandardAdapterCount: 1,
+		implementedStandardAdapterCount: 2,
 	});
 	const body = toCanonicalJsonValue({
 		protocol: VERIFICATION_CAPABILITY_MATRIX_PROTOCOL,
@@ -268,7 +268,9 @@ function formatCapabilities(
 		capabilities.push({
 			format: binding.format,
 			status:
-				binding.format === "sarif_2_1_0" ? "implemented" : "not_implemented",
+				binding.format === "sarif_2_1_0" || binding.format === "junit_xml"
+					? "implemented"
+					: "not_implemented",
 			evidenceKinds,
 			authorityCeiling: binding.authorityCeiling,
 			grantsResult: false,
@@ -335,7 +337,6 @@ function compareCapabilities(
 
 function compareText(...values: [string, string]): number {
 	const [left, right] = values;
-	if (left < right) return -1;
 	if (left > right) return 1;
-	return 0;
+	return left === right ? 0 : -1;
 }
