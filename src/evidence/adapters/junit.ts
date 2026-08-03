@@ -1,6 +1,3 @@
-import {XMLParser} from "fast-xml-parser";
-import {SyntaxValidator} from "fast-xml-validator";
-
 import type {
 	EvidenceArtifact,
 	EvidenceCoverage,
@@ -12,20 +9,25 @@ import {
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 import * as evidenceAdapter from "./shared.ts";
+import {
+	parseSafeXmlArtifact,
+	xmlElementAttributes as elementAttributes,
+	xmlElementObject as elementObject,
+	xmlObjectArray as objectArray,
+} from "./xml.ts";
 
 const {
 	admitAdapterArtifact,
+	admitStandardAdapterExecution,
 	assertOnlyKeys,
 	boundedText,
 	buildCommandExecutionMaterial,
 	compareText,
 	digestValue: digest,
-	enumValue,
 	integerValue: integer,
 	normalizedProjectPath: normalizedOptionalPath,
 	normalizedRefList: normalizedRefs,
 	objectValue: object,
-	optionalIntegerValue: optionalInteger,
 	safeOpaqueRef: safeRef,
 	sortedUnique,
 } = evidenceAdapter;
@@ -55,17 +57,8 @@ export interface JunitRunnerIdentity {
 	readonly version: string;
 }
 
-export interface JunitExecutionBinding {
-	readonly adapterId: string;
-	readonly adapterVersion: string;
-	readonly requestDigest: Sha256Digest;
-	readonly invocationDigest: Sha256Digest;
-	readonly environmentDigest: Sha256Digest;
-	readonly configurationDigest: Sha256Digest;
-	readonly termination: "exited" | "timed_out" | "cancelled" | "unavailable";
-	readonly exitCode?: number;
-	readonly durationMs: number;
-}
+export type JunitExecutionBinding =
+	evidenceAdapter.StandardAdapterExecutionBinding;
 
 export interface JunitEvidenceIngestionInput {
 	readonly artifact: {
@@ -257,7 +250,10 @@ function admittedInput(
 			name: boundedText(runner.name, "JUnit runner name", 256),
 			version: boundedText(runner.version, "JUnit runner version", 128),
 		}),
-		execution: admittedExecution(root.execution),
+		execution: admitStandardAdapterExecution(root.execution, {
+			label: "JUnit",
+			errorPrefix: "JUnit ingestion",
+		}),
 		provenanceRefs: normalizedRefs(
 			root.provenanceRefs,
 			"JUnit provenanceRefs",
@@ -266,111 +262,18 @@ function admittedInput(
 	});
 }
 
-function admittedExecution(value: unknown): JunitExecutionBinding {
-	const execution = object(value, "JUnit execution binding");
-	assertOnlyKeys(
-		execution,
-		[
-			"adapterId",
-			"adapterVersion",
-			"requestDigest",
-			"invocationDigest",
-			"environmentDigest",
-			"configurationDigest",
-			"termination",
-			"exitCode",
-			"durationMs",
-		],
-		"JUnit ingestion",
-	);
-	const termination = enumValue(
-		execution.termination,
-		["exited", "timed_out", "cancelled", "unavailable"] as const,
-		"JUnit execution termination",
-	);
-	const exitCode = optionalInteger(execution.exitCode, "JUnit execution exitCode");
-	if (termination === "exited" && exitCode === undefined) {
-		throw new Error("Exited JUnit execution requires exitCode.");
-	}
-	if (termination !== "exited" && exitCode !== undefined) {
-		throw new Error("Non-exited JUnit execution cannot include exitCode.");
-	}
-	return Object.freeze({
-		adapterId: boundedText(execution.adapterId, "JUnit execution adapterId", 256),
-		adapterVersion: boundedText(
-			execution.adapterVersion,
-			"JUnit execution adapterVersion",
-			128,
-		),
-		requestDigest: digest(
-			execution.requestDigest,
-			"JUnit execution requestDigest",
-		),
-		invocationDigest: digest(
-			execution.invocationDigest,
-			"JUnit execution invocationDigest",
-		),
-		environmentDigest: digest(
-			execution.environmentDigest,
-			"JUnit execution environmentDigest",
-		),
-		configurationDigest: digest(
-			execution.configurationDigest,
-			"JUnit execution configurationDigest",
-		),
-		termination,
-		...(exitCode === undefined ? {} : {exitCode}),
-		durationMs: integer(execution.durationMs, "JUnit execution durationMs", 0),
-	});
-}
-
 function parseJunitDocument(bytesValue: Uint8Array): {
 	readonly suites: readonly Record<string, unknown>[];
 	readonly declaredCounts: DeclaredCounts;
 } {
-	let xml: string;
-	try {
-		xml = new TextDecoder("utf-8", {fatal: true}).decode(bytesValue);
-	} catch {
-		throw new Error("JUnit artifact must be valid UTF-8 XML.");
-	}
-	const withoutDeclaration = xml.replace(
-		/^\uFEFF?\s*<\?xml\s[^?]*\?>/iu,
-		"",
+	const document = object(
+		parseSafeXmlArtifact(bytesValue, {
+			label: "JUnit",
+			arrayElements: JUNIT_ARRAY_ELEMENTS,
+			maximumNesting: XML_NESTING_LIMIT,
+		}),
+		"JUnit document",
 	);
-	if (/<!DOCTYPE\b|<!ENTITY\b|<\?/iu.test(withoutDeclaration)) {
-		throw new Error("JUnit artifact cannot contain DTD, entity, or processing declarations.");
-	}
-	try {
-		SyntaxValidator.validate(xml, {
-			invalidCharSequence: {comment: true, tagValue: true, attrLt: true},
-		});
-	} catch (error) {
-		const line = xmlErrorLine(error);
-		throw new Error(
-			`JUnit artifact is not valid XML${line === undefined ? "." : ` at line ${line}.`}`,
-		);
-	}
-	let parsed: unknown;
-	try {
-		parsed = new XMLParser({
-			ignoreAttributes: false,
-			attributesGroupName: "$",
-			attributeNamePrefix: "",
-			parseTagValue: false,
-			parseAttributeValue: false,
-			trimValues: false,
-			processEntities: false,
-			ignoreDeclaration: true,
-			ignorePiTags: true,
-			maxNestedTags: XML_NESTING_LIMIT,
-			isArray: (tagName) => JUNIT_ARRAY_ELEMENTS.has(tagName),
-		}).parse(xml);
-	} catch (error) {
-		const reason = error instanceof Error ? error.message : String(error);
-		throw new Error(`JUnit artifact could not be parsed safely: ${reason}`);
-	}
-	const document = object(parsed, "JUnit document");
 	const rootKeys = Object.keys(document);
 	if (rootKeys.length !== 1) {
 		throw new Error("JUnit document must contain exactly one testsuites or testsuite root.");
@@ -631,31 +534,6 @@ function countStatus(
 	return tests.filter((test) => test.status === status).length;
 }
 
-function elementAttributes(
-	...input: [Record<string, unknown>, string]
-): Record<string, unknown> {
-	const [value, label] = input;
-	if (value.$ === undefined) return {};
-	return object(value.$, `${label} attributes`);
-}
-
-function elementObject(...input: [unknown, string]): Record<string, unknown> {
-	const [value, label] = input;
-	if (value === "") return {};
-	return object(value, label);
-}
-
-function objectArray(
-	...input: [unknown, string]
-): Record<string, unknown>[] {
-	const [value, label] = input;
-	if (value === undefined) return [];
-	if (!Array.isArray(value)) throw new Error(`${label} must be an array.`);
-	return Array.from(value.entries(), ([index, entry]) =>
-		object(entry, `${label}[${index}]`),
-	);
-}
-
 function elementArray(...input: [unknown, string]): unknown[] {
 	const [value, label] = input;
 	if (value === undefined) return [];
@@ -699,13 +577,4 @@ function optionalXmlDuration(...input: [unknown, string]): void {
 	}
 	const parsed = Number(value);
 	if (!Number.isFinite(parsed)) throw new Error(`${label} must be finite.`);
-}
-
-function xmlErrorLine(error: unknown): number | undefined {
-	if (typeof error !== "object" || error === null || !("line" in error)) {
-		return undefined;
-	}
-	return Number.isSafeInteger(error.line) && (error.line as number) > 0
-		? (error.line as number)
-		: undefined;
 }

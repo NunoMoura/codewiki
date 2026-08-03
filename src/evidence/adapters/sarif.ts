@@ -12,19 +12,19 @@ import {
 } from "../../utils/canonical-json.ts";
 import {
 	admitAdapterArtifact,
+	admitStandardAdapterExecution,
 	assertOnlyKeys,
 	boundedText,
 	buildCommandExecutionMaterial,
 	compareText,
 	digestValue as digest,
 	enumValue,
-	integerValue as integer,
 	normalizedProjectPath as normalizedOptionalPath,
 	normalizedRefList as normalizedRefs,
 	objectValue as object,
-	optionalIntegerValue as optionalInteger,
 	safeOpaqueRef as safeRef,
 	sortedUnique,
+	type StandardAdapterExecutionBinding,
 } from "./shared.ts";
 
 export const SARIF_EVIDENCE_ADAPTER_PROTOCOL = Object.freeze({
@@ -43,17 +43,9 @@ export interface SarifExpectedTool {
 	readonly version: string;
 }
 
-export interface SarifExecutionBinding {
-	readonly adapterId: string;
-	readonly adapterVersion: string;
-	readonly requestDigest: Sha256Digest;
-	readonly invocationDigest: Sha256Digest;
-	readonly environmentDigest: Sha256Digest;
-	readonly configurationDigest: Sha256Digest;
+export interface SarifExecutionBinding
+	extends StandardAdapterExecutionBinding {
 	readonly advisoryDatabaseDigest?: Sha256Digest;
-	readonly termination: "exited" | "timed_out" | "cancelled" | "unavailable";
-	readonly exitCode?: number;
-	readonly durationMs: number;
 }
 
 export interface SarifEvidenceIngestionInput {
@@ -254,57 +246,13 @@ function admittedInput(
 
 function admittedExecution(value: unknown): SarifExecutionBinding {
 	const execution = object(value, "SARIF execution binding");
-	assertOnlyKeys(
-		execution,
-		[
-			"adapterId",
-			"adapterVersion",
-			"requestDigest",
-			"invocationDigest",
-			"environmentDigest",
-			"configurationDigest",
-			"advisoryDatabaseDigest",
-			"termination",
-			"exitCode",
-			"durationMs",
-		],
-		"SARIF ingestion",
-	);
-	const termination = enumValue(
-		execution.termination,
-		["exited", "timed_out", "cancelled", "unavailable"] as const,
-		"SARIF execution termination",
-	);
-	const exitCode = optionalInteger(execution.exitCode, "SARIF execution exitCode");
-	if (termination === "exited" && exitCode === undefined) {
-		throw new Error("Exited SARIF execution requires exitCode.");
-	}
-	if (termination !== "exited" && exitCode !== undefined) {
-		throw new Error("Non-exited SARIF execution cannot include exitCode.");
-	}
+	const base = admitStandardAdapterExecution(value, {
+		label: "SARIF",
+		errorPrefix: "SARIF ingestion",
+		additionalKeys: ["advisoryDatabaseDigest"],
+	});
 	return Object.freeze({
-		adapterId: boundedText(execution.adapterId, "SARIF execution adapterId", 256),
-		adapterVersion: boundedText(
-			execution.adapterVersion,
-			"SARIF execution adapterVersion",
-			128,
-		),
-		requestDigest: digest(
-			execution.requestDigest,
-			"SARIF execution requestDigest",
-		),
-		invocationDigest: digest(
-			execution.invocationDigest,
-			"SARIF execution invocationDigest",
-		),
-		environmentDigest: digest(
-			execution.environmentDigest,
-			"SARIF execution environmentDigest",
-		),
-		configurationDigest: digest(
-			execution.configurationDigest,
-			"SARIF execution configurationDigest",
-		),
+		...base,
 		...(execution.advisoryDatabaseDigest === undefined
 			? {}
 			: {
@@ -313,9 +261,6 @@ function admittedExecution(value: unknown): SarifExecutionBinding {
 						"SARIF execution advisoryDatabaseDigest",
 					),
 				}),
-		termination,
-		...(exitCode === undefined ? {} : {exitCode}),
-		durationMs: integer(execution.durationMs, "SARIF execution durationMs", 0),
 	});
 }
 

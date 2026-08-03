@@ -31,7 +31,7 @@ describe("verification capability matrix", () => {
 			expectedCount,
 		);
 		assert.equal(matrix.summary.standardAdapterCount, 11);
-		assert.equal(matrix.summary.implementedStandardAdapterCount, 2);
+		assert.equal(matrix.summary.implementedStandardAdapterCount, 4);
 		assert.deepEqual(
 			buildVerificationCapabilityMatrix(catalog),
 			matrix,
@@ -87,7 +87,8 @@ describe("verification capability matrix", () => {
 		);
 		assert.equal(language.status, "host_required");
 		assert.equal(format(language, "junit_xml").status, "implemented");
-		assert.equal(format(language, "lcov").status, "not_implemented");
+		assert.equal(format(language, "lcov").status, "implemented");
+		assert.equal(format(language, "cobertura_xml").status, "implemented");
 		assert.equal(format(language, "provider_check_receipt").status, "not_implemented");
 
 		const assessed = capability(

@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added bounded `codewiki.evidence-adapter.lcov@1.0.0` and `codewiki.evidence-adapter.cobertura@1.0.0`. Exact Runtime-owned source snapshot, coverage scope, up to 255 required project paths, tool/version, request/invocation/environment/configuration, and execution bindings admit at most 4 MiB. Detailed line/branch/function hits are derived and cross-checked against LCOV or Cobertura declarations; private symbol identities remain digests. Unsafe/missing paths, contradictory totals, more than 2,048 unique files, non-exit, and unavailability remain partial or unknown. Output is canonical-receipted `command_execution` and `source_observation` material without threshold, authority, or Result input. Verification matrix now reports four implemented standard adapters.",
+					},
+					{
+						kind: "Update",
 						text: "Added bounded `codewiki.evidence-adapter.junit@1.0.0`. Exact Runtime-owned runner/version, source snapshot, test selection, expected count, request/invocation/environment/configuration, and execution bindings admit common `testsuites` or `testsuite` XML under 4 MiB, 32 nesting levels, 256 suites, 8,192 test cases, and 256 diagnostic refs. Audited parser/validator dependencies reject malformed or declaration-bearing XML; case identity and private failure details become digests. Count drift, unsafe paths, truncation, cancellation, timeout, and unavailability remain partial or unknown. Output is canonical-receipted `command_execution` material without authority or Result input. Verification matrix now reports two implemented standard adapters.",
 					},
 					{

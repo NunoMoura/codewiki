@@ -100,6 +100,13 @@ const LOOPS: readonly SemanticLoop[] = [
 	"implementation",
 ];
 
+const IMPLEMENTED_STANDARD_ADAPTER_FORMATS = new Set<VerificationArtifactFormat>([
+	"sarif_2_1_0",
+	"junit_xml",
+	"lcov",
+	"cobertura_xml",
+]);
+
 const STANDARD_FORMAT_BINDINGS: readonly StandardFormatBinding[] = [
 	{
 		format: "sarif_2_1_0",
@@ -181,7 +188,7 @@ export function buildVerificationCapabilityMatrix(
 			(entry) => entry.status === "capability_required",
 		).length,
 		standardAdapterCount: STANDARD_FORMAT_BINDINGS.length,
-		implementedStandardAdapterCount: 2,
+		implementedStandardAdapterCount: 4,
 	});
 	const body = toCanonicalJsonValue({
 		protocol: VERIFICATION_CAPABILITY_MATRIX_PROTOCOL,
@@ -267,10 +274,9 @@ function formatCapabilities(
 		if (evidenceKinds.length === 0) continue;
 		capabilities.push({
 			format: binding.format,
-			status:
-				binding.format === "sarif_2_1_0" || binding.format === "junit_xml"
-					? "implemented"
-					: "not_implemented",
+			status: IMPLEMENTED_STANDARD_ADAPTER_FORMATS.has(binding.format)
+				? "implemented"
+				: "not_implemented",
 			evidenceKinds,
 			authorityCeiling: binding.authorityCeiling,
 			grantsResult: false,

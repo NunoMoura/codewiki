@@ -11,15 +11,34 @@ interface AdapterArtifactInput {
 	readonly ref: string;
 }
 
-interface AdapterExecutionObservation {
+export interface StandardAdapterExecutionBinding {
 	readonly adapterId: string;
 	readonly adapterVersion: string;
+	readonly requestDigest: Sha256Digest;
 	readonly invocationDigest: Sha256Digest;
 	readonly environmentDigest: Sha256Digest;
+	readonly configurationDigest: Sha256Digest;
 	readonly termination: CommandExecutionPayload["termination"];
 	readonly exitCode?: number;
 	readonly durationMs: number;
 }
+
+type AdapterExecutionObservation = Omit<
+	StandardAdapterExecutionBinding,
+	"requestDigest" | "configurationDigest"
+>;
+
+const STANDARD_EXECUTION_KEYS = [
+	"adapterId",
+	"adapterVersion",
+	"requestDigest",
+	"invocationDigest",
+	"environmentDigest",
+	"configurationDigest",
+	"termination",
+	"exitCode",
+	"durationMs",
+] as const;
 
 export function admitAdapterArtifact(
 	...input: [
@@ -45,6 +64,71 @@ export function admitAdapterArtifact(
 			ref: value.ref,
 			sizeBytes: artifactBytes.byteLength,
 		}),
+	});
+}
+
+export function admitStandardAdapterExecution(
+	...input: [
+		unknown,
+		{
+			readonly label: string;
+			readonly errorPrefix: string;
+			readonly additionalKeys?: readonly string[];
+		},
+	]
+): StandardAdapterExecutionBinding {
+	const [value, options] = input;
+	const execution = objectValue(value, `${options.label} execution binding`);
+	assertOnlyKeys(
+		execution,
+		[...STANDARD_EXECUTION_KEYS, ...(options.additionalKeys ?? [])],
+		options.errorPrefix,
+	);
+	const termination = enumValue(
+		execution.termination,
+		["exited", "timed_out", "cancelled", "unavailable"] as const,
+		`${options.label} execution termination`,
+	);
+	const exitCode = optionalIntegerValue(
+		execution.exitCode,
+		`${options.label} execution exitCode`,
+	);
+	if (termination === "exited" && exitCode === undefined) {
+		throw new Error(`Exited ${options.label} execution requires exitCode.`);
+	}
+	if (termination !== "exited" && exitCode !== undefined) {
+		throw new Error(`Non-exited ${options.label} execution cannot include exitCode.`);
+	}
+	return Object.freeze({
+		adapterId: boundedText(execution.adapterId, `${options.label} execution adapterId`, 256),
+		adapterVersion: boundedText(
+			execution.adapterVersion,
+			`${options.label} execution adapterVersion`,
+			128,
+		),
+		requestDigest: digestValue(
+			execution.requestDigest,
+			`${options.label} execution requestDigest`,
+		),
+		invocationDigest: digestValue(
+			execution.invocationDigest,
+			`${options.label} execution invocationDigest`,
+		),
+		environmentDigest: digestValue(
+			execution.environmentDigest,
+			`${options.label} execution environmentDigest`,
+		),
+		configurationDigest: digestValue(
+			execution.configurationDigest,
+			`${options.label} execution configurationDigest`,
+		),
+		termination,
+		...(exitCode === undefined ? {} : {exitCode}),
+		durationMs: integerValue(
+			execution.durationMs,
+			`${options.label} execution durationMs`,
+			0,
+		),
 	});
 }
 
@@ -189,7 +273,7 @@ export function integerValue(...input: [unknown, string, number]): number {
 	return value as number;
 }
 
-export function optionalIntegerValue(
+function optionalIntegerValue(
 	...input: [unknown, string]
 ): number | undefined {
 	const [value, label] = input;
