@@ -34,18 +34,57 @@ export function authorityBinding(overrides = {}) {
 
 export function changeRevision() {
 	return createChangeRevision({
-		title: "Execute Change Trace Protocol v1",
-		summary: "Replace mutable Trace assumptions with exact accepted operations.",
-		desiredOutcome: "Canonical replay converges across independent clones.",
+		title: "Execute Change Trace Protocol",
+		intent: {
+			currentState: "Mutable Trace assumptions prevent exact coordination.",
+			desiredState: "Canonical replay converges across independent clones.",
+			rationale: "Replace mutable Trace assumptions with exact accepted operations.",
+			nonGoals: ["No hosted relay."],
+			alternatives: ["Keep local mutable Trace state."],
+		},
+		classification: {
+			kind: "migrate",
+			type: "architecture_change",
+			scope: "system",
+			affectedLayers: ["runtime"],
+			targetRefs: ["src/change-trace"],
+		},
+		impact: {
+			user: "Accepted intent remains consistent across clones.",
+			maintainer: "Canonical operations replace mutable coordination state.",
+			compatibility: "No compatibility parser.",
+		},
+		knowledge: {
+			topicRefs: ["kb:system/traces", "kb:system/alignment-model"],
+			propagationRefs: ["kb:system/change-trace-v1"],
+		},
+		outcome: {
+			successSignals: ["Canonical replay converges across independent clones."],
+			evidenceExpectations: ["Full and incremental replay produce one state digest."],
+		},
+		delivery: {
+			constraints: ["No mutable status operation.", "No compatibility parser."],
+			planningQuestions: ["How will stale remote heads fail closed?"],
+		},
+		evidence: {
+			sourceRefs: ["src/change-trace"],
+			proofRefs: ["tests:change-trace-protocol", "tests:distributed-mutation"],
+			sourceBehavior: "Mutable Trace state coordinates local work.",
+			targetBehavior: "Accepted operations replay deterministically.",
+		},
+		safety: {
+			risk: "high",
+			invariants: ["Accepted operation identity is immutable."],
+			safetyBoundary: "Only expected-head CAS may advance accepted state.",
+			failureModes: ["Concurrent writers observe a stale remote head."],
+			rollbackPlan: "Restore the previous accepted state ref.",
+			negativeTestPlan: "Reject stale, malformed, and unauthorized operations.",
+			regressionPlan: "Replay canonical protocol fixtures after every change.",
+		},
 		acceptanceRequirements: [
 			{id: "replay", statement: "Full and incremental replay are equivalent."},
 			{id: "identity", statement: "Every authority-bearing record is content addressed."},
 		],
-		constraints: ["No mutable status operation.", "No compatibility parser."],
-		nonGoals: ["No hosted relay."],
-		knowledgeRefs: ["kb:system/traces", "kb:system/alignment-model"],
-		sourceRefs: ["src/change-trace"],
-		risk: "high",
 	});
 }
 

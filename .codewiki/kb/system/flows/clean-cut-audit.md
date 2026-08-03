@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Clean-Cut Audit
-description: The pre-production cut replaces local-linear Trace and legacy Quality contracts with Change Trace Protocol v1, Git-synchronized acceptance, deterministic projections, and native Loop exit without migration or compatibility layers.
+description: The pre-production cut replaces local-linear Trace and legacy Quality contracts with the versioned Change Trace Protocol, Git-synchronized acceptance, deterministic projections, and native Loop exit without migration or compatibility layers.
 tags:
   - codewiki
   - system

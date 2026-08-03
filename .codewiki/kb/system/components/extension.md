@@ -148,7 +148,7 @@ Current external smokes cover:
 - external lifecycle and failure paths;
 - Pi SDK semantic sessions and Worker Reports.
 
-Current mutation smoke still proves legacy expected-byte/local-sequence behavior. That is executable drift; target external proof must exercise Change Trace Protocol v1 and remote expected-head state acceptance.
+Current mutation smoke still proves legacy expected-byte/local-sequence behavior. That is executable drift; target external proof must exercise Change Trace Protocol `2.0.0` and remote expected-head state acceptance.
 
 Real model/provider authentication, real OCI execution, trusted worker-image distribution, distributed state synchronization, archive/hydration, and production effect correlation remain external gates.
 

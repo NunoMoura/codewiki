@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Advanced Change Trace Protocol to `2.0.0` and clean-cut the skeletal revision shape. One immutable normalized revision now binds intent and alternatives, Runtime-owned source-family classification, impact, Knowledge propagation, observable outcomes, delivery constraints, source/proof Evidence expectations, safety/risk/failure/rollback semantics, acceptance requirements, and any optional defect profile. Native intake preserves exact source meaning, keeps unsupported assurance fields empty or unknown, and cannot promote source claims into revision risk. Triage, overlap, conflict serialization, deduplication, graph projection, replay, and frozen fixtures now consume the nested semantic contract directly; no legacy revision parser remains.",
+					},
+					{
+						kind: "Update",
 						text: "Simplified authenticated exact-revision Decision admission through `codewiki.decision-attention-selection@2.0.0`. One strict command carries a principal-scoped idempotency key, exact Change/revision identity, and the projection digest that already commits WorkState, triage Candidates, graph, protected config, and policy. Runtime resolves trusted caller authority, revalidates context after authorization, appends canonical `loop.attempt_started`, and uses that operation ID as the sole coordinator job key. The operation authority/base/revision/private-digest fields are the durable selection record; no separate receipt, receipt store, duplicate job identity, or broad selection adapter remains. Revision-derived conflict refs preserve serialization and canonical attempt state drives recovery. Pending Changes, generic triggers, and direct candidate submission remain unable to select Decision work; selection grants no disposition or Planning priority.",
 					},
 					{

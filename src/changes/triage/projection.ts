@@ -238,14 +238,18 @@ function projectCandidateDraft(input: {
 		input.context.materials.map((material) => material.materialType),
 	);
 	const sourceProvenanceRefs = sortedUnique([
-		...revision.content.sourceRefs,
+		...revision.content.evidence.sourceRefs,
 		...input.context.materials.flatMap((material) => material.content.sourceRefs),
 		...input.context.relevantOperations.map((operation) => operation.operationId),
 	]);
 	const affectedScope = {
-		knowledgeRefs: sortedUnique(revision.content.knowledgeRefs),
+		knowledgeRefs: sortedUnique([
+			...revision.content.knowledge.topicRefs,
+			...revision.content.knowledge.propagationRefs,
+		]),
 		sourceRefs: sortedUnique([
-			...revision.content.sourceRefs,
+			...revision.content.evidence.sourceRefs,
+			...revision.content.classification.targetRefs,
 			...(profile?.sourceLocations ?? []),
 			...input.context.materials.flatMap((material) => material.content.affectedRefs),
 		]),
@@ -287,11 +291,11 @@ function projectCandidateDraft(input: {
 		changeId: change.changeId,
 		changeRevisionId: revision.revisionId,
 		title: revision.content.title,
-		summary: revision.content.summary,
-		desiredOutcome: revision.content.desiredOutcome,
+		summary: revision.content.intent.currentState,
+		desiredOutcome: revision.content.intent.desiredState,
 		decisionQuestion: `Should revision ${revision.revisionId} be approved, deferred, rejected, or withdrawn?`,
 		status: input.context.status,
-		declaredChangeRisk: revision.content.risk,
+		declaredChangeRisk: revision.content.safety.risk,
 		sourceKinds,
 		sourceProvenanceRefs,
 		sourceCorroborationCount: input.context.materials.length,
@@ -545,7 +549,11 @@ function projectReadiness(input: {
 	if (revision.content.acceptanceRequirements.length === 0) {
 		missingInformation.push("acceptance_requirements");
 	}
-	if (revision.content.knowledgeRefs.length === 0 && revision.content.sourceRefs.length === 0) {
+	if (
+		revision.content.knowledge.topicRefs.length === 0 &&
+		revision.content.knowledge.propagationRefs.length === 0 &&
+		revision.content.evidence.sourceRefs.length === 0
+	) {
 		missingInformation.push("grounding_refs");
 	}
 	const conflictFacts = input.relationFacts.filter(
@@ -611,8 +619,10 @@ function projectOverlap(
 		if (peer.change.changeId === context.change.changeId) continue;
 		const {revision} = peer;
 		const refs = [
-			...revision.content.knowledgeRefs,
-			...revision.content.sourceRefs,
+			...revision.content.knowledge.topicRefs,
+			...revision.content.knowledge.propagationRefs,
+			...revision.content.evidence.sourceRefs,
+			...revision.content.classification.targetRefs,
 			...(revision.content.defectProfile?.affectedComponents ?? []),
 		];
 		const shared = refs.filter((ref) => currentRefs.has(ref));
@@ -718,16 +728,8 @@ function duplicatePeerMap(
 ): ReadonlyMap<string, readonly string[]> {
 	const groups = new Map<string, string[]>();
 	for (const context of contexts) {
-		const content = context.revision.content;
-		const key = canonicalJsonDigest({
-			summary: content.summary,
-			desiredOutcome: content.desiredOutcome,
-			acceptanceRequirements: content.acceptanceRequirements,
-			constraints: content.constraints,
-			nonGoals: content.nonGoals,
-			knowledgeRefs: content.knowledgeRefs,
-			sourceRefs: content.sourceRefs,
-		});
+		const {title: _title, ...semanticContent} = context.revision.content;
+		const key = canonicalJsonDigest(semanticContent);
 		const group = groups.get(key) ?? [];
 		group.push(context.change.changeId);
 		groups.set(key, group);

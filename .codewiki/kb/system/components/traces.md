@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Change Traces
-description: Change Trace Protocol v1 preserves each Change as immutable typed content-addressed operations accepted through provider-neutral Git, with deterministic WorkState and Alignment Graph projection.
+description: The versioned Change Trace Protocol preserves each Change as immutable typed content-addressed operations accepted through provider-neutral Git, with deterministic WorkState and Alignment Graph projection.
 tags:
   - codewiki
   - system
@@ -71,7 +71,7 @@ codewiki_source_map:
 
 One Change owns one Change Trace: the complete accountable history for that Change. It preserves intent, revisions, relationships, semantic attempts, Evidence Records, Check Results, Exit Reports, Runtime Routes, Planning bindings, Change Claim and Work Item Claim history, Assignments, Integration, review, delivery, feedback, outcomes, archive, and reopening.
 
-Change Trace Protocol v1 is:
+The Change Trace Protocol is:
 
 ```text
 log-canonical
@@ -93,7 +93,7 @@ Current status, Backlog, Planning, Implementation, dashboards, queues, and graph
 
 ## Protocol scopes and envelope
 
-Authority-bearing identity uses versioned strict canonical JSON and SHA-256. V1 exposes exactly two closed semantic scopes:
+Authority-bearing identity uses versioned strict canonical JSON and SHA-256. The protocol exposes exactly two closed semantic scopes:
 
 ```text
 Change-scoped operation
@@ -116,7 +116,7 @@ interface CanonicalChangeOperation {
 interface ChangeOperationBody {
   protocol: {
     id: "codewiki.change-trace";
-    version: "1.3.0";
+    version: "2.0.0";
     canonicalJson: "codewiki.canonical-json/1.0.0";
   };
   changeId: ChangeId;
@@ -132,7 +132,7 @@ interface ChangeOperationBody {
 }
 ```
 
-`operationId` is `sha256(canonical_json(body))` and is excluded from its own hash input. Any authority-bearing byte change changes identity. Canonical JSON admits no insignificant whitespace, alternate key ordering, duplicate keys, non-finite numbers, negative zero, sparse arrays, accessors, symbols, or non-data prototypes. Change Trace Protocol `1.3.0` permits `change.proposed` and `change.feedback_recorded` to bind one complete normalized `codewiki.change-intake-material@1.1.0` inline artifact; replay verifies its schema, canonical bytes, digest, and content-addressed id. It also binds an optional normalized `codewiki.change-defect-profile@1.0.0` shape into Change revision identity while keeping profile severity, likelihood, exposure, and confidence distinct from revision risk and Planning priority. Project-scoped `PlanningEpochRecord`, `StateCommitManifest`, and `ArchiveManifest` use separate closed schemas and content identities.
+`operationId` is `sha256(canonical_json(body))` and is excluded from its own hash input. Any authority-bearing byte change changes identity. Canonical JSON admits no insignificant whitespace, alternate key ordering, duplicate keys, non-finite numbers, negative zero, sparse arrays, accessors, symbols, or non-data prototypes. Change Trace Protocol `2.0.0` permits `change.proposed` and `change.feedback_recorded` to bind one complete normalized `codewiki.change-intake-material@1.1.0` inline artifact; replay verifies its schema, canonical bytes, digest, and content-addressed id. It clean-cuts the prior skeletal revision fields to one nested semantic revision whose identity includes title, current and desired state, rationale, alternatives, non-goals, classification, affected layers and targets, impact, Knowledge propagation, observable outcomes, delivery constraints, source/proof Evidence expectations, safety/risk/failure/rollback semantics, acceptance requirements, and an optional normalized `codewiki.change-defect-profile@1.0.0`. Profile severity, likelihood, exposure, and confidence remain distinct from revision risk and Planning priority. Project-scoped `PlanningEpochRecord`, `StateCommitManifest`, and `ArchiveManifest` use separate closed schemas and content identities.
 
 ```ts
 interface BaseSnapshot {

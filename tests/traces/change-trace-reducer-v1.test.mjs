@@ -30,7 +30,7 @@ function assertReductionCode(code, action) {
 	assert.throws(action, (error) => error?.code === code);
 }
 
-describe("Change Trace v1 deterministic reducer", () => {
+describe("Change Trace deterministic reducer", () => {
 	it("reduces exact state batches without mutating prior projections", () => {
 		const initial = createInitialProjectWorkState();
 		const initialBytes = canonicalJson(initial);

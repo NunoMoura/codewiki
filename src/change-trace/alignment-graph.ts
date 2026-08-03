@@ -637,7 +637,7 @@ function projectChangeRevision(
 		id: revisionNode,
 		type: "change_revision",
 		label: revision.content.title,
-		attributes: {risk: revision.content.risk},
+		attributes: {risk: revision.content.safety.risk},
 		provenance,
 	});
 	graph.edge(

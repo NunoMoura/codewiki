@@ -113,7 +113,11 @@ describe("Runtime-owned Change intake admission", () => {
 				acceptedChange.operations.map((operation) => operation.body.kind),
 				["trace.opened", "change.proposed"],
 			);
-			assert.equal(acceptedChange.currentRevision.content.risk, "unknown");
+			assert.equal(acceptedChange.currentRevision.content.safety.risk, "unknown");
+			assert.equal(
+				acceptedChange.currentRevision.content.classification.kind,
+				"unknown",
+			);
 			assert.equal(
 				acceptedChange.currentRevision.content.defectProfile.severity,
 				"medium",
@@ -135,7 +139,7 @@ describe("Runtime-owned Change intake admission", () => {
 				false,
 			);
 			assert.match(
-				acceptedChange.currentRevision.content.constraints.join("\n"),
+				acceptedChange.currentRevision.content.delivery.constraints.join("\n"),
 				/Source claimed severity: medium/,
 			);
 			const proposedOperation = acceptedChange.operations.find(
@@ -145,7 +149,7 @@ describe("Runtime-owned Change intake admission", () => {
 				proposedOperation,
 				"change.proposed",
 			);
-			assert.equal(proposedOperation.body.protocol.version, "1.3.0");
+			assert.equal(proposedOperation.body.protocol.version, "2.0.0");
 			assert.equal(
 				proposedPayload.intakeMaterial.digest,
 				created.materialDigest,

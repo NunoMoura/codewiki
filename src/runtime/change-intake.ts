@@ -6,6 +6,7 @@ import {
 	type CanonicalChangeOperation,
 	type CanonicalInlineSemanticArtifact,
 	type ChangeRevision,
+	type ChangeRevisionClassification,
 	type ChangeRevisionId,
 } from "../change-trace/contracts.ts";
 import type {GitCommandRunner} from "../change-trace/git-command.ts";
@@ -506,30 +507,134 @@ function intakeRevision(
 	if (material.content.claimedConfidence) {
 		constraints.push(`Source claimed confidence: ${material.content.claimedConfidence}.`);
 	}
-	const defectProfile = intakeDefectProfile(material, authenticationEvidenceId);
+	const defectProfile = intakeDefectProfile({
+		material,
+		authenticationEvidenceId,
+	});
+	const knowledgeRefs = material.content.affectedRefs.filter(isKnowledgeRef);
 	return createChangeRevision({
 		title: material.content.summary.split("\n", 1)[0],
-		summary: material.content.observedBehavior,
-		desiredOutcome,
+		intent: {
+			currentState: material.content.observedBehavior,
+			desiredState: desiredOutcome,
+			rationale: material.content.summary,
+			nonGoals: [],
+			alternatives: [],
+		},
+		classification: intakeClassification(material),
+		impact:
+			material.materialType === "user_suggestion" ||
+			material.materialType === "outcome_finding"
+				? {user: desiredOutcome}
+				: {},
+		knowledge: {
+			topicRefs: knowledgeRefs,
+			propagationRefs:
+				material.materialType === "knowledge_drift"
+					? material.binding.topicRefs
+					: [],
+		},
+		outcome: {
+			successSignals: [desiredOutcome],
+			evidenceExpectations: [],
+		},
+		delivery: {constraints, planningQuestions: []},
+		evidence: {
+			sourceRefs: provenanceRefs,
+			proofRefs: [],
+			...(material.content.reproduction
+				? {reproduction: material.content.reproduction}
+				: {}),
+			...(material.content.desiredBehavior
+				? {
+						expectedBehavior: material.content.desiredBehavior,
+						targetBehavior: material.content.desiredBehavior,
+					}
+				: {}),
+			sourceBehavior: material.content.observedBehavior,
+		},
+		safety: {
+			risk: "unknown",
+			invariants: [],
+			failureModes: [],
+		},
 		acceptanceRequirements: [
 			{
 				id: "REQ-intake-desired-outcome",
 				statement: desiredOutcome,
 			},
 		],
-		constraints,
-		nonGoals: [],
-		knowledgeRefs: material.content.affectedRefs.filter(isKnowledgeRef),
-		sourceRefs: provenanceRefs,
 		...(defectProfile ? {defectProfile} : {}),
-		risk: "unknown",
 	});
 }
 
-function intakeDefectProfile(
+function intakeClassification(
 	material: ChangeIntakeMaterial,
-	authenticationEvidenceId: string | undefined,
-): ChangeDefectProfile | undefined {
+): ChangeRevisionClassification {
+	const byMaterialType: Record<
+		ChangeIntakeMaterial["materialType"],
+		Omit<ChangeRevisionClassification, "targetRefs">
+	> = {
+		user_suggestion: {
+			kind: "unknown",
+			type: "unknown",
+			scope: "unknown",
+			affectedLayers: [],
+		},
+		pull_request_finding: {
+			kind: "fix",
+			type: "behavior_change",
+			scope: "source",
+			affectedLayers: ["source"],
+		},
+		worker_discovery: {
+			kind: "unknown",
+			type: "unknown",
+			scope: "source",
+			affectedLayers: ["source"],
+		},
+		regression_finding: {
+			kind: "fix",
+			type: "incident_resolution",
+			scope: "source",
+			affectedLayers: ["source"],
+		},
+		security_scanner_finding: {
+			kind: "harden",
+			type: "security_change",
+			scope: "source",
+			affectedLayers: ["security", "source"],
+		},
+		delivery_observation: {
+			kind: "fix",
+			type: "release_change",
+			scope: "runtime",
+			affectedLayers: ["delivery", "runtime"],
+		},
+		outcome_finding: {
+			kind: "improve",
+			type: "behavior_change",
+			scope: "product",
+			affectedLayers: ["product"],
+		},
+		knowledge_drift: {
+			kind: "fix",
+			type: "documentation_change",
+			scope: "documentation",
+			affectedLayers: ["knowledge"],
+		},
+	};
+	return {
+		...byMaterialType[material.materialType],
+		targetRefs: [...material.content.affectedRefs],
+	};
+}
+
+function intakeDefectProfile(input: {
+	readonly material: ChangeIntakeMaterial;
+	readonly authenticationEvidenceId: string | undefined;
+}): ChangeDefectProfile | undefined {
+	const {material, authenticationEvidenceId} = input;
 	if (
 		material.materialType === "user_suggestion" &&
 		!material.content.claimedCategory &&

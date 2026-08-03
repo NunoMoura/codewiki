@@ -148,7 +148,7 @@ Executable producers now cover every closed source member. Each producer injects
 
 ## Runtime admission
 
-Runtime derives idempotency and canonical identity from exact authenticated source material and the current fresh project snapshot. Under Change Trace Protocol `1.3.0`, accepted `change.proposed` and `change.feedback_recorded` operations carry the complete normalized material as a digest- and schema-validated inline artifact; source, semantic, and request fingerprints support bounded correlation and replay without replacing those exact bytes. Admission performs:
+Runtime derives idempotency and canonical identity from exact authenticated source material and the current fresh project snapshot. Under Change Trace Protocol `2.0.0`, accepted `change.proposed` and `change.feedback_recorded` operations carry the complete normalized material as a digest- and schema-validated inline artifact; source, semantic, and request fingerprints support bounded correlation and replay without replacing those exact bytes. New-Change admission also projects that source into one immutable semantic revision: exact observed and desired behavior, source-family classification, affected targets, source/Knowledge refs, outcome signal, delivery constraints, Evidence expectations, explicit unknown risk, and optional defect profile. Unsupported alternatives, proofs, safety facts, and planning questions remain empty instead of being invented. Source claims cannot set canonical risk or Check authority. Admission performs:
 
 1. schema and size validation;
 2. source authentication and exact subject correlation;

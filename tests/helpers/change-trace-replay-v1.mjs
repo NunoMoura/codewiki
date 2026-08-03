@@ -28,16 +28,42 @@ export function baseSnapshotFor(state) {
 export function revisionFor(changeId) {
 	return createChangeRevision({
 		title: `Execute ${changeId}`,
-		summary: `Apply accepted intent for ${changeId}.`,
-		desiredOutcome: `Produce deterministic accepted state for ${changeId}.`,
+		intent: {
+			currentState: `Accepted intent for ${changeId} is not yet applied.`,
+			desiredState: `Produce deterministic accepted state for ${changeId}.`,
+			rationale: `Apply accepted intent for ${changeId}.`,
+			nonGoals: ["No mutable status setter."],
+			alternatives: ["Keep mutable state."],
+		},
+		classification: {
+			kind: "migrate",
+			type: "architecture_change",
+			scope: "system",
+			affectedLayers: ["runtime"],
+			targetRefs: ["src/change-trace"],
+		},
+		impact: {maintainer: "Replay produces one accepted state."},
+		knowledge: {topicRefs: ["kb:system/traces"], propagationRefs: []},
+		outcome: {
+			successSignals: [`Produce deterministic accepted state for ${changeId}.`],
+			evidenceExpectations: ["Required evidence and checks are exact."],
+		},
+		delivery: {
+			constraints: ["No compatibility path."],
+			planningQuestions: [],
+		},
+		evidence: {
+			sourceRefs: ["src/change-trace"],
+			proofRefs: ["tests:change-trace-replay"],
+		},
+		safety: {
+			risk: "moderate",
+			invariants: ["Accepted identity remains immutable."],
+			failureModes: ["Replay diverges."],
+		},
 		acceptanceRequirements: [
 			{id: "accepted", statement: "Required evidence and checks are exact."},
 		],
-		constraints: ["No compatibility path."],
-		nonGoals: ["No mutable status setter."],
-		knowledgeRefs: ["kb:system/traces"],
-		sourceRefs: ["src/change-trace"],
-		risk: "moderate",
 	});
 }
 

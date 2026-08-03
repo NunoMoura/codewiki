@@ -66,6 +66,11 @@ export type CreateArchiveManifestInput = Omit<
 export function createChangeRevision(
 	content: ChangeRevisionContent,
 ): ChangeRevision {
+	assertTypeboxSchema(
+		changeRevisionContentSchema,
+		content,
+		"Change revision content",
+	);
 	const normalized = normalizeChangeRevisionContent(content);
 	assertTypeboxSchema(
 		changeRevisionContentSchema,
@@ -937,15 +942,86 @@ function normalizeChangeRevisionContent(
 	content: ChangeRevisionContent,
 ): ChangeRevisionContent {
 	return canonicalObject({
-		...content,
+		title: content.title,
+		intent: {
+			currentState: content.intent.currentState,
+			desiredState: content.intent.desiredState,
+			...(content.intent.rationale
+				? {rationale: content.intent.rationale}
+				: {}),
+			nonGoals: sortedUnique(content.intent.nonGoals),
+			alternatives: sortedUnique(content.intent.alternatives),
+		},
+		classification: {
+			kind: content.classification.kind,
+			type: content.classification.type,
+			scope: content.classification.scope,
+			affectedLayers: sortedUnique(content.classification.affectedLayers),
+			targetRefs: sortedUnique(content.classification.targetRefs),
+		},
+		impact: {
+			...(content.impact.user ? {user: content.impact.user} : {}),
+			...(content.impact.maintainer
+				? {maintainer: content.impact.maintainer}
+				: {}),
+			...(content.impact.compatibility
+				? {compatibility: content.impact.compatibility}
+				: {}),
+		},
+		knowledge: {
+			topicRefs: sortedUnique(content.knowledge.topicRefs),
+			propagationRefs: sortedUnique(content.knowledge.propagationRefs),
+			...(content.knowledge.noImpactRationale
+				? {noImpactRationale: content.knowledge.noImpactRationale}
+				: {}),
+		},
+		outcome: {
+			successSignals: sortedUnique(content.outcome.successSignals),
+			evidenceExpectations: sortedUnique(
+				content.outcome.evidenceExpectations,
+			),
+		},
+		delivery: {
+			constraints: sortedUnique(content.delivery.constraints),
+			planningQuestions: sortedUnique(content.delivery.planningQuestions),
+		},
+		evidence: {
+			sourceRefs: sortedUnique(content.evidence.sourceRefs),
+			proofRefs: sortedUnique(content.evidence.proofRefs),
+			...(content.evidence.reproduction
+				? {reproduction: content.evidence.reproduction}
+				: {}),
+			...(content.evidence.expectedBehavior
+				? {expectedBehavior: content.evidence.expectedBehavior}
+				: {}),
+			...(content.evidence.sourceBehavior
+				? {sourceBehavior: content.evidence.sourceBehavior}
+				: {}),
+			...(content.evidence.targetBehavior
+				? {targetBehavior: content.evidence.targetBehavior}
+				: {}),
+		},
+		safety: {
+			risk: content.safety.risk,
+			invariants: sortedUnique(content.safety.invariants),
+			...(content.safety.safetyBoundary
+				? {safetyBoundary: content.safety.safetyBoundary}
+				: {}),
+			failureModes: sortedUnique(content.safety.failureModes),
+			...(content.safety.rollbackPlan
+				? {rollbackPlan: content.safety.rollbackPlan}
+				: {}),
+			...(content.safety.negativeTestPlan
+				? {negativeTestPlan: content.safety.negativeTestPlan}
+				: {}),
+			...(content.safety.regressionPlan
+				? {regressionPlan: content.safety.regressionPlan}
+				: {}),
+		},
 		acceptanceRequirements: sortedObjects(
 			content.acceptanceRequirements,
 			(entry) => entry.id,
 		),
-		constraints: sortedUnique(content.constraints),
-		nonGoals: sortedUnique(content.nonGoals),
-		knowledgeRefs: sortedUnique(content.knowledgeRefs),
-		sourceRefs: sortedUnique(content.sourceRefs),
 		...(content.defectProfile
 			? {defectProfile: normalizeChangeDefectProfile(content.defectProfile)}
 			: {}),

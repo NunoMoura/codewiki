@@ -136,7 +136,7 @@ function operationRefs(
 		const payload = operationPayload(operation, "change.proposed");
 		return [
 			...payload.provenance.refs,
-			...payload.revision.content.sourceRefs,
+			...payload.revision.content.evidence.sourceRefs,
 		];
 	}
 	return operationPayload(operation, "change.feedback_recorded").provenanceRefs;

@@ -111,22 +111,37 @@ describe("Change defect and security profile", () => {
 		const normalized = normalizeChangeDefectProfile(profile());
 		const content = {
 			title: "Validate token issuer",
-			summary: "Issuer validation is incomplete.",
-			desiredOutcome: "Only configured issuers pass.",
+			intent: {
+				currentState: "Issuer validation is incomplete.",
+				desiredState: "Only configured issuers pass.",
+				nonGoals: [],
+				alternatives: [],
+			},
+			classification: {
+				kind: "harden",
+				type: "security_change",
+				scope: "source",
+				affectedLayers: ["security"],
+				targetRefs: ["src/security/token.ts"],
+			},
+			impact: {},
+			knowledge: {topicRefs: ["kb:system/runtime"], propagationRefs: []},
+			outcome: {
+				successSignals: ["Only configured issuers pass."],
+				evidenceExpectations: [],
+			},
+			delivery: {constraints: [], planningQuestions: []},
+			evidence: {sourceRefs: ["src/security/token.ts"], proofRefs: []},
+			safety: {risk: "unknown", invariants: [], failureModes: []},
 			acceptanceRequirements: [
 				{id: "REQ-token-issuer", statement: "Reject unexpected issuers."},
 			],
-			constraints: [],
-			nonGoals: [],
-			knowledgeRefs: ["kb:system/runtime"],
-			sourceRefs: ["src/security/token.ts"],
 			defectProfile: normalized,
-			risk: "unknown",
 		};
 		const revision = createChangeRevision(content);
 		const {defectProfile: _defectProfile, ...contentWithoutProfile} = content;
 		const withoutProfile = createChangeRevision(contentWithoutProfile);
-		assert.equal(revision.content.risk, "unknown");
+		assert.equal(revision.content.safety.risk, "unknown");
 		assert.equal("risk" in revision.content.defectProfile, false);
 		assert.equal("priority" in revision.content.defectProfile, false);
 		assert.notEqual(revision.revisionId, withoutProfile.revisionId);

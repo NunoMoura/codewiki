@@ -132,6 +132,8 @@ Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain 
 
 Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Runtime exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Accepted User Standard preferences may influence protected deterministic triage ordering, but lower order is not Check failure and no model emits final rank. An authenticated user selects an exact revision to start Decision; selection grants no disposition. `codewiki.decision-attention-selection@2.0.0` binds that command to one principal-scoped idempotency key, exact Change revision, and the projection digest that already commits WorkState, triage Candidates, graph, protected config, and policy. Runtime then appends canonical `loop.attempt_started`; its operation ID is also the revision-bound job key. Pending Changes and generic triggers remain quiescent until selection. Planning later decomposes approved Changes and owns Work Item execution ordering.
 
+Change Trace Protocol `2.0.0` makes every revision a complete content-addressed semantic input rather than a skeletal issue summary. Revision identity binds current and desired state, rationale and alternatives, classification and affected targets, impact, Knowledge propagation, observable outcomes, delivery constraints, Evidence expectations, safety semantics, acceptance requirements, and any normalized defect profile. Missing assurance remains explicitly absent or unknown; intake claims never become risk or Check authority.
+
 One Change owns one append-only JSONL dossier:
 
 ```text

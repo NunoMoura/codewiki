@@ -11,7 +11,7 @@ import {
 
 export const CHANGE_TRACE_PROTOCOL = Object.freeze({
 	id: "codewiki.change-trace",
-	version: "1.3.0",
+	version: "2.0.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 
@@ -135,17 +135,98 @@ export interface ChangeRequirement {
 	readonly statement: string;
 }
 
+export interface ChangeRevisionIntent {
+	readonly currentState: string;
+	readonly desiredState: string;
+	readonly rationale?: string;
+	readonly nonGoals: readonly string[];
+	readonly alternatives: readonly string[];
+}
+
+export interface ChangeRevisionClassification {
+	readonly kind:
+		| "unknown"
+		| "fix"
+		| "improve"
+		| "harden"
+		| "migrate"
+		| "introduce"
+		| "remove";
+	readonly type:
+		| "unknown"
+		| "behavior_change"
+		| "architecture_change"
+		| "workflow_change"
+		| "incident_resolution"
+		| "security_change"
+		| "documentation_change"
+		| "dependency_change"
+		| "release_change";
+	readonly scope:
+		| "unknown"
+		| "product"
+		| "system"
+		| "source"
+		| "documentation"
+		| "configuration"
+		| "runtime";
+	readonly affectedLayers: readonly string[];
+	readonly targetRefs: readonly string[];
+}
+
+export interface ChangeRevisionImpact {
+	readonly user?: string;
+	readonly maintainer?: string;
+	readonly compatibility?: string;
+}
+
+export interface ChangeRevisionKnowledgeImpact {
+	readonly topicRefs: readonly string[];
+	readonly propagationRefs: readonly string[];
+	readonly noImpactRationale?: string;
+}
+
+export interface ChangeRevisionOutcomeContract {
+	readonly successSignals: readonly string[];
+	readonly evidenceExpectations: readonly string[];
+}
+
+export interface ChangeRevisionDeliveryConstraints {
+	readonly constraints: readonly string[];
+	readonly planningQuestions: readonly string[];
+}
+
+export interface ChangeRevisionEvidence {
+	readonly sourceRefs: readonly string[];
+	readonly proofRefs: readonly string[];
+	readonly reproduction?: string;
+	readonly expectedBehavior?: string;
+	readonly sourceBehavior?: string;
+	readonly targetBehavior?: string;
+}
+
+export interface ChangeRevisionSafety {
+	readonly risk: "unknown" | "low" | "moderate" | "high" | "critical";
+	readonly invariants: readonly string[];
+	readonly safetyBoundary?: string;
+	readonly failureModes: readonly string[];
+	readonly rollbackPlan?: string;
+	readonly negativeTestPlan?: string;
+	readonly regressionPlan?: string;
+}
+
 export interface ChangeRevisionContent {
 	readonly title: string;
-	readonly summary: string;
-	readonly desiredOutcome: string;
+	readonly intent: ChangeRevisionIntent;
+	readonly classification: ChangeRevisionClassification;
+	readonly impact: ChangeRevisionImpact;
+	readonly knowledge: ChangeRevisionKnowledgeImpact;
+	readonly outcome: ChangeRevisionOutcomeContract;
+	readonly delivery: ChangeRevisionDeliveryConstraints;
+	readonly evidence: ChangeRevisionEvidence;
+	readonly safety: ChangeRevisionSafety;
 	readonly acceptanceRequirements: readonly ChangeRequirement[];
-	readonly constraints: readonly string[];
-	readonly nonGoals: readonly string[];
-	readonly knowledgeRefs: readonly string[];
-	readonly sourceRefs: readonly string[];
 	readonly defectProfile?: ChangeDefectProfile;
-	readonly risk: "unknown" | "low" | "moderate" | "high" | "critical";
 }
 
 export interface ChangeRevision {
@@ -248,20 +329,96 @@ const changeRequirementSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
-export const changeRevisionContentSchema = Type.Object(
+const optionalTextSchema = Type.Optional(requiredTextSchema);
+const changeRevisionIntentSchema = Type.Object(
 	{
-		title: shortTextSchema,
-		summary: requiredTextSchema,
-		desiredOutcome: requiredTextSchema,
-		acceptanceRequirements: Type.Array(changeRequirementSchema, {
-			minItems: 1,
-			maxItems: 256,
-		}),
-		constraints: textListSchema,
+		currentState: requiredTextSchema,
+		desiredState: requiredTextSchema,
+		rationale: optionalTextSchema,
 		nonGoals: textListSchema,
-		knowledgeRefs: refListSchema,
+		alternatives: textListSchema,
+	},
+	{ additionalProperties: false },
+);
+const changeRevisionClassificationSchema = Type.Object(
+	{
+		kind: Type.Union([
+			Type.Literal("unknown"),
+			Type.Literal("fix"),
+			Type.Literal("improve"),
+			Type.Literal("harden"),
+			Type.Literal("migrate"),
+			Type.Literal("introduce"),
+			Type.Literal("remove"),
+		]),
+		type: Type.Union([
+			Type.Literal("unknown"),
+			Type.Literal("behavior_change"),
+			Type.Literal("architecture_change"),
+			Type.Literal("workflow_change"),
+			Type.Literal("incident_resolution"),
+			Type.Literal("security_change"),
+			Type.Literal("documentation_change"),
+			Type.Literal("dependency_change"),
+			Type.Literal("release_change"),
+		]),
+		scope: Type.Union([
+			Type.Literal("unknown"),
+			Type.Literal("product"),
+			Type.Literal("system"),
+			Type.Literal("source"),
+			Type.Literal("documentation"),
+			Type.Literal("configuration"),
+			Type.Literal("runtime"),
+		]),
+		affectedLayers: idListSchema,
+		targetRefs: refListSchema,
+	},
+	{ additionalProperties: false },
+);
+const changeRevisionImpactSchema = Type.Object(
+	{
+		user: optionalTextSchema,
+		maintainer: optionalTextSchema,
+		compatibility: optionalTextSchema,
+	},
+	{ additionalProperties: false },
+);
+const changeRevisionKnowledgeSchema = Type.Object(
+	{
+		topicRefs: refListSchema,
+		propagationRefs: refListSchema,
+		noImpactRationale: optionalTextSchema,
+	},
+	{ additionalProperties: false },
+);
+const changeRevisionOutcomeSchema = Type.Object(
+	{
+		successSignals: textListSchema,
+		evidenceExpectations: textListSchema,
+	},
+	{ additionalProperties: false },
+);
+const changeRevisionDeliverySchema = Type.Object(
+	{
+		constraints: textListSchema,
+		planningQuestions: textListSchema,
+	},
+	{ additionalProperties: false },
+);
+const changeRevisionEvidenceSchema = Type.Object(
+	{
 		sourceRefs: refListSchema,
-		defectProfile: Type.Optional(changeDefectProfileSchema),
+		proofRefs: refListSchema,
+		reproduction: optionalTextSchema,
+		expectedBehavior: optionalTextSchema,
+		sourceBehavior: optionalTextSchema,
+		targetBehavior: optionalTextSchema,
+	},
+	{ additionalProperties: false },
+);
+const changeRevisionSafetySchema = Type.Object(
+	{
 		risk: Type.Union([
 			Type.Literal("unknown"),
 			Type.Literal("low"),
@@ -269,6 +426,32 @@ export const changeRevisionContentSchema = Type.Object(
 			Type.Literal("high"),
 			Type.Literal("critical"),
 		]),
+		invariants: textListSchema,
+		safetyBoundary: optionalTextSchema,
+		failureModes: textListSchema,
+		rollbackPlan: optionalTextSchema,
+		negativeTestPlan: optionalTextSchema,
+		regressionPlan: optionalTextSchema,
+	},
+	{ additionalProperties: false },
+);
+
+export const changeRevisionContentSchema = Type.Object(
+	{
+		title: shortTextSchema,
+		intent: changeRevisionIntentSchema,
+		classification: changeRevisionClassificationSchema,
+		impact: changeRevisionImpactSchema,
+		knowledge: changeRevisionKnowledgeSchema,
+		outcome: changeRevisionOutcomeSchema,
+		delivery: changeRevisionDeliverySchema,
+		evidence: changeRevisionEvidenceSchema,
+		safety: changeRevisionSafetySchema,
+		acceptanceRequirements: Type.Array(changeRequirementSchema, {
+			minItems: 1,
+			maxItems: 256,
+		}),
+		defectProfile: Type.Optional(changeDefectProfileSchema),
 	},
 	{ additionalProperties: false },
 );

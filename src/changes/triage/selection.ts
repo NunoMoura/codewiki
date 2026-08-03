@@ -247,8 +247,18 @@ export function decisionSelectionConflictRefs(input: {
 }): readonly string[] {
 	return normalizeConflictRefs([
 		`change:${input.change.changeId}`,
-		...input.revision.content.knowledgeRefs.map((ref) => `knowledge:${ref}`),
-		...input.revision.content.sourceRefs.map((ref) => `source:${ref}`),
+		...input.revision.content.knowledge.topicRefs.map(
+			(ref) => `knowledge:${ref}`,
+		),
+		...input.revision.content.knowledge.propagationRefs.map(
+			(ref) => `knowledge:${ref}`,
+		),
+		...input.revision.content.evidence.sourceRefs.map(
+			(ref) => `source:${ref}`,
+		),
+		...input.revision.content.classification.targetRefs.map(
+			(ref) => `source:${ref}`,
+		),
 		...selectionAffectedRefs({
 			change: input.change,
 			revisionId: input.revision.revisionId,

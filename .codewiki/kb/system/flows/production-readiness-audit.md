@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: Production Readiness Audit
-description: CodeWiki remains private pre-production software; release requires Change Trace Protocol v1, Git-synchronized coordination, native exact Loop exit, deterministic Alignment Graph projection, archive/learning safety, and external proof.
+description: CodeWiki remains private pre-production software; release requires the current Change Trace Protocol, Git-synchronized coordination, native exact Loop exit, deterministic Alignment Graph projection, archive/learning safety, and external proof.
 tags:
   - codewiki
   - system
@@ -67,7 +67,7 @@ Change
 
 Required architecture cuts:
 
-1. exact Change Trace Protocol v1 schemas and canonical fixtures;
+1. exact Change Trace Protocol `2.0.0` schemas and canonical fixtures;
 2. pure deterministic reducer and versioned Alignment Graph projector;
 3. full/incremental replay equivalence and adversarial/property tests;
 4. two-clone provider-neutral Git expected-head CAS experiment;

@@ -11,6 +11,7 @@ import {
 	assertValidPlanningEpochRecord,
 	assertValidStateCommitManifest,
 	createCanonicalChangeOperation,
+	createChangeRevision,
 	createPlanningEpochRecord,
 	parseArchiveManifest,
 	parseCanonicalChangeOperation,
@@ -53,7 +54,7 @@ function operationCatalogFrom(text, start, end) {
 	return section.match(/^[a-z_]+\.[a-z_]+$/gm) ?? [];
 }
 
-describe("Change Trace Protocol v1 catalog", () => {
+describe("Change Trace Protocol catalog", () => {
 	it("closes exactly 42 operation kinds across two semantic scopes", () => {
 		assert.equal(CHANGE_TRACE_OPERATION_CATALOG.length, 42);
 		assert.equal(CHANGE_OPERATION_KINDS.length, 41);
@@ -133,13 +134,33 @@ describe("content-addressed Change operations", () => {
 			revision.content.acceptanceRequirements.map((entry) => entry.id),
 			["identity", "replay"],
 		);
-		assert.deepEqual(revision.content.constraints, [
+		assert.deepEqual(revision.content.delivery.constraints, [
 			"No compatibility parser.",
 			"No mutable status operation.",
+		]);
+		assert.deepEqual(revision.content.knowledge.topicRefs, [
+			"kb:system/alignment-model",
+			"kb:system/traces",
 		]);
 		assert.equal(revision.revisionId, sha256Digest(canonicalJson(revision.content)));
 		assert.equal(Object.isFrozen(revision), true);
 		assert.equal(Object.isFrozen(revision.content), true);
+		assert.throws(() =>
+			createChangeRevision({
+				title: "Legacy skeleton",
+				summary: "Legacy summary",
+				desiredOutcome: "Legacy outcome",
+				acceptanceRequirements: [
+					{id: "legacy", statement: "Legacy requirement."},
+				],
+				constraints: [],
+				nonGoals: [],
+				knowledgeRefs: [],
+				sourceRefs: [],
+				risk: "unknown",
+			}),
+			/Change revision content/,
+		);
 	});
 
 	it("round-trips exact canonical bytes and rejects non-canonical input", () => {
@@ -286,10 +307,10 @@ describe("frozen protocol fixtures", () => {
 		const archive = archiveManifest(operation);
 		const documents = {operation, epoch, state, archive};
 		const expectedIds = {
-			operation: "sha256:d3422315709811eca07b85f55722b9c7874aeb86b601a73ec0e361598ab123c5",
-			epoch: "sha256:4b0186b1c8c86271e3899cea1f1e1313e447cfaa35fc08fafb71f8dc5bcb64b1",
-			state: "sha256:2929841de994fc76c749eb85169fe0f20e0b3e017bd72f5b0cea2deed0592ab1",
-			archive: "sha256:6065989a0674739b08551e27bfa424e5485840283b7ad67a47ef2f8a774d7fbf",
+			operation: "sha256:5988a731c184675004e7d9e747f0aabdc4050bdf59cb789ca5fa5f5a58b83f5d",
+			epoch: "sha256:d6c9d6ea3ff85eac9c06fe3ec630e54dcffd75fea155e6b52d50bd3a4e07369d",
+			state: "sha256:3d8369781ec353673058dd03398478fadcb029d0bb301a159d5ca566b755f6f5",
+			archive: "sha256:6118efd276f5e5cd0f4619a71b1af215c6315f3b67717ce70445f925b1790faa",
 		};
 		for (const [name, document] of Object.entries(documents)) {
 			const bytes = await readFile(new URL(`${name}.json`, fixtureDirectory), "utf8");
