@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Advanced the native standard Evidence executor to `codewiki.standard-evidence-check-executor@1.1.0` and Loop Exit Runner to `1.2.0`. Multiple independent Checks in one Loop may now consume one exact receipt/bundle substrate while retaining separate protected selectors, obligation resolutions, execution identities, and Runtime-created Results. Receipt and bundle digests enter execution configuration. Runtime records and streams each byte-identical Evidence Record once, reuses exact caller-supplied records during replay, and rejects inconsistent shared bindings or same-id content conflicts. The coordination is bounded to one run and adds no central Evidence store.",
+					},
+					{
+						kind: "Update",
 						text: "Added `codewiki.standard-evidence-check-executor@1.0.0` and installed exact report-bound capabilities in native Loop Exit Runtime. Each capability binds one Loop/Check/version, every owned obligation, one normalized selector, adapter receipt, and materialized bundle; protected Resolved Exit Policy must bind the same selector. Runtime rechecks Candidate/source identity, produces immutable Evidence Records/resolutions, maps evaluator observations into boolean Code Check output, disables report-bound caching, and alone constructs Results. Duplicate Check capabilities or bundle assignment, partial obligation ownership, permissive obligations, non-Code Checks, cancellation, and drift fail closed. Check Catalog clean-cuts to `7.0.0` and standard external-command obligations require artifacts.",
 					},
 					{

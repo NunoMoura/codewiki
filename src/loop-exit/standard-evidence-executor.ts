@@ -31,7 +31,7 @@ export const STANDARD_EVIDENCE_CHECK_SELECTOR_PARAMETER =
 	"standardEvidenceCheckSelector" as const;
 export const STANDARD_EVIDENCE_CHECK_EXECUTOR_PROTOCOL = Object.freeze({
 	id: "codewiki.standard-evidence-check-executor",
-	version: "1.0.0",
+	version: "1.1.0",
 } as const);
 
 export interface StandardEvidenceCheckCapability {
@@ -46,6 +46,7 @@ export interface StandardEvidenceCheckCapability {
 
 interface AdmittedCapability extends StandardEvidenceCheckCapability {
 	readonly selectorDigest: Sha256Digest;
+	readonly ingestionDigest: Sha256Digest;
 	readonly configurationDigest: Sha256Digest;
 }
 
@@ -71,7 +72,10 @@ export function createStandardEvidenceCheckExecutors(input: {
 		throw new Error("Standard Evidence Check executors require at most 64 capabilities.");
 	}
 	const seen = new Set<string>();
-	const seenBundles = new Set<string>();
+	const seenBundles = new Map<
+		string,
+		{readonly loop: SemanticLoop; readonly ingestionDigest: Sha256Digest}
+	>();
 	const executors: LoopCheckExecutor[] = [];
 	for (const [ordinal, value] of input.capabilities.entries()) {
 		const capability = admittedCapability(value, input.catalog, ordinal);
@@ -80,12 +84,20 @@ export function createStandardEvidenceCheckExecutors(input: {
 			throw new Error(`Standard Evidence Check capability ${key} is duplicated.`);
 		}
 		seen.add(key);
-		if (seenBundles.has(capability.bundle.bundleDigest)) {
+		const priorBundle = seenBundles.get(capability.bundle.bundleDigest);
+		if (
+			priorBundle &&
+			(priorBundle.loop !== capability.loop ||
+				priorBundle.ingestionDigest !== capability.ingestionDigest)
+		) {
 			throw new Error(
-				`Standard Evidence Check bundle ${capability.bundle.bundleDigest} is assigned more than once.`,
+				`Standard Evidence Check bundle ${capability.bundle.bundleDigest} has inconsistent shared-substrate bindings.`,
 			);
 		}
-		seenBundles.add(capability.bundle.bundleDigest);
+		seenBundles.set(capability.bundle.bundleDigest, {
+			loop: capability.loop,
+			ingestionDigest: capability.ingestionDigest,
+		});
 		const registration = requiredRegistration(
 			input.catalog,
 			capability.checkId,
@@ -174,12 +186,15 @@ function admittedCapability(
 	assertStandardAdapterIngestionResult(value.ingestion);
 	assertStandardAdapterEvidenceBundle(value.bundle);
 	const selectorDigest = canonicalJsonDigest(selector);
+	const ingestionDigest = canonicalJsonDigest(toCanonicalJsonValue(value.ingestion));
 	const configurationDigest = canonicalJsonDigest({
 		protocol: STANDARD_EVIDENCE_CHECK_EXECUTOR_PROTOCOL,
 		checkId: value.checkId,
 		checkVersion: value.checkVersion,
 		obligationIds: value.obligationIds,
 		selectorDigest,
+		ingestionDigest,
+		bundleDigest: value.bundle.bundleDigest,
 		adapterProtocol: value.bundle.adapterProtocol,
 	});
 	return Object.freeze({
@@ -187,6 +202,7 @@ function admittedCapability(
 		obligationIds: Object.freeze([...value.obligationIds]),
 		selector,
 		selectorDigest,
+		ingestionDigest,
 		configurationDigest,
 	});
 }

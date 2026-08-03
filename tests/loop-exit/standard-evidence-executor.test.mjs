@@ -79,7 +79,11 @@ function junit(loopCandidate, {failed = false, expectedTestCount = 2} = {}) {
 	};
 }
 
-function policy(loopCandidate, selected = selector) {
+function policy(
+	loopCandidate,
+	selected = selector,
+	checkIds = ["verification_passed"],
+) {
 	const resolved = resolveExitPolicy({
 		loop: "implementation",
 		candidateDigest: loopCandidate.digest,
@@ -97,33 +101,31 @@ function policy(loopCandidate, selected = selector) {
 		projectTraits: [],
 		technologies: [],
 		paths: ["src/index.ts"],
-		approvedAdditions: [
-			{
-				checkId: "verification_passed",
-				checkVersion: "1.0.0",
-				authorityRef: "trace:approval:standard-evidence",
-				parameters: createStandardEvidenceCheckBindingParameters(selected),
-			},
-		],
+		approvedAdditions: checkIds.map((checkId) => ({
+			checkId,
+			checkVersion: "1.0.0",
+			authorityRef: `trace:approval:standard-evidence:${checkId}`,
+			parameters: createStandardEvidenceCheckBindingParameters(selected),
+		})),
 	});
-	const binding = resolved.bindings.find(
-		(entry) => entry.checkId === "verification_passed",
+	const bindings = resolved.bindings.filter((entry) =>
+		checkIds.includes(entry.checkId),
 	);
-	assert.ok(binding);
+	assert.equal(bindings.length, checkIds.length);
 	return createResolvedExitPolicy({
 		loop: "implementation",
 		candidateDigest: loopCandidate.digest,
 		catalogDigest: resolved.catalogDigest,
 		selectorInputDigest: resolved.selectorInputDigest,
-		bindings: [binding],
-		protectedCheckIds: ["verification_passed"],
+		bindings,
+		protectedCheckIds: checkIds,
 	});
 }
 
-function capability(admitted) {
+function capability(admitted, checkId = "verification_passed") {
 	return {
 		loop: "implementation",
-		checkId: "verification_passed",
+		checkId,
 		checkVersion: "1.0.0",
 		obligationIds: ["command-execution"],
 		selector,
@@ -197,6 +199,62 @@ describe("native standard Evidence Check executor", () => {
 		assert.equal(mismatched.result.producedEvidenceRecords.length, 0);
 	});
 
+	it("fans one exact substrate into independent Results and records Evidence once", async () => {
+		const loopCandidate = candidate();
+		const admitted = junit(loopCandidate);
+		const checkIds = ["verification_passed", "typescript_verified"];
+		const runtime = createLoopExitRuntime({
+			standardEvidenceCapabilities: checkIds.map((checkId) =>
+				capability(admitted, checkId),
+			),
+		});
+		const recorded = [];
+		const result = await runtime.createRunner({executors: []}).run({
+			candidate: loopCandidate,
+			policy: policy(loopCandidate, selector, checkIds),
+			onProducedEvidence: (record) => recorded.push(record.evidenceId),
+		});
+
+		assert.equal(result.report.status, "pass");
+		assert.deepEqual(
+			result.report.checkResults.map((entry) => entry.checkId).sort(),
+			[...checkIds].sort(),
+		);
+		assert.deepEqual(
+			result.report.checkResults.map((entry) => entry.evidenceRecordIds),
+			checkIds.map(() => admitted.bundle.evidenceRecordIds),
+		);
+		assert.deepEqual(
+			result.producedEvidenceRecords.map((record) => record.evidenceId),
+			admitted.bundle.evidenceRecordIds,
+		);
+		assert.deepEqual(recorded, admitted.bundle.evidenceRecordIds);
+
+		const replayRecorded = [];
+		const replay = await runtime.createRunner({executors: []}).run({
+			candidate: loopCandidate,
+			policy: policy(loopCandidate, selector, checkIds),
+			evidenceRecords: admitted.bundle.evidenceRecords,
+			onProducedEvidence: (record) => replayRecorded.push(record.evidenceId),
+		});
+		assert.equal(replay.report.reportDigest, result.report.reportDigest);
+		assert.deepEqual(replay.producedEvidenceRecords, []);
+		assert.deepEqual(replayRecorded, []);
+
+		const [record] = admitted.bundle.evidenceRecords;
+		assert.ok(record);
+		await assert.rejects(
+			runtime.createRunner({executors: []}).run({
+				candidate: loopCandidate,
+				policy: policy(loopCandidate, selector, checkIds),
+				evidenceRecords: [
+					{...record, provenanceRefs: [...record.provenanceRefs, "tampered"]},
+				],
+			}),
+			/conflicts with an existing record/,
+		);
+	});
+
 	it("rejects duplicate, incomplete, unknown, and non-Code capabilities", () => {
 		const loopCandidate = candidate();
 		const admitted = junit(loopCandidate);
@@ -210,16 +268,20 @@ describe("native standard Evidence Check executor", () => {
 				}),
 			/duplicated/,
 		);
+		const conflictingIngestion = junit(loopCandidate, {failed: true}).ingestion;
 		assert.throws(
 			() =>
 				createStandardEvidenceCheckExecutors({
 					catalog: runtime.catalog,
 					capabilities: [
 						valid,
-						{...valid, checkId: "typescript_verified"},
+						{
+							...capability(admitted, "typescript_verified"),
+							ingestion: conflictingIngestion,
+						},
 					],
 				}),
-			/assigned more than once/,
+			/inconsistent shared-substrate bindings/,
 		);
 		assert.throws(
 			() =>

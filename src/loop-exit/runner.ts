@@ -29,7 +29,7 @@ import {
 	type LoopExitResultCache,
 } from "./cache.ts";
 
-const LOOP_EXIT_RUNNER_VERSION = "1.1.0" as const;
+const LOOP_EXIT_RUNNER_VERSION = "1.2.0" as const;
 
 export type CheckObservationDisposition =
 	| "satisfied"
@@ -297,19 +297,20 @@ async function executeScheduledCheck(
 		signal: context.input.signal,
 		semaphore: context.semaphores[check.execution.kind],
 	});
+	const newlyProduced: EvidenceRecord[] = [];
 	for (const record of executed.producedEvidenceRecords) {
-		if (
-			context.evidenceRecords.has(record.evidenceId) ||
-			context.producedEvidenceRecords.has(record.evidenceId)
-		) {
-			throw new Error(`Produced Evidence ${record.evidenceId} is duplicated.`);
+		const existing =
+			context.evidenceRecords.get(record.evidenceId) ??
+			context.producedEvidenceRecords.get(record.evidenceId);
+		if (existing) {
+			assertSameEvidenceRecord(existing, record);
+			continue;
 		}
 		context.producedEvidenceRecords.set(record.evidenceId, record);
+		newlyProduced.push(record);
 	}
 	await Promise.all(
-		executed.producedEvidenceRecords.map((record) =>
-			context.input.onProducedEvidence?.(record),
-		),
+		newlyProduced.map((record) => context.input.onProducedEvidence?.(record)),
 	);
 	if (
 		executor?.cacheable !== false &&
@@ -757,6 +758,20 @@ function normalizedEvidenceRecords(
 		records.set(record.evidenceId, record);
 	}
 	return records;
+}
+
+function assertSameEvidenceRecord(
+	existing: EvidenceRecord,
+	produced: EvidenceRecord,
+): void {
+	if (
+		canonicalJsonDigest(toCanonicalJsonValue(existing)) !==
+		canonicalJsonDigest(toCanonicalJsonValue(produced))
+	) {
+		throw new Error(
+			`Produced Evidence ${produced.evidenceId} conflicts with an existing record.`,
+		);
+	}
 }
 
 function availableEvidenceRecords(
