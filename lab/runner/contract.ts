@@ -30,6 +30,7 @@ export const LAB_LOCKED_EVALUATOR_FILES = [
 	"lab/runner/objective.ts",
 	"lab/runner/quality-pack.ts",
 	"lab/runner/score.ts",
+	"lab/runner/security-calibration.ts",
 	"lab/runner/sealed-check.ts",
 	"lab/runner/sealed-template.ts",
 	"lab/runner/trace-forge.ts",
@@ -59,6 +60,7 @@ export const LAB_FORBIDDEN_CANDIDATE_IMPORTS = [
 	"../runner/holdout.ts",
 	"../runner/holdout-score.ts",
 	"../runner/judge-calibration.ts",
+	"../runner/security-calibration.ts",
 	"../runner/experiment-runner.ts",
 	"../runner/score.ts",
 ] as const;

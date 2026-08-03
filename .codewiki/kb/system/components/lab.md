@@ -182,6 +182,8 @@ Fixture families include:
 
 Sealed fixtures live outside repository and producer visibility. Objective executable evidence is preferred. Judge-derived partial scores remain separate from full resolution.
 
+Scanner/evaluator route calibration uses `codewiki.security-route-calibration@1.0.0`. External human-labeled bundles bind exact Scanner Suite and atomic evaluator protocols, complete pass/defect/unavailable cases for all six scanner families, source, report, scanner-request, environment, and scanner/evaluator configuration digests, scanner and evaluator identities, Evidence refs, limitations, latency, and cost. Route reports separate false pass, false failure, escaped critical defects, `indeterminate`, latency, and cost. Any false pass or escaped critical defect blocks promotion regardless of aggregate score. The calibration runner evaluates bounded receipts only; it executes no scanner and grants no Result, promotion, or authority.
+
 ## Repair-learning evaluation
 
 Completed accepted history may derive:

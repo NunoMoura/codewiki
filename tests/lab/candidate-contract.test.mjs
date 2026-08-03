@@ -75,6 +75,7 @@ describe("lab candidate contract", () => {
 				"lab/runner/objective.ts",
 				"lab/runner/quality-pack.ts",
 				"lab/runner/score.ts",
+				"lab/runner/security-calibration.ts",
 				"lab/runner/sealed-check.ts",
 				"lab/runner/sealed-template.ts",
 				"lab/runner/trace-forge.ts",

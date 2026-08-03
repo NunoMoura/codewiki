@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added off-repository `codewiki.security-route-calibration@1.0.0` admission and scoring for exact Scanner Suite `3.0.0` plus atomic evaluator `2.0.0` receipts. Complete human-labeled pass, defect, and unavailable matrices across all six families now report false pass/failure, escaped critical defects, `indeterminate`, latency, and cost per route. Protocol drift, incomplete coverage, false passes, escaped critical defects, and below-threshold scores block calibration. Lab reports grant no Result or promotion authority; real sealed execution remains pending external human cases and production scanner receipts.",
+					},
+					{
+						kind: "Update",
 						text: "Closed measured scanner families and added fixed Gitleaks collection. `codewiki.production-security-collector@2.0.0` binds exact Gitleaks executable/version, rules, ignore policy, Candidate source/tree/environment, redacted no-shell invocation, and bounded execution without ambient configuration, archive recursion, decode recursion, plugins, credentials, or network updates. Scanner Suite `3.0.0` clean-cuts generic `configuration` to `infrastructure_configuration` and closes its vocabulary at six distinct measured families. `codewiki.atomic-security-scanner-check@2.0.0` and Check Catalog `9.0.0` add independent infrastructure-configuration activation; concerns without distinct scanner measurements remain under static-analysis, standard contract/test, or independent Model Checks.",
 					},
 					{

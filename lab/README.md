@@ -156,6 +156,27 @@ human-labeled non-deterministic standard cases and report score, false passes,
 and over-blocks. Any judge false pass fails calibration because false pass is the
 highest-cost error.
 
+Security scanner/evaluator routes have a separate sealed calibration command:
+
+```bash
+npm run lab:security-calibration -- \
+  --file /path/outside/repo/security-calibration.json \
+  --json --gate
+```
+
+The bundle must bind `codewiki.security-scanner-suite@3.0.0` and
+`codewiki.atomic-security-scanner-check@2.0.0`, name each route's exact evaluator
+identity, and provide one observation per route for every case. Every scanner
+family requires a human-labeled pass control, defect trap, and unavailable case;
+at least one trap must be critical. Observations bind source, report, scanner-request, environment, scanner configuration,
+and evaluator configuration digests, scanner/evaluator identity, Evidence refs, latency,
+cost, and limitations. Reports keep
+false passes, false failures, escaped critical defects, `indeterminate` rate,
+latency, and cost separate per route. Any false pass or escaped critical defect
+blocks promotion regardless of aggregate score. Bundles remain external and
+must not be committed. The command evaluates receipts only; it does not execute
+scanners, create CodeWiki Results, or grant promotion authority.
+
 When a production judge provider is enabled, deterministic hard gates run first.
 If they pass, CodeWiki sends one batch prompt per semantic loop attempt. The
 batch contains loop evidence plus per-standard rubrics for `agent_self_assessment`

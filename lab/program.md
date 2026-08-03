@@ -154,6 +154,20 @@ verifies private bundles are outside the repo, placeholder-free, and contain
 both expected-pass controls plus expected fail/block traps with expected standard
 failures and failure-class labels.
 
+Scanner/evaluator route changes require a separate off-repository human-labeled
+calibration bundle. Each route must cover pass, defect, and unavailable cases for
+all six closed scanner families and bind exact source/report/request,
+environment, scanner/evaluator configuration identity, latency, and cost. Run:
+
+```bash
+npm run lab:security-calibration -- \
+  --file /path/outside/repo/security-calibration.json \
+  --json --gate
+```
+
+Any false pass or escaped critical defect blocks the route. The Lab report is
+measurement only and cannot grant a Runtime Result or promotion authority.
+
 When validating an enabled independent judge, first run the public protocol
 smoke, then run sealed judge calibration with an off-repo human-labeled bundle.
 Production judge providers receive one batch prompt per semantic loop attempt

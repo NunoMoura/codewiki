@@ -24,7 +24,7 @@ import {
 	type SecuritySurface,
 } from "./security-surfaces.ts";
 
-const SECURITY_SCANNER_PROTOCOL = Object.freeze({
+export const SECURITY_SCANNER_PROTOCOL = Object.freeze({
 	id: "codewiki.security-scanner-suite",
 	version: "3.0.0",
 	maxScanners: 6,
