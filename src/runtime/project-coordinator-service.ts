@@ -6,12 +6,17 @@ import type { Server } from "node:http";
 
 import type { WorktreeCommandRunner } from "../git/worktrees.ts";
 import {
-	assertDecisionAttentionSelectionReceipt,
 	DecisionAttentionSelectionError,
 	parseDecisionAttentionSelectionCommand,
+	type AuthenticatedDecisionSelectionAuthority,
 	type DecisionAttentionSelectionCommand,
-	type DecisionAttentionSelectionReceipt,
 } from "../changes/triage/selection.ts";
+import {
+	createDecisionStartRuntime,
+	type DecisionStartResult,
+	type DecisionStartRuntime,
+	type DecisionStartRuntimeOptions,
+} from "./decision-attention-selection.ts";
 import {
 	ImplementationWorkerDispatcher,
 	type ImplementationWorkerDispatchResult,
@@ -111,7 +116,7 @@ export interface ProjectCoordinatorServiceOptions
 	releasePlan?: ProductReleasePlan;
 	releaseAdapter?: ProductReleaseAdapter;
 	onEvent?: (event: ProjectCoordinatorEvent) => void;
-	decisionAttentionSelection?: ProjectCoordinatorDecisionAttentionSelectionAdapter;
+	decisionStart?: ProjectCoordinatorDecisionStartOptions;
 }
 
 export interface ProjectCoordinatorDecisionAttentionCaller {
@@ -122,14 +127,13 @@ export interface ProjectCoordinatorDecisionAttentionCaller {
 	readonly generationId: string;
 }
 
-export interface ProjectCoordinatorDecisionAttentionSelectionAdapter {
-	selectAndSchedule(input: {
-		readonly command: DecisionAttentionSelectionCommand;
-		readonly caller: ProjectCoordinatorDecisionAttentionCaller;
-		readonly coordinator: ProjectCoordinator;
-	}):
-		| DecisionAttentionSelectionReceipt
-		| Promise<DecisionAttentionSelectionReceipt>;
+export interface ProjectCoordinatorDecisionStartOptions
+	extends Omit<DecisionStartRuntimeOptions, "coordinator" | "now"> {
+	resolveAuthority(
+		caller: ProjectCoordinatorDecisionAttentionCaller,
+	):
+		| AuthenticatedDecisionSelectionAuthority
+		| Promise<AuthenticatedDecisionSelectionAuthority>;
 }
 
 export interface ProjectCoordinatorServiceHandle {
@@ -165,7 +169,7 @@ export interface ProjectCoordinatorRemoteClient {
 	inspect(trigger: ProjectCoordinatorRemoteTrigger): Promise<RuntimeReaction>;
 	selectDecision(
 		command: DecisionAttentionSelectionCommand,
-	): Promise<DecisionAttentionSelectionReceipt>;
+	): Promise<DecisionStartResult>;
 	submitCandidate(
 		trigger: ProjectCoordinatorRemoteTrigger,
 		loop: RuntimeCandidateLoop,
@@ -211,7 +215,10 @@ interface ServiceRuntime {
 	maxReactions?: number;
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
-	decisionAttentionSelection?: ProjectCoordinatorDecisionAttentionSelectionAdapter;
+	decisionStart?: {
+		readonly runtime: DecisionStartRuntime;
+		readonly resolveAuthority: ProjectCoordinatorDecisionStartOptions["resolveAuthority"];
+	};
 	clients: Map<string, RemoteClientLease>;
 	clientLeaseMs: number;
 	clock: () => number;
@@ -294,6 +301,23 @@ export async function startProjectCoordinatorService(
 			generationId,
 			startedAt,
 		};
+		const decisionStartOptions = options.decisionStart;
+		const decisionStart = decisionStartOptions
+			? {
+					resolveAuthority: decisionStartOptions.resolveAuthority,
+					runtime: createDecisionStartRuntime({
+						coordinator,
+						loadCurrentContext: decisionStartOptions.loadCurrentContext,
+						authorize: decisionStartOptions.authorize,
+						async appendAttempt(input) {
+							await assertCurrentGeneration(runtime);
+							return decisionStartOptions.appendAttempt(input);
+						},
+						executor: decisionStartOptions.executor,
+						now: options.now,
+					}),
+				}
+			: undefined;
 		Object.assign(runtime, {
 			endpoint,
 			ownership,
@@ -321,7 +345,7 @@ export async function startProjectCoordinatorService(
 				8,
 				"maxCasRetries",
 			),
-			decisionAttentionSelection: options.decisionAttentionSelection,
+			decisionStart,
 			clients,
 			clientLeaseMs: boundedClientLease(options.clientLeaseMs),
 			clock: options.clock || Date.now,
@@ -437,7 +461,7 @@ export async function connectProjectCoordinatorClient(
 		},
 		selectDecision(command) {
 			assertRemoteClientConnected(disconnected, response.clientId);
-			return requestCoordinatorJson<DecisionAttentionSelectionReceipt>(
+			return requestCoordinatorJson<DecisionStartResult>(
 				endpoint,
 				"/v1/runtime/decision-selection",
 				{
@@ -757,8 +781,8 @@ async function handleDecisionAttentionSelection(
 	request: IncomingMessage,
 	response: ServerResponse,
 ): Promise<void> {
-	const adapter = runtime.decisionAttentionSelection;
-	if (!adapter) {
+	const start = runtime.decisionStart;
+	if (!start) {
 		throw new HttpError(503, "decision_attention_selection_unavailable");
 	}
 	const body = objectBody(await readJsonBody(request));
@@ -773,19 +797,16 @@ async function handleDecisionAttentionSelection(
 	lease.activeRequests += 1;
 	try {
 		await assertCurrentGeneration(runtime);
-		let receipt: DecisionAttentionSelectionReceipt;
+		let result: DecisionStartResult;
 		try {
-			receipt = await adapter.selectAndSchedule({
-				command,
-				caller: {
-					clientId: lease.clientId,
-					clientKind: lease.connection.kind,
-					supervision: lease.connection.supervision,
-					connectionId: lease.connectionId,
-					generationId: runtime.endpoint.generationId,
-				},
-				coordinator: runtime.coordinator,
+			const authority = await start.resolveAuthority({
+				clientId: lease.clientId,
+				clientKind: lease.connection.kind,
+				supervision: lease.connection.supervision,
+				connectionId: lease.connectionId,
+				generationId: runtime.endpoint.generationId,
 			});
+			result = await start.runtime.start({command, authority});
 		} catch (error) {
 			if (error instanceof DecisionAttentionSelectionError) {
 				let status = 409;
@@ -795,9 +816,8 @@ async function handleDecisionAttentionSelection(
 			}
 			throw error;
 		}
-		assertDecisionAttentionSelectionReceipt(receipt);
 		await assertCurrentGeneration(runtime);
-		writeJson(response, 200, receipt);
+		writeJson(response, 200, result);
 	} finally {
 		extendLease(runtime, lease);
 	}

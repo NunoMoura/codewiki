@@ -65,7 +65,7 @@ Target capability groups:
 | --- | --- | --- |
 | State | Read bounded WorkState, Backlog Triage Projection, Change dossier, Loop exit, blockers, delivery, and next-safe-action projections. | Read-only derived data with snapshot/provenance/ordering reasons. |
 | Change | Submit bounded user suggestions or source-specific review/worker/regression/scanner/delivery/outcome/Knowledge-drift findings; revise/link/split/merge/defer/reject/withdraw pending intent. | Runtime authenticates, sanitizes, deduplicates, scope-routes, and creates Decision intake only; no approval/priority/execution. |
-| Decision attention | Select one exact eligible current Change revision from the bound Backlog Triage Projection. | Dedicated authenticated command binds native WorkState, projection, protected config/policy, triage Candidate and revision, authority Evidence, and idempotency before one Decision job; no disposition or priority. |
+| Decision attention | Select one exact eligible current Change revision from the bound Backlog Triage Projection. | Dedicated authenticated command carries one principal-scoped idempotency key, exact Change/revision, and projection digest; Runtime appends canonical `loop.attempt_started` and uses its operation ID as the job key without granting disposition or priority. |
 | Authority | Submit exact user/maintainer approval or intervention response. | Runtime authenticates and binds exact candidate/revision/effect into approval-receipt Evidence Record. |
 | Evidence | Submit bounded kind-specific material or read exact Evidence Record/artifact projections. | Runtime owns identity/time/authority/coverage/freshness; no verdict or route in payload. |
 | Review | Read Validation Bundle; Approve / Request changes; request explicitly authorized draft-PR publication. | One correlated action; no direct append, merge, branch movement, or acceptance. |
@@ -163,7 +163,7 @@ Current harness-neutral facades remain executable truth:
 - `runWikiChange()` performs guarded Change intake/mutation.
 - `buildWorkState()` derives current project state; `buildWikiState()` exposes bounded views.
 - `runWikiDecide()`, `runWikiPlan()`, and `runWikiImplement()` evaluate prepared inputs and preview/append legacy outputs.
-- `codewiki.decision-attention-selection@1.0.0` gives authenticated users exact pending-revision selection while Runtime validates current native state/config/policy, owns deterministic job identity, and rejects generic trigger/candidate substitution.
+- `codewiki.decision-attention-selection@2.0.0` gives authenticated users exact pending-revision selection through one projection digest; Runtime appends canonical `loop.attempt_started`, uses its operation ID as the job identity, and rejects generic trigger/candidate substitution.
 - exact Runtime reaction jobs own Planning/Implementation selection plus idempotency, recovery, and generation fencing.
 - `ImplementationWorkerDispatcher.reconcile()` currently derives ready Work Items, writes private Assignment packets, appends local Work Item ownership events, prepares worktrees, and schedules adapters.
 - `runWikiArchive()` and `runWikiConfig()` own retention/config compatibility behavior.

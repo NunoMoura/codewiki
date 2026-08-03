@@ -128,26 +128,23 @@ export {
 	type ProjectCoordinatorStreamEvent,
 } from "./project-coordinator-events.ts";
 export {
-	assertDecisionAttentionSelectionCurrent,
-	assertDecisionAttentionSelectionReceipt,
-	createDecisionAttentionSelectionRuntime,
 	DECISION_ATTENTION_SELECTION_PROTOCOL,
 	DecisionAttentionSelectionError,
 	parseDecisionAttentionSelectionCommand,
 	type AuthenticatedDecisionSelectionAuthority,
 	type DecisionAttentionSelectionAuthorizationRequest,
-	type DecisionAttentionSelectionBinding,
 	type DecisionAttentionSelectionCommand,
 	type DecisionAttentionSelectionContext,
 	type DecisionAttentionSelectionErrorCode,
-	type DecisionAttentionSelectionReceipt,
-	type DecisionAttentionSelectionRuntime,
 } from "../changes/triage/selection.ts";
 export {
-	scheduleDecisionAttentionJob,
-	selectAndScheduleDecisionAttentionJob,
-	type DecisionAttentionJobExecutor,
-	type StartedDecisionAttentionJob,
+	createDecisionStartRuntime,
+	type DecisionAttemptAppendInput,
+	type DecisionAttemptExecutor,
+	type DecisionStartInput,
+	type DecisionStartResult,
+	type DecisionStartRuntime,
+	type DecisionStartRuntimeOptions,
 } from "./decision-attention-selection.ts";
 export {
 	connectProjectCoordinatorClient,
@@ -158,7 +155,7 @@ export {
 	type ProjectCoordinatorCandidateResult,
 	type ProjectCoordinatorClientRequestOptions,
 	type ProjectCoordinatorDecisionAttentionCaller,
-	type ProjectCoordinatorDecisionAttentionSelectionAdapter,
+	type ProjectCoordinatorDecisionStartOptions,
 	type ProjectCoordinatorRemoteClient,
 	type ProjectCoordinatorSemanticExecution,
 	type RuntimeCandidateLoop,

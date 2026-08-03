@@ -18,8 +18,6 @@ import {
 	createTriagePreferenceBinding,
 } from "../../src/changes/triage/policy.ts";
 import {
-	assertDecisionAttentionSelectionReceipt,
-	createDecisionAttentionSelectionRuntime,
 	DECISION_ATTENTION_SELECTION_PROTOCOL,
 	DecisionAttentionSelectionError,
 	parseDecisionAttentionSelectionCommand,
@@ -30,10 +28,7 @@ import {
 	createUserStandardDefinition,
 	createUserStandardSourceSnapshot,
 } from "../../src/loop-exit/custom-checks/user-standards.ts";
-import {
-	scheduleDecisionAttentionJob,
-	selectAndScheduleDecisionAttentionJob,
-} from "../../src/runtime/decision-attention-selection.ts";
+import {createDecisionStartRuntime} from "../../src/runtime/decision-attention-selection.ts";
 import {ProjectCoordinator} from "../../src/runtime/project-coordinator.ts";
 import {
 	connectProjectCoordinatorClient,
@@ -108,11 +103,7 @@ function selectionCommand(projection, candidate) {
 		idempotencyKey: `select:${candidate.changeId}:current`,
 		changeId: candidate.changeId,
 		changeRevisionId: candidate.changeRevisionId,
-		expectedTriageCandidateDigest: candidate.candidateDigest,
-		expectedWorkStateDigest: projection.binding.workStateDigest,
 		expectedProjectionDigest: projection.projectionDigest,
-		expectedProjectConfigDigest: projection.binding.configDigest,
-		expectedTriagePolicyDigest: projection.binding.triagePolicyDigest,
 	};
 }
 
@@ -640,138 +631,212 @@ describe("snapshot-bound Backlog Triage Projection", () => {
 	});
 });
 
+function mutableDecisionSelectionContext(state, policy) {
+	let currentState = state;
+	let currentProjection = buildBacklogTriageProjection({
+		workState: currentState,
+		graph: projectAlignmentGraph(currentState),
+		policy,
+		asOf: "2026-09-30T10:00:00.000Z",
+	});
+	const appended = [];
+	const stateHeads = ["d", "e", "f", "1", "2", "3"];
+	return {
+		appended,
+		load() {
+			return {workState: currentState, projection: currentProjection};
+		},
+		candidate(changeId) {
+			return currentProjection.candidates.find(
+				(candidate) => candidate.changeId === changeId,
+			);
+		},
+		command(changeId) {
+			const candidate = this.candidate(changeId);
+			assert.ok(candidate, `missing triage candidate ${changeId}`);
+			return selectionCommand(currentProjection, candidate);
+		},
+		appendAttempt(input) {
+			assert.equal(input.expectedWorkStateDigest, currentState.workStateDigest);
+			appended.push(input.operation);
+			const nextHead = stateHeads.shift();
+			assert.ok(nextHead, "selection test exhausted state heads");
+			currentState = reduceBatch(
+				currentState,
+				[input.operation],
+				gitObject(nextHead),
+			);
+			currentProjection = buildBacklogTriageProjection({
+				workState: currentState,
+				graph: projectAlignmentGraph(currentState),
+				policy,
+				asOf: "2026-09-30T10:00:00.000Z",
+			});
+			return input.operation.operationId;
+		},
+	};
+}
+
 describe("authenticated exact-revision Decision attention selection", () => {
-	it("binds one exact current projection and schedules one idempotent Decision job", async () => {
-		const {state, graph, estimates} = fixture();
+	it("records one canonical attempt start and schedules it idempotently", async () => {
+		const {state} = fixture();
 		const policy = protectedPreferencePolicy(state);
-		const projection = buildBacklogTriageProjection({
-			workState: state,
-			graph,
-			policy,
-			asOf: "2026-09-30T10:00:00.000Z",
-			estimates,
-		});
-		const candidate = projection.candidates.find(
-			(entry) => entry.changeId === "CHG-feature",
-		);
-		const context = {workState: state, projection};
+		const context = mutableDecisionSelectionContext(state, policy);
+		const command = context.command("CHG-feature");
 		const authorizationRequests = [];
-		const runtime = createDecisionAttentionSelectionRuntime({
-			loadCurrentContext: () => context,
+		const coordinator = new ProjectCoordinator(process.cwd(), {
+			executionPolicy: "unattended",
+			generationId: "decision-start-test",
+		});
+		let runs = 0;
+		let markRun;
+		const ran = new Promise((resolve) => {
+			markRun = resolve;
+		});
+		const runtime = createDecisionStartRuntime({
+			coordinator,
+			loadCurrentContext: context.load,
 			authorize(request) {
 				authorizationRequests.push(request);
 				return true;
 			},
-		});
-		const command = selectionCommand(projection, candidate);
-		const receipt = await runtime.execute({
-			command,
-			authority: selectionAuthority(),
-		});
-
-		assert.equal(receipt.protocolVersion, "1.0.0");
-		assert.equal(receipt.binding.changeId, "CHG-feature");
-		assert.equal(receipt.binding.changeRevisionId, candidate.changeRevisionId);
-		assert.equal(receipt.binding.projectionDigest, projection.projectionDigest);
-		assert.equal(receipt.binding.triagePolicyDigest, policy.policyDigest);
-		assert.equal(receipt.authority.authenticationEvidenceId, "auth:decision-selector");
-		assert.equal(authorizationRequests.length, 1);
-		assert.equal(
-			authorizationRequests[0].binding.triageCandidateDigest,
-			candidate.candidateDigest,
-		);
-		assert.ok(receipt.conflictRefs.includes("change:CHG-feature"));
-		assert.ok(receipt.conflictRefs.includes("source:src/shared.ts"));
-		assert.doesNotThrow(() => assertDecisionAttentionSelectionReceipt(receipt));
-
-		const repeated = await runtime.execute({
-			command,
-			authority: selectionAuthority(),
-		});
-		assert.equal(repeated.selectionId, receipt.selectionId);
-		assert.equal(repeated.decisionJobId, receipt.decisionJobId);
-		assert.equal(authorizationRequests.length, 1);
-
-		const coordinator = new ProjectCoordinator(process.cwd(), {
-			executionPolicy: "unattended",
-			generationId: "decision-selection-test",
-		});
-		let runs = 0;
-		const executor = {
-			recover: () => undefined,
-			run(input) {
-				runs += 1;
-				assert.equal(input.candidate.candidateDigest, candidate.candidateDigest);
-				assert.equal(input.selection.selectionId, receipt.selectionId);
-				return {selectionId: input.selection.selectionId};
+			appendAttempt: context.appendAttempt,
+			now: () => "2026-09-30T10:00:01.000Z",
+			executor: {
+				recover: () => undefined,
+				run(input) {
+					runs += 1;
+					const persisted = context.load().workState.changes
+						.find((change) => change.changeId === input.changeId)
+						?.loopAttempts.some(
+							(attempt) => attempt.operationId === input.attemptOperationId,
+						);
+					assert.equal(persisted, true);
+					markRun(input);
+					return input.attemptOperationId;
+				},
 			},
-		};
-		const first = await scheduleDecisionAttentionJob({
-			coordinator,
-			selection: receipt,
-			loadCurrentContext: () => context,
-			executor,
 		});
-		const replay = await scheduleDecisionAttentionJob({
-			coordinator,
-			selection: repeated,
-			loadCurrentContext: () => context,
-			executor,
+		const [started, concurrentReplay] = await Promise.all([
+			runtime.start({command, authority: selectionAuthority()}),
+			runtime.start({command, authority: selectionAuthority()}),
+		]);
+		assert.deepEqual(concurrentReplay, started);
+		const execution = await ran;
+		assert.deepEqual(Object.keys(started), ["attemptOperationId"]);
+		assert.equal(execution.attemptOperationId, started.attemptOperationId);
+		assert.equal(execution.changeId, "CHG-feature");
+		assert.equal(context.appended.length, 1);
+		const attempt = context.appended[0];
+		assert.equal(attempt.operationId, started.attemptOperationId);
+		assert.equal(attempt.body.kind, "loop.attempt_started");
+		assert.equal(attempt.body.payload.loop, "decision");
+		assert.equal(attempt.body.payload.changeRevisionId, command.changeRevisionId);
+		assert.match(attempt.body.payload.privateAttemptDigest, /^sha256:[0-9a-f]{64}$/u);
+		assert.equal(
+			attempt.body.authorityBinding.authenticationEvidenceId,
+			"auth:decision-selector",
+		);
+		assert.ok(
+			authorizationRequests.length >= 1 && authorizationRequests.length <= 2,
+		);
+		const authorizationCount = authorizationRequests.length;
+		assert.deepEqual(Object.keys(authorizationRequests[0]).sort(), [
+			"action",
+			"authority",
+			"changeId",
+			"changeRevisionId",
+			"commandDigest",
+			"projectionDigest",
+		]);
+		assert.equal(
+			authorizationRequests[0].projectionDigest,
+			command.expectedProjectionDigest,
+		);
+
+		const replay = await runtime.start({
+			command,
+			authority: selectionAuthority(),
 		});
-		assert.deepEqual(replay, first);
+		assert.deepEqual(replay, started);
+		assert.equal(context.appended.length, 1);
+		assert.equal(authorizationRequests.length, authorizationCount);
 		assert.equal(runs, 1);
 		coordinator.close();
 
 		const restartedCoordinator = new ProjectCoordinator(process.cwd(), {
 			executionPolicy: "unattended",
-			generationId: "decision-selection-restart-test",
+			generationId: "decision-start-recovery-test",
 		});
-		const recovered = await scheduleDecisionAttentionJob({
+		let markRecovered;
+		const recovered = new Promise((resolve) => {
+			markRecovered = resolve;
+		});
+		const restarted = createDecisionStartRuntime({
 			coordinator: restartedCoordinator,
-			selection: receipt,
-			loadCurrentContext: () => context,
+			loadCurrentContext: context.load,
+			authorize: () => {
+				throw new Error("canonical replay must not reauthorize");
+			},
+			appendAttempt: () => {
+				throw new Error("canonical replay must not append");
+			},
 			executor: {
-				recover: () => ({status: "completed", result: first}),
+				recover(input) {
+					markRecovered(input);
+					return {status: "completed", result: input.attemptOperationId};
+				},
 				run() {
-					throw new Error("recovered Decision job must not rerun");
+					throw new Error("recovered Decision attempt must not rerun");
 				},
 			},
 		});
-		assert.deepEqual(recovered, first);
+		assert.deepEqual(
+			await restarted.start({command, authority: selectionAuthority()}),
+			started,
+		);
+		assert.equal((await recovered).attemptOperationId, started.attemptOperationId);
 		restartedCoordinator.close();
+	});
 
-		const serviceRoot = await mkdtemp(join(tmpdir(), "codewiki-selection-service-"));
+	it("resolves trusted caller authority before starting through remote service", async () => {
+		const {state} = fixture();
+		const policy = protectedPreferencePolicy(state);
+		const context = mutableDecisionSelectionContext(state, policy);
+		const command = context.command("CHG-feature");
+		const serviceRoot = await mkdtemp(join(tmpdir(), "codewiki-decision-start-"));
 		let service;
 		let client;
 		let remoteRuns = 0;
+		let markRun;
+		const ran = new Promise((resolve) => {
+			markRun = resolve;
+		});
 		try {
 			service = await startProjectCoordinatorService(serviceRoot, {
-				generationId: "decision-selection-service-test",
-				decisionAttentionSelection: {
-					async selectAndSchedule(input) {
-						if (input.caller.supervision !== "approved") {
+				generationId: "decision-start-service-test",
+				decisionStart: {
+					resolveAuthority(caller) {
+						if (caller.supervision !== "approved") {
 							throw new DecisionAttentionSelectionError({
 								code: "forbidden",
 								message: "Approved user supervision is required.",
 							});
 						}
-						assert.equal(input.caller.clientId, "pi:decision-selector");
-						assert.equal(input.caller.clientKind, "pi");
-						const started = await selectAndScheduleDecisionAttentionJob({
-							selectionRuntime: runtime,
-							command: input.command,
-							authority: selectionAuthority(),
-							coordinator: input.coordinator,
-							loadCurrentContext: () => context,
-							executor: {
-								recover: () => undefined,
-								run(execution) {
-									remoteRuns += 1;
-									return execution.selection.selectionId;
-								},
-							},
-						});
-						return started.selection;
+						assert.equal(caller.clientId, "pi:decision-selector");
+						assert.equal(caller.clientKind, "pi");
+						return selectionAuthority();
+					},
+					loadCurrentContext: context.load,
+					authorize: () => true,
+					appendAttempt: context.appendAttempt,
+					executor: {
+						recover: () => undefined,
+						run(input) {
+							remoteRuns += 1;
+							markRun(input);
+							return input.attemptOperationId;
+						},
 					},
 				},
 			});
@@ -780,11 +845,9 @@ describe("authenticated exact-revision Decision attention selection", () => {
 				kind: "pi",
 				supervision: "approved",
 			});
-			const remote = await client.selectDecision(command);
-			assert.equal(remote.selectionId, receipt.selectionId);
-			assert.equal(remote.decisionJobId, receipt.decisionJobId);
-			const remoteReplay = await client.selectDecision(command);
-			assert.equal(remoteReplay.selectionId, remote.selectionId);
+			const started = await client.selectDecision(command);
+			assert.equal((await ran).attemptOperationId, started.attemptOperationId);
+			assert.deepEqual(await client.selectDecision(command), started);
 			assert.equal(remoteRuns, 1);
 			await client.disconnect();
 			client = await connectProjectCoordinatorClient(serviceRoot, {
@@ -808,100 +871,106 @@ describe("authenticated exact-revision Decision attention selection", () => {
 		}
 	});
 
-	it("serializes selected Decision jobs whose exact scope conflicts", async () => {
-		const {state, graph, estimates} = fixture();
+	it("fails closed when canonical Decision start capabilities are unavailable", async () => {
+		const {state} = fixture();
 		const policy = protectedPreferencePolicy(state);
-		const projection = buildBacklogTriageProjection({
-			workState: state,
-			graph,
-			policy,
-			asOf: "2026-09-30T10:00:00.000Z",
-			estimates,
+		const context = mutableDecisionSelectionContext(state, policy);
+		const serviceRoot = await mkdtemp(join(tmpdir(), "codewiki-decision-unavailable-"));
+		const service = await startProjectCoordinatorService(serviceRoot, {
+			generationId: "decision-start-unavailable-test",
 		});
-		const context = {workState: state, projection};
-		const runtime = createDecisionAttentionSelectionRuntime({
-			loadCurrentContext: () => context,
-			authorize: () => true,
+		const client = await connectProjectCoordinatorClient(serviceRoot, {
+			clientId: "pi:decision-selector",
+			kind: "pi",
+			supervision: "approved",
 		});
-		const selected = await Promise.all(
-			["CHG-feature", "CHG-security"].map((changeId) => {
-				const candidate = projection.candidates.find(
-					(entry) => entry.changeId === changeId,
-				);
-				return runtime.execute({
-					command: selectionCommand(projection, candidate),
-					authority: selectionAuthority(),
-				});
-			}),
-		);
-		assert.ok(
-			selected.every((receipt) =>
-				receipt.conflictRefs.includes("source:src/shared.ts"),
-			),
-		);
+		try {
+			await assert.rejects(
+				client.selectDecision(context.command("CHG-feature")),
+				(error) =>
+					error.status === 503 &&
+					error.message === "decision_attention_selection_unavailable",
+			);
+		} finally {
+			await client.disconnect().catch(() => undefined);
+			await service.close().catch(() => undefined);
+			await rm(serviceRoot, {recursive: true, force: true});
+		}
+	});
 
+	it("serializes canonical Decision attempts whose revision scopes conflict", async () => {
+		const {state} = fixture();
+		const policy = protectedPreferencePolicy(state);
+		const context = mutableDecisionSelectionContext(state, policy);
 		const coordinator = new ProjectCoordinator(process.cwd(), {
 			executionPolicy: "unattended",
-			generationId: "decision-selection-conflict-test",
+			generationId: "decision-start-conflict-test",
 			maxConcurrentJobs: 2,
 		});
 		let releaseFirst;
 		const firstGate = new Promise((resolve) => {
 			releaseFirst = resolve;
 		});
+		let finishAll;
+		const finished = new Promise((resolve) => {
+			finishAll = resolve;
+		});
 		const starts = [];
-		const first = scheduleDecisionAttentionJob({
+		let completions = 0;
+		const runtime = createDecisionStartRuntime({
 			coordinator,
-			selection: selected[0],
-			loadCurrentContext: () => context,
+			loadCurrentContext: context.load,
+			authorize: () => true,
+			appendAttempt: context.appendAttempt,
 			executor: {
 				recover: () => undefined,
 				async run(input) {
-					starts.push(input.selection.binding.changeId);
-					await firstGate;
-					return input.selection.selectionId;
+					starts.push(input.changeId);
+					if (input.changeId === "CHG-feature") await firstGate;
+					completions += 1;
+					if (completions === 2) finishAll();
+					return input.attemptOperationId;
 				},
 			},
 		});
-		const second = scheduleDecisionAttentionJob({
-			coordinator,
-			selection: selected[1],
-			loadCurrentContext: () => context,
-			executor: {
-				recover: () => undefined,
-				run(input) {
-					starts.push(input.selection.binding.changeId);
-					return input.selection.selectionId;
-				},
+		await runtime.start({
+			command: context.command("CHG-feature"),
+			authority: selectionAuthority(),
+		});
+		await runtime.start({
+			command: context.command("CHG-security"),
+			authority: {
+				...selectionAuthority(),
+				authenticationEvidenceId: "auth:decision-selector:second",
 			},
 		});
 		await new Promise((resolve) => setImmediate(resolve));
 		assert.deepEqual(starts, ["CHG-feature"]);
 		releaseFirst();
-		await Promise.all([first, second]);
+		await finished;
+		await new Promise((resolve) => setImmediate(resolve));
 		assert.deepEqual(starts, ["CHG-feature", "CHG-security"]);
 		coordinator.close();
 	});
 
-	it("rejects stale, unauthenticated, denied, unsupported, and tampered selection", async () => {
-		const {state, graph} = fixture();
+	it("rejects stale, unauthenticated, denied, conflicting, and extra input", async () => {
+		const {state} = fixture();
 		const policy = protectedPreferencePolicy(state);
-		const projection = buildBacklogTriageProjection({
-			workState: state,
-			graph,
-			policy,
-			asOf: "2026-09-30T10:00:00.000Z",
+		const context = mutableDecisionSelectionContext(state, policy);
+		const coordinator = new ProjectCoordinator(process.cwd(), {
+			executionPolicy: "unattended",
+			generationId: "decision-start-rejection-test",
 		});
-		const candidate = projection.candidates[0];
-		const context = {workState: state, projection};
-		const runtime = createDecisionAttentionSelectionRuntime({
-			loadCurrentContext: () => context,
+		const runtime = createDecisionStartRuntime({
+			coordinator,
+			loadCurrentContext: context.load,
 			authorize: () => true,
+			appendAttempt: context.appendAttempt,
+			executor: {recover: () => undefined, run: () => undefined},
 		});
-		const command = selectionCommand(projection, candidate);
-
+		const command = context.command("CHG-feature");
 		await assert.rejects(
-			runtime.execute({
+			runtime.start({
 				command: {
 					...command,
 					expectedProjectionDigest: `sha256:${"f".repeat(64)}`,
@@ -911,95 +980,82 @@ describe("authenticated exact-revision Decision attention selection", () => {
 			(error) => error.code === "conflict" && /projection is stale/.test(error.message),
 		);
 		await assert.rejects(
-			runtime.execute({
-				command: {
-					...command,
-					expectedProjectConfigDigest: `sha256:${"e".repeat(64)}`,
-				},
-				authority: selectionAuthority(),
-			}),
-			(error) =>
-				error.code === "conflict" && /project config is stale/.test(error.message),
-		);
-		await assert.rejects(
-			runtime.execute({
-				command: {
-					...command,
-					expectedTriageCandidateDigest: `sha256:${"d".repeat(64)}`,
-				},
-				authority: selectionAuthority(),
-			}),
-			(error) =>
-				error.code === "conflict" &&
-				/triage candidate digest is stale/.test(error.message),
-		);
-		const driftedProjection = buildBacklogTriageProjection({
-			workState: state,
-			graph,
-			policy,
-			asOf: "2026-09-30T10:00:01.000Z",
-		});
-		let contextLoads = 0;
-		const driftingRuntime = createDecisionAttentionSelectionRuntime({
-			loadCurrentContext() {
-				contextLoads += 1;
-				return contextLoads === 1
-					? context
-					: {workState: state, projection: driftedProjection};
-			},
-			authorize: () => true,
-		});
-		await assert.rejects(
-			driftingRuntime.execute({command, authority: selectionAuthority()}),
-			(error) => error.code === "conflict" && /projection is stale/.test(error.message),
-		);
-		await assert.rejects(
-			runtime.execute({
+			runtime.start({
 				command,
 				authority: {...selectionAuthority(), authenticationEvidenceId: ""},
 			}),
 			/requires authentication Evidence/,
 		);
-		const denied = createDecisionAttentionSelectionRuntime({
-			loadCurrentContext: () => context,
-			authorize: () => false,
+		const beforeAuthorization = context.load();
+		const driftedProjection = buildBacklogTriageProjection({
+			workState: beforeAuthorization.workState,
+			graph: projectAlignmentGraph(beforeAuthorization.workState),
+			policy,
+			asOf: "2026-09-30T10:00:01.000Z",
+		});
+		let contextLoads = 0;
+		const drifting = createDecisionStartRuntime({
+			coordinator,
+			loadCurrentContext() {
+				contextLoads += 1;
+				return contextLoads === 1
+					? beforeAuthorization
+					: {
+							workState: beforeAuthorization.workState,
+							projection: driftedProjection,
+						};
+			},
+			authorize: () => true,
+			appendAttempt: () => {
+				throw new Error("drifted selection must not append");
+			},
+			executor: {recover: () => undefined, run: () => undefined},
 		});
 		await assert.rejects(
-			denied.execute({command, authority: selectionAuthority()}),
+			drifting.start({command, authority: selectionAuthority()}),
+			(error) => error.code === "conflict" && /projection is stale/.test(error.message),
+		);
+		const denied = createDecisionStartRuntime({
+			coordinator,
+			loadCurrentContext: context.load,
+			authorize: () => false,
+			appendAttempt: context.appendAttempt,
+			executor: {recover: () => undefined, run: () => undefined},
+		});
+		await assert.rejects(
+			denied.start({command, authority: selectionAuthority()}),
 			(error) => error.code === "forbidden",
 		);
 		assert.throws(
 			() => parseDecisionAttentionSelectionCommand({...command, rank: 1}),
 			/unsupported field rank/,
 		);
-
-		const receipt = await runtime.execute({
-			command,
-			authority: selectionAuthority(),
-		});
-		await assert.rejects(
-			runtime.execute({
-				command,
-				authority: {
-					...selectionAuthority(),
-					actorId: "different-selector",
-					principalRef: "identity:different-selector",
-				},
-			}),
-			(error) =>
-				error.code === "conflict" && /idempotencyKey was already used/.test(error.message),
-		);
 		assert.throws(
 			() =>
-				assertDecisionAttentionSelectionReceipt({
-					...receipt,
-					binding: {
-						...receipt.binding,
-						triageCandidateDigest: `sha256:${"e".repeat(64)}`,
-					},
+				parseDecisionAttentionSelectionCommand({
+					...command,
+					expectedWorkStateDigest: state.workStateDigest,
 				}),
-			/command digest is invalid|id does not match/,
+			/unsupported field expectedWorkStateDigest/,
 		);
+
+		const started = await runtime.start({command, authority: selectionAuthority()});
+		const otherCandidate = context.candidate("CHG-security");
+		assert.ok(otherCandidate);
+		await assert.rejects(
+			runtime.start({
+				command: {
+					...selectionCommand(context.load().projection, otherCandidate),
+					idempotencyKey: command.idempotencyKey,
+				},
+				authority: selectionAuthority(),
+			}),
+			(error) =>
+				error.code === "conflict" &&
+				/idempotencyKey was already used/.test(error.message),
+		);
+		assert.equal(context.appended[0].operationId, started.attemptOperationId);
+		coordinator.close();
 	});
 });
 

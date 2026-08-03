@@ -454,6 +454,9 @@ function reduceLoopAttemptStarted(
 		operationId: operation.operationId,
 		loop: payload.loop,
 		changeRevisionId: payload.changeRevisionId,
+		...(payload.privateAttemptDigest
+			? {privateAttemptDigest: payload.privateAttemptDigest}
+			: {}),
 		status: "active",
 		candidateOperationIds: [],
 		currentCandidateId: null,

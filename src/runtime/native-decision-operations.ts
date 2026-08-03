@@ -4,6 +4,7 @@ import type {
 	CanonicalChangeOperation,
 	CanonicalInlineSemanticArtifact,
 	ChangeOperationKind,
+	OperationId,
 } from "../change-trace/contracts.ts";
 import {createNextChangeOperation} from "../change-trace/builder.ts";
 import {reduceChangeOperation} from "../change-trace/reduce-operation.ts";
@@ -35,6 +36,7 @@ import type {DecisionRuntimeRoute} from "../decision/exit/runtime.ts";
 
 export interface CreateNativeDecisionOperationsInput {
 	readonly state: ChangeWorkState;
+	readonly attemptOperationId: OperationId;
 	readonly baseSnapshot: BaseSnapshot;
 	readonly authorityBinding: AuthorityBinding;
 	readonly recordedAt: string;
@@ -58,7 +60,7 @@ export interface NativeDecisionOperationSequence {
 export function createNativeDecisionOperationSequence(
 	input: CreateNativeDecisionOperationsInput,
 ): NativeDecisionOperationSequence {
-	const changeRevisionId = assertInput(input);
+	const attempt = assertInput(input);
 	const candidateBinding = inlineSemanticArtifact(
 		input.candidate.id,
 		input.candidate.schemaVersion,
@@ -107,12 +109,6 @@ export function createNativeDecisionOperationSequence(
 		operations.push(operation);
 		return operation;
 	};
-	const attempt = append("loop.attempt_started", {
-		loop: "decision",
-		changeRevisionId,
-		loopProtocolDigest: decisionProtocolDigest(input.policy),
-		routeId: "decision-native-v1",
-	});
 	append("decision.candidate_recorded", {
 		attemptOperationId: attempt.operationId,
 		candidate: candidateBinding,
@@ -184,11 +180,32 @@ export function createNativeDecisionOperationSequence(
 	}) as unknown as NativeDecisionOperationSequence;
 }
 
-function assertInput(input: CreateNativeDecisionOperationsInput): Sha256Digest {
+function assertInput(
+	input: CreateNativeDecisionOperationsInput,
+): ChangeWorkState["loopAttempts"][number] {
 	const changeRevisionId = activeChangeRevisionId(input.state);
+	const attempt = input.state.loopAttempts.find(
+		(entry) => entry.operationId === input.attemptOperationId,
+	);
+	const attemptOperation = input.state.operations.find(
+		(operation) => operation.operationId === input.attemptOperationId,
+	);
+	if (
+		!attempt ||
+		attempt.loop !== "decision" ||
+		attempt.status !== "active" ||
+		attempt.changeRevisionId !== changeRevisionId ||
+		!attempt.privateAttemptDigest ||
+		attemptOperation?.body.kind !== "loop.attempt_started" ||
+		!attemptOperation.body.authorityBinding.authenticationEvidenceId
+	) {
+		throw new Error(
+			"Native Decision operations require the exact authenticated canonical Decision attempt.",
+		);
+	}
 	assertDecisionArtifactIdentity(input, changeRevisionId);
 	assertResultEvidenceAvailable(input.report, input.evidenceRecords);
-	return changeRevisionId;
+	return attempt;
 }
 
 function activeChangeRevisionId(state: ChangeWorkState): Sha256Digest {
@@ -283,20 +300,9 @@ function assertRuntimeRouteIdentity(route: DecisionRuntimeRoute): void {
 	}
 }
 
-function idFromDigest(prefix: string, digest: string): string {
+function idFromDigest(...values: [string, string]): string {
+	const [prefix, digest] = values;
 	return `${prefix}:${digest.slice("sha256:".length)}`;
-}
-
-function decisionProtocolDigest(policy: ResolvedExitPolicy): Sha256Digest {
-	return canonicalJsonDigest({
-		protocol: "codewiki.native-decision-runtime@1.0.0",
-		catalogDigest: policy.catalogDigest,
-		bindings: policy.bindings.map((binding) => ({
-			checkId: binding.checkId,
-			checkVersion: binding.checkVersion,
-			checkDigest: binding.checkDigest,
-		})),
-	});
 }
 
 function operationTimestamp(base: string, offset: number): string {
@@ -348,6 +354,7 @@ export interface CommitNativeDecisionOperationSequenceInput {
 	readonly replayPolicy: ReplayAdmissionPolicy;
 	readonly authorityBinding: AuthorityBinding;
 	readonly changeId: string;
+	readonly attemptOperationId: OperationId;
 	readonly expectedTeamSnapshotDigest: Sha256Digest;
 	readonly expectedWorkStateDigest: Sha256Digest;
 	readonly recordedAt: string;
@@ -411,6 +418,7 @@ export async function commitNativeDecisionOperationSequence(
 	}
 	const sequence = createNativeDecisionOperationSequence({
 		state: change,
+		attemptOperationId: input.attemptOperationId,
 		baseSnapshot: {
 			remoteStateHead: observation.teamSnapshot.remoteStateHead,
 			sourceHead: observation.teamSnapshot.protectedSourceHead,

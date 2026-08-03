@@ -28,6 +28,9 @@ import {
 import {
 	assertValidCanonicalChangeOperation,
 	createInitialProjectWorkState,
+	createNextChangeOperation,
+	pushSynchronizedStateBatch,
+	reduceChangeOperation,
 	synchronizeGitState,
 } from "../../src/change-trace/index.ts";
 import {
@@ -137,16 +140,44 @@ function projectSnapshotFor(state) {
 	};
 }
 
-describe("native Decision canonical operation sequence", () => {
+function startDecisionAttempt(input) {
+	const operation = createNextChangeOperation(input.change, {
+		changeId: input.change.changeId,
+		kind: "loop.attempt_started",
+		baseSnapshot: input.baseSnapshot,
+		authorityBinding: authorityBinding({
+			authenticationEvidenceId: "auth:native-decision-selection",
+		}),
+		recordedAt: input.recordedAt,
+		payload: {
+			loop: "decision",
+			changeRevisionId: input.change.currentRevision.revisionId,
+			loopProtocolDigest: digest("7"),
+			routeId: "decision-selected-v2",
+			privateAttemptDigest: digest("9"),
+		},
+	});
+	return {
+		operation,
+		change: reduceChangeOperation(input.change, operation, {planningEpochs: []}),
+	};
+}
+
+describe("native Decision canonical operation continuation", () => {
 	it("records exact Candidate-to-Route artifacts as one replayable parent chain", () => {
 		const opened = openProposedChange(
 			createInitialProjectWorkState(),
 			"CHG-native-decision-operations",
 		);
-		const change = opened.state.changes[0];
-		const artifacts = nativeDecisionArtifacts(change);
+		const started = startDecisionAttempt({
+			change: opened.state.changes[0],
+			baseSnapshot: baseSnapshotFor(opened.state),
+			recordedAt: "2026-07-30T14:59:00.000Z",
+		});
+		const artifacts = nativeDecisionArtifacts(started.change);
 		const sequence = createNativeDecisionOperationSequence({
-			state: change,
+			state: started.change,
+			attemptOperationId: started.operation.operationId,
 			baseSnapshot: baseSnapshotFor(opened.state),
 			authorityBinding: authorityBinding(),
 			recordedAt: "2026-07-30T15:00:00.000Z",
@@ -156,7 +187,6 @@ describe("native Decision canonical operation sequence", () => {
 		assert.deepEqual(
 			sequence.operations.map((operation) => operation.body.kind),
 			[
-				"loop.attempt_started",
 				"decision.candidate_recorded",
 				"loop.exit_policy_recorded",
 				"check.result_recorded",
@@ -172,7 +202,7 @@ describe("native Decision canonical operation sequence", () => {
 		);
 		const accepted = reduceBatch(
 			opened.state,
-			sequence.operations,
+			[started.operation, ...sequence.operations],
 			gitObject("b"),
 		);
 		assert.equal(
@@ -185,11 +215,11 @@ describe("native Decision canonical operation sequence", () => {
 		assert.equal(routeOperation.body.payload.route, "planning");
 		assert.equal(routeOperation.body.payload.exitReportId, sequence.exitReportId);
 		const artifactOperations = [
-			[sequence.operations[1], "candidate", artifacts.candidate],
-			[sequence.operations[2], "policy", artifacts.policy],
-			[sequence.operations[3], "result", artifacts.report.checkResults[0]],
-			[sequence.operations[4], "report", artifacts.report],
-			[sequence.operations[5], "runtimeRoute", artifacts.route],
+			[sequence.operations[0], "candidate", artifacts.candidate],
+			[sequence.operations[1], "policy", artifacts.policy],
+			[sequence.operations[2], "result", artifacts.report.checkResults[0]],
+			[sequence.operations[3], "report", artifacts.report],
+			[sequence.operations[4], "runtimeRoute", artifacts.route],
 		];
 		for (const [operation, field, expected] of artifactOperations) {
 			const inline = operation.body.payload[field];
@@ -212,11 +242,16 @@ describe("native Decision canonical operation sequence", () => {
 			createInitialProjectWorkState(),
 			"CHG-native-decision-inline-evidence",
 		);
-		const change = opened.state.changes[0];
-		const artifacts = nativeDecisionArtifacts(change);
-		const evidence = sourceEvidence(change, artifacts.candidate);
+		const started = startDecisionAttempt({
+			change: opened.state.changes[0],
+			baseSnapshot: baseSnapshotFor(opened.state),
+			recordedAt: "2026-07-30T15:03:00.000Z",
+		});
+		const artifacts = nativeDecisionArtifacts(started.change);
+		const evidence = sourceEvidence(started.change, artifacts.candidate);
 		const sequence = createNativeDecisionOperationSequence({
-			state: change,
+			state: started.change,
+			attemptOperationId: started.operation.operationId,
 			baseSnapshot: baseSnapshotFor(opened.state),
 			authorityBinding: authorityBinding(),
 			recordedAt: "2026-07-30T15:04:00.000Z",
@@ -239,15 +274,20 @@ describe("native Decision canonical operation sequence", () => {
 			createInitialProjectWorkState(),
 			"CHG-native-decision-inline-size",
 		);
-		const change = opened.state.changes[0];
+		const started = startDecisionAttempt({
+			change: opened.state.changes[0],
+			baseSnapshot: baseSnapshotFor(opened.state),
+			recordedAt: "2026-07-30T15:04:00.000Z",
+		});
 		assert.throws(
 			() =>
 				createNativeDecisionOperationSequence({
-					state: change,
+					state: started.change,
+					attemptOperationId: started.operation.operationId,
 					baseSnapshot: baseSnapshotFor(opened.state),
 					authorityBinding: authorityBinding(),
 					recordedAt: "2026-07-30T15:04:30.000Z",
-					...nativeDecisionArtifacts(change, "x".repeat(270_000)),
+					...nativeDecisionArtifacts(started.change, "x".repeat(270_000)),
 					evidenceRecords: [],
 				}),
 			/exceeds 262144 bytes/,
@@ -259,16 +299,21 @@ describe("native Decision canonical operation sequence", () => {
 			createInitialProjectWorkState(),
 			"CHG-native-decision-inline-tamper",
 		);
-		const change = opened.state.changes[0];
+		const started = startDecisionAttempt({
+			change: opened.state.changes[0],
+			baseSnapshot: baseSnapshotFor(opened.state),
+			recordedAt: "2026-07-30T15:04:45.000Z",
+		});
 		const sequence = createNativeDecisionOperationSequence({
-			state: change,
+			state: started.change,
+			attemptOperationId: started.operation.operationId,
 			baseSnapshot: baseSnapshotFor(opened.state),
 			authorityBinding: authorityBinding(),
 			recordedAt: "2026-07-30T15:05:00.000Z",
-			...nativeDecisionArtifacts(change),
+			...nativeDecisionArtifacts(started.change),
 			evidenceRecords: [],
 		});
-		const tampered = structuredClone(sequence.operations[1]);
+		const tampered = structuredClone(sequence.operations[0]);
 		tampered.body.payload.candidate.artifact.content.rationale = "Tampered.";
 		tampered.body.payload.candidate.digest = canonicalJsonDigest(
 			tampered.body.payload.candidate.artifact,
@@ -279,7 +324,7 @@ describe("native Decision canonical operation sequence", () => {
 		);
 	});
 
-	it("admits and verifies one exact inline Decision chain through synchronized Git", async () => {
+	it("admits and verifies one exact inline Decision continuation through synchronized Git", async () => {
 		const fixture = await createTwoCloneFixture();
 		try {
 			const initial = createInitialProjectWorkState();
@@ -300,7 +345,28 @@ describe("native Decision canonical operation sequence", () => {
 				currentProject: project,
 				policy: allowAllReplayPolicy,
 			});
-			const change = observed.workState.changes[0];
+			const started = startDecisionAttempt({
+				change: observed.workState.changes[0],
+				baseSnapshot: baseSnapshotFor(observed.workState),
+				recordedAt: "2026-07-30T15:06:00.000Z",
+			});
+			const startPush = await pushSynchronizedStateBatch({
+				repoRoot: fixture.cloneB,
+				remote: "origin",
+				state: observed.workState,
+				records: [started.operation],
+				policy: allowAllReplayPolicy,
+				observation: observed,
+			});
+			assert.equal(startPush.pushResult.status, "accepted");
+			const selected = await synchronizeGitState({
+				repoRoot: fixture.cloneB,
+				remote: "origin",
+				repositoryIdentity,
+				currentProject: project,
+				policy: allowAllReplayPolicy,
+			});
+			const change = selected.workState.changes[0];
 			const artifacts = nativeDecisionArtifacts(change);
 			const receipt = await commitNativeDecisionOperationSequence({
 				repoRoot: fixture.cloneB,
@@ -310,8 +376,9 @@ describe("native Decision canonical operation sequence", () => {
 				replayPolicy: allowAllReplayPolicy,
 				authorityBinding: authorityBinding(),
 				changeId: change.changeId,
-				expectedTeamSnapshotDigest: observed.teamSnapshot.snapshotDigest,
-				expectedWorkStateDigest: observed.workState.workStateDigest,
+				attemptOperationId: started.operation.operationId,
+				expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
+				expectedWorkStateDigest: selected.workState.workStateDigest,
 				recordedAt: "2026-07-30T15:07:00.000Z",
 				candidate: artifacts.candidate,
 				exitPolicy: artifacts.policy,
@@ -342,8 +409,9 @@ describe("native Decision canonical operation sequence", () => {
 					replayPolicy: allowAllReplayPolicy,
 					authorityBinding: authorityBinding(),
 					changeId: change.changeId,
-					expectedTeamSnapshotDigest: observed.teamSnapshot.snapshotDigest,
-					expectedWorkStateDigest: observed.workState.workStateDigest,
+					attemptOperationId: started.operation.operationId,
+					expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
+					expectedWorkStateDigest: selected.workState.workStateDigest,
 					recordedAt: "2026-07-30T15:07:00.000Z",
 					candidate: artifacts.candidate,
 					exitPolicy: artifacts.policy,
@@ -358,23 +426,49 @@ describe("native Decision canonical operation sequence", () => {
 		}
 	});
 
+	it("rejects Decision continuation without its canonical attempt", () => {
+		const opened = openProposedChange(
+			createInitialProjectWorkState(),
+			"CHG-native-decision-missing-attempt",
+		);
+		const change = opened.state.changes[0];
+		assert.throws(
+			() =>
+				createNativeDecisionOperationSequence({
+					state: change,
+					attemptOperationId: digest("0"),
+					baseSnapshot: baseSnapshotFor(opened.state),
+					authorityBinding: authorityBinding(),
+					recordedAt: "2026-07-30T15:08:00.000Z",
+					...nativeDecisionArtifacts(change),
+					evidenceRecords: [],
+				}),
+			/exact authenticated canonical Decision attempt/,
+		);
+	});
+
 	it("rejects a stale Candidate revision before operation creation", () => {
 		const opened = openProposedChange(
 			createInitialProjectWorkState(),
 			"CHG-native-decision-stale",
 		);
-		const change = opened.state.changes[0];
-		const artifacts = nativeDecisionArtifacts(change);
+		const started = startDecisionAttempt({
+			change: opened.state.changes[0],
+			baseSnapshot: baseSnapshotFor(opened.state),
+			recordedAt: "2026-07-30T15:09:00.000Z",
+		});
+		const artifacts = nativeDecisionArtifacts({
+			...started.change,
+			currentRevision: {
+				...started.change.currentRevision,
+				revisionId: digest("f"),
+			},
+		});
 		assert.throws(
 			() =>
 				createNativeDecisionOperationSequence({
-					state: {
-						...change,
-						currentRevision: {
-							...change.currentRevision,
-							revisionId: digest("f"),
-						},
-					},
+					state: started.change,
+					attemptOperationId: started.operation.operationId,
 					baseSnapshot: baseSnapshotFor(opened.state),
 					authorityBinding: authorityBinding(),
 					recordedAt: "2026-07-30T15:10:00.000Z",

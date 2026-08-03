@@ -276,7 +276,7 @@ edges:
     label: exact Decision-attention candidates for authenticated user selection only
   - from: project_runtime
     to: scheduler
-    label: creates one native revision-bound Decision job only after exact selection; otherwise selects compatible Planning, Implementation, Integration, and effect jobs
+    label: appends one canonical Decision attempt start after exact selection and schedules its operation ID; otherwise selects compatible Planning, Implementation, Integration, and effect jobs
   - from: project_runtime
     to: protocols
     label: binds exact versions

@@ -1,8 +1,6 @@
 import { randomUUID } from "node:crypto";
-import type {
-	DecisionAttentionSelectionCommand,
-	DecisionAttentionSelectionReceipt,
-} from "../changes/triage/selection.ts";
+import type {DecisionAttentionSelectionCommand} from "../changes/triage/selection.ts";
+import type {DecisionStartResult} from "../runtime/decision-attention-selection.ts";
 import {
 	connectEnsuredProjectCoordinatorClient,
 	type EnsureProjectCoordinatorServiceOptions,
@@ -46,7 +44,7 @@ export interface PiProjectServiceClientProvider {
 			"mode" | "sessionManager"
 		>;
 		readonly command: DecisionAttentionSelectionCommand;
-	}): Promise<DecisionAttentionSelectionReceipt>;
+	}): Promise<DecisionStartResult>;
 	react(
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,

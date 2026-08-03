@@ -81,6 +81,7 @@ export interface LoopAttemptProjection {
 	readonly operationId: OperationId;
 	readonly loop: "decision" | "planning" | "implementation";
 	readonly changeRevisionId: Sha256Digest;
+	readonly privateAttemptDigest?: Sha256Digest;
 	readonly status: LoopAttemptProjectionStatus;
 	readonly candidateOperationIds: readonly OperationId[];
 	readonly currentCandidateId: string | null;
