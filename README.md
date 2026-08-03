@@ -134,6 +134,8 @@ Backlog is a generated intake view over persisted pending Change revisions; subm
 
 Change Trace Protocol `2.0.0` makes every revision a complete content-addressed semantic input rather than a skeletal issue summary. Revision identity binds current and desired state, rationale and alternatives, classification and affected targets, impact, Knowledge propagation, observable outcomes, delivery constraints, Evidence expectations, safety semantics, acceptance requirements, and any normalized defect profile. Missing assurance remains explicitly absent or unknown; intake claims never become risk or Check authority.
 
+Decision Candidate schema `2.0.0` is materialized only from native `ProjectWorkState` plus the producer's strict disposition/rationale proposal. Runtime derives the current revision, active relationships and overlap accounting, WorkState/Knowledge/source/config/policy refs, and Candidate identity; callers cannot submit observed bases, validation state, authority, or append bindings. Native continuation admission reconstructs this exact Candidate before any canonical write.
+
 One Change owns one append-only JSONL dossier:
 
 ```text

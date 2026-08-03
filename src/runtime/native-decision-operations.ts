@@ -10,7 +10,11 @@ import {createNextChangeOperation} from "../change-trace/builder.ts";
 import {reduceChangeOperation} from "../change-trace/reduce-operation.ts";
 import type {GitCommandRunner} from "../change-trace/git-command.ts";
 import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
-import {changeById, type ChangeWorkState} from "../change-trace/state.ts";
+import {
+	changeById,
+	type ChangeWorkState,
+	type ProjectWorkState,
+} from "../change-trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	pushSynchronizedStateBatch,
@@ -26,21 +30,25 @@ import {
 	type ResolvedExitPolicy,
 } from "../loop-exit/contracts.ts";
 import {assertValidExitReport} from "../loop-exit/results.ts";
-import type {LoopCandidate} from "../loop-exit/identity.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../utils/canonical-json.ts";
+import {
+	createDecisionCandidate,
+	type DecisionCandidate,
+} from "../decision/exit/candidate.ts";
 import type {DecisionRuntimeRoute} from "../decision/exit/runtime.ts";
 
 export interface CreateNativeDecisionOperationsInput {
-	readonly state: ChangeWorkState;
+	readonly state: ProjectWorkState;
+	readonly changeId: string;
 	readonly attemptOperationId: OperationId;
 	readonly baseSnapshot: BaseSnapshot;
 	readonly authorityBinding: AuthorityBinding;
 	readonly recordedAt: string;
-	readonly candidate: LoopCandidate<"decision">;
+	readonly candidate: DecisionCandidate;
 	readonly policy: ResolvedExitPolicy;
 	readonly evidenceRecords: readonly EvidenceRecord[];
 	readonly report: ExitReport;
@@ -60,7 +68,7 @@ export interface NativeDecisionOperationSequence {
 export function createNativeDecisionOperationSequence(
 	input: CreateNativeDecisionOperationsInput,
 ): NativeDecisionOperationSequence {
-	const attempt = assertInput(input);
+	const {attempt, change} = assertInput(input);
 	const candidateBinding = inlineSemanticArtifact(
 		input.candidate.id,
 		input.candidate.schemaVersion,
@@ -91,12 +99,15 @@ export function createNativeDecisionOperationSequence(
 		input.route.schemaVersion,
 		input.route,
 	);
-	let projected = input.state;
+	let projected = change;
 	const operations: CanonicalChangeOperation[] = [];
 	const append = <K extends ChangeOperationKind>(
-		kind: K,
-		payload: Parameters<typeof createNextChangeOperation<K>>[1]["payload"],
+		...values: [
+			K,
+			Parameters<typeof createNextChangeOperation<K>>[1]["payload"],
+		]
 	): CanonicalChangeOperation<K> => {
+		const [kind, payload] = values;
 		const operation = createNextChangeOperation(projected, {
 			changeId: projected.changeId,
 			kind,
@@ -161,7 +172,7 @@ export function createNativeDecisionOperationSequence(
 		route: input.route.route,
 		reasonCode: input.route.reasonCode,
 		runtimeRoute: runtimeRouteBinding,
-		targetChangeId: input.state.changeId,
+		targetChangeId: input.changeId,
 	});
 	append("loop.attempt_ended", {
 		attemptOperationId: attempt.operationId,
@@ -180,14 +191,19 @@ export function createNativeDecisionOperationSequence(
 	}) as unknown as NativeDecisionOperationSequence;
 }
 
-function assertInput(
-	input: CreateNativeDecisionOperationsInput,
-): ChangeWorkState["loopAttempts"][number] {
-	const changeRevisionId = activeChangeRevisionId(input.state);
-	const attempt = input.state.loopAttempts.find(
+function assertInput(input: CreateNativeDecisionOperationsInput): {
+	readonly attempt: ChangeWorkState["loopAttempts"][number];
+	readonly change: ChangeWorkState;
+} {
+	const change = changeById(input.state, input.changeId);
+	if (!change) {
+		throw new Error(`Native Decision Change ${input.changeId} is absent.`);
+	}
+	const changeRevisionId = activeChangeRevisionId(change);
+	const attempt = change.loopAttempts.find(
 		(entry) => entry.operationId === input.attemptOperationId,
 	);
-	const attemptOperation = input.state.operations.find(
+	const attemptOperation = change.operations.find(
 		(operation) => operation.operationId === input.attemptOperationId,
 	);
 	if (
@@ -205,7 +221,7 @@ function assertInput(
 	}
 	assertDecisionArtifactIdentity(input, changeRevisionId);
 	assertResultEvidenceAvailable(input.report, input.evidenceRecords);
-	return attempt;
+	return {attempt, change};
 }
 
 function activeChangeRevisionId(state: ChangeWorkState): Sha256Digest {
@@ -216,9 +232,9 @@ function activeChangeRevisionId(state: ChangeWorkState): Sha256Digest {
 }
 
 function assertDecisionArtifactIdentity(
-	input: CreateNativeDecisionOperationsInput,
-	changeRevisionId: Sha256Digest,
+	...values: [CreateNativeDecisionOperationsInput, Sha256Digest]
 ): void {
+	const [input, changeRevisionId] = values;
 	if (
 		input.candidate.loop !== "decision" ||
 		input.policy.loop !== "decision" ||
@@ -227,6 +243,19 @@ function assertDecisionArtifactIdentity(
 		throw new Error("Native Decision operations require Decision artifacts.");
 	}
 	assertCandidateIdentity(input.candidate);
+	const expectedCandidate = createDecisionCandidate({
+		state: input.state,
+		changeId: input.changeId,
+		proposal: {
+			disposition: input.candidate.content.disposition,
+			rationale: input.candidate.content.rationale,
+		},
+	});
+	if (expectedCandidate.digest !== input.candidate.digest) {
+		throw new Error(
+			"Native Decision Candidate is not the exact Runtime materialization for current WorkState.",
+		);
+	}
 	assertValidResolvedExitPolicy(input.policy);
 	assertValidExitReport(input.report, input.policy);
 	assertRuntimeRouteIdentity(input.route);
@@ -242,15 +271,15 @@ function assertDecisionArtifactIdentity(
 	if (!input.candidate.observedBase.canonicalRefs.includes(changeRevisionId)) {
 		throw new Error("Native Decision Candidate does not bind current Change revision.");
 	}
-	if (input.candidate.observedBase.workStateDigest !== input.state.stateDigest) {
+	if (input.candidate.observedBase.workStateDigest !== input.state.workStateDigest) {
 		throw new Error("Native Decision Candidate WorkState is stale.");
 	}
 }
 
 function assertResultEvidenceAvailable(
-	report: ExitReport,
-	evidenceRecords: readonly EvidenceRecord[],
+	...values: [ExitReport, readonly EvidenceRecord[]]
 ): void {
+	const [report, evidenceRecords] = values;
 	const recordedEvidence = new Set(evidenceRecords.map((record) => record.evidenceId));
 	for (const result of report.checkResults) {
 		for (const evidenceId of result.evidenceRecordIds) {
@@ -262,19 +291,18 @@ function assertResultEvidenceAvailable(
 }
 
 function requiredResultBinding(
-	bindings: ReadonlyMap<string, CanonicalInlineSemanticArtifact>,
-	checkId: string,
+	...values: [ReadonlyMap<string, CanonicalInlineSemanticArtifact>, string]
 ): CanonicalInlineSemanticArtifact {
+	const [bindings, checkId] = values;
 	const binding = bindings.get(checkId);
 	if (!binding) throw new Error(`Native Decision Result ${checkId} has no binding.`);
 	return binding;
 }
 
 function inlineSemanticArtifact(
-	id: string,
-	schemaVersion: string,
-	artifact: unknown,
+	...values: [string, string, unknown]
 ): CanonicalInlineSemanticArtifact {
+	const [id, schemaVersion, artifact] = values;
 	const normalized = toCanonicalJsonValue(artifact);
 	return toCanonicalJsonValue({
 		id,
@@ -284,7 +312,7 @@ function inlineSemanticArtifact(
 	}) as unknown as CanonicalInlineSemanticArtifact;
 }
 
-function assertCandidateIdentity(candidate: LoopCandidate<"decision">): void {
+function assertCandidateIdentity(candidate: DecisionCandidate): void {
 	const {id, digest, ...body} = candidate;
 	const expectedDigest = canonicalJsonDigest(body);
 	const expectedId = `candidate:decision:${expectedDigest.slice("sha256:".length)}`;
@@ -305,7 +333,8 @@ function idFromDigest(...values: [string, string]): string {
 	return `${prefix}:${digest.slice("sha256:".length)}`;
 }
 
-function operationTimestamp(base: string, offset: number): string {
+function operationTimestamp(...values: [string, number]): string {
+	const [base, offset] = values;
 	const epoch = Date.parse(base);
 	if (!Number.isFinite(epoch)) throw new Error("Native Decision recordedAt is invalid.");
 	return new Date(epoch + offset).toISOString();
@@ -319,13 +348,21 @@ function sortedEvidence(values: readonly EvidenceRecord[]): EvidenceRecord[] {
 		}
 		byId.set(value.evidenceId, value);
 	}
-	return [...byId.values()].sort((left, right) =>
-		left.evidenceId.localeCompare(right.evidenceId),
-	);
+	return [...byId.values()].sort(compareEvidence);
 }
 
 function sortedResults(values: readonly CheckResult[]): CheckResult[] {
-	return [...values].sort((left, right) => left.checkId.localeCompare(right.checkId));
+	return [...values].sort(compareResults);
+}
+
+function compareEvidence(...values: [EvidenceRecord, EvidenceRecord]): number {
+	const [left, right] = values;
+	return left.evidenceId.localeCompare(right.evidenceId);
+}
+
+function compareResults(...values: [CheckResult, CheckResult]): number {
+	const [left, right] = values;
+	return left.checkId.localeCompare(right.checkId);
 }
 
 function operationResultStatus(
@@ -358,7 +395,7 @@ export interface CommitNativeDecisionOperationSequenceInput {
 	readonly expectedTeamSnapshotDigest: Sha256Digest;
 	readonly expectedWorkStateDigest: Sha256Digest;
 	readonly recordedAt: string;
-	readonly candidate: LoopCandidate<"decision">;
+	readonly candidate: DecisionCandidate;
 	readonly exitPolicy: ResolvedExitPolicy;
 	readonly evidenceRecords: readonly EvidenceRecord[];
 	readonly report: ExitReport;
@@ -417,7 +454,8 @@ export async function commitNativeDecisionOperationSequence(
 		throw new Error(`Native Decision Change ${input.changeId} is absent.`);
 	}
 	const sequence = createNativeDecisionOperationSequence({
-		state: change,
+		state: observation.workState,
+		changeId: input.changeId,
 		attemptOperationId: input.attemptOperationId,
 		baseSnapshot: {
 			remoteStateHead: observation.teamSnapshot.remoteStateHead,

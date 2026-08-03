@@ -1,10 +1,6 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {changeContentDigest} from "../../src/changes/digest.ts";
-import {createChangeRecord} from "../../src/changes/records.ts";
-import {parseDecisionCandidateProposal} from "../../src/decision/candidate-proposal.ts";
-import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
 import {materializeDecisionApprovalReceipt} from "../../src/decision/exit/evidence.ts";
 import {
 	DECISION_MODEL_CHECK_REQUEST_PROTOCOL,
@@ -25,7 +21,11 @@ import {
 } from "../../src/loop-exit/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
 import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
-import {acceptedChangeFixture} from "../helpers/accepted-change.mjs";
+import {
+	nativeDecisionCandidate,
+	nativeDecisionRevision,
+	nativeDecisionState,
+} from "../helpers/native-decision.mjs";
 import {
 	createTestUserStandard,
 	standardRefsFor,
@@ -33,8 +33,6 @@ import {
 
 const USER_STANDARD = createTestUserStandard();
 const USER_STANDARDS = [USER_STANDARD];
-const WORK_STATE_DIGEST = `sha256:${"a".repeat(64)}`;
-const KNOWLEDGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const MODEL_CHECK_IDS = ["intention_validated", "recommendation_justified"];
 const digest = (character) => `sha256:${character.repeat(64)}`;
 const SECURITY_SCANNER_TYPES = [
@@ -109,74 +107,38 @@ function protectedConfig(customChecks) {
 	});
 }
 
-function fixture(changeOverrides = {}) {
-	const change = acceptedChangeFixture({
-		id: "CHG-decision-model",
-		...changeOverrides,
+function fixture(revisionOptions = {}) {
+	const changeId = "CHG-decision-model";
+	const revision = nativeDecisionRevision({changeId, ...revisionOptions});
+	const candidate = nativeDecisionCandidate({
+		state: nativeDecisionState([{changeId, revision}]),
+		changeId,
+		rationale: "Approve grounded exact revision.",
 	});
-	const record = createChangeRecord(change);
-	const candidate = createDecisionCandidate({
-		record,
-		workState: {
-			schemaVersion: 1,
-			snapshotDigest: WORK_STATE_DIGEST,
-			changeIds: [change.id],
-			sprintIds: [],
-			workItemIds: [],
-			assignmentIds: [],
-			changes: [
-				{
-					id: change.id,
-					traceId: `TRACE-${change.id}`,
-					record,
-					approval: {status: "pending"},
-					planningStatus: "unplanned",
-					realizationStatus: "not_started",
-					outcomeStatus: "unobserved",
-					sprintIds: [],
-					workItemIds: [],
-					assignmentIds: [],
-					blockers: [],
-				},
-			],
-			sprints: [],
-			workItems: [],
-			assignments: [],
-			blockers: [],
-			sources: {traceCount: 1, recordCount: 1, changeTraceCount: 1},
-		},
-		proposal: parseDecisionCandidateProposal({
-			disposition: "approve",
-			rationale: "Approve grounded exact revision.",
-		}),
-		observedBase: {
-			workStateDigest: WORK_STATE_DIGEST,
-			knowledgeSnapshotDigest: KNOWLEDGE_DIGEST,
-			canonicalRefs: [
-				`change:${change.id}`,
-				`change:${change.id}:revision:${change.revision}`,
-				changeContentDigest(change),
-			],
-		},
-	});
+	const semantic = candidate.content.revision;
 	const catalog = createCheckCatalog();
 	const resolved = resolveExitPolicy({
 		loop: "decision",
 		candidateDigest: candidate.digest,
 		changes: [
 			{
-				changeId: change.id,
-				revision: change.revision,
-				digest: changeContentDigest(change),
-				kind: change.classification.kind,
-				type: change.classification.type,
-				risk: change.safety.risk,
-				affectedLayers: [...change.classification.affectedLayers],
+				changeId,
+				revision: semantic.ordinal,
+				digest: semantic.revisionId,
+				kind: semantic.classification.kind,
+				type: semantic.classification.type,
+				risk:
+					semantic.safety.risk === "low"
+						? "low"
+						: semantic.safety.risk === "moderate"
+							? "medium"
+							: "high",
+				affectedLayers: [...semantic.classification.affectedLayers],
 			},
 		],
 		projectTraits: [],
 		technologies: [],
-		paths: [...change.classification.targetRefs],
+		paths: [...semantic.classification.targetRefs],
 	});
 	const bindings = resolved.bindings.filter((binding) =>
 		MODEL_CHECK_IDS.includes(binding.checkId),
@@ -194,10 +156,12 @@ function fixture(changeOverrides = {}) {
 		catalog,
 		policy,
 		subject: {
-			changeRefs: [`change:${change.id}`],
-			changeRevisionDigests: [changeContentDigest(change)],
+			changeRefs: [`change:${changeId}`],
+			changeRevisionDigests: [semantic.revisionId],
 			candidateDigest: candidate.digest,
-			acceptanceRequirementIds: [],
+			acceptanceRequirementIds: semantic.acceptanceRequirements.map(
+				(requirement) => requirement.id,
+			),
 		},
 	};
 }
@@ -368,11 +332,16 @@ describe("native Decision Model Checks", () => {
 			changes: [
 				{
 					changeId: setup.subject.changeRefs[0].slice("change:".length),
-					revision: revision.revision,
-					digest: setup.candidate.content.validation.revisionDigest,
+					revision: revision.ordinal,
+					digest: revision.revisionId,
 					kind: revision.classification.kind,
 					type: revision.classification.type,
-					risk: revision.safety.risk,
+					risk:
+						revision.safety.risk === "low"
+							? "low"
+							: revision.safety.risk === "moderate"
+								? "medium"
+								: "high",
 					affectedLayers: [...revision.classification.affectedLayers],
 				},
 			],
@@ -443,11 +412,11 @@ describe("native Decision Model Checks", () => {
 
 	it("runs classified security review as an asserted dependency-bound challenge", async () => {
 		const setup = fixture({
-			question: "How should authorization protect personal data?",
+			title: "How should authorization protect personal data?",
 			currentState: "Authorization boundaries are implicit.",
 			desiredState: "Explicit access control protects personal data.",
 			rationale: "Prevent authorization bypass.",
-			risk: "medium",
+			risk: "moderate",
 			invariants: ["Unauthorized actors cannot read personal data."],
 			failureModes: ["An authorization bypass exposes personal data."],
 			safetyBoundary: "Authenticated actor to protected record boundary.",

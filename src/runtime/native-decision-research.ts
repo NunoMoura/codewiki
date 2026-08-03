@@ -294,8 +294,7 @@ function normalizedCandidateSubject(subject: EvidenceSubject): EvidenceSubject {
 	if (
 		!subject.candidateDigest ||
 		subject.changeRefs.length !== 1 ||
-		subject.changeRevisionDigests.length !== 1 ||
-		subject.acceptanceRequirementIds.length !== 0
+		subject.changeRevisionDigests.length !== 1
 	) {
 		throw new Error("Native Decision research subject is invalid.");
 	}

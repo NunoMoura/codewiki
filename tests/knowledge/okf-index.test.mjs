@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Clean-cut Decision Candidate schema to `2.0.0` over native ProjectWorkState. Runtime accepts only strict disposition/rationale proposal content, derives current revision, active canonical relationships, overlap accounting, and WorkState/Knowledge/source/config/policy bindings, and owns Candidate identity. Legacy ChangeRecord input, caller-supplied observed bases, copied validation/provenance/estimate fields, duplicate grounding refs, and unresolved summaries are removed without aliases. Decision checks and research Evidence now bind canonical revision and requirement identities directly; continuation admission reconstructs the Candidate and rejects stale or expanded artifacts before mutation. End-to-end selected-job host wiring remains pending.",
+					},
+					{
+						kind: "Update",
 						text: "Advanced Change Trace Protocol to `2.0.0` and clean-cut the skeletal revision shape. One immutable normalized revision now binds intent and alternatives, Runtime-owned source-family classification, impact, Knowledge propagation, observable outcomes, delivery constraints, source/proof Evidence expectations, safety/risk/failure/rollback semantics, acceptance requirements, and any optional defect profile. Native intake preserves exact source meaning, keeps unsupported assurance fields empty or unknown, and cannot promote source claims into revision risk. Triage, overlap, conflict serialization, deduplication, graph projection, replay, and frozen fixtures now consume the nested semantic contract directly; no legacy revision parser remains.",
 					},
 					{

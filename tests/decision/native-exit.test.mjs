@@ -1,9 +1,7 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {changeContentDigest} from "../../src/changes/digest.ts";
-import {createChangeRecord} from "../../src/changes/records.ts";
-import {parseDecisionCandidateProposal} from "../../src/decision/candidate-proposal.ts";
+import {createInitialProjectWorkState} from "../../src/change-trace/index.ts";
 import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
 import {createDecisionCodeExecutors} from "../../src/decision/exit/code-executors.ts";
 import {
@@ -14,10 +12,12 @@ import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
 import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
-import {acceptedChangeFixture} from "../helpers/accepted-change.mjs";
+import {
+	nativeDecisionCandidate,
+	nativeDecisionRevision,
+	nativeDecisionState,
+} from "../helpers/native-decision.mjs";
 
-const WORK_STATE_DIGEST = `sha256:${"a".repeat(64)}`;
-const KNOWLEDGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const CODE_CHECK_IDS = [
 	"active_change_overlap_accounted",
 	"change_kind_classified",
@@ -33,79 +33,38 @@ const CODE_CHECK_IDS = [
 	"user_value_clear",
 ];
 
-function workState(records) {
-	return {
-		schemaVersion: 1,
-		snapshotDigest: WORK_STATE_DIGEST,
-		changeIds: records.map((record) => record.change.id),
-		sprintIds: [],
-		workItemIds: [],
-		assignmentIds: [],
-		changes: records.map((record) => ({
-			id: record.change.id,
-			traceId: `TRACE-${record.change.id}`,
-			record,
-			approval: {status: "pending"},
-			planningStatus: "unplanned",
-			realizationStatus: "not_started",
-			outcomeStatus: "unobserved",
-			sprintIds: [],
-			workItemIds: [],
-			assignmentIds: [],
-			blockers: [],
-		})),
-		sprints: [],
-		workItems: [],
-		assignments: [],
-		blockers: [],
-		sources: {traceCount: records.length, recordCount: records.length, changeTraceCount: records.length},
-	};
-}
-
-function decisionCandidate(
-	change,
-	records = [createChangeRecord(change)],
-	disposition = "approve",
-) {
-	const record = records.find((entry) => entry.change.id === change.id);
-	return createDecisionCandidate({
-		record,
-		workState: workState(records),
-		proposal: parseDecisionCandidateProposal({
-			disposition,
-			rationale: "Apply exact grounded semantic disposition.",
-		}),
-		observedBase: {
-			workStateDigest: WORK_STATE_DIGEST,
-			knowledgeSnapshotDigest: KNOWLEDGE_DIGEST,
-			canonicalRefs: [
-				`change:${change.id}`,
-				`change:${change.id}:revision:${change.revision}`,
-				changeContentDigest(change),
-			],
-		},
-	});
+function stateWithRevision(changeId, revision = nativeDecisionRevision({changeId})) {
+	return nativeDecisionState([{changeId, revision}]);
 }
 
 function policyFor(candidate, checkIds = CODE_CHECK_IDS) {
 	const catalog = createCheckCatalog();
+	const revision = candidate.content.revision;
 	const resolved = resolveExitPolicy({
 		loop: "decision",
 		candidateDigest: candidate.digest,
 		changes: [
 			{
-				changeId: "CHG-native-decision",
-				revision: candidate.content.revision.revision,
-				digest: candidate.content.validation.revisionDigest,
-				kind: candidate.content.revision.classification.kind,
-				type: candidate.content.revision.classification.type,
-				risk: candidate.content.revision.safety.risk,
-				affectedLayers: [...candidate.content.revision.classification.affectedLayers],
+				changeId: candidate.content.changeId,
+				revision: revision.ordinal,
+				digest: revision.revisionId,
+				kind: revision.classification.kind === "unknown" ? "harden" : revision.classification.kind,
+				type:
+					revision.classification.type === "unknown"
+						? "security_change"
+						: revision.classification.type,
+				risk:
+					revision.safety.risk === "low"
+						? "low"
+						: revision.safety.risk === "moderate"
+							? "medium"
+							: "high",
+				affectedLayers: [...revision.classification.affectedLayers],
 			},
 		],
 		projectTraits: [],
 		technologies: [],
-		paths: [...candidate.content.revision.classification.targetRefs],
+		paths: [...revision.classification.targetRefs],
 	});
 	const bindings = resolved.bindings.filter((binding) =>
 		checkIds.includes(binding.checkId),
@@ -122,23 +81,33 @@ function policyFor(candidate, checkIds = CODE_CHECK_IDS) {
 }
 
 describe("native Decision Candidate and Code Checks", () => {
-	it("materializes complete semantic revision and passes exact Code Checks", async () => {
-		const change = acceptedChangeFixture({id: "CHG-native-decision"});
-		const candidate = decisionCandidate(change);
+	it("materializes the exact native semantic revision and passes Code Checks", async () => {
+		const changeId = "CHG-native-decision";
+		const revision = nativeDecisionRevision({changeId});
+		const state = stateWithRevision(changeId, revision);
+		const candidate = nativeDecisionCandidate({state, changeId});
+
 		assert.equal(candidate.loop, "decision");
-		assert.equal(candidate.content.revision.intent.desiredState, change.intent.desiredState);
-		assert.equal(candidate.content.validation.revisionDigest, changeContentDigest(change));
-		assert.equal(candidate.content.groundingRefs.includes(change.evidence.sourceRefs[0]), true);
+		assert.equal(candidate.schemaVersion, "2.0.0");
+		assert.equal(candidate.content.changeId, changeId);
+		assert.equal(
+			candidate.content.revision.intent.desiredState,
+			revision.content.intent.desiredState,
+		);
+		assert.equal(candidate.content.revision.revisionId, revision.revisionId);
+		assert.equal(candidate.observedBase.workStateDigest, state.workStateDigest);
+		assert.equal(
+			candidate.observedBase.canonicalRefs.includes(revision.revisionId),
+			true,
+		);
 		assert.equal("authority" in candidate.content, false);
-		assert.equal("changeId" in candidate.content, false);
 		assert.equal(Object.isFrozen(candidate), true);
 
 		const {catalog, policy} = policyFor(candidate);
-		const runner = createLoopExitRunner({
+		const result = await createLoopExitRunner({
 			catalog,
 			executors: createDecisionCodeExecutors(catalog),
-		});
-		const result = await runner.run({candidate, policy});
+		}).run({candidate, policy});
 		assert.equal(result.report.status, "pass");
 		assert.equal(
 			result.report.checkResults.every((check) => check.status === "pass"),
@@ -146,12 +115,15 @@ describe("native Decision Candidate and Code Checks", () => {
 		);
 	});
 
-	it("fails closed through the complete native policy when required assurance is unavailable", async () => {
-		const change = acceptedChangeFixture({id: "CHG-native-decision"});
-		const candidate = decisionCandidate(change);
+	it("fails closed through the complete native policy when assurance is unavailable", async () => {
+		const changeId = "CHG-native-decision";
+		const candidate = nativeDecisionCandidate({
+			state: stateWithRevision(changeId),
+			changeId,
+		});
 		const native = await createDecisionExitRuntime().run({
 			candidate,
-			changeRef: "change:CHG-native-decision",
+			changeRef: `change:${changeId}`,
 		});
 		assert.equal(native.result.report.status, "indeterminate");
 		assert.equal(
@@ -172,17 +144,14 @@ describe("native Decision Candidate and Code Checks", () => {
 	});
 
 	it("derives terminal and waiting routes only after passing assurance", async () => {
-		const change = acceptedChangeFixture({id: "CHG-native-decision"});
+		const changeId = "CHG-native-decision";
+		const state = stateWithRevision(changeId);
 		for (const [disposition, expectedRoute] of [
 			["defer", "waiting"],
 			["reject", "complete"],
 			["withdraw", "withdrawn"],
 		]) {
-			const candidate = decisionCandidate(
-				change,
-				[createChangeRecord(change)],
-				disposition,
-			);
+			const candidate = nativeDecisionCandidate({state, changeId, disposition});
 			const {catalog, policy} = policyFor(candidate);
 			const result = await createLoopExitRunner({
 				catalog,
@@ -197,25 +166,34 @@ describe("native Decision Candidate and Code Checks", () => {
 	});
 
 	it("retains unaccounted overlap and incomplete Knowledge as native failures", async () => {
-		const change = acceptedChangeFixture({
-			id: "CHG-native-decision",
-			knowledgeTopicRefs: [],
-			knowledgePropagationRefs: [],
-		});
-		change.knowledge.noImpactRationale = undefined;
-		change.validation.validatedDigest = changeContentDigest(change);
-		const overlapping = createChangeRecord(
-			acceptedChangeFixture({
-				id: "CHG-overlap",
-				targetRefs: [...change.classification.targetRefs],
-			}),
-		);
-		const candidate = decisionCandidate(change, [
-			createChangeRecord(change),
-			overlapping,
+		const targetRefs = ["src/shared.ts"];
+		const state = nativeDecisionState([
+			{
+				changeId: "CHG-native-decision",
+				revision: nativeDecisionRevision({
+					changeId: "CHG-native-decision",
+					targetRefs,
+					topicRefs: [],
+					propagationRefs: [],
+				}),
+			},
+			{
+				changeId: "CHG-overlap",
+				revision: nativeDecisionRevision({
+					changeId: "CHG-overlap",
+					targetRefs,
+				}),
+			},
 		]);
+		const candidate = nativeDecisionCandidate({
+			state,
+			changeId: "CHG-native-decision",
+		});
 		assert.equal(candidate.content.activeOverlaps.length, 1);
-		assert.equal(candidate.content.activeOverlaps[0].accountedByRelationship, false);
+		assert.equal(
+			candidate.content.activeOverlaps[0].accountedByRelationship,
+			false,
+		);
 		const {catalog, policy} = policyFor(candidate, [
 			"active_change_overlap_accounted",
 			"knowledge_impact_accounted",
@@ -234,22 +212,61 @@ describe("native Decision Candidate and Code Checks", () => {
 		);
 	});
 
-	it("rejects a Candidate built against stale WorkState", () => {
-		const change = acceptedChangeFixture({id: "CHG-native-decision"});
-		const record = createChangeRecord(change);
+	it("preserves unknown intake classification and routes failed classification to repair", async () => {
+		const changeId = "CHG-native-unknown";
+		const revision = nativeDecisionRevision({
+			changeId,
+			kind: "unknown",
+			type: "unknown",
+			scope: "unknown",
+			risk: "unknown",
+		});
+		const candidate = nativeDecisionCandidate({
+			state: stateWithRevision(changeId, revision),
+			changeId,
+		});
+		assert.equal(candidate.content.revision.classification.kind, "unknown");
+		assert.equal(candidate.content.revision.safety.risk, "unknown");
+		const result = await createDecisionExitRuntime().run({
+			candidate,
+			changeRef: `change:${changeId}`,
+		});
+		assert.equal(
+			result.result.report.checkResults.find(
+				(check) => check.checkId === "change_kind_classified",
+			).status,
+			"fail",
+		);
+		assert.equal(result.result.report.status, "fail");
+		assert.equal(result.route.route, "repair");
+	});
+
+	it("rejects absent Changes and caller-owned Candidate bindings", () => {
 		assert.throws(
 			() =>
 				createDecisionCandidate({
-					record,
-					workState: workState([record]),
-					proposal: {disposition: "defer", rationale: "Await state refresh."},
-					observedBase: {
-						workStateDigest: `sha256:${"0".repeat(64)}`,
-						knowledgeSnapshotDigest: KNOWLEDGE_DIGEST,
-						canonicalRefs: ["change:CHG-native-decision:revision:1"],
+					state: createInitialProjectWorkState(),
+					changeId: "CHG-native-decision",
+					proposal: {
+						disposition: "defer",
+						rationale: "Await exact project state.",
 					},
 				}),
-			/observed WorkState digest does not match/,
+			/requires current non-withdrawn Change/,
+		);
+		const changeId = "CHG-native-decision";
+		assert.throws(
+			() =>
+				createDecisionCandidate({
+					state: stateWithRevision(changeId),
+					changeId,
+					proposal: {
+						disposition: "defer",
+						rationale: "Await exact project state.",
+						workStateDigest: `sha256:${"0".repeat(64)}`,
+					},
+				}),
+			/unsupported fields: workStateDigest/,
 		);
 	});
 });

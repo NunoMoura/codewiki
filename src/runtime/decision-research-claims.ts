@@ -643,7 +643,6 @@ function assertDecisionCandidateSubject(
 	if (
 		subject.changeRefs?.length !== 1 ||
 		subject.changeRevisionDigests?.length !== 1 ||
-		subject.acceptanceRequirementIds?.length !== 0 ||
 		subject.candidateDigest !== candidateDigest
 	) {
 		throw new Error(

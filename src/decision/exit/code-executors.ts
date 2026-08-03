@@ -1,10 +1,16 @@
+import type {ChangeRevisionContent} from "../../change-trace/contracts.ts";
 import type {CheckCatalog} from "../../loop-exit/catalog.ts";
 import type {
 	CheckExecutorObservation,
 	LoopCheckExecutor,
 	LoopCheckExecutorContext,
 } from "../../loop-exit/runner.ts";
-import type {DecisionCandidate, DecisionCandidateContent} from "./candidate.ts";
+import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
+import type {
+	DecisionCandidate,
+	DecisionCandidateContent,
+	DecisionSemanticRevision,
+} from "./candidate.ts";
 
 interface DecisionCodeEvaluation {
 	readonly satisfied: boolean;
@@ -24,12 +30,12 @@ const DECISION_CODE_EVALUATORS: Readonly<Record<string, DecisionCodeEvaluator>> 
 		approval_safety: () => satisfied(),
 		change_kind_classified: kindClassified,
 		change_revision_ready: (content) =>
-			content.validation.state === "valid" &&
-			content.validation.validatedRevision === content.revision.revision &&
-			content.validation.validatedDigest === content.validation.revisionDigest
+			content.revision.ordinal > 0 &&
+			canonicalJsonDigest(revisionContent(content.revision)) ===
+				content.revision.revisionId
 				? satisfied()
 				: unsatisfied(
-						"Change validation must bind the exact current revision and digest.",
+						"Decision Candidate must bind one valid canonical Change revision.",
 					),
 		cli_behavior_verified: (content) =>
 			hasText(content.revision.impact.compatibility) &&
@@ -40,9 +46,13 @@ const DECISION_CODE_EVALUATORS: Readonly<Record<string, DecisionCodeEvaluator>> 
 					),
 		current_state_grounded: (content) =>
 			content.revision.evidence.sourceRefs.length > 0 &&
-			content.groundingRefs.length > 0
+			[
+				...content.revision.classification.targetRefs,
+				...content.revision.knowledge.topicRefs,
+				...content.revision.knowledge.propagationRefs,
+			].length > 0
 				? satisfied()
-				: unsatisfied("Canonical source refs must ground current state."),
+				: unsatisfied("Canonical source and affected refs must ground current state."),
 		delivery_constraints_safe: deliveryConstraintsSafe,
 		dependency_risk_controlled: (content) =>
 			hasText(content.revision.impact.compatibility) &&
@@ -127,21 +137,21 @@ export function createDecisionCodeExecutors(
 					checkVersion: registration.check.version,
 					execution: {...registration.check.execution},
 					execute: (context: LoopCheckExecutorContext) =>
-						observation(context, evaluate),
+						observation({context, evaluate}),
 				},
 			];
 		},
 	);
 }
 
-function observation(
-	context: LoopCheckExecutorContext,
-	evaluate: DecisionCodeEvaluator,
-): CheckExecutorObservation {
-	const candidate = context.candidate as DecisionCandidate;
+function observation(input: {
+	readonly context: LoopCheckExecutorContext;
+	readonly evaluate: DecisionCodeEvaluator;
+}): CheckExecutorObservation {
+	const candidate = input.context.candidate as DecisionCandidate;
 	if (
 		candidate.loop !== "decision" ||
-		candidate.schemaVersion !== "1.0.0"
+		candidate.schemaVersion !== "2.0.0"
 	) {
 		return {
 			disposition: "unsatisfied",
@@ -149,7 +159,7 @@ function observation(
 			issueClass: "candidate_contract",
 		};
 	}
-	const result = evaluate(candidate.content);
+	const result = input.evaluate(candidate.content);
 	return result.satisfied
 		? {disposition: "satisfied"}
 		: {
@@ -162,8 +172,9 @@ function observation(
 function intentionUnderstood(
 	content: DecisionCandidateContent,
 ): DecisionCodeEvaluation {
-	const intent = content.revision.intent;
-	return [intent.question, intent.currentState, intent.desiredState, intent.rationale].every(
+	const revision = content.revision;
+	const intent = revision.intent;
+	return [revision.title, intent.currentState, intent.desiredState, intent.rationale].every(
 		hasText,
 	)
 		? satisfied()
@@ -183,10 +194,12 @@ function evidenceSufficient(
 			);
 }
 
-function minimumProofCount(risk: "low" | "medium" | "high"): number {
-	if (risk === "high") return 2;
-	if (risk === "medium") return 1;
-	return 0;
+function minimumProofCount(
+	risk: DecisionSemanticRevision["safety"]["risk"],
+): number {
+	if (risk === "low") return 0;
+	if (risk === "moderate") return 1;
+	return 2;
 }
 
 function knowledgeImpactAccounted(
@@ -217,7 +230,7 @@ function riskAndAlternatives(
 	if (!hasText(safety.rollbackPlan) || !hasText(safety.regressionPlan)) {
 		return unsatisfied("Medium/high risk requires rollback and regression plans.");
 	}
-	if (safety.risk === "medium") return satisfied();
+	if (safety.risk === "moderate") return satisfied();
 	return safety.invariants.length > 0 &&
 		hasText(safety.safetyBoundary) &&
 		hasText(safety.negativeTestPlan)
@@ -262,23 +275,25 @@ function securitySurfaceRequirements(
 function kindClassified(
 	content: DecisionCandidateContent,
 ): DecisionCodeEvaluation {
-	switch (content.revision.classification.kind) {
-		case "fix":
-			return DECISION_CODE_EVALUATORS.fix_reproducible(content);
-		case "harden":
-			return DECISION_CODE_EVALUATORS.hardening_boundaries_complete(content);
-		case "migrate":
-			return DECISION_CODE_EVALUATORS.migration_invariants_preserved(content);
-		case "remove":
-			return hasText(content.revision.safety.rollbackPlan)
-				? satisfied()
-				: unsatisfied("Removal requires a rollback plan.");
-		case "improve":
-		case "introduce":
-			return DECISION_CODE_EVALUATORS.improvement_outcome_observable(content);
-		default:
-			return unsatisfied("Decision Change kind is unsupported.");
+	const kind = content.revision.classification.kind;
+	if (kind === "fix") {
+		return DECISION_CODE_EVALUATORS.fix_reproducible(content);
 	}
+	if (kind === "harden") {
+		return DECISION_CODE_EVALUATORS.hardening_boundaries_complete(content);
+	}
+	if (kind === "migrate") {
+		return DECISION_CODE_EVALUATORS.migration_invariants_preserved(content);
+	}
+	if (kind === "remove") {
+		return hasText(content.revision.safety.rollbackPlan)
+			? satisfied()
+			: unsatisfied("Removal requires a rollback plan.");
+	}
+	if (kind === "improve" || kind === "introduce") {
+		return DECISION_CODE_EVALUATORS.improvement_outcome_observable(content);
+	}
+	return unsatisfied("Decision Change kind is unsupported.");
 }
 
 function deliveryConstraintsSafe(
@@ -300,6 +315,13 @@ function satisfied(): DecisionCodeEvaluation {
 
 function unsatisfied(finding: string): DecisionCodeEvaluation {
 	return {satisfied: false, finding};
+}
+
+function revisionContent(
+	revision: DecisionSemanticRevision,
+): ChangeRevisionContent {
+	const {ordinal: _ordinal, revisionId: _revisionId, ...content} = revision;
+	return content;
 }
 
 function hasText(value: string | undefined): boolean {

@@ -19,6 +19,7 @@ codewiki_test_patterns:
   - tests/changes/**
   - tests/helpers/accepted-change.mjs
   - tests/helpers/canonical-loop-events.mjs
+  - tests/helpers/native-decision.mjs
   - tests/helpers/proposed-change.mjs
 codewiki_trace_events:
   - decision.candidate_recorded
@@ -33,6 +34,7 @@ codewiki_source_map:
       - tests/changes/**
       - tests/helpers/accepted-change.mjs
       - tests/helpers/canonical-loop-events.mjs
+      - tests/helpers/native-decision.mjs
       - tests/helpers/proposed-change.mjs
     trace_events:
       - decision.candidate_recorded
@@ -119,17 +121,15 @@ Runtime loads repository facts. Callers cannot replace current Knowledge, trace,
 
 ## Candidate
 
-A semantic-session producer returns only a strict `DecisionCandidateProposal`: requested disposition and rationale. It cannot repeat or replace Runtime-owned Change, WorkState, Knowledge, authority, time, or append fields. Runtime combines that proposal with the exact persisted Change revision and current WorkState to materialize immutable `DecisionCandidateContent` containing:
+A semantic-session producer returns only a strict `DecisionCandidateProposal`: requested disposition and rationale. It cannot repeat or replace Runtime-owned Change, WorkState, Knowledge, authority, time, or append fields. Candidate schema `2.0.0` combines that proposal with native `ProjectWorkState` to materialize immutable `DecisionCandidateContent` containing:
 
-- complete normalized semantic revision and Runtime-observed revision-validation binding;
+- Runtime-owned Change ID;
+- exact current revision ordinal, content digest, and complete normalized semantic revision;
 - disposition request (`approve`, `reject`, `defer`, or `withdraw`) and rationale;
-- grounded current-state and Knowledge impact refs;
-- outcome, risks, alternatives, invariants, constraints, and questions;
-- canonical authored Change relationships;
-- active overlap facts with explicit relationship accounting;
-- concise unresolved fact codes.
+- active unsuperseded canonical Change relationships;
+- current shared-target overlap facts and the exact relationship IDs that account for them.
 
-Candidate identity binds this content to exact WorkState, Knowledge, source/Git when present, and canonical Change refs. Content does not contain approval receipt, actor identity, approval time, Check activation, Exit Report, or final Runtime route. Runtime materializes identity and authenticated disposition facts around accepted candidate content.
+Candidate identity separately binds this content to the exact WorkState digest, Knowledge digest, current Change tail/revision, protected source head, config, policy, and accepted remote state when present. Revision content already carries source/proof, Knowledge, outcome, risk, alternative, invariant, constraint, and requirement semantics, so Candidate does not copy validation, provenance, estimates, grounding refs, or unresolved summaries. It contains no approval receipt, actor identity, approval time, Check activation, Exit Report, or final Runtime route. Native continuation admission reconstructs the Candidate from current ProjectWorkState and rejects stale or caller-expanded content before mutation. Unknown classification or risk remains visible in Candidate content; Runtime activates conservative hardening/security/high-risk selectors for assurance coverage while `change_kind_classified` still fails, so fallback activation cannot fabricate classification success.
 
 ## Loop cycle
 

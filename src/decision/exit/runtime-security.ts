@@ -89,11 +89,11 @@ function decisionExitPolicy(
 		changes: [
 			{
 				changeId,
-				revision: candidate.content.revision.revision,
-				digest: candidate.content.validation.revisionDigest,
-				kind: candidate.content.revision.classification.kind,
-				type: candidate.content.revision.classification.type,
-				risk: candidate.content.revision.safety.risk,
+				revision: candidate.content.revision.ordinal,
+				digest: candidate.content.revision.revisionId,
+				kind: selectorKind(candidate.content.revision.classification.kind),
+				type: selectorType(candidate.content.revision.classification.type),
+				risk: selectorRisk(candidate.content.revision.safety.risk),
 				affectedLayers: [
 					...candidate.content.revision.classification.affectedLayers,
 				],
@@ -116,12 +116,12 @@ function securitySurfaceClassificationForCandidate(
 	const revision = candidate.content.revision;
 	return classifySecuritySurfaces({
 		changeId,
-		revision: revision.revision,
-		revisionDigest: candidate.content.validation.revisionDigest,
-		kind: revision.classification.kind,
-		type: revision.classification.type,
-		scope: revision.classification.scope,
-		risk: revision.safety.risk,
+		revision: revision.ordinal,
+		revisionDigest: revision.revisionId,
+		kind: selectorKind(revision.classification.kind),
+		type: selectorType(revision.classification.type),
+		scope: selectorScope(revision.classification.scope),
+		risk: selectorRisk(revision.safety.risk),
 		affectedLayers: revision.classification.affectedLayers,
 		targetRefs: revision.classification.targetRefs,
 		knowledgeRefs: [
@@ -142,7 +142,7 @@ function decisionSecuritySignals(
 	const revision = candidate.content.revision;
 	return [
 		...securityFields("intent", [
-			revision.intent.question,
+			revision.title,
 			revision.intent.currentState,
 			revision.intent.desiredState,
 			revision.intent.rationale,
@@ -177,6 +177,40 @@ function decisionSecuritySignals(
 			revision.safety.regressionPlan,
 		]),
 	];
+}
+
+function selectorKind(
+	kind: DecisionCandidate["content"]["revision"]["classification"]["kind"],
+): "fix" | "improve" | "harden" | "migrate" | "introduce" | "remove" {
+	return kind === "unknown" ? "harden" : kind;
+}
+
+function selectorType(
+	type: DecisionCandidate["content"]["revision"]["classification"]["type"],
+):
+	| "behavior_change"
+	| "architecture_change"
+	| "workflow_change"
+	| "incident_resolution"
+	| "security_change"
+	| "documentation_change"
+	| "dependency_change"
+	| "release_change" {
+	return type === "unknown" ? "security_change" : type;
+}
+
+function selectorScope(
+	scope: DecisionCandidate["content"]["revision"]["classification"]["scope"],
+): "product" | "system" | "source" | "documentation" | "configuration" | "runtime" {
+	return scope === "unknown" ? "system" : scope;
+}
+
+function selectorRisk(
+	risk: DecisionCandidate["content"]["revision"]["safety"]["risk"],
+): "low" | "medium" | "high" {
+	if (risk === "low") return "low";
+	if (risk === "moderate") return "medium";
+	return "high";
 }
 
 function securityFields(

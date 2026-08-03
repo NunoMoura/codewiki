@@ -144,9 +144,11 @@ export function decisionEvidenceSubject(
 	}
 	return toCanonicalJsonValue({
 		changeRefs: [changeRef],
-		changeRevisionDigests: [candidate.content.validation.revisionDigest],
+		changeRevisionDigests: [candidate.content.revision.revisionId],
 		candidateDigest: candidate.digest,
-		acceptanceRequirementIds: [],
+		acceptanceRequirementIds: candidate.content.revision.acceptanceRequirements.map(
+			(requirement) => requirement.id,
+		),
 	}) as unknown as EvidenceSubject;
 }
 
