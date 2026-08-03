@@ -30,17 +30,26 @@ import type {
 	CheckDefinition,
 } from "./contracts.ts";
 import {
+	ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL,
+	ATOMIC_SECURITY_SCANNER_CHECKS,
+} from "./security-scanner-checks.ts";
+import {
 	canonicalJsonDigest,
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "7.0.0";
+export const CHECK_CATALOG_VERSION = "8.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
 	"codewiki.model-check",
+	ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL.id,
 	"codewiki.custom-code.resource_usage_limit",
 ] as const;
+
+const ATOMIC_SECURITY_SCANNER_CHECK_IDS: ReadonlySet<string> = new Set(
+	ATOMIC_SECURITY_SCANNER_CHECKS.map((definition) => definition.checkId),
+);
 
 export type CheckAuthority = "kernel" | "project";
 
@@ -318,6 +327,26 @@ const CONDITIONAL_CHECKS = [
 const LOOP_SPECIFIC_CONDITIONAL_CHECKS = {
 	decision: [
 		[
+			"static_analysis_findings_absent",
+			"Static-analysis Evidence for the exact Candidate contains no findings and has complete coverage.",
+		],
+		[
+			"dependency_advisories_absent",
+			"Dependency-advisory Evidence for the exact Candidate contains no findings and uses a fresh advisory snapshot.",
+		],
+		[
+			"credential_exposure_absent",
+			"Secret-detection Evidence for the exact Candidate contains no credential-exposure findings and has complete coverage.",
+		],
+		[
+			"authorization_controls_verified",
+			"Authorization-test Evidence for the exact Candidate contains no control failures and has complete coverage.",
+		],
+		[
+			"persistence_safety_verified",
+			"Migration-test Evidence for the exact Candidate contains no persistence-safety failures and has complete coverage.",
+		],
+		[
 			"research_provenance_valid",
 			"Required research citations have exact provenance, freshness, source identity, and durable passage evidence.",
 		],
@@ -380,6 +409,11 @@ const EXTERNAL_CHECK_IDS = new Set([
 ]);
 
 const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
+	static_analysis_findings_absent: ["security_scanners_valid"],
+	dependency_advisories_absent: ["security_scanners_valid"],
+	credential_exposure_absent: ["security_scanners_valid"],
+	authorization_controls_verified: ["security_scanners_valid"],
+	persistence_safety_verified: ["security_scanners_valid"],
 	research_claims_supported: ["research_provenance_valid"],
 	security_privacy_reviewed: [
 		"security_surface_requirements_complete",
@@ -582,7 +616,7 @@ function kernelRegistration(
 ): CheckRegistration {
 	const [id, description, loops] = args;
 	const kind = checkExecutionKind(id);
-	const executionId = executionIdForKind(kind);
+	const executionId = executionIdForCheck(id, kind);
 	return {
 		check: {
 			id,
@@ -612,9 +646,13 @@ function checkExecutionKind(id: string): CheckDefinition["execution"]["kind"] {
 	return MODEL_CHECK_IDS.has(id) ? "model" : "code";
 }
 
-function executionIdForKind(
-	kind: CheckDefinition["execution"]["kind"],
+function executionIdForCheck(
+	...args: [string, CheckDefinition["execution"]["kind"]]
 ): (typeof CHECK_EXECUTOR_IDS)[number] {
+	const [id, kind] = args;
+	if (ATOMIC_SECURITY_SCANNER_CHECK_IDS.has(id)) {
+		return ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL.id;
+	}
 	return kind === "model" ? "codewiki.model-check" : "codewiki.code-check";
 }
 
@@ -648,7 +686,10 @@ function evidenceObligations(
 			}),
 		];
 	}
-	if (id === "security_scanners_valid") {
+	if (
+		id === "security_scanners_valid" ||
+		ATOMIC_SECURITY_SCANNER_CHECK_IDS.has(id)
+	) {
 		return [
 			obligation({
 				id: "scanner-command-execution",

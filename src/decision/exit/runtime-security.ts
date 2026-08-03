@@ -5,7 +5,9 @@ import type {ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
 import type {ProtectedCustomCheckConfigSnapshot} from "../../loop-exit/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../loop-exit/resolve-policy.ts";
 import type {LoopCheckExecutor} from "../../loop-exit/runner.ts";
+import {createAtomicSecurityScannerCheckExecutors} from "../../loop-exit/security-scanner-checks.ts";
 import type {SecurityScannerAdapter} from "../../loop-exit/security-scanners.ts";
+import {toCanonicalJsonValue} from "../../utils/canonical-json.ts";
 import {
 	classifySecuritySurfaces,
 	type SecuritySurfaceClassification,
@@ -51,6 +53,12 @@ export function prepareDecisionSecurityRuntime(
 		changeId,
 	);
 	const findingIntakeMaterials: ChangeIntakeMaterial[] = [];
+	const scannerSubject = input.scanContext
+		? (toCanonicalJsonValue({
+				...input.subject,
+				sourceTreeDigest: input.scanContext.sourceTreeDigest,
+			}) as unknown as EvidenceSubject)
+		: input.subject;
 	return {
 		policy: decisionExitPolicy(
 			input.candidate,
@@ -70,6 +78,11 @@ export function prepareDecisionSecurityRuntime(
 						recordIntakeMaterials(materials) {
 							findingIntakeMaterials.push(...materials);
 						},
+					}),
+					...createAtomicSecurityScannerCheckExecutors({
+						catalog: input.catalog,
+						loop: "decision",
+						subject: scannerSubject,
 					}),
 				]
 			: [],

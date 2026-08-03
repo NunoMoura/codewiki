@@ -459,6 +459,22 @@ describe("native Decision Model Checks", () => {
 		});
 
 		assert.equal(result.result.report.status, "pass");
+		const staticAnalysisResult = result.result.report.checkResults.find(
+			(check) => check.checkId === "static_analysis_findings_absent",
+		);
+		const authorizationResult = result.result.report.checkResults.find(
+			(check) => check.checkId === "authorization_controls_verified",
+		);
+		assert.equal(staticAnalysisResult.status, "pass");
+		assert.equal(authorizationResult.status, "pass");
+		assert.equal(staticAnalysisResult.evidenceRecordIds.length, 2);
+		assert.equal(authorizationResult.evidenceRecordIds.length, 2);
+		assert.deepEqual(
+			staticAnalysisResult.evidenceRecordIds.filter((evidenceId) =>
+				authorizationResult.evidenceRecordIds.includes(evidenceId),
+			),
+			[],
+		);
 		const securityRequest = requests.find(
 			(request) => request.check.id === "security_privacy_reviewed",
 		);
@@ -525,11 +541,62 @@ describe("native Decision Model Checks", () => {
 			).status,
 			"fail",
 		);
+		assert.equal(
+			scannerBlockedResult.result.report.checkResults.find(
+				(check) => check.checkId === "static_analysis_findings_absent",
+			).status,
+			"fail",
+		);
+		assert.equal(
+			scannerBlockedResult.result.report.checkResults.find(
+				(check) => check.checkId === "authorization_controls_verified",
+			).status,
+			"pass",
+		);
 		assert.equal(blockedModelCheckIds.includes("security_privacy_reviewed"), true);
 		assert.equal(scannerBlockedResult.securityFindingIntakeMaterials.length, 1);
 		assert.equal(
 			scannerBlockedResult.securityFindingIntakeMaterials[0].content.claimedSeverity,
 			"critical",
+		);
+
+		const incompleteScannerConfiguration = securityScannerConfiguration();
+		incompleteScannerConfiguration.adapters =
+			incompleteScannerConfiguration.adapters.filter(
+				(adapter) => adapter.scannerType !== "authorization_test",
+			);
+		const incompleteScannerRuntime = createDecisionExitRuntime({
+			securityScanners: incompleteScannerConfiguration,
+			modelChecks: {
+				route: route(),
+				transport: {
+					async execute(request) {
+						return {
+							status: "completed",
+							observedAt: "2026-07-28T12:01:30.000Z",
+							response: response(request),
+						};
+					},
+				},
+			},
+		});
+		const incompleteScannerResult = await incompleteScannerRuntime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: [approval],
+			securityScan: securityScanContext(),
+		});
+		assert.equal(
+			incompleteScannerResult.result.report.checkResults.find(
+				(check) => check.checkId === "static_analysis_findings_absent",
+			).status,
+			"pass",
+		);
+		assert.equal(
+			incompleteScannerResult.result.report.checkResults.find(
+				(check) => check.checkId === "authorization_controls_verified",
+			).status,
+			"indeterminate",
 		);
 
 		const challenged = createDecisionExitRuntime({

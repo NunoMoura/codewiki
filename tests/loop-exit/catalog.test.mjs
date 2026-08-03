@@ -120,7 +120,27 @@ describe("Check catalog", () => {
 				.map((entry) => entry.check.id)
 				.toSorted((left, right) => left.localeCompare(right)),
 		);
-		assert.equal(catalog.version, "7.0.0");
+		for (const checkId of [
+			"static_analysis_findings_absent",
+			"dependency_advisories_absent",
+			"credential_exposure_absent",
+			"authorization_controls_verified",
+			"persistence_safety_verified",
+		]) {
+			const registration = catalog.get(checkId, "decision");
+			assert.ok(registration, `missing ${checkId}`);
+			assert.equal(
+				registration.check.execution.id,
+				"codewiki.atomic-security-scanner-check",
+			);
+			assert.deepEqual(registration.dependsOn, ["security_scanners_valid"]);
+			assert.deepEqual(
+				registration.check.evidenceObligations.map((obligation) => obligation.id),
+				["scanner-command-execution", "scanner-source-observation"],
+			);
+			assert.equal(catalog.get(checkId, "planning"), undefined);
+		}
+		assert.equal(catalog.version, "8.0.0");
 		assert.match(catalog.digest, /^sha256:[0-9a-f]{64}$/);
 		assert.ok(
 			catalog

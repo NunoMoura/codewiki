@@ -222,7 +222,7 @@ describe("Resolved Exit Policy resolver", () => {
 			type: input.changes[0].type,
 			scope: "system",
 			risk: input.changes[0].risk,
-			affectedLayers: ["api", "database"],
+			affectedLayers: ["api", "database", "auth", "credentials", "dependency"],
 			targetRefs: [],
 			knowledgeRefs: [],
 			sourceRefs: [],
@@ -236,6 +236,11 @@ describe("Resolved Exit Policy resolver", () => {
 		for (const checkId of [
 			"security_surface_requirements_complete",
 			"security_scanners_valid",
+			"static_analysis_findings_absent",
+			"dependency_advisories_absent",
+			"credential_exposure_absent",
+			"authorization_controls_verified",
+			"persistence_safety_verified",
 			"security_privacy_reviewed",
 			"api_contract_reviewed",
 			"persistent_data_safety_reviewed",
@@ -253,6 +258,18 @@ describe("Resolved Exit Policy resolver", () => {
 			"security_scanners_valid",
 			"security_surface_requirements_complete",
 		]);
+		assert.deepEqual(
+			byId.get("static_analysis_findings_absent").dependsOn,
+			["security_scanners_valid"],
+		);
+		for (const checkId of [
+			"dependency_advisories_absent",
+			"credential_exposure_absent",
+			"authorization_controls_verified",
+			"persistence_safety_verified",
+		]) {
+			assert.deepEqual(byId.get(checkId).dependsOn, ["security_scanners_valid"]);
+		}
 		assert.equal(
 			security.parameters.securitySurfaceClassification.classificationDigest,
 			input.securitySurfaceClassification.classificationDigest,

@@ -294,14 +294,30 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 	...rulesForLoop(
 		"check.security.surface.detected",
 		"decision",
-		["security_scanners_valid", "security_privacy_reviewed"],
+		[
+			"security_scanners_valid",
+			"static_analysis_findings_absent",
+			"security_privacy_reviewed",
+		],
 		{securitySurfaces: [...SECURITY_SURFACES]},
 	),
 	...rulesForLoop(
 		"check.security.surface.dependency",
 		"decision",
-		["dependency_risk_controlled"],
+		["dependency_advisories_absent", "dependency_risk_controlled"],
 		{securitySurfaces: ["dependency_supply_chain"]},
+	),
+	...rulesForLoop(
+		"check.security.surface.credentials",
+		"decision",
+		["credential_exposure_absent"],
+		{securitySurfaces: ["credentials_secrets"]},
+	),
+	...rulesForLoop(
+		"check.security.surface.authorization",
+		"decision",
+		["authorization_controls_verified"],
+		{securitySurfaces: ["authentication_authorization"]},
 	),
 	...rulesForLoop(
 		"check.security.surface.public-api",
@@ -312,7 +328,7 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 	...rulesForLoop(
 		"check.security.surface.persistence",
 		"decision",
-		["persistent_data_safety_reviewed"],
+		["persistence_safety_verified", "persistent_data_safety_reviewed"],
 		{securitySurfaces: ["persistence_migration"]},
 	),
 	...rulesForAllLoops(

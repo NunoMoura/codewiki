@@ -26,7 +26,7 @@ import {
 
 const SECURITY_SCANNER_PROTOCOL = Object.freeze({
 	id: "codewiki.security-scanner-suite",
-	version: "1.0.0",
+	version: "2.0.0",
 	maxScanners: 6,
 	maxFindingsPerScanner: 128,
 	maxCanonicalObservationBytes: 262_144,
@@ -99,8 +99,7 @@ export interface SecurityScannerAdapter {
 	readonly scannerVersion: string;
 	readonly configurationDigest: Sha256Digest;
 	readonly execute: (
-		request: SecurityScannerAdapterRequest,
-		signal: AbortSignal,
+		...args: [SecurityScannerAdapterRequest, AbortSignal]
 	) => Promise<SecurityScannerAdapterObservation>;
 }
 
@@ -268,10 +267,9 @@ export async function runSecurityScannerSuite(
 }
 
 async function executeRequiredScanner(
-	input: NormalizedSuiteInput,
-	scannerType: SecurityScannerType,
-	adapter: SecurityScannerAdapter | undefined,
+	...args: [NormalizedSuiteInput, SecurityScannerType, SecurityScannerAdapter | undefined]
 ): Promise<ScannerExecutionResult> {
+	const [input, scannerType, adapter] = args;
 	const selected = adapter ?? missingAdapter(scannerType);
 	const advisorySnapshot = input.advisorySnapshots.find(
 		(snapshot) => snapshot.scannerType === scannerType,
@@ -313,11 +311,14 @@ async function executeRequiredScanner(
 }
 
 function scannerRequest(
-	input: NormalizedSuiteInput,
-	adapter: SecurityScannerAdapter,
-	scannerType: SecurityScannerType,
-	advisorySnapshot: SecurityAdvisorySnapshot | undefined,
+	...args: [
+		NormalizedSuiteInput,
+		SecurityScannerAdapter,
+		SecurityScannerType,
+		SecurityAdvisorySnapshot | undefined,
+	]
 ): SecurityScannerAdapterRequest {
+	const [input, adapter, scannerType, advisorySnapshot] = args;
 	const body = {
 		scannerType,
 		scannerId: adapter.scannerId,
@@ -435,6 +436,7 @@ function materializeScannerExecution(
 				...(observation.stdoutDigest ? {stdoutDigest: observation.stdoutDigest} : {}),
 				...(observation.stderrDigest ? {stderrDigest: observation.stderrDigest} : {}),
 				diagnosticRefs: [
+					`scanner:${request.scannerId}:outcome:${observation.outcome}`,
 					...observation.findings.map(
 						(finding) => `scanner:${request.scannerId}:finding:${finding.findingId}`,
 					),
@@ -822,6 +824,7 @@ function missingAdapter(scannerType: SecurityScannerType): SecurityScannerAdapte
 function scannerProvenanceRefs(request: SecurityScannerAdapterRequest): string[] {
 	return [
 		`scanner:${request.scannerId}@${request.scannerVersion}`,
+		`scanner-type:${request.scannerType}`,
 		`scanner-request:${request.requestDigest}`,
 		`scanner-config:${request.configurationDigest}`,
 		...(request.advisorySnapshot

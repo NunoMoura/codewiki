@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added `codewiki.atomic-security-scanner-check@1.0.0`, advanced Scanner Suite to `2.0.0`, and clean-cut Check Catalog to `8.0.0`. Exact scanner-family, request, and outcome provenance lets one immutable `security_scanners_valid` Evidence substrate feed independent protected static-analysis, dependency-advisory, credential-exposure, authorization-control, and persistence-safety Decision Code Checks. Surface activation selects relevant families; each Check filters only its exact scanner records, resolves separate command/source obligations, and receives its own Runtime-created Result. A complete family may pass while another fails or remains `indeterminate`; shared Evidence is recorded once and scanners still grant no Result.",
+					},
+					{
+						kind: "Update",
 						text: "Added `codewiki.production-security-collector@1.0.0` with fixed Semgrep SARIF static-analysis and offline Trivy filesystem/advisory SARIF profiles. Collector identity binds executable bytes/version, Semgrep configuration or Trivy database bytes, exact source snapshot/tree/environment, fixed arguments, and a credential-free command environment. Runtime probes version, verifies bound files before and after execution, disables metrics/version/database updates, bounds output and time, sanitizes accepted SARIF through the existing adapter and scanner suite, and preserves absence, drift, cancellation, timeout, overflow, nonzero exit, malformed output, and identity mismatch as unavailable or partial Evidence. No arbitrary command, shell, plugin, implicit network update, authority, or Result is exposed.",
 					},
 					{

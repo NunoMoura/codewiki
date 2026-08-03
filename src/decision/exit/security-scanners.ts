@@ -181,14 +181,20 @@ function persistedScannerResult(
 			reference.endsWith(":advisory-stale"),
 		),
 	);
-	if (!observations.every(completeScannerRecords) || stale) {
+	const executionError = commandRecords.some((record) =>
+		record.payload.diagnosticRefs.some((reference) =>
+			reference.endsWith(":outcome:error"),
+		),
+	);
+	if (!observations.every(completeScannerRecords) || stale || executionError) {
+		let finding = "Persisted security scanner Evidence is incomplete or unavailable.";
+		if (executionError) {
+			finding = "Persisted security scanner Evidence records an execution error.";
+		}
+		if (stale) finding = "Persisted dependency advisory Evidence is stale.";
 		return {
 			disposition: "indeterminate",
-			findings: [
-				stale
-					? "Persisted dependency advisory Evidence is stale."
-					: "Persisted security scanner Evidence is incomplete or unavailable.",
-			],
+			findings: [finding],
 			issueClass: "security_scanner_unavailable",
 		};
 	}

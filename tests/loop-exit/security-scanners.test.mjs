@@ -148,6 +148,7 @@ describe("closed security scanner suite", () => {
 				advisorySnapshots: [advisory()],
 			}),
 		);
+		assert.equal(result.protocol.version, "2.0.0");
 		assert.equal(result.status, "passed");
 		assert.deepEqual(result.requiredScannerTypes, [
 			"static_analysis",
@@ -172,6 +173,13 @@ describe("closed security scanner suite", () => {
 		assert.ok(
 			result.evidenceRecords.some((record) =>
 				record.provenanceRefs.includes(`advisory-snapshot:${digest("5")}`),
+			),
+		);
+		assert.ok(
+			result.evidenceRecords.every((record) =>
+				record.provenanceRefs.some((reference) =>
+					reference.startsWith("scanner-type:"),
+				),
 			),
 		);
 		const {suiteDigest, ...body} = result;
