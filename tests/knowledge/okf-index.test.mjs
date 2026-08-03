@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added `codewiki.production-security-collector@1.0.0` with fixed Semgrep SARIF static-analysis and offline Trivy filesystem/advisory SARIF profiles. Collector identity binds executable bytes/version, Semgrep configuration or Trivy database bytes, exact source snapshot/tree/environment, fixed arguments, and a credential-free command environment. Runtime probes version, verifies bound files before and after execution, disables metrics/version/database updates, bounds output and time, sanitizes accepted SARIF through the existing adapter and scanner suite, and preserves absence, drift, cancellation, timeout, overflow, nonzero exit, malformed output, and identity mismatch as unavailable or partial Evidence. No arbitrary command, shell, plugin, implicit network update, authority, or Result is exposed.",
+					},
+					{
+						kind: "Update",
 						text: "Advanced the native standard Evidence executor to `codewiki.standard-evidence-check-executor@1.1.0` and Loop Exit Runner to `1.2.0`. Multiple independent Checks in one Loop may now consume one exact receipt/bundle substrate while retaining separate protected selectors, obligation resolutions, execution identities, and Runtime-created Results. Receipt and bundle digests enter execution configuration. Runtime records and streams each byte-identical Evidence Record once, reuses exact caller-supplied records during replay, and rejects inconsistent shared bindings or same-id content conflicts. The coordination is bounded to one run and adds no central Evidence store.",
 					},
 					{

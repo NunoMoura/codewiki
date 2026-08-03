@@ -4,6 +4,7 @@ export * from "./loop-exit/custom-checks/index.ts";
 export * from "./loop-exit/verification-capabilities.ts";
 export * from "./loop-exit/standard-evidence-checks.ts";
 export * from "./loop-exit/standard-evidence-executor.ts";
+export * from "./loop-exit/security-collectors.ts";
 export * from "./evidence/adapters/sarif.ts";
 export * from "./evidence/adapters/junit.ts";
 export * from "./evidence/adapters/coverage.ts";
