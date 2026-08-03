@@ -8,7 +8,6 @@ import {
 
 import type {
 	EvidenceArtifact,
-	EvidenceAuthority,
 	EvidenceCoverage,
 	EvidenceMaterial,
 } from "../contracts.ts";
@@ -86,7 +85,7 @@ export interface StructuredDocumentEvidenceResult<
 	readonly artifact: EvidenceArtifact;
 	readonly sourceSnapshotDigest: Sha256Digest;
 	readonly tool: StructuredDocumentToolIdentity;
-	readonly authorityCeiling: EvidenceAuthority;
+	readonly authorityCeiling: "observed" | "verified";
 	readonly grantsResult: false;
 	readonly coverage: EvidenceCoverage;
 	readonly summary: StructuredDocumentIngestionSummary<TSummary>;
@@ -112,7 +111,7 @@ interface StructuredDocumentAdapterDefinition<
 	readonly format: TFormat;
 	readonly label: string;
 	readonly mediaType: string | ((bytes: string | Uint8Array) => string);
-	readonly authorityCeiling: EvidenceAuthority;
+	readonly authorityCeiling: "observed" | "verified";
 	readonly parse: (bytes: Uint8Array) => ParsedStructuredDocument<TSummary>;
 }
 

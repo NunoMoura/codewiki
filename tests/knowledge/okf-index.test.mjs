@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added closed `codewiki.standard-evidence-check-evaluation@1.0.0`. Exact receipt/bundle/protocol/selector/obligation binding now derives bounded `satisfied | unsatisfied | indeterminate` observations for JUnit minimum tests, zero failures/errors, and maximum skips, LCOV/Cobertura line/branch/function basis-point thresholds, SARIF blocked levels, authenticated provider accepted conclusions, and minimum required identities in CycloneDX/SPDX/Pact/OpenAPI content. Evaluators reject obligations permitting partial Evidence, optional artifacts, non-Candidate subjects, or non-exact freshness, plus wrong adapter families, selector drift, receipt/bundle mismatch, and empty coverage denominators. Output has `grantsResult: false`; Runtime still creates Results. SBOM identity readiness grants no security/license claim, and contract identity readiness grants no verification/conformance claim.",
+					},
+					{
+						kind: "Update",
 						text: "Added closed `codewiki.evidence-adapter.materialization@1.0.0`. Runtime now verifies accepted core-adapter receipt integrity, exact supported protocol, artifact/source-subject binding, and fixed authority ceiling before materializing immutable command/source Evidence Records with protocol producer identity, observed or verified authority, exact source freshness, project sensitivity, and protocol/receipt/binding provenance. Exact accepted-protocol reduction reuses declarative Evidence obligations: complete observations become ready input even when factual tests or provider checks failed, while partial, unavailable, drifted, tampered, wrong-protocol, neutral, or duplicate Evidence remains missing or `indeterminate`. Every bundle has `grantsResult: false`; trusted Check code still owns semantic Results. SARIF, JUnit, LCOV, and Cobertura outputs now expose explicit source snapshot, authority ceiling, and no-Result fields, and resolution validation preserves eligible neutral Evidence as potentially relevant.",
 					},
 					{

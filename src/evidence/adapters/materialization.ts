@@ -174,6 +174,18 @@ export function materializeStandardAdapterEvidence(
 	});
 }
 
+export function assertStandardAdapterIngestionResult(
+	value: StandardAdapterIngestionResult,
+): void {
+	admittedIngestion(value);
+}
+
+export function assertStandardAdapterEvidenceBundle(
+	value: StandardAdapterEvidenceBundle,
+): void {
+	admittedBundle(value);
+}
+
 export function resolveStandardAdapterEvidenceObligation(
 	input: ResolveStandardAdapterEvidenceObligationInput,
 ): EvidenceObligationResolution {
