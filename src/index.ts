@@ -5,6 +5,7 @@ export * from "./loop-exit/verification-capabilities.ts";
 export * from "./evidence/adapters/sarif.ts";
 export * from "./evidence/adapters/junit.ts";
 export * from "./evidence/adapters/coverage.ts";
+export * from "./evidence/adapters/provider-check-receipt.ts";
 export * from "./pi/user-standard-distillation-session.ts";
 export {
 	PI_NATIVE_DECISION_HOST_PROTOCOL,

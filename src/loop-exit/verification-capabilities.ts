@@ -105,6 +105,7 @@ const IMPLEMENTED_STANDARD_ADAPTER_FORMATS = new Set<VerificationArtifactFormat>
 	"junit_xml",
 	"lcov",
 	"cobertura_xml",
+	"provider_check_receipt",
 ]);
 
 const STANDARD_FORMAT_BINDINGS: readonly StandardFormatBinding[] = [
@@ -160,11 +161,7 @@ const STANDARD_FORMAT_BINDINGS: readonly StandardFormatBinding[] = [
 	},
 	{
 		format: "provider_check_receipt",
-		evidenceKinds: [
-			"command_execution",
-			"integration_proof",
-			"delivery_attestation",
-		],
+		evidenceKinds: ["command_execution"],
 		authorityCeiling: "verified",
 	},
 ];
@@ -188,7 +185,7 @@ export function buildVerificationCapabilityMatrix(
 			(entry) => entry.status === "capability_required",
 		).length,
 		standardAdapterCount: STANDARD_FORMAT_BINDINGS.length,
-		implementedStandardAdapterCount: 4,
+		implementedStandardAdapterCount: IMPLEMENTED_STANDARD_ADAPTER_FORMATS.size,
 	});
 	const body = toCanonicalJsonValue({
 		protocol: VERIFICATION_CAPABILITY_MATRIX_PROTOCOL,

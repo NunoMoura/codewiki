@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added bounded `codewiki.evidence-adapter.provider-check-receipt@1.0.0`. A trusted connector emits at most 64 KiB of digest-only canonical JSON bound to exact provider instance, repository, source snapshot, Git head, Check/configuration, authentication principal/credential identity, adapter, request, environment, and retrieval execution. Duplicate keys, credentials, authority/Result fields, drift, and contradictory lifecycle state fail closed. Completed provider success or failure is complete observation, pending is partial, and unavailable is unknown. Output is authenticated-retrieval `command_execution` material with `authorityCeiling: verified` and `grantsResult: false`; it grants no approval, Integration, delivery, release, or deployment authority. Verification matrix now reports five implemented standard adapters; real provider connectors remain host capabilities.",
+					},
+					{
+						kind: "Update",
 						text: "Added bounded `codewiki.evidence-adapter.lcov@1.0.0` and `codewiki.evidence-adapter.cobertura@1.0.0`. Exact Runtime-owned source snapshot, coverage scope, up to 255 required project paths, tool/version, request/invocation/environment/configuration, and execution bindings admit at most 4 MiB. Detailed line/branch/function hits are derived and cross-checked against LCOV or Cobertura declarations; private symbol identities remain digests. Unsafe/missing paths, contradictory totals, more than 2,048 unique files, non-exit, and unavailability remain partial or unknown. Output is canonical-receipted `command_execution` and `source_observation` material without threshold, authority, or Result input. Verification matrix now reports four implemented standard adapters.",
 					},
 					{
