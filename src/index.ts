@@ -2,6 +2,12 @@ export * from "./api/index.ts";
 export * from "./change-trace/index.ts";
 export * from "./loop-exit/custom-checks/index.ts";
 export * from "./pi/user-standard-distillation-session.ts";
+export {
+	PI_NATIVE_DECISION_HOST_PROTOCOL,
+	createPiNativeDecisionStartOptions,
+	resolvePiDecisionSelectionAuthority,
+	type PiNativeDecisionHostOptions,
+} from "./pi/native-decision-host.ts";
 export * from "./runtime/user-standard-distillation.ts";
 export {
 	createDecisionGitAdmission,

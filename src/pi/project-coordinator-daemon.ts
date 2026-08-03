@@ -26,6 +26,10 @@ import type {
 	RuntimeSemanticAdapters,
 	RuntimeSemanticContext,
 } from "../runtime/semantic-executor.ts";
+import {
+	createPiNativeDecisionStartOptions,
+	type PiNativeDecisionHostOptions,
+} from "./native-decision-host.ts";
 import { createPiProcessImplementationWorkerAdapter } from "./process-worker-adapter.ts";
 
 export type PiSemanticAdapterLoader = (
@@ -44,6 +48,8 @@ export interface PiProjectCoordinatorDaemonOptions {
 	releasePlan?: ProductReleasePlan;
 	releaseAdapter?: ProductReleaseAdapter;
 	decisionStart?: ProjectCoordinatorDecisionStartOptions;
+	nativeDecision?: Omit<PiNativeDecisionHostOptions, "repoRoot">;
+	now?: () => string;
 }
 
 const PI_SDK_MODULE_URL_ENV = "CODEWIKI_PI_SDK_MODULE_URL";
@@ -80,11 +86,24 @@ export async function startPiProjectCoordinatorDaemon(
 	options: PiProjectCoordinatorDaemonOptions = {},
 ): Promise<ProjectCoordinatorDaemonHandle> {
 	const canonicalRoot = realpathSync(repoRoot);
+	if (options.decisionStart && options.nativeDecision) {
+		throw new Error(
+			"Pi coordinator accepts either decisionStart or nativeDecision, not both.",
+		);
+	}
 	const semanticAdapters = await (
 		options.loadSemanticAdapters || loadPiSemanticAdapters
 	)(canonicalRoot);
+	let decisionStart = options.decisionStart;
+	if (!decisionStart && options.nativeDecision) {
+		decisionStart = createPiNativeDecisionStartOptions({
+			...options.nativeDecision,
+			repoRoot: canonicalRoot,
+		});
+	}
 	return startProjectCoordinatorDaemon(canonicalRoot, {
 		...(semanticAdapters ? { semanticAdapters } : {}),
+		...(options.now ? {now: options.now} : {}),
 		...(options.semanticContext
 			? { semanticContext: options.semanticContext }
 			: {}),
@@ -102,7 +121,7 @@ export async function startPiProjectCoordinatorDaemon(
 		...(options.releaseAdapter
 			? { releaseAdapter: options.releaseAdapter }
 			: {}),
-		...(options.decisionStart ? { decisionStart: options.decisionStart } : {}),
+		...(decisionStart ? {decisionStart} : {}),
 		workerAdapter:
 			options.workerAdapter || createPiProcessImplementationWorkerAdapter(),
 		workerWorktreeRunner: createShellWorktreeCommandRunner({
