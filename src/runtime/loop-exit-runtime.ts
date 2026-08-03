@@ -20,6 +20,10 @@ import {
 	type CreateLoopExitRunnerInput,
 } from "../loop-exit/runner.ts";
 import {
+	createStandardEvidenceCheckExecutors,
+	type StandardEvidenceCheckCapability,
+} from "../loop-exit/standard-evidence-executor.ts";
+import {
 	createLoopExitSuite,
 	type LoopExitSuite,
 } from "../loop-exit/suite.ts";
@@ -65,6 +69,7 @@ export function createLoopExitRuntime(
 	input: {
 		readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
 		readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
+		readonly standardEvidenceCapabilities?: readonly StandardEvidenceCheckCapability[];
 	} = {},
 ): LoopExitRuntime {
 	if ("customChecks" in input) {
@@ -87,6 +92,10 @@ export function createLoopExitRuntime(
 		...(input.customCodeCapabilitySnapshot
 			? {capabilitySnapshot: input.customCodeCapabilitySnapshot}
 			: {}),
+	});
+	const standardEvidenceExecutors = createStandardEvidenceCheckExecutors({
+		catalog,
+		capabilities: input.standardEvidenceCapabilities ?? [],
 	});
 	let customCodeExecutors: ReturnType<typeof createCustomCodeCheckExecutors> = [];
 	if (resourceGuards.status === "ready") {
@@ -116,7 +125,11 @@ export function createLoopExitRuntime(
 			return createLoopExitRunner({
 				...runnerInput,
 				catalog,
-				executors: [...runnerInput.executors, ...customCodeExecutors],
+				executors: [
+					...runnerInput.executors,
+					...standardEvidenceExecutors,
+					...customCodeExecutors,
+				],
 			});
 		},
 		materializeDecisionResearchCitation,

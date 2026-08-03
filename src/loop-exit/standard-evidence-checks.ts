@@ -166,7 +166,7 @@ export function evaluateStandardEvidenceCheck(
 		],
 		"Standard Evidence Check input",
 	);
-	const selector = admittedSelector(input.selector);
+	const selector = normalizeStandardEvidenceCheckSelector(input.selector);
 	assertSemanticObligation(input.obligation);
 	assertStandardAdapterIngestionResult(input.ingestion);
 	assertStandardAdapterEvidenceBundle(input.bundle);
@@ -205,7 +205,7 @@ export function evaluateStandardEvidenceCheck(
 	return Object.freeze({...body, evaluationDigest: canonicalJsonDigest(body)});
 }
 
-function admittedSelector(
+export function normalizeStandardEvidenceCheckSelector(
 	selector: StandardEvidenceCheckSelector,
 ): StandardEvidenceCheckSelector {
 	if (!selector || typeof selector !== "object" || Array.isArray(selector)) {

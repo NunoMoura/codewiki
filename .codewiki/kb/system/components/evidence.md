@@ -129,6 +129,8 @@ Checks may use the bridge's deterministic helper to classify records from exact 
 
 Inventory/contract identity evaluation has deliberately narrow meaning. CycloneDX or SPDX identity presence does not establish vulnerability absence, license compliance, or provenance. Pact identity presence does not establish provider verification. OpenAPI identity presence does not establish compatibility, implementation conformance, security, or runtime behavior. Those claims require separately applicable Checks and Evidence.
 
+The native `codewiki.standard-evidence-check-executor@1.0.0` makes the boundary operational. A trusted host supplies one exact adapter receipt/bundle capability for one boolean Code Check. The capability must own every Check obligation and its selector must exactly equal the protected Resolved Exit Policy parameter. Runtime verifies the Candidate/source snapshot, emits the bundle records and resolutions, and derives the Result from the evaluator observation. Reusing one report bundle as multiple independently produced capabilities is rejected to prevent duplicate canonical Evidence; multi-Check reuse requires one shared persisted Evidence substrate in the later fan-out cut.
+
 Each Check embeds zero or more immutable versioned Evidence obligations. An obligation declares accepted Evidence kinds, producer classes, authority classes, coverage, sensitivity, exact subject binding, freshness mode, artifact availability, minimum count, and contradiction handling. It contains no executable adapter, shell command, model route, or authority grant.
 
 ```text

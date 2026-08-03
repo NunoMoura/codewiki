@@ -34,7 +34,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "6.0.0";
+export const CHECK_CATALOG_VERSION = "7.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -560,10 +560,13 @@ function builtInRegistrations(): CheckRegistration[] {
 }
 
 function addDefinitions(
-	byId: Map<string, { description: string; loops: Set<SemanticLoop> }>,
-	loops: SemanticLoop | SemanticLoop[],
-	definitions: readonly (readonly [string, string])[],
+	...args: [
+		Map<string, {description: string; loops: Set<SemanticLoop>}>,
+		SemanticLoop | SemanticLoop[],
+		readonly (readonly [string, string])[],
+	]
 ): void {
+	const [byId, loops, definitions] = args;
 	for (const [id, description] of definitions) {
 		const current = byId.get(id);
 		if (current) {
@@ -575,10 +578,9 @@ function addDefinitions(
 }
 
 function kernelRegistration(
-	id: string,
-	description: string,
-	loops: SemanticLoop[],
+	...args: [string, string, SemanticLoop[]]
 ): CheckRegistration {
+	const [id, description, loops] = args;
 	const kind = checkExecutionKind(id);
 	const executionId = executionIdForKind(kind);
 	return {
@@ -625,9 +627,9 @@ function checkTimeout(kind: CheckDefinition["execution"]["kind"]): number {
 }
 
 function evidenceObligations(
-	id: string,
-	kind: CheckDefinition["execution"]["kind"],
+	...args: [string, CheckDefinition["execution"]["kind"]]
 ): EvidenceObligation[] {
+	const [id, kind] = args;
 	if (id === "research_provenance_valid") {
 		return [researchCitationObligation()];
 	}
@@ -736,7 +738,7 @@ function evidenceObligations(
 				coverages: ["complete"],
 				subject: "candidate_source_tree",
 				freshness: "exact_boundary",
-				artifact: "optional",
+				artifact: "required",
 			}),
 		];
 	}
@@ -789,14 +791,15 @@ function obligation(
 	});
 }
 
-function registrationKey(loop: SemanticLoop, checkId: string): string {
+function registrationKey(...args: [SemanticLoop, string]): string {
+	const [loop, checkId] = args;
 	return `${loop}:${checkId}`;
 }
 
 function compareRegistrations(
-	left: CheckRegistration,
-	right: CheckRegistration,
+	...args: [CheckRegistration, CheckRegistration]
 ): number {
+	const [left, right] = args;
 	return (
 		left.check.id.localeCompare(right.check.id) ||
 		left.loops.join(",").localeCompare(right.loops.join(","))
@@ -814,7 +817,7 @@ function normalizeRegistration(input: {
 			...registration.check,
 			evidenceObligations: registration.check.evidenceObligations
 				.map((entry) => createEvidenceObligation(entry))
-				.sort((left, right) => compareText(left.id, right.id)),
+				.sort(compareObligations),
 			execution: { ...registration.check.execution },
 			measurement: { ...registration.check.measurement },
 		},
@@ -835,9 +838,9 @@ function normalizeRegistration(input: {
 }
 
 function validateRegistration(
-	registration: CheckRegistration,
-	userStandards: readonly UserStandardDefinition[],
+	...args: [CheckRegistration, readonly UserStandardDefinition[]]
 ): void {
+	const [registration, userStandards] = args;
 	validateCheckShape(registration);
 	validateClosedExecutionInputs(registration);
 	validateCheckAuthority(registration, userStandards);
@@ -884,9 +887,9 @@ function validateClosedExecutionInputs(
 }
 
 function validateCheckAuthority(
-	registration: CheckRegistration,
-	userStandards: readonly UserStandardDefinition[],
+	...args: [CheckRegistration, readonly UserStandardDefinition[]]
 ): void {
+	const [registration, userStandards] = args;
 	const check = registration.check;
 	if (registration.authority === "kernel") {
 		if (registration.customCheck) {
@@ -908,9 +911,9 @@ function validateCheckAuthority(
 }
 
 function validateCustomCheckRegistration(
-	registration: CheckRegistration,
-	userStandards: readonly UserStandardDefinition[],
+	...args: [CheckRegistration, readonly UserStandardDefinition[]]
 ): void {
+	const [registration, userStandards] = args;
 	const customCheck = registration.customCheck;
 	if (!customCheck) {
 		throw new Error(
@@ -1001,8 +1004,12 @@ function unique<T>(values: T[]): T[] {
 	return [...new Set(values)];
 }
 
-function compareText(left: string, right: string): number {
-	if (left < right) return -1;
-	if (left > right) return 1;
-	return 0;
+function compareObligations(
+	...args: [EvidenceObligation, EvidenceObligation]
+): number {
+	return Number(args[0].id > args[1].id) - Number(args[0].id < args[1].id);
+}
+
+function compareText(...args: [string, string]): number {
+	return Number(args[0] > args[1]) - Number(args[0] < args[1]);
 }

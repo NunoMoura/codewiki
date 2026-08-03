@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added `codewiki.standard-evidence-check-executor@1.0.0` and installed exact report-bound capabilities in native Loop Exit Runtime. Each capability binds one Loop/Check/version, every owned obligation, one normalized selector, adapter receipt, and materialized bundle; protected Resolved Exit Policy must bind the same selector. Runtime rechecks Candidate/source identity, produces immutable Evidence Records/resolutions, maps evaluator observations into boolean Code Check output, disables report-bound caching, and alone constructs Results. Duplicate Check capabilities or bundle assignment, partial obligation ownership, permissive obligations, non-Code Checks, cancellation, and drift fail closed. Check Catalog clean-cuts to `7.0.0` and standard external-command obligations require artifacts.",
+					},
+					{
+						kind: "Update",
 						text: "Added closed `codewiki.standard-evidence-check-evaluation@1.0.0`. Exact receipt/bundle/protocol/selector/obligation binding now derives bounded `satisfied | unsatisfied | indeterminate` observations for JUnit minimum tests, zero failures/errors, and maximum skips, LCOV/Cobertura line/branch/function basis-point thresholds, SARIF blocked levels, authenticated provider accepted conclusions, and minimum required identities in CycloneDX/SPDX/Pact/OpenAPI content. Evaluators reject obligations permitting partial Evidence, optional artifacts, non-Candidate subjects, or non-exact freshness, plus wrong adapter families, selector drift, receipt/bundle mismatch, and empty coverage denominators. Output has `grantsResult: false`; Runtime still creates Results. SBOM identity readiness grants no security/license claim, and contract identity readiness grants no verification/conformance claim.",
 					},
 					{
