@@ -212,43 +212,21 @@ try {
 	const decisionInput = {
 		disposition: "approve",
 		rationale: "Approve exact project-local install Change.",
-		authority: {
-			kind: "user",
-			actor: "project-local-install-smoke",
-			ref: "approval:user:project-local-install-smoke",
-		},
-		occurredAt: "2026-06-18T14:00:01.000Z",
 	};
-	const preview = assertToolResult(
-		await decideTool.execute(
-			"decide-preview",
-			{
-				input: { ...decisionInput, mode: "preview" },
-			},
-			undefined,
-			undefined,
-			ctx,
-		),
-		/wiki_decide: coordinator previewed with 0 durable event\(s\)\./,
-	).outcomes[0].result;
-	const decided = assertToolResult(
-		await decideTool.execute(
-			"decide-append",
-			{
-				input: {
-					...decisionInput,
-					mode: "append",
-				},
-			},
-			undefined,
-			undefined,
-			ctx,
-		),
-		/wiki_decide: coordinator completed with 1 durable event\(s\)\./,
-	).outcomes[0].result;
-	assert.equal(preview.report.exit.status, "exit");
-	assert.equal(decided.report.exit.status, "exit");
-	assert.equal(decided.event.data.exit.status, "exit");
+	const beforeDecision = readFileSync(tracePath, "utf8");
+	for (const mode of ["preview", "append"]) {
+		await assert.rejects(
+			decideTool.execute(
+				`decide-${mode}`,
+				{input: {...decisionInput, mode}},
+				undefined,
+				undefined,
+				ctx,
+			),
+			/decision_attention_selection_required/,
+		);
+	}
+	assert.equal(readFileSync(tracePath, "utf8"), beforeDecision);
 	assert.equal((await stat(tracePath)).size > 0, true);
 	const state = await stateTool.execute(
 		"post-decision-state",

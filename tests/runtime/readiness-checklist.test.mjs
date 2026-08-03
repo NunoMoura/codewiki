@@ -37,6 +37,7 @@ const operatingGuidanceFiles = [
 ];
 const expectedToolNames = [
 	"wiki_state",
+	"wiki_attention",
 	"wiki_config",
 	"wiki_change",
 	"wiki_decide",
@@ -162,6 +163,7 @@ describe("install readiness checklist", () => {
 		assert.equal(CODEWIKI_PROMPT_GUIDELINES.length <= 4, true);
 		assert.equal(prompt.length < 900, true);
 		assert.match(prompt, /internal wiki_state/);
+		assert.match(prompt, /user \/wiki-select command/);
 		assert.match(prompt, /runtimeReaction/);
 		assert.doesNotMatch(prompt, /wiki_decide|wiki_plan|wiki_implement/);
 		assert.match(prompt, /\.codewiki\/kb\/product\/DESIGN\.md/);

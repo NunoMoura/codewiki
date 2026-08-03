@@ -1,5 +1,7 @@
 export type CodewikiSubcommand =
 	| "dashboard"
+	| "attention"
+	| "select"
 	| "resume"
 	| "explain"
 	| "config"
@@ -19,6 +21,19 @@ export const CODEWIKI_DIRECT_COMMANDS: readonly CodewikiDirectCommandSpec[] = [
 		syntax: "/wiki-dashboard [--no-open] [--json] [--stop]",
 		description:
 			"reopen, inspect, or stop the automatic Work Pipeline dashboard",
+	},
+	{
+		name: "wiki-attention",
+		subcommand: "attention",
+		syntax: "/wiki-attention [--json]",
+		description: "browse exact revisions recommended for Decision attention",
+	},
+	{
+		name: "wiki-select",
+		subcommand: "select",
+		syntax:
+			"/wiki-select <change-id> --revision <revision-id> --projection <digest> [--json]",
+		description: "select one exact current Change revision for Decision",
 	},
 	{
 		name: "wiki-resume",
@@ -48,6 +63,8 @@ export const CODEWIKI_DIRECT_COMMANDS: readonly CodewikiDirectCommandSpec[] = [
 
 export const CODEWIKI_COMMAND_NAMES = [
 	"wiki-dashboard",
+	"wiki-attention",
+	"wiki-select",
 	"wiki-resume",
 	"wiki-explain",
 	"wiki-config",

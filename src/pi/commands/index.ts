@@ -1,5 +1,12 @@
+import {randomUUID} from "node:crypto";
+
 import { runWikiConfig } from "../../api/wiki-config.ts";
 import { bootstrapCodewiki } from "../../project/bootstrap.ts";
+import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../changes/triage/contracts.ts";
+import {
+	DECISION_ATTENTION_SELECTION_PROTOCOL,
+	parseDecisionAttentionSelectionCommand,
+} from "../../changes/triage/selection.ts";
 import { resolveWikiConfigFile } from "../../project/config-file.ts";
 import { buildProjectExplainView } from "../../project/explain.ts";
 import { findCodewikiProjectRoot } from "../../project/root.ts";
@@ -21,6 +28,10 @@ import {
 import { stopProjectCoordinatorService } from "../../runtime/project-coordinator-service.ts";
 import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
+import {
+	createPiProjectServiceClients,
+	type PiProjectServiceClientProvider,
+} from "../project-service-client.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
 import {
 	renderBootstrapCommand,
@@ -38,6 +49,7 @@ import type {
 export function registerCodewikiCommands(
 	pi: CodewikiExtensionApi,
 	connectProjectCoordinator = true,
+	projectServices: PiProjectServiceClientProvider = createPiProjectServiceClients(),
 ): void {
 	for (const command of CODEWIKI_DIRECT_COMMANDS) {
 		pi.registerCommand(
@@ -47,6 +59,7 @@ export function registerCodewikiCommands(
 				command.subcommand,
 				command.description,
 				connectProjectCoordinator,
+				projectServices,
 			),
 		);
 	}
@@ -57,6 +70,7 @@ function directWikiCommand(
 	subcommand: CodewikiSubcommand,
 	description: string,
 	connectProjectCoordinator: boolean,
+	projectServices: PiProjectServiceClientProvider,
 ): CodewikiCommandDefinition {
 	return {
 		description,
@@ -67,6 +81,7 @@ function directWikiCommand(
 				ctx,
 				pi,
 				connectProjectCoordinator,
+				projectServices,
 			);
 		},
 	};
@@ -78,9 +93,16 @@ async function dispatchWikiCommand(
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
 	connectProjectCoordinator: boolean,
+	projectServices: PiProjectServiceClientProvider,
 ): Promise<unknown> {
 	if (subcommand === "dashboard") {
 		return await dashboardCommand(args, ctx, pi, connectProjectCoordinator);
+	}
+	if (subcommand === "attention") {
+		return await decisionAttentionCommand(args, ctx, pi, projectServices);
+	}
+	if (subcommand === "select") {
+		return await selectDecisionCommand(args, ctx, pi, projectServices);
 	}
 	if (subcommand === "resume") return await resumeCommand(args, ctx, pi);
 	if (subcommand === "explain") return await explainCommand(args, ctx, pi);
@@ -174,6 +196,179 @@ async function startDashboard(
 
 function renderDashboardMessage(url: string): string[] {
 	return [buildCodewikiDashboardUrlMessage(url)];
+}
+
+interface DecisionAttentionCommandOptions {
+	json: boolean;
+}
+
+interface SelectDecisionCommandOptions {
+	changeId: string;
+	changeRevisionId: string;
+	expectedProjectionDigest: string;
+	json: boolean;
+	allowNonProjectInstall: boolean;
+}
+
+async function decisionAttentionCommand(
+	args: string[],
+	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
+	projectServices: PiProjectServiceClientProvider,
+): Promise<unknown> {
+	const options = parseDecisionAttentionOptions(args);
+	const root = await requireCodewikiRoot(ctx);
+	const result = await projectServices.decisionAttention({
+		repoRoot: root,
+		context: ctx,
+	});
+	if (
+		result.protocol.id !== BACKLOG_TRIAGE_QUERY_PROTOCOL.id ||
+		result.protocol.version !== BACKLOG_TRIAGE_QUERY_PROTOCOL.version
+	) {
+		throw new Error("Coordinator returned an unsupported Decision attention protocol.");
+	}
+	const rendered = renderDecisionAttention(result);
+	const message = options.json ? JSON.stringify(result, null, 2) : rendered.join("\n");
+	emitCommandOutput(pi, ctx, message, options.json ? [message] : rendered);
+	return {
+		command: "attention",
+		json: options.json,
+		result,
+		rendered,
+	};
+}
+
+async function selectDecisionCommand(
+	args: string[],
+	ctx: CodewikiExtensionContext,
+	pi: CodewikiExtensionApi,
+	projectServices: PiProjectServiceClientProvider,
+): Promise<unknown> {
+	const options = parseSelectDecisionOptions(args);
+	const root = await requireCodewikiRoot(ctx);
+	assertProjectLocalMutationAllowed({
+		toolName: "/wiki-select",
+		ctx,
+		projectRoot: root,
+		moduleUrl: import.meta.url,
+		input: options.allowNonProjectInstall
+			? {allowNonProjectInstall: true}
+			: {},
+	});
+	const command = parseDecisionAttentionSelectionCommand({
+		protocolId: DECISION_ATTENTION_SELECTION_PROTOCOL.id,
+		protocolVersion: DECISION_ATTENTION_SELECTION_PROTOCOL.version,
+		idempotencyKey: `pi-selection:${randomUUID()}`,
+		changeId: options.changeId,
+		changeRevisionId: options.changeRevisionId,
+		expectedProjectionDigest: options.expectedProjectionDigest,
+	});
+	const result = await projectServices.selectDecision({
+		repoRoot: root,
+		context: ctx,
+		command,
+	});
+	const body = {
+		command: "select",
+		changeId: command.changeId,
+		changeRevisionId: command.changeRevisionId,
+		expectedProjectionDigest: command.expectedProjectionDigest,
+		idempotencyKey: command.idempotencyKey,
+		attemptOperationId: result.attemptOperationId,
+	};
+	const rendered = [
+		"CodeWiki Decision Selection",
+		`Change: ${command.changeId}`,
+		`Revision: ${command.changeRevisionId}`,
+		`Projection: ${command.expectedProjectionDigest}`,
+		`Attempt: ${result.attemptOperationId}`,
+	];
+	const message = options.json ? JSON.stringify(body, null, 2) : rendered.join("\n");
+	emitCommandOutput(pi, ctx, message, options.json ? [message] : rendered);
+	return {...body, json: options.json, rendered};
+}
+
+function parseDecisionAttentionOptions(
+	args: string[],
+): DecisionAttentionCommandOptions {
+	if (args.length === 0) return {json: false};
+	if (args.length === 1 && args[0] === "--json") return {json: true};
+	throw new Error(`Unsupported /wiki-attention option: ${args[0]}`);
+}
+
+function parseSelectDecisionOptions(args: string[]): SelectDecisionCommandOptions {
+	let changeId: string | undefined;
+	let changeRevisionId: string | undefined;
+	let expectedProjectionDigest: string | undefined;
+	let json = false;
+	let allowNonProjectInstall = false;
+	for (let index = 0; index < args.length; index++) {
+		const arg = args[index];
+		if (arg === "--revision") {
+			changeRevisionId = requiredFlagValue("select", arg, args[++index]);
+			continue;
+		}
+		if (arg === "--projection") {
+			expectedProjectionDigest = requiredFlagValue(
+				"select",
+				arg,
+				args[++index],
+			);
+			continue;
+		}
+		if (arg === "--json") {
+			json = true;
+			continue;
+		}
+		if (arg === "--allow-non-project-install") {
+			allowNonProjectInstall = true;
+			continue;
+		}
+		if (arg.startsWith("--")) {
+			throw new Error(`Unsupported /wiki-select option: ${arg}`);
+		}
+		if (changeId !== undefined) {
+			throw new Error(`/wiki-select received unexpected argument: ${arg}`);
+		}
+		changeId = arg;
+	}
+	if (!changeId || !changeRevisionId || !expectedProjectionDigest) {
+		throw new Error(
+			"Usage: /wiki-select <change-id> --revision <revision-id> --projection <digest> [--json]",
+		);
+	}
+	return {
+		changeId,
+		changeRevisionId,
+		expectedProjectionDigest,
+		json,
+		allowNonProjectInstall,
+	};
+}
+
+function renderDecisionAttention(
+	result: Awaited<ReturnType<PiProjectServiceClientProvider["decisionAttention"]>>,
+): string[] {
+	const lines = [
+		"CodeWiki Decision Attention",
+		`Projection: ${result.projectionDigest}`,
+		`Showing ${result.coverage.returnedCandidateCount} of ${result.coverage.matchedCandidateCount} matched Change revision(s).`,
+	];
+	for (const item of result.items) {
+		lines.push(
+			`${item.rank}. ${item.candidate.title} (${item.candidate.changeId})`,
+			`   Revision: ${item.candidate.changeRevisionId}`,
+			`   Status: ${item.candidate.status}; readiness: ${item.candidate.readiness.value}`,
+		);
+		for (const reason of item.orderingReasons.slice(0, 2)) {
+			lines.push(`   Why: ${reason.detail}`);
+		}
+	}
+	if (result.coverage.truncated) {
+		lines.push("Result is truncated; use the coordinator query API with this projection digest for bounded filtering.");
+	}
+	return lines;
 }
 
 async function resumeCommand(

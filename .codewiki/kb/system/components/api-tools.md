@@ -163,7 +163,8 @@ Current harness-neutral facades remain executable truth:
 - `runWikiChange()` performs guarded Change intake/mutation.
 - `buildWorkState()` derives current project state; `buildWikiState()` exposes bounded views.
 - `runWikiDecide()`, `runWikiPlan()`, and `runWikiImplement()` evaluate prepared inputs and preview/append legacy outputs.
-- `codewiki.decision-attention-selection@2.0.0` gives authenticated users exact pending-revision selection through one projection digest; Runtime appends canonical `loop.attempt_started`, uses its operation ID as the job identity, and rejects generic trigger/candidate substitution.
+- authenticated `/v1/runtime/decision-attention`, coordinator/Pi client methods, read-only `wiki_attention`, and `/wiki-attention` expose bounded `codewiki.backlog-triage-query@2.0.0` results bound to one current projection; stale/unsupported follow-up queries fail closed.
+- `/wiki-select <change-id> --revision <revision-id> --projection <digest>` is the explicit user-only Pi selection control. It creates a fresh idempotency key and submits only `codewiki.decision-attention-selection@2.0.0`; Runtime appends canonical `loop.attempt_started`, uses its operation ID as the job identity, and rejects caller authority or generic trigger/candidate substitution.
 - exact Runtime reaction jobs own Planning/Implementation selection plus idempotency, recovery, and generation fencing.
 - `ImplementationWorkerDispatcher.reconcile()` currently derives ready Work Items, writes private Assignment packets, appends local Work Item ownership events, prepares worktrees, and schedules adapters.
 - `runWikiArchive()` and `runWikiConfig()` own retention/config compatibility behavior.

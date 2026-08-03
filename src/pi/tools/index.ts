@@ -39,9 +39,11 @@ import type {
 } from "../types.ts";
 
 const WIKI_STATE_TOOL_NAME = "wiki_state";
+const WIKI_ATTENTION_TOOL_NAME = "wiki_attention";
 
 export const CODEWIKI_TOOL_NAMES = [
 	WIKI_STATE_TOOL_NAME,
+	WIKI_ATTENTION_TOOL_NAME,
 	"wiki_config",
 	"wiki_change",
 	"wiki_decide",
@@ -52,7 +54,10 @@ export const CODEWIKI_TOOL_NAMES = [
 
 type WikiStateToolView = "summary" | "board" | "quality" | "blockers" | "all";
 
-const READ_ONLY_TOOL_NAMES = new Set<string>([WIKI_STATE_TOOL_NAME]);
+const READ_ONLY_TOOL_NAMES = new Set<string>([
+	WIKI_STATE_TOOL_NAME,
+	WIKI_ATTENTION_TOOL_NAME,
+]);
 const WIKI_STATE_TOOL_VIEWS = new Set<string>([
 	"summary",
 	"board",
@@ -104,6 +109,7 @@ function codewikiTools(
 ): CodewikiToolDefinition[] {
 	return [
 		wikiStateTool(projectServices),
+		wikiAttentionTool(projectServices),
 		wikiConfigTool(),
 		wikiChangeTool(),
 		runtimeSemanticTool(
@@ -214,6 +220,59 @@ function wikiStateTool(
 				stateToolModelPayload(snapshot, view, runtimeReaction),
 			);
 		},
+	};
+}
+
+function wikiAttentionTool(
+	projectServices: PiProjectServiceClientProvider,
+): CodewikiToolDefinition {
+	return {
+		name: WIKI_ATTENTION_TOOL_NAME,
+		label: "CodeWiki Decision Attention",
+		description:
+			"Read the bounded, exact-revision Backlog Triage Projection currently available for user-selected Decision attention. This tool cannot select or approve work.",
+		promptSnippet:
+			"Read current Decision-attention recommendations; ask the user to run /wiki-select for any exact selection.",
+		promptGuidelines: [
+			"Use wiki_attention to inspect current eligible Change revisions and projection identity.",
+			"Never treat recommendation as approval or Planning priority. Only an explicit /wiki-select user command can start Decision work.",
+		],
+		executionMode: "parallel",
+		parameters: Type.Object({}, {additionalProperties: false}),
+		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+			paramsObject(WIKI_ATTENTION_TOOL_NAME, params, []);
+			const root = await requireCodewikiRoot(ctx);
+			const warning = notifyInstallWarning(ctx, root);
+			const result = await projectServices.decisionAttention({
+				repoRoot: root,
+				context: ctx,
+			});
+			return toolResult(
+				`wiki_attention: ${result.coverage.returnedCandidateCount} of ${result.coverage.matchedCandidateCount} matched exact Change revision(s).`,
+				result,
+				warning,
+				decisionAttentionModelPayload(result),
+			);
+		},
+	};
+}
+
+function decisionAttentionModelPayload(
+	result: Awaited<ReturnType<PiProjectServiceClientProvider["decisionAttention"]>>,
+): unknown {
+	return {
+		protocol: result.protocol,
+		projectionDigest: result.projectionDigest,
+		coverage: result.coverage,
+		items: result.items.map((item) => ({
+			rank: item.rank,
+			changeId: item.candidate.changeId,
+			changeRevisionId: item.candidate.changeRevisionId,
+			title: item.candidate.title,
+			status: item.candidate.status,
+			readiness: item.candidate.readiness,
+			orderingReasons: item.orderingReasons,
+		})),
 	};
 }
 

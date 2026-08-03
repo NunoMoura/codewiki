@@ -37,6 +37,10 @@ test("Pi project-service clients reuse one leased supervised connection", async 
 			await clients.semanticExecution(root, ctx),
 			"client_candidate",
 		);
+		await assert.rejects(
+			clients.decisionAttention({repoRoot: root, context: ctx}),
+			/decision_attention_projection_unavailable/,
+		);
 		assert.equal(starts, 1);
 		assert.equal(service.coordinator.snapshot().clientCount, 1);
 		assert.equal(service.coordinator.snapshot().supervisorCount, 1);

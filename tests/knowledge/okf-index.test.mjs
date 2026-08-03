@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added authenticated Decision-attention browsing through `/v1/runtime/decision-attention`, `ProjectCoordinatorRemoteClient`, `PiProjectServiceClientProvider`, read-only `wiki_attention`, and `/wiki-attention`. Omitted query input bootstraps one bounded `codewiki.backlog-triage-query@2.0.0` result from the current exact projection; supplied queries must bind that projection and reject drift or unsupported fields. Explicit user command `/wiki-select <change-id> --revision <revision-id> --projection <digest>` creates a fresh idempotency key and submits only the strict selection command. No model-callable selection tool or caller authority field exists; observers and missing native host capability remain fail-closed.",
+					},
+					{
+						kind: "Update",
 						text: "Added `codewiki.pi-native-decision-host@1.0.0` and `createPiNativeDecisionStartOptions()`. Given mandatory trusted repository identity, current project authority, replay policy, and Runtime continuation authority, the host composes exact Git selection admission, native Pi Candidate production, protected-config Exit Runtime construction, canonical continuation, and restart recovery. Only approved project-local Pi coordinator connections resolve to hashed stable principals and connection-specific authentication Evidence; optional project authorization may deny them. Pi daemon `nativeDecision` installs the bundle and rejects simultaneous raw `decisionStart`. Disposable two-clone proof covers denial, one producer run, complete canonical exit, daemon restart, and recovery without reinvocation. External user/provider identity remains separate.",
 					},
 					{

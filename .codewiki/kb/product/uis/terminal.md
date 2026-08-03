@@ -76,7 +76,7 @@ The Backlog workspace emphasizes:
 
 The primary composition is an intake/triage list with one focused detail region, not a grid of lifecycle cards. Filters cover source, readiness, affected concept/component, category, severity, security sensitivity, regression/incident state, effort, impact, confidence, overlap, blocked work, freshness, and age. Ordering may emphasize urgency, risk of inaction, impact, effort, readiness, confidence, work unblocked, newest, or oldest. Default ordering explains protected escalations, active regressions, Pareto-frontier candidates, and bounded age fairness rather than hiding tradeoffs in one score.
 
-User and agent queries consume the same exact snapshot-bound projection and ordering reasons. Approval assurance remains attached to the exact Change revision and evidence that support it. Backlog ordering chooses Decision attention only; rolling Planning owns execution priority after Decision acceptance.
+User and agent queries consume the same exact snapshot-bound projection and ordering reasons. The authenticated coordinator now returns one bounded bootstrap page from the current projection and accepts strict follow-up queries only when they bind that projection digest. Read-only `wiki_attention` and `/wiki-attention` expose exact Change, revision, projection, readiness, and ordering reasons. Only explicit user command `/wiki-select <change-id> --revision <revision-id> --projection <digest>` starts Decision; no model-callable selection tool exists. Approval assurance remains attached to the exact Change revision and evidence that support it. Backlog ordering chooses Decision attention only; rolling Planning owns execution priority after Decision acceptance.
 
 ## Work / Planning
 
@@ -171,6 +171,8 @@ Assurance / Standards and Checks is the primary source-to-assurance surface. It 
 Optional Pi extension connects active conversation to existing Project Runtime. It may:
 
 - submit or revise Change intent;
+- inspect exact Decision-attention recommendations through read-only `wiki_attention` or `/wiki-attention`;
+- let the user explicitly select one exact eligible revision through `/wiki-select`, with authority resolved only by Project Runtime;
 - provide explicit authority bound to exact revisions;
 - display compact state and notifications;
 - request dashboard open/reopen;

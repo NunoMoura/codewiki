@@ -7,6 +7,7 @@ import {
 	createInitialProjectWorkState,
 	synchronizeGitState,
 } from "../../src/change-trace/index.ts";
+import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../src/changes/triage/contracts.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../src/changes/triage/selection.ts";
 import {
 	resolvePiDecisionSelectionAuthority,
@@ -206,6 +207,39 @@ it("runs and recovers selected native Decision work through the default Pi host 
 			kind: "pi",
 			supervision: "approved",
 		});
+		const attention = await client.decisionAttention();
+		assert.deepEqual(attention.protocol, BACKLOG_TRIAGE_QUERY_PROTOCOL);
+		assert.equal(attention.projectionDigest, context.projection.projectionDigest);
+		assert.equal(attention.coverage.returnedCandidateCount, 1);
+		assert.equal(attention.items[0].candidate.changeId, changeId);
+		assert.equal(
+			attention.items[0].candidate.changeRevisionId,
+			candidate.changeRevisionId,
+		);
+		const exactQuery = await client.decisionAttention({
+			protocol: BACKLOG_TRIAGE_QUERY_PROTOCOL,
+			projectionDigest: attention.projectionDigest,
+			filters: {changeIds: [changeId]},
+			limit: 1,
+		});
+		assert.equal(exactQuery.projectionDigest, attention.projectionDigest);
+		assert.equal(exactQuery.items[0].candidate.changeId, changeId);
+		assert.notEqual(exactQuery.queryDigest, attention.queryDigest);
+		await assert.rejects(
+			client.decisionAttention({
+				protocol: BACKLOG_TRIAGE_QUERY_PROTOCOL,
+				projectionDigest: digest("f"),
+			}),
+			/projectionDigest does not match current projection/,
+		);
+		await assert.rejects(
+			client.decisionAttention({
+				protocol: BACKLOG_TRIAGE_QUERY_PROTOCOL,
+				projectionDigest: attention.projectionDigest,
+				unexpected: true,
+			}),
+			/unsupported field unexpected/,
+		);
 		await assert.rejects(
 			client.selectDecision(command),
 			/Decision attention selection authority was denied/,

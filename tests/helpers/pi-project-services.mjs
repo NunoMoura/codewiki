@@ -19,6 +19,12 @@ export function testPiProjectServices() {
 		async semanticExecution() {
 			return "client_candidate";
 		},
+		async decisionAttention() {
+			throw new Error("decision_attention_projection_unavailable");
+		},
+		async selectDecision() {
+			throw new Error("decision_attention_selection_unavailable");
+		},
 		async react() {
 			throw new Error("autonomous semantic execution is not expected");
 		},

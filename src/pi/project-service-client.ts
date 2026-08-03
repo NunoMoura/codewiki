@@ -1,4 +1,8 @@
 import { randomUUID } from "node:crypto";
+import type {
+	BacklogTriageQueryRequest,
+	BacklogTriageQueryResult,
+} from "../changes/triage/contracts.ts";
 import type {DecisionAttentionSelectionCommand} from "../changes/triage/selection.ts";
 import type {DecisionStartResult} from "../runtime/decision-attention-selection.ts";
 import {
@@ -37,6 +41,14 @@ export interface PiProjectServiceClientProvider {
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
 	): Promise<ProjectCoordinatorSemanticExecution>;
+	decisionAttention(input: {
+		readonly repoRoot: string;
+		readonly context: Pick<
+			CodewikiExtensionContext,
+			"mode" | "sessionManager"
+		>;
+		readonly request?: BacklogTriageQueryRequest;
+	}): Promise<BacklogTriageQueryResult>;
 	selectDecision(input: {
 		readonly repoRoot: string;
 		readonly context: Pick<
@@ -159,6 +171,11 @@ export function createPiProjectServiceClients(
 		},
 		semanticExecution(repoRoot, ctx) {
 			return invoke(repoRoot, ctx, async (client) => client.semanticExecution);
+		},
+		decisionAttention(input) {
+			return invoke(input.repoRoot, input.context, (client) =>
+				client.decisionAttention(input.request),
+			);
 		},
 		selectDecision(input) {
 			return invoke(input.repoRoot, input.context, (client) =>

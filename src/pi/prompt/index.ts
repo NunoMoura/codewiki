@@ -5,7 +5,7 @@ export const CODEWIKI_PROMPT_MARKER = "<!-- codewiki-prompt-v1 -->";
 
 export const CODEWIKI_PROMPT_GUIDELINES = [
 	".codewiki/kb/** owns design; one JSONL Change Trace owns each Change; source/tests/Git own implementation proof; WorkState/views are disposable. Frontend Changes read .codewiki/kb/product/DESIGN.md and declare Knowledge/UI refs.",
-	"Use internal wiki_state and obey its runtimeReaction; runtime selects the loop. Never choose from caller state or shell out to the CLI.",
+	"Use internal wiki_state and obey runtimeReaction. wiki_attention reads; only explicit user /wiki-select command starts Decision. Never select from caller state or shell.",
 	"Exactly three semantic loops exist: Decision approves Change revisions, Planning creates Sprints and owned Work Items across approved Changes, and Implementation accepts realization. Runtime is their supervised outer loop, not a fourth semantic loop or agent mega-tool.",
 	"Eligible Pi TUI sessions open the Work Pipeline dashboard automatically; /wiki-dashboard reopens or stops it. Legacy grouped /codewiki namespaces are not public UX.",
 ] as const;

@@ -300,6 +300,7 @@ extension.default({
 });
 assert.deepEqual(tools, [
 	"wiki_state",
+	"wiki_attention",
 	"wiki_config",
 	"wiki_change",
 	"wiki_decide",
@@ -336,6 +337,8 @@ assert.match(
 );
 assert.deepEqual(commands, [
 	"wiki-dashboard",
+	"wiki-attention",
+	"wiki-select",
 	"wiki-resume",
 	"wiki-explain",
 	"wiki-config",

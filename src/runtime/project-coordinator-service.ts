@@ -6,6 +6,12 @@ import type { Server } from "node:http";
 
 import type { WorktreeCommandRunner } from "../git/worktrees.ts";
 import {
+	BACKLOG_TRIAGE_QUERY_PROTOCOL,
+	type BacklogTriageQueryRequest,
+	type BacklogTriageQueryResult,
+} from "../changes/triage/contracts.ts";
+import {queryBacklogTriage} from "../changes/triage/query.ts";
+import {
 	DecisionAttentionSelectionError,
 	parseDecisionAttentionSelectionCommand,
 	type AuthenticatedDecisionSelectionAuthority,
@@ -167,6 +173,9 @@ export interface ProjectCoordinatorRemoteClient {
 	semanticExecution: ProjectCoordinatorSemanticExecution;
 	state(): Promise<ProjectCoordinatorSnapshot>;
 	inspect(trigger: ProjectCoordinatorRemoteTrigger): Promise<RuntimeReaction>;
+	decisionAttention(
+		request?: BacklogTriageQueryRequest,
+	): Promise<BacklogTriageQueryResult>;
 	selectDecision(
 		command: DecisionAttentionSelectionCommand,
 	): Promise<DecisionStartResult>;
@@ -218,6 +227,7 @@ interface ServiceRuntime {
 	decisionStart?: {
 		readonly runtime: DecisionStartRuntime;
 		readonly resolveAuthority: ProjectCoordinatorDecisionStartOptions["resolveAuthority"];
+		readonly loadCurrentContext: ProjectCoordinatorDecisionStartOptions["loadCurrentContext"];
 	};
 	clients: Map<string, RemoteClientLease>;
 	clientLeaseMs: number;
@@ -305,6 +315,7 @@ export async function startProjectCoordinatorService(
 		const decisionStart = decisionStartOptions
 			? {
 					resolveAuthority: decisionStartOptions.resolveAuthority,
+					loadCurrentContext: decisionStartOptions.loadCurrentContext,
 					runtime: createDecisionStartRuntime({
 						coordinator,
 						loadCurrentContext: decisionStartOptions.loadCurrentContext,
@@ -455,6 +466,21 @@ export async function connectProjectCoordinatorClient(
 				{
 					method: "POST",
 					body: { connectionId: response.connectionId, trigger },
+					timeoutMs: options.timeoutMs,
+				},
+			);
+		},
+		decisionAttention(request) {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<BacklogTriageQueryResult>(
+				endpoint,
+				"/v1/runtime/decision-attention",
+				{
+					method: "POST",
+					body: {
+						connectionId: response.connectionId,
+						...(request === undefined ? {} : {request}),
+					},
 					timeoutMs: options.timeoutMs,
 				},
 			);
@@ -685,6 +711,10 @@ async function routeServiceRequest(
 		await handleRuntimeInspection(runtime, request, response);
 		return;
 	}
+	if (method === "POST" && url.pathname === "/v1/runtime/decision-attention") {
+		await handleDecisionAttentionQuery(runtime, request, response);
+		return;
+	}
 	if (method === "POST" && url.pathname === "/v1/runtime/decision-selection") {
 		await handleDecisionAttentionSelection(runtime, request, response);
 		return;
@@ -771,6 +801,42 @@ async function handleRuntimeInspection(
 			});
 		}
 		writeJson(response, 200, reaction);
+	} finally {
+		extendLease(runtime, lease);
+	}
+}
+
+async function handleDecisionAttentionQuery(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+): Promise<void> {
+	const start = runtime.decisionStart;
+	if (!start) {
+		throw new HttpError(503, "decision_attention_projection_unavailable");
+	}
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, ["connectionId", "request"]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	lease.activeRequests += 1;
+	try {
+		await assertCurrentGeneration(runtime);
+		const context = await start.loadCurrentContext();
+		const queryRequest =
+			body.request === undefined
+				? {
+						protocol: BACKLOG_TRIAGE_QUERY_PROTOCOL,
+						projectionDigest: context.projection.projectionDigest,
+					}
+				: (body.request as BacklogTriageQueryRequest);
+		let result: BacklogTriageQueryResult;
+		try {
+			result = queryBacklogTriage(context.projection, queryRequest);
+		} catch (error) {
+			throw new HttpError(400, errorMessage(error));
+		}
+		await assertCurrentGeneration(runtime);
+		writeJson(response, 200, result);
 	} finally {
 		extendLease(runtime, lease);
 	}

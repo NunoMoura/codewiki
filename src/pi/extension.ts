@@ -36,7 +36,11 @@ export function registerCodewikiExtension(
 		options.connectDashboardCoordinator ?? true;
 	registerCodewikiMessageRenderers(pi);
 	registerCodewikiTools(pi, projectServices);
-	registerCodewikiCommands(pi, connectDashboardCoordinator);
+	registerCodewikiCommands(
+		pi,
+		connectDashboardCoordinator,
+		projectServices,
+	);
 	registerCodewikiPromptHooks(pi);
 	registerRuntimeToolRouting(pi, projectServices);
 	registerCodeWikiReviewHooks({ on: pi.on?.bind(pi) });

@@ -35,6 +35,8 @@ import {
 } from "../../src/pi/tui/index.ts";
 import { shouldOpenAutomaticDashboard } from "../../src/pi/tui/footer.ts";
 import { changeTraceId } from "../../src/changes/change-trace.ts";
+import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../src/changes/triage/contracts.ts";
+import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../src/changes/triage/selection.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
 import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
@@ -202,9 +204,11 @@ describe("Pi extension adapter", () => {
 		);
 		assert.equal(codewikiPromptHooksAvailable, true);
 		assert.equal(codewikiTuiRenderersAvailable, true);
-		assert.equal(toolByName(pi, "wiki_state").executionMode, "parallel");
+		for (const name of ["wiki_state", "wiki_attention"]) {
+			assert.equal(toolByName(pi, name).executionMode, "parallel");
+		}
 		for (const name of CODEWIKI_TOOL_NAMES.filter(
-			(candidate) => candidate !== "wiki_state",
+			(candidate) => !["wiki_state", "wiki_attention"].includes(candidate),
 		)) {
 			assert.equal(toolByName(pi, name).executionMode, "sequential");
 		}
@@ -217,6 +221,132 @@ describe("Pi extension adapter", () => {
 			extensions: ["dist/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
+	});
+
+	it("browses bound Decision attention read-only and selects only through an explicit exact-revision command", async () => {
+		const root = await fixture();
+		try {
+			const pi = mockPi();
+			const projectionDigest = `sha256:${"b".repeat(64)}`;
+			const revisionId = `sha256:${"a".repeat(64)}`;
+			const attentionResult = {
+				protocol: BACKLOG_TRIAGE_QUERY_PROTOCOL,
+				projectionDigest,
+				workStateDigest: `sha256:${"c".repeat(64)}`,
+				graphSnapshotDigest: `sha256:${"d".repeat(64)}`,
+				graphContentDigest: `sha256:${"e".repeat(64)}`,
+				triagePolicyDigest: `sha256:${"f".repeat(64)}`,
+				orderBy: "default",
+				queryDigest: `sha256:${"1".repeat(64)}`,
+				items: [
+					{
+						rank: 1,
+						candidate: {
+							changeId: "CHG-explicit-user-selection",
+							changeRevisionId: revisionId,
+							title: "Require explicit user selection",
+							status: "pending",
+							readiness: {value: "ready"},
+						},
+						orderingReasons: [
+							{
+								code: "protected-tier",
+								detail: "Eligible exact revision.",
+								refs: ["change:CHG-explicit-user-selection"],
+							},
+						],
+					},
+				],
+				coverage: {
+					projectedCandidateCount: 1,
+					matchedCandidateCount: 1,
+					returnedCandidateCount: 1,
+					truncated: false,
+				},
+				resultDigest: `sha256:${"2".repeat(64)}`,
+			};
+			const selections = [];
+			const projectServices = {
+				...testPiProjectServices(),
+				async decisionAttention() {
+					return attentionResult;
+				},
+				async selectDecision(input) {
+					selections.push(input);
+					return {attemptOperationId: "op:decision-attempt:test"};
+				},
+			};
+			registerCodewikiExtension(pi.api, {
+				projectServices,
+				connectDashboardCoordinator: false,
+			});
+			const context = {
+				cwd: root,
+				mode: "rpc",
+				sessionManager: {getSessionId: () => "session:selection-test"},
+			};
+			const attentionTool = toolByName(pi, "wiki_attention");
+			const attention = assertToolResult(
+				await attentionTool.execute(
+					"tool-call-attention",
+					{},
+					undefined,
+					undefined,
+					context,
+				),
+				/wiki_attention: 1 of 1 matched exact Change revision/,
+			);
+			assert.equal(attention.projectionDigest, projectionDigest);
+			await assert.rejects(
+				attentionTool.execute(
+					"tool-call-attention-extra",
+					{select: true},
+					undefined,
+					undefined,
+					context,
+				),
+				/wiki_attention received unsupported parameter select/,
+			);
+
+			const attentionCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-attention",
+			).command;
+			const attentionCommandResult = await attentionCommand.handler(
+				"--json",
+				context,
+			);
+			assert.equal(attentionCommandResult.result.projectionDigest, projectionDigest);
+
+			const selectCommand = pi.commands.find(
+				(candidate) => candidate.name === "wiki-select",
+			).command;
+			const selected = await selectCommand.handler(
+				`CHG-explicit-user-selection --revision ${revisionId} --projection ${projectionDigest} --allow-non-project-install`,
+				context,
+			);
+			assert.equal(selected.attemptOperationId, "op:decision-attempt:test");
+			assert.equal(selections.length, 1);
+			assert.deepEqual(selections[0].command.protocolId, DECISION_ATTENTION_SELECTION_PROTOCOL.id);
+			assert.deepEqual(Object.keys(selections[0].command).sort(), [
+				"changeId",
+				"changeRevisionId",
+				"expectedProjectionDigest",
+				"idempotencyKey",
+				"protocolId",
+				"protocolVersion",
+			]);
+			assert.match(selections[0].command.idempotencyKey, /^pi-selection:/);
+			await assert.rejects(
+				selectCommand.handler(
+					`CHG-explicit-user-selection --revision ${revisionId} --projection ${projectionDigest} --authority admin`,
+					context,
+				),
+				/Unsupported \/wiki-select option: --authority/,
+			);
+			assert.equal(selections.length, 1);
+		} finally {
+			await rm(root, {recursive: true, force: true});
+		}
 	});
 
 	it("exposes guarded Change reads through the registered Pi tool", async () => {
