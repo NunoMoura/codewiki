@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added executable `codewiki.verification-capability-matrix@1.0.0`. Every Loop-qualified Default or active Custom Check now projects exact Catalog/config identity, execution status, Evidence obligations, trusted-producer/capability gaps, and potential standard formats into immutable digested rows. Canonical Evidence material admission is native, while SARIF 2.1, JUnit, LCOV, Cobertura, CycloneDX, SPDX, Playwright, axe, Pact, OpenAPI, and provider-check adapters remain explicitly `not_implemented`. Every format is Evidence-only with `grantsResult: false`; external tools never gain Result authority.",
+					},
+					{
+						kind: "Update",
 						text: "Added authenticated Decision-attention browsing through `/v1/runtime/decision-attention`, `ProjectCoordinatorRemoteClient`, `PiProjectServiceClientProvider`, read-only `wiki_attention`, and `/wiki-attention`. Omitted query input bootstraps one bounded `codewiki.backlog-triage-query@2.0.0` result from the current exact projection; supplied queries must bind that projection and reject drift or unsupported fields. Explicit user command `/wiki-select <change-id> --revision <revision-id> --projection <digest>` creates a fresh idempotency key and submits only the strict selection command. No model-callable selection tool or caller authority field exists; observers and missing native host capability remain fail-closed.",
 					},
 					{
