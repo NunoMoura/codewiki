@@ -42,6 +42,7 @@ export type VerificationArtifactFormat =
 
 export type VerificationAdapterStatus =
 	| "native_admission"
+	| "implemented"
 	| "not_implemented";
 
 export interface VerificationFormatCapability {
@@ -180,7 +181,7 @@ export function buildVerificationCapabilityMatrix(
 			(entry) => entry.status === "capability_required",
 		).length,
 		standardAdapterCount: STANDARD_FORMAT_BINDINGS.length,
-		implementedStandardAdapterCount: 0,
+		implementedStandardAdapterCount: 1,
 	});
 	const body = toCanonicalJsonValue({
 		protocol: VERIFICATION_CAPABILITY_MATRIX_PROTOCOL,
@@ -266,7 +267,8 @@ function formatCapabilities(
 		if (evidenceKinds.length === 0) continue;
 		capabilities.push({
 			format: binding.format,
-			status: "not_implemented",
+			status:
+				binding.format === "sarif_2_1_0" ? "implemented" : "not_implemented",
 			evidenceKinds,
 			authorityCeiling: binding.authorityCeiling,
 			grantsResult: false,

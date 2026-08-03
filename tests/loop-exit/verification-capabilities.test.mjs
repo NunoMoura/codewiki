@@ -31,7 +31,7 @@ describe("verification capability matrix", () => {
 			expectedCount,
 		);
 		assert.equal(matrix.summary.standardAdapterCount, 11);
-		assert.equal(matrix.summary.implementedStandardAdapterCount, 0);
+		assert.equal(matrix.summary.implementedStandardAdapterCount, 1);
 		assert.deepEqual(
 			buildVerificationCapabilityMatrix(catalog),
 			matrix,
@@ -75,7 +75,7 @@ describe("verification capability matrix", () => {
 			format(scanner, "codewiki_evidence_material").authorityCeiling,
 			"observed",
 		);
-		assert.equal(format(scanner, "sarif_2_1_0").status, "not_implemented");
+		assert.equal(format(scanner, "sarif_2_1_0").status, "implemented");
 		assert.equal(format(scanner, "cyclonedx").status, "not_implemented");
 		assert.equal(format(scanner, "spdx").status, "not_implemented");
 		assert.ok(scanner.gaps.includes("exact_evidence_collection_required"));

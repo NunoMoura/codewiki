@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added bounded `codewiki.evidence-adapter.sarif@1.0.0`. Exact Runtime-owned tool/version, source snapshot/scanned paths, adapter/request/invocation/environment/configuration/advisory, and execution bindings admit at most 4 MiB of SARIF 2.1 bytes, 32 runs, 8,192 findings, and 256 compact observations/refs. Raw bytes and finding messages are digested; unsafe absolute/URI locations are excluded with partial coverage; unavailable/non-exited execution cannot become complete. Output is only canonical-receipted `command_execution` and `source_observation` material with no subject/time/authority/verdict input. Verification matrix now reports SARIF implemented and all remaining standard adapters missing.",
+					},
+					{
+						kind: "Update",
 						text: "Added executable `codewiki.verification-capability-matrix@1.0.0`. Every Loop-qualified Default or active Custom Check now projects exact Catalog/config identity, execution status, Evidence obligations, trusted-producer/capability gaps, and potential standard formats into immutable digested rows. Canonical Evidence material admission is native, while SARIF 2.1, JUnit, LCOV, Cobertura, CycloneDX, SPDX, Playwright, axe, Pact, OpenAPI, and provider-check adapters remain explicitly `not_implemented`. Every format is Evidence-only with `grantsResult: false`; external tools never gain Result authority.",
 					},
 					{
