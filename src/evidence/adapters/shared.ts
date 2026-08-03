@@ -162,6 +162,30 @@ export function buildCommandExecutionMaterial(input: {
 	});
 }
 
+export function buildSourceObservationMaterial(input: {
+	readonly artifact: EvidenceArtifact;
+	readonly provenanceRefs: readonly string[];
+	readonly snapshotDigest: Sha256Digest;
+	readonly paths: readonly string[];
+	readonly ownershipRefs: readonly string[];
+	readonly observations: readonly string[];
+}): EvidenceMaterial<"source_observation"> {
+	return Object.freeze({
+		schemaVersion: EVIDENCE_SCHEMA_VERSION,
+		kind: "source_observation",
+		artifact: input.artifact,
+		provenanceRefs: input.provenanceRefs,
+		payload: {
+			sourceType: "source" as const,
+			snapshotDigest: input.snapshotDigest,
+			paths: input.paths,
+			symbols: [],
+			ownershipRefs: input.ownershipRefs,
+			observations: input.observations,
+		},
+	});
+}
+
 export function normalizedProjectPath(value: unknown): {
 	readonly path?: string;
 	readonly unsafe: boolean;

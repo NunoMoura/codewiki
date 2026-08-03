@@ -30,8 +30,8 @@ describe("verification capability matrix", () => {
 				matrix.summary.capabilityRequiredCount,
 			expectedCount,
 		);
-		assert.equal(matrix.summary.standardAdapterCount, 11);
-		assert.equal(matrix.summary.implementedStandardAdapterCount, 5);
+		assert.equal(matrix.summary.standardAdapterCount, 9);
+		assert.equal(matrix.summary.implementedStandardAdapterCount, 9);
 		assert.deepEqual(
 			buildVerificationCapabilityMatrix(catalog),
 			matrix,
@@ -76,8 +76,10 @@ describe("verification capability matrix", () => {
 			"observed",
 		);
 		assert.equal(format(scanner, "sarif_2_1_0").status, "implemented");
-		assert.equal(format(scanner, "cyclonedx").status, "not_implemented");
-		assert.equal(format(scanner, "spdx").status, "not_implemented");
+		assert.equal(format(scanner, "cyclonedx").status, "implemented");
+		assert.equal(format(scanner, "spdx").status, "implemented");
+		assert.equal(format(scanner, "pact").status, "implemented");
+		assert.equal(format(scanner, "openapi").status, "implemented");
 		assert.ok(scanner.gaps.includes("exact_evidence_collection_required"));
 
 		const language = capability(

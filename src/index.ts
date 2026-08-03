@@ -6,6 +6,10 @@ export * from "./evidence/adapters/sarif.ts";
 export * from "./evidence/adapters/junit.ts";
 export * from "./evidence/adapters/coverage.ts";
 export * from "./evidence/adapters/provider-check-receipt.ts";
+export * from "./evidence/adapters/cyclonedx.ts";
+export * from "./evidence/adapters/spdx.ts";
+export * from "./evidence/adapters/pact.ts";
+export * from "./evidence/adapters/openapi.ts";
 export * from "./pi/user-standard-distillation-session.ts";
 export {
 	PI_NATIVE_DECISION_HOST_PROTOCOL,

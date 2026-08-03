@@ -26,6 +26,7 @@ import {
 	sortedUnique,
 	type StandardAdapterExecutionBinding,
 } from "./shared.ts";
+import {parseBoundedJsonObject} from "./document.ts";
 
 export const SARIF_EVIDENCE_ADAPTER_PROTOCOL = Object.freeze({
 	id: "codewiki.evidence-adapter.sarif",
@@ -265,14 +266,7 @@ function admittedExecution(value: unknown): SarifExecutionBinding {
 }
 
 function parseSarifDocument(bytesValue: Uint8Array): Record<string, unknown> {
-	let parsed: unknown;
-	try {
-		parsed = JSON.parse(Buffer.from(bytesValue).toString("utf8"));
-	} catch (error) {
-		const reason = error instanceof Error ? error.message : String(error);
-		throw new Error(`SARIF artifact is not valid JSON: ${reason}`);
-	}
-	const document = object(parsed, "SARIF document");
+	const document = parseBoundedJsonObject(bytesValue, "SARIF");
 	if (document.version !== "2.1.0") {
 		throw new Error("SARIF document version must be 2.1.0.");
 	}

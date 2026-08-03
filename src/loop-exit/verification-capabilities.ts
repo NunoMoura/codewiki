@@ -18,7 +18,7 @@ import type {CheckExecutionKind} from "./contracts.ts";
 
 export const VERIFICATION_CAPABILITY_MATRIX_PROTOCOL = Object.freeze({
 	id: "codewiki.verification-capability-matrix",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 export type VerificationCapabilityStatus =
@@ -34,8 +34,6 @@ export type VerificationArtifactFormat =
 	| "cobertura_xml"
 	| "cyclonedx"
 	| "spdx"
-	| "playwright"
-	| "axe"
 	| "pact"
 	| "openapi"
 	| "provider_check_receipt";
@@ -105,6 +103,10 @@ const IMPLEMENTED_STANDARD_ADAPTER_FORMATS = new Set<VerificationArtifactFormat>
 	"junit_xml",
 	"lcov",
 	"cobertura_xml",
+	"cyclonedx",
+	"spdx",
+	"pact",
+	"openapi",
 	"provider_check_receipt",
 ]);
 
@@ -140,23 +142,13 @@ const STANDARD_FORMAT_BINDINGS: readonly StandardFormatBinding[] = [
 		authorityCeiling: "observed",
 	},
 	{
-		format: "playwright",
-		evidenceKinds: ["command_execution", "ui_capture"],
-		authorityCeiling: "observed",
-	},
-	{
-		format: "axe",
-		evidenceKinds: ["command_execution", "ui_capture"],
-		authorityCeiling: "observed",
-	},
-	{
 		format: "pact",
-		evidenceKinds: ["command_execution", "source_observation"],
+		evidenceKinds: ["source_observation"],
 		authorityCeiling: "observed",
 	},
 	{
 		format: "openapi",
-		evidenceKinds: ["command_execution", "source_observation"],
+		evidenceKinds: ["source_observation"],
 		authorityCeiling: "observed",
 	},
 	{

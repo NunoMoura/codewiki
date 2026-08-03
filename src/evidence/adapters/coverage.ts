@@ -1,8 +1,7 @@
-import {
-	EVIDENCE_SCHEMA_VERSION,
-	type EvidenceArtifact,
-	type EvidenceCoverage,
-	type EvidenceMaterial,
+import type {
+	EvidenceArtifact,
+	EvidenceCoverage,
+	EvidenceMaterial,
 } from "../contracts.ts";
 import {
 	canonicalJsonDigest,
@@ -22,6 +21,7 @@ const {
 	assertOnlyKeys,
 	boundedText,
 	buildCommandExecutionMaterial,
+	buildSourceObservationMaterial,
 	compareText,
 	digestValue: digest,
 	normalizedProjectPath,
@@ -189,20 +189,15 @@ function ingestCoverageEvidence(
 		execution: admitted.execution,
 		diagnosticRefs: scoped.diagnosticRefs,
 	});
-	const sourceObservation: EvidenceMaterial<"source_observation"> = Object.freeze({
-		schemaVersion: EVIDENCE_SCHEMA_VERSION,
-		kind: "source_observation",
-		artifact,
-		provenanceRefs,
-		payload: {
-			sourceType: "source" as const,
+	const sourceObservation: EvidenceMaterial<"source_observation"> =
+		buildSourceObservationMaterial({
+			artifact,
+			provenanceRefs,
 			snapshotDigest: admitted.sourceSnapshotDigest,
 			paths: admitted.requiredPaths,
-			symbols: [],
 			ownershipRefs: admitted.ownershipRefs,
 			observations: scoped.observations,
-		},
-	});
+		});
 	const body = toCanonicalJsonValue({
 		protocol: definition.protocol,
 		format: definition.format,

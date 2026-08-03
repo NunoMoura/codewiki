@@ -217,6 +217,18 @@ describe("SARIF 2.1 Evidence adapter", () => {
 				}),
 			/SARIF document version must be 2.1.0/,
 		);
+		const duplicateKey = sarif().replace(
+			'"version":"2.1.0"',
+			'"version":"2.1.0","version":"2.1.0"',
+		);
+		assert.throws(
+			() =>
+				ingestSarif21Evidence({
+					...input(),
+					artifact: {bytes: duplicateKey, ref: "artifact:sarif/duplicate"},
+				}),
+			/malformed or duplicate-key syntax/,
+		);
 		assert.throws(
 			() =>
 				ingestSarif21Evidence({
