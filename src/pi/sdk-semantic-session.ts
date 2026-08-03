@@ -27,6 +27,11 @@ import type {
 	RuntimePlanningInvocation,
 	RuntimeSemanticAdapters,
 } from "../runtime/semantic-executor.ts";
+import {
+	assertNativeDecisionCandidateProductionRequest,
+	type NativeDecisionCandidateProducer,
+	type NativeDecisionCandidateProductionRequest,
+} from "../runtime/native-decision-executor.ts";
 
 export { createPiDecisionModelCheckTransport } from "./decision-model-check-session.ts";
 export { createPiDecisionResearchClaimsTransport } from "./decision-research-claims-session.ts";
@@ -140,9 +145,52 @@ interface ReadOnlyToolCall {
 export function createPiSdkRuntimeSemanticAdapters(
 	options: PiSdkRuntimeSemanticAdapterOptions,
 ): RuntimeSemanticAdapters {
-	const repoRoot = requiredRepoRoot(options.repoRoot);
-	const runner: PiSdkSemanticRunnerOptions = {
-		repoRoot,
+	const runner = createSemanticRunner(options);
+	return {
+		decision: (input) =>
+			runSemanticSession<RuntimeDecisionInvocation, DecisionCandidateProposal>(
+				runner,
+				"decision",
+				input,
+			),
+		planning: (input) =>
+			runSemanticSession<RuntimePlanningInvocation, PlanningCandidateContent>(
+				runner,
+				"planning",
+				input,
+			),
+		implementation: (input) =>
+			runSemanticSession<
+				RuntimeImplementationInvocation,
+				ImplementationCandidateContent
+			>(runner, "implementation", input),
+	};
+}
+
+export function createPiSdkNativeDecisionCandidateProducer(
+	options: PiSdkRuntimeSemanticAdapterOptions,
+): NativeDecisionCandidateProducer {
+	const runner = createSemanticRunner(options);
+	return Object.freeze({
+		produce(input: {
+			readonly request: NativeDecisionCandidateProductionRequest;
+			readonly signal: AbortSignal;
+		}) {
+			const {request, signal} = input;
+			assertNativeDecisionCandidateProductionRequest(request);
+			return runSemanticSession<
+				NativeDecisionCandidateProductionRequest,
+				DecisionCandidateProposal
+			>(runner, "decision", request, signal);
+		},
+	});
+}
+
+function createSemanticRunner(
+	options: PiSdkRuntimeSemanticAdapterOptions,
+): PiSdkSemanticRunnerOptions {
+	return {
+		repoRoot: requiredRepoRoot(options.repoRoot),
 		timeoutMs: boundedInteger({
 			value: options.timeoutMs,
 			fallback: DEFAULT_TIMEOUT_MS,
@@ -166,27 +214,7 @@ export function createPiSdkRuntimeSemanticAdapters(
 		}),
 		sessionFactory:
 			options.sessionFactory || createDefaultPiSdkSessionFactory(options),
-		...(options.onObservation ? { onObservation: options.onObservation } : {}),
-	};
-
-	return {
-		decision: (input) =>
-			runSemanticSession<RuntimeDecisionInvocation, DecisionCandidateProposal>(
-				runner,
-				"decision",
-				input,
-			),
-		planning: (input) =>
-			runSemanticSession<RuntimePlanningInvocation, PlanningCandidateContent>(
-				runner,
-				"planning",
-				input,
-			),
-		implementation: (input) =>
-			runSemanticSession<
-				RuntimeImplementationInvocation,
-				ImplementationCandidateContent
-			>(runner, "implementation", input),
+		...(options.onObservation ? {onObservation: options.onObservation} : {}),
 	};
 }
 
@@ -194,7 +222,9 @@ async function runSemanticSession<TInvocation, TCandidate>(
 	options: PiSdkSemanticRunnerOptions,
 	role: PiSdkSemanticRole,
 	invocation: TInvocation,
+	signal?: AbortSignal,
 ): Promise<TCandidate> {
+	signal?.throwIfAborted();
 	const invocationJson = boundedJson(
 		invocation,
 		options.maxInvocationBytes,
@@ -204,22 +234,38 @@ async function runSemanticSession<TInvocation, TCandidate>(
 	let candidate: unknown;
 	let submissions = 0;
 	let session: PiSdkBoundedSession | undefined;
-	let timedOut = false;
+	let cancelled = false;
 	let timer: NodeJS.Timeout | undefined;
+	let removeAbortListener: (() => void) | undefined;
 
 	const timeoutError = new Error(
 		`Pi SDK ${role} session exceeded ${options.timeoutMs}ms.`,
 	);
-	const timeout = new Promise<never>((_resolve, reject) => {
-		timer = setTimeout(() => {
-			timedOut = true;
-			reject(timeoutError);
-			void abortSession(session);
-		}, options.timeoutMs);
-	});
+	const cancellationGates: Promise<never>[] = [
+		new Promise<never>((_resolve, rejectTimeout) => {
+			timer = setTimeout(() => {
+				cancelled = true;
+				rejectTimeout(timeoutError);
+				void abortSession(session);
+			}, options.timeoutMs);
+		}),
+	];
+	if (signal) {
+		cancellationGates.push(
+			new Promise<never>((_resolve, rejectAbort) => {
+				const onAbort = () => {
+					cancelled = true;
+					rejectAbort(signal.reason);
+					void abortSession(session);
+				};
+			signal.addEventListener("abort", onAbort, {once: true});
+				removeAbortListener = () => signal.removeEventListener("abort", onAbort);
+			}),
+		);
+	}
 
 	try {
-		emitObservation(options, { role, state: "starting" });
+		emitObservation(options, {role, state: "starting"});
 		const sessionPromise = options.sessionFactory({
 			repoRoot: options.repoRoot,
 			role,
@@ -237,21 +283,22 @@ async function runSemanticSession<TInvocation, TCandidate>(
 		});
 		void sessionPromise.then(
 			(lateSession) => {
-				if (timedOut && lateSession !== session) {
+				if (cancelled && lateSession !== session) {
 					void disposeSessionQuietly(lateSession);
 				}
 			},
 			() => undefined,
 		);
-		session = await Promise.race([sessionPromise, timeout]);
+		session = await Promise.race([sessionPromise, ...cancellationGates]);
 		emitObservation(
 			options,
 			semanticSessionObservation(role, "running", session),
 		);
 		await Promise.race([
 			session.prompt(semanticInvocationPrompt(role, invocationJson)),
-			timeout,
+			...cancellationGates,
 		]);
+		signal?.throwIfAborted();
 		if (submissions !== 1 || candidate === undefined) {
 			throw new Error(
 				`Pi SDK ${role} session did not submit exactly one candidate.`,
@@ -267,7 +314,7 @@ async function runSemanticSession<TInvocation, TCandidate>(
 			options,
 			semanticSessionObservation(
 				role,
-				timedOut ? "cancelled" : "failed",
+				cancelled ? "cancelled" : "failed",
 				session,
 				boundedMessage(error),
 			),
@@ -275,7 +322,8 @@ async function runSemanticSession<TInvocation, TCandidate>(
 		throw error;
 	} finally {
 		if (timer) clearTimeout(timer);
-		await closeSemanticSession(session, timedOut);
+		removeAbortListener?.();
+		await closeSemanticSession({session, shouldDispose: cancelled});
 	}
 }
 
@@ -294,13 +342,13 @@ function semanticSessionObservation(
 	};
 }
 
-async function closeSemanticSession(
-	session: PiSdkBoundedSession | undefined,
-	timedOut: boolean,
-): Promise<void> {
-	if (!session) return;
-	if (timedOut) await disposeSessionQuietly(session);
-	else await session.dispose();
+async function closeSemanticSession(input: {
+	readonly session: PiSdkBoundedSession | undefined;
+	readonly shouldDispose: boolean;
+}): Promise<void> {
+	if (!input.session) return;
+	if (input.shouldDispose) await disposeSessionQuietly(input.session);
+	else await input.session.dispose();
 }
 
 function createDefaultPiSdkSessionFactory(

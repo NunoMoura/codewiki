@@ -4,9 +4,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import {
+	createPiSdkNativeDecisionCandidateProducer,
 	createPiSdkRuntimeSemanticAdapters,
 	validatePiSdkReadOnlyToolCall,
 } from "../../src/pi/sdk-semantic-session.ts";
+import {DECISION_CANDIDATE_PRODUCTION_PROTOCOL} from "../../src/runtime/native-decision-executor.ts";
+import {digest} from "../helpers/change-trace-v1.mjs";
+import {nativeDecisionRevision} from "../helpers/native-decision.mjs";
 
 function decisionInvocation(extra = {}) {
 	return {
@@ -27,6 +31,20 @@ function planningInvocation() {
 		loop: "planning",
 		observedWorkStateDigest: "sha256:work-state",
 		changes: [decisionInvocation().change],
+	};
+}
+
+function nativeDecisionProductionRequest() {
+	const revision = nativeDecisionRevision();
+	return {
+		protocolId: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.id,
+		protocolVersion: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.version,
+		attemptOperationId: digest("a"),
+		changeId: "CHG-sdk-native-decision",
+		changeRevisionId: revision.revisionId,
+		workStateDigest: digest("b"),
+		revision,
+		relationships: [],
 	};
 }
 
@@ -70,6 +88,90 @@ test("Pi SDK semantic adapter runs one bounded role session and returns its cand
 		["starting", "running", "completed"],
 	);
 	assert.deepEqual(sessions.at(-1), { disposed: true });
+});
+
+test("Pi SDK native Decision producer sends one exact bounded request", async () => {
+	let prompt = "";
+	let sessions = 0;
+	const producer = createPiSdkNativeDecisionCandidateProducer({
+		repoRoot: process.cwd(),
+		sessionFactory: async (input) => {
+			sessions += 1;
+			assert.equal(input.role, "decision");
+			return {
+				async prompt(value) {
+					prompt = value;
+					input.submitCandidate({
+						disposition: "approve",
+						rationale: "Exact native Change semantics support approval.",
+					});
+				},
+				dispose() {},
+			};
+		},
+	});
+	const request = nativeDecisionProductionRequest();
+	const candidate = await producer.produce({
+		request,
+		signal: new AbortController().signal,
+	});
+	assert.equal(sessions, 1);
+	assert.match(prompt, /codewiki\.decision-candidate-production/);
+	assert.match(prompt, new RegExp(request.changeRevisionId));
+	assert.deepEqual(candidate, {
+		disposition: "approve",
+		rationale: "Exact native Change semantics support approval.",
+	});
+
+	await assert.rejects(
+		async () =>
+			producer.produce({
+				request: {...request, authorityBinding: {actorId: "forged"}},
+				signal: new AbortController().signal,
+			}),
+		/unsupported fields: authorityBinding/,
+	);
+	assert.equal(sessions, 1);
+});
+
+test("Pi SDK native Decision producer aborts and disposes its active session", async () => {
+	const observations = [];
+	let aborts = 0;
+	let disposals = 0;
+	let markPromptStarted;
+	const promptStarted = new Promise((resolve) => {
+		markPromptStarted = resolve;
+	});
+	const producer = createPiSdkNativeDecisionCandidateProducer({
+		repoRoot: process.cwd(),
+		onObservation: (observation) => observations.push(observation),
+		sessionFactory: async () => ({
+			prompt() {
+				markPromptStarted();
+				return new Promise(() => undefined);
+			},
+			abort() {
+				aborts += 1;
+			},
+			dispose() {
+				disposals += 1;
+			},
+		}),
+	});
+	const controller = new AbortController();
+	const running = producer.produce({
+		request: nativeDecisionProductionRequest(),
+		signal: controller.signal,
+	});
+	await promptStarted;
+	controller.abort();
+	await assert.rejects(running, (error) => error?.name === "AbortError");
+	assert.equal(aborts, 1);
+	assert.equal(disposals, 1);
+	assert.deepEqual(
+		observations.map((entry) => entry.state),
+		["starting", "running", "cancelled"],
+	);
 });
 
 test("default Pi SDK factory enables only read tools and one closed candidate tool", async () => {

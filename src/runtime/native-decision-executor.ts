@@ -1,7 +1,8 @@
-import type {
-	AuthorityBinding,
-	ChangeRevision,
-	OperationId,
+import {
+	changeRevisionSchema,
+	type AuthorityBinding,
+	type ChangeRevision,
+	type OperationId,
 } from "../change-trace/contracts.ts";
 import type {GitCommandRunner} from "../change-trace/git-command.ts";
 import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
@@ -33,9 +34,12 @@ import {
 	type NativeDecisionCommitReceipt,
 } from "./native-decision-operations.ts";
 import {
+	assertSha256Digest,
+	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../utils/canonical-json.ts";
+import {assertTypeboxSchema} from "../utils/json.ts";
 
 export const DECISION_CANDIDATE_PRODUCTION_PROTOCOL = Object.freeze({
 	id: "codewiki.decision-candidate-production",
@@ -51,6 +55,63 @@ export interface NativeDecisionCandidateProductionRequest {
 	readonly workStateDigest: Sha256Digest;
 	readonly revision: ChangeRevision;
 	readonly relationships: ChangeWorkState["relationships"];
+}
+
+export function assertNativeDecisionCandidateProductionRequest(
+	value: unknown,
+): asserts value is NativeDecisionCandidateProductionRequest {
+	assertOnlyKeys({
+		value,
+		allowed: [
+			"protocolId",
+			"protocolVersion",
+			"attemptOperationId",
+			"changeId",
+			"changeRevisionId",
+			"workStateDigest",
+			"revision",
+			"relationships",
+		],
+		label: "Native Decision candidate production request",
+	});
+	const request = value as NativeDecisionCandidateProductionRequest;
+	if (
+		request.protocolId !== DECISION_CANDIDATE_PRODUCTION_PROTOCOL.id ||
+		request.protocolVersion !== DECISION_CANDIDATE_PRODUCTION_PROTOCOL.version
+	) {
+		throw new Error("Native Decision candidate production protocol is invalid.");
+	}
+	assertSha256Digest(request.attemptOperationId, "attemptOperationId");
+	assertSha256Digest(request.changeRevisionId, "changeRevisionId");
+	assertSha256Digest(request.workStateDigest, "workStateDigest");
+	if (
+		typeof request.changeId !== "string" ||
+		!request.changeId.trim() ||
+		request.changeId.length > 132
+	) {
+		throw new Error("Native Decision candidate production changeId is invalid.");
+	}
+	assertTypeboxSchema(
+		changeRevisionSchema,
+		request.revision,
+		"Native Decision candidate production revision",
+	);
+	if (
+		request.revision.revisionId !== request.changeRevisionId ||
+		canonicalJsonDigest(request.revision.content) !== request.revision.revisionId
+	) {
+		throw new Error(
+			"Native Decision candidate production revision identity is invalid.",
+		);
+	}
+	if (!Array.isArray(request.relationships)) {
+		throw new Error(
+			"Native Decision candidate production relationships must be an array.",
+		);
+	}
+	for (const relationship of request.relationships) {
+		assertProductionRelationship(relationship);
+	}
 }
 
 export interface NativeDecisionCandidateProducer {
@@ -256,7 +317,7 @@ function candidateProductionRequest(input: {
 	if (!revision) {
 		throw new Error("Native Decision candidate production requires a current revision.");
 	}
-	return toCanonicalJsonValue({
+	const request = toCanonicalJsonValue({
 		protocolId: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.id,
 		protocolVersion: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.version,
 		attemptOperationId: input.attemptOperationId,
@@ -265,7 +326,9 @@ function candidateProductionRequest(input: {
 		workStateDigest: input.current.state.workStateDigest,
 		revision,
 		relationships: input.current.change.relationships,
-	}) as unknown as NativeDecisionCandidateProductionRequest;
+	});
+	assertNativeDecisionCandidateProductionRequest(request);
+	return request;
 }
 
 async function loadCurrentAttempt(input: {
@@ -345,6 +408,49 @@ function normalizeEvaluationInput(
 	});
 }
 
+function assertProductionRelationship(value: unknown): void {
+	assertOnlyKeys({
+		value,
+		allowed: [
+			"operationId",
+			"relationshipId",
+			"type",
+			"sourceRevisionId",
+			"targetChangeId",
+			"targetRevisionId",
+			"supersededByOperationId",
+		],
+		label: "Native Decision candidate production relationship",
+	});
+	const relationship = value as Record<string, unknown>;
+	for (const field of [
+		"operationId",
+		"relationshipId",
+		"sourceRevisionId",
+		"targetRevisionId",
+	] as const) {
+		assertSha256Digest(relationship[field], `relationship.${field}`);
+	}
+	if (
+		typeof relationship.type !== "string" ||
+		!relationship.type.trim() ||
+		relationship.type.length > 128 ||
+		typeof relationship.targetChangeId !== "string" ||
+		!relationship.targetChangeId.trim() ||
+		relationship.targetChangeId.length > 132
+	) {
+		throw new Error(
+			"Native Decision candidate production relationship identity is invalid.",
+		);
+	}
+	if (relationship.supersededByOperationId !== null) {
+		assertSha256Digest(
+			relationship.supersededByOperationId,
+			"relationship.supersededByOperationId",
+		);
+	}
+}
+
 function committedAttemptResult(input: {
 	readonly receipt: NativeDecisionCommitReceipt;
 	readonly changeId: string;
@@ -387,10 +493,13 @@ function attemptResult(current: CurrentAttempt): NativeDecisionAttemptResult {
 }
 
 function assertOnlyKeys(input: {
-	readonly value: object;
+	readonly value: unknown;
 	readonly allowed: readonly string[];
 	readonly label: string;
 }): void {
+	if (!input.value || typeof input.value !== "object" || Array.isArray(input.value)) {
+		throw new Error(`${input.label} must be an object.`);
+	}
 	const extras = Object.keys(input.value).filter(
 		(key) => !input.allowed.includes(key),
 	);

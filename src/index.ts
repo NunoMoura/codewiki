@@ -10,6 +10,7 @@ export {
 } from "./runtime/decision-git-admission.ts";
 export {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
+	assertNativeDecisionCandidateProductionRequest,
 	createNativeDecisionAttemptExecutor,
 	type NativeDecisionAttemptExecutorOptions,
 	type NativeDecisionAttemptResult,

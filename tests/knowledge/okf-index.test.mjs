@@ -104,11 +104,15 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added `createPiSdkNativeDecisionCandidateProducer()` for the closed native Decision producer protocol. It rejects unsupported or authority-bearing request fields before session creation, validates exact revision identity and relationship shape, runs one isolated read-only Pi SDK session, accepts exactly one strict disposition/rationale proposal, enforces request/output/time bounds, and propagates coordinator cancellation through session abort and disposal. Final trusted daemon host composition remains pending.",
+					},
+					{
+						kind: "Update",
 						text: "Added `createDecisionGitAdmission()` as the Runtime-owned selected-Decision context/appender boundary. It fresh-synchronizes Change state, loads and digest-checks protected config from the exact team source head, compiles Standard-derived triage policy, projects the Alignment Graph and a short-lived bound Backlog Triage context, and reuses that identity across authorization revalidation. Attempt append re-fetches state, checks expected WorkState and every team snapshot field, performs one expected-head Git push without blind retry, and verifies the exact canonical operation. Repository identity, current project authority, and replay policy remain trusted host inputs.",
 					},
 					{
 						kind: "Update",
-						text: "Added the host-configured native Decision attempt executor. It reloads fresh synchronized Git state, validates the exact authenticated active attempt/revision and protected-source/config-bound Exit Runtime before producer invocation, emits one bounded `codewiki.decision-candidate-production@1.0.0` request without authority or Evidence, materializes Candidate `2.0.0`, runs native Exit reduction, and commits supplied plus produced Evidence through attempt end under exact CAS. Canonical terminal attempt state recovers completion without producer/evaluator reinvocation. Pi daemon startup accepts an injected complete Decision-start bundle; default trusted authority and Pi producer/final host assembly remain pending.",
+						text: "Added the host-configured native Decision attempt executor. It reloads fresh synchronized Git state, validates the exact authenticated active attempt/revision and protected-source/config-bound Exit Runtime before producer invocation, emits one bounded `codewiki.decision-candidate-production@1.0.0` request without authority or Evidence, materializes Candidate `2.0.0`, runs native Exit reduction, and commits supplied plus produced Evidence through attempt end under exact CAS. Canonical terminal attempt state recovers completion without producer/evaluator reinvocation. Pi daemon startup accepts an injected complete Decision-start bundle; default trusted authority and final host assembly remain pending.",
 					},
 					{
 						kind: "Update",
