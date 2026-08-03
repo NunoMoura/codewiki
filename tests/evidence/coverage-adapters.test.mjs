@@ -172,6 +172,9 @@ describe("LCOV and Cobertura Evidence adapters", () => {
 			const admitted = entry.result;
 			assert.deepEqual({...admitted.protocol}, entry.protocol);
 			assert.equal(admitted.format, entry.format);
+			assert.equal(admitted.sourceSnapshotDigest, sourceSnapshotDigest);
+			assert.equal(admitted.authorityCeiling, "observed");
+			assert.equal(admitted.grantsResult, false);
 			assert.equal(admitted.coverage, "complete");
 			assert.deepEqual({...admitted.summary}, expectedSummary());
 			assert.equal(

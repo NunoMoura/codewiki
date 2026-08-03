@@ -84,6 +84,7 @@ export interface StructuredDocumentEvidenceResult<
 	readonly protocol: TProtocol;
 	readonly format: TFormat;
 	readonly artifact: EvidenceArtifact;
+	readonly sourceSnapshotDigest: Sha256Digest;
 	readonly tool: StructuredDocumentToolIdentity;
 	readonly authorityCeiling: EvidenceAuthority;
 	readonly grantsResult: false;
@@ -230,6 +231,7 @@ export function ingestStructuredDocumentEvidence<
 		protocol: definition.protocol,
 		format: definition.format,
 		artifact,
+		sourceSnapshotDigest: admitted.sourceSnapshotDigest,
 		tool: admitted.tool,
 		authorityCeiling: definition.authorityCeiling,
 		grantsResult: false,

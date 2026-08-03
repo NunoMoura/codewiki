@@ -104,6 +104,9 @@ describe("SARIF 2.1 Evidence adapter", () => {
 			{...admitted.protocol},
 			SARIF_EVIDENCE_ADAPTER_PROTOCOL,
 		);
+		assert.equal(admitted.sourceSnapshotDigest, sourceSnapshotDigest);
+		assert.equal(admitted.authorityCeiling, "observed");
+		assert.equal(admitted.grantsResult, false);
 		assert.equal(admitted.coverage, "complete");
 		assert.equal(admitted.summary.resultCount, 2);
 		assert.equal(admitted.summary.errorCount, 1);

@@ -134,7 +134,8 @@ export function evidenceObligationStatus(input: {
 	return input.potentiallyRelevant ? "indeterminate" : "missing";
 }
 
-function assertStableId(value: unknown, label: string): asserts value is string {
+function assertStableId(...args: [unknown, string]): void {
+	const [value, label] = args;
 	if (
 		typeof value !== "string" ||
 		!/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(value)
@@ -143,7 +144,8 @@ function assertStableId(value: unknown, label: string): asserts value is string 
 	}
 }
 
-function assertVersion(value: unknown, label: string): asserts value is string {
+function assertVersion(...args: [unknown, string]): void {
+	const [value, label] = args;
 	if (
 		typeof value !== "string" ||
 		!/^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$/.test(value)
@@ -153,9 +155,9 @@ function assertVersion(value: unknown, label: string): asserts value is string {
 }
 
 function assertEvidenceIdList(
-	values: readonly EvidenceId[],
-	label: string,
+	...args: [readonly EvidenceId[], string]
 ): void {
+	const [values, label] = args;
 	if (!Array.isArray(values)) {
 		throw new Error(`Evidence obligation resolution ${label} must be an array.`);
 	}
@@ -247,9 +249,9 @@ function assertResolutionAccounting(
 }
 
 function assertResolutionObligation(
-	resolution: EvidenceObligationResolution,
-	obligation: EvidenceObligation,
+	...args: [EvidenceObligationResolution, EvidenceObligation]
 ): void {
+	const [resolution, obligation] = args;
 	const obligationDigest = canonicalJsonDigest(obligation);
 	if (
 		resolution.obligationId !== obligation.id ||
@@ -273,10 +275,13 @@ function assertResolutionObligation(
 	const eligibleContradictionCount = resolution.contradictoryEvidenceIds.filter(
 		(evidenceId) => eligible.has(evidenceId),
 	).length;
-	const potentiallyRelevant = resolution.excludedEvidence.some(
-		(entry) =>
-			!entry.reasons.includes("kind") && !entry.reasons.includes("subject"),
-	);
+	const potentiallyRelevant =
+		resolution.neutralEvidenceIds.length > 0 ||
+		eligibleContradictionCount > 0 ||
+		resolution.excludedEvidence.some(
+			(entry) =>
+				!entry.reasons.includes("kind") && !entry.reasons.includes("subject"),
+		);
 	const expectedStatus = evidenceObligationStatus({
 		obligation,
 		supportingCount: resolution.supportingEvidenceIds.length,
@@ -292,10 +297,9 @@ function assertResolutionObligation(
 }
 
 function assertSubset(
-	values: ReadonlySet<EvidenceId>,
-	container: ReadonlySet<EvidenceId>,
-	label: string,
+	...args: [ReadonlySet<EvidenceId>, ReadonlySet<EvidenceId>, string]
 ): void {
+	const [values, container, label] = args;
 	for (const value of values) {
 		if (!container.has(value)) {
 			throw new Error(`Evidence obligation resolution ${label} is not a subset.`);
@@ -304,10 +308,9 @@ function assertSubset(
 }
 
 function assertDisjoint(
-	left: ReadonlySet<EvidenceId>,
-	right: ReadonlySet<EvidenceId>,
-	label: string,
+	...args: [ReadonlySet<EvidenceId>, ReadonlySet<EvidenceId>, string]
 ): void {
+	const [left, right, label] = args;
 	for (const value of left) {
 		if (right.has(value)) {
 			throw new Error(`Evidence obligation resolution ${label} must be disjoint.`);
@@ -316,9 +319,9 @@ function assertDisjoint(
 }
 
 function assertSortedUniqueList(
-	values: readonly string[],
-	label: string,
+	...args: [readonly string[], string]
 ): void {
+	const [values, label] = args;
 	let previous: string | undefined;
 	for (const value of values) {
 		if (typeof value !== "string" || !value.trim()) {

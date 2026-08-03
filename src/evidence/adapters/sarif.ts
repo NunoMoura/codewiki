@@ -77,7 +77,10 @@ export interface SarifIngestionSummary {
 export interface SarifEvidenceIngestionResult {
 	readonly protocol: typeof SARIF_EVIDENCE_ADAPTER_PROTOCOL;
 	readonly artifact: EvidenceArtifact;
+	readonly sourceSnapshotDigest: Sha256Digest;
 	readonly tools: readonly SarifExpectedTool[];
+	readonly authorityCeiling: "observed";
+	readonly grantsResult: false;
 	readonly coverage: EvidenceCoverage;
 	readonly summary: SarifIngestionSummary;
 	readonly bindingDigest: Sha256Digest;
@@ -173,7 +176,10 @@ export function ingestSarif21Evidence(
 	const body = toCanonicalJsonValue({
 		protocol: SARIF_EVIDENCE_ADAPTER_PROTOCOL,
 		artifact,
+		sourceSnapshotDigest: admitted.sourceSnapshotDigest,
 		tools: observedTools,
+		authorityCeiling: "observed",
+		grantsResult: false,
 		coverage,
 		summary,
 		bindingDigest,

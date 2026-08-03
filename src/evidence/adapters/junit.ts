@@ -94,7 +94,10 @@ export interface JunitIngestionSummary {
 export interface JunitEvidenceIngestionResult {
 	readonly protocol: typeof JUNIT_EVIDENCE_ADAPTER_PROTOCOL;
 	readonly artifact: EvidenceArtifact;
+	readonly sourceSnapshotDigest: Sha256Digest;
 	readonly runner: JunitRunnerIdentity;
+	readonly authorityCeiling: "observed";
+	readonly grantsResult: false;
 	readonly coverage: EvidenceCoverage;
 	readonly summary: JunitIngestionSummary;
 	readonly bindingDigest: Sha256Digest;
@@ -193,7 +196,10 @@ export function ingestJunitXmlEvidence(
 	const body = toCanonicalJsonValue({
 		protocol: JUNIT_EVIDENCE_ADAPTER_PROTOCOL,
 		artifact,
+		sourceSnapshotDigest: admitted.sourceSnapshotDigest,
 		runner: admitted.runner,
+		authorityCeiling: "observed",
+		grantsResult: false,
 		coverage,
 		summary,
 		bindingDigest,

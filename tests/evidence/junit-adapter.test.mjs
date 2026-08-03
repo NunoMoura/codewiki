@@ -85,6 +85,9 @@ describe("JUnit XML Evidence adapter", () => {
 			{...admitted.protocol},
 			JUNIT_EVIDENCE_ADAPTER_PROTOCOL,
 		);
+		assert.equal(admitted.sourceSnapshotDigest, sourceSnapshotDigest);
+		assert.equal(admitted.authorityCeiling, "observed");
+		assert.equal(admitted.grantsResult, false);
 		assert.equal(admitted.coverage, "complete");
 		assert.deepEqual({...admitted.summary}, {
 			suiteCount: 1,

@@ -94,7 +94,10 @@ export interface CoverageEvidenceIngestionResult {
 		| typeof COBERTURA_EVIDENCE_ADAPTER_PROTOCOL;
 	readonly format: CoverageArtifactFormat;
 	readonly artifact: EvidenceArtifact;
+	readonly sourceSnapshotDigest: Sha256Digest;
 	readonly tool: CoverageToolIdentity;
+	readonly authorityCeiling: "observed";
+	readonly grantsResult: false;
 	readonly coverage: EvidenceCoverage;
 	readonly summary: CoverageIngestionSummary;
 	readonly bindingDigest: Sha256Digest;
@@ -202,7 +205,10 @@ function ingestCoverageEvidence(
 		protocol: definition.protocol,
 		format: definition.format,
 		artifact,
+		sourceSnapshotDigest: admitted.sourceSnapshotDigest,
 		tool: admitted.tool,
+		authorityCeiling: "observed",
+		grantsResult: false,
 		coverage,
 		summary: scoped.summary,
 		bindingDigest,
