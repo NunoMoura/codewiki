@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added the host-configured native Decision attempt executor. It reloads fresh synchronized Git state, validates the exact authenticated active attempt/revision and protected-source/config-bound Exit Runtime before producer invocation, emits one bounded `codewiki.decision-candidate-production@1.0.0` request without authority or Evidence, materializes Candidate `2.0.0`, runs native Exit reduction, and commits supplied plus produced Evidence through attempt end under exact CAS. Canonical terminal attempt state recovers completion without producer/evaluator reinvocation. Pi daemon startup accepts an injected complete Decision-start bundle; default trusted authority, Git context/appender, and Pi producer assembly remain pending.",
+					},
+					{
+						kind: "Update",
 						text: "Clean-cut Decision Candidate schema to `2.0.0` over native ProjectWorkState. Runtime accepts only strict disposition/rationale proposal content, derives current revision, active canonical relationships, overlap accounting, and WorkState/Knowledge/source/config/policy bindings, and owns Candidate identity. Legacy ChangeRecord input, caller-supplied observed bases, copied validation/provenance/estimate fields, duplicate grounding refs, and unresolved summaries are removed without aliases. Decision checks and research Evidence now bind canonical revision and requirement identities directly; continuation admission reconstructs the Candidate and rejects stale or expanded artifacts before mutation. End-to-end selected-job host wiring remains pending.",
 					},
 					{

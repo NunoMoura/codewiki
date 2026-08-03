@@ -10,6 +10,7 @@ import {
 	type ProjectCoordinatorDaemonHandle,
 } from "../runtime/project-coordinator-daemon.ts";
 import { spawnProjectCoordinatorDaemon } from "../runtime/project-coordinator-process.ts";
+import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/project-coordinator-service.ts";
 import type { ImplementationWorkerAdapter } from "../runtime/implementation-worker-adapter.ts";
 import type { ProjectBranchMergeAuthority } from "../runtime/project-branch-merge.ts";
 import type { ProjectBranchPushAuthority } from "../runtime/project-branch-push.ts";
@@ -42,6 +43,7 @@ export interface PiProjectCoordinatorDaemonOptions {
 	publicationAdapter?: ProductPublicationAdapter;
 	releasePlan?: ProductReleasePlan;
 	releaseAdapter?: ProductReleaseAdapter;
+	decisionStart?: ProjectCoordinatorDecisionStartOptions;
 }
 
 const PI_SDK_MODULE_URL_ENV = "CODEWIKI_PI_SDK_MODULE_URL";
@@ -100,6 +102,7 @@ export async function startPiProjectCoordinatorDaemon(
 		...(options.releaseAdapter
 			? { releaseAdapter: options.releaseAdapter }
 			: {}),
+		...(options.decisionStart ? { decisionStart: options.decisionStart } : {}),
 		workerAdapter:
 			options.workerAdapter || createPiProcessImplementationWorkerAdapter(),
 		workerWorktreeRunner: createShellWorktreeCommandRunner({

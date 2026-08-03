@@ -1,0 +1,402 @@
+import type {
+	AuthorityBinding,
+	ChangeRevision,
+	OperationId,
+} from "../change-trace/contracts.ts";
+import type {GitCommandRunner} from "../change-trace/git-command.ts";
+import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
+import {
+	changeById,
+	type ChangeWorkState,
+	type LoopAttemptProjection,
+	type LoopAttemptProjectionStatus,
+	type ProjectWorkState,
+} from "../change-trace/state.ts";
+import {
+	createCurrentGitSynchronizer,
+	type ProjectAuthoritySnapshot,
+	type TeamSnapshot,
+} from "../change-trace/synchronization.ts";
+import type {DecisionCandidateProposal} from "../decision/candidate-proposal.ts";
+import {parseDecisionCandidateProposal} from "../decision/candidate-proposal.ts";
+import {
+	createDecisionCandidate,
+	type DecisionCandidate,
+} from "../decision/exit/candidate.ts";
+import type {DecisionSecurityScanContext} from "../decision/exit/runtime-security.ts";
+import type {createDecisionExitRuntime} from "../decision/exit/runtime.ts";
+import type {EvidenceRecord} from "../evidence/contracts.ts";
+import type {ProjectCoordinatorRecovery} from "./project-coordinator.ts";
+import type {DecisionAttemptExecutor} from "./decision-attention-selection.ts";
+import {
+	commitNativeDecisionOperationSequence,
+	type NativeDecisionCommitReceipt,
+} from "./native-decision-operations.ts";
+import {
+	toCanonicalJsonValue,
+	type Sha256Digest,
+} from "../utils/canonical-json.ts";
+
+export const DECISION_CANDIDATE_PRODUCTION_PROTOCOL = Object.freeze({
+	id: "codewiki.decision-candidate-production",
+	version: "1.0.0",
+} as const);
+
+export interface NativeDecisionCandidateProductionRequest {
+	readonly protocolId: typeof DECISION_CANDIDATE_PRODUCTION_PROTOCOL.id;
+	readonly protocolVersion: typeof DECISION_CANDIDATE_PRODUCTION_PROTOCOL.version;
+	readonly attemptOperationId: OperationId;
+	readonly changeId: string;
+	readonly changeRevisionId: Sha256Digest;
+	readonly workStateDigest: Sha256Digest;
+	readonly revision: ChangeRevision;
+	readonly relationships: ChangeWorkState["relationships"];
+}
+
+export interface NativeDecisionCandidateProducer {
+	produce(input: {
+		readonly request: NativeDecisionCandidateProductionRequest;
+		readonly signal: AbortSignal;
+	}): DecisionCandidateProposal | Promise<DecisionCandidateProposal>;
+}
+
+export interface NativeDecisionEvaluationInput {
+	readonly evidenceRecords?: readonly EvidenceRecord[];
+	readonly researchFreshnessBoundary?: string;
+	readonly securityScan?: DecisionSecurityScanContext;
+}
+
+export interface NativeDecisionExitRuntimeBinding {
+	readonly protectedSourceHead: string;
+	readonly projectConfigDigest: Sha256Digest;
+	readonly runtime: ReturnType<typeof createDecisionExitRuntime>;
+}
+
+export interface NativeDecisionAttemptResult {
+	readonly attemptOperationId: OperationId;
+	readonly changeId: string;
+	readonly changeRevisionId: Sha256Digest;
+	readonly status: Exclude<LoopAttemptProjectionStatus, "active">;
+	readonly candidateId: string | null;
+	readonly exitReportOperationId: OperationId | null;
+	readonly routeOperationId: OperationId | null;
+	readonly terminalOperationId: OperationId | null;
+	readonly stateHead: string;
+}
+
+export interface NativeDecisionAttemptExecutorOptions {
+	readonly repoRoot: string;
+	readonly remote: string;
+	readonly repositoryIdentity: Sha256Digest;
+	readonly currentProject: () =>
+		| ProjectAuthoritySnapshot
+		| Promise<ProjectAuthoritySnapshot>;
+	readonly replayPolicy: ReplayAdmissionPolicy;
+	readonly authorityBinding: AuthorityBinding;
+	readonly producer: NativeDecisionCandidateProducer;
+	readonly createExitRuntime: (input: {
+		readonly state: ProjectWorkState;
+		readonly teamSnapshot: TeamSnapshot;
+		readonly signal: AbortSignal;
+	}) =>
+		| NativeDecisionExitRuntimeBinding
+		| Promise<NativeDecisionExitRuntimeBinding>;
+	readonly loadEvaluationInput?: (input: {
+		readonly candidate: DecisionCandidate;
+		readonly state: ProjectWorkState;
+		readonly teamSnapshot: TeamSnapshot;
+		readonly signal: AbortSignal;
+	}) => NativeDecisionEvaluationInput | Promise<NativeDecisionEvaluationInput>;
+	readonly now?: () => string;
+	readonly runner?: GitCommandRunner;
+	readonly materializationRoot?: string;
+}
+
+type NativeDecisionAttemptRunInput = Parameters<
+	DecisionAttemptExecutor<NativeDecisionAttemptResult>["run"]
+>[0];
+
+type NativeDecisionAttemptRecoveryInput = Parameters<
+	DecisionAttemptExecutor<NativeDecisionAttemptResult>["recover"]
+>[0];
+
+interface CurrentAttempt {
+	readonly state: ProjectWorkState;
+	readonly teamSnapshot: TeamSnapshot;
+	readonly change: ChangeWorkState;
+	readonly attempt: LoopAttemptProjection;
+}
+
+export function createNativeDecisionAttemptExecutor(
+	options: NativeDecisionAttemptExecutorOptions,
+): DecisionAttemptExecutor<NativeDecisionAttemptResult> {
+	return Object.freeze({
+		async run(
+			input: NativeDecisionAttemptRunInput,
+		): Promise<NativeDecisionAttemptResult> {
+			input.signal.throwIfAborted();
+			const current = await loadCurrentAttempt({options, input});
+			if (current.attempt.status !== "active") {
+				return attemptResult(current);
+			}
+			const exitRuntime = await boundExitRuntime({
+				options,
+				current,
+				signal: input.signal,
+			});
+			const request = candidateProductionRequest({
+				current,
+				attemptOperationId: input.attemptOperationId,
+			});
+			const proposal = parseDecisionCandidateProposal(
+				await options.producer.produce({request, signal: input.signal}),
+			);
+			input.signal.throwIfAborted();
+			const candidate = createDecisionCandidate({
+				state: current.state,
+				changeId: input.changeId,
+				proposal,
+			});
+			const evaluationInput = normalizeEvaluationInput(
+				(await options.loadEvaluationInput?.({
+					candidate,
+					state: current.state,
+					teamSnapshot: current.teamSnapshot,
+					signal: input.signal,
+				})) ?? {},
+			);
+			const exit = await exitRuntime.run({
+				candidate,
+				changeRef: `change:${input.changeId}`,
+				evidenceRecords: evaluationInput.evidenceRecords,
+				...(evaluationInput.researchFreshnessBoundary
+					? {
+							researchFreshnessBoundary:
+								evaluationInput.researchFreshnessBoundary,
+						}
+					: {}),
+				...(evaluationInput.securityScan
+					? {securityScan: evaluationInput.securityScan}
+					: {}),
+				signal: input.signal,
+			});
+			input.signal.throwIfAborted();
+			const evidenceRecords = [
+				...evaluationInput.evidenceRecords,
+				...exit.result.producedEvidenceRecords,
+			];
+			const receipt = await commitNativeDecisionOperationSequence({
+				repoRoot: options.repoRoot,
+				remote: options.remote,
+				repositoryIdentity: options.repositoryIdentity,
+				currentProject: options.currentProject,
+				replayPolicy: options.replayPolicy,
+				authorityBinding: options.authorityBinding,
+				changeId: input.changeId,
+				attemptOperationId: input.attemptOperationId,
+				expectedTeamSnapshotDigest: current.teamSnapshot.snapshotDigest,
+				expectedWorkStateDigest: current.state.workStateDigest,
+				recordedAt: (options.now ?? (() => new Date().toISOString()))(),
+				candidate,
+				exitPolicy: exit.policy,
+				evidenceRecords,
+				report: exit.result.report,
+				route: exit.route,
+				runner: options.runner,
+				materializationRoot: options.materializationRoot,
+				signal: input.signal,
+			});
+			return committedAttemptResult({receipt, changeId: input.changeId});
+		},
+		async recover(
+			input: NativeDecisionAttemptRecoveryInput,
+		): Promise<
+			ProjectCoordinatorRecovery<NativeDecisionAttemptResult> | undefined
+		> {
+			const current = await loadCurrentAttempt({options, input});
+			return current.attempt.status === "active"
+				? undefined
+				: {status: "completed", result: attemptResult(current)};
+		},
+	});
+}
+
+async function boundExitRuntime(input: {
+	readonly options: NativeDecisionAttemptExecutorOptions;
+	readonly current: CurrentAttempt;
+	readonly signal: AbortSignal;
+}): Promise<ReturnType<typeof createDecisionExitRuntime>> {
+	const binding = await input.options.createExitRuntime({
+		state: input.current.state,
+		teamSnapshot: input.current.teamSnapshot,
+		signal: input.signal,
+	});
+	assertOnlyKeys({
+		value: binding,
+		allowed: ["protectedSourceHead", "projectConfigDigest", "runtime"],
+		label: "Native Decision Exit Runtime binding",
+	});
+	if (
+		binding.protectedSourceHead !== input.current.teamSnapshot.protectedSourceHead ||
+		binding.projectConfigDigest !== input.current.teamSnapshot.configDigest ||
+		typeof binding.runtime?.run !== "function"
+	) {
+		throw new Error(
+			"Native Decision Exit Runtime is not bound to the current protected project snapshot.",
+		);
+	}
+	return binding.runtime;
+}
+
+function candidateProductionRequest(input: {
+	readonly current: CurrentAttempt;
+	readonly attemptOperationId: OperationId;
+}): NativeDecisionCandidateProductionRequest {
+	const revision = input.current.change.currentRevision;
+	if (!revision) {
+		throw new Error("Native Decision candidate production requires a current revision.");
+	}
+	return toCanonicalJsonValue({
+		protocolId: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.id,
+		protocolVersion: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.version,
+		attemptOperationId: input.attemptOperationId,
+		changeId: input.current.change.changeId,
+		changeRevisionId: revision.revisionId,
+		workStateDigest: input.current.state.workStateDigest,
+		revision,
+		relationships: input.current.change.relationships,
+	}) as unknown as NativeDecisionCandidateProductionRequest;
+}
+
+async function loadCurrentAttempt(input: {
+	readonly options: NativeDecisionAttemptExecutorOptions;
+	readonly input: {
+		readonly attemptOperationId: OperationId;
+		readonly changeId: string;
+		readonly changeRevisionId: Sha256Digest;
+		readonly signal?: AbortSignal;
+	};
+}): Promise<CurrentAttempt> {
+	const synchronize = createCurrentGitSynchronizer({
+		repoRoot: input.options.repoRoot,
+		remote: input.options.remote,
+		repositoryIdentity: input.options.repositoryIdentity,
+		currentProject: input.options.currentProject,
+		policy: input.options.replayPolicy,
+		runner: input.options.runner,
+		materializationRoot: input.options.materializationRoot,
+		signal: input.input.signal,
+	});
+	const {observation} = await synchronize();
+	if (
+		observation.status !== "fresh" ||
+		!observation.workState ||
+		!observation.teamSnapshot
+	) {
+		throw new Error(
+			`Native Decision execution requires fresh synchronization; current status is ${observation.status}.`,
+		);
+	}
+	const change = changeById(observation.workState, input.input.changeId);
+	const attempt = change?.loopAttempts.find(
+		(entry) => entry.operationId === input.input.attemptOperationId,
+	);
+	const attemptOperation = change?.operations.find(
+		(operation) => operation.operationId === input.input.attemptOperationId,
+	);
+	if (
+		!change?.currentRevision ||
+		change.withdrawn ||
+		change.currentRevision.revisionId !== input.input.changeRevisionId ||
+		!attempt ||
+		attempt.loop !== "decision" ||
+		attempt.changeRevisionId !== input.input.changeRevisionId ||
+		!attempt.privateAttemptDigest ||
+		attemptOperation?.body.kind !== "loop.attempt_started" ||
+		!attemptOperation.body.authorityBinding.authenticationEvidenceId
+	) {
+		throw new Error(
+			"Native Decision execution requires the exact authenticated current Decision attempt.",
+		);
+	}
+	return {
+		state: observation.workState,
+		teamSnapshot: observation.teamSnapshot,
+		change,
+		attempt,
+	};
+}
+
+function normalizeEvaluationInput(
+	value: NativeDecisionEvaluationInput,
+): Required<Pick<NativeDecisionEvaluationInput, "evidenceRecords">> &
+	Omit<NativeDecisionEvaluationInput, "evidenceRecords"> {
+	assertOnlyKeys({
+		value,
+		allowed: ["evidenceRecords", "researchFreshnessBoundary", "securityScan"],
+		label: "Native Decision evaluation input",
+	});
+	return Object.freeze({
+		evidenceRecords: Object.freeze([...(value.evidenceRecords ?? [])]),
+		...(value.researchFreshnessBoundary
+			? {researchFreshnessBoundary: value.researchFreshnessBoundary}
+			: {}),
+		...(value.securityScan ? {securityScan: value.securityScan} : {}),
+	});
+}
+
+function committedAttemptResult(input: {
+	readonly receipt: NativeDecisionCommitReceipt;
+	readonly changeId: string;
+}): NativeDecisionAttemptResult {
+	const {receipt, changeId} = input;
+	const {workState, teamSnapshot} = receipt.observation;
+	if (!workState || !teamSnapshot) {
+		throw new Error("Committed native Decision synchronization is incomplete.");
+	}
+	const change = changeById(workState, changeId);
+	const attempt = change?.loopAttempts.find(
+		(entry) => entry.operationId === receipt.attemptOperationId,
+	);
+	if (!change || !attempt || attempt.status === "active") {
+		throw new Error("Committed native Decision attempt could not be projected.");
+	}
+	return attemptResult({
+		state: workState,
+		teamSnapshot,
+		change,
+		attempt,
+	});
+}
+
+function attemptResult(current: CurrentAttempt): NativeDecisionAttemptResult {
+	if (current.attempt.status === "active" || !current.state.stateHead) {
+		throw new Error("Native Decision attempt is not durably complete.");
+	}
+	return Object.freeze({
+		attemptOperationId: current.attempt.operationId,
+		changeId: current.change.changeId,
+		changeRevisionId: current.attempt.changeRevisionId,
+		status: current.attempt.status,
+		candidateId: current.attempt.currentCandidateId,
+		exitReportOperationId: current.attempt.exitReportOperationId,
+		routeOperationId: current.attempt.routeOperationId,
+		terminalOperationId: current.attempt.terminalOperationId,
+		stateHead: current.state.stateHead,
+	});
+}
+
+function assertOnlyKeys(input: {
+	readonly value: object;
+	readonly allowed: readonly string[];
+	readonly label: string;
+}): void {
+	const extras = Object.keys(input.value).filter(
+		(key) => !input.allowed.includes(key),
+	);
+	if (extras.length > 0) {
+		throw new Error(
+			`${input.label} received unsupported fields: ${extras.sort().join(", ")}.`,
+		);
+	}
+}
