@@ -38,7 +38,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "8.0.0";
+export const CHECK_CATALOG_VERSION = "9.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -339,6 +339,10 @@ const LOOP_SPECIFIC_CONDITIONAL_CHECKS = {
 			"Secret-detection Evidence for the exact Candidate contains no credential-exposure findings and has complete coverage.",
 		],
 		[
+			"infrastructure_configuration_verified",
+			"Infrastructure-configuration Evidence for the exact Candidate contains no deployment or configuration findings and has complete coverage.",
+		],
+		[
 			"authorization_controls_verified",
 			"Authorization-test Evidence for the exact Candidate contains no control failures and has complete coverage.",
 		],
@@ -412,6 +416,7 @@ const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
 	static_analysis_findings_absent: ["security_scanners_valid"],
 	dependency_advisories_absent: ["security_scanners_valid"],
 	credential_exposure_absent: ["security_scanners_valid"],
+	infrastructure_configuration_verified: ["security_scanners_valid"],
 	authorization_controls_verified: ["security_scanners_valid"],
 	persistence_safety_verified: ["security_scanners_valid"],
 	research_claims_supported: ["research_provenance_valid"],
@@ -617,6 +622,9 @@ function kernelRegistration(
 	const [id, description, loops] = args;
 	const kind = checkExecutionKind(id);
 	const executionId = executionIdForCheck(id, kind);
+	const executionVersion = ATOMIC_SECURITY_SCANNER_CHECK_IDS.has(id)
+		? ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL.version
+		: "1.0.0";
 	return {
 		check: {
 			id,
@@ -624,7 +632,7 @@ function kernelRegistration(
 			description,
 			requirement: description,
 			requirementDigest: checkRequirementDigest(description),
-			execution: { id: executionId, version: "1.0.0", kind },
+			execution: {id: executionId, version: executionVersion, kind},
 			measurement: {
 				kind: kind === "model" ? "qualitative" : "quantitative",
 				shape: "boolean",

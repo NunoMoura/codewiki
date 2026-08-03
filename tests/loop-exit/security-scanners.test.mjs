@@ -128,7 +128,7 @@ describe("closed security scanner suite", () => {
 				"static_analysis",
 				"dependency_advisory",
 				"secret_detection",
-				"configuration",
+				"infrastructure_configuration",
 				"authorization_test",
 				"migration_test",
 			],
@@ -148,7 +148,7 @@ describe("closed security scanner suite", () => {
 				advisorySnapshots: [advisory()],
 			}),
 		);
-		assert.equal(result.protocol.version, "2.0.0");
+		assert.equal(result.protocol.version, "3.0.0");
 		assert.equal(result.status, "passed");
 		assert.deepEqual(result.requiredScannerTypes, [
 			"static_analysis",

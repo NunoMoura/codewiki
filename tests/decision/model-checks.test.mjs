@@ -39,7 +39,7 @@ const SECURITY_SCANNER_TYPES = [
 	"static_analysis",
 	"dependency_advisory",
 	"secret_detection",
-	"configuration",
+	"infrastructure_configuration",
 	"authorization_test",
 	"migration_test",
 ];

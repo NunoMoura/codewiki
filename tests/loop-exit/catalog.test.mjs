@@ -124,15 +124,17 @@ describe("Check catalog", () => {
 			"static_analysis_findings_absent",
 			"dependency_advisories_absent",
 			"credential_exposure_absent",
+			"infrastructure_configuration_verified",
 			"authorization_controls_verified",
 			"persistence_safety_verified",
 		]) {
 			const registration = catalog.get(checkId, "decision");
 			assert.ok(registration, `missing ${checkId}`);
-			assert.equal(
-				registration.check.execution.id,
-				"codewiki.atomic-security-scanner-check",
-			);
+			assert.deepEqual(registration.check.execution, {
+				id: "codewiki.atomic-security-scanner-check",
+				version: "2.0.0",
+				kind: "code",
+			});
 			assert.deepEqual(registration.dependsOn, ["security_scanners_valid"]);
 			assert.deepEqual(
 				registration.check.evidenceObligations.map((obligation) => obligation.id),
@@ -140,7 +142,7 @@ describe("Check catalog", () => {
 			);
 			assert.equal(catalog.get(checkId, "planning"), undefined);
 		}
-		assert.equal(catalog.version, "8.0.0");
+		assert.equal(catalog.version, "9.0.0");
 		assert.match(catalog.digest, /^sha256:[0-9a-f]{64}$/);
 		assert.ok(
 			catalog

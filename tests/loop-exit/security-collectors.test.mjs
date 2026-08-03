@@ -72,23 +72,35 @@ async function fixture() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-security-collector-"));
 	const semgrepExecutable = join(root, "semgrep");
 	const semgrepConfiguration = join(root, "semgrep.yml");
+	const gitleaksExecutable = join(root, "gitleaks");
+	const gitleaksRules = join(root, "gitleaks.toml");
+	const gitleaksIgnore = join(root, ".gitleaksignore");
 	const trivyExecutable = join(root, "trivy");
 	const trivyCache = join(root, "trivy-cache");
 	const trivyDatabase = join(trivyCache, "db", "trivy.db");
 	await mkdir(join(trivyCache, "db"), {recursive: true});
 	await writeFile(semgrepExecutable, "semgrep executable v1");
 	await writeFile(semgrepConfiguration, "rules: []\n");
+	await writeFile(gitleaksExecutable, "gitleaks executable v1");
+	await writeFile(gitleaksRules, "title = \"CodeWiki rules\"\n");
+	await writeFile(gitleaksIgnore, "# CodeWiki fixed ignore policy\n");
 	await writeFile(trivyExecutable, "trivy executable v1");
 	await writeFile(trivyDatabase, "trivy database snapshot v1");
 	return {
 		root,
 		semgrepExecutable,
 		semgrepConfiguration,
+		gitleaksExecutable,
+		gitleaksRules,
+		gitleaksIgnore,
 		trivyExecutable,
 		trivyCache,
 		trivyDatabase,
 		semgrepExecutableDigest: sha256Digest("semgrep executable v1"),
 		semgrepConfigurationDigest: sha256Digest("rules: []\n"),
+		gitleaksExecutableDigest: sha256Digest("gitleaks executable v1"),
+		gitleaksRulesDigest: sha256Digest("title = \"CodeWiki rules\"\n"),
+		gitleaksIgnoreDigest: sha256Digest("# CodeWiki fixed ignore policy\n"),
 		trivyExecutableDigest: sha256Digest("trivy executable v1"),
 		trivyDatabaseDigest: sha256Digest("trivy database snapshot v1"),
 	};
@@ -160,6 +172,105 @@ describe("production security collectors", () => {
 				TRIVY_DISABLE_VEX_NOTICE: "true",
 			});
 			assert.equal(commands[1].cwd, files.root);
+		} finally {
+			await rm(files.root, {recursive: true, force: true});
+		}
+	});
+
+	it("runs fixed Gitleaks directory SARIF with exact rules and ignore policy", async () => {
+		const files = await fixture();
+		try {
+			const semgrepRunner = async (command) =>
+				command.args.includes("--version")
+					? commandResult({stdout: "1.99.0\n"})
+					: commandResult({stdout: sarif("semgrep", "1.99.0")});
+			const gitleaksCommands = [];
+			const gitleaksRunner = async (command) => {
+				gitleaksCommands.push(command);
+				if (command.args.includes("version")) {
+					return commandResult({stdout: "8.30.0\n"});
+				}
+				return commandResult({
+					stdout: sarif("gitleaks", "v8.30.0", [
+						{
+							ruleId: "generic-api-key",
+							level: "error",
+							message: {text: "raw credential value must not escape"},
+							locations: [
+								{physicalLocation: {artifactLocation: {uri: "src/security/api.ts"}}},
+							],
+						},
+					]),
+				});
+			};
+			const semgrep = createProductionSecurityCollector({
+				profile: "semgrep_sarif",
+				repoRoot: files.root,
+				executablePath: files.semgrepExecutable,
+				executableDigest: files.semgrepExecutableDigest,
+				scannerVersion: "1.99.0",
+				source: source(),
+				configurationPath: files.semgrepConfiguration,
+				configurationDigest: files.semgrepConfigurationDigest,
+				commandRunner: semgrepRunner,
+			});
+			const gitleaks = createProductionSecurityCollector({
+				profile: "gitleaks_directory_sarif",
+				repoRoot: files.root,
+				executablePath: files.gitleaksExecutable,
+				executableDigest: files.gitleaksExecutableDigest,
+				scannerVersion: "8.30.0",
+				source: source(),
+				rulesPath: files.gitleaksRules,
+				rulesDigest: files.gitleaksRulesDigest,
+				ignorePath: files.gitleaksIgnore,
+				ignoreDigest: files.gitleaksIgnoreDigest,
+				commandRunner: gitleaksRunner,
+			});
+			const result = await runSecurityScannerSuite(
+				suiteInput([semgrep.adapter, gitleaks.adapter], {
+					surfaces: ["credentials_secrets"],
+				}),
+			);
+
+			assert.equal(gitleaks.identity.protocol.version, "2.0.0");
+			assert.equal(gitleaks.identity.scannerType, "secret_detection");
+			assert.equal(gitleaks.identity.rulesDigest, files.gitleaksRulesDigest);
+			assert.equal(gitleaks.identity.ignoreDigest, files.gitleaksIgnoreDigest);
+			assert.equal(result.status, "failed");
+			assert.deepEqual(result.requiredScannerTypes, [
+				"static_analysis",
+				"secret_detection",
+			]);
+			assert.equal(result.intakeMaterials.length, 1);
+			assert.equal(
+				result.intakeMaterials[0].content.claimedSecurity.classification,
+				"secret_exposure",
+			);
+			assert.doesNotMatch(JSON.stringify(result), /raw credential value/);
+			assert.deepEqual(gitleaksCommands[0].args, ["version"]);
+			assert.deepEqual(gitleaksCommands[1].args, [
+				"dir",
+				"--config",
+				files.gitleaksRules,
+				"--gitleaks-ignore-path",
+				files.gitleaksIgnore,
+				"--report-format",
+				"sarif",
+				"--report-path",
+				"-",
+				"--exit-code",
+				"0",
+				"--no-banner",
+				"--no-color",
+				"--redact=100",
+				"--max-archive-depth",
+				"0",
+				"--max-decode-depth",
+				"0",
+				".",
+			]);
+			assert.equal(gitleaksCommands[1].cwd, files.root);
 		} finally {
 			await rm(files.root, {recursive: true, force: true});
 		}

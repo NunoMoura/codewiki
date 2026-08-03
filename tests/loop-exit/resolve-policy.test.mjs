@@ -222,7 +222,14 @@ describe("Resolved Exit Policy resolver", () => {
 			type: input.changes[0].type,
 			scope: "system",
 			risk: input.changes[0].risk,
-			affectedLayers: ["api", "database", "auth", "credentials", "dependency"],
+			affectedLayers: [
+				"api",
+				"database",
+				"auth",
+				"credentials",
+				"dependency",
+				"infrastructure",
+			],
 			targetRefs: [],
 			knowledgeRefs: [],
 			sourceRefs: [],
@@ -239,6 +246,7 @@ describe("Resolved Exit Policy resolver", () => {
 			"static_analysis_findings_absent",
 			"dependency_advisories_absent",
 			"credential_exposure_absent",
+			"infrastructure_configuration_verified",
 			"authorization_controls_verified",
 			"persistence_safety_verified",
 			"security_privacy_reviewed",
@@ -265,6 +273,7 @@ describe("Resolved Exit Policy resolver", () => {
 		for (const checkId of [
 			"dependency_advisories_absent",
 			"credential_exposure_absent",
+			"infrastructure_configuration_verified",
 			"authorization_controls_verified",
 			"persistence_safety_verified",
 		]) {

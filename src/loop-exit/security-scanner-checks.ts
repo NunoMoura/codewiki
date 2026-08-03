@@ -16,7 +16,7 @@ import type {SecurityScannerType} from "./security-scanners.ts";
 
 export const ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL = Object.freeze({
 	id: "codewiki.atomic-security-scanner-check",
-	version: "1.0.0",
+	version: "2.0.0",
 	producerCheckId: "security_scanners_valid",
 } as const);
 
@@ -38,6 +38,12 @@ export const ATOMIC_SECURITY_SCANNER_CHECKS = Object.freeze([
 		scannerType: "secret_detection",
 		issueClass: "credential_exposure_finding",
 		feedback: "Remove exposed credentials and rotate affected secrets before Loop exit.",
+	},
+	{
+		checkId: "infrastructure_configuration_verified",
+		scannerType: "infrastructure_configuration",
+		issueClass: "infrastructure_configuration_finding",
+		feedback: "Repair infrastructure or deployment configuration findings before Loop exit.",
 	},
 	{
 		checkId: "authorization_controls_verified",

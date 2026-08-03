@@ -314,6 +314,12 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 		{securitySurfaces: ["credentials_secrets"]},
 	),
 	...rulesForLoop(
+		"check.security.surface.infrastructure",
+		"decision",
+		["infrastructure_configuration_verified"],
+		{securitySurfaces: ["infrastructure_configuration"]},
+	),
+	...rulesForLoop(
 		"check.security.surface.authorization",
 		"decision",
 		["authorization_controls_verified"],

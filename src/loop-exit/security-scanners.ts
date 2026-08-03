@@ -26,7 +26,7 @@ import {
 
 const SECURITY_SCANNER_PROTOCOL = Object.freeze({
 	id: "codewiki.security-scanner-suite",
-	version: "2.0.0",
+	version: "3.0.0",
 	maxScanners: 6,
 	maxFindingsPerScanner: 128,
 	maxCanonicalObservationBytes: 262_144,
@@ -36,7 +36,7 @@ const SECURITY_SCANNER_TYPES = Object.freeze([
 	"static_analysis",
 	"dependency_advisory",
 	"secret_detection",
-	"configuration",
+	"infrastructure_configuration",
 	"authorization_test",
 	"migration_test",
 ] as const);
@@ -197,7 +197,9 @@ export function requiredSecurityScannerTypes(
 	for (const surface of normalized) {
 		if (surface === "dependency_supply_chain") required.add("dependency_advisory");
 		if (surface === "credentials_secrets") required.add("secret_detection");
-		if (surface === "infrastructure_configuration") required.add("configuration");
+		if (surface === "infrastructure_configuration") {
+			required.add("infrastructure_configuration");
+		}
 		if (surface === "authentication_authorization") required.add("authorization_test");
 		if (surface === "persistence_migration") required.add("migration_test");
 	}

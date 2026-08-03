@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Closed measured scanner families and added fixed Gitleaks collection. `codewiki.production-security-collector@2.0.0` binds exact Gitleaks executable/version, rules, ignore policy, Candidate source/tree/environment, redacted no-shell invocation, and bounded execution without ambient configuration, archive recursion, decode recursion, plugins, credentials, or network updates. Scanner Suite `3.0.0` clean-cuts generic `configuration` to `infrastructure_configuration` and closes its vocabulary at six distinct measured families. `codewiki.atomic-security-scanner-check@2.0.0` and Check Catalog `9.0.0` add independent infrastructure-configuration activation; concerns without distinct scanner measurements remain under static-analysis, standard contract/test, or independent Model Checks.",
+					},
+					{
+						kind: "Update",
 						text: "Added `codewiki.atomic-security-scanner-check@1.0.0`, advanced Scanner Suite to `2.0.0`, and clean-cut Check Catalog to `8.0.0`. Exact scanner-family, request, and outcome provenance lets one immutable `security_scanners_valid` Evidence substrate feed independent protected static-analysis, dependency-advisory, credential-exposure, authorization-control, and persistence-safety Decision Code Checks. Surface activation selects relevant families; each Check filters only its exact scanner records, resolves separate command/source obligations, and receives its own Runtime-created Result. A complete family may pass while another fails or remains `indeterminate`; shared Evidence is recorded once and scanners still grant no Result.",
 					},
 					{

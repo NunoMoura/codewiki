@@ -23,7 +23,7 @@ import type {
 
 export const PRODUCTION_SECURITY_COLLECTOR_PROTOCOL = Object.freeze({
 	id: "codewiki.production-security-collector",
-	version: "1.0.0",
+	version: "2.0.0",
 	maxOutputBytes: 4_194_304,
 	maxFindings: 128,
 	probeTimeoutMs: 10_000,
@@ -34,6 +34,7 @@ export const PRODUCTION_SECURITY_COLLECTOR_PROTOCOL = Object.freeze({
 
 export type ProductionSecurityCollectorProfile =
 	| "semgrep_sarif"
+	| "gitleaks_directory_sarif"
 	| "trivy_filesystem_sarif";
 
 export interface ProductionSecurityCollectorCommand {
@@ -78,6 +79,15 @@ export interface SemgrepSecurityCollectorInput
 	readonly configurationDigest: Sha256Digest;
 }
 
+export interface GitleaksSecurityCollectorInput
+	extends ProductionSecurityCollectorInputBase {
+	readonly profile: "gitleaks_directory_sarif";
+	readonly rulesPath: string;
+	readonly rulesDigest: Sha256Digest;
+	readonly ignorePath: string;
+	readonly ignoreDigest: Sha256Digest;
+}
+
 export interface TrivySecurityCollectorInput
 	extends ProductionSecurityCollectorInputBase {
 	readonly profile: "trivy_filesystem_sarif";
@@ -88,16 +98,22 @@ export interface TrivySecurityCollectorInput
 
 export type ProductionSecurityCollectorInput =
 	| SemgrepSecurityCollectorInput
+	| GitleaksSecurityCollectorInput
 	| TrivySecurityCollectorInput;
 
 export interface ProductionSecurityCollectorIdentity {
 	readonly protocol: typeof PRODUCTION_SECURITY_COLLECTOR_PROTOCOL;
 	readonly profile: ProductionSecurityCollectorProfile;
-	readonly scannerType: "static_analysis" | "dependency_advisory";
+	readonly scannerType:
+		| "static_analysis"
+		| "secret_detection"
+		| "dependency_advisory";
 	readonly scannerId: string;
 	readonly scannerVersion: string;
 	readonly executableDigest: Sha256Digest;
 	readonly configurationDigest: Sha256Digest;
+	readonly rulesDigest?: Sha256Digest;
+	readonly ignoreDigest?: Sha256Digest;
 	readonly databaseDigest?: Sha256Digest;
 	readonly sourceSnapshotDigest: Sha256Digest;
 	readonly sourceTree: string;
@@ -122,6 +138,10 @@ interface AdmittedCollectorInput {
 	readonly source: SecurityScannerSourceBinding;
 	readonly configurationPath?: string;
 	readonly configurationDigest?: Sha256Digest;
+	readonly rulesPath?: string;
+	readonly rulesDigest?: Sha256Digest;
+	readonly ignorePath?: string;
+	readonly ignoreDigest?: Sha256Digest;
 	readonly cacheDirectory?: string;
 	readonly databasePath?: string;
 	readonly databaseDigest?: Sha256Digest;
@@ -141,6 +161,13 @@ const SEMGREP_INPUT_FIELDS = [
 	...BASE_INPUT_FIELDS,
 	"configurationPath",
 	"configurationDigest",
+] as const;
+const GITLEAKS_INPUT_FIELDS = [
+	...BASE_INPUT_FIELDS,
+	"rulesPath",
+	"rulesDigest",
+	"ignorePath",
+	"ignoreDigest",
 ] as const;
 const TRIVY_INPUT_FIELDS = [
 	...BASE_INPUT_FIELDS,
@@ -174,6 +201,8 @@ export function createProductionSecurityCollector(
 		profile: admitted.profile,
 		executableDigest: admitted.executableDigest,
 		configurationDigest: admitted.configurationDigest as Sha256Digest,
+		...(admitted.rulesDigest ? {rulesDigest: admitted.rulesDigest} : {}),
+		...(admitted.ignoreDigest ? {ignoreDigest: admitted.ignoreDigest} : {}),
 		...(admitted.databaseDigest
 			? {databaseDigest: admitted.databaseDigest}
 			: {}),
@@ -401,7 +430,10 @@ function sarifObservation(
 			sourceSnapshotDigest: request.sourceSnapshotDigest,
 			scannedPaths: ["."],
 			expectedTools: [
-				{name: collectorProfile(input.profile).sarifToolId, version: identity.scannerVersion},
+				{
+					name: collectorProfile(input.profile).sarifToolId,
+					version: sarifToolVersion(input.profile, identity.scannerVersion),
+				},
 			],
 			execution: {
 				adapterId: PRODUCTION_SECURITY_COLLECTOR_PROTOCOL.id,
@@ -496,7 +528,7 @@ function collectorFinding(input: {
 		claimedSeverity: claimedSeverity(level),
 		claimedConfidence: "unknown",
 		claimedSecurity: {
-			classification: profile === "trivy_filesystem_sarif" ? "dependency_advisory" : "suspected_vulnerability",
+			classification: findingClassification(profile),
 			identifiers: [],
 			cvss: [],
 			sarif: [
@@ -521,6 +553,8 @@ function admitCollectorInput(
 	}
 	if (value.profile === "semgrep_sarif") {
 		assertExactKeys(value, SEMGREP_INPUT_FIELDS, "Semgrep production collector input");
+	} else if (value.profile === "gitleaks_directory_sarif") {
+		assertExactKeys(value, GITLEAKS_INPUT_FIELDS, "Gitleaks production collector input");
 	} else if (value.profile === "trivy_filesystem_sarif") {
 		assertExactKeys(value, TRIVY_INPUT_FIELDS, "Trivy production collector input");
 	} else {
@@ -543,6 +577,24 @@ function admitCollectorInput(
 			executablePath,
 			scannerVersion,
 			configurationPath: absolutePath(value.configurationPath, "configurationPath"),
+			commandRunner: value.commandRunner ?? runProductionSecurityCollectorCommand,
+		});
+	}
+	if (value.profile === "gitleaks_directory_sarif") {
+		assertSha256Digest(value.rulesDigest, "Gitleaks rulesDigest");
+		assertSha256Digest(value.ignoreDigest, "Gitleaks ignoreDigest");
+		return Object.freeze({
+			...value,
+			repoRoot,
+			executablePath,
+			scannerVersion,
+			configurationDigest: canonicalJsonDigest({
+				profile: value.profile,
+				rulesDigest: value.rulesDigest,
+				ignoreDigest: value.ignoreDigest,
+			}),
+			rulesPath: absolutePath(value.rulesPath, "rulesPath"),
+			ignorePath: absolutePath(value.ignorePath, "ignorePath"),
 			commandRunner: value.commandRunner ?? runProductionSecurityCollectorCommand,
 		});
 	}
@@ -581,28 +633,40 @@ function assertSource(source: SecurityScannerSourceBinding): void {
 }
 
 function collectorProfile(profile: ProductionSecurityCollectorProfile): {
-	readonly scannerType: "static_analysis" | "dependency_advisory";
+	readonly scannerType:
+		| "static_analysis"
+		| "secret_detection"
+		| "dependency_advisory";
 	readonly scannerId: string;
 	readonly sarifToolId: string;
 	readonly label: string;
 } {
-	return profile === "semgrep_sarif"
-		? {
-				scannerType: "static_analysis",
-				scannerId: "codewiki.collector.semgrep-sarif",
-				sarifToolId: "semgrep",
-				label: "Semgrep",
-			}
-		: {
-				scannerType: "dependency_advisory",
-				scannerId: "codewiki.collector.trivy-filesystem-sarif",
-				sarifToolId: "Trivy",
-				label: "Trivy",
-			};
+	if (profile === "semgrep_sarif") {
+		return {
+			scannerType: "static_analysis",
+			scannerId: "codewiki.collector.semgrep-sarif",
+			sarifToolId: "semgrep",
+			label: "Semgrep",
+		};
+	}
+	if (profile === "gitleaks_directory_sarif") {
+		return {
+			scannerType: "secret_detection",
+			scannerId: "codewiki.collector.gitleaks-directory-sarif",
+			sarifToolId: "gitleaks",
+			label: "Gitleaks",
+		};
+	}
+	return {
+		scannerType: "dependency_advisory",
+		scannerId: "codewiki.collector.trivy-filesystem-sarif",
+		sarifToolId: "Trivy",
+		label: "Trivy",
+	};
 }
 
 function versionArguments(profile: ProductionSecurityCollectorProfile): readonly string[] {
-	return profile === "semgrep_sarif" ? ["--version"] : ["--version"];
+	return profile === "gitleaks_directory_sarif" ? ["version"] : ["--version"];
 }
 
 function scanArguments(input: AdmittedCollectorInput): readonly string[] {
@@ -618,6 +682,29 @@ function scanArguments(input: AdmittedCollectorInput): readonly string[] {
 			"--timeout",
 			"30",
 			input.repoRoot,
+		];
+	}
+	if (input.profile === "gitleaks_directory_sarif") {
+		return [
+			"dir",
+			"--config",
+			input.rulesPath as string,
+			"--gitleaks-ignore-path",
+			input.ignorePath as string,
+			"--report-format",
+			"sarif",
+			"--report-path",
+			"-",
+			"--exit-code",
+			"0",
+			"--no-banner",
+			"--no-color",
+			"--redact=100",
+			"--max-archive-depth",
+			"0",
+			"--max-decode-depth",
+			"0",
+			".",
 		];
 	}
 	return [
@@ -668,6 +755,19 @@ async function verifyIdentityFiles(input: AdmittedCollectorInput): Promise<strin
 			input.configurationPath as string,
 			input.configurationDigest as Sha256Digest,
 			"configuration",
+		);
+	}
+	if (input.profile === "gitleaks_directory_sarif") {
+		const rulesFailure = await verifyFile(
+			input.rulesPath as string,
+			input.rulesDigest as Sha256Digest,
+			"rules configuration",
+		);
+		if (rulesFailure) return rulesFailure;
+		return verifyFile(
+			input.ignorePath as string,
+			input.ignoreDigest as Sha256Digest,
+			"ignore configuration",
 		);
 	}
 	return verifyFile(
@@ -747,9 +847,27 @@ function matchesVersion(
 ): boolean {
 	const [profile, stdout, stderr, expected] = args;
 	const output = `${stdout}\n${stderr}`.trim();
-	return profile === "semgrep_sarif"
-		? output.split(/\s+/u).includes(expected)
-		: output.split(/\r?\n/u).some((line) => line.trim() === `Version: ${expected}`);
+	if (profile === "trivy_filesystem_sarif") {
+		return output.split(/\r?\n/u).some((line) => line.trim() === `Version: ${expected}`);
+	}
+	return output.split(/\s+/u).some((token) => token === expected || token === `v${expected}`);
+}
+
+function sarifToolVersion(
+	...args: [ProductionSecurityCollectorProfile, string]
+): string {
+	const [profile, scannerVersion] = args;
+	return profile === "gitleaks_directory_sarif"
+		? `v${scannerVersion.replace(/^v/u, "")}`
+		: scannerVersion;
+}
+
+function findingClassification(
+	profile: ProductionSecurityCollectorProfile,
+): "suspected_vulnerability" | "dependency_advisory" | "secret_exposure" {
+	if (profile === "trivy_filesystem_sarif") return "dependency_advisory";
+	if (profile === "gitleaks_directory_sarif") return "secret_exposure";
+	return "suspected_vulnerability";
 }
 
 function commandFailure(
