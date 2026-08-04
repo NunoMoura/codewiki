@@ -212,7 +212,8 @@ describe("native standard Evidence Check executor", () => {
 		const result = await runtime.createRunner({executors: []}).run({
 			candidate: loopCandidate,
 			policy: policy(loopCandidate, selector, checkIds),
-			onProducedEvidence: (record) => recorded.push(record.evidenceId),
+			onCheckMaterialized: ({producedEvidenceRecords}) =>
+				recorded.push(...producedEvidenceRecords.map((record) => record.evidenceId)),
 		});
 
 		assert.equal(result.report.status, "pass");
@@ -235,7 +236,10 @@ describe("native standard Evidence Check executor", () => {
 			candidate: loopCandidate,
 			policy: policy(loopCandidate, selector, checkIds),
 			evidenceRecords: admitted.bundle.evidenceRecords,
-			onProducedEvidence: (record) => replayRecorded.push(record.evidenceId),
+			onCheckMaterialized: ({producedEvidenceRecords}) =>
+				replayRecorded.push(
+					...producedEvidenceRecords.map((record) => record.evidenceId),
+				),
 		});
 		assert.equal(replay.report.reportDigest, result.report.reportDigest);
 		assert.deepEqual(replay.producedEvidenceRecords, []);

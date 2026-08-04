@@ -554,6 +554,11 @@ function activateCustomChecks(
 				...reference,
 				passageIds: [...reference.passageIds],
 			})),
+			standardBindings: customCheck.standardBindings.map((standard) => ({
+				...standard,
+				source: {...standard.source},
+				passages: standard.passages.map((passage) => ({...passage})),
+			})),
 			knowledgeRefs: [...(definition.knowledgeRefs ?? [])],
 			...(definition.repairGuidance
 				? { repairGuidance: definition.repairGuidance }

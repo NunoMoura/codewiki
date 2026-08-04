@@ -157,6 +157,8 @@ const payloads = {
 		checkVersion: "1.0.0",
 		protocolId: "implementation-ui-review",
 		protocolVersion: "1.0.0",
+		requestDigest: digest("e"),
+		assessmentDigest: digest("d"),
 		routeId: "implementation-model",
 		configurationDigest: digest("f"),
 		measurement: { kind: "score", value: 0.8, minimum: 0, maximum: 1 },
@@ -242,7 +244,15 @@ describe("Evidence Record foundation", () => {
 		}
 	});
 
-	it("rejects legacy unscoped approval receipts without a compatibility path", () => {
+	it("rejects legacy Evidence and unscoped approval receipts without compatibility paths", () => {
+		assert.throws(
+			() =>
+				materializeEvidenceRecord(
+					{...material("model_assessment", payloads.model_assessment), schemaVersion: "1.3.0"},
+					runtimeFor("model_assessment"),
+				),
+			/Evidence material is invalid at \/schemaVersion/,
+		);
 		const {
 			checkId: _checkId,
 			checkVersion: _checkVersion,

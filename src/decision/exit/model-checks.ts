@@ -10,9 +10,12 @@ import {modelConclusionEvidenceMeasurement} from "../../evidence/model-assessmen
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
 import type {CheckCatalog} from "../../loop-exit/catalog.ts";
 import {
-	normalizeCustomCheckStandardRefs,
-	type CustomCheckStandardRef,
-} from "../../loop-exit/custom-checks/contracts.ts";
+	createCustomCheckEvaluatorBinding,
+	normalizeCustomCheckEvaluatorAssessment,
+	normalizeCustomCheckEvaluatorStandardBindings,
+	type CustomCheckEvaluatorAssessmentExtension,
+	type CustomCheckEvaluatorBinding,
+} from "../../loop-exit/custom-checks/model-evaluator.ts";
 import type {CheckDefinition} from "../../loop-exit/contracts.ts";
 import {
 	assertSecuritySurfaceClassification,
@@ -36,7 +39,7 @@ import type {DecisionCandidate} from "./candidate.ts";
 
 export const DECISION_MODEL_CHECK_REQUEST_PROTOCOL = Object.freeze({
 	id: "codewiki.decision.model-check-request",
-	version: "4.0.0",
+	version: "5.0.0",
 	maxRequestBytes: 262_144,
 	maxFindings: 32,
 	maxLimitations: 32,
@@ -54,20 +57,7 @@ export interface DecisionModelCheckRequest {
 		readonly digest: Sha256Digest;
 		readonly description: string;
 		readonly requirement: string;
-		readonly customCheck?: {
-			readonly customCheckId: string;
-			readonly definitionDigest: Sha256Digest;
-			readonly protectedSourceHead: string;
-			readonly protectedConfigDigest: Sha256Digest;
-			readonly customCheckConfigDigest: Sha256Digest;
-			readonly protectedConfigSnapshotDigest: Sha256Digest;
-			readonly checkTypeId: string;
-			readonly checkTypeVersion: string;
-			readonly evaluatorId: string;
-			readonly standardRefs: readonly CustomCheckStandardRef[];
-			readonly knowledgeRefs: readonly string[];
-			readonly repairGuidance?: string;
-		};
+		readonly customCheck?: CustomCheckEvaluatorBinding;
 	};
 	readonly route: {
 		readonly id: string;
@@ -102,6 +92,7 @@ interface DecisionModelCheckResponse {
 	readonly findings: readonly string[];
 	readonly limitations: readonly string[];
 	readonly securityFindings?: readonly ModelSecurityChallengeFinding[];
+	readonly customCheckAssessment?: CustomCheckEvaluatorAssessmentExtension;
 }
 
 export type DecisionModelCheckObservation =
@@ -219,15 +210,19 @@ async function executeModelCheck(input: {
 	readonly configurationDigest: Sha256Digest;
 }): Promise<CheckExecutorObservation> {
 	assertCandidateSubject(input.context.candidate, input.subject);
+	const request = modelCheckRequest(input);
 	const ready = input.context.evidenceResolutions.find(
 		(resolution) =>
 			resolution.obligationId === "model-assessment" &&
 			resolution.status === "ready",
 	);
 	if (ready) {
-		return observationFromPersistedEvidence(input.context, ready.eligibleEvidenceIds);
+		return observationFromPersistedEvidence({
+			context: input.context,
+			eligibleEvidenceIds: ready.eligibleEvidenceIds,
+			request,
+		});
 	}
-	const request = modelCheckRequest(input);
 	let observation: DecisionModelCheckObservation;
 	try {
 		observation = await input.transport.execute(request, {
@@ -272,6 +267,7 @@ function modelCheckRequest(input: {
 	readonly route: WikiModelRouteConfig;
 	readonly configurationDigest: Sha256Digest;
 }): DecisionModelCheckRequest {
+	const review = modelCheckReview(input.context);
 	const body = {
 		protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
 		protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
@@ -282,7 +278,12 @@ function modelCheckRequest(input: {
 			digest: input.context.binding.checkDigest,
 			description: input.context.check.description,
 			requirement: input.context.check.requirement,
-			...customCheckRequestMetadata(input.context),
+			...customCheckRequestMetadata({
+				context: input.context,
+				route: input.route,
+				configurationDigest: input.configurationDigest,
+				consideredEvidenceIds: review.consideredEvidenceIds,
+			}),
 		},
 		route: {
 			id: input.route.id,
@@ -291,7 +292,7 @@ function modelCheckRequest(input: {
 			thinking: input.route.thinking,
 		},
 		configurationDigest: input.configurationDigest,
-		review: modelCheckReview(input.context),
+		review,
 	};
 	const request = toCanonicalJsonValue({
 		...body,
@@ -303,16 +304,14 @@ function modelCheckRequest(input: {
 	return request;
 }
 
-function customCheckRequestMetadata(
-	context: LoopCheckExecutorContext,
-): Pick<DecisionModelCheckRequest["check"], "customCheck"> | Record<string, never> {
-	const parameters = context.binding.parameters;
+function customCheckRequestMetadata(input: {
+	readonly context: LoopCheckExecutorContext;
+	readonly route: WikiModelRouteConfig;
+	readonly configurationDigest: Sha256Digest;
+	readonly consideredEvidenceIds: readonly EvidenceId[];
+}): Pick<DecisionModelCheckRequest["check"], "customCheck"> | Record<string, never> {
+	const parameters = input.context.binding.parameters;
 	if (parameters.customCheckId === undefined) return {};
-	const customCheckId = requiredParameterText(parameters.customCheckId, "customCheckId");
-	const definitionDigest = requiredDigestParameter(
-		parameters.customCheckDefinitionDigest,
-		"customCheckDefinitionDigest",
-	);
 	const protectedSourceHead = requiredParameterText(
 		parameters.protectedSourceHead,
 		"protectedSourceHead",
@@ -320,59 +319,73 @@ function customCheckRequestMetadata(
 	if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(protectedSourceHead)) {
 		throw new Error("Custom Check Model request has invalid protected source head.");
 	}
-	const protectedConfigDigest = requiredDigestParameter(
-		parameters.protectedConfigDigest,
-		"protectedConfigDigest",
-	);
-	const customCheckConfigDigest = requiredDigestParameter(
-		parameters.customCheckConfigDigest,
-		"customCheckConfigDigest",
-	);
-	const protectedConfigSnapshotDigest = requiredDigestParameter(
-		parameters.protectedCustomCheckConfigSnapshotDigest,
-		"protectedCustomCheckConfigSnapshotDigest",
-	);
-	const standardRefs = normalizeCustomCheckStandardRefs(
-		parameters.standardRefs as unknown as readonly CustomCheckStandardRef[],
-	);
 	const knowledgeRefs = parameters.knowledgeRefs;
-	if (!Array.isArray(knowledgeRefs)) {
+	if (!Array.isArray(knowledgeRefs) || knowledgeRefs.some((value) => typeof value !== "string")) {
 		throw new Error("Custom Check Model request has invalid Knowledge refs.");
 	}
-	const normalizedKnowledgeRefs = knowledgeRefs.map((value) => {
-		if (typeof value !== "string") {
-			throw new Error("Custom Check Model request has invalid Knowledge refs.");
-		}
-		return value;
-	});
 	const repairGuidance = parameters.repairGuidance;
 	if (repairGuidance !== undefined && typeof repairGuidance !== "string") {
 		throw new Error("Custom Check Model request has invalid repair guidance.");
 	}
 	return {
-		customCheck: {
-			customCheckId,
-			definitionDigest,
-			protectedSourceHead,
-			protectedConfigDigest,
-			customCheckConfigDigest,
-			protectedConfigSnapshotDigest,
-			checkTypeId: requiredParameterText(
-				parameters.customCheckTypeId,
-				"customCheckTypeId",
+		customCheck: createCustomCheckEvaluatorBinding({
+			customCheckId: requiredParameterText(parameters.customCheckId, "customCheckId"),
+			definitionDigest: requiredDigestParameter(
+				parameters.customCheckDefinitionDigest,
+				"customCheckDefinitionDigest",
 			),
+			checkTypeId: requiredParameterText(parameters.customCheckTypeId, "customCheckTypeId"),
 			checkTypeVersion: requiredParameterText(
 				parameters.customCheckTypeVersion,
 				"customCheckTypeVersion",
 			),
-			evaluatorId: requiredParameterText(
-				parameters.checkEvaluatorId,
-				"checkEvaluatorId",
+			evaluatorId: requiredParameterText(parameters.checkEvaluatorId, "checkEvaluatorId"),
+			candidateDigest: input.context.candidate.digest,
+			checkId: input.context.check.id,
+			checkVersion: input.context.check.version,
+			checkDigest: requiredDigestParameter(
+				input.context.binding.checkDigest,
+				"checkDigest",
 			),
-			standardRefs,
-			knowledgeRefs: normalizedKnowledgeRefs,
-			...(repairGuidance ? { repairGuidance } : {}),
-		},
+			protectedSourceHead,
+			protectedConfigDigest: requiredDigestParameter(
+				parameters.protectedConfigDigest,
+				"protectedConfigDigest",
+			),
+			customCheckConfigDigest: requiredDigestParameter(
+				parameters.customCheckConfigDigest,
+				"customCheckConfigDigest",
+			),
+			protectedConfigSnapshotDigest: requiredDigestParameter(
+				parameters.protectedCustomCheckConfigSnapshotDigest,
+				"protectedCustomCheckConfigSnapshotDigest",
+			),
+			standardBindings: normalizeCustomCheckEvaluatorStandardBindings(
+				parameters.standardBindings,
+			),
+			knowledgeRefs: knowledgeRefs as string[],
+			...(repairGuidance ? {repairGuidance} : {}),
+			consideredEvidenceIds: [...input.consideredEvidenceIds],
+			prerequisiteResults: input.context.dependencyResults.map((result) => ({
+				checkId: result.checkId,
+				checkVersion: result.checkVersion,
+				resultDigest: requiredDigestParameter(
+					result.resultDigest,
+					"prerequisiteResultDigest",
+				),
+				status: result.status,
+				evidenceInputDigest: requiredDigestParameter(
+					result.evidenceInputDigest,
+					"prerequisiteEvidenceInputDigest",
+				),
+			})),
+			route: {
+				id: input.route.id,
+				provider: input.route.provider,
+				model: input.route.model,
+			},
+			configurationDigest: input.configurationDigest,
+		}),
 	};
 }
 
@@ -457,6 +470,8 @@ function modelAssessmentEvidence(input: {
 				checkVersion: input.context.check.version,
 				protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
 				protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
+				requestDigest: input.request.requestDigest,
+				assessmentDigest: canonicalJsonDigest(input.response),
 				routeId: input.route.id,
 				configurationDigest: input.request.configurationDigest,
 				measurement: modelConclusionEvidenceMeasurement(
@@ -468,6 +483,35 @@ function modelAssessmentEvidence(input: {
 				limitations: [...input.response.limitations],
 				...(input.response.securityFindings
 					? {securityFindings: [...input.response.securityFindings]}
+					: {}),
+				...(input.response.customCheckAssessment && input.request.check.customCheck
+					? {
+							customCheck: {
+								evaluatorBindingDigest:
+									input.response.customCheckAssessment.evaluatorBindingDigest,
+								customCheckId: input.response.customCheckAssessment.customCheckId,
+								definitionDigest:
+									input.response.customCheckAssessment.definitionDigest,
+								checkTypeId: input.response.customCheckAssessment.checkTypeId,
+								checkTypeVersion:
+									input.response.customCheckAssessment.checkTypeVersion,
+								evaluatorId: input.response.customCheckAssessment.evaluatorId,
+								standardDigests: input.request.check.customCheck.standardBindings.map(
+									(standard) => standard.standardDigest,
+								),
+								prerequisiteResultDigests: [
+									...input.response.customCheckAssessment.prerequisiteResultDigests,
+								],
+								evidenceGaps: [...input.response.customCheckAssessment.evidenceGaps],
+								counterevidence: [
+									...input.response.customCheckAssessment.counterevidence,
+								],
+								coverage: input.response.customCheckAssessment.coverage,
+								truncated: input.response.customCheckAssessment.truncated,
+								repairTargetRefs:
+									input.response.customCheckAssessment.repair?.targetRefs ?? [],
+							},
+						}
 					: {}),
 			},
 		},
@@ -512,6 +556,9 @@ function responseObservation(
 		],
 		...(disposition === "unsatisfied" ? {issueClass: "model_assessment"} : {}),
 		...(disposition === "indeterminate" ? {issueClass: "model_uncertainty"} : {}),
+		...(response.customCheckAssessment?.repair
+			? {feedback: response.customCheckAssessment.repair.summary}
+			: {}),
 		producedEvidenceRecords: [evidence],
 		producedEvidenceResolutions: [resolution],
 	};
@@ -525,18 +572,24 @@ function modelDisposition(
 	return "indeterminate";
 }
 
-function observationFromPersistedEvidence(
-	context: LoopCheckExecutorContext,
-	eligibleEvidenceIds: readonly string[],
-): CheckExecutorObservation {
-	const eligible = new Set(eligibleEvidenceIds);
-	const assessments = context.evidenceRecords
+function observationFromPersistedEvidence(input: {
+	readonly context: LoopCheckExecutorContext;
+	readonly eligibleEvidenceIds: readonly string[];
+	readonly request: DecisionModelCheckRequest;
+}): CheckExecutorObservation {
+	const eligible = new Set(input.eligibleEvidenceIds);
+	const assessments = input.context.evidenceRecords
 		.filter(isModelAssessmentEvidence)
 		.filter(
 			(record) =>
 				eligible.has(record.evidenceId) &&
-				record.payload.checkId === context.check.id &&
-				record.payload.checkVersion === context.check.version,
+				record.payload.checkId === input.context.check.id &&
+				record.payload.checkVersion === input.context.check.version &&
+				record.payload.requestDigest === input.request.requestDigest &&
+				persistedCustomAssessmentMatches({
+					record,
+					binding: input.request.check.customCheck,
+				}),
 		);
 	if (assessments.length !== 1) {
 		return {
@@ -589,6 +642,31 @@ function isModelAssessmentEvidence(
 	return record.kind === "model_assessment";
 }
 
+function persistedCustomAssessmentMatches(input: {
+	readonly record: EvidenceRecord<"model_assessment">;
+	readonly binding: CustomCheckEvaluatorBinding | undefined;
+}): boolean {
+	const assessment = input.record.payload.customCheck;
+	if (!input.binding) return assessment === undefined;
+	if (!assessment) return false;
+	return (
+		assessment.evaluatorBindingDigest === input.binding.evaluatorBindingDigest &&
+		assessment.customCheckId === input.binding.customCheckId &&
+		assessment.definitionDigest === input.binding.definitionDigest &&
+		assessment.checkTypeId === input.binding.checkTypeId &&
+		assessment.checkTypeVersion === input.binding.checkTypeVersion &&
+		assessment.evaluatorId === input.binding.evaluatorId &&
+		JSON.stringify(assessment.standardDigests) ===
+			JSON.stringify(
+				input.binding.standardBindings.map((standard) => standard.standardDigest),
+			) &&
+		JSON.stringify(assessment.prerequisiteResultDigests) ===
+			JSON.stringify(
+				input.binding.prerequisiteResults.map((result) => result.resultDigest),
+			)
+	);
+}
+
 function operationalObservation(
 	status: Exclude<DecisionModelCheckObservation["status"], "completed">,
 ): CheckExecutorObservation {
@@ -617,24 +695,13 @@ function normalizedResponse(
 	if (request.review.mode === "security_challenge") {
 		responseKeys.push("securityFindings");
 	}
+	if (request.check.customCheck) {
+		responseKeys.push("customCheckAssessment");
+	}
 	assertExactKeys(value, responseKeys, "Decision Model Check response");
 	const response = value as Record<string, unknown>;
-	if (
-		response.protocolId !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id ||
-		response.protocolVersion !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version ||
-		response.requestDigest !== request.requestDigest ||
-		response.checkId !== request.check.id ||
-		response.checkVersion !== request.check.version
-	) {
-		throw new Error("Decision Model Check response identity does not match request.");
-	}
-	if (
-		response.conclusion !== "supported" &&
-		response.conclusion !== "unsupported" &&
-		response.conclusion !== "uncertain"
-	) {
-		throw new Error("Decision Model Check response conclusion is invalid.");
-	}
+	assertResponseIdentity({response, request});
+	assertResponseConclusion(response.conclusion);
 	const consideredEvidenceIds = normalizedEvidenceIds(
 		response.consideredEvidenceIds,
 	);
@@ -661,6 +728,14 @@ function normalizedResponse(
 					consideredEvidenceIds,
 				)
 			: undefined;
+	const customCheckAssessment = normalizedCustomCheckAssessment({
+		request,
+		value: response.customCheckAssessment,
+	});
+	assertCustomCheckAssessmentBasis({
+		conclusion: response.conclusion,
+		assessment: customCheckAssessment,
+	});
 	assertAssessmentBasis(
 		response.conclusion,
 		findings,
@@ -668,8 +743,8 @@ function normalizedResponse(
 		securityFindings,
 	);
 	return {
-		protocolId: response.protocolId,
-		protocolVersion: response.protocolVersion,
+		protocolId: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id,
+		protocolVersion: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 		requestDigest: response.requestDigest as Sha256Digest,
 		checkId: response.checkId as string,
 		checkVersion: response.checkVersion as string,
@@ -678,7 +753,63 @@ function normalizedResponse(
 		findings,
 		limitations,
 		...(securityFindings ? {securityFindings} : {}),
+		...(customCheckAssessment ? {customCheckAssessment} : {}),
 	};
+}
+
+function assertResponseIdentity(input: {
+	readonly response: Readonly<Record<string, unknown>>;
+	readonly request: DecisionModelCheckRequest;
+}): void {
+	if (
+		input.response.protocolId !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.id ||
+		input.response.protocolVersion !== DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version ||
+		input.response.requestDigest !== input.request.requestDigest ||
+		input.response.checkId !== input.request.check.id ||
+		input.response.checkVersion !== input.request.check.version
+	) {
+		throw new Error("Decision Model Check response identity does not match request.");
+	}
+}
+
+function assertResponseConclusion(
+	value: unknown,
+): asserts value is DecisionModelCheckResponse["conclusion"] {
+	if (value !== "supported" && value !== "unsupported" && value !== "uncertain") {
+		throw new Error("Decision Model Check response conclusion is invalid.");
+	}
+}
+
+function assertCustomCheckAssessmentBasis(input: {
+	readonly conclusion: DecisionModelCheckResponse["conclusion"];
+	readonly assessment: CustomCheckEvaluatorAssessmentExtension | undefined;
+}): void {
+	if (!input.assessment) return;
+	if (
+		input.conclusion === "supported" &&
+		(input.assessment.coverage !== "complete" ||
+			input.assessment.truncated ||
+			input.assessment.evidenceGaps.length > 0 ||
+			input.assessment.counterevidence.length > 0)
+	) {
+		throw new Error(
+			"Supported Custom Check Assessment requires complete untruncated Evidence without gaps or counterevidence.",
+		);
+	}
+	if (input.conclusion === "unsupported" && !input.assessment.repair) {
+		throw new Error("Unsupported Custom Check Assessment requires bounded repair output.");
+	}
+}
+
+function normalizedCustomCheckAssessment(input: {
+	readonly request: DecisionModelCheckRequest;
+	readonly value: unknown;
+}): CustomCheckEvaluatorAssessmentExtension | undefined {
+	if (!input.request.check.customCheck) return undefined;
+	return normalizeCustomCheckEvaluatorAssessment({
+		value: input.value,
+		binding: input.request.check.customCheck,
+	});
 }
 
 function compareText(left: string, right: string): number {

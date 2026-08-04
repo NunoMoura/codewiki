@@ -264,6 +264,21 @@ describe("Custom Check catalog and policy", () => {
 			"codewiki.check-evaluator.organization_policy",
 		);
 		assert.deepEqual(binding.parameters.standardRefs, standardRefsFor(USER_STANDARD));
+		assert.deepEqual(
+			JSON.parse(JSON.stringify(binding.parameters.standardBindings)),
+			[{
+				userStandardId: USER_STANDARD.userStandardId,
+				standardDigest: USER_STANDARD.standardDigest,
+				name: USER_STANDARD.name,
+				source: {
+					kind: USER_STANDARD.source.kind,
+					mediaType: USER_STANDARD.source.mediaType,
+					contentDigest: USER_STANDARD.source.contentDigest,
+					observedAt: USER_STANDARD.source.observedAt,
+				},
+				passages: USER_STANDARD.passages,
+			}],
+		);
 		assert.deepEqual(binding.parameters.knowledgeRefs, [
 			"knowledge:company-api-policy",
 		]);

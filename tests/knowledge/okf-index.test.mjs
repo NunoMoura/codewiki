@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added `codewiki.custom-check-evaluator@1.0.0`, Decision Model Check Request Protocol `5.0.0`, Evidence schema `1.4.0`, and Loop Exit Runner `1.3.0`. Each Custom Model Check now receives exact Candidate, Check/definition, accepted Standard snapshot and passage text, considered Evidence, prerequisite Result, protected config, no-tool route, and evaluator configuration bindings in a fresh no-shared-state request. One bounded Assessment must echo those identities and reports Evidence gaps, counterevidence, coverage, truncation, and repair targets. Runtime records request/Assessment/evaluator identity and exposes one atomic Evidence-plus-Result materialization callback; mismatched, stale, malformed, or oversized output remains `indeterminate`.",
+					},
+					{
+						kind: "Update",
 						text: "Added independent high/critical Decision assurance and separately authenticated residual-risk authority. Check Catalog `10.0.0` activates a second security challenge only on a distinct no-tool provider/model route and requires an independent authorization Check. Evidence schema `1.3.0` scopes approvals to exact Check/version/purpose; residual-risk receipts bind qualified role, an identity distinct from general Candidate approval, supported primary/independent assessment Evidence from distinct routes/configurations/producers, exact risk, prior approval, rationale digest, and finding digests. Missing, disagreeing, unavailable, aliased-route, same-authority, generic, or wrong-Candidate input remains `indeterminate`.",
 					},
 					{

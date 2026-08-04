@@ -206,6 +206,36 @@ function response(request, conclusion = "supported") {
 		...(request.review.mode === "security_challenge"
 			? {securityFindings: []}
 			: {}),
+		...(request.check.customCheck
+			? {
+					customCheckAssessment: {
+						protocolId: "codewiki.custom-check-evaluator",
+						protocolVersion: "1.0.0",
+						evaluatorBindingDigest:
+							request.check.customCheck.evaluatorBindingDigest,
+						customCheckId: request.check.customCheck.customCheckId,
+						definitionDigest: request.check.customCheck.definitionDigest,
+						checkTypeId: request.check.customCheck.checkTypeId,
+						checkTypeVersion: request.check.customCheck.checkTypeVersion,
+						evaluatorId: request.check.customCheck.evaluatorId,
+						prerequisiteResultDigests:
+							request.check.customCheck.prerequisiteResults.map(
+								(result) => result.resultDigest,
+							),
+						evidenceGaps: [],
+						counterevidence: [],
+						coverage: "complete",
+						truncated: false,
+						repair:
+							conclusion === "supported"
+								? null
+								: {
+										summary: "Add exact Evidence for unsupported requirement.",
+										targetRefs: ["candidate:requirement"],
+									},
+					},
+				}
+			: {}),
 	};
 }
 
@@ -389,28 +419,135 @@ describe("native Decision Model Checks", () => {
 			requests[0].protocolId,
 			"codewiki.decision.model-check-request",
 		);
-		assert.equal(requests[0].protocolVersion, "4.0.0");
-		assert.deepEqual({
-			...requests[0].check.customCheck,
-			standardRefs: requests[0].check.customCheck.standardRefs.map((reference) => ({
-				...reference,
-				passageIds: [...reference.passageIds],
-			})),
-		}, {
-			customCheckId: definition.customCheckId,
-			definitionDigest: definition.definitionDigest,
-			protectedSourceHead: protectedBase.protectedSourceHead,
-			protectedConfigDigest: protectedBase.projectConfigDigest,
-			customCheckConfigDigest: protectedBase.customCheckConfigDigest,
-			protectedConfigSnapshotDigest: protectedBase.snapshotDigest,
-			checkTypeId: "organization_policy",
-			checkTypeVersion: "1.0.0",
-			evaluatorId: "codewiki.check-evaluator.organization_policy",
-			standardRefs: standardRefsFor(USER_STANDARD),
-			knowledgeRefs: ["knowledge:api-ownership"],
-			repairGuidance: "Add one accepted owning-team reference.",
-		});
+		assert.equal(requests[0].protocolVersion, "5.0.0");
+		const evaluator = requests[0].check.customCheck;
+		assert.equal(evaluator.protocolId, "codewiki.custom-check-evaluator");
+		assert.equal(evaluator.protocolVersion, "1.0.0");
+		assert.equal(evaluator.sessionIsolation, "fresh_no_shared_state");
+		assert.equal(evaluator.customCheckId, definition.customCheckId);
+		assert.equal(evaluator.definitionDigest, definition.definitionDigest);
+		assert.equal(evaluator.candidateDigest, setup.candidate.digest);
+		assert.equal(evaluator.checkId, checkId);
+		assert.equal(evaluator.checkDigest, binding.checkDigest);
+		assert.equal(evaluator.protectedSourceHead, protectedBase.protectedSourceHead);
+		assert.equal(evaluator.protectedConfigDigest, protectedBase.projectConfigDigest);
+		assert.equal(evaluator.customCheckConfigDigest, protectedBase.customCheckConfigDigest);
+		assert.equal(evaluator.protectedConfigSnapshotDigest, protectedBase.snapshotDigest);
+		assert.equal(evaluator.checkTypeId, "organization_policy");
+		assert.equal(evaluator.checkTypeVersion, "1.0.0");
+		assert.equal(evaluator.evaluatorId, "codewiki.check-evaluator.organization_policy");
+		assert.deepEqual(JSON.parse(JSON.stringify(evaluator.standardBindings)), [{
+			userStandardId: USER_STANDARD.userStandardId,
+			standardDigest: USER_STANDARD.standardDigest,
+			name: USER_STANDARD.name,
+			source: {
+				kind: USER_STANDARD.source.kind,
+				mediaType: USER_STANDARD.source.mediaType,
+				contentDigest: USER_STANDARD.source.contentDigest,
+				observedAt: USER_STANDARD.source.observedAt,
+			},
+			passages: USER_STANDARD.passages,
+		}]);
+		assert.deepEqual(evaluator.knowledgeRefs, ["knowledge:api-ownership"]);
+		assert.deepEqual(evaluator.consideredEvidenceIds, []);
+		assert.deepEqual(evaluator.prerequisiteResults, []);
+		assert.equal(evaluator.repairGuidance, "Add one accepted owning-team reference.");
+		assert.match(evaluator.evaluatorBindingDigest, /^sha256:[0-9a-f]{64}$/u);
+		const assessment = result.producedEvidenceRecords[0];
+		assert.equal(assessment.payload.requestDigest, requests[0].requestDigest);
+		assert.match(assessment.payload.assessmentDigest, /^sha256:[0-9a-f]{64}$/u);
+		assert.equal(
+			assessment.payload.customCheck.evaluatorBindingDigest,
+			evaluator.evaluatorBindingDigest,
+		);
+		assert.deepEqual(assessment.payload.customCheck.standardDigests, [
+			USER_STANDARD.standardDigest,
+		]);
+		assert.deepEqual(result.report.checkResults[0].evidenceRecordIds, [
+			assessment.evidenceId,
+		]);
 		assert.equal(requests[0].review.mode, "balanced");
+
+		for (const scenario of [
+			"identity",
+			"prerequisite",
+			"repair",
+			"missing_repair",
+			"supported_partial",
+		]) {
+			const rejected = await createLoopExitRunner({
+				catalog,
+				executors: createDecisionModelCheckExecutors({
+					catalog,
+					route: route(),
+					subject: setup.subject,
+					transport: {
+						async execute(request) {
+							const output = response(
+								request,
+								scenario === "supported_partial" ? "supported" : "unsupported",
+							);
+							if (scenario === "identity") {
+								output.customCheckAssessment.definitionDigest = digest("0");
+							}
+							if (scenario === "prerequisite") {
+								output.customCheckAssessment.prerequisiteResultDigests = [
+									digest("1"),
+								];
+							}
+							if (scenario === "repair") {
+								output.customCheckAssessment.repair.summary = "x".repeat(1_001);
+							}
+							if (scenario === "missing_repair") {
+								output.customCheckAssessment.repair = null;
+							}
+							if (scenario === "supported_partial") {
+								output.customCheckAssessment.coverage = "partial";
+								output.customCheckAssessment.evidenceGaps = ["Missing owner mapping."];
+							}
+							return {
+								status: "completed",
+								observedAt: "2026-07-28T12:00:00.000Z",
+								response: output,
+							};
+						},
+					},
+				}),
+			}).run({candidate: setup.candidate, policy});
+			assert.equal(rejected.report.checkResults[0].status, "indeterminate");
+			assert.equal(rejected.report.checkResults[0].issueClass, "model_output");
+			assert.deepEqual(rejected.producedEvidenceRecords, []);
+		}
+
+		let replayCalls = 0;
+		const mismatchedReplay = await createLoopExitRunner({
+			catalog,
+			executors: createDecisionModelCheckExecutors({
+				catalog,
+				route: route({model: "different-model"}),
+				subject: setup.subject,
+				transport: {
+					async execute(request) {
+						replayCalls += 1;
+						return {
+							status: "completed",
+							observedAt: "2026-07-28T12:00:00.000Z",
+							response: response(request),
+						};
+					},
+				},
+			}),
+		}).run({
+			candidate: setup.candidate,
+			policy,
+			evidenceRecords: [assessment],
+			evidenceResolutionsByCheck: {
+				[checkId]: result.report.checkResults[0].evidenceResolutions,
+			},
+		});
+		assert.equal(mismatchedReplay.report.checkResults[0].status, "indeterminate");
+		assert.equal(mismatchedReplay.report.checkResults[0].issueClass, "model_evidence");
+		assert.equal(replayCalls, 0);
 	});
 
 	it("runs classified security review as an asserted dependency-bound challenge", async () => {

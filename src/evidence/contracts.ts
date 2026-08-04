@@ -1,7 +1,7 @@
 import { Type, type TSchema } from "typebox";
 import type { Sha256Digest } from "../utils/canonical-json.ts";
 
-export const EVIDENCE_SCHEMA_VERSION = "1.3.0" as const;
+export const EVIDENCE_SCHEMA_VERSION = "1.4.0" as const;
 
 export const EVIDENCE_KINDS = [
 	"research_citation",
@@ -181,6 +181,8 @@ export interface ModelAssessmentPayload {
 	readonly checkVersion: string;
 	readonly protocolId: string;
 	readonly protocolVersion: string;
+	readonly requestDigest: Sha256Digest;
+	readonly assessmentDigest: Sha256Digest;
 	readonly routeId: string;
 	readonly configurationDigest: Sha256Digest;
 	readonly measurement: EvidenceMeasurement;
@@ -188,6 +190,21 @@ export interface ModelAssessmentPayload {
 	readonly findings: readonly string[];
 	readonly limitations: readonly string[];
 	readonly securityFindings?: readonly ModelSecurityChallengeFinding[];
+	readonly customCheck?: {
+		readonly evaluatorBindingDigest: Sha256Digest;
+		readonly customCheckId: string;
+		readonly definitionDigest: Sha256Digest;
+		readonly checkTypeId: string;
+		readonly checkTypeVersion: string;
+		readonly evaluatorId: string;
+		readonly standardDigests: readonly Sha256Digest[];
+		readonly prerequisiteResultDigests: readonly Sha256Digest[];
+		readonly evidenceGaps: readonly string[];
+		readonly counterevidence: readonly string[];
+		readonly coverage: "complete" | "partial";
+		readonly truncated: boolean;
+		readonly repairTargetRefs: readonly string[];
+	};
 }
 
 export interface WorkerReportPayload {
@@ -597,6 +614,8 @@ const modelAssessmentPayloadSchema = Type.Object(
 		checkVersion: idSchema,
 		protocolId: idSchema,
 		protocolVersion: idSchema,
+		requestDigest: digestSchema,
+		assessmentDigest: digestSchema,
 		routeId: idSchema,
 		configurationDigest: digestSchema,
 		measurement: measurementSchema,
@@ -608,6 +627,36 @@ const modelAssessmentPayloadSchema = Type.Object(
 		limitations: findingListSchema,
 		securityFindings: Type.Optional(
 			Type.Array(modelSecurityChallengeFindingSchema, {maxItems: 32}),
+		),
+		customCheck: Type.Optional(
+			Type.Object(
+				{
+					evaluatorBindingDigest: digestSchema,
+					customCheckId: idSchema,
+					definitionDigest: digestSchema,
+					checkTypeId: idSchema,
+					checkTypeVersion: idSchema,
+					evaluatorId: idSchema,
+					standardDigests: Type.Array(digestSchema, {
+						minItems: 1,
+						maxItems: 8,
+						uniqueItems: true,
+					}),
+					prerequisiteResultDigests: Type.Array(digestSchema, {
+						maxItems: 64,
+						uniqueItems: true,
+					}),
+					evidenceGaps: Type.Array(requiredTextSchema, {maxItems: 16}),
+					counterevidence: Type.Array(requiredTextSchema, {maxItems: 16}),
+					coverage: Type.Union([Type.Literal("complete"), Type.Literal("partial")]),
+					truncated: Type.Boolean(),
+					repairTargetRefs: Type.Array(refSchema, {
+						maxItems: 16,
+						uniqueItems: true,
+					}),
+				},
+				{additionalProperties: false},
+			),
 		),
 	},
 	{ additionalProperties: false },

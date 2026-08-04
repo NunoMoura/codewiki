@@ -160,6 +160,8 @@ function modelAssessmentEvidence(setup, check) {
 				checkVersion: check.version,
 				protocolId: "codewiki.test.model-check",
 				protocolVersion: "1.0.0",
+				requestDigest: canonicalJsonDigest({request: "test-model"}),
+				assessmentDigest: canonicalJsonDigest({assessment: "supported"}),
 				routeId: "test-model",
 				configurationDigest: canonicalJsonDigest({route: "test-model"}),
 				measurement: {kind: "boolean", value: true},
@@ -212,7 +214,8 @@ describe("bounded Loop exit runner", () => {
 		const first = await runner.run({
 			candidate: setup.candidate,
 			policy: setup.policy,
-			onResult: (result, source) => streamed.push([result.checkId, source]),
+			onCheckMaterialized: ({result, source}) =>
+				streamed.push([result.checkId, source]),
 		});
 		assert.equal(first.report.status, "pass");
 		assert.equal(first.nextAction.kind, "ready_for_runtime_route");
@@ -230,7 +233,7 @@ describe("bounded Loop exit runner", () => {
 			candidate: setup.candidate,
 			policy: setup.policy,
 			precomputedResults: first.report.checkResults,
-			onResult: (_result, source) => precomputedSources.push(source),
+			onCheckMaterialized: ({source}) => precomputedSources.push(source),
 		});
 		assert.equal(precomputed.report.reportDigest, first.report.reportDigest);
 		assert.deepEqual(precomputedSources, Array(4).fill("precomputed"));
@@ -342,6 +345,7 @@ describe("bounded Loop exit runner", () => {
 			expectedSubject: evidence.subject,
 		});
 		const streamedEvidence = [];
+		const atomicMaterializations = [];
 		const runner = createLoopExitRunner({
 			catalog: setup.catalog,
 			executors: [
@@ -364,11 +368,23 @@ describe("bounded Loop exit runner", () => {
 		const result = await runner.run({
 			candidate: setup.candidate,
 			policy: setup.policy,
-			onProducedEvidence: (record) => streamedEvidence.push(record.evidenceId),
+			onCheckMaterialized: (materialization) => {
+				atomicMaterializations.push(materialization);
+				streamedEvidence.push(
+					...materialization.producedEvidenceRecords.map(
+						(record) => record.evidenceId,
+					),
+				);
+			},
 		});
 		assert.equal(result.report.status, "pass");
 		assert.deepEqual(result.producedEvidenceRecords, [evidence]);
 		assert.deepEqual(streamedEvidence, [evidence.evidenceId]);
+		assert.equal(atomicMaterializations.length, 1);
+		assert.equal(
+			atomicMaterializations[0].result.evidenceRecordIds[0],
+			atomicMaterializations[0].producedEvidenceRecords[0].evidenceId,
+		);
 		assert.deepEqual(result.report.checkResults[0].evidenceRecordIds, [
 			evidence.evidenceId,
 		]);

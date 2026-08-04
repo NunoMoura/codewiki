@@ -29,7 +29,7 @@ import {
 	type LoopExitResultCache,
 } from "./cache.ts";
 
-const LOOP_EXIT_RUNNER_VERSION = "1.2.0" as const;
+const LOOP_EXIT_RUNNER_VERSION = "1.3.0" as const;
 
 export type CheckObservationDisposition =
 	| "satisfied"
@@ -90,13 +90,11 @@ interface RunLoopExitInput {
 	readonly evidenceRecords?: readonly EvidenceRecord[];
 	readonly precomputedResults?: readonly CheckResult[];
 	readonly signal?: AbortSignal;
-	readonly onResult?: (
-		result: CheckResult,
-		source: "executed" | "cache" | "precomputed",
-	) => void | Promise<void>;
-	readonly onProducedEvidence?: (
-		record: EvidenceRecord,
-	) => void | Promise<void>;
+	readonly onCheckMaterialized?: (materialization: {
+		readonly result: CheckResult;
+		readonly producedEvidenceRecords: readonly EvidenceRecord[];
+		readonly source: "executed" | "cache" | "precomputed";
+	}) => void | Promise<void>;
 }
 
 type LoopExitNextAction =
@@ -249,7 +247,11 @@ async function executeScheduledCheck(
 ): Promise<CheckResult> {
 	const precomputed = context.precomputedResults.get(binding.checkId);
 	if (precomputed) {
-		await context.input.onResult?.(precomputed, "precomputed");
+		await context.input.onCheckMaterialized?.({
+			result: precomputed,
+			producedEvidenceRecords: [],
+			source: "precomputed",
+		});
 		return precomputed;
 	}
 	const check = requiredCatalogRegistration(
@@ -278,7 +280,11 @@ async function executeScheduledCheck(
 	const cached = executor?.cacheable === false ? undefined : context.cache.get(cacheKey);
 	if (cached) {
 		context.cacheHits.add(binding.checkId);
-		await context.input.onResult?.(cached, "cache");
+		await context.input.onCheckMaterialized?.({
+			result: cached,
+			producedEvidenceRecords: [],
+			source: "cache",
+		});
 		return cached;
 	}
 	const executed = await executeBinding({
@@ -309,9 +315,6 @@ async function executeScheduledCheck(
 		context.producedEvidenceRecords.set(record.evidenceId, record);
 		newlyProduced.push(record);
 	}
-	await Promise.all(
-		newlyProduced.map((record) => context.input.onProducedEvidence?.(record)),
-	);
 	if (
 		executor?.cacheable !== false &&
 		executed.producedEvidenceRecords.length === 0 &&
@@ -319,7 +322,11 @@ async function executeScheduledCheck(
 	) {
 		context.cache.set(cacheKey, executed.result);
 	}
-	await context.input.onResult?.(executed.result, "executed");
+	await context.input.onCheckMaterialized?.({
+		result: executed.result,
+		producedEvidenceRecords: newlyProduced,
+		source: "executed",
+	});
 	return executed.result;
 }
 

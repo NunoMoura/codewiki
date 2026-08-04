@@ -5,6 +5,7 @@ import {
 import type { EvidenceObligation } from "../evidence/obligations.ts";
 import type { SemanticLoop } from "../semantic-loop.ts";
 import type { CustomCheckDefinition } from "./custom-checks/contracts.ts";
+import type {CustomCheckEvaluatorStandardBinding} from "./custom-checks/model-evaluator.ts";
 import {
 	normalizeUserStandardDefinitions,
 	type UserStandardDefinition,
@@ -63,6 +64,7 @@ export interface CheckRegistration {
 		definition: CustomCheckDefinition;
 		checkTypeVersion: string;
 		evaluatorId: string;
+		standardBindings: readonly CustomCheckEvaluatorStandardBinding[];
 	};
 }
 
@@ -461,7 +463,9 @@ export function createCheckCatalog(input: {
 	});
 	const customRegistrations = normalizedCustomChecks
 		.filter((definition) => definition.lifecycle === "active")
-		.flatMap(customCheckRegistrations);
+		.flatMap((definition) =>
+			customCheckRegistrations({definition, userStandards}),
+		);
 	const registrations = [
 		...CODEWIKI_CHECK_REGISTRATIONS,
 		...customRegistrations,
@@ -534,9 +538,11 @@ export function createCheckCatalog(input: {
 	});
 }
 
-function customCheckRegistrations(
-	definition: CustomCheckDefinition,
-): CheckRegistration[] {
+function customCheckRegistrations(input: {
+	readonly definition: CustomCheckDefinition;
+	readonly userStandards: readonly UserStandardDefinition[];
+}): CheckRegistration[] {
+	const definition = input.definition;
 	const checkType = getCustomCheckType(definition.checkTypeId);
 	const loops = definition.appliesWhen.loops?.length
 		? definition.appliesWhen.loops
@@ -586,8 +592,52 @@ function customCheckRegistrations(
 			definition,
 			checkTypeVersion: checkType.version,
 			evaluatorId: codeTemplate ? execution.id : checkType.evaluatorId,
+			standardBindings: customCheckStandardBindings({
+				definition,
+				userStandards: input.userStandards,
+			}),
 		},
 	}));
+}
+
+function customCheckStandardBindings(input: {
+	readonly definition: CustomCheckDefinition;
+	readonly userStandards: readonly UserStandardDefinition[];
+}): CustomCheckEvaluatorStandardBinding[] {
+	return input.definition.standardRefs.map((reference) => {
+		const standard = input.userStandards.find(
+			(candidate) => candidate.userStandardId === reference.userStandardId,
+		);
+		if (!standard || standard.standardDigest !== reference.standardDigest) {
+			throw new Error(
+				`Custom Check ${input.definition.customCheckId} has an invalid User Standard binding.`,
+			);
+		}
+		const passageById = new Map(
+			standard.passages.map((passage) => [passage.passageId, passage]),
+		);
+		return {
+			userStandardId: standard.userStandardId,
+			standardDigest: standard.standardDigest,
+			name: standard.name,
+			source: {
+				kind: standard.source.kind,
+				mediaType: standard.source.mediaType,
+				contentDigest: standard.source.contentDigest,
+				observedAt: standard.source.observedAt,
+				...(standard.source.uri ? {uri: standard.source.uri} : {}),
+			},
+			passages: reference.passageIds.map((passageId) => {
+				const passage = passageById.get(passageId);
+				if (!passage) {
+					throw new Error(
+						`Custom Check ${input.definition.customCheckId} has an invalid User Standard passage binding.`,
+					);
+				}
+				return {passageId: passage.passageId, text: passage.text};
+			}),
+		};
+	});
 }
 
 function builtInRegistrations(): CheckRegistration[] {
@@ -901,6 +951,13 @@ function normalizeRegistration(input: {
 							[registration.customCheck.definition],
 							userStandards,
 						)[0],
+						standardBindings: registration.customCheck.standardBindings.map(
+							(standard) => ({
+								...standard,
+								source: {...standard.source},
+								passages: standard.passages.map((passage) => ({...passage})),
+							}),
+						),
 					},
 				}
 			: {}),

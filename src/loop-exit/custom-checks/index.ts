@@ -4,6 +4,7 @@ export * from "./code-templates.ts";
 export * from "./configuration.ts";
 export * from "./contracts.ts";
 export * from "./distillation.ts";
+export * from "./model-evaluator.ts";
 export * from "./mutations.ts";
 export * from "./policy-acceptance.ts";
 export * from "./policy-review.ts";

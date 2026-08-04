@@ -533,6 +533,8 @@ function materializeModelAssessment(
 		checkVersion: request.checkVersion,
 		protocolId: PROTOCOL_ID,
 		protocolVersion: PROTOCOL_VERSION,
+		requestDigest: request.requestDigest,
+		assessmentDigest: canonicalJsonDigest(response),
 		routeId: request.route.id,
 		configurationDigest: request.configurationDigest,
 		measurement: modelConclusionEvidenceMeasurement(
