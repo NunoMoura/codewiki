@@ -227,6 +227,21 @@ function normalizedPayload<TKind extends EvidenceKind>(
 			normalized = {
 				...value,
 				captureDigests: sortedUniqueText(value.captureDigests, "capture digest"),
+				...(value.securityResidualRisk
+					? {
+							securityResidualRisk: {
+								...value.securityResidualRisk,
+								assessmentEvidenceIds: sortedUniqueText(
+									value.securityResidualRisk.assessmentEvidenceIds,
+									"security assessment evidence id",
+								),
+								findingDigests: sortedUniqueText(
+									value.securityResidualRisk.findingDigests,
+									"security finding digest",
+								),
+							},
+						}
+					: {}),
 			};
 			break;
 		}
@@ -410,6 +425,32 @@ function assertApprovalReceipt(
 	assertIsoTimestamp(payload.decidedAt, "Approval receipt decidedAt");
 	if (Date.parse(payload.decidedAt) > Date.parse(observedAt)) {
 		throw new Error("Approval receipt decidedAt cannot be after observedAt.");
+	}
+	const scopedCheckIds: Record<ApprovalReceiptPayload["approvalScope"], string> = {
+		candidate_exit: "approval_safety",
+		security_residual_risk: "security_residual_risk_authorized",
+		release_intent: "release_intent_authorized",
+		release_safety: "release_safety_approved",
+	};
+	if (payload.checkId !== scopedCheckIds[payload.approvalScope]) {
+		throw new Error("Approval receipt scope does not match its Check.");
+	}
+	if (
+		payload.approvalScope === "security_residual_risk" &&
+		(payload.checkId !== "security_residual_risk_authorized" ||
+			!payload.securityResidualRisk)
+	) {
+		throw new Error(
+			"Security residual-risk approval Evidence requires its exact Check and risk binding.",
+		);
+	}
+	if (
+		payload.approvalScope !== "security_residual_risk" &&
+		payload.securityResidualRisk
+	) {
+		throw new Error(
+			"Non-security approval Evidence cannot include residual-risk binding.",
+		);
 	}
 	if (payload.channel === "git_provider") {
 		assertProducerKind(producerKind, "external_service", "Git-provider approval");

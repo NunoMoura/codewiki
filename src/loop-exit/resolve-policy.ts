@@ -63,6 +63,7 @@ const TECHNOLOGIES = [
 type ProjectTrait = (typeof PROJECT_TRAITS)[number];
 type Technology = (typeof TECHNOLOGIES)[number];
 type PathTrait = "ui" | "dependency" | "release";
+type SecurityResidualRisk = "high" | "critical";
 
 interface ChangeSelectorFacts {
 	changeId: string;
@@ -94,6 +95,7 @@ interface ResolveExitPolicyInput {
 	candidateDigest: string;
 	changes: ChangeSelectorFacts[];
 	securitySurfaceClassification?: SecuritySurfaceClassification;
+	securityResidualRisk?: SecurityResidualRisk;
 	projectTraits?: ProjectTrait[];
 	technologies?: Technology[];
 	paths?: string[];
@@ -111,6 +113,7 @@ interface CheckActivationRuleMatch {
 	technologies?: Technology[];
 	pathTraits?: PathTrait[];
 	securitySurfaces?: SecuritySurface[];
+	securityResidualRisks?: SecurityResidualRisk[];
 }
 
 interface CheckActivationRule {
@@ -134,6 +137,7 @@ interface NormalizedSelectorInput {
 	pathTraits: PathTrait[];
 	securitySurfaceClassification?: SecuritySurfaceClassification;
 	securitySurfaces: SecuritySurface[];
+	securityResidualRisk?: SecurityResidualRisk;
 	approvedAdditions: ApprovedCheckAddition[];
 	approvedExclusions: ApprovedCheckExclusion[];
 	protectedBaseCustomCheckConfig?: {
@@ -341,6 +345,15 @@ const CODEWIKI_CHECK_ACTIVATION_RULES: CheckActivationRule[] = [
 		"check.change.risk.high",
 		["security_privacy_reviewed"],
 		{ risks: ["high"] },
+	),
+	...rulesForLoop(
+		"check.security.residual-risk",
+		"decision",
+		[
+			"security_independent_challenge_reviewed",
+			"security_residual_risk_authorized",
+		],
+		{securityResidualRisks: ["high", "critical"]},
 	),
 	...rulesForAllLoops(
 		"check.project.security",
@@ -740,6 +753,9 @@ function normalizeSelectorInput(
 			? {securitySurfaceClassification: input.securitySurfaceClassification}
 			: {}),
 		securitySurfaces,
+		...(input.securityResidualRisk
+			? {securityResidualRisk: input.securityResidualRisk}
+			: {}),
 		...(input.protectedBaseCustomCheckConfig
 			? {
 					protectedBaseCustomCheckConfig: {
@@ -813,6 +829,15 @@ function assertSelectorTraits(input: ResolveExitPolicyInput): void {
 		if (!(TECHNOLOGIES as readonly string[]).includes(technology)) {
 			throw new Error(`Unknown Resolved Exit Policy technology ${technology}.`);
 		}
+	}
+	if (
+		input.securityResidualRisk !== undefined &&
+		input.securityResidualRisk !== "high" &&
+		input.securityResidualRisk !== "critical"
+	) {
+		throw new Error(
+			`Unknown Resolved Exit Policy security residual risk ${String(input.securityResidualRisk)}.`,
+		);
 	}
 }
 
@@ -1002,6 +1027,13 @@ function ruleReasons(
 		optionalRuleReasons(rule.match.securitySurfaces, (values) =>
 			selectedReasons("security-surface", selector.securitySurfaces, values),
 		),
+		optionalRuleReasons(rule.match.securityResidualRisks, (values) =>
+			selectedReasons(
+				"security-residual-risk",
+				selector.securityResidualRisk ? [selector.securityResidualRisk] : [],
+				values,
+			),
+		),
 	];
 	const reasons = [`loop:${rule.loop}`];
 	for (const match of matches) {
@@ -1035,17 +1067,22 @@ function activationParameters(
 	checkId: string,
 	selector: NormalizedSelectorInput,
 ): Record<string, CheckJsonValue> | undefined {
-	if (
-		checkId !== "security_privacy_reviewed" ||
-		!selector.securitySurfaceClassification
-	) {
-		return undefined;
-	}
-	return {
-		securitySurfaceClassification: mutableCheckJsonValue(
+	const securityChallenge =
+		checkId === "security_privacy_reviewed" ||
+		checkId === "security_independent_challenge_reviewed";
+	const residualRiskAuthority =
+		checkId === "security_residual_risk_authorized";
+	if (!securityChallenge && !residualRiskAuthority) return undefined;
+	const parameters: Record<string, CheckJsonValue> = {};
+	if (securityChallenge && selector.securitySurfaceClassification) {
+		parameters.securitySurfaceClassification = mutableCheckJsonValue(
 			toCanonicalJsonValue(selector.securitySurfaceClassification),
-		),
-	};
+		);
+	}
+	if (selector.securityResidualRisk) {
+		parameters.securityResidualRisk = selector.securityResidualRisk;
+	}
+	return Object.keys(parameters).length > 0 ? parameters : undefined;
 }
 
 function layerReasons(

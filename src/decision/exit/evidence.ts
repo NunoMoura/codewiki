@@ -1,6 +1,7 @@
 import {
 	EVIDENCE_SCHEMA_VERSION,
 	type ApprovalReceiptProvider,
+	type EvidenceId,
 	type EvidenceProducer,
 	type EvidenceRecord,
 	type EvidenceSensitivity,
@@ -11,6 +12,7 @@ import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
 import type {CheckCatalog} from "../../loop-exit/catalog.ts";
 import type {ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
 import {
+	assertSha256Digest,
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
@@ -33,6 +35,15 @@ interface DecisionApprovalReceiptInput {
 	readonly provider?: ApprovalReceiptProvider;
 }
 
+interface DecisionResidualRiskApprovalReceiptInput
+	extends DecisionApprovalReceiptInput {
+	readonly acceptedRisk: "high" | "critical";
+	readonly priorApproval: EvidenceRecord<"approval_receipt">;
+	readonly assessmentEvidenceRecords: readonly EvidenceRecord<"model_assessment">[];
+	readonly rationaleDigest: Sha256Digest;
+	readonly findingDigests: readonly Sha256Digest[];
+}
+
 interface ResolveDecisionEvidenceInput {
 	readonly catalog: CheckCatalog;
 	readonly policy: ResolvedExitPolicy;
@@ -45,42 +56,114 @@ export function materializeDecisionApprovalReceipt(
 	input: DecisionApprovalReceiptInput,
 ): EvidenceRecord<"approval_receipt"> {
 	assertApprovalInput(input);
-	const subject = decisionEvidenceSubject(input.candidate, input.changeRef);
+	return materializeApprovalReceipt({
+		input,
+		checkId: "approval_safety",
+		checkVersion: "1.0.0",
+		approvalScope: "candidate_exit",
+	});
+}
+
+export function materializeDecisionResidualRiskApprovalReceipt(
+	input: DecisionResidualRiskApprovalReceiptInput,
+): EvidenceRecord<"approval_receipt"> {
+	assertResidualRiskApprovalInput(input);
+	const assessmentEvidenceIds = input.assessmentEvidenceRecords.map(
+		(record) => record.evidenceId,
+	);
+	return materializeApprovalReceipt({
+		input,
+		checkId: "security_residual_risk_authorized",
+		checkVersion: "1.0.0",
+		approvalScope: "security_residual_risk",
+		securityResidualRisk: {
+			risk: input.acceptedRisk,
+			priorApprovalEvidenceId: input.priorApproval.evidenceId,
+			assessmentEvidenceIds,
+			rationaleDigest: input.rationaleDigest,
+			findingDigests: [...input.findingDigests],
+		},
+	});
+}
+
+function materializeApprovalReceipt(input: {
+	readonly input: DecisionApprovalReceiptInput;
+	readonly checkId: string;
+	readonly checkVersion: string;
+	readonly approvalScope: "candidate_exit" | "security_residual_risk";
+	readonly securityResidualRisk?: {
+		readonly risk: "high" | "critical";
+		readonly priorApprovalEvidenceId: EvidenceId;
+		readonly assessmentEvidenceIds: readonly EvidenceId[];
+		readonly rationaleDigest: Sha256Digest;
+		readonly findingDigests: readonly Sha256Digest[];
+	};
+}): EvidenceRecord<"approval_receipt"> {
+	const approval = input.input;
+	const subject = decisionEvidenceSubject({
+		candidate: approval.candidate,
+		changeRef: approval.changeRef,
+	});
+	const captureDigests = [...(approval.captureDigests ?? [])].sort();
+	const securityResidualRisk = input.securityResidualRisk
+		? {
+				...input.securityResidualRisk,
+				assessmentEvidenceIds: [
+					...input.securityResidualRisk.assessmentEvidenceIds,
+				].sort(),
+				findingDigests: [...input.securityResidualRisk.findingDigests].sort(),
+			}
+		: undefined;
 	const bundleDigest = canonicalJsonDigest({
-		candidateDigest: input.candidate.digest,
-		changeRef: input.changeRef,
-		actorId: input.actorId,
-		authenticatedIdentityRef: input.authenticatedIdentityRef,
-		role: input.role,
-		channel: input.channel,
-		decidedAt: input.decidedAt,
-		captureDigests: input.captureDigests ?? [],
-		provider: input.provider ?? null,
+		candidateDigest: approval.candidate.digest,
+		changeRef: approval.changeRef,
+		checkId: input.checkId,
+		checkVersion: input.checkVersion,
+		approvalScope: input.approvalScope,
+		actorId: approval.actorId,
+		authenticatedIdentityRef: approval.authenticatedIdentityRef,
+		role: approval.role,
+		channel: approval.channel,
+		decidedAt: approval.decidedAt,
+		captureDigests,
+		securityResidualRisk: securityResidualRisk ?? null,
+		provider: approval.provider ?? null,
 	});
 	return materializeEvidenceRecord(
 		{
 			schemaVersion: EVIDENCE_SCHEMA_VERSION,
 			kind: "approval_receipt",
-			provenanceRefs: [input.authenticatedIdentityRef, input.changeRef],
+			provenanceRefs: [
+				approval.authenticatedIdentityRef,
+				approval.changeRef,
+				`check:${input.checkId}@${input.checkVersion}`,
+				...(securityResidualRisk?.assessmentEvidenceIds ?? []),
+			],
 			payload: {
-				actorId: input.actorId,
-				authenticatedIdentityRef: input.authenticatedIdentityRef,
-				role: input.role,
+				checkId: input.checkId,
+				checkVersion: input.checkVersion,
+				approvalScope: input.approvalScope,
+				actorId: approval.actorId,
+				authenticatedIdentityRef: approval.authenticatedIdentityRef,
+				role: approval.role,
 				decision: "approved",
-				channel: input.channel,
-				decidedAt: input.decidedAt,
+				channel: approval.channel,
+				decidedAt: approval.decidedAt,
 				evidenceBundleDigest: bundleDigest,
-				captureDigests: [...(input.captureDigests ?? [])],
-				...(input.provider ? {provider: input.provider} : {}),
+				captureDigests,
+				...(securityResidualRisk
+					? {securityResidualRisk}
+					: {}),
+				...(approval.provider ? {provider: approval.provider} : {}),
 			},
 		},
 		{
 			subject,
-			observedAt: input.observedAt,
-			producer: input.producer,
+			observedAt: approval.observedAt,
+			producer: approval.producer,
 			authority: "approved",
 			coverage: "complete",
-			sensitivity: input.sensitivity ?? "project",
+			sensitivity: approval.sensitivity ?? "project",
 		},
 	);
 }
@@ -109,12 +192,12 @@ export function resolveDecisionEvidenceObligations(
 				reduceEvidenceObligation({
 					obligation,
 					evidence: input.evidenceRecords.flatMap((evidence) =>
-						isEvidenceForCheck(
+						isEvidenceForCheck({
 							evidence,
-							check.id,
-							check.version,
-							obligation.kinds,
-						)
+							checkId: check.id,
+							checkVersion: check.version,
+							requiredKinds: obligation.kinds,
+						})
 							? [{evidence, relation: evidenceRelation(evidence)}]
 							: [],
 					),
@@ -135,34 +218,40 @@ export function resolveDecisionEvidenceObligations(
 	return Object.freeze(resolutions);
 }
 
-export function decisionEvidenceSubject(
-	candidate: DecisionCandidate,
-	changeRef: string,
-): EvidenceSubject {
-	if (!candidate.observedBase.canonicalRefs.includes(changeRef)) {
+export function decisionEvidenceSubject(input: {
+	readonly candidate: DecisionCandidate;
+	readonly changeRef: string;
+}): EvidenceSubject {
+	if (!input.candidate.observedBase.canonicalRefs.includes(input.changeRef)) {
 		throw new Error("Decision Evidence changeRef is not bound by Candidate.");
 	}
 	return toCanonicalJsonValue({
-		changeRefs: [changeRef],
-		changeRevisionDigests: [candidate.content.revision.revisionId],
-		candidateDigest: candidate.digest,
-		acceptanceRequirementIds: candidate.content.revision.acceptanceRequirements.map(
-			(requirement) => requirement.id,
-		),
+		changeRefs: [input.changeRef],
+		changeRevisionDigests: [input.candidate.content.revision.revisionId],
+		candidateDigest: input.candidate.digest,
+		acceptanceRequirementIds:
+			input.candidate.content.revision.acceptanceRequirements.map(
+				(requirement) => requirement.id,
+			),
 	}) as unknown as EvidenceSubject;
 }
 
-function isEvidenceForCheck(
-	evidence: EvidenceRecord,
-	checkId: string,
-	checkVersion: string,
-	requiredKinds: readonly EvidenceRecord["kind"][],
-): boolean {
-	if (!requiredKinds.includes(evidence.kind)) return false;
-	if (evidence.kind !== "model_assessment") return true;
+function isEvidenceForCheck(input: {
+	readonly evidence: EvidenceRecord;
+	readonly checkId: string;
+	readonly checkVersion: string;
+	readonly requiredKinds: readonly EvidenceRecord["kind"][];
+}): boolean {
+	if (!input.requiredKinds.includes(input.evidence.kind)) return false;
+	if (
+		input.evidence.kind !== "model_assessment" &&
+		input.evidence.kind !== "approval_receipt"
+	) {
+		return true;
+	}
 	return (
-		evidence.payload.checkId === checkId &&
-		evidence.payload.checkVersion === checkVersion
+		input.evidence.payload.checkId === input.checkId &&
+		input.evidence.payload.checkVersion === input.checkVersion
 	);
 }
 
@@ -196,6 +285,58 @@ function assertApprovalInput(input: DecisionApprovalReceiptInput): void {
 		],
 		"Decision approval input",
 	);
+	assertApprovalFields(input);
+}
+
+function assertResidualRiskApprovalInput(
+	input: DecisionResidualRiskApprovalReceiptInput,
+): void {
+	assertExactKeys(
+		input,
+		[
+			"candidate",
+			"changeRef",
+			"actorId",
+			"authenticatedIdentityRef",
+			"role",
+			"channel",
+			"decidedAt",
+			"observedAt",
+			"producer",
+			"sensitivity",
+			"captureDigests",
+			"provider",
+			"acceptedRisk",
+			"priorApproval",
+			"assessmentEvidenceRecords",
+			"rationaleDigest",
+			"findingDigests",
+		],
+		"Decision residual-risk approval input",
+	);
+	assertApprovalFields(input);
+	if (input.acceptedRisk !== input.candidate.content.revision.safety.risk) {
+		throw new Error(
+			"Decision residual-risk approval does not match Candidate risk.",
+		);
+	}
+	if (!["security_reviewer", "security_owner", "risk_owner"].includes(input.role)) {
+		throw new Error(
+			"Decision residual-risk approval requires a qualified security role.",
+		);
+	}
+	assertSha256Digest(input.rationaleDigest, "Residual-risk rationaleDigest");
+	for (const digest of input.findingDigests) {
+		assertSha256Digest(digest, "Residual-risk findingDigest");
+	}
+	if (new Set(input.findingDigests).size !== input.findingDigests.length) {
+		throw new Error("Residual-risk findingDigests must be unique.");
+	}
+	assertPriorApproval(input);
+	assertIndependentSecurityAssessments(input);
+}
+
+function assertApprovalFields(input: DecisionApprovalReceiptInput): void {
 	if (input.candidate.loop !== "decision") {
 		throw new Error("Decision approval requires a Decision Candidate.");
 	}
@@ -217,6 +358,86 @@ function assertApprovalInput(input: DecisionApprovalReceiptInput): void {
 	if (decidedAt > observedAt) {
 		throw new Error("Decision approval cannot be observed before it was decided.");
 	}
+}
+
+function assertPriorApproval(input: DecisionResidualRiskApprovalReceiptInput): void {
+	const prior = input.priorApproval;
+	if (
+		prior.authority !== "approved" ||
+		prior.coverage !== "complete" ||
+		prior.payload.checkId !== "approval_safety" ||
+		prior.payload.checkVersion !== "1.0.0" ||
+		prior.payload.approvalScope !== "candidate_exit" ||
+		prior.payload.decision !== "approved" ||
+		prior.subject.candidateDigest !== input.candidate.digest
+	) {
+		throw new Error(
+			"Decision residual-risk approval requires exact approved Candidate-exit Evidence.",
+		);
+	}
+	if (
+		prior.payload.authenticatedIdentityRef === input.authenticatedIdentityRef
+	) {
+		throw new Error(
+			"Decision residual-risk authority must be independently authenticated.",
+		);
+	}
+}
+
+function assertIndependentSecurityAssessments(
+	input: DecisionResidualRiskApprovalReceiptInput,
+): void {
+	const records = input.assessmentEvidenceRecords;
+	const expectedCheckIds = new Set([
+		"security_privacy_reviewed",
+		"security_independent_challenge_reviewed",
+	]);
+	if (
+		records.length !== 2 ||
+		new Set(records.map((record) => record.evidenceId)).size !== 2 ||
+		new Set(records.map((record) => record.payload.checkId)).size !== 2 ||
+		records.some((record) => !expectedCheckIds.has(record.payload.checkId))
+	) {
+		throw new Error(
+			"Decision residual-risk approval requires both independent security assessments.",
+		);
+	}
+	if (
+		records.some(
+			(record) =>
+				!isCompleteSupportedSecurityAssessment({
+					record,
+					candidateDigest: input.candidate.digest,
+				}),
+		)
+	) {
+		throw new Error(
+			"Decision residual-risk approval requires complete supported Candidate-bound assessments.",
+		);
+	}
+	if (
+		new Set(records.map((record) => record.payload.routeId)).size !== 2 ||
+		new Set(records.map((record) => record.payload.configurationDigest)).size !== 2 ||
+		new Set(records.map((record) => record.producer.id)).size !== 2
+	) {
+		throw new Error(
+			"Decision residual-risk assessments must use independent model routes.",
+		);
+	}
+}
+
+function isCompleteSupportedSecurityAssessment(input: {
+	readonly record: EvidenceRecord<"model_assessment">;
+	readonly candidateDigest: string;
+}): boolean {
+	return (
+		input.record.authority === "asserted" &&
+		input.record.coverage === "complete" &&
+		input.record.subject.candidateDigest === input.candidateDigest &&
+		input.record.payload.checkVersion === "1.0.0" &&
+		input.record.payload.measurement.kind === "boolean" &&
+		input.record.payload.measurement.value === true
+	);
 }
 
 function assertEvidenceInput(input: ResolveDecisionEvidenceInput): void {

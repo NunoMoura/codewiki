@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {materializeDecisionApprovalReceipt} from "../../src/decision/exit/evidence.ts";
+import {
+	materializeDecisionApprovalReceipt,
+	materializeDecisionResidualRiskApprovalReceipt,
+} from "../../src/decision/exit/evidence.ts";
 import {
 	DECISION_MODEL_CHECK_REQUEST_PROTOCOL,
 	createDecisionModelCheckExecutors,
@@ -795,6 +798,23 @@ describe("native Decision Model Checks", () => {
 						};
 					},
 				},
+				independentSecurity: {
+					route: route({
+						id: "independent-security",
+						provider: "independent-provider",
+						model: "independent-model",
+					}),
+					transport: {
+						async execute(request) {
+							modelCalls += 1;
+							return {
+								status: "completed",
+								observedAt: "2026-07-28T12:01:00.000Z",
+								response: response(request),
+							};
+						},
+					},
+				},
 			},
 			researchChecks: {
 				route: route({id: "decision-research"}),
@@ -832,12 +852,12 @@ describe("native Decision Model Checks", () => {
 			researchFreshnessBoundary: freshnessBoundary,
 			securityScan: securityScanContext(),
 		});
+		assert.equal(first.result.report.status, "indeterminate");
 		assert.equal(
-			first.result.report.status,
-			"pass",
-			JSON.stringify(
-				first.result.report.checkResults.filter((check) => check.status !== "pass"),
-			),
+			first.result.report.checkResults.find(
+				(check) => check.checkId === "security_residual_risk_authorized",
+			).status,
+			"indeterminate",
 		);
 		assert.equal(researchCalls, 1);
 		assert.equal(scannerCalls, 1);
@@ -853,18 +873,78 @@ describe("native Decision Model Checks", () => {
 			).status,
 			"pass",
 		);
-		const replay = await runtime.run({
+		const assessments = first.result.producedEvidenceRecords.filter(
+			(record) =>
+				record.kind === "model_assessment" &&
+				[
+					"security_privacy_reviewed",
+					"security_independent_challenge_reviewed",
+				].includes(record.payload.checkId),
+		);
+		const riskApprovalInput = {
 			candidate: setup.candidate,
 			changeRef: setup.subject.changeRefs[0],
-			evidenceRecords: [
-				approval,
-				citation,
-				...first.result.producedEvidenceRecords,
-			],
+			actorId: "security-owner-1",
+			authenticatedIdentityRef: "identity:test:security-owner-1",
+			role: "security_owner",
+			channel: "codewiki",
+			decidedAt: "2026-07-28T12:02:00.000Z",
+			observedAt: "2026-07-28T12:03:00.000Z",
+			producer: {kind: "user", id: "security-owner-1", version: "1.0.0"},
+			acceptedRisk: "high",
+			priorApproval: approval,
+			assessmentEvidenceRecords: assessments,
+			rationaleDigest: digest("a"),
+			findingDigests: [],
+		};
+		assert.throws(
+			() =>
+				materializeDecisionResidualRiskApprovalReceipt({
+					...riskApprovalInput,
+					authenticatedIdentityRef: approval.payload.authenticatedIdentityRef,
+				}),
+			/independently authenticated/,
+		);
+		const riskApproval =
+			materializeDecisionResidualRiskApprovalReceipt(riskApprovalInput);
+		assert.equal(
+			materializeDecisionResidualRiskApprovalReceipt({
+				...riskApprovalInput,
+				assessmentEvidenceRecords: [...assessments].reverse(),
+			}).evidenceId,
+			riskApproval.evidenceId,
+		);
+		const authorizedEvidence = [
+			approval,
+			citation,
+			...first.result.producedEvidenceRecords,
+			riskApproval,
+		];
+		const authorized = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: authorizedEvidence,
 			researchFreshnessBoundary: freshnessBoundary,
 			securityScan: securityScanContext(),
 		});
-		assert.equal(replay.result.report.reportDigest, first.result.report.reportDigest);
+		assert.equal(authorized.result.report.status, "pass");
+		assert.deepEqual(
+			authorized.result.report.checkResults.find(
+				(check) => check.checkId === "security_residual_risk_authorized",
+			).evidenceRecordIds,
+			[riskApproval.evidenceId],
+		);
+		const replay = await runtime.run({
+			candidate: setup.candidate,
+			changeRef: setup.subject.changeRefs[0],
+			evidenceRecords: authorizedEvidence,
+			researchFreshnessBoundary: freshnessBoundary,
+			securityScan: securityScanContext(),
+		});
+		assert.equal(
+			replay.result.report.reportDigest,
+			authorized.result.report.reportDigest,
+		);
 		assert.equal(researchCalls, 1);
 		assert.equal(modelCalls > 0, true);
 		assert.equal(scannerCalls, 1);
@@ -1052,6 +1132,22 @@ describe("native Decision Model Checks", () => {
 					transport: {execute: async () => ({status: "unavailable"})},
 				}),
 			/must disable all tools/,
+		);
+		assert.throws(
+			() =>
+				createDecisionExitRuntime({
+					modelChecks: {
+						route: route(),
+						transport: {execute: async () => ({status: "unavailable"})},
+						independentSecurity: {
+							route: route({id: "renamed-same-model"}),
+							transport: {
+								execute: async () => ({status: "unavailable"}),
+							},
+						},
+					},
+				}),
+			/distinct model route and provider\/model identity/,
 		);
 	});
 });

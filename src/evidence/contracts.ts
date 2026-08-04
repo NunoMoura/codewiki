@@ -1,7 +1,7 @@
 import { Type, type TSchema } from "typebox";
 import type { Sha256Digest } from "../utils/canonical-json.ts";
 
-export const EVIDENCE_SCHEMA_VERSION = "1.2.0" as const;
+export const EVIDENCE_SCHEMA_VERSION = "1.3.0" as const;
 
 export const EVIDENCE_KINDS = [
 	"research_citation",
@@ -223,6 +223,13 @@ export interface ApprovalReceiptProvider {
 }
 
 export interface ApprovalReceiptPayload {
+	readonly checkId: string;
+	readonly checkVersion: string;
+	readonly approvalScope:
+		| "candidate_exit"
+		| "security_residual_risk"
+		| "release_intent"
+		| "release_safety";
 	readonly actorId: string;
 	readonly authenticatedIdentityRef: string;
 	readonly role: string;
@@ -231,6 +238,13 @@ export interface ApprovalReceiptPayload {
 	readonly decidedAt: string;
 	readonly evidenceBundleDigest: Sha256Digest;
 	readonly captureDigests: readonly Sha256Digest[];
+	readonly securityResidualRisk?: {
+		readonly risk: "high" | "critical";
+		readonly priorApprovalEvidenceId: EvidenceId;
+		readonly assessmentEvidenceIds: readonly EvidenceId[];
+		readonly rationaleDigest: Sha256Digest;
+		readonly findingDigests: readonly Sha256Digest[];
+	};
 	readonly provider?: ApprovalReceiptProvider;
 }
 
@@ -644,6 +658,14 @@ const integrationProofPayloadSchema = Type.Object(
 
 const approvalReceiptPayloadSchema = Type.Object(
 	{
+		checkId: idSchema,
+		checkVersion: idSchema,
+		approvalScope: Type.Union([
+			Type.Literal("candidate_exit"),
+			Type.Literal("security_residual_risk"),
+			Type.Literal("release_intent"),
+			Type.Literal("release_safety"),
+		]),
 		actorId: idSchema,
 		authenticatedIdentityRef: refSchema,
 		role: idSchema,
@@ -657,6 +679,25 @@ const approvalReceiptPayloadSchema = Type.Object(
 		decidedAt: timestampSchema,
 		evidenceBundleDigest: digestSchema,
 		captureDigests: digestListSchema,
+		securityResidualRisk: Type.Optional(
+			Type.Object(
+				{
+					risk: Type.Union([Type.Literal("high"), Type.Literal("critical")]),
+					priorApprovalEvidenceId: idSchema,
+					assessmentEvidenceIds: Type.Array(idSchema, {
+						minItems: 2,
+						maxItems: 2,
+						uniqueItems: true,
+					}),
+					rationaleDigest: digestSchema,
+					findingDigests: Type.Array(digestSchema, {
+						maxItems: 128,
+						uniqueItems: true,
+					}),
+				},
+				{ additionalProperties: false },
+			),
+		),
 		provider: Type.Optional(
 			Type.Object(
 				{

@@ -113,6 +113,7 @@ const DECISION_CODE_EVALUATORS: Readonly<Record<string, DecisionCodeEvaluator>> 
 						"Release intent requires explicit delivery constraints and evidence expectations.",
 					),
 		risks_and_alternatives_considered: riskAndAlternatives,
+		security_residual_risk_authorized: () => satisfied(),
 		security_surface_requirements_complete: securitySurfaceRequirements,
 		user_value_clear: (content) =>
 			hasText(content.revision.impact.user)

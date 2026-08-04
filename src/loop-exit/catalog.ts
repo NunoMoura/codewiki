@@ -38,7 +38,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "9.0.0";
+export const CHECK_CATALOG_VERSION = "10.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -359,6 +359,14 @@ const LOOP_SPECIFIC_CONDITIONAL_CHECKS = {
 			"Independent assessment accounts for citation support, contradiction, overstatement, alternatives, and uncertainty.",
 		],
 		[
+			"security_independent_challenge_reviewed",
+			"A separately routed security challenge independently assesses high or critical residual risk.",
+		],
+		[
+			"security_residual_risk_authorized",
+			"A separately authenticated qualified authority explicitly accepts exact high or critical residual risk.",
+		],
+		[
 			"release_intent_authorized",
 			"Release intent, authority boundary, and delivery constraints are explicitly accepted.",
 		],
@@ -389,6 +397,7 @@ const MODEL_CHECK_IDS = new Set([
 	"outcome_realization_accounted",
 	"uncertainty_resolved",
 	"security_privacy_reviewed",
+	"security_independent_challenge_reviewed",
 	"accessibility_ui_reviewed",
 	"api_contract_reviewed",
 	"library_contract_preserved",
@@ -396,6 +405,7 @@ const MODEL_CHECK_IDS = new Set([
 ]);
 const HUMAN_CHECK_IDS = new Set([
 	"approval_safety",
+	"security_residual_risk_authorized",
 	"release_intent_authorized",
 	"release_safety_approved",
 ]);
@@ -423,6 +433,14 @@ const CHECK_DEPENDENCIES: Readonly<Record<string, readonly string[]>> = {
 	security_privacy_reviewed: [
 		"security_surface_requirements_complete",
 		"security_scanners_valid",
+	],
+	security_independent_challenge_reviewed: [
+		"security_surface_requirements_complete",
+		"security_scanners_valid",
+	],
+	security_residual_risk_authorized: [
+		"security_privacy_reviewed",
+		"security_independent_challenge_reviewed",
 	],
 };
 
@@ -721,7 +739,10 @@ function evidenceObligations(
 			}),
 		];
 	}
-	if (id === "security_privacy_reviewed") {
+	if (
+		id === "security_privacy_reviewed" ||
+		id === "security_independent_challenge_reviewed"
+	) {
 		return [
 			obligation({
 				id: "model-assessment",

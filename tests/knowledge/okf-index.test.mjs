@@ -104,6 +104,10 @@ describe("OKF index and log navigation", () => {
 				entries: [
 					{
 						kind: "Update",
+						text: "Added independent high/critical Decision assurance and separately authenticated residual-risk authority. Check Catalog `10.0.0` activates a second security challenge only on a distinct no-tool provider/model route and requires an independent authorization Check. Evidence schema `1.3.0` scopes approvals to exact Check/version/purpose; residual-risk receipts bind qualified role, an identity distinct from general Candidate approval, supported primary/independent assessment Evidence from distinct routes/configurations/producers, exact risk, prior approval, rationale digest, and finding digests. Missing, disagreeing, unavailable, aliased-route, same-authority, generic, or wrong-Candidate input remains `indeterminate`.",
+					},
+					{
+						kind: "Update",
 						text: "Added off-repository `codewiki.security-route-calibration@1.0.0` admission and scoring for exact Scanner Suite `3.0.0` plus atomic evaluator `2.0.0` receipts. Complete human-labeled pass, defect, and unavailable matrices across all six families now report false pass/failure, escaped critical defects, `indeterminate`, latency, and cost per route. Protocol drift, incomplete coverage, false passes, escaped critical defects, and below-threshold scores block calibration. Lab reports grant no Result or promotion authority; real sealed execution remains pending external human cases and production scanner receipts.",
 					},
 					{

@@ -71,6 +71,28 @@ describe("Check catalog", () => {
 				.evidenceObligations[0].authorities,
 			["approved"],
 		);
+		const independentSecurity = catalog.get(
+			"security_independent_challenge_reviewed",
+			"decision",
+		);
+		assert.equal(independentSecurity.check.execution.kind, "model");
+		assert.deepEqual(independentSecurity.dependsOn, [
+			"security_scanners_valid",
+			"security_surface_requirements_complete",
+		]);
+		const residualRisk = catalog.get(
+			"security_residual_risk_authorized",
+			"decision",
+		);
+		assert.equal(residualRisk.check.execution.kind, "code");
+		assert.deepEqual(residualRisk.dependsOn, [
+			"security_independent_challenge_reviewed",
+			"security_privacy_reviewed",
+		]);
+		assert.deepEqual(
+			residualRisk.check.evidenceObligations[0].authorities,
+			["approved"],
+		);
 		const researchProvenance = catalog.get(
 			"research_provenance_valid",
 			"decision",
@@ -142,7 +164,7 @@ describe("Check catalog", () => {
 			);
 			assert.equal(catalog.get(checkId, "planning"), undefined);
 		}
-		assert.equal(catalog.version, "9.0.0");
+		assert.equal(catalog.version, "10.0.0");
 		assert.match(catalog.digest, /^sha256:[0-9a-f]{64}$/);
 		assert.ok(
 			catalog

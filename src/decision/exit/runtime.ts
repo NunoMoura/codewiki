@@ -52,6 +52,10 @@ interface CreateDecisionExitRuntimeInput {
 	readonly modelChecks?: {
 		readonly route: WikiModelRouteConfig;
 		readonly transport: DecisionModelCheckTransport;
+		readonly independentSecurity?: {
+			readonly route: WikiModelRouteConfig;
+			readonly transport: DecisionModelCheckTransport;
+		};
 	};
 	readonly securityScanners?: DecisionSecurityRuntimeConfig;
 	readonly researchChecks?: {
@@ -105,6 +109,7 @@ export function createDecisionExitRuntime(
 			"Decision Exit Runtime received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
 		);
 	}
+	assertIndependentSecurityRoute(input.modelChecks);
 	const protectedConfig = input.protectedBaseCustomCheckConfig;
 	const catalog = createCheckCatalog(
 		protectedConfig
@@ -119,10 +124,10 @@ export function createDecisionExitRuntime(
 		cache,
 		async run(runInput: RunDecisionExitInput): Promise<DecisionExitRun> {
 			assertRunInput(runInput);
-			const subject = decisionEvidenceSubject(
-				runInput.candidate,
-				runInput.changeRef,
-			);
+			const subject = decisionEvidenceSubject({
+				candidate: runInput.candidate,
+				changeRef: runInput.changeRef,
+			});
 			const security = prepareDecisionSecurityRuntime({
 				catalog,
 				candidate: runInput.candidate,
@@ -152,6 +157,21 @@ export function createDecisionExitRuntime(
 								route: input.modelChecks.route,
 								subject,
 								transport: input.modelChecks.transport,
+								excludeCheckIds: [
+									"security_independent_challenge_reviewed",
+								],
+							})
+						: []),
+					...(input.modelChecks?.independentSecurity
+						? createDecisionModelCheckExecutors({
+								catalog,
+								route: input.modelChecks.independentSecurity.route,
+								subject,
+								transport:
+									input.modelChecks.independentSecurity.transport,
+								includeCheckIds: [
+									"security_independent_challenge_reviewed",
+								],
 							})
 						: []),
 					...(input.researchChecks && runInput.researchFreshnessBoundary
@@ -252,6 +272,23 @@ function passedDecisionRoute(
 			return {route: "complete", reasonCode: "decision-rejected"};
 		default:
 			throw new Error(`Decision disposition ${String(disposition)} is unsupported.`);
+	}
+}
+
+function assertIndependentSecurityRoute(
+	modelChecks: CreateDecisionExitRuntimeInput["modelChecks"],
+): void {
+	const independent = modelChecks?.independentSecurity?.route;
+	const primary = modelChecks?.route;
+	if (!independent || !primary) return;
+	if (
+		independent.id === primary.id ||
+		(independent.provider === primary.provider &&
+			independent.model === primary.model)
+	) {
+		throw new Error(
+			"Independent security assessment requires a distinct model route and provider/model identity.",
+		);
 	}
 }
 

@@ -187,6 +187,9 @@ const payloads = {
 		verificationEvidenceIds: [evidenceId("command_execution", "4")],
 	},
 	approval_receipt: {
+		checkId: "approval_safety",
+		checkVersion: "1.0.0",
+		approvalScope: "candidate_exit",
 		actorId: "user-42",
 		authenticatedIdentityRef: "codewiki:user:user-42",
 		role: "intent_owner",
@@ -237,6 +240,23 @@ describe("Evidence Record foundation", () => {
 			assert.equal(Object.isFrozen(record.payload), true);
 			assert.doesNotThrow(() => assertValidEvidenceRecord(record));
 		}
+	});
+
+	it("rejects legacy unscoped approval receipts without a compatibility path", () => {
+		const {
+			checkId: _checkId,
+			checkVersion: _checkVersion,
+			approvalScope: _approvalScope,
+			...legacyPayload
+		} = payloads.approval_receipt;
+		assert.throws(
+			() =>
+				materializeEvidenceRecord(
+					material("approval_receipt", legacyPayload),
+					runtimeFor("approval_receipt"),
+				),
+			/must have required properties checkId, checkVersion, approvalScope/,
+		);
 	});
 
 	it("normalizes unordered bindings before deriving deterministic identity", () => {

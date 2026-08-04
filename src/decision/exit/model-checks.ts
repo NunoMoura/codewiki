@@ -131,6 +131,8 @@ interface CreateDecisionModelCheckExecutorsInput {
 	readonly route: WikiModelRouteConfig;
 	readonly subject: EvidenceSubject;
 	readonly transport: DecisionModelCheckTransport;
+	readonly includeCheckIds?: readonly string[];
+	readonly excludeCheckIds?: readonly string[];
 }
 
 const SPECIALIZED_MODEL_CHECK_IDS = new Set(["research_claims_supported"]);
@@ -145,10 +147,16 @@ export function createDecisionModelCheckExecutors(
 ): readonly LoopCheckExecutor[] {
 	const route = validateNoToolModelRoute(input.route, "Decision Model Check");
 	const subject = normalizedSubject(input.subject);
+	const included = input.includeCheckIds
+		? new Set(input.includeCheckIds)
+		: undefined;
+	const excluded = new Set(input.excludeCheckIds ?? []);
 	return Object.freeze(
 		input.catalog.list("decision").flatMap((registration) =>
 			registration.check.execution.kind === "model" &&
-			!SPECIALIZED_MODEL_CHECK_IDS.has(registration.check.id)
+			!SPECIALIZED_MODEL_CHECK_IDS.has(registration.check.id) &&
+			(!included || included.has(registration.check.id)) &&
+			!excluded.has(registration.check.id)
 				? [
 						modelCheckExecutor({
 							check: registration.check,
@@ -412,6 +420,7 @@ function modelCheckReview(
 	let securitySurfaceClassification: SecuritySurfaceClassification | null = null;
 	const securityChallenge =
 		context.check.id === "security_privacy_reviewed" ||
+		context.check.id === "security_independent_challenge_reviewed" ||
 		context.binding.parameters.customCheckTypeId === "security_and_privacy";
 	if (securityChallenge) {
 		const configured = context.binding.parameters.securitySurfaceClassification;
@@ -471,7 +480,8 @@ function modelAssessmentEvidence(input: {
 				version: DECISION_MODEL_CHECK_REQUEST_PROTOCOL.version,
 			},
 			authority:
-				input.context.check.id === "security_privacy_reviewed"
+				input.context.check.id === "security_privacy_reviewed" ||
+				input.context.check.id === "security_independent_challenge_reviewed"
 					? "asserted"
 					: "observed",
 			coverage: "complete",

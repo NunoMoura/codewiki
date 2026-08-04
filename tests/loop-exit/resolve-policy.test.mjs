@@ -175,6 +175,29 @@ describe("Resolved Exit Policy resolver", () => {
 			);
 			assert.ok(binding.required);
 		}
+		assert.equal(
+			highRisk.bindings.some(
+				(binding) => binding.checkId === "security_residual_risk_authorized",
+			),
+			false,
+		);
+		const residualRiskInput = selectorInput("decision");
+		residualRiskInput.changes[0].risk = "high";
+		residualRiskInput.securityResidualRisk = "critical";
+		const residualRisk = resolveExitPolicy(residualRiskInput);
+		for (const checkId of [
+			"security_independent_challenge_reviewed",
+			"security_residual_risk_authorized",
+		]) {
+			const binding = residualRisk.bindings.find(
+				(candidate) => candidate.checkId === checkId,
+			);
+			assert.ok(binding, `missing ${checkId}`);
+			assert.equal(binding.parameters.securityResidualRisk, "critical");
+			assert.ok(
+				binding.activatedBy.includes("security-residual-risk:critical"),
+			);
+		}
 
 		const riskFactInputs = [
 			(input) => {

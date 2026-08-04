@@ -113,6 +113,10 @@ function decisionExitPolicy(
 			},
 		],
 		securitySurfaceClassification,
+		...(candidate.content.revision.safety.risk === "high" ||
+		candidate.content.revision.safety.risk === "critical"
+			? {securityResidualRisk: candidate.content.revision.safety.risk}
+			: {}),
 		projectTraits: [],
 		technologies: [],
 		paths: [...candidate.content.revision.classification.targetRefs],

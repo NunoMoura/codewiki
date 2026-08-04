@@ -14,6 +14,10 @@ export * from "./evidence/adapters/spdx.ts";
 export * from "./evidence/adapters/pact.ts";
 export * from "./evidence/adapters/openapi.ts";
 export * from "./evidence/adapters/materialization.ts";
+export {
+	materializeDecisionApprovalReceipt,
+	materializeDecisionResidualRiskApprovalReceipt,
+} from "./decision/exit/evidence.ts";
 export * from "./pi/user-standard-distillation-session.ts";
 export {
 	PI_NATIVE_DECISION_HOST_PROTOCOL,
