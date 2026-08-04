@@ -28,7 +28,7 @@ import {
 	toCanonicalJsonValue,
 } from "../utils/canonical-json.ts";
 
-interface DecisionResearchClaimsTransport {
+export interface DecisionResearchClaimsTransport {
 	readonly execute: (
 		request: DecisionResearchClaimsRequest,
 		options: {readonly signal: AbortSignal},

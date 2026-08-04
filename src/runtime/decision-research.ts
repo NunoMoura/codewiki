@@ -20,7 +20,7 @@ import { assertExactKeys } from "../utils/json.ts";
 
 const RESEARCH_PROVENANCE_CHECK_ID = "research_provenance_valid";
 
-interface DecisionResearchCitationMaterial {
+export interface DecisionResearchCitationMaterial {
 	readonly artifact?: EvidenceArtifact;
 	readonly provenanceRefs: readonly string[];
 	readonly payload: ResearchCitationPayload;

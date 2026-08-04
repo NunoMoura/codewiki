@@ -100,8 +100,12 @@ describe("OKF index and log navigation", () => {
 		assert.equal(
 			readFileSync(".codewiki/kb/log.md", "utf8"),
 			generateOkfLog({
-				date: "2026-08-01",
+				date: "2026-08-04",
 				entries: [
+					{
+						kind: "Update",
+						text: "Added production native Decision research collection through `codewiki.decision.research-collection@1.0.0` and advanced Pi Native Decision Host to `2.0.0`. Exact Candidate/collector/sensitivity/limit-bound requests admit only correlated bounded receipts from a configured trusted-host connector. Runtime owns collection timeout, observation time, freshness, producer, authority, coverage, and atomic Change-revision citation materialization; isolated claim-support work starts only after provenance passes. Collected citations and Assessments commit with the Decision continuation, while exact replay skips connector and model calls. Partial, unavailable, malformed, contradictory, timed-out, wrong-subject, or mixed-freshness input remains `indeterminate`; networking and credentials stay outside core Runtime.",
+					},
 					{
 						kind: "Update",
 						text: "Added `codewiki.custom-check-evaluator@1.0.0`, Decision Model Check Request Protocol `5.0.0`, Evidence schema `1.4.0`, and Loop Exit Runner `1.3.0`. Each Custom Model Check now receives exact Candidate, Check/definition, accepted Standard snapshot and passage text, considered Evidence, prerequisite Result, protected config, no-tool route, and evaluator configuration bindings in a fresh no-shared-state request. One bounded Assessment must echo those identities and reports Evidence gaps, counterevidence, coverage, truncation, and repair targets. Runtime records request/Assessment/evaluator identity and exposes one atomic Evidence-plus-Result materialization callback; mismatched, stale, malformed, or oversized output remains `indeterminate`.",

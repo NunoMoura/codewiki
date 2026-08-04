@@ -24,7 +24,17 @@ export {
 	createPiNativeDecisionStartOptions,
 	resolvePiDecisionSelectionAuthority,
 	type PiNativeDecisionHostOptions,
+	type PiNativeDecisionResearchOptions,
 } from "./pi/native-decision-host.ts";
+export {
+	DECISION_RESEARCH_COLLECTION_PROTOCOL,
+	collectDecisionResearchEvidence,
+	type DecisionResearchCollectionReceipt,
+	type DecisionResearchCollectionRequest,
+	type DecisionResearchCollectionResult,
+	type DecisionResearchCollector,
+	type DecisionResearchCollectorBinding,
+} from "./runtime/decision-research-collection.ts";
 export * from "./runtime/user-standard-distillation.ts";
 export {
 	createDecisionGitAdmission,

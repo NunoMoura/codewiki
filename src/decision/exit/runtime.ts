@@ -15,11 +15,14 @@ import {
 	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import type {
-	DecisionResearchClaimsModelObservation,
-	DecisionResearchClaimsRequest,
-} from "../../runtime/decision-research-claims.ts";
-import {createNativeDecisionResearchExecutors} from "../../runtime/native-decision-research.ts";
+import {
+	collectDecisionResearchEvidence,
+	type DecisionResearchCollector,
+} from "../../runtime/decision-research-collection.ts";
+import {
+	createNativeDecisionResearchExecutors,
+	type DecisionResearchClaimsTransport,
+} from "../../runtime/native-decision-research.ts";
 import {
 	createLoopExitRunner,
 	type LoopCheckExecutor,
@@ -43,6 +46,14 @@ import {
 	type DecisionSecurityScanContext,
 } from "./runtime-security.ts";
 
+export interface DecisionResearchRuntimeConfig {
+	readonly route: WikiModelRouteConfig;
+	readonly sensitivity: "public" | "project" | "private";
+	readonly collector: DecisionResearchCollector;
+	readonly transport: DecisionResearchClaimsTransport;
+	readonly now?: () => string;
+}
+
 interface CreateDecisionExitRuntimeInput {
 	readonly additionalExecutors?: readonly LoopCheckExecutor[];
 	readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
@@ -58,23 +69,13 @@ interface CreateDecisionExitRuntimeInput {
 		};
 	};
 	readonly securityScanners?: DecisionSecurityRuntimeConfig;
-	readonly researchChecks?: {
-		readonly route: WikiModelRouteConfig;
-		readonly sensitivity: "public" | "project" | "private";
-		readonly transport: {
-			readonly execute: (
-				request: DecisionResearchClaimsRequest,
-				options: {readonly signal: AbortSignal},
-			) => Promise<DecisionResearchClaimsModelObservation>;
-		};
-	};
+	readonly researchChecks?: DecisionResearchRuntimeConfig;
 }
 
 interface RunDecisionExitInput {
 	readonly candidate: DecisionCandidate;
 	readonly changeRef: string;
 	readonly evidenceRecords?: readonly EvidenceRecord[];
-	readonly researchFreshnessBoundary?: string;
 	readonly securityScan?: DecisionSecurityScanContext;
 	readonly signal?: AbortSignal;
 }
@@ -94,6 +95,7 @@ interface DecisionExitRun {
 	readonly result: Awaited<
 		ReturnType<ReturnType<typeof createLoopExitRunner>["run"]>
 	>;
+	readonly collectedEvidenceRecords: readonly EvidenceRecord<"research_citation">[];
 	readonly route: DecisionRuntimeRoute;
 	readonly securityFindingIntakeMaterials: readonly DecisionSecurityFindingIntakeMaterial[];
 }
@@ -138,6 +140,15 @@ export function createDecisionExitRuntime(
 				scanContext: runInput.securityScan,
 			});
 			const policy = security.policy;
+			const suppliedEvidenceRecords = runInput.evidenceRecords ?? [];
+			const research = await admittedDecisionResearch({
+				candidate: runInput.candidate,
+				subject,
+				policy,
+				suppliedEvidenceRecords,
+				configuration: input.researchChecks,
+				signal: runInput.signal ?? new AbortController().signal,
+			});
 			const runner = createLoopExitRunner({
 				catalog,
 				cache,
@@ -174,13 +185,12 @@ export function createDecisionExitRuntime(
 								],
 							})
 						: []),
-					...(input.researchChecks && runInput.researchFreshnessBoundary
+					...(input.researchChecks && research.freshnessBoundary
 						? createNativeDecisionResearchExecutors({
 								catalog,
 								route: input.researchChecks.route,
 								candidateSubject: subject,
-								expectedFreshnessBoundary:
-									runInput.researchFreshnessBoundary,
+								expectedFreshnessBoundary: research.freshnessBoundary,
 								sensitivity: input.researchChecks.sensitivity,
 								transport: input.researchChecks.transport,
 							})
@@ -188,17 +198,17 @@ export function createDecisionExitRuntime(
 					...(input.additionalExecutors ?? []),
 				],
 			});
-			const evidenceRecords = runInput.evidenceRecords ?? [];
+			const evidenceRecords = [
+				...suppliedEvidenceRecords,
+				...research.collectedEvidenceRecords,
+			];
 			const evidenceResolutionsByCheck = resolveDecisionEvidenceObligations({
 				catalog,
 				policy,
 				subject,
 				evidenceRecords,
-				...(runInput.researchFreshnessBoundary
-					? {
-							researchFreshnessBoundary:
-								runInput.researchFreshnessBoundary,
-						}
+				...(research.freshnessBoundary
+					? {researchFreshnessBoundary: research.freshnessBoundary}
 					: {}),
 			});
 			const result = await runner.run({
@@ -211,6 +221,7 @@ export function createDecisionExitRuntime(
 			return Object.freeze({
 				policy,
 				result,
+				collectedEvidenceRecords: research.collectedEvidenceRecords,
 				route: deriveDecisionRuntimeRoute(
 					runInput.candidate,
 					result.report,
@@ -220,6 +231,59 @@ export function createDecisionExitRuntime(
 				]),
 			});
 		},
+	});
+}
+
+async function admittedDecisionResearch(input: {
+	readonly candidate: DecisionCandidate;
+	readonly subject: ReturnType<typeof decisionEvidenceSubject>;
+	readonly policy: ResolvedExitPolicy;
+	readonly suppliedEvidenceRecords: readonly EvidenceRecord[];
+	readonly configuration: DecisionResearchRuntimeConfig | undefined;
+	readonly signal: AbortSignal;
+}): Promise<{
+	readonly freshnessBoundary?: string;
+	readonly collectedEvidenceRecords: readonly EvidenceRecord<"research_citation">[];
+}> {
+	const active = input.policy.bindings.some(
+		(binding) =>
+			binding.checkId === "research_provenance_valid" ||
+			binding.checkId === "research_claims_supported",
+	);
+	if (!active) return {collectedEvidenceRecords: Object.freeze([])};
+	const suppliedCitations = input.suppliedEvidenceRecords.filter(
+		(record): record is EvidenceRecord<"research_citation"> =>
+			record.kind === "research_citation",
+	);
+	if (suppliedCitations.length > 0) {
+		const boundaries = new Set(
+			suppliedCitations.map((record) => record.freshnessBoundary),
+		);
+		const freshnessBoundary =
+			boundaries.size === 1 ? suppliedCitations[0]?.freshnessBoundary : undefined;
+		return Object.freeze({
+			...(freshnessBoundary ? {freshnessBoundary} : {}),
+			collectedEvidenceRecords: Object.freeze([]),
+		});
+	}
+	if (!input.configuration) {
+		return {collectedEvidenceRecords: Object.freeze([])};
+	}
+	const collection = await collectDecisionResearchEvidence({
+		candidate: input.candidate,
+		subject: {
+			changeRefs: input.subject.changeRefs,
+			changeRevisionDigests: input.subject.changeRevisionDigests,
+			acceptanceRequirementIds: [],
+		},
+		collector: input.configuration.collector,
+		sensitivity: input.configuration.sensitivity,
+		observedAt: input.configuration.now ?? (() => new Date().toISOString()),
+		signal: input.signal,
+	});
+	return Object.freeze({
+		freshnessBoundary: collection.freshnessBoundary,
+		collectedEvidenceRecords: collection.evidenceRecords,
 	});
 }
 
@@ -293,6 +357,11 @@ function assertIndependentSecurityRoute(
 }
 
 function assertRunInput(input: RunDecisionExitInput): void {
+	if ("researchFreshnessBoundary" in input) {
+		throw new Error(
+			"Decision exit runtime received unsupported field researchFreshnessBoundary; Runtime owns research freshness.",
+		);
+	}
 	if (input.candidate.loop !== "decision") {
 		throw new Error("Decision exit runtime requires a Decision Candidate.");
 	}

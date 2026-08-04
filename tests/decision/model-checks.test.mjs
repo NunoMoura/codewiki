@@ -13,7 +13,6 @@ import {
 	createDecisionExitRuntime,
 	deriveDecisionRuntimeRoute,
 } from "../../src/decision/exit/runtime.ts";
-import {materializeDecisionResearchCitation} from "../../src/runtime/decision-research.ts";
 import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
 import {
@@ -881,41 +880,8 @@ describe("native Decision Model Checks", () => {
 			observedAt: "2026-07-28T12:00:00.000Z",
 			producer: {kind: "user", id: "maintainer-1", version: "1.0.0"},
 		});
-		const freshnessBoundary = digest("9");
-		const citation = materializeDecisionResearchCitation(
-			{
-				provenanceRefs: ["source:https://example.test/runtime"],
-				payload: {
-					claim: "The provider supports bounded retries.",
-					classification: "primary",
-					publisher: "Example Provider",
-					uri: "https://example.test/runtime",
-					title: "Runtime limits",
-					publicationDate: "2026-07-01",
-					passageDigest: digest("8"),
-					passageLocator: "section:retries",
-					stance: "supports",
-					limitations: [],
-				},
-			},
-			{
-				subject: {
-					changeRefs: setup.subject.changeRefs,
-					changeRevisionDigests: setup.subject.changeRevisionDigests,
-					acceptanceRequirementIds: [],
-				},
-				observedAt: "2026-07-28T12:00:00.000Z",
-				producer: {
-					kind: "external_service",
-					id: "bounded-research-fetch",
-					version: "1.0.0",
-				},
-				coverage: "complete",
-				sensitivity: "project",
-				freshnessBoundary,
-			},
-		);
 		let modelCalls = 0;
+		let collectionCalls = 0;
 		let researchCalls = 0;
 		let scannerCalls = 0;
 		let researchConclusion = "supported";
@@ -956,6 +922,39 @@ describe("native Decision Model Checks", () => {
 			researchChecks: {
 				route: route({id: "decision-research"}),
 				sensitivity: "project",
+				collector: {
+					id: "bounded-research-fetch",
+					version: "1.0.0",
+					configurationDigest: digest("9"),
+					async collect({request}) {
+						collectionCalls += 1;
+						return {
+							protocol: request.protocol,
+							requestDigest: request.requestDigest,
+							status: "available",
+							citations: [
+								{
+									provenanceRefs: [
+										"source:https://example.test/runtime",
+									],
+									payload: {
+										claim: "The provider supports bounded retries.",
+										classification: "primary",
+										publisher: "Example Provider",
+										uri: "https://example.test/runtime",
+										title: "Runtime limits",
+										publicationDate: "2026-07-01",
+										passageDigest: digest("8"),
+										passageLocator: "section:retries",
+										stance: "supports",
+										limitations: [],
+									},
+								},
+							],
+						};
+					},
+				},
+				now: () => "2026-07-28T12:00:00.000Z",
 				transport: {
 					async execute(request) {
 						researchCalls += 1;
@@ -982,11 +981,20 @@ describe("native Decision Model Checks", () => {
 				},
 			},
 		});
+		await assert.rejects(
+			runtime.run({
+				candidate: setup.candidate,
+				changeRef: setup.subject.changeRefs[0],
+				evidenceRecords: [approval],
+				researchFreshnessBoundary: digest("9"),
+				securityScan: securityScanContext(),
+			}),
+			/Runtime owns research freshness/,
+		);
 		const first = await runtime.run({
 			candidate: setup.candidate,
 			changeRef: setup.subject.changeRefs[0],
-			evidenceRecords: [approval, citation],
-			researchFreshnessBoundary: freshnessBoundary,
+			evidenceRecords: [approval],
 			securityScan: securityScanContext(),
 		});
 		assert.equal(first.result.report.status, "indeterminate");
@@ -996,6 +1004,7 @@ describe("native Decision Model Checks", () => {
 			).status,
 			"indeterminate",
 		);
+		assert.equal(collectionCalls, 1);
 		assert.equal(researchCalls, 1);
 		assert.equal(scannerCalls, 1);
 		assert.equal(
@@ -1053,7 +1062,7 @@ describe("native Decision Model Checks", () => {
 		);
 		const authorizedEvidence = [
 			approval,
-			citation,
+			...first.collectedEvidenceRecords,
 			...first.result.producedEvidenceRecords,
 			riskApproval,
 		];
@@ -1061,7 +1070,6 @@ describe("native Decision Model Checks", () => {
 			candidate: setup.candidate,
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: authorizedEvidence,
-			researchFreshnessBoundary: freshnessBoundary,
 			securityScan: securityScanContext(),
 		});
 		assert.equal(authorized.result.report.status, "pass");
@@ -1075,7 +1083,6 @@ describe("native Decision Model Checks", () => {
 			candidate: setup.candidate,
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: authorizedEvidence,
-			researchFreshnessBoundary: freshnessBoundary,
 			securityScan: securityScanContext(),
 		});
 		assert.equal(
@@ -1092,10 +1099,9 @@ describe("native Decision Model Checks", () => {
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: [
 				approval,
-				citation,
+				...first.collectedEvidenceRecords,
 				...first.result.producedEvidenceRecords,
 			],
-			researchFreshnessBoundary: freshnessBoundary,
 			securityScan: {
 				...securityScanContext(),
 				environmentDigest: digest("d"),
@@ -1127,8 +1133,7 @@ describe("native Decision Model Checks", () => {
 		const uncertain = await runtime.run({
 			candidate: setup.candidate,
 			changeRef: setup.subject.changeRefs[0],
-			evidenceRecords: [approval, citation],
-			researchFreshnessBoundary: freshnessBoundary,
+			evidenceRecords: [approval],
 			securityScan: securityScanContext(),
 		});
 		assert.equal(uncertain.result.report.status, "indeterminate");
@@ -1154,16 +1159,16 @@ describe("native Decision Model Checks", () => {
 			changeRef: setup.subject.changeRefs[0],
 			evidenceRecords: [
 				approval,
-				citation,
+				...uncertain.collectedEvidenceRecords,
 				...uncertain.result.producedEvidenceRecords,
 			],
-			researchFreshnessBoundary: freshnessBoundary,
 			securityScan: securityScanContext(),
 		});
 		assert.equal(
 			uncertainReplay.result.report.reportDigest,
 			uncertain.result.report.reportDigest,
 		);
+		assert.equal(collectionCalls, 2);
 		assert.equal(researchCalls, 2);
 		assert.equal(scannerCalls, 3);
 	});

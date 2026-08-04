@@ -123,7 +123,6 @@ export interface NativeDecisionCandidateProducer {
 
 export interface NativeDecisionEvaluationInput {
 	readonly evidenceRecords?: readonly EvidenceRecord[];
-	readonly researchFreshnessBoundary?: string;
 	readonly securityScan?: DecisionSecurityScanContext;
 }
 
@@ -230,12 +229,6 @@ export function createNativeDecisionAttemptExecutor(
 				candidate,
 				changeRef: `change:${input.changeId}`,
 				evidenceRecords: evaluationInput.evidenceRecords,
-				...(evaluationInput.researchFreshnessBoundary
-					? {
-							researchFreshnessBoundary:
-								evaluationInput.researchFreshnessBoundary,
-						}
-					: {}),
 				...(evaluationInput.securityScan
 					? {securityScan: evaluationInput.securityScan}
 					: {}),
@@ -244,6 +237,7 @@ export function createNativeDecisionAttemptExecutor(
 			input.signal.throwIfAborted();
 			const evidenceRecords = [
 				...evaluationInput.evidenceRecords,
+				...exit.collectedEvidenceRecords,
 				...exit.result.producedEvidenceRecords,
 			];
 			const receipt = await commitNativeDecisionOperationSequence({
@@ -396,14 +390,11 @@ function normalizeEvaluationInput(
 	Omit<NativeDecisionEvaluationInput, "evidenceRecords"> {
 	assertOnlyKeys({
 		value,
-		allowed: ["evidenceRecords", "researchFreshnessBoundary", "securityScan"],
+		allowed: ["evidenceRecords", "securityScan"],
 		label: "Native Decision evaluation input",
 	});
 	return Object.freeze({
 		evidenceRecords: Object.freeze([...(value.evidenceRecords ?? [])]),
-		...(value.researchFreshnessBoundary
-			? {researchFreshnessBoundary: value.researchFreshnessBoundary}
-			: {}),
 		...(value.securityScan ? {securityScan: value.securityScan} : {}),
 	});
 }
@@ -505,7 +496,11 @@ function assertOnlyKeys(input: {
 	);
 	if (extras.length > 0) {
 		throw new Error(
-			`${input.label} received unsupported fields: ${extras.sort().join(", ")}.`,
+			`${input.label} received unsupported fields: ${extras.sort(compareText).join(", ")}.`,
 		);
 	}
+}
+
+function compareText(...values: [string, string]): number {
+	return values[0].localeCompare(values[1]);
 }

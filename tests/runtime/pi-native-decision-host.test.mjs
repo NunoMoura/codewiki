@@ -10,6 +10,8 @@ import {
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../src/changes/triage/contracts.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../src/changes/triage/selection.ts";
 import {
+	PI_NATIVE_DECISION_HOST_PROTOCOL,
+	createPiNativeDecisionStartOptions,
 	resolvePiDecisionSelectionAuthority,
 } from "../../src/pi/native-decision-host.ts";
 import {startPiProjectCoordinatorDaemon} from "../../src/pi/project-coordinator-daemon.ts";
@@ -33,6 +35,16 @@ import {
 const repositoryIdentity = digest("a");
 
 it("rejects ambiguous raw and native Pi Decision host configuration", async () => {
+	assert.equal(PI_NATIVE_DECISION_HOST_PROTOCOL.version, "2.0.0");
+	assert.throws(
+		() =>
+			createPiNativeDecisionStartOptions({
+				repoRoot: process.cwd(),
+				createExitRuntime() {},
+				decisionResearch: {},
+			}),
+		/either createExitRuntime or decisionResearch, not both/,
+	);
 	await assert.rejects(
 		startPiProjectCoordinatorDaemon(process.cwd(), {
 			loadSemanticAdapters: async () => undefined,

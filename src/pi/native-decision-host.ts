@@ -5,11 +5,6 @@ import {
 } from "../change-trace/contracts.ts";
 import type {GitCommandRunner} from "../change-trace/git-command.ts";
 import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
-import type {ProjectWorkState} from "../change-trace/state.ts";
-import type {
-	ProjectAuthoritySnapshot,
-	TeamSnapshot,
-} from "../change-trace/synchronization.ts";
 import {
 	DECISION_ATTENTION_SELECTION_PROTOCOL,
 	DecisionAttentionSelectionError,
@@ -36,13 +31,18 @@ import {
 } from "../utils/canonical-json.ts";
 import {assertTypeboxSchema} from "../utils/json.ts";
 import {
+	createPiNativeDecisionResearchRuntimeConfig,
+	type PiNativeDecisionResearchOptions,
+} from "./native-decision-research.ts";
+export type {PiNativeDecisionResearchOptions} from "./native-decision-research.ts";
+import {
 	createPiSdkNativeDecisionCandidateProducer,
 	type PiSdkRuntimeSemanticAdapterOptions,
 } from "./sdk-semantic-session.ts";
 
 export const PI_NATIVE_DECISION_HOST_PROTOCOL = Object.freeze({
 	id: "codewiki.pi-native-decision-host",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 const PI_DECISION_SELECTION_ACTOR_POLICY_DIGEST = canonicalJsonDigest({
@@ -62,21 +62,19 @@ export interface PiNativeDecisionHostOptions {
 	readonly repoRoot: string;
 	readonly remote: string;
 	readonly repositoryIdentity: Sha256Digest;
-	readonly currentProject: () =>
-		| ProjectAuthoritySnapshot
-		| Promise<ProjectAuthoritySnapshot>;
+	readonly currentProject: NativeDecisionAttemptExecutorOptions["currentProject"];
 	readonly replayPolicy: ReplayAdmissionPolicy;
 	readonly runtimeAuthorityBinding: AuthorityBinding;
 	readonly semanticSession?: Omit<PiSdkRuntimeSemanticAdapterOptions, "repoRoot">;
+	readonly decisionResearch?: PiNativeDecisionResearchOptions;
 	readonly authorizeSelection?: (
 		request: DecisionAttentionSelectionAuthorizationRequest,
 	) => boolean | Promise<boolean>;
-	readonly createExitRuntime?: (input: {
-		readonly state: ProjectWorkState;
-		readonly teamSnapshot: TeamSnapshot;
-		readonly protectedConfig: ProtectedCustomCheckConfigSnapshot;
-		readonly signal: AbortSignal;
-	}) =>
+	readonly createExitRuntime?: (
+		input: Parameters<NativeDecisionAttemptExecutorOptions["createExitRuntime"]>[0] & {
+			readonly protectedConfig: ProtectedCustomCheckConfigSnapshot;
+		},
+	) =>
 		| ReturnType<typeof createDecisionExitRuntime>
 		| Promise<ReturnType<typeof createDecisionExitRuntime>>;
 	readonly loadEvaluationInput?: NativeDecisionAttemptExecutorOptions["loadEvaluationInput"];
@@ -91,6 +89,11 @@ export function createPiNativeDecisionStartOptions(
 	options: PiNativeDecisionHostOptions,
 ): ProjectCoordinatorDecisionStartOptions {
 	const repoRoot = realpathSync(options.repoRoot);
+	if (options.createExitRuntime && options.decisionResearch) {
+		throw new Error(
+			"Pi native Decision host accepts either createExitRuntime or decisionResearch, not both.",
+		);
+	}
 	assertTypeboxSchema(
 		authorityBindingSchema,
 		options.runtimeAuthorityBinding,
@@ -122,31 +125,8 @@ export function createPiNativeDecisionStartOptions(
 		replayPolicy: options.replayPolicy,
 		authorityBinding: runtimeAuthorityBinding,
 		producer,
-		async createExitRuntime(input) {
-			const protectedConfig = await loadProtectedCustomCheckConfigSnapshot({
-				repoRoot,
-				protectedSourceHead: input.teamSnapshot.protectedSourceHead,
-				runner: options.runner,
-				signal: input.signal,
-			});
-			if (
-				protectedConfig.projectConfigDigest !== input.teamSnapshot.configDigest
-			) {
-				throw new Error(
-					"Pi native Decision Exit Runtime config does not match the current team snapshot.",
-				);
-			}
-			const runtime = options.createExitRuntime
-				? await options.createExitRuntime({...input, protectedConfig})
-				: createDecisionExitRuntime({
-						protectedBaseCustomCheckConfig: protectedConfig,
-					});
-			return {
-				protectedSourceHead: protectedConfig.protectedSourceHead,
-				projectConfigDigest: protectedConfig.projectConfigDigest,
-				runtime,
-			};
-		},
+		createExitRuntime: (input) =>
+			loadPiNativeDecisionExitRuntime({repoRoot, options, input}),
 		...(options.loadEvaluationInput
 			? {loadEvaluationInput: options.loadEvaluationInput}
 			: {}),
@@ -159,7 +139,7 @@ export function createPiNativeDecisionStartOptions(
 	return Object.freeze({
 		resolveAuthority: resolvePiDecisionSelectionAuthority,
 		loadCurrentContext: admission.loadCurrentContext,
-		async authorize(request: DecisionAttentionSelectionAuthorizationRequest) {
+		authorize(request: DecisionAttentionSelectionAuthorizationRequest) {
 			if (!isPiDecisionSelectionAuthority(request.authority)) return false;
 			return options.authorizeSelection
 				? options.authorizeSelection(request)
@@ -168,6 +148,50 @@ export function createPiNativeDecisionStartOptions(
 		appendAttempt: admission.appendAttempt,
 		executor,
 	});
+}
+
+async function loadPiNativeDecisionExitRuntime(input: {
+	readonly repoRoot: string;
+	readonly options: PiNativeDecisionHostOptions;
+	readonly input: Parameters<
+		NativeDecisionAttemptExecutorOptions["createExitRuntime"]
+	>[0];
+}) {
+	const protectedConfig = await loadProtectedCustomCheckConfigSnapshot({
+		repoRoot: input.repoRoot,
+		protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
+		runner: input.options.runner,
+		signal: input.input.signal,
+	});
+	if (
+		protectedConfig.projectConfigDigest !== input.input.teamSnapshot.configDigest
+	) {
+		throw new Error(
+			"Pi native Decision Exit Runtime config does not match the current team snapshot.",
+		);
+	}
+	let runtime: ReturnType<typeof createDecisionExitRuntime>;
+	if (input.options.createExitRuntime) {
+		runtime = await input.options.createExitRuntime({...input.input, protectedConfig});
+	} else {
+		const researchChecks = input.options.decisionResearch
+			? createPiNativeDecisionResearchRuntimeConfig({
+					repoRoot: input.repoRoot,
+					research: input.options.decisionResearch,
+					semanticSession: input.options.semanticSession,
+					now: input.options.now,
+				})
+			: undefined;
+		runtime = createDecisionExitRuntime({
+			protectedBaseCustomCheckConfig: protectedConfig,
+			...(researchChecks ? {researchChecks} : {}),
+		});
+	}
+	return {
+		protectedSourceHead: protectedConfig.protectedSourceHead,
+		projectConfigDigest: protectedConfig.projectConfigDigest,
+		runtime,
+	};
 }
 
 export function resolvePiDecisionSelectionAuthority(
