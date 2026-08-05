@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { CODEWIKI_EXTENSION_AVAILABLE, sourceLayout } from "../src/index.ts";
+import { CODEWIKI_EXTENSION_AVAILABLE } from "../src/index.ts";
 import * as publicApi from "../src/api/index.ts";
 import { traceTmpPath } from "../src/runtime/tmp.ts";
 import packageJson from "../package.json" with { type: "json" };
@@ -12,40 +12,9 @@ const readme = readFileSync("README.md", "utf8");
 const sourceIndex = readFileSync("src/index.ts", "utf8");
 const apiIndex = readFileSync("src/api/index.ts", "utf8");
 
-const expectedSupportRoots = [
-	"api",
-	"evidence",
-	"loop-exit",
-	"loops",
-	"dashboard",
-	"traces",
-	"views",
-	"work-state",
-	"knowledge",
-	"git",
-	"cli",
-	"pi",
-	"runtime",
-	"error-handling",
-	"project",
-	"utils",
-];
-
 describe("fresh scaffold", () => {
 	it("exposes the Pi extension for package installs", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
-	});
-
-	it("names the intended source roots", () => {
-		assert.deepEqual(sourceLayout.loopRoots, [
-			"decision",
-			"planning",
-			"implementation",
-		]);
-		assert.deepEqual(sourceLayout.supportRoots, expectedSupportRoots);
-		assert.equal(sourceLayout.supportRoots.includes("graph"), false);
-		assert.equal(sourceLayout.supportRoots.includes("telemetry"), false);
-		assert.equal(sourceLayout.supportRoots.includes("agency"), false);
 	});
 
 	it("keeps the package root and API facade acyclic", () => {
@@ -151,7 +120,6 @@ describe("fresh scaffold", () => {
 			"runWikiOkf",
 			"runWikiPlan",
 			"runWikiRuntime",
-			"sourceLayout",
 			"validateWikiConfig",
 		]);
 	});

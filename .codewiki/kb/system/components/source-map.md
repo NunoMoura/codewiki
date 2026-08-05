@@ -151,6 +151,10 @@ Rules:
 - API, CLI, dashboard, preview, and Pi are outer adapters. Core/domain packages cannot import them; Runtime cannot import Pi.
 - A clean move updates imports, tests, ownership metadata, package exports, and all callers in one slice. No old-path re-export, compatibility alias, or dual contract is allowed.
 
+## Executable architecture guardrails
+
+`src/project/source-architecture.ts` is the internal architecture manifest; it replaces the removed public `sourceLayout` export. `tests/project/source-architecture.test.mjs` validates the complete current root inventory, target and legacy root declarations, forbidden Runtime Loop subtrees, core-to-outer-adapter imports, the exact temporary Runtime-to-Pi import-debt baseline, and the exact temporary import-cycle baseline. A new dependency or cycle fails the gate; a clean cut must remove its corresponding baseline entry in the same slice. The gate is intentionally a debt ratchet, not a claim that legacy paths are already clean.
+
 ## Validation policy
 
 Source-map validation checks must verify:

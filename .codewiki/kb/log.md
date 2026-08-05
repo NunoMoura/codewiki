@@ -3,6 +3,7 @@
 ## 2026-08-05
 
 * **Decision**: Ratified one-source-owner architecture. Decision, Planning, and Implementation own all Loop-specific Candidate, Check, attempt, interpretation, and route-recommendation semantics. Runtime is generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effect machinery only; it cannot gain Loop-named policy packages. Shared `src/verification/**` replaces `src/loop-exit/**`; canonical Change, WorkState, and Alignment destinations are `src/changes/trace/**`, `src/work-state/**`, and `src/alignment/**`. Legacy `src/loops/**`, Trace/ChangeRecord/WorkState/View stacks, Loop-named Runtime modules, and stale source-layout metadata are explicit clean-cut debt. No aliases, dual paths, or old-path re-exports are allowed.
+* **Update**: Added internal `src/project/source-architecture.ts` and a source-architecture regression gate. The manifest replaces public stale `sourceLayout`, records complete current/target/legacy roots, and forbids new legacy files, parallel Loop Runtime subtrees, core-to-outer-adapter imports, new Runtime-to-Pi edges, and new import cycles. Existing Runtime-to-Pi edges and cycles are explicit shrinking baselines; each clean cut must remove its matching baseline entry.
 
 ## 2026-08-04
 

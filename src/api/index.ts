@@ -1,29 +1,5 @@
 export const CODEWIKI_EXTENSION_AVAILABLE = true as const;
 
-export const sourceLayout = {
-	loopRoots: ["decision", "planning", "implementation"],
-	supportRoots: [
-		"api",
-		"evidence",
-		"loop-exit",
-		"loops",
-		"dashboard",
-		"traces",
-		"views",
-		"work-state",
-		"knowledge",
-		"git",
-		"cli",
-		"pi",
-		"runtime",
-		"error-handling",
-		"project",
-		"utils",
-	],
-} as const;
-
-export type SourceLayout = typeof sourceLayout;
-
 export * from "./state.ts";
 export * from "./wiki-archive.ts";
 export * from "./wiki-config.ts";
