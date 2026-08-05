@@ -78,6 +78,79 @@ Rules:
 - OKF frontmatter ownership fields are read directly through the ownership view;
 - bootstrap writes OKF ownership metadata, not a parallel YAML map.
 
+## Target source architecture
+
+The active ownership map above describes the current checkout. The following layout is the ratified destination for clean-cut work; a destination path does not become active ownership until its source and tests move in the same slice.
+
+```text
+src/
+  semantic-loop.ts        # closed three-Loop primitive
+  api/                    # thin standalone facade
+  changes/
+    trace/                # canonical immutable Change operation protocol and Git persistence
+    intake/
+    triage/
+    defect-profile.ts
+  work-state/             # one canonical deterministic ProjectWorkState projection
+  alignment/              # one canonical Alignment Graph projection and query surface
+  benchmarks/              # isolated nonproduction comparison harnesses
+  decision/               # all Decision-specific semantics and attempt composition
+  planning/               # all Planning-specific semantics and attempt composition
+  implementation/         # all Implementation-specific semantics and attempt composition
+  verification/           # shared Check, Result, Exit Report, and Check-policy kernel
+    custom-checks/
+    standard-checks/
+    security/
+  evidence/
+    adapters/
+  runtime/                # generic project-control mechanics only
+    coordinator/
+    persistence/
+    synchronization/
+    claims/
+    workers/
+    integration/
+    effects/
+    recovery/
+    lifecycle/
+  pi/                     # Pi-only adapters
+    coordinator/
+    sessions/
+    workers/
+    ui/
+  dashboard/
+  preview/
+  project/
+  knowledge/
+  git/
+  error-handling/
+  utils/
+  cli/
+```
+
+The destination has exactly three semantic Loop packages: `decision`, `planning`, and `implementation`. Runtime must not gain matching `decision`, `planning`, `implementation`, or `loop-exit` subtrees, files, or policy modules. `src/verification/**` is shared machinery, not a fourth Loop; it replaces the target package name `src/loop-exit/**` only when one clean move removes the old path. `src/changes/trace/**` replaces the target role currently split between `src/change-trace/**`, `src/traces/**`, and legacy Change-record files. `src/work-state/**` and `src/alignment/**` each own one canonical projection rather than a second legacy model. Current `src/views/**` is a legacy Trace/view facade with no target root: delete it when canonical WorkState, Alignment, API, and Dashboard projections replace its callers. `src/benchmarks/**` remains a separate nonproduction measurement package until a later Lab rehome is independently justified.
+
+## Target dependency direction
+
+Dependencies flow inward:
+
+```text
+utils and closed protocol contracts
+→ changes, evidence, work-state, alignment, verification
+→ decision, planning, implementation
+→ runtime outer composition
+→ api, cli, dashboard, pi, preview adapters
+```
+
+Rules:
+
+- A Loop package owns its Candidate schema, Loop-specific Check declarations, semantic attempt composition, interpretation, and route recommendation. It accepts injected ports and does not import Runtime implementations or own global scheduling, claims, persistence, recovery, or effects.
+- Runtime is outer composition: it imports typed Loop entry ports, supplies generic scheduling, synchronization, canonical persistence, claims, workers, Integration, recovery, and guarded effects, and contains no Loop-specific Candidate construction, policy, or semantic evaluation.
+- Verification owns shared Check/Evidence-obligation/Result/Report mechanics and declares its own generic execution-port interfaces. Runtime supplies implementations; Verification cannot import Runtime or any Loop implementation.
+- Pi owns only Pi SDK, session, process, command, tool, and UI adapters. It implements Runtime ports and cannot own Loop policy or canonical authority.
+- API, CLI, dashboard, preview, and Pi are outer adapters. Core/domain packages cannot import them; Runtime cannot import Pi.
+- A clean move updates imports, tests, ownership metadata, package exports, and all callers in one slice. No old-path re-export, compatibility alias, or dual contract is allowed.
+
 ## Validation policy
 
 Source-map validation checks must verify:

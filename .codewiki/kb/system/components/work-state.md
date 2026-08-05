@@ -79,9 +79,13 @@ fresh | stale | offline
 
 Unsafe distributed mutation requires `fresh`. Private offline attempts may produce artifacts, but they cannot gain shared acceptance.
 
+## Target source boundary
+
+`src/work-state/**` owns one canonical deterministic `ProjectWorkState` projection. It has no separate legacy `WorkState` implementation. `src/changes/trace/**` owns immutable operation parsing/reduction inputs; `src/alignment/**` owns graph projection/query. Current `src/change-trace/state.ts`, `builder.ts`, `reduce-operation.ts`, and `reducer.ts` are intermediate native foundations and move into those destination packages only after legacy trace callers are removed. Current `src/work-state/project.ts`, `projector.ts`, `publication-projection.ts`, `release-projection.ts`, `session.ts`, and `types.ts` are legacy projection code scheduled for deletion, not a second target model.
+
 ## Deterministic reduction
 
-The executable pure reducer in `src/change-trace/**` validates protocol version, canonical identity, parent availability, authority capability, exact shared batch base, expected remote head, pre/post reduction digests, closed payload, atomic multi-Change bindings, manifest record order/tails, and operation-specific preconditions before applying an operation.
+The executable pure reducer currently under `src/change-trace/**` validates protocol version, canonical identity, parent availability, authority capability, exact shared batch base, expected remote head, pre/post reduction digests, closed payload, atomic multi-Change bindings, manifest record order/tails, and operation-specific preconditions before applying an operation.
 
 Reduction digests form an authority-bound semantic hash chain without an operation-identity cycle:
 
@@ -233,7 +237,7 @@ A separate disposable index may retrieve applicable Repair Episodes and Repair P
 
 The standalone v1 reducer and versioned Alignment Graph projector are executable and property-tested, including malformed/duplicate/stale/unauthorized rejection, atomic Planning bindings, contradiction retention, and full/incremental equivalence. They are pure package foundations and do not yet grant Runtime mutation authority.
 
-Current Runtime paths still project local `.codewiki/traces/**` history and local coordinator state. Remote Git state acceptance, verified state-ref replay, distributed Change Claims, distributed Work Item Claims, and Runtime cutover remain clean-cut work. No compatibility or dual-write layer connects legacy Trace bytes to v1.
+Current Runtime paths still project local `.codewiki/traces/**` history and local coordinator state. Remote Git state acceptance, verified state-ref replay, distributed Change Claims, distributed Work Item Claims, and Runtime cutover remain clean-cut work. No compatibility or dual-write layer connects legacy Trace bytes to v1. After cutover, rehome one surviving projection into `src/work-state/**` and delete every old projection path rather than retaining two names.
 
 ## Related docs
 

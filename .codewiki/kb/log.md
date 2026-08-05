@@ -1,5 +1,9 @@
 # Directory Update Log
 
+## 2026-08-05
+
+* **Decision**: Ratified one-source-owner architecture. Decision, Planning, and Implementation own all Loop-specific Candidate, Check, attempt, interpretation, and route-recommendation semantics. Runtime is generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effect machinery only; it cannot gain Loop-named policy packages. Shared `src/verification/**` replaces `src/loop-exit/**`; canonical Change, WorkState, and Alignment destinations are `src/changes/trace/**`, `src/work-state/**`, and `src/alignment/**`. Legacy `src/loops/**`, Trace/ChangeRecord/WorkState/View stacks, Loop-named Runtime modules, and stale source-layout metadata are explicit clean-cut debt. No aliases, dual paths, or old-path re-exports are allowed.
+
 ## 2026-08-04
 
 * **Update**: Added production native Decision research collection through `codewiki.decision.research-collection@1.0.0` and advanced Pi Native Decision Host to `2.0.0`. Exact Candidate/collector/sensitivity/limit-bound requests admit only correlated bounded receipts from a configured trusted-host connector. Runtime owns collection timeout, observation time, freshness, producer, authority, coverage, and atomic Change-revision citation materialization; isolated claim-support work starts only after provenance passes. Collected citations and Assessments commit with the Decision continuation, while exact replay skips connector and model calls. Partial, unavailable, malformed, contradictory, timed-out, wrong-subject, or mixed-freshness input remains `indeterminate`; networking and credentials stay outside core Runtime.

@@ -482,13 +482,25 @@ Repair Episodes and Repair Patterns derive from completed history. They are scop
 
 Stable guidance enters Knowledge, Protocols, Checks, routes, config, source, or tests only through Lab ablation, sealed holdout confirmation, and an accountable Change.
 
-## Clean-cut status
+## Target source boundary and clean-cut status
 
-The standalone executable v1 protocol foundation now lives in `src/change-trace/**`: closed operation definitions, strict payload schemas, canonical serialization, SHA-256 identities, exact Planning epoch/state/archive records, authority/base admission, typed operation reduction, atomic batch reduction, deterministic WorkState, a versioned Alignment Graph projector, and frozen/property fixtures. Full/incremental WorkState and graph projection are byte-equivalent. These pure foundations grant no Runtime mutation authority until provider-neutral Git acceptance consumes them.
+The final Change boundary is singular:
 
-Existing Runtime paths still use local-linear `.codewiki/traces/TRACE-CHG-<id>.jsonl`, singular `parentId`, local `sequence`, formatted event IDs, snapshot-heavy records, and local rollback. Those contracts remain executable drift scheduled for deletion, not compatibility inputs to v1.
+```text
+src/changes/
+  trace/          # immutable operation protocol, identity, ordering, Git persistence, archive
+  intake/
+  triage/
+  defect-profile.ts
+src/work-state/   # one canonical deterministic ProjectWorkState projection
+src/alignment/    # one canonical Alignment Graph projection and query surface
+```
 
-The clean cut preserves `.codewiki/kb/**`, deletes obsolete dogfood/runtime state and legacy schemas/adapters/tests, and starts fresh v1 Change history. No migration, fallback parser, alias, or dual-write layer is authorized.
+Current `src/change-trace/**` is an intermediate native foundation: closed operation definitions, strict payload schemas, canonical serialization, SHA-256 identities, exact Planning epoch/state/archive records, authority/base admission, typed operation reduction, atomic batch reduction, deterministic WorkState, a versioned Alignment Graph projector, and frozen/property fixtures. Full/incremental WorkState and graph projection are byte-equivalent. It grants no Runtime mutation authority until provider-neutral Git acceptance consumes it.
+
+Current `src/traces/**`, `src/changes/change-trace.ts`, `src/changes/trace-store.ts`, legacy ChangeRecord files, and legacy `src/work-state/**` projection files remain executable drift scheduled for deletion. The target does not retain `src/change-trace/**` beside `src/changes/trace/**`, or a second WorkState model. First cut legacy callers to the native model; then rehome native modules into the destination packages in clean moves that update all imports, tests, source ownership, and exports together. No migration parser, fallback, alias, dual write, or old-path re-export is authorized.
+
+The clean cut preserves `.codewiki/kb/**`, deletes obsolete dogfood/runtime state and legacy schemas/adapters/tests, and starts fresh v1 Change history.
 
 ## Related docs
 

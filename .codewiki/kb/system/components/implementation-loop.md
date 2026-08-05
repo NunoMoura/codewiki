@@ -80,6 +80,10 @@ Runtime owns Work Item Claim, Assignment, Worker Workbench lifecycle, exact sour
 
 Implementation does not own new Change meaning, alter accepted Knowledge semantics, redesign Work Items, choose authority, mutate assurance policy, merge/push/publish/release, or treat views/tool output as truth.
 
+## Source boundary
+
+`src/implementation/**` owns all Implementation-specific Candidate construction, Check declarations, realization interpretation, semantic attempt composition, and route recommendation. It may call injected generic Runtime and Verification ports, but it does not import Pi, API, dashboard, or Runtime implementations. Runtime owns generic worker, workbench, Integration, persistence, recovery, and effect mechanics without Implementation policy. Current `implementation-worker-*` Runtime modules split into generic `src/runtime/workers/**` mechanics or Loop-local orchestration; they must not remain a second Implementation package. A local `exit/**` folder, if retained, contains only Implementation bindings and never shared Verification code.
+
 ## One Loop, bounded phases
 
 Implementation may have two phases:

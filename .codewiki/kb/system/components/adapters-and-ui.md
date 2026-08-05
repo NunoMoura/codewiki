@@ -18,8 +18,8 @@ Adapters translate user, host, model, and browser operations into bounded Projec
 
 ## Owned paths
 
-- `src/runtime/**` owns harness-neutral control-plane and execution-adapter contracts.
-- `src/pi/**` owns Pi extension, embedded SDK, process-session, command, prompt, and tool integration. The embedded adapter is exposed through `./pi-sdk`, not the harness-neutral root entrypoint.
+- `src/runtime/**` owns only harness-neutral generic control-plane, scheduling, persistence, worker, Integration, recovery, and effect ports. It cannot own a Decision, Planning, or Implementation policy stack and cannot import Pi.
+- `src/pi/**` owns Pi extension, embedded SDK, process-session, command, prompt, tool, and UI adapter implementations. It implements Runtime ports but cannot own Loop policy, Candidate construction, or canonical authority. The embedded adapter is exposed through `./pi-sdk`, not the harness-neutral root entrypoint.
 - `src/dashboard/**` owns Work, Product, System, and Design projections, local transport, accessibility, and guarded user operations.
 - `src/preview/**` owns project-native preview and browser adapter boundaries.
 - `src/cli/**` is the planned clean-cut boundary for the approved primary standalone CodeWiki CLI.
@@ -35,7 +35,7 @@ Future clients ───────┘              ├── Pi semantic/Model
                                     └── guarded core/query APIs
 ```
 
-One Pi conversation may connect or disconnect without becoming Project Runtime owner. The dashboard may remain available independently. Runtime decides whether work can continue from current supervision and unattended-execution policy.
+One Pi conversation may connect or disconnect without becoming Project Runtime owner. The dashboard may remain available independently. Runtime decides whether work can continue from current supervision and unattended-execution policy. The target Pi tree groups adapter code under `coordinator/`, `sessions/`, `workers/`, and `ui/`; Loop-named adapter modules may exist only there and remain transport implementations, never a second Loop package.
 
 ## Contracts
 

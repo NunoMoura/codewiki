@@ -20,9 +20,9 @@ Runtime-visible jobs, Checks, Change Claims, Work Item Claims, Assignments, Inte
 
 ## Ownership
 
-- `src/runtime/**` owns harness-neutral scheduling, lane, ownership, lifecycle, cancellation, recovery, and adapter contracts.
-- `src/pi/**` owns Pi-specific candidate-producer, independent Model Check, and process-session adapters.
-- worker adapters implement one Runtime-owned Assignment contract through process, worktree, OCI, or a future harness.
+- `src/runtime/**` owns harness-neutral generic scheduling, lanes, ownership, lifecycle, cancellation, recovery, and adapter ports. It contains no Decision, Planning, or Implementation semantic composition.
+- `src/pi/**` owns Pi-specific candidate-producer, independent Model Check, and process-session adapters. It implements ports and owns no Loop policy or canonical authority.
+- worker adapters implement one Runtime-owned generic Assignment contract through process, worktree, OCI, or a future harness.
 - `.codewiki/runtime/**` stores bounded private scratch, endpoint metadata, process observations, artifacts, and recoverable references.
 
 No session file, process registry, local service lease, or Runtime scratch becomes accepted Product/System Knowledge, Planning truth, semantic approval, or content proof.
@@ -77,7 +77,7 @@ User Standard distillers, Candidate producers, and independent Model Checks neve
 
 Semantic sessions cannot supply canonical identity, authority, current snapshots, Check activation, thresholds, Results, Runtime Route, or append guards. They return bounded typed Candidate or Model Check Assessment output only.
 
-Pi retains provider/auth/model transport, session, compaction, extension, tool, and normal Skill mechanics. Runtime receives capabilities, route/configuration digests, usage, and normalized outcomes, never credentials.
+Pi retains provider/auth/model transport, session, compaction, extension, tool, and normal Skill mechanics. Runtime receives capabilities, route/configuration digests, usage, and normalized outcomes, never credentials. Target code groups Pi adapters under `src/pi/sessions/**`, `src/pi/workers/**`, `src/pi/coordinator/**`, and `src/pi/ui/**`; target Runtime groups generic mechanics under `src/runtime/coordinator/**`, `claims/**`, `workers/**`, `integration/**`, `effects/**`, `recovery/**`, and `lifecycle/**`.
 
 ## Implementation workers
 

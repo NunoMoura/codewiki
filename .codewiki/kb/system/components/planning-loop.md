@@ -90,7 +90,11 @@ Planning does not approve Change meaning, re-evaluate broad company sources, imp
 
 Planning consumes approved Change meaning, exact Decision Results, accepted User Standard bindings, and policy-derived invariants. Planning Custom Checks verify complete decomposition, feasibility, resource allocation, sequencing, verification, and rollback without granting Planning authority to reinterpret or waive the underlying policy. If decomposition exposes a new semantic conflict or makes an accepted invariant impossible, Runtime routes the Change to Decision. Hard resource Custom Code Checks may require a compatible worker route and bounded Runtime guard before Work Items become executable.
 
-Runtime owns candidate and epoch identity, exact participant revisions, WorkState/base digests, Change Claim and Work Item Claim lifecycle, scheduling, Check activation, guard derivation, accepted state commit, CAS, recovery, and routing.
+## Source boundary
+
+`src/planning/**` owns all Planning-specific Candidate construction, Check declarations, epoch interpretation, semantic attempt composition, and route recommendation. It may call injected generic Runtime and Verification ports, but it does not import Pi, API, dashboard, or Runtime implementations. Planning-specific orchestration must not be added under `src/runtime/**`. Current rolling-planning and planning-mutation modules under `src/change-trace/**` are intermediate native foundations that move into Planning or generic Change persistence only after legacy callers are removed.
+
+Runtime owns candidate and epoch identity, exact participant revisions, WorkState/base digests, Change Claim and Work Item Claim lifecycle, generic scheduling, guard derivation, accepted state commit, CAS, recovery, and final route/effect authority.
 
 ## Rolling epochs
 

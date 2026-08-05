@@ -277,17 +277,18 @@ A Standard preference such as “prioritize critical security regressions” com
 ## Target source boundary
 
 ```text
-src/loop-exit/custom-checks/**
-tests/loop-exit/custom-checks/**
-src/changes/triage/**         # protected policy compilation and projection
-src/dashboard/**                 # primary authoring projection and guarded commands
-src/project/config.ts            # bounded persisted project configuration
-src/loop-exit/catalog.ts         # Default and Custom Check integration
-src/loop-exit/resolve-policy.ts  # deterministic activation
-src/runtime/loop-exit-runtime.ts # scheduling, Assessment validation, Results
+src/verification/custom-checks/**
+tests/verification/custom-checks/**
+src/changes/triage/**          # protected policy compilation and projection
+src/dashboard/**               # primary authoring projection and guarded commands
+src/project/config.ts          # bounded persisted project configuration
+src/verification/catalog.ts    # Default and Custom Check integration
+src/verification/resolve-policy.ts # deterministic activation
+src/{decision,planning,implementation}/attempt.ts # Loop-specific composition
+src/runtime/**                 # generic config CAS, ports, scheduling, and effects only
 ```
 
-The clean cut replaces dashboard/public use of the broad `ProjectCheckRegistration` contract with narrow Custom Check proposal and materialized-definition contracts. No `ProjectCheck` alias, compatibility parser, caller-authored executor definition, or dual registration path remains.
+Verification owns Custom Check definitions, activation, evaluator contracts, and shared Result mechanics. Loop packages select and compose their own semantic attempts. Runtime provides generic guarded persistence, bounded execution, and final authority without a Loop-specific Custom Check runtime. The clean cut replaces dashboard/public use of the broad `ProjectCheckRegistration` contract with narrow Custom Check proposal and materialized-definition contracts. No `ProjectCheck` alias, compatibility parser, caller-authored executor definition, dual registration path, or old-path re-export remains.
 
 ## Current executable drift
 

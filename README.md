@@ -12,7 +12,7 @@ It turns accepted user intent into an accountable transition of project Knowledg
 
 Where `K` is accepted Knowledge, `G` is exact Git state, `P` is delivery state, and Evidence includes exact Check Results, Exit Reports, authority, Integration proof, and observations.
 
-> **A Change is accountable intent and a durable dossier. Runtime owns the portfolio pipeline.**
+> **A Change is accountable intent and a durable dossier. Runtime owns generic portfolio control; Decision, Planning, and Implementation own Loop meaning.**
 
 CodeWiki does not guarantee unknowable semantic perfection. It provides bounded process integrity: accepted-intent provenance, exact candidate identity, independent checking, deterministic exit status, guarded progression, exact Git/delivery proof, and explicit uncertainty.
 
@@ -247,44 +247,51 @@ Recurring suspected CodeWiki defects may produce a local allowlisted pseudonymiz
 ```text
 src/
   semantic-loop.ts
-  loop-exit/
-    contracts.ts
-    identity.ts
-    catalog.ts
-    resolve-policy.ts
-    runner.ts
-    cache.ts
-    report.ts
-  decision/
-    candidate.ts
-    iteration.ts
-    exit/**
-  planning/
-    candidate.ts
-    iteration.ts
-    exit/**
-  implementation/
-    candidate.ts
-    iteration.ts
-    exit/**
-  runtime/
-    loop-exit-runtime.ts
-  dashboard/**
-  traces/**
-  views/**
-  work-state/**
-  knowledge/**
-  git/**
-  error-handling/**
-  pi/**
-  project/**
-  api/**
-  utils/**
+  changes/
+    trace/
+    intake/
+    triage/
+  work-state/
+  alignment/
+    benchmarks/
+  decision/              # all Decision semantics and attempt composition
+  planning/              # all Planning semantics and attempt composition
+  implementation/        # all Implementation semantics and attempt composition
+  verification/          # shared Check / Result / Exit Report machinery
+    custom-checks/
+    standard-checks/
+    security/
+  evidence/
+    adapters/
+  runtime/               # generic control-plane mechanics only
+    coordinator/
+    persistence/
+    synchronization/
+    claims/
+    workers/
+    integration/
+    effects/
+    recovery/
+    lifecycle/
+  pi/                    # Pi-only adapter implementations
+    coordinator/
+    sessions/
+    workers/
+    ui/
+  api/
+  cli/
+  dashboard/
+  preview/
+  knowledge/
+  git/
+  error-handling/
+  project/
+  utils/
 ```
 
-Shared `src/loop-exit/**` cannot import Loop implementations. Runtime composes one immutable `LoopExitSuite`. Clean cuts keep no old-path re-exports.
+Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `loop-exit` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Pi implements adapter ports and owns no Loop policy or canonical authority. Clean cuts keep no old-path re-exports.
 
-Current `src/loops/**`, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
+Current `src/loops/**`, `src/loop-exit/**`, `src/change-trace/**`, legacy trace/WorkState paths, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 
 ## Development requirements
 

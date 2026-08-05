@@ -97,10 +97,21 @@ describe("OKF index and log navigation", () => {
 				index.content,
 			);
 		}
+		const architectureLog = generateOkfLog({
+			date: "2026-08-05",
+			entries: [
+				{
+					kind: "Decision",
+					text: "Ratified one-source-owner architecture. Decision, Planning, and Implementation own all Loop-specific Candidate, Check, attempt, interpretation, and route-recommendation semantics. Runtime is generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effect machinery only; it cannot gain Loop-named policy packages. Shared `src/verification/**` replaces `src/loop-exit/**`; canonical Change, WorkState, and Alignment destinations are `src/changes/trace/**`, `src/work-state/**`, and `src/alignment/**`. Legacy `src/loops/**`, Trace/ChangeRecord/WorkState/View stacks, Loop-named Runtime modules, and stale source-layout metadata are explicit clean-cut debt. No aliases, dual paths, or old-path re-exports are allowed.",
+				},
+			],
+		});
 		assert.equal(
 			readFileSync(".codewiki/kb/log.md", "utf8"),
-			generateOkfLog({
-				date: "2026-08-04",
+			architectureLog +
+				"\n" +
+				generateOkfLog({
+					date: "2026-08-04",
 				entries: [
 					{
 						kind: "Update",
@@ -258,8 +269,8 @@ describe("OKF index and log navigation", () => {
 						kind: "Update",
 						text: "Added guarded Custom Check create/update/activate/disable commands with exact current/protected config CAS, protected Git-head loading, authenticated authority verification, idempotency, next-snapshot receipts, and protected-base anti-self-disable bindings; advanced the per-Check transport to Decision Model Check Request Protocol `3.0.0` and changed its machine id to `codewiki.decision.model-check-request`.",
 					},
-				],
-			}),
+					],
+				}).replace(/^# Directory Update Log\n\n/, ""),
 		);
 	});
 

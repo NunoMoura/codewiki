@@ -88,7 +88,7 @@ clients and triggers
 
 ## Authority
 
-Runtime alone owns:
+Runtime alone owns generic project-control authority:
 
 - canonical Change, operation, Candidate, Evidence Record, Check Result, Exit Report, Planning epoch, request, policy, job, Assignment, and effect identity;
 - actor/principal/role binding and authentication correlation;
@@ -103,13 +103,34 @@ Runtime alone owns:
 - Evidence normalization, provenance/freshness/privacy validation, contradiction preservation, and approval correlation;
 - User Standard source registration/snapshot sanitation, bounded distillation, Default Check coverage, Custom Check proposal validation, Runtime-owned source/definition/config digests, guarded lifecycle changes, deterministic required activation, and policy binding;
 - approved Custom Code template normalization, capability snapshot admission, exact executor/template/configuration identity, quantitative Evidence materialization, and matching preflight, meter, and cancellation guard decisions;
-- Check activation, Check Evaluator scheduling, Assessment validation, execution, cancellation, exact caching, and required-result fan-in;
-- deterministic Runtime Route;
+- generic Check execution admission, bounded scheduling, Assessment transport validation, cancellation, exact caching, and required-result fan-in through Verification ports;
+- final Runtime Route after a Loop's route recommendation and final guards;
 - canonical Git-backed writes;
 - Integration, branch effects, review projection, publication, release, delivery, and outcome observation;
 - archive eligibility, hydration, reopening, and cleanup.
 
 Clients, sessions, candidate producers, workers, Checks, provider events, graph adapters, and generated views cannot provide Runtime-owned fields or authorize progression. Runtime does not approve Change meaning; Decision owns that authority. Runtime does not create Sprint or Work Item truth; Planning owns their immutable semantic content.
+
+## Source architecture boundary
+
+Runtime is a generic control plane, not a second implementation of any semantic Loop.
+
+```text
+src/runtime/
+  coordinator/       # generic job selection, local service, lanes, and fencing
+  synchronization/   # Git state/archive refresh and expected-head mechanics
+  persistence/       # canonical append, manifests, and local materialization ports
+  claims/            # Change and Work Item ownership mechanics
+  workers/           # generic Assignment, workbench, process, and OCI mechanics
+  integration/       # generic guarded source-combination mechanics
+  effects/           # generic merge, push, review, publication, release, and delivery guards
+  recovery/          # restart, replay, and reconciliation mechanics
+  lifecycle/         # process, cancellation, budget, and supervision mechanics
+```
+
+`src/runtime/**` must contain no `decision`, `planning`, `implementation`, or `loop-exit` package, no Loop-specific Candidate constructor, no Loop-specific Check declaration, and no semantic evaluator. Its generic scheduler invokes one typed Loop-attempt port selected by a Loop value and supplies generic port implementations; it does not construct a second Decision, Planning, or Implementation stack. Runtime-owned facts—identity, authority, time, freshness, CAS, claims, persistence, bounded execution, and effects—remain Runtime authority regardless of where Loop composition code lives.
+
+Current `decision-*`, `native-decision-*`, `implementation-worker-*`, and `loop-exit-runtime.ts` Runtime filenames are migration debt. Decision-specific orchestration moves under `src/decision/**`; generic worker mechanics move under `src/runtime/workers/**` without Implementation policy; shared verification execution moves under `src/verification/**` through injected Runtime ports. No compatibility exports remain after each clean move.
 
 ## Exact Loop exit
 
@@ -127,7 +148,7 @@ Change
 → Runtime Route
 ```
 
-Decision, Planning, and Implementation own Candidate semantics and Loop-specific Default Check declarations. Closed Check Types constrain User Standard-derived Custom Checks. Runtime constructs identity, resolves protected-base and candidate-specific policy deterministically, schedules bounded independent Code Checks and type-specific Check Evaluators, derives required resource guards, validates one Assessment and Result per active Check, creates the immutable Exit Report, and chooses a route.
+Decision, Planning, and Implementation own Candidate semantics, Loop-specific Default Check declarations, semantic attempt composition, and route recommendation. Closed Check Types constrain User Standard-derived Custom Checks. Shared Verification derives policy bindings, validates Assessments, constructs Results and Exit Reports, and declares generic execution ports. Runtime implements and supplies those ports plus identity, bounded execution, resource guards, final freshness/CAS validation, canonical append, and final route/effect authority without owning Loop-specific policy or evaluation.
 
 A passing Exit Report is not write or effect authority. Runtime revalidates current state, exact bases, generation, actor authority, CAS, and effect-specific policy immediately before action.
 

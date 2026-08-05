@@ -48,7 +48,9 @@ Project Runtime
 └── Implementation Loop
 ```
 
-Runtime, checking, synchronization, graph projection, Integration, recovery, archive, delivery, learning, and feedback are not additional Loops.
+Runtime, Verification/checking, synchronization, graph projection, Integration, recovery, archive, delivery, learning, and feedback are not additional Loops.
+
+Source ownership follows the same boundary: `src/decision/**`, `src/planning/**`, and `src/implementation/**` own all Loop-specific Candidate, Check, attempt, interpretation, and route-recommendation semantics. `src/runtime/**` owns generic scheduling, persistence, synchronization, claims, worker/Integration mechanics, recovery, and effects; it does not contain a second Loop package. Shared `src/verification/**` owns Check/Result/Exit Report mechanics without becoming a Loop. `src/pi/**` implements host adapters only. Current duplicate paths are migration debt scheduled for clean deletion or rehome.
 
 Exact exit chain:
 

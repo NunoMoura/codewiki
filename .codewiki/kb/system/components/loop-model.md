@@ -22,7 +22,23 @@ Project Runtime
 
 Runtime is the outer project control plane, not another semantic Loop. Change intake, Backlog triage, learning, checking, graph projection, recovery, publication, and feedback are also not semantic Loops. Triage orders Decision attention through a disposable snapshot projection; rolling Planning owns execution priority after Change acceptance.
 
-Each Loop owns typed input, one mandatory Loop Protocol, exact immutable candidate semantics, Loop-specific Checks, and exit facts. Shared Loop-exit machinery schedules Checks and constructs Exit Reports without owning Decision, Planning, or Implementation meaning.
+Each Loop owns typed input, one mandatory Loop Protocol, exact immutable Candidate semantics, Loop-specific Check declarations, semantic attempt composition, and route recommendation. Shared verification machinery evaluates common Check/Evidence/Result/Report contracts without owning Decision, Planning, or Implementation meaning.
+
+## Source architecture boundary
+
+The three semantic Loop packages are the only source locations that may own Loop-specific semantics:
+
+```text
+src/decision/**
+src/planning/**
+src/implementation/**
+```
+
+A Loop package owns its Candidate construction, Loop-specific Check declarations, attempt composition, interpretation, and route recommendation. A Loop may invoke injected generic Runtime ports, but it does not own global scheduling, claims, canonical persistence, recovery, workers, Integration, or effects.
+
+`src/runtime/**` owns only generic project-control mechanics. It must not contain a `decision`, `planning`, `implementation`, or `loop-exit` subtree, or a module whose responsibility is one Loop's Candidate construction, policy, or semantic evaluation. A Loop-local module must not be named `runtime.ts`; use a role name such as `attempt.ts`, `admission.ts`, or `execution.ts` when it calls a generic port. Current Loop-named Runtime modules are migration debt, not a target split.
+
+`src/verification/**` is shared Check/Result/Exit Report machinery, not a fourth Loop. It may consume shared Evidence and generic execution ports, but cannot import a Loop implementation or Runtime. `src/pi/**` implements Pi-specific ports and cannot own Loop policy or canonical authority.
 
 ## Change as semantic carrier
 

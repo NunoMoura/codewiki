@@ -76,7 +76,11 @@ Decision owns:
 
 Decision does not own Sprints, Work Items, scheduling, Assignment execution, implementation evidence, Integration, or delivery effects.
 
-Runtime owns Change/candidate identity construction, canonical actor/time, authenticated authority validation, Check activation/thresholds, generation/CAS, Exit Report validation, route, and append. Candidate producers cannot supply those fields.
+## Source boundary
+
+`src/decision/**` owns all Decision-specific Candidate construction, Check declarations, attempt composition, Decision interpretation, and route recommendation. It may call injected generic Runtime and Verification ports, but it does not import Pi, API, dashboard, or Runtime implementations. Decision-specific orchestration must not live under `src/runtime/**`; current `decision-*` and `native-decision-*` Runtime modules are migration debt to move into Decision or split into generic Runtime ports. A local `exit/**` folder, if retained, contains only Decision bindings and never a second shared verification engine.
+
+Runtime owns Change/candidate identity construction, canonical actor/time, authenticated authority validation, generic bounded execution, generation/CAS, final route/effect authority, and append. Candidate producers cannot supply those fields.
 
 ## Decision attention admission
 

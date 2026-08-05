@@ -364,25 +364,38 @@ src/
     contracts.ts
     identity.ts
     materialize.ts
-  loop-exit/
+    obligations.ts
+    obligation-resolution.ts
+  verification/
     contracts.ts
     suite.ts
     identity.ts
     catalog.ts
     custom-checks/**
+    standard-checks/**
+    security/**
     resolve-policy.ts
     runner.ts
     cache.ts
     results.ts
-  decision/exit/**
-  planning/exit/**
-  implementation/exit/**
-  runtime/loop-exit-runtime.ts
+  decision/              # Candidate, Loop-specific Checks, attempt, route; local exit/** optional
+  planning/              # Candidate, Loop-specific Checks, attempt, route; local exit/** optional
+  implementation/        # Candidate, Loop-specific Checks, attempt, route; local exit/** optional
+  runtime/
+    coordinator/**
+    persistence/**
+    synchronization/**
+    claims/**
+    workers/**
+    integration/**
+    effects/**
+    recovery/**
+    lifecycle/**
 ```
 
-Shared `src/evidence/**` and `src/loop-exit/**` cannot import Loop implementations. Loop exit consumes Evidence contracts one way. Runtime composes Evidence materialization and one immutable `LoopExitSuite`. Clean cuts retain no old-path re-exports.
+Shared `src/evidence/**` and `src/verification/**` cannot import Loop or Runtime implementations. Verification consumes Evidence contracts one way and receives generic execution ports; it does not schedule semantic jobs or choose Runtime Route. Each Loop package binds exact Loop identity and composes its own semantic attempt through Candidate, Check, attempt, and route modules. A Loop-local `exit/**` directory is permitted only for those Loop-specific bindings; it cannot reimplement the shared Verification engine or Runtime mechanics. Runtime supplies generic identity, persistence, bounded pools, cancellation, and final route/effect guards through ports; it does not host a `loop-exit-runtime.ts` facade or Loop-specific policy.
 
-The production-unwired native contracts, Catalog, resolver, shared canonical JSON/digests, strict role-specific Candidate admission, Runtime-owned Candidate/Check identity, immutable Result/Report constructors, bounded runner/cache, and frozen `LoopExitSuite` occupy the target package/runtime boundaries without old-path exports. Loop-owned `exit/**` declarations bind exact Loop identity while the closed Catalog carries Check definitions. `src/runtime/loop-exit-runtime.ts` now composes a Runtime-owned exact Result cache and bounded runner: Code and Model Checks use separate pools, dependencies remain explicit, timeout/cancellation and malformed execution become indeterminate, every active Result fans into one immutable Report, and typed repair/retry guidance grants no Runtime Route authority. Production Loop composition and canonical operation transport remain pending. Current production `src/loops/**` graph/judge/evaluator machinery remains executable drift until those clean cuts replace it in the ratified order.
+The destination replaces current `src/loop-exit/**` by one clean move to `src/verification/**`; it retains no old-path re-export. It deletes current `src/loops/**` Quality graph/judge/evaluator machinery after native Loop parity. The production-unwired native contracts, Catalog, resolver, shared canonical JSON/digests, strict role-specific Candidate admission, immutable Result/Report constructors, bounded runner/cache, and frozen `LoopExitSuite` are current migration foundations, not permission for permanent duplicate Loop and Runtime ownership.
 
 ## Token-efficiency rule
 

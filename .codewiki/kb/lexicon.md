@@ -73,7 +73,11 @@ Content-addressed cross-Loop entity represented by one immutable value record wi
 
 ### Project Runtime
 
-CodeWiki's project-scoped outer control plane. It derives WorkState, selects compatible jobs, owns identity/freshness/CAS, runs Loop exit, supervises sessions/workers, guards canonical writes/effects, and quiesces safely. It is not a semantic Loop.
+CodeWiki's project-scoped outer control plane. It derives WorkState, selects compatible jobs, owns identity/freshness/CAS, supplies generic execution and persistence ports, supervises sessions/workers, guards canonical writes/effects, and quiesces safely. It is not a semantic Loop and does not own Decision, Planning, or Implementation Candidate semantics, Check declarations, interpretation, or route recommendation.
+
+### Verification
+
+Shared Check, Evidence-obligation, policy-binding, Result, Exit Report, runner, and cache machinery used by all three semantic Loops. Verification is not a semantic Loop, scheduler, Runtime Route authority, or standalone reviewer. It cannot import Runtime or Loop implementations; it receives generic execution ports. The target source package is `src/verification/**`.
 
 ### Coordinator
 
@@ -87,7 +91,7 @@ One of exactly three meaning-owning capabilities:
 Decision | Planning | Implementation
 ```
 
-Runtime, checking, learning, graph projection, recovery, Integration, publication, release, and feedback are not semantic Loops.
+Runtime, Verification/checking, learning, graph projection, recovery, Integration, publication, release, and feedback are not semantic Loops.
 
 ### Loop Protocol
 

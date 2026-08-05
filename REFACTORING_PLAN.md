@@ -127,6 +127,62 @@ Accepted operation history reduces deterministically into WorkState and projects
 
 Backlog, Planning, Implementation, Change dossiers, dashboards, queues, graph layouts, search indexes, notifications, and repair-retrieval indexes are projections. They never become another truth store.
 
+### Source architecture and dependency direction
+
+The source tree must express one owner for each semantic responsibility. Semantic Loop packages and Runtime are not parallel implementations of the same Loop:
+
+```text
+src/
+  semantic-loop.ts        # closed three-Loop primitive
+  api/                    # thin standalone facade
+  changes/
+    trace/                # immutable Change operation protocol and persistence contracts
+    intake/
+    triage/
+    defect-profile.ts
+  work-state/             # one canonical deterministic ProjectWorkState projection
+  alignment/              # one canonical Alignment Graph projection and query surface
+  benchmarks/              # isolated nonproduction comparison harnesses
+  decision/               # all Decision-specific semantics and attempt composition
+  planning/               # all Planning-specific semantics and attempt composition
+  implementation/         # all Implementation-specific semantics and attempt composition
+  verification/           # shared Check, Result, Exit Report, and policy machinery
+    custom-checks/
+    standard-checks/
+    security/
+  evidence/
+    adapters/
+  runtime/                # generic control-plane mechanics only
+    coordinator/
+    persistence/
+    synchronization/
+    claims/
+    workers/
+    integration/
+    effects/
+    recovery/
+    lifecycle/
+  pi/                     # Pi-only adapter implementations
+    coordinator/
+    sessions/
+    workers/
+    ui/
+  dashboard/
+  preview/
+  project/
+  knowledge/
+  git/
+  error-handling/
+  utils/
+  cli/
+```
+
+The three semantic packages own all Loop-specific Candidate schemas, Default Check declarations, semantic attempt composition, interpretation, and route recommendations. `src/runtime/**` owns only generic scheduling, persistence, synchronization, claims, worker mechanics, Integration mechanics, recovery, and guarded effects. It must not contain `decision`, `planning`, `implementation`, or `loop-exit` subtrees, Loop-specific Candidate constructors, Loop-specific policy, or semantic evaluators.
+
+`src/verification/**` is shared machinery, not a fourth Loop. It consumes Evidence contracts and generic execution ports but cannot import Runtime or Loop implementations. `src/pi/**` implements Pi SDK/session/process/UI ports and cannot own Loop policy or canonical authority. Outer `api`, `cli`, `dashboard`, `preview`, and `pi` adapters may import inward; core/domain packages must not import them, and Runtime must not import Pi.
+
+Current `src/loop-exit/**`, `src/change-trace/**`, Loop-named Runtime modules, and legacy trace/work-state packages are migration paths, not target names or permission for duplicate ownership. Every rehome is one clean move with its imports, tests, ownership metadata, and package exports; old-path re-exports, compatibility aliases, dual contracts, and transitional writes are forbidden.
+
 ### Change intake and Backlog triage
 
 One closed Change intake boundary accepts bounded authenticated material from users, ordinary pull-request reviews by any configured human or agent, CodeWiki workers, regression/security/scanner runs, delivery/outcome observations, and Knowledge drift:
@@ -745,15 +801,15 @@ Paid runs, provider mutation, leaderboard submission, publication, release, and 
 
 ### Material gaps
 
+- source structure still contains parallel legacy and replacement stacks: `src/loops/**` beside shared `src/loop-exit/**` and Loop-local `exit/**`; `src/traces/**` and legacy Change-record files beside `src/change-trace/**`; and legacy `src/work-state/**` beside canonical `ProjectWorkState` under `src/change-trace/**`;
+- Runtime and Pi remain too flat, and current Loop-named Runtime modules mix semantic composition with generic control-plane mechanics; no normal feature work may add to those duplicate ownership paths;
 - current Trace remains local-linear with singular `parentId`, local `sequence`, formatted IDs, snapshot-heavy payloads, and local rollback;
 - current hot path remains `.codewiki/traces/TRACE-CHG-<id>.jsonl`;
 - provider-neutral Git CAS, verified synchronization, and distributed Change/Work Item Claim mutation are proven in v1, but production coordinator paths still use legacy local state;
-- production Decision Candidate still contains only disposition and rationale;
-- production Decision still uses count/presence quality checks and reruns legacy evaluation;
+- legacy `runWikiDecide()` still uses count/presence quality checks and reruns legacy evaluation; the selected native Decision path has Candidate/Evidence/Result/Report foundations but has not replaced that facade or deleted the old path;
 - command, Worker Report, Integration, UI, approval, delivery, and outcome Evidence producers remain incomplete;
-- generic native Change intake remains absent: legacy input is restricted to `user | runtime | lab`, requires caller-authored classification, and lacks provider-neutral review findings, structured worker discoveries, regression/scanner producers, defect/security profiles, and native expected-head admission;
-- no snapshot-bound shared Backlog Triage Projection/query exposes Decision readiness, impact, effort, urgency, risk of inaction, confidence, overlap, provenance, or explainable ordering to both user and agent;
-- Decision security assurance now has deterministic revision-bound security-surface activation, one prerequisite boundary Code Check, and a structured security challenge mode, but exact scanner/advisory suites, full Knowledge/source augmentation, calibrated route comparison, high/critical independent authority, intake routing, and production cutover remain incomplete;
+- native Change intake and snapshot-bound Backlog Triage Projection/query are implemented, but legacy API/dashboard paths still retain old ChangeRecord/Trace assumptions and have not been deleted;
+- Decision security assurance now has deterministic revision-bound security-surface activation, production Semgrep/Gitleaks/offline-Trivy collection, closed atomic scanner families, and high/critical independent authority. Real scanner execution, sealed calibration, external provider proof, broader Knowledge/source augmentation, and legacy production cutover remain incomplete;
 - rolling Planning, remote freshness, state-ref CAS, and Alignment Graph projection have executable v1 foundations but production cutover remains; verified archive hydration and repair retrieval are not implemented;
 - OCI and real provider/auth execution remain externally unproven.
 
@@ -761,7 +817,9 @@ This drift is intentional and visible. Do not add parallel authority while cutti
 
 ## Named clean cuts
 
-Delete only after native replacements are authoritative:
+Delete or rehome only after native replacements are authoritative. A clean cut removes callers, tests, exports, and ownership references in the same slice; it never leaves a compatibility facade.
+
+### Legacy Quality
 
 ```text
 src/decision/change-quality.ts
@@ -779,7 +837,44 @@ src/loops/quality-standards.ts
 src/loops/runner.ts
 ```
 
-The planning filename above is executable legacy debt, not accepted vocabulary.
+### Legacy Trace, ChangeRecord, and WorkState
+
+```text
+src/traces/**
+src/api/traces.ts
+src/changes/change-trace.ts
+src/changes/trace-store.ts
+src/changes/digest.ts
+src/changes/normalize.ts
+src/changes/records.ts
+src/changes/schema.ts
+src/changes/store.ts
+src/changes/types.ts
+src/changes/validation-view.ts
+src/work-state/project.ts
+src/work-state/projector.ts
+src/work-state/publication-projection.ts
+src/work-state/release-projection.ts
+src/work-state/session.ts
+src/work-state/types.ts
+src/views/**
+src/api/views.ts
+src/api/state.ts
+```
+
+Their authoritative replacements land only at `src/changes/trace/**`, `src/work-state/**`, and `src/alignment/**`. Current `src/change-trace/**` is an intermediate native foundation; it is rehomed or split into those destination packages after legacy callers are removed. `src/changes/defect-profile.ts`, `src/changes/intake/**`, and `src/changes/triage/**` are retained Change-domain contracts, not part of this legacy list.
+
+### Shared verification and Loop-specific orchestration
+
+```text
+src/loop-exit/**                 → src/verification/**
+src/runtime/loop-exit-runtime.ts → Loop-local composition plus generic Runtime ports
+src/runtime/decision-*.ts        → src/decision/** or generic Runtime ports
+src/runtime/native-decision-*.ts → src/decision/** or generic Runtime ports
+src/runtime/implementation-worker-*.ts → src/runtime/workers/** after semantic policy is removed
+```
+
+The planning filename above is executable legacy debt, not accepted vocabulary. `src/loops/**` is deleted rather than merged into shared Verification. Pi may retain Loop-named adapter implementations beneath `src/pi/sessions/**`, but cannot own corresponding Loop semantics.
 
 ## Frozen rejection behavior
 
@@ -913,12 +1008,11 @@ Phase 6 uses Alignment Graph projector `1.2.0`, deterministic OKF/source augment
 - [x] Implement `codewiki.custom-check-evaluator@1.0.0` with exact Candidate/User Standard passage/Custom Check/Evidence/prerequisite/route/configuration bindings, one-to-one Assessment validation, bounded Evidence-gap/counterevidence/coverage/truncation/repair output, and explicit fresh no-shared-state execution. Advance Decision Model Check Request Protocol to `5.0.0`, Evidence schema to `1.4.0`, and Loop Exit Runner to `1.3.0`; persist exact request/Assessment/evaluator identities and replace split Evidence/Result callbacks with one atomic Check materialization boundary.
 - [ ] Run sealed focused-call versus per-type batch versus deterministic-shard comparisons; retain focused calls or isolate high-risk Checks unless batching preserves safety and improves measured latency/cost.
 - [x] Wire production Decision research through bounded `codewiki.decision.research-collection@1.0.0` trusted-host requests and receipts. Runtime now activates collection only for research-bound policy, binds the exact Candidate/collector configuration/sensitivity/limits, enforces 32-citation, 262,144-byte, and 30-second bounds, owns observation time/freshness/producer/authority, atomically materializes exact Change-revision citations, and invokes the isolated claim-support transport only after provenance passes. Pi Native Decision Host `2.0.0` installs the collector and claim transport, exact replay skips both calls, malformed/partial/unavailable collection remains `indeterminate`, collected Evidence commits with the Decision continuation, and caller-owned research freshness is rejected without a compatibility path.
-- [ ] Replace Decision count checks with native Candidate/Evidence/Result/Report path.
-- [ ] Create native Planning Candidate/Evidence/Result/Report path.
-- [ ] Create native Implementation Candidate/Evidence/Result/Report path.
-- [ ] Cut command, Worker Report, Integration, preview, approval, delivery, and outcome observations over to closed Evidence contracts.
+- [ ] Replace legacy `runWikiDecide()` count checks with the native Candidate/Evidence/Result/Report path, then delete its old Quality path and rehome Decision-specific orchestration out of `src/runtime/**` into `src/decision/**` or generic Runtime ports.
+- [ ] Create native Planning Candidate/Evidence/Result/Report path under `src/planning/**`; delete legacy Planning quality and do not add a Runtime Planning policy package.
+- [ ] Create native Implementation Candidate/Evidence/Result/Report path under `src/implementation/**`; cut command, Worker Report, Integration, preview, approval, delivery, and outcome observations to closed Evidence contracts; split generic worker mechanics into `src/runtime/workers/**` without retaining an Implementation policy package there.
 - [x] Add bounded Check fan-out/fan-in, cancellation, exact caching, immutable Reports, and typed repair/escalation.
-- [ ] Delete legacy Quality modules only after parity and replacement tests pass.
+- [ ] Delete all legacy Quality modules—including `src/loops/**`—only after native Loop parity and replacement tests pass; do not merge them into shared Verification.
 
 Native intake now clean-cuts the legacy single-file `user | runtime | lab` feedback path into `codewiki.change-intake-material@1.1.0` under `src/changes/intake/**`. Eight strict source members carry normalized bounded semantic content and exact source bindings without caller-owned authority fields. Change Trace Protocol `2.0.0` persists the complete normalized material as an identity-checked inline artifact on proposal or feedback operations and clean-cuts skeletal revision fields to one immutable semantic revision containing intent/alternatives, Runtime-owned source-family classification, impact, Knowledge propagation, outcomes, delivery constraints, Evidence expectations, safety, acceptance requirements, and optional normalized defect/security profile identity. The public Runtime factory verifies source authentication Evidence, validates fresh-state correlation, records durable request/source/semantic fingerprints, replays exact accepted requests, reinforces deterministic matches, routes current feedback or linked independent discovery, pushes under expected-head Git CAS, and verifies accepted operation identities. Closed user-suggestion, provider-neutral pull-request review, Worker Report discovery, regression, scanner, delivery/outcome Evidence, and Knowledge-drift producer adapters now emit only normalized intake material; Pi process Worker Reports preserve up to sixteen bounded discovery proposals while Runtime injects exact Assignment/Claim/tree bindings before admission. `codewiki.backlog-triage-projection@2.0.0` now rebuilds one content-addressed Decision-attention view from exact pending/deferred Change revisions, WorkState, Alignment Graph, intake provenance, optional snapshot-bound estimates, and `codewiki.backlog-triage-policy@1.0.0`. It preserves unknown dimensions, Evidence authority, graph provenance classes, exact overlap/blocking facts, freshness, Pareto membership, bounded age fairness, protected source-bound preference reasons, and tiered ordering without producing an overall score or priority. `codewiki.backlog-triage-query@2.0.0` provides one strict shared user/agent filter and ordering contract capped at 100 results; unsupported DSL/priority fields, stale identity, policy/candidate tampering, and unsafe bounds fail closed. `codewiki.decision-attention-selection@2.0.0` now carries only one principal-scoped idempotency key, exact Change/revision identity, and the projection digest that already commits native WorkState, triage Candidates, graph, protected config, and compiled policy. Runtime resolves authority from trusted caller metadata, revalidates context after authorization, and appends canonical `loop.attempt_started` before scheduling. Its authority/base/revision/private-digest fields are the durable selection record and its operation ID is the sole coordinator job key. Same principal/key and revision replay that operation; changed semantic input conflicts. Revision-derived Change/Knowledge/source/component refs preserve overlap serialization and canonical attempt state drives recovery. The prior standalone receipt, repeated nested command/binding digests, process-local receipt memory, duplicate job identity, and broad selection adapter were removed without aliases. Generic triggers and candidate submission cannot impersonate selection; pending Changes leave Decision quiescent. Native Candidate/evaluator/continuation contracts now consume exact ProjectWorkState, and a host-configured executor runs the selected attempt through synchronized Git admission and canonical recovery. `createDecisionGitAdmission()` now supplies fresh protected-config-bound triage context loading, short-lived projection identity reuse across authorization, exact expected-WorkState attempt append, stale rejection, and canonical post-push verification. The native Pi producer now validates the closed authority-free request, runs exactly one isolated read-only bounded session, and propagates cancellation through abort/disposal. `codewiki.pi-native-decision-host@1.0.0` now composes those pieces from mandatory trusted repository/project/replay/Runtime-authority inputs, resolves only approved project-local Pi connections to hashed principals, supports additional project denial, and recovers terminal work across daemon restart without reinvocation. Authenticated `/v1/runtime/decision-attention` now bootstraps the current bounded query result and validates strict projection-bound follow-ups; coordinator/Pi clients, read-only `wiki_attention`, and `/wiki-attention` expose it. Explicit user `/wiki-select` alone submits one exact command with a fresh idempotency key; no model-callable selection tool or caller authority exists. External identity and provider collection remain pending. Fixed Semgrep and offline Trivy production scanner collection is now implemented; trusted host installation/path selection and external real-tool proof remain separate deployment gates.
 
@@ -930,9 +1024,20 @@ User Standard schema `1.0.0` now materializes immutable bounded inline or HTTPS 
 
 The native deterministic scanner cut now uses `codewiki.security-scanner-suite@3.0.0` and protected `security_scanners_valid` under Check Catalog `10.0.0`. Its closed vocabulary contains only static-analysis, dependency-advisory, secret-detection, infrastructure-configuration, authorization-test, and migration-test families, each tied to a distinct measured Check need. Strict bounded requests bind Candidate, source snapshot/tree, environment, adapter/configuration, source/Knowledge/ownership refs, and advisory snapshots. Runtime materializes observed command/source Evidence with exact scanner-family/request and outcome provenance, fails on findings, preserves missing/malformed/partial/stale/error execution as `indeterminate`, and emits bounded sanitized scanner intake without accepting scanner-owned authority or Results. `codewiki.atomic-security-scanner-check@2.0.0` then fans that one immutable substrate into independent static-analysis, dependency-advisory, credential-exposure, infrastructure-configuration, authorization-control, and persistence-safety Check obligations and Runtime Results. A clean family can pass while another fails or is unavailable; replay uses the same exact Evidence identities without re-recording. Fixed Semgrep SARIF, Gitleaks directory SARIF, and offline Trivy advisory collectors implement current production scanner execution under `codewiki.production-security-collector@2.0.0`. Gitleaks binds exact rules and ignore-policy bytes, disables archive/recursive decoding, redacts output, and accepts no ambient config. `codewiki.security-route-calibration@1.0.0` now admits only off-repository complete six-family route matrices bound to exact scanner/evaluator protocols and reports safety, availability, latency, and cost without promotion authority. Running it against real human-labeled sealed cases and production scanner receipts, deeper source/Knowledge analysis, and high/critical residual-risk authority remain pending.
 
-Current checklist inventory after wiring bounded production Decision research collection and claim-support transport: **85 complete, 42 remaining**.
+Current checklist inventory after ratifying the source architecture boundary: **86 complete, 47 remaining**. This is literal checkbox inventory, not effort or readiness percentage.
 
 The native Decision path now separates the producer's strict disposition/rationale proposal from Runtime-materialized Decision Candidate schema `2.0.0`. Candidate construction accepts only native ProjectWorkState, derives the current non-withdrawn revision, active unsuperseded relationships, overlap accounting, and WorkState/Knowledge/source/config/policy bindings, and removes legacy ChangeRecord, caller-supplied observed bases, copied validation/provenance/estimate fields, duplicate grounding refs, and unresolved summaries without aliases. Native continuation admission reconstructs that exact Candidate and rejects stale or caller-expanded content. The path resolves the closed policy, evaluates all deterministic Decision Code Checks, runs independent tool-free general Model Check requests, preserves uncertain assessments across Evidence replay, materializes exact authenticated approval receipts, and deterministically resolves persisted Decision Evidence. Security assurance now derives a content-addressed twelve-surface classification from the exact semantic revision with explicit refs-only Knowledge/source coverage, binds it into policy activation and parameters, requires `security_surface_requirements_complete` before model execution, and uses Decision Model Check Request Protocol `4.0.0` for exact considered-Evidence echo and exact User Standard/Custom Check metadata, three-valued basis validation, and asserted structured security challenge findings. Runtime still derives every Check Result and Exit Report; no final model reviewer can override Code or human-authority Results. The Pi SDK general Model Check transport now uses a shared fresh-session JSON runtime with exact routes, no tools or resource discovery, bounded responses/timeouts, redacted failures, and cleanup. Activated research provenance and claim-support Checks now run in the same dependency-aware native runner, drive the closed Pi claim-support transport, preserve uncertainty in Evidence, and replay without another provider call or Report drift. Runtime now derives an immutable Candidate/Report-bound Decision route only after assurance: approval to Planning, defer or indeterminate assurance to waiting, failed assurance to repair, rejection to complete, and withdrawal to withdrawn. This route grants no effect before canonical admission. The native operation builder now requires the exact active canonical attempt operation created by selection and emits/replay-validates only its append-only continuation from Candidate through policy, Evidence, Results, Report, Route, and attempt end, rejecting stale revision/WorkState binding, malformed full artifact identities, and unavailable Result Evidence before operation creation. Bounded artifacts live inline in operation bytes rather than dangling object refs. Synchronized Git admission now binds a fresh team snapshot, accepts the complete chain atomically under expected-head CAS, rejects stale mutation bases, and verifies all operation identities after resynchronization. `createNativeDecisionAttemptExecutor()` now reloads fresh synchronized Git state, validates the exact authenticated attempt and a protected-source/config-bound Exit Runtime before producer invocation, issues one versioned producer request without authority or Evidence, runs Candidate through independent evaluation, commits supplied and produced Evidence through attempt end under exact team/WorkState CAS, and recovers canonical terminal attempts without producer/evaluator reinvocation. `createDecisionGitAdmission()` now supplies fresh exact protected-config triage context loading and canonical attempt append under expected-head Git CAS, while requiring trusted repository identity, project authority snapshot, and replay policy inputs. Pi daemon startup accepts an injected complete Decision-start bundle. `createPiSdkNativeDecisionCandidateProducer()` now validates exact protocol/revision/relationship shape before creating one isolated read-only bounded session, admits exactly one strict proposal, rejects authority-bearing fields, and propagates cancellation through abort and disposal. `codewiki.pi-native-decision-host@1.0.0` now supplies approved project-local Pi authority resolution and final daemon assembly from mandatory trusted project inputs, with denial and restart recovery proof. External identity/provider proof, external research collection, native `runWikiDecide()` replacement, and old-path deletion remain incomplete, so the remaining Decision cut checkboxes stay open.
+
+### Phase 7.5 — Source architecture clean cut
+
+This phase reduces duplicate authority before further feature accumulation. It uses clean moves and deletions, never aliases, compatibility re-exports, dual contracts, or transitional writes.
+
+- [x] Ratify one-source-owner architecture: Decision, Planning, and Implementation own Loop semantics; Runtime owns generic control mechanics; Verification owns shared Check/Result/Report machinery; Pi owns only adapter implementations.
+- [ ] Replace exported stale `sourceLayout` with one complete internal architecture manifest; validate every active root and target/deprecated path explicitly.
+- [ ] Add import-boundary and circular-dependency gates. Core/domain packages cannot import outer adapters; Runtime cannot import Pi; Verification cannot import Runtime or Loop implementations; new files/imports in named legacy stacks fail.
+- [ ] Move current `src/loop-exit/**` to `src/verification/**` with all callers/tests/ownership metadata, then remove `src/runtime/loop-exit-runtime.ts`; preserve Loop-local `exit/**` only for Loop-specific bindings.
+- [ ] Rehome generic Runtime and Pi mechanics into the ratified subdirectories; move Loop-specific Runtime orchestration into its Loop package or split it into generic ports; do not create `runtime/decision`, `runtime/planning`, or `runtime/implementation`.
+- [ ] Narrow root and subpath package exports so harness-neutral root APIs expose no Pi-specific hosts, sessions, or adapter composition.
 
 ### Phase 8 — UI assurance and Integration
 
@@ -956,11 +1061,12 @@ This phase builds backend assurance contracts and exact Integration bindings, no
 - [ ] Add bounded retrieval with negative-transfer controls.
 - [ ] Run no-history/summary/raw/Episode/Pattern ablations and sealed holdouts.
 
-### Phase 10 — Clean Trace cut
+### Phase 10 — Clean Change, WorkState, and Alignment cut
 
-- [ ] Replace `src/traces/**`, `src/changes/change-trace.ts`, and `src/changes/trace-store.ts` with v1 protocol implementation.
+- [ ] Cut production callers from `src/traces/**`, `src/changes/change-trace.ts`, `src/changes/trace-store.ts`, legacy ChangeRecord schema/store/normalization/view files, and legacy `src/work-state/**` projection files to one native operation/ProjectWorkState path.
+- [ ] Move native Change protocol/Git persistence to `src/changes/trace/**`, canonical ProjectWorkState projection to `src/work-state/**`, and Alignment Graph/query to `src/alignment/**`; remove intermediate `src/change-trace/**` only after all callers move.
 - [ ] Move hot canonical materialization to `.codewiki/changes/**` on `codewiki/state`.
-- [ ] Delete legacy schema, parser, append, migration, alias, and dual-contract tests.
+- [ ] Delete legacy schema, parser, append, migration, alias, dual-contract tests, Trace API/view facades, legacy `src/views/**` projections, and permissive legacy report adapters once canonical Evidence owns their observations.
 - [ ] Delete obsolete source-checkout dogfood state while preserving `.codewiki/kb/**`.
 - [ ] Preserve Git history as checkpoint evidence only.
 

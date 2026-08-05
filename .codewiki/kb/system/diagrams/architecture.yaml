@@ -25,7 +25,9 @@ groups:
   - id: clients
     label: Product clients
   - id: runtime
-    label: CodeWiki Project Runtime
+    label: Generic CodeWiki Project Runtime mechanics
+  - id: verification
+    label: Shared verification machinery
   - id: execution
     label: Pi and worker execution
   - id: loops
@@ -81,14 +83,14 @@ nodes:
     group: runtime
     kind: deterministic_projector
     source: .codewiki/kb/system/components/alignment-model.md
-  - id: loop_exit
-    label: Candidate / Evidence / Policy / Checks / Results / Report
-    group: runtime
-    kind: loop_exit_runtime
+  - id: verification
+    label: Shared Check / Evidence / Result / Exit Report machinery
+    group: verification
+    kind: verification_kernel
     source: .codewiki/kb/system/components/loop-exit.md
   - id: custom_checks
     label: Check Types / Custom Checks / Check Evaluators
-    group: runtime
+    group: verification
     kind: protected_project_policy
     source: .codewiki/kb/system/components/custom-checks.md
   - id: protocols
@@ -233,7 +235,7 @@ edges:
     to: custom_checks
     label: validates proposals guarded lifecycle and protected-base policy
   - from: custom_checks
-    to: loop_exit
+    to: verification
     label: exact active bindings and type-specific evaluator contracts
   - from: project_runtime
     to: pi_sdk
@@ -248,17 +250,26 @@ edges:
     to: implementation
     label: typed Candidate or Model Check output
   - from: decision
-    to: loop_exit
-    label: Candidate and Check declarations
+    to: verification
+    label: Candidate, Loop-specific Checks, and route recommendation
   - from: planning
-    to: loop_exit
-    label: Candidate and Check declarations
+    to: verification
+    label: Candidate, Loop-specific Checks, and route recommendation
   - from: implementation
-    to: loop_exit
-    label: Candidate and Check declarations
-  - from: loop_exit
+    to: verification
+    label: Candidate, Loop-specific Checks, and route recommendation
+  - from: verification
     to: project_runtime
-    label: Exit Report then Runtime Route
+    label: Result and Exit Report execution facts
+  - from: project_runtime
+    to: decision
+    label: invokes typed Loop attempt and supplies generic ports
+  - from: project_runtime
+    to: planning
+    label: invokes typed Loop attempt and supplies generic ports
+  - from: project_runtime
+    to: implementation
+    label: invokes typed Loop attempt and supplies generic ports
   - from: planning
     to: workbench
     label: Worker Workbench requirements

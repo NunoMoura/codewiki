@@ -77,7 +77,7 @@ Pi integration under `src/pi/**` has two roles:
 1. thin client for intent, authority, explanation, supervision, and dashboard access;
 2. execution adapter creating bounded Candidate-producer and independent Model Check sessions on Runtime request.
 
-Harness-neutral Runtime code must not import Pi SDK types.
+Harness-neutral Runtime code must not import Pi SDK types. Target Pi code groups adapters under `src/pi/coordinator/**`, `src/pi/sessions/**`, `src/pi/workers/**`, and `src/pi/ui/**`. A Loop-named Pi adapter may implement a typed Loop port, but it cannot contain Candidate semantics, Check policy, canonical identity, or Runtime authority.
 
 ## Ownership
 
