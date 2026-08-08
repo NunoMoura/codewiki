@@ -100,8 +100,8 @@ assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 	"./pi-sdk",
 ]);
 assert.deepEqual(packageJson.exports["./coordinator"], {
-	types: "./dist/runtime/coordinator/coordinator-entrypoint.d.ts",
-	import: "./dist/runtime/coordinator/coordinator-entrypoint.js",
+	types: "./dist/harnesses/coordinator-entrypoint.d.ts",
+	import: "./dist/harnesses/coordinator-entrypoint.js",
 });
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
 \ttypes: "./dist/pi/sdk-semantic-session.d.ts",
@@ -120,10 +120,11 @@ assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-adapter.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-adapter.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-options.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-git.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "oci-container-command.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "coordinator-entrypoint.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "container-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "container-worker-options.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "container-worker-git.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "oci-container-command.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-report-store.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-artifacts.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "worker-observation.js")), true);

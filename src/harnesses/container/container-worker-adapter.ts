@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { lstatSync, realpathSync } from "node:fs";
 import { chmod, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
-import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
 import {
 	assertImplementationWorkerAssignment,
 	assertImplementationWorkerReport,
@@ -11,13 +11,13 @@ import {
 	type ImplementationWorkerAdapterAvailability,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./workers/implementation-worker-adapter.ts";
+} from "../../runtime/workers/implementation-worker-adapter.ts";
 import {
 	assertImplementationWorkerReportPath,
 	implementationWorkerReportStatus,
 	persistImplementationWorkerReport,
 	recoverImplementationWorkerReport,
-} from "./workers/implementation-worker-report-store.ts";
+} from "../../runtime/workers/implementation-worker-report-store.ts";
 import {
 	resolveContainerGitMount,
 	type ContainerGitMount,

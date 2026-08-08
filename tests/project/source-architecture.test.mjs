@@ -174,6 +174,17 @@ describe("source architecture", () => {
 		}
 	});
 
+	it("allows Runtime to depend only on harness-neutral ports", () => {
+		for (const [source, targets] of importEdges(sourceFiles())) {
+			if (!relative(sourceRoot, source).startsWith("runtime/")) continue;
+			for (const target of targets) {
+				const targetPath = relative(sourceRoot, target);
+				if (!targetPath.startsWith("harnesses/")) continue;
+				assert.equal(targetPath, "harnesses/ports.ts", edgeLabel(source, target));
+			}
+		}
+	});
+
 	it("freezes Runtime-to-Pi import debt until adapters invert", () => {
 		const files = sourceFiles();
 		const edges = importEdges(files);

@@ -64,6 +64,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 
 ### 2. Split Pi client and harness ownership
 
+- [x] Move OCI/container execution transport and public coordinator composition to `src/harnesses/**`.
 - [ ] Move user-facing Pi commands, tools, prompts, TUI, rendering, and coordinator clients to `src/clients/pi/**`.
 - [ ] Move Candidate production, Model Check sessions, process workers, and execution adapters to `src/harnesses/pi/**`.
 - [ ] Remove hidden semantic-loop tools from the main conversational client registration.
