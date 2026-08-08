@@ -1,4 +1,4 @@
-import type {CheckCatalog} from "../loop-exit/catalog.ts";
+import type {CheckCatalog} from "../verification/catalog.ts";
 import {
 	createUserStandardDistillationRequest,
 	createUserStandardSourceRequest,
@@ -11,8 +11,8 @@ import {
 	type UserStandardSourceReceipt,
 	type UserStandardSourceSelection,
 	type UserStandardUrlRetriever,
-} from "../loop-exit/custom-checks/index.ts";
-import {compareCanonicalText as compareText} from "../loop-exit/custom-checks/validation.ts";
+} from "../verification/custom-checks/index.ts";
+import {compareCanonicalText as compareText} from "../verification/custom-checks/validation.ts";
 import {canonicalJsonDigest} from "../utils/canonical-json.ts";
 
 export interface UserStandardDistillationRuntimeResult {

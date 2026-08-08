@@ -4,8 +4,8 @@ import {tmpdir} from "node:os";
 import {join} from "node:path";
 import {describe, it} from "node:test";
 
-import {createProductionSecurityCollector} from "../../src/loop-exit/security-collectors.ts";
-import {runSecurityScannerSuite} from "../../src/loop-exit/security-scanners.ts";
+import {createProductionSecurityCollector} from "../../src/verification/security-collectors.ts";
+import {runSecurityScannerSuite} from "../../src/verification/security-scanners.ts";
 import {sha256Digest} from "../../src/utils/canonical-json.ts";
 
 const digest = (character) => `sha256:${character.repeat(64)}`;

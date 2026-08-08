@@ -11,7 +11,7 @@ import {
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
-} from "../../src/loop-exit/custom-checks/index.ts";
+} from "../../src/verification/custom-checks/index.ts";
 import {
 	loadWikiConfigFile,
 	resolveWikiConfigFile,
@@ -20,7 +20,7 @@ import {
 import {
 	createTestUserStandard,
 	standardRefsFor,
-} from "../loop-exit/custom-checks/user-standard-fixture.mjs";
+} from "../verification/custom-checks/user-standard-fixture.mjs";
 
 const USER_STANDARD = createTestUserStandard();
 const USER_STANDARDS = [USER_STANDARD];

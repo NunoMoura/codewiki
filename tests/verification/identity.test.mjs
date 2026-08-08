@@ -8,7 +8,7 @@ import {
 	createLoopCandidate,
 	loopQualifiedCheckDigest,
 	toCanonicalJsonValue,
-} from "../../src/loop-exit/identity.ts";
+} from "../../src/verification/identity.ts";
 
 describe("canonical Loop-exit identity", () => {
 	it("sorts object keys recursively while preserving array order", () => {

@@ -289,9 +289,9 @@ src/
   utils/
 ```
 
-Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `loop-exit` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Pi implements adapter ports and owns no Loop policy or canonical authority. Clean cuts keep no old-path re-exports.
+Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Pi implements adapter ports and owns no Loop policy or canonical authority. Clean cuts keep no old-path re-exports.
 
-Current `src/loops/**`, `src/loop-exit/**`, `src/change-trace/**`, legacy trace/WorkState paths, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
+Current `src/loops/**`, `src/verification/**`, `src/change-trace/**`, legacy trace/WorkState paths, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 
 ## Development requirements
 
@@ -391,7 +391,7 @@ If CodeWiki cannot materially reduce drift, false acceptance, lost context, repe
 - [System overview](.codewiki/kb/system/components/overview.md)
 - [Alignment model](.codewiki/kb/system/components/alignment-model.md)
 - [Loop model](.codewiki/kb/system/components/loop-model.md)
-- [Loop exit](.codewiki/kb/system/components/loop-exit.md)
+- [Loop exit](.codewiki/kb/system/components/verification.md)
 - [Runtime](.codewiki/kb/system/components/runtime.md)
 - [Knowledge](.codewiki/kb/system/components/knowledge.md)
 - [Lexicon](.codewiki/kb/lexicon.md)

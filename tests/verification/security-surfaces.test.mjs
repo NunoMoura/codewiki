@@ -4,7 +4,7 @@ import {
 	SECURITY_SURFACE_CLASSIFIER,
 	assertSecuritySurfaceClassification,
 	classifySecuritySurfaces,
-} from "../../src/loop-exit/security-surfaces.ts";
+} from "../../src/verification/security-surfaces.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 
 const REVISION_DIGEST = canonicalJsonDigest({change: "security-surfaces"});

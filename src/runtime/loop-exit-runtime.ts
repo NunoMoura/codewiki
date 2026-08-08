@@ -1,32 +1,32 @@
 import { decisionLoopExitDeclaration } from "../decision/exit/index.ts";
 import { implementationLoopExitDeclaration } from "../implementation/exit/index.ts";
-import { createLoopExitResultCache } from "../loop-exit/cache.ts";
-import {createCustomCodeCheckExecutors} from "../loop-exit/custom-checks/code-executor.ts";
-import type {CustomCodeCapabilitySnapshot} from "../loop-exit/custom-checks/code-templates.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../loop-exit/custom-checks/configuration.ts";
+import { createLoopExitResultCache } from "../verification/cache.ts";
+import {createCustomCodeCheckExecutors} from "../verification/custom-checks/code-executor.ts";
+import type {CustomCodeCapabilitySnapshot} from "../verification/custom-checks/code-templates.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/configuration.ts";
 import {
 	createResourceUsageEvidenceMaterial,
 	evaluateRuntimeResourceMeter,
 	preflightRuntimeResourceGuards,
 	resolveRuntimeResourceGuards,
-} from "../loop-exit/custom-checks/resource-guards.ts";
-import { createCheckCatalog } from "../loop-exit/catalog.ts";
+} from "../verification/custom-checks/resource-guards.ts";
+import { createCheckCatalog } from "../verification/catalog.ts";
 import {
 	createCheckResult,
 	createExitReport,
-} from "../loop-exit/results.ts";
+} from "../verification/results.ts";
 import {
 	createLoopExitRunner,
 	type CreateLoopExitRunnerInput,
-} from "../loop-exit/runner.ts";
+} from "../verification/runner.ts";
 import {
 	createStandardEvidenceCheckExecutors,
 	type StandardEvidenceCheckCapability,
-} from "../loop-exit/standard-evidence-executor.ts";
+} from "../verification/standard-evidence-executor.ts";
 import {
 	createLoopExitSuite,
 	type LoopExitSuite,
-} from "../loop-exit/suite.ts";
+} from "../verification/suite.ts";
 import { planningLoopExitDeclaration } from "../planning/exit/index.ts";
 import { createDecisionResearchClaimsExecutor } from "./decision-research-claims.ts";
 import {

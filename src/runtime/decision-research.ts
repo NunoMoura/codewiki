@@ -10,12 +10,12 @@ import type {
 import { EVIDENCE_SCHEMA_VERSION } from "../evidence/contracts.ts";
 import { materializeEvidenceRecord } from "../evidence/materialize.ts";
 import { reduceEvidenceObligation } from "../evidence/obligations.ts";
-import type { CheckCatalog } from "../loop-exit/catalog.ts";
+import type { CheckCatalog } from "../verification/catalog.ts";
 import type {
 	CheckResult,
 	ResolvedExitPolicy,
-} from "../loop-exit/contracts.ts";
-import { createCheckResult } from "../loop-exit/results.ts";
+} from "../verification/contracts.ts";
+import { createCheckResult } from "../verification/results.ts";
 import { assertExactKeys } from "../utils/json.ts";
 
 const RESEARCH_PROVENANCE_CHECK_ID = "research_provenance_valid";

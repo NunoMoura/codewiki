@@ -9,8 +9,8 @@ import {
 } from "../../evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../evidence/materialize.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
-import type {CheckCatalog} from "../../loop-exit/catalog.ts";
-import type {ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
+import type {CheckCatalog} from "../../verification/catalog.ts";
+import type {ResolvedExitPolicy} from "../../verification/contracts.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

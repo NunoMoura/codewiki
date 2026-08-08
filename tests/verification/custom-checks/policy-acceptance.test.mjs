@@ -20,7 +20,7 @@ import {
 	createWikiConfigCustomCheckStore,
 	loadProtectedCustomCheckConfigSnapshot,
 	parseCustomCheckPolicyAcceptanceCommand,
-} from "../../../src/loop-exit/custom-checks/index.ts";
+} from "../../../src/verification/custom-checks/index.ts";
 import {createBacklogTriagePolicy} from "../../../src/changes/triage/policy.ts";
 import {writeWikiConfigFile} from "../../../src/project/config-file.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";

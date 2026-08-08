@@ -8,10 +8,10 @@ import {
 	createDecisionExitRuntime,
 	deriveDecisionRuntimeRoute,
 } from "../../src/decision/exit/runtime.ts";
-import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
-import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
-import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
-import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
+import {createCheckCatalog} from "../../src/verification/catalog.ts";
+import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
+import {resolveExitPolicy} from "../../src/verification/resolve-policy.ts";
+import {createLoopExitRunner} from "../../src/verification/runner.ts";
 import {
 	nativeDecisionCandidate,
 	nativeDecisionRevision,

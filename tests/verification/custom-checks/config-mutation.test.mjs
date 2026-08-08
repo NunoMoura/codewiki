@@ -17,8 +17,8 @@ import {
 	disableCustomCheckDefinition,
 	loadProtectedCustomCheckConfigSnapshot,
 	parseCustomCheckMutationCommand,
-} from "../../../src/loop-exit/custom-checks/index.ts";
-import {resolveExitPolicy} from "../../../src/loop-exit/resolve-policy.ts";
+} from "../../../src/verification/custom-checks/index.ts";
+import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
 import {
 	loadWikiConfigFile,
 	writeWikiConfigFile,

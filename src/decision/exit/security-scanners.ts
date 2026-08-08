@@ -5,13 +5,13 @@ import type {
 	EvidenceSubject,
 } from "../../evidence/contracts.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
-import type {CheckCatalog} from "../../loop-exit/catalog.ts";
-import type {CheckDefinition} from "../../loop-exit/contracts.ts";
+import type {CheckCatalog} from "../../verification/catalog.ts";
+import type {CheckDefinition} from "../../verification/contracts.ts";
 import type {
 	CheckExecutorObservation,
 	LoopCheckExecutor,
 	LoopCheckExecutorContext,
-} from "../../loop-exit/runner.ts";
+} from "../../verification/runner.ts";
 import {
 	createSecurityScannerRequests,
 	runSecurityScannerSuite,
@@ -19,12 +19,12 @@ import {
 	type SecurityScannerAdapter,
 	type SecurityScannerAdapterRequest,
 	type SecurityScannerSuiteResult,
-} from "../../loop-exit/security-scanners.ts";
+} from "../../verification/security-scanners.ts";
 import {toCanonicalJsonValue} from "../../utils/canonical-json.ts";
 import {
 	assertSecuritySurfaceClassification,
 	type SecuritySurfaceClassification,
-} from "../../loop-exit/security-surfaces.ts";
+} from "../../verification/security-surfaces.ts";
 
 export type DecisionSecurityScanContext = Omit<
 	RunSecurityScannerSuiteInput,

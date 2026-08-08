@@ -2,13 +2,13 @@ import type {EvidenceRecord} from "../../evidence/contracts.ts";
 import {
 	createLoopExitResultCache,
 	type LoopExitResultCache,
-} from "../../loop-exit/cache.ts";
-import {createCheckCatalog} from "../../loop-exit/catalog.ts";
+} from "../../verification/cache.ts";
+import {createCheckCatalog} from "../../verification/catalog.ts";
 import {
 	createCustomCodeCheckExecutors,
 	type CustomCodeCapabilitySnapshot,
-} from "../../loop-exit/custom-checks/index.ts";
-import type {ExitReport, ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
+} from "../../verification/custom-checks/index.ts";
+import type {ExitReport, ResolvedExitPolicy} from "../../verification/contracts.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {
 	canonicalJsonDigest,
@@ -27,7 +27,7 @@ import {
 	createLoopExitRunner,
 	type LoopCheckExecutor,
 	type LoopExitRunnerLimits,
-} from "../../loop-exit/runner.ts";
+} from "../../verification/runner.ts";
 import type {DecisionCandidate} from "./candidate.ts";
 import {createDecisionCodeExecutors} from "./code-executors.ts";
 import {

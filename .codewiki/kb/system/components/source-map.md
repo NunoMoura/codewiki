@@ -128,7 +128,7 @@ src/
   cli/
 ```
 
-The destination has exactly three semantic Loop packages: `decision`, `planning`, and `implementation`. Runtime must not gain matching `decision`, `planning`, `implementation`, or `loop-exit` subtrees, files, or policy modules. `src/verification/**` is shared machinery, not a fourth Loop; it replaces the target package name `src/loop-exit/**` only when one clean move removes the old path. `src/changes/trace/**` replaces the target role currently split between `src/change-trace/**`, `src/traces/**`, and legacy Change-record files. `src/work-state/**` and `src/alignment/**` each own one canonical projection rather than a second legacy model. Current `src/views/**` is a legacy Trace/view facade with no target root: delete it when canonical WorkState, Alignment, API, and Dashboard projections replace its callers. `src/benchmarks/**` remains a separate nonproduction measurement package until a later Lab rehome is independently justified.
+The destination has exactly three semantic Loop packages: `decision`, `planning`, and `implementation`. Runtime must not gain matching `decision`, `planning`, `implementation`, or `loop-exit` subtrees, files, or policy modules. `src/verification/**` is shared machinery, not a fourth Loop; it has cleanly replaced former `src/loop-exit/**` without an old path. `src/changes/trace/**` replaces the target role currently split between `src/change-trace/**`, `src/traces/**`, and legacy Change-record files. `src/work-state/**` and `src/alignment/**` each own one canonical projection rather than a second legacy model. Current `src/views/**` is a legacy Trace/view facade with no target root: delete it when canonical WorkState, Alignment, API, and Dashboard projections replace its callers. `src/benchmarks/**` remains a separate nonproduction measurement package until a later Lab rehome is independently justified.
 
 ## Target dependency direction
 
@@ -153,7 +153,7 @@ Rules:
 
 ## Executable architecture guardrails
 
-`src/project/source-architecture.ts` is the internal architecture manifest; it replaces the removed public `sourceLayout` export. `tests/project/source-architecture.test.mjs` validates the complete current root inventory, target and legacy root declarations, forbidden Runtime Loop subtrees, core-to-outer-adapter imports, the exact temporary Runtime-to-Pi import-debt baseline, and the exact temporary import-cycle baseline. A new dependency or cycle fails the gate; a clean cut must remove its corresponding baseline entry in the same slice. The gate is intentionally a debt ratchet, not a claim that legacy paths are already clean.
+`src/project/source-architecture.ts` is the internal architecture manifest; it replaces the removed public `sourceLayout` export. `tests/project/source-architecture.test.mjs` validates the complete current root inventory, target and legacy root declarations, frozen legacy-file counts, forbidden Runtime Loop subtrees, core-to-outer-adapter imports, the exact temporary Runtime-to-Pi import-debt baseline, and the exact temporary import-cycle baseline. A new dependency, cycle, or legacy file fails the gate; a clean cut must remove its corresponding baseline entry in the same slice. The gate is intentionally a debt ratchet, not a claim that remaining legacy paths are already clean.
 
 ## Validation policy
 

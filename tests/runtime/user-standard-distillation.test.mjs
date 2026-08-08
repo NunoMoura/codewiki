@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
+import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {
 	createUserStandardDistillationRequest,
 	createUserStandardSourceRequest,
 	retrieveUserStandardSource,
-} from "../../src/loop-exit/custom-checks/index.ts";
+} from "../../src/verification/custom-checks/index.ts";
 import {createPiUserStandardDistiller} from "../../src/pi/user-standard-distillation-session.ts";
 import {
 	createUserStandardDistillationRuntime,

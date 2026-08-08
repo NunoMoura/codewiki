@@ -128,7 +128,7 @@ src/runtime/
   lifecycle/         # process, cancellation, budget, and supervision mechanics
 ```
 
-`src/runtime/**` must contain no `decision`, `planning`, `implementation`, or `loop-exit` package, no Loop-specific Candidate constructor, no Loop-specific Check declaration, and no semantic evaluator. Its generic scheduler invokes one typed Loop-attempt port selected by a Loop value and supplies generic port implementations; it does not construct a second Decision, Planning, or Implementation stack. Runtime-owned facts—identity, authority, time, freshness, CAS, claims, persistence, bounded execution, and effects—remain Runtime authority regardless of where Loop composition code lives.
+`src/runtime/**` must contain no `decision`, `planning`, `implementation`, or `verification` package, no Loop-specific Candidate constructor, no Loop-specific Check declaration, and no semantic evaluator. Its generic scheduler invokes one typed Loop-attempt port selected by a Loop value and supplies generic port implementations; it does not construct a second Decision, Planning, or Implementation stack. Runtime-owned facts—identity, authority, time, freshness, CAS, claims, persistence, bounded execution, and effects—remain Runtime authority regardless of where Loop composition code lives.
 
 Current `decision-*`, `native-decision-*`, `implementation-worker-*`, and `loop-exit-runtime.ts` Runtime filenames are migration debt. Decision-specific orchestration moves under `src/decision/**`; generic worker mechanics move under `src/runtime/workers/**` without Implementation policy; shared verification execution moves under `src/verification/**` through injected Runtime ports. No compatibility exports remain after each clean move.
 

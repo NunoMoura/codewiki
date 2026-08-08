@@ -102,7 +102,7 @@ describe("OKF index and log navigation", () => {
 			entries: [
 				{
 					kind: "Decision",
-					text: "Ratified one-source-owner architecture. Decision, Planning, and Implementation own all Loop-specific Candidate, Check, attempt, interpretation, and route-recommendation semantics. Runtime is generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effect machinery only; it cannot gain Loop-named policy packages. Shared `src/verification/**` replaces `src/loop-exit/**`; canonical Change, WorkState, and Alignment destinations are `src/changes/trace/**`, `src/work-state/**`, and `src/alignment/**`. Legacy `src/loops/**`, Trace/ChangeRecord/WorkState/View stacks, Loop-named Runtime modules, and stale source-layout metadata are explicit clean-cut debt. No aliases, dual paths, or old-path re-exports are allowed.",
+					text: "Ratified one-source-owner architecture. Decision, Planning, and Implementation own all Loop-specific Candidate, Check, attempt, interpretation, and route-recommendation semantics. Runtime is generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effect machinery only; it cannot gain Loop-named policy packages. Shared `src/verification/**` replaces former `src/loop-exit/**`; canonical Change, WorkState, and Alignment destinations are `src/changes/trace/**`, `src/work-state/**`, and `src/alignment/**`. Legacy `src/loops/**`, Trace/ChangeRecord/WorkState/View stacks, Loop-named Runtime modules, and stale source-layout metadata are explicit clean-cut debt. No aliases, dual paths, or old-path re-exports are allowed.",
 				},
 				{
 					kind: "Update",

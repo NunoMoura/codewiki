@@ -157,7 +157,7 @@ export const implementationCases: LabCase<ImplementationLabInput>[] = [
 							criterionId: "AC-unknown",
 							summary:
 								"Evidence cites a criterion that planning did not define.",
-							evidenceRefs: ["tests/lab/loop-exit-score.test.mjs"],
+							evidenceRefs: ["tests/lab/verification-score.test.mjs"],
 						},
 					],
 				}),
@@ -202,13 +202,13 @@ function implementationChange(
 		planningRefs: ["trace:PW-1"],
 		codePaths: ["src/runtime/types.ts"],
 		docPaths: [],
-		testPaths: ["tests/lab/loop-exit-score.test.mjs"],
+		testPaths: ["tests/lab/verification-score.test.mjs"],
 		checks: ["node --experimental-strip-types --test tests/lab/*.test.mjs"],
 		checkResults: [
 			{
 				command: "node --experimental-strip-types --test tests/lab/*.test.mjs",
 				status: "pass",
-				outputRef: "tests/lab/loop-exit-score.test.mjs",
+				outputRef: "tests/lab/verification-score.test.mjs",
 				summary: "Loop exit lab tests pass.",
 			},
 		],
@@ -220,7 +220,7 @@ function implementationChange(
 				criterionId: "AC-1",
 				summary:
 					"Loop exit lab reports pass, gap, or regression for every fixture.",
-				evidenceRefs: ["tests/lab/loop-exit-score.test.mjs"],
+				evidenceRefs: ["tests/lab/verification-score.test.mjs"],
 			},
 		],
 		contentProof: { workingTreeDigest: "sha256:abcdef" },

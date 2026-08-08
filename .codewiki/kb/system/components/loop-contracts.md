@@ -13,10 +13,10 @@ codewiki_components:
   - loop_exit
 codewiki_source_patterns:
   - src/semantic-loop.ts
-  - src/loop-exit/**
+  - src/verification/**
   - src/loops/**
 codewiki_test_patterns:
-  - tests/loop-exit/**
+  - tests/verification/**
   - tests/loops/**
   - tests/decision/**
   - tests/planning/**
@@ -27,10 +27,10 @@ codewiki_source_map:
   - id: loop_exit
     source_patterns:
       - src/semantic-loop.ts
-      - src/loop-exit/**
+      - src/verification/**
       - src/loops/**
     test_patterns:
-      - tests/loop-exit/**
+      - tests/verification/**
       - tests/loops/**
       - tests/decision/**
       - tests/planning/**
@@ -395,7 +395,7 @@ src/
 
 Shared `src/evidence/**` and `src/verification/**` cannot import Loop or Runtime implementations. Verification consumes Evidence contracts one way and receives generic execution ports; it does not schedule semantic jobs or choose Runtime Route. Each Loop package binds exact Loop identity and composes its own semantic attempt through Candidate, Check, attempt, and route modules. A Loop-local `exit/**` directory is permitted only for those Loop-specific bindings; it cannot reimplement the shared Verification engine or Runtime mechanics. Runtime supplies generic identity, persistence, bounded pools, cancellation, and final route/effect guards through ports; it does not host a `loop-exit-runtime.ts` facade or Loop-specific policy.
 
-The destination replaces current `src/loop-exit/**` by one clean move to `src/verification/**`; it retains no old-path re-export. It deletes current `src/loops/**` Quality graph/judge/evaluator machinery after native Loop parity. The production-unwired native contracts, Catalog, resolver, shared canonical JSON/digests, strict role-specific Candidate admission, immutable Result/Report constructors, bounded runner/cache, and frozen `LoopExitSuite` are current migration foundations, not permission for permanent duplicate Loop and Runtime ownership.
+Shared Verification has moved cleanly from former `src/loop-exit/**` to `src/verification/**` without an old-path re-export. The destination deletes current `src/loops/**` Quality graph/judge/evaluator machinery after native Loop parity. The production-unwired native contracts, Catalog, resolver, shared canonical JSON/digests, strict role-specific Candidate admission, immutable Result/Report constructors, bounded runner/cache, and frozen `LoopExitSuite` are current migration foundations, not permission for permanent duplicate Loop and Runtime ownership.
 
 ## Token-efficiency rule
 

@@ -112,7 +112,6 @@ describe("source architecture", () => {
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
 		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
 			"change-trace",
-			"loop-exit",
 			"loops",
 			"traces",
 			"views",

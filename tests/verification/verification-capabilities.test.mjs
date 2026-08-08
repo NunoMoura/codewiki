@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
+import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {
 	VERIFICATION_CAPABILITY_MATRIX_PROTOCOL,
 	buildVerificationCapabilityMatrix,
-} from "../../src/loop-exit/verification-capabilities.ts";
+} from "../../src/verification/verification-capabilities.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 
 describe("verification capability matrix", () => {

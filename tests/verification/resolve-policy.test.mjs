@@ -1,15 +1,15 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
-import { assertValidResolvedExitPolicy } from "../../src/loop-exit/contracts.ts";
+import { resolveExitPolicy } from "../../src/verification/resolve-policy.ts";
+import { assertValidResolvedExitPolicy } from "../../src/verification/contracts.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
 	createProtectedCustomCheckConfigSnapshot,
 	customCheckDefinitionCheckId,
-} from "../../src/loop-exit/custom-checks/index.ts";
-import {classifySecuritySurfaces} from "../../src/loop-exit/security-surfaces.ts";
+} from "../../src/verification/custom-checks/index.ts";
+import {classifySecuritySurfaces} from "../../src/verification/security-surfaces.ts";
 import {
 	createTestUserStandard,
 	standardRefsFor,
@@ -37,7 +37,7 @@ function selectorInput(loop = "decision") {
 		],
 		projectTraits: [],
 		technologies: [],
-		paths: ["src/loop-exit/contracts.ts"],
+		paths: ["src/verification/contracts.ts"],
 	};
 }
 

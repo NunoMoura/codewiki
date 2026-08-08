@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import {
 	assertValidResolvedExitPolicy,
 	createResolvedExitPolicy,
-} from "../../src/loop-exit/contracts.ts";
+} from "../../src/verification/contracts.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const SELECTOR_DIGEST = `sha256:${"b".repeat(64)}`;
@@ -29,7 +29,7 @@ function policyInput() {
 				parameters: { minimum: 1, evidence: "exact" },
 				dependsOn: ["input_valid"],
 				activatedBy: ["loop:implementation", "risk:check"],
-				ruleRefs: ["loop-exit.loop.implementation"],
+				ruleRefs: ["verification.loop.implementation"],
 			},
 			{
 				checkId: "input_valid",
@@ -41,7 +41,7 @@ function policyInput() {
 				parameters: {},
 				dependsOn: [],
 				activatedBy: ["kernel", "loop:implementation"],
-				ruleRefs: ["loop-exit.kernel.input"],
+				ruleRefs: ["verification.kernel.input"],
 			},
 		],
 		exclusions: [

@@ -9,7 +9,7 @@ import {
 	type ProjectWorkState,
 	type RelationshipProjection,
 } from "../../change-trace/state.ts";
-import {createLoopCandidate, type LoopCandidate} from "../../loop-exit/identity.ts";
+import {createLoopCandidate, type LoopCandidate} from "../../verification/identity.ts";
 import {
 	toCanonicalJsonValue,
 	type CanonicalJsonValue,

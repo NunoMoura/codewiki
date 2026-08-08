@@ -8,24 +8,24 @@ import {
 import {materializeEvidenceRecord} from "../../evidence/materialize.ts";
 import {modelConclusionEvidenceMeasurement} from "../../evidence/model-assessment.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
-import type {CheckCatalog} from "../../loop-exit/catalog.ts";
+import type {CheckCatalog} from "../../verification/catalog.ts";
 import {
 	createCustomCheckEvaluatorBinding,
 	normalizeCustomCheckEvaluatorAssessment,
 	normalizeCustomCheckEvaluatorStandardBindings,
 	type CustomCheckEvaluatorAssessmentExtension,
 	type CustomCheckEvaluatorBinding,
-} from "../../loop-exit/custom-checks/model-evaluator.ts";
-import type {CheckDefinition} from "../../loop-exit/contracts.ts";
+} from "../../verification/custom-checks/model-evaluator.ts";
+import type {CheckDefinition} from "../../verification/contracts.ts";
 import {
 	assertSecuritySurfaceClassification,
 	type SecuritySurfaceClassification,
-} from "../../loop-exit/security-surfaces.ts";
+} from "../../verification/security-surfaces.ts";
 import type {
 	CheckExecutorObservation,
 	LoopCheckExecutor,
 	LoopCheckExecutorContext,
-} from "../../loop-exit/runner.ts";
+} from "../../verification/runner.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {validateNoToolModelRoute} from "../../project/model-route-validation.ts";
 import {

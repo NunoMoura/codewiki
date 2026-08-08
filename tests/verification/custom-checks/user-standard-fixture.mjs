@@ -1,7 +1,7 @@
 import {
 	createUserStandardDefinition,
 	createUserStandardSourceSnapshot,
-} from "../../../src/loop-exit/custom-checks/index.ts";
+} from "../../../src/verification/custom-checks/index.ts";
 
 export function createTestUserStandard(overrides = {}) {
 	const passage =

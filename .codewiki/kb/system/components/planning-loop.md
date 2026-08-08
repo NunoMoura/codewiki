@@ -26,7 +26,7 @@ codewiki_generated_views:
   - .codewiki/views/work-plan.json
   - .codewiki/views/work-queue.json
   - .codewiki/views/triggers.json
-  - .codewiki/views/loop-exit.json
+  - .codewiki/views/verification.json
 codewiki_role: semantic_loop
 codewiki_source_map:
   - id: planning
@@ -42,7 +42,7 @@ codewiki_source_map:
       - .codewiki/views/work-plan.json
       - .codewiki/views/work-queue.json
       - .codewiki/views/triggers.json
-      - .codewiki/views/loop-exit.json
+      - .codewiki/views/verification.json
     trace_events:
       - planning.epoch_recorded
       - planning.epoch_bound

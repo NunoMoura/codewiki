@@ -1,4 +1,4 @@
-import type { LoopExitDeclaration } from "../../loop-exit/suite.ts";
+import type { LoopExitDeclaration } from "../../verification/suite.ts";
 
 export * from "./candidate.ts";
 export * from "./code-executors.ts";

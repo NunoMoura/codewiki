@@ -4,18 +4,18 @@ import { describe, it } from "node:test";
 import {EVIDENCE_SCHEMA_VERSION} from "../../src/evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../src/evidence/materialize.ts";
 import {reduceEvidenceObligation} from "../../src/evidence/obligations.ts";
-import {createLoopExitResultCache} from "../../src/loop-exit/cache.ts";
-import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
+import {createLoopExitResultCache} from "../../src/verification/cache.ts";
+import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
 	createProtectedCustomCheckConfigSnapshot,
 	customCheckDefinitionCheckId,
-} from "../../src/loop-exit/custom-checks/index.ts";
-import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
-import {createLoopCandidate} from "../../src/loop-exit/identity.ts";
-import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
-import {createLoopExitRunner} from "../../src/loop-exit/runner.ts";
+} from "../../src/verification/custom-checks/index.ts";
+import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
+import {createLoopCandidate} from "../../src/verification/identity.ts";
+import {resolveExitPolicy} from "../../src/verification/resolve-policy.ts";
+import {createLoopExitRunner} from "../../src/verification/runner.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 import {
 	createTestUserStandard,

@@ -4,7 +4,7 @@ import {
 	assertCandidateSchema,
 	candidateContentRecord,
 	requiredCandidateText,
-} from "../loop-exit/admission.ts";
+} from "../verification/admission.ts";
 
 const requiredTextSchema = Type.String({ minLength: 1, pattern: "\\S" });
 const stringArraySchema = Type.Array(Type.String());

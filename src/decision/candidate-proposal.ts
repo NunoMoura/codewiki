@@ -2,7 +2,7 @@ import {
 	assertCandidateContentKeys,
 	candidateContentRecord,
 	requiredCandidateText,
-} from "../loop-exit/admission.ts";
+} from "../verification/admission.ts";
 
 export type DecisionDisposition = "approve" | "reject" | "defer" | "withdraw";
 

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
+import {createCheckCatalog} from "../../src/verification/catalog.ts";
 
 describe("Check catalog", () => {
 	it("provides closed versioned kernel Checks for all three loops", () => {

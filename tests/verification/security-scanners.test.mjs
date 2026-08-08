@@ -4,7 +4,7 @@ import {describe, it} from "node:test";
 import {
 	requiredSecurityScannerTypes,
 	runSecurityScannerSuite,
-} from "../../src/loop-exit/security-scanners.ts";
+} from "../../src/verification/security-scanners.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 
 const digest = (character) => `sha256:${character.repeat(64)}`;

@@ -1,18 +1,18 @@
 import type {ChangeIntakeMaterial} from "../../changes/intake/contracts.ts";
 import type {EvidenceSubject} from "../../evidence/contracts.ts";
-import type {CheckCatalog} from "../../loop-exit/catalog.ts";
-import type {ResolvedExitPolicy} from "../../loop-exit/contracts.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../../loop-exit/custom-checks/index.ts";
-import {resolveExitPolicy} from "../../loop-exit/resolve-policy.ts";
-import type {LoopCheckExecutor} from "../../loop-exit/runner.ts";
-import {createAtomicSecurityScannerCheckExecutors} from "../../loop-exit/security-scanner-checks.ts";
-import type {SecurityScannerAdapter} from "../../loop-exit/security-scanners.ts";
+import type {CheckCatalog} from "../../verification/catalog.ts";
+import type {ResolvedExitPolicy} from "../../verification/contracts.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/index.ts";
+import {resolveExitPolicy} from "../../verification/resolve-policy.ts";
+import type {LoopCheckExecutor} from "../../verification/runner.ts";
+import {createAtomicSecurityScannerCheckExecutors} from "../../verification/security-scanner-checks.ts";
+import type {SecurityScannerAdapter} from "../../verification/security-scanners.ts";
 import {toCanonicalJsonValue} from "../../utils/canonical-json.ts";
 import {
 	classifySecuritySurfaces,
 	type SecuritySurfaceClassification,
 	type SecuritySurfaceSignal,
-} from "../../loop-exit/security-surfaces.ts";
+} from "../../verification/security-surfaces.ts";
 import type {DecisionCandidate} from "./candidate.ts";
 import {
 	createDecisionSecurityScannerExecutor,

@@ -4,7 +4,7 @@ import {describe, it} from "node:test";
 import {
 	evaluateStandardEvidenceCheck,
 	STANDARD_EVIDENCE_CHECK_EVALUATION_PROTOCOL,
-} from "../../src/loop-exit/standard-evidence-checks.ts";
+} from "../../src/verification/standard-evidence-checks.ts";
 import {
 	materializeStandardAdapterEvidence,
 } from "../../src/evidence/adapters/materialization.ts";

@@ -6,7 +6,7 @@ import {
 	assertUserStandardSourceRequest,
 	createUserStandardSourceRequest,
 	retrieveUserStandardSource,
-} from "../../../src/loop-exit/custom-checks/index.ts";
+} from "../../../src/verification/custom-checks/index.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 
 const NOW = () => new Date("2026-08-02T10:00:00.000Z");

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { createLoopExitSuite } from "../../src/loop-exit/suite.ts";
+import { createLoopExitSuite } from "../../src/verification/suite.ts";
 import {
 	createLoopExitRuntime,
 	LOOP_EXIT_SUITE,

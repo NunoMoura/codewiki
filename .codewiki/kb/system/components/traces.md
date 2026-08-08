@@ -29,7 +29,7 @@ codewiki_generated_views:
   - .codewiki/views/trace-board.json
   - .codewiki/views/triggers.json
   - .codewiki/views/runtime-board.json
-  - .codewiki/views/loop-exit.json
+  - .codewiki/views/verification.json
   - .codewiki/views/blockers.json
   - .codewiki/views/conflicts.json
 codewiki_roles:
@@ -60,7 +60,7 @@ codewiki_source_map:
       - .codewiki/views/trace-board.json
       - .codewiki/views/triggers.json
       - .codewiki/views/runtime-board.json
-      - .codewiki/views/loop-exit.json
+      - .codewiki/views/verification.json
       - .codewiki/views/blockers.json
       - .codewiki/views/conflicts.json
     role: generated_projection

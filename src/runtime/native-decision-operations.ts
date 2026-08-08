@@ -28,8 +28,8 @@ import {
 	type CheckResult,
 	type ExitReport,
 	type ResolvedExitPolicy,
-} from "../loop-exit/contracts.ts";
-import {assertValidExitReport} from "../loop-exit/results.ts";
+} from "../verification/contracts.ts";
+import {assertValidExitReport} from "../verification/results.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,

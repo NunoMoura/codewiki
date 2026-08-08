@@ -7,7 +7,7 @@ import {
 	createUserStandardSourceSnapshot,
 	customCheckConfigurationDigest,
 	normalizeUserStandardDefinitions,
-} from "../../../src/loop-exit/custom-checks/index.ts";
+} from "../../../src/verification/custom-checks/index.ts";
 
 const OBSERVED_AT = "2026-08-01T12:00:00.000Z";
 

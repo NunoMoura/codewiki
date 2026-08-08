@@ -13,16 +13,16 @@ import { modelConclusionEvidenceMeasurement } from "../evidence/model-assessment
 import type { EvidenceObligationResolution } from "../evidence/obligation-resolution.ts";
 import type { EvidenceObligation } from "../evidence/obligations.ts";
 import { reduceEvidenceObligation } from "../evidence/obligations.ts";
-import type { CheckCatalog } from "../loop-exit/catalog.ts";
+import type { CheckCatalog } from "../verification/catalog.ts";
 import type {
 	CheckDefinition,
 	CheckExecutionIdentity,
 	CheckResult,
 	ResolvedExitPolicy,
-} from "../loop-exit/contracts.ts";
-import { assertValidResolvedExitPolicy } from "../loop-exit/contracts.ts";
-import { loopQualifiedCheckDigest } from "../loop-exit/identity.ts";
-import { createCheckResult } from "../loop-exit/results.ts";
+} from "../verification/contracts.ts";
+import { assertValidResolvedExitPolicy } from "../verification/contracts.ts";
+import { loopQualifiedCheckDigest } from "../verification/identity.ts";
+import { createCheckResult } from "../verification/results.ts";
 import type { WikiModelRouteConfig } from "../project/model-routing.ts";
 import { validateNoToolModelRoute } from "../project/model-route-validation.ts";
 import type { Sha256Digest } from "../utils/canonical-json.ts";

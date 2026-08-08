@@ -36,7 +36,7 @@ src/implementation/**
 
 A Loop package owns its Candidate construction, Loop-specific Check declarations, attempt composition, interpretation, and route recommendation. A Loop may invoke injected generic Runtime ports, but it does not own global scheduling, claims, canonical persistence, recovery, workers, Integration, or effects.
 
-`src/runtime/**` owns only generic project-control mechanics. It must not contain a `decision`, `planning`, `implementation`, or `loop-exit` subtree, or a module whose responsibility is one Loop's Candidate construction, policy, or semantic evaluation. A Loop-local module must not be named `runtime.ts`; use a role name such as `attempt.ts`, `admission.ts`, or `execution.ts` when it calls a generic port. Current Loop-named Runtime modules are migration debt, not a target split.
+`src/runtime/**` owns only generic project-control mechanics. It must not contain a `decision`, `planning`, `implementation`, or `verification` subtree, or a module whose responsibility is one Loop's Candidate construction, policy, or semantic evaluation. A Loop-local module must not be named `runtime.ts`; use a role name such as `attempt.ts`, `admission.ts`, or `execution.ts` when it calls a generic port. Current Loop-named Runtime modules are migration debt, not a target split.
 
 `src/verification/**` is shared Check/Result/Exit Report machinery, not a fourth Loop. It may consume shared Evidence and generic execution ports, but cannot import a Loop implementation or Runtime. `src/pi/**` implements Pi-specific ports and cannot own Loop policy or canonical authority.
 

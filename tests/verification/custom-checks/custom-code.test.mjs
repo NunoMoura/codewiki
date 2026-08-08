@@ -3,7 +3,7 @@ import {describe, it} from "node:test";
 
 import {materializeEvidenceRecord} from "../../../src/evidence/materialize.ts";
 import {reduceEvidenceObligation} from "../../../src/evidence/obligations.ts";
-import {createCheckCatalog} from "../../../src/loop-exit/catalog.ts";
+import {createCheckCatalog} from "../../../src/verification/catalog.ts";
 import {
 	activateCustomCheckDefinition,
 	assertCustomCodeCapabilitySnapshot,
@@ -19,9 +19,9 @@ import {
 	normalizeCustomCodeTemplateBinding,
 	preflightRuntimeResourceGuards,
 	resolveRuntimeResourceGuards,
-} from "../../../src/loop-exit/custom-checks/index.ts";
-import {resolveExitPolicy} from "../../../src/loop-exit/resolve-policy.ts";
-import {createCheckResult} from "../../../src/loop-exit/results.ts";
+} from "../../../src/verification/custom-checks/index.ts";
+import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
+import {createCheckResult} from "../../../src/verification/results.ts";
 import {createLoopExitRuntime} from "../../../src/runtime/loop-exit-runtime.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 import {

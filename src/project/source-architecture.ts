@@ -11,7 +11,7 @@ export const CURRENT_SOURCE_ROOTS = [
 	"git",
 	"implementation",
 	"knowledge",
-	"loop-exit",
+	"verification",
 	"loops",
 	"pi",
 	"planning",
@@ -49,7 +49,6 @@ export const TARGET_SOURCE_ROOTS = [
 
 export const LEGACY_SOURCE_ROOTS = [
 	"change-trace",
-	"loop-exit",
 	"loops",
 	"traces",
 	"views",
@@ -59,7 +58,7 @@ export const CORE_SOURCE_ROOTS = [
 	"change-trace",
 	"changes",
 	"evidence",
-	"loop-exit",
+	"verification",
 ] as const;
 
 export const OUTER_ADAPTER_SOURCE_ROOTS = [
@@ -72,7 +71,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	"change-trace": 19,
-	"loop-exit": 34,
 	loops: 10,
 	traces: 12,
 	views: 13,
@@ -95,7 +93,7 @@ export const IMPORT_CYCLE_BASELINE = [
 	"src/evidence/obligation-resolution.ts | src/evidence/obligations.ts",
 	"src/git/worktrees.ts | src/runtime/work-unit-claim-selection.ts",
 	"src/implementation/review/evidence-report.ts | src/implementation/types.ts | src/implementation/worker-proof.ts",
-	"src/loop-exit/catalog.ts | src/loop-exit/runner.ts | src/loop-exit/security-scanner-checks.ts",
-	"src/loop-exit/contracts.ts | src/loop-exit/identity.ts",
+	"src/verification/catalog.ts | src/verification/runner.ts | src/verification/security-scanner-checks.ts",
+	"src/verification/contracts.ts | src/verification/identity.ts",
 	"src/pi/process-session.ts | src/pi/trace-host-process.ts",
 ] as const;

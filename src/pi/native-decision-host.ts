@@ -12,8 +12,8 @@ import {
 	type DecisionAttentionSelectionAuthorizationRequest,
 } from "../changes/triage/selection.ts";
 import {createDecisionExitRuntime} from "../decision/exit/runtime.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../loop-exit/custom-checks/configuration.ts";
-import {loadProtectedCustomCheckConfigSnapshot} from "../loop-exit/custom-checks/project-config-store.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/configuration.ts";
+import {loadProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/project-config-store.ts";
 import {createDecisionGitAdmission} from "../runtime/decision-git-admission.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,

@@ -1,25 +1,25 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { createCheckCatalog } from "../../src/loop-exit/catalog.ts";
+import { createCheckCatalog } from "../../src/verification/catalog.ts";
 import {
 	canonicalJsonDigest,
 	checkRequirementDigest,
 	loopQualifiedCheckDigest,
-} from "../../src/loop-exit/identity.ts";
-import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
+} from "../../src/verification/identity.ts";
+import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
 	createProtectedCustomCheckConfigSnapshot,
 	customCheckDefinitionCheckId,
-} from "../../src/loop-exit/custom-checks/index.ts";
-import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
+} from "../../src/verification/custom-checks/index.ts";
+import { resolveExitPolicy } from "../../src/verification/resolve-policy.ts";
 import {
 	assertValidExitReport,
 	createCheckResult,
 	createExitReport,
-} from "../../src/loop-exit/results.ts";
+} from "../../src/verification/results.ts";
 import {
 	createTestUserStandard,
 	standardRefsFor,
@@ -58,7 +58,7 @@ function selectorInput() {
 		],
 		projectTraits: [],
 		technologies: [],
-		paths: ["src/loop-exit/results.ts"],
+		paths: ["src/verification/results.ts"],
 	};
 }
 

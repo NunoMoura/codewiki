@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../src/loop-exit/catalog.ts";
-import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
-import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
-import {createCheckResult, createExitReport} from "../../src/loop-exit/results.ts";
+import {createCheckCatalog} from "../../src/verification/catalog.ts";
+import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
+import {resolveExitPolicy} from "../../src/verification/resolve-policy.ts";
+import {createCheckResult, createExitReport} from "../../src/verification/results.ts";
 import {deriveDecisionRuntimeRoute} from "../../src/decision/exit/runtime.ts";
 import {EVIDENCE_SCHEMA_VERSION} from "../../src/evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../src/evidence/materialize.ts";

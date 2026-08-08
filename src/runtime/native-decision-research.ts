@@ -4,17 +4,17 @@ import type {
 	EvidenceSensitivity,
 	EvidenceSubject,
 } from "../evidence/contracts.ts";
-import type {CheckCatalog} from "../loop-exit/catalog.ts";
+import type {CheckCatalog} from "../verification/catalog.ts";
 import type {
 	CheckDefinition,
 	CheckExecutionIdentity,
 	CheckResult,
-} from "../loop-exit/contracts.ts";
+} from "../verification/contracts.ts";
 import type {
 	CheckExecutorObservation,
 	LoopCheckExecutor,
 	LoopCheckExecutorContext,
-} from "../loop-exit/runner.ts";
+} from "../verification/runner.ts";
 import type {WikiModelRouteConfig} from "../project/model-routing.ts";
 import {validateNoToolModelRoute} from "../project/model-route-validation.ts";
 import {

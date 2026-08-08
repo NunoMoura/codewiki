@@ -3,13 +3,13 @@ import {describe, it} from "node:test";
 
 import {ingestJunitXmlEvidence} from "../../src/evidence/adapters/junit.ts";
 import {materializeStandardAdapterEvidence} from "../../src/evidence/adapters/materialization.ts";
-import {createResolvedExitPolicy} from "../../src/loop-exit/contracts.ts";
-import {createLoopCandidate} from "../../src/loop-exit/identity.ts";
-import {resolveExitPolicy} from "../../src/loop-exit/resolve-policy.ts";
+import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
+import {createLoopCandidate} from "../../src/verification/identity.ts";
+import {resolveExitPolicy} from "../../src/verification/resolve-policy.ts";
 import {
 	createStandardEvidenceCheckBindingParameters,
 	createStandardEvidenceCheckExecutors,
-} from "../../src/loop-exit/standard-evidence-executor.ts";
+} from "../../src/verification/standard-evidence-executor.ts";
 import {createLoopExitRuntime} from "../../src/runtime/loop-exit-runtime.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 

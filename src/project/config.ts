@@ -6,11 +6,11 @@ import {
 import {
 	normalizeCustomCheckDefinitions,
 	type CustomCheckDefinition,
-} from "../loop-exit/custom-checks/contracts.ts";
+} from "../verification/custom-checks/contracts.ts";
 import {
 	normalizeUserStandardDefinitions,
 	type UserStandardDefinition,
-} from "../loop-exit/custom-checks/user-standards.ts";
+} from "../verification/custom-checks/user-standards.ts";
 import {
 	DEFAULT_WIKI_PREVIEW_CONFIG,
 	type PartialWikiPreviewConfig,

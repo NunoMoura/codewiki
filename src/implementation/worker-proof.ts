@@ -1,5 +1,5 @@
 import type { ContentProof } from "../git/content-proof.ts";
-import { canonicalJsonDigest } from "../loop-exit/identity.ts";
+import { canonicalJsonDigest } from "../verification/identity.ts";
 import type { CheckResultInput, ImplementationChangeInput } from "./types.ts";
 
 export type ImplementationWorkerProofVerdict =

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { resolveExitPolicy } from "../../src/loop-exit/resolve-policy.ts";
+import { resolveExitPolicy } from "../../src/verification/resolve-policy.ts";
 import { createPiDecisionResearchClaimsTransport } from "../../src/pi/decision-research-claims-session.ts";
 import { createLoopExitRuntime } from "../../src/runtime/loop-exit-runtime.ts";
 

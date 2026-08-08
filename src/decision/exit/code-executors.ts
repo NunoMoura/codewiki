@@ -1,10 +1,10 @@
 import type {ChangeRevisionContent} from "../../change-trace/contracts.ts";
-import type {CheckCatalog} from "../../loop-exit/catalog.ts";
+import type {CheckCatalog} from "../../verification/catalog.ts";
 import type {
 	CheckExecutorObservation,
 	LoopCheckExecutor,
 	LoopCheckExecutorContext,
-} from "../../loop-exit/runner.ts";
+} from "../../verification/runner.ts";
 import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
 import type {
 	DecisionCandidate,

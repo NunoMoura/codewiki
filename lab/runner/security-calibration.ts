@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
-import { ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL } from "../../src/loop-exit/security-scanner-checks.ts";
+import { ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL } from "../../src/verification/security-scanner-checks.ts";
 import {
 	SECURITY_SCANNER_PROTOCOL,
 	type SecurityScannerType,
-} from "../../src/loop-exit/security-scanners.ts";
+} from "../../src/verification/security-scanners.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,

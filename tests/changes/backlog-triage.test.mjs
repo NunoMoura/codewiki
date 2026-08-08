@@ -27,7 +27,7 @@ import {queryBacklogTriage} from "../../src/changes/triage/query.ts";
 import {
 	createUserStandardDefinition,
 	createUserStandardSourceSnapshot,
-} from "../../src/loop-exit/custom-checks/user-standards.ts";
+} from "../../src/verification/custom-checks/user-standards.ts";
 import {createDecisionStartRuntime} from "../../src/runtime/decision-attention-selection.ts";
 import {ProjectCoordinator} from "../../src/runtime/project-coordinator.ts";
 import {

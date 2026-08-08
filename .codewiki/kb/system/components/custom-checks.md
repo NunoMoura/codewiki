@@ -13,18 +13,18 @@ codewiki_component: custom_checks
 codewiki_components:
   - custom_checks
 codewiki_source_patterns:
-  - src/loop-exit/custom-checks/**
+  - src/verification/custom-checks/**
 codewiki_test_patterns:
-  - tests/loop-exit/custom-checks.test.mjs
-  - tests/loop-exit/custom-checks/**
+  - tests/verification/custom-checks.test.mjs
+  - tests/verification/custom-checks/**
 codewiki_role: custom_check_policy
 codewiki_source_map:
   - id: custom_checks
     source_patterns:
-      - src/loop-exit/custom-checks/**
+      - src/verification/custom-checks/**
     test_patterns:
-      - tests/loop-exit/custom-checks.test.mjs
-      - tests/loop-exit/custom-checks/**
+      - tests/verification/custom-checks.test.mjs
+      - tests/verification/custom-checks/**
     role: custom_check_policy
 ---
 # User Standards and Custom Checks
