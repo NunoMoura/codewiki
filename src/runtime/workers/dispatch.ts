@@ -4,31 +4,31 @@ import { join } from "node:path";
 import {
 	runWikiRuntime,
 	type RunWikiRuntimeInput,
-} from "../api/wiki-runtime.ts";
+} from "../../api/wiki-runtime.ts";
 import {
 	collectGitStatusSnapshot,
 	runtimeWorktreeInputsFromGitStatus,
 	type GitStatusSnapshot,
-} from "../git/status.ts";
+} from "../../git/status.ts";
 import {
 	executeRuntimeWorktreeCommands,
 	type RuntimeWorktreePlan,
 	type WorktreeCommandRunner,
-} from "../git/worktrees.ts";
-import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
-import { loadWikiConfigFile } from "../project/config-file.ts";
-import type { WikiConfig } from "../project/config.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
-import { buildWorkQueueView } from "../views/work-queue.ts";
-import type { WorkState } from "../work-state/types.ts";
-import { createRuntimeHandoffManifest } from "./handoff.ts";
+} from "../../git/worktrees.ts";
+import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
+import { loadWikiConfigFile } from "../../project/config-file.ts";
+import type { WikiConfig } from "../../project/config.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
+import { buildWorkQueueView } from "../../views/work-queue.ts";
+import type { WorkState } from "../../work-state/types.ts";
+import { createRuntimeHandoffManifest } from "../handoff.ts";
 import {
 	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 	cleanupImplementationWorkerArtifacts,
 	readImplementationWorkerDispatchPackets,
 	writeImplementationWorkerDispatchPacket,
 	type ImplementationWorkerDispatchPacket,
-} from "./workers/implementation-artifacts.ts";
+} from "./implementation-artifacts.ts";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
@@ -37,34 +37,34 @@ import {
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./workers/implementation-adapter.ts";
+} from "./implementation-adapter.ts";
 import {
 	implementationWorkerIntegrationJob,
 	type ImplementationWorkerIntegrationInput,
-} from "./implementation-worker-integration.ts";
-import { scheduleImplementationWorkerAssignment } from "./implementation-worker-jobs.ts";
-import { implementationWorkerClaimReleaseJob } from "./implementation-worker-review.ts";
+} from "../integration/worker.ts";
+import { scheduleImplementationWorkerAssignment } from "./jobs.ts";
+import { implementationWorkerClaimReleaseJob } from "../claims/release.ts";
 import {
 	projectBranchMergeJob,
 	type ProjectBranchMergeAuthority,
-} from "./effects/project-branch-merge.ts";
+} from "../effects/project-branch-merge.ts";
 import {
 	projectBranchPushJob,
 	type ProjectBranchPushAuthority,
-} from "./effects/project-branch-push.ts";
+} from "../effects/project-branch-push.ts";
 import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
-} from "./effects/product-publication-contract.ts";
-import { productPublicationJob } from "./effects/product-publication.ts";
+} from "../effects/product-publication-contract.ts";
+import { productPublicationJob } from "../effects/product-publication.ts";
 import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
-} from "./effects/product-release-contract.ts";
-import { productReleaseJob } from "./effects/product-release.ts";
-import type { ProjectCoordinator } from "./coordinator/project.ts";
-import { appendRuntimeWorkUnitClaims } from "./claims/work-unit-events.ts";
-import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
+} from "../effects/product-release-contract.ts";
+import { productReleaseJob } from "../effects/product-release.ts";
+import type { ProjectCoordinator } from "../coordinator/project.ts";
+import { appendRuntimeWorkUnitClaims } from "../claims/work-unit-events.ts";
+import type { RuntimeReactor, RuntimeTrigger } from "../reactor.ts";
 
 export interface ImplementationWorkerDispatchResult {
 	status: "held" | "quiescent" | "scheduled";

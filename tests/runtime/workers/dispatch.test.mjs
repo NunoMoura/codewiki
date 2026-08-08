@@ -6,20 +6,20 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { writeWikiConfigFile } from "../../src/project/config-file.ts";
-import { resolveWikiConfig } from "../../src/project/config.ts";
-import { readImplementationWorkerDispatchPackets } from "../../src/runtime/workers/implementation-artifacts.ts";
-import { ImplementationWorkerDispatcher } from "../../src/runtime/implementation-worker-dispatch.ts";
-import { implementationWorkerClaimReleaseJob } from "../../src/runtime/implementation-worker-review.ts";
-import { ProjectCoordinator } from "../../src/runtime/coordinator/project.ts";
-import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";
+import { writeWikiConfigFile } from "../../../src/project/config-file.ts";
+import { resolveWikiConfig } from "../../../src/project/config.ts";
+import { readImplementationWorkerDispatchPackets } from "../../../src/runtime/workers/implementation-artifacts.ts";
+import { ImplementationWorkerDispatcher } from "../../../src/runtime/workers/dispatch.ts";
+import { implementationWorkerClaimReleaseJob } from "../../../src/runtime/claims/release.ts";
+import { ProjectCoordinator } from "../../../src/runtime/coordinator/project.ts";
+import { appendRuntimeTraceRecords } from "../../../src/runtime/trace-writer.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
-} from "../../src/runtime/coordinator/service.ts";
-import { RuntimeReactor } from "../../src/runtime/reactor.ts";
-import { buildProjectWorkState } from "../../src/work-state/project.ts";
-import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
+} from "../../../src/runtime/coordinator/service.ts";
+import { RuntimeReactor } from "../../../src/runtime/reactor.ts";
+import { buildProjectWorkState } from "../../../src/work-state/project.ts";
+import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
 
 const execFile = promisify(execFileCallback);
 

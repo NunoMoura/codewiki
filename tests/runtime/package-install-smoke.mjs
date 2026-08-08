@@ -133,10 +133,14 @@ assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "com
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-report-store.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-artifacts.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "observation.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-integration.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "dispatch.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "jobs.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "integration", "worker.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "release.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-integration.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "events.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "leases.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "work-unit-events.js")), true);

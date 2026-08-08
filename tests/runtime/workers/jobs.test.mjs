@@ -7,13 +7,13 @@ import test from "node:test";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	implementationWorkerJobId,
-} from "../../src/runtime/workers/implementation-adapter.ts";
-import { scheduleImplementationWorkerAssignments } from "../../src/runtime/implementation-worker-jobs.ts";
-import { ProjectCoordinator } from "../../src/runtime/coordinator/project.ts";
+} from "../../../src/runtime/workers/implementation-adapter.ts";
+import { scheduleImplementationWorkerAssignments } from "../../../src/runtime/workers/jobs.ts";
+import { ProjectCoordinator } from "../../../src/runtime/coordinator/project.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
-} from "../../src/runtime/coordinator/service.ts";
+} from "../../../src/runtime/coordinator/service.ts";
 
 function assignment(root, id, pathScope) {
 	return {

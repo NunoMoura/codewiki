@@ -14,26 +14,26 @@ import type {
 	RuntimeWorktreePlan,
 	WorktreeCommand,
 	WorktreeCommandRunner,
-} from "../git/worktrees.ts";
-import { readTraceFile } from "../traces/reader.ts";
-import { traceFilePath } from "../traces/schema.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
-import { appendRuntimeTraceRecord } from "./trace-writer.ts";
+} from "../../git/worktrees.ts";
+import { readTraceFile } from "../../traces/reader.ts";
+import { traceFilePath } from "../../traces/schema.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
+import { appendRuntimeTraceRecord } from "../trace-writer.ts";
 import {
 	assertImplementationWorkerAssignment,
 	assertImplementationWorkerReport,
 	implementationWorkerJobId,
 	type ImplementationWorkerReport,
-} from "./workers/implementation-adapter.ts";
+} from "../workers/implementation-adapter.ts";
 import {
 	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 	type ImplementationWorkerDispatchPacket,
-} from "./workers/implementation-artifacts.ts";
+} from "../workers/implementation-artifacts.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "./coordinator/project.ts";
-import type { RuntimeReactor } from "./reactor.ts";
+} from "../coordinator/project.ts";
+import type { RuntimeReactor } from "../reactor.ts";
 
 const MAX_GIT_OUTPUT_BYTES = 8 * 1024 * 1024;
 const MAX_CHANGED_PATHS = 1_024;

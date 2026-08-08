@@ -42,13 +42,13 @@ export {
 	type ImplementationWorkerDispatcherOptions,
 	type ImplementationWorkerDispatchResult,
 	type ImplementationWorkerRuntimeReconciliation,
-} from "../implementation-worker-dispatch.ts";
+} from "../workers/dispatch.ts";
 export {
 	implementationWorkerIntegrationJob,
 	scheduleImplementationWorkerIntegration,
 	type ImplementationWorkerIntegrationInput,
 	type ImplementationWorkerIntegrationReceipt,
-} from "../implementation-worker-integration.ts";
+} from "../integration/worker.ts";
 export {
 	projectBranchMergeJob,
 	scheduleProjectBranchMerge,
@@ -102,13 +102,13 @@ export {
 	scheduleImplementationWorkerClaimRelease,
 	type ImplementationWorkerClaimReleaseInput,
 	type ImplementationWorkerClaimReleaseReceipt,
-} from "../implementation-worker-review.ts";
+} from "../claims/release.ts";
 export {
 	scheduleImplementationWorkerAssignment,
 	scheduleImplementationWorkerAssignments,
 	type ImplementationWorkerJobReceipt,
 	type ScheduleImplementationWorkerAssignmentsInput,
-} from "../implementation-worker-jobs.ts";
+} from "../workers/jobs.ts";
 export {
 	PROJECT_COORDINATOR_EVENT_STREAM_SCHEMA_VERSION,
 	ProjectCoordinatorEventJournal,

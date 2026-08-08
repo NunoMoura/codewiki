@@ -26,7 +26,7 @@ import {
 import {
 	ImplementationWorkerDispatcher,
 	type ImplementationWorkerDispatchResult,
-} from "../implementation-worker-dispatch.ts";
+} from "../workers/dispatch.ts";
 import type {
 	ImplementationWorkerAdapter,
 	ImplementationWorkerAssignment,
@@ -34,7 +34,7 @@ import type {
 import {
 	scheduleImplementationWorkerAssignments,
 	type ImplementationWorkerJobReceipt,
-} from "../implementation-worker-jobs.ts";
+} from "../workers/jobs.ts";
 import {
 	ProjectCoordinatorEventJournal,
 	type ProjectCoordinatorEventBatch,

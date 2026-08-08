@@ -7,16 +7,16 @@ import { join } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 
-import { createShellWorktreeCommandRunner } from "../../src/git/worktree-shell-runner.ts";
+import { createShellWorktreeCommandRunner } from "../../../src/git/worktree-shell-runner.ts";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	implementationWorkerJobId,
-} from "../../src/runtime/workers/implementation-adapter.ts";
-import { IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-artifacts.ts";
-import { implementationWorkerIntegrationJob } from "../../src/runtime/implementation-worker-integration.ts";
-import { RuntimeReactor } from "../../src/runtime/reactor.ts";
-import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";
-import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
+} from "../../../src/runtime/workers/implementation-adapter.ts";
+import { IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION } from "../../../src/runtime/workers/implementation-artifacts.ts";
+import { implementationWorkerIntegrationJob } from "../../../src/runtime/integration/worker.ts";
+import { RuntimeReactor } from "../../../src/runtime/reactor.ts";
+import { appendRuntimeTraceRecords } from "../../../src/runtime/trace-writer.ts";
+import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
 
 const execFile = promisify(execFileCallback);
 

@@ -1,23 +1,23 @@
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 
-import { readTraceFile } from "../traces/reader.ts";
-import { traceFilePath } from "../traces/schema.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { readTraceFile } from "../../traces/reader.ts";
+import { traceFilePath } from "../../traces/schema.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import {
 	implementationWorkerJobId,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./workers/implementation-adapter.ts";
+} from "../workers/implementation-adapter.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "./coordinator/project.ts";
-import type { RuntimeReactor } from "./reactor.ts";
+} from "../coordinator/project.ts";
+import type { RuntimeReactor } from "../reactor.ts";
 import {
 	appendRuntimeWorkUnitClaims,
 	createRuntimeWorkerCompletionReleaseEvents,
-} from "./claims/work-unit-events.ts";
+} from "./work-unit-events.ts";
 
 export interface ImplementationWorkerClaimReleaseInput {
 	repoRoot: string;

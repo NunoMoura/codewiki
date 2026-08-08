@@ -10,7 +10,7 @@ import {
 	type EnsureProjectCoordinatorServiceOptions,
 } from "../runtime/coordinator/process.ts";
 import type { ProjectCoordinatorEventBatch } from "../runtime/coordinator/events.ts";
-import type { ImplementationWorkerDispatchResult } from "../runtime/implementation-worker-dispatch.ts";
+import type { ImplementationWorkerDispatchResult } from "../runtime/workers/dispatch.ts";
 import type {
 	ProjectCoordinatorCandidateResult,
 	ProjectCoordinatorRemoteClient,
