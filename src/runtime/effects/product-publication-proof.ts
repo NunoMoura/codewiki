@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { realpathSync } from "node:fs";
 
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import type {
 	ProductPublicationAdapter,
 	ProductPublicationOperation,

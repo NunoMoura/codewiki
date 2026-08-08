@@ -66,20 +66,20 @@ export {
 	type ProjectBranchMergeAuthority,
 	type ProjectBranchMergeInput,
 	type ProjectBranchMergeReceipt,
-} from "./project-branch-merge.ts";
+} from "./effects/project-branch-merge.ts";
 export {
 	projectBranchPushJob,
 	scheduleProjectBranchPush,
 	type ProjectBranchPushAuthority,
 	type ProjectBranchPushInput,
 	type ProjectBranchPushReceipt,
-} from "./project-branch-push.ts";
+} from "./effects/project-branch-push.ts";
 export {
 	productPublicationJob,
 	scheduleProductPublication,
 	type ProductPublicationInput,
 	type ProductPublicationReceipt,
-} from "./product-publication.ts";
+} from "./effects/product-publication.ts";
 export type {
 	ProductPublicationAdapter,
 	ProductPublicationAdapterInput,
@@ -90,13 +90,13 @@ export type {
 	ProductPublicationPlan,
 	ProductPublicationTarget,
 	ProductPublicationTargetKind,
-} from "./product-publication-contract.ts";
+} from "./effects/product-publication-contract.ts";
 export {
 	productReleaseJob,
 	scheduleProductRelease,
 	type ProductReleaseInput,
 	type ProductReleaseReceipt,
-} from "./product-release.ts";
+} from "./effects/product-release.ts";
 export type {
 	ProductReleaseAdapter,
 	ProductReleaseAdapterInput,
@@ -107,7 +107,7 @@ export type {
 	ProductReleaseTarget,
 	ProductReleaseTargetKind,
 	PublishedArtifactObservation,
-} from "./product-release-contract.ts";
+} from "./effects/product-release-contract.ts";
 export {
 	implementationWorkerClaimReleaseJob,
 	scheduleImplementationWorkerClaimRelease,

@@ -11,6 +11,7 @@ import {
 	LEGACY_SOURCE_ROOTS,
 	OUTER_ADAPTER_SOURCE_ROOTS,
 	RUNTIME_TO_PI_IMPORT_BASELINE,
+	TARGET_RUNTIME_SUBDIRECTORIES,
 	TARGET_SOURCE_ROOTS,
 } from "../../src/project/source-architecture.ts";
 
@@ -138,12 +139,25 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("forbids parallel Loop Runtime subtrees", () => {
-		const runtimeDirectories = readdirSync("src/runtime")
-			.filter((name) => statSync(`src/runtime/${name}`).isDirectory());
+	it("keeps Runtime subtrees within target responsibilities", () => {
+		const runtimeEntries = readdirSync("src/runtime");
+		const runtimeDirectories = runtimeEntries.filter((name) =>
+			statSync(`src/runtime/${name}`).isDirectory(),
+		);
+		for (const directory of runtimeDirectories) {
+			assert.equal(TARGET_RUNTIME_SUBDIRECTORIES.includes(directory), true, directory);
+		}
 		for (const directory of FORBIDDEN_RUNTIME_SUBDIRECTORIES) {
 			assert.equal(runtimeDirectories.includes(directory), false, directory);
 		}
+		assert.equal(
+			runtimeEntries.some((name) =>
+				/^(?:product-(?:publication|release)|project-branch-(?:merge|push))/u.test(
+					name,
+				),
+			),
+			false,
+		);
 	});
 
 	it("forbids core packages from importing outer adapters", () => {

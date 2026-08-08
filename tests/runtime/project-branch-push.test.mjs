@@ -16,8 +16,8 @@ import test from "node:test";
 import { promisify } from "node:util";
 
 import { createShellWorktreeCommandRunner } from "../../src/git/worktree-shell-runner.ts";
-import { projectBranchMergeJob } from "../../src/runtime/project-branch-merge.ts";
-import { projectBranchPushJob } from "../../src/runtime/project-branch-push.ts";
+import { projectBranchMergeJob } from "../../src/runtime/effects/project-branch-merge.ts";
+import { projectBranchPushJob } from "../../src/runtime/effects/project-branch-push.ts";
 import { RuntimeReactor } from "../../src/runtime/reactor.ts";
 import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";

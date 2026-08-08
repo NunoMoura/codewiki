@@ -39,16 +39,16 @@ import {
 	ProjectCoordinatorEventJournal,
 	type ProjectCoordinatorEventBatch,
 } from "./project-coordinator-events.ts";
-import type { ProjectBranchMergeAuthority } from "./project-branch-merge.ts";
-import type { ProjectBranchPushAuthority } from "./project-branch-push.ts";
+import type { ProjectBranchMergeAuthority } from "./effects/project-branch-merge.ts";
+import type { ProjectBranchPushAuthority } from "./effects/project-branch-push.ts";
 import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
-} from "./product-publication-contract.ts";
+} from "./effects/product-publication-contract.ts";
 import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
-} from "./product-release-contract.ts";
+} from "./effects/product-release-contract.ts";
 import {
 	ProjectCoordinator,
 	type ProjectCoordinatorClientConnection,

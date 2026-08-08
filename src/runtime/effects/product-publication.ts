@@ -1,4 +1,4 @@
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import { verifyProductPublicationArtifact } from "./product-publication-artifact.ts";
 import type {
 	ProductPublicationAdapter,
@@ -27,9 +27,9 @@ export type { ProductPublicationReceipt } from "./product-publication-proof.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "./project-coordinator.ts";
-import type { RuntimeReactor } from "./reactor.ts";
-import { appendRuntimeTraceRecord } from "./trace-writer.ts";
+} from "../project-coordinator.ts";
+import type { RuntimeReactor } from "../reactor.ts";
+import { appendRuntimeTraceRecord } from "../trace-writer.ts";
 
 const PRODUCT_PUBLICATION_EVENT = "runtime.product.published";
 

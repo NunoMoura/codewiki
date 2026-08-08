@@ -47,21 +47,21 @@ import { implementationWorkerClaimReleaseJob } from "./implementation-worker-rev
 import {
 	projectBranchMergeJob,
 	type ProjectBranchMergeAuthority,
-} from "./project-branch-merge.ts";
+} from "./effects/project-branch-merge.ts";
 import {
 	projectBranchPushJob,
 	type ProjectBranchPushAuthority,
-} from "./project-branch-push.ts";
+} from "./effects/project-branch-push.ts";
 import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
-} from "./product-publication-contract.ts";
-import { productPublicationJob } from "./product-publication.ts";
+} from "./effects/product-publication-contract.ts";
+import { productPublicationJob } from "./effects/product-publication.ts";
 import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
-} from "./product-release-contract.ts";
-import { productReleaseJob } from "./product-release.ts";
+} from "./effects/product-release-contract.ts";
+import { productReleaseJob } from "./effects/product-release.ts";
 import type { ProjectCoordinator } from "./project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./work-unit-claims.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";

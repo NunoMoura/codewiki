@@ -12,16 +12,16 @@ import {
 import { spawnProjectCoordinatorDaemon } from "../runtime/project-coordinator-process.ts";
 import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/project-coordinator-service.ts";
 import type { ImplementationWorkerAdapter } from "../runtime/implementation-worker-adapter.ts";
-import type { ProjectBranchMergeAuthority } from "../runtime/project-branch-merge.ts";
-import type { ProjectBranchPushAuthority } from "../runtime/project-branch-push.ts";
+import type { ProjectBranchMergeAuthority } from "../runtime/effects/project-branch-merge.ts";
+import type { ProjectBranchPushAuthority } from "../runtime/effects/project-branch-push.ts";
 import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
-} from "../runtime/product-publication-contract.ts";
+} from "../runtime/effects/product-publication-contract.ts";
 import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
-} from "../runtime/product-release-contract.ts";
+} from "../runtime/effects/product-release-contract.ts";
 import type {
 	RuntimeSemanticAdapters,
 	RuntimeSemanticContext,

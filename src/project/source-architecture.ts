@@ -45,6 +45,18 @@ export const TARGET_SOURCE_ROOTS = [
 	"work-state",
 ] as const;
 
+export const TARGET_RUNTIME_SUBDIRECTORIES = [
+	"claims",
+	"coordinator",
+	"effects",
+	"integration",
+	"lifecycle",
+	"persistence",
+	"recovery",
+	"synchronization",
+	"workers",
+] as const;
+
 export const LEGACY_SOURCE_ROOTS = [
 	"change-trace",
 	"loops",

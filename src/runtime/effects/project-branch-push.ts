@@ -1,12 +1,12 @@
 import { createHash } from "node:crypto";
 import { realpathSync } from "node:fs";
 import { resolve } from "node:path";
-import type { WorktreeCommandRunner } from "../git/worktrees.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import type { WorktreeCommandRunner } from "../../git/worktrees.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "./project-coordinator.ts";
+} from "../project-coordinator.ts";
 import {
 	assertPushCheckout,
 	readRemoteBranchCommit,
@@ -17,8 +17,8 @@ import {
 	removeProjectBranchPushManifest,
 	writeProjectBranchPushManifest,
 } from "./project-branch-push-manifest.ts";
-import type { RuntimeReactor } from "./reactor.ts";
-import { appendRuntimeTraceRecord } from "./trace-writer.ts";
+import type { RuntimeReactor } from "../reactor.ts";
+import { appendRuntimeTraceRecord } from "../trace-writer.ts";
 
 const MERGE_EVENT = "runtime.project_branch.merged";
 const PUSH_EVENT = "runtime.project_branch.pushed";

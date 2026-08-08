@@ -1,13 +1,13 @@
 import { createHash } from "node:crypto";
 import { lstat, mkdir, readdir } from "node:fs/promises";
 import { resolve } from "node:path";
-import { parseGitPorcelainPaths } from "../git/status.ts";
+import { parseGitPorcelainPaths } from "../../git/status.ts";
 import type {
 	RuntimeWorktreePlan,
 	WorktreeCommand,
 	WorktreeCommandRunner,
-} from "../git/worktrees.ts";
-import type { TraceEvent } from "../traces/types.ts";
+} from "../../git/worktrees.ts";
+import type { TraceEvent } from "../../traces/types.ts";
 
 const GIT_OBJECT_ID = /^[a-f0-9]{40}(?:[a-f0-9]{24})?$/u;
 const MAX_GIT_OUTPUT_BYTES = 8 * 1024 * 1024;
