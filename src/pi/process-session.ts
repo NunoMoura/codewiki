@@ -17,12 +17,12 @@ import {
 	type WorkerExecutionUsage,
 } from "../runtime/workers/execution-policy.ts";
 import type {
-	PiWorkerSession,
-	PiWorkerSessionFactory,
-	PiWorkerSessionInput,
-	PiWorkerSessionResumeInput,
-	PiWorkerSessionResumeResult,
-} from "./worker-start.ts";
+	WorkerSession,
+	WorkerSessionFactory,
+	WorkerSessionInput,
+	WorkerSessionResumeInput,
+	WorkerSessionResumeResult,
+} from "../runtime/workers/start.ts";
 
 export type PiModelInvocation = TraceHostExecutionModel;
 
@@ -48,7 +48,7 @@ export interface PiProcessSessionFactoryOptions {
 	noSession?: boolean;
 	model?: PiModelInvocation;
 	outputDir?: string;
-	outputFile?: string | ((input: PiWorkerSessionInput) => string);
+	outputFile?: string | ((input: WorkerSessionInput) => string);
 	runner?: PiProcessCommandRunner;
 	resumeRunner?: PiProcessSessionResumeRunner;
 	terminationGraceMs?: number;
@@ -91,8 +91,8 @@ export type PiProcessCommandRunner = (
 ) => Promise<PiProcessCommandResult> | PiProcessCommandResult;
 
 export type PiProcessSessionResumeRunner = (
-	input: PiWorkerSessionResumeInput,
-) => Promise<PiWorkerSessionResumeResult> | PiWorkerSessionResumeResult;
+	input: WorkerSessionResumeInput,
+) => Promise<WorkerSessionResumeResult> | WorkerSessionResumeResult;
 
 export function createPiTraceHostSessionFactory(
 	options: PiTraceHostSessionFactoryOptions = {},
@@ -228,7 +228,7 @@ function resolveTraceHostOutputFile(
 
 export function createPiProcessSessionFactory(
 	options: PiProcessSessionFactoryOptions = {},
-): PiWorkerSessionFactory {
+): WorkerSessionFactory {
 	return {
 		async create(input) {
 			return new PiProcessSession(input, options);
@@ -247,11 +247,11 @@ export function createPiProcessSessionFactory(
 	};
 }
 
-type PolicyAwareWorkerSessionInput = PiWorkerSessionInput & {
+type PolicyAwareWorkerSessionInput = WorkerSessionInput & {
 	executionPolicy?: WorkerExecutionPolicySnapshot;
 };
 
-class PiProcessSession implements PiWorkerSession {
+class PiProcessSession implements WorkerSession {
 	sessionId?: string;
 	sessionFile?: string;
 	outputFile?: string;
@@ -424,7 +424,7 @@ function piModelArgs(model: PiModelInvocation | undefined): string[] {
 }
 
 function outputFileForSession(
-	input: PiWorkerSessionInput,
+	input: WorkerSessionInput,
 	options: PiProcessSessionFactoryOptions,
 ): string {
 	if (typeof options.outputFile === "function")
@@ -437,7 +437,7 @@ function outputFileForSession(
 }
 
 function defaultOutputDir(
-	input: PiWorkerSessionInput,
+	input: WorkerSessionInput,
 	options: PiProcessSessionFactoryOptions,
 ): string {
 	return resolve(

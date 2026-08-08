@@ -1,7 +1,7 @@
 import type { WorktreeCommand, WorktreeRef } from "../git/worktrees.ts";
-import type { PiWorkerSessionInput } from "../pi/worker-start.ts";
+import type { WorkerSessionInput } from "./workers/start.ts";
 import type { CodewikiHostError } from "../error-handling/host-errors.ts";
-import { createPiWorkerPrompt } from "../pi/worker-start.ts";
+import { createWorkerPrompt } from "./workers/start.ts";
 import type {
 	RuntimeWorkUnitClaimAppendResult,
 	RuntimeWorkUnitClaimEventBatch,
@@ -108,10 +108,10 @@ export interface RuntimeHandoffWorker {
 	worktree?: WorktreeRef;
 	worktreeCommands: RuntimeHandoffWorktreeCommands;
 	executionPolicy?: WorkerExecutionPolicySnapshot;
-	sessionInput: PiWorkerSessionInput & {
+	sessionInput: WorkerSessionInput & {
 		executionPolicy?: WorkerExecutionPolicySnapshot;
 	};
-	completionFeeds: "collectPiWorkerOutputFiles -> collectPiWorkerReports";
+	completionFeeds: "collectWorkerOutputFiles -> collectWorkerReports";
 	implementationInput: "workerReports";
 }
 
@@ -124,7 +124,7 @@ export interface RuntimeHandoffWorktreeCommands {
 }
 
 export interface RuntimeHandoffCompletionContract {
-	collector: "collectPiWorkerOutputFiles -> collectPiWorkerReports";
+	collector: "collectWorkerOutputFiles -> collectWorkerReports";
 	statusValues: ["completed", "blocked", "failed"];
 	requiredFields: string[];
 	proofFields: string[];
@@ -182,7 +182,7 @@ function handoffWorker(input: {
 		...input.item,
 		...(worktree ? { worktree } : {}),
 	};
-	const prompt = createPiWorkerPrompt(promptItem, input.options);
+	const prompt = createWorkerPrompt(promptItem, input.options);
 	const executionPolicy =
 		input.options.executionPoliciesByWorkUnit?.[input.item.workUnitId];
 	return {
@@ -214,7 +214,7 @@ function handoffWorker(input: {
 			...(executionPolicy ? { executionPolicy } : {}),
 			prompt,
 		},
-		completionFeeds: "collectPiWorkerOutputFiles -> collectPiWorkerReports",
+		completionFeeds: "collectWorkerOutputFiles -> collectWorkerReports",
 		implementationInput: "workerReports",
 	};
 }
@@ -285,7 +285,7 @@ function handoffActions(
 
 function expectedCompletionContract(): RuntimeHandoffCompletionContract {
 	return {
-		collector: "collectPiWorkerOutputFiles -> collectPiWorkerReports",
+		collector: "collectWorkerOutputFiles -> collectWorkerReports",
 		statusValues: ["completed", "blocked", "failed"],
 		requiredFields: [
 			"status",

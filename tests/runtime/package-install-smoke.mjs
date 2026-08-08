@@ -121,6 +121,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-j
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "reports.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-start.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-reports.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "coordinator-entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-options.js")), true);

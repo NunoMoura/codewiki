@@ -1,16 +1,16 @@
 import { readFile } from "node:fs/promises";
-import type { ChangeIntakeContent } from "../changes/intake/contracts.ts";
-import { normalizeChangeIntakeContent } from "../changes/intake/normalize.ts";
-import type { ImplementationChangeInput } from "../implementation/types.ts";
-import type { ImplementationWorkerProofInput } from "../implementation/worker-proof.ts";
+import type { ChangeIntakeContent } from "../../changes/intake/contracts.ts";
+import { normalizeChangeIntakeContent } from "../../changes/intake/normalize.ts";
+import type { ImplementationChangeInput } from "../../implementation/types.ts";
+import type { ImplementationWorkerProofInput } from "../../implementation/worker-proof.ts";
 import type {
 	ImplementationWorkerBlockerInput,
 	ImplementationWorkerReportInput,
-} from "../implementation/workers.ts";
-import type { PiWorkerStartResult } from "./worker-start.ts";
+} from "../../implementation/workers.ts";
+import type { WorkerStartResult } from "./start.ts";
 
-export interface PiWorkerCompletionInput {
-	workerStart: PiWorkerStartResult;
+export interface WorkerCompletionInput {
+	workerStart: WorkerStartResult;
 	output?: unknown;
 	error?: unknown;
 }
@@ -23,20 +23,20 @@ interface ParsedCompletionOutput {
 const WORKER_REPORT_FENCE =
 	/```[ \t]*(?:codewiki-worker-report|json[ \t]+codewiki-worker-report)[^\n]*\n([\s\S]*?)\n?```/gi;
 
-export async function collectPiWorkerOutputFiles(
-	workers: PiWorkerStartResult[],
-): Promise<PiWorkerCompletionInput[]> {
-	return Promise.all(workers.map(collectPiWorkerOutputFile));
+export async function collectWorkerOutputFiles(
+	workers: WorkerStartResult[],
+): Promise<WorkerCompletionInput[]> {
+	return Promise.all(workers.map(collectWorkerOutputFile));
 }
 
-export function collectPiWorkerReports(
-	inputs: PiWorkerCompletionInput[],
+export function collectWorkerReports(
+	inputs: WorkerCompletionInput[],
 ): ImplementationWorkerReportInput[] {
-	return inputs.map(normalizePiWorkerCompletion);
+	return inputs.map(normalizeWorkerCompletion);
 }
 
-export function collectPiWorkerDiscoveries(
-	inputs: PiWorkerCompletionInput[],
+export function collectWorkerDiscoveries(
+	inputs: WorkerCompletionInput[],
 ): readonly ChangeIntakeContent[] {
 	const discoveries: ChangeIntakeContent[] = [];
 	for (const input of inputs) {
@@ -52,9 +52,9 @@ export function collectPiWorkerDiscoveries(
 	return Object.freeze(discoveries);
 }
 
-async function collectPiWorkerOutputFile(
-	workerStart: PiWorkerStartResult,
-): Promise<PiWorkerCompletionInput> {
+async function collectWorkerOutputFile(
+	workerStart: WorkerStartResult,
+): Promise<WorkerCompletionInput> {
 	if (!workerStart.outputFile) {
 		return {
 			workerStart,
@@ -74,8 +74,8 @@ async function collectPiWorkerOutputFile(
 	}
 }
 
-export function normalizePiWorkerCompletion(
-	input: PiWorkerCompletionInput,
+export function normalizeWorkerCompletion(
+	input: WorkerCompletionInput,
 ): ImplementationWorkerReportInput {
 	const parsed = parseCompletionOutput(input.output);
 	const data = parsed.data;
@@ -179,7 +179,7 @@ function parseJsonObject(value: string): Record<string, unknown> | undefined {
 }
 
 function completionStatus(
-	input: PiWorkerCompletionInput,
+	input: WorkerCompletionInput,
 	parsed: ParsedCompletionOutput,
 ): ImplementationWorkerReportInput["status"] {
 	if (input.workerStart.status === "cancelled") return "cancelled";
@@ -196,7 +196,7 @@ function completionStatus(
 }
 
 function completionPlanningRefs(
-	input: PiWorkerCompletionInput,
+	input: WorkerCompletionInput,
 	data: Record<string, unknown>,
 ): string[] {
 	const refs = unique([
@@ -208,7 +208,7 @@ function completionPlanningRefs(
 }
 
 function completionSession(
-	input: PiWorkerCompletionInput,
+	input: WorkerCompletionInput,
 	data: Record<string, unknown>,
 ): Partial<ImplementationWorkerReportInput> {
 	return {
@@ -224,7 +224,7 @@ function completionSession(
 }
 
 function completionMessage(
-	input: PiWorkerCompletionInput,
+	input: WorkerCompletionInput,
 	data: Record<string, unknown>,
 	parsed: ParsedCompletionOutput,
 ): Partial<ImplementationWorkerReportInput> {

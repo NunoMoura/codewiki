@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiImplement } from "../../src/api/wiki-implement.ts";
-import { collectPiWorkerReports } from "../../src/pi/worker-reports.ts";
+import { collectWorkerReports } from "../../src/runtime/workers/reports.ts";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims/events.ts";
 import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/claims/work-unit-events.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
@@ -385,7 +385,7 @@ describe("wiki_implement core facade", () => {
 			const expectedWorkStateDigest = (
 				await buildProjectWorkState({ repoRoot: root })
 			).snapshotDigest;
-			const workerReports = collectPiWorkerReports([
+			const workerReports = collectWorkerReports([
 				{
 					workerStart: {
 						workerId: "pi-worker-001",

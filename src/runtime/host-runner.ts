@@ -23,15 +23,15 @@ import {
 	type RunWikiRuntimeResult,
 } from "../api/wiki-runtime.ts";
 import {
-	startPiWorkers,
-	type PiWorkerStartResult,
-	type PiWorkerSessionFactory,
-} from "../pi/worker-start.ts";
+	startWorkers,
+	type WorkerStartResult,
+	type WorkerSessionFactory,
+} from "./workers/start.ts";
 import {
-	collectPiWorkerOutputFiles,
-	collectPiWorkerReports,
-	type PiWorkerCompletionInput,
-} from "../pi/worker-reports.ts";
+	collectWorkerOutputFiles,
+	collectWorkerReports,
+	type WorkerCompletionInput,
+} from "./workers/reports.ts";
 import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
 import { resolveWikiConfig } from "../project/config.ts";
 import { buildProjectWorkState } from "../work-state/project.ts";
@@ -78,8 +78,8 @@ interface PreviewRuntimeHostHandoffResult {
 type RuntimeHostCompletionCollector = (input: {
 	runtime: RunWikiRuntimeResult;
 	handoff: RuntimeHandoffManifest;
-	workers: PiWorkerStartResult[];
-}) => Promise<PiWorkerCompletionInput[]> | PiWorkerCompletionInput[];
+	workers: WorkerStartResult[];
+}) => Promise<WorkerCompletionInput[]> | WorkerCompletionInput[];
 
 type RuntimeHostImplementationInput = Omit<
 	RunWikiImplementInput,
@@ -92,7 +92,7 @@ const WORKTREE_PREPARE_PHASE: RuntimeHostWorktreePhase = "prepare";
 const WORKTREE_CLEANUP_PHASE: RuntimeHostWorktreePhase = "cleanup";
 
 interface ResumeRuntimeHostWorkerSessionsInput {
-	sessionFactory: PiWorkerSessionFactory;
+	sessionFactory: WorkerSessionFactory;
 	workerStatuses: RuntimeDisposableWorkerStatus[];
 	supervision?: RuntimeHostSupervision;
 	currentExecutionPoliciesByWorkUnit?: Record<
@@ -110,7 +110,7 @@ export interface WatchRuntimeHostWorkerSessionsInput
 
 export interface WatchRuntimeHostWorkerSessionsResult {
 	workerStatuses: RuntimeDisposableWorkerStatus[];
-	completions: PiWorkerCompletionInput[];
+	completions: WorkerCompletionInput[];
 	workerReports: ImplementationWorkerReportInput[];
 	hostErrors: CodewikiHostError[];
 	releaseCheck: RuntimeHostReleaseCheck;
@@ -129,7 +129,7 @@ type WorkerExecutionContextOverrides = Partial<
 interface RunRuntimeHostOnceInput {
 	runtime: RunWikiRuntimeInput;
 	implementation?: RuntimeHostImplementationInput;
-	sessionFactory: PiWorkerSessionFactory;
+	sessionFactory: WorkerSessionFactory;
 	completionCollector?: RuntimeHostCompletionCollector;
 	gitStatus?: GitStatusSnapshotInput | GitStatusSnapshot | false;
 	promptPrefix?: string;
@@ -176,8 +176,8 @@ interface RunRuntimeHostOnceResult {
 	gitStatus?: GitStatusSnapshot;
 	runtime: RunWikiRuntimeResult;
 	handoff: RuntimeHandoffManifest;
-	workers: PiWorkerStartResult[];
-	completions: PiWorkerCompletionInput[];
+	workers: WorkerStartResult[];
+	completions: WorkerCompletionInput[];
 	workerReports: ImplementationWorkerReportInput[];
 	workerStatuses: RuntimeDisposableWorkerStatus[];
 	implementationPreviews: RunWikiImplementResult[];
@@ -250,10 +250,10 @@ export async function watchRuntimeHostWorkerSessions(
 			},
 		};
 	}
-	const completions = await collectPiWorkerOutputFiles(
+	const completions = await collectWorkerOutputFiles(
 		terminal.map(workerStartFromStatus),
 	);
-	const workerReports = collectPiWorkerReports(completions);
+	const workerReports = collectWorkerReports(completions);
 	const hostErrors = completionHostErrors(completions, workerReports);
 	const releaseCheck = releaseCheckForHostCompletion(workerReports, []);
 	return {
@@ -305,7 +305,7 @@ function detachedHostErrors(
 
 function workerStartFromStatus(
 	status: RuntimeDisposableWorkerStatus,
-): PiWorkerStartResult {
+): WorkerStartResult {
 	return {
 		workerId: status.workerId,
 		workUnitId: status.workUnitId,
@@ -485,8 +485,8 @@ async function prepareHostWorkerStart(
 function startHostWorkers(
 	input: RunRuntimeHostOnceInput,
 	workerStartContext: RuntimeHostWorkerStartContext,
-): Promise<PiWorkerStartResult[]> {
-	return startPiWorkers(workerStartContext.runtime.plan, {
+): Promise<WorkerStartResult[]> {
+	return startWorkers(workerStartContext.runtime.plan, {
 		claimEvents: workerStartContext.claimEvents,
 		sessionFactory: policyAwareSessionFactory(
 			input.sessionFactory,
@@ -566,9 +566,9 @@ function assertStableWorkerSelection(
 }
 
 function policyAwareSessionFactory(
-	factory: PiWorkerSessionFactory,
+	factory: WorkerSessionFactory,
 	policies: Record<string, WorkerExecutionPolicySnapshot>,
-): PiWorkerSessionFactory {
+): WorkerSessionFactory {
 	return {
 		create(sessionInput) {
 			const executionPolicy = policies[sessionInput.workUnitId];
@@ -691,7 +691,7 @@ function worktreeFailureHostResult(
 async function failedStartHostResult(
 	input: RunRuntimeHostOnceInput,
 	workerStartContext: RuntimeHostWorkerStartContext,
-	workers: PiWorkerStartResult[],
+	workers: WorkerStartResult[],
 ): Promise<RunRuntimeHostOnceResult | undefined> {
 	const failedStartReleaseBatch = failedStartBatch(
 		input,
@@ -747,14 +747,14 @@ async function maybeAppendFailedStartReleases(
 async function completeRuntimeHostOnce(
 	input: RunRuntimeHostOnceInput,
 	workerStartContext: RuntimeHostWorkerStartContext,
-	workers: PiWorkerStartResult[],
+	workers: WorkerStartResult[],
 ): Promise<RunRuntimeHostOnceResult> {
 	const completions = await collectHostWorkerCompletions(
 		input,
 		workerStartContext,
 		workers,
 	);
-	const workerReports = collectPiWorkerReports(completions);
+	const workerReports = collectWorkerReports(completions);
 	const hostErrors = completionHostErrors(completions, workerReports);
 	const implementationPreviews = await implementationPreviewsForHostOnce(
 		input,
@@ -774,8 +774,8 @@ async function completeRuntimeHostOnce(
 async function collectHostWorkerCompletions(
 	input: RunRuntimeHostOnceInput,
 	workerStartContext: RuntimeHostWorkerStartContext,
-	workers: PiWorkerStartResult[],
-): Promise<PiWorkerCompletionInput[]> {
+	workers: WorkerStartResult[],
+): Promise<WorkerCompletionInput[]> {
 	if (input.completionCollector) {
 		return await input.completionCollector({
 			runtime: workerStartContext.runtime,
@@ -783,11 +783,11 @@ async function collectHostWorkerCompletions(
 			workers,
 		});
 	}
-	return await collectPiWorkerOutputFiles(workers);
+	return await collectWorkerOutputFiles(workers);
 }
 
 function completionHostErrors(
-	completions: PiWorkerCompletionInput[],
+	completions: WorkerCompletionInput[],
 	workerReports: ImplementationWorkerReportInput[],
 ): CodewikiHostError[] {
 	return workerReports.flatMap((result, index): CodewikiHostError[] => {
@@ -816,7 +816,7 @@ function completionHostErrors(
 }
 
 function completionHostErrorKind(
-	completion: PiWorkerCompletionInput | undefined,
+	completion: WorkerCompletionInput | undefined,
 	result: ImplementationWorkerReportInput,
 ): CodewikiHostErrorKind | undefined {
 	const message = String(result.message || completion?.error || "");
@@ -836,7 +836,7 @@ function completionHostErrorKind(
 }
 
 function completionHostErrorMessage(
-	completion: PiWorkerCompletionInput | undefined,
+	completion: WorkerCompletionInput | undefined,
 	result: ImplementationWorkerReportInput,
 ): string {
 	return [
@@ -858,7 +858,7 @@ async function resolveGitStatus(
 async function implementationPreviewsForHostOnce(
 	input: RunRuntimeHostOnceInput,
 	_claimEvents: TraceEvent[],
-	completions: PiWorkerCompletionInput[],
+	completions: WorkerCompletionInput[],
 	workerReports: ImplementationWorkerReportInput[],
 ): Promise<RunWikiImplementResult[]> {
 	return await runHostImplementationReports(
@@ -873,7 +873,7 @@ async function implementationAppendsForHostOnce(
 	input: RunRuntimeHostOnceInput,
 	_runtime: RunWikiRuntimeResult,
 	_claimEvents: TraceEvent[],
-	completions: PiWorkerCompletionInput[],
+	completions: WorkerCompletionInput[],
 	workerReports: ImplementationWorkerReportInput[],
 ): Promise<RunWikiImplementResult[]> {
 	return await runHostImplementationReports(
@@ -887,7 +887,7 @@ async function implementationAppendsForHostOnce(
 async function runHostImplementationReports(
 	input: RunRuntimeHostOnceInput,
 	mode: "preview" | "append",
-	_completions: PiWorkerCompletionInput[],
+	_completions: WorkerCompletionInput[],
 	workerReports: ImplementationWorkerReportInput[],
 ): Promise<RunWikiImplementResult[]> {
 	if (!input.implementation) return [];
@@ -1081,7 +1081,7 @@ async function maybeAppendReleases(
 }
 
 function failedStartReleaseCheck(
-	workers: PiWorkerStartResult[],
+	workers: WorkerStartResult[],
 ): RuntimeHostReleaseCheck {
 	return {
 		status: "blocked",
@@ -1134,7 +1134,7 @@ function worktreeFailureRemediation(
 
 function failedStartRemediation(
 	releaseCheck: RuntimeHostReleaseCheck,
-	workers: PiWorkerStartResult[],
+	workers: WorkerStartResult[],
 ): RuntimeHostRemediation {
 	const hostErrors = workerStartHostErrors(workers);
 	return {
@@ -1154,7 +1154,7 @@ function failedStartRemediation(
 }
 
 function workerStartHostErrors(
-	workers: PiWorkerStartResult[],
+	workers: WorkerStartResult[],
 ): CodewikiHostError[] {
 	return workers
 		.filter((worker) => worker.status === "failed")
@@ -1442,7 +1442,7 @@ function releaseCheckForImplementation(
 }
 
 function releaseInputs(
-	completions: PiWorkerCompletionInput[],
+	completions: WorkerCompletionInput[],
 	workerReports: ImplementationWorkerReportInput[],
 	hostErrors: CodewikiHostError[],
 ) {
@@ -1514,7 +1514,7 @@ function releaseExpectedBytesByTrace(
 function failedStartBatch(
 	input: RunRuntimeHostOnceInput,
 	runtime: RunWikiRuntimeResult,
-	workers: PiWorkerStartResult[],
+	workers: WorkerStartResult[],
 	claimEvents: TraceEvent[],
 ): RuntimeWorkUnitClaimEventBatch | undefined {
 	const failures = workers.filter((worker) => worker.status === "failed");
@@ -1613,7 +1613,7 @@ async function recordClaimObservations(
 
 async function recordWorkerStarts(
 	input: RunRuntimeHostOnceInput,
-	workers: PiWorkerStartResult[],
+	workers: WorkerStartResult[],
 ): Promise<void> {
 	await Promise.all(
 		workers.map((worker, index) =>

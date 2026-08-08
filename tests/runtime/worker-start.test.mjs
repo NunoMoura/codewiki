@@ -4,10 +4,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import {
-	createPiWorkerPrompt,
-	startPiRuntimeWorkers,
-	startPiWorkers,
-} from "../../src/pi/worker-start.ts";
+	createWorkerPrompt,
+	startRuntimeWorkers,
+	startWorkers,
+} from "../../src/runtime/workers/start.ts";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { createRuntimeWorkUnitClaimEvents } from "../../src/runtime/claims/work-unit-events.ts";
 import { selectRuntimeWorkUnitClaims } from "../../src/runtime/claims/work-unit-selection.ts";
@@ -71,13 +71,21 @@ function plannedClaimSelection() {
 function workerReportExample(prompt) {
 	const match = /```codewiki-worker-report\n([\s\S]*?)\n```/.exec(prompt);
 	assert.ok(match?.[1]);
-	return JSON.parse(match[1]);
+	try {
+		const value = JSON.parse(match[1]);
+		assert.ok(value && typeof value === "object" && !Array.isArray(value));
+		return value;
+	} catch (error) {
+		assert.fail(
+			`Worker report example is invalid JSON: ${error instanceof Error ? error.message : "unknown parse error"}`,
+		);
+	}
 }
 
-describe("Pi worker-start seam", () => {
+describe("worker-start seam", () => {
 	it("creates scoped implementation worker prompts", () => {
 		const { plan } = plannedClaimSelection();
-		const prompt = createPiWorkerPrompt(plan.selected[0], {
+		const prompt = createWorkerPrompt(plan.selected[0], {
 			promptPrefix: "PREFIX",
 			promptSuffix: "SUFFIX",
 		});
@@ -122,7 +130,7 @@ describe("Pi worker-start seam", () => {
 		};
 		const created = [];
 		const prompts = [];
-		await startPiWorkers(plan, {
+		await startWorkers(plan, {
 			claimEvents: claimBatch.events,
 			sessionFactory: {
 				async create(input) {
@@ -161,7 +169,7 @@ describe("Pi worker-start seam", () => {
 			},
 		};
 
-		const results = await startPiWorkers(plan, {
+		const results = await startWorkers(plan, {
 			claimEvents: claimBatch.events,
 			sessionFactory,
 		});
@@ -210,7 +218,7 @@ describe("Pi worker-start seam", () => {
 
 	it("returns failed worker start results without throwing", async () => {
 		const { plan, claimBatch } = plannedClaimSelection();
-		const results = await startPiWorkers(plan, {
+		const results = await startWorkers(plan, {
 			claimEvents: claimBatch.events,
 			sessionFactory: {
 				async create(input) {
@@ -229,7 +237,7 @@ describe("Pi worker-start seam", () => {
 
 	it("keeps session provenance when prompting fails", async () => {
 		const { plan, claimBatch } = plannedClaimSelection();
-		const results = await startPiWorkers(plan, {
+		const results = await startWorkers(plan, {
 			claimEvents: claimBatch.events,
 			sessionFactory: {
 				async create(input) {
@@ -253,7 +261,7 @@ describe("Pi worker-start seam", () => {
 	it("disposes sessions when requested", async () => {
 		const { plan, claimBatch } = plannedClaimSelection();
 		let disposed = 0;
-		await startPiWorkers(plan, {
+		await startWorkers(plan, {
 			claimEvents: claimBatch.events,
 			disposeSessions: true,
 			sessionFactory: {
@@ -296,7 +304,7 @@ describe("Pi worker-start seam", () => {
 			const created = [];
 			const prompts = [];
 			let disposed = 0;
-			const result = await startPiRuntimeWorkers({
+			const result = await startRuntimeWorkers({
 				runtime: {
 					mode: "append",
 					repoRoot: root,
@@ -382,7 +390,7 @@ describe("Pi worker-start seam", () => {
 				0,
 			);
 			const { queue } = plannedClaimSelection();
-			const result = await startPiRuntimeWorkers({
+			const result = await startRuntimeWorkers({
 				runtime: {
 					mode: "append",
 					repoRoot: root,
@@ -432,7 +440,7 @@ describe("Pi worker-start seam", () => {
 	it("does not start sessions from preview-only runtime", async () => {
 		const { queue } = plannedClaimSelection();
 		let created = 0;
-		const result = await startPiRuntimeWorkers({
+		const result = await startRuntimeWorkers({
 			runtime: {
 				mode: "preview",
 				config: { runtime: { automation: "assist", maxWorkers: 2 } },

@@ -146,12 +146,12 @@ describe("runtime handoff manifest", () => {
 		);
 		assert.equal(
 			manifest.workers[0].completionFeeds,
-			"collectPiWorkerOutputFiles -> collectPiWorkerReports",
+			"collectWorkerOutputFiles -> collectWorkerReports",
 		);
 		assert.equal(manifest.workers[0].implementationInput, "workerReports");
 		assert.equal(
 			manifest.expectedCompletion.collector,
-			"collectPiWorkerOutputFiles -> collectPiWorkerReports",
+			"collectWorkerOutputFiles -> collectWorkerReports",
 		);
 		assert.deepEqual(manifest.expectedCompletion.statusValues, [
 			"completed",

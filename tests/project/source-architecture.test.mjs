@@ -10,7 +10,6 @@ import {
 	LEGACY_SOURCE_FILE_COUNTS,
 	LEGACY_SOURCE_ROOTS,
 	OUTER_ADAPTER_SOURCE_ROOTS,
-	RUNTIME_TO_PI_IMPORT_BASELINE,
 	TARGET_RUNTIME_SUBDIRECTORIES,
 	TARGET_SOURCE_ROOTS,
 } from "../../src/project/source-architecture.ts";
@@ -198,7 +197,7 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("freezes Runtime-to-Pi import debt until adapters invert", () => {
+	it("forbids Runtime-to-Pi imports", () => {
 		const files = sourceFiles();
 		const edges = importEdges(files);
 		const runtimeToPi = [];
@@ -210,7 +209,7 @@ describe("source architecture", () => {
 				}
 			}
 		}
-		assert.deepEqual(runtimeToPi.sort(), [...RUNTIME_TO_PI_IMPORT_BASELINE]);
+		assert.deepEqual(runtimeToPi.sort(), []);
 	});
 
 	it("freezes import-cycle debt until clean cuts remove it", () => {

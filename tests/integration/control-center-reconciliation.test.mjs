@@ -84,7 +84,7 @@ const criterionEvidence = {
 			"src/changes/intake/route.ts",
 			"src/runtime/change-intake.ts",
 			"src/runtime/workers/implementation-adapter.ts",
-			"src/pi/worker-reports.ts",
+			"src/runtime/workers/reports.ts",
 			"src/harnesses/pi/process-worker-adapter.ts",
 			"src/changes/triage/contracts.ts",
 			"src/changes/triage/estimates.ts",

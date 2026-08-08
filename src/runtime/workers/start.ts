@@ -2,22 +2,22 @@ import {
 	runWikiRuntime,
 	type RunWikiRuntimeInput,
 	type RunWikiRuntimeResult,
-} from "../api/wiki-runtime.ts";
-import type { WorktreeRef } from "../git/worktrees.ts";
+} from "../../api/wiki-runtime.ts";
+import type { WorktreeRef } from "../../git/worktrees.ts";
 import {
 	appendRuntimeWorkUnitClaims,
 	createRuntimeFailedWorkerStartReleaseEvents,
 	type RuntimeWorkUnitClaimAppendResult,
 	type RuntimeWorkUnitClaimEventBatch,
-} from "../runtime/claims/work-unit-events.ts";
+} from "../claims/work-unit-events.ts";
 import type {
 	RuntimeWorkUnitClaimCandidate,
 	RuntimeWorkUnitClaimSelection,
-} from "../runtime/claims/work-unit-selection.ts";
-import type { TraceEvent } from "../traces/types.ts";
-import type { WorkerExecutionPolicySnapshot } from "../runtime/workers/execution-policy.ts";
+} from "../claims/work-unit-selection.ts";
+import type { TraceEvent } from "../../traces/types.ts";
+import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
-export interface PiWorkerSession {
+export interface WorkerSession {
 	prompt(
 		text: string,
 		options?: unknown,
@@ -30,20 +30,20 @@ export interface PiWorkerSession {
 	pid?: number;
 }
 
-export interface PiWorkerSessionFactory {
-	create(input: PiWorkerSessionInput): Promise<PiWorkerSession>;
+export interface WorkerSessionFactory {
+	create(input: WorkerSessionInput): Promise<WorkerSession>;
 	resume?(
-		input: PiWorkerSessionResumeInput,
-	): Promise<PiWorkerSessionResumeResult> | PiWorkerSessionResumeResult;
+		input: WorkerSessionResumeInput,
+	): Promise<WorkerSessionResumeResult> | WorkerSessionResumeResult;
 }
 
-export type PiWorkerSessionResumeState =
+export type WorkerSessionResumeState =
 	| "running"
 	| "completed"
 	| "failed"
 	| "detached";
 
-export interface PiWorkerSessionResumeInput {
+export interface WorkerSessionResumeInput {
 	workerId: string;
 	workUnitId: string;
 	traceId: string;
@@ -54,8 +54,8 @@ export interface PiWorkerSessionResumeInput {
 	executionPolicy?: WorkerExecutionPolicySnapshot;
 }
 
-export interface PiWorkerSessionResumeResult {
-	state: PiWorkerSessionResumeState;
+export interface WorkerSessionResumeResult {
+	state: WorkerSessionResumeState;
 	sessionId?: string;
 	sessionFile?: string;
 	outputFile?: string;
@@ -63,7 +63,7 @@ export interface PiWorkerSessionResumeResult {
 	message?: string;
 }
 
-export interface PiWorkerSessionInput {
+export interface WorkerSessionInput {
 	workerId: string;
 	workUnitId: string;
 	traceId: string;
@@ -75,16 +75,16 @@ export interface PiWorkerSessionInput {
 	prompt: string;
 }
 
-export interface PiWorkerStartOptions {
+export interface WorkerStartOptions {
 	claimEvents: TraceEvent[];
-	sessionFactory: PiWorkerSessionFactory;
+	sessionFactory: WorkerSessionFactory;
 	promptPrefix?: string;
 	promptSuffix?: string;
 	disposeSessions?: boolean;
 	promptOptions?: unknown;
 }
 
-export interface PiWorkerStartResult {
+export interface WorkerStartResult {
 	workUnitId: string;
 	workerId: string;
 	traceId: string;
@@ -98,25 +98,25 @@ export interface PiWorkerStartResult {
 	error?: string;
 }
 
-export interface PiRuntimeWorkerStartOptions
-	extends Omit<PiWorkerStartOptions, "claimEvents"> {
+export interface RuntimeWorkerStartOptions
+	extends Omit<WorkerStartOptions, "claimEvents"> {
 	runtime: RunWikiRuntimeInput;
 	releaseFailedStarts?: boolean;
 	failedStartReleaseCreatedAt?: string;
 	failedStartReleaseIdPrefix?: string;
 }
 
-export interface PiRuntimeWorkerStartResult {
+export interface RuntimeWorkerStartResult {
 	runtime: RunWikiRuntimeResult;
-	workers: PiWorkerStartResult[];
+	workers: WorkerStartResult[];
 	failedStartReleaseBatch?: RuntimeWorkUnitClaimEventBatch;
 	failedStartReleaseAppend?: RuntimeWorkUnitClaimAppendResult;
 	skippedReason?: "runtime_mode_not_append" | "no_claim_events";
 }
 
-export async function startPiRuntimeWorkers(
-	options: PiRuntimeWorkerStartOptions,
-): Promise<PiRuntimeWorkerStartResult> {
+export async function startRuntimeWorkers(
+	options: RuntimeWorkerStartOptions,
+): Promise<RuntimeWorkerStartResult> {
 	const runtime = await runWikiRuntime(options.runtime);
 	if (runtime.mode !== "append") {
 		return { runtime, workers: [], skippedReason: "runtime_mode_not_append" };
@@ -125,7 +125,7 @@ export async function startPiRuntimeWorkers(
 	if (claimEvents.length === 0) {
 		return { runtime, workers: [], skippedReason: "no_claim_events" };
 	}
-	const workers = await startPiWorkers(runtime.plan, {
+	const workers = await startWorkers(runtime.plan, {
 		claimEvents,
 		sessionFactory: options.sessionFactory,
 		promptPrefix: options.promptPrefix,
@@ -145,15 +145,15 @@ export async function startPiRuntimeWorkers(
 	return { runtime, workers, ...release };
 }
 
-export async function startPiWorkers(
+export async function startWorkers(
 	plan: RuntimeWorkUnitClaimSelection,
-	options: PiWorkerStartOptions,
-): Promise<PiWorkerStartResult[]> {
+	options: WorkerStartOptions,
+): Promise<WorkerStartResult[]> {
 	const claimMetadata = claimMetadataByWorkUnit(options.claimEvents);
 	return Promise.all(
 		plan.selected.map((item) => {
 			const metadata = claimMetadata.get(item.workUnitId);
-			return startPiWorkerAssignment({
+			return startWorkerAssignment({
 				item: {
 					...item,
 					...(metadata?.worktree ? { worktree: metadata.worktree } : {}),
@@ -166,9 +166,9 @@ export async function startPiWorkers(
 	);
 }
 
-export function createPiWorkerPrompt(
+export function createWorkerPrompt(
 	item: RuntimeWorkUnitClaimCandidate,
-	options: Pick<PiWorkerStartOptions, "promptPrefix" | "promptSuffix"> = {},
+	options: Pick<WorkerStartOptions, "promptPrefix" | "promptSuffix"> = {},
 ): string {
 	return [
 		options.promptPrefix,
@@ -242,20 +242,20 @@ export function createPiWorkerPrompt(
 		.join("\n");
 }
 
-export interface PiWorkerAssignmentStartInput {
+export interface WorkerAssignmentStartInput {
 	item: RuntimeWorkUnitClaimCandidate;
 	workerId: string;
 	prompt?: string;
 	claimId?: string;
 	signal?: AbortSignal;
-	options: PiWorkerStartOptions;
+	options: WorkerStartOptions;
 }
 
-export async function startPiWorkerAssignment(
-	input: PiWorkerAssignmentStartInput,
-): Promise<PiWorkerStartResult> {
-	const prompt = input.prompt || createPiWorkerPrompt(input.item, input.options);
-	let session: PiWorkerSession | undefined;
+export async function startWorkerAssignment(
+	input: WorkerAssignmentStartInput,
+): Promise<WorkerStartResult> {
+	const prompt = input.prompt || createWorkerPrompt(input.item, input.options);
+	let session: WorkerSession | undefined;
 	try {
 		session = await input.options.sessionFactory.create({
 			workerId: input.workerId,
@@ -304,13 +304,13 @@ export async function startPiWorkerAssignment(
 async function releaseFailedWorkerStarts(input: {
 	runtime: RunWikiRuntimeResult;
 	repoRoot?: string;
-	workers: PiWorkerStartResult[];
+	workers: WorkerStartResult[];
 	claimEvents: TraceEvent[];
 	createdAt?: string;
 	releaseIdPrefix?: string;
 }): Promise<
 	Pick<
-		PiRuntimeWorkerStartResult,
+		RuntimeWorkerStartResult,
 		"failedStartReleaseBatch" | "failedStartReleaseAppend"
 	>
 > {

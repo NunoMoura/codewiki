@@ -94,12 +94,6 @@ export const FORBIDDEN_RUNTIME_SUBDIRECTORIES = [
 	"loop-exit",
 ] as const;
 
-export const RUNTIME_TO_PI_IMPORT_BASELINE = [
-	"src/runtime/handoff.ts -> src/pi/worker-start.ts",
-	"src/runtime/host-runner.ts -> src/pi/worker-reports.ts",
-	"src/runtime/host-runner.ts -> src/pi/worker-start.ts",
-] as const;
-
 export const IMPORT_CYCLE_BASELINE = [
 	"src/evidence/obligation-resolution.ts | src/evidence/obligations.ts",
 	"src/git/worktrees.ts | src/runtime/claims/work-unit-selection.ts",

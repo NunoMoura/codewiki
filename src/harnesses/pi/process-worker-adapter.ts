@@ -16,15 +16,15 @@ import {
 	type PiProcessSessionFactoryOptions,
 } from "../../pi/process-session.ts";
 import {
-	collectPiWorkerDiscoveries,
-	collectPiWorkerOutputFiles,
-	collectPiWorkerReports,
-	type PiWorkerCompletionInput,
-} from "../../pi/worker-reports.ts";
+	collectWorkerDiscoveries,
+	collectWorkerOutputFiles,
+	collectWorkerReports,
+	type WorkerCompletionInput,
+} from "../../runtime/workers/reports.ts";
 import {
-	startPiWorkerAssignment,
-	type PiWorkerSessionFactory,
-} from "../../pi/worker-start.ts";
+	startWorkerAssignment,
+	type WorkerSessionFactory,
+} from "../../runtime/workers/start.ts";
 
 export interface PiProcessImplementationWorkerAdapterOptions {
 	process?: PiProcessSessionFactoryOptions;
@@ -67,7 +67,7 @@ async function executePiProcessWorker(
 		outputFile,
 	});
 	const sessionFactory = policySessionFactory(processFactory, assignment);
-	const workerStart = await startPiWorkerAssignment({
+	const workerStart = await startWorkerAssignment({
 		item: {
 			workUnitId: assignment.workItemId,
 			traceId: assignment.traceId,
@@ -88,21 +88,21 @@ async function executePiProcessWorker(
 			promptOptions: options.promptOptions,
 		},
 	});
-	let completions: PiWorkerCompletionInput[];
+	let completions: WorkerCompletionInput[];
 	let implementationEvidence;
 	try {
 		await assertBoundedFile(outputFile, 2 * 1024 * 1024, "worker output");
-		completions = await collectPiWorkerOutputFiles([workerStart]);
-		implementationEvidence = collectPiWorkerReports(completions)[0];
+		completions = await collectWorkerOutputFiles([workerStart]);
+		implementationEvidence = collectWorkerReports(completions)[0];
 	} catch (error) {
 		if (workerStart.status !== "cancelled" || !isNotFound(error)) throw error;
 		completions = [{workerStart}];
-		implementationEvidence = collectPiWorkerReports(completions)[0];
+		implementationEvidence = collectWorkerReports(completions)[0];
 	}
 	if (!implementationEvidence) {
 		throw new Error("Pi process worker did not produce a normalized report.");
 	}
-	const discoveries = collectPiWorkerDiscoveries(completions);
+	const discoveries = collectWorkerDiscoveries(completions);
 	const reportWithoutRef = {
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
@@ -128,9 +128,9 @@ function recoverPiProcessWorker(
 }
 
 function policySessionFactory(
-	factory: PiWorkerSessionFactory,
+	factory: WorkerSessionFactory,
 	assignment: ImplementationWorkerAssignment,
-): PiWorkerSessionFactory {
+): WorkerSessionFactory {
 	if (!assignment.executionPolicy) return factory;
 	return {
 		create(input) {
