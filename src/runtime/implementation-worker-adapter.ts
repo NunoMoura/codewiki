@@ -3,6 +3,7 @@ import type { ImplementationWorkerReportInput } from "../implementation/workers.
 import type { ChangeIntakeContent } from "../changes/intake/contracts.ts";
 import { normalizeChangeIntakeContent } from "../changes/intake/normalize.ts";
 import type { WorktreeRef } from "../git/worktrees.ts";
+import type { WorkerExecutionPort } from "../harnesses/ports.ts";
 import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
 export const IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION = 1 as const;
@@ -51,16 +52,13 @@ export interface ImplementationWorkerAdapterAvailability {
 	reason?: string;
 }
 
-export interface ImplementationWorkerAdapter {
+export interface ImplementationWorkerAdapter
+	extends WorkerExecutionPort<
+		ImplementationWorkerAssignment,
+		ImplementationWorkerReport,
+		ImplementationWorkerAdapterAvailability
+	> {
 	isolationKinds?: readonly ImplementationWorkerAssignment["isolation"]["kind"][];
-	availability?(): Promise<ImplementationWorkerAdapterAvailability>;
-	execute(
-		assignment: ImplementationWorkerAssignment,
-		signal: AbortSignal,
-	): Promise<ImplementationWorkerReport>;
-	recover(
-		assignment: ImplementationWorkerAssignment,
-	): Promise<ImplementationWorkerReport | undefined>;
 }
 
 export function implementationWorkerJobId(

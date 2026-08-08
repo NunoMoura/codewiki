@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../src/index.ts";
+import * as packageApi from "../src/index.ts";
 import * as publicApi from "../src/api/index.ts";
 import { traceTmpPath } from "../src/runtime/tmp.ts";
 import packageJson from "../package.json" with { type: "json" };
@@ -17,8 +18,15 @@ describe("fresh scaffold", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 	});
 
-	it("keeps the package root and API facade acyclic", () => {
+	it("keeps the package root harness-neutral and the API facade acyclic", () => {
 		assert.match(sourceIndex, /export \* from "\.\/api\/index\.ts"/);
+		assert.doesNotMatch(sourceIndex, /from "\.\/pi\//);
+		assert.equal(
+			Object.keys(packageApi).some(
+				(name) => name.startsWith("Pi") || name.startsWith("createPi"),
+			),
+			false,
+		);
 		assert.doesNotMatch(apiIndex, /from "\.\.\/index\.ts"/);
 	});
 

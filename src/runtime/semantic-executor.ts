@@ -19,6 +19,7 @@ import {
 } from "../decision/candidate-proposal.ts";
 import type { ChangeDecisionAuthority } from "../decision/change-quality.ts";
 import { TraceAppendConflictError } from "../error-handling/trace-errors.ts";
+import type { CandidateProducerPort } from "../harnesses/ports.ts";
 import {
 	parseImplementationCandidateContent,
 	type ImplementationCandidateContent,
@@ -86,15 +87,18 @@ export interface RuntimeImplementationInvocation {
 }
 
 export interface RuntimeSemanticAdapters {
-	decision?: (
-		input: RuntimeDecisionInvocation,
-	) => DecisionCandidateProposal | Promise<DecisionCandidateProposal>;
-	planning?: (
-		input: RuntimePlanningInvocation,
-	) => PlanningCandidateContent | Promise<PlanningCandidateContent>;
-	implementation?: (
-		input: RuntimeImplementationInvocation,
-	) => ImplementationCandidateContent | Promise<ImplementationCandidateContent>;
+	decision?: CandidateProducerPort<
+		RuntimeDecisionInvocation,
+		DecisionCandidateProposal
+	>;
+	planning?: CandidateProducerPort<
+		RuntimePlanningInvocation,
+		PlanningCandidateContent
+	>;
+	implementation?: CandidateProducerPort<
+		RuntimeImplementationInvocation,
+		ImplementationCandidateContent
+	>;
 }
 
 export type RuntimeSemanticOutcome =

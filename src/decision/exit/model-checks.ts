@@ -7,6 +7,7 @@ import {
 } from "../../evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../evidence/materialize.ts";
 import {modelConclusionEvidenceMeasurement} from "../../evidence/model-assessment.ts";
+import type {ModelCheckEvaluatorPort} from "../../harnesses/ports.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
 import type {CheckCatalog} from "../../verification/catalog.ts";
 import {
@@ -110,12 +111,10 @@ export type DecisionModelCheckObservation =
 			readonly observedAt: string;
 	  };
 
-export interface DecisionModelCheckTransport {
-	readonly execute: (
-		request: DecisionModelCheckRequest,
-		options: {readonly signal: AbortSignal; readonly timeoutMs: number},
-	) => Promise<DecisionModelCheckObservation>;
-}
+export type DecisionModelCheckTransport = ModelCheckEvaluatorPort<
+	DecisionModelCheckRequest,
+	DecisionModelCheckObservation
+>;
 
 interface CreateDecisionModelCheckExecutorsInput {
 	readonly catalog: CheckCatalog;

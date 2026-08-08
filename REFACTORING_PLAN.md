@@ -50,15 +50,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 
 ## Work slices
 
-### 1. Define harness-neutral execution ports
-
-- [ ] Define exact Candidate producer, Model Check evaluator, worker, cancellation, usage, structured-output, repository-read, workbench-mutation, and session-isolation ports.
-- [ ] Keep port declarations in semantic or shared interface owners; Runtime supplies orchestration and Harness packages supply implementations.
-- [ ] Represent missing capabilities as `unavailable` or `indeterminate`; never weaken policy.
-- [ ] Remove Pi types from harness-neutral root exports and core contracts.
-- [ ] Add contract and dependency-boundary tests before adapter moves.
-
-### 2. Rehome generic Runtime mechanics
+### 1. Rehome generic Runtime mechanics
 
 - [ ] Move generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, lifecycle, and effects into responsibility-named Runtime subdirectories.
 - [ ] Remove `src/runtime/loop-exit-runtime.ts` by moving Loop-specific bindings to their Loop owner and retaining only generic Runtime ports.
@@ -66,7 +58,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [ ] Preserve exact identity, freshness, expected-head CAS, replay, recovery, and guarded-effect behavior.
 - [ ] Update callers and tests atomically; leave no old-path re-export.
 
-### 3. Split Pi client and harness ownership
+### 2. Split Pi client and harness ownership
 
 - [ ] Move user-facing Pi commands, tools, prompts, TUI, rendering, and coordinator clients to `src/clients/pi/**`.
 - [ ] Move Candidate production, Model Check sessions, process workers, and execution adapters to `src/harnesses/pi/**`.
@@ -75,7 +67,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [ ] Eliminate the frozen Runtime-to-Pi imports through injected ports.
 - [ ] Narrow package exports and update packed-install tests.
 
-### 4. Replace Lab with external paired benchmarks
+### 3. Replace Lab with external paired benchmarks
 
 - [ ] Move supported measurement code from `src/benchmarks/**` to repository-root `benchmarks/**`.
 - [ ] Preserve only externally-oracled paired harness trials in `alone` and `codewiki` modes.
@@ -84,7 +76,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [ ] Benchmark every supported executable harness with controlled task, repository, model/provider, tools, network, budget, timeout, concurrency, retries, environment, and trial count.
 - [ ] Block release on false exits, unauthorized effects, or escaped critical defects regardless of aggregate score.
 
-### 5. Add explicit GitHub issue intake
+### 4. Add explicit GitHub issue intake
 
 - [ ] Extend `user_suggestion` with a digest-bound provider-issue binding.
 - [ ] Implement explicit authenticated `codewiki change import-github-issue owner/repository#123` for the configured repository only.
@@ -92,7 +84,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [ ] Treat issue content as untrusted, reject secret-like material, and preserve exact snapshot digest and idempotent re-import.
 - [ ] Do not automatically select imported material for Decision.
 
-### 6. Cut Change Trace, WorkState, and Alignment paths
+### 5. Cut Change Trace, WorkState, and Alignment paths
 
 - [ ] Move canonical Change protocol, encoding, manifests, reduction, and replay to `src/changes/trace/**`.
 - [ ] Move Alignment Graph and bounded queries to `src/alignment/**`.
@@ -100,7 +92,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [ ] Delete intermediate `src/change-trace/**`, legacy `src/traces/**`, legacy ChangeRecord paths, obsolete WorkState paths, and generic `src/views/**` after callers move.
 - [ ] Preserve append-only history, deterministic replay, projection provenance, and synchronization behavior.
 
-### 7. Finish semantic Loop clean cuts
+### 6. Finish semantic Loop clean cuts
 
 - [ ] Replace legacy Decision count/Quality paths with native Candidate, Evidence, Result, Exit Report, and route semantics under `src/decision/**`.
 - [ ] Complete native Planning semantics under `src/planning/**` without a Runtime Planning policy package.
@@ -108,13 +100,13 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [ ] Delete `src/loops/**` and all remaining legacy Quality modules only after replacement tests pass.
 - [ ] Preserve exactly three semantic Loops.
 
-### 8. Expose bounded agent query tools
+### 7. Expose bounded agent query tools
 
 - [ ] Stabilize `wiki_state`, `wiki_context`, `wiki_attention`, `wiki_explain`, and `wiki_change` over completed owner paths.
 - [ ] Make every query read-only, bounded, snapshot-bound, and provenance-bearing, with explicit coverage, truncation, and staleness.
 - [ ] Do not expose arbitrary Cypher, traversal DSL, graph dump, graph mutation, or generic Knowledge mutation.
 
-### 9. Complete UI assurance and Dashboard last
+### 8. Complete UI assurance and Dashboard last
 
 - [ ] Freeze Dashboard query, command, freshness, idempotency, and authority contracts over completed Runtime projections.
 - [ ] Remove dashboard-local workflow truth and legacy Trace/session assumptions.
@@ -122,7 +114,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [ ] Add Candidate-bound preview Evidence, independent experience review, and authenticated approval where policy requires it.
 - [ ] Validate keyboard, assistive technology, reduced motion, contrast, bounded rendering, reconnect, reset, and actionable failure states.
 
-### 10. External proof and release gates
+### 9. External proof and release gates
 
 - [ ] Run real Gitleaks, Semgrep, and offline Trivy profiles with exact production receipts.
 - [ ] Run sealed scanner/evaluator calibration against off-repository human-labeled cases.

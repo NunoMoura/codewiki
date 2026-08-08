@@ -2,6 +2,7 @@ export * from "./api/index.ts";
 export * from "./change-trace/index.ts";
 export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
+export * from "./harnesses/ports.ts";
 export * from "./verification/custom-checks/index.ts";
 export * from "./verification/verification-capabilities.ts";
 export * from "./verification/standard-evidence-checks.ts";
@@ -20,14 +21,6 @@ export {
 	materializeDecisionApprovalReceipt,
 	materializeDecisionResidualRiskApprovalReceipt,
 } from "./decision/exit/evidence.ts";
-export * from "./pi/user-standard-distillation-session.ts";
-export {
-	PI_NATIVE_DECISION_HOST_PROTOCOL,
-	createPiNativeDecisionStartOptions,
-	resolvePiDecisionSelectionAuthority,
-	type PiNativeDecisionHostOptions,
-	type PiNativeDecisionResearchOptions,
-} from "./pi/native-decision-host.ts";
 export {
 	DECISION_RESEARCH_COLLECTION_PROTOCOL,
 	collectDecisionResearchEvidence,

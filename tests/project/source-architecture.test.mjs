@@ -118,6 +118,10 @@ describe("source architecture", () => {
 		]);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("verification"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("alignment"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("clients"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("harnesses"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("benchmarks"), false);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("pi"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("loop-exit"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("traces"), false);
 	});

@@ -9,6 +9,7 @@ export const CURRENT_SOURCE_ROOTS = [
 	"error-handling",
 	"evidence",
 	"git",
+	"harnesses",
 	"implementation",
 	"knowledge",
 	"verification",
@@ -25,18 +26,16 @@ export const CURRENT_SOURCE_ROOTS = [
 ] as const;
 
 export const TARGET_SOURCE_ROOTS = [
+	"alignment",
 	"api",
-	"benchmarks",
 	"changes",
-	"cli",
-	"dashboard",
+	"clients",
 	"decision",
-	"error-handling",
 	"evidence",
 	"git",
+	"harnesses",
 	"implementation",
 	"knowledge",
-	"pi",
 	"planning",
 	"preview",
 	"project",
@@ -44,7 +43,6 @@ export const TARGET_SOURCE_ROOTS = [
 	"utils",
 	"verification",
 	"work-state",
-	"alignment",
 ] as const;
 
 export const LEGACY_SOURCE_ROOTS = [
@@ -65,6 +63,7 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"api",
 	"cli",
 	"dashboard",
+	"harnesses",
 	"pi",
 	"preview",
 ] as const;
