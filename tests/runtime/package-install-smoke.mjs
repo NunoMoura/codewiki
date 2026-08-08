@@ -120,6 +120,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "coordinator-entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-options.js")), true);

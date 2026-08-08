@@ -3,7 +3,7 @@ import type { TraceHostTarget } from "./trace-host-runner.ts";
 import {
 	resolveExecutionPolicy,
 	type ResolvedExecutionPolicy,
-} from "./execution-policy.ts";
+} from "./workers/execution-policy.ts";
 
 export interface TraceExecutionPolicyInput {
 	target: TraceHostTarget;

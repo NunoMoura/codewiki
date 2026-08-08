@@ -41,7 +41,7 @@ import {
 	workerExecutionPolicySnapshot,
 	type ExecutionPolicyContext,
 	type WorkerExecutionPolicySnapshot,
-} from "./execution-policy.ts";
+} from "./workers/execution-policy.ts";
 import { appendDevLogEntry } from "./dev-log.ts";
 import {
 	appendRuntimeWorkUnitClaims,

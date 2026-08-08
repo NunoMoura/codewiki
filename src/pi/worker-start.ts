@@ -15,7 +15,7 @@ import type {
 	RuntimeWorkUnitClaimSelection,
 } from "../runtime/claims/work-unit-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
-import type { WorkerExecutionPolicySnapshot } from "../runtime/execution-policy.ts";
+import type { WorkerExecutionPolicySnapshot } from "../runtime/workers/execution-policy.ts";
 
 export interface PiWorkerSession {
 	prompt(

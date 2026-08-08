@@ -15,7 +15,7 @@ import {
 	type WorkerExecutionPolicySnapshot,
 	type WorkerExecutionVerification,
 	type WorkerExecutionUsage,
-} from "../runtime/execution-policy.ts";
+} from "../runtime/workers/execution-policy.ts";
 import type {
 	PiWorkerSession,
 	PiWorkerSessionFactory,

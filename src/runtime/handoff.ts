@@ -12,7 +12,7 @@ import type {
 	RuntimeWorkUnitClaimSelection,
 } from "./claims/work-unit-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
-import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
+import type { WorkerExecutionPolicySnapshot } from "./workers/execution-policy.ts";
 
 export type RuntimeHandoffSchemaVersion = "codewiki.runtime.handoff.v2";
 export type RuntimeDisposableWorkerState =

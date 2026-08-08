@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { resolveWikiConfig } from "../../src/project/config.ts";
-import { resolveExecutionPolicy } from "../../src/runtime/execution-policy.ts";
+import { resolveExecutionPolicy } from "../../src/runtime/workers/execution-policy.ts";
 
 const tools = ["wiki_state", "wiki_plan", "wiki_implement", "wiki_archive"];
 

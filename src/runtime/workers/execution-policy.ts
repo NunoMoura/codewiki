@@ -4,7 +4,7 @@ import type {
 	WikiConfigAgencyLevel,
 	WikiModelQuality,
 	WikiModelRouteConfig,
-} from "../project/config.ts";
+} from "../../project/config.ts";
 
 export type ExecutionRisk = "low" | "medium" | "high" | "critical";
 export type ExecutionTarget =

@@ -5,7 +5,7 @@ import {
 	type RuntimeHostLifecyclePlan,
 } from "../runtime/lifecycle.ts";
 import { resolveTraceExecutionPolicy } from "../runtime/trace-execution-policy.ts";
-import type { ResolvedExecutionPolicy } from "../runtime/execution-policy.ts";
+import type { ResolvedExecutionPolicy } from "../runtime/workers/execution-policy.ts";
 import {
 	traceHostResumePrompt,
 	type TraceHostSessionFactory,

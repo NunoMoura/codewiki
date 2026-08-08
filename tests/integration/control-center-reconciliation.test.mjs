@@ -14,7 +14,7 @@ const criterionEvidence = {
 			"src/decision/change-quality.ts",
 			"src/api/wiki-change.ts",
 			"src/api/wiki-decide.ts",
-			"src/runtime/execution-policy.ts",
+			"src/runtime/workers/execution-policy.ts",
 		],
 		tests: [
 			"tests/changes/change-domain.test.mjs",
@@ -105,7 +105,7 @@ const criterionEvidence = {
 		criteria: ["policy-dispatch", "explicit-propagation", "fail-closed"],
 		source: [
 			"src/runtime/host-runner.ts",
-			"src/runtime/execution-policy.ts",
+			"src/runtime/workers/execution-policy.ts",
 			"src/pi/process-session.ts",
 			"src/runtime/workers/observation.ts",
 		],
