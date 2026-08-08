@@ -53,7 +53,18 @@ function startPi(projectRoot, env, name) {
 		while (newline >= 0) {
 			const line = buffer.slice(0, newline).trim();
 			buffer = buffer.slice(newline + 1);
-			if (line) messages.push(JSON.parse(line));
+			if (line) {
+				try {
+					const message = JSON.parse(line);
+					if (message && typeof message === "object" && !Array.isArray(message)) {
+						messages.push(message);
+					} else {
+						stderr += "Pi RPC emitted a non-object JSON message.\n";
+					}
+				} catch (error) {
+					stderr += `Pi RPC emitted invalid JSON: ${error instanceof Error ? error.message : "unknown parse error"}\n`;
+				}
+			}
 			newline = buffer.indexOf("\n");
 		}
 	});
@@ -140,8 +151,7 @@ try {
 			join(
 				packageRoot,
 				"dist",
-				"runtime",
-				"coordinator",
+				"harnesses",
 				"coordinator-entrypoint.js",
 			),
 		).href

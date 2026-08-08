@@ -20,7 +20,7 @@ import {
 	assertImplementationWorkerAssignment,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./implementation-worker-adapter.ts";
+} from "./implementation-adapter.ts";
 
 export const IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION = 1 as const;
 

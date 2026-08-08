@@ -8,10 +8,10 @@ import {
 import {
 	startProjectCoordinatorDaemon,
 	type ProjectCoordinatorDaemonHandle,
-} from "../runtime/coordinator/project-coordinator-daemon.ts";
-import { spawnProjectCoordinatorDaemon } from "../runtime/coordinator/project-coordinator-process.ts";
-import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/coordinator/project-coordinator-service.ts";
-import type { ImplementationWorkerAdapter } from "../runtime/workers/implementation-worker-adapter.ts";
+} from "../runtime/coordinator/daemon.ts";
+import { spawnProjectCoordinatorDaemon } from "../runtime/coordinator/process.ts";
+import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/coordinator/service.ts";
+import type { ImplementationWorkerAdapter } from "../runtime/workers/implementation-adapter.ts";
 import type { ProjectBranchMergeAuthority } from "../runtime/effects/project-branch-merge.ts";
 import type { ProjectBranchPushAuthority } from "../runtime/effects/project-branch-push.ts";
 import type {
@@ -30,7 +30,7 @@ import {
 	createPiNativeDecisionStartOptions,
 	type PiNativeDecisionHostOptions,
 } from "./native-decision-host.ts";
-import { createPiProcessImplementationWorkerAdapter } from "./process-worker-adapter.ts";
+import { createPiProcessImplementationWorkerAdapter } from "../harnesses/pi/process-worker-adapter.ts";
 
 export type PiSemanticAdapterLoader = (
 	repoRoot: string,

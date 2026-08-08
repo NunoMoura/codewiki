@@ -1,7 +1,7 @@
 import {
 	runOciContainerCommand,
 	type OciContainerCommandRunner,
-} from "./oci-container-command.ts";
+} from "./command.ts";
 
 const DEFAULT_WORKER_COMMAND = ["/usr/local/bin/codewiki-worker"] as const;
 const DEFAULT_TIMEOUT_MS = 30 * 60_000;

@@ -28,7 +28,7 @@ import {
 	readImplementationWorkerDispatchPackets,
 	writeImplementationWorkerDispatchPacket,
 	type ImplementationWorkerDispatchPacket,
-} from "./workers/implementation-worker-artifacts.ts";
+} from "./workers/implementation-artifacts.ts";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
@@ -37,7 +37,7 @@ import {
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./workers/implementation-worker-adapter.ts";
+} from "./workers/implementation-adapter.ts";
 import {
 	implementationWorkerIntegrationJob,
 	type ImplementationWorkerIntegrationInput,
@@ -62,7 +62,7 @@ import type {
 	ProductReleasePlan,
 } from "./effects/product-release-contract.ts";
 import { productReleaseJob } from "./effects/product-release.ts";
-import type { ProjectCoordinator } from "./coordinator/project-coordinator.ts";
+import type { ProjectCoordinator } from "./coordinator/project.ts";
 import { appendRuntimeWorkUnitClaims } from "./claims/work-unit-events.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
 

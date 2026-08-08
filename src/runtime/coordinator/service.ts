@@ -30,7 +30,7 @@ import {
 import type {
 	ImplementationWorkerAdapter,
 	ImplementationWorkerAssignment,
-} from "../workers/implementation-worker-adapter.ts";
+} from "../workers/implementation-adapter.ts";
 import {
 	scheduleImplementationWorkerAssignments,
 	type ImplementationWorkerJobReceipt,
@@ -38,7 +38,7 @@ import {
 import {
 	ProjectCoordinatorEventJournal,
 	type ProjectCoordinatorEventBatch,
-} from "./project-coordinator-events.ts";
+} from "./events.ts";
 import type { ProjectBranchMergeAuthority } from "../effects/project-branch-merge.ts";
 import type { ProjectBranchPushAuthority } from "../effects/project-branch-push.ts";
 import type {
@@ -57,7 +57,7 @@ import {
 	type ProjectCoordinatorExecutionPolicy,
 	type ProjectCoordinatorOptions,
 	type ProjectCoordinatorSnapshot,
-} from "./project-coordinator.ts";
+} from "./project.ts";
 import {
 	PROJECT_COORDINATOR_ENDPOINT_SCHEMA_VERSION,
 	acquireProjectCoordinatorOwnership,
@@ -70,7 +70,7 @@ import {
 	writeProjectCoordinatorEndpoint,
 	type ProjectCoordinatorEndpoint,
 	type ProjectCoordinatorOwnership,
-} from "./project-coordinator-endpoint.ts";
+} from "./endpoint.ts";
 import {
 	RuntimeReactor,
 	type RuntimeReaction,

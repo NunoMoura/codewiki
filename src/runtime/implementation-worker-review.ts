@@ -8,11 +8,11 @@ import {
 	implementationWorkerJobId,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./workers/implementation-worker-adapter.ts";
+} from "./workers/implementation-adapter.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "./coordinator/project-coordinator.ts";
+} from "./coordinator/project.ts";
 import type { RuntimeReactor } from "./reactor.ts";
 import {
 	appendRuntimeWorkUnitClaims,

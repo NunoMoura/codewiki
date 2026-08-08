@@ -11,32 +11,32 @@ import {
 	type ImplementationWorkerAdapterAvailability,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "../../runtime/workers/implementation-worker-adapter.ts";
+} from "../../runtime/workers/implementation-adapter.ts";
 import {
 	assertImplementationWorkerReportPath,
 	implementationWorkerReportStatus,
 	persistImplementationWorkerReport,
 	recoverImplementationWorkerReport,
-} from "../../runtime/workers/implementation-worker-report-store.ts";
+} from "../../runtime/workers/implementation-report-store.ts";
 import {
 	resolveContainerGitMount,
 	type ContainerGitMount,
-} from "./container-worker-git.ts";
+} from "./worker-git.ts";
 import {
 	containerRuntimeEnvironment,
 	resolveContainerOptions,
 	type OciContainerWorkerAdapterOptions,
 	type ResolvedContainerOptions,
-} from "./container-worker-options.ts";
-import type { OciContainerCommandResult } from "./oci-container-command.ts";
+} from "./worker-options.ts";
+import type { OciContainerCommandResult } from "./command.ts";
 
 export {
 	runOciContainerCommand,
 	type OciContainerCommandInput,
 	type OciContainerCommandResult,
 	type OciContainerCommandRunner,
-} from "./oci-container-command.ts";
-export type { OciContainerWorkerAdapterOptions } from "./container-worker-options.ts";
+} from "./command.ts";
+export type { OciContainerWorkerAdapterOptions } from "./worker-options.ts";
 
 export const OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION = 1 as const;
 

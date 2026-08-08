@@ -6,12 +6,12 @@ import {
 	requestProjectCoordinatorHealth,
 	type ProjectCoordinatorClientRequestOptions,
 	type ProjectCoordinatorRemoteClient,
-} from "./project-coordinator-service.ts";
+} from "./service.ts";
 import {
 	readProjectCoordinatorEndpoint,
 	type ProjectCoordinatorEndpoint,
-} from "./project-coordinator-endpoint.ts";
-import type { ProjectCoordinatorClientInput } from "./project-coordinator.ts";
+} from "./endpoint.ts";
+import type { ProjectCoordinatorClientInput } from "./project.ts";
 
 const DEFAULT_START_TIMEOUT_MS = 10_000;
 const POLL_INTERVAL_MS = 50;

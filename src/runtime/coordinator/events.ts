@@ -1,4 +1,4 @@
-import type { ProjectCoordinatorEvent } from "./project-coordinator.ts";
+import type { ProjectCoordinatorEvent } from "./project.ts";
 
 export const PROJECT_COORDINATOR_EVENT_STREAM_SCHEMA_VERSION = 1 as const;
 

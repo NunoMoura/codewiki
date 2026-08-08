@@ -29,7 +29,7 @@ import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
 	ProjectCoordinatorRecovery,
-} from "./coordinator/project-coordinator.ts";
+} from "./coordinator/project.ts";
 
 export interface DecisionStartResult {
 	readonly attemptOperationId: OperationId;

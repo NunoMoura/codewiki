@@ -7,7 +7,7 @@ export {
 	type ProjectCoordinatorLane,
 	type ProjectCoordinatorOptions,
 	type ProjectCoordinatorSnapshot,
-} from "./project-coordinator.ts";
+} from "./project.ts";
 export {
 	PROJECT_COORDINATOR_ENDPOINT_SCHEMA_VERSION,
 	projectCoordinatorEndpointPath,
@@ -15,18 +15,18 @@ export {
 	projectCoordinatorRuntimeDirectory,
 	readProjectCoordinatorEndpoint,
 	type ProjectCoordinatorEndpoint,
-} from "./project-coordinator-endpoint.ts";
+} from "./endpoint.ts";
 export {
 	connectEnsuredProjectCoordinatorClient,
 	ensureProjectCoordinatorService,
 	projectCoordinatorDaemonScriptPath,
 	spawnProjectCoordinatorDaemon,
 	type EnsureProjectCoordinatorServiceOptions,
-} from "./project-coordinator-process.ts";
+} from "./process.ts";
 export {
 	startProjectCoordinatorDaemon,
 	type ProjectCoordinatorDaemonHandle,
-} from "./project-coordinator-daemon.ts";
+} from "./daemon.ts";
 export {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
@@ -36,7 +36,7 @@ export {
 	type ImplementationWorkerAdapterAvailability,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "../workers/implementation-worker-adapter.ts";
+} from "../workers/implementation-adapter.ts";
 export {
 	ImplementationWorkerDispatcher,
 	type ImplementationWorkerDispatcherOptions,
@@ -115,7 +115,7 @@ export {
 	type ProjectCoordinatorEventBatch,
 	type ProjectCoordinatorEventPoll,
 	type ProjectCoordinatorStreamEvent,
-} from "./project-coordinator-events.ts";
+} from "./events.ts";
 export {
 	DECISION_ATTENTION_SELECTION_PROTOCOL,
 	DecisionAttentionSelectionError,
@@ -150,7 +150,7 @@ export {
 	type RuntimeCandidateLoop,
 	type ProjectCoordinatorServiceHandle,
 	type ProjectCoordinatorServiceOptions,
-} from "./project-coordinator-service.ts";
+} from "./service.ts";
 export {
 	persistedRuntimeJobEvidence,
 	scheduleRuntimeReactions,

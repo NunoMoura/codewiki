@@ -24,15 +24,15 @@ import {
 	assertImplementationWorkerReport,
 	implementationWorkerJobId,
 	type ImplementationWorkerReport,
-} from "./workers/implementation-worker-adapter.ts";
+} from "./workers/implementation-adapter.ts";
 import {
 	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 	type ImplementationWorkerDispatchPacket,
-} from "./workers/implementation-worker-artifacts.ts";
+} from "./workers/implementation-artifacts.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "./coordinator/project-coordinator.ts";
+} from "./coordinator/project.ts";
 import type { RuntimeReactor } from "./reactor.ts";
 
 const MAX_GIT_OUTPUT_BYTES = 8 * 1024 * 1024;

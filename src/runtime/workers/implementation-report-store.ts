@@ -7,7 +7,7 @@ import {
 	assertImplementationWorkerReport,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./implementation-worker-adapter.ts";
+} from "./implementation-adapter.ts";
 
 const MAX_WORKER_REPORT_BYTES = 1024 * 1024;
 

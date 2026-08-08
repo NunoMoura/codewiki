@@ -56,6 +56,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [x] Move generic claim events, lease expiry, and Work Unit claim selection into `src/runtime/claims/**`.
 - [x] Move project coordinator authority, service, process, endpoint, event journal, daemon launcher, and package entrypoint into `src/runtime/coordinator/**`.
 - [x] Move worker assignment/report contracts, artifact custody, report persistence, and observations into `src/runtime/workers/**`.
+- [x] Remove repeated responsibility prefixes from Coordinator, Worker, and Container filenames.
 - [ ] Move generic scheduling, persistence, synchronization, remaining worker mechanics, Integration, recovery, and lifecycle into responsibility-named Runtime subdirectories.
 - [ ] Remove `src/runtime/loop-exit-runtime.ts` by moving Loop-specific bindings to their Loop owner and retaining only generic Runtime ports.
 - [ ] Do not create `runtime/decision`, `runtime/planning`, `runtime/implementation`, `runtime/verification`, or `runtime/loop-exit`.
@@ -65,6 +66,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 ### 2. Split Pi client and harness ownership
 
 - [x] Move OCI/container execution transport and public coordinator composition to `src/harnesses/**`.
+- [x] Move the concrete Pi process worker adapter to `src/harnesses/pi/**` without moving legacy host/session debt.
 - [ ] Move user-facing Pi commands, tools, prompts, TUI, rendering, and coordinator clients to `src/clients/pi/**`.
 - [ ] Move Candidate production, Model Check sessions, process workers, and execution adapters to `src/harnesses/pi/**`.
 - [ ] Remove hidden semantic-loop tools from the main conversational client registration.

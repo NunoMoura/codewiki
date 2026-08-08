@@ -18,7 +18,7 @@ import {startPiProjectCoordinatorDaemon} from "../../src/pi/project-coordinator-
 import {resolveWikiConfig} from "../../src/project/config.ts";
 import {wikiConfigDigest} from "../../src/project/config-digest.ts";
 import {createDecisionGitAdmission} from "../../src/runtime/decision-git-admission.ts";
-import {connectProjectCoordinatorClient} from "../../src/runtime/coordinator/project-coordinator-service.ts";
+import {connectProjectCoordinatorClient} from "../../src/runtime/coordinator/service.ts";
 import {
 	allowAllReplayPolicy,
 	buildOperationSequence,

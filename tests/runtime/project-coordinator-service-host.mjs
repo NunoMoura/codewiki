@@ -1,4 +1,4 @@
-import { startProjectCoordinatorService } from "../../src/runtime/coordinator/project-coordinator-service.ts";
+import { startProjectCoordinatorService } from "../../src/runtime/coordinator/service.ts";
 
 const repoRoot = process.argv[2];
 if (!repoRoot) throw new Error("Project root argument is required.");

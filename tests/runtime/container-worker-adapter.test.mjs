@@ -16,8 +16,8 @@ import {
 	OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION,
 	createOciContainerImplementationWorkerAdapter,
 	runOciContainerCommand,
-} from "../../src/harnesses/container/container-worker-adapter.ts";
-import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-worker-adapter.ts";
+} from "../../src/harnesses/container/worker-adapter.ts";
+import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-adapter.ts";
 
 const IMAGE = `registry.example/codewiki-worker@sha256:${"a".repeat(64)}`;
 

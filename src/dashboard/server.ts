@@ -43,9 +43,9 @@ import {
 	unavailableDashboardPreviewControl,
 } from "../preview/dashboard-control.ts";
 import { readDevLog } from "../runtime/dev-log.ts";
-import type { ProjectCoordinatorClientInput } from "../runtime/coordinator/project-coordinator.ts";
-import { connectEnsuredProjectCoordinatorClient } from "../runtime/coordinator/project-coordinator-process.ts";
-import type { ProjectCoordinatorRemoteClient } from "../runtime/coordinator/project-coordinator-service.ts";
+import type { ProjectCoordinatorClientInput } from "../runtime/coordinator/project.ts";
+import { connectEnsuredProjectCoordinatorClient } from "../runtime/coordinator/process.ts";
+import type { ProjectCoordinatorRemoteClient } from "../runtime/coordinator/service.ts";
 import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
 import {
 	createDashboardChangeControl,

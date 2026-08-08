@@ -7,11 +7,11 @@ import { createChangeRecord } from "../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
 import { readTraceFileSnapshot } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
-import { ProjectCoordinator } from "../../src/runtime/coordinator/project-coordinator.ts";
+import { ProjectCoordinator } from "../../src/runtime/coordinator/project.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
-} from "../../src/runtime/coordinator/project-coordinator-service.ts";
+} from "../../src/runtime/coordinator/service.ts";
 import { RuntimeReactor } from "../../src/runtime/reactor.ts";
 import {
 	runtimeReactionJob,

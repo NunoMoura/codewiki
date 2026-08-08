@@ -27,7 +27,7 @@ export type { ProductReleaseReceipt } from "./product-release-proof.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "../coordinator/project-coordinator.ts";
+} from "../coordinator/project.ts";
 import type { RuntimeReactor } from "../reactor.ts";
 import { appendRuntimeTraceRecord } from "../trace-writer.ts";
 

@@ -27,7 +27,7 @@ import {
 import type {DecisionSecurityScanContext} from "../decision/exit/runtime-security.ts";
 import type {createDecisionExitRuntime} from "../decision/exit/runtime.ts";
 import type {EvidenceRecord} from "../evidence/contracts.ts";
-import type {ProjectCoordinatorRecovery} from "./coordinator/project-coordinator.ts";
+import type {ProjectCoordinatorRecovery} from "./coordinator/project.ts";
 import type {DecisionAttemptExecutor} from "./decision-attention-selection.ts";
 import {
 	commitNativeDecisionOperationSequence,

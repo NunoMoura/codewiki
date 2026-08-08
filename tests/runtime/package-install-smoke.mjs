@@ -119,15 +119,15 @@ assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.js
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "coordinator-entrypoint.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "container-worker-adapter.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "container-worker-options.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "container-worker-git.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "oci-container-command.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-report-store.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-artifacts.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "worker-observation.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-options.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-git.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "command.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-report-store.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-artifacts.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "observation.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), true);
@@ -150,7 +150,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product-release-proof.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product-release-contract.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product-release-manifest.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "pi", "process-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "pi", "process-worker-adapter.js")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 const coordinator = new ProjectCoordinator(process.cwd(), {
 	generationId: "packed:coordinator",
@@ -249,11 +249,11 @@ assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-ref-reader.
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projector.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project-coordinator.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "coordinator-entrypoint.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project-coordinator-process.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project-coordinator-daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "process.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "daemon.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-coordinator-daemon.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);

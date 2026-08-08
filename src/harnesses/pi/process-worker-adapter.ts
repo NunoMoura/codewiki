@@ -4,27 +4,27 @@ import {
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "../runtime/workers/implementation-worker-adapter.ts";
+} from "../../runtime/workers/implementation-adapter.ts";
 import {
 	assertImplementationWorkerReportPath,
 	implementationWorkerReportStatus,
 	persistImplementationWorkerReport,
 	recoverImplementationWorkerReport,
-} from "../runtime/workers/implementation-worker-report-store.ts";
+} from "../../runtime/workers/implementation-report-store.ts";
 import {
 	createPiProcessSessionFactory,
 	type PiProcessSessionFactoryOptions,
-} from "./process-session.ts";
+} from "../../pi/process-session.ts";
 import {
 	collectPiWorkerDiscoveries,
 	collectPiWorkerOutputFiles,
 	collectPiWorkerReports,
 	type PiWorkerCompletionInput,
-} from "./worker-reports.ts";
+} from "../../pi/worker-reports.ts";
 import {
 	startPiWorkerAssignment,
 	type PiWorkerSessionFactory,
-} from "./worker-start.ts";
+} from "../../pi/worker-start.ts";
 
 export interface PiProcessImplementationWorkerAdapterOptions {
 	process?: PiProcessSessionFactoryOptions;

@@ -3,7 +3,7 @@ import {
 	startProjectCoordinatorService,
 	type ProjectCoordinatorServiceHandle,
 	type ProjectCoordinatorServiceOptions,
-} from "./project-coordinator-service.ts";
+} from "./service.ts";
 
 export interface ProjectCoordinatorDaemonHandle
 	extends Omit<ProjectCoordinatorServiceHandle, "close"> {

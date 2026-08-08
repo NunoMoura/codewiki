@@ -160,6 +160,19 @@ describe("source architecture", () => {
 		);
 	});
 
+	it("does not repeat responsibility directory names in filenames", () => {
+		const repeatedPrefixes = {
+			"src/runtime/coordinator": /^(?:coordinator-|project-coordinator)/u,
+			"src/runtime/workers": /^(?:worker-|implementation-worker-)/u,
+			"src/harnesses/container": /^(?:container-|oci-container-)/u,
+		};
+		for (const [directory, repeatedPrefix] of Object.entries(repeatedPrefixes)) {
+			for (const filename of readdirSync(directory)) {
+				assert.equal(repeatedPrefix.test(filename), false, `${directory}/${filename}`);
+			}
+		}
+	});
+
 	it("forbids core packages from importing outer adapters", () => {
 		const rootFor = (file) => relative(sourceRoot, file).split("/")[0];
 		for (const [source, targets] of importEdges(sourceFiles())) {

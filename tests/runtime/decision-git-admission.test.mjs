@@ -12,7 +12,7 @@ import {wikiConfigDigest} from "../../src/project/config-digest.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../src/changes/triage/selection.ts";
 import {createDecisionGitAdmission} from "../../src/runtime/decision-git-admission.ts";
 import {createDecisionStartRuntime} from "../../src/runtime/decision-attention-selection.ts";
-import {ProjectCoordinator} from "../../src/runtime/coordinator/project-coordinator.ts";
+import {ProjectCoordinator} from "../../src/runtime/coordinator/project.ts";
 import {
 	allowAllReplayPolicy,
 	buildOperationSequence,
