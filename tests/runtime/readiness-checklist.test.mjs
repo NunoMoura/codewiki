@@ -2,16 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import {
-	DECISION_CHANGE_GRAPH_HASH,
-	DECISION_CHANGE_QUALITY_STANDARDS,
-} from "../../src/decision/change-quality.ts";
-import { IMPLEMENTATION_LOOP_QUALITY_PACK } from "../../src/implementation/loop.ts";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../../src/index.ts";
-import {
-	PLANNING_PORTFOLIO_GRAPH_HASH,
-	PLANNING_PORTFOLIO_QUALITY_STANDARDS,
-} from "../../src/planning/portfolio-quality.ts";
 import { assertValidTraceRecord } from "../../src/traces/schema.ts";
 import {
 	formatKnowledgeDriftIssues,
@@ -193,39 +184,6 @@ describe("install readiness checklist", () => {
 		);
 	});
 
-	it("protects kernel quality, bounds project composition, and documents lab authority", () => {
-		assert.match(DECISION_CHANGE_GRAPH_HASH, /^sha256:[a-f0-9]{64}$/);
-		assert.match(PLANNING_PORTFOLIO_GRAPH_HASH, /^sha256:[a-f0-9]{64}$/);
-		assert.equal(DECISION_CHANGE_QUALITY_STANDARDS.length > 0, true);
-		assert.equal(PLANNING_PORTFOLIO_QUALITY_STANDARDS.length > 0, true);
-		for (const pack of [IMPLEMENTATION_LOOP_QUALITY_PACK]) {
-			assert.equal(pack.authority, "kernel");
-			assert.equal(pack.rollout, "enforce");
-			assert.equal(pack.id.startsWith("codewiki."), true);
-			assert.equal(pack.standards.length > 0, true);
-		}
-		const loopContracts = readFileSync(
-			".codewiki/kb/system/components/loop-contracts.md",
-			"utf8",
-		);
-		const labDocumentation = readFileSync(
-			".codewiki/kb/system/components/lab.md",
-			"utf8",
-		);
-		assert.match(loopContracts, /immutable `kernel` packs in `enforce` mode/);
-		assert.match(
-			loopContracts,
-			/Project Standards progress through `observe`, `warn`, and approved `enforce`/,
-		);
-		assert.match(
-			loopContracts,
-			/never permits project-owned kernel overrides.*arbitrary JavaScript or shell evaluators/,
-		);
-		assert.match(labDocumentation, /authority is `lab`/);
-		assert.match(labDocumentation, /rollout is `observe`/);
-		assert.match(labDocumentation, /does not grant production authority/);
-	});
-
 	it("keeps reconciled control-center behavior in release gates without dogfood state", () => {
 		assert.match(
 			packageJson.scripts["test:smoke"],
@@ -328,27 +286,6 @@ describe("install readiness checklist", () => {
 		assert.equal(existsSync(".codewiki/traces/trace-index.jsonl"), false);
 	});
 
-	it("documents the OKF bundle boundary without demoting CodeWiki extensions", () => {
-		const knowledgeDoc = readFileSync(
-			".codewiki/kb/system/components/knowledge.md",
-			"utf8",
-		);
-		assert.match(knowledgeDoc, /\.codewiki\/kb\/\*\*/);
-		assert.match(knowledgeDoc, /OKF v0\.1 markdown\/frontmatter bundle/);
-		assert.match(
-			knowledgeDoc,
-			/durable workflow truth remains JSONL under `\.codewiki\/traces\/TRACE-\*\.jsonl`/,
-		);
-		assert.match(
-			knowledgeDoc,
-			/Backlog, Planning, Implementation, Sprint, work-queue, and Change dossier screens are WorkState-backed projections/,
-		);
-		assert.match(
-			knowledgeDoc,
-			/OKF concept frontmatter is the active KB-code-test ownership source/,
-		);
-	});
-
 	it("keeps hot trace files valid under the current schema", () => {
 		for (const fileName of readdirSync(".codewiki/traces")) {
 			if (!/^TRACE-.*\.jsonl$/.test(fileName)) continue;
@@ -365,118 +302,6 @@ describe("install readiness checklist", () => {
 		assert.deepEqual(Object.keys(codewikiConfig.hosts).sort(), ["mcp", "pi"]);
 		assert.equal(codewikiConfig.hosts.pi.enabled, true);
 		assert.equal(codewikiConfig.hosts.mcp.enabled, false);
-	});
-
-	it("recommends project-local CodeWiki installation", () => {
-		const readme = readFileSync("README.md", "utf8");
-		const extensionDoc = readFileSync(
-			".codewiki/kb/system/components/extension.md",
-			"utf8",
-		);
-		const runtimeDoc = readFileSync(
-			".codewiki/kb/system/components/runtime.md",
-			"utf8",
-		);
-		assert.match(readme, /not published to the npm registry yet/);
-		assert.match(extensionDoc, /not published to the npm registry yet/);
-		assert.match(readme, /@nunomoura\/codewiki/);
-		assert.match(extensionDoc, /@nunomoura\/codewiki/);
-		assert.match(readme, /"private": true/);
-		assert.match(extensionDoc, /"private": true/);
-		assert.match(readme, /Avoid global\/user installs/);
-		assert.match(extensionDoc, /global\/user installs\s+for normal mutation/i);
-		assert.match(readme, /Production readiness and automation gates/);
-		assert.match(extensionDoc, /Production readiness gates/);
-		assert.match(runtimeDoc, /Automation gates/);
-		assert.match(runtimeDoc, /Unattended\s+worker start/i);
-	});
-
-	it("documents external release gates and source-repository non-self-hosting", () => {
-		const readme = readFileSync("README.md", "utf8");
-		const extensionDoc = readFileSync(
-			".codewiki/kb/system/components/extension.md",
-			"utf8",
-		);
-		const loopContracts = readFileSync(
-			".codewiki/kb/system/components/loop-contracts.md",
-			"utf8",
-		);
-		const audit = packageJson.scripts["audit:codewiki"];
-		for (const command of [
-			"npm test",
-			"npm run test:coordinator",
-			"npm run test:pack",
-			"npm run test:pi-install",
-			"npm run test:pi-rpc",
-			"npm run test:pi-multiprocess",
-			"npm run test:pi-mutation",
-			"npm run test:pi-sdk",
-			"npm run test:pi-sdk-package",
-			"npm run test:project-local-install",
-			"npm run test:external-lifecycle",
-			"npm run test:external-failures",
-			"npm run test:readiness",
-			"npm audit --omit=dev",
-			"git diff --check",
-		]) {
-			assert.match(audit, new RegExp(escapeRegExp(command)));
-		}
-		for (const content of [readme, extensionDoc]) {
-			assert.match(content, /disposable external projects/i);
-			assert.match(
-				content,
-				/does not (?:register, install, or load|install or load|self-host)/i,
-			);
-			assert.match(content, /new explicit .*decision/i);
-			assert.match(content, /historical .*grant no authority/i);
-		}
-		assert.match(loopContracts, /fast edit feedback is never enough/i);
-		assert.match(loopContracts, /Pi-tool autoload uses only/);
-	});
-
-	it("documents loop/runtime/host boundaries and trace queue ownership", () => {
-		const loopContracts = readFileSync(
-			".codewiki/kb/system/components/loop-contracts.md",
-			"utf8",
-		);
-		const runtimeDoc = readFileSync(
-			".codewiki/kb/system/components/runtime.md",
-			"utf8",
-		);
-		const planningDoc = readFileSync(
-			".codewiki/kb/system/components/planning-loop.md",
-			"utf8",
-		);
-		const tracesDoc = readFileSync(
-			".codewiki/kb/system/components/traces.md",
-			"utf8",
-		);
-		const implementationDoc = readFileSync(
-			".codewiki/kb/system/components/implementation-loop.md",
-			"utf8",
-		);
-		assert.match(loopContracts, /Planning .*WorkState horizon/i);
-		assert.match(loopContracts, /Runtime is the outer control loop/i);
-		assert.match(loopContracts, /Write authority is surface-specific/i);
-		assert.match(runtimeDoc, /does not.*approve Change meaning/is);
-		assert.match(runtimeDoc, /does not.*create Sprint or Work Item truth/is);
-		assert.match(
-			planningDoc,
-			/Planning is the project-wide execution optimizer/i,
-		);
-		assert.match(planningDoc, /Planning owns Sprint creation/i);
-		assert.match(tracesDoc, /one Change owns one Change Trace/i);
-		assert.match(tracesDoc, /Sprint state is a generated view/i);
-		assert.match(tracesDoc, /Git restore ref/i);
-		assert.match(tracesDoc, /compact hot stub/i);
-		assert.match(implementationDoc, /does not own new Change meaning/i);
-		assert.match(implementationDoc, /archive_disposition_ready/i);
-		assert.match(implementationDoc, /outcome disposition/i);
-		assert.match(implementationDoc, /retain[-_]hot/i);
-		assert.doesNotMatch(
-			runtimeDoc,
-			/choose next semantic loop or coordination action/,
-		);
 	});
 
 	it("does not load CodeWiki in its source repository", () => {

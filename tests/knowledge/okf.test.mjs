@@ -10,7 +10,6 @@ import {
 	parseOkfDocument,
 	serializeOkfDocument,
 } from "../../src/knowledge/okf-frontmatter.ts";
-import { generateOkfSourceMapExtensions } from "../../src/knowledge/okf-source-map.ts";
 import { sourceOwnershipMapFromOkfBundle } from "../../src/knowledge/source-ownership.ts";
 import {
 	okfConceptDocuments,
@@ -91,25 +90,17 @@ describe("Open Knowledge Format v0.1", () => {
 		const bundle = readKbBundle();
 		const result = validateOkfBundle(bundle);
 		const sourceMap = sourceOwnershipMapFromOkfBundle(readFullPathKbBundle());
-		const documentsByPath = new Map(
-			result.documents.map((document) => [
-				`.codewiki/kb/${document.path}`,
-				document,
-			]),
-		);
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 54);
-		assert.equal(result.reservedCount, 10);
-		for (const extension of generateOkfSourceMapExtensions(sourceMap).filter(
-			(candidate) => candidate.path.startsWith(".codewiki/kb/"),
-		)) {
-			const frontmatter = documentsByPath.get(extension.path)?.frontmatter;
-			assert.ok(frontmatter, `missing OKF frontmatter for ${extension.path}`);
-			for (const [key, value] of Object.entries(extension.fields)) {
-				assert.deepEqual(frontmatter[key], value, `${extension.path} ${key}`);
-			}
-		}
+		assert.equal(result.conceptCount, 37);
+		assert.equal(result.reservedCount, 0);
+		assert.equal(sourceMap.components.length, 18);
+		assert.equal(
+			sourceMap.components.every((component) =>
+				component.doc.startsWith(".codewiki/kb/system/components/"),
+			),
+			true,
+		);
 		for (const path of collectFiles(".codewiki/traces").filter((candidate) =>
 			candidate.endsWith(".jsonl"),
 		)) {

@@ -73,12 +73,12 @@ describe("OKF trace boundary", () => {
 			false,
 		);
 		assert.equal(
-			okfFiles.some((file) => file.path === "index.md"),
+			okfFiles.some((file) => file.path === "lexicon.md"),
 			true,
 		);
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 54);
-		assert.equal(result.reservedCount, 10);
+		assert.equal(result.conceptCount, 37);
+		assert.equal(result.reservedCount, 0);
 	});
 
 	it("does not parse trace files as OKF concepts", () => {

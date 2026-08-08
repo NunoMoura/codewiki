@@ -119,8 +119,8 @@ const criterionEvidence = {
 		criteria: ["regression-proof", "clean-vocabulary", "aggregate-evidence"],
 		source: [
 			"README.md",
-			".codewiki/kb/system/components/decision-loop.md",
-			".codewiki/kb/system/components/api-tools.md",
+			".codewiki/kb/system/components/decision.md",
+			".codewiki/kb/system/components/api.md",
 			".codewiki/kb/system/components/runtime.md",
 		],
 		tests: [
@@ -171,11 +171,11 @@ describe("control-center reconciliation integration", () => {
 	it("documents delivered control-center boundaries on canonical surfaces", () => {
 		const readme = readFileSync("README.md", "utf8");
 		const decision = readFileSync(
-			".codewiki/kb/system/components/decision-loop.md",
+			".codewiki/kb/system/components/decision.md",
 			"utf8",
 		);
 		const tools = readFileSync(
-			".codewiki/kb/system/components/api-tools.md",
+			".codewiki/kb/system/components/api.md",
 			"utf8",
 		);
 		const runtime = readFileSync(
@@ -185,24 +185,20 @@ describe("control-center reconciliation integration", () => {
 		assert.match(readme, /## Work and project control plane/);
 		assert.match(readme, /persisted pending Change revisions/);
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
-		assert.match(decision, /Decision is a process.*not a domain entity/i);
-		assert.match(decision, /exact approved Change revision/i);
-		assert.match(tools, /First explicit persistence creates a Change Trace/i);
-		assert.match(tools, /Configuration compiles only schema-defined patches/i);
-		assert.match(runtime, /WorkState refresh/i);
-		assert.match(runtime, /policy snapshot and lease/i);
-		assert.match(
-			runtime,
-			/project-scoped control plane and outer control loop/i,
-		);
+		assert.match(decision, /one authenticated exact Change revision/i);
+		assert.match(decision, /Runtime owns admission, scheduling, identity, persistence/i);
+		assert.match(tools, /delegates semantics and authority to their owning packages/i);
+		assert.match(tools, /reject unknown fields and caller-supplied Runtime-owned identity/i);
+		assert.match(runtime, /project-scoped control plane/i);
+		assert.match(runtime, /exact current state and authority/i);
 	});
 
 	it("keeps active shipped surfaces on canonical Change vocabulary", () => {
 		const activeFiles = [
 			...filesUnder("src").filter((path) => path.endsWith(".ts")),
 			"README.md",
-			".codewiki/kb/system/components/decision-loop.md",
-			".codewiki/kb/system/components/api-tools.md",
+			".codewiki/kb/system/components/decision.md",
+			".codewiki/kb/system/components/api.md",
 			".codewiki/kb/system/components/runtime.md",
 		];
 		const activeText = activeFiles

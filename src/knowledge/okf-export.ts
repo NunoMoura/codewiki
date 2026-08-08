@@ -1,4 +1,8 @@
-import { isOkfMarkdownPath, normalizeOkfPath, OKF_VERSION } from "./okf.ts";
+import {
+	isOkfMarkdownPath,
+	normalizeOkfPath,
+	type OkfSupportedVersion,
+} from "./okf.ts";
 import {
 	codeWikiOkfBundleFiles,
 	codeWikiTraceBoundaryEntries,
@@ -17,7 +21,7 @@ export interface OkfCompatibilityInput {
 }
 
 export interface OkfCompatibilityResult {
-	okfVersion: typeof OKF_VERSION;
+	okfVersion: OkfSupportedVersion;
 	scope: OkfCompatibilityScope;
 	files: OkfBundleFile[];
 	validation: OkfBundleValidationResult;
@@ -47,11 +51,12 @@ function okfCompatibilityResult(
 	scope: OkfCompatibilityScope,
 ): OkfCompatibilityResult {
 	const files = okfFilesForScope(input.files, scope);
+	const validation = validateOkfBundle(files);
 	return {
-		okfVersion: OKF_VERSION,
+		okfVersion: validation.version,
 		scope,
 		files,
-		validation: validateOkfBundle(files),
+		validation,
 		excludedTraceFiles: codeWikiTraceBoundaryEntries(input.files).map(
 			(entry) => entry.path,
 		),

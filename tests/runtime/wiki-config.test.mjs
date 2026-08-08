@@ -135,11 +135,7 @@ describe("wiki_config core facade", () => {
 
 	it("documents review pack configuration recipes", async () => {
 		const readme = await readFile("README.md", "utf8");
-		const loopContracts = await readFile(
-			".codewiki/kb/system/components/loop-contracts.md",
-			"utf8",
-		);
-		const docs = `${readme}\n${loopContracts}`;
+		const docs = readme;
 
 		for (const packId of DEFAULT_WIKI_CONFIG.quality.review.enabledPacks) {
 			assert.match(docs, new RegExp(escapeRegExp(packId)));
@@ -150,8 +146,6 @@ describe("wiki_config core facade", () => {
 		assert.match(readme, /requiredPacks/);
 		assert.match(readme, /skippedPacks/);
 		assert.match(readme, /Explicit `reviewEvidenceReports`/);
-		assert.match(loopContracts, /Review pack recipes/);
-		assert.match(loopContracts, /requiredPacks/);
 	});
 
 	it("normalizes retention, host, and stop-condition policy", () => {

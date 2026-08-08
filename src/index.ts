@@ -1,5 +1,7 @@
 export * from "./api/index.ts";
 export * from "./change-trace/index.ts";
+export * from "./knowledge/codewiki-kb-profile.ts";
+export * from "./knowledge/system-diagrams.ts";
 export * from "./verification/custom-checks/index.ts";
 export * from "./verification/verification-capabilities.ts";
 export * from "./verification/standard-evidence-checks.ts";

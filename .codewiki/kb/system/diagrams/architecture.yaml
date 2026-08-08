@@ -1,344 +1,39 @@
-schema_version: 1
-id: spec.system.diagrams.architecture
-title: CodeWiki Intent-to-Production Architecture
-kind: architecture_map
-purpose: Show bounded multi-source Change intake, explainable Backlog triage, log-canonical Change operations, provider-neutral Git acceptance, deterministic WorkState and Alignment Graph projection, rolling Planning, exactly three semantic Loops, isolated execution, archive, and guarded effects.
-source_docs:
-  - .codewiki/kb/product/overview.md
-  - .codewiki/kb/system/components/overview.md
-  - .codewiki/kb/system/components/change-intake.md
-  - .codewiki/kb/system/components/custom-checks.md
-  - .codewiki/kb/system/components/alignment-model.md
-  - .codewiki/kb/system/components/traces.md
-  - .codewiki/kb/system/components/runtime.md
-  - .codewiki/kb/system/components/work-state.md
-  - .codewiki/kb/system/components/loop-exit.md
-  - .codewiki/kb/system/components/evidence.md
-  - .codewiki/kb/system/components/planning-loop.md
-  - .codewiki/kb/system/components/session-coordination.md
-renderer:
-  preferred: layered_projection
-  fallback: mermaid_flowchart
-  layout: top_down
-  stable_ids: true
-groups:
-  - id: clients
-    label: Product clients
-  - id: runtime
-    label: Generic CodeWiki Project Runtime mechanics
-  - id: verification
-    label: Shared verification machinery
-  - id: execution
-    label: Pi and worker execution
-  - id: loops
-    label: Exactly three semantic Loops
-  - id: authority
-    label: Authority roots and Git synchronization
-  - id: projections
-    label: Deterministic and disposable projections
-  - id: effects
-    label: Guarded review and delivery boundaries
-nodes:
-  - id: user_agent
-    label: User / agent / bounded integration
-    group: clients
-    kind: actor
-  - id: cli
-    label: Standalone CodeWiki CLI
-    group: clients
-    kind: client
-    source: README.md
-  - id: dashboard
-    label: Work / Product / System / Design dashboard
-    group: clients
-    kind: client
-    source: .codewiki/kb/product/uis/terminal.md
-  - id: pi_client
-    label: Optional thin Pi client
-    group: clients
-    kind: client_adapter
-    source: .codewiki/kb/system/components/extension.md
-  - id: project_runtime
-    label: Project Runtime authority and scheduler
-    group: runtime
-    kind: project_control_plane
-    source: .codewiki/kb/system/components/runtime.md
-  - id: change_intake
-    label: Closed Change intake and scope routing
-    group: runtime
-    kind: bounded_domain_service
-    source: .codewiki/kb/system/components/change-intake.md
-  - id: state_sync
-    label: Fresh / stale / offline Git synchronizer
-    group: runtime
-    kind: git_state_sync
-    source: .codewiki/kb/system/flows/remote-state-synchronization.md
-  - id: reducer
-    label: Change operation validator and WorkState reducer
-    group: runtime
-    kind: deterministic_reducer
-    source: .codewiki/kb/system/components/work-state.md
-  - id: graph_projector
-    label: Versioned Alignment Graph projector
-    group: runtime
-    kind: deterministic_projector
-    source: .codewiki/kb/system/components/alignment-model.md
-  - id: verification
-    label: Shared Check / Evidence / Result / Exit Report machinery
-    group: verification
-    kind: verification_kernel
-    source: .codewiki/kb/system/components/loop-exit.md
-  - id: custom_checks
-    label: Check Types / Custom Checks / Check Evaluators
-    group: verification
-    kind: protected_project_policy
-    source: .codewiki/kb/system/components/custom-checks.md
-  - id: protocols
-    label: CodeWiki OS + Loop Protocols
-    group: runtime
-    kind: versioned_policy_resource
-    source: .codewiki/kb/system/components/codewiki-os.md
-  - id: pi_sdk
-    label: Independent Pi Candidate and Model Check sessions
-    group: execution
-    kind: execution_adapter
-    source: .codewiki/kb/system/components/session-coordination.md
-  - id: workbench
-    label: Exact private Worker Workbench
-    group: execution
-    kind: transient_execution_environment
-    source: .codewiki/kb/system/components/worker-workbench.md
-  - id: workers
-    label: Isolated process / OCI workers
-    group: execution
-    kind: execution_adapter
-    source: .codewiki/kb/system/components/session-coordination.md
-  - id: decision
-    label: Decision Loop
-    group: loops
-    kind: semantic_loop
-    source: .codewiki/kb/system/components/decision-loop.md
-  - id: planning
-    label: Rolling Planning Loop
-    group: loops
-    kind: semantic_loop
-    source: .codewiki/kb/system/components/planning-loop.md
-  - id: implementation
-    label: Implementation Loop
-    group: loops
-    kind: semantic_loop
-    source: .codewiki/kb/system/components/implementation-loop.md
-  - id: knowledge
-    label: OKF Knowledge + authored relationships
-    group: authority
-    kind: durable_truth
-    source: .codewiki/kb/system/components/knowledge.md
-  - id: change_operations
-    label: Typed content-addressed Change operations
-    group: authority
-    kind: durable_truth
-    source: .codewiki/kb/system/components/traces.md
-  - id: source_tests
-    label: Source + tests
-    group: authority
-    kind: executable_truth
-  - id: git_state
-    label: codewiki/state expected-head acceptance
-    group: authority
-    kind: git_acceptance_receipt
-    source: .codewiki/kb/system/components/traces.md
-  - id: git_archive
-    label: codewiki/archive immutable segments
-    group: authority
-    kind: git_archive
-    source: .codewiki/kb/system/components/traces.md
-  - id: work_state
-    label: WorkState
-    group: projections
-    kind: deterministic_projection
-    source: .codewiki/kb/system/components/work-state.md
-  - id: alignment_graph
-    label: Alignment Graph with per-fact provenance
-    group: projections
-    kind: deterministic_projection
-    source: .codewiki/kb/system/components/alignment-model.md
-  - id: backlog_triage
-    label: Backlog Triage Projection
-    group: projections
-    kind: disposable_snapshot_projection
-    source: .codewiki/kb/system/components/change-intake.md
-  - id: views
-    label: Dashboard / Work / graph indexes / repair retrieval
-    group: projections
-    kind: disposable_projection
-    source: .codewiki/kb/system/components/work-state.md
-  - id: review
-    label: Provider-level review projection + findings / approval observation
-    group: effects
-    kind: guarded_provider_review_effect
-    source: .codewiki/kb/system/components/evidence.md
-  - id: delivery
-    label: Integration / merge / push / publication / release / outcome
-    group: effects
-    kind: guarded_effects
-    source: .codewiki/kb/system/components/runtime.md
-edges:
-  - from: user_agent
-    to: cli
-    label: operates project
-  - from: user_agent
-    to: dashboard
-    label: inspects and grants exact authority
-  - from: user_agent
-    to: pi_client
-    label: discusses intent and supervision
-  - from: cli
-    to: project_runtime
-    label: authenticated bounded requests
-  - from: dashboard
-    to: project_runtime
-    label: guarded requests and queries
-  - from: pi_client
-    to: project_runtime
-    label: thin client requests
-  - from: project_runtime
-    to: change_intake
-    label: authenticates sanitizes and scope-routes intake
-  - from: change_intake
-    to: project_runtime
-    label: deduplicated pending Change or feedback proposal
-  - from: project_runtime
-    to: state_sync
-    label: requires verified snapshot
-  - from: state_sync
-    to: git_state
-    label: fetches and expected-head pushes
-  - from: git_state
-    to: change_operations
-    label: atomically accepts exact batch
-  - from: change_operations
-    to: reducer
-    label: deterministic replay
-  - from: knowledge
-    to: reducer
-    label: accepted meaning and ownership
-  - from: source_tests
-    to: reducer
-    label: executable facts
-  - from: reducer
-    to: work_state
-    label: current project snapshot
-  - from: project_runtime
-    to: protocols
-    label: binds exact versions
-  - from: project_runtime
-    to: custom_checks
-    label: validates proposals guarded lifecycle and protected-base policy
-  - from: custom_checks
-    to: verification
-    label: exact active bindings and type-specific evaluator contracts
-  - from: project_runtime
-    to: pi_sdk
-    label: starts bounded independent sessions
-  - from: pi_sdk
-    to: decision
-    label: typed Candidate
-  - from: pi_sdk
-    to: planning
-    label: typed Candidate
-  - from: pi_sdk
-    to: implementation
-    label: typed Candidate or Model Check output
-  - from: decision
-    to: verification
-    label: Candidate, Loop-specific Checks, and route recommendation
-  - from: planning
-    to: verification
-    label: Candidate, Loop-specific Checks, and route recommendation
-  - from: implementation
-    to: verification
-    label: Candidate, Loop-specific Checks, and route recommendation
-  - from: verification
-    to: project_runtime
-    label: Result and Exit Report execution facts
-  - from: project_runtime
-    to: decision
-    label: invokes typed Loop attempt and supplies generic ports
-  - from: project_runtime
-    to: planning
-    label: invokes typed Loop attempt and supplies generic ports
-  - from: project_runtime
-    to: implementation
-    label: invokes typed Loop attempt and supplies generic ports
-  - from: planning
-    to: workbench
-    label: Worker Workbench requirements
-  - from: project_runtime
-    to: workbench
-    label: provisions before Work Item Claim acquisition
-  - from: workbench
-    to: workers
-    label: activates under exact Work Item Claim and Assignment
-  - from: workers
-    to: project_runtime
-    label: asserted Worker Report material
-  - from: workers
-    to: change_intake
-    label: Assignment-bound independent discoveries
-  - from: project_runtime
-    to: implementation
-    label: exact integrated Candidate and Evidence
-  - from: change_operations
-    to: graph_projector
-    label: canonical bindings
-  - from: knowledge
-    to: graph_projector
-    label: authored Knowledge relationships
-  - from: source_tests
-    to: graph_projector
-    label: deterministic analysis
-  - from: graph_projector
-    to: alignment_graph
-    label: snapshot-bound facts
-  - from: work_state
-    to: backlog_triage
-    label: pending state readiness and freshness
-  - from: alignment_graph
-    to: backlog_triage
-    label: impact overlap and dependency facts
-  - from: change_intake
-    to: backlog_triage
-    label: source provenance and classification
-  - from: custom_checks
-    to: backlog_triage
-    label: protected Standard-derived fixed ordering criteria
-  - from: backlog_triage
-    to: project_runtime
-    label: explainable Decision-attention candidates only
-  - from: backlog_triage
-    to: views
-    label: shared user and agent filters and ordering
-  - from: work_state
-    to: views
-    label: scheduling and status projections
-  - from: alignment_graph
-    to: views
-    label: bounded semantic queries
-  - from: project_runtime
-    to: review
-    label: separately authorized projection
-  - from: review
-    to: project_runtime
-    label: re-observed approval/request changes
-  - from: review
-    to: change_intake
-    label: ordinary reviewer findings at exact head
-  - from: project_runtime
-    to: delivery
-    label: separately authorizes exact effects
-  - from: delivery
-    to: change_operations
-    label: bounded effect and outcome operations
-  - from: change_operations
-    to: git_archive
-    label: terminal verified segments
+id: architecture
+purpose: Show every System Component in its owning zone and the dependency direction inside each zone; boundary-crossing behavior belongs to named lifecycle, execution, and synchronization diagrams.
+components:
+  - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
+  - { id: api, concept: /system/components/api.md, label: API, zone: core }
+  - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
+  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: core }
+  - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
+  - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
+  - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
+  - { id: verification, concept: /system/components/verification.md, label: Verification, zone: core }
+  - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
+  - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
+  - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
+  - { id: harnesses, concept: /system/components/harnesses.md, label: Harnesses, zone: harness }
+  - { id: preview, concept: /system/components/preview.md, label: Preview, zone: harness }
+  - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
+  - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
+  - { id: project, concept: /system/components/project.md, label: Project Configuration, zone: repository }
+  - { id: package, concept: /system/components/package.md, label: Package, zone: repository }
+  - { id: benchmarks, concept: /system/components/benchmarks.md, label: Benchmarks, zone: repository }
+connections:
+  - { id: api-invokes-runtime, from: api, to: runtime, type: invokes, label: requests bounded Runtime operations }
+  - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns normalized intake }
+  - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts exact Decision attempt }
+  - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt }
+  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts exact Implementation attempt }
+  - { id: decision-invokes-verification, from: decision, to: verification, type: invokes, label: resolves Decision Checks }
+  - { id: planning-invokes-verification, from: planning, to: verification, type: invokes, label: resolves Planning Checks }
+  - { id: implementation-invokes-verification, from: implementation, to: verification, type: invokes, label: resolves Implementation Checks }
+  - { id: verification-consumes-evidence, from: verification, to: evidence, type: consumes, label: resolves Evidence obligations }
+  - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: evaluates current guards }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded alignment facts }
+  - { id: harnesses-invoke-preview, from: harnesses, to: preview, type: invokes, label: captures bounded preview observations }
+  - { id: knowledge-reads-project, from: knowledge, to: project, type: reads, label: validates protected project profile }
+  - { id: change-trace-reads-project, from: change-trace, to: project, type: reads, label: binds repository identity }
+  - { id: package-reads-project, from: package, to: project, type: reads, label: composes protected package configuration }
+  - { id: benchmarks-read-package, from: benchmarks, to: package, type: reads, label: executes packed candidate }
+flows: []

@@ -1,0 +1,57 @@
+id: lifecycle
+purpose: Show accountable intent entering through a client and advancing across the three semantic Loops into accepted Knowledge and Change Trace state.
+components:
+  - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
+  - { id: api, concept: /system/components/api.md, label: API, zone: core }
+  - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
+  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: core }
+  - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
+  - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
+  - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
+  - { id: verification, concept: /system/components/verification.md, label: Verification, zone: core }
+  - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
+  - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
+connections:
+  - id: clients-request-api
+    from: clients
+    to: api
+    type: invokes
+    label: submits bounded authenticated request
+    boundary: { type: trust, failure: Reject unauthenticated, malformed, or oversized input. }
+  - { id: api-invokes-intake, from: api, to: intake, type: invokes, label: submits untrusted intake material }
+  - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns normalized proposal }
+  - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts selected exact revision }
+  - { id: decision-invokes-verification, from: decision, to: verification, type: invokes, label: evaluates Decision Candidate }
+  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
+  - id: runtime-writes-knowledge
+    from: runtime
+    to: knowledge
+    type: writes
+    label: accepts verified desired state
+    boundary: { type: persistence, failure: Preserve prior accepted Knowledge revision. }
+  - id: knowledge-returns-runtime
+    from: knowledge
+    to: runtime
+    type: returns
+    label: returns accepted Knowledge identity
+    boundary: { type: persistence, failure: Report unverifiable Knowledge and block progression. }
+  - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts Planning for approved meaning }
+  - { id: planning-invokes-verification, from: planning, to: verification, type: invokes, label: evaluates Planning Candidate }
+  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts eligible realization }
+  - { id: implementation-invokes-verification, from: implementation, to: verification, type: invokes, label: evaluates Implementation Candidate }
+  - id: runtime-writes-change-trace
+    from: runtime
+    to: change-trace
+    type: writes
+    label: appends accepted operation
+    boundary: { type: persistence, failure: Reject append and retain prior accepted head. }
+flows:
+  - concept: /system/flows/change-lifecycle.md
+    paths:
+      - connections: [clients-request-api, api-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-invokes-verification, verification-returns-runtime, runtime-writes-knowledge, knowledge-returns-runtime, runtime-invokes-planning, planning-invokes-verification, verification-returns-runtime, runtime-invokes-implementation, implementation-invokes-verification, verification-returns-runtime, runtime-writes-change-trace]
+  - concept: /system/flows/decision-to-planning.md
+    paths:
+      - connections: [runtime-invokes-decision, decision-invokes-verification, verification-returns-runtime, runtime-invokes-planning]
+  - concept: /system/flows/planning-to-implementation.md
+    paths:
+      - connections: [runtime-invokes-planning, planning-invokes-verification, verification-returns-runtime, runtime-invokes-implementation]

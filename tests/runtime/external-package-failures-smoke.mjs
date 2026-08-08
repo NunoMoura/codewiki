@@ -315,12 +315,20 @@ async function installPackage(root) {
 				pathToFileURL(join(packageRoot, "dist/runtime/host-runner.js")).href
 			)
 		).runRuntimeHostOnce,
-		runRuntimeSemanticExecutor: (
+		runWikiDecide: (
+			await import(pathToFileURL(join(packageRoot, "dist/api/wiki-decide.js")).href)
+		).runWikiDecide,
+		runRuntimeSelectedWikiPlan: (
+			await import(pathToFileURL(join(packageRoot, "dist/api/wiki-plan.js")).href)
+		).runRuntimeSelectedWikiPlan,
+		buildProjectWorkState: (
 			await import(
-				pathToFileURL(join(packageRoot, "dist/runtime/semantic-executor.js"))
-					.href
+				pathToFileURL(join(packageRoot, "dist/work-state/project.js")).href
 			)
-		).runRuntimeSemanticExecutor,
+		).buildProjectWorkState,
+		readTraceFileSnapshot: (
+			await import(pathToFileURL(join(packageRoot, "dist/traces/reader.js")).href)
+		).readTraceFileSnapshot,
 	};
 }
 
@@ -365,7 +373,10 @@ async function newProject(root, installed, name) {
 		ctx,
 		commands,
 		tools,
-		runRuntimeSemanticExecutor: installed.runRuntimeSemanticExecutor,
+		runWikiDecide: installed.runWikiDecide,
+		runRuntimeSelectedWikiPlan: installed.runRuntimeSelectedWikiPlan,
+		buildProjectWorkState: installed.buildProjectWorkState,
+		readTraceFileSnapshot: installed.readTraceFileSnapshot,
 	};
 }
 
@@ -445,88 +456,77 @@ async function createReadyTrace(
 		),
 		/wiki_change: completed create operation\./,
 	);
-	const decisionInput = {
+	let workState = await project.buildProjectWorkState({
+		repoRoot: project.projectRoot,
+	});
+	let trace = await project.readTraceFileSnapshot(tracePath);
+	const changeState = workState.changes.find(
+		(candidate) => candidate.id === changeId,
+	);
+	assert.ok(changeState);
+	await project.runWikiDecide({
+		repoRoot: project.projectRoot,
+		changeId,
+		expectedRevision: change.revision,
+		expectedChangeDigest: changeState.approval.changeDigest,
+		expectedWorkStateDigest: workState.snapshotDigest,
 		disposition: "approve",
 		rationale: "Approve exact failure-handling Change.",
-	};
-	const decisionContext = {
 		authority: {
 			kind: "user",
 			actor: "external-package-failures-smoke",
 			ref: "approval:user:external-package-failures-smoke",
 		},
 		occurredAt: "2026-06-18T11:00:01.000Z",
-	};
-	const trigger = {
-		kind: "manual_resume",
-		refs: [changeId, `change:${changeId}`],
-	};
-	await project.runRuntimeSemanticExecutor({
-		repoRoot: project.projectRoot,
-		trigger,
-		mode: "preview",
-		maxIterations: 1,
-		context: { decision: decisionContext },
-		adapters: { decision: () => decisionInput },
-	});
-	await project.runRuntimeSemanticExecutor({
-		repoRoot: project.projectRoot,
-		trigger,
 		mode: "append",
-		maxIterations: 1,
-		context: { decision: decisionContext },
-		adapters: { decision: () => decisionInput },
+		expectedBytes: trace.bytes,
 	});
+	workState = await project.buildProjectWorkState({
+		repoRoot: project.projectRoot,
+	});
+	trace = await project.readTraceFileSnapshot(tracePath);
 	const sprintId = `SPR-${suffix}`;
 	const pathScope = options.pathScope ?? "src/**";
 	const verification =
 		options.verification ?? "tests/external-feature.test.mjs";
-	const plannedExecution = await project.runRuntimeSemanticExecutor({
+	const planned = await project.runRuntimeSelectedWikiPlan({
 		repoRoot: project.projectRoot,
-		trigger,
-		mode: "append",
-		maxIterations: 1,
-		context: {
-			planning: {
-				actor: "agent:external-package-failures-smoke",
-				createdAt: "2026-06-18T11:00:02.000Z",
+		expectedWorkStateDigest: workState.snapshotDigest,
+		expectedChangeIds: [changeId],
+		rationale: "Plan exact approved failure-handling Change.",
+		sprints: [
+			{
+				id: sprintId,
+				goal: "Exercise installed package runtime failure handling.",
+				participatingChangeIds: [changeId],
+				workItemIds: [workUnitId],
+				rollbackBoundary: "Revert Sprint work as one boundary.",
+				dependsOn: [],
+				integrationRefs: [],
 			},
-		},
-		adapters: {
-			planning: () => ({
-				rationale: "Plan exact approved failure-handling Change.",
-				sprints: [
-					{
-						id: sprintId,
-						goal: "Exercise installed package runtime failure handling.",
-						participatingChangeIds: [changeId],
-						workItemIds: [workUnitId],
-						rollbackBoundary: "Revert Sprint work as one boundary.",
-						dependsOn: [],
-						integrationRefs: [],
-					},
-				],
-				workItems: [
-					{
-						id: workUnitId,
-						sprintId,
-						owningChangeId: changeId,
-						contributingChangeIds: [],
-						title: "Exercise installed package runtime failure handling",
-						outcome: "Runtime failures produce deterministic remediation.",
-						technicalRequirements: ["Preserve Change Trace authority."],
-						acceptanceRequirements: ["Failure routes remain deterministic."],
-						componentRefs: ["source"],
-						pathScopes: [pathScope],
-						verification: [verification],
-						workerProfile: "implementation",
-						dependsOn: [],
-					},
-				],
-			}),
-		},
-	});
-	const planned = plannedExecution.outcomes[0].result;
+		],
+		workItems: [
+			{
+				id: workUnitId,
+				sprintId,
+				owningChangeId: changeId,
+				contributingChangeIds: [],
+				title: "Exercise installed package runtime failure handling",
+				outcome: "Runtime failures produce deterministic remediation.",
+				technicalRequirements: ["Preserve Change Trace authority."],
+				acceptanceCriteria: ["Failure routes remain deterministic."],
+				componentRefs: ["source"],
+				pathScopes: [pathScope],
+				verification: [verification],
+				workerProfile: "implementation",
+				dependsOn: [],
+			},
+		],
+		actor: "agent:external-package-failures-smoke",
+		createdAt: "2026-06-18T11:00:02.000Z",
+		mode: "append",
+		expectedBytesByChangeId: { [changeId]: trace.bytes },
+	}, [changeId]);
 	const planningEvents = Object.values(planned.events);
 	return {
 		traceId,

@@ -154,7 +154,7 @@ describe("project explain", () => {
 			assert.equal(view.owner?.componentId, "api");
 			assert.deepEqual(view.refs, [
 				".codewiki/kb/system/components/api.md",
-				".codewiki/kb/system/components/source-map.md",
+				".codewiki/kb/system/components/knowledge.md",
 			]);
 		} finally {
 			await rm(root, { recursive: true, force: true });

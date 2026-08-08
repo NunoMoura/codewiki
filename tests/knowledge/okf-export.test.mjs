@@ -26,24 +26,24 @@ function repoOkfInputFiles() {
 }
 
 describe("OKF export compatibility API", () => {
-	it("validates and exports the active CodeWiki KB as OKF v0.1", () => {
+	it("validates and exports the active CodeWiki KB as native OKF v0.2", () => {
 		const input = repoOkfInputFiles();
 		const validation = runWikiOkf({ action: "validate", files: input });
 		const exported = runWikiOkf({ action: "export", files: input });
 
 		assert.equal(validation.action, "validate");
-		assert.equal(validation.okfVersion, "0.1");
+		assert.equal(validation.okfVersion, "0.2");
 		assert.equal(validation.scope, "codewiki-kb");
 		assert.deepEqual(validation.validation.issues, []);
-		assert.equal(validation.validation.conceptCount, 54);
-		assert.equal(validation.validation.reservedCount, 10);
+		assert.equal(validation.validation.conceptCount, 37);
+		assert.equal(validation.validation.reservedCount, 0);
 		assert.equal(exported.action, "export");
-		assert.equal(exported.okfVersion, "0.1");
+		assert.equal(exported.okfVersion, "0.2");
 		assert.deepEqual(exported.validation.issues, []);
-		assert.equal(exported.files.length, 64);
+		assert.equal(exported.files.length, 37);
 		assert.equal(
 			exported.files.some((file) => file.path === "index.md"),
-			true,
+			false,
 		);
 		assert.equal(
 			exported.files.some((file) => file.path.startsWith(".codewiki/traces/")),

@@ -78,7 +78,9 @@ export function validateOkfBundle(
 
 function declaredOkfVersion(documents: readonly OkfDocument[]): OkfSupportedVersion {
 	const declared = documents.find(
-		(document) => document.kind === "index" && isOkfRootIndexPath(document.path),
+		(document) =>
+			(document.kind === "index" && isOkfRootIndexPath(document.path)) ||
+			(document.kind === "concept" && document.path === "lexicon.md"),
 	)?.frontmatter?.okf_version;
 	return OKF_SUPPORTED_VERSIONS.includes(declared as OkfSupportedVersion)
 		? (declared as OkfSupportedVersion)

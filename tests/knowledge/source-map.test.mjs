@@ -44,7 +44,7 @@ function unique(values) {
 function sampleSourceMap() {
 	return {
 		id: "spec.test.source-ownership",
-		sourceRefs: [".codewiki/kb/system/components/source-map.md"],
+		sourceRefs: [".codewiki/kb/system/components/change-trace.md"],
 		defaults: {
 			inheritance: true,
 			maxOwnerDepth: 2,
@@ -53,7 +53,7 @@ function sampleSourceMap() {
 		components: [
 			{
 				id: "traces",
-				doc: ".codewiki/kb/system/components/traces.md",
+				doc: ".codewiki/kb/system/components/change-trace.md",
 				sourcePatterns: ["src/traces/**", "src/api/traces.ts"],
 				testPatterns: ["tests/traces/**"],
 				generatedViews: [],
@@ -62,7 +62,7 @@ function sampleSourceMap() {
 			},
 			{
 				id: "implementation",
-				doc: ".codewiki/kb/system/components/implementation-loop.md",
+				doc: ".codewiki/kb/system/components/implementation.md",
 				sourcePatterns: ["src/implementation/**"],
 				testPatterns: ["tests/implementation/**"],
 				generatedViews: [],
@@ -84,7 +84,7 @@ describe("source ownership map helpers", () => {
 		);
 		assert.equal(
 			sourceMapOwnerForPath(map, "src/implementation/workers.ts")?.doc,
-			".codewiki/kb/system/components/implementation-loop.md",
+			".codewiki/kb/system/components/implementation.md",
 		);
 	});
 
@@ -104,7 +104,7 @@ describe("source ownership map helpers", () => {
 			components: [
 				{
 					id: "tests",
-					doc: ".codewiki/kb/system/components/source-map.md",
+					doc: ".codewiki/kb/system/components/change-trace.md",
 					sourcePatterns: ["tests/**"],
 					testPatterns: ["tests/**"],
 					generatedViews: [],

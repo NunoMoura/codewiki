@@ -31,7 +31,7 @@ export interface SourceOwnershipOptions {
 
 export const CODEWIKI_SOURCE_OWNERSHIP_ID = "spec.system.source-ownership";
 export const CODEWIKI_SOURCE_OWNERSHIP_REFS = [
-	".codewiki/kb/system/components/source-map.md",
+	".codewiki/kb/system/components/knowledge.md",
 ];
 export const CODEWIKI_SOURCE_OWNERSHIP_DEFAULTS: SourceMapDefaults = {
 	inheritance: true,

@@ -1,0 +1,39 @@
+id: synchronization
+purpose: Show provider-neutral Git synchronization with expected-head compare-and-swap, accepted Change history, and post-mutation alignment verification.
+components:
+  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: core }
+  - { id: project, concept: /system/components/project.md, label: Project Configuration, zone: repository }
+  - { id: provider, concept: /system/components/provider-boundary.md, label: Trusted Git Host Boundary, zone: provider }
+  - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
+  - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
+connections:
+  - id: runtime-reads-project
+    from: runtime
+    to: project
+    type: reads
+    label: binds configured repository and expected head
+    boundary: { type: persistence, failure: Block synchronization when configuration cannot be verified. }
+  - id: project-synchronizes-provider
+    from: project
+    to: provider
+    type: synchronizes
+    label: fetches or pushes exact refs
+    boundary: { type: network, failure: Preserve local state and report unavailable remote acceptance. }
+  - id: provider-returns-project
+    from: provider
+    to: project
+    type: returns
+    label: returns authenticated exact ref state
+    boundary: { type: network, failure: Reject unauthenticated, stale, or contradictory provider state. }
+  - { id: project-writes-change-trace, from: project, to: change-trace, type: writes, label: accepts verified canonical history }
+  - id: change-trace-produces-alignment
+    from: change-trace
+    to: alignment
+    type: produces
+    label: projects accepted identities and provenance
+    boundary: { type: persistence, failure: Block projection when canonical history cannot be reduced. }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: confirms synchronized identities }
+flows:
+  - concept: /system/flows/remote-state-synchronization.md
+    paths:
+      - connections: [runtime-reads-project, project-synchronizes-provider, provider-returns-project, project-writes-change-trace, change-trace-produces-alignment, alignment-returns-runtime]

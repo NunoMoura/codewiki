@@ -8,12 +8,6 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { serializeOkfDocument } from "../knowledge/okf-frontmatter.ts";
-import { generateOkfDirectoryIndexes } from "../knowledge/okf-index.ts";
-import {
-	mergeOkfSourceMapExtension,
-	okfSourceMapExtensionForDoc,
-} from "../knowledge/okf-source-map.ts";
-import type { SourceMapContract } from "../knowledge/source-map.ts";
 import { resolveWikiConfig } from "./config.ts";
 import { WIKI_CONFIG_PATH } from "./config-file.ts";
 
@@ -61,8 +55,7 @@ interface BootstrapPlan {
 
 const TARGET_DIRECTORIES = [
 	".codewiki/kb/product/users",
-	".codewiki/kb/product/stories",
-	".codewiki/kb/product/uis",
+	".codewiki/kb/product/stories/maintainer",
 	".codewiki/kb/system/components",
 	".codewiki/kb/system/flows",
 	".codewiki/kb/system/diagrams",
@@ -90,8 +83,6 @@ const EXCLUDED_NAMES = new Set([
 	"dist",
 	"coverage",
 ]);
-const OKF_BOOTSTRAP_TIMESTAMP = "2026-06-30T00:00:00Z";
-
 export async function bootstrapCodewiki(
 	repoRoot: string,
 	options: BootstrapOptions = {},
@@ -207,81 +198,75 @@ function starterFiles(
 	project: string,
 	boundaries: BootstrapBoundary[],
 ): Record<string, string> {
-	const sourceMap = starterSourceOwnershipMap(boundaries);
-	const conceptBodies: Record<string, string> = {
-		".codewiki/kb/lexicon.md": lexiconDoc(project),
-		".codewiki/kb/product/overview.md": productOverviewDoc(project),
-		".codewiki/kb/product/users/maintainers.md": simpleDoc(
-			"Maintainers",
-			`Maintainers use CodeWiki to keep ${project} intent, work state, and implementation evidence close to source.`,
-		),
-		".codewiki/kb/product/users/agents.md": simpleDoc(
-			"Agents",
-			"Agents use CodeWiki traces and KB refs to resume work without treating chat history as source truth.",
-		),
-		".codewiki/kb/product/stories/intent.md": simpleDoc(
-			"Intent",
-			"CodeWiki preserves accepted intent as decisions, planned work, implementation evidence, and source-backed references.",
-		),
-		".codewiki/kb/product/stories/navigation.md": simpleDoc(
-			"Navigation",
-			"CodeWiki starts from compact state views and expands to exact KB, trace, source, test, and Git refs only when needed.",
-		),
-		".codewiki/kb/product/uis/terminal.md": simpleDoc(
-			"Terminal UI",
-			"Terminal and CLI surfaces expose disposable views over KB and trace truth.",
-		),
-		".codewiki/kb/system/components/overview.md": systemOverviewDoc(
-			project,
-			boundaries,
-		),
-		".codewiki/kb/system/components/loop-model.md": loopModelDoc(),
-		".codewiki/kb/system/components/decision-loop.md": loopDoc(
-			"Decision Loop",
-			"Decision iterations capture accepted intent, alternatives, risks, and knowledge impact before planning starts.",
-		),
-		".codewiki/kb/system/components/planning-loop.md": loopDoc(
-			"Planning Loop",
-			"Planning iterations map approved decision refs into executable work units, dependencies, acceptance criteria, and explicit non-executable resolutions.",
-		),
-		".codewiki/kb/system/components/implementation-loop.md": loopDoc(
-			"Implementation Loop",
-			"Implementation iterations record source changes, tests, evidence, worker claims, and coverage of planned work refs.",
-		),
-		".codewiki/kb/system/components/traces.md": tracesDoc(),
-		".codewiki/kb/system/components/api.md": apiDoc(),
-		".codewiki/kb/system/components/runtime.md": runtimeDoc(),
-		".codewiki/kb/system/components/knowledge.md": knowledgeDoc(),
-		".codewiki/kb/system/components/package.md": packageDoc(project),
-		".codewiki/kb/system/components/source-map.md": sourceMapDoc(),
-	};
-	const conceptFiles = {
-		...Object.fromEntries(
-			Object.entries(conceptBodies).map(([path, body]) => [
-				path,
-				starterOkfConcept(path, body, sourceMap),
-			]),
-		),
-		".codewiki/kb/product/DESIGN.md": starterDesignDoc(project),
-	};
-	const navigationFiles = {
-		".codewiki/kb/system/diagrams/index.md": systemDiagramsIndexDoc(),
-	};
-	const indexFiles = Object.fromEntries(
-		generateOkfDirectoryIndexes(
-			Object.entries({ ...conceptFiles, ...navigationFiles }).map(
-				([path, content]) => ({
-					path: path.replace(/^\.codewiki\/kb\//, ""),
-					content,
-				}),
-			),
-		).map((index) => [`.codewiki/kb/${index.path}`, index.content]),
-	);
+	const sourcePatterns = boundaries
+		.filter((boundary) => boundary.kind === "source")
+		.map((boundary) => boundary.path);
+	const testPatterns = boundaries
+		.filter((boundary) => boundary.kind === "tests")
+		.map((boundary) => boundary.path);
 	return {
 		[WIKI_CONFIG_PATH]: configJson(project),
-		...conceptFiles,
-		...navigationFiles,
-		...indexFiles,
+		".codewiki/kb/lexicon.md": nativeDocument(
+			{
+				okf_version: "0.2",
+				type: "Lexicon",
+				title: `${project} Lexicon`,
+				description: `Active vocabulary for ${project}.`,
+				status: "stable",
+				tags: ["system", "vocabulary"],
+			},
+			`# ${project} Lexicon\n\n| Term | Definition | Owner |\n| --- | --- | --- |\n| Knowledge | Accepted desired Product and System state. | [Knowledge](system/components/knowledge.md) |\n| Maintainer | Accountable human who accepts project intent. | [Maintainer](product/users/maintainer.md) |\n`,
+		),
+		".codewiki/kb/product/DESIGN.md": starterDesignDoc(project),
+		".codewiki/kb/product/users/maintainer.md": nativeDocument(
+			{
+				type: "User",
+				title: "Maintainer",
+				description: `Accountable human who maintains ${project} intent.`,
+				status: "stable",
+				tags: ["product", "user"],
+			},
+			`# Maintainer\n\nMaintainers accept desired state, authorize protected actions, and inspect whether ${project} realization remains aligned.\n`,
+		),
+		".codewiki/kb/product/stories/maintainer/maintain-intent.md": nativeDocument(
+			{
+				type: "User Story",
+				title: "Maintain Intent",
+				description: `A maintainer wants ${project} desired state kept close to its realization.`,
+				status: "stable",
+				codewiki_user: "/product/users/maintainer.md",
+				tags: ["product", "story"],
+			},
+			`# Maintain Intent\n\nAs a maintainer, I want accepted Product and System intent recorded as desired Knowledge so implementation can be checked against an explicit target.\n`,
+		),
+		".codewiki/kb/system/components/source.md": starterComponent({
+			id: "source",
+			title: "Source",
+			description: `Owns ${project} production source and test realization.`,
+			sourcePatterns,
+			testPatterns,
+			body: `# Source\n\nSource and tests realize accepted ${project} Knowledge. Each production path has one intended Component owner.\n`,
+		}),
+		".codewiki/kb/system/components/knowledge.md": starterComponent({
+			id: "knowledge",
+			title: "Knowledge",
+			description: `Owns ${project} desired-state concepts and topology.`,
+			sourcePatterns: [".codewiki/kb/**"],
+			testPatterns: [],
+			body: `# Knowledge\n\nKnowledge contains accepted desired state only. Git carries content history, while generated navigation remains disposable.\n`,
+		}),
+		".codewiki/kb/system/flows/project-realization.md": nativeDocument(
+			{
+				type: "System Flow",
+				title: "Project Realization",
+				description: `Relates ${project} desired Knowledge to source and test realization.`,
+				status: "stable",
+				tags: ["system", "flow"],
+				codewiki_relationships: [realizesMaintainerStory("Project realization provides the stable alignment path required by this Story.")],
+			},
+			`# Project Realization\n\nAccepted Knowledge constrains source and tests. Implementation Evidence establishes realization without allowing executable state to silently redefine intent.\n`,
+		),
+		".codewiki/kb/system/diagrams/architecture.yaml": starterArchitectureDiagram(),
 	};
 }
 
@@ -289,373 +274,101 @@ function configJson(project: string): string {
 	return `${JSON.stringify(resolveWikiConfig({ project }), null, "\t")}\n`;
 }
 
-function starterOkfConcept(
-	path: string,
+function nativeDocument(
+	frontmatter: Record<string, unknown>,
 	body: string,
-	sourceMap: SourceMapContract,
 ): string {
-	const frontmatter = {
-		type: "Concept",
-		title: markdownTitle(body),
-		description: markdownDescription(body),
-		tags: okfTagsForPath(path),
-		timestamp: OKF_BOOTSTRAP_TIMESTAMP,
-	};
-	const extension =
-		okfSourceMapExtensionForDoc(sourceMap, path) ||
-		packageOkfSourceMapExtension(sourceMap, path);
-	return serializeOkfDocument({
-		frontmatter: extension
-			? mergeOkfSourceMapExtension(frontmatter, extension)
-			: frontmatter,
-		body,
-	});
+	return serializeOkfDocument({ frontmatter, body });
 }
 
-function packageOkfSourceMapExtension(
-	sourceMap: SourceMapContract,
-	path: string,
-) {
-	if (path !== ".codewiki/kb/system/components/package.md") return undefined;
-	const component = sourceMap.components.find((item) => item.id === "package");
-	if (!component) return undefined;
+function starterComponent(input: {
+	id: string;
+	title: string;
+	description: string;
+	sourcePatterns: string[];
+	testPatterns: string[];
+	body: string;
+}): string {
+	return nativeDocument(
+		{
+			type: "System Component",
+			title: input.title,
+			description: input.description,
+			status: "stable",
+			tags: ["system", "component"],
+			codewiki_component: input.id,
+			codewiki_source_patterns: input.sourcePatterns,
+			codewiki_test_patterns: input.testPatterns,
+			...(input.testPatterns.length === 0
+				? {
+						codewiki_test_policy: "inherited",
+						codewiki_test_rationale:
+							"This Component is verified by bundle-level Knowledge validation.",
+					}
+				: {}),
+			codewiki_relationships: [
+				realizesMaintainerStory(`${input.title} supplies the System responsibility required by this Story.`),
+			],
+		},
+		input.body,
+	);
+}
+
+function realizesMaintainerStory(rationale: string): Record<string, string> {
 	return {
-		codewiki_component: component.id,
-		codewiki_components: [component.id],
-		codewiki_source_patterns: [...component.sourcePatterns],
-		codewiki_test_patterns: [...component.testPatterns],
-		...(component.role ? { codewiki_role: component.role } : {}),
-		codewiki_source_map: [
-			{
-				id: component.id,
-				doc: component.doc,
-				source_patterns: [...component.sourcePatterns],
-				test_patterns: [...component.testPatterns],
-				...(component.role ? { role: component.role } : {}),
-			},
-		],
+		type: "realizes",
+		target: "/product/stories/maintainer/maintain-intent.md",
+		rationale,
 	};
-}
-
-function markdownTitle(body: string): string {
-	return body.match(/^#\s+(.+)$/m)?.[1]?.trim() || "CodeWiki Knowledge";
-}
-
-function markdownDescription(body: string): string {
-	return (
-		body
-			.split(/\n\n+/)
-			.map((paragraph) => paragraph.trim().replace(/\s+/g, " "))
-			.find(
-				(paragraph) =>
-					paragraph &&
-					!paragraph.startsWith("#") &&
-					!paragraph.startsWith("```") &&
-					!paragraph.startsWith("- "),
-			) || markdownTitle(body)
-	);
-}
-
-function okfTagsForPath(path: string): string[] {
-	return uniqueStrings([
-		"codewiki",
-		...path
-			.replace(/^\.codewiki\/kb\//, "")
-			.replace(/\.md$/, "")
-			.split(/[/\s_-]+/),
-	]);
-}
-
-function uniqueStrings(values: string[]): string[] {
-	return Array.from(
-		new Set(values.map((value) => value.toLowerCase().trim()).filter(Boolean)),
-	);
-}
-
-function lexiconDoc(project: string): string {
-	return `# Lexicon\n\n${project} uses CodeWiki terms exactly. Semantic loops are decision, planning, and implementation. Runtime is an outer coordination loop. Trace JSONL is append-only workflow truth. Views are disposable projections.\n`;
-}
-
-function productOverviewDoc(project: string): string {
-	return `# Product Overview\n\n${project} uses CodeWiki to keep product intent, system design, and work evidence source-backed. The KB explains intended behavior. Trace records explain workflow history. Source and tests remain implementation truth.\n`;
 }
 
 function starterDesignDoc(project: string): string {
-	return serializeOkfDocument({
-		frontmatter: {
+	return nativeDocument(
+		{
 			version: "alpha",
 			name: project,
-			description: `Starter visual identity and design-system contract for ${project}.`,
 			colors: {
-				primary: "#111827",
-				secondary: "#475569",
-				tertiary: "#0F766E",
-				neutral: "#F8FAFC",
+				canvas: "#F8FAFC",
 				surface: "#FFFFFF",
-				"on-surface": "#111827",
+				ink: "#111827",
+				accent: "#0F766E",
 				error: "#B42318",
 			},
 			typography: {
-				"headline-lg": {
-					fontFamily: "system-ui",
-					fontSize: "32px",
-					fontWeight: 700,
-					lineHeight: 1.2,
-					letterSpacing: "-0.02em",
-				},
-				"body-md": {
+				body: {
 					fontFamily: "system-ui",
 					fontSize: "16px",
 					fontWeight: 400,
 					lineHeight: 1.5,
 				},
-				"label-md": {
-					fontFamily: "ui-monospace",
-					fontSize: "12px",
-					fontWeight: 600,
-					lineHeight: 1.3,
-					letterSpacing: "0.04em",
-				},
 			},
-			rounded: { sm: "4px", md: "8px", lg: "12px", full: "9999px" },
-			spacing: {
-				xs: "4px",
-				sm: "8px",
-				md: "16px",
-				lg: "24px",
-				xl: "32px",
-			},
-			components: {
-				page: {
-					backgroundColor: "{colors.neutral}",
-					textColor: "{colors.on-surface}",
-				},
-				"button-primary": {
-					backgroundColor: "{colors.tertiary}",
-					textColor: "{colors.surface}",
-					typography: "{typography.label-md}",
-					rounded: "{rounded.md}",
-					padding: "{spacing.md}",
-				},
-				card: {
-					backgroundColor: "{colors.surface}",
-					textColor: "{colors.on-surface}",
-					rounded: "{rounded.lg}",
-					padding: "{spacing.lg}",
-				},
-			},
-			type: "Concept",
+			spacing: { xs: "4px", sm: "8px", md: "16px", lg: "24px" },
+			rounded: { sm: "4px", md: "8px", lg: "12px" },
+			components: {},
+			type: "Design System",
 			title: `${project} Design System`,
-			tags: ["codewiki", "product", "design-system", "visual-identity"],
-			timestamp: OKF_BOOTSTRAP_TIMESTAMP,
+			description: `Visual and interaction rules for ${project}.`,
+			status: "stable",
+			tags: ["product", "design"],
 		},
-		body: `# Design System: ${project}
-
-## Overview
-
-This file is the canonical visual-identity contract for ${project}. The initial values are a deliberately neutral, accessible baseline. Replace them with observed and approved brand choices as the product develops; do not silently infer permanent brand rules from framework defaults.
-
-This document follows Google's open [DESIGN.md alpha specification](https://github.com/google-labs-code/design.md/blob/main/docs/spec.md). Machine-readable tokens are normative; prose explains why they exist and how agents should apply them.
-
-## Colors
-
-Primary ink and neutral surfaces provide the default hierarchy. Tertiary teal is the single interaction accent. Record every added color as a token with one functional role, and preserve WCAG AA contrast for text and controls.
-
-## Typography
-
-The starter uses the local system sans-serif stack for interface text and the local monospace stack for technical labels. Document licensed font family names, weights, fallback stacks, loading paths, and usage rules here before introducing external font dependencies.
-
-## Layout
-
-Use a mobile-first responsive grid, an 8px spacing rhythm with a 4px micro-step, bounded readable content widths, and no horizontal overflow. Record intentional density, breakpoints, and exceptional compositions instead of relying on implicit framework defaults.
-
-## Elevation & Depth
-
-Prefer borders, tonal surfaces, and restrained shadows. Elevation must communicate hierarchy or interaction state; decorative glow is not a substitute for structure.
-
-## Shapes
-
-Use the rounded token scale consistently. Touch targets must remain at least 44px even when visible controls are compact.
-
-## Components
-
-Primary buttons use the tertiary interaction color. Cards use the surface and on-surface pair. Add component tokens and prose together whenever a reusable visual rule becomes established.
-
-## Iconography
-
-Use one coherent SVG icon family with consistent view boxes, stroke weight, optical size, and filled-versus-outline rules. Prefer repository-relative asset paths. Do not use emoji as product iconography. Record icon package names, license links, and custom asset directories here.
-
-## Visual References
-
-Record durable HTTPS URLs or repository-relative paths to approved mood boards, screenshots, logos, illustrations, and prototypes. No visual references were established during bootstrap.
-
-## Do's and Don'ts
-
-- Do update tokens and rationale together.
-- Do preserve accessible contrast, focus visibility, responsive behavior, and reduced-motion support.
-- Do cite exact font, icon, image, and logo sources.
-- Don't treat generated mockups, temporary files, or framework defaults as approved brand truth.
-- Don't introduce a second competing design-token source without an explicit migration.
-`,
-	});
+		`# ${project} Design System\n\n## Overview\n\nUse calm, accessible surfaces that expose exact project facts without fabricating status or certainty.\n\n## Colors\n\nUse accent for permitted action and error only for failure or danger. Color never carries meaning alone.\n\n## Typography\n\nUse readable system typography and preserve visible focus.\n\n## Layout\n\nUse mobile-first hierarchy with no horizontal overflow.\n\n## Elevation & Depth\n\nPrefer borders and tonal surfaces over decorative shadows.\n\n## Shapes\n\nUse the token scale consistently and preserve 44px touch targets.\n\n## Iconography\n\nUse consistent labeled icons that reinforce text without carrying state alone.\n\n## Components\n\nComponents expose state, authority, and unavailable conditions before progressive detail.\n\n## Do's and Don'ts\n\n- Do preserve accessible contrast and reduced motion.\n- Don't hide uncertainty or duplicate System policy.\n\n## Visual References\n\nTreat visual references as illustrative inputs and validate resulting surfaces against tokens, accessibility requirements, and exact project facts.\n`,
+	);
 }
 
-function systemOverviewDoc(
-	project: string,
-	boundaries: BootstrapBoundary[],
-): string {
-	const boundaryLines = boundaries.length
-		? boundaries.map((boundary) => `- ${boundary.kind}: \`${boundary.path}\``)
-		: ["- No source boundaries detected yet."];
-	return `# System Overview\n\n${project} CodeWiki state has three durable roots: KB knowledge, trace JSONL workflow records, and disposable views.\n\n## Detected boundaries\n\n${boundaryLines.join("\n")}\n`;
-}
-
-function loopModelDoc(): string {
-	return `# Loop Model\n\nCodeWiki has exactly three semantic loops: decision, planning, and implementation. Runtime coordinates work outside those loops. Each semantic loop emits durable facts with \`loop\` naming the semantic authority and \`event\` naming what changed, plus output, progress, and exit status.\n`;
-}
-
-function loopDoc(title: string, body: string): string {
-	return `# ${title}\n\n${body}\n\nExit conditions belong to this loop. They may use deterministic helper predicates, but verdict and routing stay loop-owned. Valid exit statuses are \`continue\`, \`exit\`, \`route_back\`, and \`blocked\`.\n`;
-}
-
-function tracesDoc(): string {
-	return `# Traces\n\nTrace files live at \`.codewiki/traces/TRACE-*.jsonl\`. Records are append-only. Semantic events include \`loop\` plus a specific event such as \`change_approved\`, \`work_units_created\`, or \`evidence_accepted\`. Runtime events coordinate claims and omit \`loop\`; they are not semantic loop truth.\n`;
-}
-
-function apiDoc(): string {
-	return `# API\n\nCodeWiki host adapters should call core facades for state, config, decisions, planning, implementation, runtime work-unit claims, and archive lifecycle. Adapters must not introduce alternate workflow truth.\n`;
-}
-
-function runtimeDoc(): string {
-	return `# Runtime\n\nRuntime schedules and claims executable work from disposable views. Runtime is an outer coordination loop, not a fourth semantic loop. Runtime policy comes from config and durable work state comes from traces.\n`;
-}
-
-function knowledgeDoc(): string {
-	return `# Knowledge\n\nKnowledge lives in \`.codewiki/kb/**\`. Product docs explain user-facing intent. System docs explain architecture and loop behavior. Markdown concept docs use OKF v0.1 frontmatter with CodeWiki extension fields as the active ownership read path.\n`;
-}
-
-function sourceMapDoc(): string {
-	return `# Source Ownership\n\nOKF concept frontmatter maps source, tests, generated views, trace events, and owning docs. There is no separate source-map YAML truth file.\n`;
-}
-
-function packageDoc(project: string): string {
-	return `# Package Boundary\n\n${project} package metadata, README, TypeScript entrypoint, and install checks define the package distribution boundary.\n`;
-}
-
-function systemDiagramsIndexDoc(): string {
-	return [
-		"# System Diagrams",
-		"",
-		"Canonical diagram data lives in YAML files in this directory.",
-		"Renderer output is not source truth.",
-		"",
-		"## Diagrams",
-		"",
-		"* `architecture.yaml` - High-level architecture map.",
-		"* `component-map.yaml` - Runtime component relationships.",
-		"* `context-map.yaml` - Users, access surfaces, and project boundary.",
-		"* `data-model.yaml` - Durable entities and evidence relationships.",
-		"* `key-flow.yaml` - Primary user/agent workflow sequence.",
-		"* `state-lifecycle.yaml` - Semantic loop and runtime state lifecycle.",
-		"",
-	].join("\n");
-}
-
-function simpleDoc(title: string, body: string): string {
-	return `# ${title}\n\n${body}\n`;
-}
-
-function starterSourceOwnershipMap(
-	boundaries: BootstrapBoundary[],
-): SourceMapContract {
-	const sourcePatterns = boundaries
-		.filter((boundary) => boundary.kind === "source")
-		.map((boundary) => boundary.path);
-	const testPatterns = boundaries
-		.filter((boundary) => boundary.kind === "tests")
-		.map((boundary) => boundary.path);
-	const docPatterns = boundaries
-		.filter((boundary) => boundary.kind === "docs")
-		.map((boundary) => boundary.path);
-	return {
-		id: "spec.system.source-ownership",
-		sourceRefs: [".codewiki/kb/system/components/source-map.md"],
-		defaults: {
-			inheritance: true,
-			maxOwnerDepth: 2,
-			excluded: [
-				"node_modules/**",
-				".git/**",
-				".pi/**",
-				"dist/**",
-				"coverage/**",
-			],
-		},
-		components: [
-			{
-				id: "package",
-				doc: "README.md",
-				sourcePatterns: ["package.json", "README.md"],
-				testPatterns,
-				generatedViews: [],
-				traceEvents: [],
-				role: "package_entrypoint",
-				...(testPatterns.length === 0
-					? {
-							testPolicy: "inherited",
-							testRationale: "No test root detected during bootstrap.",
-						}
-					: {}),
-			},
-			{
-				id: "knowledge",
-				doc: ".codewiki/kb/system/components/knowledge.md",
-				sourcePatterns: [".codewiki/kb/**"],
-				testPatterns: [],
-				generatedViews: [],
-				traceEvents: [],
-				role: "hot_knowledge",
-				testPolicy: "inherited",
-				testRationale:
-					"Knowledge docs are validated through OKF/source ownership checks.",
-			},
-			...(sourcePatterns.length > 0
-				? [
-						{
-							id: "source",
-							doc: ".codewiki/kb/system/components/overview.md",
-							sourcePatterns,
-							testPatterns,
-							generatedViews: [],
-							traceEvents: [],
-							role: "implementation_source",
-							...(testPatterns.length === 0
-								? {
-										testPolicy: "inherited",
-										testRationale: "No test root detected during bootstrap.",
-									}
-								: {}),
-						},
-					]
-				: []),
-			...(docPatterns.length > 0
-				? [
-						{
-							id: "repo_docs",
-							doc: ".codewiki/kb/product/overview.md",
-							sourcePatterns: docPatterns,
-							testPatterns: [],
-							generatedViews: [],
-							traceEvents: [],
-							role: "repository_docs",
-							testPolicy: "inherited",
-							testRationale:
-								"Repository documentation is reviewed through knowledge and source ownership checks.",
-						},
-					]
-				: []),
-		],
-	};
+function starterArchitectureDiagram(): string {
+	return `id: architecture
+purpose: Show desired Knowledge and executable source as separately owned Components connected by one stable realization Flow.
+components:
+  - { id: source, concept: /system/components/source.md, label: Source, zone: repository }
+  - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
+connections:
+  - { id: source-reads-knowledge, from: source, to: knowledge, type: reads, label: reads accepted desired state }
+  - { id: knowledge-returns-source, from: knowledge, to: source, type: returns, label: returns validated intent and ownership }
+flows:
+  - concept: /system/flows/project-realization.md
+    paths:
+      - connections: [source-reads-knowledge, knowledge-returns-source]
+`;
 }
 
 async function bootstrapProjectName(

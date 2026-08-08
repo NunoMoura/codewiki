@@ -1,0 +1,62 @@
+id: execution
+purpose: Show claimed Work Item execution through an isolated harness, Candidate-bound Evidence, Verification, Integration routing, and deterministic recovery.
+components:
+  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: core }
+  - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
+  - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
+  - { id: harnesses, concept: /system/components/harnesses.md, label: Harnesses, zone: harness }
+  - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
+  - { id: preview, concept: /system/components/preview.md, label: Preview, zone: harness }
+  - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
+  - { id: verification, concept: /system/components/verification.md, label: Verification, zone: core }
+  - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
+connections:
+  - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: selects eligible claimed work }
+  - { id: work-state-returns-runtime, from: work-state, to: runtime, type: returns, label: returns exact scheduling snapshot }
+  - id: runtime-invokes-harness
+    from: runtime
+    to: harnesses
+    type: invokes
+    label: dispatches isolated worker request
+    boundary: { type: authority, failure: Reject unsupported capability or invalid assignment. }
+  - id: harness-returns-implementation
+    from: harnesses
+    to: implementation
+    type: returns
+    label: returns bounded worker output
+    boundary: { type: trust, failure: Mark malformed or unbound output unavailable. }
+  - id: implementation-invokes-preview
+    from: implementation
+    to: preview
+    type: invokes
+    label: requests Candidate-bound observation
+    boundary: { type: trust, failure: Record unavailable preview without weakening policy. }
+  - id: preview-produces-evidence
+    from: preview
+    to: evidence
+    type: produces
+    label: returns bounded observation metadata
+    boundary: { type: trust, failure: Reject stale, oversized, or mismatched observation. }
+  - { id: evidence-returns-verification, from: evidence, to: verification, type: returns, label: returns resolved Evidence records }
+  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
+  - id: runtime-writes-change-trace
+    from: runtime
+    to: change-trace
+    type: writes
+    label: appends integrated result
+    boundary: { type: persistence, failure: Reject append and preserve prior accepted head. }
+  - id: change-trace-returns-runtime
+    from: change-trace
+    to: runtime
+    type: returns
+    label: reloads accepted history
+    boundary: { type: persistence, failure: Block recovery on unknown or invalid history. }
+  - { id: work-state-produces-alignment, from: work-state, to: alignment, type: produces, label: projects current coordination relationships }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns recovered impact and provenance }
+flows:
+  - concept: /system/flows/work-item-execution.md
+    paths:
+      - connections: [runtime-reads-work-state, work-state-returns-runtime, runtime-invokes-harness, harness-returns-implementation, implementation-invokes-preview, preview-produces-evidence, evidence-returns-verification, verification-returns-runtime, runtime-writes-change-trace]
+  - concept: /system/flows/recovery.md
+    paths:
+      - connections: [change-trace-returns-runtime, runtime-reads-work-state, work-state-produces-alignment, alignment-returns-runtime]

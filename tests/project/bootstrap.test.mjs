@@ -125,15 +125,16 @@ describe("project bootstrap", () => {
 			);
 			assert.equal(design.frontmatter.version, "alpha");
 			assert.equal(design.frontmatter.name, "bootstrap-fixture");
-			assert.equal(design.frontmatter.type, "Concept");
+			assert.equal(design.frontmatter.type, "Design System");
+			assert.equal(design.frontmatter.status, "stable");
 			assert.equal(design.frontmatter.title, "bootstrap-fixture Design System");
-			assert.equal(design.frontmatter.colors.tertiary, "#0F766E");
+			assert.equal(design.frontmatter.colors.accent, "#0F766E");
 			assert.equal(
-				design.frontmatter.typography["body-md"].fontFamily,
+				design.frontmatter.typography.body.fontFamily,
 				"system-ui",
 			);
-			assert.match(design.body, /## Iconography/);
-			assert.match(design.body, /## Visual References/);
+			assert.match(design.body, /## Components/);
+			assert.match(design.body, /## Do's and Don'ts/);
 			assert.equal(
 				result.created.includes(".codewiki/kb/system/source-map.yaml"),
 				false,
@@ -182,11 +183,16 @@ describe("project bootstrap", () => {
 			});
 			assert.deepEqual(issues, []);
 			assert.equal(
-				markdownFiles
-					.filter((entry) => !entry.path.endsWith("/index.md"))
-					.every((entry) => entry.hasFrontmatter),
+				markdownFiles.every((entry) => entry.hasFrontmatter),
 				true,
 			);
+			assert.equal(
+				files.some(
+					(path) => path.endsWith("/index.md") || path.endsWith("/log.md"),
+				),
+				false,
+			);
+			assert.equal(files.some((path) => path.includes("/product/uis/")), false);
 			const okf = validateOkfBundle(
 				await Promise.all(
 					markdownFiles.map(async (entry) => ({
@@ -196,6 +202,9 @@ describe("project bootstrap", () => {
 				),
 			);
 			assert.deepEqual(okf.issues, []);
+			assert.equal(okf.version, "0.2");
+			assert.equal(okf.conceptCount, 7);
+			assert.equal(okf.reservedCount, 0);
 			assert.equal(
 				okf.documents.find(
 					(document) => document.path === "system/components/knowledge.md",

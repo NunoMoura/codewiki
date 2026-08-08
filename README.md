@@ -33,7 +33,7 @@ CodeWiki is private pre-production software under active clean-cut refactoring.
 
 The package is currently `@nunomoura/codewiki@0.3.0` with `"private": true` and is not published to the npm registry yet. Avoid global/user installs for normal mutation workflows. Current source exposes an optional Pi extension and compatibility CLI/test harness, but the approved target boundary below is not yet fully implemented.
 
-This source repository does not install or load CodeWiki and does not self-host. Reintroducing source self-hosting requires a new explicit product Decision; historical pins, traces, approvals, and releases grant no authority.
+This source repository does not install or load CodeWiki during stabilization. Future source-repository dogfooding is ratified only for an immutable stable release installed in an isolated external controller and requires a separate explicit activation Change after external gates pass; historical pins, traces, approvals, and releases grant no authority.
 
 ## Primary product boundary
 
@@ -154,7 +154,7 @@ Pi-Lens, LSP, compilers, linters, tests, browsers, AST tools, and Skills remain 
 
 For exact `high | critical` Decision risk, Check Catalog `10.0.0` additionally requires `security_independent_challenge_reviewed` and `security_residual_risk_authorized`. The second challenge runs through a distinct no-tool provider/model route and produces separate asserted Candidate-bound Evidence. Evidence schema `1.4.0` retains `1.3.0` approval scoping to one exact Check/version and approval purpose and adds exact model request/Assessment identity. Residual-risk approval requires a qualified security/risk role, an authenticated identity different from general Candidate approval, both complete supported challenge assessments from distinct producers/routes/configurations, exact Candidate risk, and digest-only rationale/finding bindings. Missing routes, disagreement, unavailable assessment, generic approval reuse, same-identity approval, or stale/wrong-Candidate Evidence remains `indeterminate`; models and scanners cannot accept risk.
 
-`npm run lab:security-calibration -- --file /sealed/security-calibration.json --gate` evaluates off-repository human-labeled scanner/evaluator route receipts under `codewiki.security-route-calibration@1.0.0`. Exact Scanner Suite `3.0.0` and atomic evaluator `2.0.0` identities, a complete pass/fail/unavailable matrix for all six scanner families, artifact/source/request/environment/configuration digests, scanner/evaluator identities, Evidence refs, latency, and cost are required. Reports keep false passes, false failures, escaped critical defects, `indeterminate`, latency, and cost separate per route. Any false pass, escaped critical defect, incomplete matrix, protocol drift, or score below the configured threshold blocks that route. This Lab report grants no Result, promotion, or Runtime authority; sealed execution remains pending real off-repository human cases and production scanner receipts.
+Target `npm run benchmark:calibrate -- --kind security --file /sealed/security-calibration.json --gate` evaluates off-repository human-labeled scanner/evaluator route receipts under `codewiki.security-route-calibration@1.0.0`. Exact Scanner Suite `3.0.0` and atomic evaluator `2.0.0` identities, a complete pass/fail/unavailable matrix for all six scanner families, artifact/source/request/environment/configuration digests, scanner/evaluator identities, Evidence refs, latency, and cost are required. Reports keep false passes, false failures, escaped critical defects, `indeterminate`, latency, and cost separate per route. Any false pass, escaped critical defect, incomplete matrix, protocol drift, or score below the configured threshold blocks that route. This Lab report grants no Result, promotion, or Runtime authority; sealed execution remains pending real off-repository human cases and production scanner receipts.
 
 ## Work and project control plane
 
@@ -225,22 +225,13 @@ Target Knowledge support is OKF v0.2 with v0.1 fallback consumption, including `
 
 Imported `generated`, `verified`, `status`, `stale_after`, provenance, or Attested Computation metadata never grants CodeWiki authority or Loop exit. Change Traces remain outside OKF.
 
-## Relationship queries and learning
+## Relationship queries and improvement intake
 
-Work, Alignment, and Learning graphs are disposable views over canonical sources. Agents may use bounded read-only semantic queries that include snapshot digest, provenance, authority class, coverage, truncation, and staleness. No arbitrary Cypher, graph mutation, canonical graph file, or absence-as-proof under partial coverage.
+WorkState and Alignment Graph queries are disposable views over canonical sources. Agents may use bounded read-only semantic queries that include snapshot digest, provenance, authority class, coverage, truncation, and staleness. No arbitrary Cypher, graph mutation, canonical graph file, or absence-as-proof under partial coverage.
 
-> **Changes improve future Changes.**
+CodeWiki has no separate project-learning, Feedback Bundle, or self-improvement subsystem. User feedback, benchmark regressions, CI/security findings, worker discoveries, delivery outcomes, and maintainer suggestions enter through normal bounded Change Intake. Improvement then follows the same authenticated selection, Decision, Planning, Implementation, Verification, and release authority as any other Change. CodeWiki never uploads private project traces automatically.
 
-Compact candidate/Check/repair/outcome lineage in Change Traces can derive:
-
-- **Repair Episode:** failed/indeterminate Result → repair candidate → later outcome;
-- **Repair Pattern:** applicable aggregation of successful and harmful Episodes.
-
-These remain advisory projections, not a Lesson/Memory entity or fourth Loop. Learning cannot suppress Checks, lower thresholds, change activation, grant authority, or promote itself. Stable guidance enters Knowledge/config/source only through another accountable Change.
-
-Lab must compare current feedback, raw history, retrieved Repair Episodes, and issue-class-routed validated Repair Patterns using temporal/component holdouts. Retrieval ships only when measured benefit exceeds latency/cost without worsening false passes or escaped regressions.
-
-Recurring suspected CodeWiki defects may produce a local allowlisted pseudonymized Feedback Bundle. User previews/redacts and separately approves export. Full traces, project content/identity, paths, commits, prompts, reasoning, raw output, credentials, exact timestamps, and project-defined Check content are excluded by default. Initial transport is manual file only.
+After stabilization and explicit activation, an immutable released CodeWiki version may operate on this source repository from an isolated external controller to coordinate the next version. It must not load mutable workspace code or edit its installed package, and dogfood evidence cannot replace independent CI, packed external proof, benchmark oracles, human review, or release authorization.
 
 ## Target source layout
 
@@ -253,7 +244,6 @@ src/
     triage/
   work-state/
   alignment/
-    benchmarks/
   decision/              # all Decision semantics and attempt composition
   planning/              # all Planning semantics and attempt composition
   implementation/        # all Implementation semantics and attempt composition
@@ -273,23 +263,24 @@ src/
     effects/
     recovery/
     lifecycle/
-  pi/                    # Pi-only adapter implementations
-    coordinator/
-    sessions/
-    workers/
-    ui/
   api/
-  cli/
-  dashboard/
+  clients/
+    cli/
+    dashboard/
+    pi/
+  harnesses/
+    pi/
   preview/
   knowledge/
   git/
   error-handling/
   project/
   utils/
+
+benchmarks/              # nonproduction paired harness and release measurement
 ```
 
-Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Pi implements adapter ports and owns no Loop policy or canonical authority. Clean cuts keep no old-path re-exports.
+Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Clients own user interaction; harnesses implement Runtime-selected execution ports and own no Loop policy or canonical authority. Repository-root benchmarks compare every real supported harness alone with the same harness under CodeWiki and do not ship in the production package. Clean cuts keep no old-path re-exports.
 
 Current `src/loops/**`, `src/verification/**`, `src/change-trace/**`, legacy trace/WorkState paths, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 
@@ -387,12 +378,12 @@ If CodeWiki cannot materially reduce drift, false acceptance, lost context, repe
 
 ## Documentation
 
-- [Product overview](.codewiki/kb/product/overview.md)
-- [System overview](.codewiki/kb/system/components/overview.md)
-- [Alignment model](.codewiki/kb/system/components/alignment-model.md)
-- [Loop model](.codewiki/kb/system/components/loop-model.md)
-- [Loop exit](.codewiki/kb/system/components/verification.md)
+- [Maintainer intent](.codewiki/kb/product/stories/maintainer/maintain-intent.md)
+- [Design system](.codewiki/kb/product/DESIGN.md)
+- [System architecture](.codewiki/kb/system/diagrams/architecture.yaml)
+- [Alignment](.codewiki/kb/system/components/alignment.md)
+- [Verification](.codewiki/kb/system/components/verification.md)
 - [Runtime](.codewiki/kb/system/components/runtime.md)
 - [Knowledge](.codewiki/kb/system/components/knowledge.md)
 - [Lexicon](.codewiki/kb/lexicon.md)
-- [Refactoring plan](REFACTORING_PLAN.md)
+- [Temporary refactoring plan](REFACTORING_PLAN.md)

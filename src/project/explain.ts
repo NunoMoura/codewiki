@@ -159,11 +159,11 @@ async function projectExplain(
 ): Promise<ProjectExplainView> {
 	const product = await readKbSummary(
 		repoRoot,
-		".codewiki/kb/product/overview.md",
+		".codewiki/kb/product/stories/maintainer/maintain-intent.md",
 	);
 	const system = await readKbSummary(
 		repoRoot,
-		".codewiki/kb/system/components/overview.md",
+		".codewiki/kb/system/components/runtime.md",
 	);
 	return {
 		kind: "project",
@@ -171,11 +171,12 @@ async function projectExplain(
 		summary:
 			product ||
 			system ||
-			"CodeWiki is a Pi-native software-development OS backed by KB docs, append-only traces, and generated views.",
+			"CodeWiki aligns accepted intent, desired Knowledge, implementation, and guarded project effects.",
 		refs: [
-			".codewiki/kb/product/overview.md",
-			".codewiki/kb/system/components/overview.md",
-			".codewiki/kb/system/components/api-tools.md",
+			".codewiki/kb/product/stories/maintainer/maintain-intent.md",
+			".codewiki/kb/system/components/runtime.md",
+			".codewiki/kb/system/components/api.md",
+			".codewiki/kb/system/diagrams/architecture.yaml",
 		],
 		sections: [
 			{
@@ -183,7 +184,7 @@ async function projectExplain(
 				items: [
 					"Semantic loops: decision, planning, implementation.",
 					"Runtime coordinates scheduling, claims, workers, and handoff; it is not a fourth loop.",
-					"Trace JSONL files are workflow truth; generated views are disposable projections.",
+					"Typed Change operations are canonical history; WorkState and Alignment are disposable deterministic projections.",
 				],
 			},
 			{
@@ -236,7 +237,7 @@ function pathExplain(
 			title: `Path: ${target}`,
 			summary: "No OKF source owner was found for this path.",
 			refs: unique([
-				".codewiki/kb/system/components/source-map.md",
+				".codewiki/kb/system/components/knowledge.md",
 				...traceRefs,
 			]),
 			traceRefs,
@@ -258,7 +259,7 @@ function pathExplain(
 		summary: `Owned by component ${owner.id}.`,
 		refs: unique([
 			owner.doc,
-			".codewiki/kb/system/components/source-map.md",
+			".codewiki/kb/system/components/knowledge.md",
 			...traceRefs,
 		]),
 		owner: ownerSummary(owner),
@@ -296,7 +297,7 @@ function unknownExplain(
 		kind: "unknown",
 		title: `CodeWiki explanation: ${target}`,
 		summary: "No exact component, flow, or path owner matched this target.",
-		refs: [".codewiki/kb/system/components/source-map.md"],
+		refs: [".codewiki/kb/system/components/knowledge.md"],
 		sections: [
 			{ title: "Known components", items: components.slice(0, 12) },
 			{ title: "Known flows", items: flows.slice(0, 12) },

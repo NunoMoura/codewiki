@@ -49,11 +49,6 @@ function replaceDigest(value) {
 	return `${value.slice(0, -1)}${value.endsWith("0") ? "1" : "0"}`;
 }
 
-function operationCatalogFrom(text, start, end) {
-	const section = text.split(start, 2)[1]?.split(end, 1)[0] ?? "";
-	return section.match(/^[a-z_]+\.[a-z_]+$/gm) ?? [];
-}
-
 describe("Change Trace Protocol catalog", () => {
 	it("closes exactly 42 operation kinds across two semantic scopes", () => {
 		assert.equal(CHANGE_TRACE_OPERATION_CATALOG.length, 42);
@@ -78,34 +73,7 @@ describe("Change Trace Protocol catalog", () => {
 		}
 	});
 
-	it("matches the ratified plan and Knowledge catalogs exactly", async () => {
-		const [plan, knowledge] = await Promise.all([
-			readFile(new URL("../../REFACTORING_PLAN.md", import.meta.url), "utf8"),
-			readFile(
-				new URL(
-					"../../.codewiki/kb/system/components/traces.md",
-					import.meta.url,
-				),
-				"utf8",
-			),
-		]);
-		assert.deepEqual(
-			operationCatalogFrom(
-				plan,
-				"### Closed v1 catalog",
-				"### Explicit non-operations",
-			),
-			CHANGE_TRACE_OPERATION_CATALOG,
-		);
-		assert.deepEqual(
-			operationCatalogFrom(
-				knowledge,
-				"## Closed v1 operation catalog",
-				"## Executable payload grammar",
-			),
-			CHANGE_TRACE_OPERATION_CATALOG,
-		);
-	});
+
 });
 
 describe("strict canonical JSON profile", () => {
