@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { selectRuntimeWorkUnitClaims } from "../../src/runtime/work-unit-claim-selection.ts";
+import { selectRuntimeWorkUnitClaims } from "../../src/runtime/claims/work-unit-selection.ts";
 
 function queue(items) {
 	return {
@@ -82,7 +82,7 @@ describe("runtime work-unit claim selection", () => {
 				{ id: "WU-file", pathScopes: ["src/pi/tools/index.ts"] },
 				{
 					id: "WU-safe",
-					pathScopes: ["src/runtime/work-unit-claim-selection.ts"],
+					pathScopes: ["src/runtime/claims/work-unit-selection.ts"],
 				},
 			]),
 			{ maxWorkers: 3 },
@@ -107,7 +107,7 @@ describe("runtime work-unit claim selection", () => {
 				},
 				{
 					id: "WU-conflict",
-					pathScopes: ["src/runtime/work-unit-claim-selection.ts"],
+					pathScopes: ["src/runtime/claims/work-unit-selection.ts"],
 				},
 				{ id: "WU-ready", pathScopes: ["src/views"] },
 			]),

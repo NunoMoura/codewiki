@@ -9,8 +9,8 @@ import {
 	startPiWorkers,
 } from "../../src/pi/worker-start.ts";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
-import { createRuntimeWorkUnitClaimEvents } from "../../src/runtime/work-unit-claims.ts";
-import { selectRuntimeWorkUnitClaims } from "../../src/runtime/work-unit-claim-selection.ts";
+import { createRuntimeWorkUnitClaimEvents } from "../../src/runtime/claims/work-unit-events.ts";
+import { selectRuntimeWorkUnitClaims } from "../../src/runtime/claims/work-unit-selection.ts";
 import { appendTraceRecord } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";

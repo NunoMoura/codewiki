@@ -10,7 +10,7 @@ import {
 	createChangeRecord,
 } from "../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
-import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
+import { createRuntimeClaimEvent } from "../../src/runtime/claims/events.ts";
 import { appendTraceRecords } from "../../src/traces/append.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";

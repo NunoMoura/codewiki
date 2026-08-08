@@ -3,27 +3,27 @@ import { resolve } from "node:path";
 import {
 	createRuntimeClaimEvent,
 	createRuntimeClaimReleaseEvent,
-} from "./claims.ts";
+} from "./events.ts";
 import {
 	createCodewikiHostError,
 	hostErrorData,
 	type CodewikiHostError,
-} from "../error-handling/host-errors.ts";
-import type { WorktreeRef } from "../git/worktrees.ts";
+} from "../../error-handling/host-errors.ts";
+import type { WorktreeRef } from "../../git/worktrees.ts";
 import type {
 	RuntimeWorkUnitClaimCandidate,
 	RuntimeWorkUnitClaimSelection,
-} from "./work-unit-claim-selection.ts";
+} from "./work-unit-selection.ts";
 import {
 	CodewikiTraceError,
 	TraceAppendConflictError,
-} from "../error-handling/trace-errors.ts";
+} from "../../error-handling/trace-errors.ts";
 import {
 	appendRuntimeTraceRecords,
 	type AppendTraceBatchResult,
-} from "./trace-writer.ts";
-import { traceFilePath } from "../traces/schema.ts";
-import type { TraceEvent } from "../traces/types.ts";
+} from "../trace-writer.ts";
+import { traceFilePath } from "../../traces/schema.ts";
+import type { TraceEvent } from "../../traces/types.ts";
 
 export interface RuntimeWorkUnitClaimEventOptions {
 	createdAt: string;

@@ -129,6 +129,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-wor
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-integration.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "events.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "leases.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "work-unit-events.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "work-unit-selection.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "project-branch-merge.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "project-branch-merge-git.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "project-branch-push.js")), true);

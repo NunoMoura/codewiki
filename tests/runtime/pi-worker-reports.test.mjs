@@ -30,7 +30,7 @@ describe("Pi worker completion normalization", () => {
 			output: JSON.stringify({
 				status: "completed",
 				message: "Worker finished.",
-				changed_files: ["src/runtime/work-unit-claims.ts"],
+				changed_files: ["src/runtime/claims/work-unit-events.ts"],
 				checks_run: ["npm test"],
 				head_sha: "abc1234",
 				tree_sha: "def5678",
@@ -66,7 +66,7 @@ describe("Pi worker completion normalization", () => {
 		]);
 		assert.equal(result.message, "Worker finished.");
 		assert.deepEqual(result.proof?.changedPaths, [
-			"src/runtime/work-unit-claims.ts",
+			"src/runtime/claims/work-unit-events.ts",
 		]);
 		assert.deepEqual(result.proof?.checksRun, ["npm test"]);
 		assert.equal(result.proof?.headSha, "abc1234");

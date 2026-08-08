@@ -5,12 +5,12 @@ import { createPiWorkerPrompt } from "../pi/worker-start.ts";
 import type {
 	RuntimeWorkUnitClaimAppendResult,
 	RuntimeWorkUnitClaimEventBatch,
-} from "./work-unit-claims.ts";
+} from "./claims/work-unit-events.ts";
 import type { RuntimeWorkUnitClaimPolicyDecision } from "./policy.ts";
 import type {
 	RuntimeWorkUnitClaimCandidate,
 	RuntimeWorkUnitClaimSelection,
-} from "./work-unit-claim-selection.ts";
+} from "./claims/work-unit-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
 import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 

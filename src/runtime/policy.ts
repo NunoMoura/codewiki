@@ -11,7 +11,7 @@ import {
 	type WikiConfigWorktreeIsolation,
 } from "../project/config.ts";
 import type { WorkQueueItem, WorkQueueView } from "../views/types.ts";
-import type { RuntimeWorkUnitClaimSelection } from "./work-unit-claim-selection.ts";
+import type { RuntimeWorkUnitClaimSelection } from "./claims/work-unit-selection.ts";
 
 export interface RuntimePolicy {
 	automationEnabled: boolean;

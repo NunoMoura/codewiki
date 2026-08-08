@@ -8,7 +8,7 @@ import type {
 	WorkQueueView,
 } from "./types.ts";
 import type { HeartbeatCycleResult } from "../runtime/coordinator/index.ts";
-import type { RuntimeLeaseExpirationBatch } from "../runtime/leases.ts";
+import type { RuntimeLeaseExpirationBatch } from "../runtime/claims/leases.ts";
 import type {
 	RuntimeHeartbeatCyclePolicyDecision,
 	RuntimeLeaseExpirationPolicyDecision,
@@ -19,7 +19,7 @@ import {
 	type RuntimeHeldWorkUnitClaim,
 	type RuntimeWorkUnitClaimCandidate,
 	type RuntimeWorkUnitClaimSelection,
-} from "../runtime/work-unit-claim-selection.ts";
+} from "../runtime/claims/work-unit-selection.ts";
 
 export type RuntimeBoardBlockerKind =
 	| "trace_conflict"

@@ -17,7 +17,7 @@ import type { RuntimeReactor } from "./reactor.ts";
 import {
 	appendRuntimeWorkUnitClaims,
 	createRuntimeWorkerCompletionReleaseEvents,
-} from "./work-unit-claims.ts";
+} from "./claims/work-unit-events.ts";
 
 export interface ImplementationWorkerClaimReleaseInput {
 	repoRoot: string;

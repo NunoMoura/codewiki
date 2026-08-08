@@ -7,7 +7,7 @@ import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import {
 	createRuntimeClaimEvent,
 	createRuntimeClaimReleaseEvent,
-} from "../../src/runtime/claims.ts";
+} from "../../src/runtime/claims/events.ts";
 import {
 	appendTraceRecords,
 	assertValidTraceRecord,
@@ -18,11 +18,11 @@ import {
 import {
 	createRuntimeFailedWorkerStartReleaseEvents,
 	createRuntimeWorkerCompletionReleaseEvents,
-} from "../../src/runtime/work-unit-claims.ts";
+} from "../../src/runtime/claims/work-unit-events.ts";
 import {
 	appendRuntimeLeaseExpirations,
 	planRuntimeLeaseExpirations,
-} from "../../src/runtime/leases.ts";
+} from "../../src/runtime/claims/leases.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 
 function planningEvent() {

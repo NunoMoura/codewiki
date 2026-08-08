@@ -1,16 +1,16 @@
 import { stat } from "node:fs/promises";
 import { resolve } from "node:path";
-import { createRuntimeClaimReleaseEvent } from "./claims.ts";
+import { createRuntimeClaimReleaseEvent } from "./events.ts";
 import {
 	CodewikiTraceError,
 	TraceAppendConflictError,
-} from "../error-handling/trace-errors.ts";
+} from "../../error-handling/trace-errors.ts";
 import {
 	appendRuntimeTraceRecords,
 	type AppendTraceBatchResult,
-} from "./trace-writer.ts";
-import { traceFilePath } from "../traces/schema.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+} from "../trace-writer.ts";
+import { traceFilePath } from "../../traces/schema.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 
 export interface RuntimeLeaseExpirationOptions {
 	generatedAt: string;

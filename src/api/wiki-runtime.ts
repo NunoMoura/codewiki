@@ -10,13 +10,13 @@ import {
 	createRuntimeWorkUnitClaimEvents,
 	type RuntimeWorkUnitClaimAppendResult,
 	type RuntimeWorkUnitClaimEventBatch,
-} from "../runtime/work-unit-claims.ts";
+} from "../runtime/claims/work-unit-events.ts";
 import {
 	appendRuntimeLeaseExpirations,
 	planRuntimeLeaseExpirations,
 	type RuntimeLeaseExpirationAppendResult,
 	type RuntimeLeaseExpirationBatch,
-} from "../runtime/leases.ts";
+} from "../runtime/claims/leases.ts";
 import {
 	evaluateRuntimeWorkUnitClaimPolicy,
 	evaluateRuntimeHeartbeatCyclePolicy,
@@ -28,7 +28,7 @@ import {
 import {
 	selectRuntimeWorkUnitClaims,
 	type RuntimeWorkUnitClaimSelection,
-} from "../runtime/work-unit-claim-selection.ts";
+} from "../runtime/claims/work-unit-selection.ts";
 import type { WorktreeRef } from "../git/worktrees.ts";
 import type { PartialWikiConfig, WikiConfig } from "../project/config.ts";
 import type { TraceRecord } from "../traces/types.ts";

@@ -102,7 +102,7 @@ export const RUNTIME_TO_PI_IMPORT_BASELINE = [
 
 export const IMPORT_CYCLE_BASELINE = [
 	"src/evidence/obligation-resolution.ts | src/evidence/obligations.ts",
-	"src/git/worktrees.ts | src/runtime/work-unit-claim-selection.ts",
+	"src/git/worktrees.ts | src/runtime/claims/work-unit-selection.ts",
 	"src/implementation/review/evidence-report.ts | src/implementation/types.ts | src/implementation/worker-proof.ts",
 	"src/verification/catalog.ts | src/verification/runner.ts | src/verification/security-scanner-checks.ts",
 	"src/verification/contracts.ts | src/verification/identity.ts",

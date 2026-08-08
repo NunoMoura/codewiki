@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
-import { createRuntimeClaimEvent } from "../../src/runtime/claims.ts";
+import { createRuntimeClaimEvent } from "../../src/runtime/claims/events.ts";
 import {
 	appendTraceRecord,
 	appendTraceRecords,

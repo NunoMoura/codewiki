@@ -6,7 +6,7 @@ import { runImplementationIteration } from "../../src/implementation/iteration.t
 import {
 	createRuntimeClaimEvent,
 	createRuntimeClaimReleaseEvent,
-} from "../../src/runtime/claims.ts";
+} from "../../src/runtime/claims/events.ts";
 import {
 	contentProofRefs,
 	normalizeImplementationChanges,

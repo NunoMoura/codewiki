@@ -49,7 +49,7 @@ import {
 	createRuntimeWorkerCompletionReleaseEvents,
 	type RuntimeWorkUnitClaimAppendResult,
 	type RuntimeWorkUnitClaimEventBatch,
-} from "./work-unit-claims.ts";
+} from "./claims/work-unit-events.ts";
 import {
 	createRuntimeHandoffManifest,
 	type RuntimeDisposableWorkerStatus,

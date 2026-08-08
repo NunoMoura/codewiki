@@ -9,11 +9,11 @@ import {
 	createRuntimeFailedWorkerStartReleaseEvents,
 	type RuntimeWorkUnitClaimAppendResult,
 	type RuntimeWorkUnitClaimEventBatch,
-} from "../runtime/work-unit-claims.ts";
+} from "../runtime/claims/work-unit-events.ts";
 import type {
 	RuntimeWorkUnitClaimCandidate,
 	RuntimeWorkUnitClaimSelection,
-} from "../runtime/work-unit-claim-selection.ts";
+} from "../runtime/claims/work-unit-selection.ts";
 import type { TraceEvent } from "../traces/types.ts";
 import type { WorkerExecutionPolicySnapshot } from "../runtime/execution-policy.ts";
 

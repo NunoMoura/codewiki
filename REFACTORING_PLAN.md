@@ -53,7 +53,8 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 ### 1. Rehome generic Runtime mechanics
 
 - [x] Move guarded branch merge/push, publication, and release effects into `src/runtime/effects/**`.
-- [ ] Move generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and lifecycle into responsibility-named Runtime subdirectories.
+- [x] Move generic claim events, lease expiry, and Work Unit claim selection into `src/runtime/claims/**`.
+- [ ] Move generic scheduling, persistence, synchronization, workers, Integration, recovery, and lifecycle into responsibility-named Runtime subdirectories.
 - [ ] Remove `src/runtime/loop-exit-runtime.ts` by moving Loop-specific bindings to their Loop owner and retaining only generic Runtime ports.
 - [ ] Do not create `runtime/decision`, `runtime/planning`, `runtime/implementation`, `runtime/verification`, or `runtime/loop-exit`.
 - [ ] Preserve exact identity, freshness, expected-head CAS, replay, recovery, and guarded-effect behavior.

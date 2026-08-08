@@ -6,9 +6,9 @@ import { describe, it } from "node:test";
 import {
 	appendRuntimeWorkUnitClaims,
 	createRuntimeWorkUnitClaimEvents,
-} from "../../src/runtime/work-unit-claims.ts";
+} from "../../src/runtime/claims/work-unit-events.ts";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
-import { selectRuntimeWorkUnitClaims } from "../../src/runtime/work-unit-claim-selection.ts";
+import { selectRuntimeWorkUnitClaims } from "../../src/runtime/claims/work-unit-selection.ts";
 import {
 	TraceAppendConflictError,
 	appendTraceRecords,

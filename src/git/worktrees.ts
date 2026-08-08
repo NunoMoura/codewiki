@@ -2,7 +2,7 @@ import { resolve } from "node:path";
 import { pathMatchesPattern } from "../knowledge/source-map.ts";
 import { traceTmpPath } from "../runtime/tmp.ts";
 import type { WikiConfigWorktreeIsolation } from "../project/config.ts";
-import type { RuntimeWorkUnitClaimCandidate } from "../runtime/work-unit-claim-selection.ts";
+import type { RuntimeWorkUnitClaimCandidate } from "../runtime/claims/work-unit-selection.ts";
 
 export interface WorktreeRef {
 	path: string;
