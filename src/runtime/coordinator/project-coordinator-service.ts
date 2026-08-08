@@ -4,51 +4,51 @@ import type { AddressInfo } from "node:net";
 import { realpathSync } from "node:fs";
 import type { Server } from "node:http";
 
-import type { WorktreeCommandRunner } from "../git/worktrees.ts";
+import type { WorktreeCommandRunner } from "../../git/worktrees.ts";
 import {
 	BACKLOG_TRIAGE_QUERY_PROTOCOL,
 	type BacklogTriageQueryRequest,
 	type BacklogTriageQueryResult,
-} from "../changes/triage/contracts.ts";
-import {queryBacklogTriage} from "../changes/triage/query.ts";
+} from "../../changes/triage/contracts.ts";
+import {queryBacklogTriage} from "../../changes/triage/query.ts";
 import {
 	DecisionAttentionSelectionError,
 	parseDecisionAttentionSelectionCommand,
 	type AuthenticatedDecisionSelectionAuthority,
 	type DecisionAttentionSelectionCommand,
-} from "../changes/triage/selection.ts";
+} from "../../changes/triage/selection.ts";
 import {
 	createDecisionStartRuntime,
 	type DecisionStartResult,
 	type DecisionStartRuntime,
 	type DecisionStartRuntimeOptions,
-} from "./decision-attention-selection.ts";
+} from "../decision-attention-selection.ts";
 import {
 	ImplementationWorkerDispatcher,
 	type ImplementationWorkerDispatchResult,
-} from "./implementation-worker-dispatch.ts";
+} from "../implementation-worker-dispatch.ts";
 import type {
 	ImplementationWorkerAdapter,
 	ImplementationWorkerAssignment,
-} from "./implementation-worker-adapter.ts";
+} from "../implementation-worker-adapter.ts";
 import {
 	scheduleImplementationWorkerAssignments,
 	type ImplementationWorkerJobReceipt,
-} from "./implementation-worker-jobs.ts";
+} from "../implementation-worker-jobs.ts";
 import {
 	ProjectCoordinatorEventJournal,
 	type ProjectCoordinatorEventBatch,
 } from "./project-coordinator-events.ts";
-import type { ProjectBranchMergeAuthority } from "./effects/project-branch-merge.ts";
-import type { ProjectBranchPushAuthority } from "./effects/project-branch-push.ts";
+import type { ProjectBranchMergeAuthority } from "../effects/project-branch-merge.ts";
+import type { ProjectBranchPushAuthority } from "../effects/project-branch-push.ts";
 import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
-} from "./effects/product-publication-contract.ts";
+} from "../effects/product-publication-contract.ts";
 import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
-} from "./effects/product-release-contract.ts";
+} from "../effects/product-release-contract.ts";
 import {
 	ProjectCoordinator,
 	type ProjectCoordinatorClientConnection,
@@ -75,21 +75,21 @@ import {
 	RuntimeReactor,
 	type RuntimeReaction,
 	type RuntimeTrigger,
-} from "./reactor.ts";
+} from "../reactor.ts";
 import {
 	scheduleRuntimeReactionJob,
 	scheduleRuntimeReactions,
 	type RuntimeReactionJobReceipt,
-} from "./runtime-reaction-jobs.ts";
-import { parseDecisionCandidateProposal } from "../decision/candidate-proposal.ts";
-import { parseImplementationCandidateContent } from "../implementation/candidate-content.ts";
-import { parsePlanningCandidateContent } from "../planning/candidate-content.ts";
+} from "../runtime-reaction-jobs.ts";
+import { parseDecisionCandidateProposal } from "../../decision/candidate-proposal.ts";
+import { parseImplementationCandidateContent } from "../../implementation/candidate-content.ts";
+import { parsePlanningCandidateContent } from "../../planning/candidate-content.ts";
 import type {
 	RunRuntimeSelectedSemanticReactionResult,
 	RuntimeSemanticAdapters,
 	RuntimeSemanticContext,
 	RuntimeSemanticMode,
-} from "./semantic-executor.ts";
+} from "../semantic-executor.ts";
 
 const DEFAULT_CLIENT_LEASE_MS = 30_000;
 const DEFAULT_REQUEST_TIMEOUT_MS = 60_000;

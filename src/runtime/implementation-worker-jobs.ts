@@ -6,7 +6,7 @@ import {
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
 } from "./implementation-worker-adapter.ts";
-import type { ProjectCoordinator } from "./project-coordinator.ts";
+import type { ProjectCoordinator } from "./coordinator/project-coordinator.ts";
 
 export interface ScheduleImplementationWorkerAssignmentsInput {
 	coordinator: ProjectCoordinator;

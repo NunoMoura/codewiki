@@ -10,7 +10,7 @@ import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
 	ProjectCoordinatorLane,
-} from "./project-coordinator.ts";
+} from "./coordinator/project-coordinator.ts";
 import type {
 	RuntimeReactor,
 	RuntimeReaction,

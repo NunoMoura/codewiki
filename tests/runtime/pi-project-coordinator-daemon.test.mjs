@@ -10,7 +10,7 @@ import {
 	loadPiSemanticAdapters,
 	startPiProjectCoordinatorDaemon,
 } from "../../src/pi/project-coordinator-daemon.ts";
-import { connectProjectCoordinatorClient } from "../../src/runtime/project-coordinator-service.ts";
+import { connectProjectCoordinatorClient } from "../../src/runtime/coordinator/project-coordinator-service.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
 test("Pi coordinator daemon loads entrypoint-isolated SDK adapters", async () => {

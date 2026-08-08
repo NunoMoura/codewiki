@@ -137,7 +137,13 @@ try {
 	});
 	coordinator = await import(
 		pathToFileURL(
-			join(packageRoot, "dist", "runtime", "coordinator-entrypoint.js"),
+			join(
+				packageRoot,
+				"dist",
+				"runtime",
+				"coordinator",
+				"coordinator-entrypoint.js",
+			),
 		).href
 	);
 	const first = startPi(projectRoot, env, "pi-one");

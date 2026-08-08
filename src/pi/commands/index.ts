@@ -25,7 +25,7 @@ import {
 	closeCodewikiDashboardServer,
 	startCodewikiDashboardServer,
 } from "../../dashboard/index.ts";
-import { stopProjectCoordinatorService } from "../../runtime/project-coordinator-service.ts";
+import { stopProjectCoordinatorService } from "../../runtime/coordinator/project-coordinator-service.ts";
 import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
 import {

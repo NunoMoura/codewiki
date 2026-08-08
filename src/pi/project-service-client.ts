@@ -8,15 +8,15 @@ import type {DecisionStartResult} from "../runtime/decision-attention-selection.
 import {
 	connectEnsuredProjectCoordinatorClient,
 	type EnsureProjectCoordinatorServiceOptions,
-} from "../runtime/project-coordinator-process.ts";
-import type { ProjectCoordinatorEventBatch } from "../runtime/project-coordinator-events.ts";
+} from "../runtime/coordinator/project-coordinator-process.ts";
+import type { ProjectCoordinatorEventBatch } from "../runtime/coordinator/project-coordinator-events.ts";
 import type { ImplementationWorkerDispatchResult } from "../runtime/implementation-worker-dispatch.ts";
 import type {
 	ProjectCoordinatorCandidateResult,
 	ProjectCoordinatorRemoteClient,
 	ProjectCoordinatorSemanticExecution,
 	RuntimeCandidateLoop,
-} from "../runtime/project-coordinator-service.ts";
+} from "../runtime/coordinator/project-coordinator-service.ts";
 import type { RuntimeReaction, RuntimeTrigger } from "../runtime/reactor.ts";
 import type { RuntimeReactionJobReceipt } from "../runtime/runtime-reaction-jobs.ts";
 import type { RuntimeSemanticMode } from "../runtime/semantic-executor.ts";

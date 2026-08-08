@@ -23,7 +23,7 @@ import {
 import type {
 	ProjectCoordinatorDecisionAttentionCaller,
 	ProjectCoordinatorDecisionStartOptions,
-} from "../runtime/project-coordinator-service.ts";
+} from "../runtime/coordinator/project-coordinator-service.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,

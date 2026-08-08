@@ -54,6 +54,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 
 - [x] Move guarded branch merge/push, publication, and release effects into `src/runtime/effects/**`.
 - [x] Move generic claim events, lease expiry, and Work Unit claim selection into `src/runtime/claims/**`.
+- [x] Move project coordinator authority, service, process, endpoint, event journal, daemon launcher, and package entrypoint into `src/runtime/coordinator/**`.
 - [ ] Move generic scheduling, persistence, synchronization, workers, Integration, recovery, and lifecycle into responsibility-named Runtime subdirectories.
 - [ ] Remove `src/runtime/loop-exit-runtime.ts` by moving Loop-specific bindings to their Loop owner and retaining only generic Runtime ports.
 - [ ] Do not create `runtime/decision`, `runtime/planning`, `runtime/implementation`, `runtime/verification`, or `runtime/loop-exit`.

@@ -100,8 +100,8 @@ assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 	"./pi-sdk",
 ]);
 assert.deepEqual(packageJson.exports["./coordinator"], {
-	types: "./dist/runtime/coordinator-entrypoint.d.ts",
-	import: "./dist/runtime/coordinator-entrypoint.js",
+	types: "./dist/runtime/coordinator/coordinator-entrypoint.d.ts",
+	import: "./dist/runtime/coordinator/coordinator-entrypoint.js",
 });
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
 \ttypes: "./dist/pi/sdk-semantic-session.d.ts",
@@ -246,11 +246,11 @@ assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-ref-reader.
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projector.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator-entrypoint.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project-coordinator.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "coordinator-entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-process.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-coordinator-daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project-coordinator-process.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project-coordinator-daemon.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-coordinator-daemon.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);

@@ -7,12 +7,12 @@ import {
 	connectEnsuredProjectCoordinatorClient,
 	ensureProjectCoordinatorService,
 	projectCoordinatorDaemonScriptPath,
-} from "../../src/runtime/project-coordinator-process.ts";
+} from "../../src/runtime/coordinator/project-coordinator-process.ts";
 import {
 	startProjectCoordinatorService,
 	stopProjectCoordinatorService,
-} from "../../src/runtime/project-coordinator-service.ts";
-import { readProjectCoordinatorEndpoint } from "../../src/runtime/project-coordinator-endpoint.ts";
+} from "../../src/runtime/coordinator/project-coordinator-service.ts";
+import { readProjectCoordinatorEndpoint } from "../../src/runtime/coordinator/project-coordinator-endpoint.ts";
 
 test("project coordinator process ensure reuses one responsive service", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-coordinator-process-"));

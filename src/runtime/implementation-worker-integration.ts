@@ -32,7 +32,7 @@ import {
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "./project-coordinator.ts";
+} from "./coordinator/project-coordinator.ts";
 import type { RuntimeReactor } from "./reactor.ts";
 
 const MAX_GIT_OUTPUT_BYTES = 8 * 1024 * 1024;

@@ -72,7 +72,7 @@ export function spawnProjectCoordinatorDaemon(
 
 export function projectCoordinatorDaemonScriptPath(): string {
 	return fileURLToPath(
-		new URL("../pi/project-coordinator-daemon.js", import.meta.url),
+		new URL("../../pi/project-coordinator-daemon.js", import.meta.url),
 	);
 }
 

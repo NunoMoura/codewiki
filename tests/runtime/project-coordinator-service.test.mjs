@@ -16,12 +16,12 @@ import {
 	projectCoordinatorEndpointPath,
 	projectCoordinatorOwnershipPath,
 	readProjectCoordinatorEndpoint,
-} from "../../src/runtime/project-coordinator-endpoint.ts";
+} from "../../src/runtime/coordinator/project-coordinator-endpoint.ts";
 import {
 	connectProjectCoordinatorClient,
 	requestProjectCoordinatorHealth,
 	startProjectCoordinatorService,
-} from "../../src/runtime/project-coordinator-service.ts";
+} from "../../src/runtime/coordinator/project-coordinator-service.ts";
 
 function deferred() {
 	let resolve;

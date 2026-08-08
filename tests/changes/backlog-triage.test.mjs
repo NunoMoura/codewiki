@@ -29,11 +29,11 @@ import {
 	createUserStandardSourceSnapshot,
 } from "../../src/verification/custom-checks/user-standards.ts";
 import {createDecisionStartRuntime} from "../../src/runtime/decision-attention-selection.ts";
-import {ProjectCoordinator} from "../../src/runtime/project-coordinator.ts";
+import {ProjectCoordinator} from "../../src/runtime/coordinator/project-coordinator.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
-} from "../../src/runtime/project-coordinator-service.ts";
+} from "../../src/runtime/coordinator/project-coordinator-service.ts";
 import {
 	canonicalJson,
 	canonicalJsonDigest,

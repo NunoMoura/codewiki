@@ -8,9 +8,9 @@ import {
 import {
 	startProjectCoordinatorDaemon,
 	type ProjectCoordinatorDaemonHandle,
-} from "../runtime/project-coordinator-daemon.ts";
-import { spawnProjectCoordinatorDaemon } from "../runtime/project-coordinator-process.ts";
-import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/project-coordinator-service.ts";
+} from "../runtime/coordinator/project-coordinator-daemon.ts";
+import { spawnProjectCoordinatorDaemon } from "../runtime/coordinator/project-coordinator-process.ts";
+import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/coordinator/project-coordinator-service.ts";
 import type { ImplementationWorkerAdapter } from "../runtime/implementation-worker-adapter.ts";
 import type { ProjectBranchMergeAuthority } from "../runtime/effects/project-branch-merge.ts";
 import type { ProjectBranchPushAuthority } from "../runtime/effects/project-branch-push.ts";

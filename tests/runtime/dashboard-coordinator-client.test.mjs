@@ -10,7 +10,7 @@ import {
 	readProjectCoordinatorServiceState,
 	startProjectCoordinatorService,
 	stopProjectCoordinatorService,
-} from "../../src/runtime/project-coordinator-service.ts";
+} from "../../src/runtime/coordinator/project-coordinator-service.ts";
 
 async function waitForReplacement(root, previousGeneration, deadline) {
 	const state = await readProjectCoordinatorServiceState(root).catch(() => undefined);

@@ -6,7 +6,7 @@ import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
-} from "../project-coordinator.ts";
+} from "../coordinator/project-coordinator.ts";
 import type { RuntimeReactor } from "../reactor.ts";
 import { appendRuntimeTraceRecord } from "../trace-writer.ts";
 import {

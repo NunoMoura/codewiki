@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { ProjectCoordinatorEventJournal } from "../../src/runtime/project-coordinator-events.ts";
+import { ProjectCoordinatorEventJournal } from "../../src/runtime/coordinator/project-coordinator-events.ts";
 
 function event(state, observedAt, fields = {}) {
 	return {

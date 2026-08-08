@@ -218,7 +218,7 @@ export type {
 } from "../planning/candidate-content.ts";
 export type { ProjectSnapshot } from "../project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "../runtime/policy.ts";
-export * from "../runtime/project-coordinator.ts";
+export * from "../runtime/coordinator/project-coordinator.ts";
 export {
 	CHANGE_INTAKE_RUNTIME_PROTOCOL,
 	createChangeIntakeRuntime,

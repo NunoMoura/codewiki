@@ -8,7 +8,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { ProjectCoordinator } from "../../src/runtime/project-coordinator.ts";
+import { ProjectCoordinator } from "../../src/runtime/coordinator/project-coordinator.ts";
 
 function deferred() {
 	let resolve;

@@ -9,11 +9,11 @@ import {
 	implementationWorkerJobId,
 } from "../../src/runtime/implementation-worker-adapter.ts";
 import { scheduleImplementationWorkerAssignments } from "../../src/runtime/implementation-worker-jobs.ts";
-import { ProjectCoordinator } from "../../src/runtime/project-coordinator.ts";
+import { ProjectCoordinator } from "../../src/runtime/coordinator/project-coordinator.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
-} from "../../src/runtime/project-coordinator-service.ts";
+} from "../../src/runtime/coordinator/project-coordinator-service.ts";
 
 function assignment(root, id, pathScope) {
 	return {

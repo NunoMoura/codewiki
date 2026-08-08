@@ -62,7 +62,7 @@ import type {
 	ProductReleasePlan,
 } from "./effects/product-release-contract.ts";
 import { productReleaseJob } from "./effects/product-release.ts";
-import type { ProjectCoordinator } from "./project-coordinator.ts";
+import type { ProjectCoordinator } from "./coordinator/project-coordinator.ts";
 import { appendRuntimeWorkUnitClaims } from "./claims/work-unit-events.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "./reactor.ts";
 

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { realpathSync } from "node:fs";
-import type { Sha256Digest } from "../utils/canonical-json.ts";
+import type { Sha256Digest } from "../../utils/canonical-json.ts";
 
 const DEFAULT_MAX_CONCURRENT_JOBS = 4;
 const DEFAULT_MAX_COMPLETED_JOBS = 1_024;
