@@ -104,13 +104,13 @@ const criterionEvidence = {
 	"WU-worker-execution-policy-integration-v1": {
 		criteria: ["policy-dispatch", "explicit-propagation", "fail-closed"],
 		source: [
-			"src/runtime/host-runner.ts",
+			"src/runtime/workers/start.ts",
 			"src/runtime/workers/execution-policy.ts",
 			"src/pi/process-session.ts",
 			"src/runtime/workers/observation.ts",
 		],
 		tests: [
-			"tests/runtime/host-runner.test.mjs",
+			"tests/runtime/worker-start.test.mjs",
 			"tests/runtime/pi-process-session.test.mjs",
 			"tests/runtime/worker-observation.test.mjs",
 		],
