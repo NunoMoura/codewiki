@@ -17,7 +17,7 @@ import {
 	createOciContainerImplementationWorkerAdapter,
 	runOciContainerCommand,
 } from "../../src/runtime/container-worker-adapter.ts";
-import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/implementation-worker-adapter.ts";
+import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-worker-adapter.ts";
 
 const IMAGE = `registry.example/codewiki-worker@sha256:${"a".repeat(64)}`;
 

@@ -14,7 +14,7 @@ import type { DevLogEntry } from "../runtime/dev-log.ts";
 import {
 	type WorkerObservation,
 	workerObservationFreshness,
-} from "../runtime/worker-observation.ts";
+} from "../runtime/workers/worker-observation.ts";
 import { DECISION_CHANGE_QUALITY_STANDARDS } from "../decision/change-quality.ts";
 import { implementationQualityStandards } from "../implementation/quality-standards.ts";
 import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../planning/portfolio-quality.ts";

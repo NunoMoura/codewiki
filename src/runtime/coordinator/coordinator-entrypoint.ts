@@ -36,7 +36,7 @@ export {
 	type ImplementationWorkerAdapterAvailability,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "../implementation-worker-adapter.ts";
+} from "../workers/implementation-worker-adapter.ts";
 export {
 	OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION,
 	createOciContainerImplementationWorkerAdapter,

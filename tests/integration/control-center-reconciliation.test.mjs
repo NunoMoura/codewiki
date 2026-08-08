@@ -83,7 +83,7 @@ const criterionEvidence = {
 			"src/changes/intake/deduplicate.ts",
 			"src/changes/intake/route.ts",
 			"src/runtime/change-intake.ts",
-			"src/runtime/implementation-worker-adapter.ts",
+			"src/runtime/workers/implementation-worker-adapter.ts",
 			"src/pi/worker-reports.ts",
 			"src/pi/process-worker-adapter.ts",
 			"src/changes/triage/contracts.ts",
@@ -107,7 +107,7 @@ const criterionEvidence = {
 			"src/runtime/host-runner.ts",
 			"src/runtime/execution-policy.ts",
 			"src/pi/process-session.ts",
-			"src/runtime/worker-observation.ts",
+			"src/runtime/workers/worker-observation.ts",
 		],
 		tests: [
 			"tests/runtime/host-runner.test.mjs",

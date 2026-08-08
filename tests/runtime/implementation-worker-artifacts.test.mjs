@@ -17,8 +17,8 @@ import {
 	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 	cleanupImplementationWorkerArtifacts,
 	writeImplementationWorkerDispatchPacket,
-} from "../../src/runtime/implementation-worker-artifacts.ts";
-import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/implementation-worker-adapter.ts";
+} from "../../src/runtime/workers/implementation-worker-artifacts.ts";
+import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-worker-adapter.ts";
 
 function packetDirectory(root) {
 	return join(root, ".codewiki", "runtime", "worker-assignments");

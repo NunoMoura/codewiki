@@ -119,12 +119,14 @@ assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.js
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-options.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "container-worker-git.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "oci-container-command.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-report-store.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-report-store.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-worker-artifacts.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "worker-observation.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-dispatch.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-jobs.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "implementation-worker-review.js")), true);

@@ -11,8 +11,8 @@ import { createShellWorktreeCommandRunner } from "../../src/git/worktree-shell-r
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	implementationWorkerJobId,
-} from "../../src/runtime/implementation-worker-adapter.ts";
-import { IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION } from "../../src/runtime/implementation-worker-artifacts.ts";
+} from "../../src/runtime/workers/implementation-worker-adapter.ts";
+import { IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-worker-artifacts.ts";
 import { implementationWorkerIntegrationJob } from "../../src/runtime/implementation-worker-integration.ts";
 import { RuntimeReactor } from "../../src/runtime/reactor.ts";
 import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";

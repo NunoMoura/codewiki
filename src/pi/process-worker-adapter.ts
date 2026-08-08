@@ -4,13 +4,13 @@ import {
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "../runtime/implementation-worker-adapter.ts";
+} from "../runtime/workers/implementation-worker-adapter.ts";
 import {
 	assertImplementationWorkerReportPath,
 	implementationWorkerReportStatus,
 	persistImplementationWorkerReport,
 	recoverImplementationWorkerReport,
-} from "../runtime/implementation-worker-report-store.ts";
+} from "../runtime/workers/implementation-worker-report-store.ts";
 import {
 	createPiProcessSessionFactory,
 	type PiProcessSessionFactoryOptions,

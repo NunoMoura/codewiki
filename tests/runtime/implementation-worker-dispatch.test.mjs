@@ -8,7 +8,7 @@ import test from "node:test";
 
 import { writeWikiConfigFile } from "../../src/project/config-file.ts";
 import { resolveWikiConfig } from "../../src/project/config.ts";
-import { readImplementationWorkerDispatchPackets } from "../../src/runtime/implementation-worker-artifacts.ts";
+import { readImplementationWorkerDispatchPackets } from "../../src/runtime/workers/implementation-worker-artifacts.ts";
 import { ImplementationWorkerDispatcher } from "../../src/runtime/implementation-worker-dispatch.ts";
 import { implementationWorkerClaimReleaseJob } from "../../src/runtime/implementation-worker-review.ts";
 import { ProjectCoordinator } from "../../src/runtime/coordinator/project-coordinator.ts";

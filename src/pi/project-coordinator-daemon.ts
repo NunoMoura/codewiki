@@ -11,7 +11,7 @@ import {
 } from "../runtime/coordinator/project-coordinator-daemon.ts";
 import { spawnProjectCoordinatorDaemon } from "../runtime/coordinator/project-coordinator-process.ts";
 import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/coordinator/project-coordinator-service.ts";
-import type { ImplementationWorkerAdapter } from "../runtime/implementation-worker-adapter.ts";
+import type { ImplementationWorkerAdapter } from "../runtime/workers/implementation-worker-adapter.ts";
 import type { ProjectBranchMergeAuthority } from "../runtime/effects/project-branch-merge.ts";
 import type { ProjectBranchPushAuthority } from "../runtime/effects/project-branch-push.ts";
 import type {

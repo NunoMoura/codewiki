@@ -24,11 +24,11 @@ import {
 	assertImplementationWorkerReport,
 	implementationWorkerJobId,
 	type ImplementationWorkerReport,
-} from "./implementation-worker-adapter.ts";
+} from "./workers/implementation-worker-adapter.ts";
 import {
 	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 	type ImplementationWorkerDispatchPacket,
-} from "./implementation-worker-artifacts.ts";
+} from "./workers/implementation-worker-artifacts.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,

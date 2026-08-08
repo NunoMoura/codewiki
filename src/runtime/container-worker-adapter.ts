@@ -11,13 +11,13 @@ import {
 	type ImplementationWorkerAdapterAvailability,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./implementation-worker-adapter.ts";
+} from "./workers/implementation-worker-adapter.ts";
 import {
 	assertImplementationWorkerReportPath,
 	implementationWorkerReportStatus,
 	persistImplementationWorkerReport,
 	recoverImplementationWorkerReport,
-} from "./implementation-worker-report-store.ts";
+} from "./workers/implementation-worker-report-store.ts";
 import {
 	resolveContainerGitMount,
 	type ContainerGitMount,

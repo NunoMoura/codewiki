@@ -28,7 +28,7 @@ import {
 	readImplementationWorkerDispatchPackets,
 	writeImplementationWorkerDispatchPacket,
 	type ImplementationWorkerDispatchPacket,
-} from "./implementation-worker-artifacts.ts";
+} from "./workers/implementation-worker-artifacts.ts";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	assertImplementationWorkerAssignment,
@@ -37,7 +37,7 @@ import {
 	type ImplementationWorkerAdapter,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./implementation-worker-adapter.ts";
+} from "./workers/implementation-worker-adapter.ts";
 import {
 	implementationWorkerIntegrationJob,
 	type ImplementationWorkerIntegrationInput,

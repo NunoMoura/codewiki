@@ -7,7 +7,7 @@ import test from "node:test";
 import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	implementationWorkerJobId,
-} from "../../src/runtime/implementation-worker-adapter.ts";
+} from "../../src/runtime/workers/implementation-worker-adapter.ts";
 import { scheduleImplementationWorkerAssignments } from "../../src/runtime/implementation-worker-jobs.ts";
 import { ProjectCoordinator } from "../../src/runtime/coordinator/project-coordinator.ts";
 import {

@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
 	createWorkerObservation,
 	workerObservationFreshness,
-} from "../../src/runtime/worker-observation.ts";
+} from "../../src/runtime/workers/worker-observation.ts";
 
 function observation(overrides = {}) {
 	return {

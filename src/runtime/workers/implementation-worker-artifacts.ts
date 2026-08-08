@@ -15,7 +15,7 @@ import {
 	executeRuntimeWorktreeCommands,
 	type RuntimeWorktreePlan,
 	type WorktreeCommandRunner,
-} from "../git/worktrees.ts";
+} from "../../git/worktrees.ts";
 import {
 	assertImplementationWorkerAssignment,
 	type ImplementationWorkerAssignment,

@@ -30,7 +30,7 @@ import {
 import type {
 	ImplementationWorkerAdapter,
 	ImplementationWorkerAssignment,
-} from "../implementation-worker-adapter.ts";
+} from "../workers/implementation-worker-adapter.ts";
 import {
 	scheduleImplementationWorkerAssignments,
 	type ImplementationWorkerJobReceipt,

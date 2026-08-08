@@ -1,10 +1,10 @@
 import { createHash } from "node:crypto";
-import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
-import type { ChangeIntakeContent } from "../changes/intake/contracts.ts";
-import { normalizeChangeIntakeContent } from "../changes/intake/normalize.ts";
-import type { WorktreeRef } from "../git/worktrees.ts";
-import type { WorkerExecutionPort } from "../harnesses/ports.ts";
-import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
+import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
+import type { ChangeIntakeContent } from "../../changes/intake/contracts.ts";
+import { normalizeChangeIntakeContent } from "../../changes/intake/normalize.ts";
+import type { WorktreeRef } from "../../git/worktrees.ts";
+import type { WorkerExecutionPort } from "../../harnesses/ports.ts";
+import type { WorkerExecutionPolicySnapshot } from "../execution-policy.ts";
 
 export const IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION = 1 as const;
 

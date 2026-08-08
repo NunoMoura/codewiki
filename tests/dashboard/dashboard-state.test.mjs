@@ -6,7 +6,7 @@ import {
 	isCommittedDashboardTrace,
 	projectSprintPlan,
 } from "../../src/dashboard/state.ts";
-import { createWorkerObservation } from "../../src/runtime/worker-observation.ts";
+import { createWorkerObservation } from "../../src/runtime/workers/worker-observation.ts";
 
 function claim(sequence = 1) {
 	return {

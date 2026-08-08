@@ -12,7 +12,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { createPiProcessImplementationWorkerAdapter } from "../../src/pi/process-worker-adapter.ts";
-import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/implementation-worker-adapter.ts";
+import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-worker-adapter.ts";
 
 function assignment(root) {
 	return {

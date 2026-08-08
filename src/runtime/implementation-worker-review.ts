@@ -8,7 +8,7 @@ import {
 	implementationWorkerJobId,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "./implementation-worker-adapter.ts";
+} from "./workers/implementation-worker-adapter.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
