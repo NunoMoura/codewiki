@@ -4,7 +4,7 @@ import type {WikiModelRouteConfig} from "../project/model-routing.ts";
 import {
 	collectDecisionResearchEvidence,
 	type DecisionResearchCollector,
-} from "../runtime/decision-research-collection.ts";
+} from "../runtime/effects/research-collection.ts";
 import type {DecisionResearchClaimsTransport} from "../decision/exit/research-executors.ts";
 import {createPiDecisionResearchClaimsTransport} from "./decision-research-claims-session.ts";
 import type {PiSdkRuntimeSemanticAdapterOptions} from "./sdk-semantic-session.ts";

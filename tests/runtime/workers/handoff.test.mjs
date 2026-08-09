@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
-import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
-import { createRuntimeHandoffManifest } from "../../src/runtime/handoff.ts";
+import { runWikiRuntime } from "../../../src/api/wiki-runtime.ts";
+import { planningQualityStandards } from "../../helpers/canonical-loop-events.mjs";
+import { createRuntimeHandoffManifest } from "../../../src/runtime/workers/handoff.ts";
 
 function queue() {
 	return {

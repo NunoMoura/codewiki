@@ -1,18 +1,18 @@
-import type { WorktreeCommand, WorktreeRef } from "../git/worktrees.ts";
-import type { WorkerSessionInput } from "./workers/start.ts";
-import type { CodewikiHostError } from "../error-handling/host-errors.ts";
-import { createWorkerPrompt } from "./workers/start.ts";
+import type { WorktreeCommand, WorktreeRef } from "../../git/worktrees.ts";
+import type { WorkerSessionInput } from "./start.ts";
+import type { CodewikiHostError } from "../../error-handling/host-errors.ts";
+import { createWorkerPrompt } from "./start.ts";
 import type {
 	RuntimeWorkUnitClaimAppendResult,
 	RuntimeWorkUnitClaimEventBatch,
-} from "./claims/work-unit-events.ts";
-import type { RuntimeWorkUnitClaimPolicyDecision } from "./policy.ts";
+} from "../claims/work-unit-events.ts";
+import type { RuntimeWorkUnitClaimPolicyDecision } from "../policy.ts";
 import type {
 	RuntimeWorkUnitClaimCandidate,
 	RuntimeWorkUnitClaimSelection,
-} from "./claims/work-unit-selection.ts";
-import type { TraceEvent } from "../traces/types.ts";
-import type { WorkerExecutionPolicySnapshot } from "./workers/execution-policy.ts";
+} from "../claims/work-unit-selection.ts";
+import type { TraceEvent } from "../../traces/types.ts";
+import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
 export type RuntimeHandoffSchemaVersion = "codewiki.runtime.handoff.v2";
 export type RuntimeDisposableWorkerState =

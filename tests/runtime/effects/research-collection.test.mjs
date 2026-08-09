@@ -4,12 +4,12 @@ import {describe, it} from "node:test";
 import {
 	DECISION_RESEARCH_COLLECTION_PROTOCOL,
 	collectDecisionResearchEvidence,
-} from "../../src/runtime/decision-research-collection.ts";
+} from "../../../src/runtime/effects/research-collection.ts";
 import {
 	nativeDecisionCandidate,
 	nativeDecisionRevision,
 	nativeDecisionState,
-} from "../helpers/native-decision.mjs";
+} from "../../helpers/native-decision.mjs";
 
 const digest = (value) => `sha256:${value.repeat(64)}`;
 

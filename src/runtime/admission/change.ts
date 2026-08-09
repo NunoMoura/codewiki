@@ -1,4 +1,4 @@
-import {createNextChangeOperation} from "../change-trace/builder.ts";
+import {createNextChangeOperation} from "../../change-trace/builder.ts";
 import {
 	authorityBindingSchema,
 	type AuthorityBinding,
@@ -8,51 +8,51 @@ import {
 	type ChangeRevision,
 	type ChangeRevisionClassification,
 	type ChangeRevisionId,
-} from "../change-trace/contracts.ts";
-import type {GitCommandRunner} from "../change-trace/git-command.ts";
+} from "../../change-trace/contracts.ts";
+import type {GitCommandRunner} from "../../change-trace/git-command.ts";
 import {
 	createChangeRevision,
 	operationPayload,
-} from "../change-trace/identity.ts";
-import {reduceChangeOperation} from "../change-trace/reduce-operation.ts";
-import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
+} from "../../change-trace/identity.ts";
+import {reduceChangeOperation} from "../../change-trace/reduce-operation.ts";
+import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
 import type {
 	ChangeWorkState,
 	ProjectWorkState,
-} from "../change-trace/state.ts";
+} from "../../change-trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	pushSynchronizedStateBatch,
 	type ProjectAuthoritySnapshot,
 	type SynchronizationObservation,
-} from "../change-trace/synchronization.ts";
+} from "../../change-trace/synchronization.ts";
 import {
 	normalizeChangeDefectProfile,
 	type ChangeDefectCategory,
 	type ChangeDefectProfile,
 	type ChangeSecurityClassification,
-} from "../changes/defect-profile.ts";
-import type {ChangeIntakeMaterial} from "../changes/intake/contracts.ts";
+} from "../../changes/defect-profile.ts";
+import type {ChangeIntakeMaterial} from "../../changes/intake/contracts.ts";
 import {
 	changeIntakeProvenanceRefs,
 	createChangeIntakeFingerprints,
 	findAcceptedChangeIntakeRequest,
 	type AcceptedChangeIntakeReference,
 	type ChangeIntakeFingerprints,
-} from "../changes/intake/deduplicate.ts";
-import {normalizeChangeIntakeMaterial} from "../changes/intake/normalize.ts";
+} from "../../changes/intake/deduplicate.ts";
+import {normalizeChangeIntakeMaterial} from "../../changes/intake/normalize.ts";
 import {
 	resolveChangeIntakeRoute,
 	type AuthenticatedChangeIntakeCorrelation,
 	type ChangeIntakeRoute,
-} from "../changes/intake/route.ts";
+} from "../../changes/intake/route.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type CanonicalJsonValue,
 	type Sha256Digest,
-} from "../utils/canonical-json.ts";
-import {assertTypeboxSchema} from "../utils/json.ts";
+} from "../../utils/canonical-json.ts";
+import {assertTypeboxSchema} from "../../utils/json.ts";
 
 export const CHANGE_INTAKE_RUNTIME_PROTOCOL = Object.freeze({
 	id: "codewiki.change-intake-runtime",

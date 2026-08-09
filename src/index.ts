@@ -29,7 +29,7 @@ export {
 	type DecisionResearchCollectionResult,
 	type DecisionResearchCollector,
 	type DecisionResearchCollectorBinding,
-} from "./runtime/decision-research-collection.ts";
+} from "./runtime/effects/research-collection.ts";
 export * from "./runtime/user-standard-distillation.ts";
 export {
 	createDecisionGitAdmission,

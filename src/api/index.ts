@@ -222,7 +222,7 @@ export * from "../runtime/coordinator/project.ts";
 export {
 	CHANGE_INTAKE_RUNTIME_PROTOCOL,
 	createChangeIntakeRuntime,
-} from "../runtime/change-intake.ts";
+} from "../runtime/admission/change.ts";
 export type {
 	AuthenticatedChangeIntakeSource,
 	ChangeIntakeAuthenticationRequest,
@@ -232,7 +232,7 @@ export type {
 	ChangeIntakeRuntime,
 	ChangeIntakeSourceAuthenticator,
 	ChangeIntakeSourceCorrelator,
-} from "../runtime/change-intake.ts";
+} from "../runtime/admission/change.ts";
 export { runRuntimeSemanticExecutor } from "../runtime/semantic-executor.ts";
 export type {
 	RunRuntimeSemanticExecutorInput,
@@ -256,7 +256,7 @@ export type {
 	RuntimeHandoffReleaseInstructions,
 	RuntimeHandoffRuntimeResult,
 	RuntimeHandoffWorker,
-} from "../runtime/handoff.ts";
+} from "../runtime/workers/handoff.ts";
 export type {
 	TraceCloseReleaseNotes,
 	TraceReleaseNoteChange,

@@ -1,21 +1,21 @@
-import type {DecisionCandidate} from "../decision/exit/candidate.ts";
+import type {DecisionCandidate} from "../../decision/exit/candidate.ts";
 import type {
 	EvidenceCoverage,
 	EvidenceRecord,
 	EvidenceSensitivity,
 	EvidenceSubject,
-} from "../evidence/contracts.ts";
+} from "../../evidence/contracts.ts";
 import {
 	materializeDecisionResearchCitation,
 	type DecisionResearchCitationMaterial,
-} from "../decision/exit/research.ts";
+} from "../../decision/exit/research.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type CanonicalJsonValue,
 	type Sha256Digest,
-} from "../utils/canonical-json.ts";
-import {assertExactKeys} from "../utils/json.ts";
+} from "../../utils/canonical-json.ts";
+import {assertExactKeys} from "../../utils/json.ts";
 
 export const DECISION_RESEARCH_COLLECTION_PROTOCOL = Object.freeze({
 	id: "codewiki.decision.research-collection",

@@ -82,7 +82,7 @@ const criterionEvidence = {
 			"src/changes/intake/producers.ts",
 			"src/changes/intake/deduplicate.ts",
 			"src/changes/intake/route.ts",
-			"src/runtime/change-intake.ts",
+			"src/runtime/admission/change.ts",
 			"src/runtime/workers/implementation-adapter.ts",
 			"src/runtime/workers/reports.ts",
 			"src/harnesses/pi/process-worker-adapter.ts",
@@ -94,7 +94,7 @@ const criterionEvidence = {
 		],
 		tests: [
 			"tests/changes/change-intake.test.mjs",
-			"tests/changes/change-intake-runtime.test.mjs",
+			"tests/runtime/admission/change.test.mjs",
 			"tests/changes/change-intake-producers.test.mjs",
 			"tests/changes/defect-profile.test.mjs",
 			"tests/changes/backlog-triage.test.mjs",

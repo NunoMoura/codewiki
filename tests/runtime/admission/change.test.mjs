@@ -5,19 +5,19 @@ import {
 	assertValidCanonicalChangeOperation,
 	createInitialProjectWorkState,
 	operationPayload,
-} from "../../src/change-trace/index.ts";
-import {createChangeIntakeRuntime} from "../../src/runtime/change-intake.ts";
-import {allowAllReplayPolicy} from "../helpers/change-trace-replay-v1.mjs";
+} from "../../../src/change-trace/index.ts";
+import {createChangeIntakeRuntime} from "../../../src/runtime/admission/change.ts";
+import {allowAllReplayPolicy} from "../../helpers/change-trace-replay-v1.mjs";
 import {
 	authorityBinding,
 	digest,
-} from "../helpers/change-trace-v1.mjs";
+} from "../../helpers/change-trace-v1.mjs";
 import {
 	buildOpenChangeRecords,
 	createGitProposal,
 	createTwoCloneFixture,
 	pushGitProposal,
-} from "../helpers/git-state-v1.mjs";
+} from "../../helpers/git-state-v1.mjs";
 
 const REPOSITORY_IDENTITY = digest("a");
 const AUTHENTICATION_EVIDENCE_ID = "EVD-intake-authenticated-source";

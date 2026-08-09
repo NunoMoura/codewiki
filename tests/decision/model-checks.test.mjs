@@ -13,7 +13,7 @@ import {
 	createDecisionExitRuntime,
 	deriveDecisionRuntimeRoute,
 } from "../../src/decision/exit/runtime.ts";
-import {collectDecisionResearchEvidence} from "../../src/runtime/decision-research-collection.ts";
+import {collectDecisionResearchEvidence} from "../../src/runtime/effects/research-collection.ts";
 import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
 import {

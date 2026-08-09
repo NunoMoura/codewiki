@@ -21,7 +21,7 @@ import type { WikiConfig } from "../../project/config.ts";
 import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import { buildWorkQueueView } from "../../views/work-queue.ts";
 import type { WorkState } from "../../work-state/types.ts";
-import { createRuntimeHandoffManifest } from "../handoff.ts";
+import { createRuntimeHandoffManifest } from "./handoff.ts";
 import {
 	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 	cleanupImplementationWorkerArtifacts,
