@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "purpose": "Move native Decision and semantic Pi SDK execution adapters to the Pi Harness owner.",
+  "moves": [
+    {"from": "src/pi/sdk-semantic-session.ts", "to": "src/harnesses/pi/sdk-semantic-session.ts"},
+    {"from": "src/pi/native-decision-host.ts", "to": "src/harnesses/pi/native-decision-host.ts"},
+    {"from": "src/pi/native-decision-research.ts", "to": "src/harnesses/pi/native-decision-research.ts"},
+    {"from": "tests/runtime/pi-sdk-semantic-session.test.mjs", "to": "tests/harnesses/pi/sdk-semantic-session.test.mjs"},
+    {"from": "tests/runtime/pi-native-decision-host.test.mjs", "to": "tests/harnesses/pi/native-decision-host.test.mjs"},
+    {"from": "tests/runtime/pi-native-decision-research.test.mjs", "to": "tests/harnesses/pi/native-decision-research.test.mjs"},
+    {"from": "tests/runtime/pi-sdk-package-smoke.mjs", "to": "tests/harnesses/pi/sdk-package-smoke.mjs"}
+  ],
+  "constraints": [
+    "Rewrite module specifiers and package export targets only.",
+    "Do not retain old-path re-exports.",
+    "Pi Client composition may import Pi Harness adapters; Harness adapters may not import Pi Client implementations.",
+    "Delete this temporary manifest when the refactor completes."
+  ]
+}

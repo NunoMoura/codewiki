@@ -7,10 +7,10 @@ import {
 	createPiSdkNativeDecisionCandidateProducer,
 	createPiSdkRuntimeSemanticAdapters,
 	validatePiSdkReadOnlyToolCall,
-} from "../../src/pi/sdk-semantic-session.ts";
-import {DECISION_CANDIDATE_PRODUCTION_PROTOCOL} from "../../src/runtime/coordinator/decision-attempt.ts";
-import {digest} from "../helpers/change-trace-v1.mjs";
-import {nativeDecisionRevision} from "../helpers/native-decision.mjs";
+} from "../../../src/harnesses/pi/sdk-semantic-session.ts";
+import {DECISION_CANDIDATE_PRODUCTION_PROTOCOL} from "../../../src/runtime/coordinator/decision-attempt.ts";
+import {digest} from "../../helpers/change-trace-v1.mjs";
+import {nativeDecisionRevision} from "../../helpers/native-decision.mjs";
 
 function decisionInvocation(extra = {}) {
 	return {

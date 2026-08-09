@@ -10,31 +10,31 @@ import { Type } from "typebox";
 import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
-} from "../decision/candidate-proposal.ts";
+} from "../../decision/candidate-proposal.ts";
 import {
 	implementationCandidateContentSchema as implementationCandidateSchema,
 	parseImplementationCandidateContent,
 	type ImplementationCandidateContent,
-} from "../implementation/candidate-content.ts";
+} from "../../implementation/candidate-content.ts";
 import {
 	parsePlanningCandidateContent,
 	planningCandidateContentSchema as planningCandidateSchema,
 	type PlanningCandidateContent,
-} from "../planning/candidate-content.ts";
+} from "../../planning/candidate-content.ts";
 import type {
 	RuntimeDecisionInvocation,
 	RuntimeImplementationInvocation,
 	RuntimePlanningInvocation,
 	RuntimeSemanticAdapters,
-} from "../runtime/coordinator/executor.ts";
+} from "../../runtime/coordinator/executor.ts";
 import {
 	assertNativeDecisionCandidateProductionRequest,
 	type NativeDecisionCandidateProducer,
 	type NativeDecisionCandidateProductionRequest,
-} from "../runtime/coordinator/decision-attempt.ts";
+} from "../../runtime/coordinator/decision-attempt.ts";
 
-export { createPiDecisionModelCheckTransport } from "../harnesses/pi/decision-model-check-session.ts";
-export { createPiDecisionResearchClaimsTransport } from "../harnesses/pi/decision-research-claims-session.ts";
+export { createPiDecisionModelCheckTransport } from "./decision-model-check-session.ts";
+export { createPiDecisionResearchClaimsTransport } from "./decision-research-claims-session.ts";
 
 const READ_ONLY_TOOL_NAMES = ["read", "grep", "find", "ls"] as const;
 const DEFAULT_TIMEOUT_MS = 120_000;

@@ -31,7 +31,7 @@ import type {
 import {
 	createPiNativeDecisionStartOptions,
 	type PiNativeDecisionHostOptions,
-} from "./native-decision-host.ts";
+} from "../harnesses/pi/native-decision-host.ts";
 import { createPiProcessImplementationWorkerAdapter } from "../harnesses/pi/process-worker-adapter.ts";
 
 export type PiSemanticAdapterLoader = (
@@ -66,7 +66,7 @@ export async function loadPiSemanticAdapters(
 				"@earendil-works/pi-coding-agent"
 		)) as typeof import("@earendil-works/pi-coding-agent");
 		const { createPiSdkRuntimeSemanticAdapters } = await import(
-			"./sdk-semantic-session.ts"
+			"../harnesses/pi/sdk-semantic-session.ts"
 		);
 		return createPiSdkRuntimeSemanticAdapters({ repoRoot, piSdk });
 	} catch (error) {

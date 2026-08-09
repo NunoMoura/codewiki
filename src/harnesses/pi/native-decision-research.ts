@@ -1,12 +1,12 @@
-import type {DecisionResearchRuntimeConfig} from "../decision/exit/runtime.ts";
-import type {DecisionResearchCollectionPortInput} from "../decision/exit/research.ts";
-import type {WikiModelRouteConfig} from "../project/model-routing.ts";
+import type {DecisionResearchRuntimeConfig} from "../../decision/exit/runtime.ts";
+import type {DecisionResearchCollectionPortInput} from "../../decision/exit/research.ts";
+import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {
 	collectDecisionResearchEvidence,
 	type DecisionResearchCollector,
-} from "../runtime/effects/research-collection.ts";
-import type {DecisionResearchClaimsTransport} from "../decision/exit/research-executors.ts";
-import {createPiDecisionResearchClaimsTransport} from "../harnesses/pi/decision-research-claims-session.ts";
+} from "../../runtime/effects/research-collection.ts";
+import type {DecisionResearchClaimsTransport} from "../../decision/exit/research-executors.ts";
+import {createPiDecisionResearchClaimsTransport} from "./decision-research-claims-session.ts";
 import type {PiSdkRuntimeSemanticAdapterOptions} from "./sdk-semantic-session.ts";
 
 export interface PiNativeDecisionResearchOptions {

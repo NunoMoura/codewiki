@@ -2,34 +2,34 @@ import {realpathSync} from "node:fs";
 import {
 	authorityBindingSchema,
 	type AuthorityBinding,
-} from "../change-trace/contracts.ts";
-import type {GitCommandRunner} from "../change-trace/git-command.ts";
-import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
+} from "../../change-trace/contracts.ts";
+import type {GitCommandRunner} from "../../change-trace/git-command.ts";
+import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
 import {
 	DECISION_ATTENTION_SELECTION_PROTOCOL,
 	DecisionAttentionSelectionError,
 	type AuthenticatedDecisionSelectionAuthority,
 	type DecisionAttentionSelectionAuthorizationRequest,
-} from "../changes/triage/selection.ts";
-import {createDecisionExitRuntime} from "../decision/exit/runtime.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/configuration.ts";
-import {loadProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/project-config-store.ts";
-import {createDecisionGitAdmission} from "../runtime/admission/git.ts";
+} from "../../changes/triage/selection.ts";
+import {createDecisionExitRuntime} from "../../decision/exit/runtime.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/configuration.ts";
+import {loadProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/project-config-store.ts";
+import {createDecisionGitAdmission} from "../../runtime/admission/git.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
 	createNativeDecisionAttemptExecutor,
 	type NativeDecisionAttemptExecutorOptions,
-} from "../runtime/coordinator/decision-attempt.ts";
+} from "../../runtime/coordinator/decision-attempt.ts";
 import type {
 	ProjectCoordinatorDecisionAttentionCaller,
 	ProjectCoordinatorDecisionStartOptions,
-} from "../runtime/coordinator/service.ts";
+} from "../../runtime/coordinator/service.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
-} from "../utils/canonical-json.ts";
-import {assertTypeboxSchema} from "../utils/json.ts";
+} from "../../utils/canonical-json.ts";
+import {assertTypeboxSchema} from "../../utils/json.ts";
 import {
 	createPiNativeDecisionResearchRuntimeConfig,
 	type PiNativeDecisionResearchOptions,

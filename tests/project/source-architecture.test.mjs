@@ -274,6 +274,9 @@ describe("source architecture", () => {
 			"decision-model-check-session.ts",
 			"decision-research-claims-session.ts",
 			"isolated-json-model-session.ts",
+			"native-decision-host.ts",
+			"native-decision-research.ts",
+			"sdk-semantic-session.ts",
 			"user-standard-distillation-session.ts",
 		]) {
 			assert.equal(existsSync(join(sourceRoot, "harnesses", "pi", name)), true, name);
@@ -281,17 +284,21 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("forbids Harness adapters from importing interaction clients", () => {
-		for (const [source, targets] of importEdges(sourceFiles("src/harnesses"))) {
+	it("freezes the remaining Harness-to-Pi interaction debt", () => {
+		const legacyEdges = [];
+		for (const [source, targets] of importEdges(sourceFiles())) {
+			if (!relative(sourceRoot, source).startsWith("harnesses/")) continue;
 			for (const target of targets) {
 				const targetPath = relative(sourceRoot, target);
-				assert.equal(
-					targetPath.startsWith("pi/") || targetPath.startsWith("clients/"),
-					false,
-					edgeLabel(source, target),
-				);
+				assert.equal(targetPath.startsWith("clients/"), false, edgeLabel(source, target));
+				if (targetPath.startsWith("pi/")) {
+					legacyEdges.push(edgeLabel(source, target));
+				}
 			}
 		}
+		assert.deepEqual(legacyEdges.sort(), [
+			"src/harnesses/pi/process-worker-adapter.ts -> src/pi/process-session.ts",
+		]);
 	});
 
 	it("forbids core packages from importing outer adapters", () => {

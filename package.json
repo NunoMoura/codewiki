@@ -21,8 +21,8 @@
 			"import": "./dist/harnesses/coordinator-entrypoint.js"
 		},
 		"./pi-sdk": {
-			"types": "./dist/pi/sdk-semantic-session.d.ts",
-			"import": "./dist/pi/sdk-semantic-session.js"
+			"types": "./dist/harnesses/pi/sdk-semantic-session.d.ts",
+			"import": "./dist/harnesses/pi/sdk-semantic-session.js"
 		},
 		"./package.json": "./package.json"
 	},
@@ -41,8 +41,8 @@
 		"test:pi-rpc": "node tests/runtime/pi-rpc-smoke.mjs",
 		"test:pi-multiprocess": "node --experimental-strip-types tests/runtime/pi-multiprocess-coordinator-smoke.mjs",
 		"test:pi-mutation": "node --experimental-strip-types tests/runtime/pi-tool-mutation-smoke.mjs",
-		"test:pi-sdk": "node --experimental-strip-types --test tests/runtime/pi-sdk-semantic-session.test.mjs",
-		"test:pi-sdk-package": "node tests/runtime/pi-sdk-package-smoke.mjs",
+		"test:pi-sdk": "node --experimental-strip-types --test tests/harnesses/pi/sdk-semantic-session.test.mjs",
+		"test:pi-sdk-package": "node tests/harnesses/pi/sdk-package-smoke.mjs",
 		"test:project-local-install": "node tests/runtime/project-local-install-smoke.mjs",
 		"test:external-lifecycle": "node tests/runtime/external-package-lifecycle-smoke.mjs",
 		"test:external-failures": "node tests/runtime/external-package-failures-smoke.mjs",
@@ -82,7 +82,7 @@
 			"src/benchmarks/*.ts",
 			"src/api/index.ts",
 			"src/pi/extension.ts",
-			"src/pi/sdk-semantic-session.ts",
+			"src/harnesses/pi/sdk-semantic-session.ts",
 			"src/harnesses/coordinator-entrypoint.ts",
 			"src/pi/rendering/command-renderers.ts",
 			"tests/**/*.mjs"

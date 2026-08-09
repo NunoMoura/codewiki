@@ -6,31 +6,31 @@ import {it} from "node:test";
 import {
 	createInitialProjectWorkState,
 	synchronizeGitState,
-} from "../../src/change-trace/index.ts";
-import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../src/changes/triage/contracts.ts";
-import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../src/changes/triage/selection.ts";
+} from "../../../src/change-trace/index.ts";
+import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../src/changes/triage/contracts.ts";
+import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
 import {
 	PI_NATIVE_DECISION_HOST_PROTOCOL,
 	createPiNativeDecisionStartOptions,
 	resolvePiDecisionSelectionAuthority,
-} from "../../src/pi/native-decision-host.ts";
-import {startPiProjectCoordinatorDaemon} from "../../src/pi/project-coordinator-daemon.ts";
-import {resolveWikiConfig} from "../../src/project/config.ts";
-import {wikiConfigDigest} from "../../src/project/config-digest.ts";
-import {createDecisionGitAdmission} from "../../src/runtime/admission/git.ts";
-import {connectProjectCoordinatorClient} from "../../src/runtime/coordinator/service.ts";
+} from "../../../src/harnesses/pi/native-decision-host.ts";
+import {startPiProjectCoordinatorDaemon} from "../../../src/pi/project-coordinator-daemon.ts";
+import {resolveWikiConfig} from "../../../src/project/config.ts";
+import {wikiConfigDigest} from "../../../src/project/config-digest.ts";
+import {createDecisionGitAdmission} from "../../../src/runtime/admission/git.ts";
+import {connectProjectCoordinatorClient} from "../../../src/runtime/coordinator/service.ts";
 import {
 	allowAllReplayPolicy,
 	buildOperationSequence,
 	revisionFor,
-} from "../helpers/change-trace-replay-v1.mjs";
-import {authorityBinding, digest} from "../helpers/change-trace-v1.mjs";
+} from "../../helpers/change-trace-replay-v1.mjs";
+import {authorityBinding, digest} from "../../helpers/change-trace-v1.mjs";
 import {
 	createGitProposal,
 	createTwoCloneFixture,
 	git,
 	pushGitProposal,
-} from "../helpers/git-state-v1.mjs";
+} from "../../helpers/git-state-v1.mjs";
 
 const repositoryIdentity = digest("a");
 

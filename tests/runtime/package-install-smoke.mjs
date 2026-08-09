@@ -105,8 +105,8 @@ assert.deepEqual(packageJson.exports["./coordinator"], {
 	import: "./dist/harnesses/coordinator-entrypoint.js",
 });
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
-\ttypes: "./dist/pi/sdk-semantic-session.d.ts",
-\timport: "./dist/pi/sdk-semantic-session.js",
+\ttypes: "./dist/harnesses/pi/sdk-semantic-session.d.ts",
+\timport: "./dist/harnesses/pi/sdk-semantic-session.js",
 });
 assert.equal(
 \tpackageJson.peerDependencies["@earendil-works/pi-coding-agent"],
@@ -116,8 +116,6 @@ assert.equal(
 \tpackageJson.peerDependenciesMeta["@earendil-works/pi-coding-agent"].optional,
 \ttrue,
 );
-assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactions.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactions.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactor.js")), true);
@@ -305,6 +303,9 @@ for (const name of [
 	"decision-model-check-session",
 	"decision-research-claims-session",
 	"isolated-json-model-session",
+	"native-decision-host",
+	"native-decision-research",
+	"sdk-semantic-session",
 	"user-standard-distillation-session",
 ]) {
 	assert.equal(

@@ -133,7 +133,8 @@ Budget rules:
 - [x] Move the concrete Pi process worker adapter to `src/harnesses/pi/**` without moving legacy trace-host session debt.
 - [ ] Move user-facing Pi commands, tools, prompts, TUI, rendering, and coordinator clients to `src/clients/pi/**`.
 - [x] Move isolated Model Check, research-claim, and User Standard distillation sessions to `src/harnesses/pi/**`.
-- [ ] Move remaining Candidate production, semantic SDK sessions, process workers, and execution adapters to `src/harnesses/pi/**`.
+- [x] Move native Candidate production, Decision research, and semantic SDK execution to `src/harnesses/pi/**`.
+- [ ] Split Pi process worker execution from trace-host lifecycle debt, then keep only the worker transport under `src/harnesses/pi/**`.
 - [ ] Remove hidden semantic-loop tools from the main conversational client registration.
 - [ ] Ensure conversational clients cannot double as Candidate producers, Model Checks, Planning sessions, or workers.
 - [x] Eliminate the frozen Runtime-to-Pi imports through injected ports.

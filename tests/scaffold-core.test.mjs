@@ -54,8 +54,8 @@ describe("fresh scaffold", () => {
 				import: "./dist/harnesses/coordinator-entrypoint.js",
 			},
 			"./pi-sdk": {
-				types: "./dist/pi/sdk-semantic-session.d.ts",
-				import: "./dist/pi/sdk-semantic-session.js",
+				types: "./dist/harnesses/pi/sdk-semantic-session.d.ts",
+				import: "./dist/harnesses/pi/sdk-semantic-session.js",
 			},
 			"./package.json": "./package.json",
 		});
