@@ -43,7 +43,7 @@ describe("git status snapshot helper", () => {
 				return { stdout: "abc1234\n" };
 			}
 			if (command === "status --porcelain=v1 -z") {
-				return { stdout: " M src/runtime/policy.ts\0?? tests/new.test.mjs\0" };
+				return { stdout: " M src/runtime/claims/policy.ts\0?? tests/new.test.mjs\0" };
 			}
 			return { stderr: `unexpected ${command}`, exitCode: 1 };
 		};
@@ -60,14 +60,14 @@ describe("git status snapshot helper", () => {
 		assert.equal(snapshot.baseRef, "main");
 		assert.equal(snapshot.baseSha, "abc1234");
 		assert.deepEqual(snapshot.dirtyPaths, [
-			"src/runtime/policy.ts",
+			"src/runtime/claims/policy.ts",
 			"tests/new.test.mjs",
 		]);
 		assert.deepEqual(snapshot.errors, []);
 		assert.deepEqual(inputs, {
 			baseRef: "abc1234",
 			baseSha: "abc1234",
-			dirtyPaths: ["src/runtime/policy.ts", "tests/new.test.mjs"],
+			dirtyPaths: ["src/runtime/claims/policy.ts", "tests/new.test.mjs"],
 		});
 		assert.deepEqual(
 			calls.map(([, args]) => args),

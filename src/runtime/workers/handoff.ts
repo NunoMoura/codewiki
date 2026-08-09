@@ -6,7 +6,7 @@ import type {
 	RuntimeWorkUnitClaimAppendResult,
 	RuntimeWorkUnitClaimEventBatch,
 } from "../claims/work-unit-events.ts";
-import type { RuntimeWorkUnitClaimPolicyDecision } from "../policy.ts";
+import type { RuntimeWorkUnitClaimPolicyDecision } from "../claims/policy.ts";
 import type {
 	RuntimeWorkUnitClaimCandidate,
 	RuntimeWorkUnitClaimSelection,

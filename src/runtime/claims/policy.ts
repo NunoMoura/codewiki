@@ -1,7 +1,7 @@
 import {
 	planRuntimeWorkUnitClaimWorktrees,
 	type RuntimeWorktreePlan,
-} from "../git/worktrees.ts";
+} from "../../git/worktrees.ts";
 import {
 	resolveWikiConfig,
 	type PartialWikiConfig,
@@ -9,20 +9,15 @@ import {
 	type WikiConfigAgencyLevel,
 	type WikiConfigAutomationMode,
 	type WikiConfigWorktreeIsolation,
-} from "../project/config.ts";
-import type { WorkQueueItem, WorkQueueView } from "../views/types.ts";
-import type { RuntimeWorkUnitClaimSelection } from "./claims/work-unit-selection.ts";
+} from "../../project/config.ts";
+import type { WorkQueueItem, WorkQueueView } from "../../views/types.ts";
+import { runtimeAutomationBlockers } from "../admission/automation.ts";
+import type { RuntimeWorkUnitClaimSelection } from "./work-unit-selection.ts";
 
-export interface RuntimePolicy {
-	automationEnabled: boolean;
-	maxParallelClaims: number;
-}
+type RuntimeWorkUnitClaimPolicyMode = "preview" | "append";
+type RuntimeLeaseExpirationPolicyMode = "preview" | "append";
 
-export type RuntimeWorkUnitClaimPolicyMode = "preview" | "append";
-export type RuntimeHeartbeatCyclePolicyMode = "preview" | "append";
-export type RuntimeLeaseExpirationPolicyMode = "preview" | "append";
-
-export interface RuntimeWorkUnitClaimPolicyInput {
+interface RuntimeWorkUnitClaimPolicyInput {
 	mode: RuntimeWorkUnitClaimPolicyMode;
 	queue: WorkQueueView;
 	plan: RuntimeWorkUnitClaimSelection;
@@ -39,7 +34,8 @@ export interface RuntimeWorkUnitClaimPolicyInput {
 	workerIds?: Record<string, string>;
 }
 
-export interface RuntimeWorkUnitClaimPolicyDecision extends RuntimePolicy {
+export interface RuntimeWorkUnitClaimPolicyDecision {
+	maxParallelClaims: number;
 	automation: WikiConfigAutomationMode;
 	agency: WikiConfigAgencyLevel;
 	worktreeIsolation: WikiConfigWorktreeIsolation;
@@ -49,20 +45,7 @@ export interface RuntimeWorkUnitClaimPolicyDecision extends RuntimePolicy {
 	qualityBlockedWorkUnitIds: string[];
 }
 
-export interface RuntimeHeartbeatCyclePolicyInput {
-	mode: RuntimeHeartbeatCyclePolicyMode;
-	config?: PartialWikiConfig | WikiConfig;
-	repoRoot?: string;
-}
-
-export interface RuntimeHeartbeatCyclePolicyDecision extends RuntimePolicy {
-	automation: WikiConfigAutomationMode;
-	agency: WikiConfigAgencyLevel;
-	appendAllowed: boolean;
-	blockers: string[];
-}
-
-export interface RuntimeLeaseExpirationPolicyInput {
+interface RuntimeLeaseExpirationPolicyInput {
 	mode: RuntimeLeaseExpirationPolicyMode;
 	config?: PartialWikiConfig | WikiConfig;
 	repoRoot?: string;
@@ -70,40 +53,11 @@ export interface RuntimeLeaseExpirationPolicyInput {
 	expectedBytesByTrace?: Record<string, number>;
 }
 
-export interface RuntimeLeaseExpirationPolicyDecision extends RuntimePolicy {
+export interface RuntimeLeaseExpirationPolicyDecision {
 	automation: WikiConfigAutomationMode;
 	agency: WikiConfigAgencyLevel;
 	appendAllowed: boolean;
 	blockers: string[];
-}
-
-export function runtimePolicyFromConfig(
-	config: PartialWikiConfig | WikiConfig = {},
-	maxWorkers?: number,
-): RuntimePolicy {
-	const resolved = resolveWikiConfig(config);
-	return {
-		automationEnabled: resolved.runtime.automation !== "manual",
-		maxParallelClaims: Math.max(0, maxWorkers ?? resolved.runtime.maxWorkers),
-	};
-}
-
-export function evaluateRuntimeHeartbeatCyclePolicy(
-	input: RuntimeHeartbeatCyclePolicyInput,
-): RuntimeHeartbeatCyclePolicyDecision {
-	const config = resolveWikiConfig(input.config);
-	const blockers = [
-		...automationBlockers(config),
-		...heartbeatAppendSafetyBlockers(input),
-	];
-	return {
-		automationEnabled: config.runtime.automation !== "manual",
-		maxParallelClaims: config.runtime.maxWorkers,
-		automation: config.runtime.automation,
-		agency: config.runtime.agency,
-		appendAllowed: blockers.length === 0,
-		blockers,
-	};
 }
 
 export function evaluateRuntimeLeaseExpirationPolicy(
@@ -111,12 +65,10 @@ export function evaluateRuntimeLeaseExpirationPolicy(
 ): RuntimeLeaseExpirationPolicyDecision {
 	const config = resolveWikiConfig(input.config);
 	const blockers = [
-		...automationBlockers(config),
+		...runtimeAutomationBlockers(config),
 		...leaseExpirationAppendSafetyBlockers(input),
 	];
 	return {
-		automationEnabled: config.runtime.automation !== "manual",
-		maxParallelClaims: config.runtime.maxWorkers,
 		automation: config.runtime.automation,
 		agency: config.runtime.agency,
 		appendAllowed: blockers.length === 0,
@@ -128,7 +80,6 @@ export function evaluateRuntimeWorkUnitClaimPolicy(
 	input: RuntimeWorkUnitClaimPolicyInput,
 ): RuntimeWorkUnitClaimPolicyDecision {
 	const config = resolveWikiConfig(input.config);
-	const setupCommands = config.runtime.worktreeSetupCommands;
 	const worktrees = planRuntimeWorkUnitClaimWorktrees(input.plan.selected, {
 		mode: config.runtime.worktreeIsolation,
 		repoRoot: input.repoRoot,
@@ -139,21 +90,20 @@ export function evaluateRuntimeWorkUnitClaimPolicy(
 		dirtyPaths: input.dirtyPaths,
 		workerIdPrefix: input.workerIdPrefix,
 		workerIds: input.workerIds,
-		setupCommands,
+		setupCommands: config.runtime.worktreeSetupCommands,
 	});
 	const qualityBlockedWorkUnitIds = selectedQualityBlockedWorkUnitIds(
 		input.queue,
 		input.plan,
 	);
 	const blockers = [
-		...automationBlockers(config),
+		...runtimeAutomationBlockers(config),
 		...appendSafetyBlockers(input),
 		...qualityBlockedWorkUnitIds.map(
 			(id) => `Work unit ${id} is not claimable by quality policy.`,
 		),
 	];
 	return {
-		automationEnabled: config.runtime.automation !== "manual",
 		maxParallelClaims: Math.max(
 			0,
 			input.maxWorkers ?? config.runtime.maxWorkers,
@@ -166,24 +116,6 @@ export function evaluateRuntimeWorkUnitClaimPolicy(
 		blockers,
 		qualityBlockedWorkUnitIds,
 	};
-}
-
-function automationBlockers(config: WikiConfig): string[] {
-	const blockers: string[] = [];
-	if (config.runtime.automation === "manual") {
-		blockers.push("runtime.automation is manual.");
-	}
-	if (config.runtime.agency === "observe") {
-		blockers.push("runtime.agency is observe.");
-	}
-	return blockers;
-}
-
-function heartbeatAppendSafetyBlockers(
-	input: RuntimeHeartbeatCyclePolicyInput,
-): string[] {
-	if (input.mode !== "append") return [];
-	return input.repoRoot ? [] : ["Missing repoRoot for heartbeat cycle append."];
 }
 
 function leaseExpirationAppendSafetyBlockers(
@@ -225,8 +157,7 @@ function selectedQualityBlockedWorkUnitIds(
 ): string[] {
 	const selectedIds = new Set(plan.selected.map((item) => item.workUnitId));
 	return queue.items
-		.filter((item) => selectedIds.has(item.id))
-		.filter(qualityBlocked)
+		.filter((item) => selectedIds.has(item.id) && qualityBlocked(item))
 		.map((item) => item.id);
 }
 

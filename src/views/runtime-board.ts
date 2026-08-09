@@ -7,13 +7,15 @@ import type {
 	WorkQueueItem,
 	WorkQueueView,
 } from "./types.ts";
-import type { HeartbeatCycleResult } from "../runtime/coordinator/index.ts";
+import type {
+	HeartbeatCycleResult,
+	RuntimeHeartbeatCyclePolicyDecision,
+} from "../runtime/coordinator/index.ts";
 import type { RuntimeLeaseExpirationBatch } from "../runtime/claims/leases.ts";
 import type {
-	RuntimeHeartbeatCyclePolicyDecision,
 	RuntimeLeaseExpirationPolicyDecision,
 	RuntimeWorkUnitClaimPolicyDecision,
-} from "../runtime/policy.ts";
+} from "../runtime/claims/policy.ts";
 import {
 	selectRuntimeWorkUnitClaims,
 	type RuntimeHeldWorkUnitClaim,

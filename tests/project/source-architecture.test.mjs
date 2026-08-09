@@ -201,6 +201,24 @@ describe("source architecture", () => {
 		}
 	});
 
+	it("keeps Runtime policy and admission with their responsibility owners", () => {
+		assert.equal(existsSync(join(sourceRoot, "runtime", "policy.ts")), false);
+		assert.equal(
+			existsSync(join(sourceRoot, "runtime", "admission", "automation.ts")),
+			true,
+		);
+		assert.equal(
+			existsSync(join(sourceRoot, "runtime", "claims", "policy.ts")),
+			true,
+		);
+		assert.equal(
+			existsSync(
+				join(sourceRoot, "runtime", "coordinator", "heartbeat-policy.ts"),
+			),
+			true,
+		);
+	});
+
 	it("forbids core packages from importing outer adapters", () => {
 		const rootFor = (file) => relative(sourceRoot, file).split("/")[0];
 		for (const [source, targets] of importEdges(sourceFiles())) {

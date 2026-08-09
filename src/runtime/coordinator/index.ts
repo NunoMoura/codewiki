@@ -11,6 +11,10 @@ export {
 	type HeartbeatCycleResult,
 } from "./heartbeat-cycle.ts";
 export {
+	evaluateRuntimeHeartbeatCyclePolicy,
+	type RuntimeHeartbeatCyclePolicyDecision,
+} from "./heartbeat-policy.ts";
+export {
 	appendPlannedTriggerRuns,
 	planRuntimeTriggerRuns,
 	type AppendPlannedTriggerRunsInput,

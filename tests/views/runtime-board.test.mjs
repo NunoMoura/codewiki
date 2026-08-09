@@ -154,7 +154,6 @@ describe("runtime board view", () => {
 			maxWorkers: 2,
 			runtimeResultPreview: {
 				policy: {
-					automationEnabled: true,
 					maxParallelClaims: 2,
 					automation: "assist",
 					agency: "operate",
@@ -165,8 +164,6 @@ describe("runtime board view", () => {
 					qualityBlockedWorkUnitIds: [],
 				},
 				heartbeatPolicy: {
-					automationEnabled: true,
-					maxParallelClaims: 2,
 					automation: "assist",
 					agency: "operate",
 					appendAllowed: false,
@@ -207,8 +204,6 @@ describe("runtime board view", () => {
 				},
 				leaseExpirations: {
 					policy: {
-						automationEnabled: true,
-						maxParallelClaims: 2,
 						automation: "assist",
 						agency: "operate",
 						appendAllowed: false,

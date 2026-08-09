@@ -305,7 +305,7 @@ describe("runtime worktree planning", () => {
 			{
 				mode: "auto",
 				repoRoot: "/tmp/repo/codewiki",
-				dirtyPaths: ["src/runtime/policy.ts"],
+				dirtyPaths: ["src/runtime/claims/policy.ts"],
 			},
 		);
 		const dirtyGlobSolo = planRuntimeWorkUnitClaimWorktrees(

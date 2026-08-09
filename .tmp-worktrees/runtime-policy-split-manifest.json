@@ -1,0 +1,44 @@
+{
+  "slice": "runtime-policy-responsibility-split",
+  "intent": "Delete the mixed-owner Runtime policy root and place claim/lease policy with Claims and heartbeat policy with Coordinator.",
+  "moves": [
+    {
+      "from": "src/runtime/policy.ts",
+      "to": "src/runtime/claims/policy.ts",
+      "owner": "runtime/claims",
+      "keeps": [
+        "work-unit claim policy",
+        "lease-expiration policy"
+      ]
+    }
+  ],
+  "creates": [
+    {
+      "path": "src/runtime/coordinator/heartbeat-policy.ts",
+      "owner": "runtime/coordinator",
+      "contains": "heartbeat-cycle admission policy"
+    },
+    {
+      "path": "src/runtime/admission/automation.ts",
+      "owner": "runtime/admission",
+      "contains": "shared protected automation and agency admission blockers"
+    }
+  ],
+  "deletes": [
+    {
+      "symbol": "RuntimePolicy",
+      "reason": "Generic inheritance coupled unrelated policies and had no consumer outside the mixed module."
+    },
+    {
+      "symbol": "runtimePolicyFromConfig",
+      "reason": "Unused export with no executable caller."
+    }
+  ],
+  "constraints": [
+    "preserve live policy decision shapes and fail-closed blockers",
+    "no compatibility export from src/runtime/policy.ts",
+    "module-specifier-only caller rewrites",
+    "leave trace-host lifecycle debt untouched"
+  ],
+  "method": "git mv, responsibility extraction, old-file deletion by relocation, and atomic caller/test/package updates"
+}

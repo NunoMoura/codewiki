@@ -136,6 +136,13 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "tra
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "dev-log.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "tmp.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "trace-writer.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "automation.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "policy.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "claims", "policy.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "heartbeat-policy.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "heartbeat-policy.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "policy.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "policy.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), true);

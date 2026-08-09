@@ -1,8 +1,10 @@
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
 import {
 	createRuntimeHeartbeatQueue,
+	evaluateRuntimeHeartbeatCyclePolicy,
 	runHeartbeatCycle,
 	type HeartbeatCycleResult,
+	type RuntimeHeartbeatCyclePolicyDecision,
 	type RuntimeHeartbeatRequest,
 } from "../runtime/coordinator/index.ts";
 import {
@@ -18,13 +20,11 @@ import {
 	type RuntimeLeaseExpirationBatch,
 } from "../runtime/claims/leases.ts";
 import {
-	evaluateRuntimeWorkUnitClaimPolicy,
-	evaluateRuntimeHeartbeatCyclePolicy,
 	evaluateRuntimeLeaseExpirationPolicy,
-	type RuntimeWorkUnitClaimPolicyDecision,
-	type RuntimeHeartbeatCyclePolicyDecision,
+	evaluateRuntimeWorkUnitClaimPolicy,
 	type RuntimeLeaseExpirationPolicyDecision,
-} from "../runtime/policy.ts";
+	type RuntimeWorkUnitClaimPolicyDecision,
+} from "../runtime/claims/policy.ts";
 import {
 	selectRuntimeWorkUnitClaims,
 	type RuntimeWorkUnitClaimSelection,
