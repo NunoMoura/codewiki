@@ -98,7 +98,7 @@ const criterionEvidence = {
 			"tests/changes/change-intake-producers.test.mjs",
 			"tests/changes/defect-profile.test.mjs",
 			"tests/changes/backlog-triage.test.mjs",
-			"tests/runtime/process-worker-adapter.test.mjs",
+			"tests/harnesses/pi/process-worker-adapter.test.mjs",
 		],
 	},
 	"WU-worker-execution-policy-integration-v1": {
