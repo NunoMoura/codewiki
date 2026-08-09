@@ -22,7 +22,7 @@ import {
 } from "../../../src/verification/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
 import {createCheckResult} from "../../../src/verification/results.ts";
-import {createLoopExitRuntime} from "../../../src/runtime/loop-exit-runtime.ts";
+import {createVerificationRuntime} from "../../../src/verification/runtime.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 import {
 	createTestUserStandard,
@@ -106,7 +106,7 @@ function selectorInput(protectedConfig) {
 		],
 		projectTraits: [],
 		technologies: [],
-		paths: ["src/runtime/loop-exit-runtime.ts"],
+		paths: ["src/verification/runtime.ts"],
 		protectedBaseCustomCheckConfig: protectedConfig,
 	};
 }
@@ -417,7 +417,7 @@ describe("approved-template Custom Code Checks", () => {
 		});
 		assert.equal(malformedMeter.action, "cancel");
 		assert.equal(malformedMeter.observationStatus, "indeterminate");
-		const blockedRuntime = createLoopExitRuntime({
+		const blockedRuntime = createVerificationRuntime({
 			protectedBaseCustomCheckConfig: protectedConfig,
 		});
 		assert.throws(
@@ -425,7 +425,7 @@ describe("approved-template Custom Code Checks", () => {
 			/Runtime resource guard admission blocked/,
 		);
 		assert.doesNotThrow(() =>
-			createLoopExitRuntime({
+			createVerificationRuntime({
 				protectedBaseCustomCheckConfig: protectedConfig,
 				customCodeCapabilitySnapshot: snapshot,
 			}).createRunner({executors: []}),

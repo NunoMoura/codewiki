@@ -61,7 +61,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [x] Partition Runtime-owned worker dispatch/job scheduling, Integration, and claim release into responsibility directories.
 - [x] Remove repeated responsibility prefixes from Coordinator, Worker, and Container filenames.
 - [ ] Move generic scheduling, persistence, synchronization, remaining worker mechanics, Integration, recovery, and lifecycle into responsibility-named Runtime subdirectories.
-- [ ] Remove `src/runtime/loop-exit-runtime.ts` by moving Loop-specific bindings to their Loop owner and retaining only generic Runtime ports.
+- [x] Remove `src/runtime/loop-exit-runtime.ts`; Loop declarations remain owner-local and generic composition lives in Verification.
 - [ ] Do not create `runtime/decision`, `runtime/planning`, `runtime/implementation`, `runtime/verification`, or `runtime/loop-exit`.
 - [ ] Preserve exact identity, freshness, expected-head CAS, replay, recovery, and guarded-effect behavior.
 - [ ] Update callers and tests atomically; leave no old-path re-export.

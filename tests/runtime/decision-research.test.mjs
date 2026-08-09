@@ -1,9 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { resolveExitPolicy } from "../../src/verification/resolve-policy.ts";
 import { createPiDecisionResearchClaimsTransport } from "../../src/pi/decision-research-claims-session.ts";
-import { createLoopExitRuntime } from "../../src/runtime/loop-exit-runtime.ts";
+import { createDecisionResearchClaimsExecutor } from "../../src/runtime/decision-research-claims.ts";
+import {
+	createDecisionResearchProvenanceExecutor,
+	materializeDecisionResearchCitation,
+} from "../../src/runtime/decision-research.ts";
+import { createCheckCatalog } from "../../src/verification/catalog.ts";
+import { resolveExitPolicy } from "../../src/verification/resolve-policy.ts";
 
 const digest = (value) => `sha256:${value.repeat(64)}`;
 const subject = {
@@ -69,6 +74,18 @@ const candidateSubject = {
 	...subject,
 	candidateDigest: digest("2"),
 };
+
+function createDecisionResearchRuntime() {
+	const catalog = createCheckCatalog();
+	const claims = createDecisionResearchClaimsExecutor(catalog);
+	return Object.freeze({
+		materializeDecisionResearchCitation,
+		evaluateDecisionResearchProvenance:
+			createDecisionResearchProvenanceExecutor(catalog),
+		prepareDecisionResearchClaimsAssessment: claims.prepare,
+		completeDecisionResearchClaimsAssessment: claims.complete,
+	});
+}
 
 function modelRoute(overrides = {}) {
 	return {
@@ -138,7 +155,7 @@ function modelAssessmentResponse(
 
 describe("Decision research Runtime boundary", () => {
 	it("materializes exact Change-revision citations and creates a passing provenance Result", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const evidence = runtime.materializeDecisionResearchCitation(
 			material(),
 			context(),
@@ -164,7 +181,7 @@ describe("Decision research Runtime boundary", () => {
 	});
 
 	it("keeps contradictory research stance while checking provenance independently", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const evidence = runtime.materializeDecisionResearchCitation(
 			material({
 				payload: {
@@ -187,7 +204,7 @@ describe("Decision research Runtime boundary", () => {
 	});
 
 	it("returns fail for temporally impossible source metadata without discarding Evidence", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const evidence = runtime.materializeDecisionResearchCitation(
 			material({
 				payload: {
@@ -210,7 +227,7 @@ describe("Decision research Runtime boundary", () => {
 	});
 
 	it("returns indeterminate for missing or stale citation inputs", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const missing = runtime.evaluateDecisionResearchProvenance({
 			policy: policy(),
 			evidence: [],
@@ -237,7 +254,7 @@ describe("Decision research Runtime boundary", () => {
 	});
 
 	it("rejects caller-owned assurance and non-Change research subjects", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		assert.throws(
 			() =>
 				runtime.materializeDecisionResearchCitation(material(), {
@@ -264,7 +281,7 @@ describe("Decision research Runtime boundary", () => {
 
 describe("Decision research claim-support Model Check", () => {
 	it("completes exact prepared input through isolated Pi transport", async () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const fixture = claimsFixture(runtime);
 		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
 			fixture.input,
@@ -291,7 +308,7 @@ describe("Decision research claim-support Model Check", () => {
 	});
 
 	it("prepares one immutable, tool-free, exact-input model request", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const fixture = claimsFixture(runtime);
 		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
 			fixture.input,
@@ -316,7 +333,7 @@ describe("Decision research claim-support Model Check", () => {
 			["supported", "pass"],
 			["unsupported", "fail"],
 		]) {
-			const runtime = createLoopExitRuntime();
+			const runtime = createDecisionResearchRuntime();
 			const fixture = claimsFixture(runtime);
 			const prepared = runtime.prepareDecisionResearchClaimsAssessment(
 				fixture.input,
@@ -354,7 +371,7 @@ describe("Decision research claim-support Model Check", () => {
 	});
 
 	it("keeps semantic uncertainty indeterminate with observed model Evidence", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const fixture = claimsFixture(runtime);
 		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
 			fixture.input,
@@ -389,7 +406,7 @@ describe("Decision research claim-support Model Check", () => {
 	});
 
 	it("maps provider and malformed-output failures to indeterminate without fake Evidence", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const fixture = claimsFixture(runtime);
 		const prepared = runtime.prepareDecisionResearchClaimsAssessment(
 			fixture.input,
@@ -429,7 +446,7 @@ describe("Decision research claim-support Model Check", () => {
 	});
 
 	it("does not invoke model work when exact provenance dependency failed", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const failedEvidence = runtime.materializeDecisionResearchCitation(
 			material({
 				payload: {
@@ -460,7 +477,7 @@ describe("Decision research claim-support Model Check", () => {
 	});
 
 	it("rejects tools and observations for another exact request", () => {
-		const runtime = createLoopExitRuntime();
+		const runtime = createDecisionResearchRuntime();
 		const fixture = claimsFixture(runtime);
 		assert.throws(
 			() =>

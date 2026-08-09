@@ -123,6 +123,8 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "impleme
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "reports.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "verification", "runtime.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "loop-exit-runtime.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-start.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-reports.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "coordinator-entrypoint.js")), true);

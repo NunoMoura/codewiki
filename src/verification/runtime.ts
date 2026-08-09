@@ -1,41 +1,25 @@
-import { decisionLoopExitDeclaration } from "../decision/exit/index.ts";
-import { implementationLoopExitDeclaration } from "../implementation/exit/index.ts";
-import { createLoopExitResultCache } from "../verification/cache.ts";
-import {createCustomCodeCheckExecutors} from "../verification/custom-checks/code-executor.ts";
-import type {CustomCodeCapabilitySnapshot} from "../verification/custom-checks/code-templates.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/configuration.ts";
+import {createLoopExitResultCache} from "./cache.ts";
+import {createCheckCatalog} from "./catalog.ts";
+import {createCustomCodeCheckExecutors} from "./custom-checks/code-executor.ts";
+import type {CustomCodeCapabilitySnapshot} from "./custom-checks/code-templates.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "./custom-checks/configuration.ts";
 import {
 	createResourceUsageEvidenceMaterial,
 	evaluateRuntimeResourceMeter,
 	preflightRuntimeResourceGuards,
 	resolveRuntimeResourceGuards,
-} from "../verification/custom-checks/resource-guards.ts";
-import { createCheckCatalog } from "../verification/catalog.ts";
-import {
-	createCheckResult,
-	createExitReport,
-} from "../verification/results.ts";
+} from "./custom-checks/resource-guards.ts";
+import {createCheckResult, createExitReport} from "./results.ts";
 import {
 	createLoopExitRunner,
 	type CreateLoopExitRunnerInput,
-} from "../verification/runner.ts";
+} from "./runner.ts";
 import {
 	createStandardEvidenceCheckExecutors,
 	type StandardEvidenceCheckCapability,
-} from "../verification/standard-evidence-executor.ts";
-import {
-	createLoopExitSuite,
-	type LoopExitSuite,
-} from "../verification/suite.ts";
-import { planningLoopExitDeclaration } from "../planning/exit/index.ts";
-import { createDecisionResearchClaimsExecutor } from "./decision-research-claims.ts";
-import {
-	createDecisionResearchProvenanceExecutor,
-	materializeDecisionResearchCitation,
-} from "./decision-research.ts";
+} from "./standard-evidence-executor.ts";
 
-interface LoopExitRuntime {
-	readonly suite: LoopExitSuite;
+export interface VerificationRuntime {
 	readonly catalog: ReturnType<typeof createCheckCatalog>;
 	readonly createCheckResult: typeof createCheckResult;
 	readonly createExitReport: typeof createExitReport;
@@ -47,34 +31,20 @@ interface LoopExitRuntime {
 	readonly createRunner: (
 		input: Omit<CreateLoopExitRunnerInput, "catalog">,
 	) => ReturnType<typeof createLoopExitRunner>;
-	readonly materializeDecisionResearchCitation: typeof materializeDecisionResearchCitation;
-	readonly evaluateDecisionResearchProvenance: ReturnType<
-		typeof createDecisionResearchProvenanceExecutor
-	>;
-	readonly prepareDecisionResearchClaimsAssessment: ReturnType<
-		typeof createDecisionResearchClaimsExecutor
-	>["prepare"];
-	readonly completeDecisionResearchClaimsAssessment: ReturnType<
-		typeof createDecisionResearchClaimsExecutor
-	>["complete"];
 }
 
-export const LOOP_EXIT_SUITE = createLoopExitSuite({
-	decision: decisionLoopExitDeclaration,
-	planning: planningLoopExitDeclaration,
-	implementation: implementationLoopExitDeclaration,
-});
+export interface CreateVerificationRuntimeInput {
+	readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
+	readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
+	readonly standardEvidenceCapabilities?: readonly StandardEvidenceCheckCapability[];
+}
 
-export function createLoopExitRuntime(
-	input: {
-		readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
-		readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
-		readonly standardEvidenceCapabilities?: readonly StandardEvidenceCheckCapability[];
-	} = {},
-): LoopExitRuntime {
+export function createVerificationRuntime(
+	input: CreateVerificationRuntimeInput = {},
+): VerificationRuntime {
 	if ("customChecks" in input) {
 		throw new Error(
-			"Loop Exit Runtime received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
+			"Verification Runtime received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
 		);
 	}
 	const protectedConfig = input.protectedBaseCustomCheckConfig;
@@ -86,7 +56,6 @@ export function createLoopExitRuntime(
 				}
 			: undefined,
 	);
-	const claimsExecutor = createDecisionResearchClaimsExecutor(catalog);
 	const resourceGuards = resolveRuntimeResourceGuards({
 		...(protectedConfig ? {protectedConfig} : {}),
 		...(input.customCodeCapabilitySnapshot
@@ -107,7 +76,6 @@ export function createLoopExitRuntime(
 		});
 	}
 	return Object.freeze({
-		suite: LOOP_EXIT_SUITE,
 		catalog,
 		createCheckResult,
 		createExitReport,
@@ -132,10 +100,5 @@ export function createLoopExitRuntime(
 				],
 			});
 		},
-		materializeDecisionResearchCitation,
-		evaluateDecisionResearchProvenance:
-			createDecisionResearchProvenanceExecutor(catalog),
-		prepareDecisionResearchClaimsAssessment: claimsExecutor.prepare,
-		completeDecisionResearchClaimsAssessment: claimsExecutor.complete,
 	});
 }

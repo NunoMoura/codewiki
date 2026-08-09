@@ -10,7 +10,7 @@ import {
 	createStandardEvidenceCheckBindingParameters,
 	createStandardEvidenceCheckExecutors,
 } from "../../src/verification/standard-evidence-executor.ts";
-import {createLoopExitRuntime} from "../../src/runtime/loop-exit-runtime.ts";
+import {createVerificationRuntime} from "../../src/verification/runtime.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 
 const sourceSnapshotDigest = digest("source");
@@ -137,7 +137,7 @@ function capability(admitted, checkId = "verification_passed") {
 async function run({failed = false, expectedTestCount = 2, selected = selector} = {}) {
 	const loopCandidate = candidate();
 	const admitted = junit(loopCandidate, {failed, expectedTestCount});
-	const runtime = createLoopExitRuntime({
+	const runtime = createVerificationRuntime({
 		standardEvidenceCapabilities: [capability(admitted)],
 	});
 	const runner = runtime.createRunner({executors: []});
@@ -149,7 +149,7 @@ async function run({failed = false, expectedTestCount = 2, selected = selector} 
 }
 
 describe("native standard Evidence Check executor", () => {
-	it("installs through Runtime and creates passing or failing canonical Results", async () => {
+	it("installs through Verification and creates passing or failing canonical Results", async () => {
 		const passed = await run();
 		const failed = await run({failed: true});
 
@@ -203,7 +203,7 @@ describe("native standard Evidence Check executor", () => {
 		const loopCandidate = candidate();
 		const admitted = junit(loopCandidate);
 		const checkIds = ["verification_passed", "typescript_verified"];
-		const runtime = createLoopExitRuntime({
+		const runtime = createVerificationRuntime({
 			standardEvidenceCapabilities: checkIds.map((checkId) =>
 				capability(admitted, checkId),
 			),
@@ -262,7 +262,7 @@ describe("native standard Evidence Check executor", () => {
 	it("rejects duplicate, incomplete, unknown, and non-Code capabilities", () => {
 		const loopCandidate = candidate();
 		const admitted = junit(loopCandidate);
-		const runtime = createLoopExitRuntime();
+		const runtime = createVerificationRuntime();
 		const valid = capability(admitted);
 		assert.throws(
 			() =>
