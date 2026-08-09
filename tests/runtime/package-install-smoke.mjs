@@ -127,10 +127,18 @@ assert.equal(existsSync(join(packageRoot, "dist", "verification", "runtime.js"))
 assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research-claims.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research-executors.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "start.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "git.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "decision-attempt.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "decision-operations.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "loop-exit-runtime.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "decision-research.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "decision-research-claims.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "native-decision-research.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "decision-attention-selection.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "decision-git-admission.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "native-decision-executor.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "native-decision-operations.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-start.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-reports.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "coordinator-entrypoint.js")), true);

@@ -5,41 +5,41 @@ import type {
 	CanonicalInlineSemanticArtifact,
 	ChangeOperationKind,
 	OperationId,
-} from "../change-trace/contracts.ts";
-import {createNextChangeOperation} from "../change-trace/builder.ts";
-import {reduceChangeOperation} from "../change-trace/reduce-operation.ts";
-import type {GitCommandRunner} from "../change-trace/git-command.ts";
-import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
+} from "../../change-trace/contracts.ts";
+import {createNextChangeOperation} from "../../change-trace/builder.ts";
+import {reduceChangeOperation} from "../../change-trace/reduce-operation.ts";
+import type {GitCommandRunner} from "../../change-trace/git-command.ts";
+import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
 import {
 	changeById,
 	type ChangeWorkState,
 	type ProjectWorkState,
-} from "../change-trace/state.ts";
+} from "../../change-trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	pushSynchronizedStateBatch,
 	type ProjectAuthoritySnapshot,
 	type SynchronizationObservation,
-} from "../change-trace/synchronization.ts";
-import type {EvidenceRecord} from "../evidence/contracts.ts";
-import {assertValidEvidenceRecord} from "../evidence/materialize.ts";
+} from "../../change-trace/synchronization.ts";
+import type {EvidenceRecord} from "../../evidence/contracts.ts";
+import {assertValidEvidenceRecord} from "../../evidence/materialize.ts";
 import {
 	assertValidResolvedExitPolicy,
 	type CheckResult,
 	type ExitReport,
 	type ResolvedExitPolicy,
-} from "../verification/contracts.ts";
-import {assertValidExitReport} from "../verification/results.ts";
+} from "../../verification/contracts.ts";
+import {assertValidExitReport} from "../../verification/results.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
-} from "../utils/canonical-json.ts";
+} from "../../utils/canonical-json.ts";
 import {
 	createDecisionCandidate,
 	type DecisionCandidate,
-} from "../decision/exit/candidate.ts";
-import type {DecisionRuntimeRoute} from "../decision/exit/runtime.ts";
+} from "../../decision/exit/candidate.ts";
+import type {DecisionRuntimeRoute} from "../../decision/exit/runtime.ts";
 
 export interface CreateNativeDecisionOperationsInput {
 	readonly state: ProjectWorkState;

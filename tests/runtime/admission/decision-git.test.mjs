@@ -6,25 +6,25 @@ import {it} from "node:test";
 import {
 	createInitialProjectWorkState,
 	synchronizeGitState,
-} from "../../src/change-trace/index.ts";
-import {resolveWikiConfig} from "../../src/project/config.ts";
-import {wikiConfigDigest} from "../../src/project/config-digest.ts";
-import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../src/changes/triage/selection.ts";
-import {createDecisionGitAdmission} from "../../src/runtime/decision-git-admission.ts";
-import {createDecisionStartRuntime} from "../../src/runtime/decision-attention-selection.ts";
-import {ProjectCoordinator} from "../../src/runtime/coordinator/project.ts";
+} from "../../../src/change-trace/index.ts";
+import {resolveWikiConfig} from "../../../src/project/config.ts";
+import {wikiConfigDigest} from "../../../src/project/config-digest.ts";
+import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
+import {createDecisionGitAdmission} from "../../../src/runtime/admission/git.ts";
+import {createDecisionStartRuntime} from "../../../src/runtime/admission/start.ts";
+import {ProjectCoordinator} from "../../../src/runtime/coordinator/project.ts";
 import {
 	allowAllReplayPolicy,
 	buildOperationSequence,
 	revisionFor,
-} from "../helpers/change-trace-replay-v1.mjs";
-import {authorityBinding, digest} from "../helpers/change-trace-v1.mjs";
+} from "../../helpers/change-trace-replay-v1.mjs";
+import {authorityBinding, digest} from "../../helpers/change-trace-v1.mjs";
 import {
 	createGitProposal,
 	createTwoCloneFixture,
 	git,
 	pushGitProposal,
-} from "../helpers/git-state-v1.mjs";
+} from "../../helpers/git-state-v1.mjs";
 
 const repositoryIdentity = digest("a");
 

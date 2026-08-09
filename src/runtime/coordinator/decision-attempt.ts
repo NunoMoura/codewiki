@@ -3,43 +3,43 @@ import {
 	type AuthorityBinding,
 	type ChangeRevision,
 	type OperationId,
-} from "../change-trace/contracts.ts";
-import type {GitCommandRunner} from "../change-trace/git-command.ts";
-import type {ReplayAdmissionPolicy} from "../change-trace/reducer.ts";
+} from "../../change-trace/contracts.ts";
+import type {GitCommandRunner} from "../../change-trace/git-command.ts";
+import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
 import {
 	changeById,
 	type ChangeWorkState,
 	type LoopAttemptProjection,
 	type LoopAttemptProjectionStatus,
 	type ProjectWorkState,
-} from "../change-trace/state.ts";
+} from "../../change-trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	type ProjectAuthoritySnapshot,
 	type TeamSnapshot,
-} from "../change-trace/synchronization.ts";
-import type {DecisionCandidateProposal} from "../decision/candidate-proposal.ts";
-import {parseDecisionCandidateProposal} from "../decision/candidate-proposal.ts";
+} from "../../change-trace/synchronization.ts";
+import type {DecisionCandidateProposal} from "../../decision/candidate-proposal.ts";
+import {parseDecisionCandidateProposal} from "../../decision/candidate-proposal.ts";
 import {
 	createDecisionCandidate,
 	type DecisionCandidate,
-} from "../decision/exit/candidate.ts";
-import type {DecisionSecurityScanContext} from "../decision/exit/runtime-security.ts";
-import type {createDecisionExitRuntime} from "../decision/exit/runtime.ts";
-import type {EvidenceRecord} from "../evidence/contracts.ts";
-import type {ProjectCoordinatorRecovery} from "./coordinator/project.ts";
-import type {DecisionAttemptExecutor} from "./decision-attention-selection.ts";
+} from "../../decision/exit/candidate.ts";
+import type {DecisionSecurityScanContext} from "../../decision/exit/runtime-security.ts";
+import type {createDecisionExitRuntime} from "../../decision/exit/runtime.ts";
+import type {EvidenceRecord} from "../../evidence/contracts.ts";
+import type {ProjectCoordinatorRecovery} from "./project.ts";
+import type {DecisionAttemptExecutor} from "../admission/start.ts";
 import {
 	commitNativeDecisionOperationSequence,
 	type NativeDecisionCommitReceipt,
-} from "./native-decision-operations.ts";
+} from "../effects/decision-operations.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
-} from "../utils/canonical-json.ts";
-import {assertTypeboxSchema} from "../utils/json.ts";
+} from "../../utils/canonical-json.ts";
+import {assertTypeboxSchema} from "../../utils/json.ts";
 
 export const DECISION_CANDIDATE_PRODUCTION_PROTOCOL = Object.freeze({
 	id: "codewiki.decision-candidate-production",

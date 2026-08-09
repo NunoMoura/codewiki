@@ -59,6 +59,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [x] Remove all Runtime-to-Pi imports by making concrete Pi sessions depend inward on generic worker contracts.
 - [x] Port packed failure coverage to current worker/worktree contracts and delete legacy `src/runtime/host-runner.ts`.
 - [x] Partition Runtime-owned worker dispatch/job scheduling, Integration, and claim release into responsibility directories.
+- [x] Partition authenticated Decision admission, attempt scheduling, and canonical writes into generic Runtime responsibility directories.
 - [x] Remove repeated responsibility prefixes from Coordinator, Worker, and Container filenames.
 - [ ] Move generic scheduling, persistence, synchronization, remaining worker mechanics, Integration, recovery, and lifecycle into responsibility-named Runtime subdirectories.
 - [x] Remove `src/runtime/loop-exit-runtime.ts`; Loop declarations remain owner-local and generic composition lives in Verification.

@@ -4,7 +4,7 @@ import type {
 	BacklogTriageQueryResult,
 } from "../changes/triage/contracts.ts";
 import type {DecisionAttentionSelectionCommand} from "../changes/triage/selection.ts";
-import type {DecisionStartResult} from "../runtime/decision-attention-selection.ts";
+import type {DecisionStartResult} from "../runtime/admission/start.ts";
 import {
 	connectEnsuredProjectCoordinatorClient,
 	type EnsureProjectCoordinatorServiceOptions,

@@ -134,7 +134,7 @@ export {
 	type DecisionStartResult,
 	type DecisionStartRuntime,
 	type DecisionStartRuntimeOptions,
-} from "../decision-attention-selection.ts";
+} from "../admission/start.ts";
 export {
 	connectProjectCoordinatorClient,
 	readProjectCoordinatorServiceState,

@@ -14,12 +14,12 @@ import {
 import {createDecisionExitRuntime} from "../decision/exit/runtime.ts";
 import type {ProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/configuration.ts";
 import {loadProtectedCustomCheckConfigSnapshot} from "../verification/custom-checks/project-config-store.ts";
-import {createDecisionGitAdmission} from "../runtime/decision-git-admission.ts";
+import {createDecisionGitAdmission} from "../runtime/admission/git.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
 	createNativeDecisionAttemptExecutor,
 	type NativeDecisionAttemptExecutorOptions,
-} from "../runtime/native-decision-executor.ts";
+} from "../runtime/coordinator/decision-attempt.ts";
 import type {
 	ProjectCoordinatorDecisionAttentionCaller,
 	ProjectCoordinatorDecisionStartOptions,

@@ -1,44 +1,44 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../src/verification/catalog.ts";
-import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
-import {resolveExitPolicy} from "../../src/verification/resolve-policy.ts";
-import {createCheckResult, createExitReport} from "../../src/verification/results.ts";
-import {deriveDecisionRuntimeRoute} from "../../src/decision/exit/runtime.ts";
-import {EVIDENCE_SCHEMA_VERSION} from "../../src/evidence/contracts.ts";
-import {materializeEvidenceRecord} from "../../src/evidence/materialize.ts";
-import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
+import {createCheckCatalog} from "../../../src/verification/catalog.ts";
+import {createResolvedExitPolicy} from "../../../src/verification/contracts.ts";
+import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
+import {createCheckResult, createExitReport} from "../../../src/verification/results.ts";
+import {deriveDecisionRuntimeRoute} from "../../../src/decision/exit/runtime.ts";
+import {EVIDENCE_SCHEMA_VERSION} from "../../../src/evidence/contracts.ts";
+import {materializeEvidenceRecord} from "../../../src/evidence/materialize.ts";
+import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 import {
 	commitNativeDecisionOperationSequence,
 	createNativeDecisionOperationSequence,
-} from "../../src/runtime/native-decision-operations.ts";
+} from "../../../src/runtime/effects/decision-operations.ts";
 import {
 	allowAllReplayPolicy,
 	baseSnapshotFor,
 	openProposedChange,
 	reduceBatch,
-} from "../helpers/change-trace-replay-v1.mjs";
+} from "../../helpers/change-trace-replay-v1.mjs";
 import {
 	authorityBinding,
 	digest,
 	gitObject,
-} from "../helpers/change-trace-v1.mjs";
-import {nativeDecisionCandidate} from "../helpers/native-decision.mjs";
+} from "../../helpers/change-trace-v1.mjs";
+import {nativeDecisionCandidate} from "../../helpers/native-decision.mjs";
 import {
 	assertValidCanonicalChangeOperation,
 	createInitialProjectWorkState,
 	createNextChangeOperation,
 	pushSynchronizedStateBatch,
 	synchronizeGitState,
-} from "../../src/change-trace/index.ts";
+} from "../../../src/change-trace/index.ts";
 import {
 	buildOpenChangeRecords,
 	createGitProposal,
 	createTwoCloneFixture,
 	git,
 	pushGitProposal,
-} from "../helpers/git-state-v1.mjs";
+} from "../../helpers/git-state-v1.mjs";
 
 function sourceEvidence(change, candidate) {
 	return materializeEvidenceRecord(
@@ -49,7 +49,7 @@ function sourceEvidence(change, candidate) {
 			payload: {
 				sourceType: "source",
 				snapshotDigest: digest("6"),
-				paths: ["src/runtime/native-decision-operations.ts"],
+				paths: ["src/runtime/effects/decision-operations.ts"],
 				symbols: ["createNativeDecisionOperationSequence"],
 				ownershipRefs: ["component:runtime"],
 				observations: ["Native Decision artifacts are inline."],
@@ -245,7 +245,10 @@ describe("native Decision canonical operation continuation", () => {
 			[sequence.operations[4], "runtimeRoute", artifacts.route],
 		];
 		for (const [operation, field, expected] of artifactOperations) {
-			const inline = operation.body.payload[field];
+			const canonicalOperation = /** @type {(typeof sequence.operations)[number]} */ (
+				operation
+			);
+			const inline = canonicalOperation.body.payload[field];
 			assert.equal(Object.hasOwn(inline, "ref"), false);
 			assert.deepEqual(
 				JSON.parse(JSON.stringify(inline.artifact)),
@@ -285,8 +288,10 @@ describe("native Decision canonical operation continuation", () => {
 			...artifacts,
 			evidenceRecords: [evidence],
 		});
-		const operation = sequence.operations.find(
-			(candidate) => candidate.body.kind === "evidence.recorded",
+		const operation = /** @type {(typeof sequence.operations)[number]} */ (
+			sequence.operations.find(
+				(candidate) => candidate.body.kind === "evidence.recorded",
+			)
 		);
 		assert.equal(operation.body.payload.evidence.id, evidence.evidenceId);
 		assert.equal(Object.hasOwn(operation.body.payload.evidence, "ref"), false);

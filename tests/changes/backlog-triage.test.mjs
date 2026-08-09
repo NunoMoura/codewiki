@@ -28,7 +28,7 @@ import {
 	createUserStandardDefinition,
 	createUserStandardSourceSnapshot,
 } from "../../src/verification/custom-checks/user-standards.ts";
-import {createDecisionStartRuntime} from "../../src/runtime/decision-attention-selection.ts";
+import {createDecisionStartRuntime} from "../../src/runtime/admission/start.ts";
 import {ProjectCoordinator} from "../../src/runtime/coordinator/project.ts";
 import {
 	connectProjectCoordinatorClient,

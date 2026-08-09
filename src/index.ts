@@ -35,7 +35,7 @@ export {
 	createDecisionGitAdmission,
 	type DecisionGitAdmission,
 	type DecisionGitAdmissionOptions,
-} from "./runtime/decision-git-admission.ts";
+} from "./runtime/admission/git.ts";
 export {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
 	assertNativeDecisionCandidateProductionRequest,
@@ -46,7 +46,7 @@ export {
 	type NativeDecisionCandidateProductionRequest,
 	type NativeDecisionEvaluationInput,
 	type NativeDecisionExitRuntimeBinding,
-} from "./runtime/native-decision-executor.ts";
+} from "./runtime/coordinator/decision-attempt.ts";
 export {
 	commitNativeDecisionOperationSequence,
 	createNativeDecisionOperationSequence,
@@ -54,4 +54,4 @@ export {
 	type NativeDecisionCommitReceipt,
 	type CreateNativeDecisionOperationsInput,
 	type NativeDecisionOperationSequence,
-} from "./runtime/native-decision-operations.ts";
+} from "./runtime/effects/decision-operations.ts";

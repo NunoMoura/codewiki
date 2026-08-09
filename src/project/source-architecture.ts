@@ -46,6 +46,7 @@ export const TARGET_SOURCE_ROOTS = [
 ] as const;
 
 export const TARGET_RUNTIME_SUBDIRECTORIES = [
+	"admission",
 	"claims",
 	"coordinator",
 	"effects",

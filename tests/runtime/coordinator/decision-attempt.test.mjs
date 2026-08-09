@@ -6,23 +6,23 @@ import {
 	createNextChangeOperation,
 	pushSynchronizedStateBatch,
 	synchronizeGitState,
-} from "../../src/change-trace/index.ts";
-import {createDecisionExitRuntime} from "../../src/decision/exit/runtime.ts";
+} from "../../../src/change-trace/index.ts";
+import {createDecisionExitRuntime} from "../../../src/decision/exit/runtime.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
 	createNativeDecisionAttemptExecutor,
-} from "../../src/runtime/native-decision-executor.ts";
+} from "../../../src/runtime/coordinator/decision-attempt.ts";
 import {
 	allowAllReplayPolicy,
 	baseSnapshotFor,
-} from "../helpers/change-trace-replay-v1.mjs";
-import {authorityBinding, digest} from "../helpers/change-trace-v1.mjs";
+} from "../../helpers/change-trace-replay-v1.mjs";
+import {authorityBinding, digest} from "../../helpers/change-trace-v1.mjs";
 import {
 	buildOpenChangeRecords,
 	createGitProposal,
 	createTwoCloneFixture,
 	pushGitProposal,
-} from "../helpers/git-state-v1.mjs";
+} from "../../helpers/git-state-v1.mjs";
 
 const repositoryIdentity = digest("a");
 

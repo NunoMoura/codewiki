@@ -1,15 +1,15 @@
-import {createNextChangeOperation} from "../change-trace/builder.ts";
+import {createNextChangeOperation} from "../../change-trace/builder.ts";
 import type {
 	CanonicalChangeOperation,
 	ChangeRevision,
 	OperationId,
-} from "../change-trace/contracts.ts";
-import {reduceChangeOperation} from "../change-trace/reduce-operation.ts";
+} from "../../change-trace/contracts.ts";
+import {reduceChangeOperation} from "../../change-trace/reduce-operation.ts";
 import type {
 	ChangeWorkState,
 	LoopAttemptProjection,
 	ProjectWorkState,
-} from "../change-trace/state.ts";
+} from "../../change-trace/state.ts";
 import {
 	assertDecisionAttentionSelectionContext,
 	decisionSelectionAuthorizationRequest,
@@ -23,13 +23,13 @@ import {
 	type DecisionAttentionSelectionCommand,
 	type DecisionAttentionSelectionContext,
 	DecisionAttentionSelectionError,
-} from "../changes/triage/selection.ts";
-import type {Sha256Digest} from "../utils/canonical-json.ts";
+} from "../../changes/triage/selection.ts";
+import type {Sha256Digest} from "../../utils/canonical-json.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
 	ProjectCoordinatorRecovery,
-} from "./coordinator/project.ts";
+} from "../coordinator/project.ts";
 
 export interface DecisionStartResult {
 	readonly attemptOperationId: OperationId;

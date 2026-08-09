@@ -31,7 +31,7 @@ import {
 	assertNativeDecisionCandidateProductionRequest,
 	type NativeDecisionCandidateProducer,
 	type NativeDecisionCandidateProductionRequest,
-} from "../runtime/native-decision-executor.ts";
+} from "../runtime/coordinator/decision-attempt.ts";
 
 export { createPiDecisionModelCheckTransport } from "./decision-model-check-session.ts";
 export { createPiDecisionResearchClaimsTransport } from "./decision-research-claims-session.ts";
