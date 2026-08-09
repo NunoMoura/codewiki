@@ -1,0 +1,3797 @@
+{
+  "version": 1,
+  "snapshot": "b4823683a23b93cd46be0b40af1dd8326e8cf5f5",
+  "purpose": "Reviewed file-level keep/move/merge/delete budget for the remaining clean-cut refactor.",
+  "authority": "Temporary execution tracking only; Knowledge, source/tests, and Git remain authoritative.",
+  "rules": [
+    "Every tracked file at the snapshot plus this manifest has exactly one disposition.",
+    "Move and merge target paths name accepted owners; no old-path compatibility exports survive.",
+    "Delete means delete after replacement parity, not delete before its callers are cut over.",
+    "New files consume explicit reserves; exceeding a reserve requires deleting or merging another file in the same slice.",
+    "File-count reduction must come from deleting obsolete authority, compatibility, and duplication\u2014not combining unrelated responsibilities."
+  ],
+  "hardCaps": {
+    "src": 315,
+    "tests": 190,
+    "benchmarks": 10,
+    "scripts": 1,
+    "lab": 0,
+    "trackedTotal": 575,
+    "packedFiles": 650
+  },
+  "reserves": {
+    "src": {
+      "maxNewFiles": 16,
+      "for": [
+        "GitHub issue intake",
+        "bounded Alignment/query tools",
+        "replacement Runtime lifecycle and recovery contracts"
+      ]
+    },
+    "tests": {
+      "maxNewFiles": 10,
+      "for": [
+        "new intake/query/lifecycle contract coverage"
+      ]
+    },
+    "benchmarks": {
+      "maxNewFiles": 7,
+      "for": [
+        "paired harness adapters, controlled runner, and external judge contracts"
+      ]
+    }
+  },
+  "summary": {
+    "currentTrackedIncludingManifest": 705,
+    "currentByArea": {
+      "knowledge": 41,
+      "lab": 38,
+      "other": 15,
+      "scripts": 5,
+      "src": 371,
+      "temporary": 6,
+      "tests": 229
+    },
+    "actions": {
+      "delete": 171,
+      "keep": 392,
+      "merge": 3,
+      "move": 139
+    },
+    "derivedTargetBeforeReserves": {
+      "benchmarks": 3,
+      "knowledge": 41,
+      "other": 14,
+      "scripts": 1,
+      "src": 294,
+      "tests": 178
+    },
+    "projectedWithReserves": {
+      "src": 310,
+      "tests": 188,
+      "benchmarks": 10
+    },
+    "projectedTrackedWithReserves": 564,
+    "reductionFromCurrentTracked": 141,
+    "nonKeepReasons": {
+      "barrel_cleanup": 2,
+      "duplicate_adapter": 3,
+      "generated_placeholder": 1,
+      "legacy_lab": 56,
+      "legacy_quality": 13,
+      "legacy_trace": 27,
+      "legacy_trace_host": 7,
+      "legacy_view": 13,
+      "legacy_work_state": 6,
+      "merge_small_contract": 2,
+      "move_target_owner": 70,
+      "self_dogfood": 6,
+      "temporary_execution": 6,
+      "test_follows_source": 69,
+      "test_merge": 1,
+      "test_obsolete": 31
+    }
+  },
+  "auditChanges": [
+    {
+      "path": "package.json",
+      "change": "Keep test:coordinator as a focused developer command but remove its duplicate invocation from audit:codewiki after the suite manifests are updated."
+    },
+    {
+      "path": "package.json",
+      "change": "Delete Lab and self-dogfood scripts when their files are removed; replace benchmark commands with repository-root paired harness commands."
+    },
+    {
+      "path": "src/project/source-architecture.ts",
+      "change": "Delete legacy root counts after all listed paths are gone; assert only final target roots and dependency directions."
+    }
+  ],
+  "reasonCatalog": {
+    "target_owned": "Already belongs to an accepted target owner; retain unless a later focused audit proves redundancy.",
+    "move_target_owner": "Semantics survive but current path names the wrong owner.",
+    "merge_small_contract": "Small single-purpose contract belongs in an existing owner module; merge without compatibility export.",
+    "legacy_quality": "Legacy Quality/Loop stack is replaced by Candidate, Evidence, Check Result, Exit Report, and route semantics.",
+    "legacy_trace": "Legacy local Trace/ChangeRecord authority is replaced by canonical Change operations and deterministic projections.",
+    "legacy_view": "Generic Trace-derived view is replaced by bounded WorkState, Alignment, or client projection.",
+    "legacy_work_state": "Old Trace/ChangeRecord WorkState is replaced by canonical ProjectWorkState reduction.",
+    "legacy_trace_host": "Legacy trace-host lifecycle duplicates generic Runtime coordination and Pi Harness execution.",
+    "legacy_lab": "Lab/optimizer/promotion machinery is replaced by repository-root externally judged paired benchmarks.",
+    "self_dogfood": "Source-checkout self-dogfood machinery is forbidden during stabilization and has no final product owner.",
+    "barrel_cleanup": "Broad or one-line compatibility barrel expands internal API without owning behavior.",
+    "duplicate_adapter": "Permissive or duplicate adapter is replaced by bounded canonical Evidence/Verification machinery.",
+    "temporary_execution": "Temporary refactoring execution evidence is deleted when target topology is complete.",
+    "generated_placeholder": "Legacy runtime/generated-state placeholder is not source truth.",
+    "test_follows_source": "Test survives and moves with its source responsibility.",
+    "test_obsolete": "Test proves behavior or structure intentionally deleted by clean cut.",
+    "test_merge": "Assertions survive inside the target owner test; separate file disappears."
+  },
+  "entries": [
+    {
+      "path": ".codewiki/config.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/lexicon.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/DESIGN.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/agent/retrieve-bounded-context.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/account-for-drift.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/automate-safe-work.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/enforce-project-standards.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/maintain-intent.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/recover-history.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/users/adapter-author.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/users/agent.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/users/external-user.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/product/users/maintainer.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/alignment.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/api.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/benchmarks.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/change-intake.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/change-trace.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/clients.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/decision.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/evidence.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/harnesses.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/implementation.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/knowledge.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/package.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/planning.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/preview.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/project.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/provider-boundary.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/runtime.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/verification.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/components/work-state.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/architecture.yaml",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/execution.yaml",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/lifecycle.yaml",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/synchronization.yaml",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/change-lifecycle.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/decision-to-planning.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/planning-to-implementation.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/recovery.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/remote-state-synchronization.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/work-item-execution.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".codewiki/traces/.gitkeep",
+      "action": "delete",
+      "reason": "generated_placeholder"
+    },
+    {
+      "path": ".gitignore",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".pi-lens.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".pi/.gitignore",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".pi/APPEND_SYSTEM.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".pi/settings.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": ".tmp-worktrees/deep-clean-file-budget.json",
+      "action": "delete",
+      "reason": "temporary_execution"
+    },
+    {
+      "path": ".tmp-worktrees/runtime-loop-execution-ports-move-manifest.json",
+      "action": "delete",
+      "reason": "temporary_execution"
+    },
+    {
+      "path": ".tmp-worktrees/runtime-persistence-move-manifest.json",
+      "action": "delete",
+      "reason": "temporary_execution"
+    },
+    {
+      "path": ".tmp-worktrees/runtime-policy-split-manifest.json",
+      "action": "delete",
+      "reason": "temporary_execution"
+    },
+    {
+      "path": ".tmp-worktrees/user-standard-distillation-verification-move-manifest.json",
+      "action": "delete",
+      "reason": "temporary_execution"
+    },
+    {
+      "path": "AGENTS.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "LICENSE",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "README.md",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "REFACTORING_PLAN.md",
+      "action": "delete",
+      "reason": "temporary_execution"
+    },
+    {
+      "path": "lab/README.md",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/decision/README.md",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/decision/cases.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/decision/fixture.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/decision/loop.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/decision/score.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/implementation/README.md",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/implementation/cases.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/implementation/loop.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/implementation/score.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/pipeline/cases.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/pipeline/score.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/pipeline/trace-harness.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/pipeline/types.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/planning/README.md",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/planning/cases.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/planning/fixture.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/planning/loop.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/planning/score.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/program.md",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/contract.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/engine.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/experiment-budget.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/experiment-runner.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/graph.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/holdout-score.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/holdout.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/judge-calibration.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/judge-smoke.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/objective.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/promotion.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/quality-pack.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/score.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/sealed-check.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/sealed-template.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/security-calibration.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/trace-forge.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "lab/runner/types.ts",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "package-lock.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "package.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "scripts/create-self-dogfood-baseline.mjs",
+      "action": "delete",
+      "reason": "self_dogfood"
+    },
+    {
+      "path": "scripts/dashboard-dev.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "scripts/install-self-dogfood-controller.mjs",
+      "action": "delete",
+      "reason": "self_dogfood"
+    },
+    {
+      "path": "scripts/run-self-dogfood-shadow.mjs",
+      "action": "delete",
+      "reason": "self_dogfood"
+    },
+    {
+      "path": "scripts/verify-self-dogfood-baseline.mjs",
+      "action": "delete",
+      "reason": "self_dogfood"
+    },
+    {
+      "path": "src/api/index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/input-validation.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/loop-execution.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/state.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/api/traces.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/api/views.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/api/wiki-archive.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/api/wiki-change.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/wiki-config.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/api/wiki-decide.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/wiki-implement.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/wiki-okf.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/wiki-plan.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/api/wiki-runtime.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/benchmarks/alignment-retrieval.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "benchmarks/alignment-retrieval.ts"
+    },
+    {
+      "path": "src/benchmarks/retrieval-adapters.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "benchmarks/retrieval-adapters.ts"
+    },
+    {
+      "path": "src/change-trace/alignment-graph.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/alignment/graph.ts"
+    },
+    {
+      "path": "src/change-trace/alignment-knowledge.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/alignment/knowledge.ts"
+    },
+    {
+      "path": "src/change-trace/alignment-query.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/alignment/query.ts"
+    },
+    {
+      "path": "src/change-trace/builder.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/changes/trace/builder.ts"
+    },
+    {
+      "path": "src/change-trace/catalog.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/changes/trace/catalog.ts"
+    },
+    {
+      "path": "src/change-trace/contracts.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/changes/trace/contracts.ts"
+    },
+    {
+      "path": "src/change-trace/errors.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/changes/trace/errors.ts"
+    },
+    {
+      "path": "src/change-trace/git-command.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/git/command.ts"
+    },
+    {
+      "path": "src/change-trace/git-state.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/runtime/synchronization/state.ts"
+    },
+    {
+      "path": "src/change-trace/identity.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/changes/trace/identity.ts"
+    },
+    {
+      "path": "src/change-trace/index.ts",
+      "action": "delete",
+      "reason": "barrel_cleanup"
+    },
+    {
+      "path": "src/change-trace/mutation.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/runtime/claims/mutation.ts"
+    },
+    {
+      "path": "src/change-trace/order.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/changes/trace/order.ts"
+    },
+    {
+      "path": "src/change-trace/planning-mutation.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/planning/mutation.ts"
+    },
+    {
+      "path": "src/change-trace/reduce-operation.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/work-state/operations.ts"
+    },
+    {
+      "path": "src/change-trace/reducer.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/work-state/reducer.ts"
+    },
+    {
+      "path": "src/change-trace/rolling-planning.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/planning/rolling.ts"
+    },
+    {
+      "path": "src/change-trace/state.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/work-state/types.ts"
+    },
+    {
+      "path": "src/change-trace/synchronization.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/runtime/synchronization/git.ts"
+    },
+    {
+      "path": "src/changes/change-trace.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/defect-profile.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/digest.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/intake/contracts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/intake/deduplicate.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/intake/normalize.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/intake/producers.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/intake/route.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/normalize.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/records.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/schema.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/store.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/trace-store.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/triage/contracts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/triage/estimates.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/triage/ordering.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/triage/policy.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/triage/projection.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/triage/query.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/triage/selection.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/changes/types.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/changes/validation-view.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/cli/index.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/cli/index.ts"
+    },
+    {
+      "path": "src/dashboard/activity-feed.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/activity-feed.ts"
+    },
+    {
+      "path": "src/dashboard/assets.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/assets.ts"
+    },
+    {
+      "path": "src/dashboard/assets/codewiki-logo.png",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/assets/codewiki-logo.png"
+    },
+    {
+      "path": "src/dashboard/change-control.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/change-control.ts"
+    },
+    {
+      "path": "src/dashboard/change-validation-card.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/change-validation-card.ts"
+    },
+    {
+      "path": "src/dashboard/changes-state.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/changes-state.ts"
+    },
+    {
+      "path": "src/dashboard/config-control.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/config-control.ts"
+    },
+    {
+      "path": "src/dashboard/config-state.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/config-state.ts"
+    },
+    {
+      "path": "src/dashboard/daemon.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/daemon.ts"
+    },
+    {
+      "path": "src/dashboard/dev-log-projection.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/dev-log-projection.ts"
+    },
+    {
+      "path": "src/dashboard/health.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/health.ts"
+    },
+    {
+      "path": "src/dashboard/index.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/index.ts"
+    },
+    {
+      "path": "src/dashboard/server.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/server.ts"
+    },
+    {
+      "path": "src/dashboard/session-actions.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/session-actions.ts"
+    },
+    {
+      "path": "src/dashboard/state.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/dashboard/state.ts"
+    },
+    {
+      "path": "src/dashboard/trace-host-control.ts",
+      "action": "delete",
+      "reason": "legacy_trace_host"
+    },
+    {
+      "path": "src/dashboard/trace-host-runtime.ts",
+      "action": "delete",
+      "reason": "legacy_trace_host"
+    },
+    {
+      "path": "src/decision/candidate-proposal.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/change-quality.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/decision/exit/candidate.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/code-executors.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/evidence.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/model-checks.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/research-claims-protocol.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/research-claims.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/research-executors.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/research.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/runtime-security.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/runtime.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/decision/exit/security-scanners.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/error-handling/api-errors.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/utils/errors/api-errors.ts"
+    },
+    {
+      "path": "src/error-handling/codewiki-error.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/utils/errors/codewiki-error.ts"
+    },
+    {
+      "path": "src/error-handling/config-errors.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/utils/errors/config-errors.ts"
+    },
+    {
+      "path": "src/error-handling/host-errors.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/utils/errors/host-errors.ts"
+    },
+    {
+      "path": "src/error-handling/trace-errors.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/utils/errors/trace-errors.ts"
+    },
+    {
+      "path": "src/evidence/adapters/coverage-parsers.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/coverage.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/cyclonedx.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/document.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/junit.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/materialization.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/openapi.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/pact.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/provider-check-receipt.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/sarif.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/shared.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/spdx.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/adapters/xml.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/contracts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/identity.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/materialize.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/model-assessment.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/obligation-resolution.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/evidence/obligations.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/git/content-proof.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/git/status.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/git/worktree-shell-runner.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/git/worktrees.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/harnesses/container/command.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/harnesses/container/worker-adapter.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/harnesses/container/worker-git.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/harnesses/container/worker-options.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/harnesses/coordinator-entrypoint.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/harnesses/pi/process-worker-adapter.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/harnesses/ports.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/candidate-content.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/claims.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/evidence-policy.ts",
+      "action": "merge",
+      "reason": "merge_small_contract",
+      "targetPath": "src/implementation/evidence.ts"
+    },
+    {
+      "path": "src/implementation/evidence.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/exit/index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/iteration.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/loop.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/merge-proof.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/quality-standards.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/implementation/review/adapter.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/adapters/generic-command.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/adapters/sarif.ts",
+      "action": "delete",
+      "reason": "duplicate_adapter"
+    },
+    {
+      "path": "src/implementation/review/artifacts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/evidence-cache.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/evidence-report.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/fast-feedback.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/index.ts",
+      "action": "delete",
+      "reason": "barrel_cleanup"
+    },
+    {
+      "path": "src/implementation/review/language-pack.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/languages/go.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/languages/javascript-lint.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/languages/python.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/languages/rust.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/languages/shell.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/languages/typescript.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/packs.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/review/quality-nodes.ts",
+      "action": "delete",
+      "reason": "duplicate_adapter"
+    },
+    {
+      "path": "src/implementation/review/summary.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/types.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/worker-observation-authority.ts",
+      "action": "merge",
+      "reason": "merge_small_contract",
+      "targetPath": "src/implementation/worker-proof.ts"
+    },
+    {
+      "path": "src/implementation/worker-proof.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/implementation/workers.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/codewiki-kb-profile.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/drift-linter.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf-export.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf-frontmatter.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf-index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf-source-map.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf-trace-boundary.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf-v02.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf-validation.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/okf.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/source-map.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/source-ownership.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/system-diagrams.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/knowledge/topic-alignment.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/loops/evaluator.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/feedback.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/graph.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/judge-prompts.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/judge-provider.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/judge.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/quality-pack.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/quality-profile.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/quality-standards.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/loops/runner.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/pi/command-catalog.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/command-catalog.ts"
+    },
+    {
+      "path": "src/pi/commands/index.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/commands/index.ts"
+    },
+    {
+      "path": "src/pi/dashboard-session-actions.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/dashboard-session-actions.ts"
+    },
+    {
+      "path": "src/pi/decision-model-check-session.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/decision-model-check-session.ts"
+    },
+    {
+      "path": "src/pi/decision-research-claims-session.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/decision-research-claims-session.ts"
+    },
+    {
+      "path": "src/pi/extension.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/extension.ts"
+    },
+    {
+      "path": "src/pi/identity.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/identity.ts"
+    },
+    {
+      "path": "src/pi/install-scope.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/install-scope.ts"
+    },
+    {
+      "path": "src/pi/isolated-json-model-session.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/isolated-json-model-session.ts"
+    },
+    {
+      "path": "src/pi/messages.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/messages.ts"
+    },
+    {
+      "path": "src/pi/native-decision-host.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/native-decision-host.ts"
+    },
+    {
+      "path": "src/pi/native-decision-research.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/native-decision-research.ts"
+    },
+    {
+      "path": "src/pi/preview-runtime.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/preview-runtime.ts"
+    },
+    {
+      "path": "src/pi/process-session.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/process-session.ts"
+    },
+    {
+      "path": "src/pi/project-coordinator-daemon.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/project-coordinator-daemon.ts"
+    },
+    {
+      "path": "src/pi/project-service-client.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/project-service-client.ts"
+    },
+    {
+      "path": "src/pi/prompt/index.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/prompt/index.ts"
+    },
+    {
+      "path": "src/pi/rendering/change-validation-card.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/rendering/change-validation-card.ts"
+    },
+    {
+      "path": "src/pi/rendering/command-renderers.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/rendering/command-renderers.ts"
+    },
+    {
+      "path": "src/pi/rendering/message-renderers.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/rendering/message-renderers.ts"
+    },
+    {
+      "path": "src/pi/rendering/width.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/rendering/width.ts"
+    },
+    {
+      "path": "src/pi/review-hooks.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/review-hooks.ts"
+    },
+    {
+      "path": "src/pi/runtime-tool-routing.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/runtime-tool-routing.ts"
+    },
+    {
+      "path": "src/pi/sdk-semantic-session.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/sdk-semantic-session.ts"
+    },
+    {
+      "path": "src/pi/tools/index.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/tools/index.ts"
+    },
+    {
+      "path": "src/pi/trace-host-process.ts",
+      "action": "delete",
+      "reason": "legacy_trace_host"
+    },
+    {
+      "path": "src/pi/trace-host-result.ts",
+      "action": "delete",
+      "reason": "legacy_trace_host"
+    },
+    {
+      "path": "src/pi/tui/footer.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/tui/footer.ts"
+    },
+    {
+      "path": "src/pi/tui/index.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/tui/index.ts"
+    },
+    {
+      "path": "src/pi/types.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/clients/pi/types.ts"
+    },
+    {
+      "path": "src/pi/user-standard-distillation-session.ts",
+      "action": "move",
+      "reason": "move_target_owner",
+      "targetPath": "src/harnesses/pi/user-standard-distillation-session.ts"
+    },
+    {
+      "path": "src/planning/candidate-content.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/planning/conflicts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/planning/exit/index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/planning/portfolio-quality.ts",
+      "action": "delete",
+      "reason": "legacy_quality"
+    },
+    {
+      "path": "src/planning/types.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/binding.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/browser-adapter.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/coordinator.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/dashboard-control.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/evidence.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/integration.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/profile.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/preview/target.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/bootstrap.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/config-digest.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/config-file.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/config.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/explain.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/model-route-validation.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/model-routing.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/root.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/self-dogfood-baseline.ts",
+      "action": "delete",
+      "reason": "self_dogfood"
+    },
+    {
+      "path": "src/project/self-dogfood-controller.ts",
+      "action": "delete",
+      "reason": "self_dogfood"
+    },
+    {
+      "path": "src/project/snapshot.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/source-architecture.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/project/state-file.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/admission/automation.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/admission/change.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/admission/git.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/admission/start.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/claims/events.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/claims/leases.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/claims/policy.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/claims/release.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/claims/work-unit-events.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/claims/work-unit-selection.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/daemon.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/decision-attempt.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/due-triggers.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/endpoint.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/entrypoint.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/events.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/executor.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/heartbeat-cycle.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/heartbeat-policy.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/heartbeat-queue.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/job-id.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/process.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/project.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/reactions.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/reactor.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/service.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/trigger-runs.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/coordinator/types.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/decision-operations.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-artifact.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-contract.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-manifest.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-proof.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-publication.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-release-contract.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-release-manifest.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-release-proof.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/product-release.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-merge-git.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-merge.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-push-manifest.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-push-operations.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-push.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/effects/research-collection.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/integration/worker.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/lifecycle.ts",
+      "action": "delete",
+      "reason": "legacy_trace_host"
+    },
+    {
+      "path": "src/runtime/persistence/dev-log.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/persistence/tmp.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/persistence/trace.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/runtime/trace-execution-policy.ts",
+      "action": "delete",
+      "reason": "duplicate_adapter"
+    },
+    {
+      "path": "src/runtime/trace-host-runner.ts",
+      "action": "delete",
+      "reason": "legacy_trace_host"
+    },
+    {
+      "path": "src/runtime/trace-host-supervisor.ts",
+      "action": "delete",
+      "reason": "legacy_trace_host"
+    },
+    {
+      "path": "src/runtime/workers/dispatch.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/execution-policy.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/handoff.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/implementation-adapter.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/implementation-artifacts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/implementation-report-store.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/jobs.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/observation.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/reports.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/runtime/workers/start.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/semantic-loop.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/traces/append.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/events.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/project.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/queries.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/reader.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/refs.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/release-notes.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/replay.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/retention.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/schema.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/types.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/traces/writer.ts",
+      "action": "delete",
+      "reason": "legacy_trace"
+    },
+    {
+      "path": "src/utils/canonical-json.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/utils/json.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/utils/time.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/admission.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/cache.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/catalog.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/contracts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/check-types.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/code-executor.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/code-templates.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/configuration.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/contracts.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/distillation.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/index.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/model-evaluator.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/mutations.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/policy-acceptance.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/policy-git.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/policy-review.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/project-config-store.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/resource-guards.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/runtime.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/serialized-idempotency.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/source-retrieval.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/user-standards.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/custom-checks/validation.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/identity.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/resolve-policy.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/results.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/runner.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/runtime.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/security-collectors.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/security-scanner-checks.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/security-scanners.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/security-surfaces.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/standard-evidence-checks.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/standard-evidence-executor.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/suite.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/verification/verification-capabilities.ts",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "src/views/blockers.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/conflicts.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/quality.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/resume.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/runtime-board.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/status.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/trace-goals.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/trace-queue.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/triggers.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/types.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/work-plan.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/work-queue.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/views/writer.ts",
+      "action": "delete",
+      "reason": "legacy_view"
+    },
+    {
+      "path": "src/work-state/project.ts",
+      "action": "delete",
+      "reason": "legacy_work_state"
+    },
+    {
+      "path": "src/work-state/projector.ts",
+      "action": "delete",
+      "reason": "legacy_work_state"
+    },
+    {
+      "path": "src/work-state/publication-projection.ts",
+      "action": "delete",
+      "reason": "legacy_work_state"
+    },
+    {
+      "path": "src/work-state/release-projection.ts",
+      "action": "delete",
+      "reason": "legacy_work_state"
+    },
+    {
+      "path": "src/work-state/session.ts",
+      "action": "delete",
+      "reason": "legacy_work_state"
+    },
+    {
+      "path": "src/work-state/types.ts",
+      "action": "delete",
+      "reason": "legacy_work_state"
+    },
+    {
+      "path": "tests/benchmarks/alignment-retrieval-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "benchmarks/tests/alignment-retrieval.test.mjs"
+    },
+    {
+      "path": "tests/changes/backlog-triage.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/changes/change-domain.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/changes/change-intake-producers.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/changes/change-intake.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/changes/change-trace-store.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/changes/change-validation-view.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/changes/defect-profile.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/changes/wiki-change.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/dashboard/activity-feed.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/activity-feed.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/change-control.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/change-control.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/change-trace-state.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/dashboard/change-validation-card.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/change-validation-card.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/changes-state.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/changes-state.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/config-control.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/config-control.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/config-state.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/config-state.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/dashboard-browser.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/dashboard-browser.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/dashboard-state.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/dashboard-state.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/dev-log-projection.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/dev-log-projection.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/session-actions.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/session-actions.test.mjs"
+    },
+    {
+      "path": "tests/dashboard/trace-host-control.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/dashboard/trace-host-http.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/decision/model-checks.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/decision/native-exit.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/decision/research.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/decision/wiki-decide.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/adapter-materialization.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/contract-document-adapters.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/coverage-adapters.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/evidence-obligations.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/evidence-record.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/junit-adapter.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/provider-check-receipt-adapter.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/sarif-adapter.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/evidence/sbom-adapters.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/archive.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/epoch.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/operation.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/state.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/harnesses/ports.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/accepted-change.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/canonical-loop-events.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/helpers/change-trace-replay-v1.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/change-trace-v1.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/git-state-v1.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/implementation-change.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/helpers/native-decision.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/pi-project-services.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/planning-work.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/helpers/proposed-change.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/helpers/runtime-implementation.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/implementation/implementation-iteration.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/merge-proof.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/repo-proof.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-adapter.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-evidence-cache.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-evidence.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-fast-feedback.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-go-rust-pack.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-integration.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-language-pack.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-python-pack.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/review-quality-nodes.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/implementation/review-shell-pack.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/wiki-implement.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/implementation/worker-observation-authority.test.mjs",
+      "action": "merge",
+      "reason": "test_merge",
+      "targetPath": "tests/implementation/worker-proof.test.mjs"
+    },
+    {
+      "path": "tests/implementation/worker-proof.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/integration/control-center-reconciliation.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/knowledge/codewiki-kb-profile.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/drift-linter.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/native-kb.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/okf-export.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/okf-index.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/okf-source-map.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/okf-trace-boundary.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/okf-v02.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/okf.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/skills.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/source-map.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/source-ownership.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/system-diagrams.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/knowledge/topic-alignment.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/lab/candidate-contract.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/experiment-budget.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/experiment-runner.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/graph-introspection.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/holdout-runner.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/judge-calibration.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/judge-smoke.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/loop-exit-score.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/objective.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/pipeline-score.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/program-contract.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/promotion.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/review-architecture.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/sealed-check.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/sealed-template.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/security-calibration.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/src-support.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/lab/trace-forge.test.mjs",
+      "action": "delete",
+      "reason": "legacy_lab"
+    },
+    {
+      "path": "tests/loops/evaluator.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/loops/judge-provider.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/loops/model-judge.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/loops/quality-pack.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/loops/runner.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/planning/wiki-plan.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/project/bootstrap.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/project/explain.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/project/source-architecture.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/admission/change.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/admission/decision-git.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/cli.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/cli/index.test.mjs"
+    },
+    {
+      "path": "tests/runtime/container-worker-adapter.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/container/worker-adapter.test.mjs"
+    },
+    {
+      "path": "tests/runtime/coordinator.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/coordinator/project.test.mjs"
+    },
+    {
+      "path": "tests/runtime/coordinator/decision-attempt.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/coordinator/executor.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/coordinator/reactions.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/coordinator/reactor.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/dashboard-coordinator-client.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/coordinator-client.test.mjs"
+    },
+    {
+      "path": "tests/runtime/dashboard-dev-harness.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/dev-harness.test.mjs"
+    },
+    {
+      "path": "tests/runtime/dashboard-lifecycle.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/lifecycle.test.mjs"
+    },
+    {
+      "path": "tests/runtime/dashboard-preview-control.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/dashboard/preview-control.test.mjs"
+    },
+    {
+      "path": "tests/runtime/effects/decision-operations.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/effects/research-collection.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/error-handling.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/utils/errors/error-handling.test.mjs"
+    },
+    {
+      "path": "tests/runtime/execution-policy.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/external-package-failures-smoke.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/external-package-lifecycle-smoke.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/git-status.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/git/status.test.mjs"
+    },
+    {
+      "path": "tests/runtime/implementation-worker-artifacts.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/workers/implementation-artifacts.test.mjs"
+    },
+    {
+      "path": "tests/runtime/integration/worker.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/lifecycle.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/runtime/package-install-smoke.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/persistence/dev-log.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/pi-change-validation-card.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/change-validation-card.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-decision-model-check-session.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/decision-model-check-session.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-decision-research-claims-session.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/decision-research-claims-session.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-extension.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/extension.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-install-scope.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/install-scope.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-install-smoke.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/install-smoke.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-multiprocess-coordinator-smoke.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/multiprocess-coordinator-smoke.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-native-decision-host.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/native-decision-host.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-native-decision-research.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/native-decision-research.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-process-session.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/process-session.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-project-coordinator-daemon.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/project-coordinator-daemon.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-project-service-client.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/project-service-client.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-review-hooks.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/review-hooks.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-rpc-smoke.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/rpc-smoke.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-sdk-package-smoke.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/sdk-package-smoke.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-sdk-semantic-session.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/sdk-semantic-session.test.mjs"
+    },
+    {
+      "path": "tests/runtime/pi-tool-mutation-smoke.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/clients/pi/tool-mutation-smoke.mjs"
+    },
+    {
+      "path": "tests/runtime/preview-browser-adapter.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/preview/browser-adapter.test.mjs"
+    },
+    {
+      "path": "tests/runtime/preview-coordinator.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/preview/coordinator.test.mjs"
+    },
+    {
+      "path": "tests/runtime/preview-evidence.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/preview/evidence.test.mjs"
+    },
+    {
+      "path": "tests/runtime/preview-integration.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/preview/integration.test.mjs"
+    },
+    {
+      "path": "tests/runtime/preview-profile.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/preview/profile.test.mjs"
+    },
+    {
+      "path": "tests/runtime/process-worker-adapter.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/harnesses/pi/process-worker-adapter.test.mjs"
+    },
+    {
+      "path": "tests/runtime/product-publication.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/effects/product-publication.test.mjs"
+    },
+    {
+      "path": "tests/runtime/product-release.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/effects/product-release.test.mjs"
+    },
+    {
+      "path": "tests/runtime/project-branch-merge.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/effects/project-branch-merge.test.mjs"
+    },
+    {
+      "path": "tests/runtime/project-branch-push.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/effects/project-branch-push.test.mjs"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-events.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/coordinator/events.test.mjs"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-process.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/coordinator/process.test.mjs"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-service-host.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-service.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/coordinator/service.test.mjs"
+    },
+    {
+      "path": "tests/runtime/project-coordinator.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/project-local-install-smoke.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/readiness-checklist.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/runtime-claims.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/claims/events.test.mjs"
+    },
+    {
+      "path": "tests/runtime/runtime-lifecycle.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/runtime/runtime-tool-routing.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/self-dogfood-baseline.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/runtime/self-dogfood-controller.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/runtime/trace-host-result.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/runtime/trace-host-runner.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/runtime/trace-host-supervisor.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/runtime/wiki-config.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/project/config.test.mjs"
+    },
+    {
+      "path": "tests/runtime/wiki-runtime.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/api/wiki-runtime.test.mjs"
+    },
+    {
+      "path": "tests/runtime/work-unit-claim-selection.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/claims/work-unit-selection.test.mjs"
+    },
+    {
+      "path": "tests/runtime/work-unit-claims.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/claims/work-unit-events.test.mjs"
+    },
+    {
+      "path": "tests/runtime/worker-observation.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/workers/observation.test.mjs"
+    },
+    {
+      "path": "tests/runtime/worker-reports.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/workers/reports.test.mjs"
+    },
+    {
+      "path": "tests/runtime/worker-start.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/workers/start.test.mjs"
+    },
+    {
+      "path": "tests/runtime/workers/dispatch.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/workers/handoff.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/workers/jobs.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/runtime/worktrees.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/git/worktrees.test.mjs"
+    },
+    {
+      "path": "tests/scaffold-core.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/traces/alignment-graph-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/alignment/graph.test.mjs"
+    },
+    {
+      "path": "tests/traces/alignment-query-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/alignment/query.test.mjs"
+    },
+    {
+      "path": "tests/traces/change-trace-protocol-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/changes/trace/protocol.test.mjs"
+    },
+    {
+      "path": "tests/traces/change-trace-reducer-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/work-state/reducer.test.mjs"
+    },
+    {
+      "path": "tests/traces/distributed-mutation-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/claims/mutation.test.mjs"
+    },
+    {
+      "path": "tests/traces/git-state-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/synchronization/state.test.mjs"
+    },
+    {
+      "path": "tests/traces/release-notes.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/traces/rolling-planning-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/planning/rolling.test.mjs"
+    },
+    {
+      "path": "tests/traces/synchronization-v1.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/runtime/synchronization/git.test.mjs"
+    },
+    {
+      "path": "tests/traces/traces-jsonl.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/traces/wiki-archive.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/verification/candidate-admission.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/catalog.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/contracts.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/bundle-mutation.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/config-mutation.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/custom-code.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/distillation-fixture.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/distillation.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/policy-acceptance.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/runtime.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/source-retrieval.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/user-standard-fixture.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/custom-checks/user-standards.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/identity.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/resolve-policy.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/results.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/runner.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/runtime.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/security-collectors.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/security-scanners.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/security-surfaces.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/standard-evidence-checks.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/standard-evidence-executor.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/verification/verification-capabilities.test.mjs",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tests/views/runtime-board.test.mjs",
+      "action": "move",
+      "reason": "test_follows_source",
+      "targetPath": "tests/work-state/runtime-board.test.mjs"
+    },
+    {
+      "path": "tests/views/views-projections.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/views/wiki-state.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/work-state/work-state-session.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tests/work-state/work-state.test.mjs",
+      "action": "delete",
+      "reason": "test_obsolete"
+    },
+    {
+      "path": "tsconfig.build.json",
+      "action": "keep",
+      "reason": "target_owned"
+    },
+    {
+      "path": "tsconfig.json",
+      "action": "keep",
+      "reason": "target_owned"
+    }
+  ]
+}

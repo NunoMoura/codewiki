@@ -48,6 +48,56 @@ tests/
 
 Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, dual contracts, transitional writes, empty package roots, or global prose replacements. Perform moves from reviewed manifests with `git mv`, then rewrite module specifiers only.
 
+## Deep-clean file budget
+
+The reviewed file-level inventory is `.tmp-worktrees/deep-clean-file-budget.json`, anchored to commit `b482368`. It assigns every tracked file at that snapshot, plus the temporary inventory itself, exactly one `keep`, `move`, `merge`, or `delete` disposition and names every surviving current-file target path.
+
+Current inventory including the temporary manifest:
+
+| Area | Files |
+| --- | ---: |
+| Tracked total | 705 |
+| `src/**` | 371 |
+| `tests/**` | 229 |
+| `lab/**` | 38 |
+| Knowledge | 41 |
+| Scripts | 5 |
+| Temporary execution files | 6 |
+
+Reviewed dispositions:
+
+| Disposition | Files |
+| --- | ---: |
+| Keep | 392 |
+| Move | 139 |
+| Merge | 3 |
+| Delete | 171 |
+
+The derived target before reserved additions contains 294 source files, 178 test/support files, three benchmark files, one script, 41 Knowledge files, and 14 other tracked project files. Reserved additions cover only unfinished GitHub intake, bounded query tools, replacement lifecycle/recovery contracts, benchmark harnesses, and their tests.
+
+Hard completion caps:
+
+| Area | Hard cap |
+| --- | ---: |
+| `src/**` | 315 |
+| `tests/**` | 190 |
+| repository-root `benchmarks/**` | 10 |
+| `scripts/**` | 1 |
+| `lab/**` | 0 |
+| tracked repository total | 575 |
+| packed package files | 650 |
+
+The reserved projection is 310 source files, 188 test/support files, ten benchmark files, and 564 tracked files. The difference between each projection and cap is contingency, not permission for unreviewed growth.
+
+Budget rules:
+
+- A move improves ownership but does not count as file reduction.
+- A merge is allowed only when one responsibility and one lifecycle remain; unrelated modules must not be combined to hit a number.
+- A delete occurs only after replacement parity and importer removal are proven in the same clean cut.
+- Every new file consumes the named reserve. Exceeding a reserve requires deleting or merging another file in that slice.
+- Temporary manifests, this plan, Lab, self-dogfood machinery, legacy Trace/Quality/View authority, and trace-host debt have zero final budget.
+- Keep `test:coordinator` as a focused developer command, but remove its duplicate invocation from `audit:codewiki` after suite paths are updated.
+
 ## Work slices
 
 ### 1. Rehome generic Runtime mechanics
