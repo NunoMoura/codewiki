@@ -23,11 +23,9 @@ import {
 	type ChangeRecord,
 } from "../changes/records.ts";
 import { ChangeTraceStore } from "../changes/trace-store.ts";
-import {
-	evaluateChangeDecision,
-	type ChangeDecisionAuthority,
-	type ChangeDisposition,
-} from "../decision/change-quality.ts";
+import { evaluateChangeDecision } from "../decision/change-quality.ts";
+import type { DecisionDisposition } from "../decision/candidate-proposal.ts";
+import type { RuntimeDecisionAuthority } from "../runtime/admission/authority.ts";
 import { buildProjectWorkState } from "../work-state/project.ts";
 import type { WorkState } from "../work-state/types.ts";
 import { join } from "node:path";
@@ -39,9 +37,9 @@ export interface RunWikiDecideInput {
 	expectedRevision: number;
 	expectedChangeDigest: string;
 	expectedWorkStateDigest: string;
-	disposition: ChangeDisposition;
+	disposition: DecisionDisposition;
 	rationale: string;
-	authority?: ChangeDecisionAuthority;
+	authority?: RuntimeDecisionAuthority;
 	occurredAt?: string;
 	mode?: WikiDecideMode;
 	repoRoot?: string;
@@ -57,12 +55,12 @@ export interface ChangeApproval {
 	observedWorkStateDigest: string;
 	qualityRef: string;
 	approvedAt: string;
-	authorityKind: ChangeDecisionAuthority["kind"];
+	authorityKind: RuntimeDecisionAuthority["kind"];
 	authorityRef: string;
 }
 
 export interface ChangeTerminalDisposition {
-	kind: Exclude<ChangeDisposition, "approve">;
+	kind: Exclude<DecisionDisposition, "approve">;
 	actor: string;
 	authorityRef: string;
 	rationale: string;
@@ -76,7 +74,7 @@ export interface ChangeDecisionReport {
 	changeRevision: number;
 	changeDigest: string;
 	observedWorkStateDigest: string;
-	disposition: ChangeDisposition;
+	disposition: DecisionDisposition;
 	rationale: string;
 	qualityRef: string;
 	qualityStandards: LoopQualityStandardResult[];
@@ -412,13 +410,13 @@ function lastChangeEvent(
 }
 
 function dispositionOperation(
-	disposition: ChangeDisposition,
+	disposition: DecisionDisposition,
 ): ChangeTraceOperation {
 	return disposition === "approve" ? "accept" : disposition;
 }
 
 function dispositionStatus(
-	disposition: ChangeDisposition,
+	disposition: DecisionDisposition,
 ): "accepted" | "rejected" | "deferred" | "withdrawn" {
 	switch (disposition) {
 		case "approve":
@@ -433,7 +431,7 @@ function dispositionStatus(
 }
 
 function terminalDispositionStatus(
-	disposition: Exclude<ChangeDisposition, "approve">,
+	disposition: Exclude<DecisionDisposition, "approve">,
 ): "rejected" | "deferred" | "withdrawn" {
 	switch (disposition) {
 		case "reject":
@@ -516,7 +514,7 @@ function assertInput(input: RunWikiDecideInput): void {
 	}
 }
 
-function requiredAuthority(input: RunWikiDecideInput): ChangeDecisionAuthority {
+function requiredAuthority(input: RunWikiDecideInput): RuntimeDecisionAuthority {
 	if (!input.authority)
 		throw new Error("wiki_decide requires exact authority.");
 	return input.authority;

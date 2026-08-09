@@ -87,9 +87,9 @@ Hard completion caps:
 | tracked repository total | 575 |
 | packed package files | 650 |
 
-The reserved projection is 310 source files, 188 test/support files, ten benchmark files, and 564 tracked files. The difference between each projection and cap is contingency, not permission for unreviewed growth.
+The reserved projection is 311 source files, 188 test/support files, ten benchmark files, and 565 tracked files. One source reserve is consumed by the Runtime admission authority contract required to remove Decision Quality type ownership. The difference between each projection and cap is contingency, not permission for unreviewed growth.
 
-After the Lab and source-checkout self-dogfood clean cut, 641 tracked files remain: 369 source files, 209 test/support files, zero Lab files, and one script. The worker/trace-host process split temporarily raises the packed package to 743 files; deleting the remaining trace-host shell and later source consolidation must reduce it below 650.
+After the Lab and source-checkout self-dogfood clean cut, 641 tracked files remain: 369 source files, 209 test/support files, zero Lab files, and one script. The worker/trace-host process split and explicit Runtime admission authority contract temporarily raise the packed package to 745 files; deleting the remaining trace-host shell and legacy Quality stack must reduce it below 650.
 
 Budget rules:
 
@@ -170,6 +170,7 @@ Budget rules:
 ### 6. Finish semantic Loop clean cuts
 
 - [ ] Replace legacy Decision count/Quality paths with native Candidate, Evidence, Result, Exit Report, and route semantics under `src/decision/**`.
+  - [x] Move Decision disposition ownership to Candidate semantics and actor/authority binding to Runtime admission.
 - [ ] Complete native Planning semantics under `src/planning/**` without a Runtime Planning policy package.
 - [ ] Complete native Implementation semantics under `src/implementation/**` while generic worker mechanics remain Runtime-owned.
 - [ ] Delete `src/loops/**` and all remaining legacy Quality modules only after replacement tests pass.

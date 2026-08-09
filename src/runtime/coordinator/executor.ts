@@ -15,7 +15,7 @@ import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
 } from "../../decision/candidate-proposal.ts";
-import type { ChangeDecisionAuthority } from "../../decision/change-quality.ts";
+import type { RuntimeDecisionAuthority } from "../admission/authority.ts";
 import { TraceAppendConflictError } from "../../error-handling/trace-errors.ts";
 import type { CandidateProducerPort } from "../../harnesses/ports.ts";
 import {
@@ -44,7 +44,7 @@ import {
 export type RuntimeSemanticMode = "preview" | "append";
 
 export interface RuntimeDecisionContext {
-	authority: ChangeDecisionAuthority;
+	authority: RuntimeDecisionAuthority;
 	occurredAt?: string;
 }
 
