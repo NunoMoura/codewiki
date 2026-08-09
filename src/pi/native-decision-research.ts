@@ -1,7 +1,11 @@
 import type {DecisionResearchRuntimeConfig} from "../decision/exit/runtime.ts";
+import type {DecisionResearchCollectionPortInput} from "../decision/exit/research.ts";
 import type {WikiModelRouteConfig} from "../project/model-routing.ts";
-import type {DecisionResearchCollector} from "../runtime/decision-research-collection.ts";
-import type {DecisionResearchClaimsTransport} from "../runtime/native-decision-research.ts";
+import {
+	collectDecisionResearchEvidence,
+	type DecisionResearchCollector,
+} from "../runtime/decision-research-collection.ts";
+import type {DecisionResearchClaimsTransport} from "../decision/exit/research-executors.ts";
 import {createPiDecisionResearchClaimsTransport} from "./decision-research-claims-session.ts";
 import type {PiSdkRuntimeSemanticAdapterOptions} from "./sdk-semantic-session.ts";
 
@@ -23,7 +27,12 @@ export function createPiNativeDecisionResearchRuntimeConfig(input: {
 	return Object.freeze({
 		route: input.research.route,
 		sensitivity: input.research.sensitivity,
-		collector: input.research.collector,
+		collectEvidence: (request: DecisionResearchCollectionPortInput) =>
+			collectDecisionResearchEvidence({
+				...request,
+				collector: input.research.collector,
+				observedAt: input.now ?? (() => new Date().toISOString()),
+			}),
 		transport:
 			input.research.claimsTransport ??
 			createPiDecisionResearchClaimsTransport({
@@ -44,6 +53,5 @@ export function createPiNativeDecisionResearchRuntimeConfig(input: {
 						}
 					: {}),
 			}),
-		...(input.now ? {now: input.now} : {}),
 	});
 }

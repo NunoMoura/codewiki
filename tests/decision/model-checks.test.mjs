@@ -13,6 +13,7 @@ import {
 	createDecisionExitRuntime,
 	deriveDecisionRuntimeRoute,
 } from "../../src/decision/exit/runtime.ts";
+import {collectDecisionResearchEvidence} from "../../src/runtime/decision-research-collection.ts";
 import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
 import {
@@ -382,7 +383,9 @@ describe("native Decision Model Checks", () => {
 			paths: [...revision.classification.targetRefs],
 			protectedBaseCustomCheckConfig: protectedBase,
 		});
-		const binding = resolved.bindings.find((entry) => entry.checkId === checkId);
+		const binding = /** @type {(typeof resolved.bindings)[number]} */ (
+			resolved.bindings.find((entry) => entry.checkId === checkId)
+		);
 		const policy = createResolvedExitPolicy({
 			loop: "decision",
 			candidateDigest: setup.candidate.digest,
@@ -922,39 +925,43 @@ describe("native Decision Model Checks", () => {
 			researchChecks: {
 				route: route({id: "decision-research"}),
 				sensitivity: "project",
-				collector: {
-					id: "bounded-research-fetch",
-					version: "1.0.0",
-					configurationDigest: digest("9"),
-					async collect({request}) {
-						collectionCalls += 1;
-						return {
-							protocol: request.protocol,
-							requestDigest: request.requestDigest,
-							status: "available",
-							citations: [
-								{
-									provenanceRefs: [
-										"source:https://example.test/runtime",
+				collectEvidence: (request) =>
+					collectDecisionResearchEvidence({
+						...request,
+						collector: {
+							id: "bounded-research-fetch",
+							version: "1.0.0",
+							configurationDigest: digest("9"),
+							async collect({request: collectionRequest}) {
+								collectionCalls += 1;
+								return {
+									protocol: collectionRequest.protocol,
+									requestDigest: collectionRequest.requestDigest,
+									status: "available",
+									citations: [
+										{
+											provenanceRefs: [
+												"source:https://example.test/runtime",
+											],
+											payload: {
+												claim: "The provider supports bounded retries.",
+												classification: "primary",
+												publisher: "Example Provider",
+												uri: "https://example.test/runtime",
+												title: "Runtime limits",
+												publicationDate: "2026-07-01",
+												passageDigest: digest("8"),
+												passageLocator: "section:retries",
+												stance: "supports",
+												limitations: [],
+											},
+										},
 									],
-									payload: {
-										claim: "The provider supports bounded retries.",
-										classification: "primary",
-										publisher: "Example Provider",
-										uri: "https://example.test/runtime",
-										title: "Runtime limits",
-										publicationDate: "2026-07-01",
-										passageDigest: digest("8"),
-										passageLocator: "section:retries",
-										stance: "supports",
-										limitations: [],
-									},
-								},
-							],
-						};
-					},
-				},
-				now: () => "2026-07-28T12:00:00.000Z",
+								};
+							},
+						},
+						observedAt: () => "2026-07-28T12:00:00.000Z",
+					}),
 				transport: {
 					async execute(request) {
 						researchCalls += 1;

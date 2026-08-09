@@ -44,8 +44,9 @@ test("Pi native Decision research binds injected or default isolated claim trans
 		now,
 	});
 	assert.equal(injected.transport, claimsTransport);
-	assert.equal(injected.now, now);
-	assert.equal(injected.collector.id, "trusted-research-connector");
+	assert.equal(typeof injected.collectEvidence, "function");
+	assert.equal("now" in injected, false);
+	assert.equal("collector" in injected, false);
 
 	const defaultTransport = createPiNativeDecisionResearchRuntimeConfig({
 		repoRoot: process.cwd(),
@@ -58,5 +59,7 @@ test("Pi native Decision research binds injected or default isolated claim trans
 		now: undefined,
 	});
 	assert.equal(typeof defaultTransport.transport.execute, "function");
+	assert.equal(typeof defaultTransport.collectEvidence, "function");
 	assert.equal("now" in defaultTransport, false);
+	assert.equal("collector" in defaultTransport, false);
 });

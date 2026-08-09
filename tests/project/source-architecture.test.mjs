@@ -186,6 +186,21 @@ describe("source architecture", () => {
 		}
 	});
 
+	it("forbids Loop packages from importing Runtime implementations", () => {
+		const loopRoots = ["decision", "planning", "implementation"];
+		for (const [source, targets] of importEdges(sourceFiles())) {
+			const sourceRootName = relative(sourceRoot, source).split("/")[0];
+			if (!loopRoots.includes(sourceRootName)) continue;
+			for (const target of targets) {
+				assert.equal(
+					relative(sourceRoot, target).startsWith("runtime/"),
+					false,
+					edgeLabel(source, target),
+				);
+			}
+		}
+	});
+
 	it("allows Runtime to depend only on harness-neutral ports", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			if (!relative(sourceRoot, source).startsWith("runtime/")) continue;

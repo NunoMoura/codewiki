@@ -1,4 +1,4 @@
-import { DECISION_RESEARCH_CLAIMS_PROTOCOL } from "../decision/exit/research-claims-protocol.ts";
+import { DECISION_RESEARCH_CLAIMS_PROTOCOL } from "./research-claims-protocol.ts";
 import type {
 	EvidenceId,
 	EvidenceRecord,
@@ -6,32 +6,32 @@ import type {
 	EvidenceSubject,
 	ModelAssessmentPayload,
 	ResearchCitationPayload,
-} from "../evidence/contracts.ts";
-import { EVIDENCE_SCHEMA_VERSION } from "../evidence/contracts.ts";
-import { materializeEvidenceRecord } from "../evidence/materialize.ts";
-import { modelConclusionEvidenceMeasurement } from "../evidence/model-assessment.ts";
-import type { EvidenceObligationResolution } from "../evidence/obligation-resolution.ts";
-import type { EvidenceObligation } from "../evidence/obligations.ts";
-import { reduceEvidenceObligation } from "../evidence/obligations.ts";
-import type { CheckCatalog } from "../verification/catalog.ts";
+} from "../../evidence/contracts.ts";
+import { EVIDENCE_SCHEMA_VERSION } from "../../evidence/contracts.ts";
+import { materializeEvidenceRecord } from "../../evidence/materialize.ts";
+import { modelConclusionEvidenceMeasurement } from "../../evidence/model-assessment.ts";
+import type { EvidenceObligationResolution } from "../../evidence/obligation-resolution.ts";
+import type { EvidenceObligation } from "../../evidence/obligations.ts";
+import { reduceEvidenceObligation } from "../../evidence/obligations.ts";
+import type { CheckCatalog } from "../../verification/catalog.ts";
 import type {
 	CheckDefinition,
 	CheckExecutionIdentity,
 	CheckResult,
 	ResolvedExitPolicy,
-} from "../verification/contracts.ts";
-import { assertValidResolvedExitPolicy } from "../verification/contracts.ts";
-import { loopQualifiedCheckDigest } from "../verification/identity.ts";
-import { createCheckResult } from "../verification/results.ts";
-import type { WikiModelRouteConfig } from "../project/model-routing.ts";
-import { validateNoToolModelRoute } from "../project/model-route-validation.ts";
-import type { Sha256Digest } from "../utils/canonical-json.ts";
+} from "../../verification/contracts.ts";
+import { assertValidResolvedExitPolicy } from "../../verification/contracts.ts";
+import { loopQualifiedCheckDigest } from "../../verification/identity.ts";
+import { createCheckResult } from "../../verification/results.ts";
+import type { WikiModelRouteConfig } from "../../project/model-routing.ts";
+import { validateNoToolModelRoute } from "../../project/model-route-validation.ts";
+import type { Sha256Digest } from "../../utils/canonical-json.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
-} from "../utils/canonical-json.ts";
-import { assertExactKeys } from "../utils/json.ts";
-import { assertDecisionResearchSubject } from "./decision-research.ts";
+} from "../../utils/canonical-json.ts";
+import { assertExactKeys } from "../../utils/json.ts";
+import { assertDecisionResearchSubject } from "./research.ts";
 
 const CHECK_ID = "research_claims_supported";
 const PROVENANCE_CHECK_ID = "research_provenance_valid";

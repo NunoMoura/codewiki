@@ -8,7 +8,7 @@ import type {
 import {
 	materializeDecisionResearchCitation,
 	type DecisionResearchCitationMaterial,
-} from "./decision-research.ts";
+} from "../decision/exit/research.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,

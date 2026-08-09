@@ -5,7 +5,7 @@ import {
 import type {
 	DecisionResearchClaimsModelObservation,
 	DecisionResearchClaimsRequest,
-} from "../runtime/decision-research-claims.ts";
+} from "../decision/exit/research-claims.ts";
 import {canonicalJsonDigest} from "../utils/canonical-json.ts";
 import {
 	createDefaultPiIsolatedJsonModelSessionFactory,

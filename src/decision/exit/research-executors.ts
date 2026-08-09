@@ -1,32 +1,32 @@
-import {DECISION_RESEARCH_CLAIMS_PROTOCOL} from "../decision/exit/research-claims-protocol.ts";
+import {DECISION_RESEARCH_CLAIMS_PROTOCOL} from "./research-claims-protocol.ts";
 import type {
 	EvidenceRecord,
 	EvidenceSensitivity,
 	EvidenceSubject,
-} from "../evidence/contracts.ts";
-import type {CheckCatalog} from "../verification/catalog.ts";
+} from "../../evidence/contracts.ts";
+import type {CheckCatalog} from "../../verification/catalog.ts";
 import type {
 	CheckDefinition,
 	CheckExecutionIdentity,
 	CheckResult,
-} from "../verification/contracts.ts";
+} from "../../verification/contracts.ts";
 import type {
 	CheckExecutorObservation,
 	LoopCheckExecutor,
 	LoopCheckExecutorContext,
-} from "../verification/runner.ts";
-import type {WikiModelRouteConfig} from "../project/model-routing.ts";
-import {validateNoToolModelRoute} from "../project/model-route-validation.ts";
+} from "../../verification/runner.ts";
+import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
+import {validateNoToolModelRoute} from "../../project/model-route-validation.ts";
 import {
 	createDecisionResearchClaimsExecutor,
 	type DecisionResearchClaimsModelObservation,
 	type DecisionResearchClaimsRequest,
-} from "./decision-research-claims.ts";
-import {createDecisionResearchProvenanceExecutor} from "./decision-research.ts";
+} from "./research-claims.ts";
+import {createDecisionResearchProvenanceExecutor} from "./research.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
-} from "../utils/canonical-json.ts";
+} from "../../utils/canonical-json.ts";
 
 export interface DecisionResearchClaimsTransport {
 	readonly execute: (
@@ -48,7 +48,7 @@ const PROVENANCE_CHECK_ID = "research_provenance_valid";
 const CLAIMS_CHECK_ID = "research_claims_supported";
 const MODEL_OBLIGATION_ID = "model-assessment";
 
-export function createNativeDecisionResearchExecutors(
+export function createDecisionResearchExecutors(
 	input: CreateNativeDecisionResearchExecutorsInput,
 ): readonly LoopCheckExecutor[] {
 	const route = validateNoToolModelRoute(

@@ -1,3 +1,4 @@
+import type {DecisionCandidate} from "./candidate.ts";
 import type {
 	EvidenceArtifact,
 	EvidenceCoverage,
@@ -6,17 +7,17 @@ import type {
 	EvidenceSensitivity,
 	EvidenceSubject,
 	ResearchCitationPayload,
-} from "../evidence/contracts.ts";
-import { EVIDENCE_SCHEMA_VERSION } from "../evidence/contracts.ts";
-import { materializeEvidenceRecord } from "../evidence/materialize.ts";
-import { reduceEvidenceObligation } from "../evidence/obligations.ts";
-import type { CheckCatalog } from "../verification/catalog.ts";
+} from "../../evidence/contracts.ts";
+import { EVIDENCE_SCHEMA_VERSION } from "../../evidence/contracts.ts";
+import { materializeEvidenceRecord } from "../../evidence/materialize.ts";
+import { reduceEvidenceObligation } from "../../evidence/obligations.ts";
+import type { CheckCatalog } from "../../verification/catalog.ts";
 import type {
 	CheckResult,
 	ResolvedExitPolicy,
-} from "../verification/contracts.ts";
-import { createCheckResult } from "../verification/results.ts";
-import { assertExactKeys } from "../utils/json.ts";
+} from "../../verification/contracts.ts";
+import { createCheckResult } from "../../verification/results.ts";
+import { assertExactKeys } from "../../utils/json.ts";
 
 const RESEARCH_PROVENANCE_CHECK_ID = "research_provenance_valid";
 
@@ -25,6 +26,22 @@ export interface DecisionResearchCitationMaterial {
 	readonly provenanceRefs: readonly string[];
 	readonly payload: ResearchCitationPayload;
 }
+
+export interface DecisionResearchCollectionPortInput {
+	readonly candidate: DecisionCandidate;
+	readonly subject: EvidenceSubject;
+	readonly sensitivity: EvidenceSensitivity;
+	readonly signal: AbortSignal;
+}
+
+export interface DecisionResearchCollectionPortResult {
+	readonly freshnessBoundary: string;
+	readonly evidenceRecords: readonly EvidenceRecord<"research_citation">[];
+}
+
+export type DecisionResearchCollectionPort = (
+	input: DecisionResearchCollectionPortInput,
+) => Promise<DecisionResearchCollectionPortResult>;
 
 interface DecisionResearchObservationContext {
 	readonly subject: EvidenceSubject;

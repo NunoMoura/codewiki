@@ -16,13 +16,10 @@ import {
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 import {
-	collectDecisionResearchEvidence,
-	type DecisionResearchCollector,
-} from "../../runtime/decision-research-collection.ts";
-import {
-	createNativeDecisionResearchExecutors,
+	createDecisionResearchExecutors,
 	type DecisionResearchClaimsTransport,
-} from "../../runtime/native-decision-research.ts";
+} from "./research-executors.ts";
+import type {DecisionResearchCollectionPort} from "./research.ts";
 import {
 	createLoopExitRunner,
 	type LoopCheckExecutor,
@@ -49,9 +46,8 @@ import {
 export interface DecisionResearchRuntimeConfig {
 	readonly route: WikiModelRouteConfig;
 	readonly sensitivity: "public" | "project" | "private";
-	readonly collector: DecisionResearchCollector;
+	readonly collectEvidence: DecisionResearchCollectionPort;
 	readonly transport: DecisionResearchClaimsTransport;
-	readonly now?: () => string;
 }
 
 interface CreateDecisionExitRuntimeInput {
@@ -186,7 +182,7 @@ export function createDecisionExitRuntime(
 							})
 						: []),
 					...(input.researchChecks && research.freshnessBoundary
-						? createNativeDecisionResearchExecutors({
+						? createDecisionResearchExecutors({
 								catalog,
 								route: input.researchChecks.route,
 								candidateSubject: subject,
@@ -269,16 +265,14 @@ async function admittedDecisionResearch(input: {
 	if (!input.configuration) {
 		return {collectedEvidenceRecords: Object.freeze([])};
 	}
-	const collection = await collectDecisionResearchEvidence({
+	const collection = await input.configuration.collectEvidence({
 		candidate: input.candidate,
 		subject: {
 			changeRefs: input.subject.changeRefs,
 			changeRevisionDigests: input.subject.changeRevisionDigests,
 			acceptanceRequirementIds: [],
 		},
-		collector: input.configuration.collector,
 		sensitivity: input.configuration.sensitivity,
-		observedAt: input.configuration.now ?? (() => new Date().toISOString()),
 		signal: input.signal,
 	});
 	return Object.freeze({
