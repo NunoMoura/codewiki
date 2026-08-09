@@ -147,16 +147,18 @@ describe("trace JSONL core", () => {
 		]);
 	});
 
-	it("treats active agent, lab, config, and Pi settings paths as canonical refs", () => {
+	it("treats active agent, config, and Pi settings paths as canonical refs", () => {
 		assert.deepEqual(
 			invalidTraceRefs([
 				".agents/skills/codewiki-decide/SKILL.md",
-				"lab/decision/loop.ts",
 				".codewiki/config.json",
 				".pi/settings.json",
 			]),
 			[],
 		);
+		assert.deepEqual(invalidTraceRefs(["lab/decision/loop.ts"]), [
+			"lab/decision/loop.ts",
+		]);
 	});
 
 	it("creates target loop iteration trace events", () => {

@@ -1187,7 +1187,6 @@ function isSourceLocation(ref: string): boolean {
 	return (
 		ref.startsWith("src/") ||
 		ref.startsWith("tests/") ||
-		ref.startsWith("lab/") ||
 		ref === ".codewiki/config.json" ||
 		ref === "package.json" ||
 		ref === "package-lock.json"

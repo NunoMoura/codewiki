@@ -153,6 +153,29 @@ describe("source architecture", () => {
 		}
 	});
 
+	it("keeps Lab and source-checkout self-dogfood machinery deleted", () => {
+		assert.equal(existsSync("lab"), false);
+		assert.equal(existsSync("tests/lab"), false);
+		for (const path of [
+			"src/project/self-dogfood-baseline.ts",
+			"src/project/self-dogfood-controller.ts",
+			"tests/runtime/self-dogfood-baseline.test.mjs",
+			"tests/runtime/self-dogfood-controller.test.mjs",
+		]) {
+			assert.equal(existsSync(path), false, path);
+		}
+
+		const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
+		assert.deepEqual(
+			Object.keys(packageJson.scripts).filter((name) =>
+				/^(?:lab(?::|$)|self-dogfood:|test:self-dogfood)/u.test(name),
+			),
+			[],
+		);
+		const tsconfig = JSON.parse(readFileSync("tsconfig.json", "utf8"));
+		assert.deepEqual(tsconfig.include, ["src/**/*.ts"]);
+	});
+
 	it("keeps Runtime subtrees within target responsibilities", () => {
 		const runtimeEntries = readdirSync("src/runtime");
 		const runtimeDirectories = runtimeEntries.filter((name) =>

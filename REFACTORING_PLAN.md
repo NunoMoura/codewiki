@@ -89,6 +89,8 @@ Hard completion caps:
 
 The reserved projection is 310 source files, 188 test/support files, ten benchmark files, and 564 tracked files. The difference between each projection and cap is contingency, not permission for unreviewed growth.
 
+After the Lab and source-checkout self-dogfood clean cut, 641 tracked files remain: 369 source files, 209 test/support files, zero Lab files, and one script. The packed package contains 741 files; further source deletion and merging must reduce it below 650.
+
 Budget rules:
 
 - A move improves ownership but does not count as file reduction.
@@ -96,7 +98,7 @@ Budget rules:
 - A delete occurs only after replacement parity and importer removal are proven in the same clean cut.
 - Every new file consumes the named reserve. Exceeding a reserve requires deleting or merging another file in that slice.
 - Temporary manifests, this plan, Lab, self-dogfood machinery, legacy Trace/Quality/View authority, and trace-host debt have zero final budget.
-- Keep `test:coordinator` as a focused developer command, but remove its duplicate invocation from `audit:codewiki` after suite paths are updated.
+- Keep `test:coordinator` as a focused developer command; `audit:codewiki` does not rerun that already-covered subset.
 
 ## Work slices
 
@@ -140,7 +142,8 @@ Budget rules:
 
 - [ ] Move supported measurement code from `src/benchmarks/**` to repository-root `benchmarks/**`.
 - [ ] Preserve only externally-oracled paired harness trials in `alone` and `codewiki` modes.
-- [ ] Delete `lab/**`, `tests/lab/**`, Lab scripts, optimizer/promotion machinery, trace-forge, obsolete Quality schemas, and self-dogfood scripts.
+- [x] Delete `lab/**`, `tests/lab/**`, Lab commands, optimizer/promotion machinery, trace-forge, and source-checkout self-dogfood source, tests, and scripts.
+- [ ] Delete remaining obsolete Quality schemas with their legacy Loop consumers.
 - [ ] Ensure `src/**` cannot import `benchmarks/**` and benchmark files do not ship.
 - [ ] Benchmark every supported executable harness with controlled task, repository, model/provider, tools, network, budget, timeout, concurrency, retries, environment, and trial count.
 - [ ] Block release on false exits, unauthorized effects, or escaped critical defects regardless of aggregate score.

@@ -216,7 +216,7 @@ describe("install readiness checklist", () => {
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 	});
 
-	it("keeps lab code out of the packaged Pi extension", () => {
+	it("keeps Lab deleted and out of the packaged Pi extension", () => {
 		assert.deepEqual(packageJson.files, [
 			"dist",
 			"README.md",
@@ -226,7 +226,7 @@ describe("install readiness checklist", () => {
 		]);
 		assert.deepEqual(buildTsconfig.include, ["src/**/*.ts"]);
 		assert.equal(packageJson.pi.extensions.includes("lab"), false);
-		assert.equal(existsSync("lab"), true);
+		assert.equal(existsSync("lab"), false);
 		assert.equal(
 			readFileSync("src/pi/extension.ts", "utf8").includes("lab/"),
 			false,

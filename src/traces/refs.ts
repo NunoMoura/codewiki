@@ -18,7 +18,6 @@ export function isCanonicalTraceRef(ref: string): boolean {
 		value.startsWith("git:") ||
 		/^sha256:[A-Fa-f0-9]+$/.test(value) ||
 		value.startsWith("src/") ||
-		value.startsWith("lab/") ||
 		value.startsWith("tests/") ||
 		value === ".codewiki/config.json" ||
 		value.startsWith(".pi/") ||

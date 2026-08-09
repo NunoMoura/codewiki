@@ -1254,7 +1254,7 @@ function looksLikeProjectPath(value: string): boolean {
 }
 
 function isCodeEditPath(path: string): boolean {
-	return path.startsWith("src/") || path.startsWith("lab/");
+	return path.startsWith("src/");
 }
 
 function isOtherTouchedPath(path: string): boolean {
