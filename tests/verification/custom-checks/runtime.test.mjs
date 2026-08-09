@@ -1,18 +1,15 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../src/verification/catalog.ts";
+import {createCheckCatalog} from "../../../src/verification/catalog.ts";
 import {
 	createUserStandardDistillationRequest,
+	createUserStandardDistillationRuntime,
 	createUserStandardSourceRequest,
 	retrieveUserStandardSource,
-} from "../../src/verification/custom-checks/index.ts";
-import {createPiUserStandardDistiller} from "../../src/pi/user-standard-distillation-session.ts";
-import {
-	createUserStandardDistillationRuntime,
-	defaultCheckDescriptors,
-} from "../../src/runtime/user-standard-distillation.ts";
-import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
+} from "../../../src/verification/custom-checks/index.ts";
+import {createPiUserStandardDistiller} from "../../../src/pi/user-standard-distillation-session.ts";
+import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 
 const NOW = () => new Date("2026-08-04T10:00:00.000Z");
 const ROUTE = Object.freeze({
@@ -44,7 +41,6 @@ function unresolvedOutput(request) {
 describe("User Standard distillation Runtime", () => {
 	it("supplies exact kernel Default Checks and runs source retrieval before one distiller", async () => {
 		const catalog = createCheckCatalog();
-		const defaultChecks = defaultCheckDescriptors(catalog);
 		const calls = [];
 		const runtime = createUserStandardDistillationRuntime({
 			catalog,
@@ -71,10 +67,10 @@ describe("User Standard distillation Runtime", () => {
 			},
 		});
 
+		assert.equal(calls.length, 1);
+		const defaultChecks = calls[0].request.defaultChecks;
 		assert.equal(defaultChecks.length, catalog.list().length);
 		assert.equal(new Set(defaultChecks.map((check) => check.id)).size, defaultChecks.length);
-		assert.equal(calls.length, 1);
-		assert.deepEqual(calls[0].request.defaultChecks, defaultChecks);
 		assert.equal(result.sourceReceipt.status, "retrieved");
 		assert.equal(result.distillationReceipt.status, "completed");
 	});

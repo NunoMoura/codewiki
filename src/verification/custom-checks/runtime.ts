@@ -1,19 +1,21 @@
-import type {CheckCatalog} from "../verification/catalog.ts";
+import type {CheckCatalog} from "../catalog.ts";
+import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
 import {
 	createUserStandardDistillationRequest,
-	createUserStandardSourceRequest,
-	retrieveUserStandardSource,
 	runUserStandardDistillation,
 	type UserStandardDefaultCheckDescriptor,
 	type UserStandardDistillationReceipt,
 	type UserStandardDistillationRoute,
 	type UserStandardDistiller,
+} from "./distillation.ts";
+import {
+	createUserStandardSourceRequest,
+	retrieveUserStandardSource,
 	type UserStandardSourceReceipt,
 	type UserStandardSourceSelection,
 	type UserStandardUrlRetriever,
-} from "../verification/custom-checks/index.ts";
-import {compareCanonicalText as compareText} from "../verification/custom-checks/validation.ts";
-import {canonicalJsonDigest} from "../utils/canonical-json.ts";
+} from "./source-retrieval.ts";
+import {compareCanonicalText as compareText} from "./validation.ts";
 
 export interface UserStandardDistillationRuntimeResult {
 	readonly sourceReceipt: UserStandardSourceReceipt;
@@ -67,7 +69,7 @@ export function createUserStandardDistillationRuntime(options: {
 	});
 }
 
-export function defaultCheckDescriptors(
+function defaultCheckDescriptors(
 	catalog: CheckCatalog,
 ): UserStandardDefaultCheckDescriptor[] {
 	const descriptors: UserStandardDefaultCheckDescriptor[] = [];

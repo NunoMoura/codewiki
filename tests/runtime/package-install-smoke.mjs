@@ -149,6 +149,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.j
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "reports.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "handoff.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "verification", "runtime.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "verification", "custom-checks", "runtime.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "verification", "custom-checks", "runtime.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "user-standard-distillation.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "user-standard-distillation.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research-claims.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research-executors.js")), true);

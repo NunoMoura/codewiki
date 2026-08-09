@@ -1,0 +1,33 @@
+{
+  "slice": "user-standard-distillation-verification-ownership",
+  "intent": "Move User Standard distillation composition from the Runtime root to Verification Custom Checks, its semantic owner.",
+  "moves": [
+    {
+      "from": "src/runtime/user-standard-distillation.ts",
+      "to": "src/verification/custom-checks/runtime.ts",
+      "owner": "verification/custom-checks"
+    },
+    {
+      "from": "tests/runtime/user-standard-distillation.test.mjs",
+      "to": "tests/verification/custom-checks/runtime.test.mjs",
+      "owner": "verification/custom-checks tests"
+    }
+  ],
+  "exports": {
+    "add": "src/verification/custom-checks/index.ts exports ./runtime.ts",
+    "remove": "src/index.ts no longer exports a Runtime-root compatibility path"
+  },
+  "deletes": [
+    {
+      "symbol": "defaultCheckDescriptors",
+      "reason": "Internal Catalog projection helper had no production caller and needlessly expanded the public API."
+    }
+  ],
+  "constraints": [
+    "Verification imports neither Runtime nor Loop implementations",
+    "Pi distiller remains an outer adapter injected by composition",
+    "preserve source-retrieval and distillation fail-closed behavior",
+    "no compatibility export at src/runtime/user-standard-distillation.ts"
+  ],
+  "method": "git mv plus module-specifier-only rewrites and packed clean-cut assertions"
+}

@@ -30,7 +30,6 @@ export {
 	type DecisionResearchCollector,
 	type DecisionResearchCollectorBinding,
 } from "./runtime/effects/research-collection.ts";
-export * from "./runtime/user-standard-distillation.ts";
 export {
 	createDecisionGitAdmission,
 	type DecisionGitAdmission,

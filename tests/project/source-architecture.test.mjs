@@ -219,6 +219,19 @@ describe("source architecture", () => {
 		);
 	});
 
+	it("keeps User Standard distillation composition with Verification", () => {
+		assert.equal(
+			existsSync(join(sourceRoot, "runtime", "user-standard-distillation.ts")),
+			false,
+		);
+		assert.equal(
+			existsSync(
+				join(sourceRoot, "verification", "custom-checks", "runtime.ts"),
+			),
+			true,
+		);
+	});
+
 	it("forbids core packages from importing outer adapters", () => {
 		const rootFor = (file) => relative(sourceRoot, file).split("/")[0];
 		for (const [source, targets] of importEdges(sourceFiles())) {
@@ -241,6 +254,20 @@ describe("source architecture", () => {
 			for (const target of targets) {
 				assert.equal(
 					relative(sourceRoot, target).startsWith("runtime/"),
+					false,
+					edgeLabel(source, target),
+				);
+			}
+		}
+	});
+
+	it("forbids Verification from importing Runtime or Loop implementations", () => {
+		const forbiddenRoots = ["runtime", "decision", "planning", "implementation"];
+		for (const [source, targets] of importEdges(sourceFiles())) {
+			if (!relative(sourceRoot, source).startsWith("verification/")) continue;
+			for (const target of targets) {
+				assert.equal(
+					forbiddenRoots.includes(relative(sourceRoot, target).split("/")[0]),
 					false,
 					edgeLabel(source, target),
 				);
