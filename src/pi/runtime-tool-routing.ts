@@ -1,5 +1,5 @@
 import { findCodewikiProjectRoot } from "../project/root.ts";
-import type { RuntimeReaction, RuntimeTrigger } from "../runtime/reactor.ts";
+import type { RuntimeReaction, RuntimeTrigger } from "../runtime/coordinator/reactor.ts";
 import {
 	createPiProjectServiceClients,
 	type PiProjectServiceClientProvider,

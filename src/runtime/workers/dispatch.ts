@@ -64,7 +64,7 @@ import type {
 import { productReleaseJob } from "../effects/product-release.ts";
 import type { ProjectCoordinator } from "../coordinator/project.ts";
 import { appendRuntimeWorkUnitClaims } from "../claims/work-unit-events.ts";
-import type { RuntimeReactor, RuntimeTrigger } from "../reactor.ts";
+import type { RuntimeReactor, RuntimeTrigger } from "../coordinator/reactor.ts";
 
 export interface ImplementationWorkerDispatchResult {
 	status: "held" | "quiescent" | "scheduled";

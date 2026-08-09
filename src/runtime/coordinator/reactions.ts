@@ -1,22 +1,22 @@
 import { createHash } from "node:crypto";
 import { join } from "node:path";
-import { changeTraceId } from "../changes/change-trace.ts";
-import { stableJson } from "../changes/digest.ts";
-import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
-import { readTraceFile } from "../traces/reader.ts";
-import { traceFilePath } from "../traces/schema.ts";
-import type { TraceEvent } from "../traces/types.ts";
+import { changeTraceId } from "../../changes/change-trace.ts";
+import { stableJson } from "../../changes/digest.ts";
+import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
+import { readTraceFile } from "../../traces/reader.ts";
+import { traceFilePath } from "../../traces/schema.ts";
+import type { TraceEvent } from "../../traces/types.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
 	ProjectCoordinatorLane,
-} from "./coordinator/project.ts";
+} from "./project.ts";
 import type {
 	RuntimeReactor,
 	RuntimeReaction,
 	RuntimeTrigger,
 } from "./reactor.ts";
-import { runtimeSemanticJobId } from "./semantic-job-id.ts";
+import { runtimeSemanticJobId } from "./job-id.ts";
 import {
 	runRuntimeSelectedSemanticReaction,
 	type RuntimeSemanticAdapters,
@@ -24,7 +24,7 @@ import {
 	type RuntimeSemanticMode,
 	type RuntimeSemanticOutcome,
 	type RunRuntimeSelectedSemanticReactionResult,
-} from "./semantic-executor.ts";
+} from "../semantic-executor.ts";
 
 export interface RuntimeReactionJobEvidence {
 	traceId: string;

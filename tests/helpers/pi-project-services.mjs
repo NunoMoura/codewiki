@@ -1,5 +1,5 @@
-import { RuntimeReactor } from "../../src/runtime/reactor.ts";
-import { runtimeSemanticJobId } from "../../src/runtime/semantic-job-id.ts";
+import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
+import { runtimeSemanticJobId } from "../../src/runtime/coordinator/job-id.ts";
 import { runRuntimeSelectedSemanticReaction } from "../../src/runtime/semantic-executor.ts";
 
 export function testPiProjectServices() {

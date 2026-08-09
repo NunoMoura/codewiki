@@ -17,7 +17,7 @@ import { promisify } from "node:util";
 
 import { createShellWorktreeCommandRunner } from "../../src/git/worktree-shell-runner.ts";
 import { projectBranchMergeJob } from "../../src/runtime/effects/project-branch-merge.ts";
-import { RuntimeReactor } from "../../src/runtime/reactor.ts";
+import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
 import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";

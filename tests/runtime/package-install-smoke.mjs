@@ -117,8 +117,13 @@ assert.equal(
 );
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "sdk-semantic-session.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactions.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactions.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactor.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "job-id.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-job-id.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), true);
@@ -279,7 +284,8 @@ assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-migration.j
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-ref-reader.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projector.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactor.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);

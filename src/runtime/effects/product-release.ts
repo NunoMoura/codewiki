@@ -28,7 +28,7 @@ import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
 } from "../coordinator/project.ts";
-import type { RuntimeReactor } from "../reactor.ts";
+import type { RuntimeReactor } from "../coordinator/reactor.ts";
 import { appendRuntimeTraceRecord } from "../trace-writer.ts";
 
 const PRODUCT_RELEASE_EVENT = "runtime.product.released";

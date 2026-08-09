@@ -157,4 +157,4 @@ export {
 	type RuntimeReactionJobEvidence,
 	type RuntimeReactionJobReceipt,
 	type ScheduleRuntimeReactionsInput,
-} from "../runtime-reaction-jobs.ts";
+} from "./reactions.ts";

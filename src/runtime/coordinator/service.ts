@@ -75,12 +75,12 @@ import {
 	RuntimeReactor,
 	type RuntimeReaction,
 	type RuntimeTrigger,
-} from "../reactor.ts";
+} from "./reactor.ts";
 import {
 	scheduleRuntimeReactionJob,
 	scheduleRuntimeReactions,
 	type RuntimeReactionJobReceipt,
-} from "../runtime-reaction-jobs.ts";
+} from "./reactions.ts";
 import { parseDecisionCandidateProposal } from "../../decision/candidate-proposal.ts";
 import { parseImplementationCandidateContent } from "../../implementation/candidate-content.ts";
 import { parsePlanningCandidateContent } from "../../planning/candidate-content.ts";

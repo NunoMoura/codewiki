@@ -33,7 +33,7 @@ import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,
 } from "../coordinator/project.ts";
-import type { RuntimeReactor } from "../reactor.ts";
+import type { RuntimeReactor } from "../coordinator/reactor.ts";
 
 const MAX_GIT_OUTPUT_BYTES = 8 * 1024 * 1024;
 const MAX_CHANGED_PATHS = 1_024;

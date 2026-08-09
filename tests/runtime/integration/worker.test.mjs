@@ -14,7 +14,7 @@ import {
 } from "../../../src/runtime/workers/implementation-adapter.ts";
 import { IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION } from "../../../src/runtime/workers/implementation-artifacts.ts";
 import { implementationWorkerIntegrationJob } from "../../../src/runtime/integration/worker.ts";
-import { RuntimeReactor } from "../../../src/runtime/reactor.ts";
+import { RuntimeReactor } from "../../../src/runtime/coordinator/reactor.ts";
 import { appendRuntimeTraceRecords } from "../../../src/runtime/trace-writer.ts";
 import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
 

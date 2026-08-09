@@ -53,7 +53,7 @@ import {
 	collectProjectSnapshot,
 	type ProjectSnapshot,
 } from "../project/snapshot.ts";
-import { RuntimeReactor, type RuntimeObservation } from "../runtime/reactor.ts";
+import { RuntimeReactor, type RuntimeObservation } from "../runtime/coordinator/reactor.ts";
 import { assertRuntimeSemanticJobId } from "../traces/schema.ts";
 import {
 	appendSemanticLoopReport,

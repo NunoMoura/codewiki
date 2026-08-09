@@ -3,22 +3,22 @@ import {mkdtemp, rm} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { createChangeRecord } from "../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
-import { readTraceFileSnapshot } from "../../src/traces/reader.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
-import { ProjectCoordinator } from "../../src/runtime/coordinator/project.ts";
+import { createChangeRecord } from "../../../src/changes/records.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { readTraceFileSnapshot } from "../../../src/traces/reader.ts";
+import { traceFilePath } from "../../../src/traces/schema.ts";
+import { ProjectCoordinator } from "../../../src/runtime/coordinator/project.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
-} from "../../src/runtime/coordinator/service.ts";
-import { RuntimeReactor } from "../../src/runtime/reactor.ts";
+} from "../../../src/runtime/coordinator/service.ts";
+import { RuntimeReactor } from "../../../src/runtime/coordinator/reactor.ts";
 import {
 	runtimeReactionJob,
 	scheduleRuntimeReactionJob,
-} from "../../src/runtime/runtime-reaction-jobs.ts";
-import {buildProjectWorkState} from "../../src/work-state/project.ts";
-import {acceptedChangeFixture} from "../helpers/accepted-change.mjs";
+} from "../../../src/runtime/coordinator/reactions.ts";
+import {buildProjectWorkState} from "../../../src/work-state/project.ts";
+import {acceptedChangeFixture} from "../../helpers/accepted-change.mjs";
 
 async function fixture(id) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-runtime-reaction-"));

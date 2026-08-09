@@ -17,7 +17,7 @@ import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
 } from "../../../src/runtime/coordinator/service.ts";
-import { RuntimeReactor } from "../../../src/runtime/reactor.ts";
+import { RuntimeReactor } from "../../../src/runtime/coordinator/reactor.ts";
 import { buildProjectWorkState } from "../../../src/work-state/project.ts";
 import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
 

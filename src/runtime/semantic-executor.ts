@@ -41,7 +41,7 @@ import {
 	type RuntimeObservation,
 	type RuntimeReaction,
 	type RuntimeTrigger,
-} from "./reactor.ts";
+} from "./coordinator/reactor.ts";
 
 export type RuntimeSemanticMode = "preview" | "append";
 

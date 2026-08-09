@@ -1,14 +1,14 @@
-import type { ChangeRecord } from "../changes/records.ts";
-import { buildProjectWorkState } from "../work-state/project.ts";
+import type { ChangeRecord } from "../../changes/records.ts";
+import { buildProjectWorkState } from "../../work-state/project.ts";
 import {
 	WorkStateSession,
 	type WorkStateRefreshResult,
-} from "../work-state/session.ts";
+} from "../../work-state/session.ts";
 import type {
 	WorkState,
 	WorkStateChange,
 	WorkStateSprint,
-} from "../work-state/types.ts";
+} from "../../work-state/types.ts";
 
 export const RUNTIME_REACTION_SCHEMA_VERSION = 1;
 

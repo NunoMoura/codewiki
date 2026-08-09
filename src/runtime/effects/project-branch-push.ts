@@ -17,7 +17,7 @@ import {
 	removeProjectBranchPushManifest,
 	writeProjectBranchPushManifest,
 } from "./project-branch-push-manifest.ts";
-import type { RuntimeReactor } from "../reactor.ts";
+import type { RuntimeReactor } from "../coordinator/reactor.ts";
 import { appendRuntimeTraceRecord } from "../trace-writer.ts";
 
 const MERGE_EVENT = "runtime.project_branch.merged";

@@ -6,7 +6,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { productReleaseJob } from "../../src/runtime/effects/product-release.ts";
-import { RuntimeReactor } from "../../src/runtime/reactor.ts";
+import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
 import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";

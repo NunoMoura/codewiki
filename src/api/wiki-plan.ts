@@ -24,7 +24,7 @@ import {
 	type SprintPlanInput,
 } from "../planning/portfolio-quality.ts";
 import { normalizeUiPreviewTargetBinding } from "../preview/binding.ts";
-import { selectRuntimeReaction } from "../runtime/reactor.ts";
+import { selectRuntimeReaction } from "../runtime/coordinator/reactor.ts";
 import { buildProjectWorkState } from "../work-state/project.ts";
 import type { WorkState } from "../work-state/types.ts";
 

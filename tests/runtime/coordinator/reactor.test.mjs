@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {
 	selectRuntimeReaction,
 	selectRuntimeReactions,
-} from "../../src/runtime/reactor.ts";
+} from "../../../src/runtime/coordinator/reactor.ts";
 
 function record(id, targetRefs = [], links = []) {
 	return {

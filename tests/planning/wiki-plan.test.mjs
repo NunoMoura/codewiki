@@ -15,7 +15,7 @@ import {
 import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
 import { readTrace } from "../../src/traces/reader.ts";
 import { traceFilePath } from "../../src/traces/schema.ts";
-import { selectRuntimeReaction } from "../../src/runtime/reactor.ts";
+import { selectRuntimeReaction } from "../../src/runtime/coordinator/reactor.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
