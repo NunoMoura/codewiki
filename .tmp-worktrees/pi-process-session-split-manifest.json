@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "purpose": "Split Pi worker process execution from legacy trace-host lifecycle debt.",
+  "moves": [
+    {"from": "src/pi/process-session.ts#worker-execution", "to": "src/harnesses/pi/process-session.ts"},
+    {"from": "tests/runtime/pi-process-session.test.mjs#worker-execution", "to": "tests/harnesses/pi/process-session.test.mjs"}
+  ],
+  "retainedDebt": [
+    "src/pi/process-session.ts",
+    "src/pi/trace-host-process.ts",
+    "src/pi/trace-host-result.ts",
+    "src/runtime/trace-host-runner.ts",
+    "src/runtime/trace-host-supervisor.ts",
+    "src/dashboard/trace-host-control.ts",
+    "src/dashboard/trace-host-runtime.ts"
+  ],
+  "constraints": [
+    "Harness process execution must not import Pi Client implementations.",
+    "Legacy trace-host code may import neutral Harness process contracts until deletion.",
+    "Do not add compatibility exports for worker execution under src/pi.",
+    "Delete this temporary manifest when the refactor completes."
+  ]
+}

@@ -324,6 +324,19 @@ for (const name of [
 		name,
 	);
 }
+assert.equal(
+	existsSync(join(packageRoot, "dist", "harnesses", "pi", "process-session.js")),
+	true,
+);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "harnesses", "pi", "process-session.d.ts")),
+	true,
+);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "pi", "process-session.js")),
+	true,
+	"legacy trace-host shell remains until Dashboard cutover",
+);
 assert.equal(existsSync(join(packageRoot, "dist", "preview", "evidence.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace-store.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "git-ref-store.js")), false);

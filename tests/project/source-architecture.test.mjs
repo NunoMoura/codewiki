@@ -284,7 +284,7 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("freezes the remaining Harness-to-Pi interaction debt", () => {
+	it("forbids Harness adapters from importing interaction clients", () => {
 		const legacyEdges = [];
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			if (!relative(sourceRoot, source).startsWith("harnesses/")) continue;
@@ -296,9 +296,7 @@ describe("source architecture", () => {
 				}
 			}
 		}
-		assert.deepEqual(legacyEdges.sort(), [
-			"src/harnesses/pi/process-worker-adapter.ts -> src/pi/process-session.ts",
-		]);
+		assert.deepEqual(legacyEdges.sort(), []);
 	});
 
 	it("forbids core packages from importing outer adapters", () => {

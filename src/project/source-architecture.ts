@@ -101,5 +101,4 @@ export const IMPORT_CYCLE_BASELINE = [
 	"src/implementation/review/evidence-report.ts | src/implementation/types.ts | src/implementation/worker-proof.ts",
 	"src/verification/catalog.ts | src/verification/runner.ts | src/verification/security-scanner-checks.ts",
 	"src/verification/contracts.ts | src/verification/identity.ts",
-	"src/pi/process-session.ts | src/pi/trace-host-process.ts",
 ] as const;

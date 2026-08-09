@@ -89,7 +89,7 @@ Hard completion caps:
 
 The reserved projection is 310 source files, 188 test/support files, ten benchmark files, and 564 tracked files. The difference between each projection and cap is contingency, not permission for unreviewed growth.
 
-After the Lab and source-checkout self-dogfood clean cut, 641 tracked files remain: 369 source files, 209 test/support files, zero Lab files, and one script. The packed package contains 741 files; further source deletion and merging must reduce it below 650.
+After the Lab and source-checkout self-dogfood clean cut, 641 tracked files remain: 369 source files, 209 test/support files, zero Lab files, and one script. The worker/trace-host process split temporarily raises the packed package to 743 files; deleting the remaining trace-host shell and later source consolidation must reduce it below 650.
 
 Budget rules:
 
@@ -134,7 +134,8 @@ Budget rules:
 - [ ] Move user-facing Pi commands, tools, prompts, TUI, rendering, and coordinator clients to `src/clients/pi/**`.
 - [x] Move isolated Model Check, research-claim, and User Standard distillation sessions to `src/harnesses/pi/**`.
 - [x] Move native Candidate production, Decision research, and semantic SDK execution to `src/harnesses/pi/**`.
-- [ ] Split Pi process worker execution from trace-host lifecycle debt, then keep only the worker transport under `src/harnesses/pi/**`.
+- [x] Split Pi process worker execution from trace-host lifecycle debt and keep worker transport under `src/harnesses/pi/**`.
+- [ ] Delete the remaining Pi/Dashboard trace-host shell after removing its UI and lifecycle callers.
 - [ ] Remove hidden semantic-loop tools from the main conversational client registration.
 - [ ] Ensure conversational clients cannot double as Candidate producers, Model Checks, Planning sessions, or workers.
 - [x] Eliminate the frozen Runtime-to-Pi imports through injected ports.

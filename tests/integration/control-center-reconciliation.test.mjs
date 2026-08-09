@@ -106,12 +106,12 @@ const criterionEvidence = {
 		source: [
 			"src/runtime/workers/start.ts",
 			"src/runtime/workers/execution-policy.ts",
-			"src/pi/process-session.ts",
+			"src/harnesses/pi/process-session.ts",
 			"src/runtime/workers/observation.ts",
 		],
 		tests: [
 			"tests/runtime/worker-start.test.mjs",
-			"tests/runtime/pi-process-session.test.mjs",
+			"tests/harnesses/pi/process-session.test.mjs",
 			"tests/runtime/worker-observation.test.mjs",
 		],
 	},

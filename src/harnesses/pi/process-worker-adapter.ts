@@ -14,7 +14,7 @@ import {
 import {
 	createPiProcessSessionFactory,
 	type PiProcessSessionFactoryOptions,
-} from "../../pi/process-session.ts";
+} from "./process-session.ts";
 import {
 	collectWorkerDiscoveries,
 	collectWorkerOutputFiles,

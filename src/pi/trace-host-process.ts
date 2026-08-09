@@ -4,7 +4,7 @@ import type { TraceHostSessionController } from "../runtime/trace-host-runner.ts
 import type {
 	PiProcessCommandResult,
 	PiProcessCommandRunnerInput,
-} from "./process-session.ts";
+} from "../harnesses/pi/process-session.ts";
 import { createTraceHostResultCollector } from "./trace-host-result.ts";
 
 const MAX_EVENT_LINE = 262_144;
