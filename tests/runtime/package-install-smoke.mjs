@@ -301,6 +301,28 @@ for (const path of filesUnder(packageRoot)) {
 	}
 }
 assert.equal(readdirSync(join(packageRoot, "dist")).includes("pi"), true);
+for (const name of [
+	"decision-model-check-session",
+	"decision-research-claims-session",
+	"isolated-json-model-session",
+	"user-standard-distillation-session",
+]) {
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "harnesses", "pi", name + ".js")),
+		true,
+		name,
+	);
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "harnesses", "pi", name + ".d.ts")),
+		true,
+		name,
+	);
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "pi", name + ".js")),
+		false,
+		name,
+	);
+}
 assert.equal(existsSync(join(packageRoot, "dist", "preview", "evidence.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace-store.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "git-ref-store.js")), false);

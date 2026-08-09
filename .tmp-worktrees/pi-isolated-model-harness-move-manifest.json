@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "purpose": "Move isolated Pi model execution from the Pi interaction root to the Pi Harness owner.",
+  "moves": [
+    {"from": "src/pi/decision-model-check-session.ts", "to": "src/harnesses/pi/decision-model-check-session.ts"},
+    {"from": "src/pi/decision-research-claims-session.ts", "to": "src/harnesses/pi/decision-research-claims-session.ts"},
+    {"from": "src/pi/isolated-json-model-session.ts", "to": "src/harnesses/pi/isolated-json-model-session.ts"},
+    {"from": "src/pi/user-standard-distillation-session.ts", "to": "src/harnesses/pi/user-standard-distillation-session.ts"},
+    {"from": "tests/runtime/pi-decision-model-check-session.test.mjs", "to": "tests/harnesses/pi/decision-model-check-session.test.mjs"},
+    {"from": "tests/runtime/pi-decision-research-claims-session.test.mjs", "to": "tests/harnesses/pi/decision-research-claims-session.test.mjs"}
+  ],
+  "constraints": [
+    "Rewrite module specifiers only.",
+    "Do not retain old-path re-exports.",
+    "Pi clients may compose these Harness adapters; Runtime may not import them.",
+    "Delete this temporary manifest when the refactor completes."
+  ]
+}

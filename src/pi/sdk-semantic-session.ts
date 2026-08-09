@@ -33,8 +33,8 @@ import {
 	type NativeDecisionCandidateProductionRequest,
 } from "../runtime/coordinator/decision-attempt.ts";
 
-export { createPiDecisionModelCheckTransport } from "./decision-model-check-session.ts";
-export { createPiDecisionResearchClaimsTransport } from "./decision-research-claims-session.ts";
+export { createPiDecisionModelCheckTransport } from "../harnesses/pi/decision-model-check-session.ts";
+export { createPiDecisionResearchClaimsTransport } from "../harnesses/pi/decision-research-claims-session.ts";
 
 const READ_ONLY_TOOL_NAMES = ["read", "grep", "find", "ls"] as const;
 const DEFAULT_TIMEOUT_MS = 120_000;

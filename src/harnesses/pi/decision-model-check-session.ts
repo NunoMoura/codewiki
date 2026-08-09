@@ -2,8 +2,8 @@ import {
 	DECISION_MODEL_CHECK_REQUEST_PROTOCOL,
 	type DecisionModelCheckObservation,
 	type DecisionModelCheckRequest,
-} from "../decision/exit/model-checks.ts";
-import {canonicalJsonDigest} from "../utils/canonical-json.ts";
+} from "../../decision/exit/model-checks.ts";
+import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
 import {
 	createDefaultPiIsolatedJsonModelSessionFactory,
 	requiredPiModelRepoRoot,

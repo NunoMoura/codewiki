@@ -4,7 +4,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import type {createAgentSession as createPiAgentSession} from "@earendil-works/pi-coding-agent";
 import {join} from "node:path";
-import type {WikiModelRouteConfig} from "../project/model-routing.ts";
+import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 
 type PiIsolatedJsonModelRoute = Pick<
 	WikiModelRouteConfig,

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { createPiDecisionResearchClaimsTransport } from "../../src/pi/decision-research-claims-session.ts";
+import { createPiDecisionResearchClaimsTransport } from "../../src/harnesses/pi/decision-research-claims-session.ts";
 import { createDecisionResearchClaimsExecutor } from "../../src/decision/exit/research-claims.ts";
 import {
 	createDecisionResearchProvenanceExecutor,

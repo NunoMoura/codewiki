@@ -16,6 +16,14 @@ import {
 
 const sourceRoot = resolve("src");
 
+function readJson(path) {
+	try {
+		return JSON.parse(readFileSync(path, "utf8"));
+	} catch (error) {
+		throw new Error(`Cannot parse ${path}.`, { cause: error });
+	}
+}
+
 function sourceFiles(root = "src") {
 	const files = [];
 	for (const name of readdirSync(root).sort()) {
@@ -165,14 +173,20 @@ describe("source architecture", () => {
 			assert.equal(existsSync(path), false, path);
 		}
 
-		const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
+		const packageJson = readJson("package.json");
 		assert.deepEqual(
 			Object.keys(packageJson.scripts).filter((name) =>
 				/^(?:lab(?::|$)|self-dogfood:|test:self-dogfood)/u.test(name),
 			),
 			[],
 		);
-		const tsconfig = JSON.parse(readFileSync("tsconfig.json", "utf8"));
+		for (const script of ["test:smoke", "test:features"]) {
+			assert.match(
+				packageJson.scripts[script],
+				/tests\/harnesses\/pi\/\*\.test\.mjs/u,
+			);
+		}
+		const tsconfig = readJson("tsconfig.json");
 		assert.deepEqual(tsconfig.include, ["src/**/*.ts"]);
 	});
 
@@ -253,6 +267,31 @@ describe("source architecture", () => {
 			),
 			true,
 		);
+	});
+
+	it("keeps isolated Pi execution under the Harness owner", () => {
+		for (const name of [
+			"decision-model-check-session.ts",
+			"decision-research-claims-session.ts",
+			"isolated-json-model-session.ts",
+			"user-standard-distillation-session.ts",
+		]) {
+			assert.equal(existsSync(join(sourceRoot, "harnesses", "pi", name)), true, name);
+			assert.equal(existsSync(join(sourceRoot, "pi", name)), false, name);
+		}
+	});
+
+	it("forbids Harness adapters from importing interaction clients", () => {
+		for (const [source, targets] of importEdges(sourceFiles("src/harnesses"))) {
+			for (const target of targets) {
+				const targetPath = relative(sourceRoot, target);
+				assert.equal(
+					targetPath.startsWith("pi/") || targetPath.startsWith("clients/"),
+					false,
+					edgeLabel(source, target),
+				);
+			}
+		}
 	});
 
 	it("forbids core packages from importing outer adapters", () => {

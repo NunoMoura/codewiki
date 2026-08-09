@@ -1,12 +1,12 @@
 import {
 	DECISION_RESEARCH_CLAIMS_PROTOCOL,
 	DecisionResearchClaimsResponseSchema,
-} from "../decision/exit/research-claims-protocol.ts";
+} from "../../decision/exit/research-claims-protocol.ts";
 import type {
 	DecisionResearchClaimsModelObservation,
 	DecisionResearchClaimsRequest,
-} from "../decision/exit/research-claims.ts";
-import {canonicalJsonDigest} from "../utils/canonical-json.ts";
+} from "../../decision/exit/research-claims.ts";
+import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
 import {
 	createDefaultPiIsolatedJsonModelSessionFactory,
 	requiredPiModelRepoRoot,
