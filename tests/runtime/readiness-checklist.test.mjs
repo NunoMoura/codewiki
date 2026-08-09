@@ -8,12 +8,12 @@ import {
 	formatKnowledgeDriftIssues,
 	lintKnowledgeDrift,
 } from "../../src/knowledge/drift-linter.ts";
-import { piExtensionAvailable } from "../../src/pi/extension.ts";
+import { piExtensionAvailable } from "../../src/clients/pi/extension.ts";
 import {
 	CODEWIKI_PROMPT_GUIDELINES,
 	renderCodewikiPromptInstructions,
-} from "../../src/pi/prompt/index.ts";
-import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
+} from "../../src/clients/pi/prompt/index.ts";
+import { CODEWIKI_TOOL_NAMES } from "../../src/clients/pi/tools/index.ts";
 
 const packageJson = jsonFile("package.json");
 const buildTsconfig = jsonFile("tsconfig.build.json");
@@ -93,7 +93,7 @@ describe("install readiness checklist", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 		assert.equal(piExtensionAvailable, true);
 		assert.deepEqual(packageJson.pi, {
-			extensions: ["dist/pi/extension.js"],
+			extensions: ["dist/clients/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
 		assert.equal(packageJson.name, "@nunomoura/codewiki");
@@ -118,7 +118,7 @@ describe("install readiness checklist", () => {
 		assert.equal(packageJson.scripts["test:pi-dogfood"], undefined);
 		assert.equal(
 			packageJson.scripts["test:pi-install"],
-			"node tests/runtime/pi-install-smoke.mjs",
+			"node tests/clients/pi/install-smoke.mjs",
 		);
 		assert.equal(
 			packageJson.scripts["test:project-local-install"],
@@ -136,7 +136,7 @@ describe("install readiness checklist", () => {
 
 	it("keeps the internal agent tool surface small and exact", () => {
 		assert.deepEqual([...CODEWIKI_TOOL_NAMES], expectedToolNames);
-		const toolSource = readFileSync("src/pi/tools/index.ts", "utf8");
+		const toolSource = readFileSync("src/clients/pi/tools/index.ts", "utf8");
 		assert.equal(toolSource.includes("wiki_runtime"), false);
 		assert.match(toolSource, /Internal agent read/);
 		assert.match(toolSource, /not a user command/);
@@ -179,7 +179,7 @@ describe("install readiness checklist", () => {
 			/sourceOwners|sourcePaths/,
 		);
 		assert.doesNotMatch(
-			readFileSync("src/pi/tools/index.ts", "utf8"),
+			readFileSync("src/clients/pi/tools/index.ts", "utf8"),
 			/sourceOwners|sourcePaths/,
 		);
 	});
@@ -228,11 +228,11 @@ describe("install readiness checklist", () => {
 		assert.equal(packageJson.pi.extensions.includes("lab"), false);
 		assert.equal(existsSync("lab"), false);
 		assert.equal(
-			readFileSync("src/pi/extension.ts", "utf8").includes("lab/"),
+			readFileSync("src/clients/pi/extension.ts", "utf8").includes("lab/"),
 			false,
 		);
 		assert.equal(
-			readFileSync("src/pi/prompt/index.ts", "utf8").includes("lab/"),
+			readFileSync("src/clients/pi/prompt/index.ts", "utf8").includes("lab/"),
 			false,
 		);
 	});

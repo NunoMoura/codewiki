@@ -5,14 +5,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 
-import { renderPiChangeValidationCard } from "../../src/pi/rendering/change-validation-card.ts";
-import { registerCodewikiTools } from "../../src/pi/tools/index.ts";
-import { buildChangeValidationCard } from "../../src/changes/validation-view.ts";
-import { createChangeRecord } from "../../src/changes/records.ts";
+import { renderPiChangeValidationCard } from "../../../src/clients/pi/rendering/change-validation-card.ts";
+import { registerCodewikiTools } from "../../../src/clients/pi/tools/index.ts";
+import { buildChangeValidationCard } from "../../../src/changes/validation-view.ts";
+import { createChangeRecord } from "../../../src/changes/records.ts";
 import {
 	acceptedChangeFixture,
 	seedChangeAcceptance,
-} from "../helpers/accepted-change.mjs";
+} from "../../helpers/accepted-change.mjs";
 
 function registeredTools() {
 	const tools = [];

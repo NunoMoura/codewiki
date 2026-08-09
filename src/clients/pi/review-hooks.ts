@@ -9,8 +9,8 @@ import {
 	type ImplementationEvidenceReport,
 	type LanguageReviewPackSkipSummary,
 	type ReviewEvidenceCache,
-} from "../implementation/review/index.ts";
-import { loadWikiConfigFile } from "../project/config-file.ts";
+} from "../../implementation/review/index.ts";
+import { loadWikiConfigFile } from "../../project/config-file.ts";
 import type {
 	CodewikiCustomMessage,
 	CodewikiExtensionContext,

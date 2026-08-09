@@ -2,24 +2,24 @@ import { randomUUID } from "node:crypto";
 import type {
 	BacklogTriageQueryRequest,
 	BacklogTriageQueryResult,
-} from "../changes/triage/contracts.ts";
-import type {DecisionAttentionSelectionCommand} from "../changes/triage/selection.ts";
-import type {DecisionStartResult} from "../runtime/admission/start.ts";
+} from "../../changes/triage/contracts.ts";
+import type {DecisionAttentionSelectionCommand} from "../../changes/triage/selection.ts";
+import type {DecisionStartResult} from "../../runtime/admission/start.ts";
 import {
 	connectEnsuredProjectCoordinatorClient,
 	type EnsureProjectCoordinatorServiceOptions,
-} from "../runtime/coordinator/process.ts";
-import type { ProjectCoordinatorEventBatch } from "../runtime/coordinator/events.ts";
-import type { ImplementationWorkerDispatchResult } from "../runtime/workers/dispatch.ts";
+} from "../../runtime/coordinator/process.ts";
+import type { ProjectCoordinatorEventBatch } from "../../runtime/coordinator/events.ts";
+import type { ImplementationWorkerDispatchResult } from "../../runtime/workers/dispatch.ts";
 import type {
 	ProjectCoordinatorCandidateResult,
 	ProjectCoordinatorRemoteClient,
 	ProjectCoordinatorSemanticExecution,
 	RuntimeCandidateLoop,
-} from "../runtime/coordinator/service.ts";
-import type { RuntimeReaction, RuntimeTrigger } from "../runtime/coordinator/reactor.ts";
-import type { RuntimeReactionJobReceipt } from "../runtime/coordinator/reactions.ts";
-import type { RuntimeSemanticMode } from "../runtime/coordinator/executor.ts";
+} from "../../runtime/coordinator/service.ts";
+import type { RuntimeReaction, RuntimeTrigger } from "../../runtime/coordinator/reactor.ts";
+import type { RuntimeReactionJobReceipt } from "../../runtime/coordinator/reactions.ts";
+import type { RuntimeSemanticMode } from "../../runtime/coordinator/executor.ts";
 import { spawnPiProjectCoordinatorDaemon } from "./project-coordinator-daemon.ts";
 import type { CodewikiExtensionContext } from "./types.ts";
 

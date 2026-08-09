@@ -1,9 +1,9 @@
-import type { WikiStateSnapshot } from "../../api/state.ts";
+import type { WikiStateSnapshot } from "../../../api/state.ts";
 import {
 	closeInProcessCodewikiDashboardServer,
 	startCodewikiDashboardServer,
-} from "../../dashboard/index.ts";
-import { findCodewikiProjectRoot } from "../../project/root.ts";
+} from "../../../dashboard/index.ts";
+import { findCodewikiProjectRoot } from "../../../project/root.ts";
 import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import {
 	resolveCodewikiExtensionIdentity,

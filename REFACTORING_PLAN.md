@@ -131,7 +131,7 @@ Budget rules:
 
 - [x] Move OCI/container execution transport and public coordinator composition to `src/harnesses/**`.
 - [x] Move the concrete Pi process worker adapter to `src/harnesses/pi/**` without moving legacy trace-host session debt.
-- [ ] Move user-facing Pi commands, tools, prompts, TUI, rendering, and coordinator clients to `src/clients/pi/**`.
+- [x] Move user-facing Pi commands, tools, prompts, TUI, rendering, and coordinator clients to `src/clients/pi/**`.
 - [x] Move isolated Model Check, research-claim, and User Standard distillation sessions to `src/harnesses/pi/**`.
 - [x] Move native Candidate production, Decision research, and semantic SDK execution to `src/harnesses/pi/**`.
 - [x] Split Pi process worker execution from trace-host lifecycle debt and keep worker transport under `src/harnesses/pi/**`.

@@ -1,16 +1,16 @@
 import {randomUUID} from "node:crypto";
 
-import { runWikiConfig } from "../../api/wiki-config.ts";
-import { bootstrapCodewiki } from "../../project/bootstrap.ts";
-import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../changes/triage/contracts.ts";
+import { runWikiConfig } from "../../../api/wiki-config.ts";
+import { bootstrapCodewiki } from "../../../project/bootstrap.ts";
+import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../changes/triage/contracts.ts";
 import {
 	DECISION_ATTENTION_SELECTION_PROTOCOL,
 	parseDecisionAttentionSelectionCommand,
-} from "../../changes/triage/selection.ts";
-import { resolveWikiConfigFile } from "../../project/config-file.ts";
-import { buildProjectExplainView } from "../../project/explain.ts";
-import { findCodewikiProjectRoot } from "../../project/root.ts";
-import { buildProjectWikiState } from "../../project/state-file.ts";
+} from "../../../changes/triage/selection.ts";
+import { resolveWikiConfigFile } from "../../../project/config-file.ts";
+import { buildProjectExplainView } from "../../../project/explain.ts";
+import { findCodewikiProjectRoot } from "../../../project/root.ts";
+import { buildProjectWikiState } from "../../../project/state-file.ts";
 import {
 	CODEWIKI_DIRECT_COMMANDS,
 	type CodewikiSubcommand,
@@ -24,8 +24,8 @@ import {
 	buildCodewikiDashboardUrlMessage,
 	closeCodewikiDashboardServer,
 	startCodewikiDashboardServer,
-} from "../../dashboard/index.ts";
-import { stopProjectCoordinatorService } from "../../runtime/coordinator/service.ts";
+} from "../../../dashboard/index.ts";
+import { stopProjectCoordinatorService } from "../../../runtime/coordinator/service.ts";
 import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
 import {

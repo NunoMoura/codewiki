@@ -1,38 +1,38 @@
 import { readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { createCodeWikiLoopExecutionPorts } from "../api/loop-execution.ts";
+import { createCodeWikiLoopExecutionPorts } from "../../api/loop-execution.ts";
 import {
 	createShellWorktreeCommandRunner,
 	type WorktreeCommandExecFile,
-} from "../git/worktree-shell-runner.ts";
+} from "../../git/worktree-shell-runner.ts";
 import {
 	startProjectCoordinatorDaemon,
 	type ProjectCoordinatorDaemonHandle,
-} from "../runtime/coordinator/daemon.ts";
-import { spawnProjectCoordinatorDaemon } from "../runtime/coordinator/process.ts";
-import type { ProjectCoordinatorDecisionStartOptions } from "../runtime/coordinator/service.ts";
-import type { ImplementationWorkerAdapter } from "../runtime/workers/implementation-adapter.ts";
-import type { ProjectBranchMergeAuthority } from "../runtime/effects/project-branch-merge.ts";
-import type { ProjectBranchPushAuthority } from "../runtime/effects/project-branch-push.ts";
+} from "../../runtime/coordinator/daemon.ts";
+import { spawnProjectCoordinatorDaemon } from "../../runtime/coordinator/process.ts";
+import type { ProjectCoordinatorDecisionStartOptions } from "../../runtime/coordinator/service.ts";
+import type { ImplementationWorkerAdapter } from "../../runtime/workers/implementation-adapter.ts";
+import type { ProjectBranchMergeAuthority } from "../../runtime/effects/project-branch-merge.ts";
+import type { ProjectBranchPushAuthority } from "../../runtime/effects/project-branch-push.ts";
 import type {
 	ProductPublicationAdapter,
 	ProductPublicationPlan,
-} from "../runtime/effects/product-publication-contract.ts";
+} from "../../runtime/effects/product-publication-contract.ts";
 import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
-} from "../runtime/effects/product-release-contract.ts";
+} from "../../runtime/effects/product-release-contract.ts";
 import type {
 	RuntimeLoopExecutionPorts,
 	RuntimeSemanticAdapters,
 	RuntimeSemanticContext,
-} from "../runtime/coordinator/executor.ts";
+} from "../../runtime/coordinator/executor.ts";
 import {
 	createPiNativeDecisionStartOptions,
 	type PiNativeDecisionHostOptions,
-} from "../harnesses/pi/native-decision-host.ts";
-import { createPiProcessImplementationWorkerAdapter } from "../harnesses/pi/process-worker-adapter.ts";
+} from "../../harnesses/pi/native-decision-host.ts";
+import { createPiProcessImplementationWorkerAdapter } from "../../harnesses/pi/process-worker-adapter.ts";
 
 export type PiSemanticAdapterLoader = (
 	repoRoot: string,
@@ -66,7 +66,7 @@ export async function loadPiSemanticAdapters(
 				"@earendil-works/pi-coding-agent"
 		)) as typeof import("@earendil-works/pi-coding-agent");
 		const { createPiSdkRuntimeSemanticAdapters } = await import(
-			"../harnesses/pi/sdk-semantic-session.ts"
+			"../../harnesses/pi/sdk-semantic-session.ts"
 		);
 		return createPiSdkRuntimeSemanticAdapters({ repoRoot, piSdk });
 	} catch (error) {

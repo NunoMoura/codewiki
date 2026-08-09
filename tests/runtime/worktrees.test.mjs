@@ -309,11 +309,11 @@ describe("runtime worktree planning", () => {
 			},
 		);
 		const dirtyGlobSolo = planRuntimeWorkUnitClaimWorktrees(
-			[item("WU-one", ["src/pi/**"])],
+			[item("WU-one", ["src/clients/pi/**"])],
 			{
 				mode: "auto",
 				repoRoot: "/tmp/repo/codewiki",
-				dirtyPaths: ["src/pi/rendering/command-renderers.ts"],
+				dirtyPaths: ["src/clients/pi/rendering/command-renderers.ts"],
 			},
 		);
 		const unrelatedDirtySolo = planRuntimeWorkUnitClaimWorktrees(

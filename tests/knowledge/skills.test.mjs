@@ -9,12 +9,12 @@ describe("CodeWiki source-repository agent guidance", () => {
 			? readdirSync(".agents/skills")
 			: [];
 		assert.deepEqual(localSkills, []);
-		assert.deepEqual(packageJson.pi.extensions, ["dist/pi/extension.js"]);
+		assert.deepEqual(packageJson.pi.extensions, ["dist/clients/pi/extension.js"]);
 		assert.equal(packageJson.pi.skills, undefined);
 	});
 
 	it("keeps semantic-loop guidance in the packaged Pi prompt", () => {
-		const promptSource = readFileSync("src/pi/prompt/index.ts", "utf8");
+		const promptSource = readFileSync("src/clients/pi/prompt/index.ts", "utf8");
 		assert.match(promptSource, /exactly three semantic loops/i);
 		assert.match(
 			promptSource,

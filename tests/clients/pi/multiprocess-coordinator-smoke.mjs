@@ -10,7 +10,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { bootstrapCodewiki } from "../../src/project/bootstrap.ts";
+import { bootstrapCodewiki } from "../../../src/project/bootstrap.ts";
 
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
@@ -135,7 +135,7 @@ try {
 		"@nunomoura",
 		"codewiki",
 	);
-	assert.equal(existsSync(join(packageRoot, "dist", "pi", "extension.js")), true);
+	assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "extension.js")), true);
 	const env = {
 		...process.env,
 		PI_CODING_AGENT_DIR: join(root, "agent"),

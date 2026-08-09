@@ -3,14 +3,14 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { InMemoryReviewEvidenceCache } from "../../src/implementation/review/index.ts";
-import codewikiExtension from "../../src/pi/extension.ts";
+import { InMemoryReviewEvidenceCache } from "../../../src/implementation/review/index.ts";
+import codewikiExtension from "../../../src/clients/pi/extension.ts";
 import {
 	createCodeWikiReviewToolResultHandler,
 	pathScopesFromToolEventContext,
 	pathsFromToolEvent,
 	registerCodeWikiReviewHooks,
-} from "../../src/pi/review-hooks.ts";
+} from "../../../src/clients/pi/review-hooks.ts";
 
 function mockPi() {
 	const events = [];
@@ -73,10 +73,10 @@ describe("CodeWiki Pi review hooks", () => {
 				{},
 				{
 					cwd: process.cwd(),
-					review: { activePathScopes: ["src/pi/"] },
+					review: { activePathScopes: ["src/clients/pi/"] },
 				},
 			),
-			["src/pi/"],
+			["src/clients/pi/"],
 		);
 	});
 
@@ -182,7 +182,7 @@ describe("CodeWiki Pi review hooks", () => {
 				args: { path: "src/outside.ts" },
 				result: { success: true },
 			},
-			{ cwd: process.cwd(), review: { activePathScopes: ["src/pi/"] } },
+			{ cwd: process.cwd(), review: { activePathScopes: ["src/clients/pi/"] } },
 		);
 
 		assert.equal(result.feedback.status, "block");

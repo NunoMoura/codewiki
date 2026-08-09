@@ -78,8 +78,8 @@ describe("runtime work-unit claim selection", () => {
 	it("holds glob path conflicts against selected work", () => {
 		const plan = selectRuntimeWorkUnitClaims(
 			queue([
-				{ id: "WU-glob", pathScopes: ["src/pi/**"] },
-				{ id: "WU-file", pathScopes: ["src/pi/tools/index.ts"] },
+				{ id: "WU-glob", pathScopes: ["src/clients/pi/**"] },
+				{ id: "WU-file", pathScopes: ["src/clients/pi/tools/index.ts"] },
 				{
 					id: "WU-safe",
 					pathScopes: ["src/runtime/claims/work-unit-selection.ts"],

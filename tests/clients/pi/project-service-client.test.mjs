@@ -3,8 +3,8 @@ import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { createPiProjectServiceClients } from "../../src/pi/project-service-client.ts";
-import { startProjectCoordinatorService } from "../../src/runtime/coordinator/service.ts";
+import { createPiProjectServiceClients } from "../../../src/clients/pi/project-service-client.ts";
+import { startProjectCoordinatorService } from "../../../src/runtime/coordinator/service.ts";
 
 test("Pi project-service clients reuse one leased supervised connection", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-pi-project-service-"));

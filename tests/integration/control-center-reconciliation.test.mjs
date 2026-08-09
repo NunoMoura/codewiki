@@ -28,12 +28,12 @@ const criterionEvidence = {
 		criteria: ["semantic-sections", "exact-identity", "safe-rendering"],
 		source: [
 			"src/changes/validation-view.ts",
-			"src/pi/rendering/change-validation-card.ts",
+			"src/clients/pi/rendering/change-validation-card.ts",
 			"src/dashboard/change-validation-card.ts",
 		],
 		tests: [
 			"tests/changes/change-validation-view.test.mjs",
-			"tests/runtime/pi-change-validation-card.test.mjs",
+			"tests/clients/pi/change-validation-card.test.mjs",
 			"tests/dashboard/change-validation-card.test.mjs",
 		],
 	},

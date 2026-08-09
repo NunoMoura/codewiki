@@ -92,7 +92,7 @@ assert.equal(packageJson.name, "@nunomoura/codewiki");
 assert.equal(packageJson.private, true);
 assert.equal(packageJson.bin, undefined);
 assert.equal(packageJson.publishConfig, undefined);
-assert.deepEqual(packageJson.pi, { extensions: ["dist/pi/extension.js"] });
+assert.deepEqual(packageJson.pi, { extensions: ["dist/clients/pi/extension.js"] });
 assert.equal(packageJson.pi.skills, undefined);
 assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 	".",
@@ -351,16 +351,19 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "ent
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "process.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "daemon.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-coordinator-daemon.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), true);
-assert.equal(readFileSync(join(packageRoot, "dist", "pi", "extension.js"), "utf8").includes("lab/"), false);
-assert.equal(readFileSync(join(packageRoot, "dist", "pi", "prompt", "index.js"), "utf8").includes("lab/"), false);
+assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "project-coordinator-daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "project-service-client.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "runtime-tool-routing.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-coordinator-daemon.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), false);
+assert.equal(readFileSync(join(packageRoot, "dist", "clients", "pi", "extension.js"), "utf8").includes("lab/"), false);
+assert.equal(readFileSync(join(packageRoot, "dist", "clients", "pi", "prompt", "index.js"), "utf8").includes("lab/"), false);
 
-const extension = await import(pathToFileURL(join(packageRoot, "dist", "pi", "extension.js")).href);
-const prompt = await import(pathToFileURL(join(packageRoot, "dist", "pi", "prompt", "index.js")).href);
-const tui = await import(pathToFileURL(join(packageRoot, "dist", "pi", "tui", "index.js")).href);
-const piSessionActions = await import(pathToFileURL(join(packageRoot, "dist", "pi", "dashboard-session-actions.js")).href);
+const extension = await import(pathToFileURL(join(packageRoot, "dist", "clients", "pi", "extension.js")).href);
+const prompt = await import(pathToFileURL(join(packageRoot, "dist", "clients", "pi", "prompt", "index.js")).href);
+const tui = await import(pathToFileURL(join(packageRoot, "dist", "clients", "pi", "tui", "index.js")).href);
+const piSessionActions = await import(pathToFileURL(join(packageRoot, "dist", "clients", "pi", "dashboard-session-actions.js")).href);
 assert.equal(extension.piExtensionAvailable, true);
 assert.equal(prompt.codewikiPromptHooksAvailable, true);
 assert.equal(tui.codewikiTuiRenderersAvailable, true);

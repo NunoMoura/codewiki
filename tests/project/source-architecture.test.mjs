@@ -284,6 +284,29 @@ describe("source architecture", () => {
 		}
 	});
 
+	it("keeps Pi interaction adapters under the Client owner", () => {
+		for (const name of [
+			"command-catalog.ts",
+			"extension.ts",
+			"identity.ts",
+			"install-scope.ts",
+			"project-coordinator-daemon.ts",
+			"project-service-client.ts",
+			"runtime-tool-routing.ts",
+		]) {
+			assert.equal(existsSync(join(sourceRoot, "clients", "pi", name)), true, name);
+			assert.equal(existsSync(join(sourceRoot, "pi", name)), false, name);
+		}
+		assert.deepEqual(
+			sourceFiles("src/pi").map((file) => relative(sourceRoot, file)).sort(),
+			[
+				"pi/process-session.ts",
+				"pi/trace-host-process.ts",
+				"pi/trace-host-result.ts",
+			],
+		);
+	});
+
 	it("forbids Harness adapters from importing interaction clients", () => {
 		const legacyEdges = [];
 		for (const [source, targets] of importEdges(sourceFiles())) {

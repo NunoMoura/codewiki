@@ -7,20 +7,20 @@ import {
 	type RunWikiConfigInput,
 	type RunWikiChangeInput,
 	type RunWikiChangeResult,
-} from "../../api/index.ts";
-import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
-import type { RuntimeSemanticMode } from "../../runtime/coordinator/executor.ts";
-import type { RuntimeReaction } from "../../runtime/coordinator/reactor.ts";
-import type { WikiStateSnapshot } from "../../api/state.ts";
-import { buildChangeValidationCard } from "../../changes/validation-view.ts";
+} from "../../../api/index.ts";
+import { wikiChangeOperationMutates } from "../../../api/wiki-change.ts";
+import type { RuntimeSemanticMode } from "../../../runtime/coordinator/executor.ts";
+import type { RuntimeReaction } from "../../../runtime/coordinator/reactor.ts";
+import type { WikiStateSnapshot } from "../../../api/state.ts";
+import { buildChangeValidationCard } from "../../../changes/validation-view.ts";
 import {
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 	type WikiConfigFileResult,
-} from "../../project/config-file.ts";
-import { findCodewikiProjectRoot } from "../../project/root.ts";
-import { previewProfileDigest } from "../../preview/profile.ts";
-import { buildProjectWikiState } from "../../project/state-file.ts";
+} from "../../../project/config-file.ts";
+import { findCodewikiProjectRoot } from "../../../project/root.ts";
+import { previewProfileDigest } from "../../../preview/profile.ts";
+import { buildProjectWikiState } from "../../../project/state-file.ts";
 import {
 	assertProjectLocalMutationAllowed,
 	projectLocalInstallWarning,

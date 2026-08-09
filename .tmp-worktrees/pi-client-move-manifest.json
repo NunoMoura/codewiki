@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "purpose": "Move Pi interaction adapters to the Pi Client owner without compatibility exports.",
+  "sourceRoot": "src/pi",
+  "targetRoot": "src/clients/pi",
+  "movedSourceFiles": 21,
+  "movedTestFiles": 11,
+  "retainedSourceDebt": [
+    "src/pi/process-session.ts",
+    "src/pi/trace-host-process.ts",
+    "src/pi/trace-host-result.ts"
+  ],
+  "constraints": [
+    "Pi Clients may compose Runtime APIs and concrete Harness adapters.",
+    "Harness adapters must not import Pi Clients.",
+    "No old-path re-exports or package aliases survive.",
+    "Module specifiers are rewritten by resolved source identity; prose is not globally replaced.",
+    "Delete this temporary manifest when the refactor completes."
+  ]
+}

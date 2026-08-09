@@ -1,4 +1,4 @@
-import type { ChangeValidationCard } from "../../changes/validation-view.ts";
+import type { ChangeValidationCard } from "../../../changes/validation-view.ts";
 import { truncateToWidth } from "./width.ts";
 
 interface PiChangeValidationCardRenderOptions {

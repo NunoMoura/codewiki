@@ -14,33 +14,33 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { registerCodewikiExtension } from "../../src/pi/extension.ts";
-import { CODEWIKI_COMMAND_NAMES } from "../../src/pi/command-catalog.ts";
+import { registerCodewikiExtension } from "../../../src/clients/pi/extension.ts";
+import { CODEWIKI_COMMAND_NAMES } from "../../../src/clients/pi/command-catalog.ts";
 import {
 	CODEWIKI_PROMPT_MARKER,
 	codewikiPromptHooksAvailable,
-} from "../../src/pi/prompt/index.ts";
+} from "../../../src/clients/pi/prompt/index.ts";
 import {
 	closeCodewikiDashboardServer,
 	restoreCodewikiDashboardServer,
-} from "../../src/dashboard/index.ts";
-import { isActiveDashboardTrace } from "../../src/dashboard/state.ts";
-import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../src/pi/rendering/message-renderers.ts";
-import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
-import { appendDevLogEntry } from "../../src/runtime/persistence/dev-log.ts";
+} from "../../../src/dashboard/index.ts";
+import { isActiveDashboardTrace } from "../../../src/dashboard/state.ts";
+import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../../src/clients/pi/rendering/message-renderers.ts";
+import { CODEWIKI_TOOL_NAMES } from "../../../src/clients/pi/tools/index.ts";
+import { appendDevLogEntry } from "../../../src/runtime/persistence/dev-log.ts";
 import {
 	CODEWIKI_FOOTER_STATUS_KEY,
 	codewikiTuiRenderersAvailable,
 	renderBootstrapCommand,
-} from "../../src/pi/tui/index.ts";
-import { shouldOpenAutomaticDashboard } from "../../src/pi/tui/footer.ts";
-import { changeTraceId } from "../../src/changes/change-trace.ts";
-import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../src/changes/triage/contracts.ts";
-import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../src/changes/triage/selection.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
-import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
-import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
-import { testPiProjectServices } from "../helpers/pi-project-services.mjs";
+} from "../../../src/clients/pi/tui/index.ts";
+import { shouldOpenAutomaticDashboard } from "../../../src/clients/pi/tui/footer.ts";
+import { changeTraceId } from "../../../src/changes/change-trace.ts";
+import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../src/changes/triage/contracts.ts";
+import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
+import { traceFilePath } from "../../../src/traces/schema.ts";
+import { createTraceHead, formatTraceText } from "../../../src/traces/writer.ts";
+import { seedChangeAcceptance } from "../../helpers/accepted-change.mjs";
+import { testPiProjectServices } from "../../helpers/pi-project-services.mjs";
 
 function registerTestExtension(pi) {
 	registerCodewikiExtension(pi, {
@@ -218,7 +218,7 @@ describe("Pi extension adapter", () => {
 		}
 		const packageJson = await readJsonFile("package.json");
 		assert.deepEqual(packageJson.pi, {
-			extensions: ["dist/pi/extension.js"],
+			extensions: ["dist/clients/pi/extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
 	});
@@ -1312,7 +1312,7 @@ describe("Pi extension adapter", () => {
 					loadMode: "local checkout",
 					sourceLabel: "local checkout ✓",
 					footerLabel: "0.3.0 local",
-					entry: "dist/pi/commands/index.js",
+					entry: "dist/clients/pi/commands/index.js",
 					packageRoot:
 						"/tmp/codewiki-bootstrap-renderer-wide-path-with-extra-text",
 					loadedFromProject: true,
@@ -1321,7 +1321,10 @@ describe("Pi extension adapter", () => {
 		);
 		assert.match(rendered.join("\n"), /✓ CodeWiki ready/);
 		assert.match(rendered.join("\n"), /local checkout ✓/);
-		assert.match(rendered.join("\n"), /dist\/pi\/commands\/index\.js/);
+		assert.match(
+			rendered.join("\n"),
+			/dist\/clients\/pi\/commands\/index\.js/,
+		);
 		assert.match(rendered.join("\n"), /Action\s+│ Count\s+│ Meaning/);
 		assert.match(rendered.join("\n"), /Next\n• You are ready/);
 		assert.match(rendered.join("\n"), /\/wiki-bootstrap/);

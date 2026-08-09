@@ -4,14 +4,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { createChangeRecord } from "../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
+import { createChangeRecord } from "../../../src/changes/records.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
 import {
 	loadPiSemanticAdapters,
 	startPiProjectCoordinatorDaemon,
-} from "../../src/pi/project-coordinator-daemon.ts";
-import { connectProjectCoordinatorClient } from "../../src/runtime/coordinator/service.ts";
-import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
+} from "../../../src/clients/pi/project-coordinator-daemon.ts";
+import { connectProjectCoordinatorClient } from "../../../src/runtime/coordinator/service.ts";
+import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
 
 test("Pi coordinator daemon loads entrypoint-isolated SDK adapters", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-pi-daemon-loader-"));

@@ -1,11 +1,11 @@
 import { truncateToWidth, visibleWidth } from "./width.ts";
-import type { BootstrapResult } from "../../project/bootstrap.ts";
+import type { BootstrapResult } from "../../../project/bootstrap.ts";
 import { CODEWIKI_DIRECT_COMMANDS } from "../command-catalog.ts";
 import type { CodewikiExtensionIdentity } from "../identity.ts";
-import type { ProjectExplainView } from "../../project/explain.ts";
-import type { WikiConfigFileResult } from "../../project/config-file.ts";
-import type { RunWikiConfigResult } from "../../project/config.ts";
-import type { ResumeView } from "../../views/types.ts";
+import type { ProjectExplainView } from "../../../project/explain.ts";
+import type { WikiConfigFileResult } from "../../../project/config-file.ts";
+import type { RunWikiConfigResult } from "../../../project/config.ts";
+import type { ResumeView } from "../../../views/types.ts";
 
 export interface CommandRenderOptions {
 	width?: number;

@@ -10,7 +10,7 @@ import {
 	createChangeRecord,
 } from "../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
-import { registerRuntimeToolRouting } from "../../src/pi/runtime-tool-routing.ts";
+import { registerRuntimeToolRouting } from "../../src/clients/pi/runtime-tool-routing.ts";
 import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 

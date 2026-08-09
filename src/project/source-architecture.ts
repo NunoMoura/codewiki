@@ -4,6 +4,7 @@ export const CURRENT_SOURCE_ROOTS = [
 	"change-trace",
 	"changes",
 	"cli",
+	"clients",
 	"dashboard",
 	"decision",
 	"error-handling",
@@ -75,6 +76,7 @@ export const CORE_SOURCE_ROOTS = [
 export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"api",
 	"cli",
+	"clients",
 	"dashboard",
 	"harnesses",
 	"pi",

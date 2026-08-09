@@ -331,7 +331,7 @@ Package manifest retains:
 ```json
 {
   "pi": {
-    "extensions": ["dist/pi/extension.js"]
+    "extensions": ["dist/clients/pi/extension.js"]
   }
 }
 ```

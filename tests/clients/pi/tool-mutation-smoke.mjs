@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { changeTraceId } from "../../src/changes/change-trace.ts";
-import { registerCodewikiExtension } from "../../src/pi/extension.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
-import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
-import { testPiProjectServices } from "../helpers/pi-project-services.mjs";
+import { changeTraceId } from "../../../src/changes/change-trace.ts";
+import { registerCodewikiExtension } from "../../../src/clients/pi/extension.ts";
+import { traceFilePath } from "../../../src/traces/schema.ts";
+import { seedChangeAcceptance } from "../../helpers/accepted-change.mjs";
+import { testPiProjectServices } from "../../helpers/pi-project-services.mjs";
 
 function mockPi() {
 	const tools = [];

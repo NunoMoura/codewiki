@@ -56,7 +56,7 @@ try {
 		"./package.json",
 		"./pi-sdk",
 	]);
-	assert.deepEqual(manifest.pi, { extensions: ["dist/pi/extension.js"] });
+	assert.deepEqual(manifest.pi, { extensions: ["dist/clients/pi/extension.js"] });
 
 	const env = {
 		...process.env,

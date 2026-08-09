@@ -7,9 +7,9 @@ import { describe, it } from "node:test";
 import {
 	createDashboardSessionActionControl,
 	parseDashboardSessionActionCommand,
-} from "../../src/dashboard/session-actions.ts";
-import { startCodewikiDashboardServer } from "../../src/dashboard/server.ts";
-import { createPiDashboardSessionActionControl } from "../../src/pi/dashboard-session-actions.ts";
+} from "../../../src/dashboard/session-actions.ts";
+import { startCodewikiDashboardServer } from "../../../src/dashboard/server.ts";
+import { createPiDashboardSessionActionControl } from "../../../src/clients/pi/dashboard-session-actions.ts";
 
 function command(state, overrides = {}) {
 	return {

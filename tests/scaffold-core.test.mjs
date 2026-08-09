@@ -34,7 +34,7 @@ describe("fresh scaffold", () => {
 		assert.equal(packageJson.engines.node, ">=20.6.0");
 		assert.equal(packageJson.bin, undefined);
 		assert.deepEqual(packageJson.pi, {
-			extensions: ["dist/pi/extension.js"],
+			extensions: ["dist/clients/pi/extension.js"],
 		});
 		assert.equal(packageJson.keywords.includes("pi-package"), true);
 		assert.deepEqual(packageJson.files, [

@@ -1,11 +1,11 @@
 import {
 	createDashboardPreviewControl,
 	type DashboardPreviewControl,
-} from "../preview/dashboard-control.ts";
+} from "../../preview/dashboard-control.ts";
 import {
 	createPreviewCoordinator,
 	type PreviewCoordinator,
-} from "../preview/coordinator.ts";
+} from "../../preview/coordinator.ts";
 
 interface PiPreviewRuntime {
 	control: DashboardPreviewControl;

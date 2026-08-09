@@ -1,7 +1,7 @@
 import {
 	createDashboardSessionActionControl,
 	type DashboardSessionActionControl,
-} from "../dashboard/session-actions.ts";
+} from "../../dashboard/session-actions.ts";
 import type {
 	CodewikiExtensionApi,
 	CodewikiExtensionContext,
