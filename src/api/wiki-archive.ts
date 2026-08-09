@@ -4,7 +4,7 @@ import { traceGoalCloseBlockers } from "../views/trace-goals.ts";
 import {
 	appendRuntimeTraceRecord,
 	type AppendTraceResult,
-} from "../runtime/trace-writer.ts";
+} from "../runtime/persistence/trace.ts";
 import {
 	replaceTraceRecords,
 	type ReplaceTraceRecordsResult,

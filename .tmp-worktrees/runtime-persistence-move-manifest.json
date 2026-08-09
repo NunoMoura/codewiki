@@ -1,0 +1,49 @@
+{
+  "slice": "runtime-persistence-partition",
+  "intent": "Move generic Runtime scratch, development-log, and canonical trace append mechanics into the ratified persistence responsibility without changing behavior.",
+  "moves": [
+    {
+      "from": "src/runtime/dev-log.ts",
+      "to": "src/runtime/persistence/dev-log.ts",
+      "owner": "runtime/persistence"
+    },
+    {
+      "from": "src/runtime/tmp.ts",
+      "to": "src/runtime/persistence/tmp.ts",
+      "owner": "runtime/persistence"
+    },
+    {
+      "from": "src/runtime/trace-writer.ts",
+      "to": "src/runtime/persistence/trace.ts",
+      "owner": "runtime/persistence"
+    },
+    {
+      "from": "tests/runtime/dev-log.test.mjs",
+      "to": "tests/runtime/persistence/dev-log.test.mjs",
+      "owner": "runtime/persistence tests"
+    }
+  ],
+  "deferred": [
+    {
+      "path": "src/runtime/lifecycle.ts",
+      "reason": "Legacy trace-host lifecycle debt; moving it would rename debt rather than establish target lifecycle ownership."
+    },
+    {
+      "path": "src/runtime/policy.ts",
+      "reason": "Combines claim, heartbeat, and lease policy and requires a dedicated responsibility split."
+    },
+    {
+      "path": "src/runtime/user-standard-distillation.ts",
+      "reason": "Likely Verification/custom-check composition; requires a separate semantic ownership cut."
+    },
+    {
+      "paths": [
+        "src/runtime/trace-execution-policy.ts",
+        "src/runtime/trace-host-runner.ts",
+        "src/runtime/trace-host-supervisor.ts"
+      ],
+      "reason": "Explicitly preserved legacy trace-host debt."
+    }
+  ],
+  "method": "git mv plus module-specifier-only rewrites; no compatibility exports"
+}

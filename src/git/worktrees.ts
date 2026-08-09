@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { pathMatchesPattern } from "../knowledge/source-map.ts";
-import { traceTmpPath } from "../runtime/tmp.ts";
+import { traceTmpPath } from "../runtime/persistence/tmp.ts";
 import type { WikiConfigWorktreeIsolation } from "../project/config.ts";
 import type { RuntimeWorkUnitClaimCandidate } from "../runtime/claims/work-unit-selection.ts";
 

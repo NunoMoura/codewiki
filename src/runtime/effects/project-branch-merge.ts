@@ -8,7 +8,7 @@ import type {
 	ProjectCoordinatorJob,
 } from "../coordinator/project.ts";
 import type { RuntimeReactor } from "../coordinator/reactor.ts";
-import { appendRuntimeTraceRecord } from "../trace-writer.ts";
+import { appendRuntimeTraceRecord } from "../persistence/trace.ts";
 import {
 	assertMergedCheckout,
 	promoteProjectBranch,

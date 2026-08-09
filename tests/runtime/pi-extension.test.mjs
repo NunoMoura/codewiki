@@ -27,7 +27,7 @@ import {
 import { isActiveDashboardTrace } from "../../src/dashboard/state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../src/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../src/pi/tools/index.ts";
-import { appendDevLogEntry } from "../../src/runtime/dev-log.ts";
+import { appendDevLogEntry } from "../../src/runtime/persistence/dev-log.ts";
 import {
 	CODEWIKI_FOOTER_STATUS_KEY,
 	codewikiTuiRenderersAvailable,

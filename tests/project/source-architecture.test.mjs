@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { relative, resolve } from "node:path";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { join, relative, resolve } from "node:path";
 import { describe, it } from "node:test";
 import {
 	CORE_SOURCE_ROOTS,
@@ -177,6 +177,7 @@ describe("source architecture", () => {
 	it("does not repeat responsibility directory names in filenames", () => {
 		const repeatedPrefixes = {
 			"src/runtime/coordinator": /^(?:coordinator-|project-coordinator)/u,
+			"src/runtime/persistence": /^persistence-/u,
 			"src/runtime/workers": /^(?:worker-|implementation-worker-)/u,
 			"src/harnesses/container": /^(?:container-|oci-container-)/u,
 		};
@@ -184,6 +185,19 @@ describe("source architecture", () => {
 			for (const filename of readdirSync(directory)) {
 				assert.equal(repeatedPrefix.test(filename), false, `${directory}/${filename}`);
 			}
+		}
+	});
+
+	it("keeps generic persistence mechanics under the Runtime persistence owner", () => {
+		for (const obsolete of ["dev-log.ts", "tmp.ts", "trace-writer.ts"]) {
+			assert.equal(existsSync(join(sourceRoot, "runtime", obsolete)), false, obsolete);
+		}
+		for (const current of ["dev-log.ts", "tmp.ts", "trace.ts"]) {
+			assert.equal(
+				existsSync(join(sourceRoot, "runtime", "persistence", current)),
+				true,
+				current,
+			);
 		}
 	});
 

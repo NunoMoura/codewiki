@@ -1,4 +1,4 @@
-import type { DevLogEntry } from "../runtime/dev-log.ts";
+import type { DevLogEntry } from "../runtime/persistence/dev-log.ts";
 
 export interface DashboardDevLogItem {
 	id: string;

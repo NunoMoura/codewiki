@@ -9,11 +9,11 @@ import {
 	CodewikiTraceError,
 	TraceAppendConflictError,
 } from "../error-handling/trace-errors.ts";
-import { applyDevLogRetention } from "./dev-log.ts";
+import { applyDevLogRetention } from "./persistence/dev-log.ts";
 import {
 	appendRuntimeTraceRecords,
 	type AppendTraceBatchResult,
-} from "./trace-writer.ts";
+} from "./persistence/trace.ts";
 import { normalizeTraceRefs } from "../traces/refs.ts";
 import { traceFilePath } from "../traces/schema.ts";
 import type { TraceEvent, TraceLoop } from "../traces/types.ts";

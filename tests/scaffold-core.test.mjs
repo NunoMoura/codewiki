@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../src/index.ts";
 import * as packageApi from "../src/index.ts";
 import * as publicApi from "../src/api/index.ts";
-import { traceTmpPath } from "../src/runtime/tmp.ts";
+import { traceTmpPath } from "../src/runtime/persistence/tmp.ts";
 import packageJson from "../package.json" with { type: "json" };
 import tsconfig from "../tsconfig.json" with { type: "json" };
 import buildTsconfig from "../tsconfig.build.json" with { type: "json" };

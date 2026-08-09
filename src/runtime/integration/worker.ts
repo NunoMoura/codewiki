@@ -18,7 +18,7 @@ import type {
 import { readTraceFile } from "../../traces/reader.ts";
 import { traceFilePath } from "../../traces/schema.ts";
 import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
-import { appendRuntimeTraceRecord } from "../trace-writer.ts";
+import { appendRuntimeTraceRecord } from "../persistence/trace.ts";
 import {
 	assertImplementationWorkerAssignment,
 	assertImplementationWorkerReport,

@@ -42,7 +42,7 @@ import {
 	type DashboardPreviewControl,
 	unavailableDashboardPreviewControl,
 } from "../preview/dashboard-control.ts";
-import { readDevLog } from "../runtime/dev-log.ts";
+import { readDevLog } from "../runtime/persistence/dev-log.ts";
 import type { ProjectCoordinatorClientInput } from "../runtime/coordinator/project.ts";
 import { connectEnsuredProjectCoordinatorClient } from "../runtime/coordinator/process.ts";
 import type { ProjectCoordinatorRemoteClient } from "../runtime/coordinator/service.ts";

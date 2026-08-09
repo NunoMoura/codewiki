@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { it } from "node:test";
-import { appendDevLogEntry, readDevLog } from "../../src/runtime/dev-log.ts";
+import { appendDevLogEntry, readDevLog } from "../../src/runtime/persistence/dev-log.ts";
 import {
 	appendRuntimeHostLifecycleEvents,
 	createRuntimeHostLifecycleEvent,

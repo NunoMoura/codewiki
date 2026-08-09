@@ -8,7 +8,7 @@ import type {
 	TraceHostSessionInput,
 	TraceHostSessionStart,
 } from "../runtime/trace-host-runner.ts";
-import { traceTmpPath } from "../runtime/tmp.ts";
+import { traceTmpPath } from "../runtime/persistence/tmp.ts";
 import { runDetachedTraceHostCommand } from "./trace-host-process.ts";
 import {
 	verifyWorkerExecutionUsage,

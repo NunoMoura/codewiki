@@ -9,7 +9,7 @@ import {
 	createDevLogEntry,
 	devLogDirectory,
 	readDevLog,
-} from "../../src/runtime/dev-log.ts";
+} from "../../../src/runtime/persistence/dev-log.ts";
 
 function entry(index = 1, overrides = {}) {
 	return {
@@ -25,7 +25,7 @@ function entry(index = 1, overrides = {}) {
 		durationMs: 42,
 		exitCode: 0,
 		summary: "Targeted tests passed.",
-		refs: ["tests/runtime/dev-log.test.mjs"],
+		refs: ["tests/runtime/persistence/dev-log.test.mjs"],
 		...overrides,
 	};
 }

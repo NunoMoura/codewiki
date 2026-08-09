@@ -129,6 +129,13 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-j
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-job-id.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-executor.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "dev-log.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "tmp.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "trace.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "trace.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "dev-log.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "tmp.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "trace-writer.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), true);

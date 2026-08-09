@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { projectDevLog } from "../../src/dashboard/dev-log-projection.ts";
-import { createDevLogEntry } from "../../src/runtime/dev-log.ts";
+import { createDevLogEntry } from "../../src/runtime/persistence/dev-log.ts";
 
 describe("dashboard Dev Log projection", () => {
 	it("projects bounded newest-first diagnostics without adding authority", () => {

@@ -59,7 +59,7 @@ import {
 	appendSemanticLoopReport,
 	assertSemanticLoopReportBatch,
 	type AppendSemanticLoopReportResult,
-} from "../runtime/trace-writer.ts";
+} from "../runtime/persistence/trace.ts";
 import type { TraceEvent, TraceRecord } from "../traces/types.ts";
 import type {
 	WorkState,

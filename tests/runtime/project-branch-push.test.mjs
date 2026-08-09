@@ -19,7 +19,7 @@ import { createShellWorktreeCommandRunner } from "../../src/git/worktree-shell-r
 import { projectBranchMergeJob } from "../../src/runtime/effects/project-branch-merge.ts";
 import { projectBranchPushJob } from "../../src/runtime/effects/project-branch-push.ts";
 import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
-import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";
+import { appendRuntimeTraceRecords } from "../../src/runtime/persistence/trace.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
 

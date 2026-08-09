@@ -13,7 +13,7 @@ import { readImplementationWorkerDispatchPackets } from "../../../src/runtime/wo
 import { ImplementationWorkerDispatcher } from "../../../src/runtime/workers/dispatch.ts";
 import { implementationWorkerClaimReleaseJob } from "../../../src/runtime/claims/release.ts";
 import { ProjectCoordinator } from "../../../src/runtime/coordinator/project.ts";
-import { appendRuntimeTraceRecords } from "../../../src/runtime/trace-writer.ts";
+import { appendRuntimeTraceRecords } from "../../../src/runtime/persistence/trace.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,

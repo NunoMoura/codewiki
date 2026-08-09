@@ -8,7 +8,7 @@ import {
 import {
 	appendRuntimeTraceRecords,
 	type AppendTraceBatchResult,
-} from "../trace-writer.ts";
+} from "../persistence/trace.ts";
 import { traceFilePath } from "../../traces/schema.ts";
 import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 

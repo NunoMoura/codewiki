@@ -14,7 +14,7 @@ import test from "node:test";
 
 import { productPublicationJob } from "../../src/runtime/effects/product-publication.ts";
 import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
-import { appendRuntimeTraceRecords } from "../../src/runtime/trace-writer.ts";
+import { appendRuntimeTraceRecords } from "../../src/runtime/persistence/trace.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
 
