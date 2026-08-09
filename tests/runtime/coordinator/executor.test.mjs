@@ -3,14 +3,15 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
-import { createChangeRecord } from "../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
+import { createChangeRecord } from "../../../src/changes/records.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { createCodeWikiLoopExecutionPorts } from "../../../src/api/loop-execution.ts";
 import {
 	runRuntimeSelectedSemanticReaction,
 	runRuntimeSemanticExecutor,
-} from "../../src/runtime/semantic-executor.ts";
-import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
-import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
+} from "../../../src/runtime/coordinator/executor.ts";
+import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
+import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
 
 const roots = [];
 
@@ -51,6 +52,7 @@ describe("runtime semantic executor", () => {
 					throw new Error("adapter must not run");
 				},
 			},
+			executionPorts: {},
 		});
 
 		assert.equal(result.status, "quiescent");
@@ -74,6 +76,7 @@ describe("runtime semantic executor", () => {
 					};
 				},
 			},
+			executionPorts: {},
 		});
 		assert.equal(result.status, "quiescent");
 		assert.equal(calls, 0);
@@ -98,6 +101,7 @@ describe("runtime semantic executor", () => {
 				},
 				runtimeJobId: `runtime-reaction:${"2".repeat(64)}`,
 				adapters: {},
+				executionPorts: {},
 			}),
 			/authenticated exact-revision selection/,
 		);
@@ -109,6 +113,27 @@ describe("runtime semantic executor", () => {
 		const seeded = await seedRuntimeImplementation(root, {
 			suffix: "semantic-command-results",
 		});
+		let unavailableAdapterCalls = 0;
+		await assert.rejects(
+			runRuntimeSemanticExecutor({
+				repoRoot: root,
+				trigger: { kind: "manual_resume" },
+				mode: "preview",
+				maxIterations: 1,
+				adapters: {
+					implementation() {
+						unavailableAdapterCalls += 1;
+						return {};
+					},
+				},
+				executionPorts: {},
+			}),
+			/Runtime implementation execution port is unavailable\./,
+		);
+		assert.equal(unavailableAdapterCalls, 0);
+
+		const executionPorts = createCodeWikiLoopExecutionPorts();
+		let executionCalls = 0;
 		const result = await runRuntimeSemanticExecutor({
 			repoRoot: root,
 			trigger: { kind: "manual_resume" },
@@ -132,8 +157,16 @@ describe("runtime semantic executor", () => {
 					],
 				}),
 			},
+			executionPorts: {
+				...executionPorts,
+				implementation(...args) {
+					executionCalls += 1;
+					return executionPorts.implementation(...args);
+				},
+			},
 		});
 
+		assert.equal(executionCalls, 1);
 		assert.equal(result.outcomes[0].loop, "implementation");
 		assert.deepEqual(
 			result.outcomes[0].result.loopResult.changes[0].checkResults,

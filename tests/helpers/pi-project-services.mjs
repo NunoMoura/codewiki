@@ -1,9 +1,11 @@
+import { createCodeWikiLoopExecutionPorts } from "../../src/api/loop-execution.ts";
 import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
 import { runtimeSemanticJobId } from "../../src/runtime/coordinator/job-id.ts";
-import { runRuntimeSelectedSemanticReaction } from "../../src/runtime/semantic-executor.ts";
+import { runRuntimeSelectedSemanticReaction } from "../../src/runtime/coordinator/executor.ts";
 
 export function testPiProjectServices() {
 	const reactors = new Map();
+	const executionPorts = createCodeWikiLoopExecutionPorts();
 	const reactorFor = (root) => {
 		const current = reactors.get(root);
 		if (current) return current;
@@ -51,6 +53,7 @@ export function testPiProjectServices() {
 				reaction,
 				runtimeJobId: runtimeSemanticJobId(reaction, mode),
 				adapters,
+				executionPorts,
 				context: {
 					decision: {
 						authority: {

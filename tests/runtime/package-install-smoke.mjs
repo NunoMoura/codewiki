@@ -61,6 +61,7 @@ import {
 	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 	ImplementationWorkerDispatcher,
 	connectProjectCoordinatorClient,
+	createCodeWikiLoopExecutionPorts,
 	createOciContainerImplementationWorkerAdapter,
 	ensureProjectCoordinatorService,
 	scheduleImplementationWorkerClaimRelease,
@@ -121,9 +122,13 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "rea
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactions.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactor.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "job-id.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "executor.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "executor.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "loop-execution.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-job-id.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-executor.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), true);
@@ -211,6 +216,7 @@ assert.equal(typeof remoteClient.events, "function");
 assert.equal((await remoteClient.events(0)).events[0].state, "client_connected");
 assert.equal(remoteClient.semanticExecution, "client_candidate");
 assert.equal(typeof scheduleRuntimeReactions, "function");
+assert.equal(typeof createCodeWikiLoopExecutionPorts, "function");
 assert.equal(typeof scheduleImplementationWorkerAssignments, "function");
 assert.equal(typeof scheduleImplementationWorkerClaimRelease, "function");
 assert.equal(typeof scheduleImplementationWorkerIntegration, "function");

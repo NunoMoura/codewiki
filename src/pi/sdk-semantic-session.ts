@@ -26,7 +26,7 @@ import type {
 	RuntimeImplementationInvocation,
 	RuntimePlanningInvocation,
 	RuntimeSemanticAdapters,
-} from "../runtime/semantic-executor.ts";
+} from "../runtime/coordinator/executor.ts";
 import {
 	assertNativeDecisionCandidateProductionRequest,
 	type NativeDecisionCandidateProducer,

@@ -5,6 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { createChangeRecord } from "../../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { createCodeWikiLoopExecutionPorts } from "../../../src/api/loop-execution.ts";
 import { readTraceFileSnapshot } from "../../../src/traces/reader.ts";
 import { traceFilePath } from "../../../src/traces/schema.ts";
 import { ProjectCoordinator } from "../../../src/runtime/coordinator/project.ts";
@@ -19,6 +20,8 @@ import {
 } from "../../../src/runtime/coordinator/reactions.ts";
 import {buildProjectWorkState} from "../../../src/work-state/project.ts";
 import {acceptedChangeFixture} from "../../helpers/accepted-change.mjs";
+
+const executionPorts = createCodeWikiLoopExecutionPorts();
 
 async function fixture(id) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-runtime-reaction-"));
@@ -122,12 +125,14 @@ test("Implementation reaction identity includes stable exact worker-report conte
 		repoRoot: "/tmp/codewiki-worker-report-context",
 		reaction,
 		adapters: {},
+		executionPorts,
 		implementationWorkerReports: [workerReport],
 	});
 	const reordered = runtimeReactionJob({
 		repoRoot: "/tmp/codewiki-worker-report-context",
 		reaction,
 		adapters: {},
+		executionPorts,
 		implementationWorkerReports: [
 			{
 				refs: workerReport.refs,
@@ -143,6 +148,7 @@ test("Implementation reaction identity includes stable exact worker-report conte
 		repoRoot: "/tmp/codewiki-worker-report-context",
 		reaction,
 		adapters: {},
+		executionPorts,
 		implementationWorkerReports: [
 			{ ...workerReport, refs: ["runtime-worker-report:changed"] },
 		],
@@ -170,6 +176,7 @@ test("legacy runtime reactions cannot create Decision jobs", async () => {
 							return approvingAdapters().decision();
 						},
 					},
+					executionPorts,
 				}),
 			/authenticated exact-revision selection/,
 		);
@@ -188,6 +195,7 @@ test("generic service reactions do not auto-execute pending Decisions", async ()
 		let adapterCalls = 0;
 		service = await startProjectCoordinatorService(root, {
 			generationId: "generation:service-pending",
+			loopExecutionPorts: executionPorts,
 			semanticAdapters: {
 				decision() {
 					adapterCalls += 1;
@@ -228,6 +236,7 @@ test("remote candidate submission cannot substitute for Decision selection", asy
 	try {
 		service = await startProjectCoordinatorService(root, {
 			generationId: "generation:transport",
+			loopExecutionPorts: executionPorts,
 			semanticContext: decisionContext("confirmation:transport"),
 		});
 		client = await connectProjectCoordinatorClient(root, {

@@ -1,6 +1,7 @@
 import { readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { createCodeWikiLoopExecutionPorts } from "../api/loop-execution.ts";
 import {
 	createShellWorktreeCommandRunner,
 	type WorktreeCommandExecFile,
@@ -23,9 +24,10 @@ import type {
 	ProductReleasePlan,
 } from "../runtime/effects/product-release-contract.ts";
 import type {
+	RuntimeLoopExecutionPorts,
 	RuntimeSemanticAdapters,
 	RuntimeSemanticContext,
-} from "../runtime/semantic-executor.ts";
+} from "../runtime/coordinator/executor.ts";
 import {
 	createPiNativeDecisionStartOptions,
 	type PiNativeDecisionHostOptions,
@@ -38,6 +40,7 @@ export type PiSemanticAdapterLoader = (
 
 export interface PiProjectCoordinatorDaemonOptions {
 	loadSemanticAdapters?: PiSemanticAdapterLoader;
+	loopExecutionPorts?: RuntimeLoopExecutionPorts;
 	semanticContext?: RuntimeSemanticContext;
 	workerAdapter?: ImplementationWorkerAdapter;
 	worktreeExecFile?: WorktreeCommandExecFile;
@@ -103,6 +106,8 @@ export async function startPiProjectCoordinatorDaemon(
 	}
 	return startProjectCoordinatorDaemon(canonicalRoot, {
 		...(semanticAdapters ? { semanticAdapters } : {}),
+		loopExecutionPorts:
+			options.loopExecutionPorts || createCodeWikiLoopExecutionPorts(),
 		...(options.now ? {now: options.now} : {}),
 		...(options.semanticContext
 			? { semanticContext: options.semanticContext }

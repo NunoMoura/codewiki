@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
+import { createCodeWikiLoopExecutionPorts } from "../../../src/api/loop-execution.ts";
 import { writeWikiConfigFile } from "../../../src/project/config-file.ts";
 import { resolveWikiConfig } from "../../../src/project/config.ts";
 import { readImplementationWorkerDispatchPackets } from "../../../src/runtime/workers/implementation-artifacts.ts";
@@ -360,6 +361,7 @@ test("authenticated project-service clients trigger automatic worker reconciliat
 		await writeWikiConfigFile(root, automaticConfig());
 		service = await startProjectCoordinatorService(root, {
 			generationId: "generation:worker-service-dispatch",
+			loopExecutionPorts: createCodeWikiLoopExecutionPorts(),
 			semanticAdapters: {
 				implementation(invocation) {
 					semanticExecutions += 1;

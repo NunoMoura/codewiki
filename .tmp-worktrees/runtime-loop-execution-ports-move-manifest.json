@@ -1,0 +1,27 @@
+{
+  "slice": "runtime-loop-execution-port-inversion",
+  "rationale": "Runtime Coordinator must select and schedule semantic work through injected Loop execution ports instead of importing concrete wiki-decide, wiki-plan, and wiki-implement implementations.",
+  "moves": [
+    {
+      "from": "src/runtime/semantic-executor.ts",
+      "to": "src/runtime/coordinator/executor.ts"
+    },
+    {
+      "from": "tests/runtime/semantic-executor.test.mjs",
+      "to": "tests/runtime/coordinator/executor.test.mjs"
+    }
+  ],
+  "newFiles": [
+    {
+      "path": "src/api/loop-execution.ts",
+      "responsibility": "Bind concrete CodeWiki Loop API implementations to Runtime-owned execution ports at the outer API composition boundary."
+    }
+  ],
+  "invariants": [
+    "Runtime Coordinator imports no concrete API implementation.",
+    "Missing Loop execution capability fails closed without semantic fallback.",
+    "Candidate producer ports remain separate from Loop execution ports.",
+    "Preview, append, expected-head CAS retry, exact selection, and route behavior remain unchanged."
+  ],
+  "compatibilityExports": false
+}

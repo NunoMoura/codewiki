@@ -86,10 +86,11 @@ import { parseImplementationCandidateContent } from "../../implementation/candid
 import { parsePlanningCandidateContent } from "../../planning/candidate-content.ts";
 import type {
 	RunRuntimeSelectedSemanticReactionResult,
+	RuntimeLoopExecutionPorts,
 	RuntimeSemanticAdapters,
 	RuntimeSemanticContext,
 	RuntimeSemanticMode,
-} from "../semantic-executor.ts";
+} from "./executor.ts";
 
 const DEFAULT_CLIENT_LEASE_MS = 30_000;
 const DEFAULT_REQUEST_TIMEOUT_MS = 60_000;
@@ -108,6 +109,7 @@ export interface ProjectCoordinatorServiceOptions
 	now?: () => string;
 	clock?: () => number;
 	semanticAdapters?: RuntimeSemanticAdapters;
+	loopExecutionPorts?: RuntimeLoopExecutionPorts;
 	semanticContext?: RuntimeSemanticContext;
 	maxReactions?: number;
 	maxPlanningChanges?: number;
@@ -220,6 +222,7 @@ interface ServiceRuntime {
 	reactor: RuntimeReactor;
 	workerDispatcher?: ImplementationWorkerDispatcher;
 	semanticAdapters?: RuntimeSemanticAdapters;
+	loopExecutionPorts?: RuntimeLoopExecutionPorts;
 	semanticContext?: RuntimeSemanticContext;
 	maxReactions?: number;
 	maxPlanningChanges?: number;
@@ -337,6 +340,7 @@ export async function startProjectCoordinatorService(
 			reactor,
 			workerDispatcher,
 			semanticAdapters: options.semanticAdapters,
+			loopExecutionPorts: options.loopExecutionPorts,
 			semanticContext: options.semanticContext,
 			maxReactions: boundedOptionalInteger(
 				options.maxReactions,
@@ -910,6 +914,10 @@ async function handleRuntimeCandidate(
 	if (loop === "decision") {
 		throw new HttpError(409, "decision_attention_selection_required");
 	}
+	const executionPorts = runtime.loopExecutionPorts;
+	if (!executionPorts) {
+		throw new HttpError(503, "loop_execution_ports_unavailable");
+	}
 	const mode = runtimeSemanticMode(body.mode);
 	lease.activeRequests += 1;
 	try {
@@ -927,6 +935,7 @@ async function handleRuntimeCandidate(
 			reactor: runtime.reactor,
 			reaction: observation.reaction,
 			adapters,
+			executionPorts,
 			context: runtime.semanticContext,
 			mode,
 			maxCasRetries: runtime.maxCasRetries,
@@ -980,6 +989,10 @@ async function handleRuntimeReaction(
 	if (!adapters) {
 		throw new HttpError(503, "semantic_adapters_unavailable");
 	}
+	const executionPorts = runtime.loopExecutionPorts;
+	if (!executionPorts) {
+		throw new HttpError(503, "loop_execution_ports_unavailable");
+	}
 	lease.activeRequests += 1;
 	try {
 		const workerReconciliation = await runtime.workerDispatcher
@@ -991,6 +1004,7 @@ async function handleRuntimeReaction(
 			reactor: runtime.reactor,
 			trigger,
 			adapters,
+			executionPorts,
 			context: runtime.semanticContext,
 			mode,
 			maxReactions: runtime.maxReactions,

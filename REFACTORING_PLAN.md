@@ -62,7 +62,7 @@ Use breaking clean cuts. Do not add compatibility aliases, old-path re-exports, 
 - [x] Partition authenticated Decision admission, attempt scheduling, and canonical writes into generic Runtime responsibility directories.
 - [x] Partition Change admission, bounded research collection, and worker handoff into generic Runtime responsibility directories.
 - [x] Partition reaction selection, reaction scheduling, and semantic job identity into Runtime Coordinator.
-- [ ] Invert `src/runtime/semantic-executor.ts` concrete API imports through injected Loop execution ports before relocating it.
+- [x] Invert concrete Loop API imports through injected execution ports and relocate the semantic executor to `src/runtime/coordinator/executor.ts`.
 - [x] Remove repeated responsibility prefixes from Coordinator, Worker, and Container filenames.
 - [ ] Move generic scheduling, persistence, synchronization, remaining worker mechanics, Integration, recovery, and lifecycle into responsibility-named Runtime subdirectories.
 - [x] Remove `src/runtime/loop-exit-runtime.ts`; Loop declarations remain owner-local and generic composition lives in Verification.

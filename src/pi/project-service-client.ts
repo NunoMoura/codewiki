@@ -19,7 +19,7 @@ import type {
 } from "../runtime/coordinator/service.ts";
 import type { RuntimeReaction, RuntimeTrigger } from "../runtime/coordinator/reactor.ts";
 import type { RuntimeReactionJobReceipt } from "../runtime/coordinator/reactions.ts";
-import type { RuntimeSemanticMode } from "../runtime/semantic-executor.ts";
+import type { RuntimeSemanticMode } from "../runtime/coordinator/executor.ts";
 import { spawnPiProjectCoordinatorDaemon } from "./project-coordinator-daemon.ts";
 import type { CodewikiExtensionContext } from "./types.ts";
 

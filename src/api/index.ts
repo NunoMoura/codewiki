@@ -233,7 +233,7 @@ export type {
 	ChangeIntakeSourceAuthenticator,
 	ChangeIntakeSourceCorrelator,
 } from "../runtime/admission/change.ts";
-export { runRuntimeSemanticExecutor } from "../runtime/semantic-executor.ts";
+export { runRuntimeSemanticExecutor } from "../runtime/coordinator/executor.ts";
 export type {
 	RunRuntimeSemanticExecutorInput,
 	RunRuntimeSemanticExecutorResult,
@@ -241,13 +241,14 @@ export type {
 	RuntimeDecisionInvocation,
 	RuntimeImplementationContext,
 	RuntimeImplementationInvocation,
+	RuntimeLoopExecutionPorts,
 	RuntimePlanningContext,
 	RuntimePlanningInvocation,
 	RuntimeSemanticAdapters,
 	RuntimeSemanticContext,
 	RuntimeSemanticMode,
 	RuntimeSemanticOutcome,
-} from "../runtime/semantic-executor.ts";
+} from "../runtime/coordinator/executor.ts";
 export type {
 	CreateRuntimeHandoffManifestOptions,
 	RuntimeHandoffAction,

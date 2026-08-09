@@ -9,7 +9,7 @@ import {
 	type RunWikiChangeResult,
 } from "../../api/index.ts";
 import { wikiChangeOperationMutates } from "../../api/wiki-change.ts";
-import type { RuntimeSemanticMode } from "../../runtime/semantic-executor.ts";
+import type { RuntimeSemanticMode } from "../../runtime/coordinator/executor.ts";
 import type { RuntimeReaction } from "../../runtime/coordinator/reactor.ts";
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import { buildChangeValidationCard } from "../../changes/validation-view.ts";

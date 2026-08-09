@@ -1,47 +1,45 @@
-import {
-	runWikiDecide,
-	type RunWikiDecideInput,
-	type RunWikiDecideResult,
-} from "../api/wiki-decide.ts";
-import {
-	runRuntimeSelectedWikiImplement,
-	type ImplementationEvidenceSubmission,
-	type RunWikiImplementResult,
-} from "../api/wiki-implement.ts";
-import {
-	runRuntimeSelectedWikiPlan,
-	type RunWikiPlanInput,
-	type RunWikiPlanResult,
-} from "../api/wiki-plan.ts";
+import type {
+	RunWikiDecideInput,
+	RunWikiDecideResult,
+} from "../../api/wiki-decide.ts";
+import type {
+	ImplementationEvidenceSubmission,
+	RunWikiImplementInput,
+	RunWikiImplementResult,
+} from "../../api/wiki-implement.ts";
+import type {
+	RunWikiPlanInput,
+	RunWikiPlanResult,
+} from "../../api/wiki-plan.ts";
 import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
-} from "../decision/candidate-proposal.ts";
-import type { ChangeDecisionAuthority } from "../decision/change-quality.ts";
-import { TraceAppendConflictError } from "../error-handling/trace-errors.ts";
-import type { CandidateProducerPort } from "../harnesses/ports.ts";
+} from "../../decision/candidate-proposal.ts";
+import type { ChangeDecisionAuthority } from "../../decision/change-quality.ts";
+import { TraceAppendConflictError } from "../../error-handling/trace-errors.ts";
+import type { CandidateProducerPort } from "../../harnesses/ports.ts";
 import {
 	parseImplementationCandidateContent,
 	type ImplementationCandidateContent,
-} from "../implementation/candidate-content.ts";
-import type { ImplementationWorkerReportInput } from "../implementation/workers.ts";
+} from "../../implementation/candidate-content.ts";
+import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
 import {
 	parsePlanningCandidateContent,
 	type PlanningCandidateContent,
-} from "../planning/candidate-content.ts";
+} from "../../planning/candidate-content.ts";
 import type {
 	WorkStateAssignment,
 	WorkStateChange,
 	WorkStateSprint,
 	WorkStateWorkItem,
-} from "../work-state/types.ts";
+} from "../../work-state/types.ts";
 import {
 	RuntimeReactor,
 	runtimeReactionsShareInvariant,
 	type RuntimeObservation,
 	type RuntimeReaction,
 	type RuntimeTrigger,
-} from "./coordinator/reactor.ts";
+} from "./reactor.ts";
 
 export type RuntimeSemanticMode = "preview" | "append";
 
@@ -101,6 +99,22 @@ export interface RuntimeSemanticAdapters {
 	>;
 }
 
+/** Runtime-selected Loop execution capabilities supplied by outer composition. */
+export interface RuntimeLoopExecutionPorts {
+	decision?: (
+		input: RunWikiDecideInput,
+	) => Promise<RunWikiDecideResult>;
+	planning?: (
+		input: RunWikiPlanInput,
+		selectedChangeIds: string[],
+	) => Promise<RunWikiPlanResult>;
+	implementation?: (
+		input: RunWikiImplementInput,
+		observation: RuntimeObservation,
+		beforeAppend?: () => void | Promise<void>,
+	) => Promise<RunWikiImplementResult>;
+}
+
 export type RuntimeSemanticOutcome =
 	| { loop: "decision"; result: RunWikiDecideResult }
 	| { loop: "planning"; result: RunWikiPlanResult }
@@ -110,6 +124,7 @@ export interface RunRuntimeSemanticExecutorInput {
 	repoRoot: string;
 	trigger: RuntimeTrigger;
 	adapters: RuntimeSemanticAdapters;
+	executionPorts: RuntimeLoopExecutionPorts;
 	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxIterations?: number;
@@ -132,6 +147,7 @@ export interface RunRuntimeSelectedSemanticReactionInput {
 	reaction: RuntimeReaction;
 	runtimeJobId: string;
 	adapters: RuntimeSemanticAdapters;
+	executionPorts: RuntimeLoopExecutionPorts;
 	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxCasRetries?: number;
@@ -183,6 +199,7 @@ export async function runRuntimeSelectedSemanticReaction(
 				mode,
 				observation,
 				adapters: input.adapters,
+				executionPorts: input.executionPorts,
 				context: input.context,
 				runtimeJobId: input.runtimeJobId,
 				beforeAppend: input.beforeAppend,
@@ -279,6 +296,7 @@ export async function runRuntimeSemanticExecutor(
 				mode,
 				observation,
 				adapters: input.adapters,
+				executionPorts: input.executionPorts,
 				context: input.context,
 			});
 			outcomes.push(outcome);
@@ -345,6 +363,7 @@ async function executeSelectedSemanticWork(input: {
 	readonly mode: RuntimeSemanticMode;
 	readonly observation: RuntimeObservation;
 	readonly adapters: RuntimeSemanticAdapters;
+	readonly executionPorts: RuntimeLoopExecutionPorts;
 	readonly context?: RuntimeSemanticContext;
 	readonly runtimeJobId?: string;
 	readonly beforeAppend?: () => void | Promise<void>;
@@ -355,6 +374,7 @@ async function executeSelectedSemanticWork(input: {
 		mode,
 		observation,
 		adapters,
+		executionPorts,
 		context,
 		runtimeJobId,
 		beforeAppend,
@@ -363,6 +383,7 @@ async function executeSelectedSemanticWork(input: {
 	const selection = observation.reaction.selection;
 	if (!selection) throw new Error("Runtime ready reaction has no selection.");
 	if (selection.loop === "decision") {
+		if (!executionPorts.decision) throw missingExecutionPort("decision");
 		if (!adapters.decision) throw missingAdapter("decision");
 		const change = requiredChange(observation, selection.change.changeId);
 		const candidate = parseDecisionCandidateProposal(
@@ -383,14 +404,14 @@ async function executeSelectedSemanticWork(input: {
 			runtimeJobId,
 			mode: "preview",
 		};
-		const preview = await runWikiDecide(coreInput);
+		const preview = await executionPorts.decision(coreInput);
 		if (mode === "preview" || preview.report.exit.status !== "exit") {
 			return { loop: "decision", result: preview };
 		}
 		await beforeAppend?.();
 		return {
 			loop: "decision",
-			result: await runWikiDecide({
+			result: await executionPorts.decision({
 				...coreInput,
 				mode: "append",
 				expectedBytes: requiredTraceBytes(
@@ -401,6 +422,7 @@ async function executeSelectedSemanticWork(input: {
 		};
 	}
 	if (selection.loop === "planning") {
+		if (!executionPorts.planning) throw missingExecutionPort("planning");
 		if (!adapters.planning) throw missingAdapter("planning");
 		const changes = selection.planningHorizon.map((entry) =>
 			requiredChange(observation, entry.changeId),
@@ -424,7 +446,7 @@ async function executeSelectedSemanticWork(input: {
 			runtimeJobId,
 			mode: "preview",
 		};
-		const preview = await runRuntimeSelectedWikiPlan(
+		const preview = await executionPorts.planning(
 			coreInput,
 			expectedChangeIds,
 		);
@@ -434,7 +456,7 @@ async function executeSelectedSemanticWork(input: {
 		await beforeAppend?.();
 		return {
 			loop: "planning",
-			result: await runRuntimeSelectedWikiPlan(
+			result: await executionPorts.planning(
 				{
 					...coreInput,
 					mode: "append",
@@ -448,6 +470,9 @@ async function executeSelectedSemanticWork(input: {
 				expectedChangeIds,
 			),
 		};
+	}
+	if (!executionPorts.implementation) {
+		throw missingExecutionPort("implementation");
 	}
 	if (!adapters.implementation) throw missingAdapter("implementation");
 	const sprint = observation.workState.sprints.find(
@@ -480,7 +505,7 @@ async function executeSelectedSemanticWork(input: {
 	const { evidence, ...candidateContent } = candidate;
 	return {
 		loop: "implementation",
-		result: await runRuntimeSelectedWikiImplement(
+		result: await executionPorts.implementation(
 			{
 				...candidateContent,
 				...(evidence
@@ -667,6 +692,10 @@ function missingAdapter(loop: string): Error {
 	return new Error(
 		`Runtime selected ${loop}, but no ${loop} adapter is attached.`,
 	);
+}
+
+function missingExecutionPort(loop: string): Error {
+	return new Error(`Runtime ${loop} execution port is unavailable.`);
 }
 
 function boundedInteger(

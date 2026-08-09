@@ -19,12 +19,13 @@ import type {
 import { runtimeSemanticJobId } from "./job-id.ts";
 import {
 	runRuntimeSelectedSemanticReaction,
+	type RuntimeLoopExecutionPorts,
 	type RuntimeSemanticAdapters,
 	type RuntimeSemanticContext,
 	type RuntimeSemanticMode,
 	type RuntimeSemanticOutcome,
 	type RunRuntimeSelectedSemanticReactionResult,
-} from "../semantic-executor.ts";
+} from "./executor.ts";
 
 export interface RuntimeReactionJobEvidence {
 	traceId: string;
@@ -46,6 +47,7 @@ export interface RuntimeReactionJobInput {
 	reactor: RuntimeReactor;
 	reaction: RuntimeReaction;
 	adapters: RuntimeSemanticAdapters;
+	executionPorts: RuntimeLoopExecutionPorts;
 	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxCasRetries?: number;
@@ -60,6 +62,7 @@ export interface ScheduleRuntimeReactionsInput {
 	reactor: RuntimeReactor;
 	trigger: RuntimeTrigger;
 	adapters: RuntimeSemanticAdapters;
+	executionPorts: RuntimeLoopExecutionPorts;
 	context?: RuntimeSemanticContext;
 	mode?: RuntimeSemanticMode;
 	maxReactions?: number;
@@ -99,6 +102,7 @@ export async function scheduleRuntimeReactions(
 				reactor: input.reactor,
 				reaction,
 				adapters: input.adapters,
+				executionPorts: input.executionPorts,
 				context: input.context,
 				mode: input.mode,
 				implementationWorkerReports: workerReportsForReaction({
@@ -184,6 +188,7 @@ export function runtimeReactionJob(
 				reaction: input.reaction,
 				runtimeJobId: jobId,
 				adapters: input.adapters,
+				executionPorts: input.executionPorts,
 				context: input.context,
 				mode,
 				maxCasRetries: input.maxCasRetries,

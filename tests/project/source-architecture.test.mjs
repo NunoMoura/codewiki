@@ -41,6 +41,21 @@ function importEdges(files) {
 	return edges;
 }
 
+function valueImportEdges(files) {
+	const fileSet = new Set(files);
+	const edges = [];
+	for (const file of files) {
+		const source = readFileSync(file, "utf8");
+		for (const match of source.matchAll(
+			/^import\s+(?!type\b)[\s\S]*?\sfrom\s+(["'])(\.{1,2}\/[^"']+)\1;/gmu,
+		)) {
+			const target = resolveImport(file, match[2], fileSet);
+			if (target) edges.push([file, target]);
+		}
+	}
+	return edges;
+}
+
 function resolveImport(file, specifier, fileSet) {
 	const base = resolve(file, "..");
 	const unresolved = resolve(base, specifier);
@@ -198,6 +213,19 @@ describe("source architecture", () => {
 					edgeLabel(source, target),
 				);
 			}
+		}
+	});
+
+	it("forbids Runtime Coordinator from importing API implementations", () => {
+		for (const [source, target] of valueImportEdges(sourceFiles())) {
+			if (!relative(sourceRoot, source).startsWith("runtime/coordinator/")) {
+				continue;
+			}
+			assert.equal(
+				relative(sourceRoot, target).startsWith("api/"),
+				false,
+				edgeLabel(source, target),
+			);
 		}
 	});
 
