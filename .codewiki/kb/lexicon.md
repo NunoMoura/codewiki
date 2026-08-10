@@ -21,6 +21,7 @@ tags: [system, vocabulary]
 | Change Trace | Append-only typed operation history for one Change. | [Change Trace](system/components/change-trace.md) |
 | Check | Atomic versioned requirement evaluated for one exact Candidate. | [Verification](system/components/verification.md) |
 | Check Catalog | Snapshot of installed Checks that may be selected for a Candidate but grants no applicability or enforcement by itself. | [Verification](system/components/verification.md) |
+| Check Invocation | Versioned bounded input binding one selected Check to an exact Candidate, policy, configuration, and context coverage. | [Verification](system/components/verification.md) |
 | Check Observation | Bounded pass, fail, or indeterminate evaluator output from which Runtime may create one Check Result. | [Verification](system/components/verification.md) |
 | Check Pack | Content-addressed group of Checks and inherited configuration installed as one project binding. | [Verification](system/components/verification.md) |
 | Check Result | Immutable admitted result of one resolved Check against one exact Candidate. | [Verification](system/components/verification.md) |

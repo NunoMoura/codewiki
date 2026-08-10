@@ -189,7 +189,7 @@ Budget rules:
 - [ ] Keep applicability scope, evaluator input scope, and sandbox capability requests separate. Check scope may narrow but cannot escape Pack or project bounds.
 - [ ] Preserve `observe`, `warn`, and `require` as project-owned enforcement; package recommendation or installation cannot grant blocking authority.
 - [x] Persist Candidate-bound Resolved Exit Policy with Candidate, Catalog, selector-input, configuration, route, and policy digests. Project no-policy state as unresolved, and bind completed projection to the persisted Catalog snapshot rather than current Catalog growth.
-- [ ] Define one language-neutral invocation from exact Candidate and admitted inputs and one bounded Observation contract with `pass`, `fail`, or `indeterminate`, summary, findings, and reason.
+- [x] Define stable `CheckInvocation` and `CheckObservation` language-neutral contracts without initial-version type suffixes; bind exact Candidate, policy, Check, admitted context coverage, protocol identity, byte limits, `pass | fail | indeterminate`, bounded summary, findings, reason, and zero Result authority.
 - [ ] Keep unavailable, pending, excluded, stale, and unresolved as Runtime or projection states rather than evaluator outcomes.
 - [ ] Make Runtime validate Observation admissibility and exact bindings without claiming to verify arbitrary evaluator semantic truth; only Runtime creates canonical Results and routes from the final Exit Report.
 - [ ] Run every code Check in an admitted sandbox. No sandbox or exact runtime profile yields unavailable; never execute through ambient host fallback.

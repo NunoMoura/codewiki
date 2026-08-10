@@ -6,9 +6,31 @@ export * from "./harnesses/ports.ts";
 export * from "./verification/custom-checks/index.ts";
 export * from "./verification/verification-capabilities.ts";
 export {
+	CHECK_INVOCATION_PROTOCOL_ID,
+	CHECK_INVOCATION_PROTOCOL_VERSION,
+	CHECK_INVOCATION_SCHEMA,
+	CHECK_OBSERVATION_PROTOCOL_ID,
+	CHECK_OBSERVATION_PROTOCOL_VERSION,
+	CHECK_OBSERVATION_SCHEMA,
+	assertValidCheckInvocation,
+	createCheckInvocation,
 	createLoopExitSuite,
+	normalizeCheckObservation,
+	type CheckInvocation,
+	type CheckInvocationCandidate,
+	type CheckInvocationCheckBinding,
+	type CheckInvocationContext,
+	type CheckInvocationContextItem,
+	type CheckInvocationContextSection,
+	type CheckInvocationCoverageStatus,
+	type CheckInvocationPolicyBinding,
+	type CheckObservation,
+	type CheckObservationFinding,
+	type CheckObservationOutcome,
+	type CreateCheckInvocationInput,
 	type LoopExitDeclaration,
 	type LoopExitSuite,
+	type NormalizeCheckObservationInput,
 } from "./verification/contracts.ts";
 export {
 	VERIFICATION_PROJECTION,

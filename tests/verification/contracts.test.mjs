@@ -2,8 +2,17 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+	CHECK_INVOCATION_PROTOCOL_ID,
+	CHECK_INVOCATION_PROTOCOL_VERSION,
+	CHECK_INVOCATION_SCHEMA,
+	CHECK_OBSERVATION_PROTOCOL_ID,
+	CHECK_OBSERVATION_PROTOCOL_VERSION,
+	CHECK_OBSERVATION_SCHEMA,
+	assertValidCheckInvocation,
 	assertValidResolvedExitPolicy,
+	createCheckInvocation,
 	createResolvedExitPolicy,
+	normalizeCheckObservation,
 } from "../../src/verification/contracts.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
@@ -55,6 +64,82 @@ function policyInput() {
 			},
 		],
 		protectedCheckIds: ["input_valid"],
+	};
+}
+
+function invocationInput() {
+	const complete = (requestedRefs, items) => ({
+		status: "complete",
+		requestedRefs,
+		items,
+		omittedCount: 0,
+		truncated: false,
+		stale: false,
+	});
+	return {
+		candidate: {
+			id: "candidate:implementation:change-1",
+			digest: CANDIDATE_DIGEST,
+			loop: "implementation",
+			schemaVersion: "1.0.0",
+			content: {summary: "Implement exact Check protocols."},
+			observedBase: {
+				workStateDigest: `sha256:${"1".repeat(64)}`,
+				knowledgeSnapshotDigest: `sha256:${"2".repeat(64)}`,
+				sourceSnapshotDigest: `sha256:${"3".repeat(64)}`,
+				gitTreeDigest: `sha256:${"4".repeat(64)}`,
+				canonicalRefs: ["change:CHG-1", "knowledge:verification"],
+			},
+		},
+		policy: {
+			candidateDigest: CANDIDATE_DIGEST,
+			catalogDigest: CATALOG_DIGEST,
+			selectorInputDigest: SELECTOR_DIGEST,
+			policyDigest: `sha256:${"5".repeat(64)}`,
+		},
+		check: {
+			id: "check-pack:default:protocol",
+			version: "1.0.0",
+			requirement: "Check protocols remain exact and bounded.",
+			requirementDigest: REQUIREMENT_DIGEST,
+			checkDigest: CHECK_DIGEST,
+			enforcement: "require",
+			required: true,
+			parameters: {input: {paths: ["src/verification"]}},
+		},
+		context: {
+			repository: complete(
+				["src/verification"],
+				[
+					{
+						ref: "src/verification/contracts.ts",
+						digest: `sha256:${"6".repeat(64)}`,
+						mediaType: "text/typescript",
+						content: "export interface CheckInvocation {}\n",
+					},
+				],
+			),
+			knowledge: complete(
+				["knowledge:verification"],
+				[
+					{
+						ref: "knowledge:verification",
+						digest: `sha256:${"7".repeat(64)}`,
+						mediaType: "text/markdown",
+						content: "Verification owns common protocols.",
+					},
+				],
+			),
+			evidence: {
+				status: "unavailable",
+				requestedRefs: [],
+				items: [],
+				omittedCount: 0,
+				truncated: false,
+				stale: false,
+			},
+		},
+		maximumInputBytes: 1_048_576,
 	};
 }
 
@@ -143,6 +228,155 @@ describe("Resolved Exit Policy contracts", () => {
 		assert.throws(
 			() => assertValidResolvedExitPolicy(policy),
 			/Resolved Exit Policy digest mismatch/,
+		);
+	});
+});
+
+describe("Check Invocation protocol", () => {
+	it("creates one stable bounded Candidate and context binding", () => {
+		const first = createCheckInvocation(invocationInput());
+		const reordered = invocationInput();
+		reordered.candidate.observedBase.canonicalRefs.reverse();
+		reordered.context.repository.requestedRefs.reverse();
+		const second = createCheckInvocation(reordered);
+
+		assert.equal(first.protocolId, CHECK_INVOCATION_PROTOCOL_ID);
+		assert.equal(first.protocolVersion, CHECK_INVOCATION_PROTOCOL_VERSION);
+		assert.equal(
+			CHECK_INVOCATION_SCHEMA.$id,
+			"urn:codewiki:protocol:check-invocation:1.0.0",
+		);
+		assert.equal(first.invocationDigest, second.invocationDigest);
+		assert.equal(first.policy.candidateDigest, first.candidate.digest);
+		assert.ok(Object.isFrozen(first));
+		assert.ok(Object.isFrozen(first.context.repository.items));
+		assert.doesNotThrow(() =>
+			assertValidCheckInvocation(first, invocationInput().maximumInputBytes),
+		);
+	});
+
+	it("rejects identity drift, invalid coverage, tampering, and oversized input", () => {
+		const wrongCandidate = invocationInput();
+		wrongCandidate.policy.candidateDigest = `sha256:${"8".repeat(64)}`;
+		assert.throws(
+			() => createCheckInvocation(wrongCandidate),
+			/policy does not bind its Candidate/u,
+		);
+
+		const invalidCoverage = invocationInput();
+		invalidCoverage.context.repository.omittedCount = 1;
+		assert.throws(
+			() => createCheckInvocation(invalidCoverage),
+			/Complete Check Invocation repository context cannot be truncated or omit items/u,
+		);
+
+		const invocation = structuredClone(createCheckInvocation(invocationInput()));
+		invocation.check.requirement = "Tampered requirement.";
+		assert.throws(
+			() => assertValidCheckInvocation(invocation, 1_048_576),
+			/not in canonical normalized form/u,
+		);
+
+		assert.throws(
+			() => createCheckInvocation({...invocationInput(), maximumInputBytes: 128}),
+			/exceeds its 128-byte limit/u,
+		);
+	});
+});
+
+describe("Check Observation protocol", () => {
+	it("normalizes pass, fail, and indeterminate evaluator output", () => {
+		const invocation = createCheckInvocation(invocationInput());
+		const base = {
+			protocolId: CHECK_OBSERVATION_PROTOCOL_ID,
+			protocolVersion: CHECK_OBSERVATION_PROTOCOL_VERSION,
+			invocationDigest: invocation.invocationDigest,
+			summary: "Protocol contract evaluated.",
+			findings: [],
+			grantsResult: false,
+		};
+		const pass = normalizeCheckObservation({
+			value: {...base, outcome: "pass"},
+			expectedInvocationDigest: invocation.invocationDigest,
+			maximumOutputBytes: 65_536,
+		});
+		const fail = normalizeCheckObservation({
+			value: {
+				...base,
+				outcome: "fail",
+				findings: [
+					{
+						code: "protocol.binding",
+						message: "Observation lacks exact binding.",
+						location: {
+							ref: "src/verification/contracts.ts",
+							startLine: 10,
+							endLine: 12,
+						},
+					},
+				],
+			},
+			expectedInvocationDigest: invocation.invocationDigest,
+			maximumOutputBytes: 65_536,
+		});
+		const indeterminate = normalizeCheckObservation({
+			value: {
+				...base,
+				outcome: "indeterminate",
+				reason: "Required repository context was unavailable.",
+			},
+			expectedInvocationDigest: invocation.invocationDigest,
+			maximumOutputBytes: 65_536,
+		});
+
+		assert.equal(
+			CHECK_OBSERVATION_SCHEMA.$id,
+			"urn:codewiki:protocol:check-observation:1.0.0",
+		);
+		assert.equal(pass.outcome, "pass");
+		assert.equal(fail.findings[0].location.startLine, 10);
+		assert.equal(indeterminate.reason, "Required repository context was unavailable.");
+		assert.equal(pass.grantsResult, false);
+		assert.ok(Object.isFrozen(fail.findings[0].location));
+	});
+
+	it("rejects unbound, malformed, authority-bearing, and oversized output", () => {
+		const invocation = createCheckInvocation(invocationInput());
+		const base = {
+			protocolId: CHECK_OBSERVATION_PROTOCOL_ID,
+			protocolVersion: CHECK_OBSERVATION_PROTOCOL_VERSION,
+			invocationDigest: invocation.invocationDigest,
+			outcome: "fail",
+			summary: "Evaluation failed.",
+			findings: [{message: "Actionable finding."}],
+			grantsResult: false,
+		};
+		const normalize = (value, maximumOutputBytes = 65_536) =>
+			normalizeCheckObservation({
+				value,
+				expectedInvocationDigest: invocation.invocationDigest,
+				maximumOutputBytes,
+			});
+
+		assert.throws(
+			() => normalize({...base, invocationDigest: `sha256:${"9".repeat(64)}`}),
+			/does not bind its Invocation/u,
+		);
+		assert.throws(
+			() => normalize({...base, findings: []}),
+			/requires at least one finding/u,
+		);
+		assert.throws(
+			() => normalize({...base, outcome: "indeterminate", findings: []}),
+			/requires a reason/u,
+		);
+		assert.throws(
+			() => normalize({...base, grantsResult: true}),
+			/cannot grant a Check Result/u,
+		);
+		assert.throws(
+			() => normalize({...base, summary: "x".repeat(2_000)}, 256),
+			/exceeds its 256-byte limit/u,
 		);
 	});
 });
