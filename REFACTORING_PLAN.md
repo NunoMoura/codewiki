@@ -73,7 +73,7 @@ Reviewed dispositions:
 | Merge | 3 |
 | Delete | 171 |
 
-The derived target before reserved additions contains 294 source files, 178 test/support files, three benchmark files, one script, 41 Knowledge files, and 14 other tracked project files. Reserved additions cover only unfinished GitHub intake, bounded query tools, replacement lifecycle/recovery contracts, benchmark harnesses, and their tests.
+The derived target before reserved additions contains 294 source files, 178 test/support files, three benchmark files, one script, 41 Knowledge files, and 14 other tracked project files. Reserved additions cover only the Check Pack clean cut, unfinished GitHub intake, bounded query tools, replacement lifecycle/recovery contracts, benchmark harnesses, and their tests. Check Pack work must replace legacy Quality and Custom Check footprint within the same slices rather than increase the reserved projection.
 
 Hard completion caps:
 
@@ -89,7 +89,7 @@ Hard completion caps:
 
 The reserved projection is 311 source files, 188 test/support files, ten benchmark files, and 565 tracked files. One source reserve is consumed by the Runtime admission authority contract required to remove Decision Quality type ownership. The difference between each projection and cap is contingency, not permission for unreviewed growth.
 
-After the Lab and source-checkout self-dogfood clean cut, 641 tracked files remain: 369 source files, 209 test/support files, zero Lab files, and one script. The worker/trace-host process split and explicit Runtime admission authority contract temporarily raise the packed package to 745 files; deleting the remaining trace-host shell and legacy Quality stack must reduce it below 650.
+At this checkpoint, 647 tracked files remain: 371 source files, 209 test/support files, zero repository-root benchmark files, zero Lab files, and one script. The worker/trace-host process split, Client/Harness ownership cuts, and explicit Runtime admission authority contract temporarily leave the packed package at 745 files; deleting the remaining trace-host shell and legacy Quality stack must reduce it below 650.
 
 Budget rules:
 
@@ -97,6 +97,7 @@ Budget rules:
 - A merge is allowed only when one responsibility and one lifecycle remain; unrelated modules must not be combined to hit a number.
 - A delete occurs only after replacement parity and importer removal are proven in the same clean cut.
 - Every new file consumes the named reserve. Exceeding a reserve requires deleting or merging another file in that slice.
+- Check Pack contracts, adapters, and authoring support must reuse or replace existing Verification, Quality, Client, Harness, and Project files; any unavoidable addition requires an offsetting deletion or merge in the same slice.
 - Temporary manifests, this plan, Lab, self-dogfood machinery, legacy Trace/Quality/View authority, and trace-host debt have zero final budget.
 - Keep `test:coordinator` as a focused developer command; `audit:codewiki` does not rerun that already-covered subset.
 
@@ -167,37 +168,69 @@ Budget rules:
 - [ ] Delete intermediate `src/change-trace/**`, legacy `src/traces/**`, legacy ChangeRecord paths, obsolete WorkState paths, and generic `src/views/**` after callers move.
 - [ ] Preserve append-only history, deterministic replay, projection provenance, and synchronization behavior.
 
-### 6. Finish semantic Loop clean cuts
+### 6. Build the Candidate-bound Check ecosystem
+
+- [ ] Replace the current Custom Check and legacy Quality contracts with `Check Pack → Check Catalog → Resolved Exit Policy → Check Observation → Check Result → Exit Report` under Verification ownership.
+- [ ] Implement the tracked project layout:
+  - `.codewiki/config.json` for project defaults, route definitions, runtime profiles, and protected floors;
+  - `.codewiki/check-packs/<binding-id>/config.json` for inherited Pack binding choices;
+  - `.codewiki/check-packs/<binding-id>/checks/<check-id>/CHECK.*` for one evaluator;
+  - optional sparse colocated `config.json` for per-Check overrides; and
+  - `.codewiki/check-packs.lock.json` for exact source, version or ref, integrity, and content digests.
+- [ ] Derive Check identity and evaluator kind from Pack binding, directory path, and the one `CHECK.*` extension; reject multiple evaluators, frontmatter, absolute or escaping paths, and unsupported language adapters.
+- [ ] Support `CHECK.md` as a complete Model Check rubric and `CHECK.mjs` as the first native code format; add another language only through an exact isolated adapter with fail-closed capability reporting.
+- [ ] Define no Check Pack fixtures, cases, or semantic assets. Evaluate real Candidates with admitted repository, Knowledge, and Evidence input; keep executable dependency closure digest-pinned and separate from semantic input.
+- [ ] Make Default Checks open, materialized, inspectable, and editable in the same format as imported and Custom Checks while retaining non-editable protocol and admission invariants in Runtime and Verification.
+- [ ] Resolve project defaults, Pack defaults, optional Check overrides, and protected floors semantically rather than through generic deep merge.
+- [ ] Implement conservative applicability from Development stage, Git-relative exact file or directory-prefix scope, deterministic languages, and optional Change type or kind; unknown facts widen selection.
+- [ ] Keep applicability scope, evaluator input scope, and sandbox capability requests separate. Check scope may narrow but cannot escape Pack or project bounds.
+- [ ] Preserve `observe`, `warn`, and `require` as project-owned enforcement; package recommendation or installation cannot grant blocking authority.
+- [ ] Persist Candidate-bound Resolved Exit Policy with Candidate, Catalog, selector-input, configuration, route, and policy digests. No policy remains unresolved, and Catalog growth cannot block an already resolved Candidate.
+- [ ] Define one language-neutral invocation from exact Candidate and admitted inputs and one bounded Observation contract with `pass`, `fail`, or `indeterminate`, summary, findings, and reason.
+- [ ] Keep unavailable, pending, excluded, stale, and unresolved as Runtime or projection states rather than evaluator outcomes.
+- [ ] Make Runtime validate Observation admissibility and exact bindings without claiming to verify arbitrary evaluator semantic truth; only Runtime creates canonical Results and routes from the final Exit Report.
+- [ ] Run every code Check in an admitted sandbox. No sandbox or exact runtime profile yields unavailable; never execute through ambient host fallback.
+- [ ] Require no Runtime Check SDK in the initial contract. Provide versioned schemas, type declarations, templates, native language adapters, production-equivalent validation, sandbox diagnostics, current-Candidate dry runs, and historical replay in developer mode; add only demonstrated zero-authority helper bindings later.
+- [ ] Make every Model Check one tool-free isolated evaluation over deterministic bounded Runtime-supplied context. Missing context, exact model choice, structured output, or isolation yields indeterminate or unavailable with no scope expansion or model fallback.
+- [ ] Back the default Check model catalog, authentication, and execution adapter with the Pi SDK using CodeWiki-specific user credential and model paths outside projects.
+- [ ] Add Claude Code-native model routes only through harness mechanisms that preserve exact model selection, isolated context, bounded output, and provenance; do not conflate Claude Code authentication with Pi-backed Anthropic routes.
+- [ ] Keep the authoring or repair Harness model separate from the configured Check evaluator route and display both identities explicitly.
+- [ ] Implement deterministic regular-user Check forms and raw developer mode over the same tracked files. Add one host-native `codewiki-check-author` skill for optional Assisted Check Authoring with the active Harness model, observe-first defaults, exact diff preview, and deterministic validation.
+- [ ] Materialize local, exact npm, and exact Git Packs only after project trust approval; disable lifecycle scripts, pin integrity, preserve explicit update diffs, and grant no authority through discovery or installation.
+- [ ] Add a native Verification projection that joins Resolved Exit Policy, Results, and Exit Report and reports unresolved, pending, pass, fail, indeterminate, excluded, and stale without consulting raw Catalog entries as readiness.
+
+### 7. Finish semantic Loop clean cuts
 
 - [ ] Replace legacy Decision count/Quality paths with native Candidate, Evidence, Result, Exit Report, and route semantics under `src/decision/**`.
   - [x] Move Decision disposition ownership to Candidate semantics and actor/authority binding to Runtime admission.
 - [ ] Complete native Planning semantics under `src/planning/**` without a Runtime Planning policy package.
 - [ ] Complete native Implementation semantics under `src/implementation/**` while generic worker mechanics remain Runtime-owned.
-- [ ] Delete `src/loops/**` and all remaining legacy Quality modules only after replacement tests pass.
+- [ ] Cut `wiki-decide`, `wiki-plan`, `wiki-implement`, Coordinator, Views, Dashboard, and helper consumers over to the native Verification projection.
+- [ ] Delete `src/loops/**`, `src/decision/change-quality.ts`, `src/planning/portfolio-quality.ts`, `src/implementation/quality-standards.ts`, and remaining legacy Quality modules only after replacement tests pass.
 - [ ] Preserve exactly three semantic Loops.
 
-### 7. Expose bounded agent query tools
+### 8. Expose bounded agent query tools
 
 - [ ] Stabilize `wiki_state`, `wiki_context`, `wiki_attention`, `wiki_explain`, and `wiki_change` over completed owner paths.
 - [ ] Make every query read-only, bounded, snapshot-bound, and provenance-bearing, with explicit coverage, truncation, and staleness.
 - [ ] Do not expose arbitrary Cypher, traversal DSL, graph dump, graph mutation, or generic Knowledge mutation.
 
-### 8. Complete UI assurance and Dashboard last
+### 9. Complete UI assurance and Dashboard last
 
 - [ ] Freeze Dashboard query, command, freshness, idempotency, and authority contracts over completed Runtime projections.
 - [ ] Remove dashboard-local workflow truth and legacy Trace/session assumptions.
-- [ ] Implement responsive Work, Product, System, Design, Standards, Checks, Evidence, Integration, delivery, outcome, and history surfaces from exact projections.
+- [ ] Implement responsive Work, Product, System, Design, Standards, Check Packs, Checks, Evidence, Integration, delivery, outcome, model-route, deterministic authoring, Assisted Check Authoring, and developer-mode surfaces from exact projections and tracked files.
 - [ ] Add Candidate-bound preview Evidence, independent experience review, and authenticated approval where policy requires it.
-- [ ] Validate keyboard, assistive technology, reduced motion, contrast, bounded rendering, reconnect, reset, and actionable failure states.
+- [ ] Validate keyboard, assistive technology, reduced motion, contrast, bounded rendering, reconnect, reset, explicit model use, and actionable failure states.
 
-### 9. External proof and release gates
+### 10. External proof and release gates
 
 - [ ] Run real Gitleaks, Semgrep, and offline Trivy profiles with exact production receipts.
-- [ ] Run sealed scanner/evaluator calibration against off-repository human-labeled cases.
+- [ ] Run sealed scanner/evaluator calibration against off-repository human-labeled cases that are external proof inputs rather than Check Pack fixtures.
 - [ ] Run focused-call versus batching calibration; keep batching unavailable unless it preserves safety and improves measured cost or latency.
-- [ ] Prove real provider authentication, user authority, expected-head mutation, and OCI execution externally.
+- [ ] Prove real provider authentication, user authority, expected-head mutation, CodeWiki-owned Pi SDK credential storage, Claude Code-native model isolation, and OCI execution externally.
 - [ ] Build and pack reviewed candidates, then install only in disposable external projects with isolated Pi settings.
-- [ ] Verify prompts, tools, commands, Dashboard behavior, guarded writes, failure paths, and cleanup.
+- [ ] Verify prompts, tools, commands, model routes, Check Pack lifecycle, Assisted Check Authoring, Dashboard behavior, guarded writes, failure paths, and cleanup.
 - [ ] Resolve optional Pi SDK dependency advisories or document accepted external constraints.
 - [ ] Publish or release only with explicit maintainer approval.
 - [ ] Consider source-repository dogfooding only through an externally installed immutable digest-pinned stable release after separate approval.
@@ -227,7 +260,7 @@ These do not block local refactoring:
 
 - Real Gitleaks, Semgrep, and Trivy binaries are unavailable locally.
 - Docker/OCI execution is unavailable while Docker WSL integration is disabled.
-- Sealed security and evaluator calibration require off-repository fixtures and receipts.
+- Sealed security and evaluator calibration require independently held human-labeled cases and receipts; these are external proof inputs, not Check Pack fixtures.
 - Real provider authentication and external user-authority proof remain pending.
 - Automatic distributed expiry remains unavailable without trusted remote time.
 - Graphify remains optional and unavailable without its dependencies.

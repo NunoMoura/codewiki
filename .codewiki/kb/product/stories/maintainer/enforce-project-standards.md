@@ -12,6 +12,10 @@ As a maintainer, I want CodeWiki to apply accepted project expectations as bound
 
 ## Acceptance signals
 
-- Standards bind exact source or text snapshots.
-- Distillation exposes covered and unresolved clauses.
-- Every applicable active Check produces an independent Result for one exact Candidate.
+- Standards bind exact source or text snapshots, and distillation exposes covered and unresolved clauses.
+- Default, imported, and Custom Checks remain open, inspectable, and editable as project files.
+- Each Check evaluates one exact Candidate and returns pass, fail, or indeterminate with actionable feedback.
+- Project, Pack, and optional per-Check configuration make applicability, inputs, model route, and enforcement explicit.
+- Maintainers can author Checks through deterministic forms, raw developer mode, or optional Harness-assisted guidance without hidden model calls.
+- The authoring model and configured evaluator route remain visibly distinct, and new Checks cannot gain blocking authority without approval.
+- Every applicable active Check produces an independent Result for one exact Candidate-bound policy.
