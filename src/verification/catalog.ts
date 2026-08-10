@@ -7,6 +7,14 @@ import type { SemanticLoop } from "../semantic-loop.ts";
 import type { CustomCheckDefinition } from "./custom-checks/contracts.ts";
 import type {CustomCheckEvaluatorStandardBinding} from "./custom-checks/model-evaluator.ts";
 import {
+	CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+	type ResolvedCheckConfiguration,
+} from "./custom-checks/configuration.ts";
+import type {
+	ProjectCheckDefinition,
+	ProjectCheckPack,
+} from "./custom-checks/project-config-store.ts";
+import {
 	normalizeUserStandardDefinitions,
 	type UserStandardDefinition,
 } from "./custom-checks/user-standards.ts";
@@ -39,13 +47,15 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "10.0.0";
+export const CHECK_CATALOG_VERSION = "11.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
 	"codewiki.model-check",
 	ATOMIC_SECURITY_SCANNER_CHECK_PROTOCOL.id,
 	"codewiki.custom-code.resource_usage_limit",
+	"codewiki.check-pack.model",
+	"codewiki.check-pack.node-esm",
 ] as const;
 
 const ATOMIC_SECURITY_SCANNER_CHECK_IDS: ReadonlySet<string> = new Set(
@@ -66,12 +76,22 @@ export interface CheckRegistration {
 		evaluatorId: string;
 		standardBindings: readonly CustomCheckEvaluatorStandardBinding[];
 	};
+	packCheck?: {
+		bindingId: string;
+		checkId: string;
+		evaluatorKind: ProjectCheckDefinition["evaluatorKind"];
+		evaluatorPath: string;
+		evaluatorDigest: string;
+		checkDigest: string;
+		configuration: ResolvedCheckConfiguration;
+	};
 }
 
 export interface CheckCatalog {
 	version: typeof CHECK_CATALOG_VERSION;
 	customCheckTypeCatalogVersion: typeof CUSTOM_CHECK_TYPE_CATALOG_VERSION;
 	customCheckConfigDigest: string;
+	checkPackSnapshotDigest: string;
 	digest: string;
 	get(checkId: string, loop?: SemanticLoop): CheckRegistration | undefined;
 	list(loop?: SemanticLoop): CheckRegistration[];
@@ -451,7 +471,8 @@ const CODEWIKI_CHECK_REGISTRATIONS = builtInRegistrations();
 export function createCheckCatalog(input: {
 	readonly userStandards: readonly UserStandardDefinition[];
 	readonly customChecks: readonly CustomCheckDefinition[];
-} = {userStandards: [], customChecks: []}): CheckCatalog {
+	readonly checkPacks?: readonly ProjectCheckPack[];
+} = {userStandards: [], customChecks: [], checkPacks: []}): CheckCatalog {
 	const userStandards = normalizeUserStandardDefinitions(input.userStandards);
 	const normalizedCustomChecks = normalizeCustomCheckDefinitions(
 		input.customChecks,
@@ -466,9 +487,24 @@ export function createCheckCatalog(input: {
 		.flatMap((definition) =>
 			customCheckRegistrations({definition, userStandards}),
 		);
+	const checkPacks = [...(input.checkPacks ?? [])].sort((left, right) =>
+		compareText(left.bindingId, right.bindingId),
+	);
+	if (new Set(checkPacks.map((pack) => pack.bindingId)).size !== checkPacks.length) {
+		throw new Error("Check Catalog cannot contain duplicate Pack bindings.");
+	}
+	for (const pack of checkPacks) validateCheckPack(pack);
+	const checkPackSnapshotDigest = canonicalJsonDigest({
+		version: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+		packs: checkPacks.map((pack) => ({
+			bindingId: pack.bindingId,
+			digest: pack.digest,
+		})),
+	});
 	const registrations = [
 		...CODEWIKI_CHECK_REGISTRATIONS,
 		...customRegistrations,
+		...checkPacks.flatMap(checkPackRegistrations),
 	]
 		.map((registration) => normalizeRegistration({registration, userStandards}))
 		.sort(compareRegistrations);
@@ -501,12 +537,14 @@ export function createCheckCatalog(input: {
 		version: CHECK_CATALOG_VERSION,
 		customCheckTypeCatalogVersion: CUSTOM_CHECK_TYPE_CATALOG_VERSION,
 		customCheckConfigDigest,
+		checkPackSnapshotDigest,
 		registrations,
 	});
 	return Object.freeze({
 		version: CHECK_CATALOG_VERSION,
 		customCheckTypeCatalogVersion: CUSTOM_CHECK_TYPE_CATALOG_VERSION,
 		customCheckConfigDigest,
+		checkPackSnapshotDigest,
 		digest,
 		get: (checkId: string, loop?: SemanticLoop) => {
 			if (loop) {
@@ -536,6 +574,80 @@ export function createCheckCatalog(input: {
 					: [];
 			}),
 	});
+}
+
+function validateCheckPack(pack: ProjectCheckPack): void {
+	const configurationDigest = canonicalJsonDigest(pack.configuration);
+	if (configurationDigest !== pack.configurationDigest) {
+		throw new Error(`Check Pack ${pack.bindingId} configuration digest mismatch.`);
+	}
+	if (
+		new Set(pack.checks.map((check) => check.checkId)).size !==
+		pack.checks.length
+	) {
+		throw new Error(`Check Pack ${pack.bindingId} contains duplicate Check ids.`);
+	}
+	if (pack.checks.some((check) => check.bindingId !== pack.bindingId)) {
+		throw new Error(`Check Pack ${pack.bindingId} contains a Check from another binding.`);
+	}
+	const expectedDigest = canonicalJsonDigest({
+		version: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+		bindingId: pack.bindingId,
+		configurationDigest,
+		checks: pack.checks.map((check) => ({id: check.id, digest: check.digest})),
+	});
+	if (pack.digest !== expectedDigest) {
+		throw new Error(`Check Pack ${pack.bindingId} content digest mismatch.`);
+	}
+}
+
+function checkPackRegistrations(pack: ProjectCheckPack): CheckRegistration[] {
+	return [...pack.checks]
+		.sort((left, right) => compareText(left.id, right.id))
+		.map((definition) => {
+			const executionKind =
+				definition.evaluatorKind === "model" ? "model" : "code";
+			const requirement =
+				definition.evaluatorKind === "model"
+					? definition.evaluatorSource.trim()
+					: `Code evaluator ${definition.id} must return a passing Check Observation.`;
+			return {
+				check: {
+					id: definition.id,
+					version: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+					description: `Project Check ${definition.bindingId}/${definition.checkId}.`,
+					requirement,
+					requirementDigest: checkRequirementDigest(requirement),
+					execution: {
+						id:
+							definition.evaluatorKind === "model"
+								? "codewiki.check-pack.model"
+								: "codewiki.check-pack.node-esm",
+						version: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+						kind: executionKind,
+					},
+					measurement: {kind: "qualitative", shape: "structured"},
+					evidenceObligations: [],
+					repairTarget: `Address findings from ${definition.id}.`,
+					cost: checkCost(executionKind),
+					timeoutMs: definition.configuration.execution.timeoutMs,
+					protected: false,
+				},
+				loops: [...definition.configuration.applicability.stages],
+				authority: "project",
+				rollout: definition.configuration.enforcement,
+				dependsOn: [],
+				packCheck: {
+					bindingId: definition.bindingId,
+					checkId: definition.checkId,
+					evaluatorKind: definition.evaluatorKind,
+					evaluatorPath: definition.evaluatorPath,
+					evaluatorDigest: definition.evaluatorDigest,
+					checkDigest: definition.digest,
+					configuration: definition.configuration,
+				},
+			};
+		});
 }
 
 function customCheckRegistrations(input: {
@@ -961,6 +1073,9 @@ function normalizeRegistration(input: {
 					},
 				}
 			: {}),
+		...(registration.packCheck
+			? {packCheck: clonePackCheckRegistration(registration.packCheck)}
+			: {}),
 	};
 }
 
@@ -1019,8 +1134,8 @@ function validateCheckAuthority(
 	const [registration, userStandards] = args;
 	const check = registration.check;
 	if (registration.authority === "kernel") {
-		if (registration.customCheck) {
-			throw new Error(`Kernel Check ${check.id} cannot carry Custom Check data.`);
+		if (registration.customCheck || registration.packCheck) {
+			throw new Error(`Kernel Check ${check.id} cannot carry project Check data.`);
 		}
 		if (!check.protected || registration.rollout !== "require") {
 			throw new Error(
@@ -1034,7 +1149,65 @@ function validateCheckAuthority(
 			`Only kernel Checks may be protected: ${check.id}.`,
 		);
 	}
+	if (registration.customCheck && registration.packCheck) {
+		throw new Error(`Project Check ${check.id} cannot carry two definitions.`);
+	}
+	if (registration.packCheck) {
+		validatePackCheckRegistration(registration);
+		return;
+	}
 	validateCustomCheckRegistration(registration, userStandards);
+}
+
+function validatePackCheckRegistration(registration: CheckRegistration): void {
+	const packCheck = registration.packCheck;
+	if (!packCheck) {
+		throw new Error(`Project Check ${registration.check.id} requires Pack Check data.`);
+	}
+	const expectedId = `check-pack:${packCheck.bindingId}:${packCheck.checkId}`;
+	if (registration.check.id !== expectedId) {
+		throw new Error("Pack Check registration identity does not match its path.");
+	}
+	const expectedExecution =
+		packCheck.evaluatorKind === "model"
+			? {id: "codewiki.check-pack.model", kind: "model"}
+			: {id: "codewiki.check-pack.node-esm", kind: "code"};
+	if (
+		registration.check.execution.id !== expectedExecution.id ||
+		registration.check.execution.kind !== expectedExecution.kind
+	) {
+		throw new Error("Pack Check execution identity does not match its evaluator.");
+	}
+	if (registration.rollout !== packCheck.configuration.enforcement) {
+		throw new Error("Pack Check rollout does not match resolved configuration.");
+	}
+	if (
+		registration.check.timeoutMs !==
+		packCheck.configuration.execution.timeoutMs
+	) {
+		throw new Error("Pack Check timeout does not match resolved configuration.");
+	}
+	if (
+		canonicalJsonDigest({
+			version: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+			id: expectedId,
+			evaluatorKind: packCheck.evaluatorKind,
+			evaluatorPath: packCheck.evaluatorPath,
+			evaluatorDigest: packCheck.evaluatorDigest,
+			configurationDigest: packCheck.configuration.digest,
+		}) !== packCheck.checkDigest
+	) {
+		throw new Error("Pack Check digest does not match its content identity.");
+	}
+	const configuredLoops = [...packCheck.configuration.applicability.stages].sort(
+		compareText,
+	);
+	if (
+		configuredLoops.length !== registration.loops.length ||
+		configuredLoops.some((loop, index) => loop !== registration.loops[index])
+	) {
+		throw new Error("Pack Check loops do not match resolved applicability.");
+	}
 }
 
 function validateCustomCheckRegistration(
@@ -1109,6 +1282,29 @@ function assertAcyclicCatalog(
 		visited.add(key);
 	};
 	for (const key of byKey.keys()) visit(key);
+}
+
+function clonePackCheckRegistration(
+	packCheck: NonNullable<CheckRegistration["packCheck"]>,
+): NonNullable<CheckRegistration["packCheck"]> {
+	return {
+		...packCheck,
+		configuration: {
+			...packCheck.configuration,
+			applicability: {
+				stages: [...packCheck.configuration.applicability.stages],
+				paths: [...packCheck.configuration.applicability.paths],
+				languages: [...packCheck.configuration.applicability.languages],
+				changeTypes: [...packCheck.configuration.applicability.changeTypes],
+				changeKinds: [...packCheck.configuration.applicability.changeKinds],
+			},
+			input: {paths: [...packCheck.configuration.input.paths]},
+			execution: {
+				...packCheck.configuration.execution,
+				capabilities: [...packCheck.configuration.execution.capabilities],
+			},
+		},
+	};
 }
 
 function cloneRegistration(input: {

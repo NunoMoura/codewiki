@@ -152,5 +152,13 @@
 		"mcp": {
 			"enabled": false
 		}
+	},
+	"checks": {
+		"defaults": {
+			"enforcement": "observe"
+		},
+		"protectedFloors": {
+			"minimumEnforcement": "observe"
+		}
 	}
 }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {execFile} from "node:child_process";
-import {mkdtemp, rm} from "node:fs/promises";
+import {mkdir, mkdtemp, rm, symlink, writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import {join} from "node:path";
 import {promisify} from "node:util";
@@ -15,9 +15,12 @@ import {
 	createProtectedCustomCheckConfigSnapshot,
 	createWikiConfigCustomCheckStore,
 	disableCustomCheckDefinition,
+	discoverProjectCheckPacks,
+	loadProjectCheckPacks,
 	loadProtectedCustomCheckConfigSnapshot,
 	parseCustomCheckMutationCommand,
 } from "../../../src/verification/custom-checks/index.ts";
+import {createCheckCatalog} from "../../../src/verification/catalog.ts";
 import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
 import {
 	loadWikiConfigFile,
@@ -478,5 +481,300 @@ describe("guarded Custom Check configuration mutations", () => {
 		} finally {
 			await rm(root, {recursive: true, force: true});
 		}
+	});
+});
+
+async function createCheckPackProject(input = {}) {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-check-pack-"));
+	const projectChecks = input.projectChecks ?? {};
+	await writeWikiConfigFile(root, resolveWikiConfig({checks: projectChecks}));
+	const packRoot = join(
+		root,
+		".codewiki",
+		"check-packs",
+		input.bindingId ?? "team-policy",
+	);
+	await mkdir(join(packRoot, "checks"), {recursive: true});
+	await writeFile(
+		join(packRoot, "config.json"),
+		`${JSON.stringify(input.packConfig ?? {defaults: {}}, null, 2)}\n`,
+	);
+	for (const check of input.checks ?? []) {
+		const checkRoot = join(packRoot, "checks", check.id);
+		await mkdir(checkRoot, {recursive: true});
+		for (const [name, source] of Object.entries(check.files)) {
+			await writeFile(join(checkRoot, name), source);
+		}
+	}
+	return {root, packRoot};
+}
+
+describe("project-local Check Pack discovery", () => {
+	it("derives evaluator identity and semantically resolves deterministic configuration", async () => {
+		const fixture = await createCheckPackProject({
+			projectChecks: {
+				defaults: {enforcement: "observe", execution: {timeoutMs: 5_000}},
+				protectedFloors: {
+					minimumEnforcement: "warn",
+					allowedModelRoutes: ["pi/openai/gpt-5"],
+					allowedRuntimeProfiles: ["node-22-isolated"],
+					allowedCapabilities: ["temporary_files"],
+					maxTimeoutMs: 10_000,
+				},
+			},
+			packConfig: {
+				defaults: {
+					applicability: {
+						stages: ["implementation"],
+						paths: ["src"],
+						languages: ["typescript"],
+					},
+					input: {paths: ["src"]},
+				},
+			},
+			checks: [
+				{
+					id: "architecture",
+					files: {
+						"CHECK.md": "Require dependency direction to match System ownership.\n",
+						"config.json": `${JSON.stringify({
+							applicability: {paths: ["src/api"]},
+							input: {paths: ["src/api"]},
+							execution: {modelRoute: "pi/openai/gpt-5"},
+						})}\n`,
+					},
+				},
+				{
+					id: "types",
+					files: {
+						"CHECK.mjs": "export default async function check() { return {outcome: 'pass'}; }\n",
+						"config.json": `${JSON.stringify({
+							input: {paths: ["src/types"]},
+							execution: {
+								runtimeProfile: "node-22-isolated",
+								capabilities: ["temporary_files"],
+							},
+						})}\n`,
+					},
+				},
+			],
+		});
+		const growthFixture = await createCheckPackProject({
+			bindingId: "additional-policy",
+			packConfig: {
+				defaults: {applicability: {stages: ["implementation"]}},
+			},
+			checks: [
+				{
+					id: "documentation",
+					files: {"CHECK.md": "Require changed behavior to remain documented.\n"},
+				},
+			],
+		});
+		try {
+			const first = await loadProjectCheckPacks(fixture.root);
+			const second = await loadProjectCheckPacks(fixture.root);
+			assert.equal(first.version, "1.0.0");
+			assert.equal(first.digest, second.digest);
+			assert.equal(first.packs.length, 1);
+			assert.deepEqual(
+				first.packs[0].checks.map((check) => check.id),
+				[
+					"check-pack:team-policy:architecture",
+					"check-pack:team-policy:types",
+				],
+			);
+			const [modelCheck, codeCheck] = first.packs[0].checks;
+			assert.equal(modelCheck.evaluatorKind, "model");
+			assert.equal(codeCheck.evaluatorKind, "node_esm");
+			assert.equal(modelCheck.configuration.enforcement, "warn");
+			assert.deepEqual(modelCheck.configuration.applicability.stages, [
+				"implementation",
+			]);
+			assert.deepEqual(modelCheck.configuration.applicability.paths, ["src/api"]);
+			assert.equal(
+				modelCheck.configuration.execution.modelRoute,
+				"pi/openai/gpt-5",
+			);
+			assert.equal(modelCheck.configuration.execution.timeoutMs, 5_000);
+			assert.equal(
+				codeCheck.configuration.execution.runtimeProfile,
+				"node-22-isolated",
+			);
+			assert.deepEqual(codeCheck.configuration.execution.capabilities, [
+				"temporary_files",
+			]);
+			assert.match(modelCheck.digest, /^sha256:[0-9a-f]{64}$/u);
+			assert.match(first.packs[0].digest, /^sha256:[0-9a-f]{64}$/u);
+			const catalog = createCheckCatalog({
+				userStandards: [],
+				customChecks: [],
+				checkPacks: first.packs,
+			});
+			assert.equal(catalog.version, "11.0.0");
+			assert.equal(catalog.checkPackSnapshotDigest, first.digest);
+			assert.equal(
+				catalog.get(modelCheck.id, "implementation").packCheck.checkDigest,
+				modelCheck.digest,
+			);
+			assert.equal(catalog.get(modelCheck.id, "decision"), undefined);
+			assert.equal(catalog.get(codeCheck.id, "implementation").rollout, "warn");
+			assert.throws(
+				() =>
+					createCheckCatalog({
+						userStandards: [],
+						customChecks: [],
+						checkPacks: [
+							{...first.packs[0], digest: `sha256:${"0".repeat(64)}`},
+						],
+					}),
+				/content digest mismatch/u,
+			);
+			const originalIds = catalog.list().map((entry) => entry.check.id);
+			const additional = await loadProjectCheckPacks(growthFixture.root);
+			const expanded = createCheckCatalog({
+				userStandards: [],
+				customChecks: [],
+				checkPacks: [...first.packs, ...additional.packs],
+			});
+			assert.notEqual(expanded.digest, catalog.digest);
+			assert.equal(
+				catalog.get("check-pack:additional-policy:documentation"),
+				undefined,
+			);
+			assert.ok(
+				expanded.get("check-pack:additional-policy:documentation", "implementation"),
+			);
+			assert.deepEqual(catalog.list().map((entry) => entry.check.id), originalIds);
+		} finally {
+			await rm(fixture.root, {recursive: true, force: true});
+			await rm(growthFixture.root, {recursive: true, force: true});
+		}
+	});
+
+	it("accepts a Check without a colocated override", async () => {
+		const fixture = await createCheckPackProject({
+			packConfig: {
+				defaults: {
+					enforcement: "observe",
+					applicability: {stages: ["decision"], paths: ["docs"]},
+				},
+			},
+			checks: [
+				{
+					id: "intent",
+					files: {"CHECK.md": "Confirm accepted intent remains explicit.\n"},
+				},
+			],
+		});
+		try {
+			const snapshot = await loadProjectCheckPacks(fixture.root);
+			const check = snapshot.packs[0].checks[0];
+			assert.equal(check.configuration.enforcement, "observe");
+			assert.deepEqual(check.configuration.applicability.stages, ["decision"]);
+			assert.deepEqual(check.configuration.applicability.paths, ["docs"]);
+		} finally {
+			await rm(fixture.root, {recursive: true, force: true});
+		}
+	});
+
+	it("fails closed on ambiguous, unsupported, frontmatter, escaping, and symlinked content", async (context) => {
+		const cases = [
+			{
+				name: "multiple evaluators",
+				files: {
+					"CHECK.md": "Requirement\n",
+					"CHECK.mjs": "export default () => ({})\n",
+				},
+				error: /exactly one CHECK\.\* evaluator/u,
+			},
+			{
+				name: "unsupported evaluator",
+				files: {
+					"CHECK.py": "def check(input): return {'outcome': 'pass'}\n",
+				},
+				error: /Unsupported Check evaluator CHECK\.py/u,
+			},
+			{
+				name: "frontmatter",
+				files: {"CHECK.md": "---\ntitle: forbidden\n---\nRequirement\n"},
+				error: /cannot use frontmatter/u,
+			},
+			{
+				name: "escaping scope",
+				files: {
+					"CHECK.md": "Requirement\n",
+					"config.json": `${JSON.stringify({
+						applicability: {paths: ["../secrets"]},
+					})}\n`,
+				},
+				error: /Git-relative exact file/u,
+			},
+			{
+				name: "widened inherited scope",
+				projectChecks: {
+					defaults: {applicability: {paths: ["src"]}},
+				},
+				packConfig: {
+					defaults: {applicability: {paths: ["tests"]}},
+				},
+				files: {"CHECK.md": "Requirement\n"},
+				error: /Pack applicability paths cannot widen inherited defaults/u,
+			},
+			{
+				name: "budget above protected maximum",
+				projectChecks: {
+					protectedFloors: {maxTimeoutMs: 1_000},
+				},
+				files: {
+					"CHECK.md": "Requirement\n",
+					"config.json": `${JSON.stringify({
+						execution: {timeoutMs: 1_001},
+					})}\n`,
+				},
+				error: /timeoutMs exceeds protected maximum 1000/u,
+			},
+		];
+		for (const testCase of cases) {
+			await context.test(testCase.name, async () => {
+				const fixture = await createCheckPackProject({
+					projectChecks: testCase.projectChecks,
+					packConfig: testCase.packConfig,
+					checks: [{id: "guard", files: testCase.files}],
+				});
+				try {
+					await assert.rejects(
+						() => loadProjectCheckPacks(fixture.root),
+						testCase.error,
+					);
+				} finally {
+					await rm(fixture.root, {recursive: true, force: true});
+				}
+			});
+		}
+		await context.test("symlinked evaluator", async () => {
+			const fixture = await createCheckPackProject({
+				checks: [
+					{id: "guard", files: {"placeholder.txt": "not evaluator\n"}},
+				],
+			});
+			try {
+				await writeFile(join(fixture.root, "outside.md"), "Requirement\n");
+				await symlink(
+					join(fixture.root, "outside.md"),
+					join(fixture.packRoot, "checks", "guard", "CHECK.md"),
+				);
+				await assert.rejects(
+					() =>
+						discoverProjectCheckPacks({
+							repoRoot: fixture.root,
+							projectChecks: resolveWikiConfig().checks,
+						}),
+					/exactly: CHECK\.md, placeholder\.txt|evaluator must be a regular file/u,
+				);
+			} finally {
+				await rm(fixture.root, {recursive: true, force: true});
+			}
+		});
 	});
 });

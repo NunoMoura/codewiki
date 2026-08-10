@@ -97,6 +97,7 @@ export function configFileToPartialWikiConfig(
 		retention: objectRecord(record.retention),
 		hosts: objectRecord(record.hosts),
 		quality: objectRecord(record.quality),
+		checks: objectRecord(record.checks),
 		userStandards: record.userStandards as PartialWikiConfig["userStandards"],
 		triagePreferences:
 			record.triagePreferences as PartialWikiConfig["triagePreferences"],
@@ -113,6 +114,7 @@ function validateConfigFileKeys(value: unknown): Record<string, unknown> {
 		"retention",
 		"hosts",
 		"quality",
+		"checks",
 		"userStandards",
 		"triagePreferences",
 		"customChecks",

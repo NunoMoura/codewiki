@@ -170,6 +170,9 @@ Budget rules:
 
 ### 6. Build the Candidate-bound Check ecosystem
 
+- [x] Establish versioned project, Pack, sparse Check, resolved-configuration, local discovery, path-derived identity, evaluator digest, Pack digest, and Check Catalog snapshot contracts without adding source or test files.
+- [x] Admit local `CHECK.md` and `CHECK.mjs` only; reject ambiguous, unsupported, blank, frontmatter-bearing, malformed-configuration, escaping, unexpected, and symlinked Check content.
+- [x] Resolve project defaults, Pack defaults, sparse Check overrides, protected enforcement floors, route/profile allowlists, capability allowlists, and budget maxima semantically; keep applicability, input, and execution capability scopes distinct.
 - [ ] Replace the current Custom Check and legacy Quality contracts with `Check Pack → Check Catalog → Resolved Exit Policy → Check Observation → Check Result → Exit Report` under Verification ownership.
 - [ ] Implement the tracked project layout:
   - `.codewiki/config.json` for project defaults, route definitions, runtime profiles, and protected floors;
