@@ -1,4 +1,14 @@
-import {mkdir, open, readFile, readdir, realpath, rm} from "node:fs/promises";
+import {
+	mkdir,
+	mkdtemp,
+	open,
+	readFile,
+	readdir,
+	realpath,
+	rm,
+	writeFile,
+} from "node:fs/promises";
+import {tmpdir} from "node:os";
 import {dirname, join, resolve} from "node:path";
 import type {TriagePreferenceBinding} from "../../changes/triage/policy.ts";
 import {
@@ -12,6 +22,7 @@ import {
 } from "../../project/config-file.ts";
 import {wikiConfigDigest} from "../../project/config-digest.ts";
 import {
+	assertSha256Digest,
 	canonicalJsonDigest,
 	sha256Digest,
 	type Sha256Digest,
@@ -49,6 +60,8 @@ const MAX_CHECK_PACKS = 64;
 const MAX_CHECKS_PER_PACK = 128;
 const MAX_CHECK_CONFIG_BYTES = 65_536;
 const MAX_CHECK_EVALUATOR_BYTES = 262_144;
+const MAX_CHECK_PACK_TREE_FILES =
+	MAX_CHECK_PACKS * (1 + MAX_CHECKS_PER_PACK * 2);
 
 export interface ProjectCheckDefinition {
 	readonly id: string;
@@ -74,6 +87,30 @@ export interface ProjectCheckPackSnapshot {
 	readonly version: typeof CHECK_PACK_CONFIG_PROTOCOL_VERSION;
 	readonly packs: readonly ProjectCheckPack[];
 	readonly digest: Sha256Digest;
+}
+
+export function assertProjectCheckPackSnapshot(
+	snapshot: ProjectCheckPackSnapshot,
+): void {
+	if (snapshot.version !== CHECK_PACK_CONFIG_PROTOCOL_VERSION) {
+		throw new Error(
+			`Unsupported Check Pack snapshot version ${String(snapshot.version)}.`,
+		);
+	}
+	if (!Array.isArray(snapshot.packs)) {
+		throw new Error("Check Pack snapshot packs must be an array.");
+	}
+	assertSha256Digest(snapshot.digest, "Check Pack snapshot digest");
+	const expectedDigest = canonicalJsonDigest({
+		version: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+		packs: snapshot.packs.map((pack) => ({
+			bindingId: pack.bindingId,
+			digest: pack.digest,
+		})),
+	});
+	if (snapshot.digest !== expectedDigest) {
+		throw new Error("Check Pack snapshot digest does not match its content.");
+	}
 }
 
 export function createWikiConfigCustomCheckStore(
@@ -384,12 +421,18 @@ function compareText(left: string, right: string): number {
 	return left.localeCompare(right);
 }
 
-export async function loadProtectedCustomCheckConfigSnapshot(input: {
+interface ProtectedCheckPackTreeEntry {
+	readonly path: string;
+	readonly objectId: string;
+	readonly maximumBytes: number;
+}
+
+async function loadProtectedWikiConfig(input: {
 	readonly repoRoot: string;
 	readonly protectedSourceHead: string;
 	readonly runner?: GitCommandRunner;
 	readonly signal?: AbortSignal;
-}): Promise<ProtectedCustomCheckConfigSnapshot> {
+}): Promise<WikiConfig> {
 	assertGitObjectId(input.protectedSourceHead);
 	const runner = input.runner ?? createGitCommandRunner();
 	await runGitChecked(
@@ -417,7 +460,170 @@ export async function loadProtectedCustomCheckConfigSnapshot(input: {
 		const reason = error instanceof Error ? error.message : String(error);
 		throw new Error(`Protected project configuration is invalid JSON: ${reason}`);
 	}
-	const config = resolveWikiConfig(configFileToPartialWikiConfig(raw));
+	return resolveWikiConfig(configFileToPartialWikiConfig(raw));
+}
+
+function protectedCheckPackTreeEntries(
+	stdout: string,
+): ProtectedCheckPackTreeEntry[] {
+	const records = stdout.split("\0").filter((record) => record.length > 0);
+	if (records.length > MAX_CHECK_PACK_TREE_FILES) {
+		throw new Error(
+			`Protected Check Pack tree exceeds ${MAX_CHECK_PACK_TREE_FILES} files.`,
+		);
+	}
+	const seen = new Set<string>();
+	return records.map((record) => {
+		const separator = record.indexOf("\t");
+		if (separator < 1) {
+			throw new Error("Protected Check Pack tree contains malformed metadata.");
+		}
+		const metadata = record.slice(0, separator);
+		const path = record.slice(separator + 1);
+		const match = /^(100644|100755) blob ([0-9a-f]{40}|[0-9a-f]{64})$/u.exec(
+			metadata,
+		);
+		if (!match) {
+			throw new Error(
+				`Protected Check Pack entry ${path} must be a regular Git blob.`,
+			);
+		}
+		if (seen.has(path)) {
+			throw new Error(`Protected Check Pack tree duplicates ${path}.`);
+		}
+		seen.add(path);
+		return {
+			path,
+			objectId: match[2],
+			maximumBytes: protectedCheckPackFileLimit(path),
+		};
+	});
+}
+
+function protectedCheckPackFileLimit(path: string): number {
+	const parts = path.split("/");
+	if (
+		parts.length === 4 &&
+		parts[0] === ".codewiki" &&
+		parts[1] === "check-packs" &&
+		parts[3] === "config.json"
+	) {
+		assertCheckPackIdentifier(parts[2], "Check Pack binding id");
+		return MAX_CHECK_CONFIG_BYTES;
+	}
+	if (
+		parts.length === 6 &&
+		parts[0] === ".codewiki" &&
+		parts[1] === "check-packs" &&
+		parts[3] === "checks"
+	) {
+		assertCheckPackIdentifier(parts[2], "Check Pack binding id");
+		assertCheckPackIdentifier(parts[4], "Check id");
+		if (parts[5] === "config.json") return MAX_CHECK_CONFIG_BYTES;
+		if (parts[5] === "CHECK.md" || parts[5] === "CHECK.mjs") {
+			return MAX_CHECK_EVALUATOR_BYTES;
+		}
+	}
+	throw new Error(`Protected Check Pack tree contains unsupported path ${path}.`);
+}
+
+async function protectedBlobSize(input: {
+	readonly runner: GitCommandRunner;
+	readonly repoRoot: string;
+	readonly objectId: string;
+	readonly signal?: AbortSignal;
+}): Promise<number> {
+	const result = await runGitChecked(
+		input.runner,
+		{
+			repoRoot: input.repoRoot,
+			args: ["cat-file", "-s", input.objectId],
+			...(input.signal ? {signal: input.signal} : {}),
+		},
+		"read protected Check Pack file size",
+	);
+	const size = Number(result.stdout.trim());
+	if (!Number.isSafeInteger(size) || size < 0) {
+		throw new Error("Protected Check Pack blob has invalid size metadata.");
+	}
+	return size;
+}
+
+export async function loadProtectedProjectCheckPacks(input: {
+	readonly repoRoot: string;
+	readonly protectedSourceHead: string;
+	readonly runner?: GitCommandRunner;
+	readonly signal?: AbortSignal;
+}): Promise<ProjectCheckPackSnapshot> {
+	const runner = input.runner ?? createGitCommandRunner();
+	const config = await loadProtectedWikiConfig({...input, runner});
+	const tree = await runGitChecked(
+		runner,
+		{
+			repoRoot: input.repoRoot,
+			args: [
+				"ls-tree",
+				"-rz",
+				"--full-tree",
+				input.protectedSourceHead,
+				"--",
+				CHECK_PACK_ROOT,
+			],
+			...(input.signal ? {signal: input.signal} : {}),
+		},
+		"read protected Check Pack tree",
+	);
+	const entries = protectedCheckPackTreeEntries(tree.stdout);
+	const materializationRoot = await mkdtemp(
+		join(tmpdir(), "codewiki-protected-check-packs-"),
+	);
+	try {
+		for (const entry of entries) {
+			const size = await protectedBlobSize({
+				runner,
+				repoRoot: input.repoRoot,
+				objectId: entry.objectId,
+				signal: input.signal,
+			});
+			if (size > entry.maximumBytes) {
+				throw new Error(
+					`Protected Check Pack file ${entry.path} exceeds ${entry.maximumBytes} bytes.`,
+				);
+			}
+			const blob = await runGitChecked(
+				runner,
+				{
+					repoRoot: input.repoRoot,
+					args: ["cat-file", "blob", entry.objectId],
+					...(input.signal ? {signal: input.signal} : {}),
+				},
+				`read protected Check Pack file ${entry.path}`,
+			);
+			if (Buffer.byteLength(blob.stdout, "utf8") !== size) {
+				throw new Error(
+					`Protected Check Pack file ${entry.path} must be valid UTF-8.`,
+				);
+			}
+			const target = join(materializationRoot, entry.path);
+			await mkdir(dirname(target), {recursive: true});
+			await writeFile(target, blob.stdout, "utf8");
+		}
+		return await discoverProjectCheckPacks({
+			repoRoot: materializationRoot,
+			projectChecks: config.checks,
+		});
+	} finally {
+		await rm(materializationRoot, {recursive: true, force: true});
+	}
+}
+
+export async function loadProtectedCustomCheckConfigSnapshot(input: {
+	readonly repoRoot: string;
+	readonly protectedSourceHead: string;
+	readonly runner?: GitCommandRunner;
+	readonly signal?: AbortSignal;
+}): Promise<ProtectedCustomCheckConfigSnapshot> {
+	const config = await loadProtectedWikiConfig(input);
 	return createProtectedCustomCheckConfigSnapshot({
 		protectedSourceHead: input.protectedSourceHead,
 		projectConfigDigest: wikiConfigDigest(config),

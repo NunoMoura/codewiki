@@ -5,8 +5,10 @@ import {
 } from "../../verification/cache.ts";
 import {createCheckCatalog} from "../../verification/catalog.ts";
 import {
+	assertProjectCheckPackSnapshot,
 	createCustomCodeCheckExecutors,
 	type CustomCodeCapabilitySnapshot,
+	type ProjectCheckPackSnapshot,
 } from "../../verification/custom-checks/index.ts";
 import type {ExitReport, ResolvedExitPolicy} from "../../verification/contracts.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
@@ -54,6 +56,7 @@ interface CreateDecisionExitRuntimeInput {
 	readonly additionalExecutors?: readonly LoopCheckExecutor[];
 	readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
 	readonly protectedBaseCustomCheckConfig?: DecisionProtectedCustomCheckConfig;
+	readonly projectCheckPackSnapshot?: ProjectCheckPackSnapshot;
 	readonly cache?: LoopExitResultCache;
 	readonly limits?: LoopExitRunnerLimits;
 	readonly modelChecks?: {
@@ -109,14 +112,20 @@ export function createDecisionExitRuntime(
 	}
 	assertIndependentSecurityRoute(input.modelChecks);
 	const protectedConfig = input.protectedBaseCustomCheckConfig;
-	const catalog = createCheckCatalog(
-		protectedConfig
-			? {
-					userStandards: protectedConfig.userStandards,
-					customChecks: protectedConfig.customChecks,
-				}
-			: undefined,
-	);
+	if (input.projectCheckPackSnapshot) {
+		assertProjectCheckPackSnapshot(input.projectCheckPackSnapshot);
+	}
+	const catalog = createCheckCatalog({
+		userStandards: protectedConfig?.userStandards ?? [],
+		customChecks: protectedConfig?.customChecks ?? [],
+		checkPacks: input.projectCheckPackSnapshot?.packs ?? [],
+	});
+	if (
+		input.projectCheckPackSnapshot &&
+		catalog.checkPackSnapshotDigest !== input.projectCheckPackSnapshot.digest
+	) {
+		throw new Error("Check Pack snapshot does not match the Decision Catalog.");
+	}
 	const cache = input.cache ?? createLoopExitResultCache();
 	return Object.freeze({
 		cache,
@@ -132,6 +141,7 @@ export function createDecisionExitRuntime(
 				changeRef: runInput.changeRef,
 				subject,
 				protectedBaseCustomCheckConfig: input.protectedBaseCustomCheckConfig,
+				projectCheckPackSnapshot: input.projectCheckPackSnapshot,
 				configuration: input.securityScanners,
 				scanContext: runInput.securityScan,
 			});

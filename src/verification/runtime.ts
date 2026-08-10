@@ -4,6 +4,10 @@ import {createCustomCodeCheckExecutors} from "./custom-checks/code-executor.ts";
 import type {CustomCodeCapabilitySnapshot} from "./custom-checks/code-templates.ts";
 import type {ProtectedCustomCheckConfigSnapshot} from "./custom-checks/configuration.ts";
 import {
+	assertProjectCheckPackSnapshot,
+	type ProjectCheckPackSnapshot,
+} from "./custom-checks/project-config-store.ts";
+import {
 	createResourceUsageEvidenceMaterial,
 	evaluateRuntimeResourceMeter,
 	preflightRuntimeResourceGuards,
@@ -37,6 +41,7 @@ interface VerificationRuntime {
 
 interface CreateVerificationRuntimeInput {
 	readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
+	readonly projectCheckPackSnapshot?: ProjectCheckPackSnapshot;
 	readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
 	readonly standardEvidenceCapabilities?: readonly StandardEvidenceCheckCapability[];
 }
@@ -50,14 +55,20 @@ export function createVerificationRuntime(
 		);
 	}
 	const protectedConfig = input.protectedBaseCustomCheckConfig;
-	const catalog = createCheckCatalog(
-		protectedConfig
-			? {
-					userStandards: protectedConfig.userStandards,
-					customChecks: protectedConfig.customChecks,
-				}
-			: undefined,
-	);
+	if (input.projectCheckPackSnapshot) {
+		assertProjectCheckPackSnapshot(input.projectCheckPackSnapshot);
+	}
+	const catalog = createCheckCatalog({
+		userStandards: protectedConfig?.userStandards ?? [],
+		customChecks: protectedConfig?.customChecks ?? [],
+		checkPacks: input.projectCheckPackSnapshot?.packs ?? [],
+	});
+	if (
+		input.projectCheckPackSnapshot &&
+		catalog.checkPackSnapshotDigest !== input.projectCheckPackSnapshot.digest
+	) {
+		throw new Error("Check Pack snapshot does not match the Verification Catalog.");
+	}
 	const resourceGuards = resolveRuntimeResourceGuards({
 		...(protectedConfig ? {protectedConfig} : {}),
 		...(input.customCodeCapabilitySnapshot

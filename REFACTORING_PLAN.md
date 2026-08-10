@@ -185,7 +185,7 @@ Budget rules:
 - [ ] Define no Check Pack fixtures, cases, or semantic assets. Evaluate real Candidates with admitted repository, Knowledge, and Evidence input; keep executable dependency closure digest-pinned and separate from semantic input.
 - [ ] Make Default Checks open, materialized, inspectable, and editable in the same format as imported and Custom Checks while retaining non-editable protocol and admission invariants in Runtime and Verification.
 - [ ] Resolve project defaults, Pack defaults, optional Check overrides, and protected floors semantically rather than through generic deep merge.
-- [ ] Implement conservative applicability from Development stage, Git-relative exact file or directory-prefix scope, deterministic languages, and optional Change type or kind; unknown facts widen selection.
+- [x] Implement conservative applicability from mandatory Development stage and explicit non-empty Change kinds, with optional Git-relative exact file or directory-prefix scope, deterministic languages, and Change type; unknown optional facts widen selection while missing Candidate Change kind leaves policy unresolved.
 - [ ] Keep applicability scope, evaluator input scope, and sandbox capability requests separate. Check scope may narrow but cannot escape Pack or project bounds.
 - [ ] Preserve `observe`, `warn`, and `require` as project-owned enforcement; package recommendation or installation cannot grant blocking authority.
 - [x] Persist Candidate-bound Resolved Exit Policy with Candidate, Catalog, selector-input, configuration, route, and policy digests. Project no-policy state as unresolved, and bind completed projection to the persisted Catalog snapshot rather than current Catalog growth.

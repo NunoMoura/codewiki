@@ -13,7 +13,11 @@ import {
 } from "../../changes/triage/selection.ts";
 import {createDecisionExitRuntime} from "../../decision/exit/runtime.ts";
 import type {ProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/configuration.ts";
-import {loadProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/project-config-store.ts";
+import {
+	loadProtectedCustomCheckConfigSnapshot,
+	loadProtectedProjectCheckPacks,
+	type ProjectCheckPackSnapshot,
+} from "../../verification/custom-checks/project-config-store.ts";
 import {createDecisionGitAdmission} from "../../runtime/admission/git.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
@@ -73,6 +77,7 @@ export interface PiNativeDecisionHostOptions {
 	readonly createExitRuntime?: (
 		input: Parameters<NativeDecisionAttemptExecutorOptions["createExitRuntime"]>[0] & {
 			readonly protectedConfig: ProtectedCustomCheckConfigSnapshot;
+			readonly projectCheckPackSnapshot: ProjectCheckPackSnapshot;
 		},
 	) =>
 		| ReturnType<typeof createDecisionExitRuntime>
@@ -157,12 +162,20 @@ async function loadPiNativeDecisionExitRuntime(input: {
 		NativeDecisionAttemptExecutorOptions["createExitRuntime"]
 	>[0];
 }) {
-	const protectedConfig = await loadProtectedCustomCheckConfigSnapshot({
-		repoRoot: input.repoRoot,
-		protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
-		runner: input.options.runner,
-		signal: input.input.signal,
-	});
+	const [protectedConfig, projectCheckPackSnapshot] = await Promise.all([
+		loadProtectedCustomCheckConfigSnapshot({
+			repoRoot: input.repoRoot,
+			protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
+			runner: input.options.runner,
+			signal: input.input.signal,
+		}),
+		loadProtectedProjectCheckPacks({
+			repoRoot: input.repoRoot,
+			protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
+			runner: input.options.runner,
+			signal: input.input.signal,
+		}),
+	]);
 	if (
 		protectedConfig.projectConfigDigest !== input.input.teamSnapshot.configDigest
 	) {
@@ -172,7 +185,11 @@ async function loadPiNativeDecisionExitRuntime(input: {
 	}
 	let runtime: ReturnType<typeof createDecisionExitRuntime>;
 	if (input.options.createExitRuntime) {
-		runtime = await input.options.createExitRuntime({...input.input, protectedConfig});
+		runtime = await input.options.createExitRuntime({
+			...input.input,
+			protectedConfig,
+			projectCheckPackSnapshot,
+		});
 	} else {
 		const researchChecks = input.options.decisionResearch
 			? createPiNativeDecisionResearchRuntimeConfig({
@@ -184,6 +201,7 @@ async function loadPiNativeDecisionExitRuntime(input: {
 			: undefined;
 		runtime = createDecisionExitRuntime({
 			protectedBaseCustomCheckConfig: protectedConfig,
+			projectCheckPackSnapshot,
 			...(researchChecks ? {researchChecks} : {}),
 		});
 	}

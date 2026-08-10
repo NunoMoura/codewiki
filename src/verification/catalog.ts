@@ -1178,6 +1178,14 @@ function validatePackCheckRegistration(registration: CheckRegistration): void {
 	) {
 		throw new Error("Pack Check execution identity does not match its evaluator.");
 	}
+	const {digest: configurationDigest, ...configuration} =
+		packCheck.configuration;
+	if (canonicalJsonDigest(configuration) !== configurationDigest) {
+		throw new Error("Pack Check resolved configuration digest mismatch.");
+	}
+	if (packCheck.configuration.applicability.changeKinds.length === 0) {
+		throw new Error("Pack Check must select at least one Change kind.");
+	}
 	if (registration.rollout !== packCheck.configuration.enforcement) {
 		throw new Error("Pack Check rollout does not match resolved configuration.");
 	}

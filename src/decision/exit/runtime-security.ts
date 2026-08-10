@@ -2,7 +2,10 @@ import type {ChangeIntakeMaterial} from "../../changes/intake/contracts.ts";
 import type {EvidenceSubject} from "../../evidence/contracts.ts";
 import type {CheckCatalog} from "../../verification/catalog.ts";
 import type {ResolvedExitPolicy} from "../../verification/contracts.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/index.ts";
+import type {
+	ProjectCheckPackSnapshot,
+	ProtectedCustomCheckConfigSnapshot,
+} from "../../verification/custom-checks/index.ts";
 import {resolveExitPolicy} from "../../verification/resolve-policy.ts";
 import type {LoopCheckExecutor} from "../../verification/runner.ts";
 import {createAtomicSecurityScannerCheckExecutors} from "../../verification/security-scanner-checks.ts";
@@ -34,6 +37,7 @@ interface PrepareDecisionSecurityRuntimeInput {
 	readonly changeRef: string;
 	readonly subject: EvidenceSubject;
 	readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
+	readonly projectCheckPackSnapshot?: ProjectCheckPackSnapshot;
 	readonly configuration?: DecisionSecurityRuntimeConfig;
 	readonly scanContext?: DecisionSecurityScanContext;
 }
@@ -65,6 +69,7 @@ export function prepareDecisionSecurityRuntime(
 			changeId,
 			classification,
 			input.protectedBaseCustomCheckConfig,
+			input.projectCheckPackSnapshot,
 		),
 		executors: input.configuration
 			? [
@@ -95,6 +100,7 @@ function decisionExitPolicy(
 	changeId: string,
 	securitySurfaceClassification: SecuritySurfaceClassification,
 	protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot,
+	projectCheckPackSnapshot?: ProjectCheckPackSnapshot,
 ): ResolvedExitPolicy {
 	return resolveExitPolicy({
 		loop: "decision",
@@ -120,9 +126,11 @@ function decisionExitPolicy(
 		projectTraits: [],
 		technologies: [],
 		paths: [...candidate.content.revision.classification.targetRefs],
+		pathFactsComplete: true,
 		...(protectedBaseCustomCheckConfig
 			? {protectedBaseCustomCheckConfig}
 			: {}),
+		...(projectCheckPackSnapshot ? {projectCheckPackSnapshot} : {}),
 	});
 }
 

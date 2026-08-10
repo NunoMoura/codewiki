@@ -18,6 +18,7 @@ import {
 	discoverProjectCheckPacks,
 	loadProjectCheckPacks,
 	loadProtectedCustomCheckConfigSnapshot,
+	loadProtectedProjectCheckPacks,
 	parseCustomCheckMutationCommand,
 } from "../../../src/verification/custom-checks/index.ts";
 import {createCheckCatalog} from "../../../src/verification/catalog.ts";
@@ -486,7 +487,24 @@ describe("guarded Custom Check configuration mutations", () => {
 
 async function createCheckPackProject(input = {}) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-check-pack-"));
-	const projectChecks = input.projectChecks ?? {};
+	const suppliedChecks = input.projectChecks ?? {};
+	const projectChecks = {
+		...suppliedChecks,
+		defaults: {
+			...suppliedChecks.defaults,
+			applicability: {
+				changeKinds: [
+					"fix",
+					"improve",
+					"harden",
+					"migrate",
+					"introduce",
+					"remove",
+				],
+				...suppliedChecks.defaults?.applicability,
+			},
+		},
+	};
 	await writeWikiConfigFile(root, resolveWikiConfig({checks: projectChecks}));
 	const packRoot = join(
 		root,
@@ -528,6 +546,8 @@ describe("project-local Check Pack discovery", () => {
 						stages: ["implementation"],
 						paths: ["src"],
 						languages: ["typescript"],
+						changeTypes: ["behavior_change"],
+						changeKinds: ["fix", "improve"],
 					},
 					input: {paths: ["src"]},
 				},
@@ -549,6 +569,7 @@ describe("project-local Check Pack discovery", () => {
 					files: {
 						"CHECK.mjs": "export default async function check() { return {outcome: 'pass'}; }\n",
 						"config.json": `${JSON.stringify({
+							enforcement: "require",
 							input: {paths: ["src/types"]},
 							execution: {
 								runtimeProfile: "node-22-isolated",
@@ -592,6 +613,10 @@ describe("project-local Check Pack discovery", () => {
 				"implementation",
 			]);
 			assert.deepEqual(modelCheck.configuration.applicability.paths, ["src/api"]);
+			assert.deepEqual(modelCheck.configuration.applicability.changeKinds, [
+				"fix",
+				"improve",
+			]);
 			assert.equal(
 				modelCheck.configuration.execution.modelRoute,
 				"pi/openai/gpt-5",
@@ -618,7 +643,132 @@ describe("project-local Check Pack discovery", () => {
 				modelCheck.digest,
 			);
 			assert.equal(catalog.get(modelCheck.id, "decision"), undefined);
-			assert.equal(catalog.get(codeCheck.id, "implementation").rollout, "warn");
+			assert.equal(catalog.get(codeCheck.id, "implementation").rollout, "require");
+			const policyInput = {
+				loop: "implementation",
+				candidateDigest: CANDIDATE_DIGEST,
+				changes: [
+					{
+						changeId: "CHG-check-pack-policy",
+						revision: 1,
+						digest: CHANGE_DIGEST,
+						kind: "improve",
+						type: "behavior_change",
+						risk: "low",
+						affectedLayers: ["verification"],
+					},
+				],
+				projectTraits: [],
+				technologies: ["typescript"],
+				paths: ["src/api/checks.ts"],
+				projectCheckPackSnapshot: first,
+			};
+			const policy = resolveExitPolicy(policyInput);
+			const packBindings = policy.bindings.filter((binding) =>
+				binding.checkId.startsWith("check-pack:"),
+			);
+			assert.deepEqual(
+				packBindings.map((binding) => binding.checkId),
+				[modelCheck.id, codeCheck.id],
+			);
+			assert.equal(packBindings[0].enforcement, "warn");
+			assert.equal(packBindings[0].required, false);
+			assert.equal(packBindings[1].enforcement, "require");
+			assert.equal(packBindings[1].required, true);
+			assert.equal(
+				packBindings[0].parameters.checkPack.snapshotDigest,
+				first.digest,
+			);
+			assert.equal(
+				packBindings[0].parameters.checkPack.configuration.digest,
+				modelCheck.configuration.digest,
+			);
+			const differentKind = resolveExitPolicy({
+				...policyInput,
+				changes: [{...policyInput.changes[0], kind: "remove"}],
+			});
+			assert.ok(
+				differentKind.bindings.every(
+					(binding) => !binding.checkId.startsWith("check-pack:"),
+				),
+			);
+			const differentType = resolveExitPolicy({
+				...policyInput,
+				changes: [
+					{...policyInput.changes[0], type: "documentation_change"},
+				],
+			});
+			assert.ok(
+				differentType.bindings.every(
+					(binding) => !binding.checkId.startsWith("check-pack:"),
+				),
+			);
+			const unknownOptionalFacts = resolveExitPolicy({
+				...policyInput,
+				paths: [],
+			});
+			assert.deepEqual(
+				unknownOptionalFacts.bindings
+					.filter((binding) => binding.checkId.startsWith("check-pack:"))
+					.map((binding) => binding.checkId),
+				[modelCheck.id, codeCheck.id],
+			);
+			const incompletePaths = resolveExitPolicy({
+				...policyInput,
+				paths: ["docs/checks.md"],
+				pathFactsComplete: false,
+			});
+			assert.deepEqual(
+				incompletePaths.bindings
+					.filter((binding) => binding.checkId.startsWith("check-pack:"))
+					.map((binding) => binding.checkId),
+				[modelCheck.id, codeCheck.id],
+			);
+			const narrowerPath = resolveExitPolicy({
+				...policyInput,
+				paths: ["src/types/checks.ts"],
+			});
+			assert.deepEqual(
+				narrowerPath.bindings
+					.filter((binding) => binding.checkId.startsWith("check-pack:"))
+					.map((binding) => binding.checkId),
+				[codeCheck.id],
+			);
+			const differentLanguage = resolveExitPolicy({
+				...policyInput,
+				paths: ["src/api/checks.py"],
+			});
+			assert.ok(
+				differentLanguage.bindings.every(
+					(binding) => !binding.checkId.startsWith("check-pack:"),
+				),
+			);
+			const unknownLanguage = resolveExitPolicy({
+				...policyInput,
+				paths: ["src/api/checks.unknown"],
+			});
+			assert.deepEqual(
+				unknownLanguage.bindings
+					.filter((binding) => binding.checkId.startsWith("check-pack:"))
+					.map((binding) => binding.checkId),
+				[modelCheck.id, codeCheck.id],
+			);
+			assert.ok(
+				unknownLanguage.bindings
+					.find((binding) => binding.checkId === modelCheck.id)
+					.activatedBy.includes("languages:unknown_or_incomplete"),
+			);
+			assert.throws(
+				() =>
+					resolveExitPolicy({
+						...policyInput,
+						projectCheckPackSnapshot: {
+							...first,
+							digest: `sha256:${"0".repeat(64)}`,
+						},
+					}),
+				/snapshot digest does not match its content/u,
+			);
 			assert.throws(
 				() =>
 					createCheckCatalog({
@@ -629,6 +779,33 @@ describe("project-local Check Pack discovery", () => {
 						],
 					}),
 				/content digest mismatch/u,
+			);
+			assert.throws(
+				() =>
+					createCheckCatalog({
+						userStandards: [],
+						customChecks: [],
+						checkPacks: [
+							{
+								...first.packs[0],
+								checks: [
+									{
+										...first.packs[0].checks[0],
+										configuration: {
+											...first.packs[0].checks[0].configuration,
+											applicability: {
+												...first.packs[0].checks[0].configuration
+													.applicability,
+												changeKinds: [],
+											},
+										},
+									},
+									...first.packs[0].checks.slice(1),
+								],
+							},
+						],
+					}),
+				/resolved configuration digest mismatch/u,
 			);
 			const originalIds = catalog.list().map((entry) => entry.check.id);
 			const additional = await loadProjectCheckPacks(growthFixture.root);
@@ -649,6 +826,88 @@ describe("project-local Check Pack discovery", () => {
 		} finally {
 			await rm(fixture.root, {recursive: true, force: true});
 			await rm(growthFixture.root, {recursive: true, force: true});
+		}
+	});
+
+	it("requires every resolved Check to select at least one Change kind", async () => {
+		const fixture = await createCheckPackProject({
+			checks: [
+				{id: "policy", files: {"CHECK.md": "Require policy review.\n"}},
+			],
+		});
+		try {
+			await assert.rejects(
+				() =>
+					discoverProjectCheckPacks({
+						repoRoot: fixture.root,
+						projectChecks: resolveWikiConfig().checks,
+					}),
+				/Resolved Check applicability must select at least one Change kind/u,
+			);
+		} finally {
+			await rm(fixture.root, {recursive: true, force: true});
+		}
+	});
+
+	it("loads an immutable Pack snapshot from the protected Git head", async () => {
+		const fixture = await createCheckPackProject({
+			checks: [
+				{id: "policy", files: {"CHECK.md": "Require policy review.\n"}},
+			],
+		});
+		try {
+			await execFileAsync("git", ["init", "-q", fixture.root]);
+			await execFileAsync("git", [
+				"-C",
+				fixture.root,
+				"config",
+				"user.name",
+				"CodeWiki Test",
+			]);
+			await execFileAsync("git", [
+				"-C",
+				fixture.root,
+				"config",
+				"user.email",
+				"test@codewiki.local",
+			]);
+			await execFileAsync("git", ["-C", fixture.root, "add", ".codewiki"]);
+			await execFileAsync("git", [
+				"-C",
+				fixture.root,
+				"commit",
+				"-q",
+				"-m",
+				"protected packs",
+			]);
+			const {stdout} = await execFileAsync("git", [
+				"-C",
+				fixture.root,
+				"rev-parse",
+				"HEAD",
+			]);
+			const head = stdout.trim();
+			const protectedSnapshot = await loadProtectedProjectCheckPacks({
+				repoRoot: fixture.root,
+				protectedSourceHead: head,
+			});
+			await writeFile(
+				join(fixture.packRoot, "checks", "policy", "CHECK.md"),
+				"Changed uncommitted policy.\n",
+			);
+			const currentSnapshot = await loadProjectCheckPacks(fixture.root);
+			const stillProtected = await loadProtectedProjectCheckPacks({
+				repoRoot: fixture.root,
+				protectedSourceHead: head,
+			});
+			assert.notEqual(currentSnapshot.digest, protectedSnapshot.digest);
+			assert.equal(stillProtected.digest, protectedSnapshot.digest);
+			assert.equal(
+				stillProtected.packs[0].checks[0].evaluatorSource,
+				"Require policy review.\n",
+			);
+		} finally {
+			await rm(fixture.root, {recursive: true, force: true});
 		}
 	});
 

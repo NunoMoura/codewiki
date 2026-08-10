@@ -101,9 +101,17 @@ export interface CheckPackConfiguration {
 	readonly defaults: CheckConfiguration;
 }
 
+export interface ResolvedCheckApplicabilityConfiguration {
+	readonly stages: readonly SemanticLoop[];
+	readonly paths: readonly string[];
+	readonly languages: readonly string[];
+	readonly changeTypes: readonly ChangeType[];
+	readonly changeKinds: readonly [ChangeKind, ...ChangeKind[]];
+}
+
 export interface ResolvedCheckConfiguration {
 	readonly enforcement: CheckEnforcement;
-	readonly applicability: Readonly<Required<CheckApplicabilityConfiguration>>;
+	readonly applicability: Readonly<ResolvedCheckApplicabilityConfiguration>;
 	readonly input: Readonly<Required<CheckInputConfiguration>>;
 	readonly execution: Readonly<{
 		modelRoute?: string;
@@ -543,13 +551,21 @@ function assertNarrowerPaths(
 
 function resolveApplicability(
 	value: CheckApplicabilityConfiguration | undefined,
-): Readonly<Required<CheckApplicabilityConfiguration>> {
+): Readonly<ResolvedCheckApplicabilityConfiguration> {
+	if (!value?.changeKinds?.length) {
+		throw new Error(
+			"Resolved Check applicability must select at least one Change kind.",
+		);
+	}
 	return Object.freeze({
-		stages: Object.freeze([...(value?.stages ?? DEVELOPMENT_STAGES)]),
-		paths: Object.freeze([...(value?.paths ?? [])]),
-		languages: Object.freeze([...(value?.languages ?? [])]),
-		changeTypes: Object.freeze([...(value?.changeTypes ?? [])]),
-		changeKinds: Object.freeze([...(value?.changeKinds ?? [])]),
+		stages: Object.freeze([...(value.stages ?? DEVELOPMENT_STAGES)]),
+		paths: Object.freeze([...(value.paths ?? [])]),
+		languages: Object.freeze([...(value.languages ?? [])]),
+		changeTypes: Object.freeze([...(value.changeTypes ?? [])]),
+		changeKinds: Object.freeze([...value.changeKinds]) as readonly [
+			ChangeKind,
+			...ChangeKind[],
+		],
 	});
 }
 

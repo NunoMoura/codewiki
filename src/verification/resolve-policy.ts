@@ -28,8 +28,13 @@ import {
 } from "./catalog.ts";
 import {
 	assertProtectedCustomCheckConfigSnapshot,
+	CHECK_PACK_CONFIG_PROTOCOL_VERSION,
 	type ProtectedCustomCheckConfigSnapshot,
 } from "./custom-checks/configuration.ts";
+import {
+	assertProjectCheckPackSnapshot,
+	type ProjectCheckPackSnapshot,
+} from "./custom-checks/project-config-store.ts";
 import type {CustomCheckDefinition} from "./custom-checks/contracts.ts";
 import { loopQualifiedCheckDigest } from "./identity.ts";
 import {
@@ -39,7 +44,7 @@ import {
 	type SecuritySurfaceClassification,
 } from "./security-surfaces.ts";
 
-const EXIT_POLICY_SELECTOR_VERSION = "2.0.0";
+const EXIT_POLICY_SELECTOR_VERSION = "3.0.0";
 
 const PROJECT_TRAITS = [
 	"web-ui",
@@ -99,9 +104,11 @@ interface ResolveExitPolicyInput {
 	projectTraits?: ProjectTrait[];
 	technologies?: Technology[];
 	paths?: string[];
+	pathFactsComplete?: boolean;
 	approvedAdditions?: ApprovedCheckAddition[];
 	approvedExclusions?: ApprovedCheckExclusion[];
 	protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
+	projectCheckPackSnapshot?: ProjectCheckPackSnapshot;
 }
 
 interface CheckActivationRuleMatch {
@@ -134,12 +141,16 @@ interface NormalizedSelectorInput {
 	projectTraits: ProjectTrait[];
 	technologies: Technology[];
 	paths: string[];
+	pathFactsComplete: boolean;
 	pathTraits: PathTrait[];
+	languages: string[];
+	languageFactsComplete: boolean;
 	securitySurfaceClassification?: SecuritySurfaceClassification;
 	securitySurfaces: SecuritySurface[];
 	securityResidualRisk?: SecurityResidualRisk;
 	approvedAdditions: ApprovedCheckAddition[];
 	approvedExclusions: ApprovedCheckExclusion[];
+	checkPackSnapshotDigest: string;
 	protectedBaseCustomCheckConfig?: {
 		protectedSourceHead: string;
 		projectConfigDigest: string;
@@ -454,23 +465,31 @@ export function resolveExitPolicy(
 			input.protectedBaseCustomCheckConfig,
 		);
 	}
+	if (input.projectCheckPackSnapshot) {
+		assertProjectCheckPackSnapshot(input.projectCheckPackSnapshot);
+	}
 	const protectedConfig = input.protectedBaseCustomCheckConfig;
-	const catalog = createCheckCatalog(
-		protectedConfig
-			? {
-					userStandards: protectedConfig.userStandards,
-					customChecks: protectedConfig.customChecks,
-				}
-			: undefined,
-	);
+	const catalog = createCheckCatalog({
+		userStandards: protectedConfig?.userStandards ?? [],
+		customChecks: protectedConfig?.customChecks ?? [],
+		checkPacks: input.projectCheckPackSnapshot?.packs ?? [],
+	});
+	if (
+		input.projectCheckPackSnapshot &&
+		catalog.checkPackSnapshotDigest !== input.projectCheckPackSnapshot.digest
+	) {
+		throw new Error("Check Pack snapshot does not match the resolved Catalog.");
+	}
 	const selector = normalizeSelectorInput(
 		input,
 		catalog.version,
 		catalog.digest,
+		catalog.checkPackSnapshotDigest,
 	);
 	const active = new Map<string, MutableBinding>();
 	activateRules(active, catalog, selector);
 	activateCustomChecks(active, catalog, selector);
+	activatePackChecks(active, catalog, selector);
 	activateApprovedAdditions(active, catalog, selector);
 	activateDependencies(active, catalog, selector.loop);
 	applyApprovedExclusions(active, catalog, selector);
@@ -625,19 +644,147 @@ function customCheckApplicabilityReasons(
 	return reasons.sort(compareSelectorValue);
 }
 
+function activatePackChecks(
+	active: Map<string, MutableBinding>,
+	catalog: CheckCatalog,
+	selector: NormalizedSelectorInput,
+): void {
+	for (const registration of catalog.list(selector.loop)) {
+		const packCheck = registration.packCheck;
+		if (!packCheck) continue;
+		const applicabilityReasons = packCheckApplicabilityReasons(
+			registration,
+			selector,
+		);
+		if (!applicabilityReasons) continue;
+		activate({
+			active,
+			catalog,
+			loop: selector.loop,
+			checkId: registration.check.id,
+			checkVersion: registration.check.version,
+			parameters: packCheckParameters(registration, selector),
+			enforcement: packCheck.configuration.enforcement,
+			required: packCheck.configuration.enforcement === "require",
+			activatedBy: [
+				`check_pack:${packCheck.bindingId}:${packCheck.checkId}@${packCheck.checkDigest}`,
+				...applicabilityReasons,
+			],
+			ruleRef: `check-pack.applicability@${EXIT_POLICY_SELECTOR_VERSION}`,
+		});
+	}
+}
+
+function packCheckApplicabilityReasons(
+	registration: CheckRegistration,
+	selector: NormalizedSelectorInput,
+): string[] | undefined {
+	const configuration = registration.packCheck?.configuration;
+	if (!configuration) return undefined;
+	const matchingChanges = selector.changes.filter(
+		(change) =>
+			configuration.applicability.changeKinds.includes(change.kind) &&
+			(configuration.applicability.changeTypes.length === 0 ||
+				configuration.applicability.changeTypes.includes(change.type)),
+	);
+	if (matchingChanges.length === 0) return undefined;
+	const reasons = [
+		`development_stage:${selector.loop}`,
+		...unique(matchingChanges.map((change) => change.kind)).map(
+			(kind) => `change_kind:${kind}`,
+		),
+	];
+	if (configuration.applicability.changeTypes.length > 0) {
+		reasons.push(
+			...unique(matchingChanges.map((change) => change.type)).map(
+				(type) => `change_type:${type}`,
+			),
+		);
+	}
+	if (configuration.applicability.paths.length > 0) {
+		if (selector.paths.length === 0) {
+			reasons.push("repository_paths:unknown");
+		} else {
+			const matched = configuration.applicability.paths.filter((scope) =>
+				selector.paths.some(
+					(path) => path === scope || path.startsWith(`${scope}/`),
+				),
+			);
+			if (matched.length === 0 && selector.pathFactsComplete) return undefined;
+			if (matched.length === 0) {
+				reasons.push("repository_paths:unknown_or_incomplete");
+			}
+			reasons.push(...matched.map((scope) => `repository_scope:${scope}`));
+		}
+	}
+	if (configuration.applicability.languages.length > 0) {
+		const matched = configuration.applicability.languages.filter((language) =>
+			selector.languages.includes(language),
+		);
+		if (matched.length === 0 && selector.languageFactsComplete) return undefined;
+		if (matched.length === 0) reasons.push("languages:unknown_or_incomplete");
+		reasons.push(...matched.map((language) => `language:${language}`));
+	}
+	return unique(reasons).sort(compareSelectorValue);
+}
+
+function packCheckParameters(
+	registration: CheckRegistration,
+	selector: NormalizedSelectorInput,
+): Record<string, CheckJsonValue> {
+	const packCheck = registration.packCheck;
+	if (!packCheck) {
+		throw new Error(`Check ${registration.check.id} is not Pack-bound.`);
+	}
+	return {
+		checkPack: mutableCheckJsonValue(
+			toCanonicalJsonValue({
+				protocolVersion: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
+				snapshotDigest: selector.checkPackSnapshotDigest,
+				bindingId: packCheck.bindingId,
+				checkId: packCheck.checkId,
+				checkDigest: packCheck.checkDigest,
+				evaluator: {
+					kind: packCheck.evaluatorKind,
+					path: packCheck.evaluatorPath,
+					digest: packCheck.evaluatorDigest,
+				},
+				configuration: packCheck.configuration,
+			}),
+		),
+	};
+}
+
 function activateApprovedAdditions(
 	active: Map<string, MutableBinding>,
 	catalog: CheckCatalog,
 	selector: NormalizedSelectorInput,
 ): void {
 	for (const addition of selector.approvedAdditions) {
+		const registration = requiredRegistration(
+			catalog,
+			addition.checkId,
+			selector.loop,
+			addition.checkVersion,
+		);
+		const additionParameters = addition.parameters ?? {};
+		if (registration.packCheck && "checkPack" in additionParameters) {
+			throw new Error(
+				`Approved addition ${addition.checkId} cannot supply Runtime-owned Check Pack parameters.`,
+			);
+		}
 		activate({
 			active,
 			catalog,
 			loop: selector.loop,
 			checkId: addition.checkId,
 			checkVersion: addition.checkVersion,
-			parameters: addition.parameters,
+			parameters: {
+				...additionParameters,
+				...(registration.packCheck
+					? packCheckParameters(registration, selector)
+					: {}),
+			},
 			activatedBy: [`approved-addition:${addition.authorityRef}`],
 			ruleRef: `check.approved-addition@${EXIT_POLICY_SELECTOR_VERSION}`,
 		});
@@ -727,11 +874,14 @@ function normalizeSelectorInput(
 	input: ResolveExitPolicyInput,
 	catalogVersion: string,
 	catalogDigest: string,
+	checkPackSnapshotDigest: string,
 ): NormalizedSelectorInput {
 	assertValidSelectorInput(input);
 	const additions = optionalValues(input.approvedAdditions);
 	const exclusions = optionalValues(input.approvedExclusions);
 	const paths = unique(optionalValues(input.paths).map(normalizePath));
+	const pathFactsComplete = input.paths !== undefined && input.pathFactsComplete !== false;
+	const languageFacts = classifyLanguages(paths, pathFactsComplete);
 	if (input.securitySurfaceClassification) {
 		assertSecuritySurfaceClassification(input.securitySurfaceClassification);
 	}
@@ -742,6 +892,7 @@ function normalizeSelectorInput(
 		selectorVersion: EXIT_POLICY_SELECTOR_VERSION,
 		catalogVersion,
 		catalogDigest,
+		checkPackSnapshotDigest,
 		loop: input.loop,
 		candidateDigest: input.candidateDigest,
 		changes: [...input.changes]
@@ -753,7 +904,10 @@ function normalizeSelectorInput(
 		projectTraits: unique(optionalValues(input.projectTraits)),
 		technologies: unique(optionalValues(input.technologies)),
 		paths,
+		pathFactsComplete,
 		pathTraits: classifyPathTraits(paths),
+		languages: languageFacts.languages,
+		languageFactsComplete: languageFacts.complete,
 		...(input.securitySurfaceClassification
 			? {securitySurfaceClassification: input.securitySurfaceClassification}
 			: {}),
@@ -834,6 +988,12 @@ function assertSelectorTraits(input: ResolveExitPolicyInput): void {
 		if (!(TECHNOLOGIES as readonly string[]).includes(technology)) {
 			throw new Error(`Unknown Resolved Exit Policy technology ${technology}.`);
 		}
+	}
+	if (
+		input.pathFactsComplete !== undefined &&
+		typeof input.pathFactsComplete !== "boolean"
+	) {
+		throw new Error("Resolved Exit Policy pathFactsComplete must be boolean.");
 	}
 	if (
 		input.securityResidualRisk !== undefined &&
@@ -1122,6 +1282,64 @@ function changeReasons<T extends "kind" | "type" | "risk">(
 			? [`change:${change.changeId}:${field}:${change[field]}`]
 			: [],
 	);
+}
+
+function classifyLanguages(paths: string[], pathFactsComplete: boolean): {
+	languages: string[];
+	complete: boolean;
+} {
+	const extensionLanguages: Readonly<Record<string, string>> = {
+		bash: "shell",
+		c: "c",
+		cc: "cpp",
+		cjs: "javascript",
+		cpp: "cpp",
+		cts: "typescript",
+		css: "css",
+		go: "go",
+		h: "c",
+		hpp: "cpp",
+		html: "html",
+		java: "java",
+		js: "javascript",
+		json: "json",
+		jsonc: "json",
+		jsx: "javascript",
+		kt: "kotlin",
+		less: "css",
+		md: "markdown",
+		mdx: "markdown",
+		mjs: "javascript",
+		mts: "typescript",
+		php: "php",
+		py: "python",
+		rb: "ruby",
+		rs: "rust",
+		sass: "css",
+		scss: "css",
+		sh: "shell",
+		sql: "sql",
+		swift: "swift",
+		toml: "toml",
+		ts: "typescript",
+		tsx: "typescript",
+		xml: "xml",
+		yaml: "yaml",
+		yml: "yaml",
+		zsh: "shell",
+	};
+	const languages: string[] = [];
+	let complete = pathFactsComplete && paths.length > 0;
+	for (const path of paths) {
+		const name = path.slice(path.lastIndexOf("/") + 1).toLowerCase();
+		const extension = name.includes(".") ? name.slice(name.lastIndexOf(".") + 1) : "";
+		let language = extensionLanguages[extension];
+		if (!language && name === "dockerfile") language = "dockerfile";
+		if (!language && name === "makefile") language = "make";
+		if (language) languages.push(language);
+		else complete = false;
+	}
+	return {languages: unique(languages), complete};
 }
 
 function classifyPathTraits(paths: string[]): PathTrait[] {
