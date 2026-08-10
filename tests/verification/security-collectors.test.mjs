@@ -10,7 +10,9 @@ import {sha256Digest} from "../../src/utils/canonical-json.ts";
 
 const digest = (character) => `sha256:${character.repeat(64)}`;
 const gitObject = (character) => character.repeat(40);
-const observedAt = "2026-08-10T12:00:00.000Z";
+const observedAt = "2099-01-01T12:00:00.000Z";
+const advisoryObservedAt = "2099-01-01T11:00:00.000Z";
+const advisoryValidUntil = "2099-01-01T13:00:00.000Z";
 
 function subject() {
 	return {
@@ -320,8 +322,8 @@ describe("production security collectors", () => {
 						{
 							scannerType: "dependency_advisory",
 							snapshotDigest: files.trivyDatabaseDigest,
-							observedAt: "2026-08-10T11:00:00.000Z",
-							validUntil: "2026-08-10T13:00:00.000Z",
+							observedAt: advisoryObservedAt,
+							validUntil: advisoryValidUntil,
 							sourceRefs: ["trivy-db:local:exact"],
 						},
 					],

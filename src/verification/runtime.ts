@@ -9,6 +9,7 @@ import {
 	preflightRuntimeResourceGuards,
 	resolveRuntimeResourceGuards,
 } from "./custom-checks/resource-guards.ts";
+import {projectVerificationState} from "./projection.ts";
 import {createCheckResult, createExitReport} from "./results.ts";
 import {
 	createLoopExitRunner,
@@ -19,11 +20,12 @@ import {
 	type StandardEvidenceCheckCapability,
 } from "./standard-evidence-executor.ts";
 
-export interface VerificationRuntime {
+interface VerificationRuntime {
 	readonly catalog: ReturnType<typeof createCheckCatalog>;
 	readonly createCheckResult: typeof createCheckResult;
 	readonly createExitReport: typeof createExitReport;
 	readonly createResultCache: typeof createLoopExitResultCache;
+	readonly projectState: typeof projectVerificationState;
 	readonly resourceGuards: ReturnType<typeof resolveRuntimeResourceGuards>;
 	readonly preflightResourceGuards: typeof preflightRuntimeResourceGuards;
 	readonly evaluateResourceMeter: typeof evaluateRuntimeResourceMeter;
@@ -33,7 +35,7 @@ export interface VerificationRuntime {
 	) => ReturnType<typeof createLoopExitRunner>;
 }
 
-export interface CreateVerificationRuntimeInput {
+interface CreateVerificationRuntimeInput {
 	readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
 	readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
 	readonly standardEvidenceCapabilities?: readonly StandardEvidenceCheckCapability[];
@@ -80,6 +82,7 @@ export function createVerificationRuntime(
 		createCheckResult,
 		createExitReport,
 		createResultCache: createLoopExitResultCache,
+		projectState: projectVerificationState,
 		resourceGuards,
 		preflightResourceGuards: preflightRuntimeResourceGuards,
 		evaluateResourceMeter: evaluateRuntimeResourceMeter,

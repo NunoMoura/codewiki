@@ -1,4 +1,4 @@
-import type { LoopExitDeclaration } from "../../verification/suite.ts";
+import type {LoopExitDeclaration} from "../../verification/contracts.ts";
 
 export const implementationLoopExitDeclaration = Object.freeze({
 	loop: "implementation" as const,

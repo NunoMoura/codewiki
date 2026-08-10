@@ -5,6 +5,23 @@ export * from "./knowledge/system-diagrams.ts";
 export * from "./harnesses/ports.ts";
 export * from "./verification/custom-checks/index.ts";
 export * from "./verification/verification-capabilities.ts";
+export {
+	createLoopExitSuite,
+	type LoopExitDeclaration,
+	type LoopExitSuite,
+} from "./verification/contracts.ts";
+export {
+	VERIFICATION_PROJECTION,
+	projectVerificationState,
+	type CandidateVerificationProjection,
+	type ProjectVerificationProjection,
+	type ProjectVerificationProjectionOptions,
+	type VerificationCheckProjection,
+	type VerificationPolicyProjection,
+	type VerificationProjectionCoverage,
+	type VerificationProjectionStatus,
+	type VerificationReportProjection,
+} from "./verification/projection.ts";
 export * from "./verification/standard-evidence-checks.ts";
 export * from "./verification/standard-evidence-executor.ts";
 export * from "./verification/security-collectors.ts";

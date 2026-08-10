@@ -212,6 +212,15 @@ function evidenceRecordIds(
 	);
 }
 
+export function assertValidCheckResult(
+	result: CheckResult,
+	policy: ResolvedExitPolicy,
+): void {
+	assertValidResolvedExitPolicy(policy);
+	const binding = requiredBinding(policy, result.checkId);
+	assertResultIdentity(result, policy, binding);
+}
+
 export function createExitReport(input: CreateExitReportInput): ExitReport {
 	assertExactKeys(input, ["policy", "checkResults"], "Exit Report input");
 	assertValidResolvedExitPolicy(input.policy);

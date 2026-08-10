@@ -188,7 +188,7 @@ Budget rules:
 - [ ] Implement conservative applicability from Development stage, Git-relative exact file or directory-prefix scope, deterministic languages, and optional Change type or kind; unknown facts widen selection.
 - [ ] Keep applicability scope, evaluator input scope, and sandbox capability requests separate. Check scope may narrow but cannot escape Pack or project bounds.
 - [ ] Preserve `observe`, `warn`, and `require` as project-owned enforcement; package recommendation or installation cannot grant blocking authority.
-- [ ] Persist Candidate-bound Resolved Exit Policy with Candidate, Catalog, selector-input, configuration, route, and policy digests. No policy remains unresolved, and Catalog growth cannot block an already resolved Candidate.
+- [x] Persist Candidate-bound Resolved Exit Policy with Candidate, Catalog, selector-input, configuration, route, and policy digests. Project no-policy state as unresolved, and bind completed projection to the persisted Catalog snapshot rather than current Catalog growth.
 - [ ] Define one language-neutral invocation from exact Candidate and admitted inputs and one bounded Observation contract with `pass`, `fail`, or `indeterminate`, summary, findings, and reason.
 - [ ] Keep unavailable, pending, excluded, stale, and unresolved as Runtime or projection states rather than evaluator outcomes.
 - [ ] Make Runtime validate Observation admissibility and exact bindings without claiming to verify arbitrary evaluator semantic truth; only Runtime creates canonical Results and routes from the final Exit Report.
@@ -200,7 +200,7 @@ Budget rules:
 - [ ] Keep the authoring or repair Harness model separate from the configured Check evaluator route and display both identities explicitly.
 - [ ] Implement deterministic regular-user Check forms and raw developer mode over the same tracked files. Add one host-native `codewiki-check-author` skill for optional Assisted Check Authoring with the active Harness model, observe-first defaults, exact diff preview, and deterministic validation.
 - [ ] Materialize local, exact npm, and exact Git Packs only after project trust approval; disable lifecycle scripts, pin integrity, preserve explicit update diffs, and grant no authority through discovery or installation.
-- [ ] Add a native Verification projection that joins Resolved Exit Policy, Results, and Exit Report and reports unresolved, pending, pass, fail, indeterminate, excluded, and stale without consulting raw Catalog entries as readiness.
+- [x] Add a bounded, immutable, WorkState-snapshot-bound native Verification projection that joins persisted Resolved Exit Policy, Results, Exit Report, exclusions, and Runtime route provenance; reports unresolved, pending, pass, fail, indeterminate, excluded, and stale; and never consults raw Catalog entries as readiness.
 
 ### 7. Finish semantic Loop clean cuts
 
