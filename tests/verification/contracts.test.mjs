@@ -24,12 +24,26 @@ import {
 	assembleCheckInvocation,
 } from "../../src/verification/protocol.ts";
 import {createCheckResult} from "../../src/verification/results.ts";
+import {
+	defaultRepairProfiles,
+	repairProfileSetDigest,
+} from "../../src/verification/repair-profiles.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const SELECTOR_DIGEST = `sha256:${"b".repeat(64)}`;
 const CATALOG_DIGEST = `sha256:${"c".repeat(64)}`;
 const REQUIREMENT_DIGEST = `sha256:${"d".repeat(64)}`;
 const CHECK_DIGEST = `sha256:${"e".repeat(64)}`;
+const REPAIR_PROFILES = defaultRepairProfiles({
+	checkId: "test.contract",
+	requirement: "Test contract remains valid.",
+	target: "source",
+});
+const REPAIR_PROFILE_SET_DIGEST = repairProfileSetDigest(REPAIR_PROFILES);
+const REPAIR_BINDING = {
+	repairProfiles: REPAIR_PROFILES,
+	repairProfileSetDigest: REPAIR_PROFILE_SET_DIGEST,
+};
 
 function policyInput() {
 	return {
@@ -45,7 +59,12 @@ function policyInput() {
 				checkDigest: CHECK_DIGEST,
 				enforcement: "require",
 				required: true,
-				parameters: { minimum: 1, evidence: "exact" },
+				parameters: {
+					minimum: 1,
+					evidence: "exact",
+					repairProfileSetDigest: REPAIR_PROFILE_SET_DIGEST,
+				},
+				...REPAIR_BINDING,
 				dependsOn: ["input_valid"],
 				activatedBy: ["loop:implementation", "risk:check"],
 				ruleRefs: ["verification.loop.implementation"],
@@ -57,7 +76,8 @@ function policyInput() {
 				checkDigest: CHECK_DIGEST,
 				enforcement: "require",
 				required: true,
-				parameters: {},
+				parameters: {repairProfileSetDigest: REPAIR_PROFILE_SET_DIGEST},
+				...REPAIR_BINDING,
 				dependsOn: [],
 				activatedBy: ["kernel", "loop:implementation"],
 				ruleRefs: ["verification.kernel.input"],
@@ -234,6 +254,14 @@ describe("Resolved Exit Policy contracts", () => {
 			/Check dependency cycle includes/,
 		);
 		const policy = createResolvedExitPolicy(policyInput());
+		assert.ok(Object.isFrozen(policy.bindings[0].repairProfiles));
+		assert.ok(Object.isFrozen(policy.bindings[0].repairProfiles[0].actions));
+		const tamperedProfile = structuredClone(policy);
+		tamperedProfile.bindings[0].repairProfiles[0].actions = ["Skip the Check."];
+		assert.throws(
+			() => assertValidResolvedExitPolicy(tamperedProfile),
+			/sourceDigest does not match content/,
+		);
 		policy.bindings[0].enforcement = "observe";
 		assert.throws(
 			() => assertValidResolvedExitPolicy(policy),
@@ -326,7 +354,16 @@ function admissionFixture() {
 		timeoutMs: 10_000,
 		protected: false,
 	};
-	const parameters = {route: "checks/reviewer"};
+	const repairProfiles = defaultRepairProfiles({
+		checkId: check.id,
+		requirement: check.requirement,
+		target: check.repairTarget,
+	});
+	const profileSetDigest = repairProfileSetDigest(repairProfiles);
+	const parameters = {
+		route: "checks/reviewer",
+		repairProfileSetDigest: profileSetDigest,
+	};
 	const checkDigest = loopQualifiedCheckDigest({
 		loop: candidate.loop,
 		check,
@@ -347,6 +384,8 @@ function admissionFixture() {
 				enforcement: "require",
 				required: true,
 				parameters,
+				repairProfiles,
+				repairProfileSetDigest: profileSetDigest,
 				dependsOn: [],
 				activatedBy: ["check-pack:default"],
 				ruleRefs: ["verification.pack.default"],

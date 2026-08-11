@@ -17,6 +17,12 @@ import {
 import {assertExactKeys} from "../../utils/json.ts";
 import type {CheckEnforcement} from "../contracts.ts";
 import {
+	normalizeRepairProfileEntries,
+	resolveRepairProfiles,
+	type RepairProfileEntry,
+	type ResolvedRepairProfile,
+} from "../repair-profiles.ts";
+import {
 	customCheckConfigurationDigest,
 	normalizeCustomCheckDefinitions,
 	type CustomCheckDefinition,
@@ -27,7 +33,7 @@ import {
 } from "./user-standards.ts";
 
 export const PROTECTED_CUSTOM_CHECK_CONFIG_SCHEMA_VERSION = "3.0.0" as const;
-export const CHECK_PACK_CONFIG_PROTOCOL_VERSION = "1.0.0" as const;
+export const CHECK_PACK_CONFIG_PROTOCOL_VERSION = "2.0.0" as const;
 
 const DEVELOPMENT_STAGES: readonly SemanticLoop[] = [
 	"decision",
@@ -80,6 +86,7 @@ export interface CheckConfiguration {
 	readonly applicability?: CheckApplicabilityConfiguration;
 	readonly input?: CheckInputConfiguration;
 	readonly execution?: CheckExecutionConfiguration;
+	readonly repairProfiles?: readonly RepairProfileEntry[];
 }
 
 export interface ProtectedCheckFloors {
@@ -121,6 +128,7 @@ export interface ResolvedCheckConfiguration {
 		maxInputBytes: number;
 		maxOutputBytes: number;
 	}>;
+	readonly repairProfiles: readonly ResolvedRepairProfile[];
 	readonly digest: Sha256Digest;
 }
 
@@ -307,6 +315,23 @@ export function resolveCheckConfiguration(input: {
 			floors,
 			input.evaluatorKind,
 		),
+		repairProfiles: resolveRepairProfiles([
+			{
+				layer: "project",
+				ref: ".codewiki/config.json#checks.defaults.repairProfiles",
+				profiles: project.defaults.repairProfiles ?? [],
+			},
+			{
+				layer: "pack",
+				ref: "check-pack:config.json#defaults.repairProfiles",
+				profiles: pack.defaults.repairProfiles ?? [],
+			},
+			{
+				layer: "check",
+				ref: "check:config.json#repairProfiles",
+				profiles: check.repairProfiles ?? [],
+			},
+		]),
 	};
 	return Object.freeze({...resolved, digest: canonicalJsonDigest(resolved)});
 }
@@ -347,7 +372,11 @@ function normalizeCheckConfiguration(
 	value: unknown,
 	label: string,
 ): CheckConfiguration {
-	assertExactKeys(value, ["enforcement", "applicability", "input", "execution"], label);
+	assertExactKeys(
+		value,
+		["enforcement", "applicability", "input", "execution", "repairProfiles"],
+		label,
+	);
 	const record = value as Record<string, unknown>;
 	const enforcement = optionalEnum(
 		record.enforcement,
@@ -363,11 +392,15 @@ function normalizeCheckConfiguration(
 		record.execution,
 		`${label}.execution`,
 	);
+	const repairProfiles = record.repairProfiles === undefined
+		? undefined
+		: normalizeRepairProfileEntries(record.repairProfiles, `${label}.repairProfiles`);
 	return Object.freeze({
 		...(enforcement ? {enforcement} : {}),
 		...(applicability ? {applicability} : {}),
 		...(checkInput ? {input: checkInput} : {}),
 		...(execution ? {execution} : {}),
+		...(repairProfiles ? {repairProfiles} : {}),
 	});
 }
 
@@ -477,6 +510,7 @@ function overlayCheckConfiguration(
 		applicability: overlayObject(base.applicability, override.applicability),
 		input: overlayObject(base.input, override.input),
 		execution: overlayObject(base.execution, override.execution),
+		repairProfiles: override.repairProfiles ?? base.repairProfiles,
 	});
 }
 

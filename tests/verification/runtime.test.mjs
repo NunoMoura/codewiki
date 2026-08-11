@@ -12,6 +12,10 @@ import {
 import {loopQualifiedCheckDigest} from "../../src/verification/identity.ts";
 import {createCheckResult, createExitReport} from "../../src/verification/results.ts";
 import {projectVerificationState} from "../../src/verification/projection.ts";
+import {
+	defaultRepairProfiles,
+	repairProfileSetDigest,
+} from "../../src/verification/repair-profiles.ts";
 import {createVerificationRuntime} from "../../src/verification/runtime.ts";
 import {deriveDecisionRuntimeRoute} from "../../src/decision/exit/runtime.ts";
 import {createNativeDecisionOperationSequence} from "../../src/runtime/effects/decision-operations.ts";
@@ -54,6 +58,14 @@ function persistedVerificationFixture(disposition = "satisfied") {
 	const started = reduceBatch(opened.state, [startedOperation], gitObject("b"));
 	const candidate = nativeDecisionCandidate({state: started, changeId});
 	const catalog = createCheckCatalog();
+	const check = catalog.get("change_revision_ready", "decision").check;
+	const repairProfiles = defaultRepairProfiles({
+		checkId: check.id,
+		requirement: check.requirement,
+		target: check.repairTarget,
+	});
+	const profileSetDigest = repairProfileSetDigest(repairProfiles);
+	const parameters = {repairProfileSetDigest: profileSetDigest};
 	const resolved = createResolvedExitPolicy({
 			loop: "decision",
 			candidateDigest: candidate.digest,
@@ -62,18 +74,19 @@ function persistedVerificationFixture(disposition = "satisfied") {
 			bindings: [
 				{
 					checkId: "change_revision_ready",
-					checkVersion: catalog.get("change_revision_ready", "decision").check.version,
-					requirementDigest:
-						catalog.get("change_revision_ready", "decision").check.requirementDigest,
+					checkVersion: check.version,
+					requirementDigest: check.requirementDigest,
 					checkDigest: loopQualifiedCheckDigest({
 						loop: "decision",
-						check: catalog.get("change_revision_ready", "decision").check,
-						configuration: {},
+						check,
+						configuration: parameters,
 						catalogDigest: catalog.digest,
 					}),
 					enforcement: "require",
 					required: true,
-					parameters: {},
+					parameters,
+					repairProfiles,
+					repairProfileSetDigest: profileSetDigest,
 					dependsOn: [],
 					activatedBy: ["test:verification-projection"],
 					ruleRefs: ["test:verification-projection"],
@@ -97,7 +110,6 @@ function persistedVerificationFixture(disposition = "satisfied") {
 			],
 		protectedCheckIds: ["change_revision_ready"],
 	});
-	const check = catalog.get("change_revision_ready", "decision").check;
 	const result = createCheckResult({
 		loop: "decision",
 		policy: resolved,

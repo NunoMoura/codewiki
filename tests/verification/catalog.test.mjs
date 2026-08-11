@@ -164,7 +164,7 @@ describe("Check catalog", () => {
 			);
 			assert.equal(catalog.get(checkId, "planning"), undefined);
 		}
-		assert.equal(catalog.version, "12.0.0");
+		assert.equal(catalog.version, "13.0.0");
 		assert.match(catalog.digest, /^sha256:[0-9a-f]{64}$/);
 		assert.ok(
 			catalog

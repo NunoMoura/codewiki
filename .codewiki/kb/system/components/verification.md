@@ -75,11 +75,13 @@ The immutable Exit Report is the self-explaining certified verdict for one exact
 
 ## Repair guidance
 
-A Repair Profile maps outcome and finding code to objectives, actions, constraints, verification, and a zero-authority route recommendation. Default Checks ship curated profiles; other Checks inherit fallbacks or provide entries and bounded proposals. Project overrides and exact profile variants remain policy-bound.
+A Repair Profile maps an exact finding code or `fail | indeterminate` outcome to bounded objective, target, actions, prohibited shortcuts, required context, verification, and zero-authority route recommendation. Resolution overlays global, Default or Custom Check, project, Pack, then per-Check layers; later entries replace equal match keys. Default Checks receive deterministic profiles, Custom Checks incorporate authored guidance, and Pack Checks retain global fallbacks.
 
-After an actionable report, Runtime derives a bounded snapshot-bound Repair Frontier across relevant source, test, Knowledge, Change, Evidence, and Checks with coverage and provenance. Verification combines matched profiles, structured Result signals, and that frontier into a Repair Brief. A report-bound Repair Bundle contains only those inputs and digests; it is not a fourth Loop, Evidence format, executable plan, or authority grant.
+Each selected Check binding carries ordered variants, source refs, content digests, and one Check-identity-bound set digest. Matching prefers exact finding codes and uses the outcome fallback for unmatched findings. Profiles and evaluator proposals are untrusted guidance, never readiness or route authority.
 
-Exit Report and Repair Bundle remain separate immutable artifacts. Repair data may stale or vary without changing historical readiness truth, and one report may produce multiple digest-bound guidance variants for controlled benchmarks. Views present Exit Report, Repair Bundle, and Runtime Route as one Exit Outcome while preserving their distinct authority. Missing repair guidance never changes the Exit Report verdict; it changes only repair capability or route availability.
+Runtime derives an actionable report's bounded snapshot-bound Repair Frontier across source, tests, Knowledge, Change, Evidence, and Checks with coverage and provenance. Verification combines matched profiles, Result signals, and that frontier into a Repair Brief and report-bound Repair Bundle; neither grants authority or changes Exit Report truth.
+
+Guidance may stale or vary independently. Views present report, bundle, and Runtime Route as one Exit Outcome; missing guidance changes repair capability only.
 
 Views project Resolved Exit Policy, Check Results, Exit Report, and available repair state; they never infer readiness from raw Catalog entries. Runtime sends only bounded matched guidance, never the whole profile matrix, to the work-producing Harness. Any repair produces a new Candidate, invalidates stale Results and guidance, and re-enters the same policy and evaluation path.
 

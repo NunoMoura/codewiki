@@ -46,8 +46,9 @@ import {
 	canonicalJsonDigest,
 	checkRequirementDigest,
 } from "./identity.ts";
+import {assertResolvedRepairProfiles} from "./repair-profiles.ts";
 
-export const CHECK_CATALOG_VERSION = "12.0.0";
+export const CHECK_CATALOG_VERSION = "13.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -1183,6 +1184,7 @@ function validatePackCheckRegistration(registration: CheckRegistration): void {
 	if (canonicalJsonDigest(configuration) !== configurationDigest) {
 		throw new Error("Pack Check resolved configuration digest mismatch.");
 	}
+	assertResolvedRepairProfiles(packCheck.configuration.repairProfiles);
 	if (packCheck.configuration.applicability.changeKinds.length === 0) {
 		throw new Error("Pack Check must select at least one Change kind.");
 	}

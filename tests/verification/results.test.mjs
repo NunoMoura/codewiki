@@ -16,6 +16,10 @@ import {
 } from "../../src/verification/custom-checks/index.ts";
 import { resolveExitPolicy } from "../../src/verification/resolve-policy.ts";
 import {
+	defaultRepairProfiles,
+	repairProfileSetDigest,
+} from "../../src/verification/repair-profiles.ts";
+import {
 	assertValidCheckResult,
 	assertValidExitReport,
 	createCheckResult,
@@ -187,7 +191,16 @@ function quantitativeFoundation() {
 		protected: false,
 	};
 	const catalogDigest = canonicalJsonDigest({catalog: "quantitative-test"});
-	const parameters = {minimum: 0.9};
+	const repairProfiles = defaultRepairProfiles({
+		checkId: check.id,
+		requirement: check.requirement,
+		target: check.repairTarget,
+	});
+	const repairProfileSetDigestValue = repairProfileSetDigest(repairProfiles);
+	const parameters = {
+		minimum: 0.9,
+		repairProfileSetDigest: repairProfileSetDigestValue,
+	};
 	const binding = {
 		checkId: check.id,
 		checkVersion: check.version,
@@ -201,6 +214,8 @@ function quantitativeFoundation() {
 		enforcement: "observe",
 		required: false,
 		parameters,
+		repairProfiles,
+		repairProfileSetDigest: repairProfileSetDigestValue,
 		dependsOn: [],
 		activatedBy: ["test:quantitative"],
 		ruleRefs: ["test:quantitative"],

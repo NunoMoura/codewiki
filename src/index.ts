@@ -4,6 +4,26 @@ export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
 export * from "./harnesses/ports.ts";
 export * from "./verification/custom-checks/index.ts";
+export {
+	MAX_REPAIR_PROFILES_PER_CHECK,
+	REPAIR_PROFILE_PROTOCOL_VERSION,
+	assertResolvedRepairProfiles,
+	defaultRepairProfiles,
+	matchRepairProfiles,
+	normalizeRepairProfileEntries,
+	overlayResolvedRepairProfiles,
+	repairProfileSetDigest,
+	resolveRepairProfiles,
+	type MatchRepairProfilesInput,
+	type RepairProfileEntry,
+	type RepairProfileLayer,
+	type RepairProfileMatch,
+	type RepairProfileOutcome,
+	type RepairProfileSource,
+	type RepairProfileSourceLayer,
+	type RepairRouteRecommendation,
+	type ResolvedRepairProfile,
+} from "./verification/repair-profiles.ts";
 export * from "./verification/verification-capabilities.ts";
 export {
 	CHECK_INVOCATION_PROTOCOL_ID,

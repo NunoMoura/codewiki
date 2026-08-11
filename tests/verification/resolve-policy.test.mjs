@@ -58,6 +58,7 @@ function customCheck() {
 			evaluator: "model",
 			name: "Documentation remains current",
 			requirement: "Affected documentation is updated.",
+			repairGuidance: "Update affected documentation from accepted intent.",
 			appliesWhen: {loops: ["implementation"]},
 			standardRefs: standardRefsFor(USER_STANDARD),
 		}, USER_STANDARDS),
@@ -439,6 +440,18 @@ describe("Resolved Exit Policy resolver", () => {
 		assert.equal(
 			binding.parameters.protectedCustomCheckConfigSnapshotDigest,
 			protectedBase.snapshotDigest,
+		);
+		assert.equal(binding.repairProfiles.length, 2);
+		assert.equal(
+			binding.repairProfiles.find(
+				(profile) => profile.variantId === "outcome:fail",
+			).actions[0],
+			"Update affected documentation from accepted intent.",
+		);
+		assert.ok(binding.repairProfiles.every((profile) => profile.source.layer === "custom_check"));
+		assert.equal(
+			binding.parameters.repairProfileSetDigest,
+			binding.repairProfileSetDigest,
 		);
 	});
 

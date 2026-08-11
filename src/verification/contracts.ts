@@ -13,10 +13,14 @@ import {
 	type Sha256Digest,
 } from "../utils/canonical-json.ts";
 import { canonicalJsonDigest as resolvedExitPolicyDigest } from "./identity.ts";
+import {
+	assertResolvedRepairProfiles,
+	type ResolvedRepairProfile,
+} from "./repair-profiles.ts";
 
 export { resolvedExitPolicyDigest };
 
-export const LOOP_EXIT_SCHEMA_VERSION = 2;
+export const LOOP_EXIT_SCHEMA_VERSION = 3;
 
 export interface LoopExitDeclaration<
 	Loop extends SemanticLoop = SemanticLoop,
@@ -113,6 +117,8 @@ export interface CheckBinding {
 	enforcement: CheckEnforcement;
 	required: boolean;
 	parameters: Record<string, CheckJsonValue>;
+	repairProfiles: readonly ResolvedRepairProfile[];
+	repairProfileSetDigest: Sha256Digest;
 	dependsOn: string[];
 	activatedBy: string[];
 	ruleRefs: string[];
@@ -391,6 +397,7 @@ function normalizePolicyInput(
 			.map((binding) => ({
 				...binding,
 				parameters: sortedCheckJsonObject(binding.parameters),
+				repairProfiles: cloneRepairProfiles(binding.repairProfiles),
 				dependsOn: sortedUnique(binding.dependsOn),
 				activatedBy: sortedUnique(binding.activatedBy),
 				ruleRefs: sortedUnique(binding.ruleRefs),
@@ -430,6 +437,18 @@ function assertValidPolicyShape(
 			`Check ${binding.checkId} requirementDigest`,
 		);
 		assertDigest(binding.checkDigest, `Check ${binding.checkId} checkDigest`);
+		assertResolvedRepairProfiles(
+			binding.repairProfiles,
+			binding.repairProfileSetDigest,
+		);
+		if (
+			binding.parameters.repairProfileSetDigest !==
+			binding.repairProfileSetDigest
+		) {
+			throw new Error(
+				`Check binding ${binding.checkId} parameters must bind its Repair Profile set digest.`,
+			);
+		}
 		if (binding.activatedBy.length === 0) {
 			throw new Error(`Check binding ${binding.checkId} requires activatedBy.`);
 		}
@@ -510,6 +529,26 @@ function assertDigest(value: string, label: string): void {
 
 function sortedUnique(values: string[]): string[] {
 	return [...new Set(values)].sort((left, right) => left.localeCompare(right));
+}
+
+function cloneRepairProfiles(
+	profiles: readonly ResolvedRepairProfile[],
+): readonly ResolvedRepairProfile[] {
+	assertResolvedRepairProfiles(profiles);
+	return Object.freeze(
+		profiles.map((profile) => {
+			const clone = {
+				...profile,
+				match: Object.freeze({...profile.match}),
+				actions: Object.freeze([...profile.actions]),
+				prohibitedShortcuts: Object.freeze([...profile.prohibitedShortcuts]),
+				requiredContext: Object.freeze([...profile.requiredContext]),
+				verification: Object.freeze([...profile.verification]),
+				source: Object.freeze({...profile.source}),
+			};
+			return Object.freeze(clone);
+		}),
+	);
 }
 
 export function sortedCheckJsonObject(

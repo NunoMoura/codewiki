@@ -38,6 +38,12 @@ import {
 import type {CustomCheckDefinition} from "./custom-checks/contracts.ts";
 import { loopQualifiedCheckDigest } from "./identity.ts";
 import {
+	defaultRepairProfiles,
+	overlayResolvedRepairProfiles,
+	repairProfileSetDigest,
+	type ResolvedRepairProfile,
+} from "./repair-profiles.ts";
+import {
 	SECURITY_SURFACES,
 	assertSecuritySurfaceClassification,
 	type SecuritySurface,
@@ -1132,6 +1138,12 @@ function toBinding(
 	loop: SemanticLoop,
 	catalogDigest: string,
 ): CheckBinding {
+	const repairProfiles = bindingRepairProfiles(binding.registration);
+	const profileSetDigest = repairProfileSetDigest(repairProfiles);
+	const parameters = sortedCheckJsonObject({
+		...binding.parameters,
+		repairProfileSetDigest: profileSetDigest,
+	});
 	return {
 		checkId: binding.registration.check.id,
 		checkVersion: binding.registration.check.version,
@@ -1139,16 +1151,48 @@ function toBinding(
 		checkDigest: loopQualifiedCheckDigest({
 			loop,
 			check: binding.registration.check,
-			configuration: binding.parameters,
+			configuration: parameters,
 			catalogDigest,
 		}),
 		enforcement: binding.enforcement,
 		required: binding.required,
-		parameters: sortedCheckJsonObject(binding.parameters),
+		parameters,
+		repairProfiles,
+		repairProfileSetDigest: profileSetDigest,
 		dependsOn: binding.registration.dependsOn,
 		activatedBy: [...binding.activatedBy],
 		ruleRefs: [...binding.ruleRefs],
 	};
+}
+
+function bindingRepairProfiles(
+	registration: CheckRegistration,
+): readonly ResolvedRepairProfile[] {
+	const check = registration.check;
+	const custom = registration.customCheck?.definition;
+	let sourceLayer: "custom_check" | "global" | "default_check" = "default_check";
+	let sourceRef = `default-check:${check.id}@${check.version}`;
+	if (custom) {
+		sourceLayer = "custom_check";
+		sourceRef = `custom-check:${custom.customCheckId}@${custom.definitionDigest}`;
+	} else if (registration.packCheck) {
+		sourceLayer = "global";
+		sourceRef = "codewiki.global-repair-fallback@1.0.0";
+	}
+	const fallback = defaultRepairProfiles({
+		checkId: check.id,
+		requirement: check.requirement,
+		target: check.repairTarget,
+		...(custom?.repairGuidance ? {repairGuidance: custom.repairGuidance} : {}),
+		sourceLayer,
+		sourceRef,
+	});
+	return registration.packCheck
+		? overlayResolvedRepairProfiles(
+				fallback,
+				registration.packCheck.configuration.repairProfiles,
+			)
+		: fallback;
 }
 
 function assertActiveDependencies(active: Map<string, MutableBinding>): void {

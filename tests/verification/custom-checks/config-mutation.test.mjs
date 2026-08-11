@@ -42,6 +42,18 @@ const SOURCE_HEAD = "f".repeat(40);
 const CHANGE_DIGEST = `sha256:${"b".repeat(64)}`;
 const CANDIDATE_DIGEST = `sha256:${"c".repeat(64)}`;
 
+function repairProfile(match, objective) {
+	return {
+		match,
+		objective,
+		target: "source",
+		actions: ["Repair selected source."],
+		prohibitedShortcuts: ["Do not weaken Check enforcement."],
+		requiredContext: ["Exact Candidate"],
+		verification: ["Rerun selected Check."],
+	};
+}
+
 function proposal(overrides = {}) {
 	return {
 		checkTypeId: "organization_policy",
@@ -531,7 +543,13 @@ describe("project-local Check Pack discovery", () => {
 	it("derives evaluator identity and semantically resolves deterministic configuration", async () => {
 		const fixture = await createCheckPackProject({
 			projectChecks: {
-				defaults: {enforcement: "observe", execution: {timeoutMs: 5_000}},
+				defaults: {
+					enforcement: "observe",
+					execution: {timeoutMs: 5_000},
+					repairProfiles: [
+						repairProfile({outcome: "fail"}, "Project fallback"),
+					],
+				},
 				protectedFloors: {
 					minimumEnforcement: "warn",
 					allowedModelRoutes: ["pi/openai/gpt-5"],
@@ -542,6 +560,13 @@ describe("project-local Check Pack discovery", () => {
 			},
 			packConfig: {
 				defaults: {
+					repairProfiles: [
+						repairProfile({outcome: "fail"}, "Pack fallback"),
+						repairProfile(
+							{findingCode: "architecture.direction"},
+							"Pack finding",
+						),
+					],
 					applicability: {
 						stages: ["implementation"],
 						paths: ["src"],
@@ -561,6 +586,9 @@ describe("project-local Check Pack discovery", () => {
 							applicability: {paths: ["src/api"]},
 							input: {paths: ["src/api"]},
 							execution: {modelRoute: "pi/openai/gpt-5"},
+							repairProfiles: [
+								repairProfile({outcome: "fail"}, "Check fallback"),
+							],
 						})}\n`,
 					},
 				},
@@ -595,7 +623,7 @@ describe("project-local Check Pack discovery", () => {
 		try {
 			const first = await loadProjectCheckPacks(fixture.root);
 			const second = await loadProjectCheckPacks(fixture.root);
-			assert.equal(first.version, "1.0.0");
+			assert.equal(first.version, "2.0.0");
 			assert.equal(first.digest, second.digest);
 			assert.equal(first.packs.length, 1);
 			assert.deepEqual(
@@ -623,6 +651,24 @@ describe("project-local Check Pack discovery", () => {
 			);
 			assert.equal(modelCheck.configuration.execution.timeoutMs, 5_000);
 			assert.equal(
+				modelCheck.configuration.repairProfiles.find(
+					(profile) => profile.variantId === "outcome:fail",
+				).objective,
+				"Check fallback",
+			);
+			assert.equal(
+				modelCheck.configuration.repairProfiles.find(
+					(profile) => profile.variantId === "finding:architecture.direction",
+				).source.layer,
+				"pack",
+			);
+			assert.equal(
+				codeCheck.configuration.repairProfiles.find(
+					(profile) => profile.variantId === "outcome:fail",
+				).objective,
+				"Pack fallback",
+			);
+			assert.equal(
 				codeCheck.configuration.execution.runtimeProfile,
 				"node-22-isolated",
 			);
@@ -636,7 +682,7 @@ describe("project-local Check Pack discovery", () => {
 				customChecks: [],
 				checkPacks: first.packs,
 			});
-			assert.equal(catalog.version, "12.0.0");
+			assert.equal(catalog.version, "13.0.0");
 			assert.equal(catalog.checkPackSnapshotDigest, first.digest);
 			assert.equal(
 				catalog.get(modelCheck.id, "implementation").check.measurement.shape,
@@ -686,6 +732,22 @@ describe("project-local Check Pack discovery", () => {
 			assert.equal(
 				packBindings[0].parameters.checkPack.configuration.digest,
 				modelCheck.configuration.digest,
+			);
+			assert.equal(
+				packBindings[0].parameters.repairProfileSetDigest,
+				packBindings[0].repairProfileSetDigest,
+			);
+			assert.equal(
+				packBindings[0].repairProfiles.find(
+					(profile) => profile.variantId === "outcome:fail",
+				).objective,
+				"Check fallback",
+			);
+			assert.equal(
+				packBindings[0].repairProfiles.find(
+					(profile) => profile.variantId === "outcome:indeterminate",
+				).source.layer,
+				"global",
 			);
 			const differentKind = resolveExitPolicy({
 				...policyInput,
@@ -810,6 +872,35 @@ describe("project-local Check Pack discovery", () => {
 						],
 					}),
 				/resolved configuration digest mismatch/u,
+			);
+			const tamperedProfileConfiguration = structuredClone(
+				first.packs[0].checks[0].configuration,
+			);
+			tamperedProfileConfiguration.repairProfiles[0].actions = ["Skip verification."];
+			const {digest: _oldConfigurationDigest, ...tamperedConfigurationBody} =
+				tamperedProfileConfiguration;
+			tamperedProfileConfiguration.digest = canonicalJsonDigest(
+				tamperedConfigurationBody,
+			);
+			assert.throws(
+				() =>
+					createCheckCatalog({
+						userStandards: [],
+						customChecks: [],
+						checkPacks: [
+							{
+								...first.packs[0],
+								checks: [
+									{
+										...first.packs[0].checks[0],
+										configuration: tamperedProfileConfiguration,
+									},
+									...first.packs[0].checks.slice(1),
+								],
+							},
+						],
+					}),
+				/sourceDigest does not match content/u,
 			);
 			const originalIds = catalog.list().map((entry) => entry.check.id);
 			const additional = await loadProjectCheckPacks(growthFixture.root);
