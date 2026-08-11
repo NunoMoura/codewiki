@@ -21,3 +21,4 @@ As a maintainer, I want CodeWiki to apply accepted project expectations as bound
 - Every applicable active Check produces an independent Result for one exact Candidate-bound policy, including indeterminate Results when execution is unavailable.
 - The Exit Report explains required blockers, advisory and observed outcomes, and exclusions without hiding a selected Check or treating a nonblocking failure as a failed exit.
 - Maintainers can inspect and override repair guidance, preview the exact report-bound Repair Brief, and compare digest-bound feedback variants without granting guidance mutation authority.
+- Repair context is Candidate-, report-, and Alignment-snapshot-bound, bounded, provenance-bearing, explicit about coverage, truncation, and staleness, and never grants execution scope.

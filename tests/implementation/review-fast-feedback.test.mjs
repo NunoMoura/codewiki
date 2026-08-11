@@ -20,7 +20,7 @@ describe("implementation common fast feedback", () => {
 		const result = runCommonFastFeedback({
 			changedPaths: ["dist/index.js", "src/config.ts"],
 			contentByPath: {
-				"src/config.ts": "const apiKey = 'abc123456789xyz';",
+				"src/config.ts": `const apiKey = '${"x".repeat(24)}';`,
 			},
 		});
 

@@ -90,7 +90,7 @@ describe("CodeWiki Pi review hooks", () => {
 				toolName: "write",
 				args: {
 					path: "src/config.ts",
-					content: "export const token = 'abc123456789xyz';",
+					content: `export const token = '${"x".repeat(24)}';`,
 				},
 				result: { success: true },
 			},

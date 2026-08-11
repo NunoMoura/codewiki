@@ -125,7 +125,10 @@ describe("User Standard contracts", () => {
 					...standardProposal(),
 					source: {
 						...standardProposal().source,
-						content: `${standardProposal().source.content}\napi_key=abcdefgh12345678`,
+						content: [
+							standardProposal().source.content,
+							["api_", "key=", "x".repeat(24)].join(""),
+						].join("\n"),
 					},
 				}),
 			/credential-like private data/,

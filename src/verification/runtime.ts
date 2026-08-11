@@ -14,6 +14,10 @@ import {
 	resolveRuntimeResourceGuards,
 } from "./custom-checks/resource-guards.ts";
 import {projectVerificationState} from "./projection.ts";
+import {
+	assertValidRepairFrontier,
+	createRepairFrontier,
+} from "./repair-frontier.ts";
 import {createCheckResult, createExitReport} from "./results.ts";
 import {
 	createLoopExitRunner,
@@ -28,6 +32,8 @@ interface VerificationRuntime {
 	readonly catalog: ReturnType<typeof createCheckCatalog>;
 	readonly createCheckResult: typeof createCheckResult;
 	readonly createExitReport: typeof createExitReport;
+	readonly createRepairFrontier: typeof createRepairFrontier;
+	readonly assertValidRepairFrontier: typeof assertValidRepairFrontier;
 	readonly createResultCache: typeof createLoopExitResultCache;
 	readonly projectState: typeof projectVerificationState;
 	readonly resourceGuards: ReturnType<typeof resolveRuntimeResourceGuards>;
@@ -92,6 +98,8 @@ export function createVerificationRuntime(
 		catalog,
 		createCheckResult,
 		createExitReport,
+		createRepairFrontier,
+		assertValidRepairFrontier,
 		createResultCache: createLoopExitResultCache,
 		projectState: projectVerificationState,
 		resourceGuards,

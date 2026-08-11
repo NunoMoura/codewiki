@@ -75,11 +75,11 @@ The immutable Exit Report is the self-explaining certified verdict for one exact
 
 ## Repair guidance
 
-A Repair Profile maps an exact finding code or `fail | indeterminate` outcome to bounded objective, target, actions, prohibited shortcuts, required context, verification, and zero-authority route recommendation. Resolution overlays global, Default or Custom Check, project, Pack, then per-Check layers; later entries replace equal match keys. Default Checks receive deterministic profiles, Custom Checks incorporate authored guidance, and Pack Checks retain global fallbacks.
+A Repair Profile maps an exact finding code or `fail | indeterminate` outcome to bounded objective, target, actions, constraints, context, verification, and zero-authority route hint. Global, Default or Custom Check, project, Pack, and per-Check layers resolve by key replacement; strong defaults fill gaps.
 
-Each selected Check binding carries ordered variants, source refs, content digests, and one Check-identity-bound set digest. Matching prefers exact finding codes and uses the outcome fallback for unmatched findings. Profiles and evaluator proposals are untrusted guidance, never readiness or route authority.
+Each selected Check binding carries ordered variants, source refs, content digests, and one Check-identity-bound set digest. Exact finding codes precede outcome fallback. Profiles and evaluator proposals are untrusted guidance, never readiness or route authority.
 
-Runtime derives an actionable report's bounded snapshot-bound Repair Frontier across source, tests, Knowledge, Change, Evidence, and Checks with coverage and provenance. Verification combines matched profiles, Result signals, and that frontier into a Repair Brief and report-bound Repair Bundle; neither grants authority or changes Exit Report truth.
+Runtime derives one Candidate- and Exit Report-bound Repair Frontier from actionable Results and the exact Alignment snapshot. It retains direct finding, Check, Evidence, and Change seeds; selects bounded source, test, Knowledge, and relationship facts through closed queries; and reports roots, coverage, truncation, staleness, and provenance digests. `grantsAuthority: false` keeps suggestions inert. Verification later combines profiles, Result signals, and that frontier into a Repair Brief and report-bound Repair Bundle without changing Exit Report truth.
 
 Guidance may stale or vary independently. Views present report, bundle, and Runtime Route as one Exit Outcome; missing guidance changes repair capability only.
 

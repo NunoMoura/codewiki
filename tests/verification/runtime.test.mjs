@@ -204,6 +204,8 @@ describe("Verification runtime composition", () => {
 		assert.ok(runtime.catalog.list("implementation").length > 0);
 		assert.equal(typeof runtime.createCheckResult, "function");
 		assert.equal(typeof runtime.createExitReport, "function");
+		assert.equal(typeof runtime.createRepairFrontier, "function");
+		assert.equal(typeof runtime.assertValidRepairFrontier, "function");
 		assert.equal(typeof runtime.createResultCache, "function");
 		assert.equal(typeof runtime.projectState, "function");
 		assert.equal(typeof runtime.createRunner, "function");

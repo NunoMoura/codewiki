@@ -5,6 +5,23 @@ export * from "./knowledge/system-diagrams.ts";
 export * from "./harnesses/ports.ts";
 export * from "./verification/custom-checks/index.ts";
 export {
+	MAX_REPAIR_FRONTIER_CHANGES,
+	MAX_REPAIR_FRONTIER_FACTS,
+	MAX_REPAIR_FRONTIER_REFS_PER_KIND,
+	REPAIR_FRONTIER_PROTOCOL_VERSION,
+	assertValidRepairFrontier,
+	createRepairFrontier,
+	type CreateRepairFrontierInput,
+	type RepairFrontier,
+	type RepairFrontierCandidateBinding,
+	type RepairFrontierCoverage,
+	type RepairFrontierLimits,
+	type RepairFrontierProvenance,
+	type RepairFrontierReferenceKind,
+	type RepairFrontierReferences,
+	type RepairFrontierTruncation,
+} from "./verification/repair-frontier.ts";
+export {
 	MAX_REPAIR_PROFILES_PER_CHECK,
 	REPAIR_PROFILE_PROTOCOL_VERSION,
 	assertResolvedRepairProfiles,

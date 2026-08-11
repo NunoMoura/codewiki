@@ -148,7 +148,7 @@ describe("User Standard source retrieval", () => {
 				createUserStandardSourceRequest({
 					kind: "inline",
 					mediaType: "text/markdown",
-					content: "access_token=abcdefgh12345678",
+					content: ["access_", "token=", "x".repeat(24)].join(""),
 				}),
 			/credential-like private data/,
 		);
