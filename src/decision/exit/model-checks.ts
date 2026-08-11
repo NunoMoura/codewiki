@@ -415,7 +415,7 @@ function modelCheckReview(
 			checkVersion: result.checkVersion,
 			status: result.status,
 			evidenceRecordIds: [...result.evidenceRecordIds].sort(compareText),
-			findings: [...result.findings],
+			findings: result.findings.map((finding) => finding.message),
 		}))
 		.sort((left, right) => left.checkId.localeCompare(right.checkId));
 	const dependencyEvidenceIds = new Set(

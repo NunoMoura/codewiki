@@ -478,7 +478,7 @@ describe("approved-template Custom Code Checks", () => {
 					? {measurement: observation.measurement}
 					: {}),
 				evidenceResolutions: executionContext.evidenceResolutions,
-				findings: observation.findings,
+				findings: observation.findings.map((message) => ({message})),
 				...(observation.issueClass ? {issueClass: observation.issueClass} : {}),
 				...(observation.feedback ? {feedback: observation.feedback} : {}),
 				execution: {...registration.check.execution},

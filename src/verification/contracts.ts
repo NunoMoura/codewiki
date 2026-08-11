@@ -16,7 +16,7 @@ import { canonicalJsonDigest as resolvedExitPolicyDigest } from "./identity.ts";
 
 export { resolvedExitPolicyDigest };
 
-export const LOOP_EXIT_SCHEMA_VERSION = 1;
+export const LOOP_EXIT_SCHEMA_VERSION = 2;
 
 export interface LoopExitDeclaration<
 	Loop extends SemanticLoop = SemanticLoop,
@@ -143,7 +143,7 @@ export interface CheckExecutionIdentity {
 export const CHECK_INVOCATION_PROTOCOL_ID = "codewiki.check-invocation";
 export const CHECK_INVOCATION_PROTOCOL_VERSION = "1.0.0";
 export const CHECK_OBSERVATION_PROTOCOL_ID = "codewiki.check-observation";
-export const CHECK_OBSERVATION_PROTOCOL_VERSION = "1.0.0";
+export const CHECK_OBSERVATION_PROTOCOL_VERSION = "1.1.0";
 
 export type CheckInvocationCoverageStatus =
 	| "complete"
@@ -224,14 +224,22 @@ export interface CreateCheckInvocationInput {
 	readonly maximumInputBytes: number;
 }
 
+export interface CheckObservationRepairProposal {
+	readonly objective: string;
+	readonly actions: readonly string[];
+	readonly verification: readonly string[];
+}
+
 export interface CheckObservationFinding {
 	readonly message: string;
 	readonly code?: string;
+	readonly severity?: "info" | "warning" | "error";
 	readonly location?: {
 		readonly ref: string;
 		readonly startLine?: number;
 		readonly endLine?: number;
 	};
+	readonly repair?: CheckObservationRepairProposal;
 }
 
 export interface CheckObservation {
@@ -271,7 +279,7 @@ export interface CheckResult {
 	evidenceResolutions: EvidenceObligationResolution[];
 	evidenceRecordIds: EvidenceId[];
 	evidenceInputDigest: string;
-	findings: string[];
+	findings: CheckObservationFinding[];
 	issueClass?: string;
 	repairTarget: string;
 	feedback?: string;
@@ -514,9 +522,10 @@ export function sortedCheckJsonObject(
 
 export const MAX_CHECK_INVOCATION_BYTES = 16_777_216;
 export const MAX_CHECK_OBSERVATION_BYTES = 1_048_576;
+export const MAX_CHECK_FINDINGS = 128;
 const MAX_CHECK_CONTEXT_ITEMS = 512;
 const MAX_CHECK_CONTEXT_REFS = 1_024;
-const MAX_CHECK_FINDINGS = 128;
+const MAX_CHECK_REPAIR_STEPS = 16;
 
 const DigestSchema = Type.String({pattern: "^sha256:[0-9a-f]{64}$"});
 const RefSchema = Type.String({minLength: 1, maxLength: 4_096});
@@ -629,6 +638,13 @@ const ObservationFindingSchema = Type.Object(
 	{
 		message: Type.String({minLength: 1, maxLength: 4_096}),
 		code: Type.Optional(Type.String({minLength: 1, maxLength: 128})),
+		severity: Type.Optional(
+			Type.Union([
+				Type.Literal("info"),
+				Type.Literal("warning"),
+				Type.Literal("error"),
+			]),
+		),
 		location: Type.Optional(
 			Type.Object(
 				{
@@ -643,9 +659,28 @@ const ObservationFindingSchema = Type.Object(
 				{additionalProperties: false},
 			),
 		),
+		repair: Type.Optional(
+			Type.Object(
+				{
+					objective: Type.String({minLength: 1, maxLength: 2_048}),
+					actions: Type.Array(
+						Type.String({minLength: 1, maxLength: 2_048}),
+						{minItems: 1, maxItems: MAX_CHECK_REPAIR_STEPS},
+					),
+					verification: Type.Array(
+						Type.String({minLength: 1, maxLength: 2_048}),
+						{minItems: 1, maxItems: MAX_CHECK_REPAIR_STEPS},
+					),
+				},
+				{additionalProperties: false},
+			),
+		),
 	},
 	{additionalProperties: false},
 );
+const ObservationFindingsSchema = Type.Array(ObservationFindingSchema, {
+	maxItems: MAX_CHECK_FINDINGS,
+});
 export const CHECK_OBSERVATION_SCHEMA = Type.Object(
 	{
 		protocolId: Type.Literal(CHECK_OBSERVATION_PROTOCOL_ID),
@@ -657,14 +692,12 @@ export const CHECK_OBSERVATION_SCHEMA = Type.Object(
 			Type.Literal("indeterminate"),
 		]),
 		summary: Type.String({minLength: 1, maxLength: 2_048}),
-		findings: Type.Array(ObservationFindingSchema, {
-			maxItems: MAX_CHECK_FINDINGS,
-		}),
+		findings: ObservationFindingsSchema,
 		reason: Type.Optional(Type.String({minLength: 1, maxLength: 2_048})),
 		grantsResult: Type.Literal(false),
 	},
 	{
-		$id: "urn:codewiki:protocol:check-observation:1.0.0",
+		$id: "urn:codewiki:protocol:check-observation:1.1.0",
 		additionalProperties: false,
 	},
 );
@@ -830,18 +863,7 @@ export function normalizeCheckObservation(
 	if (observation.reason) {
 		assertProtocolText(observation.reason, "Check Observation reason");
 	}
-	for (const finding of observation.findings) {
-		assertProtocolText(finding.message, "Check Observation finding message");
-		if (finding.code) {
-			assertProtocolText(finding.code, "Check Observation finding code");
-		}
-		if (finding.location) {
-			assertProtocolText(
-				finding.location.ref,
-				"Check Observation finding location ref",
-			);
-		}
-	}
+	normalizeCheckFindings(observation.findings, "Check Observation findings");
 	if (observation.invocationDigest !== input.expectedInvocationDigest) {
 		throw new Error("Check Observation does not bind its Invocation.");
 	}
@@ -854,21 +876,45 @@ export function normalizeCheckObservation(
 	if (observation.outcome !== "indeterminate" && observation.reason) {
 		throw new Error("Only an indeterminate Check Observation may supply reason.");
 	}
-	for (const finding of observation.findings) {
-		const location = finding.location;
-		if (
-			location?.startLine !== undefined &&
-			location.endLine !== undefined &&
-			location.endLine < location.startLine
-		) {
-			throw new Error("Check Observation finding endLine cannot precede startLine.");
-		}
-	}
 	const normalized = freezeCheckProtocol(
 		toCanonicalJsonValue(observation) as unknown as CheckObservation,
 	);
 	assertCheckProtocolBytes(normalized, maximumOutputBytes, "Check Observation");
 	return normalized;
+}
+
+export function normalizeCheckFindings(
+	value: unknown,
+	label = "Check findings",
+): readonly CheckObservationFinding[] {
+	assertTypeboxSchema(ObservationFindingsSchema, value, label);
+	const findings = value as readonly CheckObservationFinding[];
+	for (const finding of findings) {
+		assertProtocolText(finding.message, `${label} message`);
+		if (finding.code) assertProtocolText(finding.code, `${label} code`);
+		if (finding.location) {
+			assertProtocolText(finding.location.ref, `${label} location ref`);
+			if (
+				finding.location.startLine !== undefined &&
+				finding.location.endLine !== undefined &&
+				finding.location.endLine < finding.location.startLine
+			) {
+				throw new Error(`${label} endLine cannot precede startLine.`);
+			}
+		}
+		if (finding.repair) {
+			assertProtocolText(finding.repair.objective, `${label} repair objective`);
+			for (const action of finding.repair.actions) {
+				assertProtocolText(action, `${label} repair action`);
+			}
+			for (const verification of finding.repair.verification) {
+				assertProtocolText(verification, `${label} repair verification`);
+			}
+		}
+	}
+	return freezeCheckProtocol(
+		toCanonicalJsonValue(findings) as unknown as readonly CheckObservationFinding[],
+	);
 }
 
 function sortedProtocolValues(

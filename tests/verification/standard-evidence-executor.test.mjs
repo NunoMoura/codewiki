@@ -193,7 +193,7 @@ describe("native standard Evidence Check executor", () => {
 		});
 		assert.equal(mismatched.result.report.status, "indeterminate");
 		assert.match(
-			mismatched.result.report.checkResults[0]?.findings[0] ?? "",
+			mismatched.result.report.checkResults[0]?.findings[0]?.message ?? "",
 			/protected policy binding/,
 		);
 		assert.equal(mismatched.result.producedEvidenceRecords.length, 0);

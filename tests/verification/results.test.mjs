@@ -16,6 +16,7 @@ import {
 } from "../../src/verification/custom-checks/index.ts";
 import { resolveExitPolicy } from "../../src/verification/resolve-policy.ts";
 import {
+	assertValidCheckResult,
 	assertValidExitReport,
 	createCheckResult,
 	createExitReport,
@@ -148,7 +149,9 @@ function resultFor(
 			options.evidenceResolutions ?? readyEvidenceResolutions(check),
 		findings:
 			options.findings ??
-			(disposition === "satisfied" ? [] : [`${binding.checkId} did not pass.`]),
+			(disposition === "satisfied"
+				? []
+				: [{message: `${binding.checkId} did not pass.`}]),
 		...(options.issueClass ? { issueClass: options.issueClass } : {}),
 		execution: { ...check.execution },
 	});
@@ -267,6 +270,74 @@ describe("immutable Check Result", () => {
 		assert.equal(Object.isFrozen(result.evidenceResolutions), true);
 	});
 
+	it("preserves bounded structured findings and rejects flattened or tampered data", () => {
+		const {policy, catalog} = foundation();
+		const binding = policy.bindings[0];
+		const finding = {
+			code: "source.contract",
+			severity: "error",
+			message: "Source contract is incomplete.",
+			location: {
+				ref: "src/verification/results.ts",
+				startLine: 100,
+				endLine: 104,
+			},
+			repair: {
+				objective: "Complete source contract.",
+				actions: ["Implement missing contract fields."],
+				verification: ["Run Verification Result tests."],
+			},
+		};
+		const result = resultFor(policy, catalog, binding, {
+			disposition: "unsatisfied",
+			findings: [finding],
+		});
+
+		assert.equal(result.findings.length, 1);
+		assert.equal(result.findings[0].code, finding.code);
+		assert.equal(result.findings[0].severity, finding.severity);
+		assert.equal(result.findings[0].message, finding.message);
+		assert.equal(result.findings[0].location.ref, finding.location.ref);
+		assert.deepEqual([...result.findings[0].repair.actions], finding.repair.actions);
+		assert.deepEqual(
+			[...result.findings[0].repair.verification],
+			finding.repair.verification,
+		);
+		assert.equal(Object.isFrozen(result.findings[0]), true);
+		assert.equal(Object.isFrozen(result.findings[0].location), true);
+		assert.equal(Object.isFrozen(result.findings[0].repair.actions), true);
+		assert.throws(
+			() =>
+				resultFor(policy, catalog, binding, {
+					disposition: "unsatisfied",
+					findings: ["Flattened finding is forbidden."],
+				}),
+			/Check Result findings is invalid/u,
+		);
+		assert.throws(
+			() =>
+				resultFor(policy, catalog, binding, {
+					disposition: "unsatisfied",
+					findings: [
+						{
+							...finding,
+							location: {...finding.location, endLine: 99},
+						},
+					],
+				}),
+			/endLine cannot precede startLine/u,
+		);
+
+		const tampered = structuredClone(result);
+		tampered.findings[0].repair.actions = [];
+		const {resultDigest: _discarded, ...tamperedBody} = tampered;
+		tampered.resultDigest = canonicalJsonDigest(tamperedBody);
+		assert.throws(
+			() => assertValidCheckResult(tampered, policy),
+			/Check Result .* findings is invalid/u,
+		);
+	});
+
 	it("requires exact obligation resolutions before a determinate Result", () => {
 		const { policy, catalog } = foundation();
 		const binding = policy.bindings.find(
@@ -293,7 +364,7 @@ describe("immutable Check Result", () => {
 		const result = resultFor(policy, catalog, binding, {
 			disposition: "indeterminate",
 			evidenceResolutions: missing,
-			findings: ["Required Evidence is missing."],
+			findings: [{message: "Required Evidence is missing."}],
 		});
 		assert.equal(result.status, "indeterminate");
 		assert.deepEqual(result.evidenceRecordIds, []);
@@ -356,7 +427,7 @@ describe("immutable Check Result", () => {
 			disposition: "unsatisfied",
 			measurement: { shape: "score", value: 0.85 },
 			evidenceResolutions: [],
-			findings: ["Coverage is below the resolved minimum."],
+			findings: [{message: "Coverage is below the resolved minimum."}],
 			execution: { ...check.execution },
 		});
 
@@ -383,7 +454,7 @@ describe("immutable Check Result", () => {
 		const binding = policy.bindings[0];
 		const result = resultFor(policy, catalog, binding, {
 			disposition: "indeterminate",
-			findings: ["Provider unavailable."],
+			findings: [{message: "Provider unavailable."}],
 		});
 		assert.equal(result.status, "indeterminate");
 		assert.equal(result.measurement, undefined);
@@ -392,7 +463,7 @@ describe("immutable Check Result", () => {
 				resultFor(policy, catalog, binding, {
 					disposition: "indeterminate",
 					measurement: { shape: "boolean", value: false },
-					findings: ["Provider unavailable."],
+					findings: [{message: "Provider unavailable."}],
 				}),
 			/Indeterminate Check Result cannot include measurement/,
 		);
@@ -518,7 +589,7 @@ describe("immutable Exit Report", () => {
 			disposition: "unsatisfied",
 			measurement: { shape: "boolean", value: false },
 			evidenceResolutions: readyEvidenceResolutions(check),
-			findings: ["Required Custom Check failed."],
+			findings: [{message: "Required Custom Check failed."}],
 			execution: { ...check.execution },
 		});
 		const customIndeterminate = createCheckResult({
@@ -527,7 +598,9 @@ describe("immutable Exit Report", () => {
 			check,
 			disposition: "indeterminate",
 			evidenceResolutions: readyEvidenceResolutions(check),
-			findings: ["Required Custom Check lacks sufficient Evidence."],
+			findings: [
+				{message: "Required Custom Check lacks sufficient Evidence."},
+			],
 			execution: { ...check.execution },
 		});
 		const passing = allSelectedResults(policy, catalog);

@@ -7,11 +7,13 @@ import type { SemanticLoop } from "../semantic-loop.ts";
 import {
 	assertValidResolvedExitPolicy,
 	LOOP_EXIT_SCHEMA_VERSION,
+	normalizeCheckFindings,
 	type CheckBinding,
 	type CheckDefinition,
 	type CheckExecutionIdentity,
 	type CheckJsonValue,
 	type CheckMeasurement,
+	type CheckObservationFinding,
 	type CheckResult,
 	type CheckResultStatus,
 	type CheckThreshold,
@@ -43,7 +45,7 @@ interface CreateCheckResultInput {
 	invocationDigest?: string;
 	measurement?: CheckMeasurement;
 	evidenceResolutions: EvidenceObligationResolution[];
-	findings?: string[];
+	findings?: readonly CheckObservationFinding[];
 	issueClass?: string;
 	feedback?: string;
 	execution: CheckExecutionIdentity;
@@ -105,7 +107,10 @@ export function createCheckResult(
 			`Determinate Check Pack Result ${input.check.id} requires an Invocation digest.`,
 		);
 	}
-	const findings = normalizedTextList(input.findings ?? [], "finding", false);
+	const findings = normalizeCheckFindings(
+		input.findings ?? [],
+		"Check Result findings",
+	);
 	if (status !== "pass" && findings.length === 0) {
 		throw new Error(`Check Result ${input.check.id} ${status} requires findings.`);
 	}
@@ -438,6 +443,16 @@ function assertResultIdentity(
 	}
 	if (!isCheckResultStatus(result.status)) {
 		throw new Error(`Check Result ${result.checkId} has invalid status.`);
+	}
+	const findings = normalizeCheckFindings(
+		result.findings,
+		`Check Result ${result.checkId} findings`,
+	);
+	if (canonicalJsonDigest(findings) !== canonicalJsonDigest(result.findings)) {
+		throw new Error(`Check Result ${result.checkId} findings are not canonical.`);
+	}
+	if (result.status !== "pass" && findings.length === 0) {
+		throw new Error(`Check Result ${result.checkId} ${result.status} requires findings.`);
 	}
 	assertResultEvidenceIdentity(result);
 	const { resultDigest, ...resultWithoutDigest } = result;

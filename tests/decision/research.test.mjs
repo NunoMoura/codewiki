@@ -223,7 +223,10 @@ describe("Decision research semantics", () => {
 
 		assert.equal(result.status, "fail");
 		assert.deepEqual(result.evidenceRecordIds, [evidence.evidenceId]);
-		assert.match(result.findings[0], /publicationDate 2026-07-30 follows observation/);
+		assert.match(
+			result.findings[0].message,
+			/publicationDate 2026-07-30 follows observation/,
+		);
 	});
 
 	it("returns indeterminate for missing or stale citation inputs", () => {
@@ -236,7 +239,7 @@ describe("Decision research semantics", () => {
 		});
 		assert.equal(missing.status, "indeterminate");
 		assert.equal(missing.measurement, undefined);
-		assert.match(missing.findings[0], /is missing/);
+		assert.match(missing.findings[0].message, /is missing/);
 
 		const staleEvidence = runtime.materializeDecisionResearchCitation(
 			material(),
@@ -249,7 +252,7 @@ describe("Decision research semantics", () => {
 			expectedFreshnessBoundary: digest("4"),
 		});
 		assert.equal(stale.status, "indeterminate");
-		assert.match(stale.findings[0], /exclusions=freshness/);
+		assert.match(stale.findings[0].message, /exclusions=freshness/);
 		assert.deepEqual(stale.evidenceRecordIds, [staleEvidence.evidenceId]);
 	});
 
@@ -472,7 +475,10 @@ describe("Decision research claim-support Model Check", () => {
 
 		assert.equal(prepared.status, "indeterminate");
 		assert.equal(prepared.result.status, "indeterminate");
-		assert.match(prepared.result.findings[0], /provenance dependency is fail/);
+		assert.match(
+			prepared.result.findings[0].message,
+			/provenance dependency is fail/,
+		);
 		assert.equal("request" in prepared, false);
 	});
 

@@ -231,7 +231,7 @@ function resultObservation(
 	return {
 		disposition,
 		...(result.measurement ? {measurement: result.measurement} : {}),
-		findings: [...result.findings],
+		findings: result.findings.map((finding) => finding.message),
 		...(result.issueClass ? {issueClass: result.issueClass} : {}),
 		...(result.feedback ? {feedback: result.feedback} : {}),
 		...(producedEvidenceRecords.length > 0

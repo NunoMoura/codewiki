@@ -200,25 +200,14 @@ function dispositionFor(
 	}
 }
 
-function resultFindings(observation: CheckObservation): string[] {
-	const findings = observation.findings.map(formatFinding);
+function resultFindings(
+	observation: CheckObservation,
+): CheckObservationFinding[] {
+	const findings = [...observation.findings];
 	if (observation.outcome === "indeterminate" && observation.reason) {
-		findings.push(observation.reason);
+		findings.push({message: observation.reason});
 	}
 	return findings;
-}
-
-function formatFinding(finding: CheckObservationFinding): string {
-	const code = finding.code ? `[${finding.code}] ` : "";
-	if (!finding.location) return `${code}${finding.message}`;
-	const start = finding.location.startLine;
-	const end = finding.location.endLine;
-	let lines = "";
-	if (start !== undefined) {
-		lines = `:${start}`;
-		if (end !== undefined) lines += `-${end}`;
-	}
-	return `${code}${finding.message} (${finding.location.ref}${lines})`;
 }
 
 function assertObservationByteLimit(value: number): void {
@@ -244,7 +233,10 @@ function resultFromInvalidObservation(
 		invocationDigest: input.invocation.invocationDigest,
 		evidenceResolutions: [...input.evidenceResolutions],
 		findings: [
-			`Check evaluator ${input.check.id} returned unavailable or invalid output; details were redacted.`,
+			{
+				code: "codewiki.evaluator.invalid_output",
+				message: `Check evaluator ${input.check.id} returned unavailable or invalid output; details were redacted.`,
+			},
 		],
 		execution: input.execution,
 	});

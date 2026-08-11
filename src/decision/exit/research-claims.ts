@@ -253,7 +253,7 @@ function completeClaims(
 			check: trusted.check,
 			disposition: "indeterminate",
 			evidenceResolutions: resolutions,
-			findings: [...resultFindings],
+			findings: resultFindings.map((message) => ({message})),
 			issueClass: "research_claim_support",
 			execution: prepared.execution,
 		});
@@ -266,7 +266,9 @@ function completeClaims(
 			disposition: supported ? "satisfied" : "unsatisfied",
 			measurement: { shape: "boolean", value: supported },
 			evidenceResolutions: resolutions,
-			findings: [...(supported ? response.findings : resultFindings)],
+			findings: (supported ? response.findings : resultFindings).map(
+				(message) => ({message}),
+			),
 			...(supported ? {} : { issueClass: "research_claim_support" }),
 			execution: prepared.execution,
 		});
@@ -397,7 +399,7 @@ function indeterminatePreparation(options: {
 			researchResolution,
 			emptyModelResolution(trusted.modelObligation, input),
 		],
-		findings: [finding],
+		findings: [{message: finding}],
 		issueClass: "research_evidence",
 		execution,
 	});
@@ -586,7 +588,7 @@ function operationalResult(
 			prepared.researchResolution,
 			emptyModelResolution(prepared.trusted.modelObligation, input),
 		],
-		findings: [`Decision research claim assessment ${outcome}.`],
+		findings: [{message: `Decision research claim assessment ${outcome}.`}],
 		issueClass: "model_execution",
 		execution: prepared.execution,
 	});

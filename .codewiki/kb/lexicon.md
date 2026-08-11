@@ -22,9 +22,9 @@ tags: [system, vocabulary]
 | Check | Atomic versioned requirement evaluated for one exact Candidate. | [Verification](system/components/verification.md) |
 | Check Catalog | Snapshot of installed Checks that may be selected for a Candidate but grants no applicability or enforcement by itself. | [Verification](system/components/verification.md) |
 | Check Invocation | Versioned bounded input binding one selected Check to an exact Candidate, policy, configuration, and context coverage. | [Verification](system/components/verification.md) |
-| Check Observation | Bounded pass, fail, or indeterminate evaluator output from which Runtime may create one Check Result. | [Verification](system/components/verification.md) |
+| Check Observation | Bounded pass, fail, or indeterminate evaluator output with structured findings and optional untrusted repair proposals from which Runtime may create one Check Result. | [Verification](system/components/verification.md) |
 | Check Pack | Content-addressed group of Checks and inherited configuration installed as one project binding. | [Verification](system/components/verification.md) |
-| Check Result | Immutable admitted result of one resolved Check against one exact Candidate. | [Verification](system/components/verification.md) |
+| Check Result | Immutable admitted result of one resolved Check against one exact Candidate, preserving bounded finding codes, descriptive severity, locations, and repair proposals. | [Verification](system/components/verification.md) |
 | Client | User-facing adapter that requests bounded reads or authenticated actions without owning Runtime authority. | [Clients](system/components/clients.md) |
 | Code Check | Arbitrary Check program executed only through an admitted isolated language adapter. | [Verification](system/components/verification.md) |
 | CodeWiki OS | Versioned guidance shared by CodeWiki-managed harness sessions. | [Harnesses](system/components/harnesses.md) |

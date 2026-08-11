@@ -323,8 +323,11 @@ describe("bounded Loop exit runner", () => {
 			(entry) => entry.checkId === ids[1],
 		);
 		assert.equal(operational.status, "indeterminate");
-		assert.match(operational.findings[0], /redacted/);
-		assert.doesNotMatch(operational.findings[0], /executor unavailable/);
+		assert.match(operational.findings[0].message, /redacted/);
+		assert.doesNotMatch(
+			operational.findings[0].message,
+			/executor unavailable/,
+		);
 		assert.equal(result.nextAction.kind, "repair_candidate");
 		assert.deepEqual([...result.nextAction.failedCheckIds], [ids[0]]);
 		assert.deepEqual([...result.nextAction.repairTargets], ["loop-candidate"]);

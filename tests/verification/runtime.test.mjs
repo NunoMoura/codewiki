@@ -113,7 +113,9 @@ function persistedVerificationFixture(disposition = "satisfied") {
 				}),
 		evidenceResolutions: [],
 		findings:
-			disposition === "satisfied" ? [] : ["Projection fixture outcome."],
+			disposition === "satisfied"
+				? []
+				: [{message: "Projection fixture outcome."}],
 		execution: check.execution,
 	});
 	const report = createExitReport({policy: resolved, checkResults: [result]});

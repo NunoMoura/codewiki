@@ -389,11 +389,17 @@ describe("Check Observation protocol", () => {
 				findings: [
 					{
 						code: "protocol.binding",
+						severity: "error",
 						message: "Observation lacks exact binding.",
 						location: {
 							ref: "src/verification/contracts.ts",
 							startLine: 10,
 							endLine: 12,
+						},
+						repair: {
+							objective: "Bind output to exact Invocation.",
+							actions: ["Copy admitted Invocation digest into output."],
+							verification: ["Revalidate Check Observation."],
 						},
 					},
 				],
@@ -413,13 +419,19 @@ describe("Check Observation protocol", () => {
 
 		assert.equal(
 			CHECK_OBSERVATION_SCHEMA.$id,
-			"urn:codewiki:protocol:check-observation:1.0.0",
+			"urn:codewiki:protocol:check-observation:1.1.0",
 		);
 		assert.equal(pass.outcome, "pass");
+		assert.equal(fail.findings[0].severity, "error");
 		assert.equal(fail.findings[0].location.startLine, 10);
+		assert.equal(
+			fail.findings[0].repair.objective,
+			"Bind output to exact Invocation.",
+		);
 		assert.equal(indeterminate.reason, "Required repository context was unavailable.");
 		assert.equal(pass.grantsResult, false);
 		assert.ok(Object.isFrozen(fail.findings[0].location));
+		assert.ok(Object.isFrozen(fail.findings[0].repair.actions));
 	});
 
 	it("rejects unbound, malformed, authority-bearing, and oversized output", () => {
@@ -455,6 +467,23 @@ describe("Check Observation protocol", () => {
 		assert.throws(
 			() => normalize({...base, grantsResult: true}),
 			/cannot grant a Check Result/u,
+		);
+		assert.throws(
+			() =>
+				normalize({
+					...base,
+					findings: [
+						{
+							message: "Actionable finding.",
+							repair: {
+								objective: "Repair exact binding.",
+								actions: [],
+								verification: ["Revalidate output."],
+							},
+						},
+					],
+				}),
+			/Check Observation is invalid/u,
 		);
 		assert.throws(
 			() => normalize({...base, summary: "x".repeat(2_000)}, 256),
@@ -514,8 +543,14 @@ describe("Check protocol Runtime boundary", () => {
 			findings: [
 				{
 					code: "protocol.binding",
+					severity: "error",
 					message: "Binding is incomplete.",
 					location: {ref: "src/verification/protocol.ts", startLine: 10},
+					repair: {
+						objective: "Restore exact protocol binding.",
+						actions: ["Use admitted Invocation digest."],
+						verification: ["Re-run protocol validation."],
+					},
 				},
 			],
 		});
@@ -525,13 +560,36 @@ describe("Check protocol Runtime boundary", () => {
 		assert.equal(passing.invocationDigest, invocation.invocationDigest);
 		assert.equal(passing.feedback, base.summary);
 		assert.equal(failing.status, "fail");
-		assert.deepEqual(failing.findings, [
-			"[protocol.binding] Binding is incomplete. (src/verification/protocol.ts:10)",
+		assert.equal(failing.findings.length, 1);
+		assert.equal(failing.findings[0].code, "protocol.binding");
+		assert.equal(failing.findings[0].severity, "error");
+		assert.equal(failing.findings[0].message, "Binding is incomplete.");
+		assert.equal(
+			failing.findings[0].location.ref,
+			"src/verification/protocol.ts",
+		);
+		assert.equal(failing.findings[0].location.startLine, 10);
+		assert.equal(
+			failing.findings[0].repair.objective,
+			"Restore exact protocol binding.",
+		);
+		assert.deepEqual([...failing.findings[0].repair.actions], [
+			"Use admitted Invocation digest.",
 		]);
+		assert.deepEqual([...failing.findings[0].repair.verification], [
+			"Re-run protocol validation.",
+		]);
+		assert.ok(Object.isFrozen(failing.findings[0].repair));
 		assert.equal(malformed.status, "indeterminate");
-		assert.deepEqual(malformed.findings, [
+		assert.equal(malformed.findings.length, 1);
+		assert.equal(
+			malformed.findings[0].code,
+			"codewiki.evaluator.invalid_output",
+		);
+		assert.equal(
+			malformed.findings[0].message,
 			`Check evaluator ${check.id} returned unavailable or invalid output; details were redacted.`,
-		]);
+		);
 	});
 
 	it("rejects Runtime-owned binding drift before evaluator output admission", () => {

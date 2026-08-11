@@ -157,7 +157,7 @@ export function createDecisionResearchProvenanceExecutor(
 				check,
 				disposition: "indeterminate",
 				evidenceResolutions: [resolution],
-				findings: [obligationGapFinding(resolution)],
+				findings: [{message: obligationGapFinding(resolution)}],
 				issueClass: "research_evidence",
 				execution: check.execution,
 			});
@@ -182,7 +182,7 @@ export function createDecisionResearchProvenanceExecutor(
 			disposition: findings.length === 0 ? "satisfied" : "unsatisfied",
 			measurement: { shape: "boolean", value: findings.length === 0 },
 			evidenceResolutions: [resolution],
-			findings,
+			findings: findings.map((message) => ({message})),
 			...(findings.length > 0
 				? { issueClass: "research_provenance" }
 				: {}),
