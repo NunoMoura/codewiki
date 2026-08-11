@@ -16,6 +16,8 @@ import {
 	type CheckResultStatus,
 	type CheckThreshold,
 	type ExitReport,
+	type ExitReportCheckOutcome,
+	type ExitReportOutcomes,
 	type ExitReportStatus,
 	type ResolvedExitPolicy,
 } from "./contracts.ts";
@@ -26,7 +28,7 @@ import {
 	toCanonicalJsonValue,
 } from "./identity.ts";
 
-const EXIT_REPORT_REDUCTION_VERSION = "1.0.0";
+const EXIT_REPORT_REDUCTION_VERSION = "2.0.0";
 
 type CheckObservationDisposition =
 	| "satisfied"
@@ -244,6 +246,8 @@ export function createExitReport(input: CreateExitReportInput): ExitReport {
 	);
 	assertResultSet(input.policy, checkResults);
 	const status = reduceExitStatus(input.policy.bindings, checkResults);
+	const outcomes = exitReportOutcomes(input.policy, checkResults);
+	const blockingCheckIds = exitBlockingCheckIds(outcomes.required);
 	const reportWithoutDigest = {
 		schemaVersion: LOOP_EXIT_SCHEMA_VERSION,
 		reductionVersion: EXIT_REPORT_REDUCTION_VERSION,
@@ -252,6 +256,8 @@ export function createExitReport(input: CreateExitReportInput): ExitReport {
 		catalogDigest: input.policy.catalogDigest,
 		policyDigest: input.policy.policyDigest,
 		status,
+		outcomes,
+		blockingCheckIds,
 		checkResults,
 	};
 	return immutable<ExitReport>({
@@ -264,6 +270,23 @@ export function assertValidExitReport(
 	report: ExitReport,
 	policy: ResolvedExitPolicy,
 ): void {
+	assertExactKeys(
+		report,
+		[
+			"schemaVersion",
+			"reductionVersion",
+			"loop",
+			"candidateDigest",
+			"catalogDigest",
+			"policyDigest",
+			"status",
+			"outcomes",
+			"blockingCheckIds",
+			"checkResults",
+			"reportDigest",
+		],
+		"Exit Report",
+	);
 	assertValidResolvedExitPolicy(policy);
 	if (report.schemaVersion !== LOOP_EXIT_SCHEMA_VERSION) {
 		throw new Error(
@@ -288,6 +311,18 @@ export function assertValidExitReport(
 		throw new Error(`Exit Report policy digest does not match Resolved Exit Policy.`);
 	}
 	assertResultSet(policy, report.checkResults);
+	const expectedOutcomes = exitReportOutcomes(policy, report.checkResults);
+	if (
+		canonicalJsonDigest(report.outcomes) !== canonicalJsonDigest(expectedOutcomes)
+	) {
+		throw new Error("Exit Report outcomes do not match its policy and Results.");
+	}
+	const expectedBlockingCheckIds = exitBlockingCheckIds(
+		expectedOutcomes.required,
+	);
+	if (!sameTextList(report.blockingCheckIds, expectedBlockingCheckIds)) {
+		throw new Error("Exit Report blockers do not match its required Results.");
+	}
 	const expectedStatus = reduceExitStatus(policy.bindings, report.checkResults);
 	if (report.status !== expectedStatus) {
 		throw new Error(
@@ -329,8 +364,8 @@ function assertResultSet(
 		throw new Error("Check Result set is not in canonical Check order.");
 	}
 	for (const binding of policy.bindings) {
-		if (binding.required && !seen.has(binding.checkId)) {
-			throw new Error(`Required Check Result ${binding.checkId} is missing.`);
+		if (!seen.has(binding.checkId)) {
+			throw new Error(`Selected Check Result ${binding.checkId} is missing.`);
 		}
 	}
 }
@@ -662,6 +697,60 @@ function measuredStatus(
 		return aboveMinimum && belowMaximum ? "pass" : "fail";
 	}
 	return undefined;
+}
+
+function exitReportOutcomes(
+	policy: ResolvedExitPolicy,
+	results: CheckResult[],
+): ExitReportOutcomes {
+	const byId = new Map(results.map((result) => [result.checkId, result]));
+	const required: ExitReportCheckOutcome[] = [];
+	const advisory: ExitReportCheckOutcome[] = [];
+	const observed: ExitReportCheckOutcome[] = [];
+	for (const binding of policy.bindings) {
+		const result = byId.get(binding.checkId);
+		if (!result) {
+			throw new Error(`Selected Check Result ${binding.checkId} is missing.`);
+		}
+		const outcome: ExitReportCheckOutcome = {
+			checkId: binding.checkId,
+			checkVersion: binding.checkVersion,
+			enforcement: binding.enforcement,
+			required: binding.required,
+			status: result.status,
+			resultDigest: result.resultDigest,
+		};
+		switch (binding.enforcement) {
+			case "require":
+				required.push(outcome);
+				break;
+			case "warn":
+				advisory.push(outcome);
+				break;
+			case "observe":
+				observed.push(outcome);
+				break;
+			default:
+				throw new Error(`Check ${binding.checkId} has invalid enforcement.`);
+		}
+	}
+	return {
+		required,
+		advisory,
+		observed,
+		excluded: policy.exclusions.map((exclusion) => ({
+			...exclusion,
+			refs: [...exclusion.refs],
+		})),
+	};
+}
+
+function exitBlockingCheckIds(
+	outcomes: readonly ExitReportCheckOutcome[],
+): string[] {
+	return outcomes.flatMap((outcome) =>
+		outcome.status === "pass" ? [] : [outcome.checkId],
+	);
 }
 
 function reduceExitStatus(

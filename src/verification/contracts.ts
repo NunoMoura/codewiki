@@ -279,6 +279,22 @@ export interface CheckResult {
 	resultDigest: string;
 }
 
+export interface ExitReportCheckOutcome {
+	checkId: string;
+	checkVersion: string;
+	enforcement: CheckEnforcement;
+	required: boolean;
+	status: CheckResultStatus;
+	resultDigest: string;
+}
+
+export interface ExitReportOutcomes {
+	required: ExitReportCheckOutcome[];
+	advisory: ExitReportCheckOutcome[];
+	observed: ExitReportCheckOutcome[];
+	excluded: CheckExclusion[];
+}
+
 export interface ExitReport {
 	schemaVersion: typeof LOOP_EXIT_SCHEMA_VERSION;
 	reductionVersion: string;
@@ -287,6 +303,8 @@ export interface ExitReport {
 	catalogDigest: string;
 	policyDigest: string;
 	status: ExitReportStatus;
+	outcomes: ExitReportOutcomes;
+	blockingCheckIds: string[];
 	checkResults: CheckResult[];
 	reportDigest: string;
 }

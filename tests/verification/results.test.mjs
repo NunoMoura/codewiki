@@ -154,10 +154,8 @@ function resultFor(
 	});
 }
 
-function allRequiredResults(policy, catalog) {
-	return policy.bindings
-		.filter((binding) => binding.required)
-		.map((binding) => resultFor(policy, catalog, binding));
+function allSelectedResults(policy, catalog) {
+	return policy.bindings.map((binding) => resultFor(policy, catalog, binding));
 }
 
 function quantitativeFoundation() {
@@ -404,7 +402,7 @@ describe("immutable Check Result", () => {
 describe("immutable Exit Report", () => {
 	it("derives pass, fail, and indeterminate with failure dominance", () => {
 		const { policy, catalog } = foundation();
-		const passing = allRequiredResults(policy, catalog);
+		const passing = allSelectedResults(policy, catalog);
 		const failed = [
 			resultFor(policy, catalog, policy.bindings[0], {
 				disposition: "unsatisfied",
@@ -425,8 +423,13 @@ describe("immutable Exit Report", () => {
 			...passing.slice(2),
 		];
 
-		assert.equal(createExitReport({ policy, checkResults: passing }).status, "pass");
-		assert.equal(createExitReport({ policy, checkResults: failed }).status, "fail");
+		const passingReport = createExitReport({policy, checkResults: passing});
+		const failedReport = createExitReport({policy, checkResults: failed});
+		assert.equal(passingReport.status, "pass");
+		assert.equal(passingReport.outcomes.required.length, policy.bindings.length);
+		assert.deepEqual(passingReport.blockingCheckIds, []);
+		assert.equal(failedReport.status, "fail");
+		assert.deepEqual(failedReport.blockingCheckIds, [policy.bindings[0].checkId]);
 		assert.equal(
 			createExitReport({ policy, checkResults: indeterminate }).status,
 			"indeterminate",
@@ -434,6 +437,64 @@ describe("immutable Exit Report", () => {
 		assert.equal(
 			createExitReport({ policy, checkResults: failedAndIndeterminate }).status,
 			"fail",
+		);
+	});
+
+	it("reports advisory and observed outcomes without changing the required verdict", () => {
+		const {policy: requiredPolicy, catalog} = foundation();
+		const advisoryId = requiredPolicy.bindings[0].checkId;
+		const observedId = requiredPolicy.bindings[1].checkId;
+		const policy = createResolvedExitPolicy({
+			loop: requiredPolicy.loop,
+			candidateDigest: requiredPolicy.candidateDigest,
+			catalogDigest: requiredPolicy.catalogDigest,
+			selectorInputDigest: requiredPolicy.selectorInputDigest,
+			bindings: requiredPolicy.bindings.map((binding) => {
+				if (binding.checkId === advisoryId) {
+					return {...binding, enforcement: "warn", required: false};
+				}
+				if (binding.checkId === observedId) {
+					return {...binding, enforcement: "observe", required: false};
+				}
+				return binding;
+			}),
+			exclusions: requiredPolicy.exclusions,
+			protectedCheckIds: requiredPolicy.protectedCheckIds.filter(
+				(checkId) => checkId !== advisoryId && checkId !== observedId,
+			),
+		});
+		const results = allSelectedResults(policy, catalog).map((result) => {
+			if (result.checkId === advisoryId) {
+				return resultFor(policy, catalog, policy.bindings[0], {
+					disposition: "unsatisfied",
+				});
+			}
+			if (result.checkId === observedId) {
+				return resultFor(policy, catalog, policy.bindings[1], {
+					disposition: "indeterminate",
+				});
+			}
+			return result;
+		});
+		const report = createExitReport({policy, checkResults: results});
+
+		assert.throws(
+			() =>
+				createExitReport({
+					policy,
+					checkResults: results.filter((result) => result.checkId !== advisoryId),
+				}),
+			/Selected Check Result .* is missing/u,
+		);
+		assert.equal(report.status, "pass");
+		assert.deepEqual(report.blockingCheckIds, []);
+		assert.deepEqual(
+			report.outcomes.advisory.map(({checkId, status}) => [checkId, status]),
+			[[advisoryId, "fail"]],
+		);
+		assert.deepEqual(
+			report.outcomes.observed.map(({checkId, status}) => [checkId, status]),
+			[[observedId, "indeterminate"]],
 		);
 	});
 
@@ -469,7 +530,7 @@ describe("immutable Exit Report", () => {
 			findings: ["Required Custom Check lacks sufficient Evidence."],
 			execution: { ...check.execution },
 		});
-		const passing = allRequiredResults(policy, catalog);
+		const passing = allSelectedResults(policy, catalog);
 		const reportFor = (customResult) =>
 			createExitReport({
 				policy,
@@ -493,10 +554,10 @@ describe("immutable Exit Report", () => {
 
 	it("rejects missing, duplicate, wrong-candidate, and wrong-policy Results", () => {
 		const { policy, catalog } = foundation();
-		const passing = allRequiredResults(policy, catalog);
+		const passing = allSelectedResults(policy, catalog);
 		assert.throws(
 			() => createExitReport({ policy, checkResults: passing.slice(1) }),
-			/Required Check Result .* is missing/,
+			/Selected Check Result .* is missing/,
 		);
 		assert.throws(
 			() => createExitReport({ policy, checkResults: [...passing, passing[0]] }),
@@ -530,7 +591,7 @@ describe("immutable Exit Report", () => {
 		const { policy, catalog } = foundation();
 		const report = createExitReport({
 			policy,
-			checkResults: allRequiredResults(policy, catalog).toReversed(),
+			checkResults: allSelectedResults(policy, catalog).toReversed(),
 		});
 
 		assert.match(report.reportDigest, /^sha256:[0-9a-f]{64}$/);
@@ -542,10 +603,28 @@ describe("immutable Exit Report", () => {
 		);
 		assert.equal(Object.isFrozen(report), true);
 		assert.equal(Object.isFrozen(report.checkResults), true);
+		assert.equal(Object.isFrozen(report.outcomes), true);
+		assert.equal(Object.isFrozen(report.outcomes.required), true);
 		assert.doesNotThrow(() => assertValidExitReport(report, policy));
 		assert.throws(
-			() => assertValidExitReport({ ...report, status: "fail" }, policy),
+			() => assertValidExitReport({...report, status: "fail"}, policy),
 			/Exit Report status mismatch/,
+		);
+		assert.throws(
+			() =>
+				assertValidExitReport(
+					{...report, blockingCheckIds: [report.checkResults[0].checkId]},
+					policy,
+				),
+			/Exit Report blockers do not match/u,
+		);
+		assert.throws(
+			() =>
+				assertValidExitReport(
+					{...report, outcomes: {...report.outcomes, required: []}},
+					policy,
+				),
+			/Exit Report outcomes do not match/u,
 		);
 
 		const evidenceIndex = report.checkResults.findIndex(

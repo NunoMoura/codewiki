@@ -67,6 +67,13 @@ export interface VerificationReportProjection {
 	readonly reportId: string;
 	readonly operationId: OperationId;
 	readonly status: "pass" | "fail" | "indeterminate";
+	readonly requiredCheckCount: number;
+	readonly advisoryCheckCount: number;
+	readonly observedCheckCount: number;
+	readonly excludedCheckCount: number;
+	readonly blockingCheckCount: number;
+	readonly blockingCheckIds: readonly string[];
+	readonly blockingCheckIdsTruncated: boolean;
 	readonly reportDigest: Sha256Digest;
 }
 
@@ -237,7 +244,13 @@ function projectAttempt(
 		? persistedResults(context, policyBinding.policy, candidate)
 		: {byCheck: new Map<string, PersistedResult>(), conflictedCheckIds: new Set<string>()};
 	const report = policyBinding
-		? persistedReport(context, policyBinding, candidate, persisted.byCheck)
+		? persistedReport(
+				context,
+				policyBinding,
+				candidate,
+				persisted.byCheck,
+				maxChecks,
+			)
 		: null;
 	const routeDigest = persistedRouteDigest(context, report);
 	const allChecks = policyBinding
@@ -383,6 +396,7 @@ function persistedReport(
 	policyBinding: PolicyBinding,
 	candidate: CandidateBinding | null,
 	results: ReadonlyMap<string, PersistedResult>,
+	maxChecks: number,
 ): {
 	readonly report: ExitReport;
 	readonly inlineId: string;
@@ -409,6 +423,13 @@ function persistedReport(
 			reportId: inline.id,
 			operationId,
 			status: report.status,
+			requiredCheckCount: report.outcomes.required.length,
+			advisoryCheckCount: report.outcomes.advisory.length,
+			observedCheckCount: report.outcomes.observed.length,
+			excludedCheckCount: report.outcomes.excluded.length,
+			blockingCheckCount: report.blockingCheckIds.length,
+			blockingCheckIds: report.blockingCheckIds.slice(0, maxChecks),
+			blockingCheckIdsTruncated: report.blockingCheckIds.length > maxChecks,
 			reportDigest: requiredDigest(report.reportDigest, "report reportDigest"),
 		},
 	};

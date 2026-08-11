@@ -34,7 +34,7 @@ tags: [system, vocabulary]
 | Delivery effect | Separately authorized change to a protected delivery boundary. | [Runtime](system/components/runtime.md) |
 | Development stage | User-facing name for the Decision, Planning, or Implementation stage backed by the corresponding semantic Loop. | [Runtime](system/components/runtime.md) |
 | Evidence Record | Immutable metadata record for an exact observation with provenance and freshness. | [Evidence](system/components/evidence.md) |
-| Exit Report | Immutable reduction of every required Result for one Candidate and policy. | [Verification](system/components/verification.md) |
+| Exit Report | Immutable self-explaining verdict that binds every selected Result, classifies required, advisory, observed, and excluded outcomes, and reduces required blockers for one exact Candidate and policy. | [Verification](system/components/verification.md) |
 | Harness | Runtime-selected execution adapter that provides declared semantic capabilities. | [Harnesses](system/components/harnesses.md) |
 | Implementation | Loop that realizes accepted Planning obligations in source, tests, and Integration. | [Implementation](system/components/implementation.md) |
 | Integration | Runtime-owned combination and verification of isolated realization into an exact candidate tree. | [Runtime](system/components/runtime.md) |
@@ -43,6 +43,10 @@ tags: [system, vocabulary]
 | Model Check | Tool-free isolated model evaluation of one Candidate against one Check rubric and configured route. | [Verification](system/components/verification.md) |
 | Planning | Loop that turns approved Decision into ordered immutable realization obligations. | [Planning](system/components/planning.md) |
 | Project Runtime | Project-scoped control plane for identity, scheduling, persistence, synchronization, recovery, and guarded effects. | [Runtime](system/components/runtime.md) |
+| Repair Brief | Candidate- and report-bound bounded guidance compiled from matched profiles, structured Result signals, and one exact Repair Frontier. | [Verification](system/components/verification.md) |
+| Repair Bundle | Immutable report-bound aggregate of matched Repair Profiles, Repair Frontier, Repair Brief, coverage, and exact guidance digests. | [Verification](system/components/verification.md) |
+| Repair Frontier | Bounded snapshot-bound Alignment projection of the smallest relevant source, test, Knowledge, Change, Evidence, and Check neighborhood for actionable Results. | [Verification](system/components/verification.md) |
+| Repair Profile | Sparse Check-owned mapping from outcome and finding code to repair objective, actions, constraints, verification, and zero-authority route recommendation. | [Verification](system/components/verification.md) |
 | Realization | Proven relation from desired Knowledge to exact source, test, and Integration facts. | [Knowledge](system/components/knowledge.md) |
 | Resolved Exit Policy | Immutable Candidate-specific set of active Check bindings and reduction rules. | [Verification](system/components/verification.md) |
 | Runtime Route | Runtime-owned next action after final Exit Report and guards. | [Runtime](system/components/runtime.md) |

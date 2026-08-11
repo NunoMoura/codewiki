@@ -22,15 +22,15 @@ components:
 connections:
   - { id: api-invokes-runtime, from: api, to: runtime, type: invokes, label: requests bounded Runtime operations }
   - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns normalized intake }
-  - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts exact Decision attempt }
-  - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt }
-  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts exact Implementation attempt }
+  - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts exact Decision attempt or report-bound repair }
+  - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt or report-bound repair }
+  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts exact Implementation attempt or report-bound repair }
   - { id: decision-invokes-verification, from: decision, to: verification, type: invokes, label: resolves Decision Checks }
   - { id: planning-invokes-verification, from: planning, to: verification, type: invokes, label: resolves Planning Checks }
   - { id: implementation-invokes-verification, from: implementation, to: verification, type: invokes, label: resolves Implementation Checks }
   - { id: verification-consumes-evidence, from: verification, to: evidence, type: consumes, label: resolves Evidence obligations }
   - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: evaluates current guards }
-  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded alignment facts }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded alignment and Repair Frontier facts }
   - { id: harnesses-invoke-preview, from: harnesses, to: preview, type: invokes, label: captures bounded preview observations }
   - { id: knowledge-reads-project, from: knowledge, to: project, type: reads, label: validates protected project profile }
   - { id: change-trace-reads-project, from: change-trace, to: project, type: reads, label: binds repository identity }

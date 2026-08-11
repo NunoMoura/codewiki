@@ -232,6 +232,26 @@ describe("Candidate-bound Verification projection", () => {
 			baseSnapshotFor(fixture.started).configDigest,
 		);
 		assert.equal(attempt.report.reportDigest, fixture.report.reportDigest);
+		assert.deepEqual(
+			{
+				required: attempt.report.requiredCheckCount,
+				advisory: attempt.report.advisoryCheckCount,
+				observed: attempt.report.observedCheckCount,
+				excluded: attempt.report.excludedCheckCount,
+				blocking: attempt.report.blockingCheckCount,
+				blockingIds: attempt.report.blockingCheckIds,
+				blockingTruncated: attempt.report.blockingCheckIdsTruncated,
+			},
+			{
+				required: 1,
+				advisory: 0,
+				observed: 0,
+				excluded: 1,
+				blocking: 0,
+				blockingIds: [],
+				blockingTruncated: false,
+			},
+		);
 		assert.equal(attempt.routeDigest, fixture.route.routeDigest);
 		assert.deepEqual(
 			attempt.checks.map((check) => [check.checkId, check.status]),

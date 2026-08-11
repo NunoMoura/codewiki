@@ -22,7 +22,7 @@ connections:
   - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns normalized proposal }
   - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts selected exact revision }
   - { id: decision-invokes-verification, from: decision, to: verification, type: invokes, label: evaluates Decision Candidate }
-  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
+  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report and available report-bound repair guidance }
   - id: runtime-writes-knowledge
     from: runtime
     to: knowledge

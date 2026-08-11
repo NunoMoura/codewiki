@@ -38,7 +38,7 @@ connections:
     label: returns bounded observation metadata
     boundary: { type: trust, failure: Reject stale, oversized, or mismatched observation. }
   - { id: evidence-returns-verification, from: evidence, to: verification, type: returns, label: returns resolved Evidence records }
-  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
+  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report and available report-bound repair guidance }
   - id: runtime-writes-change-trace
     from: runtime
     to: change-trace
@@ -52,7 +52,7 @@ connections:
     label: reloads accepted history
     boundary: { type: persistence, failure: Block recovery on unknown or invalid history. }
   - { id: work-state-produces-alignment, from: work-state, to: alignment, type: produces, label: projects current coordination relationships }
-  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns recovered impact and provenance }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns recovered impact, provenance, and Repair Frontier facts }
 flows:
   - concept: /system/flows/work-item-execution.md
     paths:
