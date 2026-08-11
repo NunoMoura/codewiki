@@ -47,7 +47,7 @@ import {
 	checkRequirementDigest,
 } from "./identity.ts";
 
-export const CHECK_CATALOG_VERSION = "11.0.0";
+export const CHECK_CATALOG_VERSION = "12.0.0";
 
 const CHECK_EXECUTOR_IDS = [
 	"codewiki.code-check",
@@ -626,7 +626,7 @@ function checkPackRegistrations(pack: ProjectCheckPack): CheckRegistration[] {
 						version: CHECK_PACK_CONFIG_PROTOCOL_VERSION,
 						kind: executionKind,
 					},
-					measurement: {kind: "qualitative", shape: "structured"},
+					measurement: {kind: "qualitative", shape: "boolean"},
 					evidenceObligations: [],
 					repairTarget: `Address findings from ${definition.id}.`,
 					cost: checkCost(executionKind),

@@ -9,9 +9,11 @@ export {
 	CHECK_INVOCATION_PROTOCOL_ID,
 	CHECK_INVOCATION_PROTOCOL_VERSION,
 	CHECK_INVOCATION_SCHEMA,
+	MAX_CHECK_INVOCATION_BYTES,
 	CHECK_OBSERVATION_PROTOCOL_ID,
 	CHECK_OBSERVATION_PROTOCOL_VERSION,
 	CHECK_OBSERVATION_SCHEMA,
+	MAX_CHECK_OBSERVATION_BYTES,
 	assertValidCheckInvocation,
 	createCheckInvocation,
 	createLoopExitSuite,
@@ -32,6 +34,12 @@ export {
 	type LoopExitSuite,
 	type NormalizeCheckObservationInput,
 } from "./verification/contracts.ts";
+export {
+	admitCheckObservation,
+	assembleCheckInvocation,
+	type AdmitCheckObservationInput,
+	type AssembleCheckInvocationInput,
+} from "./verification/protocol.ts";
 export {
 	VERIFICATION_PROJECTION,
 	projectVerificationState,

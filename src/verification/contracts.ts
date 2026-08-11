@@ -264,6 +264,7 @@ export interface CheckResult {
 	checkDigest: string;
 	candidateDigest: string;
 	policyDigest: string;
+	invocationDigest?: Sha256Digest;
 	status: CheckResultStatus;
 	measurement?: CheckMeasurement;
 	threshold?: CheckThreshold;
@@ -493,8 +494,8 @@ export function sortedCheckJsonObject(
 	);
 }
 
-const MAX_CHECK_INVOCATION_BYTES = 16_777_216;
-const MAX_CHECK_OBSERVATION_BYTES = 1_048_576;
+export const MAX_CHECK_INVOCATION_BYTES = 16_777_216;
+export const MAX_CHECK_OBSERVATION_BYTES = 1_048_576;
 const MAX_CHECK_CONTEXT_ITEMS = 512;
 const MAX_CHECK_CONTEXT_REFS = 1_024;
 const MAX_CHECK_FINDINGS = 128;
@@ -707,6 +708,17 @@ function normalizeInvocationBody(
 		context: input.context,
 	};
 	assertTypeboxSchema(InvocationBodySchema, raw, "Check Invocation");
+	assertProtocolText(input.candidate.id, "Check Invocation candidate id");
+	assertProtocolText(
+		input.candidate.schemaVersion,
+		"Check Invocation candidate schemaVersion",
+	);
+	assertProtocolText(input.check.id, "Check Invocation Check id");
+	assertProtocolText(input.check.version, "Check Invocation Check version");
+	assertProtocolText(
+		input.check.requirement,
+		"Check Invocation Check requirement",
+	);
 	if (input.policy.candidateDigest !== input.candidate.digest) {
 		throw new Error("Check Invocation policy does not bind its Candidate.");
 	}
@@ -747,6 +759,10 @@ function normalizeInvocationSection(
 		throw new Error(
 			`Unavailable Check Invocation ${label} context cannot include items.`,
 		);
+	}
+	for (const item of section.items) {
+		assertProtocolText(item.ref, `Check Invocation ${label} item ref`);
+		assertProtocolText(item.mediaType, `Check Invocation ${label} item mediaType`);
 	}
 	const items = [...section.items].sort((left, right) =>
 		left.ref.localeCompare(right.ref),
@@ -792,6 +808,22 @@ export function normalizeCheckObservation(
 	}
 	assertTypeboxSchema(CHECK_OBSERVATION_SCHEMA, input.value, "Check Observation");
 	const observation = input.value as CheckObservation;
+	assertProtocolText(observation.summary, "Check Observation summary");
+	if (observation.reason) {
+		assertProtocolText(observation.reason, "Check Observation reason");
+	}
+	for (const finding of observation.findings) {
+		assertProtocolText(finding.message, "Check Observation finding message");
+		if (finding.code) {
+			assertProtocolText(finding.code, "Check Observation finding code");
+		}
+		if (finding.location) {
+			assertProtocolText(
+				finding.location.ref,
+				"Check Observation finding location ref",
+			);
+		}
+	}
 	if (observation.invocationDigest !== input.expectedInvocationDigest) {
 		throw new Error("Check Observation does not bind its Invocation.");
 	}
@@ -825,10 +857,17 @@ function sortedProtocolValues(
 	values: readonly string[],
 	label: string,
 ): string[] {
+	for (const value of values) assertProtocolText(value, label);
 	if (new Set(values).size !== values.length) {
 		throw new Error(`${label} must not contain duplicates.`);
 	}
 	return [...values].sort((left, right) => left.localeCompare(right));
+}
+
+function assertProtocolText(value: string, label: string): void {
+	if (!value.trim() || value !== value.trim()) {
+		throw new Error(`${label} must be trimmed non-empty text.`);
+	}
 }
 
 function checkProtocolByteLimit(

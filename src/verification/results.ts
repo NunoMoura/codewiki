@@ -38,6 +38,7 @@ interface CreateCheckResultInput {
 	policy: ResolvedExitPolicy;
 	check: CheckDefinition;
 	disposition: CheckObservationDisposition;
+	invocationDigest?: string;
 	measurement?: CheckMeasurement;
 	evidenceResolutions: EvidenceObligationResolution[];
 	findings?: string[];
@@ -61,6 +62,7 @@ export function createCheckResult(
 			"policy",
 			"check",
 			"disposition",
+			"invocationDigest",
 			"measurement",
 			"evidenceResolutions",
 			"findings",
@@ -89,6 +91,18 @@ export function createCheckResult(
 	const measurement = normalizedMeasurement(input.check, input.measurement);
 	const threshold = resolvedThreshold(input.check, binding);
 	const status = derivedStatus(input.disposition, measurement, threshold);
+	const invocationDigest = input.invocationDigest
+		? assertSha256Digest(input.invocationDigest, "Check Result invocationDigest")
+		: undefined;
+	if (
+		input.check.id.startsWith("check-pack:") &&
+		input.disposition !== "indeterminate" &&
+		!invocationDigest
+	) {
+		throw new Error(
+			`Determinate Check Pack Result ${input.check.id} requires an Invocation digest.`,
+		);
+	}
 	const findings = normalizedTextList(input.findings ?? [], "finding", false);
 	if (status !== "pass" && findings.length === 0) {
 		throw new Error(`Check Result ${input.check.id} ${status} requires findings.`);
@@ -109,6 +123,7 @@ export function createCheckResult(
 		checkDigest: binding.checkDigest,
 		candidateDigest: input.policy.candidateDigest,
 		policyDigest: input.policy.policyDigest,
+		...(invocationDigest ? {invocationDigest} : {}),
 		status,
 		...(measurement ? { measurement } : {}),
 		...(threshold ? { threshold } : {}),
@@ -335,6 +350,7 @@ function assertResultIdentity(
 			"checkDigest",
 			"candidateDigest",
 			"policyDigest",
+			"invocationDigest",
 			"status",
 			"measurement",
 			"threshold",
@@ -369,6 +385,21 @@ function assertResultIdentity(
 	}
 	if (result.policyDigest !== policy.policyDigest) {
 		throw new Error(`Check Result ${result.checkId} has wrong policy.`);
+	}
+	if (result.invocationDigest) {
+		assertSha256Digest(
+			result.invocationDigest,
+			`Check Result ${result.checkId} invocationDigest`,
+		);
+	}
+	if (
+		result.checkId.startsWith("check-pack:") &&
+		result.status !== "indeterminate" &&
+		!result.invocationDigest
+	) {
+		throw new Error(
+			`Determinate Check Pack Result ${result.checkId} requires an Invocation digest.`,
+		);
 	}
 	if (!isCheckResultStatus(result.status)) {
 		throw new Error(`Check Result ${result.checkId} has invalid status.`);

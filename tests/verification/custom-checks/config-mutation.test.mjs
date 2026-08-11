@@ -636,8 +636,12 @@ describe("project-local Check Pack discovery", () => {
 				customChecks: [],
 				checkPacks: first.packs,
 			});
-			assert.equal(catalog.version, "11.0.0");
+			assert.equal(catalog.version, "12.0.0");
 			assert.equal(catalog.checkPackSnapshotDigest, first.digest);
+			assert.equal(
+				catalog.get(modelCheck.id, "implementation").check.measurement.shape,
+				"boolean",
+			);
 			assert.equal(
 				catalog.get(modelCheck.id, "implementation").packCheck.checkDigest,
 				modelCheck.digest,

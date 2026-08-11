@@ -318,7 +318,7 @@ describe("approved-template Custom Code Checks", () => {
 		const catalog = createCheckCatalog({userStandards: [standard], customChecks: [definition]});
 		const checkId = customCheckDefinitionCheckId(definition);
 		const registration = catalog.get(checkId, "decision");
-		assert.equal(catalog.version, "11.0.0");
+		assert.equal(catalog.version, "12.0.0");
 		assert.deepEqual(registration.check.execution, {
 			kind: "code",
 			id: "codewiki.custom-code.resource_usage_limit",

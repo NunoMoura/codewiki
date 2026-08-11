@@ -14,6 +14,16 @@ import {
 	createResolvedExitPolicy,
 	normalizeCheckObservation,
 } from "../../src/verification/contracts.ts";
+import {
+	checkRequirementDigest,
+	createLoopCandidate,
+	loopQualifiedCheckDigest,
+} from "../../src/verification/identity.ts";
+import {
+	admitCheckObservation,
+	assembleCheckInvocation,
+} from "../../src/verification/protocol.ts";
+import {createCheckResult} from "../../src/verification/results.ts";
 
 const CANDIDATE_DIGEST = `sha256:${"a".repeat(64)}`;
 const SELECTOR_DIGEST = `sha256:${"b".repeat(64)}`;
@@ -284,6 +294,78 @@ describe("Check Invocation protocol", () => {
 	});
 });
 
+function admissionFixture() {
+	const candidate = createLoopCandidate({
+		loop: "implementation",
+		schemaVersion: "1.0.0",
+		content: {summary: "Admit exact evaluator output."},
+		observedBase: {
+			workStateDigest: `sha256:${"1".repeat(64)}`,
+			knowledgeSnapshotDigest: `sha256:${"2".repeat(64)}`,
+			sourceSnapshotDigest: `sha256:${"3".repeat(64)}`,
+			gitTreeDigest: `sha256:${"4".repeat(64)}`,
+			canonicalRefs: ["change:CHG-1"],
+		},
+	});
+	const requirement = "Exact evaluator output satisfies this requirement.";
+	const check = {
+		id: "check-pack:default:protocol",
+		version: "1.0.0",
+		description: "Evaluate protocol integrity.",
+		requirement,
+		requirementDigest: checkRequirementDigest(requirement),
+		execution: {
+			id: "codewiki.model-check",
+			version: "1.0.0",
+			kind: "model",
+		},
+		measurement: {kind: "qualitative", shape: "boolean"},
+		evidenceObligations: [],
+		repairTarget: "source",
+		cost: 1,
+		timeoutMs: 10_000,
+		protected: false,
+	};
+	const parameters = {route: "checks/reviewer"};
+	const checkDigest = loopQualifiedCheckDigest({
+		loop: candidate.loop,
+		check,
+		configuration: parameters,
+		catalogDigest: CATALOG_DIGEST,
+	});
+	const policy = createResolvedExitPolicy({
+		loop: candidate.loop,
+		candidateDigest: candidate.digest,
+		catalogDigest: CATALOG_DIGEST,
+		selectorInputDigest: SELECTOR_DIGEST,
+		bindings: [
+			{
+				checkId: check.id,
+				checkVersion: check.version,
+				requirementDigest: check.requirementDigest,
+				checkDigest,
+				enforcement: "require",
+				required: true,
+				parameters,
+				dependsOn: [],
+				activatedBy: ["check-pack:default"],
+				ruleRefs: ["verification.pack.default"],
+			},
+		],
+		exclusions: [],
+		protectedCheckIds: [],
+	});
+	const context = invocationInput().context;
+	const invocation = assembleCheckInvocation({
+		candidate,
+		policy,
+		check,
+		context,
+		maximumInputBytes: 1_048_576,
+	});
+	return {candidate, check, policy, invocation};
+}
+
 describe("Check Observation protocol", () => {
 	it("normalizes pass, fail, and indeterminate evaluator output", () => {
 		const invocation = createCheckInvocation(invocationInput());
@@ -377,6 +459,110 @@ describe("Check Observation protocol", () => {
 		assert.throws(
 			() => normalize({...base, summary: "x".repeat(2_000)}, 256),
 			/exceeds its 256-byte limit/u,
+		);
+	});
+});
+
+describe("Check protocol Runtime boundary", () => {
+	it("assembles an exact canonical Candidate, policy, and Check binding", () => {
+		const {candidate, check, policy, invocation} = admissionFixture();
+
+		assert.equal(invocation.candidate.id, candidate.id);
+		assert.equal(invocation.policy.policyDigest, policy.policyDigest);
+		assert.equal(invocation.check.id, check.id);
+		assert.equal(invocation.check.parameters.route, "checks/reviewer");
+
+		const driftedCandidate = structuredClone(candidate);
+		driftedCandidate.content.summary = "Digest drift.";
+		assert.throws(
+			() =>
+				assembleCheckInvocation({
+					candidate: driftedCandidate,
+					policy,
+					check,
+					context: invocation.context,
+					maximumInputBytes: 1_048_576,
+				}),
+			/not canonical or has digest drift/u,
+		);
+	});
+
+	it("admits valid output into canonical Results and redacts invalid output", () => {
+		const {check, policy, invocation} = admissionFixture();
+		const admit = (observation) =>
+			admitCheckObservation({
+				invocation,
+				policy,
+				check,
+				observation,
+				maximumInputBytes: 1_048_576,
+				maximumOutputBytes: 65_536,
+				evidenceResolutions: [],
+				execution: {...check.execution, modelRef: "checks/reviewer"},
+			});
+		const base = {
+			protocolId: CHECK_OBSERVATION_PROTOCOL_ID,
+			protocolVersion: CHECK_OBSERVATION_PROTOCOL_VERSION,
+			invocationDigest: invocation.invocationDigest,
+			summary: "Evaluator completed one isolated judgment.",
+			grantsResult: false,
+		};
+		const passing = admit({...base, outcome: "pass", findings: []});
+		const failing = admit({
+			...base,
+			outcome: "fail",
+			findings: [
+				{
+					code: "protocol.binding",
+					message: "Binding is incomplete.",
+					location: {ref: "src/verification/protocol.ts", startLine: 10},
+				},
+			],
+		});
+		const malformed = admit({...base, outcome: "fail", findings: []});
+
+		assert.equal(passing.status, "pass");
+		assert.equal(passing.invocationDigest, invocation.invocationDigest);
+		assert.equal(passing.feedback, base.summary);
+		assert.equal(failing.status, "fail");
+		assert.deepEqual(failing.findings, [
+			"[protocol.binding] Binding is incomplete. (src/verification/protocol.ts:10)",
+		]);
+		assert.equal(malformed.status, "indeterminate");
+		assert.deepEqual(malformed.findings, [
+			`Check evaluator ${check.id} returned unavailable or invalid output; details were redacted.`,
+		]);
+	});
+
+	it("rejects Runtime-owned binding drift before evaluator output admission", () => {
+		const {check, policy, invocation} = admissionFixture();
+		assert.throws(
+			() =>
+				createCheckResult({
+					loop: policy.loop,
+					policy,
+					check,
+					disposition: "satisfied",
+					measurement: {shape: "boolean", value: true},
+					evidenceResolutions: [],
+					execution: check.execution,
+				}),
+			/requires an Invocation digest/u,
+		);
+		const driftedCheck = {...check, requirement: "Different requirement."};
+		assert.throws(
+			() =>
+				admitCheckObservation({
+					invocation,
+					policy,
+					check: driftedCheck,
+					observation: undefined,
+					maximumInputBytes: 1_048_576,
+					maximumOutputBytes: 65_536,
+					evidenceResolutions: [],
+					execution: check.execution,
+				}),
+			/requirement digest mismatch/u,
 		);
 	});
 });
