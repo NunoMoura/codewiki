@@ -15,6 +15,16 @@ import {
 } from "./custom-checks/resource-guards.ts";
 import {projectVerificationState} from "./projection.ts";
 import {
+	assertValidExitOutcome,
+	assertValidRepairBrief,
+	assertValidRepairBundle,
+	assertValidRepairHarnessInvocation,
+	createExitOutcome,
+	createRepairBrief,
+	createRepairBundle,
+	createRepairHarnessInvocation,
+} from "./repair-bundle.ts";
+import {
 	assertValidRepairFrontier,
 	createRepairFrontier,
 } from "./repair-frontier.ts";
@@ -34,6 +44,14 @@ interface VerificationRuntime {
 	readonly createExitReport: typeof createExitReport;
 	readonly createRepairFrontier: typeof createRepairFrontier;
 	readonly assertValidRepairFrontier: typeof assertValidRepairFrontier;
+	readonly createRepairBrief: typeof createRepairBrief;
+	readonly assertValidRepairBrief: typeof assertValidRepairBrief;
+	readonly createRepairBundle: typeof createRepairBundle;
+	readonly assertValidRepairBundle: typeof assertValidRepairBundle;
+	readonly createExitOutcome: typeof createExitOutcome;
+	readonly assertValidExitOutcome: typeof assertValidExitOutcome;
+	readonly createRepairHarnessInvocation: typeof createRepairHarnessInvocation;
+	readonly assertValidRepairHarnessInvocation: typeof assertValidRepairHarnessInvocation;
 	readonly createResultCache: typeof createLoopExitResultCache;
 	readonly projectState: typeof projectVerificationState;
 	readonly resourceGuards: ReturnType<typeof resolveRuntimeResourceGuards>;
@@ -100,6 +118,14 @@ export function createVerificationRuntime(
 		createExitReport,
 		createRepairFrontier,
 		assertValidRepairFrontier,
+		createRepairBrief,
+		assertValidRepairBrief,
+		createRepairBundle,
+		assertValidRepairBundle,
+		createExitOutcome,
+		assertValidExitOutcome,
+		createRepairHarnessInvocation,
+		assertValidRepairHarnessInvocation,
 		createResultCache: createLoopExitResultCache,
 		projectState: projectVerificationState,
 		resourceGuards,

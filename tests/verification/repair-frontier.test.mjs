@@ -12,6 +12,16 @@ import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
 import {loopQualifiedCheckDigest} from "../../src/verification/identity.ts";
 import {
+	assertValidExitOutcome,
+	assertValidRepairBrief,
+	assertValidRepairBundle,
+	assertValidRepairHarnessInvocation,
+	createExitOutcome,
+	createRepairBrief,
+	createRepairBundle,
+	createRepairHarnessInvocation,
+} from "../../src/verification/repair-bundle.ts";
+import {
 	assertValidRepairFrontier,
 	createRepairFrontier,
 } from "../../src/verification/repair-frontier.ts";
@@ -73,11 +83,13 @@ function frontierFixture(options = {}) {
 	});
 	const catalog = createCheckCatalog();
 	const check = catalog.get("api_contract_reviewed", "planning").check;
-	const repairProfiles = defaultRepairProfiles({
-		checkId: check.id,
-		requirement: check.requirement,
-		target: check.repairTarget,
-	});
+	const repairProfiles = options.withoutProfiles
+		? []
+		: defaultRepairProfiles({
+				checkId: check.id,
+				requirement: check.requirement,
+				target: check.repairTarget,
+			});
 	const profileSetDigest = repairProfileSetDigest(repairProfiles);
 	const parameters = {repairProfileSetDigest: profileSetDigest};
 	const policy = createResolvedExitPolicy({
@@ -134,7 +146,30 @@ function frontierFixture(options = {}) {
 											startLine: 192,
 										},
 									}),
+							...(options.withoutProposal
+								? {}
+								: {
+										repair: {
+											objective: "Restore the Alignment query contract.",
+											actions: ["Correct the bounded query response."],
+											verification: ["Run the Alignment query contract tests."],
+										},
+									}),
 						},
+						...(options.extraFinding
+							? [
+									{
+										code: "api.contract.coverage",
+										severity: "warning",
+										message: "Alignment query coverage is incomplete.",
+										repair: {
+											objective: "Restore Alignment query coverage.",
+											actions: ["Add the missing bounded context."],
+											verification: ["Run the Alignment retrieval benchmark."],
+										},
+									},
+								]
+							: []),
 					],
 		execution: {...check.execution},
 	});
@@ -157,6 +192,19 @@ function create(input, options = {}) {
 		synchronizationStatus: options.synchronizationStatus ?? "fresh",
 		...(options.limits ? {limits: options.limits} : {}),
 	});
+}
+
+function guidanceInput(fixture, options = {}) {
+	const synchronizationStatus = options.synchronizationStatus ?? "fresh";
+	return {
+		candidate: fixture.candidate,
+		policy: fixture.policy,
+		report: fixture.report,
+		alignmentGraph: fixture.graph,
+		synchronizationStatus,
+		frontier: create(fixture, {synchronizationStatus}),
+		...(options.limits ? {limits: options.limits} : {}),
+	};
 }
 
 describe("Candidate-bound Repair Frontier", () => {
@@ -264,6 +312,138 @@ describe("Candidate-bound Repair Frontier", () => {
 		assert.throws(
 			() => assertValidRepairFrontier(tampered, assertionInput),
 			/does not match its bound report and Alignment snapshot/,
+		);
+	});
+});
+
+describe("report-bound Repair Brief and Repair Bundle", () => {
+	it("compiles only matched profiles with structured signals and bounded frontier context", () => {
+		const fixture = frontierFixture();
+		const input = guidanceInput(fixture);
+		const brief = createRepairBrief(input);
+		const bundle = createRepairBundle(input);
+
+		assert.equal(brief.protocolVersion, "1.0.0");
+		assert.equal(bundle.protocolVersion, "1.0.0");
+		assert.equal(brief.exitReportDigest, fixture.report.reportDigest);
+		assert.equal(brief.context.frontierDigest, input.frontier.frontierDigest);
+		assert.equal(brief.resultSignals.length, 1);
+		assert.equal(brief.resultSignals[0].findings[0].code, "api.contract.drift");
+		assert.match(
+			brief.resultSignals[0].findings[0].repairProposalDigest,
+			/^sha256:[a-f0-9]{64}$/,
+		);
+		assert.equal(brief.guidance.length, 1);
+		assert.equal(
+			brief.guidance.length < fixture.policy.bindings[0].repairProfiles.length,
+			true,
+		);
+		assert.equal(brief.guidance[0].profile.match.outcome, "fail");
+		assert.equal(bundle.matchedProfiles.length, 1);
+		assert.deepEqual(bundle.guidanceDigests.profileDigests, [
+			brief.guidance[0].profile.profileDigest,
+		]);
+		assert.equal(bundle.grantsAuthority, false);
+		assert.equal(brief.grantsAuthority, false);
+		assert.ok(Object.isFrozen(bundle));
+		assert.ok(Object.isFrozen(bundle.brief.resultSignals[0].findings));
+		assertValidRepairBrief(brief, input);
+		assertValidRepairBundle(bundle, input);
+
+		const routeBody = {
+			candidateDigest: fixture.report.candidateDigest,
+			exitReportDigest: fixture.report.reportDigest,
+			route: "repair",
+			reasonCode: "required_check_failed",
+		};
+		const outcomeInput = {
+			policy: fixture.policy,
+			report: fixture.report,
+			repairGuidance: input,
+			runtimeRoute: {...routeBody, routeDigest: canonicalJsonDigest(routeBody)},
+		};
+		const outcome = createExitOutcome(outcomeInput);
+		assert.equal(outcome.exitReport.reportDigest, fixture.report.reportDigest);
+		assert.equal(outcome.repairBundle.bundleDigest, bundle.bundleDigest);
+		assert.equal(outcome.runtimeRoute.route, "repair");
+		assertValidExitOutcome(outcome, outcomeInput);
+
+		const invocation = createRepairHarnessInvocation(input);
+		assert.equal(invocation.repairBundleDigest, bundle.bundleDigest);
+		assert.equal(invocation.brief.guidance.length, 1);
+		assert.equal("frontier" in invocation, false);
+		assert.equal("matchedProfiles" in invocation, false);
+		assert.equal(invocation.grantsAuthority, false);
+		assertValidRepairHarnessInvocation(invocation, input);
+	});
+
+	it("reports truncation, stale context, and unavailable authored guidance without losing signals", () => {
+		const boundedFixture = frontierFixture({extraFinding: true});
+		const boundedInput = guidanceInput(boundedFixture, {
+			synchronizationStatus: "offline",
+			limits: {maxResults: 1, maxFindings: 1, maxProfileMatches: 1},
+		});
+		const bounded = createRepairBundle(boundedInput);
+		assert.equal(bounded.stale, true);
+		assert.equal(bounded.brief.truncation.truncated, true);
+		assert.equal(bounded.brief.truncation.findings, true);
+		assert.equal(bounded.coverage.findingCount, 2);
+		assert.equal(bounded.coverage.selectedFindingCount, 1);
+		assert.equal(bounded.coverage.status, "partial");
+
+		const unguidedFixture = frontierFixture({
+			withoutProfiles: true,
+			withoutProposal: true,
+		});
+		const unguided = createRepairBundle(guidanceInput(unguidedFixture));
+		assert.equal(unguided.coverage.status, "unavailable");
+		assert.equal(unguided.matchedProfiles.length, 0);
+		assert.equal(unguided.brief.resultSignals.length, 1);
+		assert.equal(unguided.brief.resultSignals[0].findings.length, 1);
+		const reportOnly = createExitOutcome({
+			policy: unguidedFixture.policy,
+			report: unguidedFixture.report,
+		});
+		assert.equal(reportOnly.repairBundle, null);
+		assert.equal(reportOnly.runtimeRoute, null);
+	});
+
+	it("rejects invalid bounds, content tampering, and recomputed digest rebinding", () => {
+		const fixture = frontierFixture();
+		assert.throws(
+			() => createRepairBundle(guidanceInput(fixture, {limits: {maxResults: 513}})),
+			/maxResults must be an integer from 1 to 512/,
+		);
+		const input = guidanceInput(fixture);
+		const brief = structuredClone(createRepairBrief(input));
+		brief.context.references.checkIds = ["other-check"];
+		assert.throws(
+			() => assertValidRepairBrief(brief, input),
+			/Repair Brief digest does not match content/,
+		);
+
+		const bundle = structuredClone(createRepairBundle(input));
+		bundle.brief.resultSignals[0].repairTarget = "other-target";
+		const {bundleDigest: _oldDigest, ...body} = bundle;
+		bundle.bundleDigest = canonicalJsonDigest(body);
+		assert.throws(
+			() => assertValidRepairBundle(bundle, input),
+			/does not match its bound report and Repair Frontier/,
+		);
+		assert.throws(
+			() =>
+				createExitOutcome({
+					policy: fixture.policy,
+					report: fixture.report,
+					runtimeRoute: {
+						candidateDigest: canonicalJsonDigest({other: "candidate"}),
+						exitReportDigest: fixture.report.reportDigest,
+						route: "repair",
+						reasonCode: "required_check_failed",
+						routeDigest: canonicalJsonDigest({route: "other"}),
+					},
+				}),
+			/references another Candidate or Exit Report/,
 		);
 	});
 });

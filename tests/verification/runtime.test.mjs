@@ -206,6 +206,14 @@ describe("Verification runtime composition", () => {
 		assert.equal(typeof runtime.createExitReport, "function");
 		assert.equal(typeof runtime.createRepairFrontier, "function");
 		assert.equal(typeof runtime.assertValidRepairFrontier, "function");
+		assert.equal(typeof runtime.createRepairBrief, "function");
+		assert.equal(typeof runtime.assertValidRepairBrief, "function");
+		assert.equal(typeof runtime.createRepairBundle, "function");
+		assert.equal(typeof runtime.assertValidRepairBundle, "function");
+		assert.equal(typeof runtime.createExitOutcome, "function");
+		assert.equal(typeof runtime.assertValidExitOutcome, "function");
+		assert.equal(typeof runtime.createRepairHarnessInvocation, "function");
+		assert.equal(typeof runtime.assertValidRepairHarnessInvocation, "function");
 		assert.equal(typeof runtime.createResultCache, "function");
 		assert.equal(typeof runtime.projectState, "function");
 		assert.equal(typeof runtime.createRunner, "function");

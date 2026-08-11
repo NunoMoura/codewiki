@@ -34,6 +34,7 @@ tags: [system, vocabulary]
 | Delivery effect | Separately authorized change to a protected delivery boundary. | [Runtime](system/components/runtime.md) |
 | Development stage | User-facing name for the Decision, Planning, or Implementation stage backed by the corresponding semantic Loop. | [Runtime](system/components/runtime.md) |
 | Evidence Record | Immutable metadata record for an exact observation with provenance and freshness. | [Evidence](system/components/evidence.md) |
+| Exit Outcome | Immutable projection of one unchanged Exit Report, optional Repair Bundle, and bound Runtime Route reference. | [Verification](system/components/verification.md) |
 | Exit Report | Immutable self-explaining verdict that binds every selected Result, classifies required, advisory, observed, and excluded outcomes, and reduces required blockers for one exact Candidate and policy. | [Verification](system/components/verification.md) |
 | Harness | Runtime-selected execution adapter that provides declared semantic capabilities. | [Harnesses](system/components/harnesses.md) |
 | Implementation | Loop that realizes accepted Planning obligations in source, tests, and Integration. | [Implementation](system/components/implementation.md) |
