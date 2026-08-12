@@ -27,16 +27,10 @@ test("Pi project-service clients reuse one leased supervised connection", async 
 		sessionManager: { getSessionId: () => "session:test" },
 	};
 	try {
-		await clients.connect(root, ctx);
-		await clients.connect(root, ctx);
 		const reaction = await clients.inspect(root, ctx, {
 			kind: "manual_resume",
 		});
 		assert.equal(reaction.status, "quiescent");
-		assert.equal(
-			await clients.semanticExecution(root, ctx),
-			"client_candidate",
-		);
 		await assert.rejects(
 			clients.decisionAttention({repoRoot: root, context: ctx}),
 			/decision_attention_projection_unavailable/,
@@ -44,16 +38,8 @@ test("Pi project-service clients reuse one leased supervised connection", async 
 		assert.equal(starts, 1);
 		assert.equal(service.coordinator.snapshot().clientCount, 1);
 		assert.equal(service.coordinator.snapshot().supervisorCount, 1);
-		const firstEvents = await clients.events(root, ctx, 0);
-		assert.equal(firstEvents.generationId, "generation:pi-client:1");
 		await service.close();
 		service = undefined;
-		const replacementEvents = await clients.events(
-			root,
-			ctx,
-			firstEvents.latestCursor,
-		);
-		assert.equal(replacementEvents.generationId, "generation:pi-client:2");
 		const recovered = await clients.inspect(root, ctx, {
 			kind: "manual_resume",
 		});

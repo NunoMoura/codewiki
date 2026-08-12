@@ -6,7 +6,6 @@ import {
 	mkdtempSync,
 	rmSync,
 	writeFileSync,
-	readFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -61,16 +60,6 @@ function assertToolResult(result, pattern) {
 	assert.match(result.content[0].text, pattern);
 	assert.ok(result.details.result);
 	return result.details.result;
-}
-
-async function executeTool(tool, input, ctx, id = tool.name) {
-	return await tool.execute(
-		`external-lifecycle-${id}`,
-		{ input },
-		undefined,
-		undefined,
-		ctx,
-	);
 }
 
 const root = mkdtempSync(
@@ -128,7 +117,9 @@ try {
 	const stateTool = toolByName(pi, "wiki_state");
 	const attentionTool = toolByName(pi, "wiki_attention");
 	const changeTool = toolByName(pi, "wiki_change");
-	const decideTool = toolByName(pi, "wiki_decide");
+	for (const name of ["wiki_decide", "wiki_plan", "wiki_implement"]) {
+		assert.equal(pi.tools.some((tool) => tool.name === name), false, name);
+	}
 	const notifications = [];
 	const ctx = {
 		cwd: projectRoot,
@@ -203,13 +194,6 @@ try {
 		/wiki_change: completed create operation\./,
 	);
 	const traceId = `TRACE-${change.id}`;
-	const tracePath = join(
-		projectRoot,
-		".codewiki",
-		"traces",
-		`${traceId}.jsonl`,
-	);
-	const initialTrace = readFileSync(tracePath);
 	await assert.rejects(
 		attentionTool.execute(
 			"external-lifecycle-attention",
@@ -220,22 +204,6 @@ try {
 		),
 		/decision_attention_projection_unavailable/,
 	);
-	const decisionInput = {
-		disposition: "approve",
-		rationale: "Unselected external Candidate must not gain Decision authority.",
-	};
-	for (const mode of ["preview", "append"]) {
-		await assert.rejects(
-			executeTool(
-				decideTool,
-				{ ...decisionInput, mode, allowNonProjectInstall: true },
-				ctx,
-				`decide-${mode}`,
-			),
-			/decision_attention_selection_required/,
-		);
-		assert.deepEqual(readFileSync(tracePath), initialTrace);
-	}
 	console.log(
 		JSON.stringify(
 			{
@@ -243,8 +211,7 @@ try {
 				projectRoot,
 				packageRoot,
 				traceId,
-				guard: "decision_attention_selection_required",
-				traceUnchanged: true,
+				semanticToolsAbsent: true,
 			},
 			null,
 			2,

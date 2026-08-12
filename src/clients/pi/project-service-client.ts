@@ -9,17 +9,8 @@ import {
 	connectEnsuredProjectCoordinatorClient,
 	type EnsureProjectCoordinatorServiceOptions,
 } from "../../runtime/coordinator/process.ts";
-import type { ProjectCoordinatorEventBatch } from "../../runtime/coordinator/events.ts";
-import type { ImplementationWorkerDispatchResult } from "../../runtime/workers/dispatch.ts";
-import type {
-	ProjectCoordinatorCandidateResult,
-	ProjectCoordinatorRemoteClient,
-	ProjectCoordinatorSemanticExecution,
-	RuntimeCandidateLoop,
-} from "../../runtime/coordinator/service.ts";
+import type { ProjectCoordinatorRemoteClient } from "../../runtime/coordinator/service.ts";
 import type { RuntimeReaction, RuntimeTrigger } from "../../runtime/coordinator/reactor.ts";
-import type { RuntimeReactionJobReceipt } from "../../runtime/coordinator/reactions.ts";
-import type { RuntimeSemanticMode } from "../../runtime/coordinator/executor.ts";
 import { spawnPiProjectCoordinatorDaemon } from "./project-coordinator-daemon.ts";
 import type { CodewikiExtensionContext } from "./types.ts";
 
@@ -28,19 +19,11 @@ const HEARTBEAT_INTERVAL_MS = 10_000;
 type RemoteTrigger = Omit<RuntimeTrigger, "occurredAt">;
 
 export interface PiProjectServiceClientProvider {
-	connect(
-		repoRoot: string,
-		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
-	): Promise<void>;
 	inspect(
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
 		trigger: RemoteTrigger,
 	): Promise<RuntimeReaction>;
-	semanticExecution(
-		repoRoot: string,
-		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
-	): Promise<ProjectCoordinatorSemanticExecution>;
 	decisionAttention(input: {
 		readonly repoRoot: string;
 		readonly context: Pick<
@@ -57,31 +40,6 @@ export interface PiProjectServiceClientProvider {
 		>;
 		readonly command: DecisionAttentionSelectionCommand;
 	}): Promise<DecisionStartResult>;
-	react(
-		repoRoot: string,
-		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
-		trigger: RemoteTrigger,
-		mode?: RuntimeSemanticMode,
-	): Promise<RuntimeReactionJobReceipt[]>;
-	reconcileWorkers(
-		repoRoot: string,
-		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
-		trigger: RemoteTrigger,
-	): Promise<ImplementationWorkerDispatchResult>;
-	events(
-		repoRoot: string,
-		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
-		afterCursor: number,
-		options?: { maxEvents?: number; waitMs?: number },
-	): Promise<ProjectCoordinatorEventBatch>;
-	submitCandidate(
-		repoRoot: string,
-		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
-		trigger: RemoteTrigger,
-		loop: RuntimeCandidateLoop,
-		candidate: Record<string, unknown>,
-		mode: RuntimeSemanticMode,
-	): Promise<ProjectCoordinatorCandidateResult>;
 	disconnect(repoRoot?: string): Promise<void>;
 }
 
@@ -163,14 +121,8 @@ export function createPiProjectServiceClients(
 	};
 
 	return {
-		async connect(repoRoot, ctx) {
-			await clientFor(repoRoot, ctx);
-		},
 		inspect(repoRoot, ctx, trigger) {
 			return invoke(repoRoot, ctx, (client) => client.inspect(trigger));
-		},
-		semanticExecution(repoRoot, ctx) {
-			return invoke(repoRoot, ctx, async (client) => client.semanticExecution);
 		},
 		decisionAttention(input) {
 			return invoke(input.repoRoot, input.context, (client) =>
@@ -180,24 +132,6 @@ export function createPiProjectServiceClients(
 		selectDecision(input) {
 			return invoke(input.repoRoot, input.context, (client) =>
 				client.selectDecision(input.command),
-			);
-		},
-		react(repoRoot, ctx, trigger, mode = "append") {
-			return invoke(repoRoot, ctx, (client) => client.react(trigger, mode));
-		},
-		reconcileWorkers(repoRoot, ctx, trigger) {
-			return invoke(repoRoot, ctx, (client) =>
-				client.reconcileWorkers(trigger),
-			);
-		},
-		events(repoRoot, ctx, afterCursor, eventOptions) {
-			return invoke(repoRoot, ctx, (client) =>
-				client.events(afterCursor, eventOptions),
-			);
-		},
-		submitCandidate(repoRoot, ctx, trigger, loop, candidate, mode) {
-			return invoke(repoRoot, ctx, (client) =>
-				client.submitCandidate(trigger, loop, candidate, mode),
 			);
 		},
 		async disconnect(repoRoot) {

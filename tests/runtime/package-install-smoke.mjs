@@ -353,7 +353,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "pro
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "daemon.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "project-coordinator-daemon.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "project-service-client.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "runtime-tool-routing.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "runtime-tool-routing.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-coordinator-daemon.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), false);
@@ -410,9 +410,6 @@ assert.deepEqual(tools, [
 	"wiki_attention",
 	"wiki_config",
 	"wiki_change",
-	"wiki_decide",
-	"wiki_plan",
-	"wiki_implement",
 	"wiki_archive",
 ]);
 assert.deepEqual(events.map((event) => event.eventName), [
@@ -420,6 +417,7 @@ assert.deepEqual(events.map((event) => event.eventName), [
 	"tool_result",
 	"session_shutdown",
 	"session_start",
+	"session_shutdown",
 ]);
 const promptHook = events.find((event) => event.eventName === "before_agent_start");
 const footerHook = events.find((event) => event.eventName === "session_start");

@@ -8,7 +8,6 @@ import {
 import { registerCodeWikiReviewHooks } from "./review-hooks.ts";
 import { registerCodewikiTools } from "./tools/index.ts";
 import { registerCodewikiFooter } from "./tui/index.ts";
-import { registerRuntimeToolRouting } from "./runtime-tool-routing.ts";
 import type { CodewikiExtensionApi } from "./types.ts";
 
 /**
@@ -42,7 +41,7 @@ export function registerCodewikiExtension(
 		projectServices,
 	);
 	registerCodewikiPromptHooks(pi);
-	registerRuntimeToolRouting(pi, projectServices);
 	registerCodeWikiReviewHooks({ on: pi.on?.bind(pi) });
 	registerCodewikiFooter(pi, connectDashboardCoordinator);
+	pi.on?.("session_shutdown", () => projectServices.disconnect());
 }

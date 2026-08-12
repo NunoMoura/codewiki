@@ -292,11 +292,14 @@ describe("source architecture", () => {
 			"install-scope.ts",
 			"project-coordinator-daemon.ts",
 			"project-service-client.ts",
-			"runtime-tool-routing.ts",
 		]) {
 			assert.equal(existsSync(join(sourceRoot, "clients", "pi", name)), true, name);
 			assert.equal(existsSync(join(sourceRoot, "pi", name)), false, name);
 		}
+		assert.equal(
+			existsSync(join(sourceRoot, "clients", "pi", "runtime-tool-routing.ts")),
+			false,
+		);
 		assert.equal(existsSync(join(sourceRoot, "pi")), false);
 	});
 

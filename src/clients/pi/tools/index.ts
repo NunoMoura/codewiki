@@ -9,7 +9,6 @@ import {
 	type RunWikiChangeResult,
 } from "../../../api/index.ts";
 import { wikiChangeOperationMutates } from "../../../api/wiki-change.ts";
-import type { RuntimeSemanticMode } from "../../../runtime/coordinator/executor.ts";
 import type { RuntimeReaction } from "../../../runtime/coordinator/reactor.ts";
 import type { WikiStateSnapshot } from "../../../api/state.ts";
 import { buildChangeValidationCard } from "../../../changes/validation-view.ts";
@@ -46,9 +45,6 @@ export const CODEWIKI_TOOL_NAMES = [
 	WIKI_ATTENTION_TOOL_NAME,
 	"wiki_config",
 	"wiki_change",
-	"wiki_decide",
-	"wiki_plan",
-	"wiki_implement",
 	"wiki_archive",
 ] as const;
 
@@ -112,24 +108,6 @@ function codewikiTools(
 		wikiAttentionTool(projectServices),
 		wikiConfigTool(),
 		wikiChangeTool(),
-		runtimeSemanticTool(
-			"decision",
-			"wiki_decide",
-			"Submit Decision judgment for the exact Change selected by runtime; runtime injects identity, revision, digest, WorkState, and append authority.",
-			projectServices,
-		),
-		runtimeSemanticTool(
-			"planning",
-			"wiki_plan",
-			"Submit a Planning candidate for the approved Change horizon selected by runtime; runtime injects participants, freshness, and multi-trace append authority.",
-			projectServices,
-		),
-		runtimeSemanticTool(
-			"implementation",
-			"wiki_implement",
-			"Submit evidence for runtime-selected Work Items; runtime derives Sprint, owning Change, Planning, Assignment, source-map, sequence, and append authority.",
-			projectServices,
-		),
 		facadeTool<RunWikiArchiveInput>(
 			"wiki_archive",
 			"CodeWiki Archive",
@@ -447,80 +425,6 @@ function wikiChangeModelPayload(result: RunWikiChangeResult): unknown {
 		changed: result.changed,
 		lines: renderPiChangeValidationCard(changeCard),
 	};
-}
-
-type RuntimeSemanticToolLoop = "decision" | "planning" | "implementation";
-
-type RuntimeSemanticToolCandidate = Record<string, unknown>;
-
-function runtimeSemanticTool(
-	loop: RuntimeSemanticToolLoop,
-	name: string,
-	description: string,
-	projectServices: PiProjectServiceClientProvider,
-): CodewikiToolDefinition {
-	return {
-		name,
-		label: `CodeWiki ${loop[0].toUpperCase()}${loop.slice(1)}`,
-		description,
-		promptSnippet: `Submit only ${loop} semantic judgment or evidence. Runtime owns loop selection and repository authority.`,
-		promptGuidelines: [
-			`Use ${name} only when runtimeReaction selects ${loop}.`,
-			"Do not copy trace ids, revisions, digests, byte offsets, Planning events, Assignments, or source ownership into semantic input.",
-		],
-		executionMode: "sequential",
-		parameters: inputSchema(description),
-		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-			const args = paramsObject(name, params, ["input"]);
-			const submitted = requiredInput<Record<string, unknown>>(
-				name,
-				args.input,
-			);
-			const root = await requireCodewikiRoot(ctx);
-			const mode = semanticToolMode(submitted.mode);
-			const prepared = stripNonProjectInstallOverride(submitted);
-			if (mode === "append") {
-				assertProjectLocalMutationAllowed({
-					toolName: name,
-					ctx,
-					projectRoot: root,
-					moduleUrl: import.meta.url,
-					input: submitted,
-				});
-			}
-			const { mode: _mode, ...candidate } = prepared;
-			const semanticCandidate = candidate as RuntimeSemanticToolCandidate;
-			const submittedResult = await projectServices.submitCandidate(
-				root,
-				ctx,
-				{ kind: "manual_resume" },
-				loop,
-				semanticCandidate,
-				mode,
-			);
-			const execution = submittedResult.execution;
-			const result = {
-				...submittedResult,
-				status: execution?.status || submittedResult.receipt.status,
-				mode,
-				iterations: execution?.outcome ? 1 : 0,
-				casRetries: execution?.casRetries || 0,
-				outcomes: execution?.outcome ? [execution.outcome] : [],
-				reaction: execution?.reaction,
-			};
-			return toolResult(
-				`${name}: coordinator ${result.status} with ${submittedResult.receipt.evidence.length} durable event(s).`,
-				result,
-				mode === "append" ? undefined : notifyInstallWarning(ctx, root),
-			);
-		},
-	};
-}
-
-function semanticToolMode(value: unknown): RuntimeSemanticMode {
-	if (value === undefined) return "preview";
-	if (value === "preview" || value === "append") return value;
-	throw new Error("Semantic tool input.mode must be preview or append.");
 }
 
 function facadeTool<T extends object>(

@@ -159,11 +159,11 @@ try {
 	const first = startPi(projectRoot, env, "pi-one");
 	clients.push(first);
 	assert.equal((await first.request("get_state")).success, true);
-	await waitUntil(
+	const dashboardState = await waitUntil(
 		async () => {
 			try {
 				const state = await coordinator.readProjectCoordinatorServiceState(projectRoot);
-				return state.clientCount === 2 && state.supervisorCount === 1
+				return state.clientCount === 1 && state.supervisorCount === 0
 					? state
 					: undefined;
 			} catch {
@@ -171,70 +171,59 @@ try {
 			}
 		},
 		15_000,
-		() => "First Pi client and dashboard did not connect.",
+		() => "Dashboard did not connect without ambient Pi supervision.",
 	);
 	const second = startPi(projectRoot, env, "pi-two");
 	clients.push(second);
 	assert.equal((await second.request("get_state")).success, true);
-	const shared = await waitUntil(
-		async () => {
-			try {
-				const state = await coordinator.readProjectCoordinatorServiceState(projectRoot);
-				return state.clientCount >= 3 && state.supervisorCount === 2
-					? state
-					: undefined;
-			} catch {
-				return undefined;
-			}
-		},
-		15_000,
-		() => "Two Pi clients and dashboard did not share one coordinator.",
-	);
-	assert.equal(shared.clientCount, 3);
-	assert.equal(shared.supervisorCount, 2);
+	const afterSecond = await coordinator.readProjectCoordinatorServiceState(projectRoot);
+	assert.equal(afterSecond.generationId, dashboardState.generationId);
+	assert.equal(afterSecond.clientCount, 1);
+	assert.equal(afterSecond.supervisorCount, 0);
 	const endpoint = await coordinator.readProjectCoordinatorEndpoint(projectRoot);
-	assert.equal(endpoint.generationId, shared.generationId);
+	assert.equal(endpoint.generationId, dashboardState.generationId);
 	const health = await coordinator.requestProjectCoordinatorHealth(endpoint);
-	assert.equal(health.semanticExecution, "service");
+	assert.equal(health.semanticExecution, "client_candidate");
 	eventClient = await coordinator.connectProjectCoordinatorClient(projectRoot, {
 		clientId: "test:multiprocess-events",
 		kind: "test",
 		supervision: "observer",
 	});
 	const initialEvents = await eventClient.events(0);
+	assert.equal(
+		initialEvents.events.some((event) => event.clientKind === "pi"),
+		false,
+	);
 
 	await stopPi(second);
-	const deliveredEvents = await eventClient.events(initialEvents.latestCursor, {
-		waitMs: 5_000,
-	});
+	const afterSecondExit = await eventClient.events(initialEvents.latestCursor);
+	assert.equal(
+		afterSecondExit.events.some((event) => event.clientKind === "pi"),
+		false,
+	);
+	await stopPi(first);
+	const unsupervised = await waitUntil(
+		async () => {
+			const state = await coordinator.readProjectCoordinatorServiceState(projectRoot);
+			return state.clientCount === 1 && state.supervisorCount === 0
+				? state
+				: undefined;
+		},
+		5_000,
+		() => "Dashboard connection did not close with its owning Pi shell.",
+	);
+	assert.equal(unsupervised.executionPermitted, false);
+	const deliveredEvents = await eventClient.events(initialEvents.latestCursor);
 	assert.equal(
 		deliveredEvents.events.some(
 			(event) =>
-				event.state === "client_disconnected" && event.clientKind === "pi",
+				event.state === "client_disconnected" &&
+				event.clientKind === "dashboard",
 		),
 		true,
 	);
 	await eventClient.disconnect();
 	eventClient = undefined;
-	const afterOneExit = await waitUntil(
-		async () => {
-			const state = await coordinator.readProjectCoordinatorServiceState(projectRoot);
-			return state.clientCount < 3 ? state : undefined;
-		},
-		5_000,
-		() => "Coordinator did not observe Pi client shutdown.",
-	);
-	assert.equal(afterOneExit.supervisorCount, 1);
-	await stopPi(first);
-	const unsupervised = await waitUntil(
-		async () => {
-			const state = await coordinator.readProjectCoordinatorServiceState(projectRoot);
-			return state.supervisorCount === 0 ? state : undefined;
-		},
-		5_000,
-		() => "Coordinator did not pause after all Pi supervisors exited.",
-	);
-	assert.equal(unsupervised.executionPermitted, false);
 	await coordinator.stopProjectCoordinatorService(projectRoot, {
 		timeoutMs: 5_000,
 	});
@@ -242,11 +231,12 @@ try {
 		JSON.stringify(
 			{
 				ok: true,
-				generationId: shared.generationId,
-				sharedClients: shared.clientCount,
-				supervisors: shared.supervisorCount,
+				generationId: dashboardState.generationId,
+				dashboardClients: dashboardState.clientCount,
+				supervisors: dashboardState.supervisorCount,
 				semanticExecution: health.semanticExecution,
-				eventDelivery: true,
+				ambientPiClients: 0,
+				dashboardDisconnectDelivered: true,
 				pausedAfterExit: !unsupervised.executionPermitted,
 			},
 			null,

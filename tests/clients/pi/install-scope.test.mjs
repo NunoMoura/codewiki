@@ -32,7 +32,7 @@ describe("Pi project-local install guard", () => {
 		assert.equal(identity.sourceLabel, "project-local Pi package ✓");
 		assert.doesNotThrow(() =>
 			assertProjectLocalMutationAllowed({
-				toolName: "wiki_decide",
+				toolName: "wiki_change",
 				ctx: { cwd: projectRoot },
 				projectRoot,
 				moduleUrl,
@@ -68,7 +68,7 @@ describe("Pi project-local install guard", () => {
 		assert.throws(
 			() =>
 				assertProjectLocalMutationAllowed({
-					toolName: "wiki_plan",
+					toolName: "wiki_config",
 					ctx: { cwd: projectRoot },
 					projectRoot,
 					moduleUrl,
@@ -91,7 +91,7 @@ describe("Pi project-local install guard", () => {
 
 		assert.doesNotThrow(() =>
 			assertProjectLocalMutationAllowed({
-				toolName: "wiki_decide",
+				toolName: "/wiki-select",
 				ctx: { cwd: projectRoot },
 				projectRoot,
 				moduleUrl,

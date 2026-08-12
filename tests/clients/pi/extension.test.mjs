@@ -34,12 +34,9 @@ import {
 	renderBootstrapCommand,
 } from "../../../src/clients/pi/tui/index.ts";
 import { shouldOpenAutomaticDashboard } from "../../../src/clients/pi/tui/footer.ts";
-import { changeTraceId } from "../../../src/changes/change-trace.ts";
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../src/changes/triage/contracts.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
-import { traceFilePath } from "../../../src/traces/schema.ts";
 import { createTraceHead, formatTraceText } from "../../../src/traces/writer.ts";
-import { seedChangeAcceptance } from "../../helpers/accepted-change.mjs";
 import { testPiProjectServices } from "../../helpers/pi-project-services.mjs";
 
 function registerTestExtension(pi) {
@@ -185,6 +182,9 @@ describe("Pi extension adapter", () => {
 			pi.tools.map((tool) => tool.name),
 			[...CODEWIKI_TOOL_NAMES],
 		);
+		for (const name of ["wiki_decide", "wiki_plan", "wiki_implement"]) {
+			assert.equal(toolByName(pi, name), undefined, name);
+		}
 		assert.deepEqual(
 			pi.commands.map((command) => command.name),
 			[...CODEWIKI_COMMAND_NAMES],
@@ -196,6 +196,7 @@ describe("Pi extension adapter", () => {
 				"tool_result",
 				"session_shutdown",
 				"session_start",
+				"session_shutdown",
 			],
 		);
 		assert.deepEqual(
@@ -573,17 +574,6 @@ describe("Pi extension adapter", () => {
 			);
 			await assert.rejects(
 				() =>
-					toolByName(pi, "wiki_decide").execute(
-						"tool-call-missing-input",
-						{},
-						undefined,
-						undefined,
-						{ cwd: root },
-					),
-				/wiki_decide requires input object\./,
-			);
-			await assert.rejects(
-				() =>
 					toolByName(pi, "wiki_config").execute(
 						"tool-call-invalid-config",
 						{ write: "yes" },
@@ -598,29 +588,11 @@ describe("Pi extension adapter", () => {
 		}
 	});
 
-	it("rejects direct Decision append without authenticated selection", async () => {
+	it("rejects incomplete direct archive append", async () => {
 		const root = await fixture();
 		try {
 			const pi = mockPi();
 			registerTestExtension(pi.api);
-			await seedChangeAcceptance(root, {id: "CHG-pi-runtime-append"});
-			await assert.rejects(
-				() =>
-					toolByName(pi, "wiki_decide").execute(
-						"tool-call-decide-append",
-						{
-							input: {
-								mode: "append",
-								disposition: "approve",
-								rationale: "Attempt unselected Decision append.",
-							},
-						},
-						undefined,
-						undefined,
-						{cwd: root},
-					),
-				/decision_attention_selection_required/,
-			);
 			await assert.rejects(
 				() =>
 					toolByName(pi, "wiki_archive").execute(
@@ -632,43 +604,6 @@ describe("Pi extension adapter", () => {
 					),
 				/wiki_archive append mode requires expectedBytes >= 0\./,
 			);
-		} finally {
-			await rm(root, { recursive: true, force: true });
-		}
-	});
-
-	it("rejects unselected Decision preview without mutating trace files", async () => {
-		const root = await fixture();
-		try {
-			const pi = mockPi();
-			registerTestExtension(pi.api);
-			const ctx = { cwd: join(root, "src") };
-			const { record } = await seedChangeAcceptance(root, {
-				id: "CHG-pi-preview",
-			});
-			const changeTracePath = join(
-				root,
-				traceFilePath(changeTraceId(record.change.id)),
-			);
-			const before = await readFile(changeTracePath, "utf8");
-			await assert.rejects(
-				() =>
-					toolByName(pi, "wiki_decide").execute(
-						"tool-call-decide-preview",
-						{
-							input: {
-								mode: "preview",
-								disposition: "approve",
-								rationale: "Attempt unselected Decision preview.",
-							},
-						},
-						undefined,
-						undefined,
-						ctx,
-					),
-				/decision_attention_selection_required/,
-			);
-			assert.equal(await readFile(changeTracePath, "utf8"), before);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

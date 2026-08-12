@@ -8,7 +8,6 @@ import {
 	rmSync,
 	writeFileSync,
 } from "node:fs";
-import { stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -106,8 +105,10 @@ try {
 	const dashboardCommand = commandByName(pi, "wiki-dashboard");
 	const stateTool = toolByName(pi, "wiki_state");
 	const changeTool = toolByName(pi, "wiki_change");
-	const decideTool = toolByName(pi, "wiki_decide");
 	const configTool = toolByName(pi, "wiki_config");
+	for (const name of ["wiki_decide", "wiki_plan", "wiki_implement"]) {
+		assert.equal(pi.tools.some((tool) => tool.name === name), false, name);
+	}
 	const notifications = [];
 	const ctx = {
 		cwd: projectRoot,
@@ -203,31 +204,6 @@ try {
 		/wiki_change: completed create operation\./,
 	);
 	const traceId = `TRACE-${change.id}`;
-	const tracePath = join(
-		projectRoot,
-		".codewiki",
-		"traces",
-		`${traceId}.jsonl`,
-	);
-	const decisionInput = {
-		disposition: "approve",
-		rationale: "Approve exact project-local install Change.",
-	};
-	const beforeDecision = readFileSync(tracePath, "utf8");
-	for (const mode of ["preview", "append"]) {
-		await assert.rejects(
-			decideTool.execute(
-				`decide-${mode}`,
-				{input: {...decisionInput, mode}},
-				undefined,
-				undefined,
-				ctx,
-			),
-			/decision_attention_selection_required/,
-		);
-	}
-	assert.equal(readFileSync(tracePath, "utf8"), beforeDecision);
-	assert.equal((await stat(tracePath)).size > 0, true);
 	const state = await stateTool.execute(
 		"post-decision-state",
 		{ view: "board", traceId },

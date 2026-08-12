@@ -56,11 +56,7 @@ export type WikiStateNextActionKind =
 	| "archive"
 	| "wait";
 
-export type WikiStateNextActionTool =
-	| "wiki_decide"
-	| "wiki_plan"
-	| "wiki_implement"
-	| "wiki_archive";
+export type WikiStateNextActionTool = "wiki_archive";
 
 export interface WikiStateNextAction {
 	action: WikiStateNextActionKind;
@@ -335,7 +331,6 @@ function nextStateAction(input: {
 			action: "decide",
 			reason: `Trace ${openTrace.traceId} needs decision coverage.`,
 			traceId: openTrace.traceId,
-			tool: "wiki_decide",
 		};
 	}
 	if (openTrace.status === "needs_planning") {
@@ -343,7 +338,6 @@ function nextStateAction(input: {
 			action: "plan",
 			reason: `Trace ${openTrace.traceId} needs planning coverage.`,
 			traceId: openTrace.traceId,
-			tool: "wiki_plan",
 		};
 	}
 	if (openTrace.status === "needs_implementation") {
@@ -351,7 +345,6 @@ function nextStateAction(input: {
 			action: "implement",
 			reason: `Trace ${openTrace.traceId} needs implementation evidence.`,
 			traceId: openTrace.traceId,
-			tool: "wiki_implement",
 		};
 	}
 	if (openTrace.status === "finished") {
@@ -384,7 +377,6 @@ function selectedTraceNextAction(
 			action: "decide",
 			reason: resume?.nextAction || "Create or approve proposed changes.",
 			traceId,
-			tool: "wiki_decide",
 		};
 	}
 	if (status.currentLoop === "planning") {
@@ -392,7 +384,6 @@ function selectedTraceNextAction(
 			action: "plan",
 			reason: resume?.nextAction || "Plan approved decisions.",
 			traceId,
-			tool: "wiki_plan",
 		};
 	}
 	if (status.currentLoop === "implementation") {
@@ -400,7 +391,6 @@ function selectedTraceNextAction(
 			action: "implement",
 			reason: resume?.nextAction || "Implement planned work units.",
 			traceId,
-			tool: "wiki_implement",
 			...(resume?.activeWorkUnitId
 				? { workUnitId: resume.activeWorkUnitId }
 				: {}),

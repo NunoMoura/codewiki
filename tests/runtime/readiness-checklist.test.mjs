@@ -31,9 +31,6 @@ const expectedToolNames = [
 	"wiki_attention",
 	"wiki_config",
 	"wiki_change",
-	"wiki_decide",
-	"wiki_plan",
-	"wiki_implement",
 	"wiki_archive",
 ];
 const forbiddenSkillNames = [
@@ -49,7 +46,7 @@ const agentSurfaceFiles = [
 	"README.md",
 	...filesUnder(".codewiki/kb"),
 	...filesUnder(".agents/skills"),
-	...filesUnder("src/pi"),
+	...filesUnder("src/clients/pi"),
 ];
 
 function jsonFile(path) {
@@ -116,6 +113,7 @@ describe("install readiness checklist", () => {
 			import: "./dist/harnesses/pi/sdk-semantic-session.js",
 		});
 		assert.equal(packageJson.scripts["test:pi-dogfood"], undefined);
+		assert.equal(packageJson.scripts["test:pi-mutation"], undefined);
 		assert.equal(
 			packageJson.scripts["test:pi-install"],
 			"node tests/clients/pi/install-smoke.mjs",
@@ -138,6 +136,8 @@ describe("install readiness checklist", () => {
 		assert.deepEqual([...CODEWIKI_TOOL_NAMES], expectedToolNames);
 		const toolSource = readFileSync("src/clients/pi/tools/index.ts", "utf8");
 		assert.equal(toolSource.includes("wiki_runtime"), false);
+		assert.doesNotMatch(toolSource, /wiki_decide|wiki_plan|wiki_implement/);
+		assert.equal(existsSync("src/clients/pi/runtime-tool-routing.ts"), false);
 		assert.match(toolSource, /Internal agent read/);
 		assert.match(toolSource, /not a user command/);
 	});

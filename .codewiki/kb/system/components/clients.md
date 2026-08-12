@@ -23,4 +23,6 @@ Each adapter declares the commands, queries, events, attachments, confirmations,
 
 Clients render persisted Runtime truth and never infer readiness, provenance, activity, causality, completion, or authority. Browser and channel Clients call neither models nor Git directly. High-authority scope, enforcement, Integration, publication, and deployment actions require an interaction surface capable of exact digest-bound confirmation, normally the App or CLI.
 
+Optional Pi integration exposes bounded reads and explicit user commands. It does not register Decision, Planning, or Implementation Candidate tools, dynamically activate Loop tools, or schedule semantic work or workers from ambient chat, tool-result, startup, or resume events. Exact `/wiki-select` admission may start one authenticated Decision attempt through Runtime; managed model execution remains separately isolated behind Execution Ports.
+
 Check forms and developer mode edit the same tracked Pack files. Assisted authoring is an explicit Client request that Runtime routes to Managed Execution; the returned proposal receives deterministic validation and exact diff review before acceptance. Authoring and evaluator model routes remain separately visible.

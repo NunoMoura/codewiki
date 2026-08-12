@@ -94,7 +94,7 @@ describe("CLI adapter", () => {
 			assert.equal(output.append.byTrace["TRACE-cli"].nextSequence, 1);
 			assert.equal(output.append.byTrace["TRACE-cli"].expectedBytes > 0, true);
 			assert.equal(output.next.action, "decide");
-			assert.equal(output.next.tool, "wiki_decide");
+			assert.equal(output.next.tool, undefined);
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}

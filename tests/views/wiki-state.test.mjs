@@ -111,7 +111,6 @@ describe("wiki_state core facade", () => {
 			action: "implement",
 			reason: "Implement planned work unit WU-state.",
 			traceId: "TRACE-state",
-			tool: "wiki_implement",
 			workUnitId: "WU-state",
 		});
 	});
@@ -287,7 +286,7 @@ describe("wiki_state core facade", () => {
 			selectedState.append?.byTrace["TRACE-state-b"].expectedBytes,
 			200,
 		);
-		assert.equal(selectedState.next.tool, "wiki_implement");
+		assert.equal(selectedState.next.tool, undefined);
 		assert.throws(
 			() => buildWikiState({ records, traceId: "TRACE-state-missing" }),
 			/Unknown trace id/,

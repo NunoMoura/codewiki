@@ -133,7 +133,5 @@ export interface CodewikiExtensionApi {
 		content: string,
 		options?: { deliverAs?: "steer" | "followUp" },
 	): void;
-	getActiveTools?(): string[];
-	setActiveTools?(names: string[]): void;
 	on?(eventName: string, handler: CodewikiExtensionEventHandler): void;
 }
