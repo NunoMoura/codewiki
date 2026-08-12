@@ -15,7 +15,6 @@ export const CURRENT_SOURCE_ROOTS = [
 	"knowledge",
 	"verification",
 	"loops",
-	"pi",
 	"planning",
 	"preview",
 	"project",
@@ -79,7 +78,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"clients",
 	"dashboard",
 	"harnesses",
-	"pi",
 	"preview",
 ] as const;
 

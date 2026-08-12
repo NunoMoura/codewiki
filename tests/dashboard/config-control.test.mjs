@@ -15,20 +15,6 @@ import {
 } from "../../src/project/config-file.ts";
 import { resolveWikiConfig } from "../../src/project/config.ts";
 
-function fakeTraceHostControl() {
-	return {
-		status: async () => ({
-			generatedAt: "2026-07-14T00:00:00.000Z",
-			supervisorId: "dashboard:test",
-			policy: { piHostEnabled: false, automation: "manual", agency: "assist" },
-			traces: [],
-		}),
-		execute: async () => assert.fail("Trace Host command not expected"),
-		heartbeat: async () => undefined,
-		shutdown: async () => undefined,
-	};
-}
-
 describe("dashboard execution configuration control", () => {
 	it("applies guarded bounded patches with CAS, idempotency, and restart guidance", async () => {
 		const root = await mkdtemp(
@@ -144,7 +130,6 @@ describe("dashboard execution configuration control", () => {
 				keepAlive: false,
 				inProcess: true,
 				persistent: false,
-				traceHostControl: fakeTraceHostControl(),
 			});
 			const url = `${handle.origin}/api/configuration?token=${encodeURIComponent(handle.token)}`;
 			const state = await (await fetch(url)).json();

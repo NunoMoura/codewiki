@@ -823,7 +823,6 @@ const dashboardAssetDigest = '__CODEWIKI_ASSET_DIGEST__';
 const dashboardDevMode = new URLSearchParams(window.location.search).get('dev') === '1';
 if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search);
 let state = null;
-let traceHostState = null;
 let loading = false;
 let dashboardStopped = false;
 let eventStream = null;
@@ -1095,9 +1094,6 @@ function renderTraceOptions(entry, index) {
 	const copy = document.createElement('button'); copy.type = 'button'; copy.className = 'options-action'; text(copy, 'Copy trace ID'); copy.onclick = function() { void copyText(entry.trace.traceId); };
 	actions.append(overview, copy);
 	panel.append(actions);
-	details.addEventListener('toggle', function() {
-		if (details.open && !panel.querySelector('.execution-control')) panel.append(renderExecutionControl(entry.trace));
-	});
 	details.append(summary, panel);
 	return details;
 }
@@ -1552,99 +1548,6 @@ function renderTerminalSection(label, body, aside) {
 	const title = document.createElement('span'); text(title, label);
 	const state = document.createElement('span'); state.className = 'section-state'; text(state, aside);
 	heading.append(title, state); node.append(heading, body); return node;
-}
-function renderExecutionControl(trace) {
-	const box = document.createElement('section'); box.className = 'execution-control';
-	const card = traceHostState && (traceHostState.traces || []).find(function(candidate) { return candidate.traceId === trace.traceId; });
-	if (!card) {
-		const note = document.createElement('div'); note.className = 'execution-note';
-		text(note, traceHostState ? 'No execution control is available for this trace.' : 'Loading guarded execution status…');
-		box.append(note); return box;
-	}
-	const result = card.session && card.session.result;
-	const executionPolicy = card.executionPolicy;
-	const selectedRoute = executionPolicy && executionPolicy.selected;
-	const reportedModel = result && result.model ? (result.provider ? result.provider + '/' : '') + result.model : '';
-	const executionModel = selectedRoute || card.session && card.session.executionModel;
-	const routedModel = executionModel ? executionModel.provider + '/' + executionModel.model + ' · thinking ' + executionModel.thinking : '';
-	const budget = executionPolicy && executionPolicy.budget;
-	const observedUsage = result && result.usage ? result.usage : card.session && card.session.usage;
-	const usage = observedUsage
-		? observedUsage.totalTokens + (budget && budget.maxTokens ? '/' + budget.maxTokens : '') + ' tokens · $' + observedUsage.cost + (budget && budget.maxCostUsd ? '/$' + budget.maxCostUsd : '')
-		: budget ? '0' + (budget.maxTokens ? '/' + budget.maxTokens : '') + ' tokens · $0' + (budget.maxCostUsd ? '/$' + budget.maxCostUsd : '') : 'not reported';
-	const grid = document.createElement('div'); grid.className = 'execution-control-grid';
-	[
-		['trace state', card.traceStatus],
-		['execution session', card.session ? card.session.state : 'not running'],
-		['outcome', result ? result.outcome : 'pending'],
-		['model', reportedModel ? reportedModel + (executionModel ? ' · thinking ' + executionModel.thinking : '') : routedModel || 'no eligible route'],
-		['usage / budget', usage],
-		['resume session', result && result.sessionId ? result.sessionId : 'not available'],
-		['policy', traceHostState.policy.agency + ' · ' + traceHostState.policy.automation + ' · ' + (executionPolicy ? executionPolicy.qualityFloor : traceHostState.policy.qualityFloor)],
-	].forEach(function(entry) {
-		const item = document.createElement('div'); item.className = 'execution-control-item';
-		const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
-		const value = document.createElement('div'); value.className = 'execution-control-value'; text(value, readableStatus(entry[1]));
-		item.append(label, value); grid.append(item);
-	});
-	const actions = document.createElement('div'); actions.className = 'execution-actions';
-	const start = document.createElement('button'); start.type = 'button'; start.className = 'execution-button'; text(start, result ? 'Restart trace execution' : 'Start trace execution');
-	start.disabled = !card.canStart;
-	start.title = card.blockers.join(' ');
-	start.onclick = function() { void executeTraceHostCommand('start', card); };
-	const resume = document.createElement('button'); resume.type = 'button'; resume.className = 'execution-button'; text(resume, 'Resume execution');
-	resume.disabled = !card.canResume;
-	resume.title = (card.resumeBlockers || []).join(' ');
-	resume.onclick = function() { void executeTraceHostCommand('resume', card); };
-	const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'execution-button stop'; text(cancel, 'Stop execution');
-	cancel.disabled = !card.canCancel;
-	cancel.onclick = function() { void executeTraceHostCommand('cancel', card); };
-	actions.append(start, resume, cancel);
-	const note = document.createElement('div'); note.className = 'execution-note';
-	const messages = [];
-	if (result && result.summary) messages.push(result.summary);
-	if (result && result.approval) {
-		messages.push('Approval required: ' + result.approval.kind + ' · ' + result.approval.proposalDigest + (result.approval.proposalRef ? ' · ' + result.approval.proposalRef : ''));
-	}
-	if (executionPolicy && executionPolicy.rationale) messages.push(executionPolicy.rationale);
-	if (card.blockers.length) messages.push(card.blockers.join(' '));
-	if (!messages.length) messages.push('Commands use exact state guards and return auditable receipts. Semantic approvals remain separate.');
-	text(note, messages.join(' '));
-	box.append(grid, actions, note); return box;
-}
-async function executeTraceHostCommand(action, card) {
-	const verb = action === 'start' ? 'start execution for' : action === 'resume' ? 'resume execution for' : 'stop execution for';
-	const warning = action === 'resume' ? ' This confirms only that the external action was attempted; it does not grant semantic approval.' : '';
-	if (!window.confirm('Confirm: ' + verb + ' ' + card.traceId + '?' + warning)) return;
-	const command = {
-		action: action,
-		commandId: 'dashboard-' + Date.now() + '-' + Math.random().toString(16).slice(2),
-		traceId: card.traceId,
-		expectedStateDigest: card.stateDigest,
-	};
-	if (action === 'cancel' || action === 'resume') command.expectedSessionRef = card.session && card.session.sessionRef;
-	if (action === 'resume') {
-		command.resumeAcknowledgement = card.session && card.session.result && card.session.result.outcome === 'needs_approval'
-			? 'approval_completed_externally'
-			: 'blocker_resolved_externally';
-	}
-	text(els.status, 'command pending');
-	try {
-		const response = await fetch('/api/trace-hosts/commands?token=' + encodeURIComponent(token), {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(command),
-		});
-		const result = await response.json();
-		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
-		traceHostState = result.state;
-		text(els.status, 'accepted · ' + result.receipt.receiptId);
-		render();
-	} catch (error) {
-		text(els.status, 'command rejected');
-		console.error(error);
-		await load();
-	}
 }
 function preferredDetailTab(trace, sections) {
 	return preferredOpenLoop(sections) || (sections[0] && sections[0].loop) || 'change';
@@ -2198,14 +2101,9 @@ async function load() {
 	if (loading || dashboardStopped) return;
 	loading = true;
 	try {
-		const responses = await Promise.all([
-			fetch('/api/state?token=' + encodeURIComponent(token)),
-			fetch('/api/trace-hosts?token=' + encodeURIComponent(token)),
-		]);
-		if (!responses[0].ok || !responses[1].ok) throw new Error('HTTP ' + responses[0].status + '/' + responses[1].status);
-		const payloads = await Promise.all([responses[0].json(), responses[1].json()]);
-		state = payloads[0];
-		traceHostState = payloads[1];
+		const response = await fetch('/api/state?token=' + encodeURIComponent(token));
+		if (!response.ok) throw new Error('HTTP ' + response.status);
+		state = await response.json();
 		render();
 	} catch (error) {
 		text(els.status, state ? 'stale · reconnecting' : 'failed · retrying');

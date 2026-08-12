@@ -297,14 +297,7 @@ describe("source architecture", () => {
 			assert.equal(existsSync(join(sourceRoot, "clients", "pi", name)), true, name);
 			assert.equal(existsSync(join(sourceRoot, "pi", name)), false, name);
 		}
-		assert.deepEqual(
-			sourceFiles("src/pi").map((file) => relative(sourceRoot, file)).sort(),
-			[
-				"pi/process-session.ts",
-				"pi/trace-host-process.ts",
-				"pi/trace-host-result.ts",
-			],
-		);
+		assert.equal(existsSync(join(sourceRoot, "pi")), false);
 	});
 
 	it("forbids Harness adapters from importing interaction clients", () => {

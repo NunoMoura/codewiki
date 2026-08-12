@@ -23,8 +23,9 @@ describe("dashboard browser observability", () => {
 		assert.match(script, /function renderImplementationReview/);
 		assert.match(script, /function renderNarrativeFeed/);
 		assert.match(script, /function renderDevLog/);
-		assert.match(script, /function renderExecutionControl/);
-		assert.match(script, /function executeTraceHostCommand/);
+		assert.doesNotMatch(script, /function renderExecutionControl/);
+		assert.doesNotMatch(script, /function executeTraceHostCommand/);
+		assert.doesNotMatch(script, /\/api\/trace-hosts/);
 		assert.match(script, /function renderPipeline/);
 		assert.match(script, /function renderTracePipelineCard/);
 		assert.match(script, /function renderChangePipelineCard/);
@@ -111,10 +112,8 @@ describe("dashboard browser observability", () => {
 			CODEWIKI_DASHBOARD_HTML,
 			/Semantic trace evidence remains authoritative/,
 		);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Start trace execution/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Resume execution/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /does not grant semantic approval/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Semantic approvals remain separate/);
+		assert.doesNotMatch(CODEWIKI_DASHBOARD_HTML, /Start trace execution/);
+		assert.doesNotMatch(CODEWIKI_DASHBOARD_HTML, /Resume execution/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /dashboardDevMode/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /reloadChangedDashboardAssets/);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /renderLivePreview/);
@@ -134,8 +133,8 @@ describe("dashboard browser observability", () => {
 			/Evidence never grants semantic approval/,
 		);
 		assert.match(CODEWIKI_DASHBOARD_HTML, /__CODEWIKI_ASSET_DIGEST__/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /Approval required:/);
-		assert.match(CODEWIKI_DASHBOARD_HTML, /resume session/);
+		assert.doesNotMatch(CODEWIKI_DASHBOARD_HTML, /Approval required:/);
+		assert.doesNotMatch(CODEWIKI_DASHBOARD_HTML, /resume session/);
 	});
 
 	it("provides explicit loading and terminal recovery content instead of a blank shell", () => {

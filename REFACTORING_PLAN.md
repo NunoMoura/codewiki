@@ -99,17 +99,19 @@ tests/
 
 Use breaking clean cuts. No compatibility aliases, old-path re-exports, dual contracts, transitional writes, stale package roots, or global prose replacement. Build a new HEAD-anchored manifest before structural source moves; preserve `.tmp-worktrees/deep-clean-file-budget.json` and `/tmp/codewiki-kb-pre-clean-cut.diff` as historical evidence only.
 
-Current checkpoint before this architecture cut:
+Ratification checkpoint before executable clean cuts:
 
-| Area | Current | Hard cap |
-| --- | ---: | ---: |
-| tracked total | 653 | 575 |
-| `src/**` | 375 | 315 |
-| `tests/**` | 211 | 190 |
-| `benchmarks/**` | 0 | 10 |
-| `scripts/**` | 1 | 1 |
-| `lab/**` | 0 | 0 |
-| packed files | 753 last measured | 650 |
+| Area | Ratification | After trace-host cut | Hard cap |
+| --- | ---: | ---: | ---: |
+| tracked total | 655 | 641 | 575 |
+| `src/**` | 375 | 367 | 315 |
+| `tests/**` | 211 | 204 | 190 |
+| `benchmarks/**` | 0 | 0 | 10 |
+| `scripts/**` | 1 | 1 | 1 |
+| `lab/**` | 0 | 0 | 0 |
+| packed files | 753 | 737 | 650 |
+
+The trace-host cut is recorded by `.tmp-worktrees/trace-host-clean-cut-manifest.json`, exhaustively anchored to `fafafc8` with 639 keeps and 16 deletions. Its green checkpoint is 943 full-suite tests, 116 coordinator tests, a passing packed-install smoke test, and zero production audit vulnerabilities.
 
 Rules:
 
@@ -133,8 +135,9 @@ Rules:
 
 ### 2. Execute deletion-first ownership cut
 
-- [ ] Create reviewed HEAD-anchored keep/move/merge/delete manifest covering every tracked source and test file.
-- [ ] Delete remaining Pi/Dashboard trace-host shell, lifecycle branches, HTTP controls, tests, exports, and assets that depend on hidden semantic sessions.
+- [x] Create and execute the reviewed `fafafc8`-anchored trace-host keep/delete manifest covering every tracked file in that slice.
+- [x] Delete remaining Pi/Dashboard trace-host shell, lifecycle branches, HTTP controls, tests, exports, and assets that depend on hidden semantic sessions.
+- [ ] Create a new reviewed HEAD-anchored keep/move/merge/delete manifest before the next structural source move.
 - [ ] Delete hidden semantic-loop tools from conversational Pi registration.
 - [ ] Delete legacy Quality, generic View authority, obsolete Loop compatibility, and old Trace/ChangeRecord paths as replacement consumers land.
 - [ ] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.

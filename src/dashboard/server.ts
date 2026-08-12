@@ -59,11 +59,7 @@ import {
 	createDashboardSessionActionControl,
 	type DashboardSessionActionControl,
 } from "./session-actions.ts";
-import {
-	type DashboardTraceHostControl,
-	DashboardTraceHostControlError,
-} from "./trace-host-control.ts";
-import { createDefaultDashboardTraceHostControl } from "./trace-host-runtime.ts";
+import { DashboardControlError } from "./control-error.ts";
 import {
 	assertDashboardRuntimeCurrent,
 	captureDashboardRuntimeIdentity,
@@ -79,7 +75,6 @@ export interface CodewikiDashboardServerOptions {
 	keepAlive?: boolean;
 	persistent?: boolean;
 	inProcess?: boolean;
-	traceHostControl?: DashboardTraceHostControl;
 	changeControl?: DashboardChangeControl;
 	configControl?: DashboardConfigControl;
 	sessionActionControl?: DashboardSessionActionControl;
@@ -109,7 +104,6 @@ interface DashboardRuntime {
 	clients: Set<ServerResponse>;
 	watcher?: FSWatcher;
 	broadcastTimer?: NodeJS.Timeout;
-	traceHostTimer?: NodeJS.Timeout;
 	coordinatorHeartbeatTimer?: NodeJS.Timeout;
 	coordinatorClient?: ProjectCoordinatorRemoteClient;
 	coordinatorConnector: (
@@ -117,12 +111,10 @@ interface DashboardRuntime {
 		input: ProjectCoordinatorClientInput,
 	) => Promise<ProjectCoordinatorRemoteClient>;
 	coordinatorEventsClosed: boolean;
-	traceHostControl: DashboardTraceHostControl;
 	changeControl: DashboardChangeControl;
 	configControl: DashboardConfigControl;
 	sessionActionControl: DashboardSessionActionControl;
 	previewControl: DashboardPreviewControl;
-	lastSupervisedAt: number;
 	opened: boolean;
 	close(): Promise<void>;
 }
@@ -147,7 +139,6 @@ const loadedDashboardRuntimeIdentity = captureDashboardRuntimeIdentity(
 );
 const DASHBOARD_DAEMON_ENV = "CODEWIKI_DASHBOARD_DAEMON";
 const DASHBOARD_TMPDIR_ENV = "CODEWIKI_DASHBOARD_TMPDIR";
-const DASHBOARD_SUPERVISION_GRACE_MS = 5_000;
 const DASHBOARD_SECURITY_HEADERS = {
 	"Content-Security-Policy":
 		"default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
@@ -461,7 +452,6 @@ async function startInProcessDashboardServer(
 		options.repoRoot,
 		endpoint,
 		options.keepAlive ?? false,
-		options.traceHostControl,
 		options.changeControl,
 		options.configControl,
 		options.sessionActionControl,
@@ -635,7 +625,6 @@ async function createDashboardRuntime(
 	repoRoot: string,
 	preferredEndpoint?: DashboardEndpoint,
 	keepAlive = false,
-	providedTraceHostControl?: DashboardTraceHostControl,
 	providedChangeControl?: DashboardChangeControl,
 	providedConfigControl?: DashboardConfigControl,
 	providedSessionActionControl?: DashboardSessionActionControl,
@@ -668,9 +657,6 @@ async function createDashboardRuntime(
 	const origin = `http://127.0.0.1:${address.port}`;
 	const endpoint = dashboardEndpoint(repoRoot, origin, token, address.port);
 	const dashboardActor = `dashboard:${process.pid}:${address.port}`;
-	const traceHostControl =
-		providedTraceHostControl ||
-		(await createDefaultDashboardTraceHostControl(repoRoot, dashboardActor));
 	const changeControl =
 		providedChangeControl ||
 		createDashboardChangeControl({ repoRoot, actor: dashboardActor });
@@ -704,24 +690,15 @@ async function createDashboardRuntime(
 		coordinatorClient,
 		coordinatorConnector,
 		coordinatorEventsClosed: false,
-		traceHostControl,
 		changeControl,
 		configControl,
 		sessionActionControl,
 		previewControl,
-		lastSupervisedAt: Date.now(),
 		opened: false,
 		close: () => closeRuntime(runtime),
 	};
 	await writeDashboardEndpoint(endpoint);
 	runtime.watcher = watchTraceDirectory(runtime);
-	runtime.traceHostTimer = setInterval(() => {
-		if (runtime.clients.size > 0) runtime.lastSupervisedAt = Date.now();
-		const attached =
-			Date.now() - runtime.lastSupervisedAt <= DASHBOARD_SUPERVISION_GRACE_MS;
-		void runtime.traceHostControl.heartbeat(attached).catch(() => undefined);
-	}, 1_000);
-	runtime.traceHostTimer.unref();
 	if (coordinatorClient) {
 		runtime.coordinatorHeartbeatTimer = setInterval(() => {
 			void runtime.coordinatorClient?.heartbeat().catch(() => undefined);
@@ -820,11 +797,6 @@ async function routeAuthorizedGet(
 		);
 		return true;
 	}
-	if (url.pathname === "/api/trace-hosts") {
-		runtime.lastSupervisedAt = Date.now();
-		writeJson(response, 200, await runtime.traceHostControl.status());
-		return true;
-	}
 	if (url.pathname === "/api/meta") {
 		writeJson(response, 200, {
 			mode: process.env[DASHBOARD_DAEMON_ENV] === "1" ? "daemon" : "in_process",
@@ -852,7 +824,6 @@ async function routeAuthorizedPost(
 	url: URL,
 ): Promise<boolean> {
 	if (
-		url.pathname !== "/api/trace-hosts/commands" &&
 		url.pathname !== "/api/changes/commands" &&
 		url.pathname !== "/api/configuration/commands" &&
 		url.pathname !== "/api/session-actions/commands" &&
@@ -904,10 +875,7 @@ async function routeAuthorizedPost(
 		scheduleCoordinatorObservation(runtime);
 		return true;
 	}
-	runtime.lastSupervisedAt = Date.now();
-	writeJson(response, 200, await runtime.traceHostControl.execute(command));
-	scheduleCoordinatorObservation(runtime);
-	return true;
+	return false;
 }
 
 function scheduleRuntimeClose(runtime: DashboardRuntime): void {
@@ -933,20 +901,20 @@ function assertSameOriginMutation(
 		fetchSite === "same-origin" &&
 		hostOrigin === runtime.origin;
 	if (!exactOrigin && !browserSameOriginFallback) {
-		throw new DashboardTraceHostControlError(
+		throw new DashboardControlError(
 			"Dashboard mutation requires exact same-origin authority.",
 			403,
 		);
 	}
 	if (fetchSite && fetchSite !== "same-origin") {
-		throw new DashboardTraceHostControlError(
+		throw new DashboardControlError(
 			"Dashboard mutation rejected cross-site request metadata.",
 			403,
 		);
 	}
 	const contentType = request.headers["content-type"] || "";
 	if (!contentType.toLowerCase().startsWith("application/json")) {
-		throw new DashboardTraceHostControlError(
+		throw new DashboardControlError(
 			"Dashboard mutation requires application/json.",
 			400,
 		);
@@ -957,7 +925,7 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 	const maxBytes = 16_384;
 	const declared = Number(request.headers["content-length"] || 0);
 	if (Number.isFinite(declared) && declared > maxBytes) {
-		throw new DashboardTraceHostControlError(
+		throw new DashboardControlError(
 			"Dashboard command body exceeds 16384 bytes.",
 			400,
 		);
@@ -968,7 +936,7 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 		const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
 		bytes += buffer.length;
 		if (bytes > maxBytes) {
-			throw new DashboardTraceHostControlError(
+			throw new DashboardControlError(
 				"Dashboard command body exceeds 16384 bytes.",
 				400,
 			);
@@ -978,7 +946,7 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 	try {
 		return JSON.parse(Buffer.concat(chunks).toString("utf8"));
 	} catch {
-		throw new DashboardTraceHostControlError(
+		throw new DashboardControlError(
 			"Dashboard command body must be valid JSON.",
 			400,
 		);
@@ -1021,7 +989,6 @@ async function attachEventStream(
 	runtime: DashboardRuntime,
 	response: ServerResponse,
 ): Promise<void> {
-	runtime.lastSupervisedAt = Date.now();
 	const state = await readDashboardState(runtime);
 	response.writeHead(200, {
 		...DASHBOARD_SECURITY_HEADERS,
@@ -1147,7 +1114,7 @@ function writeServerError(response: ServerResponse, error: unknown): void {
 	}
 	writeJson(
 		response,
-		error instanceof DashboardTraceHostControlError ? error.status : 500,
+		error instanceof DashboardControlError ? error.status : 500,
 		{ error: error instanceof Error ? error.message : String(error) },
 	);
 }
@@ -1156,12 +1123,10 @@ async function closeRuntime(runtime: DashboardRuntime): Promise<void> {
 	dashboards.delete(runtime.repoRoot);
 	runtime.coordinatorEventsClosed = true;
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
-	if (runtime.traceHostTimer) clearInterval(runtime.traceHostTimer);
 	if (runtime.coordinatorHeartbeatTimer) {
 		clearInterval(runtime.coordinatorHeartbeatTimer);
 	}
 	await runtime.coordinatorClient?.disconnect().catch(() => undefined);
-	await runtime.traceHostControl.shutdown();
 	runtime.watcher?.close();
 	for (const client of runtime.clients) client.end();
 	runtime.clients.clear();

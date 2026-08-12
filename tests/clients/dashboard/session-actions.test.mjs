@@ -21,20 +21,6 @@ function command(state, overrides = {}) {
 	};
 }
 
-function fakeTraceHostControl() {
-	return {
-		status: async () => ({
-			generatedAt: "2026-07-16T00:00:00.000Z",
-			supervisorId: "dashboard:test",
-			policy: { piHostEnabled: false, automation: "manual", agency: "assist" },
-			traces: [],
-		}),
-		execute: async () => assert.fail("Trace Host command not expected"),
-		heartbeat: async () => undefined,
-		shutdown: async () => undefined,
-	};
-}
-
 describe("dashboard same-session Sprint actions", () => {
 	it("delivers only fixed trace-scoped messages with idle and steering semantics", async () => {
 		const deliveries = [];
@@ -151,7 +137,6 @@ describe("dashboard same-session Sprint actions", () => {
 				keepAlive: false,
 				inProcess: true,
 				persistent: false,
-				traceHostControl: fakeTraceHostControl(),
 				sessionActionControl: control,
 			});
 			const state = control.status();

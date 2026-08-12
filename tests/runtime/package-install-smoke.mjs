@@ -298,7 +298,7 @@ for (const path of filesUnder(packageRoot)) {
 		assert.equal(content.includes(forbidden), false, path + ": " + forbidden);
 	}
 }
-assert.equal(readdirSync(join(packageRoot, "dist")).includes("pi"), true);
+assert.equal(readdirSync(join(packageRoot, "dist")).includes("pi"), false);
 for (const name of [
 	"decision-model-check-session",
 	"decision-research-claims-session",
@@ -334,8 +334,8 @@ assert.equal(
 );
 assert.equal(
 	existsSync(join(packageRoot, "dist", "pi", "process-session.js")),
-	true,
-	"legacy trace-host shell remains until Dashboard cutover",
+	false,
+	"legacy trace-host shell is not packaged",
 );
 assert.equal(existsSync(join(packageRoot, "dist", "preview", "evidence.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace-store.js")), true);

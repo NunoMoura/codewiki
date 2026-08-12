@@ -13,20 +13,6 @@ import { startCodewikiDashboardServer } from "../../src/dashboard/server.ts";
 import { changeContentDigest } from "../../src/changes/digest.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 
-function fakeTraceHostControl() {
-	return {
-		status: async () => ({
-			generatedAt: "2026-07-14T00:00:00.000Z",
-			supervisorId: "dashboard:test",
-			policy: { piHostEnabled: false, automation: "manual", agency: "assist" },
-			traces: [],
-		}),
-		execute: async () => assert.fail("Trace Host command not expected"),
-		heartbeat: async () => undefined,
-		shutdown: async () => undefined,
-	};
-}
-
 describe("dashboard Change control", () => {
 	it("enforces CAS, idempotency, lifecycle scope, and bounded receipts", async () => {
 		const root = await mkdtemp(
@@ -143,7 +129,6 @@ describe("dashboard Change control", () => {
 				keepAlive: false,
 				inProcess: true,
 				persistent: false,
-				traceHostControl: fakeTraceHostControl(),
 			});
 			const changesUrl = `${handle.origin}/api/changes?token=${encodeURIComponent(handle.token)}`;
 			assert.equal((await fetch(changesUrl)).status, 200);

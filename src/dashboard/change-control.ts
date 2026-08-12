@@ -9,7 +9,7 @@ import {
 	loadDashboardChangesState,
 	type DashboardChangesState,
 } from "./changes-state.ts";
-import { DashboardTraceHostControlError } from "./trace-host-control.ts";
+import { DashboardControlError } from "./control-error.ts";
 
 export type DashboardChangeAction = "draft" | "revise" | "validate" | "withdraw";
 
@@ -357,16 +357,16 @@ function trimEntries(entries: Map<string, IdempotencyEntry>, max: number): void 
 	}
 }
 
-function dashboardChangeError(error: unknown): DashboardTraceHostControlError {
-	if (error instanceof DashboardTraceHostControlError) return error;
+function dashboardChangeError(error: unknown): DashboardControlError {
+	if (error instanceof DashboardControlError) return error;
 	if (error instanceof CodewikiApiError) {
-		if (error.code === "forbidden") return new DashboardTraceHostControlError(error.message, 403);
+		if (error.code === "forbidden") return new DashboardControlError(error.message, 403);
 		if (error.code === "conflict" || error.code === "not_found") {
 			return conflict(error.message);
 		}
 		return badRequest(error.message);
 	}
-	return new DashboardTraceHostControlError(
+	return new DashboardControlError(
 		error instanceof Error ? error.message : String(error),
 		400,
 	);
@@ -376,10 +376,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function badRequest(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 400);
+function badRequest(message: string): DashboardControlError {
+	return new DashboardControlError(message, 400);
 }
 
-function conflict(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 409);
+function conflict(message: string): DashboardControlError {
+	return new DashboardControlError(message, 409);
 }

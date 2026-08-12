@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { DashboardTraceHostControlError } from "./trace-host-control.ts";
+import { DashboardControlError } from "./control-error.ts";
 
 export type DashboardSessionAction = "resume" | "change" | "resolve_blocker";
 
@@ -223,14 +223,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
-function badRequest(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 400);
+function badRequest(message: string): DashboardControlError {
+	return new DashboardControlError(message, 400);
 }
 
-function conflict(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 409);
+function conflict(message: string): DashboardControlError {
+	return new DashboardControlError(message, 409);
 }
 
-function unavailable(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 409);
+function unavailable(message: string): DashboardControlError {
+	return new DashboardControlError(message, 409);
 }

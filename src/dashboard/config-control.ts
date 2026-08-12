@@ -8,7 +8,7 @@ import {
 	loadWikiConfigFile,
 	writeWikiConfigFile,
 } from "../project/config-file.ts";
-import { DashboardTraceHostControlError } from "./trace-host-control.ts";
+import { DashboardControlError } from "./control-error.ts";
 import {
 	DASHBOARD_CONFIG_BUDGET_MAXIMA,
 	DASHBOARD_CONFIG_MAX_WORKERS,
@@ -416,14 +416,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function badRequest(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 400);
+function badRequest(message: string): DashboardControlError {
+	return new DashboardControlError(message, 400);
 }
 
-function forbidden(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 403);
+function forbidden(message: string): DashboardControlError {
+	return new DashboardControlError(message, 403);
 }
 
-function conflict(message: string): DashboardTraceHostControlError {
-	return new DashboardTraceHostControlError(message, 409);
+function conflict(message: string): DashboardControlError {
+	return new DashboardControlError(message, 409);
 }
