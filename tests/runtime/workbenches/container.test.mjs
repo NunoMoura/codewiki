@@ -16,8 +16,8 @@ import {
 	OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION,
 	createOciContainerImplementationWorkerAdapter,
 	runOciContainerCommand,
-} from "../../src/harnesses/container/worker-adapter.ts";
-import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-adapter.ts";
+} from "../../../src/runtime/workbenches/container/adapter.ts";
+import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../../src/runtime/workers/implementation-adapter.ts";
 
 const IMAGE = `registry.example/codewiki-worker@sha256:${"a".repeat(64)}`;
 
@@ -116,29 +116,38 @@ test("OCI container adapter runs a hardened digest-pinned worker and recovers it
 				return { exitCode: 1, stdout: "" };
 			}
 			assert.equal(command.args[0], "run");
-			const envelope = JSON.parse(command.stdin);
+			assert.equal(typeof command.stdin, "string");
+			let envelope;
+			try {
+				envelope = JSON.parse(command.stdin);
+			} catch {
+				assert.fail("Container worker stdin must be valid JSON.");
+			}
 			assert.equal(
 				envelope.schemaVersion,
 				OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION,
 			);
 			assert.equal(envelope.assignment.repoRoot, "/workspace");
 			assert.equal(envelope.assignment.worktree.path, "/workspace");
-		assert.equal(envelope.assignment.reportPath, "/codewiki-runtime/outcome.json");
-		assert.equal(envelope.outcomePath, "/codewiki-runtime/outcome.json");
-		assert.equal(command.args.includes("GIT_WORK_TREE=/workspace"), true);
-		assert.equal(command.args.includes("GIT_OPTIONAL_LOCKS=0"), true);
-		assert.equal(
-			command.args.includes("GIT_DIR=/codewiki-git/worktrees/container-worker"),
-			true,
-		);
-		assert.equal(
-			command.args.some(
-				(value) =>
-					value ===
-					`type=bind,src=${join(root, ".git")},dst=/codewiki-git,readonly`,
-			),
-			true,
-		);
+			assert.equal(
+				envelope.assignment.reportPath,
+				"/codewiki-runtime/outcome.json",
+			);
+			assert.equal(envelope.outcomePath, "/codewiki-runtime/outcome.json");
+			assert.equal(command.args.includes("GIT_WORK_TREE=/workspace"), true);
+			assert.equal(command.args.includes("GIT_OPTIONAL_LOCKS=0"), true);
+			assert.equal(
+				command.args.includes("GIT_DIR=/codewiki-git/worktrees/container-worker"),
+				true,
+			);
+			assert.equal(
+				command.args.some(
+					(value) =>
+						value ===
+						`type=bind,src=${join(root, ".git")},dst=/codewiki-git,readonly`,
+				),
+				true,
+			);
 			assert.equal(command.args.includes("provider-secret"), false);
 			await writeFile(
 				mountedOutcomePath(command.args),

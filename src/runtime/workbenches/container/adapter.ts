@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { lstatSync, realpathSync } from "node:fs";
 import { chmod, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
-import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../../../implementation/workers.ts";
 import {
 	assertImplementationWorkerAssignment,
 	assertImplementationWorkerReport,
@@ -11,23 +11,23 @@ import {
 	type ImplementationWorkerAdapterAvailability,
 	type ImplementationWorkerAssignment,
 	type ImplementationWorkerReport,
-} from "../../runtime/workers/implementation-adapter.ts";
+} from "../../workers/implementation-adapter.ts";
 import {
 	assertImplementationWorkerReportPath,
 	implementationWorkerReportStatus,
 	persistImplementationWorkerReport,
 	recoverImplementationWorkerReport,
-} from "../../runtime/workers/implementation-report-store.ts";
+} from "../../workers/implementation-report-store.ts";
 import {
 	resolveContainerGitMount,
 	type ContainerGitMount,
-} from "./worker-git.ts";
+} from "./git-mount.ts";
 import {
 	containerRuntimeEnvironment,
 	resolveContainerOptions,
 	type OciContainerWorkerAdapterOptions,
 	type ResolvedContainerOptions,
-} from "./worker-options.ts";
+} from "./options.ts";
 import type { OciContainerCommandResult } from "./command.ts";
 
 export {
@@ -36,7 +36,7 @@ export {
 	type OciContainerCommandResult,
 	type OciContainerCommandRunner,
 } from "./command.ts";
-export type { OciContainerWorkerAdapterOptions } from "./worker-options.ts";
+export type { OciContainerWorkerAdapterOptions } from "./options.ts";
 
 export const OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION = 1 as const;
 

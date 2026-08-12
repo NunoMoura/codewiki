@@ -135,7 +135,6 @@ describe("source architecture", () => {
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
 		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
 			"change-trace",
-			"harnesses",
 			"loops",
 			"traces",
 			"views",
@@ -144,6 +143,7 @@ describe("source architecture", () => {
 		assert.equal(TARGET_SOURCE_ROOTS.includes("alignment"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("clients"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("execution"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("host"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("harnesses"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("benchmarks"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("pi"), false);
@@ -161,6 +161,11 @@ describe("source architecture", () => {
 				root,
 			);
 		}
+		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
+		assert.equal(
+			existsSync(join(sourceRoot, "host", "coordinator-entrypoint.ts")),
+			true,
+		);
 	});
 
 	it("keeps Lab and source-checkout self-dogfood machinery deleted", () => {
@@ -186,6 +191,10 @@ describe("source architecture", () => {
 			assert.match(
 				packageJson.scripts[script],
 				/tests\/execution\/pi\/\*\.test\.mjs/u,
+			);
+			assert.match(
+				packageJson.scripts[script],
+				/tests\/runtime\/workbenches\/\*\.test\.mjs/u,
 			);
 			assert.doesNotMatch(packageJson.scripts[script], /tests\/harnesses\/pi/u);
 		}
@@ -219,7 +228,6 @@ describe("source architecture", () => {
 			"src/runtime/coordinator": /^(?:coordinator-|project-coordinator)/u,
 			"src/runtime/persistence": /^persistence-/u,
 			"src/runtime/workers": /^(?:worker-|implementation-worker-)/u,
-			"src/harnesses/container": /^(?:container-|oci-container-)/u,
 		};
 		for (const [directory, repeatedPrefix] of Object.entries(repeatedPrefixes)) {
 			for (const filename of readdirSync(directory)) {
@@ -270,6 +278,17 @@ describe("source architecture", () => {
 			),
 			true,
 		);
+	});
+
+	it("keeps container custody under the Runtime workbench owner", () => {
+		for (const name of ["adapter.ts", "command.ts", "git-mount.ts", "options.ts"]) {
+			assert.equal(
+				existsSync(join(sourceRoot, "runtime", "workbenches", "container", name)),
+				true,
+				name,
+			);
+		}
+		assert.equal(existsSync(join(sourceRoot, "harnesses", "container")), false);
 	});
 
 	it("keeps managed Pi adapters under the Execution owner", () => {
@@ -384,7 +403,7 @@ describe("source architecture", () => {
 			for (const target of targets) {
 				const targetPath = relative(sourceRoot, target);
 				assert.equal(
-					targetPath.startsWith("harnesses/"),
+					targetPath.startsWith("host/"),
 					false,
 					edgeLabel(source, target),
 				);

@@ -101,8 +101,8 @@ assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 	"./pi-sdk",
 ]);
 assert.deepEqual(packageJson.exports["./coordinator"], {
-	types: "./dist/harnesses/coordinator-entrypoint.d.ts",
-	import: "./dist/harnesses/coordinator-entrypoint.js",
+	types: "./dist/host/coordinator-entrypoint.d.ts",
+	import: "./dist/host/coordinator-entrypoint.js",
 });
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
 \ttypes: "./dist/execution/pi/sdk-semantic-session.d.ts",
@@ -173,11 +173,22 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "decision-research-
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "handoff.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-start.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-reports.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "coordinator-entrypoint.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-adapter.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-options.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "worker-git.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "container", "command.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.d.ts")), true);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "harnesses")),
+	false,
+	"legacy Harness root is not packaged",
+);
+for (const name of ["adapter", "command", "git-mount", "options"]) {
+	assert.equal(
+		existsSync(
+			join(packageRoot, "dist", "runtime", "workbenches", "container", name + ".js"),
+		),
+		true,
+		name,
+	);
+}
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-report-store.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-artifacts.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "observation.js")), true);
@@ -319,11 +330,6 @@ for (const name of [
 		name,
 	);
 	assert.equal(
-		existsSync(join(packageRoot, "dist", "harnesses", "pi", name + ".js")),
-		false,
-		name,
-	);
-	assert.equal(
 		existsSync(join(packageRoot, "dist", "pi", name + ".js")),
 		false,
 		name,
@@ -336,16 +342,6 @@ assert.equal(
 assert.equal(
 	existsSync(join(packageRoot, "dist", "execution", "pi", "process-session.d.ts")),
 	true,
-);
-assert.equal(
-	existsSync(join(packageRoot, "dist", "harnesses", "pi")),
-	false,
-	"legacy Pi Harness owner is not packaged",
-);
-assert.equal(
-	existsSync(join(packageRoot, "dist", "harnesses", "ports.js")),
-	false,
-	"legacy Harness ports are not packaged",
 );
 assert.equal(
 	existsSync(join(packageRoot, "dist", "execution", "ports.js")),

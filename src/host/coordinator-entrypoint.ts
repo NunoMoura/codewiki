@@ -11,4 +11,4 @@ export {
 	type OciContainerWorkerAdapterOptions,
 	type OciContainerWorkerEnvelope,
 	type OciContainerWorkerOutcome,
-} from "./container/worker-adapter.ts";
+} from "../runtime/workbenches/container/adapter.ts";

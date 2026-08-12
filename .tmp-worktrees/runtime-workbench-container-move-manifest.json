@@ -1,0 +1,2584 @@
+{
+  "version": 1,
+  "snapshot": "a6f384ae83dd36286ac87cb8a4c5a206aa6e1664",
+  "purpose": "Move OCI container and worktree custody from legacy Harness ownership to Runtime workbenches without compatibility exports.",
+  "counts": {
+    "keep": 635,
+    "move": 5
+  },
+  "constraints": [
+    "Use git mv for every classified move.",
+    "Retain public OCI adapter symbols and behavior.",
+    "Retain no old-path re-exports or compatibility modules.",
+    "Runtime owns worktree validation, container isolation, cancellation, report persistence, and cleanup proof.",
+    "Managed Execution remains Pi-only and Runtime imports no concrete Pi adapter.",
+    "Package gates prove old dist/harnesses/container output is absent."
+  ],
+  "entries": [
+    {
+      "path": ".codewiki/config.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/lexicon.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/DESIGN.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/agent/retrieve-bounded-context.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/account-for-drift.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/automate-safe-work.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/enforce-project-standards.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/maintain-intent.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/stories/maintainer/recover-history.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/users/adapter-author.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/users/agent.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/users/external-user.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/product/users/maintainer.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/alignment.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/api.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/benchmarks.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/change-intake.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/change-trace.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/clients.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/decision.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/evidence.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/execution.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/host.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/implementation.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/knowledge.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/package.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/planning.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/preview.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/project.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/provider-boundary.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/runtime.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/verification.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/components/work-state.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/architecture.yaml",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/execution.yaml",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/lifecycle.yaml",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/diagrams/synchronization.yaml",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/change-lifecycle.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/decision-to-planning.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/external-candidate-admission.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/planning-to-implementation.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/recovery.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/remote-state-synchronization.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/kb/system/flows/work-item-execution.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".codewiki/traces/.gitkeep",
+      "disposition": "keep"
+    },
+    {
+      "path": ".gitignore",
+      "disposition": "keep"
+    },
+    {
+      "path": ".pi-lens.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".pi/.gitignore",
+      "disposition": "keep"
+    },
+    {
+      "path": ".pi/APPEND_SYSTEM.md",
+      "disposition": "keep"
+    },
+    {
+      "path": ".pi/settings.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/deep-clean-file-budget.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/managed-execution-move-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/pi-client-move-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/pi-conversational-semantic-clean-cut-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/pi-isolated-model-harness-move-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/pi-native-sdk-harness-move-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/pi-process-session-split-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/runtime-loop-execution-ports-move-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/runtime-persistence-move-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/runtime-policy-split-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/trace-host-clean-cut-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": ".tmp-worktrees/user-standard-distillation-verification-move-manifest.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "AGENTS.md",
+      "disposition": "keep"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "disposition": "keep"
+    },
+    {
+      "path": "LICENSE",
+      "disposition": "keep"
+    },
+    {
+      "path": "README.md",
+      "disposition": "keep"
+    },
+    {
+      "path": "REFACTORING_PLAN.md",
+      "disposition": "keep"
+    },
+    {
+      "path": "package-lock.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "package.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "scripts/dashboard-dev.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/input-validation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/loop-execution.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/state.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/traces.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/views.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-archive.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-change.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-config.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-decide.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-implement.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-okf.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-plan.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/api/wiki-runtime.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/benchmarks/alignment-retrieval.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/benchmarks/retrieval-adapters.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/alignment-graph.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/alignment-knowledge.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/alignment-query.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/builder.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/catalog.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/contracts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/errors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/git-command.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/git-state.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/identity.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/mutation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/order.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/planning-mutation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/reduce-operation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/reducer.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/rolling-planning.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/state.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/change-trace/synchronization.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/change-trace.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/defect-profile.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/digest.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/intake/contracts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/intake/deduplicate.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/intake/normalize.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/intake/producers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/intake/route.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/normalize.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/records.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/schema.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/store.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/trace-store.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/triage/contracts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/triage/estimates.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/triage/ordering.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/triage/policy.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/triage/projection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/triage/query.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/triage/selection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/changes/validation-view.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/cli/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/command-catalog.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/commands/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/dashboard-session-actions.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/extension.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/identity.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/install-scope.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/messages.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/preview-runtime.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/project-coordinator-daemon.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/project-service-client.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/prompt/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/rendering/change-validation-card.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/rendering/command-renderers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/rendering/message-renderers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/rendering/width.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/review-hooks.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/tools/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/tui/footer.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/tui/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/clients/pi/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/activity-feed.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/assets.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/assets/codewiki-logo.png",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/change-control.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/change-validation-card.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/changes-state.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/config-control.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/config-state.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/control-error.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/daemon.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/dev-log-projection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/health.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/server.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/session-actions.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/dashboard/state.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/candidate-proposal.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/change-quality.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/candidate.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/code-executors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/evidence.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/model-checks.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/research-claims-protocol.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/research-claims.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/research-executors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/research.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/runtime-security.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/runtime.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/decision/exit/security-scanners.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/error-handling/api-errors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/error-handling/codewiki-error.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/error-handling/config-errors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/error-handling/host-errors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/error-handling/trace-errors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/coverage-parsers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/coverage.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/cyclonedx.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/document.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/junit.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/materialization.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/openapi.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/pact.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/provider-check-receipt.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/sarif.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/shared.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/spdx.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/adapters/xml.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/contracts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/identity.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/materialize.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/model-assessment.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/obligation-resolution.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/evidence/obligations.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/decision-model-check-session.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/decision-research-claims-session.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/isolated-json-model-session.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/native-decision-host.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/native-decision-research.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/process-session.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/process-worker-adapter.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/sdk-semantic-session.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/pi/user-standard-distillation-session.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/execution/ports.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/git/content-proof.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/git/status.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/git/worktree-shell-runner.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/git/worktrees.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/harnesses/container/command.ts",
+      "disposition": "move",
+      "target": "src/runtime/workbenches/container/command.ts"
+    },
+    {
+      "path": "src/harnesses/container/worker-adapter.ts",
+      "disposition": "move",
+      "target": "src/runtime/workbenches/container/adapter.ts"
+    },
+    {
+      "path": "src/harnesses/container/worker-git.ts",
+      "disposition": "move",
+      "target": "src/runtime/workbenches/container/git-mount.ts"
+    },
+    {
+      "path": "src/harnesses/container/worker-options.ts",
+      "disposition": "move",
+      "target": "src/runtime/workbenches/container/options.ts"
+    },
+    {
+      "path": "src/harnesses/coordinator-entrypoint.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/candidate-content.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/claims.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/evidence-policy.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/evidence.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/exit/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/iteration.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/loop.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/merge-proof.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/quality-standards.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/adapter.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/adapters/generic-command.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/adapters/sarif.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/artifacts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/evidence-cache.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/evidence-report.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/fast-feedback.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/language-pack.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/languages/go.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/languages/javascript-lint.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/languages/python.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/languages/rust.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/languages/shell.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/languages/typescript.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/packs.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/quality-nodes.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/review/summary.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/worker-observation-authority.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/worker-proof.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/implementation/workers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/codewiki-kb-profile.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/drift-linter.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf-export.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf-frontmatter.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf-index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf-source-map.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf-trace-boundary.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf-v02.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf-validation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/okf.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/source-map.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/source-ownership.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/system-diagrams.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/knowledge/topic-alignment.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/evaluator.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/feedback.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/graph.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/judge-prompts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/judge-provider.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/judge.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/quality-pack.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/quality-profile.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/quality-standards.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/loops/runner.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/planning/candidate-content.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/planning/conflicts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/planning/exit/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/planning/portfolio-quality.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/planning/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/binding.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/browser-adapter.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/coordinator.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/dashboard-control.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/evidence.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/integration.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/profile.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/preview/target.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/bootstrap.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/config-digest.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/config-file.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/config.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/explain.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/model-route-validation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/model-routing.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/root.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/snapshot.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/source-architecture.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/project/state-file.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/admission/authority.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/admission/automation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/admission/change.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/admission/git.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/admission/start.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/claims/events.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/claims/leases.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/claims/policy.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/claims/release.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/claims/work-unit-events.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/claims/work-unit-selection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/daemon.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/decision-attempt.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/due-triggers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/endpoint.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/entrypoint.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/events.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/executor.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/heartbeat-cycle.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/heartbeat-policy.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/heartbeat-queue.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/job-id.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/process.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/project.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/reactions.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/reactor.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/service.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/trigger-runs.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/coordinator/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/decision-operations.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-artifact.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-contract.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-manifest.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-publication-proof.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-publication.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-release-contract.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-release-manifest.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-release-proof.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/product-release.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-merge-git.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-merge.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-push-manifest.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-push-operations.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/project-branch-push.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/effects/research-collection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/integration/worker.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/persistence/dev-log.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/persistence/tmp.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/persistence/trace.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/dispatch.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/execution-policy.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/handoff.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/implementation-adapter.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/implementation-artifacts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/implementation-report-store.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/jobs.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/observation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/reports.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/runtime/workers/start.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/semantic-loop.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/append.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/events.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/project.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/queries.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/reader.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/refs.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/release-notes.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/replay.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/retention.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/schema.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/traces/writer.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/utils/canonical-json.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/utils/json.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/utils/time.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/admission.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/cache.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/catalog.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/contracts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/check-types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/code-executor.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/code-templates.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/configuration.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/contracts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/distillation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/index.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/model-evaluator.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/mutations.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/policy-acceptance.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/policy-git.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/policy-review.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/project-config-store.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/resource-guards.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/runtime.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/serialized-idempotency.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/source-retrieval.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/user-standards.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/custom-checks/validation.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/identity.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/projection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/protocol.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/repair-bundle.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/repair-frontier.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/repair-profiles.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/resolve-policy.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/results.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/runner.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/runtime.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/security-collectors.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/security-scanner-checks.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/security-scanners.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/security-surfaces.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/standard-evidence-checks.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/standard-evidence-executor.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/verification/verification-capabilities.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/blockers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/conflicts.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/quality.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/resume.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/runtime-board.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/status.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/trace-goals.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/trace-queue.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/triggers.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/work-plan.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/work-queue.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/views/writer.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/work-state/project.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/work-state/projector.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/work-state/publication-projection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/work-state/release-projection.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/work-state/session.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "src/work-state/types.ts",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/benchmarks/alignment-retrieval-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/backlog-triage.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/change-domain.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/change-intake-producers.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/change-intake.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/change-trace-store.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/change-validation-view.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/defect-profile.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/changes/wiki-change.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/dashboard/session-actions.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/change-validation-card.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/extension.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/install-scope.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/install-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/multiprocess-coordinator-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/project-coordinator-daemon.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/project-service-client.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/review-hooks.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/clients/pi/rpc-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/activity-feed.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/change-control.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/change-trace-state.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/change-validation-card.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/changes-state.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/config-control.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/config-state.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/dashboard-browser.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/dashboard-state.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/dashboard/dev-log-projection.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/decision/model-checks.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/decision/native-exit.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/decision/research.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/decision/wiki-decide.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/adapter-materialization.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/contract-document-adapters.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/coverage-adapters.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/evidence-obligations.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/evidence-record.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/junit-adapter.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/provider-check-receipt-adapter.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/sarif-adapter.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/evidence/sbom-adapters.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/decision-model-check-session.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/decision-research-claims-session.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/native-decision-host.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/native-decision-research.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/process-session.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/process-worker-adapter.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/sdk-package-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/pi/sdk-semantic-session.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/execution/ports.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/archive.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/epoch.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/operation.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/fixtures/change-trace-v1/state.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/accepted-change.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/canonical-loop-events.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/change-trace-replay-v1.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/change-trace-v1.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/git-state-v1.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/implementation-change.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/native-decision.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/pi-project-services.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/planning-work.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/proposed-change.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/helpers/runtime-implementation.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/implementation-iteration.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/merge-proof.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/repo-proof.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-adapter.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-evidence-cache.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-evidence.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-fast-feedback.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-go-rust-pack.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-integration.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-language-pack.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-python-pack.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-quality-nodes.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/review-shell-pack.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/wiki-implement.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/worker-observation-authority.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/implementation/worker-proof.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/integration/control-center-reconciliation.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/codewiki-kb-profile.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/drift-linter.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/native-kb.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/okf-export.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/okf-index.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/okf-source-map.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/okf-trace-boundary.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/okf-v02.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/okf.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/skills.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/source-map.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/source-ownership.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/system-diagrams.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/knowledge/topic-alignment.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/loops/evaluator.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/loops/judge-provider.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/loops/model-judge.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/loops/quality-pack.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/loops/runner.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/planning/wiki-plan.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/project/bootstrap.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/project/explain.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/project/source-architecture.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/admission/change.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/admission/decision-git.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/cli.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/container-worker-adapter.test.mjs",
+      "disposition": "move",
+      "target": "tests/runtime/workbenches/container.test.mjs"
+    },
+    {
+      "path": "tests/runtime/coordinator.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/coordinator/decision-attempt.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/coordinator/executor.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/coordinator/reactions.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/coordinator/reactor.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/dashboard-coordinator-client.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/dashboard-dev-harness.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/dashboard-lifecycle.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/dashboard-preview-control.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/effects/decision-operations.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/effects/research-collection.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/error-handling.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/execution-policy.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/external-package-failures-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/external-package-lifecycle-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/git-status.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/implementation-worker-artifacts.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/integration/worker.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/package-install-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/persistence/dev-log.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/preview-browser-adapter.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/preview-coordinator.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/preview-evidence.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/preview-integration.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/preview-profile.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/product-publication.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/product-release.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-branch-merge.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-branch-push.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-events.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-process.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-service-host.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-coordinator-service.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-coordinator.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/project-local-install-smoke.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/readiness-checklist.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/runtime-claims.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/wiki-config.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/wiki-runtime.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/work-unit-claim-selection.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/work-unit-claims.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/worker-observation.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/worker-reports.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/worker-start.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/workers/dispatch.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/workers/handoff.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/workers/jobs.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/runtime/worktrees.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/scaffold-core.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/alignment-graph-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/alignment-query-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/change-trace-protocol-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/change-trace-reducer-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/distributed-mutation-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/git-state-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/release-notes.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/rolling-planning-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/synchronization-v1.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/traces-jsonl.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/traces/wiki-archive.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/candidate-admission.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/catalog.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/contracts.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/bundle-mutation.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/config-mutation.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/custom-code.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/distillation-fixture.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/distillation.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/policy-acceptance.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/runtime.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/source-retrieval.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/user-standard-fixture.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/custom-checks/user-standards.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/identity.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/repair-frontier.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/repair-profiles.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/resolve-policy.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/results.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/runner.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/runtime.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/security-collectors.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/security-scanners.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/security-surfaces.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/standard-evidence-checks.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/standard-evidence-executor.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/verification/verification-capabilities.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/views/runtime-board.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/views/views-projections.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/views/wiki-state.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/work-state/work-state-session.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tests/work-state/work-state.test.mjs",
+      "disposition": "keep"
+    },
+    {
+      "path": "tsconfig.build.json",
+      "disposition": "keep"
+    },
+    {
+      "path": "tsconfig.json",
+      "disposition": "keep"
+    }
+  ]
+}

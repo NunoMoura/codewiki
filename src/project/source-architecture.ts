@@ -11,7 +11,7 @@ export const CURRENT_SOURCE_ROOTS = [
 	"evidence",
 	"execution",
 	"git",
-	"harnesses",
+	"host",
 	"implementation",
 	"knowledge",
 	"verification",
@@ -35,6 +35,7 @@ export const TARGET_SOURCE_ROOTS = [
 	"evidence",
 	"execution",
 	"git",
+	"host",
 	"implementation",
 	"knowledge",
 	"planning",
@@ -56,12 +57,12 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"persistence",
 	"recovery",
 	"synchronization",
+	"workbenches",
 	"workers",
 ] as const;
 
 export const LEGACY_SOURCE_ROOTS = [
 	"change-trace",
-	"harnesses",
 	"loops",
 	"traces",
 	"views",
@@ -80,13 +81,12 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"clients",
 	"dashboard",
 	"execution",
-	"harnesses",
+	"host",
 	"preview",
 ] as const;
 
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	"change-trace": 19,
-	harnesses: 5,
 	loops: 10,
 	traces: 12,
 	views: 13,

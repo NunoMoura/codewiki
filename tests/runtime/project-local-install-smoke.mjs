@@ -242,7 +242,7 @@ try {
 		"@nunomoura",
 		"codewiki",
 		"dist",
-		"harnesses",
+		"host",
 		"coordinator-entrypoint.js",
 	);
 	if (existsSync(coordinatorApi)) {

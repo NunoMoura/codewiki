@@ -105,8 +105,8 @@ describe("install readiness checklist", () => {
 			"./pi-sdk",
 		]);
 		assert.deepEqual(packageJson.exports["./coordinator"], {
-			types: "./dist/harnesses/coordinator-entrypoint.d.ts",
-			import: "./dist/harnesses/coordinator-entrypoint.js",
+			types: "./dist/host/coordinator-entrypoint.d.ts",
+			import: "./dist/host/coordinator-entrypoint.js",
 		});
 		assert.deepEqual(packageJson.exports["./pi-sdk"], {
 			types: "./dist/execution/pi/sdk-semantic-session.d.ts",

@@ -253,11 +253,13 @@ src/
     security/
   evidence/
     adapters/
+  host/                  # transport and Runtime composition only
   runtime/               # generic control-plane mechanics only
     coordinator/
     persistence/
     synchronization/
     claims/
+    workbenches/
     workers/
     integration/
     effects/
@@ -281,7 +283,7 @@ src/
 benchmarks/              # nonproduction paired harness and release measurement
 ```
 
-Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Clients own user interaction. Execution implements Runtime-selected neutral ports and owns no Loop policy or canonical authority; Runtime may import `src/execution/ports.ts` but never concrete Pi adapters. Repository-root benchmarks compare every real supported execution adapter alone with the same adapter under CodeWiki and do not ship in the production package. Clean cuts keep no old-path re-exports.
+Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Host owns transport and Runtime composition without project authority. Runtime owns generic scheduling, persistence, synchronization, claims, workbenches, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Clients own user interaction. Execution implements Runtime-selected neutral ports and owns no Loop policy or canonical authority; Runtime may import `src/execution/ports.ts` but never concrete Pi adapters. Repository-root benchmarks compare every real supported execution adapter alone with the same adapter under CodeWiki and do not ship in the production package. Clean cuts keep no old-path re-exports.
 
 Current `src/loops/**`, `src/verification/**`, `src/change-trace/**`, legacy trace/WorkState paths, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 

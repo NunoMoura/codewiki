@@ -151,7 +151,7 @@ try {
 			join(
 				packageRoot,
 				"dist",
-				"harnesses",
+				"host",
 				"coordinator-entrypoint.js",
 			),
 		).href
