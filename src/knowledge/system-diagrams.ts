@@ -15,7 +15,7 @@ export const SYSTEM_CONNECTION_TYPES = Object.freeze([
 export const SYSTEM_DIAGRAM_ZONES = Object.freeze([
 	"core",
 	"client",
-	"harness",
+	"execution",
 	"repository",
 	"provider",
 ] as const);

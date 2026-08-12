@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: Runtime
-description: Owns generic scheduling, identity, admission, persistence, synchronization, claims, Integration, recovery, lifecycle, and effects.
+description: Owns per-project authority, provenance, admission, scheduling, persistence, synchronization, Integration, recovery, lifecycle, and effects.
 status: stable
 tags: [system, component]
 codewiki_component: runtime
@@ -10,14 +10,19 @@ codewiki_test_patterns: ["tests/runtime/**"]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/automate-safe-work.md
-    rationale: Runtime supplies the System responsibility required by this Story.
+    rationale: Runtime supplies authoritative coordination and guarded progression.
+  - type: realizes
+    target: /product/stories/maintainer/account-for-drift.md
+    rationale: Runtime classifies every observed Candidate and Git state by positive provenance proof.
 ---
 # Runtime
 
-Runtime is the project-scoped control plane. It owns canonical identity, admission, actor and authority binding, time, digests, freshness, expected-head CAS, scheduling, claims, workers, Integration, recovery, persistence, synchronization, lifecycle, and guarded effects.
+Runtime is the authoritative per-project control plane. It owns identity, admission, actor and authority binding, time, digests, freshness, expected-head CAS, provenance, scheduling, claims, Runtime-owned workbenches, workers, Integration, persistence, synchronization, recovery, lifecycle, final routing, and guarded effects.
 
-Runtime invokes exactly three semantic Loops—Decision, Planning, and Implementation—and shared Verification through injected ports. It does not own Loop-specific Candidate meaning, Checks, interpretation, or route recommendations. Every final route and effect revalidates exact current state and authority.
+Runtime invokes exactly three semantic Loops—Decision, Planning, and Implementation—plus shared Verification and neutral Managed Execution ports. Loops own Candidate meaning and route recommendations; Verification owns common policy and evaluation machinery; Runtime alone admits attempts, creates canonical Results, selects final routes, and performs effects.
 
-For each selected Check, Runtime constructs a bounded invocation from the exact Candidate, Resolved Exit Policy, admitted repository context, Knowledge, and Evidence. It validates evaluator identity, route, input, isolation, freshness, provenance, and bounded output before creating a canonical Check Result. It verifies admissibility rather than the semantic truth of arbitrary model or package code.
+Runtime recognizes controlled provenance only when an exact Candidate Manifest matches persisted custody. Managed provenance adds a complete Pi execution receipt. MCP-mediated Agent Host work binds admitted operations and workbench identity without claiming complete prompt or agent-loop proof. Any observed tree without matching custody is external provenance, regardless of branch, author, trailer, note, or claimed producer.
 
-`pass`, `fail`, and `indeterminate` are evaluator outcomes; unavailable capability, pending execution, exclusion, staleness, and unresolved policy are Runtime or projection states. Required failure or indeterminacy blocks exit, while advisory findings return bounded feedback to the active Harness. Repair creates a new Candidate, invalidates stale Results, and repeats policy resolution and evaluation before Runtime may route to another Development stage or guarded effect.
+External Git state is captured without changing the accepted head, then either admitted against an exact accepted Change or normalized through Change Intake when intent or scope is missing. It receives no inherited execution proof and undergoes fresh policy resolution and Verification. Divergence pauses protected effects; Runtime never silently adopts, overwrites, discards, or certifies it.
+
+Every controlled Candidate producer uses a Runtime-owned isolated worktree. Runtime may claim independent ready Work Items up to `maxWorkers`, dispatch one bounded assignment per worktree, integrate compatible outputs deterministically, and verify the combined Candidate. Workers and Agent Clients cannot schedule canonical descendants, share mutable workspaces, write canonical state, or perform guarded effects.

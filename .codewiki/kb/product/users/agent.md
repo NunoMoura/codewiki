@@ -1,12 +1,12 @@
 ---
 type: User
 title: Agent
-description: Tool-using participant that proposes bounded outputs and reads project context without owning acceptance, routing, or effects.
+description: Tool-using participant that acts through a bounded Agent Client or Managed Execution assignment without owning acceptance, routing, or effects.
 status: stable
 tags: [product, user, agent]
 ---
 # Agent
 
-Agents consume bounded snapshot-bound context and produce exactly scoped Candidates, Check Observations, research, or worker reports through Runtime-selected ports. They do not select Changes, alter canonical history, weaken policy, grant authority, or perform guarded effects.
+Agents consume bounded snapshot-bound context and produce exactly scoped proposals, Candidates, Check Observations, research, or worker reports. A managed Pi agent executes under complete Runtime-controlled session and workbench custody. An external Agent Host such as Claude Code or Codex participates through stateless MCP and exact admitted workbench operations.
 
-Success means an agent can resume useful work from project truth rather than chat memory while every semantic decision remains independently reviewable.
+Agents cannot select Changes, alter canonical history, weaken policy, grant authority, schedule canonical descendants, or perform guarded effects. Success means useful work resumes from project and operation identity rather than hidden conversation memory while provenance and semantic decisions remain independently reviewable.

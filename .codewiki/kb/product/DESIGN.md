@@ -114,7 +114,7 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Source and diagram inspectors** show canonical path or diagram reference, provenance, coverage, truncation, and staleness. They open the owning concept or exact file rather than a copied summary.
 
-**Check authoring** uses deterministic fields for requirement, pass, fail, indeterminate, feedback, Development stage, scope, inputs, model route, and enforcement. An explicit assisted action invokes the active Harness model through the Check Creator skill; it never hides a model call or silently promotes enforcement.
+**Check authoring** uses deterministic fields for requirement, pass, fail, indeterminate, feedback, Development stage, scope, inputs, model route, and enforcement. An explicit assisted action asks Runtime to invoke Managed Execution for a bounded proposal; it never hides a model call or silently promotes enforcement.
 
 **Model route selection** distinguishes the active authoring or repair model from the configured Check evaluator, names adapter and credential source without exposing secrets, and explains unavailable capabilities or billing boundaries before confirmation.
 
@@ -130,7 +130,7 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 - Do use screenshots and previews as candidate-bound Evidence, not semantic approval.
 - Do identify every assisted-authoring model separately from the Check model that evaluates Candidates.
 - Don't display a generic trust score, hidden reasoning, or fabricated certainty.
-- Don't invoke a model, widen Check input, or substitute the active Harness model without an explicit visible choice.
+- Don't invoke a model, widen Check input, or substitute the active authoring route without an explicit visible choice.
 - Don't make background work appear active without an observed state transition.
 - Don't duplicate System topology or runtime policy in design guidance.
 - Don't let visual polish hide missing Evidence, stale state, or unavailable capability.

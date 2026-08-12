@@ -1,7 +1,7 @@
 ---
 type: User Story
 title: Account for Drift
-description: A maintainer wants every relevant discrepancy resolved, bound to active intent, or explicitly unknown before unsafe progression.
+description: A maintainer wants every relevant discrepancy and Git change classified, routed, or explicitly unknown before unsafe progression.
 status: stable
 codewiki_user: /product/users/maintainer.md
 tags: [product, story, alignment]
@@ -12,6 +12,7 @@ As a maintainer, I want CodeWiki to account for differences among accepted inten
 
 ## Acceptance signals
 
-- A discrepancy is resolved, attached to an exact active Change, or visibly unknown.
-- Queries expose source provenance, coverage, truncation, and staleness.
-- Required unknowns block affected unsafe routes.
+- Every observed Candidate or Git tree has positively proven controlled provenance or explicit external provenance.
+- External state is captured without altering accepted head and routed through exact Change admission or Change Intake.
+- Queries expose identity, source provenance, coverage, truncation, and staleness.
+- Required unknowns or divergence pause affected protected effects.

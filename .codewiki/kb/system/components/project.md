@@ -14,10 +14,10 @@ codewiki_relationships:
 ---
 # Project Configuration
 
-Project Configuration identifies the repository root, protected CodeWiki settings, Check defaults, model routes, source architecture, and bootstrap boundaries. Configuration digests bind every policy-sensitive attempt and cannot be weakened by clients, harnesses, installed packages, or untrusted repository content.
+Project Configuration identifies the repository root, protected CodeWiki settings, Check defaults, model routes, source architecture, and bootstrap boundaries. Configuration digests bind every policy-sensitive attempt and cannot be weakened by Clients, Agent Hosts, installed packages, or untrusted repository content.
 
 Project-wide Check defaults live in `.codewiki/config.json`; each installed Pack binding has one inherited `config.json`; and a Check directory may contain one optional sparse `config.json` override beside `CHECK.*`. Protected floors apply after all three project-owned layers. Pack and Check scope can narrow inherited applicability or input boundaries but cannot widen a trusted outer boundary.
 
-Project configuration stores adapter, provider, model, execution-profile, budget, and fallback policy identities but never credentials. Check model routes are independent from work-producing Harness routes and have no implicit fallback to the active Harness model. A route change alters provenance and invalidates incompatible calibration and cached Results.
+Project configuration stores provider, model, execution-profile, budget, and fallback policy identities but never credentials. Check model routes are independent from work-producing Managed Execution routes and have no implicit fallback to an authoring or repair route. A route change alters provenance and invalidates incompatible calibration and cached Results.
 
 Bootstrap creates the compact native Knowledge shape and open editable Default Check Pack without authored projections. Source architecture declarations describe target dependency direction and are checked independently from temporary refactoring progress.

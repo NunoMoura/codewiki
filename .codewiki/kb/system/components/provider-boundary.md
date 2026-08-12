@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: Provider Boundary
-description: Represents trusted-host networking, authentication, credentials, webhooks, model services, and exact remote state outside CodeWiki authority.
+description: Represents external Git, delivery, model, package, and collaboration services outside CodeWiki authority.
 status: stable
 tags: [system, component, external]
 codewiki_relationships:
@@ -11,8 +11,8 @@ codewiki_relationships:
 ---
 # Provider Boundary
 
-Provider Boundary represents external Git, delivery, and model hosts. Trusted hosts own networking, authentication semantics, credentials, webhook verification, billing, and provider-native state; CodeWiki owns request binding, local credential UX, receipt validation, freshness, expected-head policy, and interpretation.
+Provider Boundary represents Git hosts, delivery services, Pi-supported model providers, package registries, and collaboration platforms. Providers own networking, authentication semantics, credentials, billing, and provider-native state; CodeWiki owns request binding, local credential UX, receipt validation, freshness, expected-head policy, and interpretation.
 
-The default multi-provider model integration uses Pi SDK authentication with CodeWiki-specific user storage outside every project. Claude Code-native routes retain opaque Claude Code authentication and cannot be treated as equivalent to independently authenticated Anthropic routes. Project files contain route identities and policy only, never secrets.
+Model credentials use CodeWiki-specific user storage outside projects and remain available only to backend Managed Execution. Channel credentials remain Host-side. Project files contain route and policy identities, never secrets; UIs and channels receive redacted route metadata only.
 
-Unavailable, unauthenticated, stale, contradictory, or malformed provider state cannot imply acceptance or weaken policy. Provider content remains untrusted until bounded validation succeeds, and credentials are never mounted into Check sandboxes or model context.
+Unavailable, unauthenticated, stale, contradictory, or malformed provider state cannot imply acceptance or weaken policy. Provider and channel content remains untrusted until bounded validation succeeds. Credentials are never placed in model context, Check sandboxes, project files, or collaboration messages.
