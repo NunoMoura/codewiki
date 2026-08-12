@@ -2,28 +2,28 @@ import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-export interface DashboardRuntimeIdentity {
+interface InstalledCodewikiRuntimeIdentity {
 	commit: string;
 	packageSha256: string;
 }
 
-export interface DashboardRuntimeIdentityHealth {
+interface InstalledCodewikiRuntimeHealth {
 	status: "current" | "mismatch" | "unmanaged";
-	loaded?: DashboardRuntimeIdentity;
-	installed?: DashboardRuntimeIdentity;
+	loaded?: InstalledCodewikiRuntimeIdentity;
+	installed?: InstalledCodewikiRuntimeIdentity;
 }
 
-export function captureDashboardRuntimeIdentity(
+export function captureInstalledCodewikiRuntimeIdentity(
 	moduleUrl: string,
-): DashboardRuntimeIdentity | undefined {
+): InstalledCodewikiRuntimeIdentity | undefined {
 	const projectRoot = installedProjectRoot(moduleUrl);
 	return projectRoot ? readControllerIdentity(projectRoot) : undefined;
 }
 
-export function dashboardRuntimeIdentityHealth(
-	loaded: DashboardRuntimeIdentity | undefined,
+export function installedCodewikiRuntimeHealth(
+	loaded: InstalledCodewikiRuntimeIdentity | undefined,
 	projectRoot: string,
-): DashboardRuntimeIdentityHealth {
+): InstalledCodewikiRuntimeHealth {
 	if (!loaded) return { status: "unmanaged" };
 	const installed = readControllerIdentity(projectRoot);
 	if (!installed) return { status: "unmanaged", loaded };
@@ -38,11 +38,11 @@ export function dashboardRuntimeIdentityHealth(
 	};
 }
 
-export function assertDashboardRuntimeCurrent(
-	loaded: DashboardRuntimeIdentity | undefined,
+export function assertInstalledCodewikiRuntimeCurrent(
+	loaded: InstalledCodewikiRuntimeIdentity | undefined,
 	projectRoot: string,
 ): void {
-	const health = dashboardRuntimeIdentityHealth(loaded, projectRoot);
+	const health = installedCodewikiRuntimeHealth(loaded, projectRoot);
 	if (health.status !== "mismatch") return;
 	throw new Error(
 		`Installed CodeWiki runtime ${short(health.installed?.commit)} differs from loaded runtime ${short(health.loaded?.commit)}. Fully exit and restart Pi; /reload is not sufficient.`,
@@ -59,7 +59,7 @@ function installedProjectRoot(moduleUrl: string): string | undefined {
 
 function readControllerIdentity(
 	projectRoot: string,
-): DashboardRuntimeIdentity | undefined {
+): InstalledCodewikiRuntimeIdentity | undefined {
 	try {
 		const value = JSON.parse(
 			readFileSync(

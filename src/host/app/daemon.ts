@@ -1,9 +1,9 @@
-import { startCodewikiDashboardServer } from "./server.ts";
+import { startCodewikiDashboardServer } from "../../dashboard/server.ts";
 
 const repoRoot = process.argv[2];
 
 if (!repoRoot) {
-	throw new Error("CodeWiki dashboard daemon requires a repo root argument.");
+	throw new Error("CodeWiki App daemon requires a repo root argument.");
 }
 
 await startCodewikiDashboardServer({

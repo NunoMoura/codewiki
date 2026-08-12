@@ -61,9 +61,9 @@ import {
 } from "./session-actions.ts";
 import { DashboardControlError } from "./control-error.ts";
 import {
-	assertDashboardRuntimeCurrent,
-	captureDashboardRuntimeIdentity,
-} from "./health.ts";
+	assertInstalledCodewikiRuntimeCurrent,
+	captureInstalledCodewikiRuntimeIdentity,
+} from "../host/app/installed-runtime.ts";
 import {
 	buildCodewikiDashboardState,
 	type CodewikiDashboardState,
@@ -134,10 +134,10 @@ interface DashboardMeta {
 }
 
 const dashboards = new Map<string, DashboardRuntime>();
-const loadedDashboardRuntimeIdentity = captureDashboardRuntimeIdentity(
+const loadedCodewikiRuntimeIdentity = captureInstalledCodewikiRuntimeIdentity(
 	import.meta.url,
 );
-const DASHBOARD_DAEMON_ENV = "CODEWIKI_DASHBOARD_DAEMON";
+const APP_DAEMON_ENV = "CODEWIKI_APP_DAEMON";
 const DASHBOARD_TMPDIR_ENV = "CODEWIKI_DASHBOARD_TMPDIR";
 const DASHBOARD_SECURITY_HEADERS = {
 	"Content-Security-Policy":
@@ -151,14 +151,14 @@ const DASHBOARD_SECURITY_HEADERS = {
 export async function startCodewikiDashboardServer(
 	options: CodewikiDashboardServerOptions,
 ): Promise<CodewikiDashboardServerHandle> {
-	assertDashboardRuntimeCurrent(
-		loadedDashboardRuntimeIdentity,
+	assertInstalledCodewikiRuntimeCurrent(
+		loadedCodewikiRuntimeIdentity,
 		options.repoRoot,
 	);
 	if (
 		options.persistent &&
 		!options.inProcess &&
-		process.env[DASHBOARD_DAEMON_ENV] !== "1"
+		process.env[APP_DAEMON_ENV] !== "1"
 	) {
 		return await startPersistentDashboardServer(options);
 	}
@@ -214,8 +214,8 @@ async function startPersistentDashboardServer(
 		if (meta) await shutdownDashboardEndpoint(endpoint);
 	}
 	try {
-		spawnDashboardDaemon(options.repoRoot);
-		const started = await waitForDashboardDaemon(
+		spawnAppDaemon(options.repoRoot);
+		const started = await waitForAppDaemon(
 			options.repoRoot,
 			expectedDigest,
 		);
@@ -232,7 +232,7 @@ async function startPersistentDashboardServer(
 	}
 }
 
-async function waitForDashboardDaemon(
+async function waitForAppDaemon(
 	repoRoot: string,
 	expectedDigest: string,
 ): Promise<DashboardEndpoint> {
@@ -248,16 +248,16 @@ async function waitForDashboardDaemon(
 	});
 	if (endpoint) return endpoint;
 	throw new Error(
-		`CodeWiki dashboard daemon did not start${lastEndpoint ? ` at ${lastEndpoint.origin}` : ""}.`,
+		`CodeWiki App daemon did not start${lastEndpoint ? ` at ${lastEndpoint.origin}` : ""}.`,
 	);
 }
 
-function spawnDashboardDaemon(repoRoot: string): void {
-	const script = dashboardDaemonScriptPath();
+function spawnAppDaemon(repoRoot: string): void {
+	const script = appDaemonScriptPath();
 	const args = script.endsWith(".ts")
 		? ["--experimental-strip-types", script, repoRoot]
 		: [script, repoRoot];
-	const logPath = dashboardDaemonLogPath(repoRoot);
+	const logPath = appDaemonLogPath(repoRoot);
 	const logDirectory = dirname(logPath);
 	mkdirSync(logDirectory, { recursive: true, mode: 0o700 });
 	if (process.platform !== "win32") chmodSync(logDirectory, 0o700);
@@ -267,7 +267,7 @@ function spawnDashboardDaemon(repoRoot: string): void {
 		const child = spawn(process.execPath, args, {
 			detached: true,
 			stdio: ["ignore", output, output],
-			env: { ...process.env, [DASHBOARD_DAEMON_ENV]: "1" },
+			env: { ...process.env, [APP_DAEMON_ENV]: "1" },
 			windowsHide: true,
 		});
 		child.unref();
@@ -276,15 +276,18 @@ function spawnDashboardDaemon(repoRoot: string): void {
 	}
 }
 
-function dashboardDaemonScriptPath(): string {
+function appDaemonScriptPath(): string {
 	const current = fileURLToPath(import.meta.url);
 	return join(
 		dirname(current),
+		"..",
+		"host",
+		"app",
 		current.endsWith(".ts") ? "daemon.ts" : "daemon.js",
 	);
 }
 
-function dashboardDaemonLogPath(repoRoot: string): string {
+function appDaemonLogPath(repoRoot: string): string {
 	const key = createHash("sha256").update(repoRoot).digest("hex").slice(0, 32);
 	return join(dashboardEndpointDirectory(), `${key}.log`);
 }
@@ -804,7 +807,7 @@ async function routeAuthorizedGet(
 	}
 	if (url.pathname === "/api/meta") {
 		writeJson(response, 200, {
-			mode: process.env[DASHBOARD_DAEMON_ENV] === "1" ? "daemon" : "in_process",
+			mode: process.env[APP_DAEMON_ENV] === "1" ? "daemon" : "in_process",
 			pid: process.pid,
 			assetDigest: await currentDashboardAssetDigest(),
 		});
@@ -886,7 +889,7 @@ async function routeAuthorizedPost(
 function scheduleRuntimeClose(runtime: DashboardRuntime): void {
 	setTimeout(() => {
 		void runtime.close().then(() => {
-			if (process.env[DASHBOARD_DAEMON_ENV] === "1") process.exit(0);
+			if (process.env[APP_DAEMON_ENV] === "1") process.exit(0);
 		});
 	}, 10);
 }

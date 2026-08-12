@@ -192,6 +192,18 @@ assert.equal(
 	false,
 	"legacy Dashboard assets are not packaged",
 );
+for (const name of ["daemon", "health", "index"]) {
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "dashboard", name + ".js")),
+		false,
+		name,
+	);
+}
+assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "daemon.js")), true);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "host", "app", "installed-runtime.js")),
+	true,
+);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.d.ts")), true);
 assert.equal(

@@ -2,7 +2,7 @@ import type { WikiStateSnapshot } from "../../../api/state.ts";
 import {
 	closeInProcessCodewikiDashboardServer,
 	startCodewikiDashboardServer,
-} from "../../../dashboard/index.ts";
+} from "../../../dashboard/server.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
 import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import {

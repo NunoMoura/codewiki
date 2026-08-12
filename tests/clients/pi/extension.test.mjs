@@ -23,7 +23,7 @@ import {
 import {
 	closeCodewikiDashboardServer,
 	restoreCodewikiDashboardServer,
-} from "../../../src/dashboard/index.ts";
+} from "../../../src/dashboard/server.ts";
 import { isActiveDashboardTrace } from "../../../src/dashboard/state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../../src/clients/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../../src/clients/pi/tools/index.ts";

@@ -5,11 +5,11 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, it } from "node:test";
 import {
-	assertDashboardRuntimeCurrent,
-	captureDashboardRuntimeIdentity,
-	dashboardRuntimeIdentityHealth,
-} from "../../src/dashboard/health.ts";
-import { startCodewikiDashboardServer } from "../../src/dashboard/server.ts";
+	assertInstalledCodewikiRuntimeCurrent,
+	captureInstalledCodewikiRuntimeIdentity,
+	installedCodewikiRuntimeHealth,
+} from "../../../src/host/app/installed-runtime.ts";
+import { startCodewikiDashboardServer } from "../../../src/dashboard/server.ts";
 
 function pin(commit, sha256) {
 	return JSON.stringify({
@@ -18,7 +18,7 @@ function pin(commit, sha256) {
 	});
 }
 
-describe("dashboard runtime health", () => {
+describe("Host App lifecycle", () => {
 	it("detects when Pi still has a replaced pinned runtime loaded", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-dashboard-health-"));
 		try {
@@ -31,7 +31,8 @@ describe("dashboard runtime health", () => {
 					"@nunomoura",
 					"codewiki",
 					"dist",
-					"dashboard",
+					"host",
+					"app",
 				),
 				{ recursive: true },
 			);
@@ -48,17 +49,18 @@ describe("dashboard runtime health", () => {
 					"@nunomoura",
 					"codewiki",
 					"dist",
-					"dashboard",
-					"server.js",
+					"host",
+					"app",
+					"daemon.js",
 				),
 			).href;
-			const loaded = captureDashboardRuntimeIdentity(moduleUrl);
+			const loaded = captureInstalledCodewikiRuntimeIdentity(moduleUrl);
 			assert.deepEqual(loaded, {
 				commit: "a".repeat(40),
 				packageSha256: "1".repeat(64),
 			});
 			assert.equal(
-				dashboardRuntimeIdentityHealth(loaded, root).status,
+				installedCodewikiRuntimeHealth(loaded, root).status,
 				"current",
 			);
 
@@ -67,11 +69,11 @@ describe("dashboard runtime health", () => {
 				pin("b".repeat(40), "2".repeat(64)),
 			);
 			assert.equal(
-				dashboardRuntimeIdentityHealth(loaded, root).status,
+				installedCodewikiRuntimeHealth(loaded, root).status,
 				"mismatch",
 			);
 			assert.throws(
-				() => assertDashboardRuntimeCurrent(loaded, root),
+				() => assertInstalledCodewikiRuntimeCurrent(loaded, root),
 				/Fully exit and restart Pi; \/reload is not sufficient/,
 			);
 		} finally {
@@ -115,11 +117,11 @@ describe("dashboard runtime health", () => {
 	});
 
 	it("leaves ordinary non-controller installs unmanaged", () => {
-		const loaded = captureDashboardRuntimeIdentity(
-			pathToFileURL("/tmp/codewiki/dist/dashboard/server.js").href,
+		const loaded = captureInstalledCodewikiRuntimeIdentity(
+			pathToFileURL("/tmp/codewiki/dist/host/app/daemon.js").href,
 		);
 		assert.equal(loaded, undefined);
-		assert.deepEqual(dashboardRuntimeIdentityHealth(loaded, "/tmp/codewiki"), {
+		assert.deepEqual(installedCodewikiRuntimeHealth(loaded, "/tmp/codewiki"), {
 			status: "unmanaged",
 		});
 	});
