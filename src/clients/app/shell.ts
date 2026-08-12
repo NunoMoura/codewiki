@@ -465,9 +465,7 @@ button { color: inherit; }
 .worker-attempt-title, .narrative-head { color: var(--bright); font-weight: 650; }
 .worker-attempt-meta, .review-label, .dev-log-meta { color: var(--muted); font-size: 12px; }
 .worker-attempt-status, .narrative-status { text-transform: uppercase; font-size: 11px; letter-spacing: .06em; color: var(--cyan); }
-.worker-attempt-detail, .narrative-detail, .narrative-next, .dev-log-summary { margin-top: 5px; color: var(--text); }
-.narrative-impact { margin-top: 4px; color: var(--muted); }
-.narrative-next { color: var(--yellow); }
+.worker-attempt-detail, .narrative-detail, .dev-log-summary { margin-top: 5px; color: var(--text); }
 .implementation-review { display: grid; gap: 6px; }
 .review-value { color: var(--bright); }
 .dev-log-list { display: grid; gap: 5px; font-family: var(--mono); font-size: 12px; }
@@ -1222,7 +1220,7 @@ function renderImplementationPanel(trace, section) {
 	const preview = renderLivePreview(trace);
 	if (preview) stack.append(preview);
 	stack.append(
-		renderTerminalBlock('activity feed', renderNarrativeFeed(trace.activityFeed || []), (trace.activityFeed || []).length + ' meaningful update(s)'),
+		renderTerminalBlock('activity', renderActivities(trace.activities || []), (trace.activities || []).length + ' factual event(s)'),
 		renderTerminalBlock('worker attempts', renderWorkerAttempts(trace.workerAttempts || []), (trace.workerAttempts || []).length + ' attempt(s)'),
 		renderTerminalBlock('integration and exit review', renderImplementationReview(trace.implementationReview || {}), readableStatus((trace.implementationReview || {}).status || 'waiting')),
 		renderCollapsibleTerminalBlock('quality standards', renderQualityChecklist(section.qualityChecks || []), qualitySummaryText(section.qualitySummary)),
@@ -1329,19 +1327,17 @@ function renderPreviewEvidence(captures) {
 	});
 	return renderCollapsibleTerminalBlock('captured evidence', list, captures.length + ' capture(s)');
 }
-function renderNarrativeFeed(feed) {
+function renderActivities(activities) {
 	const box = document.createElement('div'); box.className = 'feed';
-	if (!feed.length) { const empty = document.createElement('div'); empty.className = 'feed-detail'; text(empty, 'No meaningful activity recorded yet.'); box.append(empty); return box; }
-	feed.forEach(function(item) {
-		const row = document.createElement('article'); row.className = 'feed-item narrative ' + item.status;
+	if (!activities.length) { const empty = document.createElement('div'); empty.className = 'feed-detail'; text(empty, 'No trace activity recorded yet.'); box.append(empty); return box; }
+	activities.forEach(function(item) {
+		const row = document.createElement('article'); row.className = 'feed-item narrative';
 		const head = document.createElement('div'); head.className = 'narrative-head';
-		const title = document.createElement('span'); text(title, item.headline);
-		const status = document.createElement('span'); status.className = 'narrative-status'; text(status, item.status + (item.createdAt ? ' · ' + shortTime(item.createdAt) : ''));
-		head.append(title, status);
+		const title = document.createElement('span'); text(title, item.label);
+		const kind = document.createElement('span'); kind.className = 'narrative-status'; text(kind, readableStatus(item.kind) + (item.createdAt ? ' · ' + shortTime(item.createdAt) : ''));
+		head.append(title, kind);
 		const detail = document.createElement('div'); detail.className = 'narrative-detail'; text(detail, item.detail);
-		const impact = document.createElement('div'); impact.className = 'narrative-impact'; text(impact, 'Why it matters: ' + item.impact);
-		const next = document.createElement('div'); next.className = 'narrative-next'; text(next, 'Next: ' + item.nextAction);
-		row.append(head, detail, impact, next); box.append(row);
+		row.append(head, detail); box.append(row);
 	});
 	return box;
 }

@@ -20,7 +20,6 @@ import { implementationQualityStandards } from "../implementation/quality-standa
 import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../planning/portfolio-quality.ts";
 import type { TraceEvent, TraceLoop, TraceRecord } from "../traces/types.ts";
 import { qualityIterationsFromTrace } from "../views/quality.ts";
-import { buildActivityFeed, type ActivityFeedItem } from "./activity-feed.ts";
 import type { DashboardChangesState } from "./changes-state.ts";
 import type { DashboardConfigState } from "./config-state.ts";
 import {
@@ -230,7 +229,6 @@ export interface CodewikiSprintTrace {
 	implementationReview: CodewikiImplementationReview;
 	items: CodewikiSprintTraceItem[];
 	activities: CodewikiSprintTraceActivity[];
-	activityFeed: ActivityFeedItem[];
 	devLog: DashboardDevLogProjection;
 	touchedFiles: CodewikiSprintTraceTouchedFiles;
 }
@@ -429,10 +427,6 @@ function buildSprintTrace(
 		),
 		items: items.map(sprintTraceItem),
 		activities: sprintTraceActivities(records),
-		activityFeed: buildActivityFeed(
-			records,
-			new Map(items.map((item) => [item.id, item.title])),
-		),
 		devLog: projectDevLog(context.devLogByTrace?.get(card.traceId)),
 		touchedFiles: sprintTraceTouchedFiles(records, items, workers, card),
 		sprintIds: [],

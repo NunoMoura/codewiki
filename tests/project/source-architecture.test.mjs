@@ -165,6 +165,7 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
 		assert.equal(existsSync(join(sourceRoot, "dashboard", "assets")), false);
 		for (const name of [
+			"activity-feed.ts",
 			"change-control.ts",
 			"config-control.ts",
 			"daemon.ts",

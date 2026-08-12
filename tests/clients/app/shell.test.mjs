@@ -21,7 +21,6 @@ describe("CodeWiki App browser shell", () => {
 		assert.match(script, /function renderImplementationPanel/);
 		assert.match(script, /function renderWorkerAttempts/);
 		assert.match(script, /function renderImplementationReview/);
-		assert.match(script, /function renderNarrativeFeed/);
 		assert.match(script, /function renderDevLog/);
 		assert.doesNotMatch(script, /function renderExecutionControl/);
 		assert.doesNotMatch(script, /function executeTraceHostCommand/);
@@ -45,6 +44,8 @@ describe("CodeWiki App browser shell", () => {
 		assert.match(script, /function openSearch/);
 		assert.match(script, /function renderCommittedDetail/);
 		assert.match(script, /function renderCollapsibleTerminalBlock/);
+		assert.match(script, /function renderActivities/);
+		assert.doesNotMatch(script, /function renderNarrativeFeed|Why it matters:|item\.nextAction/);
 		assert.doesNotMatch(script, /function executeChangeCommand/);
 		assert.match(script, /function renderConfiguration/);
 		assert.doesNotMatch(script, /function executeConfigCommand/);

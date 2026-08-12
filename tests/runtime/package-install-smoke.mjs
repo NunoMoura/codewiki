@@ -193,6 +193,7 @@ assert.equal(
 	"legacy Dashboard assets are not packaged",
 );
 for (const name of [
+	"activity-feed",
 	"change-control",
 	"config-control",
 	"daemon",

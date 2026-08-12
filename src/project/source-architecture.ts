@@ -88,7 +88,7 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	"change-trace": 19,
-	dashboard: 5,
+	dashboard: 4,
 	loops: 10,
 	traces: 12,
 	views: 13,
