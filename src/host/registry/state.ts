@@ -208,7 +208,7 @@ export function resolveHostConnection(input: {
 	if (registry.generation !== expectedGeneration) {
 		throw new Error("Host registry generation is stale.");
 	}
-	const authentication = normalizeAuthenticationAssertion(input.authentication);
+	const authentication = normalizeHostAuthenticationAssertion(input.authentication);
 	const repositoryIdentity = assertSha256Digest(
 		input.repositoryIdentity,
 		"repositoryIdentity",
@@ -428,8 +428,8 @@ function normalizeProject(
 	});
 }
 
-function normalizeAuthenticationAssertion(
-	value: HostAuthenticationAssertion,
+export function normalizeHostAuthenticationAssertion(
+	value: unknown,
 ): HostAuthenticationAssertion {
 	const input = exactObject(
 		value,

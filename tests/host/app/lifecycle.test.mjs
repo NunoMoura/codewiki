@@ -11,6 +11,12 @@ import {
 } from "../../../src/host/app/installed-runtime.ts";
 import {startCodewikiAppServer} from "../../../src/host/app/server.ts";
 import {
+	HOST_PAIRING_PROTOCOL,
+	issueHostPairing,
+	revokeHostPairing,
+	verifyHostAuthentication,
+} from "../../../src/host/pairing/commands.ts";
+import {
 	HOST_REGISTRY_PROTOCOL,
 	normalizeHostRegistrySnapshot,
 	readHostRegistrySnapshot,
@@ -112,7 +118,7 @@ describe("Host App lifecycle", () => {
 					"dist",
 					"host",
 					"app",
-					"daemon.js",
+					"server.js",
 				),
 			).href;
 			const loaded = captureInstalledCodewikiRuntimeIdentity(moduleUrl);
@@ -179,7 +185,7 @@ describe("Host App lifecycle", () => {
 
 	it("leaves ordinary non-controller installs unmanaged", () => {
 		const loaded = captureInstalledCodewikiRuntimeIdentity(
-			pathToFileURL("/tmp/codewiki/dist/host/app/daemon.js").href,
+			pathToFileURL("/tmp/codewiki/dist/host/app/server.js").href,
 		);
 		assert.equal(loaded, undefined);
 		assert.deepEqual(installedCodewikiRuntimeHealth(loaded, "/tmp/codewiki"), {
@@ -342,6 +348,177 @@ describe("Host registry and pairing", () => {
 					}),
 				),
 			/multiple active pairings for one client instance/,
+		);
+	});
+
+	it("verifies transient proof then issues and revokes one exact pairing", async () => {
+		const request = {
+			clientKind: "cli",
+			clientInstanceId: "cli:desktop",
+			proof: {transient: "not-persisted"},
+		};
+		const verified = await verifyHostAuthentication({
+			adapter: {
+				adapterId: "local-test",
+				async verify(received) {
+					assert.deepEqual(received, request);
+					return {
+						clientKind: "cli",
+						clientInstanceId: "cli:desktop",
+						authenticationRef: "auth:pairing:cli-desktop",
+						authenticatedIdentityRef: "identity:local:nuno",
+					};
+				},
+			},
+			request,
+		});
+		const issued = issueHostPairing({
+			registry: normalizeHostRegistrySnapshot(registry()),
+			authentication: verified,
+			command: {
+				protocolId: HOST_PAIRING_PROTOCOL.id,
+				protocolVersion: HOST_PAIRING_PROTOCOL.version,
+				kind: "issue",
+				expectedRegistryGeneration: 7,
+				pairingId: "pairing:cli-desktop",
+				clientKind: "cli",
+				clientInstanceId: "cli:desktop",
+				expiresInSeconds: 31_536_000,
+			},
+			now: new Date("2026-08-14T10:00:00.000Z"),
+		});
+		assert.equal(issued.generation, 8);
+		assert.deepEqual(issued.pairings.at(-1), {
+			pairingId: "pairing:cli-desktop",
+			clientKind: "cli",
+			clientInstanceId: "cli:desktop",
+			authenticationRef: "auth:pairing:cli-desktop",
+			authenticatedIdentityRef: "identity:local:nuno",
+			actorId: "user:nuno",
+			status: "active",
+			pairedAt: "2026-08-14T10:00:00.000Z",
+			updatedAt: "2026-08-14T10:00:00.000Z",
+			expiresAt: "2027-08-14T10:00:00.000Z",
+		});
+		assert.equal(JSON.stringify(issued).includes("not-persisted"), false);
+
+		const revoked = revokeHostPairing({
+			registry: issued,
+			authentication: verified,
+			command: {
+				protocolId: HOST_PAIRING_PROTOCOL.id,
+				protocolVersion: HOST_PAIRING_PROTOCOL.version,
+				kind: "revoke",
+				expectedRegistryGeneration: 8,
+				pairingId: "pairing:cli-desktop",
+				expectedAuthenticationRef: "auth:pairing:cli-desktop",
+			},
+			now: new Date("2026-08-15T10:00:00.000Z"),
+		});
+		assert.equal(revoked.generation, 9);
+		assert.equal(revoked.pairings.at(-1).status, "revoked");
+		assert.equal(revoked.pairings.at(-1).updatedAt, "2026-08-15T10:00:00.000Z");
+	});
+
+	it("fails closed on proof and pairing command drift", async () => {
+		await assert.rejects(
+			() =>
+				verifyHostAuthentication({
+					adapter: {
+						adapterId: "unused",
+						async verify() {
+							return authentication;
+						},
+					},
+					request: {clientKind: "app", clientInstanceId: "app:new"},
+				}),
+			/proof is required/,
+		);
+		await assert.rejects(
+			() =>
+				verifyHostAuthentication({
+					adapter: {
+						adapterId: "rejecting",
+						async verify() {
+							throw new Error("invalid proof");
+						},
+					},
+					request: {clientKind: "app", clientInstanceId: "app:new", proof: "x"},
+				}),
+			/^Error: Host authentication adapter rejected proof\.$/,
+		);
+		await assert.rejects(
+			() =>
+				verifyHostAuthentication({
+					adapter: {
+						adapterId: "forging",
+						async verify() {
+							return {...authentication, clientInstanceId: "app:other", actorId: "user:nuno"};
+						},
+					},
+					request: {clientKind: "app", clientInstanceId: "app:new", proof: "x"},
+				}),
+			/unsupported field actorId/,
+		);
+
+		const issue = (overrides = {}, assertion = {
+			...authentication,
+			clientKind: "cli",
+			clientInstanceId: "cli:new",
+			authenticationRef: "auth:pairing:cli-new",
+		}) => issueHostPairing({
+			registry: normalizeHostRegistrySnapshot(registry()),
+			authentication: assertion,
+			command: {
+				protocolId: HOST_PAIRING_PROTOCOL.id,
+				protocolVersion: HOST_PAIRING_PROTOCOL.version,
+				kind: "issue",
+				expectedRegistryGeneration: 7,
+				pairingId: "pairing:cli-new",
+				clientKind: "cli",
+				clientInstanceId: "cli:new",
+				...overrides,
+			},
+			now: new Date("2026-08-14T10:00:00.000Z"),
+		});
+		assert.throws(() => issue({authority: "admin"}), /unsupported field authority/);
+		assert.throws(() => issue({expectedRegistryGeneration: 6}), /generation conflict/);
+		assert.throws(() => issue({actorId: "user:unknown"}), /unsupported field actorId/);
+		assert.throws(
+			() => issue({}, {...authentication, clientKind: "app", clientInstanceId: "app:new"}),
+			/authentication does not match requested Client/,
+		);
+		assert.throws(
+			() =>
+				issue(
+					{clientKind: "app", clientInstanceId: "app:laptop"},
+					{...authentication, authenticationRef: "auth:pairing:app-laptop-new"},
+				),
+			/active pairing/,
+		);
+		assert.throws(
+			() => issue({occurredAt: "2026-08-14T10:00:00.000Z"}),
+			/unsupported field occurredAt/,
+		);
+		assert.throws(
+			() => issue({expiresInSeconds: 31_536_001}),
+			/expiresInSeconds must be a bounded positive safe integer/,
+		);
+		assert.throws(
+			() => revokeHostPairing({
+				registry: normalizeHostRegistrySnapshot(registry()),
+				authentication,
+				command: {
+					protocolId: HOST_PAIRING_PROTOCOL.id,
+					protocolVersion: HOST_PAIRING_PROTOCOL.version,
+					kind: "revoke",
+					expectedRegistryGeneration: 7,
+					pairingId: "pairing:app-laptop",
+					expectedAuthenticationRef: "auth:forged",
+				},
+				now: new Date("2026-08-14T10:00:00.000Z"),
+			}),
+			/authentication reference changed/,
 		);
 	});
 

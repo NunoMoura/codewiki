@@ -53,10 +53,12 @@ import { pathToFileURL } from "node:url";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
 	HOST_CLIENT_PROTOCOL,
+	HOST_PAIRING_PROTOCOL,
 	HOST_REGISTRY_PROTOCOL,
 	ProjectCoordinator,
 	buildWikiState,
 	buildWorkState,
+	issueHostPairing,
 	normalizeHostClientQuery,
 	normalizeHostRegistrySnapshot,
 	runWikiConfig,
@@ -209,7 +211,7 @@ for (const name of [
 		name,
 	);
 }
-assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "daemon.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "server.js")), true);
 assert.equal(
 	existsSync(join(packageRoot, "dist", "host", "app", "request-error.js")),
@@ -226,8 +228,12 @@ assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), true
 assert.equal(existsSync(join(packageRoot, "dist", "api", "input-validation.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "pairing", "commands.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "pairing", "commands.d.ts")), true);
 assert.equal(HOST_CLIENT_PROTOCOL.version, "1.0.0");
 assert.equal(HOST_REGISTRY_PROTOCOL.version, "1.0.0");
+assert.equal(HOST_PAIRING_PROTOCOL.version, "1.0.0");
+assert.equal(typeof issueHostPairing, "function");
 assert.equal(
 	normalizeHostRegistrySnapshot({
 		protocolId: HOST_REGISTRY_PROTOCOL.id,
