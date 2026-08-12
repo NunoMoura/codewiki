@@ -28,7 +28,7 @@ export interface ImplementationWorkerAssignment {
 	isolation:
 		| { kind: "worktree"; ref: string }
 		| { kind: "container"; ref: string };
-	worktree?: WorktreeRef;
+	worktree: WorktreeRef;
 	executionPolicy?: WorkerExecutionPolicySnapshot;
 }
 
@@ -144,6 +144,11 @@ export function assertImplementationWorkerAssignment(
 		!assignment.isolation.ref?.trim()
 	) {
 		throw new Error("Implementation worker assignment isolation is invalid.");
+	}
+	if (!assignment.worktree?.path?.trim()) {
+		throw new Error(
+			"Implementation worker assignment requires isolated worktree custody.",
+		);
 	}
 	if (
 		assignment.planningRefs.length === 0 ||

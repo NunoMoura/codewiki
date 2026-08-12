@@ -250,15 +250,6 @@ export type {
 	RuntimeSemanticOutcome,
 } from "../runtime/coordinator/executor.ts";
 export type {
-	CreateRuntimeHandoffManifestOptions,
-	RuntimeHandoffAction,
-	RuntimeHandoffCompletionContract,
-	RuntimeHandoffManifest,
-	RuntimeHandoffReleaseInstructions,
-	RuntimeHandoffRuntimeResult,
-	RuntimeHandoffWorker,
-} from "../runtime/workers/handoff.ts";
-export type {
 	TraceCloseReleaseNotes,
 	TraceReleaseNoteChange,
 	TraceReleaseNoteCheck,

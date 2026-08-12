@@ -8,7 +8,7 @@ import {
 	normalizeWorkerCompletion,
 } from "../../src/runtime/workers/reports.ts";
 
-function workerStart(overrides = {}) {
+function workerObservation(overrides = {}) {
 	return {
 		workerId: "pi-worker-001",
 		workUnitId: "WU-a",
@@ -26,7 +26,7 @@ function workerStart(overrides = {}) {
 describe("worker completion normalization", () => {
 	it("converts structured session output into implementation worker reports", () => {
 		const result = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: JSON.stringify({
 				status: "completed",
 				message: "Worker finished.",
@@ -82,7 +82,7 @@ describe("worker completion normalization", () => {
 	it("parses fenced CodeWiki worker reports from prose completion output", () => {
 		const planningRef = "trace:TRACE-pi-a:planning:iteration:1#work:WU-a";
 		const result = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: `Worker done.\n\n\`\`\`codewiki-worker-report\n${JSON.stringify({
 				status: "completed",
 				workUnitRef: planningRef,
@@ -135,7 +135,7 @@ describe("worker completion normalization", () => {
 
 	it("normalizes blocked, failed, and cancelled completions without log refs", () => {
 		const blocked = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: {
 				status: "blocked",
 				blockers: [
@@ -147,11 +147,11 @@ describe("worker completion normalization", () => {
 			},
 		});
 		const failed = normalizeWorkerCompletion({
-			workerStart: workerStart({ status: "failed", error: "spawn failed" }),
+			worker: workerObservation({ status: "failed", error: "spawn failed" }),
 			output: "plain text is not structured JSON",
 		});
 		const cancelled = normalizeWorkerCompletion({
-			workerStart: workerStart({
+			worker: workerObservation({
 				status: "cancelled",
 				error: "assignment cancelled",
 			}),
@@ -171,11 +171,11 @@ describe("worker completion normalization", () => {
 
 	it("fails invalid fenced CodeWiki worker reports", () => {
 		const result = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: "```codewiki-worker-report\nnot json\n```",
 		});
 		const arrayReport = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: "```codewiki-worker-report\n[]\n```",
 		});
 
@@ -193,7 +193,7 @@ describe("worker completion normalization", () => {
 
 	it("fails ambiguous completions with multiple worker reports", () => {
 		const result = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: [
 				"```codewiki-worker-report",
 				JSON.stringify({ status: "completed", changedFiles: ["src/a.ts"] }),
@@ -213,7 +213,7 @@ describe("worker completion normalization", () => {
 
 	it("fails worker reports with invalid status values", () => {
 		const result = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: `\`\`\`codewiki-worker-report\n${JSON.stringify({
 				status: "completed | blocked | failed | cancelled",
 				changedFiles: ["src/runtime/workers/reports.ts"],
@@ -229,7 +229,7 @@ describe("worker completion normalization", () => {
 
 	it("guards completed worker output without implementation evidence", () => {
 		const result = normalizeWorkerCompletion({
-			workerStart: workerStart(),
+			worker: workerObservation(),
 			output: { status: "completed", message: "Looks done." },
 		});
 
@@ -240,7 +240,7 @@ describe("worker completion normalization", () => {
 		);
 	});
 
-	it("collects worker output files in worker-start order", async () => {
+	it("collects worker output files in execution order", async () => {
 		const base = join(process.cwd(), ".tmp-worktrees/pi-worker-reports");
 		await mkdir(base, { recursive: true });
 		const root = await mkdtemp(join(base, "run-"));
@@ -256,12 +256,12 @@ describe("worker completion normalization", () => {
 			);
 
 			const completions = await collectWorkerOutputFiles([
-				workerStart({
+				workerObservation({
 					workUnitId: "WU-a",
 					workerId: "worker-a",
 					outputFile: firstOutput,
 				}),
-				workerStart({
+				workerObservation({
 					workUnitId: "WU-b",
 					workerId: "worker-b",
 					outputFile: missingOutput,
@@ -273,7 +273,7 @@ describe("worker completion normalization", () => {
 				completions[0].output.includes("codewiki-worker-report"),
 				true,
 			);
-			assert.equal(completions[1].workerStart.outputFile, missingOutput);
+			assert.equal(completions[1].worker.outputFile, missingOutput);
 			assert.equal(results[0].status, "completed");
 			assert.deepEqual(results[0].proof?.changedPaths, [
 				"src/runtime/workers/reports.ts",
@@ -292,7 +292,7 @@ describe("worker completion normalization", () => {
 
 	it("fails collection when a worker did not provide an output file", async () => {
 		const completions = await collectWorkerOutputFiles([
-			workerStart({ workerId: "worker-no-output", outputFile: undefined }),
+			workerObservation({ workerId: "worker-no-output", outputFile: undefined }),
 		]);
 		const results = collectWorkerReports(completions);
 
@@ -307,17 +307,17 @@ describe("worker completion normalization", () => {
 		);
 	});
 
-	it("collects multiple completions in worker-start order", () => {
+	it("collects multiple completions in execution order", () => {
 		const results = collectWorkerReports([
 			{
-				workerStart: workerStart({ workUnitId: "WU-a", workerId: "worker-a" }),
+				worker: workerObservation({ workUnitId: "WU-a", workerId: "worker-a" }),
 				output: {
 					status: "completed",
 					changedFiles: ["src/runtime/workers/reports.ts"],
 				},
 			},
 			{
-				workerStart: workerStart({ workUnitId: "WU-b", workerId: "worker-b" }),
+				worker: workerObservation({ workUnitId: "WU-b", workerId: "worker-b" }),
 				output: { status: "failed", message: "check failed" },
 			},
 		]);

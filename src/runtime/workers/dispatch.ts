@@ -21,7 +21,7 @@ import type { WikiConfig } from "../../project/config.ts";
 import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import { buildWorkQueueView } from "../../views/work-queue.ts";
 import type { WorkState } from "../../work-state/types.ts";
-import { createRuntimeHandoffManifest } from "./handoff.ts";
+import { createImplementationWorkerPrompt } from "./prompt.ts";
 import {
 	IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION,
 	cleanupImplementationWorkerArtifacts,
@@ -772,53 +772,51 @@ function createDispatchPackets(
 	isolationKind: ImplementationWorkerAssignment["isolation"]["kind"],
 ): ImplementationWorkerDispatchPacket[] {
 	const claimEvents = runtime.batch?.events || [];
-	const handoff = createRuntimeHandoffManifest({ runtime, claimEvents });
-	const candidates = new Map(
-		runtime.plan.selected.map((candidate) => [candidate.workUnitId, candidate]),
-	);
 	const plans = new Map(
 		runtime.policy.worktrees.map((plan) => [plan.workUnitId, plan]),
 	);
-	return handoff.workers.map((worker) => {
+	return runtime.plan.selected.map((candidate) => {
 		const claim = claimEvents.find(
-			(event) => text(event.data?.workUnitId) === worker.workUnitId,
+			(event) => text(event.data?.workUnitId) === candidate.workUnitId,
 		);
-		const candidate = candidates.get(worker.workUnitId);
-		const plan = plans.get(worker.workUnitId);
-		if (!claim || !worker.claimId || !worker.worktree || !candidate || !plan) {
+		const claimId = text(claim?.data?.claimId);
+		const workerId = text(claim?.data?.workerId);
+		const plan = plans.get(candidate.workUnitId);
+		if (!claim || !claimId || !workerId || !plan?.worktree) {
 			throw new Error(
-				`Implementation worker dispatch could not bind ${worker.workUnitId}.`,
+				`Implementation worker dispatch could not bind ${candidate.workUnitId}.`,
 			);
 		}
+		const prompt = createImplementationWorkerPrompt({
+			...candidate,
+			worktree: plan.worktree,
+		});
 		const contextDigest = digest({
 			workStateDigest: workState.snapshotDigest,
-			workItemId: worker.workUnitId,
-			planningRefs: worker.planningRefs,
-			componentRefs: worker.componentRefs,
-			pathScopes: worker.pathScopes,
+			workItemId: candidate.workUnitId,
+			planningRefs: candidate.planningRefs,
+			componentRefs: candidate.componentRefs,
+			pathScopes: candidate.pathScopes,
 			traceRefs: candidate.traceRefs,
-			prompt: worker.sessionInput.prompt,
+			prompt,
 		});
-		const reportKey = digest({ claimId: worker.claimId, contextDigest }).slice(
-			7,
-			39,
-		);
+		const reportKey = digest({ claimId, contextDigest }).slice(7, 39);
 		const assignment: ImplementationWorkerAssignment = {
 			schemaVersion: IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
 			repoRoot,
-			assignmentId: worker.claimId,
-			workerId: worker.workerId,
-			workItemId: worker.workUnitId,
-			claimId: worker.claimId,
-			traceId: worker.traceId,
-			planningRefs: [...worker.planningRefs],
+			assignmentId: claimId,
+			workerId,
+			workItemId: candidate.workUnitId,
+			claimId,
+			traceId: candidate.traceId,
+			planningRefs: [...candidate.planningRefs],
 			traceRefs: [...candidate.traceRefs],
-			componentRefs: [...worker.componentRefs],
-			pathScopes: [...worker.pathScopes],
+			componentRefs: [...candidate.componentRefs],
+			pathScopes: [...candidate.pathScopes],
 			workStateDigest: workState.snapshotDigest,
-			sourceBaseRef: `git:${worker.worktree.baseSha || worker.worktree.baseRef || "HEAD"}`,
+			sourceBaseRef: `git:${plan.worktree.baseSha || plan.worktree.baseRef || "HEAD"}`,
 			contextDigest,
-			prompt: worker.sessionInput.prompt,
+			prompt,
 			reportPath: join(
 				repoRoot,
 				".codewiki",
@@ -828,12 +826,9 @@ function createDispatchPackets(
 			),
 			isolation: {
 				kind: isolationKind,
-				ref: `${isolationKind}:${digest(worker.worktree).slice(7)}`,
+				ref: `${isolationKind}:${digest(plan.worktree).slice(7)}`,
 			},
-			worktree: worker.worktree,
-			...(worker.executionPolicy
-				? { executionPolicy: worker.executionPolicy }
-				: {}),
+			worktree: plan.worktree,
 		};
 		assertImplementationWorkerAssignment(assignment);
 		return {

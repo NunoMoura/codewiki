@@ -14,17 +14,16 @@ import {
 import {
 	createPiProcessSessionFactory,
 	type PiProcessSessionFactoryOptions,
+	type WorkerSession,
+	type WorkerSessionFactory,
 } from "./process-session.ts";
 import {
 	collectWorkerDiscoveries,
 	collectWorkerOutputFiles,
 	collectWorkerReports,
 	type WorkerCompletionInput,
+	type WorkerExecutionObservation,
 } from "../../runtime/workers/reports.ts";
-import {
-	startWorkerAssignment,
-	type WorkerSessionFactory,
-} from "../../runtime/workers/start.ts";
 
 export interface PiProcessImplementationWorkerAdapterOptions {
 	process?: PiProcessSessionFactoryOptions;
@@ -67,36 +66,21 @@ async function executePiProcessWorker(
 		outputFile,
 	});
 	const sessionFactory = policySessionFactory(processFactory, assignment);
-	const workerStart = await startWorkerAssignment({
-		item: {
-			workUnitId: assignment.workItemId,
-			traceId: assignment.traceId,
-			title: assignment.workItemId,
-			planningRefs: [...assignment.planningRefs],
-			componentRefs: [...assignment.componentRefs],
-			pathScopes: [...assignment.pathScopes],
-			traceRefs: [...assignment.traceRefs],
-			...(assignment.worktree ? { worktree: assignment.worktree } : {}),
-		},
-		workerId: assignment.workerId,
-		claimId: assignment.claimId,
-		prompt: assignment.prompt,
+	const worker = await executePiWorkerSession(
+		assignment,
+		sessionFactory,
 		signal,
-		options: {
-			claimEvents: [],
-			sessionFactory,
-			promptOptions: options.promptOptions,
-		},
-	});
+		options.promptOptions,
+	);
 	let completions: WorkerCompletionInput[];
 	let implementationEvidence;
 	try {
 		await assertBoundedFile(outputFile, 2 * 1024 * 1024, "worker output");
-		completions = await collectWorkerOutputFiles([workerStart]);
+		completions = await collectWorkerOutputFiles([worker]);
 		implementationEvidence = collectWorkerReports(completions)[0];
 	} catch (error) {
-		if (workerStart.status !== "cancelled" || !isNotFound(error)) throw error;
-		completions = [{workerStart}];
+		if (worker.status !== "cancelled" || !isNotFound(error)) throw error;
+		completions = [{ worker }];
 		implementationEvidence = collectWorkerReports(completions)[0];
 	}
 	if (!implementationEvidence) {
@@ -110,13 +94,11 @@ async function executePiProcessWorker(
 		status: implementationWorkerReportStatus(implementationEvidence.status),
 		implementationEvidence,
 		...(discoveries.length > 0 ? {discoveries} : {}),
-		...(workerStart.sessionId ? { sessionId: workerStart.sessionId } : {}),
-		...(workerStart.sessionFile
-			? { sessionFile: workerStart.sessionFile }
-			: {}),
-		...(workerStart.outputFile ? { outputFile: workerStart.outputFile } : {}),
-		...(workerStart.pid ? { pid: workerStart.pid } : {}),
-		...(workerStart.error ? { error: workerStart.error } : {}),
+		...(worker.sessionId ? { sessionId: worker.sessionId } : {}),
+		...(worker.sessionFile ? { sessionFile: worker.sessionFile } : {}),
+		...(worker.outputFile ? { outputFile: worker.outputFile } : {}),
+		...(worker.pid ? { pid: worker.pid } : {}),
+		...(worker.error ? { error: worker.error } : {}),
 	} satisfies Omit<ImplementationWorkerReport, "reportRef">;
 	return persistImplementationWorkerReport(assignment, reportWithoutRef);
 }
@@ -125,6 +107,59 @@ function recoverPiProcessWorker(
 	assignment: ImplementationWorkerAssignment,
 ): Promise<ImplementationWorkerReport | undefined> {
 	return recoverImplementationWorkerReport(assignment);
+}
+
+async function executePiWorkerSession(
+	assignment: ImplementationWorkerAssignment,
+	sessionFactory: WorkerSessionFactory,
+	signal: AbortSignal,
+	promptOptions: unknown,
+): Promise<WorkerExecutionObservation> {
+	let session: WorkerSession | undefined;
+	try {
+		session = await sessionFactory.create({
+			workerId: assignment.workerId,
+			workUnitId: assignment.workItemId,
+			traceId: assignment.traceId,
+			planningRefs: [...assignment.planningRefs],
+			pathScopes: [...assignment.pathScopes],
+			componentRefs: [...assignment.componentRefs],
+			worktree: assignment.worktree,
+			prompt: assignment.prompt,
+		});
+		await session.prompt(assignment.prompt, promptOptions, signal);
+		return workerObservation(assignment, session, "started");
+	} catch (error) {
+		return workerObservation(
+			assignment,
+			session,
+			signal.aborted ? "cancelled" : "failed",
+			signal.aborted
+				? "Implementation worker assignment cancelled."
+				: errorMessage(error),
+		);
+	}
+}
+
+function workerObservation(
+	assignment: ImplementationWorkerAssignment,
+	session: WorkerSession | undefined,
+	status: WorkerExecutionObservation["status"],
+	error?: string,
+): WorkerExecutionObservation {
+	return {
+		workUnitId: assignment.workItemId,
+		workerId: assignment.workerId,
+		traceId: assignment.traceId,
+		planningRefs: [...assignment.planningRefs],
+		claimId: assignment.claimId,
+		...(session?.sessionId ? { sessionId: session.sessionId } : {}),
+		...(session?.sessionFile ? { sessionFile: session.sessionFile } : {}),
+		...(session?.outputFile ? { outputFile: session.outputFile } : {}),
+		...(session?.pid ? { pid: session.pid } : {}),
+		status,
+		...(error ? { error } : {}),
+	};
 }
 
 function policySessionFactory(
@@ -155,6 +190,10 @@ async function assertBoundedFile(
 	} catch (error) {
 		if (!isNotFound(error)) throw error;
 	}
+}
+
+function errorMessage(error: unknown): string {
+	return error instanceof Error ? error.message : String(error);
 }
 
 function isNotFound(error: unknown): boolean {

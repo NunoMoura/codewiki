@@ -5,7 +5,6 @@ import {
 	createRuntimeClaimReleaseEvent,
 } from "./events.ts";
 import {
-	createCodewikiHostError,
 	hostErrorData,
 	type CodewikiHostError,
 } from "../../error-handling/host-errors.ts";
@@ -38,23 +37,6 @@ export interface RuntimeWorkUnitClaimEventOptions {
 export interface RuntimeWorkUnitClaimEventBatch {
 	events: TraceEvent[];
 	nextSequenceByTrace: Record<string, number>;
-}
-
-export interface RuntimeFailedWorkerStartInput {
-	traceId: string;
-	workerId: string;
-	workUnitId: string;
-	planningRefs: string[];
-	error?: string;
-	hostError?: CodewikiHostError;
-	sessionId?: string;
-	sessionFile?: string;
-}
-
-export interface RuntimeFailedWorkerStartReleaseOptions {
-	createdAt: string;
-	nextSequenceByTrace: Record<string, number>;
-	releaseIdPrefix?: string;
 }
 
 export interface RuntimeWorkerCompletionReleaseInput {
@@ -101,24 +83,6 @@ export function createRuntimeWorkUnitClaimEvents(
 		claimEventForCandidate({
 			item,
 			index,
-			options,
-			nextSequenceByTrace,
-		}),
-	);
-	return { events, nextSequenceByTrace };
-}
-
-export function createRuntimeFailedWorkerStartReleaseEvents(
-	failures: RuntimeFailedWorkerStartInput[],
-	claimEvents: TraceEvent[],
-	options: RuntimeFailedWorkerStartReleaseOptions,
-): RuntimeWorkUnitClaimEventBatch {
-	const claims = claimMetadataByWorkUnit(claimEvents);
-	const nextSequenceByTrace = { ...options.nextSequenceByTrace };
-	const events = failures.map((failure) =>
-		failedWorkerStartReleaseEvent({
-			failure,
-			claim: claims.get(claimKey(failure.traceId, failure.workUnitId)),
 			options,
 			nextSequenceByTrace,
 		}),
@@ -192,12 +156,6 @@ interface RuntimeClaimMetadataIndexes {
 	byWorkUnitId: Map<string, RuntimeClaimMetadata>;
 }
 
-function claimMetadataByWorkUnit(
-	events: TraceEvent[],
-): Map<string, RuntimeClaimMetadata> {
-	return claimMetadataIndexes(events).byWorkUnit;
-}
-
 function claimMetadataIndexes(
 	events: TraceEvent[],
 ): RuntimeClaimMetadataIndexes {
@@ -239,60 +197,6 @@ function claimMetadata(
 		planningRefs: stringList(event.data?.planningRefs),
 		pathScopes: stringList(event.data?.pathScopes),
 	};
-}
-
-function failedWorkerStartReleaseEvent(input: {
-	failure: RuntimeFailedWorkerStartInput;
-	claim?: RuntimeClaimMetadata;
-	options: RuntimeFailedWorkerStartReleaseOptions;
-	nextSequenceByTrace: Record<string, number>;
-}): TraceEvent {
-	const sequence = nextTraceSequence(
-		input.nextSequenceByTrace,
-		input.failure.traceId,
-	);
-	const planningRefs = input.claim?.planningRefs.length
-		? input.claim.planningRefs
-		: input.failure.planningRefs;
-	const pathScopes = input.claim?.pathScopes || [];
-	return createRuntimeClaimReleaseEvent({
-		traceId: input.failure.traceId,
-		id: failedStartReleaseId(input.failure, sequence, input.options),
-		parentId: input.claim?.parentId || null,
-		sequence,
-		createdAt: input.options.createdAt,
-		event: "runtime.work_unit.claim.released",
-		claimId: input.claim?.claimId,
-		workerId: input.failure.workerId,
-		workUnitId: input.failure.workUnitId,
-		planningRefs,
-		pathScopes,
-		reason: "worker_start_failed",
-		data: {
-			status: "failed",
-			failurePhase: "worker_start",
-			hostError: hostErrorData(
-				input.failure.hostError ||
-					createCodewikiHostError({
-						role: "worker",
-						kind: "spawn_failed",
-						traceId: input.failure.traceId,
-						workUnitId: input.failure.workUnitId,
-						workerId: input.failure.workerId,
-						claimId: input.claim?.claimId,
-						message: input.failure.error || "Worker failed to start.",
-						suggestedAction: "release_claim",
-					}),
-			),
-			...(input.failure.error ? { error: input.failure.error } : {}),
-			...(input.failure.sessionId
-				? { sessionId: input.failure.sessionId }
-				: {}),
-			...(input.failure.sessionFile
-				? { sessionFile: input.failure.sessionFile }
-				: {}),
-		},
-	});
 }
 
 function workerCompletionReleaseEvent(input: {
@@ -404,14 +308,6 @@ function workerCompletionReleaseId(
 	options: RuntimeWorkerCompletionReleaseOptions,
 ): string {
 	return `${options.releaseIdPrefix || `${traceId}:runtime:release`}:${completion.workUnitId}:${sequence}`;
-}
-
-function failedStartReleaseId(
-	failure: RuntimeFailedWorkerStartInput,
-	sequence: number,
-	options: RuntimeFailedWorkerStartReleaseOptions,
-): string {
-	return `${options.releaseIdPrefix || `${failure.traceId}:runtime:release`}:${failure.workUnitId}:${sequence}`;
 }
 
 function claimKey(traceId: string, workUnitId: string): string {

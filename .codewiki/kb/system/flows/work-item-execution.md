@@ -11,7 +11,7 @@ codewiki_relationships:
 ---
 # Work Item Execution
 
-Runtime grants one exact Work Item claim, creates one isolated worktree, and dispatches either Managed Execution or an admitted MCP Agent Client assignment. The producer reads only permitted context and mutates only the assigned workbench. Every operation binds project, Change, attempt, claim, workbench, expected tree, idempotency, and bounded capability.
+Runtime grants one exact Work Item claim, creates and verifies one isolated worktree, persists one exact Assignment packet, and schedules either Managed Execution or an admitted MCP Agent Client operation through a durable coordinator job. The producer reads only permitted context and mutates only the assigned workbench. Every operation binds project, Change, attempt, claim, workbench, expected tree, idempotency, and bounded capability. Missing worktree custody blocks dispatch before producer invocation; no direct session starter or manual Host handoff may substitute for the job.
 
 Managed Pi work returns a complete execution receipt. MCP-mediated work returns exact admitted-operation and workbench custody without claiming complete Agent Host prompt or loop proof. Runtime records one Candidate Manifest, integrates only fresh compatible output by expected-head CAS, and invokes Verification for the combined Candidate.
 

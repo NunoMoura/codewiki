@@ -7,10 +7,23 @@ import type {
 	ImplementationWorkerBlockerInput,
 	ImplementationWorkerReportInput,
 } from "../../implementation/workers.ts";
-import type { WorkerStartResult } from "./start.ts";
+
+export interface WorkerExecutionObservation {
+	workUnitId: string;
+	workerId: string;
+	traceId: string;
+	planningRefs: string[];
+	claimId?: string;
+	sessionId?: string;
+	sessionFile?: string;
+	outputFile?: string;
+	pid?: number;
+	status: "started" | "failed" | "cancelled";
+	error?: string;
+}
 
 export interface WorkerCompletionInput {
-	workerStart: WorkerStartResult;
+	worker: WorkerExecutionObservation;
 	output?: unknown;
 	error?: unknown;
 }
@@ -24,7 +37,7 @@ const WORKER_REPORT_FENCE =
 	/```[ \t]*(?:codewiki-worker-report|json[ \t]+codewiki-worker-report)[^\n]*\n([\s\S]*?)\n?```/gi;
 
 export async function collectWorkerOutputFiles(
-	workers: WorkerStartResult[],
+	workers: WorkerExecutionObservation[],
 ): Promise<WorkerCompletionInput[]> {
 	return Promise.all(workers.map(collectWorkerOutputFile));
 }
@@ -53,23 +66,23 @@ export function collectWorkerDiscoveries(
 }
 
 async function collectWorkerOutputFile(
-	workerStart: WorkerStartResult,
+	worker: WorkerExecutionObservation,
 ): Promise<WorkerCompletionInput> {
-	if (!workerStart.outputFile) {
+	if (!worker.outputFile) {
 		return {
-			workerStart,
-			error: `Worker completion output file is missing for worker ${workerStart.workerId}.`,
+			worker,
+			error: `Worker completion output file is missing for worker ${worker.workerId}.`,
 		};
 	}
 	try {
 		return {
-			workerStart,
-			output: await readFile(workerStart.outputFile, "utf8"),
+			worker,
+			output: await readFile(worker.outputFile, "utf8"),
 		};
 	} catch (error) {
 		return {
-			workerStart,
-			error: `Worker completion output file is unreadable: ${workerStart.outputFile}: ${errorMessage(error)}`,
+			worker,
+			error: `Worker completion output file is unreadable: ${worker.outputFile}: ${errorMessage(error)}`,
 		};
 	}
 }
@@ -81,14 +94,13 @@ export function normalizeWorkerCompletion(
 	const data = parsed.data;
 	const status = completionStatus(input, parsed);
 	return guardEmptyCompletedWorkerEvidence({
-		workerId: input.workerStart.workerId,
-		workUnitId: input.workerStart.workUnitId,
+		workerId: input.worker.workerId,
+		workUnitId: input.worker.workUnitId,
 		planningRefs: completionPlanningRefs(input, data),
 		status,
-		...(input.workerStart.claimId || text(data.claimId ?? data.claim_id)
+		...(input.worker.claimId || text(data.claimId ?? data.claim_id)
 			? {
-					claimId:
-						input.workerStart.claimId || text(data.claimId ?? data.claim_id),
+					claimId: input.worker.claimId || text(data.claimId ?? data.claim_id),
 				}
 			: {}),
 		...completionSession(input, data),
@@ -182,12 +194,8 @@ function completionStatus(
 	input: WorkerCompletionInput,
 	parsed: ParsedCompletionOutput,
 ): ImplementationWorkerReportInput["status"] {
-	if (input.workerStart.status === "cancelled") return "cancelled";
-	if (
-		input.error ||
-		input.workerStart.status === "failed" ||
-		parsed.parseError
-	) {
+	if (input.worker.status === "cancelled") return "cancelled";
+	if (input.error || input.worker.status === "failed" || parsed.parseError) {
 		return "failed";
 	}
 	const status = text(parsed.data.status).toLowerCase();
@@ -204,7 +212,7 @@ function completionPlanningRefs(
 		...stringList(data.planning_refs),
 		text(data.workUnitRef ?? data.work_unit_ref),
 	]);
-	return refs.length > 0 ? refs : [...input.workerStart.planningRefs];
+	return refs.length > 0 ? refs : [...input.worker.planningRefs];
 }
 
 function completionSession(
@@ -214,11 +222,11 @@ function completionSession(
 	return {
 		...optionalTextField(
 			"sessionId",
-			data.sessionId ?? data.session_id ?? input.workerStart.sessionId,
+			data.sessionId ?? data.session_id ?? input.worker.sessionId,
 		),
 		...optionalTextField(
 			"sessionFile",
-			data.sessionFile ?? data.session_file ?? input.workerStart.sessionFile,
+			data.sessionFile ?? data.session_file ?? input.worker.sessionFile,
 		),
 	};
 }
@@ -238,7 +246,7 @@ function completionMessage(
 		...objectList<ImplementationWorkerBlockerInput>(data.blockers).map(
 			(blocker) => text(blocker.message),
 		),
-		input.workerStart.error,
+		input.worker.error,
 		errorMessage(input.error),
 	]
 		.filter(Boolean)

@@ -15,10 +15,7 @@ import {
 	readTrace,
 	traceFilePath,
 } from "../../src/api/traces.ts";
-import {
-	createRuntimeFailedWorkerStartReleaseEvents,
-	createRuntimeWorkerCompletionReleaseEvents,
-} from "../../src/runtime/claims/work-unit-events.ts";
+import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/claims/work-unit-events.ts";
 import {
 	appendRuntimeLeaseExpirations,
 	planRuntimeLeaseExpirations,
@@ -122,57 +119,6 @@ describe("runtime claim events", () => {
 
 		const queue = buildWorkQueueView({ records: [planning, claim, release] });
 		assert.equal(queue.items[0].id, "WU-runtime");
-		assert.equal(queue.items[0].status, "ready");
-	});
-
-	it("creates failed-start release events with worker provenance", () => {
-		const planning = planningEvent();
-		const planningRef = planningWorkRef(planning);
-		const claim = createRuntimeClaimEvent({
-			traceId: "TRACE-runtime",
-			id: "TRACE-runtime:runtime:claim:1",
-			parentId: planningRef,
-			sequence: 2,
-			createdAt: "2026-06-11T00:00:02.000Z",
-			claimId: "claim-WU-runtime",
-			workerId: "worker-1",
-			workUnitId: "WU-runtime",
-			planningRefs: [planningRef],
-			pathScopes: ["src/runtime"],
-		});
-		const batch = createRuntimeFailedWorkerStartReleaseEvents(
-			[
-				{
-					traceId: "TRACE-runtime",
-					workerId: "worker-1",
-					workUnitId: "WU-runtime",
-					planningRefs: [planningRef],
-					error: "spawn failed",
-					sessionId: "session-1",
-					sessionFile: "/tmp/session-1.jsonl",
-				},
-			],
-			[claim],
-			{
-				createdAt: "2026-06-11T00:00:03.000Z",
-				nextSequenceByTrace: { "TRACE-runtime": 3 },
-			},
-		);
-		const release = batch.events[0];
-
-		assertValidTraceRecord(release);
-		assert.equal(release.event, "runtime.work_unit.claim.released");
-		assert.equal(release.parentId, claim.id);
-		assert.equal(release.sequence, 3);
-		assert.equal(batch.nextSequenceByTrace["TRACE-runtime"], 4);
-		assert.equal(release.data?.claimId, "claim-WU-runtime");
-		assert.equal(release.data?.reason, "worker_start_failed");
-		assert.equal(release.data?.failurePhase, "worker_start");
-		assert.equal(release.data?.error, "spawn failed");
-		assert.equal(release.data?.sessionId, "session-1");
-		assert.equal(release.data?.sessionFile, "/tmp/session-1.jsonl");
-		assert.equal(release.refs.includes("/tmp/session-1.jsonl"), false);
-		const queue = buildWorkQueueView({ records: [planning, claim, release] });
 		assert.equal(queue.items[0].status, "ready");
 	});
 

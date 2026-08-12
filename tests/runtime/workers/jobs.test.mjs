@@ -241,6 +241,37 @@ test("coordinator service drains active workers into cancelled reports", async (
 	}
 });
 
+test("implementation worker jobs reject assignments without isolated worktree custody", async () => {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-worker-custody-"));
+	const coordinator = new ProjectCoordinator(root);
+	const input = assignment(root, "missing-worktree", "src/runtime/**");
+	delete input.worktree;
+	let executions = 0;
+	try {
+		assert.throws(
+			() =>
+				scheduleImplementationWorkerAssignments({
+					coordinator,
+					adapter: {
+						async recover() {
+							return undefined;
+						},
+						async execute(candidate) {
+							executions += 1;
+							return result(candidate);
+						},
+					},
+					assignments: [input],
+				}),
+			/Implementation worker assignment requires isolated worktree custody\./,
+		);
+		assert.equal(executions, 0);
+	} finally {
+		coordinator.close();
+		await rm(root, { recursive: true, force: true });
+	}
+});
+
 test("implementation worker batches reject repeated Work Items", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-worker-duplicate-"));
 	const coordinator = new ProjectCoordinator(root);

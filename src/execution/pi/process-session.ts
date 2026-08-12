@@ -1,6 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
+import type { WorktreeRef } from "../../git/worktrees.ts";
 import { traceTmpPath } from "../../runtime/persistence/tmp.ts";
 import {
 	verifyWorkerExecutionUsage,
@@ -8,13 +9,64 @@ import {
 	type WorkerExecutionVerification,
 	type WorkerExecutionUsage,
 } from "../../runtime/workers/execution-policy.ts";
-import type {
-	WorkerSession,
-	WorkerSessionFactory,
-	WorkerSessionInput,
-	WorkerSessionResumeInput,
-	WorkerSessionResumeResult,
-} from "../../runtime/workers/start.ts";
+
+export interface WorkerSession {
+	prompt(
+		text: string,
+		options?: unknown,
+		signal?: AbortSignal,
+	): Promise<void>;
+	dispose?(): void | Promise<void>;
+	sessionId?: string;
+	sessionFile?: string;
+	outputFile?: string;
+	pid?: number;
+}
+
+export interface WorkerSessionFactory {
+	create(input: WorkerSessionInput): Promise<WorkerSession>;
+	resume?(
+		input: WorkerSessionResumeInput,
+	): Promise<WorkerSessionResumeResult> | WorkerSessionResumeResult;
+}
+
+export type WorkerSessionResumeState =
+	| "running"
+	| "completed"
+	| "failed"
+	| "detached";
+
+export interface WorkerSessionResumeInput {
+	workerId: string;
+	workUnitId: string;
+	traceId: string;
+	sessionId?: string;
+	sessionFile?: string;
+	outputFile?: string;
+	pid?: number;
+	executionPolicy?: WorkerExecutionPolicySnapshot;
+}
+
+export interface WorkerSessionResumeResult {
+	state: WorkerSessionResumeState;
+	sessionId?: string;
+	sessionFile?: string;
+	outputFile?: string;
+	pid?: number;
+	message?: string;
+}
+
+export interface WorkerSessionInput {
+	workerId: string;
+	workUnitId: string;
+	traceId: string;
+	planningRefs: string[];
+	pathScopes: string[];
+	componentRefs: string[];
+	worktree?: WorktreeRef;
+	executionPolicy?: WorkerExecutionPolicySnapshot;
+	prompt: string;
+}
 
 export interface PiModelInvocation {
 	provider: string;

@@ -387,7 +387,7 @@ describe("wiki_implement core facade", () => {
 			).snapshotDigest;
 			const workerReports = collectWorkerReports([
 				{
-					workerStart: {
+					worker: {
 						workerId: "pi-worker-001",
 						workUnitId: "WU-implement",
 						traceId,

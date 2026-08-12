@@ -170,9 +170,7 @@ function containerEnvelope(
 			...assignment,
 			repoRoot: "/workspace",
 			reportPath: "/codewiki-runtime/outcome.json",
-			worktree: assignment.worktree
-				? { ...assignment.worktree, path: "/workspace" }
-				: undefined,
+			worktree: { ...assignment.worktree, path: "/workspace" },
 		},
 		outcomePath: "/codewiki-runtime/outcome.json",
 	};

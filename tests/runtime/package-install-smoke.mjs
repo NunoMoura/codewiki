@@ -143,9 +143,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "policy.js")), fals
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "policy.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "implementation-adapter.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "execution-policy.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "prompt.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "reports.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "handoff.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "handoff.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "verification", "runtime.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "verification", "custom-checks", "runtime.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "verification", "custom-checks", "runtime.d.ts")), true);
