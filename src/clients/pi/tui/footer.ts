@@ -4,7 +4,6 @@ import {
 	startCodewikiDashboardServer,
 } from "../../../dashboard/server.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
-import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import {
 	resolveCodewikiExtensionIdentity,
 	type CodewikiExtensionIdentity,
@@ -23,9 +22,7 @@ export function registerCodewikiFooter(
 	connectProjectCoordinator = true,
 ): void {
 	if (typeof pi.on !== "function") return;
-	let sessionGeneration = 0;
 	pi.on("session_shutdown", async (_event, ctx) => {
-		sessionGeneration += 1;
 		const projectRoot = await resolveEventProjectRoot(ctx);
 		if (projectRoot) {
 			await closeInProcessCodewikiDashboardServer(projectRoot).catch(
@@ -35,7 +32,6 @@ export function registerCodewikiFooter(
 		}
 	});
 	pi.on("session_start", async (event, ctx) => {
-		const generation = ++sessionGeneration;
 		const cwd = typeof ctx.cwd === "string" ? ctx.cwd : process.cwd();
 		const projectRoot = await resolveEventProjectRoot(ctx);
 		const identity = resolveCodewikiExtensionIdentity(
@@ -51,11 +47,6 @@ export function registerCodewikiFooter(
 					keepAlive: ctx.mode === "tui",
 					inProcess: true,
 					persistent: false,
-					sessionActionControl: createPiDashboardSessionActionControl(
-						pi,
-						ctx,
-						() => generation === sessionGeneration,
-					),
 					previewControl: piPreviewControl(projectRoot),
 					projectCoordinatorClient: connectProjectCoordinator,
 				}).catch(() => undefined),

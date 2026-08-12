@@ -979,7 +979,7 @@ function renderTracePipelineCard(entry, index) {
 	const head = document.createElement('div'); head.className = 'trace-head';
 	const title = document.createElement('button'); title.type = 'button'; title.className = 'trace-title-button'; text(title, trace.title && trace.title !== trace.traceId ? trace.title : 'Untitled Change');
 	title.onclick = function() { openEntryOverview(entry, index); };
-	const headActions = document.createElement('div'); headActions.className = 'trace-head-actions'; headActions.append(renderSprintActions(entry), renderTraceOptions(entry, index));
+	const headActions = document.createElement('div'); headActions.className = 'trace-head-actions'; headActions.append(renderTraceOptions(entry, index));
 	head.append(title, headActions); row.append(head);
 	const now = document.createElement('div'); now.className = 'trace-now'; text(now, traceStateText(entry)); row.append(now);
 	if (trace.sprintPlan?.knowledgeTopics?.length) row.append(renderKnowledgeTopics(trace.sprintPlan.knowledgeTopics));
@@ -1021,44 +1021,6 @@ function openEntryOverview(entry, index) {
 	if (entry.kind === 'trace') detailTabs.set(entry.trace.traceId, 'overview');
 	render();
 	focusSelectedPipelineCard();
-}
-function renderSprintActions(entry) {
-	const details = document.createElement('details'); details.className = 'card-options sprint-actions';
-	const summary = document.createElement('summary'); summary.setAttribute('aria-label', 'Change actions'); summary.title = 'Change actions'; text(summary, '+');
-	const panel = document.createElement('div'); panel.className = 'card-options-panel';
-	const actions = document.createElement('div'); actions.className = 'options-actions';
-	const actionState = state && state.sessionActions;
-	[
-		['resume', 'Resume'],
-		['change', 'Change'],
-		['resolve_blocker', 'Resolve Blocker'],
-	].forEach(function(action) {
-		const button = document.createElement('button'); button.type = 'button'; button.className = 'options-action'; text(button, action[1]);
-		button.disabled = !actionState?.available;
-		button.title = actionState?.available ? action[1] + ' in active Pi session' : actionState?.unavailableReason || 'Active Pi session bridge unavailable.';
-		button.onclick = function(event) { event.preventDefault(); details.open = false; void executeSessionAction(action[0], entry.trace.traceId); };
-		actions.append(button);
-	});
-	const note = document.createElement('div'); note.className = 'change-authority';
-	text(note, actionState?.available ? 'Actions send one allowlisted Change-scoped user message to this active Pi session. Delivery is not approval or trace mutation.' : actionState?.unavailableReason || 'Open this dashboard from the active Pi TUI session to use Change actions.');
-	panel.append(actions, note); details.append(summary, panel); return details;
-}
-async function executeSessionAction(action, traceId) {
-	const actionState = state && state.sessionActions;
-	if (!actionState?.available) return;
-	const command = { commandId: 'dashboard-session-' + crypto.randomUUID(), traceId: traceId, action: action, expectedStateDigest: actionState.stateDigest };
-	text(els.status, 'delivering Change action');
-	try {
-		const response = await fetch('/api/session-actions/commands?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command) });
-		const result = await response.json();
-		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
-		state.sessionActions = result.state;
-		text(els.status, 'delivered to Pi · ' + result.receipt.receiptId.slice(0, 19));
-		render();
-	} catch (error) {
-		text(els.status, 'Change action rejected · ' + (error && error.message ? error.message : String(error)));
-		await load();
-	}
 }
 async function executePreviewAction(action, binding, preview) {
 	if (!binding) return;

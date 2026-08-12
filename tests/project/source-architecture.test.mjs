@@ -164,9 +164,13 @@ describe("source architecture", () => {
 		}
 		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
 		assert.equal(existsSync(join(sourceRoot, "dashboard", "assets")), false);
-		for (const name of ["daemon.ts", "health.ts", "index.ts"]) {
+		for (const name of ["daemon.ts", "health.ts", "index.ts", "session-actions.ts"]) {
 			assert.equal(existsSync(join(sourceRoot, "dashboard", name)), false, name);
 		}
+		assert.equal(
+			existsSync(join(sourceRoot, "clients", "pi", "dashboard-session-actions.ts")),
+			false,
+		);
 		assert.equal(existsSync(join(sourceRoot, "clients", "app", "shell.ts")), true);
 		assert.equal(existsSync(join(sourceRoot, "host", "app", "daemon.ts")), true);
 		assert.equal(

@@ -26,7 +26,6 @@ import {
 	startCodewikiDashboardServer,
 } from "../../../dashboard/server.ts";
 import { stopProjectCoordinatorService } from "../../../runtime/coordinator/service.ts";
-import { createPiDashboardSessionActionControl } from "../dashboard-session-actions.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
 import {
 	createPiProjectServiceClients,
@@ -136,7 +135,6 @@ async function dashboardCommand(
 	const result = await startDashboard(
 		ctx,
 		options,
-		pi,
 		connectProjectCoordinator,
 	);
 	emitCommandOutput(
@@ -153,7 +151,6 @@ async function dashboardCommand(
 async function startDashboard(
 	ctx: CodewikiExtensionContext,
 	options: DashboardCommandOptions,
-	pi: CodewikiExtensionApi,
 	connectProjectCoordinator: boolean,
 ): Promise<DashboardCommandResult> {
 	const root = await requireCodewikiRoot(ctx);
@@ -180,7 +177,6 @@ async function startDashboard(
 		keepAlive: ctx.mode === "tui",
 		inProcess: true,
 		persistent: false,
-		sessionActionControl: createPiDashboardSessionActionControl(pi, ctx),
 		previewControl: piPreviewControl(root),
 		projectCoordinatorClient: connectProjectCoordinator,
 	});

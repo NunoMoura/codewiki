@@ -55,10 +55,6 @@ import {
 	createDefaultDashboardConfigControl,
 	type DashboardConfigControl,
 } from "./config-control.ts";
-import {
-	createDashboardSessionActionControl,
-	type DashboardSessionActionControl,
-} from "./session-actions.ts";
 import { DashboardControlError } from "./control-error.ts";
 import {
 	assertInstalledCodewikiRuntimeCurrent,
@@ -69,7 +65,7 @@ import {
 	type CodewikiDashboardState,
 } from "./state.ts";
 
-export interface CodewikiDashboardServerOptions {
+interface CodewikiDashboardServerOptions {
 	repoRoot: string;
 	open?: boolean;
 	keepAlive?: boolean;
@@ -77,7 +73,6 @@ export interface CodewikiDashboardServerOptions {
 	inProcess?: boolean;
 	changeControl?: DashboardChangeControl;
 	configControl?: DashboardConfigControl;
-	sessionActionControl?: DashboardSessionActionControl;
 	previewControl?: DashboardPreviewControl;
 	projectCoordinatorClient?: boolean;
 	projectCoordinatorConnector?: (
@@ -86,7 +81,7 @@ export interface CodewikiDashboardServerOptions {
 	) => Promise<ProjectCoordinatorRemoteClient>;
 }
 
-export interface CodewikiDashboardServerHandle {
+interface CodewikiDashboardServerHandle {
 	repoRoot: string;
 	url: string;
 	origin: string;
@@ -113,7 +108,6 @@ interface DashboardRuntime {
 	coordinatorEventsClosed: boolean;
 	changeControl: DashboardChangeControl;
 	configControl: DashboardConfigControl;
-	sessionActionControl: DashboardSessionActionControl;
 	previewControl: DashboardPreviewControl;
 	opened: boolean;
 	close(): Promise<void>;
@@ -462,7 +456,6 @@ async function startInProcessDashboardServer(
 		options.keepAlive ?? false,
 		options.changeControl,
 		options.configControl,
-		options.sessionActionControl,
 		options.previewControl,
 		{
 			connectCoordinator: options.projectCoordinatorClient ?? false,
@@ -635,7 +628,6 @@ async function createDashboardRuntime(
 	keepAlive = false,
 	providedChangeControl?: DashboardChangeControl,
 	providedConfigControl?: DashboardConfigControl,
-	providedSessionActionControl?: DashboardSessionActionControl,
 	providedPreviewControl?: DashboardPreviewControl,
 	options: {
 		connectCoordinator?: boolean;
@@ -671,12 +663,6 @@ async function createDashboardRuntime(
 	const configControl =
 		providedConfigControl ||
 		(await createDefaultDashboardConfigControl(repoRoot));
-	const sessionActionControl =
-		providedSessionActionControl ||
-		createDashboardSessionActionControl({
-			unavailableReason:
-				"Sprint actions require an active in-process Pi session bridge.",
-		});
 	const previewControl =
 		providedPreviewControl || unavailableDashboardPreviewControl();
 	const coordinatorConnector =
@@ -700,7 +686,6 @@ async function createDashboardRuntime(
 		coordinatorEventsClosed: false,
 		changeControl,
 		configControl,
-		sessionActionControl,
 		previewControl,
 		opened: false,
 		close: () => closeRuntime(runtime),
@@ -834,7 +819,6 @@ async function routeAuthorizedPost(
 	if (
 		url.pathname !== "/api/changes/commands" &&
 		url.pathname !== "/api/configuration/commands" &&
-		url.pathname !== "/api/session-actions/commands" &&
 		url.pathname !== "/api/previews/commands" &&
 		url.pathname !== "/api/shutdown"
 	) {
@@ -855,16 +839,6 @@ async function routeAuthorizedPost(
 	}
 	if (url.pathname === "/api/configuration/commands") {
 		writeJson(response, 200, await runtime.configControl.execute(command));
-		scheduleBroadcast(runtime);
-		scheduleCoordinatorObservation(runtime);
-		return true;
-	}
-	if (url.pathname === "/api/session-actions/commands") {
-		writeJson(
-			response,
-			200,
-			await runtime.sessionActionControl.execute(command),
-		);
 		scheduleBroadcast(runtime);
 		scheduleCoordinatorObservation(runtime);
 		return true;
@@ -988,7 +962,6 @@ async function readDashboardState(
 		knowledgeTopicDigests,
 		changes: await runtime.changeControl.status(),
 		configuration: await runtime.configControl.status(),
-		sessionActions: runtime.sessionActionControl.status(),
 		previews: [...previews],
 	});
 }

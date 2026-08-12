@@ -893,7 +893,7 @@ describe("Pi extension adapter", () => {
 				),
 			);
 			assert.equal(state.sprintsQueue[0].devLog.available, true);
-			assert.equal(state.sessionActions.available, true);
+			assert.equal(Object.hasOwn(state, "sessionActions"), false);
 			const actionUrl = new URL(opened.url);
 			actionUrl.hash = "";
 			actionUrl.pathname = "/api/session-actions/commands";
@@ -904,18 +904,10 @@ describe("Pi extension adapter", () => {
 					Origin: actionUrl.origin,
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-					commandId: "pi-dashboard-change-action",
-					traceId: "TRACE-pi",
-					action: "change",
-					expectedStateDigest: state.sessionActions.stateDigest,
-				}),
+				body: "{}",
 			});
-			assert.equal(actionResponse.status, 200);
-			assert.equal((await actionResponse.json()).receipt.deliveredAs, "steer");
-			assert.equal(pi.userMessages.length, 1);
-			assert.match(pi.userMessages[0].message, /linked mutable Change/);
-			assert.deepEqual(pi.userMessages[0].options, { deliverAs: "steer" });
+			assert.equal(actionResponse.status, 405);
+			assert.equal(pi.userMessages.length, 0);
 			assert.equal(state.sprintsQueue[0].devLog.entryCount, 1);
 			assert.equal(
 				state.sprintsQueue[0].devLog.items[0].action,

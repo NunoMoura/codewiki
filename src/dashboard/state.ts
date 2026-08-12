@@ -23,7 +23,6 @@ import { qualityIterationsFromTrace } from "../views/quality.ts";
 import { buildActivityFeed, type ActivityFeedItem } from "./activity-feed.ts";
 import type { DashboardChangesState } from "./changes-state.ts";
 import type { DashboardConfigState } from "./config-state.ts";
-import type { DashboardSessionActionState } from "./session-actions.ts";
 import {
 	projectDevLog,
 	type DashboardDevLogProjection,
@@ -253,7 +252,6 @@ export interface CodewikiDashboardState {
 	sprintsQueue: CodewikiSprintTrace[];
 	changes?: DashboardChangesState;
 	configuration?: DashboardConfigState;
-	sessionActions?: DashboardSessionActionState;
 	previews?: PreviewRuntimeStatus[];
 }
 
@@ -262,7 +260,6 @@ interface CodewikiDashboardProjectionContext {
 	devLogByTrace?: ReadonlyMap<string, DevLogEntry[]>;
 	changes?: DashboardChangesState;
 	configuration?: DashboardConfigState;
-	sessionActions?: DashboardSessionActionState;
 	previews?: PreviewRuntimeStatus[];
 	knowledgeTopicDigests?: ReadonlyMap<string, string>;
 }
@@ -325,9 +322,6 @@ export function buildCodewikiDashboardState(
 		sprintsQueue,
 		...(context.changes ? { changes: context.changes } : {}),
 		...(context.configuration ? { configuration: context.configuration } : {}),
-		...(context.sessionActions
-			? { sessionActions: context.sessionActions }
-			: {}),
 		...(context.previews ? { previews: context.previews } : {}),
 	};
 }

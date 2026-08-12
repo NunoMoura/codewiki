@@ -33,8 +33,8 @@ describe("CodeWiki App browser shell", () => {
 		assert.match(script, /function renderKnowledgeTopics/);
 		assert.match(script, /function renderKnowledgeAlignment/);
 		assert.match(script, /function knowledgeTopicLabel/);
-		assert.match(script, /function renderSprintActions/);
-		assert.match(script, /function executeSessionAction/);
+		assert.doesNotMatch(script, /function renderSprintActions/);
+		assert.doesNotMatch(script, /function executeSessionAction/);
 		assert.match(script, /filter\.startsWith\('topic:'\)/);
 		assert.match(script, /className = 'scope-group'/);
 		assert.match(script, /topic\.category\.localeCompare/);
@@ -91,12 +91,8 @@ describe("CodeWiki App browser shell", () => {
 		assert.match(CODEWIKI_APP_HTML, /Save configuration/);
 		assert.match(CODEWIKI_APP_HTML, /CONFIG_BUDGET_FIELDS/);
 		assert.match(CODEWIKI_APP_HTML, /config-route/);
-		assert.match(CODEWIKI_APP_HTML, /\['resume', 'Resume'\]/);
-		assert.match(CODEWIKI_APP_HTML, /\['change', 'Change'\]/);
-		assert.match(
-			CODEWIKI_APP_HTML,
-			/\['resolve_blocker', 'Resolve Blocker'\]/,
-		);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /\/api\/session-actions/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /Active Pi session bridge/);
 		assert.match(CODEWIKI_APP_HTML, /knowledge-alignment\.review_needed/);
 		assert.match(CODEWIKI_APP_HTML, /knowledge-alignment\.misaligned/);
 		assert.doesNotMatch(CODEWIKI_APP_HTML, /Close Dashboard/);
