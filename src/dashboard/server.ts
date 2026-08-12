@@ -47,14 +47,8 @@ import type { ProjectCoordinatorClientInput } from "../runtime/coordinator/proje
 import { connectEnsuredProjectCoordinatorClient } from "../runtime/coordinator/process.ts";
 import type { ProjectCoordinatorRemoteClient } from "../runtime/coordinator/service.ts";
 import { CODEWIKI_APP_HTML } from "../clients/app/shell.ts";
-import {
-	createDashboardChangeControl,
-	type DashboardChangeControl,
-} from "./change-control.ts";
-import {
-	createDefaultDashboardConfigControl,
-	type DashboardConfigControl,
-} from "./config-control.ts";
+import { loadDashboardChangesState } from "./changes-state.ts";
+import { loadDashboardConfigState } from "./config-state.ts";
 import { DashboardControlError } from "./control-error.ts";
 import {
 	assertInstalledCodewikiRuntimeCurrent,
@@ -71,8 +65,6 @@ interface CodewikiDashboardServerOptions {
 	keepAlive?: boolean;
 	persistent?: boolean;
 	inProcess?: boolean;
-	changeControl?: DashboardChangeControl;
-	configControl?: DashboardConfigControl;
 	previewControl?: DashboardPreviewControl;
 	projectCoordinatorClient?: boolean;
 	projectCoordinatorConnector?: (
@@ -106,8 +98,6 @@ interface DashboardRuntime {
 		input: ProjectCoordinatorClientInput,
 	) => Promise<ProjectCoordinatorRemoteClient>;
 	coordinatorEventsClosed: boolean;
-	changeControl: DashboardChangeControl;
-	configControl: DashboardConfigControl;
 	previewControl: DashboardPreviewControl;
 	opened: boolean;
 	close(): Promise<void>;
@@ -454,8 +444,6 @@ async function startInProcessDashboardServer(
 		options.repoRoot,
 		endpoint,
 		options.keepAlive ?? false,
-		options.changeControl,
-		options.configControl,
 		options.previewControl,
 		{
 			connectCoordinator: options.projectCoordinatorClient ?? false,
@@ -626,8 +614,6 @@ async function createDashboardRuntime(
 	repoRoot: string,
 	preferredEndpoint?: DashboardEndpoint,
 	keepAlive = false,
-	providedChangeControl?: DashboardChangeControl,
-	providedConfigControl?: DashboardConfigControl,
 	providedPreviewControl?: DashboardPreviewControl,
 	options: {
 		connectCoordinator?: boolean;
@@ -656,13 +642,6 @@ async function createDashboardRuntime(
 	}
 	const origin = `http://127.0.0.1:${address.port}`;
 	const endpoint = dashboardEndpoint(repoRoot, origin, token, address.port);
-	const dashboardActor = `dashboard:${process.pid}:${address.port}`;
-	const changeControl =
-		providedChangeControl ||
-		createDashboardChangeControl({ repoRoot, actor: dashboardActor });
-	const configControl =
-		providedConfigControl ||
-		(await createDefaultDashboardConfigControl(repoRoot));
 	const previewControl =
 		providedPreviewControl || unavailableDashboardPreviewControl();
 	const coordinatorConnector =
@@ -684,8 +663,6 @@ async function createDashboardRuntime(
 		coordinatorClient,
 		coordinatorConnector,
 		coordinatorEventsClosed: false,
-		changeControl,
-		configControl,
 		previewControl,
 		opened: false,
 		close: () => closeRuntime(runtime),
@@ -774,11 +751,11 @@ async function routeAuthorizedGet(
 		return true;
 	}
 	if (url.pathname === "/api/changes") {
-		writeJson(response, 200, await runtime.changeControl.status());
+		writeJson(response, 200, await loadDashboardChangesState(runtime.repoRoot));
 		return true;
 	}
 	if (url.pathname === "/api/configuration") {
-		writeJson(response, 200, await runtime.configControl.status());
+		writeJson(response, 200, await loadDashboardConfigState(runtime.repoRoot));
 		return true;
 	}
 	if (url.pathname === "/api/previews") {
@@ -817,8 +794,6 @@ async function routeAuthorizedPost(
 	url: URL,
 ): Promise<boolean> {
 	if (
-		url.pathname !== "/api/changes/commands" &&
-		url.pathname !== "/api/configuration/commands" &&
 		url.pathname !== "/api/previews/commands" &&
 		url.pathname !== "/api/shutdown"
 	) {
@@ -831,18 +806,6 @@ async function routeAuthorizedPost(
 		return true;
 	}
 	const command = await readJsonRequest(request);
-	if (url.pathname === "/api/changes/commands") {
-		writeJson(response, 200, await runtime.changeControl.execute(command));
-		scheduleBroadcast(runtime);
-		scheduleCoordinatorObservation(runtime);
-		return true;
-	}
-	if (url.pathname === "/api/configuration/commands") {
-		writeJson(response, 200, await runtime.configControl.execute(command));
-		scheduleBroadcast(runtime);
-		scheduleCoordinatorObservation(runtime);
-		return true;
-	}
 	if (url.pathname === "/api/previews/commands") {
 		const traceFiles = await readProjectTraceFiles(runtime.repoRoot);
 		writeJson(
@@ -960,8 +923,8 @@ async function readDashboardState(
 	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {
 		devLogByTrace,
 		knowledgeTopicDigests,
-		changes: await runtime.changeControl.status(),
-		configuration: await runtime.configControl.status(),
+		changes: await loadDashboardChangesState(repoRoot),
+		configuration: await loadDashboardConfigState(repoRoot),
 		previews: [...previews],
 	});
 }

@@ -21,7 +21,7 @@ import type {
 } from "../project/config.ts";
 import {canonicalJsonDigest} from "../utils/canonical-json.ts";
 
-export interface DashboardEditableConfig {
+export interface DashboardEffectiveConfig {
 	runtime: {
 		maxWorkers: number;
 		worktreeIsolation: WikiConfigWorktreeIsolation;
@@ -85,7 +85,7 @@ export interface DashboardConfigState {
 	restartGuidance: string;
 	previewProfiles: DashboardPreviewProfile[];
 	uiPreviewTargets: DashboardUiPreviewTarget[];
-	editable: DashboardEditableConfig;
+	effective: DashboardEffectiveConfig;
 	limits: DashboardConfigLimits;
 }
 
@@ -122,7 +122,7 @@ export async function loadDashboardConfigState(
 			...structuredClone(target),
 			digest: uiPreviewTargetDigest(target),
 		})),
-		editable: editableConfig(config),
+		effective: effectiveConfig(config),
 		limits: {
 			maxWorkers: DASHBOARD_CONFIG_MAX_WORKERS,
 			budgetMaxima: { ...DASHBOARD_CONFIG_BUDGET_MAXIMA },
@@ -146,7 +146,7 @@ export function dashboardConfigDigest(config: WikiConfig): string {
 	return wikiConfigDigest(config);
 }
 
-function editableConfig(config: WikiConfig): DashboardEditableConfig {
+function effectiveConfig(config: WikiConfig): DashboardEffectiveConfig {
 	return {
 		runtime: {
 			maxWorkers: config.runtime.maxWorkers,

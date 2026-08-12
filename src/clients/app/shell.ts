@@ -259,7 +259,7 @@ button { color: inherit; }
 .scope-option[aria-selected="true"] { color: var(--interactive); background: color-mix(in srgb, var(--interactive) 9%, #090909); }
 .scope-option .scope-count { background: transparent; color: var(--dim); padding-inline: 0; }
 .scope-option[aria-selected="true"] .scope-count { color: var(--interactive); }
-.add-change, .icon-button, .change-actions button, .dialog-close, .options-action {
+.icon-button, .dialog-close, .options-action {
 	border: 1px solid var(--line);
 	background: var(--panel-2);
 	color: var(--text);
@@ -268,25 +268,6 @@ button { color: inherit; }
 	cursor: pointer;
 	font: inherit;
 }
-.add-change {
-	flex: 0 0 auto;
-	height: 38px;
-	border-color: var(--logo-blue-hover);
-	background: var(--logo-blue-dark);
-	color: #fff;
-	font-weight: 900;
-	white-space: nowrap;
-	transition: background .14s ease, border-color .14s ease, transform .14s ease, box-shadow .14s ease;
-}
-.add-change:hover {
-	border-color: var(--interactive-hover);
-	background: var(--logo-blue-hover);
-	color: #fff;
-	transform: translateY(-1px);
-	box-shadow: 0 5px 14px rgba(0,0,0,.28);
-}
-.add-change:active { background: #294a55; transform: translateY(0); box-shadow: none; }
-.add-change:focus-visible { outline: 2px solid var(--interactive); outline-offset: 2px; }
 .icon-button { width: 38px; height: 38px; padding: 0; display: grid; place-items: center; color: var(--muted); font-size: 17px; }
 .icon-button:hover { border-color: var(--interactive-hover); color: var(--interactive-hover); }
 .icon-button:focus-visible { border-color: var(--interactive); color: var(--interactive); }
@@ -317,29 +298,9 @@ button { color: inherit; }
 .change-card section { border-left: 2px solid var(--line-strong); padding-left: 9px; display: grid; gap: 4px; }
 .change-card p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .change-identity, .change-authority { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
-.change-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .configuration-panel { border: 0; background: transparent; padding: 0; display: grid; gap: 12px; }
 .configuration-status { color: var(--muted); white-space: pre-wrap; }
-.configuration-form { display: grid; gap: 12px; }
-.config-group { margin: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 11px; display: grid; gap: 10px; background: #070707; }
-.config-group > legend { color: var(--interactive-hover); padding: 0 6px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; }
-.config-group-note, .config-hint { color: var(--muted); font-size: 11px; }
-.config-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 12px; }
-.config-control { min-width: 0; display: grid; gap: 4px; }
-.config-control > span:first-child { color: var(--text); font-size: 12px; }
-.config-control input, .config-control select { width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 7px; background: #050505; color: var(--text); padding: 7px 8px; }
-.config-control input:focus, .config-control select:focus { border-color: var(--interactive); outline: 1px solid color-mix(in srgb, var(--interactive) 45%, transparent); }
-.config-control input:disabled, .config-control select:disabled, .config-choice input:disabled + span { color: var(--dim); opacity: .7; }
-.config-choice { display: flex; align-items: center; gap: 7px; color: var(--text); font-size: 12px; }
-.config-choice input { accent-color: var(--interactive); }
-.config-route { border-left: 2px solid var(--interactive); padding-left: 10px; display: grid; gap: 9px; }
-.config-route-title { color: var(--interactive-hover); font-weight: 800; }
-.config-tools { display: flex; flex-wrap: wrap; gap: 7px 12px; }
-.config-actions { position: sticky; bottom: -14px; display: flex; align-items: center; gap: 9px; padding: 10px 0 0; background: linear-gradient(transparent, #0b0b0b 22%); }
-.config-save { border-color: var(--logo-blue-hover); background: var(--logo-blue-dark); color: #fff; font-weight: 900; }
-.config-save:hover { background: var(--logo-blue-hover); }
-.config-validation { color: var(--muted); font-size: 11px; }
-.config-validation.error { color: var(--check-failed); }
+.configuration-snapshot { margin: 0; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 11px; background: #070707; color: var(--text); white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.5 var(--mono); }
 .dashboard-dialog {
 	width: min(720px, calc(100vw - 28px));
 	max-height: calc(100vh - 28px);
@@ -770,7 +731,6 @@ details.terminal-block > .terminal-block-body { margin-top: 7px; }
 	.search-filter > summary { gap: 4px; padding-inline: 7px; }
 	.search-filter .scope-label { display: none; }
 	.scope-menu { width: min(220px, calc(100vw - 34px)); }
-	.add-change { height: 36px; padding-inline: 8px; }
 	.icon-button { width: 36px; height: 36px; }
 	.trace { padding: 9px; }
 	.trace-title-button, .trace-now { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
@@ -778,7 +738,6 @@ details.terminal-block > .terminal-block-body { margin-top: 7px; }
 	.trace-now { -webkit-line-clamp: 2; line-height: 1.35; }
 	.pipeline-rail { gap: 4px; }
 	.pipeline-segment { height: 12px; }
-	.config-grid { grid-template-columns: 1fr; }
 	.card-options-panel { width: calc(100vw - 34px); }
 	.kv { grid-template-columns: 1fr; gap: 3px; }
 	.footer-help { text-align: center; font-size: 11px; }
@@ -801,7 +760,6 @@ details.terminal-block > .terminal-block-body { margin-top: 7px; }
 						<div id="scope-menu" class="scope-menu" role="listbox" aria-label="Pipeline scope"></div>
 					</details>
 				</div>
-				<button id="draft-change" class="add-change" type="button">Add Change</button>
 				<button id="open-configuration" class="icon-button" type="button" aria-label="Dashboard settings" title="Dashboard settings">⚙</button>
 			</div>
 		</header>
@@ -846,7 +804,6 @@ const els = {
 	scopeMenu: document.getElementById('scope-menu'),
 	openConfiguration: document.getElementById('open-configuration'),
 	closeConfiguration: document.getElementById('close-configuration'),
-	draftChange: document.getElementById('draft-change'),
 };
 function text(node, value) { node.textContent = value == null ? '' : String(value); }
 function isBacklogChange(card) { return card.identity.status === 'pending' || card.identity.status === 'deferred'; }
@@ -995,7 +952,7 @@ function renderChangePipelineCard(entry, index) {
 	const head = document.createElement('div'); head.className = 'trace-head';
 	const title = document.createElement('button'); title.type = 'button'; title.className = 'trace-title-button'; text(title, card.question || card.identity.changeId);
 	title.onclick = function() { openEntryOverview(entry, index); };
-	head.append(title, renderChangeOptions(card)); row.append(head);
+	head.append(title); row.append(head);
 	const now = document.createElement('div'); now.className = 'trace-now'; text(now, 'Change — ' + changeCurrentAction(card)); row.append(now);
 	row.append(renderPipelineRail(changePipelineSegments(entry.stage, card), entry, index));
 	if (expandedEntryId === entry.id) row.append(renderChangeDetail(card));
@@ -1058,17 +1015,6 @@ function renderTraceOptions(entry, index) {
 	panel.append(actions);
 	details.append(summary, panel);
 	return details;
-}
-function renderChangeOptions(card) {
-	const details = document.createElement('details'); details.className = 'card-options';
-	const summary = document.createElement('summary'); summary.setAttribute('aria-label', 'Change options'); summary.title = 'Change options'; text(summary, '⋮');
-	const panel = document.createElement('div'); panel.className = 'card-options-panel';
-	const identity = document.createElement('div'); identity.className = 'change-identity'; text(identity, card.identity.changeId + ' · revision ' + card.identity.revision + ' · ' + card.identity.validationState);
-	const actions = document.createElement('div'); actions.className = 'change-actions';
-	if (card.identity.status === 'pending') actions.append(changeActionButton('Revise', function() { executeChangeCommand('revise', card); }));
-	if (card.identity.status !== 'accepted' && card.identity.status !== 'withdrawn') actions.append(changeActionButton('Validate', function() { executeChangeCommand('validate', card); }));
-	if (card.identity.status === 'pending' || card.identity.status === 'deferred') actions.append(changeActionButton('Withdraw', function() { executeChangeCommand('withdraw', card); }));
-	panel.append(identity, actions); details.append(summary, panel); return details;
 }
 async function copyText(value) {
 	try { await navigator.clipboard.writeText(value); text(els.status, 'copied'); }
@@ -1139,11 +1085,6 @@ function renderChangeDetail(card) {
 	(card.sections.agentOpinion.recommendations || []).forEach(function(item) { opinion.push(item.actor + ' recommends ' + item.value + ': ' + item.rationale); });
 	(card.sections.agentOpinion.concerns || []).forEach(function(item) { opinion.push('Concern: ' + item); });
 	node.append(changeSection('Agent opinion', opinion.length ? opinion : ['No agent assessment recorded.']));
-	const actions = document.createElement('div'); actions.className = 'change-actions';
-	if (card.identity.status === 'pending') actions.append(changeActionButton('Revise', function() { executeChangeCommand('revise', card); }));
-	if (card.identity.status !== 'accepted' && card.identity.status !== 'withdrawn') actions.append(changeActionButton('Validate', function() { executeChangeCommand('validate', card); }));
-	if (card.identity.status === 'pending' || card.identity.status === 'deferred') actions.append(changeActionButton('Withdraw', function() { executeChangeCommand('withdraw', card); }));
-	node.append(actions);
 	return node;
 }
 function changeSection(titleValue, values) {
@@ -1152,263 +1093,17 @@ function changeSection(titleValue, values) {
 	values.forEach(function(value) { const paragraph = document.createElement('p'); text(paragraph, value); sectionNode.append(paragraph); });
 	return sectionNode;
 }
-function changeActionButton(label, handler) {
-	const button = document.createElement('button'); button.type = 'button'; text(button, label); button.onclick = handler; return button;
-}
-async function executeChangeCommand(action, card) {
-	const changes = state && state.changes;
-	if (!changes) return;
-	const command = {
-		action: action,
-		commandId: 'dashboard-change-' + crypto.randomUUID(),
-		expectedStateDigest: changes.stateDigest,
-		expectedHead: changes.head,
-	};
-	if (card) {
-		command.changeId = card.identity.changeId;
-		command.expectedRecordRevision = card.identity.recordRevision;
-	}
-	if (action === 'draft' || action === 'revise') {
-		const raw = window.prompt(action === 'draft' ? 'Paste exact canonical Change JSON for a pending draft.' : 'Paste exact complete revised Change JSON.');
-		if (!raw) return;
-		try { command.change = JSON.parse(raw); } catch { text(els.status, 'invalid Change JSON'); return; }
-	}
-	if (action === 'withdraw') {
-		const reason = window.prompt('Reason for withdrawal:');
-		if (!reason) return;
-		command.reason = reason;
-	}
-	text(els.status, 'change command pending');
-	try {
-		const response = await fetch('/api/changes/commands?token=' + encodeURIComponent(token), {
-			method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command),
-		});
-		const result = await response.json();
-		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
-		state.changes = result.state;
-		text(els.status, 'completed · ' + result.receipt.receiptId);
-		render();
-	} catch (error) {
-		text(els.status, 'rejected · ' + (error && error.message ? error.message : String(error)));
-		await load();
-	}
-}
-const CONFIG_BUDGET_FIELDS = [
-	['maxSeconds', 'Maximum seconds'],
-	['maxIterations', 'Maximum iterations'],
-	['maxChangedFiles', 'Maximum changed files'],
-	['maxTraceBytes', 'Maximum trace bytes'],
-	['maxTokens', 'Maximum tokens'],
-	['maxCostUsd', 'Maximum cost (USD)'],
-	['maxLatencyMs', 'Maximum latency (ms)'],
-];
 function renderConfiguration() {
 	els.configuration.innerHTML = '';
 	const configuration = state && state.configuration;
 	if (!configuration) { const empty = document.createElement('div'); empty.className = 'empty'; text(empty, 'Execution configuration is unavailable.'); els.configuration.append(empty); return; }
 	const heading = document.createElement('h3'); text(heading, 'Execution configuration');
 	const status = document.createElement('div'); status.className = 'configuration-status';
-	text(status, 'Source: ' + configuration.sourcePath + '\nDigest: ' + configuration.configDigest + '\nValidation: ' + configuration.validation + '\n' + configuration.restartGuidance);
-	const form = document.createElement('form'); form.className = 'configuration-form'; form.id = 'configuration-form'; form.onsubmit = executeConfigCommand;
-	form.append(renderExecutionConfigGroup(configuration), renderBudgetConfigGroup(configuration), renderModelConfigGroup(configuration), renderHostConfigGroup(configuration), renderPreviewConfigGroup(configuration));
-	const actions = document.createElement('div'); actions.className = 'config-actions';
-	const save = document.createElement('button'); save.type = 'submit'; save.className = 'options-action config-save'; text(save, 'Save configuration');
-	const validation = document.createElement('span'); validation.id = 'config-validation'; validation.className = 'config-validation'; text(validation, 'Changes stay below active authority ceilings and require a full Pi restart when execution policy changes.');
-	actions.append(save, validation); form.append(actions);
-	const note = document.createElement('div'); note.className = 'change-authority'; text(note, 'Approval, stop-condition, credential, publication, controller, and semantic authority settings are not editable here.');
-	els.configuration.append(heading, status, form, note);
-}
-function configGroup(titleValue, noteValue) {
-	const group = document.createElement('fieldset'); group.className = 'config-group';
-	const legend = document.createElement('legend'); text(legend, titleValue); group.append(legend);
-	if (noteValue) { const note = document.createElement('div'); note.className = 'config-group-note'; text(note, noteValue); group.append(note); }
-	return group;
-}
-function configGrid() { const grid = document.createElement('div'); grid.className = 'config-grid'; return grid; }
-function renderPreviewConfigGroup(configuration) {
-	const group = configGroup('Live Preview profiles', 'Profiles are file/API configuration. Planning must freeze exact profile and canonical UI-target digests before execution.');
-	const profiles = configuration.previewProfiles || [];
-	if (!profiles.length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No preview profiles configured.'); group.append(empty); }
-	profiles.forEach(function(profile) {
-		const card = document.createElement('section'); card.className = 'execution-control';
-		const title = document.createElement('div'); title.className = 'preview-title'; text(title, profile.id + ' · ' + profile.runner.kind + ':' + profile.runner.script);
-		const grid = document.createElement('div'); grid.className = 'execution-control-grid';
-		[
-			['URL', profile.url + profile.readyPath],
-			['browser', profile.browser],
-			['auto open', profile.autoOpen ? 'enabled' : 'disabled'],
-			['digest', profile.digest],
-		].forEach(function(entry) {
-			const item = document.createElement('div'); item.className = 'execution-control-item';
-			const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
-			const value = document.createElement('div'); value.className = 'execution-control-value'; text(value, entry[1]);
-			item.append(label, value); grid.append(item);
-		});
-		card.append(title, grid); group.append(card);
-	});
-	const targets = configuration.uiPreviewTargets || [];
-	if (!targets.length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No canonical UI preview targets configured.'); group.append(empty); }
-	targets.forEach(function(target) {
-		const card = document.createElement('section'); card.className = 'execution-control';
-		const title = document.createElement('div'); title.className = 'preview-title'; text(title, target.uiRef + ' · ' + target.id);
-		const grid = document.createElement('div'); grid.className = 'execution-control-grid';
-		[
-			['profile', target.profileId],
-			['route', target.route],
-			['viewports', (target.viewports || []).join(', ')],
-			['scenario', target.scenario || 'default'],
-			['digest', target.digest],
-		].forEach(function(entry) {
-			const item = document.createElement('div'); item.className = 'execution-control-item';
-			const label = document.createElement('div'); label.className = 'execution-control-label'; text(label, entry[0]);
-			const value = document.createElement('div'); value.className = 'execution-control-value'; text(value, entry[1]);
-			item.append(label, value); grid.append(item);
-		});
-		card.append(title, grid); group.append(card);
-	});
-	return group;
-}
-function configControl(labelValue, input, hintValue) {
-	const label = document.createElement('label'); label.className = 'config-control';
-	const caption = document.createElement('span'); text(caption, labelValue); label.append(caption, input);
-	if (hintValue) { const hint = document.createElement('span'); hint.className = 'config-hint'; text(hint, hintValue); label.append(hint); }
-	return label;
-}
-function configNumberInput(id, value, minimum, maximum, step) {
-	const input = document.createElement('input'); input.id = id; input.type = 'number'; input.min = String(minimum); input.max = String(maximum); input.step = String(step || 1);
-	if (value !== undefined && value !== null) input.value = String(value);
-	return input;
-}
-function configTextInput(id, value) {
-	const input = document.createElement('input'); input.id = id; input.type = 'text'; input.maxLength = 160; input.value = value || ''; return input;
-}
-function configSelect(id, value, options) {
-	const select = document.createElement('select'); select.id = id;
-	options.forEach(function(optionValue) {
-		const option = document.createElement('option'); option.value = optionValue.value || optionValue; text(option, optionValue.label || titleCase(optionValue.value || optionValue)); option.disabled = Boolean(optionValue.disabled); select.append(option);
-	});
-	select.value = value; return select;
-}
-function renderExecutionConfigGroup(configuration) {
-	const editable = configuration.editable.runtime;
-	const limits = configuration.limits;
-	const group = configGroup('Execution', 'Effective worker, isolation, automation, and agency policy. Choices above the active runtime ceiling are disabled.');
-	const grid = configGrid();
-	grid.append(
-		configControl('Maximum workers', configNumberInput('config-max-workers', editable.maxWorkers, 0, limits.maxWorkers, 1), 'Active maximum: ' + limits.maxWorkers),
-		configControl('Worktree isolation', configSelect('config-worktree-isolation', editable.worktreeIsolation, ['none', 'worktree', 'auto'])),
-		configControl('Automation', configSelect('config-automation', editable.automation, rankedConfigOptions(['manual', 'assist', 'auto'], limits.automationCeiling, false)), 'Ceiling: ' + limits.automationCeiling),
-		configControl('Agency', configSelect('config-agency', editable.agency, rankedConfigOptions(['observe', 'assist', 'delegate', 'auto'], limits.agencyCeiling, false)), 'Ceiling: ' + limits.agencyCeiling),
-	);
-	group.append(grid); return group;
-}
-function renderBudgetConfigGroup(configuration) {
-	const group = configGroup('Budgets', 'Empty optional values remain unchanged. Every value is checked again by the server.');
-	const grid = configGrid();
-	CONFIG_BUDGET_FIELDS.forEach(function(field) {
-		const key = field[0]; const maximum = configuration.limits.budgetMaxima[key]; const step = key === 'maxCostUsd' ? 0.000001 : 1;
-		grid.append(configControl(field[1], configNumberInput('config-budget-' + key, configuration.editable.runtime.budgets[key], 0, maximum, step), 'Maximum: ' + maximum));
-	});
-	group.append(grid); return group;
-}
-function renderModelConfigGroup(configuration) {
-	const routing = configuration.editable.runtime.modelRouting;
-	const limits = configuration.limits;
-	const group = configGroup('Model routing', 'Edit existing bounded routes. Tool choices are limited to authority already present when this Pi runtime started.');
-	const grid = configGrid();
-	grid.append(
-		configControl('Quality floor', configSelect('config-quality-floor', routing.qualityFloor, rankedConfigOptions(['standard', 'high', 'critical'], limits.minimumQualityFloor, true)), 'Minimum: ' + limits.minimumQualityFloor),
-		configControl('Maximum escalations', configNumberInput('config-max-escalations', routing.maxEscalations, 0, limits.modelMaxima.maxEscalations, 1)),
-		configControl('Estimated input tokens', configNumberInput('config-estimated-input', routing.estimatedInputTokens, 0, limits.modelMaxima.maxEstimatedTokens, 1)),
-		configControl('Estimated output tokens', configNumberInput('config-estimated-output', routing.estimatedOutputTokens, 0, limits.modelMaxima.maxEstimatedTokens, 1)),
-	);
-	group.append(grid);
-	(routing.routes || []).forEach(function(route, routeIndex) { group.append(renderModelRoute(route, routeIndex, limits.allowedTools, limits.modelMaxima)); });
-	if (!(routing.routes || []).length) { const empty = document.createElement('div'); empty.className = 'config-group-note'; text(empty, 'No model routes configured. Route creation remains a file/API operation.'); group.append(empty); }
-	return group;
-}
-function renderModelRoute(route, routeIndex, allowedTools, modelMaxima) {
-	const routeNode = document.createElement('section'); routeNode.className = 'config-route'; routeNode.dataset.routeIndex = String(routeIndex);
-	const titleNode = document.createElement('div'); titleNode.className = 'config-route-title'; text(titleNode, 'Route ' + (routeIndex + 1) + ' · ' + route.id); routeNode.append(titleNode);
-	const grid = configGrid();
-	grid.append(
-		configControl('Route id', configTextInput('config-route-' + routeIndex + '-id', route.id)),
-		configControl('Provider', configTextInput('config-route-' + routeIndex + '-provider', route.provider)),
-		configControl('Model', configTextInput('config-route-' + routeIndex + '-model', route.model)),
-		configControl('Thinking', configSelect('config-route-' + routeIndex + '-thinking', route.thinking, ['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'])),
-		configControl('Quality', configSelect('config-route-' + routeIndex + '-quality', route.quality, ['standard', 'high', 'critical'])),
-		configControl('Latency', configSelect('config-route-' + routeIndex + '-latency', route.latency, ['fast', 'balanced', 'slow'])),
-		configControl('Timeout (ms)', configNumberInput('config-route-' + routeIndex + '-timeout', route.timeoutMs, 1, modelMaxima.maxRouteTimeoutMs, 1)),
-		configControl('Input USD / million', configNumberInput('config-route-' + routeIndex + '-price-input', route.pricing.inputUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
-		configControl('Output USD / million', configNumberInput('config-route-' + routeIndex + '-price-output', route.pricing.outputUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
-		configControl('Cache read USD / million', configNumberInput('config-route-' + routeIndex + '-price-cache-read', route.pricing.cacheReadUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
-		configControl('Cache write USD / million', configNumberInput('config-route-' + routeIndex + '-price-cache-write', route.pricing.cacheWriteUsdPerMillion, 0, modelMaxima.maxPricingUsdPerMillion, 0.000001)),
-	);
-	routeNode.append(grid);
-	const tools = document.createElement('div'); tools.className = 'config-tools';
-	allowedTools.forEach(function(tool, toolIndex) {
-		const label = document.createElement('label'); label.className = 'config-choice';
-		const input = document.createElement('input'); input.type = 'checkbox'; input.id = 'config-route-' + routeIndex + '-tool-' + toolIndex; input.dataset.routeTool = tool; input.checked = (route.allowedTools || []).includes(tool);
-		const caption = document.createElement('span'); text(caption, tool); label.append(input, caption); tools.append(label);
-	});
-	if (!allowedTools.length) { const note = document.createElement('span'); note.className = 'config-hint'; text(note, 'No tool authority is active.'); tools.append(note); }
-	routeNode.append(tools); return routeNode;
-}
-function renderHostConfigGroup(configuration) {
-	const group = configGroup('Pi host', 'Host enablement cannot be raised above the active runtime baseline.');
-	const label = document.createElement('label'); label.className = 'config-choice';
-	const input = document.createElement('input'); input.id = 'config-pi-enabled'; input.type = 'checkbox'; input.checked = configuration.editable.hosts.pi.enabled; input.disabled = !configuration.limits.piHostCanEnable && !input.checked;
-	const caption = document.createElement('span'); text(caption, 'Pi host enabled'); label.append(input, caption); group.append(label); return group;
-}
-function rankedConfigOptions(values, boundary, minimum) {
-	const boundaryIndex = values.indexOf(boundary);
-	return values.map(function(value, index) { return { value: value, disabled: minimum ? index < boundaryIndex : index > boundaryIndex }; });
-}
-function requiredConfigNumber(id) {
-	const input = document.getElementById(id); const value = Number(input.value);
-	if (!input.value || !Number.isFinite(value)) throw new Error('Enter a valid value for ' + id.replace(/^config-/, '').replace(/-/g, ' ') + '.');
-	return value;
-}
-function optionalConfigNumber(id) {
-	const input = document.getElementById(id); if (!input.value) return undefined;
-	const value = Number(input.value); if (!Number.isFinite(value)) throw new Error('Enter a valid value for ' + id.replace(/^config-/, '').replace(/-/g, ' ') + '.'); return value;
-}
-function configurationPatch(configuration) {
-	const budgets = {};
-	CONFIG_BUDGET_FIELDS.forEach(function(field) { const value = optionalConfigNumber('config-budget-' + field[0]); if (value !== undefined) budgets[field[0]] = value; });
-	const routes = (configuration.editable.runtime.modelRouting.routes || []).map(function(_route, routeIndex) {
-		const prefix = 'config-route-' + routeIndex + '-';
-		return {
-			id: document.getElementById(prefix + 'id').value.trim(), provider: document.getElementById(prefix + 'provider').value.trim(), model: document.getElementById(prefix + 'model').value.trim(),
-			thinking: document.getElementById(prefix + 'thinking').value, quality: document.getElementById(prefix + 'quality').value, latency: document.getElementById(prefix + 'latency').value,
-			timeoutMs: requiredConfigNumber(prefix + 'timeout'),
-			pricing: { inputUsdPerMillion: requiredConfigNumber(prefix + 'price-input'), outputUsdPerMillion: requiredConfigNumber(prefix + 'price-output'), cacheReadUsdPerMillion: requiredConfigNumber(prefix + 'price-cache-read'), cacheWriteUsdPerMillion: requiredConfigNumber(prefix + 'price-cache-write') },
-			allowedTools: Array.from(document.querySelectorAll('[id^="' + prefix + 'tool-"]')).filter(function(input) { return input.checked; }).map(function(input) { return input.dataset.routeTool; }),
-		};
-	});
-	return { runtime: { maxWorkers: requiredConfigNumber('config-max-workers'), worktreeIsolation: document.getElementById('config-worktree-isolation').value, automation: document.getElementById('config-automation').value, agency: document.getElementById('config-agency').value, budgets: budgets, modelRouting: { qualityFloor: document.getElementById('config-quality-floor').value, maxEscalations: requiredConfigNumber('config-max-escalations'), estimatedInputTokens: requiredConfigNumber('config-estimated-input'), estimatedOutputTokens: requiredConfigNumber('config-estimated-output'), routes: routes } }, hosts: { pi: { enabled: document.getElementById('config-pi-enabled').checked } } };
-}
-async function executeConfigCommand(event) {
-	if (event) event.preventDefault();
-	const configuration = state && state.configuration;
-	if (!configuration) return;
-	const validation = document.getElementById('config-validation');
-	let patch;
-	try { patch = configurationPatch(configuration); validation.className = 'config-validation'; text(validation, 'Validating and saving…'); }
-	catch (error) { validation.className = 'config-validation error'; text(validation, error.message || String(error)); return; }
-	const command = { commandId: 'dashboard-config-' + crypto.randomUUID(), expectedStateDigest: configuration.stateDigest, expectedConfigDigest: configuration.configDigest, patch: patch };
-	text(els.status, 'configuration command pending');
-	try {
-		const response = await fetch('/api/configuration/commands?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(command) });
-		const result = await response.json();
-		if (!response.ok) throw new Error(result.error || 'HTTP ' + response.status);
-		state.configuration = result.state;
-		text(els.status, 'completed · ' + result.receipt.receiptId);
-		renderConfiguration();
-	} catch (error) {
-		validation.className = 'config-validation error'; text(validation, error && error.message ? error.message : String(error));
-		text(els.status, 'rejected · ' + (error && error.message ? error.message : String(error)));
-	}
+	text(status, 'Read only · Source: ' + configuration.sourcePath + '\nDigest: ' + configuration.configDigest + '\nValidation: ' + configuration.validation + '\n' + configuration.restartGuidance);
+	const snapshot = document.createElement('pre'); snapshot.className = 'configuration-snapshot';
+	text(snapshot, JSON.stringify({ effective: configuration.effective, limits: configuration.limits, previewProfiles: configuration.previewProfiles, uiPreviewTargets: configuration.uiPreviewTargets }, null, 2));
+	const note = document.createElement('div'); note.className = 'change-authority'; text(note, 'Observation only. Configuration changes require an explicit typed Runtime command.');
+	els.configuration.append(heading, status, snapshot, note);
 }
 function shortTime(value) {
 	const date = new Date(value);
@@ -2090,7 +1785,6 @@ function openConfiguration() {
 function closeConfiguration() { if (els.configurationDialog.open) els.configurationDialog.close(); }
 els.openConfiguration.addEventListener('click', openConfiguration);
 els.closeConfiguration.addEventListener('click', closeConfiguration);
-els.draftChange.addEventListener('click', function() { executeChangeCommand('draft'); });
 els.search.addEventListener('input', function() { query = els.search.value; selected = 0; render(); });
 els.search.addEventListener('keydown', function(event) {
 	if (event.key === 'Enter') { event.preventDefault(); els.search.blur(); }

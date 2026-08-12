@@ -45,18 +45,17 @@ describe("CodeWiki App browser shell", () => {
 		assert.match(script, /function openSearch/);
 		assert.match(script, /function renderCommittedDetail/);
 		assert.match(script, /function renderCollapsibleTerminalBlock/);
-		assert.match(script, /function executeChangeCommand/);
+		assert.doesNotMatch(script, /function executeChangeCommand/);
 		assert.match(script, /function renderConfiguration/);
-		assert.match(script, /function executeConfigCommand/);
+		assert.doesNotMatch(script, /function executeConfigCommand/);
 		assert.doesNotMatch(CODEWIKI_APP_HTML, /dashboard-title/);
-		assert.match(CODEWIKI_APP_HTML, />Add Change<\/button>/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, />Add Change<\/button>/);
 		assert.doesNotMatch(CODEWIKI_APP_HTML, /\+ Add Change/);
 		assert.match(CODEWIKI_APP_HTML, /--logo-blue-dark: #315561/);
 		assert.match(CODEWIKI_APP_HTML, /--interactive: #4a9293/);
 		assert.match(CODEWIKI_APP_HTML, /--interactive-hover: #58aaa7/);
 		assert.doesNotMatch(CODEWIKI_APP_HTML, /#62c6c2/);
-		assert.match(CODEWIKI_APP_HTML, /\.add-change:hover/);
-		assert.match(CODEWIKI_APP_HTML, /\.add-change:focus-visible/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /\.add-change/);
 		assert.match(
 			CODEWIKI_APP_HTML,
 			/id="search" class="pipeline-search"/,
@@ -88,9 +87,13 @@ describe("CodeWiki App browser shell", () => {
 		assert.match(CODEWIKI_APP_HTML, /aria-disabled/);
 		assert.match(CODEWIKI_APP_HTML, /✕ Blocked —/);
 		assert.match(CODEWIKI_APP_HTML, /Execution configuration/);
-		assert.match(CODEWIKI_APP_HTML, /Save configuration/);
-		assert.match(CODEWIKI_APP_HTML, /CONFIG_BUDGET_FIELDS/);
-		assert.match(CODEWIKI_APP_HTML, /config-route/);
+		assert.match(CODEWIKI_APP_HTML, /Read only/);
+		assert.match(CODEWIKI_APP_HTML, /Observation only/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /Save configuration/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /CONFIG_BUDGET_FIELDS/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /config-route/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /\/api\/changes\/commands/);
+		assert.doesNotMatch(CODEWIKI_APP_HTML, /\/api\/configuration\/commands/);
 		assert.doesNotMatch(CODEWIKI_APP_HTML, /\/api\/session-actions/);
 		assert.doesNotMatch(CODEWIKI_APP_HTML, /Active Pi session bridge/);
 		assert.match(CODEWIKI_APP_HTML, /knowledge-alignment\.review_needed/);

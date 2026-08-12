@@ -9,7 +9,7 @@ import { writeWikiConfigFile } from "../../src/project/config-file.ts";
 import { resolveWikiConfig } from "../../src/project/config.ts";
 
 describe("dashboard configuration state", () => {
-	it("projects bounded editable settings without secrets or authority policy", async () => {
+	it("projects bounded effective settings without secrets or authority policy", async () => {
 		const root = await mkdtemp(
 			join(tmpdir(), "codewiki-dashboard-config-state-"),
 		);
@@ -27,9 +27,9 @@ describe("dashboard configuration state", () => {
 			assert.match(state.configDigest, /^sha256:[a-f0-9]{64}$/);
 			assert.equal(state.activeConfigDigest, state.configDigest);
 			assert.equal(state.restartRequired, false);
-			assert.equal(state.editable.runtime.automation, "manual");
-			assert.equal(state.editable.runtime.agency, "delegate");
-			assert.equal(state.editable.hosts.pi.enabled, true);
+			assert.equal(state.effective.runtime.automation, "manual");
+			assert.equal(state.effective.runtime.agency, "delegate");
+			assert.equal(state.effective.hosts.pi.enabled, true);
 			assert.equal(state.limits.maxWorkers, 16);
 			assert.equal(state.limits.budgetMaxima.maxCostUsd, 1_000);
 			assert.equal(state.limits.modelMaxima.maxRoutes, 32);

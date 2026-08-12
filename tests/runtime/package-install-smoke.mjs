@@ -192,7 +192,13 @@ assert.equal(
 	false,
 	"legacy Dashboard assets are not packaged",
 );
-for (const name of ["daemon", "health", "index"]) {
+for (const name of [
+	"change-control",
+	"config-control",
+	"daemon",
+	"health",
+	"index",
+]) {
 	assert.equal(
 		existsSync(join(packageRoot, "dist", "dashboard", name + ".js")),
 		false,

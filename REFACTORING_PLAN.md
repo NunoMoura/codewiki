@@ -101,15 +101,15 @@ Use breaking clean cuts. No compatibility aliases, old-path re-exports, dual con
 
 Ratification checkpoint before executable clean cuts:
 
-| Area | Ratification | Trace-host cut | Conversational Pi cut | Managed Execution move | Runtime/Host ownership cut | App shell cut | Host App lifecycle cut | App/Pi bridge cut | Hard cap |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| tracked total | 655 | 641 | 639 | 640 | 642 | 641 | 641 | 639 | 575 |
-| `src/**` | 375 | 367 | 366 | 366 | 366 | 365 | 364 | 362 | 315 |
-| `tests/**` | 211 | 204 | 202 | 202 | 202 | 201 | 201 | 200 | 190 |
-| `benchmarks/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
-| `scripts/**` | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
-| `lab/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| packed files | 753 | 737 | 735 | 735 | 735 | 733 | 731 | 727 | 650 |
+| Area | Ratification | Trace-host cut | Conversational Pi cut | Managed Execution move | Runtime/Host ownership cut | App shell cut | Host App lifecycle cut | App/Pi bridge cut | App read-only cut | Hard cap |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| tracked total | 655 | 641 | 639 | 640 | 642 | 641 | 641 | 639 | 636 | 575 |
+| `src/**` | 375 | 367 | 366 | 366 | 366 | 365 | 364 | 362 | 360 | 315 |
+| `tests/**` | 211 | 204 | 202 | 202 | 202 | 201 | 201 | 200 | 198 | 190 |
+| `benchmarks/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
+| `scripts/**` | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| `lab/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| packed files | 753 | 737 | 735 | 735 | 735 | 733 | 731 | 727 | 723 | 650 |
 
 The trace-host cut is recorded by `.tmp-worktrees/trace-host-clean-cut-manifest.json`, exhaustively anchored to `fafafc8` with 639 keeps and 16 deletions. Its green checkpoint is 943 full-suite tests, 116 coordinator tests, a passing packed-install smoke test, and zero production audit vulnerabilities.
 
@@ -126,6 +126,8 @@ The App shell cut is recorded by `.tmp-worktrees/app-shell-move-manifest.json`, 
 The Host App lifecycle cut is recorded by `.tmp-worktrees/host-app-lifecycle-move-manifest.json`, exhaustively anchored to `fea8e1b` with 637 keeps, 3 moves, and 1 deletion. It moves daemon bootstrap and installed-package identity checks to `src/host/app/**`, moves lifecycle proof to `tests/host/app/**`, deletes the Dashboard barrel, and freezes the remaining 10-file `src/dashboard/**` service knot. Its green checkpoint is 941 full-suite tests, 116 coordinator tests, 731 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
 
 The App/Pi bridge clean cut is recorded by `.tmp-worktrees/app-pi-session-action-clean-cut-manifest.json`, exhaustively anchored to `9d5ea31` with 638 keeps and 3 deletions. It removes browser session-action controls and state, the same-session HTTP route, ambient Pi `sendUserMessage` adaptation, the dedicated bridge test, and both packed source artifacts. Its green checkpoint is 937 full-suite tests, 116 coordinator tests, 727 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
+
+The App read-only clean cut is recorded by `.tmp-worktrees/app-direct-mutation-clean-cut-manifest.json`, exhaustively anchored to `bfdbce2` with 635 keeps and 4 deletions. It removes Dashboard-local Change and configuration mutation controls, their browser buttons/forms, both POST command routes, and dedicated mutation tests. Changes and effective configuration remain bounded read-only projections until typed Runtime commands exist. Its green checkpoint is 932 full-suite tests, 116 coordinator tests, 723 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
 
 Rules:
 
@@ -159,6 +161,7 @@ Rules:
 - [x] Create and execute the reviewed `57fb49a`-anchored App shell keep/move/delete manifest before establishing the browser Client root.
 - [x] Create and execute the reviewed `fea8e1b`-anchored Host App lifecycle keep/move/delete manifest before removing the Dashboard barrel.
 - [x] Create and execute the reviewed `9d5ea31`-anchored App/Pi bridge keep/delete manifest before removing same-session prompt injection.
+- [x] Create and execute the reviewed `bfdbce2`-anchored App direct-mutation keep/delete manifest before making Change and configuration surfaces read-only.
 - [ ] Delete legacy Quality, generic View authority, obsolete Loop compatibility, and old Trace/ChangeRecord paths as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
@@ -166,7 +169,8 @@ Rules:
 - [x] Move the browser shell/assets directly into `src/clients/app/**` and delete the unused standalone Dashboard renderer.
 - [x] Move App daemon bootstrap and installed-runtime identity checks into `src/host/app/**`; delete the Dashboard barrel.
 - [x] Delete App-to-ambient-Pi session actions and prompt injection; preserve explicit user `/wiki-*` commands.
-- [ ] Move remaining Dashboard transport into `src/host/**` and mutation/query authority into Runtime contracts; no old Dashboard protocol survives.
+- [x] Delete Dashboard-local Change/configuration mutation authority and keep those App surfaces read-only until typed Runtime commands land.
+- [ ] Move remaining Dashboard transport into `src/host/**` and query authority into Runtime contracts; no old Dashboard protocol survives.
 - [x] Update managed Execution package exports, scripts, tests, and packed-install gates in the same cut; repeat for later Host/App cuts.
 
 ### 3. Define Host and Client protocol

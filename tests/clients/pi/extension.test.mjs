@@ -795,8 +795,8 @@ describe("Pi extension adapter", () => {
 			assert.match(html, /class="pipeline-search"/);
 			assert.match(html, /class="search-filter"/);
 			assert.match(html, /Changes Backlog/);
-			assert.match(html, />Add Change<\/button>/);
-			assert.doesNotMatch(html, /\+ Add Change/);
+			assert.doesNotMatch(html, />Add Change<\/button>/);
+			assert.match(html, /Observation only/);
 			assert.match(html, /aria-expanded/);
 			assert.match(html, /isInteractiveDashboardTarget/);
 			assert.match(html, /focusSelectedPipelineCard/);
@@ -893,20 +893,28 @@ describe("Pi extension adapter", () => {
 				),
 			);
 			assert.equal(state.sprintsQueue[0].devLog.available, true);
+			assert.equal(state.changes.available, true);
+			assert.equal(typeof state.configuration.effective.runtime.maxWorkers, "number");
 			assert.equal(Object.hasOwn(state, "sessionActions"), false);
-			const actionUrl = new URL(opened.url);
-			actionUrl.hash = "";
-			actionUrl.pathname = "/api/session-actions/commands";
-			actionUrl.searchParams.set("token", dashboardToken);
-			const actionResponse = await fetch(actionUrl, {
-				method: "POST",
-				headers: {
-					Origin: actionUrl.origin,
-					"Content-Type": "application/json",
-				},
-				body: "{}",
-			});
-			assert.equal(actionResponse.status, 405);
+			for (const pathname of [
+				"/api/session-actions/commands",
+				"/api/changes/commands",
+				"/api/configuration/commands",
+			]) {
+				const removedCommandUrl = new URL(opened.url);
+				removedCommandUrl.hash = "";
+				removedCommandUrl.pathname = pathname;
+				removedCommandUrl.searchParams.set("token", dashboardToken);
+				const response = await fetch(removedCommandUrl, {
+					method: "POST",
+					headers: {
+						Origin: removedCommandUrl.origin,
+						"Content-Type": "application/json",
+					},
+					body: "{}",
+				});
+				assert.equal(response.status, 405, pathname);
+			}
 			assert.equal(pi.userMessages.length, 0);
 			assert.equal(state.sprintsQueue[0].devLog.entryCount, 1);
 			assert.equal(

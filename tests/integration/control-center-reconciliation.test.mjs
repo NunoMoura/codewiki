@@ -39,12 +39,10 @@ const criterionEvidence = {
 		criteria: ["backlog-view", "guarded-mutations", "authority-ceiling"],
 		source: [
 			"src/dashboard/changes-state.ts",
-			"src/dashboard/change-control.ts",
 			"src/dashboard/server.ts",
 		],
 		tests: [
 			"tests/dashboard/changes-state.test.mjs",
-			"tests/dashboard/change-control.test.mjs",
 			"tests/clients/app/shell.test.mjs",
 		],
 	},
@@ -52,12 +50,10 @@ const criterionEvidence = {
 		criteria: ["config-projection", "safe-patch", "authority-invariants"],
 		source: [
 			"src/dashboard/config-state.ts",
-			"src/dashboard/config-control.ts",
 			"src/project/config-file.ts",
 		],
 		tests: [
 			"tests/dashboard/config-state.test.mjs",
-			"tests/dashboard/config-control.test.mjs",
 			"tests/runtime/wiki-config.test.mjs",
 		],
 	},
