@@ -53,10 +53,12 @@ import { pathToFileURL } from "node:url";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
 	HOST_CLIENT_PROTOCOL,
+	HOST_REGISTRY_PROTOCOL,
 	ProjectCoordinator,
 	buildWikiState,
 	buildWorkState,
 	normalizeHostClientQuery,
+	normalizeHostRegistrySnapshot,
 	runWikiConfig,
 } from "@nunomoura/codewiki";
 import {
@@ -211,7 +213,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "daemon.js")), 
 assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "server.js")), true);
 assert.equal(
 	existsSync(join(packageRoot, "dist", "host", "app", "request-error.js")),
-	true,
+	false,
 );
 assert.equal(
 	existsSync(join(packageRoot, "dist", "host", "app", "installed-runtime.js")),
@@ -222,7 +224,22 @@ assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoin
 assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "input-validation.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.d.ts")), true);
 assert.equal(HOST_CLIENT_PROTOCOL.version, "1.0.0");
+assert.equal(HOST_REGISTRY_PROTOCOL.version, "1.0.0");
+assert.equal(
+	normalizeHostRegistrySnapshot({
+		protocolId: HOST_REGISTRY_PROTOCOL.id,
+		protocolVersion: HOST_REGISTRY_PROTOCOL.version,
+		generation: 1,
+		generatedAt: "2026-08-13T10:00:00.000Z",
+		actors: [],
+		pairings: [],
+		projects: [],
+	}).generation,
+	1,
+);
 assert.equal(
 	normalizeHostClientQuery({
 		protocolId: HOST_CLIENT_PROTOCOL.id,

@@ -3,6 +3,7 @@ export * from "./change-trace/index.ts";
 export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
 export * from "./execution/ports.ts";
+export * from "./host/registry/state.ts";
 export * from "./verification/custom-checks/index.ts";
 export {
 	EXIT_OUTCOME_PROTOCOL_VERSION,

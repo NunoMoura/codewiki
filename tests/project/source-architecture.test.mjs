@@ -183,7 +183,8 @@ describe("source architecture", () => {
 		}
 		assert.equal(existsSync(join(sourceRoot, "host", "app", "daemon.ts")), true);
 		assert.equal(existsSync(join(sourceRoot, "host", "app", "server.ts")), true);
-		assert.equal(existsSync(join(sourceRoot, "host", "app", "request-error.ts")), true);
+		assert.equal(existsSync(join(sourceRoot, "host", "app", "request-error.ts")), false);
+		assert.equal(existsSync(join(sourceRoot, "host", "registry", "state.ts")), true);
 		assert.equal(
 			existsSync(join(sourceRoot, "host", "app", "installed-runtime.ts")),
 			true,

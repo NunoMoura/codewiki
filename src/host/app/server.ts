@@ -53,11 +53,20 @@ import {
 	buildCodewikiAppState,
 	type CodewikiAppState,
 } from "../../runtime/queries/app-state.ts";
-import { AppRequestError } from "./request-error.ts";
 import {
 	assertInstalledCodewikiRuntimeCurrent,
 	captureInstalledCodewikiRuntimeIdentity,
 } from "./installed-runtime.ts";
+
+class AppRequestError extends Error {
+	readonly status: 400 | 403 | 409;
+
+	constructor(message: string, status: 400 | 403 | 409) {
+		super(message);
+		this.name = "AppRequestError";
+		this.status = status;
+	}
+}
 
 interface CodewikiAppServerOptions {
 	repoRoot: string;
