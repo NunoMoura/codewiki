@@ -173,6 +173,25 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "decision-research-
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "handoff.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-start.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-reports.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "clients", "app", "shell.js")), true);
+assert.equal(
+	existsSync(
+		join(
+			packageRoot,
+			"dist",
+			"clients",
+			"app",
+			"assets",
+			"codewiki-logo.png",
+		),
+	),
+	true,
+);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "dashboard", "assets")),
+	false,
+	"legacy Dashboard assets are not packaged",
+);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.d.ts")), true);
 assert.equal(

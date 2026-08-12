@@ -29,12 +29,10 @@ const criterionEvidence = {
 		source: [
 			"src/changes/validation-view.ts",
 			"src/clients/pi/rendering/change-validation-card.ts",
-			"src/dashboard/change-validation-card.ts",
 		],
 		tests: [
 			"tests/changes/change-validation-view.test.mjs",
 			"tests/clients/pi/change-validation-card.test.mjs",
-			"tests/dashboard/change-validation-card.test.mjs",
 		],
 	},
 	"WU-changes-backlog-dashboard-v1": {
@@ -47,7 +45,7 @@ const criterionEvidence = {
 		tests: [
 			"tests/dashboard/changes-state.test.mjs",
 			"tests/dashboard/change-control.test.mjs",
-			"tests/dashboard/dashboard-browser.test.mjs",
+			"tests/clients/app/shell.test.mjs",
 		],
 	},
 	"WU-dashboard-execution-configuration-v1": {

@@ -46,7 +46,7 @@ import { readDevLog } from "../runtime/persistence/dev-log.ts";
 import type { ProjectCoordinatorClientInput } from "../runtime/coordinator/project.ts";
 import { connectEnsuredProjectCoordinatorClient } from "../runtime/coordinator/process.ts";
 import type { ProjectCoordinatorRemoteClient } from "../runtime/coordinator/service.ts";
-import { CODEWIKI_DASHBOARD_HTML } from "./assets.ts";
+import { CODEWIKI_APP_HTML } from "../clients/app/shell.ts";
 import {
 	createDashboardChangeControl,
 	type DashboardChangeControl,
@@ -301,37 +301,42 @@ async function currentDashboardAssetDigest(): Promise<string> {
 
 async function currentDashboardHtml(): Promise<string> {
 	try {
-		const moduleUrl = dashboardAssetsModuleUrl();
+		const moduleUrl = appShellModuleUrl();
 		const modulePath = fileURLToPath(moduleUrl);
 		const moduleStat = await stat(modulePath);
 		const cacheBustedUrl = `${moduleUrl.href}?mtime=${moduleStat.mtimeMs}`;
 		const module = (await import(cacheBustedUrl)) as {
-			CODEWIKI_DASHBOARD_HTML?: unknown;
+			CODEWIKI_APP_HTML?: unknown;
 		};
-		if (typeof module.CODEWIKI_DASHBOARD_HTML === "string") {
-			return module.CODEWIKI_DASHBOARD_HTML;
+		if (typeof module.CODEWIKI_APP_HTML === "string") {
+			return module.CODEWIKI_APP_HTML;
 		}
 	} catch {
-		return CODEWIKI_DASHBOARD_HTML;
+		return CODEWIKI_APP_HTML;
 	}
-	return CODEWIKI_DASHBOARD_HTML;
+	return CODEWIKI_APP_HTML;
 }
 
-function dashboardAssetsModuleUrl(): URL {
+function appShellModuleUrl(): URL {
 	const current = fileURLToPath(import.meta.url);
 	return new URL(
-		current.endsWith(".ts") ? "./assets.ts" : "./assets.js",
+		current.endsWith(".ts")
+			? "../clients/app/shell.ts"
+			: "../clients/app/shell.js",
 		import.meta.url,
 	);
 }
 
 async function currentDashboardLogoPng(): Promise<Buffer> {
-	return await readFile(dashboardLogoPath());
+	return readFile(appLogoPath());
 }
 
-function dashboardLogoPath(): string {
+function appLogoPath(): string {
 	return join(
 		dirname(fileURLToPath(import.meta.url)),
+		"..",
+		"clients",
+		"app",
 		"assets",
 		"codewiki-logo.png",
 	);

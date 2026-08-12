@@ -6,7 +6,7 @@ const CODEWIKI_LOGO_DATA_URI = `data:image/png;base64,${readFileSync(
 	join(dirname(fileURLToPath(import.meta.url)), "assets", "codewiki-logo.png"),
 ).toString("base64")}`;
 
-export const CODEWIKI_DASHBOARD_HTML = String.raw`<!doctype html>
+export const CODEWIKI_APP_HTML = String.raw`<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />

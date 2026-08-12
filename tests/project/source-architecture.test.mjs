@@ -135,6 +135,7 @@ describe("source architecture", () => {
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
 		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
 			"change-trace",
+			"dashboard",
 			"loops",
 			"traces",
 			"views",
@@ -162,6 +163,14 @@ describe("source architecture", () => {
 			);
 		}
 		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
+		assert.equal(existsSync(join(sourceRoot, "dashboard", "assets")), false);
+		assert.equal(existsSync(join(sourceRoot, "clients", "app", "shell.ts")), true);
+		assert.equal(
+			existsSync(
+				join(sourceRoot, "clients", "app", "assets", "codewiki-logo.png"),
+			),
+			true,
+		);
 		assert.equal(
 			existsSync(join(sourceRoot, "host", "coordinator-entrypoint.ts")),
 			true,

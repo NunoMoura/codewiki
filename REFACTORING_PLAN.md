@@ -101,15 +101,15 @@ Use breaking clean cuts. No compatibility aliases, old-path re-exports, dual con
 
 Ratification checkpoint before executable clean cuts:
 
-| Area | Ratification | Trace-host cut | Conversational Pi cut | Managed Execution move | Runtime/Host ownership cut | Hard cap |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| tracked total | 655 | 641 | 639 | 640 | 642 | 575 |
-| `src/**` | 375 | 367 | 366 | 366 | 366 | 315 |
-| `tests/**` | 211 | 204 | 202 | 202 | 202 | 190 |
-| `benchmarks/**` | 0 | 0 | 0 | 0 | 0 | 10 |
-| `scripts/**` | 1 | 1 | 1 | 1 | 1 | 1 |
-| `lab/**` | 0 | 0 | 0 | 0 | 0 | 0 |
-| packed files | 753 | 737 | 735 | 735 | 735 | 650 |
+| Area | Ratification | Trace-host cut | Conversational Pi cut | Managed Execution move | Runtime/Host ownership cut | App shell cut | Hard cap |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| tracked total | 655 | 641 | 639 | 640 | 642 | 641 | 575 |
+| `src/**` | 375 | 367 | 366 | 366 | 366 | 365 | 315 |
+| `tests/**` | 211 | 204 | 202 | 202 | 202 | 201 | 190 |
+| `benchmarks/**` | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
+| `scripts/**` | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| `lab/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| packed files | 753 | 737 | 735 | 735 | 735 | 733 | 650 |
 
 The trace-host cut is recorded by `.tmp-worktrees/trace-host-clean-cut-manifest.json`, exhaustively anchored to `fafafc8` with 639 keeps and 16 deletions. Its green checkpoint is 943 full-suite tests, 116 coordinator tests, a passing packed-install smoke test, and zero production audit vulnerabilities.
 
@@ -120,6 +120,8 @@ The managed Execution move is recorded by `.tmp-worktrees/managed-execution-move
 The Runtime workbench move is recorded by `.tmp-worktrees/runtime-workbench-container-move-manifest.json`, exhaustively anchored to `a6f384a` with 635 keeps and 5 moves. It moves OCI execution, worktree Git validation, container isolation options, cancellation, report persistence, and cleanup proof to `src/runtime/workbenches/container/**`.
 
 The final generic Harness deletion is recorded by `.tmp-worktrees/host-coordinator-entrypoint-move-manifest.json`, exhaustively anchored to `a6f384a` with 639 keeps and 1 move. It moves package composition to `src/host/coordinator-entrypoint.ts`, retains the public `./coordinator` subpath at its new artifact, and removes `src/harnesses/**` and `dist/harnesses/**` completely. Together these moves have a green checkpoint of 942 full-suite tests, 116 coordinator tests, 735 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
+
+The App shell cut is recorded by `.tmp-worktrees/app-shell-move-manifest.json`, exhaustively anchored to `57fb49a` with 637 keeps, 3 moves, and 2 deletions. It moves the browser shell and logo to `src/clients/app/**`, moves the browser contract test to `tests/clients/app/**`, deletes an unused standalone Dashboard renderer/test pair, and freezes the remaining 13-file `src/dashboard/**` transport/projection/mutation knot for contract-led Host and Runtime separation. Its green checkpoint is 941 full-suite tests, 116 coordinator tests, 733 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
 
 Rules:
 
@@ -150,11 +152,13 @@ Rules:
 - [x] Create and execute the reviewed `5144116`-anchored managed Execution keep/move manifest before this structural move.
 - [x] Create and execute the reviewed `a6f384a`-anchored Runtime workbench keep/move manifest before the OCI ownership move.
 - [x] Create and execute the reviewed `a6f384a`-anchored Host composition keep/move manifest before deleting the final generic Harness root.
+- [x] Create and execute the reviewed `57fb49a`-anchored App shell keep/move/delete manifest before establishing the browser Client root.
 - [ ] Delete legacy Quality, generic View authority, obsolete Loop compatibility, and old Trace/ChangeRecord paths as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
 - [x] Move coordinator package composition to Host ownership and remove the generic Harness source/package root.
-- [ ] Move Dashboard foundations directly into `src/clients/app/**` and remaining Host responsibilities into `src/host/**`; no old Dashboard protocol survives.
+- [x] Move the browser shell/assets directly into `src/clients/app/**` and delete the unused standalone Dashboard renderer.
+- [ ] Move remaining Dashboard transport into `src/host/**` and mutation/query authority into Runtime contracts; no old Dashboard protocol survives.
 - [x] Update managed Execution package exports, scripts, tests, and packed-install gates in the same cut; repeat for later Host/App cuts.
 
 ### 3. Define Host and Client protocol

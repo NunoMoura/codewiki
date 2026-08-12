@@ -63,6 +63,7 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 
 export const LEGACY_SOURCE_ROOTS = [
 	"change-trace",
+	"dashboard",
 	"loops",
 	"traces",
 	"views",
@@ -87,6 +88,7 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	"change-trace": 19,
+	dashboard: 13,
 	loops: 10,
 	traces: 12,
 	views: 13,
