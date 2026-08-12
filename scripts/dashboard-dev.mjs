@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { realpath, stat } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { startCodewikiDashboardServer } from "../src/dashboard/server.ts";
+import { startCodewikiAppServer } from "../src/host/app/server.ts";
 import { openPreviewBrowser } from "../src/preview/browser-adapter.ts";
 import { createPreviewCoordinator } from "../src/preview/coordinator.ts";
 import { createDashboardPreviewControl } from "../src/preview/dashboard-control.ts";
@@ -57,7 +57,7 @@ export async function runDashboardDev(options) {
 	assertExternalProjectRoot(canonicalSourceRoot, projectRoot);
 
 	const previewCoordinator = createPreviewCoordinator(projectRoot);
-	const dashboard = await startCodewikiDashboardServer({
+	const dashboard = await startCodewikiAppServer({
 		repoRoot: projectRoot,
 		open: false,
 		keepAlive: true,

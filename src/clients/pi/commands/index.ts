@@ -21,10 +21,10 @@ import {
 } from "../install-scope.ts";
 import { resolveCodewikiExtensionIdentity } from "../identity.ts";
 import {
-	buildCodewikiDashboardUrlMessage,
-	closeCodewikiDashboardServer,
-	startCodewikiDashboardServer,
-} from "../../../dashboard/server.ts";
+	buildCodewikiAppUrlMessage,
+	closeCodewikiAppServer,
+	startCodewikiAppServer,
+} from "../../../host/app/server.ts";
 import { stopProjectCoordinatorService } from "../../../runtime/coordinator/service.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
 import {
@@ -156,7 +156,7 @@ async function startDashboard(
 	const root = await requireCodewikiRoot(ctx);
 	notifyInstallWarning(ctx, root);
 	if (options.stop) {
-		await closeCodewikiDashboardServer(root);
+		await closeCodewikiAppServer(root);
 		if (connectProjectCoordinator) {
 			await stopProjectCoordinatorService(root).catch(() => undefined);
 		}
@@ -171,7 +171,7 @@ async function startDashboard(
 		};
 	}
 	const open = options.open ?? (!options.json && ctx.mode === "tui");
-	const dashboard = await startCodewikiDashboardServer({
+	const dashboard = await startCodewikiAppServer({
 		repoRoot: root,
 		open,
 		keepAlive: ctx.mode === "tui",
@@ -191,7 +191,7 @@ async function startDashboard(
 }
 
 function renderDashboardMessage(url: string): string[] {
-	return [buildCodewikiDashboardUrlMessage(url)];
+	return [buildCodewikiAppUrlMessage(url)];
 }
 
 interface DecisionAttentionCommandOptions {

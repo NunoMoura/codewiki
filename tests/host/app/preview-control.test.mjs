@@ -3,8 +3,8 @@ import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { startCodewikiDashboardServer } from "../../src/dashboard/server.ts";
-import { parseDashboardPreviewCommand } from "../../src/preview/dashboard-control.ts";
+import { startCodewikiAppServer } from "../../../src/host/app/server.ts";
+import { parseDashboardPreviewCommand } from "../../../src/preview/dashboard-control.ts";
 
 const digest = `sha256:${"a".repeat(64)}`;
 const targetDigest = `sha256:${"b".repeat(64)}`;
@@ -102,7 +102,7 @@ describe("dashboard preview control", () => {
 		let dashboard;
 		try {
 			await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
-			dashboard = await startCodewikiDashboardServer({
+			dashboard = await startCodewikiAppServer({
 				repoRoot: root,
 				open: false,
 				keepAlive: false,

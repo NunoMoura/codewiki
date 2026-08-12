@@ -198,6 +198,8 @@ for (const name of [
 	"daemon",
 	"health",
 	"index",
+	"server",
+	"control-error",
 ]) {
 	assert.equal(
 		existsSync(join(packageRoot, "dist", "dashboard", name + ".js")),
@@ -206,6 +208,11 @@ for (const name of [
 	);
 }
 assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "server.js")), true);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "host", "app", "request-error.js")),
+	true,
+);
 assert.equal(
 	existsSync(join(packageRoot, "dist", "host", "app", "installed-runtime.js")),
 	true,

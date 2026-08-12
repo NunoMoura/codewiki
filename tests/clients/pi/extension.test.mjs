@@ -21,9 +21,9 @@ import {
 	codewikiPromptHooksAvailable,
 } from "../../../src/clients/pi/prompt/index.ts";
 import {
-	closeCodewikiDashboardServer,
-	restoreCodewikiDashboardServer,
-} from "../../../src/dashboard/server.ts";
+	closeCodewikiAppServer,
+	restoreCodewikiAppServer,
+} from "../../../src/host/app/server.ts";
 import { isActiveDashboardTrace } from "../../../src/dashboard/state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../../src/clients/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../../src/clients/pi/tools/index.ts";
@@ -464,9 +464,9 @@ describe("Pi extension adapter", () => {
 				statuses[0].value,
 				/^CodeWiki \S+ \S+ · dashboard live · \/wiki-dashboard reopen$/,
 			);
-			assert.ok(await restoreCodewikiDashboardServer(root));
+			assert.ok(await restoreCodewikiAppServer(root));
 		} finally {
-			await closeCodewikiDashboardServer(root);
+			await closeCodewikiAppServer(root);
 			await rm(root, { recursive: true, force: true });
 		}
 	});
@@ -501,7 +501,7 @@ describe("Pi extension adapter", () => {
 				{ key: "codewiki-cards", value: undefined, options: undefined },
 			]);
 		} finally {
-			await closeCodewikiDashboardServer(root);
+			await closeCodewikiAppServer(root);
 			await rm(root, { recursive: true, force: true });
 		}
 	});
@@ -672,7 +672,7 @@ describe("Pi extension adapter", () => {
 			});
 			assert.equal(resume.command, "resume");
 		} finally {
-			await closeCodewikiDashboardServer(root);
+			await closeCodewikiAppServer(root);
 			await rm(root, { recursive: true, force: true });
 		}
 	});
@@ -681,8 +681,8 @@ describe("Pi extension adapter", () => {
 		const root = await fixture();
 		const tempRoot = await mkdtemp(join(tmpdir(), "codewiki-dashboard-test-"));
 		const dashboardTmp = join(tempRoot, "missing-tmp");
-		const previousTmp = process.env.CODEWIKI_DASHBOARD_TMPDIR;
-		process.env.CODEWIKI_DASHBOARD_TMPDIR = dashboardTmp;
+		const previousTmp = process.env.CODEWIKI_APP_SERVER_TMPDIR;
+		process.env.CODEWIKI_APP_SERVER_TMPDIR = dashboardTmp;
 		await rm(dashboardTmp, { recursive: true, force: true });
 		try {
 			const notifications = [];
@@ -714,10 +714,10 @@ describe("Pi extension adapter", () => {
 				}
 			}
 		} finally {
-			await closeCodewikiDashboardServer(root);
+			await closeCodewikiAppServer(root);
 			if (previousTmp === undefined)
-				delete process.env.CODEWIKI_DASHBOARD_TMPDIR;
-			else process.env.CODEWIKI_DASHBOARD_TMPDIR = previousTmp;
+				delete process.env.CODEWIKI_APP_SERVER_TMPDIR;
+			else process.env.CODEWIKI_APP_SERVER_TMPDIR = previousTmp;
 			await rm(root, { recursive: true, force: true });
 			await rm(tempRoot, { recursive: true, force: true });
 		}
@@ -1061,7 +1061,7 @@ describe("Pi extension adapter", () => {
 			assert.equal(restarted.stopped, false);
 			assert.equal((await fetch(restarted.url)).status, 200);
 		} finally {
-			await closeCodewikiDashboardServer(root);
+			await closeCodewikiAppServer(root);
 			await rm(root, { recursive: true, force: true });
 		}
 	});

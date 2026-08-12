@@ -1,8 +1,8 @@
 import type { WikiStateSnapshot } from "../../../api/state.ts";
 import {
-	closeInProcessCodewikiDashboardServer,
-	startCodewikiDashboardServer,
-} from "../../../dashboard/server.ts";
+	closeInProcessCodewikiAppServer,
+	startCodewikiAppServer,
+} from "../../../host/app/server.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
 import {
 	resolveCodewikiExtensionIdentity,
@@ -25,7 +25,7 @@ export function registerCodewikiFooter(
 	pi.on("session_shutdown", async (_event, ctx) => {
 		const projectRoot = await resolveEventProjectRoot(ctx);
 		if (projectRoot) {
-			await closeInProcessCodewikiDashboardServer(projectRoot).catch(
+			await closeInProcessCodewikiAppServer(projectRoot).catch(
 				() => undefined,
 			);
 			await closePiPreviewRuntime(projectRoot).catch(() => undefined);
@@ -41,7 +41,7 @@ export function registerCodewikiFooter(
 		let dashboardLive = false;
 		if (projectRoot) {
 			dashboardLive = Boolean(
-				await startCodewikiDashboardServer({
+				await startCodewikiAppServer({
 					repoRoot: projectRoot,
 					open: shouldOpenAutomaticDashboard(event, ctx),
 					keepAlive: ctx.mode === "tui",

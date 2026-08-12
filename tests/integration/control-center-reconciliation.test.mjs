@@ -39,7 +39,7 @@ const criterionEvidence = {
 		criteria: ["backlog-view", "guarded-mutations", "authority-ceiling"],
 		source: [
 			"src/dashboard/changes-state.ts",
-			"src/dashboard/server.ts",
+			"src/host/app/server.ts",
 		],
 		tests: [
 			"tests/dashboard/changes-state.test.mjs",

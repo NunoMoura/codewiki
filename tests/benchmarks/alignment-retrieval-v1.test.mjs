@@ -157,7 +157,7 @@ describe("Alignment retrieval benchmark harness", () => {
 							ref: ".codewiki/kb/system/claim-authority.md",
 							text: "distributed Claim authority policy",
 						},
-						{ref: "src/dashboard/server.ts", text: "dashboard HTTP server"},
+						{ref: "src/host/app/server.ts", text: "App HTTP host server"},
 					],
 				}),
 				createRecordedAlignmentRetrievalAdapter("pi_lens", {

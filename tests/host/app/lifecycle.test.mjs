@@ -9,7 +9,7 @@ import {
 	captureInstalledCodewikiRuntimeIdentity,
 	installedCodewikiRuntimeHealth,
 } from "../../../src/host/app/installed-runtime.ts";
-import { startCodewikiDashboardServer } from "../../../src/dashboard/server.ts";
+import { startCodewikiAppServer } from "../../../src/host/app/server.ts";
 
 function pin(commit, sha256) {
 	return JSON.stringify({
@@ -102,7 +102,7 @@ describe("Host App lifecycle", () => {
 			);
 			await assert.rejects(
 				() =>
-					startCodewikiDashboardServer({
+					startCodewikiAppServer({
 						repoRoot: root,
 						open: false,
 						keepAlive: false,

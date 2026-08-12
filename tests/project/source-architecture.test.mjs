@@ -170,7 +170,9 @@ describe("source architecture", () => {
 			"daemon.ts",
 			"health.ts",
 			"index.ts",
+			"server.ts",
 			"session-actions.ts",
+			"control-error.ts",
 		]) {
 			assert.equal(existsSync(join(sourceRoot, "dashboard", name)), false, name);
 		}
@@ -180,9 +182,19 @@ describe("source architecture", () => {
 		);
 		assert.equal(existsSync(join(sourceRoot, "clients", "app", "shell.ts")), true);
 		assert.equal(existsSync(join(sourceRoot, "host", "app", "daemon.ts")), true);
+		assert.equal(existsSync(join(sourceRoot, "host", "app", "server.ts")), true);
+		assert.equal(existsSync(join(sourceRoot, "host", "app", "request-error.ts")), true);
 		assert.equal(
 			existsSync(join(sourceRoot, "host", "app", "installed-runtime.ts")),
 			true,
+		);
+		assert.equal(
+			existsSync("tests/runtime/dashboard-preview-control.test.mjs"),
+			false,
+		);
+		assert.equal(
+			existsSync("tests/runtime/dashboard-coordinator-client.test.mjs"),
+			false,
 		);
 		assert.equal(
 			existsSync(

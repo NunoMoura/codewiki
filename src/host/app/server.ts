@@ -31,35 +31,35 @@ import { spawn } from "node:child_process";
 import {
 	buildProjectWikiState,
 	readProjectTraceFiles,
-} from "../project/state-file.ts";
+} from "../../project/state-file.ts";
 import {
 	knowledgeTopicRefsFromRecords,
 	readKnowledgeTopicDigests,
-} from "../knowledge/topic-alignment.ts";
-import { openSystemBrowser } from "../preview/browser-adapter.ts";
+} from "../../knowledge/topic-alignment.ts";
+import { openSystemBrowser } from "../../preview/browser-adapter.ts";
 import {
 	parseDashboardPreviewCommand,
 	type DashboardPreviewControl,
 	unavailableDashboardPreviewControl,
-} from "../preview/dashboard-control.ts";
-import { readDevLog } from "../runtime/persistence/dev-log.ts";
-import type { ProjectCoordinatorClientInput } from "../runtime/coordinator/project.ts";
-import { connectEnsuredProjectCoordinatorClient } from "../runtime/coordinator/process.ts";
-import type { ProjectCoordinatorRemoteClient } from "../runtime/coordinator/service.ts";
-import { CODEWIKI_APP_HTML } from "../clients/app/shell.ts";
-import { loadDashboardChangesState } from "./changes-state.ts";
-import { loadDashboardConfigState } from "./config-state.ts";
-import { DashboardControlError } from "./control-error.ts";
+} from "../../preview/dashboard-control.ts";
+import { readDevLog } from "../../runtime/persistence/dev-log.ts";
+import type { ProjectCoordinatorClientInput } from "../../runtime/coordinator/project.ts";
+import { connectEnsuredProjectCoordinatorClient } from "../../runtime/coordinator/process.ts";
+import type { ProjectCoordinatorRemoteClient } from "../../runtime/coordinator/service.ts";
+import { CODEWIKI_APP_HTML } from "../../clients/app/shell.ts";
+import { loadDashboardChangesState } from "../../dashboard/changes-state.ts";
+import { loadDashboardConfigState } from "../../dashboard/config-state.ts";
+import { AppRequestError } from "./request-error.ts";
 import {
 	assertInstalledCodewikiRuntimeCurrent,
 	captureInstalledCodewikiRuntimeIdentity,
-} from "../host/app/installed-runtime.ts";
+} from "./installed-runtime.ts";
 import {
 	buildCodewikiDashboardState,
 	type CodewikiDashboardState,
-} from "./state.ts";
+} from "../../dashboard/state.ts";
 
-interface CodewikiDashboardServerOptions {
+interface CodewikiAppServerOptions {
 	repoRoot: string;
 	open?: boolean;
 	keepAlive?: boolean;
@@ -73,7 +73,7 @@ interface CodewikiDashboardServerOptions {
 	) => Promise<ProjectCoordinatorRemoteClient>;
 }
 
-interface CodewikiDashboardServerHandle {
+interface CodewikiAppServerHandle {
 	repoRoot: string;
 	url: string;
 	origin: string;
@@ -82,7 +82,7 @@ interface CodewikiDashboardServerHandle {
 	close(): Promise<void>;
 }
 
-interface DashboardRuntime {
+interface AppServerRuntime {
 	repoRoot: string;
 	server: Server;
 	url: string;
@@ -103,7 +103,7 @@ interface DashboardRuntime {
 	close(): Promise<void>;
 }
 
-interface DashboardEndpoint {
+interface AppServerEndpoint {
 	repoRoot: string;
 	origin: string;
 	url: string;
@@ -111,19 +111,19 @@ interface DashboardEndpoint {
 	port: number;
 }
 
-interface DashboardMeta {
+interface AppServerMeta {
 	mode: "daemon" | "in_process";
 	pid: number;
 	assetDigest: string;
 }
 
-const dashboards = new Map<string, DashboardRuntime>();
+const appServers = new Map<string, AppServerRuntime>();
 const loadedCodewikiRuntimeIdentity = captureInstalledCodewikiRuntimeIdentity(
 	import.meta.url,
 );
 const APP_DAEMON_ENV = "CODEWIKI_APP_DAEMON";
-const DASHBOARD_TMPDIR_ENV = "CODEWIKI_DASHBOARD_TMPDIR";
-const DASHBOARD_SECURITY_HEADERS = {
+const APP_SERVER_TMPDIR_ENV = "CODEWIKI_APP_SERVER_TMPDIR";
+const APP_SERVER_SECURITY_HEADERS = {
 	"Content-Security-Policy":
 		"default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
 	"Cross-Origin-Resource-Policy": "same-origin",
@@ -132,9 +132,9 @@ const DASHBOARD_SECURITY_HEADERS = {
 	"X-Frame-Options": "DENY",
 } as const;
 
-export async function startCodewikiDashboardServer(
-	options: CodewikiDashboardServerOptions,
-): Promise<CodewikiDashboardServerHandle> {
+export async function startCodewikiAppServer(
+	options: CodewikiAppServerOptions,
+): Promise<CodewikiAppServerHandle> {
 	assertInstalledCodewikiRuntimeCurrent(
 		loadedCodewikiRuntimeIdentity,
 		options.repoRoot,
@@ -144,17 +144,17 @@ export async function startCodewikiDashboardServer(
 		!options.inProcess &&
 		process.env[APP_DAEMON_ENV] !== "1"
 	) {
-		return await startPersistentDashboardServer(options);
+		return await startPersistentAppServer(options);
 	}
-	return await startInProcessDashboardServer(options);
+	return await startInProcessAppServer(options);
 }
 
-export async function restoreCodewikiDashboardServer(
+export async function restoreCodewikiAppServer(
 	repoRoot: string,
-): Promise<CodewikiDashboardServerHandle | undefined> {
-	const endpoint = await readDashboardEndpoint(repoRoot);
+): Promise<CodewikiAppServerHandle | undefined> {
+	const endpoint = await readAppEndpoint(repoRoot);
 	if (!endpoint) return undefined;
-	return await startCodewikiDashboardServer({
+	return await startCodewikiAppServer({
 		repoRoot,
 		open: false,
 		keepAlive: false,
@@ -163,39 +163,39 @@ export async function restoreCodewikiDashboardServer(
 	});
 }
 
-export async function closeCodewikiDashboardServer(
+export async function closeCodewikiAppServer(
 	repoRoot: string,
 ): Promise<void> {
-	await dashboards.get(repoRoot)?.close();
-	const endpoint = await readDashboardEndpoint(repoRoot);
-	if (endpoint) await shutdownDashboardEndpoint(endpoint);
-	await removeDashboardEndpoint(repoRoot);
+	await appServers.get(repoRoot)?.close();
+	const endpoint = await readAppEndpoint(repoRoot);
+	if (endpoint) await shutdownAppEndpoint(endpoint);
+	await removeAppEndpoint(repoRoot);
 }
 
-export async function closeInProcessCodewikiDashboardServer(
+export async function closeInProcessCodewikiAppServer(
 	repoRoot: string,
 ): Promise<void> {
-	await dashboards.get(repoRoot)?.close();
+	await appServers.get(repoRoot)?.close();
 }
 
-export function buildCodewikiDashboardUrlMessage(url: string): string {
+export function buildCodewikiAppUrlMessage(url: string): string {
 	return `▸ Click to open CodeWiki dashboard: ${url}`;
 }
 
-async function startPersistentDashboardServer(
-	options: CodewikiDashboardServerOptions,
-): Promise<CodewikiDashboardServerHandle> {
-	const endpoint = await readDashboardEndpoint(options.repoRoot);
-	const expectedDigest = await currentDashboardAssetDigest();
+async function startPersistentAppServer(
+	options: CodewikiAppServerOptions,
+): Promise<CodewikiAppServerHandle> {
+	const endpoint = await readAppEndpoint(options.repoRoot);
+	const expectedDigest = await currentAppAssetDigest();
 	if (endpoint) {
-		const meta = await readDashboardEndpointMeta(endpoint);
+		const meta = await readAppEndpointMeta(endpoint);
 		if (meta?.assetDigest === expectedDigest) {
-			return dashboardEndpointHandle(
+			return appEndpointHandle(
 				endpoint,
 				options.open ? openBrowser(endpoint.url) : false,
 			);
 		}
-		if (meta) await shutdownDashboardEndpoint(endpoint);
+		if (meta) await shutdownAppEndpoint(endpoint);
 	}
 	try {
 		spawnAppDaemon(options.repoRoot);
@@ -203,12 +203,12 @@ async function startPersistentDashboardServer(
 			options.repoRoot,
 			expectedDigest,
 		);
-		return dashboardEndpointHandle(
+		return appEndpointHandle(
 			started,
 			options.open ? openBrowser(started.url) : false,
 		);
 	} catch {
-		return await startInProcessDashboardServer({
+		return await startInProcessAppServer({
 			...options,
 			keepAlive: true,
 			persistent: false,
@@ -219,13 +219,13 @@ async function startPersistentDashboardServer(
 async function waitForAppDaemon(
 	repoRoot: string,
 	expectedDigest: string,
-): Promise<DashboardEndpoint> {
-	let lastEndpoint: DashboardEndpoint | undefined;
+): Promise<AppServerEndpoint> {
+	let lastEndpoint: AppServerEndpoint | undefined;
 	const endpoint = await pollUntil(Date.now() + 4_000, async () => {
-		const candidate = await readDashboardEndpoint(repoRoot);
+		const candidate = await readAppEndpoint(repoRoot);
 		if (!candidate) return undefined;
 		lastEndpoint = candidate;
-		const meta = await readDashboardEndpointMeta(candidate);
+		const meta = await readAppEndpointMeta(candidate);
 		return meta?.mode === "daemon" && meta.assetDigest === expectedDigest
 			? candidate
 			: undefined;
@@ -241,7 +241,7 @@ function spawnAppDaemon(repoRoot: string): void {
 	const args = script.endsWith(".ts")
 		? ["--experimental-strip-types", script, repoRoot]
 		: [script, repoRoot];
-	const logPath = appDaemonLogPath(repoRoot);
+	const logPath = appServerLogPath(repoRoot);
 	const logDirectory = dirname(logPath);
 	mkdirSync(logDirectory, { recursive: true, mode: 0o700 });
 	if (process.platform !== "win32") chmodSync(logDirectory, 0o700);
@@ -264,29 +264,26 @@ function appDaemonScriptPath(): string {
 	const current = fileURLToPath(import.meta.url);
 	return join(
 		dirname(current),
-		"..",
-		"host",
-		"app",
 		current.endsWith(".ts") ? "daemon.ts" : "daemon.js",
 	);
 }
 
-function appDaemonLogPath(repoRoot: string): string {
+function appServerLogPath(repoRoot: string): string {
 	const key = createHash("sha256").update(repoRoot).digest("hex").slice(0, 32);
-	return join(dashboardEndpointDirectory(), `${key}.log`);
+	return join(appEndpointDirectory(), `${key}.log`);
 }
 
-async function currentDashboardAssetDigest(): Promise<string> {
-	const hash = createHash("sha256").update(await currentDashboardHtml());
+async function currentAppAssetDigest(): Promise<string> {
+	const hash = createHash("sha256").update(await currentAppHtml());
 	try {
-		hash.update(await currentDashboardLogoPng());
+		hash.update(await currentAppLogoPng());
 	} catch {
 		// Missing logo assets should not prevent dashboard startup.
 	}
 	return hash.digest("hex").slice(0, 16);
 }
 
-async function currentDashboardHtml(): Promise<string> {
+async function currentAppHtml(): Promise<string> {
 	try {
 		const moduleUrl = appShellModuleUrl();
 		const modulePath = fileURLToPath(moduleUrl);
@@ -308,19 +305,20 @@ function appShellModuleUrl(): URL {
 	const current = fileURLToPath(import.meta.url);
 	return new URL(
 		current.endsWith(".ts")
-			? "../clients/app/shell.ts"
-			: "../clients/app/shell.js",
+			? "../../clients/app/shell.ts"
+			: "../../clients/app/shell.js",
 		import.meta.url,
 	);
 }
 
-async function currentDashboardLogoPng(): Promise<Buffer> {
+async function currentAppLogoPng(): Promise<Buffer> {
 	return readFile(appLogoPath());
 }
 
 function appLogoPath(): string {
 	return join(
 		dirname(fileURLToPath(import.meta.url)),
+		"..",
 		"..",
 		"clients",
 		"app",
@@ -329,10 +327,10 @@ function appLogoPath(): string {
 	);
 }
 
-async function readDashboardEndpointMeta(
-	endpoint: DashboardEndpoint,
-): Promise<DashboardMeta | undefined> {
-	const result = await requestDashboardJson(
+async function readAppEndpointMeta(
+	endpoint: AppServerEndpoint,
+): Promise<AppServerMeta | undefined> {
+	const result = await requestAppJson(
 		`${endpoint.origin}/api/meta?token=${encodeURIComponent(endpoint.token)}`,
 		500,
 	);
@@ -351,19 +349,19 @@ async function readDashboardEndpointMeta(
 	};
 }
 
-async function shutdownDashboardEndpoint(
-	endpoint: DashboardEndpoint,
+async function shutdownAppEndpoint(
+	endpoint: AppServerEndpoint,
 ): Promise<void> {
-	await requestDashboardJson(
+	await requestAppJson(
 		`${endpoint.origin}/api/shutdown?token=${encodeURIComponent(endpoint.token)}`,
 		500,
 	).catch(() => undefined);
 	await pollUntil(Date.now() + 1_500, async () =>
-		(await dashboardEndpointResponds(endpoint)) ? undefined : true,
+		(await appEndpointResponds(endpoint)) ? undefined : true,
 	);
 }
 
-async function requestDashboardJson(
+async function requestAppJson(
 	url: string,
 	timeout: number,
 ): Promise<{ status: number; data?: unknown } | undefined> {
@@ -412,35 +410,35 @@ async function pollUntil<T>(
 	return pollUntil(deadline, attempt);
 }
 
-async function startInProcessDashboardServer(
-	options: CodewikiDashboardServerOptions,
-): Promise<CodewikiDashboardServerHandle> {
-	const existing = dashboards.get(options.repoRoot);
+async function startInProcessAppServer(
+	options: CodewikiAppServerOptions,
+): Promise<CodewikiAppServerHandle> {
+	const existing = appServers.get(options.repoRoot);
 	if (existing?.server.listening) {
 		if (options.keepAlive) existing.server.ref();
-		if (!(await dashboardEndpointServesState(existing))) {
+		if (!(await appEndpointServesState(existing))) {
 			await existing.close();
-			await removeDashboardEndpoint(options.repoRoot);
-			throw dashboardUnavailableError(existing.origin);
+			await removeAppEndpoint(options.repoRoot);
+			throw appUnavailableError(existing.origin);
 		}
 		if (options.open && !existing.opened)
 			existing.opened = openBrowser(existing.url);
-		return dashboardHandle(existing);
+		return appServerHandle(existing);
 	}
-	if (existing) dashboards.delete(options.repoRoot);
-	const endpoint = await readDashboardEndpoint(options.repoRoot);
-	const expectedDigest = await currentDashboardAssetDigest();
+	if (existing) appServers.delete(options.repoRoot);
+	const endpoint = await readAppEndpoint(options.repoRoot);
+	const expectedDigest = await currentAppAssetDigest();
 	if (
 		endpoint &&
-		(await dashboardEndpointIsCurrent(endpoint, expectedDigest)) &&
-		(await dashboardEndpointServesState(endpoint))
+		(await appEndpointIsCurrent(endpoint, expectedDigest)) &&
+		(await appEndpointServesState(endpoint))
 	) {
-		return dashboardEndpointHandle(
+		return appEndpointHandle(
 			endpoint,
 			options.open ? openBrowser(endpoint.url) : false,
 		);
 	}
-	const runtime = await createDashboardRuntime(
+	const runtime = await createAppServerRuntime(
 		options.repoRoot,
 		endpoint,
 		options.keepAlive ?? false,
@@ -452,21 +450,21 @@ async function startInProcessDashboardServer(
 				connectEnsuredProjectCoordinatorClient,
 		},
 	);
-	dashboards.set(options.repoRoot, runtime);
-	if (!(await dashboardEndpointServesState(runtime))) {
+	appServers.set(options.repoRoot, runtime);
+	if (!(await appEndpointServesState(runtime))) {
 		await runtime.close();
-		await removeDashboardEndpoint(options.repoRoot);
-		throw dashboardUnavailableError(runtime.origin);
+		await removeAppEndpoint(options.repoRoot);
+		throw appUnavailableError(runtime.origin);
 	}
 	if (options.open) runtime.opened = openBrowser(runtime.url);
-	return dashboardHandle(runtime);
+	return appServerHandle(runtime);
 }
 
-async function readDashboardEndpoint(
+async function readAppEndpoint(
 	repoRoot: string,
-): Promise<DashboardEndpoint | undefined> {
+): Promise<AppServerEndpoint | undefined> {
 	try {
-		const raw = await readFile(dashboardEndpointPath(repoRoot), "utf8");
+		const raw = await readFile(appEndpointPath(repoRoot), "utf8");
 		const data = JSON.parse(raw) as Record<string, unknown>;
 		if (data.repoRoot !== repoRoot) return undefined;
 		if (typeof data.origin !== "string") return undefined;
@@ -486,11 +484,11 @@ async function readDashboardEndpoint(
 	}
 }
 
-async function writeDashboardEndpoint(
-	endpoint: DashboardEndpoint,
+async function writeAppEndpoint(
+	endpoint: AppServerEndpoint,
 ): Promise<void> {
-	await ensurePrivateDashboardEndpointDirectory();
-	const endpointPath = dashboardEndpointPath(endpoint.repoRoot);
+	await ensurePrivateAppEndpointDirectory();
+	const endpointPath = appEndpointPath(endpoint.repoRoot);
 	const tempPath = `${endpointPath}.${process.pid}.${Date.now()}.tmp`;
 	await writeFile(tempPath, `${JSON.stringify(endpoint)}\n`, {
 		encoding: "utf8",
@@ -500,22 +498,22 @@ async function writeDashboardEndpoint(
 	await rename(tempPath, endpointPath);
 }
 
-async function ensurePrivateDashboardEndpointDirectory(): Promise<void> {
-	const directory = dashboardEndpointDirectory();
+async function ensurePrivateAppEndpointDirectory(): Promise<void> {
+	const directory = appEndpointDirectory();
 	await mkdir(directory, { recursive: true, mode: 0o700 });
 	if (process.platform !== "win32") await chmod(directory, 0o700);
 }
 
-async function removeDashboardEndpoint(repoRoot: string): Promise<void> {
-	await rm(dashboardEndpointPath(repoRoot), { force: true });
+async function removeAppEndpoint(repoRoot: string): Promise<void> {
+	await rm(appEndpointPath(repoRoot), { force: true });
 }
 
-function dashboardEndpoint(
+function appEndpoint(
 	repoRoot: string,
 	origin: string,
 	token: string,
 	port: number,
-): DashboardEndpoint {
+): AppServerEndpoint {
 	return {
 		repoRoot,
 		origin,
@@ -525,53 +523,53 @@ function dashboardEndpoint(
 	};
 }
 
-function dashboardEndpointDirectory(): string {
+function appEndpointDirectory(): string {
 	return join(stableTmpDirectory(), "codewiki-dashboard");
 }
 
 function stableTmpDirectory(): string {
 	return (
-		process.env[DASHBOARD_TMPDIR_ENV] ||
+		process.env[APP_SERVER_TMPDIR_ENV] ||
 		(process.platform === "win32" ? tmpdir() : "/tmp")
 	);
 }
 
-function dashboardEndpointPath(repoRoot: string): string {
+function appEndpointPath(repoRoot: string): string {
 	const key = createHash("sha256").update(repoRoot).digest("hex").slice(0, 32);
-	return join(dashboardEndpointDirectory(), `${key}.json`);
+	return join(appEndpointDirectory(), `${key}.json`);
 }
 
-async function dashboardEndpointIsCurrent(
-	endpoint: DashboardEndpoint,
+async function appEndpointIsCurrent(
+	endpoint: AppServerEndpoint,
 	expectedDigest: string,
 ): Promise<boolean> {
-	const meta = await readDashboardEndpointMeta(endpoint);
+	const meta = await readAppEndpointMeta(endpoint);
 	return meta?.assetDigest === expectedDigest;
 }
 
-async function dashboardEndpointResponds(
-	endpoint: DashboardEndpoint,
+async function appEndpointResponds(
+	endpoint: AppServerEndpoint,
 ): Promise<boolean> {
-	return (await readDashboardEndpointMeta(endpoint)) !== undefined;
+	return (await readAppEndpointMeta(endpoint)) !== undefined;
 }
 
-async function dashboardEndpointServesState(
-	endpoint: Pick<DashboardEndpoint, "origin" | "token">,
+async function appEndpointServesState(
+	endpoint: Pick<AppServerEndpoint, "origin" | "token">,
 ): Promise<boolean> {
-	const result = await requestDashboardJson(
+	const result = await requestAppJson(
 		`${endpoint.origin}/api/state?token=${encodeURIComponent(endpoint.token)}`,
 		5_000,
 	);
 	return Boolean(result && result.status === 200 && result.data);
 }
 
-function dashboardUnavailableError(origin: string): Error {
+function appUnavailableError(origin: string): Error {
 	return new Error(
 		`CodeWiki dashboard at ${origin} did not serve pipeline state. Retry /wiki-dashboard; if the failure persists, fully restart Pi.`,
 	);
 }
 
-async function listenDashboardServer(
+async function listenAppServer(
 	server: Server,
 	port: number,
 ): Promise<void> {
@@ -596,10 +594,10 @@ async function listenOnPort(server: Server, port: number): Promise<void> {
 	});
 }
 
-function dashboardEndpointHandle(
-	endpoint: DashboardEndpoint,
+function appEndpointHandle(
+	endpoint: AppServerEndpoint,
 	opened: boolean,
-): CodewikiDashboardServerHandle {
+): CodewikiAppServerHandle {
 	return {
 		repoRoot: endpoint.repoRoot,
 		url: endpoint.url,
@@ -610,9 +608,9 @@ function dashboardEndpointHandle(
 	};
 }
 
-async function createDashboardRuntime(
+async function createAppServerRuntime(
 	repoRoot: string,
-	preferredEndpoint?: DashboardEndpoint,
+	preferredEndpoint?: AppServerEndpoint,
 	keepAlive = false,
 	providedPreviewControl?: DashboardPreviewControl,
 	options: {
@@ -622,11 +620,11 @@ async function createDashboardRuntime(
 			input: ProjectCoordinatorClientInput,
 		) => Promise<ProjectCoordinatorRemoteClient>;
 	} = {},
-): Promise<DashboardRuntime> {
+): Promise<AppServerRuntime> {
 	const token =
 		preferredEndpoint?.token || randomBytes(18).toString("base64url");
 	const clients = new Set<ServerResponse>();
-	let runtime: DashboardRuntime;
+	let runtime: AppServerRuntime;
 	const server = createServer(async (request, response) => {
 		try {
 			await routeRequest(runtime, request, response);
@@ -634,14 +632,14 @@ async function createDashboardRuntime(
 			writeServerError(response, error);
 		}
 	});
-	await listenDashboardServer(server, preferredEndpoint?.port ?? 0);
+	await listenAppServer(server, preferredEndpoint?.port ?? 0);
 	if (!keepAlive) server.unref();
 	const address = server.address();
 	if (!address || typeof address === "string") {
 		throw new Error("CodeWiki dashboard server did not expose a TCP address.");
 	}
 	const origin = `http://127.0.0.1:${address.port}`;
-	const endpoint = dashboardEndpoint(repoRoot, origin, token, address.port);
+	const endpoint = appEndpoint(repoRoot, origin, token, address.port);
 	const previewControl =
 		providedPreviewControl || unavailableDashboardPreviewControl();
 	const coordinatorConnector =
@@ -667,7 +665,7 @@ async function createDashboardRuntime(
 		opened: false,
 		close: () => closeRuntime(runtime),
 	};
-	await writeDashboardEndpoint(endpoint);
+	await writeAppEndpoint(endpoint);
 	runtime.watcher = watchTraceDirectory(runtime);
 	if (coordinatorClient) {
 		runtime.coordinatorHeartbeatTimer = setInterval(() => {
@@ -679,7 +677,7 @@ async function createDashboardRuntime(
 	return runtime;
 }
 
-function watchTraceDirectory(runtime: DashboardRuntime): FSWatcher | undefined {
+function watchTraceDirectory(runtime: AppServerRuntime): FSWatcher | undefined {
 	try {
 		return watch(
 			join(runtime.repoRoot, ".codewiki", "traces"),
@@ -693,7 +691,7 @@ function watchTraceDirectory(runtime: DashboardRuntime): FSWatcher | undefined {
 }
 
 async function routeRequest(
-	runtime: DashboardRuntime,
+	runtime: AppServerRuntime,
 	request: IncomingMessage,
 	response: ServerResponse,
 ): Promise<void> {
@@ -727,22 +725,22 @@ async function routePublicGet(
 	if (url.pathname === "/" || url.pathname === "/index.html") {
 		writeHtml(
 			response,
-			(await currentDashboardHtml()).replaceAll(
+			(await currentAppHtml()).replaceAll(
 				"__CODEWIKI_ASSET_DIGEST__",
-				await currentDashboardAssetDigest(),
+				await currentAppAssetDigest(),
 			),
 		);
 		return true;
 	}
 	if (url.pathname === "/assets/codewiki-logo.png") {
-		writePng(response, await currentDashboardLogoPng());
+		writePng(response, await currentAppLogoPng());
 		return true;
 	}
 	return false;
 }
 
 async function routeAuthorizedGet(
-	runtime: DashboardRuntime,
+	runtime: AppServerRuntime,
 	response: ServerResponse,
 	url: URL,
 ): Promise<boolean> {
@@ -771,7 +769,7 @@ async function routeAuthorizedGet(
 		writeJson(response, 200, {
 			mode: process.env[APP_DAEMON_ENV] === "1" ? "daemon" : "in_process",
 			pid: process.pid,
-			assetDigest: await currentDashboardAssetDigest(),
+			assetDigest: await currentAppAssetDigest(),
 		});
 		return true;
 	}
@@ -788,7 +786,7 @@ async function routeAuthorizedGet(
 }
 
 async function routeAuthorizedPost(
-	runtime: DashboardRuntime,
+	runtime: AppServerRuntime,
 	request: IncomingMessage,
 	response: ServerResponse,
 	url: URL,
@@ -823,7 +821,7 @@ async function routeAuthorizedPost(
 	return false;
 }
 
-function scheduleRuntimeClose(runtime: DashboardRuntime): void {
+function scheduleRuntimeClose(runtime: AppServerRuntime): void {
 	setTimeout(() => {
 		void runtime.close().then(() => {
 			if (process.env[APP_DAEMON_ENV] === "1") process.exit(0);
@@ -832,7 +830,7 @@ function scheduleRuntimeClose(runtime: DashboardRuntime): void {
 }
 
 function assertSameOriginMutation(
-	runtime: DashboardRuntime,
+	runtime: AppServerRuntime,
 	request: IncomingMessage,
 ): void {
 	const requestOrigin = request.headers.origin;
@@ -846,20 +844,20 @@ function assertSameOriginMutation(
 		fetchSite === "same-origin" &&
 		hostOrigin === runtime.origin;
 	if (!exactOrigin && !browserSameOriginFallback) {
-		throw new DashboardControlError(
+		throw new AppRequestError(
 			"Dashboard mutation requires exact same-origin authority.",
 			403,
 		);
 	}
 	if (fetchSite && fetchSite !== "same-origin") {
-		throw new DashboardControlError(
+		throw new AppRequestError(
 			"Dashboard mutation rejected cross-site request metadata.",
 			403,
 		);
 	}
 	const contentType = request.headers["content-type"] || "";
 	if (!contentType.toLowerCase().startsWith("application/json")) {
-		throw new DashboardControlError(
+		throw new AppRequestError(
 			"Dashboard mutation requires application/json.",
 			400,
 		);
@@ -870,7 +868,7 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 	const maxBytes = 16_384;
 	const declared = Number(request.headers["content-length"] || 0);
 	if (Number.isFinite(declared) && declared > maxBytes) {
-		throw new DashboardControlError(
+		throw new AppRequestError(
 			"Dashboard command body exceeds 16384 bytes.",
 			400,
 		);
@@ -881,7 +879,7 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 		const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
 		bytes += buffer.length;
 		if (bytes > maxBytes) {
-			throw new DashboardControlError(
+			throw new AppRequestError(
 				"Dashboard command body exceeds 16384 bytes.",
 				400,
 			);
@@ -891,7 +889,7 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 	try {
 		return JSON.parse(Buffer.concat(chunks).toString("utf8"));
 	} catch {
-		throw new DashboardControlError(
+		throw new AppRequestError(
 			"Dashboard command body must be valid JSON.",
 			400,
 		);
@@ -899,7 +897,7 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 }
 
 async function readDashboardState(
-	runtime: DashboardRuntime,
+	runtime: AppServerRuntime,
 ): Promise<CodewikiDashboardState> {
 	const repoRoot = runtime.repoRoot;
 	const traceFiles = await readProjectTraceFiles(repoRoot);
@@ -930,12 +928,12 @@ async function readDashboardState(
 }
 
 async function attachEventStream(
-	runtime: DashboardRuntime,
+	runtime: AppServerRuntime,
 	response: ServerResponse,
 ): Promise<void> {
 	const state = await readDashboardState(runtime);
 	response.writeHead(200, {
-		...DASHBOARD_SECURITY_HEADERS,
+		...APP_SERVER_SECURITY_HEADERS,
 		"Content-Type": "text/event-stream",
 		"Cache-Control": "no-cache, no-transform",
 		Connection: "keep-alive",
@@ -945,13 +943,13 @@ async function attachEventStream(
 	writeEvent(response, state);
 }
 
-function scheduleCoordinatorObservation(runtime: DashboardRuntime): void {
+function scheduleCoordinatorObservation(runtime: AppServerRuntime): void {
 	void runtime.coordinatorClient
 		?.inspect({ kind: "project_truth_changed" })
 		.catch(() => undefined);
 }
 
-async function watchCoordinatorEvents(runtime: DashboardRuntime): Promise<void> {
+async function watchCoordinatorEvents(runtime: AppServerRuntime): Promise<void> {
 	let cursor = 0;
 	let generationId: string | undefined;
 	while (!runtime.coordinatorEventsClosed) {
@@ -992,7 +990,7 @@ async function watchCoordinatorEvents(runtime: DashboardRuntime): Promise<void> 
 	}
 }
 
-function scheduleBroadcast(runtime: DashboardRuntime): void {
+function scheduleBroadcast(runtime: AppServerRuntime): void {
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
 	runtime.broadcastTimer = setTimeout(() => {
 		runtime.broadcastTimer = undefined;
@@ -1000,7 +998,7 @@ function scheduleBroadcast(runtime: DashboardRuntime): void {
 	}, 120);
 }
 
-async function broadcast(runtime: DashboardRuntime): Promise<void> {
+async function broadcast(runtime: AppServerRuntime): Promise<void> {
 	if (runtime.clients.size === 0) return;
 	const state = await readDashboardState(runtime);
 	for (const client of runtime.clients) writeEvent(client, state);
@@ -1014,13 +1012,13 @@ function writeEvent(
 	response.write(`data: ${JSON.stringify(data)}\n\n`);
 }
 
-function validToken(runtime: DashboardRuntime, url: URL): boolean {
+function validToken(runtime: AppServerRuntime, url: URL): boolean {
 	return url.searchParams.get("token") === runtime.token;
 }
 
 function writeHtml(response: ServerResponse, html: string): void {
 	response.writeHead(200, {
-		...DASHBOARD_SECURITY_HEADERS,
+		...APP_SERVER_SECURITY_HEADERS,
 		"Content-Type": "text/html; charset=utf-8",
 		"Cache-Control": "no-store",
 	});
@@ -1029,7 +1027,7 @@ function writeHtml(response: ServerResponse, html: string): void {
 
 function writePng(response: ServerResponse, body: Buffer): void {
 	response.writeHead(200, {
-		...DASHBOARD_SECURITY_HEADERS,
+		...APP_SERVER_SECURITY_HEADERS,
 		"Content-Type": "image/png",
 		"Cache-Control": "no-store",
 	});
@@ -1044,7 +1042,7 @@ function writeJson(
 	if (response.headersSent || response.writableEnded || response.destroyed)
 		return;
 	response.writeHead(status, {
-		...DASHBOARD_SECURITY_HEADERS,
+		...APP_SERVER_SECURITY_HEADERS,
 		"Content-Type": "application/json; charset=utf-8",
 		"Cache-Control": "no-store",
 	});
@@ -1058,13 +1056,13 @@ function writeServerError(response: ServerResponse, error: unknown): void {
 	}
 	writeJson(
 		response,
-		error instanceof DashboardControlError ? error.status : 500,
+		error instanceof AppRequestError ? error.status : 500,
 		{ error: error instanceof Error ? error.message : String(error) },
 	);
 }
 
-async function closeRuntime(runtime: DashboardRuntime): Promise<void> {
-	dashboards.delete(runtime.repoRoot);
+async function closeRuntime(runtime: AppServerRuntime): Promise<void> {
+	appServers.delete(runtime.repoRoot);
 	runtime.coordinatorEventsClosed = true;
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
 	if (runtime.coordinatorHeartbeatTimer) {
@@ -1079,9 +1077,9 @@ async function closeRuntime(runtime: DashboardRuntime): Promise<void> {
 	});
 }
 
-function dashboardHandle(
-	runtime: DashboardRuntime,
-): CodewikiDashboardServerHandle {
+function appServerHandle(
+	runtime: AppServerRuntime,
+): CodewikiAppServerHandle {
 	return {
 		repoRoot: runtime.repoRoot,
 		url: runtime.url,

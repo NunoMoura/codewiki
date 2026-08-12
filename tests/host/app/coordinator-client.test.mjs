@@ -3,14 +3,14 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { startCodewikiDashboardServer } from "../../src/dashboard/server.ts";
-import { bootstrapCodewiki } from "../../src/project/bootstrap.ts";
+import { startCodewikiAppServer } from "../../../src/host/app/server.ts";
+import { bootstrapCodewiki } from "../../../src/project/bootstrap.ts";
 import {
 	connectProjectCoordinatorClient,
 	readProjectCoordinatorServiceState,
 	startProjectCoordinatorService,
 	stopProjectCoordinatorService,
-} from "../../src/runtime/coordinator/service.ts";
+} from "../../../src/runtime/coordinator/service.ts";
 
 async function waitForReplacement(root, previousGeneration, deadline) {
 	const state = await readProjectCoordinatorServiceState(root).catch(() => undefined);
@@ -37,7 +37,7 @@ test("dashboard registers as observer of shared project coordinator", async () =
 		service = await startProjectCoordinatorService(root, {
 			generationId: "generation:dashboard-client",
 		});
-		dashboard = await startCodewikiDashboardServer({
+		dashboard = await startCodewikiAppServer({
 			repoRoot: root,
 			open: false,
 			keepAlive: true,
