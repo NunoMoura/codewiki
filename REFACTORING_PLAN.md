@@ -24,7 +24,7 @@ App | CLI | Pi TUI              Claude Code | Codex          Slack | GitHub | Wh
                    Knowledge | Change Trace | Git | Evidence
 ```
 
-One versioned Host command/query/event protocol serves every binding. MCP `2026-07-28` is the preferred stateless Agent Client binding where supported. CLI remains deterministic human, scripting, confirmation, and compatibility access. Host owns transport, pairing, registry, channel delivery, redaction, deduplication, and reconnect. Runtime owns meaning, actor authority, admission, provenance, persistence, scheduling, Integration, Verification routing, and effects. Pi is the sole shipped fully managed execution engine.
+One versioned Host command/query/operation/event protocol serves every binding. MCP `2026-07-28` is the preferred stateless Agent Client binding where supported. CLI remains deterministic human, scripting, confirmation, and compatibility access. Host owns transport, pairing, registry, channel delivery, redaction, deduplication, and reconnect. Host-attached context separates accountable actor identity from Client kind/instance and explicit delegation; Runtime authorizes the actor, not the interface. Runtime owns meaning, actor authority, delegation validation, admission, provenance, persistence, scheduling, Integration, Verification routing, and effects. Pi is the sole shipped fully managed execution engine.
 
 Every observed Git state receives positive provenance accounting:
 
@@ -137,6 +137,8 @@ The Runtime App query move is recorded by `.tmp-worktrees/runtime-app-queries-mo
 
 The controlled Implementation worker path clean cut is recorded by `.tmp-worktrees/runtime-controlled-worker-path-clean-cut-manifest.json`, exhaustively anchored to `03ea724` with 633 keeps, 2 moves, and 2 deletions. It removes the direct Runtime claim-to-session starter and manual Host handoff manifest/API, moves bounded prompt construction into the authoritative dispatcher path, requires exact isolated-worktree custody on every Implementation Worker Assignment, leaves Pi session mechanics under Managed Execution ownership, and retains durable coordinator scheduling, recovery, cancellation, immutable reports, claim release, Integration, and cleanup as the sole controlled Implementation worker route. No old path or compatibility export survives. Its green checkpoint is 921 full-suite tests, 117 coordinator tests, 719 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
 
+The Host/Client protocol clean cut is recorded by `.tmp-worktrees/host-client-protocol-clean-cut-manifest.json`, exhaustively anchored to `74fd712` with 634 keeps and 2 moves. It consolidates shared API validation into `src/api/protocol.ts`, defines strict `codewiki.host-client@1.0.0` command/query/operation/event envelopes, separates accountable actor from Client transport and optional delegation, and gives Host transport deduplication and Runtime semantic idempotency different identities. Change Trace Protocol `3.0.0` and Provider Check Receipt Adapter `2.0.0` replace ambiguous legacy identity vocabulary with proof-backed authenticated identity without aliases. Host authentication, actor mapping, registry, pairing, and endpoint wiring remain pending. Its green checkpoint is 924 full-suite tests, 117 coordinator tests, 719 packed files, passing Pi and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -189,9 +191,9 @@ Rules:
 
 ### 3. Define Host and Client protocol
 
-- [ ] Define versioned command, bounded query, durable operation, and event envelopes.
-- [ ] Bind principal, project, target, expected digest, idempotency key, expiry, capability, and bounded payload on every mutation.
-- [ ] Separate transport deduplication from Runtime semantic idempotency.
+- [x] Define versioned command, bounded query, durable operation, and event envelopes.
+- [x] Bind Host-authenticated actor context, separate Client kind/instance, optional explicit delegation, repository, target, expected digest, semantic idempotency key, expiry, capability, and bounded payload on every mutation.
+- [x] Separate Client-instance transport deduplication from actor-scoped Runtime semantic idempotency.
 - [ ] Implement one machine-level Host registry over separate per-project Runtime processes.
 - [ ] Implement loopback binding, token/origin checks, pairing, stable actor mappings, reconnect cursors, deep links, redaction, and durable delivery.
 - [ ] Ensure browser or terminal closure cannot stop accepted work.

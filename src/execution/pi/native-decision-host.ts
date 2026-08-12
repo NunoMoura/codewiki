@@ -222,20 +222,20 @@ export function resolvePiDecisionSelectionAuthority(
 				"Decision attention selection requires an approved Pi coordinator connection.",
 		});
 	}
-	const principalDigest = canonicalJsonDigest({
+	const actorIdentityDigest = canonicalJsonDigest({
 		protocol: PI_NATIVE_DECISION_HOST_PROTOCOL,
 		clientKind: caller.clientKind,
 		clientId: caller.clientId,
 	});
 	const authenticationDigest = canonicalJsonDigest({
 		protocol: PI_NATIVE_DECISION_HOST_PROTOCOL,
-		principalDigest,
+		actorIdentityDigest,
 		connectionId: caller.connectionId,
 		generationId: caller.generationId,
 	});
 	return Object.freeze({
-		actorId: `pi-decision-selector:${digestHex(principalDigest)}`,
-		principalRef: `principal:pi:${digestHex(principalDigest)}`,
+		actorId: `pi-decision-selector:${digestHex(actorIdentityDigest)}`,
+		authenticatedIdentityRef: `identity:pi:${digestHex(actorIdentityDigest)}`,
 		role: "decision-selector",
 		actorPolicyDigest: PI_DECISION_SELECTION_ACTOR_POLICY_DIGEST,
 		authenticationEvidenceId: `pi-coordinator-auth:${digestHex(authenticationDigest)}`,
@@ -251,7 +251,7 @@ function isPiDecisionSelectionAuthority(
 		authority.actorPolicyDigest === PI_DECISION_SELECTION_ACTOR_POLICY_DIGEST &&
 		authority.runtimeProtocolDigest === PI_DECISION_RUNTIME_PROTOCOL_DIGEST &&
 		authority.actorId.startsWith("pi-decision-selector:") &&
-		authority.principalRef.startsWith("principal:pi:") &&
+		authority.authenticatedIdentityRef.startsWith("identity:pi:") &&
 		authority.authenticationEvidenceId.startsWith("pi-coordinator-auth:")
 	);
 }

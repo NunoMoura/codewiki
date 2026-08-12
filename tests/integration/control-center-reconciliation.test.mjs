@@ -184,7 +184,7 @@ describe("control-center reconciliation integration", () => {
 		assert.match(decision, /one authenticated exact Change revision/i);
 		assert.match(decision, /Runtime owns admission, scheduling, identity, persistence/i);
 		assert.match(tools, /delegates semantics and authority to owners/i);
-		assert.match(tools, /Callers cannot supply canonical identity, actor authority/i);
+		assert.match(tools, /Payloads cannot supply identity, authentication, delegation, authority/i);
 		assert.match(runtime, /authoritative per-project control plane/i);
 		assert.match(runtime, /Candidate Manifest matches persisted custody/i);
 	});

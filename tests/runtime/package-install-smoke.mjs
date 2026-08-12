@@ -52,9 +52,11 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
+	HOST_CLIENT_PROTOCOL,
 	ProjectCoordinator,
 	buildWikiState,
 	buildWorkState,
+	normalizeHostClientQuery,
 	runWikiConfig,
 } from "@nunomoura/codewiki";
 import {
@@ -217,6 +219,32 @@ assert.equal(
 );
 assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "input-validation.js")), false);
+assert.equal(HOST_CLIENT_PROTOCOL.version, "1.0.0");
+assert.equal(
+	normalizeHostClientQuery({
+		protocolId: HOST_CLIENT_PROTOCOL.id,
+		protocolVersion: HOST_CLIENT_PROTOCOL.version,
+		kind: "query",
+		transportRequestId: "packed:query",
+		actor: {
+			actorId: "user:packed",
+			authenticatedIdentityRef: "identity:packed",
+		},
+		client: {
+			clientKind: "cli",
+			clientInstanceId: "cli:packed",
+			authenticationRef: "auth:packed",
+		},
+		repositoryIdentity: "sha256:" + "1".repeat(64),
+		queryName: "runtime.state",
+		maxItems: 1,
+		payload: {},
+	}).actor.actorId,
+	"user:packed",
+);
 assert.equal(
 	existsSync(join(packageRoot, "dist", "harnesses")),
 	false,

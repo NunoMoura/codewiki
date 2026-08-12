@@ -71,7 +71,7 @@ function proposal(overrides = {}) {
 function authority(overrides = {}) {
 	return {
 		actorId: "maintainer-1",
-		principalRef: "identity:maintainer-1",
+		authenticatedIdentityRef: "identity:maintainer-1",
 		role: "maintainer",
 		actorPolicyDigest: `sha256:${"1".repeat(64)}`,
 		authenticationEvidenceId: "auth:test:maintainer-1",

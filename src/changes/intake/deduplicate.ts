@@ -40,7 +40,7 @@ export function createChangeIntakeFingerprints(
 	const sourceIdentityDigest = canonicalJsonDigest({
 		materialType: material.materialType,
 		binding: material.binding,
-		principalRef: authorityBinding.principalRef,
+		authenticatedIdentityRef: authorityBinding.authenticatedIdentityRef,
 	});
 	const semanticDigest = canonicalJsonDigest({
 		summary: material.content.summary,

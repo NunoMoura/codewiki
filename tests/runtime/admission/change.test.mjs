@@ -149,7 +149,7 @@ describe("Runtime-owned Change intake admission", () => {
 				proposedOperation,
 				"change.proposed",
 			);
-			assert.equal(proposedOperation.body.protocol.version, "2.0.0");
+			assert.equal(proposedOperation.body.protocol.version, "3.0.0");
 			assert.equal(
 				proposedPayload.intakeMaterial.digest,
 				created.materialDigest,

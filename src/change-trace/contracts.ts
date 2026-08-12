@@ -11,7 +11,7 @@ import {
 
 export const CHANGE_TRACE_PROTOCOL = Object.freeze({
 	id: "codewiki.change-trace",
-	version: "2.0.0",
+	version: "3.0.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 
@@ -123,7 +123,7 @@ export interface BaseSnapshot {
 
 export interface AuthorityBinding {
 	readonly actorId: string;
-	readonly principalRef: string;
+	readonly authenticatedIdentityRef: string;
 	readonly role: string;
 	readonly actorPolicyDigest: Sha256Digest;
 	readonly authenticationEvidenceId?: string;
@@ -315,7 +315,7 @@ export const baseSnapshotSchema = Type.Object(
 export const authorityBindingSchema = Type.Object(
 	{
 		actorId: idSchema,
-		principalRef: refSchema,
+		authenticatedIdentityRef: refSchema,
 		role: idSchema,
 		actorPolicyDigest: digestSchema,
 		authenticationEvidenceId: Type.Optional(idSchema),

@@ -45,7 +45,7 @@ function mutationRuntime(
 		currentProject: () => projectSnapshotFor(state),
 		authorityBinding: authorityBinding({
 			actorId,
-			principalRef: `principal:${actorId}`,
+			authenticatedIdentityRef: `identity:${actorId}`,
 			...(authenticated ? {authenticationEvidenceId: digest("e")} : {}),
 		}),
 		policy: allowAllReplayPolicy,

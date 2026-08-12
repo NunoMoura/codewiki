@@ -16,7 +16,7 @@ const repositoryIdDigest = digest("2");
 const sourceSnapshotDigest = digest("3");
 const checkIdentityDigest = digest("4");
 const checkConfigurationDigest = digest("5");
-const authenticatedPrincipalDigest = digest("6");
+const authenticatedIdentityDigest = digest("6");
 const credentialBindingDigest = digest("7");
 const requestDigest = digest("8");
 const invocationDigest = digest("9");
@@ -33,7 +33,7 @@ const headCommit = "c".repeat(40);
 
 const authentication = Object.freeze({
 	method: "authenticated_api",
-	authenticatedPrincipalDigest,
+	authenticatedIdentityDigest,
 	credentialBindingDigest,
 });
 

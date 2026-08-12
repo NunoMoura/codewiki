@@ -17,7 +17,7 @@ codewiki_relationships:
 ---
 # Runtime
 
-Runtime is the authoritative per-project control plane. It owns identity, admission, actor and authority binding, time, digests, freshness, expected-head CAS, provenance, scheduling, claims, Runtime-owned workbenches, workers, Integration, persistence, synchronization, recovery, lifecycle, final routing, and guarded effects.
+Runtime is the authoritative per-project control plane. It owns identity, admission, actor and authority binding, delegation validation, time, digests, freshness, expected-head CAS, provenance, scheduling, claims, Runtime-owned workbenches, workers, Integration, persistence, synchronization, recovery, lifecycle, final routing, and guarded effects. Runtime authorizes the accountable actor, not the Client interface; changing from App to CLI, Pi, MCP, or a channel does not create a new actor or expand authority.
 
 Runtime invokes exactly three semantic Loops—Decision, Planning, and Implementation—plus shared Verification and neutral Managed Execution ports. Loops own Candidate meaning and route recommendations; Verification owns common policy and evaluation machinery; Runtime alone admits attempts, creates canonical Results, selects final routes, and performs effects.
 

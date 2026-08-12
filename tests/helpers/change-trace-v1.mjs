@@ -24,7 +24,7 @@ export function baseSnapshot() {
 export function authorityBinding(overrides = {}) {
 	return {
 		actorId: "runtime-main",
-		principalRef: "principal:maintainer",
+		authenticatedIdentityRef: "identity:maintainer",
 		role: "maintainer",
 		actorPolicyDigest: digest("6"),
 		runtimeProtocolDigest: digest("7"),

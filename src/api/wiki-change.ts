@@ -25,7 +25,7 @@ import {
 	assertKnownInputKeys,
 	requiredArrayField,
 	requiredStringField,
-} from "./input-validation.ts";
+} from "./protocol.ts";
 
 export const WIKI_CHANGE_OPERATIONS = [
 	"list",

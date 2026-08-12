@@ -237,7 +237,7 @@ export function decisionSelectionIdempotencyDigest(input: {
 		action: "decision:start",
 		idempotencyKey: input.command.idempotencyKey,
 		actorId: input.authority.actorId,
-		principalRef: input.authority.principalRef,
+		authenticatedIdentityRef: input.authority.authenticatedIdentityRef,
 	});
 }
 

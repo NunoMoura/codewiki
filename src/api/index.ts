@@ -1,5 +1,28 @@
 export const CODEWIKI_EXTENSION_AVAILABLE = true as const;
 
+export {
+	HOST_CLIENT_KINDS,
+	HOST_CLIENT_PROTOCOL,
+	hostTransportDeduplicationDigest,
+	normalizeHostClientCommand,
+	normalizeHostClientEvent,
+	normalizeHostClientOperation,
+	normalizeHostClientQuery,
+	normalizeHostClientQueryResult,
+	runtimeSemanticIdempotencyDigest,
+	type HostClientActorContext,
+	type HostClientCommandEnvelope,
+	type HostClientCoverage,
+	type HostClientEventEnvelope,
+	type HostClientKind,
+	type HostClientOperationEnvelope,
+	type HostClientOperationStatus,
+	type HostClientQueryEnvelope,
+	type HostClientQueryResultEnvelope,
+	type HostClientRequestContext,
+	type HostClientSnapshotContext,
+	type HostClientTransportContext,
+} from "./protocol.ts";
 export * from "./state.ts";
 export * from "./wiki-archive.ts";
 export * from "./wiki-config.ts";

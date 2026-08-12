@@ -88,7 +88,7 @@ function protectedPreferencePolicy(state) {
 function selectionAuthority() {
 	return {
 		actorId: "decision-selector",
-		principalRef: "identity:decision-selector",
+		authenticatedIdentityRef: "identity:decision-selector",
 		role: "maintainer",
 		actorPolicyDigest: `sha256:${"c".repeat(64)}`,
 		authenticationEvidenceId: "auth:decision-selector",

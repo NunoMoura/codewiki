@@ -1040,7 +1040,7 @@ export function normalizeAuthenticatedCustomCheckAuthority(
 			value,
 			[
 				"actorId",
-				"principalRef",
+				"authenticatedIdentityRef",
 				"role",
 				"actorPolicyDigest",
 				"authenticationEvidenceId",
@@ -1050,7 +1050,7 @@ export function normalizeAuthenticatedCustomCheckAuthority(
 		);
 		return Object.freeze({
 			actorId: boundedText(value.actorId, "authority.actorId", 200),
-			principalRef: boundedText(value.principalRef, "authority.principalRef", 512),
+			authenticatedIdentityRef: boundedText(value.authenticatedIdentityRef, "authority.authenticatedIdentityRef", 512),
 			role: boundedText(value.role, "authority.role", 100),
 			actorPolicyDigest: assertSha256Digest(
 				value.actorPolicyDigest,

@@ -6,7 +6,7 @@ import { uniqueStrings } from "../loops/quality-standards.ts";
 import {
 	assertKnownInputKeys,
 	requiredStringField,
-} from "./input-validation.ts";
+} from "./protocol.ts";
 import type { ContentProof } from "../git/content-proof.ts";
 import type { SourceMapContract } from "../knowledge/source-map.ts";
 import {

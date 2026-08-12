@@ -24,7 +24,7 @@ const HEAD = "a".repeat(40);
 function authority() {
 	return {
 		actorId: "policy-editor",
-		principalRef: "identity:policy-editor",
+		authenticatedIdentityRef: "identity:policy-editor",
 		role: "maintainer",
 		actorPolicyDigest: `sha256:${"1".repeat(64)}`,
 		authenticationEvidenceId: "auth:test:policy-editor",
@@ -166,7 +166,7 @@ describe("atomic distilled User Standard bundle mutation", () => {
 		const reviewReceipt = createCustomCheckPolicyReviewReceipt({
 			request: reviewRequest,
 			status: "pass",
-			reviewer: {...authority(), actorId: "policy-reviewer", principalRef: "identity:policy-reviewer"},
+			reviewer: {...authority(), actorId: "policy-reviewer", authenticatedIdentityRef: "identity:policy-reviewer"},
 			evidenceIds: [fixture.receipt.receiptId],
 			summary: "Every selected source-to-Check mapping and unresolved clause was reviewed.",
 			reviewedAt: "2026-08-05T11:05:00.000Z",

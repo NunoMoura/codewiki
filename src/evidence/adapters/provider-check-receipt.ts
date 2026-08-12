@@ -28,7 +28,7 @@ const {
 
 export const PROVIDER_CHECK_RECEIPT_EVIDENCE_ADAPTER_PROTOCOL = Object.freeze({
 	id: "codewiki.evidence-adapter.provider-check-receipt",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 const MAX_RECEIPT_BYTES = 64 * 1024;
@@ -92,7 +92,7 @@ export interface ProviderCheckIdentity {
 
 export interface ProviderCheckAuthenticationBinding {
 	readonly method: ProviderCheckAuthenticationMethod;
-	readonly authenticatedPrincipalDigest: Sha256Digest;
+	readonly authenticatedIdentityDigest: Sha256Digest;
 	readonly credentialBindingDigest: Sha256Digest;
 }
 
@@ -342,7 +342,7 @@ function admittedAuthentication(
 	const authentication = object(value, "Provider Check receipt authentication");
 	assertOnlyKeys(
 		authentication,
-		["method", "authenticatedPrincipalDigest", "credentialBindingDigest"],
+		["method", "authenticatedIdentityDigest", "credentialBindingDigest"],
 		"Provider Check receipt authentication",
 	);
 	return Object.freeze({
@@ -351,9 +351,9 @@ function admittedAuthentication(
 			["authenticated_api", "verified_webhook"] as const,
 			"Provider Check receipt authentication method",
 		),
-		authenticatedPrincipalDigest: digest(
-			authentication.authenticatedPrincipalDigest,
-			"Provider Check receipt authenticatedPrincipalDigest",
+		authenticatedIdentityDigest: digest(
+			authentication.authenticatedIdentityDigest,
+			"Provider Check receipt authenticatedIdentityDigest",
 		),
 		credentialBindingDigest: digest(
 			authentication.credentialBindingDigest,

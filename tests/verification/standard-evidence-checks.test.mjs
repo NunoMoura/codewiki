@@ -171,7 +171,7 @@ function provider(conclusion) {
 	const checkConfigurationDigest = digest("d");
 	const authentication = {
 		method: "authenticated_api",
-		authenticatedPrincipalDigest: digest("e"),
+		authenticatedIdentityDigest: digest("e"),
 		credentialBindingDigest: digest("f"),
 	};
 	const execution = {

@@ -70,7 +70,7 @@ it("derives selection authority only from approved Pi coordinator callers", () =
 		generationId: "coordinator:generation-2",
 	});
 	assert.equal(first.actorId, reconnected.actorId);
-	assert.equal(first.principalRef, reconnected.principalRef);
+	assert.equal(first.authenticatedIdentityRef, reconnected.authenticatedIdentityRef);
 	assert.notEqual(
 		first.authenticationEvidenceId,
 		reconnected.authenticationEvidenceId,
