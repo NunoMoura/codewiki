@@ -31,7 +31,7 @@ CodeWiki is private pre-production software under active clean-cut refactoring.
 - `.codewiki/views/**` and `.codewiki/runtime/**` are disposable generated/private state, not source truth.
 - Pi native compaction remains the active conversation-compaction mechanism.
 
-The package is currently `@nunomoura/codewiki@0.3.0` with `"private": true` and is not published to the npm registry yet. Avoid global/user installs for normal mutation workflows. Current source exposes an optional Pi extension and compatibility CLI/test harness, but the approved target boundary below is not yet fully implemented.
+The package is currently `@nunomoura/codewiki@0.3.0` with `"private": true` and is not published to the npm registry yet. Avoid global/user installs for normal mutation workflows. Current source exposes an optional Pi extension and compatibility CLI/test surfaces, but the approved target boundary below is not yet fully implemented.
 
 This source repository does not install or load CodeWiki during stabilization. Future source-repository dogfooding is ratified only for an immutable stable release installed in an isolated external controller and requires a separate explicit activation Change after external gates pass; historical pins, traces, approvals, and releases grant no authority.
 
@@ -268,7 +268,8 @@ src/
     cli/
     dashboard/
     pi/
-  harnesses/
+  execution/
+    ports.ts
     pi/
   preview/
   knowledge/
@@ -280,7 +281,7 @@ src/
 benchmarks/              # nonproduction paired harness and release measurement
 ```
 
-Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Clients own user interaction; harnesses implement Runtime-selected execution ports and own no Loop policy or canonical authority. Repository-root benchmarks compare every real supported harness alone with the same harness under CodeWiki and do not ship in the production package. Clean cuts keep no old-path re-exports.
+Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. Runtime owns generic scheduling, persistence, synchronization, claims, workers, Integration, recovery, and effects; it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Clients own user interaction. Execution implements Runtime-selected neutral ports and owns no Loop policy or canonical authority; Runtime may import `src/execution/ports.ts` but never concrete Pi adapters. Repository-root benchmarks compare every real supported execution adapter alone with the same adapter under CodeWiki and do not ship in the production package. Clean cuts keep no old-path re-exports.
 
 Current `src/loops/**`, `src/verification/**`, `src/change-trace/**`, legacy trace/WorkState paths, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields are executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 
@@ -321,7 +322,7 @@ For dashboard visual development:
 npm run dashboard:dev -- --project /tmp/codewiki-dashboard-fixture
 ```
 
-Fixture must exist outside repository. Harness does not load CodeWiki extension into source checkout.
+Fixture must exist outside repository. Development server does not load CodeWiki extension into source checkout.
 
 ## Current extension and distribution testing
 

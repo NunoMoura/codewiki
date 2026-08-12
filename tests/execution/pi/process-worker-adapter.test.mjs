@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { createPiProcessImplementationWorkerAdapter } from "../../../src/harnesses/pi/process-worker-adapter.ts";
+import { createPiProcessImplementationWorkerAdapter } from "../../../src/execution/pi/process-worker-adapter.ts";
 import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../../src/runtime/workers/implementation-adapter.ts";
 
 function assignment(root) {

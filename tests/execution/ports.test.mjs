@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
-	HARNESS_CAPABILITY_NAMES,
-	resolveHarnessCapabilities,
-} from "../../src/harnesses/ports.ts";
+	EXECUTION_CAPABILITY_NAMES,
+	resolveExecutionCapabilities,
+} from "../../src/execution/ports.ts";
 
-describe("harness execution ports", () => {
+describe("execution ports", () => {
 	it("keeps one closed capability vocabulary", () => {
-		assert.deepEqual(HARNESS_CAPABILITY_NAMES, [
+		assert.deepEqual(EXECUTION_CAPABILITY_NAMES, [
 			"candidate_production",
 			"model_evaluation",
 			"worker_execution",
@@ -21,7 +21,7 @@ describe("harness execution ports", () => {
 	});
 
 	it("marks undeclared capabilities unavailable instead of relaxing policy", () => {
-		const profile = resolveHarnessCapabilities({
+		const profile = resolveExecutionCapabilities({
 			candidate_production: "available",
 			session_isolation: {
 				capability: "session_isolation",
@@ -29,7 +29,7 @@ describe("harness execution ports", () => {
 				reason: "sealed calibration is unavailable",
 			},
 		});
-		assert.equal(profile.length, HARNESS_CAPABILITY_NAMES.length);
+		assert.equal(profile.length, EXECUTION_CAPABILITY_NAMES.length);
 		assert.deepEqual(profile[0], {
 			capability: "candidate_production",
 			status: "available",
@@ -49,28 +49,28 @@ describe("harness execution ports", () => {
 
 	it("rejects unknown, mismatched, and unexplained unavailable declarations", () => {
 		assert.throws(
-			() => resolveHarnessCapabilities({ arbitrary_execution: "available" }),
-			/Unsupported harness capability: arbitrary_execution\./,
+			() => resolveExecutionCapabilities({ arbitrary_execution: "available" }),
+			/Unsupported execution capability: arbitrary_execution\./,
 		);
 		assert.throws(
 			() =>
-				resolveHarnessCapabilities({
+				resolveExecutionCapabilities({
 					model_evaluation: {
 						capability: "candidate_production",
 						status: "available",
 					},
 				}),
-			/Harness capability declaration key model_evaluation does not match candidate_production\./,
+			/Execution capability declaration key model_evaluation does not match candidate_production\./,
 		);
 		assert.throws(
 			() =>
-				resolveHarnessCapabilities({
+				resolveExecutionCapabilities({
 					cancellation: {
 						capability: "cancellation",
 						status: "unavailable",
 					},
 				}),
-			/Harness capability cancellation requires a reason when unavailable\./,
+			/Execution capability cancellation requires a reason when unavailable\./,
 		);
 	});
 });

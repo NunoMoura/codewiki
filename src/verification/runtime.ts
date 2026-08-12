@@ -18,11 +18,11 @@ import {
 	assertValidExitOutcome,
 	assertValidRepairBrief,
 	assertValidRepairBundle,
-	assertValidRepairHarnessInvocation,
+	assertValidRepairExecutionInvocation,
 	createExitOutcome,
 	createRepairBrief,
 	createRepairBundle,
-	createRepairHarnessInvocation,
+	createRepairExecutionInvocation,
 } from "./repair-bundle.ts";
 import {
 	assertValidRepairFrontier,
@@ -50,8 +50,8 @@ interface VerificationRuntime {
 	readonly assertValidRepairBundle: typeof assertValidRepairBundle;
 	readonly createExitOutcome: typeof createExitOutcome;
 	readonly assertValidExitOutcome: typeof assertValidExitOutcome;
-	readonly createRepairHarnessInvocation: typeof createRepairHarnessInvocation;
-	readonly assertValidRepairHarnessInvocation: typeof assertValidRepairHarnessInvocation;
+	readonly createRepairExecutionInvocation: typeof createRepairExecutionInvocation;
+	readonly assertValidRepairExecutionInvocation: typeof assertValidRepairExecutionInvocation;
 	readonly createResultCache: typeof createLoopExitResultCache;
 	readonly projectState: typeof projectVerificationState;
 	readonly resourceGuards: ReturnType<typeof resolveRuntimeResourceGuards>;
@@ -124,8 +124,8 @@ export function createVerificationRuntime(
 		assertValidRepairBundle,
 		createExitOutcome,
 		assertValidExitOutcome,
-		createRepairHarnessInvocation,
-		assertValidRepairHarnessInvocation,
+		createRepairExecutionInvocation,
+		assertValidRepairExecutionInvocation,
 		createResultCache: createLoopExitResultCache,
 		projectState: projectVerificationState,
 		resourceGuards,

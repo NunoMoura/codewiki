@@ -2,21 +2,21 @@ export * from "./api/index.ts";
 export * from "./change-trace/index.ts";
 export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
-export * from "./harnesses/ports.ts";
+export * from "./execution/ports.ts";
 export * from "./verification/custom-checks/index.ts";
 export {
 	EXIT_OUTCOME_PROTOCOL_VERSION,
 	REPAIR_BRIEF_PROTOCOL_VERSION,
 	REPAIR_BUNDLE_PROTOCOL_VERSION,
-	REPAIR_HARNESS_INVOCATION_PROTOCOL_VERSION,
+	REPAIR_EXECUTION_INVOCATION_PROTOCOL_VERSION,
 	assertValidExitOutcome,
 	assertValidRepairBrief,
 	assertValidRepairBundle,
-	assertValidRepairHarnessInvocation,
+	assertValidRepairExecutionInvocation,
 	createExitOutcome,
 	createRepairBrief,
 	createRepairBundle,
-	createRepairHarnessInvocation,
+	createRepairExecutionInvocation,
 	type CreateExitOutcomeInput,
 	type CreateRepairGuidanceInput,
 	type ExitOutcome,
@@ -30,7 +30,7 @@ export {
 	type RepairGuidanceDigests,
 	type RepairGuidanceLimits,
 	type RepairGuidanceTruncation,
-	type RepairHarnessInvocation,
+	type RepairExecutionInvocation,
 	type RepairResultSignal,
 } from "./verification/repair-bundle.ts";
 export {

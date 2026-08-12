@@ -15,11 +15,11 @@ import {
 	assertValidExitOutcome,
 	assertValidRepairBrief,
 	assertValidRepairBundle,
-	assertValidRepairHarnessInvocation,
+	assertValidRepairExecutionInvocation,
 	createExitOutcome,
 	createRepairBrief,
 	createRepairBundle,
-	createRepairHarnessInvocation,
+	createRepairExecutionInvocation,
 } from "../../src/verification/repair-bundle.ts";
 import {
 	assertValidRepairFrontier,
@@ -368,13 +368,13 @@ describe("report-bound Repair Brief and Repair Bundle", () => {
 		assert.equal(outcome.runtimeRoute.route, "repair");
 		assertValidExitOutcome(outcome, outcomeInput);
 
-		const invocation = createRepairHarnessInvocation(input);
+		const invocation = createRepairExecutionInvocation(input);
 		assert.equal(invocation.repairBundleDigest, bundle.bundleDigest);
 		assert.equal(invocation.brief.guidance.length, 1);
 		assert.equal("frontier" in invocation, false);
 		assert.equal("matchedProfiles" in invocation, false);
 		assert.equal(invocation.grantsAuthority, false);
-		assertValidRepairHarnessInvocation(invocation, input);
+		assertValidRepairExecutionInvocation(invocation, input);
 	});
 
 	it("reports truncation, stale context, and unavailable authored guidance without losing signals", () => {

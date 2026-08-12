@@ -85,7 +85,7 @@ const criterionEvidence = {
 			"src/runtime/admission/change.ts",
 			"src/runtime/workers/implementation-adapter.ts",
 			"src/runtime/workers/reports.ts",
-			"src/harnesses/pi/process-worker-adapter.ts",
+			"src/execution/pi/process-worker-adapter.ts",
 			"src/changes/triage/contracts.ts",
 			"src/changes/triage/estimates.ts",
 			"src/changes/triage/ordering.ts",
@@ -98,7 +98,7 @@ const criterionEvidence = {
 			"tests/changes/change-intake-producers.test.mjs",
 			"tests/changes/defect-profile.test.mjs",
 			"tests/changes/backlog-triage.test.mjs",
-			"tests/harnesses/pi/process-worker-adapter.test.mjs",
+			"tests/execution/pi/process-worker-adapter.test.mjs",
 		],
 	},
 	"WU-worker-execution-policy-integration-v1": {
@@ -106,12 +106,12 @@ const criterionEvidence = {
 		source: [
 			"src/runtime/workers/start.ts",
 			"src/runtime/workers/execution-policy.ts",
-			"src/harnesses/pi/process-session.ts",
+			"src/execution/pi/process-session.ts",
 			"src/runtime/workers/observation.ts",
 		],
 		tests: [
 			"tests/runtime/worker-start.test.mjs",
-			"tests/harnesses/pi/process-session.test.mjs",
+			"tests/execution/pi/process-session.test.mjs",
 			"tests/runtime/worker-observation.test.mjs",
 		],
 	},

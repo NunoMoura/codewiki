@@ -109,8 +109,8 @@ describe("install readiness checklist", () => {
 			import: "./dist/harnesses/coordinator-entrypoint.js",
 		});
 		assert.deepEqual(packageJson.exports["./pi-sdk"], {
-			types: "./dist/harnesses/pi/sdk-semantic-session.d.ts",
-			import: "./dist/harnesses/pi/sdk-semantic-session.js",
+			types: "./dist/execution/pi/sdk-semantic-session.d.ts",
+			import: "./dist/execution/pi/sdk-semantic-session.js",
 		});
 		assert.equal(packageJson.scripts["test:pi-dogfood"], undefined);
 		assert.equal(packageJson.scripts["test:pi-mutation"], undefined);

@@ -7,7 +7,7 @@ import {
 } from "../../evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../evidence/materialize.ts";
 import {modelConclusionEvidenceMeasurement} from "../../evidence/model-assessment.ts";
-import type {ModelCheckEvaluatorPort} from "../../harnesses/ports.ts";
+import type {ModelCheckEvaluatorPort} from "../../execution/ports.ts";
 import {reduceEvidenceObligation} from "../../evidence/obligations.ts";
 import type {CheckCatalog} from "../../verification/catalog.ts";
 import {

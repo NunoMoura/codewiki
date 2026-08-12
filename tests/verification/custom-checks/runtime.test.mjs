@@ -8,7 +8,7 @@ import {
 	createUserStandardSourceRequest,
 	retrieveUserStandardSource,
 } from "../../../src/verification/custom-checks/index.ts";
-import {createPiUserStandardDistiller} from "../../../src/harnesses/pi/user-standard-distillation-session.ts";
+import {createPiUserStandardDistiller} from "../../../src/execution/pi/user-standard-distillation-session.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 
 const NOW = () => new Date("2026-08-04T10:00:00.000Z");

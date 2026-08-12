@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import {createPiNativeDecisionResearchRuntimeConfig} from "../../../src/harnesses/pi/native-decision-research.ts";
+import {createPiNativeDecisionResearchRuntimeConfig} from "../../../src/execution/pi/native-decision-research.ts";
 
 const digest = (value) => `sha256:${value.repeat(64)}`;
 

@@ -1,4 +1,4 @@
-export const HARNESS_CAPABILITY_NAMES = [
+export const EXECUTION_CAPABILITY_NAMES = [
 	"candidate_production",
 	"model_evaluation",
 	"worker_execution",
@@ -10,44 +10,44 @@ export const HARNESS_CAPABILITY_NAMES = [
 	"session_isolation",
 ] as const;
 
-export type HarnessCapabilityName =
-	(typeof HARNESS_CAPABILITY_NAMES)[number];
-export type HarnessCapabilityStatus =
+export type ExecutionCapabilityName =
+	(typeof EXECUTION_CAPABILITY_NAMES)[number];
+export type ExecutionCapabilityStatus =
 	| "available"
 	| "unavailable"
 	| "indeterminate";
 
-export interface HarnessCapabilityDeclaration {
-	readonly capability: HarnessCapabilityName;
-	readonly status: HarnessCapabilityStatus;
+export interface ExecutionCapabilityDeclaration {
+	readonly capability: ExecutionCapabilityName;
+	readonly status: ExecutionCapabilityStatus;
 	readonly reason?: string;
 }
 
-export type HarnessCapabilityInput = Partial<
+export type ExecutionCapabilityInput = Partial<
 	Record<
-		HarnessCapabilityName,
-		HarnessCapabilityStatus | HarnessCapabilityDeclaration
+		ExecutionCapabilityName,
+		ExecutionCapabilityStatus | ExecutionCapabilityDeclaration
 	>
 >;
 
-export interface HarnessInvocationOptions {
+export interface ExecutionInvocationOptions {
 	readonly signal?: AbortSignal;
 }
 
-export interface HarnessTimedInvocationOptions {
+export interface TimedExecutionInvocationOptions {
 	readonly signal: AbortSignal;
 	readonly timeoutMs: number;
 }
 
 export type CandidateProducerPort<TInvocation, TCandidate> = (
 	invocation: TInvocation,
-	options?: HarnessInvocationOptions,
+	options?: ExecutionInvocationOptions,
 ) => TCandidate | Promise<TCandidate>;
 
 export interface ModelCheckEvaluatorPort<TRequest, TObservation> {
 	execute(
 		request: TRequest,
-		options: HarnessTimedInvocationOptions,
+		options: TimedExecutionInvocationOptions,
 	): Promise<TObservation>;
 }
 
@@ -71,7 +71,7 @@ export interface StructuredOutputPort<TOutput> {
 
 export type RepositoryReadPort<TRequest, TResult> = (
 	request: TRequest,
-	options?: HarnessInvocationOptions,
+	options?: ExecutionInvocationOptions,
 ) => TResult | Promise<TResult>;
 
 export type WorkbenchMutationPort<TRequest, TResult> = (
@@ -89,12 +89,12 @@ export interface SessionIsolationPort {
 	readonly sessionIsolation: SessionIsolationKind;
 }
 
-export function resolveHarnessCapabilities(
-	input: HarnessCapabilityInput,
-): readonly HarnessCapabilityDeclaration[] {
+export function resolveExecutionCapabilities(
+	input: ExecutionCapabilityInput,
+): readonly ExecutionCapabilityDeclaration[] {
 	assertKnownCapabilities(input);
 	return Object.freeze(
-		HARNESS_CAPABILITY_NAMES.map((capability) => {
+		EXECUTION_CAPABILITY_NAMES.map((capability) => {
 			const declaration = input[capability];
 			if (declaration === undefined) {
 				return Object.freeze({
@@ -108,7 +108,7 @@ export function resolveHarnessCapabilities(
 			}
 			if (declaration.capability !== capability) {
 				throw new Error(
-					`Harness capability declaration key ${capability} does not match ${declaration.capability}.`,
+					`Execution capability declaration key ${capability} does not match ${declaration.capability}.`,
 				);
 			}
 			return normalizedDeclaration(declaration);
@@ -117,22 +117,22 @@ export function resolveHarnessCapabilities(
 }
 
 function normalizedDeclaration(
-	declaration: HarnessCapabilityDeclaration,
-): Readonly<HarnessCapabilityDeclaration> {
-	if (!HARNESS_CAPABILITY_NAMES.includes(declaration.capability)) {
+	declaration: ExecutionCapabilityDeclaration,
+): Readonly<ExecutionCapabilityDeclaration> {
+	if (!EXECUTION_CAPABILITY_NAMES.includes(declaration.capability)) {
 		throw new Error(
-			`Unsupported harness capability: ${declaration.capability}.`,
+			`Unsupported execution capability: ${declaration.capability}.`,
 		);
 	}
-	if (!HARNESS_CAPABILITY_STATUSES.includes(declaration.status)) {
+	if (!EXECUTION_CAPABILITY_STATUSES.includes(declaration.status)) {
 		throw new Error(
-			`Unsupported harness capability status: ${declaration.status}.`,
+			`Unsupported execution capability status: ${declaration.status}.`,
 		);
 	}
 	const reason = declaration.reason?.trim();
 	if (declaration.status !== "available" && !reason) {
 		throw new Error(
-			`Harness capability ${declaration.capability} requires a reason when ${declaration.status}.`,
+			`Execution capability ${declaration.capability} requires a reason when ${declaration.status}.`,
 		);
 	}
 	return Object.freeze({
@@ -142,15 +142,19 @@ function normalizedDeclaration(
 	});
 }
 
-function assertKnownCapabilities(input: HarnessCapabilityInput): void {
+function assertKnownCapabilities(input: ExecutionCapabilityInput): void {
 	for (const capability of Object.keys(input)) {
-		if (!HARNESS_CAPABILITY_NAMES.includes(capability as HarnessCapabilityName)) {
-			throw new Error(`Unsupported harness capability: ${capability}.`);
+		if (
+			!EXECUTION_CAPABILITY_NAMES.includes(
+				capability as ExecutionCapabilityName,
+			)
+		) {
+			throw new Error(`Unsupported execution capability: ${capability}.`);
 		}
 	}
 }
 
-const HARNESS_CAPABILITY_STATUSES: readonly HarnessCapabilityStatus[] = [
+const EXECUTION_CAPABILITY_STATUSES: readonly ExecutionCapabilityStatus[] = [
 	"available",
 	"unavailable",
 	"indeterminate",

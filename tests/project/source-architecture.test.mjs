@@ -135,6 +135,7 @@ describe("source architecture", () => {
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
 		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
 			"change-trace",
+			"harnesses",
 			"loops",
 			"traces",
 			"views",
@@ -142,7 +143,8 @@ describe("source architecture", () => {
 		assert.equal(TARGET_SOURCE_ROOTS.includes("verification"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("alignment"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("clients"), true);
-		assert.equal(TARGET_SOURCE_ROOTS.includes("harnesses"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("execution"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("harnesses"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("benchmarks"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("pi"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("loop-exit"), false);
@@ -183,8 +185,9 @@ describe("source architecture", () => {
 		for (const script of ["test:smoke", "test:features"]) {
 			assert.match(
 				packageJson.scripts[script],
-				/tests\/harnesses\/pi\/\*\.test\.mjs/u,
+				/tests\/execution\/pi\/\*\.test\.mjs/u,
 			);
+			assert.doesNotMatch(packageJson.scripts[script], /tests\/harnesses\/pi/u);
 		}
 		const tsconfig = readJson("tsconfig.json");
 		assert.deepEqual(tsconfig.include, ["src/**/*.ts"]);
@@ -269,17 +272,20 @@ describe("source architecture", () => {
 		);
 	});
 
-	it("keeps isolated Pi execution under the Harness owner", () => {
+	it("keeps managed Pi adapters under the Execution owner", () => {
 		for (const name of [
 			"decision-model-check-session.ts",
 			"decision-research-claims-session.ts",
 			"isolated-json-model-session.ts",
 			"native-decision-host.ts",
 			"native-decision-research.ts",
+			"process-session.ts",
+			"process-worker-adapter.ts",
 			"sdk-semantic-session.ts",
 			"user-standard-distillation-session.ts",
 		]) {
-			assert.equal(existsSync(join(sourceRoot, "harnesses", "pi", name)), true, name);
+			assert.equal(existsSync(join(sourceRoot, "execution", "pi", name)), true, name);
+			assert.equal(existsSync(join(sourceRoot, "harnesses", "pi", name)), false, name);
 			assert.equal(existsSync(join(sourceRoot, "pi", name)), false, name);
 		}
 	});
@@ -303,19 +309,17 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "pi")), false);
 	});
 
-	it("forbids Harness adapters from importing interaction clients", () => {
-		const legacyEdges = [];
+	it("forbids Execution adapters from importing interaction clients", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
-			if (!relative(sourceRoot, source).startsWith("harnesses/")) continue;
+			if (!relative(sourceRoot, source).startsWith("execution/")) continue;
 			for (const target of targets) {
-				const targetPath = relative(sourceRoot, target);
-				assert.equal(targetPath.startsWith("clients/"), false, edgeLabel(source, target));
-				if (targetPath.startsWith("pi/")) {
-					legacyEdges.push(edgeLabel(source, target));
-				}
+				assert.equal(
+					relative(sourceRoot, target).startsWith("clients/"),
+					false,
+					edgeLabel(source, target),
+				);
 			}
 		}
-		assert.deepEqual(legacyEdges.sort(), []);
 	});
 
 	it("forbids core packages from importing outer adapters", () => {
@@ -374,25 +378,34 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("allows Runtime to depend only on harness-neutral ports", () => {
+	it("allows Runtime to depend only on neutral Execution ports", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			if (!relative(sourceRoot, source).startsWith("runtime/")) continue;
 			for (const target of targets) {
 				const targetPath = relative(sourceRoot, target);
-				if (!targetPath.startsWith("harnesses/")) continue;
-				assert.equal(targetPath, "harnesses/ports.ts", edgeLabel(source, target));
+				assert.equal(
+					targetPath.startsWith("harnesses/"),
+					false,
+					edgeLabel(source, target),
+				);
+				if (!targetPath.startsWith("execution/")) continue;
+				assert.equal(targetPath, "execution/ports.ts", edgeLabel(source, target));
 			}
 		}
 	});
 
-	it("forbids Runtime-to-Pi imports", () => {
+	it("forbids Runtime-to-concrete-Pi imports", () => {
 		const files = sourceFiles();
 		const edges = importEdges(files);
 		const runtimeToPi = [];
 		for (const [source, targets] of edges) {
 			if (!relative(sourceRoot, source).startsWith("runtime/")) continue;
 			for (const target of targets) {
-				if (relative(sourceRoot, target).startsWith("pi/")) {
+				const targetPath = relative(sourceRoot, target);
+				if (
+					targetPath.startsWith("pi/") ||
+					targetPath.startsWith("execution/pi/")
+				) {
 					runtimeToPi.push(edgeLabel(source, target));
 				}
 			}

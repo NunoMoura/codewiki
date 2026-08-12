@@ -32,7 +32,7 @@ async function installPackage(root) {
 	assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "extension.js")), true);
 	const processAdapter = await import(
 		pathToFileURL(
-			join(packageRoot, "dist", "harnesses", "pi", "process-worker-adapter.js"),
+			join(packageRoot, "dist", "execution", "pi", "process-worker-adapter.js"),
 		).href
 	);
 	const workerContracts = await import(

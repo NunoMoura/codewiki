@@ -13,7 +13,7 @@ import {
 	PI_NATIVE_DECISION_HOST_PROTOCOL,
 	createPiNativeDecisionStartOptions,
 	resolvePiDecisionSelectionAuthority,
-} from "../../../src/harnesses/pi/native-decision-host.ts";
+} from "../../../src/execution/pi/native-decision-host.ts";
 import {startPiProjectCoordinatorDaemon} from "../../../src/clients/pi/project-coordinator-daemon.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
 import {wikiConfigDigest} from "../../../src/project/config-digest.ts";

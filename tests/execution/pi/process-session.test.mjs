@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { createPiProcessSessionFactory } from "../../../src/harnesses/pi/process-session.ts";
+import { createPiProcessSessionFactory } from "../../../src/execution/pi/process-session.ts";
 
 function sessionInput(overrides = {}) {
 	return {
@@ -10,7 +10,7 @@ function sessionInput(overrides = {}) {
 		workUnitId: "WU-process",
 		traceId: "TRACE-process",
 		planningRefs: ["trace:TRACE-process:planning:iteration:1#work:WU-process"],
-		pathScopes: ["src/harnesses/pi/process-session.ts"],
+		pathScopes: ["src/execution/pi/process-session.ts"],
 		componentRefs: ["component.pi"],
 		prompt: "Implement WU-process.",
 		...overrides,

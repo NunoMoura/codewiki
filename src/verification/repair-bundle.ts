@@ -31,7 +31,7 @@ import { assertValidExitReport } from "./results.ts";
 export const REPAIR_BRIEF_PROTOCOL_VERSION = "1.0.0" as const;
 export const REPAIR_BUNDLE_PROTOCOL_VERSION = "1.0.0" as const;
 export const EXIT_OUTCOME_PROTOCOL_VERSION = "1.0.0" as const;
-export const REPAIR_HARNESS_INVOCATION_PROTOCOL_VERSION = "1.0.0" as const;
+export const REPAIR_EXECUTION_INVOCATION_PROTOCOL_VERSION = "1.0.0" as const;
 
 const ACTIONABLE_STATUSES = ["fail", "indeterminate"] as const;
 const DEFAULT_REPAIR_GUIDANCE_LIMITS: RepairGuidanceLimits = {
@@ -176,8 +176,8 @@ export interface CreateExitOutcomeInput {
 	readonly runtimeRoute?: ExitOutcomeRuntimeRouteReference;
 }
 
-export interface RepairHarnessInvocation {
-	readonly protocolVersion: typeof REPAIR_HARNESS_INVOCATION_PROTOCOL_VERSION;
+export interface RepairExecutionInvocation {
+	readonly protocolVersion: typeof REPAIR_EXECUTION_INVOCATION_PROTOCOL_VERSION;
 	readonly candidate: RepairFrontierCandidateBinding;
 	readonly exitReportDigest: Sha256Digest;
 	readonly repairBundleDigest: Sha256Digest;
@@ -378,26 +378,26 @@ export function assertValidExitOutcome(
 	}
 }
 
-export function createRepairHarnessInvocation(
+export function createRepairExecutionInvocation(
 	input: CreateRepairGuidanceInput,
-): RepairHarnessInvocation {
+): RepairExecutionInvocation {
 	const bundle = createRepairBundle(input);
 	const body = {
-		protocolVersion: REPAIR_HARNESS_INVOCATION_PROTOCOL_VERSION,
+		protocolVersion: REPAIR_EXECUTION_INVOCATION_PROTOCOL_VERSION,
 		candidate: bundle.candidate,
 		exitReportDigest: bundle.exitReportDigest,
 		repairBundleDigest: bundle.bundleDigest,
 		brief: bundle.brief,
 		grantsAuthority: false as const,
 	};
-	return canonicalValue<RepairHarnessInvocation>({
+	return canonicalValue<RepairExecutionInvocation>({
 		...body,
 		invocationDigest: canonicalJsonDigest(body),
 	});
 }
 
-export function assertValidRepairHarnessInvocation(
-	invocation: RepairHarnessInvocation,
+export function assertValidRepairExecutionInvocation(
+	invocation: RepairExecutionInvocation,
 	input: CreateRepairGuidanceInput,
 ): void {
 	assertExactKeys(
@@ -411,21 +411,26 @@ export function assertValidRepairHarnessInvocation(
 			"grantsAuthority",
 			"invocationDigest",
 		],
-		"Repair Harness Invocation",
+		"Repair Execution Invocation",
 	);
-	if (invocation.protocolVersion !== REPAIR_HARNESS_INVOCATION_PROTOCOL_VERSION) {
+	if (invocation.protocolVersion !== REPAIR_EXECUTION_INVOCATION_PROTOCOL_VERSION) {
 		throw new Error(
-			`Unsupported Repair Harness Invocation protocol version ${String(invocation.protocolVersion)}.`,
+			`Unsupported Repair Execution Invocation protocol version ${String(invocation.protocolVersion)}.`,
 		);
 	}
-	assertSha256Digest(invocation.invocationDigest, "Repair Harness Invocation digest");
+	assertSha256Digest(
+		invocation.invocationDigest,
+		"Repair Execution Invocation digest",
+	);
 	const { invocationDigest, ...body } = invocation;
 	if (invocationDigest !== canonicalJsonDigest(body)) {
-		throw new Error("Repair Harness Invocation digest does not match content.");
+		throw new Error("Repair Execution Invocation digest does not match content.");
 	}
-	const expected = createRepairHarnessInvocation(input);
+	const expected = createRepairExecutionInvocation(input);
 	if (canonicalJson(invocation) !== canonicalJson(expected)) {
-		throw new Error("Repair Harness Invocation does not match its bound Repair Bundle.");
+		throw new Error(
+			"Repair Execution Invocation does not match its bound Repair Bundle.",
+		);
 	}
 }
 

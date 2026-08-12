@@ -18,7 +18,7 @@ describe("fresh scaffold", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 	});
 
-	it("keeps the package root harness-neutral and the API facade acyclic", () => {
+	it("keeps the package root execution-adapter-neutral and the API facade acyclic", () => {
 		assert.match(sourceIndex, /export \* from "\.\/api\/index\.ts"/);
 		assert.doesNotMatch(sourceIndex, /from "\.\/pi\//);
 		assert.equal(
@@ -27,6 +27,10 @@ describe("fresh scaffold", () => {
 			),
 			false,
 		);
+		assert.equal(typeof packageApi.resolveExecutionCapabilities, "function");
+		assert.equal(typeof packageApi.createRepairExecutionInvocation, "function");
+		assert.equal("resolveHarnessCapabilities" in packageApi, false);
+		assert.equal("createRepairHarnessInvocation" in packageApi, false);
 		assert.doesNotMatch(apiIndex, /from "\.\.\/index\.ts"/);
 	});
 
@@ -54,8 +58,8 @@ describe("fresh scaffold", () => {
 				import: "./dist/harnesses/coordinator-entrypoint.js",
 			},
 			"./pi-sdk": {
-				types: "./dist/harnesses/pi/sdk-semantic-session.d.ts",
-				import: "./dist/harnesses/pi/sdk-semantic-session.js",
+				types: "./dist/execution/pi/sdk-semantic-session.d.ts",
+				import: "./dist/execution/pi/sdk-semantic-session.js",
 			},
 			"./package.json": "./package.json",
 		});

@@ -105,8 +105,8 @@ assert.deepEqual(packageJson.exports["./coordinator"], {
 	import: "./dist/harnesses/coordinator-entrypoint.js",
 });
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
-\ttypes: "./dist/harnesses/pi/sdk-semantic-session.d.ts",
-\timport: "./dist/harnesses/pi/sdk-semantic-session.js",
+\ttypes: "./dist/execution/pi/sdk-semantic-session.d.ts",
+\timport: "./dist/execution/pi/sdk-semantic-session.js",
 });
 assert.equal(
 \tpackageJson.peerDependencies["@earendil-works/pi-coding-agent"],
@@ -207,7 +207,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product-release-proof.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product-release-contract.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product-release-manifest.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "harnesses", "pi", "process-worker-adapter.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "execution", "pi", "process-worker-adapter.js")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 const coordinator = new ProjectCoordinator(process.cwd(), {
 	generationId: "packed:coordinator",
@@ -309,13 +309,18 @@ for (const name of [
 	"user-standard-distillation-session",
 ]) {
 	assert.equal(
-		existsSync(join(packageRoot, "dist", "harnesses", "pi", name + ".js")),
+		existsSync(join(packageRoot, "dist", "execution", "pi", name + ".js")),
 		true,
 		name,
 	);
 	assert.equal(
-		existsSync(join(packageRoot, "dist", "harnesses", "pi", name + ".d.ts")),
+		existsSync(join(packageRoot, "dist", "execution", "pi", name + ".d.ts")),
 		true,
+		name,
+	);
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "harnesses", "pi", name + ".js")),
+		false,
 		name,
 	);
 	assert.equal(
@@ -325,11 +330,25 @@ for (const name of [
 	);
 }
 assert.equal(
-	existsSync(join(packageRoot, "dist", "harnesses", "pi", "process-session.js")),
+	existsSync(join(packageRoot, "dist", "execution", "pi", "process-session.js")),
 	true,
 );
 assert.equal(
-	existsSync(join(packageRoot, "dist", "harnesses", "pi", "process-session.d.ts")),
+	existsSync(join(packageRoot, "dist", "execution", "pi", "process-session.d.ts")),
+	true,
+);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "harnesses", "pi")),
+	false,
+	"legacy Pi Harness owner is not packaged",
+);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "harnesses", "ports.js")),
+	false,
+	"legacy Harness ports are not packaged",
+);
+assert.equal(
+	existsSync(join(packageRoot, "dist", "execution", "ports.js")),
 	true,
 );
 assert.equal(
