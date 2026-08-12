@@ -135,7 +135,6 @@ describe("source architecture", () => {
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
 		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
 			"change-trace",
-			"dashboard",
 			"loops",
 			"traces",
 			"views",
@@ -163,25 +162,25 @@ describe("source architecture", () => {
 			);
 		}
 		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
-		assert.equal(existsSync(join(sourceRoot, "dashboard", "assets")), false);
-		for (const name of [
-			"activity-feed.ts",
-			"change-control.ts",
-			"config-control.ts",
-			"daemon.ts",
-			"health.ts",
-			"index.ts",
-			"server.ts",
-			"session-actions.ts",
-			"control-error.ts",
-		]) {
-			assert.equal(existsSync(join(sourceRoot, "dashboard", name)), false, name);
-		}
+		assert.equal(existsSync(join(sourceRoot, "dashboard")), false);
+		assert.equal(existsSync("tests/dashboard"), false);
 		assert.equal(
 			existsSync(join(sourceRoot, "clients", "pi", "dashboard-session-actions.ts")),
 			false,
 		);
 		assert.equal(existsSync(join(sourceRoot, "clients", "app", "shell.ts")), true);
+		for (const name of [
+			"app-state.ts",
+			"changes.ts",
+			"configuration.ts",
+			"dev-log.ts",
+		]) {
+			assert.equal(
+				existsSync(join(sourceRoot, "runtime", "queries", name)),
+				true,
+				name,
+			);
+		}
 		assert.equal(existsSync(join(sourceRoot, "host", "app", "daemon.ts")), true);
 		assert.equal(existsSync(join(sourceRoot, "host", "app", "server.ts")), true);
 		assert.equal(existsSync(join(sourceRoot, "host", "app", "request-error.ts")), true);

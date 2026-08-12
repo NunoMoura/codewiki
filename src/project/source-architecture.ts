@@ -5,7 +5,6 @@ export const CURRENT_SOURCE_ROOTS = [
 	"changes",
 	"cli",
 	"clients",
-	"dashboard",
 	"decision",
 	"error-handling",
 	"evidence",
@@ -55,6 +54,7 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"integration",
 	"lifecycle",
 	"persistence",
+	"queries",
 	"recovery",
 	"synchronization",
 	"workbenches",
@@ -63,7 +63,6 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 
 export const LEGACY_SOURCE_ROOTS = [
 	"change-trace",
-	"dashboard",
 	"loops",
 	"traces",
 	"views",
@@ -80,7 +79,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"api",
 	"cli",
 	"clients",
-	"dashboard",
 	"execution",
 	"host",
 	"preview",
@@ -88,7 +86,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	"change-trace": 19,
-	dashboard: 4,
 	loops: 10,
 	traces: 12,
 	views: 13,

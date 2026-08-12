@@ -47,17 +47,17 @@ import type { ProjectCoordinatorClientInput } from "../../runtime/coordinator/pr
 import { connectEnsuredProjectCoordinatorClient } from "../../runtime/coordinator/process.ts";
 import type { ProjectCoordinatorRemoteClient } from "../../runtime/coordinator/service.ts";
 import { CODEWIKI_APP_HTML } from "../../clients/app/shell.ts";
-import { loadDashboardChangesState } from "../../dashboard/changes-state.ts";
-import { loadDashboardConfigState } from "../../dashboard/config-state.ts";
+import { loadRuntimeChangesState } from "../../runtime/queries/changes.ts";
+import { loadRuntimeConfigurationState } from "../../runtime/queries/configuration.ts";
+import {
+	buildCodewikiAppState,
+	type CodewikiAppState,
+} from "../../runtime/queries/app-state.ts";
 import { AppRequestError } from "./request-error.ts";
 import {
 	assertInstalledCodewikiRuntimeCurrent,
 	captureInstalledCodewikiRuntimeIdentity,
 } from "./installed-runtime.ts";
-import {
-	buildCodewikiDashboardState,
-	type CodewikiDashboardState,
-} from "../../dashboard/state.ts";
 
 interface CodewikiAppServerOptions {
 	repoRoot: string;
@@ -745,15 +745,15 @@ async function routeAuthorizedGet(
 	url: URL,
 ): Promise<boolean> {
 	if (url.pathname === "/api/state") {
-		writeJson(response, 200, await readDashboardState(runtime));
+		writeJson(response, 200, await readCodewikiAppState(runtime));
 		return true;
 	}
 	if (url.pathname === "/api/changes") {
-		writeJson(response, 200, await loadDashboardChangesState(runtime.repoRoot));
+		writeJson(response, 200, await loadRuntimeChangesState(runtime.repoRoot));
 		return true;
 	}
 	if (url.pathname === "/api/configuration") {
-		writeJson(response, 200, await loadDashboardConfigState(runtime.repoRoot));
+		writeJson(response, 200, await loadRuntimeConfigurationState(runtime.repoRoot));
 		return true;
 	}
 	if (url.pathname === "/api/previews") {
@@ -896,9 +896,9 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 	}
 }
 
-async function readDashboardState(
+async function readCodewikiAppState(
 	runtime: AppServerRuntime,
-): Promise<CodewikiDashboardState> {
+): Promise<CodewikiAppState> {
 	const repoRoot = runtime.repoRoot;
 	const traceFiles = await readProjectTraceFiles(repoRoot);
 	const snapshot = await buildProjectWikiState({ repoRoot, traceFiles });
@@ -918,11 +918,11 @@ async function readDashboardState(
 	]);
 	const devLogByTrace = new Map(devLogEntries);
 	const previews = await runtime.previewControl.status(traceFiles.records);
-	return buildCodewikiDashboardState(snapshot, repoRoot, traceFiles.records, {
+	return buildCodewikiAppState(snapshot, repoRoot, traceFiles.records, {
 		devLogByTrace,
 		knowledgeTopicDigests,
-		changes: await loadDashboardChangesState(repoRoot),
-		configuration: await loadDashboardConfigState(repoRoot),
+		changes: await loadRuntimeChangesState(repoRoot),
+		configuration: await loadRuntimeConfigurationState(repoRoot),
 		previews: [...previews],
 	});
 }
@@ -931,7 +931,7 @@ async function attachEventStream(
 	runtime: AppServerRuntime,
 	response: ServerResponse,
 ): Promise<void> {
-	const state = await readDashboardState(runtime);
+	const state = await readCodewikiAppState(runtime);
 	response.writeHead(200, {
 		...APP_SERVER_SECURITY_HEADERS,
 		"Content-Type": "text/event-stream",
@@ -1000,13 +1000,13 @@ function scheduleBroadcast(runtime: AppServerRuntime): void {
 
 async function broadcast(runtime: AppServerRuntime): Promise<void> {
 	if (runtime.clients.size === 0) return;
-	const state = await readDashboardState(runtime);
+	const state = await readCodewikiAppState(runtime);
 	for (const client of runtime.clients) writeEvent(client, state);
 }
 
 function writeEvent(
 	response: ServerResponse,
-	data: CodewikiDashboardState,
+	data: CodewikiAppState,
 ): void {
 	if (response.destroyed || response.writableEnded) return;
 	response.write(`data: ${JSON.stringify(data)}\n\n`);

@@ -1,38 +1,38 @@
 import { basename } from "node:path";
-import type { WikiStateSnapshot } from "../api/state.ts";
+import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
 	projectKnowledgeAlignment,
 	type KnowledgeAlignmentProjection,
-} from "../knowledge/topic-alignment.ts";
+} from "../../knowledge/topic-alignment.ts";
 import {
 	normalizeUiPreviewTargetBinding,
 	uiPreviewTargetBindingValidationIssues,
 	type UiPreviewTargetBinding,
-} from "../preview/binding.ts";
-import type { PreviewRuntimeStatus } from "../preview/coordinator.ts";
-import type { DevLogEntry } from "../runtime/persistence/dev-log.ts";
+} from "../../preview/binding.ts";
+import type { PreviewRuntimeStatus } from "../../preview/coordinator.ts";
+import type { DevLogEntry } from "../persistence/dev-log.ts";
 import {
 	type WorkerObservation,
 	workerObservationFreshness,
-} from "../runtime/workers/observation.ts";
-import { DECISION_CHANGE_QUALITY_STANDARDS } from "../decision/change-quality.ts";
-import { implementationQualityStandards } from "../implementation/quality-standards.ts";
-import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../planning/portfolio-quality.ts";
-import type { TraceEvent, TraceLoop, TraceRecord } from "../traces/types.ts";
-import { qualityIterationsFromTrace } from "../views/quality.ts";
-import type { DashboardChangesState } from "./changes-state.ts";
-import type { DashboardConfigState } from "./config-state.ts";
+} from "../workers/observation.ts";
+import { DECISION_CHANGE_QUALITY_STANDARDS } from "../../decision/change-quality.ts";
+import { implementationQualityStandards } from "../../implementation/quality-standards.ts";
+import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../../planning/portfolio-quality.ts";
+import type { TraceEvent, TraceLoop, TraceRecord } from "../../traces/types.ts";
+import { qualityIterationsFromTrace } from "../../views/quality.ts";
+import type { RuntimeChangesState } from "./changes.ts";
+import type { RuntimeConfigurationState } from "./configuration.ts";
 import {
-	projectDevLog,
-	type DashboardDevLogProjection,
-} from "./dev-log-projection.ts";
+	projectRuntimeDevLog,
+	type RuntimeDevLogProjection,
+} from "./dev-log.ts";
 import type {
 	QualityIterationSummary,
 	QualityStandardSummary,
 	TraceGoalStatus,
 	TraceQueueCard,
 	WorkQueueItem,
-} from "../views/types.ts";
+} from "../../views/types.ts";
 
 export type CodewikiPipelineStage =
 	| "change"
@@ -229,11 +229,11 @@ export interface CodewikiSprintTrace {
 	implementationReview: CodewikiImplementationReview;
 	items: CodewikiSprintTraceItem[];
 	activities: CodewikiSprintTraceActivity[];
-	devLog: DashboardDevLogProjection;
+	devLog: RuntimeDevLogProjection;
 	touchedFiles: CodewikiSprintTraceTouchedFiles;
 }
 
-export interface CodewikiDashboardState {
+export interface CodewikiAppState {
 	projectRoot: string;
 	projectName: string;
 	generatedAt?: string;
@@ -248,26 +248,26 @@ export interface CodewikiDashboardState {
 	};
 	next: WikiStateSnapshot["next"];
 	sprintsQueue: CodewikiSprintTrace[];
-	changes?: DashboardChangesState;
-	configuration?: DashboardConfigState;
+	changes?: RuntimeChangesState;
+	configuration?: RuntimeConfigurationState;
 	previews?: PreviewRuntimeStatus[];
 }
 
-interface CodewikiDashboardProjectionContext {
+interface CodewikiAppStateQueryContext {
 	workerObservations?: WorkerObservation[];
 	devLogByTrace?: ReadonlyMap<string, DevLogEntry[]>;
-	changes?: DashboardChangesState;
-	configuration?: DashboardConfigState;
+	changes?: RuntimeChangesState;
+	configuration?: RuntimeConfigurationState;
 	previews?: PreviewRuntimeStatus[];
 	knowledgeTopicDigests?: ReadonlyMap<string, string>;
 }
 
-export function buildCodewikiDashboardState(
+export function buildCodewikiAppState(
 	snapshot: WikiStateSnapshot,
 	projectRoot: string,
 	records: TraceRecord[] = [],
-	context: CodewikiDashboardProjectionContext = {},
-): CodewikiDashboardState {
+	context: CodewikiAppStateQueryContext = {},
+): CodewikiAppState {
 	const cardsByTrace = new Map(
 		snapshot.traceQueue.cards.map((trace) => [trace.traceId, trace]),
 	);
@@ -328,7 +328,7 @@ function buildSprintTrace(
 	snapshot: WikiStateSnapshot,
 	card: TraceQueueCard,
 	records: TraceRecord[],
-	context: CodewikiDashboardProjectionContext,
+	context: CodewikiAppStateQueryContext,
 ): CodewikiSprintTrace {
 	const items = snapshot.workQueue.items.filter(
 		(item) => item.traceId === card.traceId,
@@ -342,7 +342,7 @@ function buildSprintTrace(
 	]);
 	const workers = sprintTraceWorkers(snapshot, card.traceId);
 	const loop = sprintTraceLoop(card, items, blockers);
-	const committed = isCommittedDashboardTrace(card, records);
+	const committed = isCommittedAppTrace(card, records);
 	const stage = sprintTraceStage(card, items, committed);
 	const workerAttempts = buildCodewikiWorkerAttempts(
 		records,
@@ -427,7 +427,7 @@ function buildSprintTrace(
 		),
 		items: items.map(sprintTraceItem),
 		activities: sprintTraceActivities(records),
-		devLog: projectDevLog(context.devLogByTrace?.get(card.traceId)),
+		devLog: projectRuntimeDevLog(context.devLogByTrace?.get(card.traceId)),
 		touchedFiles: sprintTraceTouchedFiles(records, items, workers, card),
 		sprintIds: [],
 	};
@@ -1395,7 +1395,7 @@ function titleCase(value: string): string {
 		.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-export function isCommittedDashboardTrace(
+export function isCommittedAppTrace(
 	card: Pick<TraceQueueCard, "closed" | "status">,
 	records: TraceRecord[],
 ): boolean {
@@ -1911,7 +1911,7 @@ function workUnitRefs(card: TraceQueueCard, items: WorkQueueItem[]): string[] {
 	]);
 }
 
-export function isActiveDashboardTrace(
+export function isActiveAppTrace(
 	trace: Pick<CodewikiSprintTrace, "closed" | "loop">,
 ): boolean {
 	return !trace.closed && trace.loop !== "waiting";

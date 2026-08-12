@@ -188,23 +188,19 @@ assert.equal(
 	true,
 );
 assert.equal(
-	existsSync(join(packageRoot, "dist", "dashboard", "assets")),
+	existsSync(join(packageRoot, "dist", "dashboard")),
 	false,
-	"legacy Dashboard assets are not packaged",
+	"legacy Dashboard root is not packaged",
 );
 for (const name of [
-	"activity-feed",
-	"change-control",
-	"config-control",
-	"daemon",
-	"health",
-	"index",
-	"server",
-	"control-error",
+	"app-state",
+	"changes",
+	"configuration",
+	"dev-log",
 ]) {
 	assert.equal(
-		existsSync(join(packageRoot, "dist", "dashboard", name + ".js")),
-		false,
+		existsSync(join(packageRoot, "dist", "runtime", "queries", name + ".js")),
+		true,
 		name,
 	);
 }

@@ -101,15 +101,15 @@ Use breaking clean cuts. No compatibility aliases, old-path re-exports, dual con
 
 Ratification checkpoint before executable clean cuts:
 
-| Area | Ratification | Trace-host cut | Conversational Pi cut | Managed Execution move | Runtime/Host ownership cut | App shell cut | Host App lifecycle cut | App/Pi bridge cut | App read-only cut | Host App transport cut | Factual activity cut | Hard cap |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| tracked total | 655 | 641 | 639 | 640 | 642 | 641 | 641 | 639 | 636 | 637 | 636 | 575 |
-| `src/**` | 375 | 367 | 366 | 366 | 366 | 365 | 364 | 362 | 360 | 360 | 359 | 315 |
-| `tests/**` | 211 | 204 | 202 | 202 | 202 | 201 | 201 | 200 | 198 | 198 | 197 | 190 |
-| `benchmarks/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
-| `scripts/**` | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
-| `lab/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| packed files | 753 | 737 | 735 | 735 | 735 | 733 | 731 | 727 | 723 | 723 | 721 | 650 |
+| Area | Ratification | Trace-host cut | Conversational Pi cut | Managed Execution move | Runtime/Host ownership cut | App shell cut | Host App lifecycle cut | App/Pi bridge cut | App read-only cut | Host App transport cut | Factual activity cut | Runtime App queries cut | Hard cap |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| tracked total | 655 | 641 | 639 | 640 | 642 | 641 | 641 | 639 | 636 | 637 | 636 | 637 | 575 |
+| `src/**` | 375 | 367 | 366 | 366 | 366 | 365 | 364 | 362 | 360 | 360 | 359 | 359 | 315 |
+| `tests/**` | 211 | 204 | 202 | 202 | 202 | 201 | 201 | 200 | 198 | 198 | 197 | 197 | 190 |
+| `benchmarks/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 10 |
+| `scripts/**` | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| `lab/**` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| packed files | 753 | 737 | 735 | 735 | 735 | 733 | 731 | 727 | 723 | 723 | 721 | 721 | 650 |
 
 The trace-host cut is recorded by `.tmp-worktrees/trace-host-clean-cut-manifest.json`, exhaustively anchored to `fafafc8` with 639 keeps and 16 deletions. Its green checkpoint is 943 full-suite tests, 116 coordinator tests, a passing packed-install smoke test, and zero production audit vulnerabilities.
 
@@ -131,7 +131,9 @@ The App read-only clean cut is recorded by `.tmp-worktrees/app-direct-mutation-c
 
 The Host App transport move is recorded by `.tmp-worktrees/host-app-transport-move-manifest.json`, exhaustively anchored to `22af603` with 632 keeps and 4 moves. It moves App HTTP transport, endpoint lifecycle, request validation, coordinator observation, and Preview command delivery to `src/host/app/**`; moves focused integration proof to `tests/host/app/**`; and clean-cuts exported server, request-error, and private temp-directory vocabulary without aliases. Its green checkpoint is 932 full-suite tests, 116 coordinator tests, 723 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
 
-The factual activity clean cut is recorded by `.tmp-worktrees/app-factual-activity-clean-cut-manifest.json`, exhaustively anchored to `9cddba3` with 635 keeps and 2 deletions. It deletes projection-authored Activity Feed impact and next-action narration and its claim-authoring test. The App renders the existing bounded factual trace activities without a compatibility field. Four `src/dashboard/**` files remain as read-only query/projection legacy debt. Its green checkpoint is 930 full-suite tests, 116 coordinator tests, 721 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
+The factual activity clean cut is recorded by `.tmp-worktrees/app-factual-activity-clean-cut-manifest.json`, exhaustively anchored to `9cddba3` with 635 keeps and 2 deletions. It deletes projection-authored Activity Feed impact and next-action narration and its claim-authoring test. The App renders the existing bounded factual trace activities without a compatibility field. Its green checkpoint is 930 full-suite tests, 116 coordinator tests, 721 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
+
+The Runtime App query move is recorded by `.tmp-worktrees/runtime-app-queries-move-manifest.json`, exhaustively anchored to `06031a5` with 627 keeps and 9 moves. It moves canonical Change/configuration reads and bounded App, activity, quality, worker, and Dev Log reductions to `src/runtime/queries/**`, moves focused tests to `tests/runtime/queries/**`, and removes `src/dashboard/**` plus `tests/dashboard/**` completely. Host retains App transport; the browser Client retains presentation. Exported query/state vocabulary is clean-cut without aliases or old-path re-exports. Its green checkpoint is 930 full-suite tests, 116 coordinator tests, 721 packed files, passing project-local and external packed-install lifecycle/failure gates, and zero production audit vulnerabilities.
 
 Rules:
 
@@ -168,6 +170,7 @@ Rules:
 - [x] Create and execute the reviewed `bfdbce2`-anchored App direct-mutation keep/delete manifest before making Change and configuration surfaces read-only.
 - [x] Create and execute the reviewed `22af603`-anchored Host App transport keep/move manifest before removing the Dashboard transport owner.
 - [x] Create and execute the reviewed `9cddba3`-anchored factual activity keep/delete manifest before removing projection-authored causality.
+- [x] Create and execute the reviewed `06031a5`-anchored Runtime App query keep/move manifest before deleting the final Dashboard roots.
 - [ ] Delete legacy Quality, generic View authority, obsolete Loop compatibility, and old Trace/ChangeRecord paths as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
@@ -177,7 +180,7 @@ Rules:
 - [x] Delete App-to-ambient-Pi session actions and prompt injection; preserve explicit user `/wiki-*` commands.
 - [x] Delete Dashboard-local Change/configuration mutation authority and keep those App surfaces read-only until typed Runtime commands land.
 - [x] Move App HTTP transport and lifecycle into `src/host/app/**`; retain no old-path transport exports.
-- [ ] Replace the four remaining Dashboard query/projection files with Runtime query contracts and Client-owned presentation; no old Dashboard protocol survives.
+- [x] Replace the four remaining Dashboard query/projection files with Runtime query contracts while preserving Client-owned presentation; no old Dashboard query protocol survives.
 - [x] Update managed Execution package exports, scripts, tests, and packed-install gates in the same cut; repeat for later Host/App cuts.
 
 ### 3. Define Host and Client protocol
@@ -192,7 +195,7 @@ Rules:
 
 ### 4. Build CodeWiki App and first-party Clients
 
-- [ ] Replace Dashboard-local workflow/session truth with persisted Runtime projections and operations.
+- [x] Replace Dashboard-local workflow/session query ownership with bounded Runtime projections; typed Runtime mutation operations remain pending.
 - [ ] Implement App surfaces for Change, Decision, Planning, Implementation, Work Items, Candidates, provenance, Checks, Evidence, Exit Reports, Repair, Integration, and effects.
 - [ ] Keep CLI as full deterministic operational and high-authority confirmation surface.
 - [ ] Keep Pi TUI as optional expert Client; it cannot double as controlled execution.

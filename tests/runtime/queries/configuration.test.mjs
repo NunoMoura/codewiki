@@ -4,11 +4,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 
-import { loadDashboardConfigState } from "../../src/dashboard/config-state.ts";
-import { writeWikiConfigFile } from "../../src/project/config-file.ts";
-import { resolveWikiConfig } from "../../src/project/config.ts";
+import { loadRuntimeConfigurationState } from "../../../src/runtime/queries/configuration.ts";
+import { writeWikiConfigFile } from "../../../src/project/config-file.ts";
+import { resolveWikiConfig } from "../../../src/project/config.ts";
 
-describe("dashboard configuration state", () => {
+describe("Runtime configuration query", () => {
 	it("projects bounded effective settings without secrets or authority policy", async () => {
 		const root = await mkdtemp(
 			join(tmpdir(), "codewiki-dashboard-config-state-"),
@@ -23,7 +23,7 @@ describe("dashboard configuration state", () => {
 				hosts: { pi: { enabled: true } },
 			});
 			await writeWikiConfigFile(root, config);
-			const state = await loadDashboardConfigState(root, config);
+			const state = await loadRuntimeConfigurationState(root, config);
 			assert.match(state.configDigest, /^sha256:[a-f0-9]{64}$/);
 			assert.equal(state.activeConfigDigest, state.configDigest);
 			assert.equal(state.restartRequired, false);

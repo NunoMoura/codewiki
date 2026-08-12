@@ -24,7 +24,7 @@ import {
 	closeCodewikiAppServer,
 	restoreCodewikiAppServer,
 } from "../../../src/host/app/server.ts";
-import { isActiveDashboardTrace } from "../../../src/dashboard/state.ts";
+import { isActiveAppTrace } from "../../../src/runtime/queries/app-state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../../src/clients/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../../src/clients/pi/tools/index.ts";
 import { appendDevLogEntry } from "../../../src/runtime/persistence/dev-log.ts";
@@ -154,21 +154,21 @@ async function fileExists(path) {
 }
 
 describe("Pi extension adapter", () => {
-	it("treats active and blocked dashboard traces as orthogonal facets", () => {
+	it("treats active and blocked App traces as orthogonal facets", () => {
 		assert.equal(
-			isActiveDashboardTrace({ closed: false, loop: "blocked" }),
+			isActiveAppTrace({ closed: false, loop: "blocked" }),
 			true,
 		);
 		assert.equal(
-			isActiveDashboardTrace({ closed: false, loop: "implementation" }),
+			isActiveAppTrace({ closed: false, loop: "implementation" }),
 			true,
 		);
 		assert.equal(
-			isActiveDashboardTrace({ closed: false, loop: "waiting" }),
+			isActiveAppTrace({ closed: false, loop: "waiting" }),
 			false,
 		);
 		assert.equal(
-			isActiveDashboardTrace({ closed: true, loop: "implementation" }),
+			isActiveAppTrace({ closed: true, loop: "implementation" }),
 			false,
 		);
 	});

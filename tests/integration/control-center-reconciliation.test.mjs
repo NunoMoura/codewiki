@@ -38,22 +38,22 @@ const criterionEvidence = {
 	"WU-changes-backlog-dashboard-v1": {
 		criteria: ["backlog-view", "guarded-mutations", "authority-ceiling"],
 		source: [
-			"src/dashboard/changes-state.ts",
+			"src/runtime/queries/changes.ts",
 			"src/host/app/server.ts",
 		],
 		tests: [
-			"tests/dashboard/changes-state.test.mjs",
+			"tests/runtime/queries/changes.test.mjs",
 			"tests/clients/app/shell.test.mjs",
 		],
 	},
 	"WU-dashboard-execution-configuration-v1": {
 		criteria: ["config-projection", "safe-patch", "authority-invariants"],
 		source: [
-			"src/dashboard/config-state.ts",
+			"src/runtime/queries/configuration.ts",
 			"src/project/config-file.ts",
 		],
 		tests: [
-			"tests/dashboard/config-state.test.mjs",
+			"tests/runtime/queries/configuration.test.mjs",
 			"tests/runtime/wiki-config.test.mjs",
 		],
 	},

@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { projectDevLog } from "../../src/dashboard/dev-log-projection.ts";
-import { createDevLogEntry } from "../../src/runtime/persistence/dev-log.ts";
+import { projectRuntimeDevLog } from "../../../src/runtime/queries/dev-log.ts";
+import { createDevLogEntry } from "../../../src/runtime/persistence/dev-log.ts";
 
-describe("dashboard Dev Log projection", () => {
+describe("Runtime Dev Log query", () => {
 	it("projects bounded newest-first diagnostics without adding authority", () => {
 		const entries = [1, 2, 3].map((index) =>
 			createDevLogEntry({
@@ -16,11 +16,11 @@ describe("dashboard Dev Log projection", () => {
 				category: "check",
 				action: "check.finished",
 				status: "success",
-				refs: ["tests/dashboard/dev-log-projection.test.mjs"],
+				refs: ["tests/runtime/queries/dev-log.test.mjs"],
 				...(index === 3 ? { redactions: ["authorization"] } : {}),
 			}),
 		);
-		const projection = projectDevLog(entries, 2);
+		const projection = projectRuntimeDevLog(entries, 2);
 		assert.equal(projection.available, true);
 		assert.equal(projection.entryCount, 3);
 		assert.deepEqual(projection.items.map((item) => item.id), ["dev-3", "dev-2"]);
@@ -29,11 +29,11 @@ describe("dashboard Dev Log projection", () => {
 	});
 
 	it("distinguishes unavailable diagnostics from an empty log", () => {
-		assert.deepEqual(projectDevLog(undefined), {
+		assert.deepEqual(projectRuntimeDevLog(undefined), {
 			available: false,
 			entryCount: 0,
 			items: [],
 		});
-		assert.equal(projectDevLog([]).available, true);
+		assert.equal(projectRuntimeDevLog([]).available, true);
 	});
 });

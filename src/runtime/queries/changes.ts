@@ -1,15 +1,15 @@
 import { createHash } from "node:crypto";
-import { ChangeTraceStore } from "../changes/trace-store.ts";
+import { ChangeTraceStore } from "../../changes/trace-store.ts";
 import {
 	buildChangeValidationCard,
 	type ChangeValidationCard,
-} from "../changes/validation-view.ts";
-import type { ChangeStatus, ChangeValidationState } from "../changes/types.ts";
+} from "../../changes/validation-view.ts";
+import type { ChangeStatus, ChangeValidationState } from "../../changes/types.ts";
 
-const MAX_DASHBOARD_CHANGES = 100;
-const MAX_DASHBOARD_STATE_BYTES = 256_000;
+const MAX_RUNTIME_CHANGES = 100;
+const MAX_RUNTIME_CHANGES_BYTES = 256_000;
 
-export interface DashboardChangesSummary {
+export interface RuntimeChangesSummary {
 	total: number;
 	pending: number;
 	accepted: number;
@@ -24,38 +24,38 @@ export interface DashboardChangesSummary {
 	stale: number;
 }
 
-export interface DashboardChangesState {
+export interface RuntimeChangesState {
 	generatedAt: string;
 	available: boolean;
 	blockers: string[];
 	head: string | null;
 	stateDigest: string;
 	records: ChangeValidationCard[];
-	summary: DashboardChangesSummary;
+	summary: RuntimeChangesSummary;
 	truncated: boolean;
 }
 
-interface DashboardChangeFilters {
+interface RuntimeChangeFilters {
 	status?: ChangeStatus;
 	validationState?: ChangeValidationState;
 	text?: string;
 }
 
-export async function loadDashboardChangesState(
+export async function loadRuntimeChangesState(
 	repoRoot: string,
-): Promise<DashboardChangesState> {
+): Promise<RuntimeChangesState> {
 	const snapshot = await new ChangeTraceStore({ repoRoot }).read();
 	const sortedRecords = [...snapshot.records].sort((left, right) =>
 		left.change.id.localeCompare(right.change.id),
 	);
 	const records: ChangeValidationCard[] = [];
 	let retainedBytes = 0;
-	for (const record of sortedRecords.slice(0, MAX_DASHBOARD_CHANGES)) {
+	for (const record of sortedRecords.slice(0, MAX_RUNTIME_CHANGES)) {
 		const card = buildChangeValidationCard(record);
 		const cardBytes = Buffer.byteLength(JSON.stringify(card), "utf8");
 		if (
 			records.length > 0 &&
-			retainedBytes + cardBytes > MAX_DASHBOARD_STATE_BYTES
+			retainedBytes + cardBytes > MAX_RUNTIME_CHANGES_BYTES
 		) {
 			break;
 		}
@@ -74,9 +74,9 @@ export async function loadDashboardChangesState(
 	};
 }
 
-export function filterDashboardChanges(
-	state: DashboardChangesState,
-	filters: DashboardChangeFilters = {},
+export function filterRuntimeChanges(
+	state: RuntimeChangesState,
+	filters: RuntimeChangeFilters = {},
 ): ChangeValidationCard[] {
 	const query = filters.text?.trim().toLowerCase();
 	return state.records.filter((record) => {
@@ -123,8 +123,8 @@ function changesSummary(
 			validation: { state: ChangeValidationState };
 		};
 	}>,
-): DashboardChangesSummary {
-	const summary: DashboardChangesSummary = {
+): RuntimeChangesSummary {
+	const summary: RuntimeChangesSummary = {
 		total: records.length,
 		pending: 0,
 		accepted: 0,

@@ -4,16 +4,16 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { buildWikiState } from "../../src/api/state.ts";
+import { buildWikiState } from "../../../src/api/state.ts";
 import {
 	acceptChangeRecord,
 	createChangeRecord,
-} from "../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
-import { loadDashboardChangesState } from "../../src/dashboard/changes-state.ts";
-import { buildCodewikiDashboardState } from "../../src/dashboard/state.ts";
-import { readProjectTraceRecords } from "../../src/work-state/project.ts";
-import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
+} from "../../../src/changes/records.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { buildCodewikiAppState } from "../../../src/runtime/queries/app-state.ts";
+import { loadRuntimeChangesState } from "../../../src/runtime/queries/changes.ts";
+import { readProjectTraceRecords } from "../../../src/work-state/project.ts";
+import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
 
 const roots = [];
 
@@ -29,19 +29,19 @@ async function project() {
 	return root;
 }
 
-async function dashboardState(root) {
+async function appState(root) {
 	const records = await readProjectTraceRecords(root);
-	return buildCodewikiDashboardState(
+	return buildCodewikiAppState(
 		buildWikiState({ records }),
 		root,
 		records,
 		{
-			changes: await loadDashboardChangesState(root),
+			changes: await loadRuntimeChangesState(root),
 		},
 	);
 }
 
-describe("Change-rooted dashboard state", () => {
+describe("Change-rooted App state", () => {
 	it("projects one Pipeline Card for one Change Trace across approval", async () => {
 		const root = await project();
 		const store = new ChangeTraceStore({ repoRoot: root });
@@ -56,7 +56,7 @@ describe("Change-rooted dashboard state", () => {
 			createdAt: pending.change.provenance.createdAt,
 		});
 
-		const before = await dashboardState(root);
+		const before = await appState(root);
 		assert.equal(before.summary.pipeline, 1);
 		assert.equal(before.summary.backlog, 1);
 		assert.equal(before.sprintsQueue.length, 1);
@@ -81,7 +81,7 @@ describe("Change-rooted dashboard state", () => {
 			createdAt: "2026-08-01T03:01:00.000Z",
 		});
 
-		const after = await dashboardState(root);
+		const after = await appState(root);
 		assert.equal(after.summary.pipeline, 1);
 		assert.equal(after.summary.backlog, 0);
 		assert.equal(after.sprintsQueue.length, 1);

@@ -3,10 +3,10 @@ import { describe, it } from "node:test";
 import {
 	buildCodewikiImplementationReview,
 	buildCodewikiWorkerAttempts,
-	isCommittedDashboardTrace,
+	isCommittedAppTrace,
 	projectSprintPlan,
-} from "../../src/dashboard/state.ts";
-import { createWorkerObservation } from "../../src/runtime/workers/observation.ts";
+} from "../../../src/runtime/queries/app-state.ts";
+import { createWorkerObservation } from "../../../src/runtime/workers/observation.ts";
 
 function claim(sequence = 1) {
 	return {
@@ -25,7 +25,7 @@ function claim(sequence = 1) {
 			planningRefs: [
 				"trace:TRACE-workers:planning:iteration:1#work:WU-workers",
 			],
-			pathScopes: ["src/dashboard/state.ts"],
+			pathScopes: ["src/runtime/queries/app-state.ts"],
 		},
 	};
 }
@@ -36,7 +36,7 @@ const item = {
 	status: "claimed",
 };
 
-describe("dashboard lifecycle projection", () => {
+describe("Runtime App state query", () => {
 	it("projects the latest declared Sprint plan", () => {
 		const plan = projectSprintPlan([
 			{
@@ -151,19 +151,19 @@ describe("dashboard lifecycle projection", () => {
 			createdAt: "2026-07-15T00:00:00.000Z",
 		};
 		assert.equal(
-			isCommittedDashboardTrace({ closed: true, status: "closed_complete" }, [
+			isCommittedAppTrace({ closed: true, status: "closed_complete" }, [
 				close,
 			]),
 			true,
 		);
 		assert.equal(
-			isCommittedDashboardTrace({ closed: true, status: "closed_incomplete" }, [
+			isCommittedAppTrace({ closed: true, status: "closed_incomplete" }, [
 				close,
 			]),
 			false,
 		);
 		assert.equal(
-			isCommittedDashboardTrace(
+			isCommittedAppTrace(
 				{ closed: true, status: "closed_complete" },
 				[],
 			),
@@ -172,7 +172,7 @@ describe("dashboard lifecycle projection", () => {
 	});
 });
 
-describe("dashboard worker projection", () => {
+describe("Runtime App worker query", () => {
 	it("combines durable claims with latest live observation", () => {
 		const observedAt = new Date();
 		const observation = createWorkerObservation({

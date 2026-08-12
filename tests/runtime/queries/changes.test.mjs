@@ -5,16 +5,16 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 
 import {
-	filterDashboardChanges,
-	loadDashboardChangesState,
-} from "../../src/dashboard/changes-state.ts";
-import { createChangeRecord } from "../../src/changes/records.ts";
+	filterRuntimeChanges,
+	loadRuntimeChangesState,
+} from "../../../src/runtime/queries/changes.ts";
+import { createChangeRecord } from "../../../src/changes/records.ts";
 import {
 	acceptedChangeFixture,
 	seedChangeAcceptance,
-} from "../helpers/accepted-change.mjs";
+} from "../../helpers/accepted-change.mjs";
 
-describe("dashboard Changes Backlog state", () => {
+describe("Runtime Changes query", () => {
 	it("projects deterministic bounded cards and independent filters", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-dashboard-changes-"));
 		try {
@@ -36,7 +36,7 @@ describe("dashboard Changes Backlog state", () => {
 				createdAt: "2026-06-25T00:00:03.000Z",
 			});
 
-			const state = await loadDashboardChangesState(root);
+			const state = await loadRuntimeChangesState(root);
 			assert.equal(state.records.length, 2);
 			assert.deepEqual(
 				state.records.map((record) => record.identity.changeId),
@@ -46,14 +46,14 @@ describe("dashboard Changes Backlog state", () => {
 			assert.equal(state.summary.valid, 2);
 			assert.match(state.stateDigest, /^sha256:[a-f0-9]{64}$/);
 			assert.deepEqual(
-				filterDashboardChanges(state, {
+				filterRuntimeChanges(state, {
 					validationState: "valid",
 					text: "beta",
 				}).map((record) => record.identity.changeId),
 				["CHG-dashboard-beta"],
 			);
 			assert.deepEqual(
-				filterDashboardChanges(state, { status: "accepted" }),
+				filterRuntimeChanges(state, { status: "accepted" }),
 				[],
 			);
 		} finally {

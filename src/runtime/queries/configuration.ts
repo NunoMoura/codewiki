@@ -1,16 +1,16 @@
 import {
 	previewProfileDigest,
 	type PreviewProfile,
-} from "../preview/profile.ts";
+} from "../../preview/profile.ts";
 import {
 	uiPreviewTargetDigest,
 	type UiPreviewTarget,
-} from "../preview/target.ts";
+} from "../../preview/target.ts";
 import {
 	loadWikiConfigFile,
 	WIKI_CONFIG_PATH,
-} from "../project/config-file.ts";
-import {wikiConfigDigest} from "../project/config-digest.ts";
+} from "../../project/config-file.ts";
+import {wikiConfigDigest} from "../../project/config-digest.ts";
 import type {
 	WikiConfig,
 	WikiConfigAgencyLevel,
@@ -18,10 +18,10 @@ import type {
 	WikiConfigWorktreeIsolation,
 	WikiRuntimeBudgetConfig,
 	WikiModelRoutingConfig,
-} from "../project/config.ts";
-import {canonicalJsonDigest} from "../utils/canonical-json.ts";
+} from "../../project/config.ts";
+import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
 
-export interface DashboardEffectiveConfig {
+export interface RuntimeEffectiveConfiguration {
 	runtime: {
 		maxWorkers: number;
 		worktreeIsolation: WikiConfigWorktreeIsolation;
@@ -35,8 +35,8 @@ export interface DashboardEffectiveConfig {
 	};
 }
 
-export const DASHBOARD_CONFIG_MAX_WORKERS = 16;
-export const DASHBOARD_CONFIG_BUDGET_MAXIMA = {
+export const RUNTIME_CONFIGURATION_MAX_WORKERS = 16;
+export const RUNTIME_CONFIGURATION_BUDGET_MAXIMA = {
 	maxSeconds: 86_400,
 	maxIterations: 100,
 	maxChangedFiles: 10_000,
@@ -46,7 +46,7 @@ export const DASHBOARD_CONFIG_BUDGET_MAXIMA = {
 	maxLatencyMs: 86_400_000,
 } as const satisfies Partial<Record<keyof WikiRuntimeBudgetConfig, number>>;
 
-export const DASHBOARD_CONFIG_MODEL_MAXIMA = {
+export const RUNTIME_CONFIGURATION_MODEL_MAXIMA = {
 	maxRoutes: 32,
 	maxEscalations: 16,
 	maxEstimatedTokens: 10_000_000,
@@ -54,10 +54,10 @@ export const DASHBOARD_CONFIG_MODEL_MAXIMA = {
 	maxPricingUsdPerMillion: 1_000_000,
 } as const;
 
-export interface DashboardConfigLimits {
+export interface RuntimeConfigurationLimits {
 	maxWorkers: number;
-	budgetMaxima: typeof DASHBOARD_CONFIG_BUDGET_MAXIMA;
-	modelMaxima: typeof DASHBOARD_CONFIG_MODEL_MAXIMA;
+	budgetMaxima: typeof RUNTIME_CONFIGURATION_BUDGET_MAXIMA;
+	modelMaxima: typeof RUNTIME_CONFIGURATION_MODEL_MAXIMA;
 	automationCeiling: WikiConfigAutomationMode;
 	agencyCeiling: WikiConfigAgencyLevel;
 	minimumQualityFloor: WikiModelRoutingConfig["qualityFloor"];
@@ -65,15 +65,15 @@ export interface DashboardConfigLimits {
 	allowedTools: string[];
 }
 
-export interface DashboardPreviewProfile extends PreviewProfile {
+export interface RuntimePreviewProfile extends PreviewProfile {
 	digest: string;
 }
 
-export interface DashboardUiPreviewTarget extends UiPreviewTarget {
+export interface RuntimeUiPreviewTarget extends UiPreviewTarget {
 	digest: string;
 }
 
-export interface DashboardConfigState {
+export interface RuntimeConfigurationState {
 	generatedAt: string;
 	sourcePath: string;
 	validation: "valid";
@@ -83,20 +83,20 @@ export interface DashboardConfigState {
 	restartRequired: boolean;
 	restartReasons: string[];
 	restartGuidance: string;
-	previewProfiles: DashboardPreviewProfile[];
-	uiPreviewTargets: DashboardUiPreviewTarget[];
-	effective: DashboardEffectiveConfig;
-	limits: DashboardConfigLimits;
+	previewProfiles: RuntimePreviewProfile[];
+	uiPreviewTargets: RuntimeUiPreviewTarget[];
+	effective: RuntimeEffectiveConfiguration;
+	limits: RuntimeConfigurationLimits;
 }
 
-export async function loadDashboardConfigState(
+export async function loadRuntimeConfigurationState(
 	repoRoot: string,
 	activeConfig?: WikiConfig,
-): Promise<DashboardConfigState> {
+): Promise<RuntimeConfigurationState> {
 	const config = await loadWikiConfigFile(repoRoot);
 	const active = activeConfig || config;
-	const configDigest = dashboardConfigDigest(config);
-	const activeConfigDigest = dashboardConfigDigest(active);
+	const configDigest = runtimeConfigurationDigest(config);
+	const activeConfigDigest = runtimeConfigurationDigest(active);
 	const restartRequired = configDigest !== activeConfigDigest;
 	return {
 		generatedAt: new Date().toISOString(),
@@ -108,7 +108,7 @@ export async function loadDashboardConfigState(
 		restartRequired,
 		restartReasons: restartRequired
 			? [
-					"Persisted execution configuration differs from this dashboard runtime baseline.",
+					"Persisted execution configuration differs from this Runtime baseline.",
 				]
 			: [],
 		restartGuidance: restartRequired
@@ -124,9 +124,9 @@ export async function loadDashboardConfigState(
 		})),
 		effective: effectiveConfig(config),
 		limits: {
-			maxWorkers: DASHBOARD_CONFIG_MAX_WORKERS,
-			budgetMaxima: { ...DASHBOARD_CONFIG_BUDGET_MAXIMA },
-			modelMaxima: { ...DASHBOARD_CONFIG_MODEL_MAXIMA },
+			maxWorkers: RUNTIME_CONFIGURATION_MAX_WORKERS,
+			budgetMaxima: { ...RUNTIME_CONFIGURATION_BUDGET_MAXIMA },
+			modelMaxima: { ...RUNTIME_CONFIGURATION_MODEL_MAXIMA },
 			automationCeiling: active.runtime.automation,
 			agencyCeiling: active.runtime.agency,
 			minimumQualityFloor: active.runtime.modelRouting.qualityFloor,
@@ -142,11 +142,11 @@ export async function loadDashboardConfigState(
 	};
 }
 
-export function dashboardConfigDigest(config: WikiConfig): string {
+export function runtimeConfigurationDigest(config: WikiConfig): string {
 	return wikiConfigDigest(config);
 }
 
-function effectiveConfig(config: WikiConfig): DashboardEffectiveConfig {
+function effectiveConfig(config: WikiConfig): RuntimeEffectiveConfiguration {
 	return {
 		runtime: {
 			maxWorkers: config.runtime.maxWorkers,
