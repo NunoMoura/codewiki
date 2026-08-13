@@ -25,9 +25,9 @@ import {createCheckCatalog} from "../../../src/verification/catalog.ts";
 import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
 import {
 	loadWikiConfigFile,
+	wikiConfigDigest,
 	writeWikiConfigFile,
 } from "../../../src/project/config-file.ts";
-import {wikiConfigDigest} from "../../../src/project/config-digest.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 import {

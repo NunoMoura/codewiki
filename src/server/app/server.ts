@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from "node:crypto";
+import { createHash } from "node:crypto";
 import {
 	chmodSync,
 	closeSync,
@@ -44,6 +44,22 @@ import {
 	assertInstalledCodewikiRuntimeCurrent,
 	captureInstalledCodewikiRuntimeIdentity,
 } from "./installed-runtime.ts";
+import {
+	appEndpointRequest,
+	appSessionBearer,
+	appSessionLaunchUrl,
+	authorizeAppServerRequest,
+	establishAppSessionCookie,
+	openAppServerSessionAuthorization,
+	revokeAppServerSession,
+	type AppServerSessionAuthorization,
+} from "./authorization.ts";
+import type {ClientServerRequestContext} from "../../protocol/client-server.ts";
+import type {
+	ServerEndpointAuthorization,
+	ServerEndpointAuthorizationAdapter,
+	ServerSessionBinding,
+} from "../sessions/contracts.ts";
 
 class AppRequestError extends Error {
 	readonly status: 400 | 403 | 409;
@@ -67,13 +83,16 @@ interface CodewikiAppServerOptions {
 		repoRoot: string,
 		input: ProjectRuntimeConnectionInput,
 	) => Promise<ProjectRuntimeGateway>;
+	sessionBinding?: ServerSessionBinding;
+	endpointAuthorizationAdapter?: ServerEndpointAuthorizationAdapter;
+	sessionLifetimeSeconds?: number;
 }
 
 interface CodewikiAppServerHandle {
 	repoRoot: string;
 	url: string;
 	origin: string;
-	token: string;
+	sessionCredential: string;
 	opened: boolean;
 	close(): Promise<void>;
 }
@@ -83,8 +102,8 @@ interface AppServerRuntime {
 	server: Server;
 	url: string;
 	origin: string;
-	token: string;
-	clients: Set<ServerResponse>;
+	sessionAuthorization: AppServerSessionAuthorization;
+	clients: Map<ServerResponse, ClientServerRequestContext>;
 	projection: Pick<
 		ProjectRuntimeProjectionGateway,
 		"appState" | "changes" | "configuration"
@@ -107,7 +126,7 @@ interface AppServerEndpoint {
 	repoRoot: string;
 	origin: string;
 	url: string;
-	token: string;
+	sessionCredential: string;
 	port: number;
 }
 
@@ -331,8 +350,9 @@ async function readAppEndpointMeta(
 	endpoint: AppServerEndpoint,
 ): Promise<AppServerMeta | undefined> {
 	const result = await requestAppJson(
-		`${endpoint.origin}/api/meta?token=${encodeURIComponent(endpoint.token)}`,
+		`${endpoint.origin}/api/meta`,
 		500,
+		{headers: {authorization: `Bearer ${endpoint.sessionCredential}`}},
 	);
 	if (!result || result.status !== 200) return undefined;
 	const data = result.data;
@@ -353,8 +373,16 @@ async function shutdownAppEndpoint(
 	endpoint: AppServerEndpoint,
 ): Promise<void> {
 	await requestAppJson(
-		`${endpoint.origin}/api/shutdown?token=${encodeURIComponent(endpoint.token)}`,
+		`${endpoint.origin}/api/shutdown`,
 		500,
+		{
+			method: "POST",
+			headers: {
+				authorization: `Bearer ${endpoint.sessionCredential}`,
+				"content-type": "application/json",
+				origin: endpoint.origin,
+			},
+		},
 	).catch(() => undefined);
 	await pollUntil(Date.now() + 1_500, async () =>
 		(await appEndpointResponds(endpoint)) ? undefined : true,
@@ -364,6 +392,7 @@ async function shutdownAppEndpoint(
 async function requestAppJson(
 	url: string,
 	timeout: number,
+	options: {readonly method?: "GET" | "POST"; readonly headers?: Readonly<Record<string, string>>} = {},
 ): Promise<{ status: number; data?: unknown } | undefined> {
 	return await new Promise((resolve) => {
 		let settled = false;
@@ -372,7 +401,10 @@ async function requestAppJson(
 			settled = true;
 			resolve(value);
 		};
-		const request = httpRequest(url, { method: "GET", timeout }, (response) => {
+		const request = httpRequest(
+			url,
+			{method: options.method || "GET", headers: options.headers, timeout},
+			(response) => {
 			const chunks: Buffer[] = [];
 			response.on("data", (chunk: Buffer) => chunks.push(chunk));
 			response.on("end", () => {
@@ -386,7 +418,8 @@ async function requestAppJson(
 					finish({ status: response.statusCode ?? 0 });
 				}
 			});
-		});
+			},
+		);
 		request.on("timeout", () => {
 			request.destroy();
 			finish(undefined);
@@ -416,7 +449,10 @@ async function startInProcessAppServer(
 	const existing = appServers.get(options.repoRoot);
 	if (existing?.server.listening) {
 		if (options.keepAlive) existing.server.ref();
-		if (!(await appEndpointServesState(existing))) {
+		if (!(await appEndpointServesState({
+			origin: existing.origin,
+			sessionCredential: appSessionBearer(existing.sessionAuthorization),
+		}))) {
 			await existing.close();
 			await removeAppEndpoint(options.repoRoot);
 			throw appUnavailableError(existing.origin);
@@ -447,10 +483,16 @@ async function startInProcessAppServer(
 			connectProjectRuntime: options.connectProjectRuntime ?? false,
 			projectRuntimeConnector:
 				options.projectRuntimeConnector || connectProjectRuntimeGateway,
+			sessionBinding: options.sessionBinding,
+			endpointAuthorizationAdapter: options.endpointAuthorizationAdapter,
+			sessionLifetimeSeconds: options.sessionLifetimeSeconds,
 		},
 	);
 	appServers.set(options.repoRoot, runtime);
-	if (!(await appEndpointServesState(runtime))) {
+	if (!(await appEndpointServesState({
+		origin: runtime.origin,
+		sessionCredential: appSessionBearer(runtime.sessionAuthorization),
+	}))) {
 		await runtime.close();
 		await removeAppEndpoint(options.repoRoot);
 		throw appUnavailableError(runtime.origin);
@@ -468,13 +510,13 @@ async function readAppEndpoint(
 		if (data.repoRoot !== repoRoot) return undefined;
 		if (typeof data.origin !== "string") return undefined;
 		if (typeof data.url !== "string") return undefined;
-		if (typeof data.token !== "string") return undefined;
+		if (typeof data.sessionCredential !== "string") return undefined;
 		if (!Number.isInteger(data.port)) return undefined;
 		return {
 			repoRoot,
 			origin: data.origin,
 			url: data.url,
-			token: data.token,
+			sessionCredential: data.sessionCredential,
 			port: data.port as number,
 		};
 	} catch (error) {
@@ -510,14 +552,14 @@ async function removeAppEndpoint(repoRoot: string): Promise<void> {
 function appEndpoint(
 	repoRoot: string,
 	origin: string,
-	token: string,
+	authorization: AppServerSessionAuthorization,
 	port: number,
 ): AppServerEndpoint {
 	return {
 		repoRoot,
 		origin,
-		url: `${origin}/#token=${encodeURIComponent(token)}`,
-		token,
+		url: appSessionLaunchUrl(origin, authorization),
+		sessionCredential: appSessionBearer(authorization),
 		port,
 	};
 }
@@ -553,11 +595,12 @@ async function appEndpointResponds(
 }
 
 async function appEndpointServesState(
-	endpoint: Pick<AppServerEndpoint, "origin" | "token">,
+	endpoint: Pick<AppServerEndpoint, "origin" | "sessionCredential">,
 ): Promise<boolean> {
 	const result = await requestAppJson(
-		`${endpoint.origin}/api/state?token=${encodeURIComponent(endpoint.token)}`,
+		`${endpoint.origin}/api/state`,
 		5_000,
+		{headers: {authorization: `Bearer ${endpoint.sessionCredential}`}},
 	);
 	return Boolean(result && result.status === 200 && result.data);
 }
@@ -601,7 +644,7 @@ function appEndpointHandle(
 		repoRoot: endpoint.repoRoot,
 		url: endpoint.url,
 		origin: endpoint.origin,
-		token: endpoint.token,
+		sessionCredential: endpoint.sessionCredential,
 		opened,
 		close: async () => undefined,
 	};
@@ -618,11 +661,18 @@ async function createAppServerRuntime(
 			repoRoot: string,
 			input: ProjectRuntimeConnectionInput,
 		) => Promise<ProjectRuntimeGateway>;
+		sessionBinding?: ServerSessionBinding;
+		endpointAuthorizationAdapter?: ServerEndpointAuthorizationAdapter;
+		sessionLifetimeSeconds?: number;
 	} = {},
 ): Promise<AppServerRuntime> {
-	const token =
-		preferredEndpoint?.token || randomBytes(18).toString("base64url");
-	const clients = new Set<ServerResponse>();
+	const sessionAuthorization = openAppServerSessionAuthorization({
+		repoRoot,
+		binding: options.sessionBinding,
+		adapter: options.endpointAuthorizationAdapter,
+		lifetimeSeconds: options.sessionLifetimeSeconds,
+	});
+	const clients = new Map<ServerResponse, ClientServerRequestContext>();
 	let runtime: AppServerRuntime;
 	const server = createServer(async (request, response) => {
 		try {
@@ -638,7 +688,7 @@ async function createAppServerRuntime(
 		throw new Error("CodeWiki dashboard server did not expose a TCP address.");
 	}
 	const origin = `http://127.0.0.1:${address.port}`;
-	const endpoint = appEndpoint(repoRoot, origin, token, address.port);
+	const endpoint = appEndpoint(repoRoot, origin, sessionAuthorization, address.port);
 	const previewControl =
 		providedPreviewControl || unavailableDashboardPreviewControl();
 	const projectRuntimeConnector =
@@ -659,7 +709,7 @@ async function createAppServerRuntime(
 		server,
 		url: endpoint.url,
 		origin,
-		token,
+		sessionAuthorization,
 		clients,
 		projectRuntime,
 		projectRuntimeConnector,
@@ -691,11 +741,42 @@ async function routeRequest(
 	const method = request.method || "GET";
 	const url = new URL(request.url || "/", runtime.origin);
 	if (method === "GET" && (await routePublicGet(response, url))) return;
-	if (!validToken(runtime, url)) {
-		writeJson(response, 403, { error: "Forbidden" });
+	const endpoint = appEndpointRequest(
+		method,
+		url.pathname,
+		runtime.sessionAuthorization.session.project.repositoryIdentity,
+	);
+	if (!endpoint) {
+		if (method !== "GET" && method !== "POST") {
+			writeJson(response, 405, {error: "Method not allowed"});
+			return;
+		}
+		writeJson(response, 404, {error: "Not found"});
 		return;
 	}
-	if (method === "GET" && (await routeAuthorizedGet(runtime, response, url))) {
+	if (endpoint.endpointId === "app.session.establish") {
+		assertSameOriginMutation(runtime, request);
+	}
+	let authorization: ServerEndpointAuthorization;
+	try {
+		authorization = await authorizeAppServerRequest({
+			authorization: runtime.sessionAuthorization,
+			endpoint,
+			request,
+		});
+	} catch {
+		writeJson(response, 403, {error: "Forbidden"});
+		return;
+	}
+	if (endpoint.endpointId === "app.session.establish") {
+		establishAppSessionCookie(response, runtime.sessionAuthorization);
+		writeJson(response, 200, {ok: true});
+		return;
+	}
+	if (
+		method === "GET" &&
+		(await routeAuthorizedGet(runtime, response, url, authorization.requestContext))
+	) {
 		return;
 	}
 	if (
@@ -704,11 +785,7 @@ async function routeRequest(
 	) {
 		return;
 	}
-	if (method !== "GET") {
-		writeJson(response, 405, { error: "Method not allowed" });
-		return;
-	}
-	writeJson(response, 404, { error: "Not found" });
+	writeJson(response, 404, {error: "Not found"});
 }
 
 async function routePublicGet(
@@ -736,17 +813,18 @@ async function routeAuthorizedGet(
 	runtime: AppServerRuntime,
 	response: ServerResponse,
 	url: URL,
+	context: ClientServerRequestContext,
 ): Promise<boolean> {
 	if (url.pathname === "/api/state") {
-		writeJson(response, 200, await readCodewikiAppState(runtime));
+		writeJson(response, 200, await readCodewikiAppState(runtime, context));
 		return true;
 	}
 	if (url.pathname === "/api/changes") {
-		writeJson(response, 200, await runtime.projection.changes());
+		writeJson(response, 200, await runtime.projection.changes(context));
 		return true;
 	}
 	if (url.pathname === "/api/configuration") {
-		writeJson(response, 200, await runtime.projection.configuration());
+		writeJson(response, 200, await runtime.projection.configuration(context));
 		return true;
 	}
 	if (url.pathname === "/api/previews") {
@@ -761,13 +839,8 @@ async function routeAuthorizedGet(
 		});
 		return true;
 	}
-	if (url.pathname === "/api/shutdown") {
-		writeJson(response, 200, { ok: true });
-		scheduleRuntimeClose(runtime);
-		return true;
-	}
 	if (url.pathname === "/api/events") {
-		await attachEventStream(runtime, response);
+		await attachEventStream(runtime, response, context);
 		return true;
 	}
 	return false;
@@ -880,9 +953,12 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 	}
 }
 
-async function readCodewikiAppState(runtime: AppServerRuntime) {
+async function readCodewikiAppState(
+	runtime: AppServerRuntime,
+	context: ClientServerRequestContext,
+) {
 	const [state, previews] = await Promise.all([
-		runtime.projection.appState(),
+		runtime.projection.appState(context),
 		runtime.previewControl.status(),
 	]);
 	return { ...state, previews: [...previews] };
@@ -891,15 +967,16 @@ async function readCodewikiAppState(runtime: AppServerRuntime) {
 async function attachEventStream(
 	runtime: AppServerRuntime,
 	response: ServerResponse,
+	context: ClientServerRequestContext,
 ): Promise<void> {
-	const state = await readCodewikiAppState(runtime);
+	const state = await readCodewikiAppState(runtime, context);
 	response.writeHead(200, {
 		...APP_SERVER_SECURITY_HEADERS,
 		"Content-Type": "text/event-stream",
 		"Cache-Control": "no-cache, no-transform",
 		Connection: "keep-alive",
 	});
-	runtime.clients.add(response);
+	runtime.clients.set(response, context);
 	response.on("close", () => runtime.clients.delete(response));
 	writeEvent(response, state);
 }
@@ -966,9 +1043,9 @@ function scheduleBroadcast(runtime: AppServerRuntime): void {
 }
 
 async function broadcast(runtime: AppServerRuntime): Promise<void> {
-	if (runtime.clients.size === 0) return;
-	const state = await readCodewikiAppState(runtime);
-	for (const client of runtime.clients) writeEvent(client, state);
+	for (const [client, context] of runtime.clients) {
+		writeEvent(client, await readCodewikiAppState(runtime, context));
+	}
 }
 
 function writeEvent(
@@ -977,10 +1054,6 @@ function writeEvent(
 ): void {
 	if (response.destroyed || response.writableEnded) return;
 	response.write(`data: ${JSON.stringify(data)}\n\n`);
-}
-
-function validToken(runtime: AppServerRuntime, url: URL): boolean {
-	return url.searchParams.get("token") === runtime.token;
 }
 
 function writeHtml(response: ServerResponse, html: string): void {
@@ -1030,6 +1103,7 @@ function writeServerError(response: ServerResponse, error: unknown): void {
 
 async function closeRuntime(runtime: AppServerRuntime): Promise<void> {
 	appServers.delete(runtime.repoRoot);
+	revokeAppServerSession(runtime.sessionAuthorization);
 	runtime.runtimeEventsClosed = true;
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
 	if (runtime.runtimeHeartbeatTimer) {
@@ -1037,7 +1111,7 @@ async function closeRuntime(runtime: AppServerRuntime): Promise<void> {
 	}
 	await runtime.projectRuntime?.connection.disconnect().catch(() => undefined);
 	runtime.unsubscribeProjection?.();
-	for (const client of runtime.clients) client.end();
+	for (const client of runtime.clients.keys()) client.end();
 	runtime.clients.clear();
 	await new Promise<void>((resolve, reject) => {
 		runtime.server.close((error) => (error ? reject(error) : resolve()));
@@ -1051,7 +1125,7 @@ function appServerHandle(
 		repoRoot: runtime.repoRoot,
 		url: runtime.url,
 		origin: runtime.origin,
-		token: runtime.token,
+		sessionCredential: appSessionBearer(runtime.sessionAuthorization),
 		opened: runtime.opened,
 		close: runtime.close,
 	};

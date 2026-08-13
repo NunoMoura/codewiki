@@ -5,10 +5,10 @@ import {
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 import {assertExactKeys} from "../../utils/json.ts";
-import {wikiConfigDigest} from "../../project/config-digest.ts";
 import {
 	loadWikiConfigFile,
 	serializeWikiConfigFile,
+	wikiConfigDigest,
 } from "../../project/config-file.ts";
 import {
 	createCustomCheckConfigState,

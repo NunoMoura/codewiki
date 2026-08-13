@@ -110,18 +110,35 @@ describe("dashboard preview control", () => {
 				persistent: false,
 				previewControl,
 			});
-			const token = new URL(dashboard.url).hash.slice("#token=".length);
-			const statusResponse = await fetch(
-				`${dashboard.origin}/api/previews?token=${encodeURIComponent(token)}`,
+			const authorization = `Bearer ${dashboard.sessionCredential}`;
+			assert.match(new URL(dashboard.url).hash, /^#session=/);
+			assert.equal(
+				(await fetch(`${dashboard.origin}/api/previews?token=stale`)).status,
+				403,
 			);
+			const established = await fetch(`${dashboard.origin}/api/session`, {
+				method: "POST",
+				headers: {Authorization: authorization, "Content-Type": "application/json", Origin: dashboard.origin},
+				body: "{}",
+			});
+			assert.equal(established.status, 200);
+			assert.match(established.headers.get("set-cookie"), /HttpOnly; SameSite=Strict/);
+			const cookie = established.headers.get("set-cookie").split(";", 1)[0];
+			assert.equal((await fetch(`${dashboard.origin}/api/previews`, {
+				headers: {Authorization: `Bearer 2.${dashboard.sessionCredential.split(".")[1]}`, Cookie: cookie},
+			})).status, 403);
+			const statusResponse = await fetch(`${dashboard.origin}/api/previews`, {
+				headers: {Cookie: cookie},
+			});
 			assert.equal(statusResponse.status, 200);
 			assert.equal((await statusResponse.json())[0].state, "ready");
 
 			const commandResponse = await fetch(
-				`${dashboard.origin}/api/previews/commands?token=${encodeURIComponent(token)}`,
+				`${dashboard.origin}/api/previews/commands`,
 				{
 					method: "POST",
 					headers: {
+						Cookie: cookie,
 						"Content-Type": "application/json",
 						Origin: dashboard.origin,
 					},
@@ -138,10 +155,11 @@ describe("dashboard preview control", () => {
 			assert.equal(previewControl.commands[0].action, "restart");
 
 			const captureResponse = await fetch(
-				`${dashboard.origin}/api/previews/commands?token=${encodeURIComponent(token)}`,
+				`${dashboard.origin}/api/previews/commands`,
 				{
 					method: "POST",
 					headers: {
+						Cookie: cookie,
 						"Content-Type": "application/json",
 						Origin: dashboard.origin,
 					},

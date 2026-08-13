@@ -350,9 +350,13 @@ const runtimeGateway = await connectProjectRuntimeGateway(process.cwd(), {
 	supervision: "approved",
 });
 assert.equal((await runtimeGateway.queries.state()).supervisorCount, 1);
-assert.equal((await runtimeGateway.queries.appState()).projectRoot, process.cwd());
-assert.deepEqual((await runtimeGateway.queries.changes()).records, []);
-assert.equal((await runtimeGateway.queries.configuration()).validation, "valid");
+const appRequestContext = {
+	actor: {actorId: "user:pack", authenticatedIdentityRef: "identity:pack"},
+	client: {clientKind: "app", clientInstanceId: "app:pack", authenticationRef: "auth:pack"},
+};
+assert.equal((await runtimeGateway.queries.appState(appRequestContext)).projectRoot, process.cwd());
+assert.deepEqual((await runtimeGateway.queries.changes(appRequestContext)).records, []);
+assert.equal((await runtimeGateway.queries.configuration(appRequestContext)).validation, "valid");
 assert.equal(typeof runtimeGateway.queries.inspect, "function");
 assert.equal(typeof runtimeGateway.queries.decisionAttention, "function");
 assert.deepEqual(Object.keys(runtimeGateway.queries).sort(), [
@@ -389,6 +393,8 @@ assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
 assert.deepEqual(buildWorkState({ records: [] }).changeIds, []);
 assert.match(buildWorkState({ records: [] }).snapshotDigest, /^sha256:[a-f0-9]{64}$/);
 assert.equal(runWikiConfig({}).config.project, "codewiki");
+assert.equal(existsSync(join(packageRoot, "dist", "server", "app", "authorization.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "project", "config-digest.js")), false);
 
 for (const dependency of Object.keys(packageJson.dependencies || {})) {
 	assert.equal(dependency.startsWith("@earendil-works/"), false);

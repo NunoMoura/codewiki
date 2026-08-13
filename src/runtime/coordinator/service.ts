@@ -6,6 +6,10 @@ import type { Server } from "node:http";
 
 import type { WorktreeCommandRunner } from "../../git/worktrees.ts";
 import {
+	normalizeClientServerRequestContext,
+	type ClientServerRequestContext,
+} from "../../protocol/client-server.ts";
+import {
 	loadRuntimeAppState,
 	type CodewikiAppState,
 } from "../queries/app-state.ts";
@@ -186,9 +190,9 @@ export interface ProjectCoordinatorRemoteClient {
 	generationId: string;
 	semanticExecution: ProjectCoordinatorSemanticExecution;
 	state(): Promise<ProjectCoordinatorSnapshot>;
-	appState(): Promise<CodewikiAppState>;
-	changes(): Promise<RuntimeChangesState>;
-	configuration(): Promise<RuntimeConfigurationState>;
+	appState(context: ClientServerRequestContext): Promise<CodewikiAppState>;
+	changes(context: ClientServerRequestContext): Promise<RuntimeChangesState>;
+	configuration(context: ClientServerRequestContext): Promise<RuntimeConfigurationState>;
 	inspect(trigger: ProjectCoordinatorRemoteTrigger): Promise<RuntimeReaction>;
 	decisionAttention(
 		request?: BacklogTriageQueryRequest,
@@ -477,38 +481,47 @@ export async function connectProjectCoordinatorClient(
 				{ timeoutMs: options.timeoutMs },
 			);
 		},
-		appState() {
+		appState(context) {
 			assertRemoteClientConnected(disconnected, response.clientId);
 			return requestCoordinatorJson<CodewikiAppState>(
 				endpoint,
 				"/v1/runtime/app-state",
 				{
 					method: "POST",
-					body: { connectionId: response.connectionId },
+					body: {
+						connectionId: response.connectionId,
+						context: normalizeClientServerRequestContext(context),
+					},
 					timeoutMs: options.timeoutMs,
 				},
 			);
 		},
-		changes() {
+		changes(context) {
 			assertRemoteClientConnected(disconnected, response.clientId);
 			return requestCoordinatorJson<RuntimeChangesState>(
 				endpoint,
 				"/v1/runtime/changes",
 				{
 					method: "POST",
-					body: { connectionId: response.connectionId },
+					body: {
+						connectionId: response.connectionId,
+						context: normalizeClientServerRequestContext(context),
+					},
 					timeoutMs: options.timeoutMs,
 				},
 			);
 		},
-		configuration() {
+		configuration(context) {
 			assertRemoteClientConnected(disconnected, response.clientId);
 			return requestCoordinatorJson<RuntimeConfigurationState>(
 				endpoint,
 				"/v1/runtime/configuration",
 				{
 					method: "POST",
-					body: { connectionId: response.connectionId },
+					body: {
+						connectionId: response.connectionId,
+						context: normalizeClientServerRequestContext(context),
+					},
 					timeoutMs: options.timeoutMs,
 				},
 			);
@@ -861,8 +874,9 @@ async function handleRuntimeProjection<T>(
 	load: (repoRoot: string) => Promise<T>,
 ): Promise<void> {
 	const body = objectBody(await readJsonBody(request));
-	assertOnlyKeys(body, ["connectionId"]);
+	assertOnlyKeys(body, ["connectionId", "context"]);
 	const lease = requiredLease(runtime, text(body.connectionId));
+	normalizeClientServerRequestContext(body.context);
 	lease.activeRequests += 1;
 	try {
 		await assertCurrentGeneration(runtime);

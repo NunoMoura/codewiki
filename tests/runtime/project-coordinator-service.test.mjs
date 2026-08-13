@@ -145,14 +145,22 @@ test("coordinator service authenticates loopback clients and shares supervision"
 			kind: "pi",
 			supervision: "approved",
 		});
+		const context = {
+			actor: {actorId: "user:service", authenticatedIdentityRef: "identity:service"},
+			client: {clientKind: "app", clientInstanceId: "app:service", authenticationRef: "auth:service"},
+		};
 		const state = await dashboard.state();
 		assert.equal(state.generationId, "generation:service");
 		assert.equal(state.clientCount, 2);
 		assert.equal(state.supervisorCount, 1);
 		assert.equal(state.executionPermitted, true);
-		assert.equal((await dashboard.appState()).projectRoot, root);
-		assert.deepEqual((await dashboard.changes()).records, []);
-		assert.equal((await dashboard.configuration()).validation, "valid");
+		assert.equal((await dashboard.appState(context)).projectRoot, root);
+		assert.deepEqual((await dashboard.changes(context)).records, []);
+		assert.equal((await dashboard.configuration(context)).validation, "valid");
+		assert.throws(
+			() => dashboard.appState({...context, authority: "admin"}),
+			/unsupported field authority/,
+		);
 		const callerSelected = await fetch(
 			`${service.endpoint.origin}/v1/runtime/react`,
 			{

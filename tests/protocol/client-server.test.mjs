@@ -11,6 +11,7 @@ import {
 	normalizeClientServerCommand,
 	normalizeClientServerEvent,
 	normalizeClientServerOperation,
+	normalizeClientServerRequestContext,
 	normalizeClientServerQuery,
 	normalizeClientServerQueryResult,
 	runtimeSemanticIdempotencyDigest,
@@ -115,6 +116,14 @@ describe("Client pairing protocol", () => {
 
 describe("Client/Server protocol", () => {
 	it("keeps accountable actor separate from client interface and delegation", () => {
+		assert.deepEqual(normalizeClientServerRequestContext({actor, client: appClient}), {
+			actor,
+			client: appClient,
+		});
+		assert.throws(
+			() => normalizeClientServerRequestContext({actor, client: appClient, authority: "admin"}),
+			/unsupported field authority/,
+		);
 		const app = normalizeClientServerCommand(
 			command(),
 			new Date("2026-08-12T10:00:00.000Z"),

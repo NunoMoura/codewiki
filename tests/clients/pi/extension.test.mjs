@@ -767,12 +767,13 @@ describe("Pi extension adapter", () => {
 			assert.equal(widgets.length, 0);
 
 			const dashboardUrl = new URL(opened.url);
-			const dashboardToken = new URLSearchParams(
+			const dashboardSession = new URLSearchParams(
 				dashboardUrl.hash.slice(1),
-			).get("token");
-			assert.ok(dashboardToken);
+			).get("session");
+			assert.ok(dashboardSession);
+			const dashboardAuthorization = `Bearer ${dashboardSession}`;
 			assert.equal(dashboardUrl.search, "");
-			assert.match(dashboardUrl.hash, /^#token=/);
+			assert.match(dashboardUrl.hash, /^#session=/);
 			const htmlResponse = await fetch(opened.url);
 			const html = await htmlResponse.text();
 			assert.equal(htmlResponse.headers.get("referrer-policy"), "no-referrer");
@@ -784,7 +785,9 @@ describe("Pi extension adapter", () => {
 				htmlResponse.headers.get("content-security-policy"),
 				/default-src 'none'/,
 			);
-			assert.doesNotMatch(html, new RegExp(dashboardToken));
+			assert.doesNotMatch(html, new RegExp(dashboardSession));
+			assert.doesNotMatch(html, /codewiki\.dashboard\.token/);
+			assert.match(html, /HttpOnly|\/api\/session/);
 			assert.match(html, /id="search"/);
 			assert.match(html, /id="search-filter"/);
 			assert.match(html, /codewiki-logo/);
@@ -871,8 +874,10 @@ describe("Pi extension adapter", () => {
 			const url = new URL(opened.url);
 			url.hash = "";
 			url.pathname = "/api/state";
-			url.searchParams.set("token", dashboardToken);
-			const state = await (await fetch(url)).json();
+			const stateResponse = await fetch(url, {
+				headers: {Authorization: dashboardAuthorization},
+			});
+			const state = await stateResponse.json();
 			assert.equal(state.projectName, root.split("/").at(-1));
 			assert.equal(state.summary.committed, 0);
 			assert.equal(state.summary.decision, 1);
@@ -904,16 +909,16 @@ describe("Pi extension adapter", () => {
 				const removedCommandUrl = new URL(opened.url);
 				removedCommandUrl.hash = "";
 				removedCommandUrl.pathname = pathname;
-				removedCommandUrl.searchParams.set("token", dashboardToken);
 				const response = await fetch(removedCommandUrl, {
 					method: "POST",
 					headers: {
+						Authorization: dashboardAuthorization,
 						Origin: removedCommandUrl.origin,
 						"Content-Type": "application/json",
 					},
 					body: "{}",
 				});
-				assert.equal(response.status, 405, pathname);
+				assert.equal(response.status, 404, pathname);
 			}
 			assert.equal(pi.userMessages.length, 0);
 			assert.equal(state.sprintsQueue[0].devLog.entryCount, 1);
@@ -954,8 +959,9 @@ describe("Pi extension adapter", () => {
 			const eventsUrl = new URL(opened.url);
 			eventsUrl.hash = "";
 			eventsUrl.pathname = "/api/events";
-			eventsUrl.searchParams.set("token", dashboardToken);
-			const eventsResponse = await fetch(eventsUrl);
+			const eventsResponse = await fetch(eventsUrl, {
+				headers: {Authorization: dashboardAuthorization},
+			});
 			assert.equal(eventsResponse.status, 200);
 			const reader = eventsResponse.body.getReader();
 			const decoder = new TextDecoder();
@@ -1023,7 +1029,7 @@ describe("Pi extension adapter", () => {
 			blockedUrl.pathname = "/api/state";
 			blockedUrl.search = "";
 			assert.equal((await fetch(blockedUrl)).status, 403);
-			assert.equal((await fetch(url, { method: "POST" })).status, 405);
+			assert.equal((await fetch(url, { method: "POST" })).status, 404);
 
 			for (const hook of pi.events.filter(
 				(event) => event.eventName === "session_shutdown",
@@ -1036,13 +1042,23 @@ describe("Pi extension adapter", () => {
 			)) {
 				await hook.handler({ reason: "reload" }, ctx);
 			}
-			const recoveredResponse = await fetch(url);
+			const reopened = await dashboardCommand.handler("--no-open", ctx);
+			const reopenedUrl = new URL(reopened.url);
+			const reopenedSession = new URLSearchParams(
+				reopenedUrl.hash.slice(1),
+			).get("session");
+			assert.ok(reopenedSession);
+			assert.notEqual(reopenedSession, dashboardSession);
+			assert.equal(reopenedUrl.origin, dashboardUrl.origin);
+			reopenedUrl.hash = "";
+			reopenedUrl.pathname = "/api/state";
+			const recoveredResponse = await fetch(reopenedUrl, {
+				headers: {Authorization: `Bearer ${reopenedSession}`},
+			});
 			assert.equal(recoveredResponse.status, 200);
 			const recoveredState = await recoveredResponse.json();
 			assert.equal(recoveredState.sprintsQueue[0].traceId, "TRACE-pi");
 			assert.equal(typeof recoveredState.summary.decision, "number");
-			const reopened = await dashboardCommand.handler("--no-open", ctx);
-			assert.equal(reopened.url, opened.url);
 
 			const resume = await resumeCommand.handler("", {
 				cwd: root,

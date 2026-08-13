@@ -1,5 +1,9 @@
 import { watch, type FSWatcher } from "node:fs";
 import { join } from "node:path";
+import {
+	normalizeClientServerRequestContext,
+	type ClientServerRequestContext,
+} from "../protocol/client-server.ts";
 import type {
 	BacklogTriageQueryRequest,
 	BacklogTriageQueryResult,
@@ -114,17 +118,17 @@ export interface ProjectRuntimeEventBatch {
 }
 
 export interface ProjectRuntimeProjectionGateway {
-	appState(): Promise<CodewikiAppState>;
-	changes(): Promise<RuntimeChangesState>;
-	configuration(): Promise<RuntimeConfigurationState>;
+	appState(context: ClientServerRequestContext): Promise<CodewikiAppState>;
+	changes(context: ClientServerRequestContext): Promise<RuntimeChangesState>;
+	configuration(context: ClientServerRequestContext): Promise<RuntimeConfigurationState>;
 	subscribe(listener: () => void): () => void;
 }
 
 export interface ProjectRuntimeGatewayClientPort {
 	state(): Promise<ProjectRuntimeState>;
-	appState(): Promise<CodewikiAppState>;
-	changes(): Promise<RuntimeChangesState>;
-	configuration(): Promise<RuntimeConfigurationState>;
+	appState(context: ClientServerRequestContext): Promise<CodewikiAppState>;
+	changes(context: ClientServerRequestContext): Promise<RuntimeChangesState>;
+	configuration(context: ClientServerRequestContext): Promise<RuntimeConfigurationState>;
 	inspect(trigger: ProjectRuntimeTrigger): Promise<ProjectRuntimeReaction>;
 	decisionAttention(
 		request?: BacklogTriageQueryRequest,
@@ -174,9 +178,18 @@ export function createProjectRuntimeGateway(
 	const gateway: ProjectRuntimeGateway = {
 		queries: {
 			state: async () => projectRuntimeState(await client.state()),
-			appState: async () => projection(await client.appState()),
-			changes: async () => projection(await client.changes()),
-			configuration: async () => projection(await client.configuration()),
+			appState: async (context) =>
+				projection(
+					await client.appState(normalizeClientServerRequestContext(context)),
+				),
+			changes: async (context) =>
+				projection(
+					await client.changes(normalizeClientServerRequestContext(context)),
+				),
+			configuration: async (context) =>
+				projection(
+					await client.configuration(normalizeClientServerRequestContext(context)),
+				),
 			inspect: async (trigger) =>
 				projectRuntimeReaction(await client.inspect(trigger)),
 			decisionAttention: (request) => client.decisionAttention(request),
@@ -208,10 +221,18 @@ export function createProjectRuntimeProjectionGateway(
 	repoRoot: string,
 ): ProjectRuntimeProjectionGateway {
 	return Object.freeze({
-		appState: async () => projection(await loadRuntimeAppState(repoRoot)),
-		changes: async () => projection(await loadRuntimeChangesState(repoRoot)),
-		configuration: async () =>
-			projection(await loadRuntimeConfigurationState(repoRoot)),
+		appState: async (context: ClientServerRequestContext) => {
+			normalizeClientServerRequestContext(context);
+			return projection(await loadRuntimeAppState(repoRoot));
+		},
+		changes: async (context: ClientServerRequestContext) => {
+			normalizeClientServerRequestContext(context);
+			return projection(await loadRuntimeChangesState(repoRoot));
+		},
+		configuration: async (context: ClientServerRequestContext) => {
+			normalizeClientServerRequestContext(context);
+			return projection(await loadRuntimeConfigurationState(repoRoot));
+		},
 		subscribe(listener: () => void) {
 			let watcher: FSWatcher | undefined;
 			try {

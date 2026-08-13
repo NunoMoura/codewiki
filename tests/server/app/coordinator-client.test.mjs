@@ -15,6 +15,10 @@ import { createProjectRuntimeGateway } from "../../../src/runtime/gateway.ts";
 
 test("Project Runtime gateway exposes bounded grouped operations", async () => {
 	const calls = [];
+	const context = {
+		actor: {actorId: "user:test", authenticatedIdentityRef: "identity:test"},
+		client: {clientKind: "app", clientInstanceId: "app:test", authenticationRef: "auth:test"},
+	};
 	const client = {
 		state: async () => {
 			calls.push(["state"]);
@@ -32,16 +36,16 @@ test("Project Runtime gateway exposes bounded grouped operations", async () => {
 				jobs: [{ idempotencyKey: "internal" }],
 			};
 		},
-		appState: async () => {
-			calls.push(["appState"]);
+		appState: async (requestContext) => {
+			calls.push(["appState", requestContext]);
 			return { projectRoot: "/project", summary: { pipeline: 0 } };
 		},
-		changes: async () => {
-			calls.push(["changes"]);
+		changes: async (requestContext) => {
+			calls.push(["changes", requestContext]);
 			return { records: [] };
 		},
-		configuration: async () => {
-			calls.push(["configuration"]);
+		configuration: async (requestContext) => {
+			calls.push(["configuration", requestContext]);
 			return { source: "default" };
 		},
 		inspect: async (trigger) => {
@@ -102,12 +106,12 @@ test("Project Runtime gateway exposes bounded grouped operations", async () => {
 		activeJobCount: 0,
 		completedJobCount: 2,
 	});
-	assert.deepEqual(await gateway.queries.appState(), {
+	assert.deepEqual(await gateway.queries.appState(context), {
 		projectRoot: "/project",
 		summary: { pipeline: 0 },
 	});
-	assert.deepEqual(await gateway.queries.changes(), { records: [] });
-	assert.deepEqual(await gateway.queries.configuration(), {
+	assert.deepEqual(await gateway.queries.changes(context), { records: [] });
+	assert.deepEqual(await gateway.queries.configuration(context), {
 		source: "default",
 	});
 	assert.deepEqual(
@@ -131,6 +135,11 @@ test("Project Runtime gateway exposes bounded grouped operations", async () => {
 	await gateway.connection.heartbeat();
 	await gateway.connection.disconnect();
 
+	assert.deepEqual(calls.slice(1, 4).map(([, requestContext]) => requestContext), [
+		context,
+		context,
+		context,
+	]);
 	assert.deepEqual(
 		calls.map(([name]) => name),
 		[

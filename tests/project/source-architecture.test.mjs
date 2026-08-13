@@ -198,6 +198,10 @@ describe("source architecture", () => {
 			true,
 		);
 		assert.equal(
+			existsSync(join(sourceRoot, "server", "app", "authorization.ts")),
+			true,
+		);
+		assert.equal(
 			existsSync(join(sourceRoot, "server", "registry", "state.ts")),
 			true,
 		);
@@ -213,6 +217,7 @@ describe("source architecture", () => {
 			existsSync(join(sourceRoot, "server", "sessions", "state.ts")),
 			true,
 		);
+		assert.equal(existsSync(join(sourceRoot, "project", "config-digest.ts")), false);
 		assert.equal(existsSync(join(sourceRoot, "api", "views.ts")), false);
 		assert.equal(existsSync(join(sourceRoot, "api", "traces.ts")), false);
 		assert.equal(existsSync("tests/host"), false);
@@ -496,6 +501,28 @@ describe("source architecture", () => {
 			/export (?:interface ServerAuthenticationAssertion|function normalizeServerAuthenticationAssertion)/,
 		);
 		assert.equal(existsSync(join(sourceRoot, "api", "wiki-config.ts")), false);
+	});
+
+	it("wires App endpoints through Server Session authorization", () => {
+		const server = readFileSync(
+			join(sourceRoot, "server", "app", "server.ts"),
+			"utf8",
+		);
+		const authorization = readFileSync(
+			join(sourceRoot, "server", "app", "authorization.ts"),
+			"utf8",
+		);
+		const shell = readFileSync(
+			join(sourceRoot, "clients", "app", "shell.ts"),
+			"utf8",
+		);
+		assert.match(server, /authorizeAppServerRequest/);
+		assert.match(authorization, /authorizeServerEndpoint/);
+		assert.match(authorization, /HttpOnly; SameSite=Strict/);
+		assert.match(shell, /\/api\/session/);
+		for (const source of [server, shell]) {
+			assert.doesNotMatch(source, /codewiki\.dashboard\.token|#token=|validToken|\\?token=/);
+		}
 	});
 
 	it("allows Server to import only the curated Runtime gateway", () => {

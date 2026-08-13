@@ -9,8 +9,8 @@ import {
 import {
 	loadWikiConfigFile,
 	WIKI_CONFIG_PATH,
+	wikiConfigDigest,
 } from "../../project/config-file.ts";
-import {wikiConfigDigest} from "../../project/config-digest.ts";
 import type {
 	WikiConfig,
 	WikiConfigAgencyLevel,

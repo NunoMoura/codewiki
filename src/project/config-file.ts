@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
+import {canonicalJsonDigest, type Sha256Digest} from "../utils/canonical-json.ts";
 import {
 	runWikiConfig,
 	resolveWikiConfig,
@@ -38,6 +39,10 @@ export async function resolveWikiConfigFile(
 
 export function serializeWikiConfigFile(config: WikiConfig): string {
 	return `${JSON.stringify(resolveWikiConfig(config), null, "\t")}\n`;
+}
+
+export function wikiConfigDigest(config: WikiConfig): Sha256Digest {
+	return canonicalJsonDigest(resolveWikiConfig(config));
 }
 
 export async function writeWikiConfigFile(

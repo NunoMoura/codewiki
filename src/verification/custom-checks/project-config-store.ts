@@ -18,9 +18,9 @@ import {
 import {
 	configFileToPartialWikiConfig,
 	loadWikiConfigFile,
+	wikiConfigDigest,
 	writeWikiConfigFile,
 } from "../../project/config-file.ts";
-import {wikiConfigDigest} from "../../project/config-digest.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

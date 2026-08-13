@@ -772,12 +772,10 @@ details.terminal-block > .terminal-block-body { margin-top: 7px; }
 	</div>
 </div>
 <script>
-const fragmentToken = new URLSearchParams(window.location.hash.slice(1)).get('token');
-if (fragmentToken) sessionStorage.setItem('codewiki.dashboard.token', fragmentToken);
-const token = fragmentToken || sessionStorage.getItem('codewiki.dashboard.token') || '';
+let sessionCredential = new URLSearchParams(window.location.hash.slice(1)).get('session') || '';
+if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search);
 const dashboardAssetDigest = '__CODEWIKI_ASSET_DIGEST__';
 const dashboardDevMode = new URLSearchParams(window.location.search).get('dev') === '1';
-if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search);
 let state = null;
 let loading = false;
 let dashboardStopped = false;
@@ -987,7 +985,7 @@ async function executePreviewAction(action, binding, preview) {
 	};
 	text(els.status, 'preview ' + action + ' pending');
 	try {
-		const response = await fetch('/api/previews/commands?token=' + encodeURIComponent(token), {
+		const response = await fetch('/api/previews/commands', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(command),
@@ -1744,7 +1742,7 @@ function renderFileSection(label, groups, open) {
 async function reloadChangedDashboardAssets() {
 	if (!dashboardDevMode || dashboardStopped) return;
 	try {
-		const response = await fetch('/api/meta?token=' + encodeURIComponent(token));
+		const response = await fetch('/api/meta');
 		if (!response.ok) return;
 		const meta = await response.json();
 		if (meta.assetDigest && meta.assetDigest !== dashboardAssetDigest) window.location.reload();
@@ -1754,7 +1752,7 @@ async function load() {
 	if (loading || dashboardStopped) return;
 	loading = true;
 	try {
-		const response = await fetch('/api/state?token=' + encodeURIComponent(token));
+		const response = await fetch('/api/state');
 		if (!response.ok) throw new Error('HTTP ' + response.status);
 		state = await response.json();
 		render();
@@ -1805,14 +1803,33 @@ document.addEventListener('keydown', function(event) {
 		if (entry) { event.preventDefault(); openEntryOverview(entry, selected); }
 	}
 });
-try {
-	eventStream = new EventSource('/api/events?token=' + encodeURIComponent(token));
-	eventStream.onmessage = function(event) { if (!dashboardStopped) { state = JSON.parse(event.data); render(); } };
-	eventStream.onerror = function() { if (!dashboardStopped) { text(els.status, 'reconnecting'); load(); } };
-} catch { load(); }
-setInterval(load, 1000);
-if (dashboardDevMode) setInterval(reloadChangedDashboardAssets, 500);
-load();
+async function establishSession() {
+	const credential = sessionCredential;
+	sessionCredential = '';
+	const headers = { 'Content-Type': 'application/json' };
+	if (credential) headers.Authorization = 'Bearer ' + credential;
+	const response = await fetch('/api/session', {
+		method: 'POST',
+		headers: headers,
+		body: '{}',
+	});
+	if (!response.ok) throw new Error('HTTP ' + response.status);
+}
+async function startSessionTransport() {
+	try {
+		await establishSession();
+		eventStream = new EventSource('/api/events');
+		eventStream.onmessage = function(event) { if (!dashboardStopped) { state = JSON.parse(event.data); render(); } };
+		eventStream.onerror = function() { if (!dashboardStopped) { text(els.status, 'reconnecting'); load(); } };
+		setInterval(load, 1000);
+		if (dashboardDevMode) setInterval(reloadChangedDashboardAssets, 500);
+		await load();
+	} catch (error) {
+		text(els.status, 'Session establishment failed. Reopen dashboard from CodeWiki.');
+		console.error(error);
+	}
+}
+void startSessionTransport();
 </script>
 </body>
 </html>`;

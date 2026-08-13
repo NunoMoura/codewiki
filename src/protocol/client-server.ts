@@ -260,6 +260,18 @@ export function normalizeClientServerCommand(
 	});
 }
 
+export function normalizeClientServerRequestContext(
+	value: unknown,
+): ClientServerRequestContext {
+	return requestContext(
+		exactObject(
+			value,
+			["actor", "client", "delegationRef"],
+			"Client/Server request context",
+		),
+	);
+}
+
 export function normalizeClientServerQuery(value: unknown): ClientServerQueryEnvelope {
 	const input = exactObject(value, QUERY_FIELDS, "Client/Server query");
 	assertProtocol(input, "query");

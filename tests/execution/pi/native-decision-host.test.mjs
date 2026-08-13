@@ -16,7 +16,7 @@ import {
 } from "../../../src/execution/pi/native-decision-host.ts";
 import {startPiProjectCoordinatorDaemon} from "../../../src/clients/pi/project-coordinator-daemon.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
-import {wikiConfigDigest} from "../../../src/project/config-digest.ts";
+import {wikiConfigDigest} from "../../../src/project/config-file.ts";
 import {createDecisionGitAdmission} from "../../../src/runtime/admission/git.ts";
 import {connectProjectCoordinatorClient} from "../../../src/runtime/coordinator/service.ts";
 import {

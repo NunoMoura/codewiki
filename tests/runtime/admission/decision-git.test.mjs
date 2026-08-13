@@ -8,7 +8,7 @@ import {
 	synchronizeGitState,
 } from "../../../src/change-trace/index.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
-import {wikiConfigDigest} from "../../../src/project/config-digest.ts";
+import {wikiConfigDigest} from "../../../src/project/config-file.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
 import {createDecisionGitAdmission} from "../../../src/runtime/admission/git.ts";
 import {createDecisionStartRuntime} from "../../../src/runtime/admission/start.ts";
