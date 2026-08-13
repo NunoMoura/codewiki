@@ -62,6 +62,7 @@ try {
 		PI_CODING_AGENT_DIR: join(root, "agent"),
 		PI_CODING_AGENT_SESSION_DIR: join(root, "sessions"),
 		PI_OFFLINE: "1",
+		CODEWIKI_SERVER_STATE_ROOT: join(root, "server-state"),
 	};
 	run("pi", ["install", "-l", packageRoot, "--approve"], {
 		cwd: projectRoot,

@@ -16,6 +16,7 @@ import {
 	issueClientPairing,
 	revokeClientPairing,
 } from "../../../src/server/pairing/commands.ts";
+import {resolveLocalAppServerConnection} from "../../../src/server/registry/local.ts";
 import {
 	SERVER_REGISTRY_PROTOCOL,
 	normalizeServerRegistrySnapshot,
@@ -182,6 +183,7 @@ describe("Server App lifecycle", () => {
 						keepAlive: false,
 						inProcess: true,
 						persistent: false,
+						serverStateRoot: join(root, ".server-state"),
 					}),
 				/did not serve pipeline state/,
 			);
@@ -222,6 +224,55 @@ describe("Server registry, Client pairing, and Sessions", () => {
 		});
 		assert.equal(resolved.project.runtimeRouteRef, "runtime:codewiki");
 		assert.equal(Object.isFrozen(resolved), true);
+	});
+
+	it("persists and resolves personal App Authentication, Pairing, and project routing", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-local-app-pairing-"));
+		const serverStateRoot = join(root, "server-state");
+		try {
+			const first = await resolveLocalAppServerConnection({repoRoot: root, serverStateRoot});
+			assert.match(first.actor.actorId, /^user:local:/);
+			assert.match(first.actor.authenticatedIdentityRef, /^identity:local-os:/);
+			assert.equal(first.client.clientKind, "app");
+			assert.match(first.client.authenticationRef, /^auth:local-app:/);
+			assert.equal(first.project.projectRoot, root);
+			const stored = await readServerRegistrySnapshot(serverStateRoot);
+			assert.equal(stored.actors.length, 1);
+			assert.equal(stored.pairings.length, 1);
+			assert.equal(stored.projects.length, 1);
+			assert.equal(JSON.stringify(stored).includes("credential"), false);
+			assert.equal(JSON.stringify(stored).includes("authority"), false);
+
+			const revoked = revokeClientPairing({
+				registry: stored,
+				authentication: {
+					clientKind: first.client.clientKind,
+					clientInstanceId: first.client.clientInstanceId,
+					authenticationRef: first.client.authenticationRef,
+					authenticatedIdentityRef: first.actor.authenticatedIdentityRef,
+				},
+				command: {
+					protocolId: CLIENT_PAIRING_PROTOCOL.id,
+					protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
+					kind: "revoke",
+					expectedRegistryGeneration: stored.generation,
+					pairingId: stored.pairings[0].pairingId,
+					expectedAuthenticationRef: first.client.authenticationRef,
+				},
+				now: new Date(Date.parse(stored.generatedAt) + 1),
+			});
+			await writeServerRegistrySnapshot({
+				serverStateRoot,
+				expectedGeneration: stored.generation,
+				snapshot: revoked,
+			});
+			await assert.rejects(
+				() => resolveLocalAppServerConnection({repoRoot: root, serverStateRoot}),
+				/pairing is not active/,
+			);
+		} finally {
+			await rm(root, {recursive: true, force: true});
+		}
 	});
 
 	it("persists canonical snapshots under generation CAS and an exclusive writer lock", async () => {

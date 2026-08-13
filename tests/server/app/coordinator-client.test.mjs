@@ -196,6 +196,7 @@ test("App Server registers as observer of shared Project Runtime", async () => {
 			keepAlive: true,
 			inProcess: true,
 			persistent: false,
+			serverStateRoot: join(root, ".server-state"),
 			connectProjectRuntime: true,
 			projectRuntimeConnector: async (repoRoot, input) => {
 				try {

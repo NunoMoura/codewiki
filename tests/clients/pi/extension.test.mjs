@@ -13,7 +13,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, it } from "node:test";
+import {after, describe, it} from "node:test";
 import { registerCodewikiExtension } from "../../../src/clients/pi/extension.ts";
 import { CODEWIKI_COMMAND_NAMES } from "../../../src/clients/pi/command-catalog.ts";
 import {
@@ -38,6 +38,13 @@ import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../src/changes/triage/contrac
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
 import { createTraceHead, formatTraceText } from "../../../src/traces/writer.ts";
 import { testPiProjectServices } from "../../helpers/pi-project-services.mjs";
+
+const testServerStateRoot = join(
+	tmpdir(),
+	`codewiki-extension-server-state-${process.pid}`,
+);
+process.env.CODEWIKI_SERVER_STATE_ROOT = testServerStateRoot;
+after(() => rm(testServerStateRoot, {recursive: true, force: true}));
 
 function registerTestExtension(pi) {
 	registerCodewikiExtension(pi, {

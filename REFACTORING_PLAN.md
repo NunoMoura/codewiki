@@ -245,6 +245,8 @@ The Server Session foundation clean cut is recorded by `.tmp-worktrees/server-se
 
 The Server App Session transport clean cut is recorded by `.tmp-worktrees/server-app-session-transport-clean-cut-manifest.json`, exhaustively anchored to `01af4fa` with 644 keeps, 1 deletion, and 1 planned addition. Browser App launch uses a generation-bound fragment credential only for same-origin Session establishment, then relies on an `HttpOnly; SameSite=Strict` cookie. Every App projection, event stream, Preview command, metadata request, and shutdown request passes exact repository-bound endpoint policy; bounded authenticated Actor and Client context crosses the Server-Runtime gateway for every Runtime projection and remains attached per event stream. Query-token and browser-storage authorization are removed. App shutdown revokes the active Session. Callers may inject an Authentication/Registry-resolved App binding and policy; the current personal loopback composition still uses a bounded local service binding until local Pairing and Actor enrollment become executable. The seven-line `src/project/config-digest.ts` helper is merged into canonical `src/project/config-file.ts` without a compatibility path, preserving source/test counts at 358/196.
 
+The personal App Pairing clean cut is recorded by `.tmp-worktrees/server-local-app-pairing-clean-cut-manifest.json`, exhaustively anchored to `a78e815` with 645 keeps, 1 deletion, and 1 planned addition. Default App launch now verifies a fresh ephemeral local proof, persists one stable local User identity, project-bound App Pairing, and exact canonical project route in private machine-level Server Registry state, resolves the current Registry generation, and only then opens the App Session. Revoked Pairings, disabled records, identity drift, repository drift, and stale generations fail closed without reactivation. Registry state persists no proof, credential, Runtime role, or project authority. The three-line `src/utils/time.ts` one-consumer abstraction is deleted and its `IsoTimestamp` type moves to the owning legacy Trace type module, keeping source/test counts flat at 358/196.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -313,8 +315,10 @@ Rules:
 - [ ] Move `src/cli/**` to `src/clients/cli/**` and remove Client-to-Server lifecycle imports through neutral bootstrap wiring.
 - [ ] Implement one machine-level Server registry over separate per-project Runtime processes.
 - [x] Replace Browser App query-token authorization with generation-bound Server Session establishment, an HttpOnly same-site cookie, exact endpoint policy, and shutdown revocation.
-- [ ] Replace the temporary local App service binding with local Pairing plus Authentication/Registry resolution; then add stable actor mappings, reconnect cursors, deep links, redaction, and durable delivery.
-- [ ] Implement local pairing for personal mode and provider-neutral OIDC with GitHub/GitLab OAuth first for team mode; persist immutable `(issuer, subject)`, not mutable usernames.
+- [x] Replace the temporary local App service binding with local Pairing plus Authentication/Registry resolution.
+- [ ] Add reconnect cursors, deep links, redaction, and durable delivery.
+- [x] Implement local Pairing and stable local User mapping for personal App mode.
+- [ ] Implement provider-neutral OIDC with GitHub/GitLab OAuth first for team mode; persist immutable `(issuer, subject)`, not mutable usernames.
 - [ ] Treat provider repository access as coarse project membership only; require secure Server session authentication and exact Runtime AuthZ for every protected operation.
 - [ ] Keep Clerk, WorkOS, password authentication, and enterprise identity lifecycle dependencies outside the initial foundation.
 - [ ] Ensure browser or terminal closure cannot stop accepted work.

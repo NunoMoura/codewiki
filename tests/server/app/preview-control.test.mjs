@@ -109,6 +109,7 @@ describe("dashboard preview control", () => {
 				inProcess: true,
 				persistent: false,
 				previewControl,
+				serverStateRoot: join(root, ".server-state"),
 			});
 			const authorization = `Bearer ${dashboard.sessionCredential}`;
 			assert.match(new URL(dashboard.url).hash, /^#session=/);

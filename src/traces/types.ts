@@ -1,6 +1,6 @@
 import type { SemanticLoop } from "../semantic-loop.ts";
-import type { IsoTimestamp } from "../utils/time.ts";
 
+export type IsoTimestamp = string;
 export type TraceLoop = SemanticLoop;
 export type TraceRecordType =
 	| "trace_head"

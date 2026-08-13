@@ -65,6 +65,7 @@ function assertToolResult(result, pattern) {
 const root = mkdtempSync(
 	join(tmpdir(), "codewiki-external-package-lifecycle-"),
 );
+process.env.CODEWIKI_SERVER_STATE_ROOT = join(root, "server-state");
 try {
 	const packRoot = join(root, "pack");
 	const installRoot = join(root, "install");

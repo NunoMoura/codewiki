@@ -1,5 +1,5 @@
 import type {IncomingMessage, ServerResponse} from "node:http";
-import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
+import {resolveLocalAppServerConnection} from "../registry/local.ts";
 import type {
 	ServerEndpointAuthorization,
 	ServerEndpointAuthorizationAdapter,
@@ -34,13 +34,29 @@ export interface AppServerSessionAuthorization {
 	readonly adapter: ServerEndpointAuthorizationAdapter;
 }
 
-export function openAppServerSessionAuthorization(input: {
+export async function openAppServerSessionAuthorization(input: {
 	readonly repoRoot: string;
 	readonly binding?: ServerSessionBinding;
 	readonly adapter?: ServerEndpointAuthorizationAdapter;
 	readonly lifetimeSeconds?: number;
-}): AppServerSessionAuthorization {
-	const binding = input.binding || localAppSessionBinding(input.repoRoot);
+	readonly serverStateRoot?: string;
+}): Promise<AppServerSessionAuthorization> {
+	let binding = input.binding;
+	if (!binding) {
+		const connection = await resolveLocalAppServerConnection({
+			repoRoot: input.repoRoot,
+			serverStateRoot: input.serverStateRoot,
+		});
+		binding = Object.freeze({
+			actor: connection.actor,
+			client: connection.client,
+			project: Object.freeze({
+				projectId: connection.project.projectId,
+				repositoryIdentity: connection.project.repositoryIdentity,
+				runtimeRouteRef: connection.project.runtimeRouteRef,
+			}),
+		});
+	}
 	if (binding.client.clientKind !== "app") {
 		throw new Error("CodeWiki App session requires an App Client binding.");
 	}
@@ -158,30 +174,6 @@ function parseSessionBearer(
 		throw new Error("CodeWiki App Session credential is invalid.");
 	}
 	return Object.freeze({generation, credential: match[2]});
-}
-
-function localAppSessionBinding(repoRoot: string): ServerSessionBinding {
-	const repositoryIdentity = canonicalJsonDigest({
-		kind: "codewiki.local-project",
-		repoRoot,
-	});
-	const projectKey = repositoryIdentity.slice("sha256:".length, "sha256:".length + 24);
-	return Object.freeze({
-		actor: Object.freeze({
-			actorId: "service:codewiki-local-app",
-			authenticatedIdentityRef: "identity:server-local-app",
-		}),
-		client: Object.freeze({
-			clientKind: "app",
-			clientInstanceId: `app:loopback:${projectKey}`,
-			authenticationRef: "auth:server-local-launch",
-		}),
-		project: Object.freeze({
-			projectId: `project:${projectKey}`,
-			repositoryIdentity,
-			runtimeRouteRef: `runtime:project:${projectKey}`,
-		}),
-	});
 }
 
 const appEndpointAuthorizationAdapter: ServerEndpointAuthorizationAdapter = Object.freeze({

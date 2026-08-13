@@ -201,10 +201,13 @@ describe("source architecture", () => {
 			existsSync(join(sourceRoot, "server", "app", "authorization.ts")),
 			true,
 		);
-		assert.equal(
-			existsSync(join(sourceRoot, "server", "registry", "state.ts")),
-			true,
-		);
+		for (const name of ["local.ts", "state.ts"]) {
+			assert.equal(
+				existsSync(join(sourceRoot, "server", "registry", name)),
+				true,
+				name,
+			);
+		}
 		assert.equal(
 			existsSync(join(sourceRoot, "server", "pairing", "commands.ts")),
 			true,
