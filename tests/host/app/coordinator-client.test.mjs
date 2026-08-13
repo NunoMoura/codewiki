@@ -11,6 +11,127 @@ import {
 	startProjectCoordinatorService,
 	stopProjectCoordinatorService,
 } from "../../../src/runtime/coordinator/service.ts";
+import { createProjectRuntimeGateway } from "../../../src/runtime/gateway.ts";
+
+test("Project Runtime gateway exposes bounded grouped operations", async () => {
+	const calls = [];
+	const client = {
+		state: async () => {
+			calls.push(["state"]);
+			return {
+				projectRoot: "/project",
+				generationId: "generation:test",
+				executionPolicy: "supervised",
+				executionPermitted: true,
+				clientCount: 1,
+				supervisorCount: 1,
+				recoveringJobCount: 0,
+				queuedJobCount: 0,
+				activeJobCount: 0,
+				completedJobCount: 2,
+				jobs: [{ idempotencyKey: "internal" }],
+			};
+		},
+		inspect: async (trigger) => {
+			calls.push(["inspect", trigger]);
+			return {
+				schemaVersion: 1,
+				status: "quiescent",
+				trigger,
+				observedWorkStateDigest: "sha256:test",
+				selection: { internal: true },
+			};
+		},
+		decisionAttention: async (request) => {
+			calls.push(["decisionAttention", request]);
+			return { items: [] };
+		},
+		selectDecision: async (command) => {
+			calls.push(["selectDecision", command]);
+			return { operationId: "operation:test" };
+		},
+		submitCandidate: async (trigger, loop, candidate, mode) => {
+			calls.push(["submitCandidate", trigger, loop, candidate, mode]);
+			return {
+				receipt: {
+					schemaVersion: 1,
+					jobId: "job:candidate",
+					loop,
+					status: "completed",
+					evidence: [],
+				},
+			};
+		},
+		events: async (afterCursor, options) => {
+			calls.push(["events", afterCursor, options]);
+			return {
+				schemaVersion: 1,
+				generationId: "generation:test",
+				latestCursor: afterCursor,
+				cursor: afterCursor,
+				resetRequired: false,
+				events: [],
+			};
+		},
+		heartbeat: async () => calls.push(["heartbeat"]),
+		disconnect: async () => calls.push(["disconnect"]),
+	};
+
+	const gateway = createProjectRuntimeGateway(client);
+	assert.deepEqual(await gateway.queries.state(), {
+		projectRoot: "/project",
+		generationId: "generation:test",
+		executionPolicy: "supervised",
+		executionPermitted: true,
+		clientCount: 1,
+		supervisorCount: 1,
+		recoveringJobCount: 0,
+		queuedJobCount: 0,
+		activeJobCount: 0,
+		completedJobCount: 2,
+	});
+	assert.deepEqual(
+		await gateway.queries.inspect({ kind: "project_truth_changed" }),
+		{
+			schemaVersion: 1,
+			status: "quiescent",
+			trigger: { kind: "project_truth_changed" },
+			observedWorkStateDigest: "sha256:test",
+		},
+	);
+	await gateway.queries.decisionAttention({ maxItems: 2 });
+	await gateway.commands.selectDecision({ changeId: "CHG-test" });
+	await gateway.commands.submitCandidate(
+		{ kind: "project_truth_changed" },
+		"planning",
+		{ candidateId: "candidate:test" },
+		"append",
+	);
+	await gateway.events.read(4, { maxEvents: 8 });
+	await gateway.connection.heartbeat();
+	await gateway.connection.disconnect();
+
+	assert.deepEqual(
+		calls.map(([name]) => name),
+		[
+			"state",
+			"inspect",
+			"decisionAttention",
+			"selectDecision",
+			"submitCandidate",
+			"events",
+			"heartbeat",
+			"disconnect",
+		],
+	);
+	assert.equal(Object.isFrozen(gateway), true);
+	assert.deepEqual(Object.keys(gateway).sort(), [
+		"commands",
+		"connection",
+		"events",
+		"queries",
+	]);
+});
 
 async function waitForReplacement(root, previousGeneration, deadline) {
 	const state = await readProjectCoordinatorServiceState(root).catch(() => undefined);
@@ -28,8 +149,8 @@ async function waitForReplacement(root, previousGeneration, deadline) {
 	return waitForReplacement(root, previousGeneration, deadline);
 }
 
-test("dashboard registers as observer of shared project coordinator", async () => {
-	const root = await mkdtemp(join(tmpdir(), "codewiki-dashboard-coordinator-"));
+test("App Server registers as observer of shared Project Runtime", async () => {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-app-runtime-"));
 	let service;
 	let dashboard;
 	try {
@@ -43,19 +164,23 @@ test("dashboard registers as observer of shared project coordinator", async () =
 			keepAlive: true,
 			inProcess: true,
 			persistent: false,
-			projectCoordinatorClient: true,
-			projectCoordinatorConnector: async (repoRoot, input) => {
+			connectProjectRuntime: true,
+			projectRuntimeConnector: async (repoRoot, input) => {
 				try {
-					return await connectProjectCoordinatorClient(repoRoot, input, {
-						timeoutMs: 500,
-					});
+					return createProjectRuntimeGateway(
+						await connectProjectCoordinatorClient(repoRoot, input, {
+							timeoutMs: 500,
+						}),
+					);
 				} catch {
 					service = await startProjectCoordinatorService(repoRoot, {
 						generationId: "generation:dashboard-replacement",
 					});
-					return connectProjectCoordinatorClient(repoRoot, input, {
-						timeoutMs: 500,
-					});
+					return createProjectRuntimeGateway(
+						await connectProjectCoordinatorClient(repoRoot, input, {
+							timeoutMs: 500,
+						}),
+					);
 				}
 			},
 		});

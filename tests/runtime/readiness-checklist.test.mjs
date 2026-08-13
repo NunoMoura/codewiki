@@ -100,13 +100,13 @@ describe("install readiness checklist", () => {
 		assert.equal(packageJson.keywords.includes("pi-package"), true);
 		assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 			".",
-			"./coordinator",
 			"./package.json",
 			"./pi-sdk",
+			"./runtime",
 		]);
-		assert.deepEqual(packageJson.exports["./coordinator"], {
-			types: "./dist/host/coordinator-entrypoint.d.ts",
-			import: "./dist/host/coordinator-entrypoint.js",
+		assert.deepEqual(packageJson.exports["./runtime"], {
+			types: "./dist/runtime/index.d.ts",
+			import: "./dist/runtime/index.js",
 		});
 		assert.deepEqual(packageJson.exports["./pi-sdk"], {
 			types: "./dist/execution/pi/sdk-semantic-session.d.ts",

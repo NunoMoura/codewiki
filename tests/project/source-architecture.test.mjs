@@ -211,8 +211,10 @@ describe("source architecture", () => {
 		);
 		assert.equal(
 			existsSync(join(sourceRoot, "host", "coordinator-entrypoint.ts")),
-			true,
+			false,
 		);
+		assert.equal(existsSync(join(sourceRoot, "runtime", "gateway.ts")), true);
+		assert.equal(existsSync(join(sourceRoot, "runtime", "index.ts")), true);
 	});
 
 	it("keeps Lab and source-checkout self-dogfood machinery deleted", () => {
@@ -441,6 +443,25 @@ describe("source architecture", () => {
 				false,
 				edgeLabel(source, target),
 			);
+		}
+	});
+
+	it("forbids Server transport from importing Runtime coordinator internals", () => {
+		for (const [source, targets] of importEdges(sourceFiles())) {
+			const sourcePath = relative(sourceRoot, source);
+			if (
+				!sourcePath.startsWith("host/") &&
+				!sourcePath.startsWith("server/")
+			) {
+				continue;
+			}
+			for (const target of targets) {
+				assert.equal(
+					relative(sourceRoot, target).startsWith("runtime/coordinator/"),
+					false,
+					edgeLabel(source, target),
+				);
+			}
 		}
 	});
 

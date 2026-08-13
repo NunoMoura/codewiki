@@ -43,9 +43,11 @@ import {
 	unavailableDashboardPreviewControl,
 } from "../../preview/dashboard-control.ts";
 import { readDevLog } from "../../runtime/persistence/dev-log.ts";
-import type { ProjectCoordinatorClientInput } from "../../runtime/coordinator/project.ts";
-import { connectEnsuredProjectCoordinatorClient } from "../../runtime/coordinator/process.ts";
-import type { ProjectCoordinatorRemoteClient } from "../../runtime/coordinator/service.ts";
+import {
+	connectProjectRuntimeGateway,
+	type ProjectRuntimeConnectionInput,
+	type ProjectRuntimeGateway,
+} from "../../runtime/gateway.ts";
 import { CODEWIKI_APP_HTML } from "../../clients/app/shell.ts";
 import { loadRuntimeChangesState } from "../../runtime/queries/changes.ts";
 import { loadRuntimeConfigurationState } from "../../runtime/queries/configuration.ts";
@@ -75,11 +77,11 @@ interface CodewikiAppServerOptions {
 	persistent?: boolean;
 	inProcess?: boolean;
 	previewControl?: DashboardPreviewControl;
-	projectCoordinatorClient?: boolean;
-	projectCoordinatorConnector?: (
+	connectProjectRuntime?: boolean;
+	projectRuntimeConnector?: (
 		repoRoot: string,
-		input: ProjectCoordinatorClientInput,
-	) => Promise<ProjectCoordinatorRemoteClient>;
+		input: ProjectRuntimeConnectionInput,
+	) => Promise<ProjectRuntimeGateway>;
 }
 
 interface CodewikiAppServerHandle {
@@ -100,13 +102,13 @@ interface AppServerRuntime {
 	clients: Set<ServerResponse>;
 	watcher?: FSWatcher;
 	broadcastTimer?: NodeJS.Timeout;
-	coordinatorHeartbeatTimer?: NodeJS.Timeout;
-	coordinatorClient?: ProjectCoordinatorRemoteClient;
-	coordinatorConnector: (
+	runtimeHeartbeatTimer?: NodeJS.Timeout;
+	projectRuntime?: ProjectRuntimeGateway;
+	projectRuntimeConnector: (
 		repoRoot: string,
-		input: ProjectCoordinatorClientInput,
-	) => Promise<ProjectCoordinatorRemoteClient>;
-	coordinatorEventsClosed: boolean;
+		input: ProjectRuntimeConnectionInput,
+	) => Promise<ProjectRuntimeGateway>;
+	runtimeEventsClosed: boolean;
 	previewControl: DashboardPreviewControl;
 	opened: boolean;
 	close(): Promise<void>;
@@ -453,10 +455,9 @@ async function startInProcessAppServer(
 		options.keepAlive ?? false,
 		options.previewControl,
 		{
-			connectCoordinator: options.projectCoordinatorClient ?? false,
-			coordinatorConnector:
-				options.projectCoordinatorConnector ||
-				connectEnsuredProjectCoordinatorClient,
+			connectProjectRuntime: options.connectProjectRuntime ?? false,
+			projectRuntimeConnector:
+				options.projectRuntimeConnector || connectProjectRuntimeGateway,
 		},
 	);
 	appServers.set(options.repoRoot, runtime);
@@ -623,11 +624,11 @@ async function createAppServerRuntime(
 	keepAlive = false,
 	providedPreviewControl?: DashboardPreviewControl,
 	options: {
-		connectCoordinator?: boolean;
-		coordinatorConnector?: (
+		connectProjectRuntime?: boolean;
+		projectRuntimeConnector?: (
 			repoRoot: string,
-			input: ProjectCoordinatorClientInput,
-		) => Promise<ProjectCoordinatorRemoteClient>;
+			input: ProjectRuntimeConnectionInput,
+		) => Promise<ProjectRuntimeGateway>;
 	} = {},
 ): Promise<AppServerRuntime> {
 	const token =
@@ -651,10 +652,10 @@ async function createAppServerRuntime(
 	const endpoint = appEndpoint(repoRoot, origin, token, address.port);
 	const previewControl =
 		providedPreviewControl || unavailableDashboardPreviewControl();
-	const coordinatorConnector =
-		options.coordinatorConnector || connectEnsuredProjectCoordinatorClient;
-	const coordinatorClient = options.connectCoordinator
-		? await coordinatorConnector(repoRoot, {
+	const projectRuntimeConnector =
+		options.projectRuntimeConnector || connectProjectRuntimeGateway;
+	const projectRuntime = options.connectProjectRuntime
+		? await projectRuntimeConnector(repoRoot, {
 				clientId: `dashboard:${process.pid}:${address.port}`,
 				kind: "dashboard",
 				supervision: "observer",
@@ -667,21 +668,21 @@ async function createAppServerRuntime(
 		origin,
 		token,
 		clients,
-		coordinatorClient,
-		coordinatorConnector,
-		coordinatorEventsClosed: false,
+		projectRuntime,
+		projectRuntimeConnector,
+		runtimeEventsClosed: false,
 		previewControl,
 		opened: false,
 		close: () => closeRuntime(runtime),
 	};
 	await writeAppEndpoint(endpoint);
 	runtime.watcher = watchTraceDirectory(runtime);
-	if (coordinatorClient) {
-		runtime.coordinatorHeartbeatTimer = setInterval(() => {
-			void runtime.coordinatorClient?.heartbeat().catch(() => undefined);
+	if (projectRuntime) {
+		runtime.runtimeHeartbeatTimer = setInterval(() => {
+			void runtime.projectRuntime?.connection.heartbeat().catch(() => undefined);
 		}, 10_000);
-		runtime.coordinatorHeartbeatTimer.unref();
-		if (keepAlive) void watchCoordinatorEvents(runtime);
+		runtime.runtimeHeartbeatTimer.unref();
+		if (keepAlive) void watchRuntimeEvents(runtime);
 	}
 	return runtime;
 }
@@ -824,7 +825,7 @@ async function routeAuthorizedPost(
 			),
 		);
 		scheduleBroadcast(runtime);
-		scheduleCoordinatorObservation(runtime);
+		scheduleProjectRuntimeObservation(runtime);
 		return true;
 	}
 	return false;
@@ -952,21 +953,24 @@ async function attachEventStream(
 	writeEvent(response, state);
 }
 
-function scheduleCoordinatorObservation(runtime: AppServerRuntime): void {
-	void runtime.coordinatorClient
-		?.inspect({ kind: "project_truth_changed" })
+function scheduleProjectRuntimeObservation(runtime: AppServerRuntime): void {
+	void runtime.projectRuntime?.queries
+		.inspect({ kind: "project_truth_changed" })
 		.catch(() => undefined);
 }
 
-async function watchCoordinatorEvents(runtime: AppServerRuntime): Promise<void> {
+async function watchRuntimeEvents(runtime: AppServerRuntime): Promise<void> {
 	let cursor = 0;
 	let generationId: string | undefined;
-	while (!runtime.coordinatorEventsClosed) {
+	while (!runtime.runtimeEventsClosed) {
 		try {
-			const client = runtime.coordinatorClient;
-			if (!client) return;
-			const batch = await client.events(cursor, { maxEvents: 64, waitMs: 5_000 });
-			if (runtime.coordinatorEventsClosed) return;
+			const projectRuntime = runtime.projectRuntime;
+			if (!projectRuntime) return;
+			const batch = await projectRuntime.events.read(cursor, {
+				maxEvents: 64,
+				waitMs: 5_000,
+			});
+			if (runtime.runtimeEventsClosed) return;
 			const generationChanged =
 				generationId !== undefined && generationId !== batch.generationId;
 			generationId = batch.generationId;
@@ -978,10 +982,12 @@ async function watchCoordinatorEvents(runtime: AppServerRuntime): Promise<void> 
 			cursor = batch.cursor;
 			if (batch.events.length > 0) scheduleBroadcast(runtime);
 		} catch {
-			if (runtime.coordinatorEventsClosed) return;
-			void runtime.coordinatorClient?.disconnect().catch(() => undefined);
+			if (runtime.runtimeEventsClosed) return;
+			void runtime.projectRuntime?.connection
+				.disconnect()
+				.catch(() => undefined);
 			try {
-				runtime.coordinatorClient = await runtime.coordinatorConnector(
+				runtime.projectRuntime = await runtime.projectRuntimeConnector(
 					runtime.repoRoot,
 					{
 						clientId: `dashboard:${process.pid}:${new URL(runtime.origin).port}`,
@@ -1072,12 +1078,12 @@ function writeServerError(response: ServerResponse, error: unknown): void {
 
 async function closeRuntime(runtime: AppServerRuntime): Promise<void> {
 	appServers.delete(runtime.repoRoot);
-	runtime.coordinatorEventsClosed = true;
+	runtime.runtimeEventsClosed = true;
 	if (runtime.broadcastTimer) clearTimeout(runtime.broadcastTimer);
-	if (runtime.coordinatorHeartbeatTimer) {
-		clearInterval(runtime.coordinatorHeartbeatTimer);
+	if (runtime.runtimeHeartbeatTimer) {
+		clearInterval(runtime.runtimeHeartbeatTimer);
 	}
-	await runtime.coordinatorClient?.disconnect().catch(() => undefined);
+	await runtime.projectRuntime?.connection.disconnect().catch(() => undefined);
 	runtime.watcher?.close();
 	for (const client of runtime.clients) client.end();
 	runtime.clients.clear();

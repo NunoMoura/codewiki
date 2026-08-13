@@ -48,7 +48,7 @@ export function registerCodewikiFooter(
 					inProcess: true,
 					persistent: false,
 					previewControl: piPreviewControl(projectRoot),
-					projectCoordinatorClient: connectProjectCoordinator,
+					connectProjectRuntime: connectProjectCoordinator,
 				}).catch(() => undefined),
 			);
 		}

@@ -53,9 +53,9 @@ describe("fresh scaffold", () => {
 				types: "./dist/index.d.ts",
 				import: "./dist/index.js",
 			},
-			"./coordinator": {
-				types: "./dist/host/coordinator-entrypoint.d.ts",
-				import: "./dist/host/coordinator-entrypoint.js",
+			"./runtime": {
+				types: "./dist/runtime/index.d.ts",
+				import: "./dist/runtime/index.js",
 			},
 			"./pi-sdk": {
 				types: "./dist/execution/pi/sdk-semantic-session.d.ts",

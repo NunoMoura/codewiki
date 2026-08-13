@@ -55,7 +55,6 @@ import {
 	HOST_CLIENT_PROTOCOL,
 	HOST_PAIRING_PROTOCOL,
 	HOST_REGISTRY_PROTOCOL,
-	ProjectCoordinator,
 	buildWikiState,
 	buildWorkState,
 	issueHostPairing,
@@ -64,23 +63,10 @@ import {
 	runWikiConfig,
 } from "@nunomoura/codewiki";
 import {
-	IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
-	ImplementationWorkerDispatcher,
-	connectProjectCoordinatorClient,
-	createCodeWikiLoopExecutionPorts,
-	createOciContainerImplementationWorkerAdapter,
-	ensureProjectCoordinatorService,
-	scheduleImplementationWorkerClaimRelease,
-	scheduleImplementationWorkerIntegration,
-	scheduleImplementationWorkerAssignments,
-	scheduleProjectBranchMerge,
-	scheduleProjectBranchPush,
-	scheduleProductPublication,
-	scheduleProductRelease,
-	scheduleRuntimeReactions,
-	startProjectCoordinatorService,
-	stopProjectCoordinatorService,
-} from "@nunomoura/codewiki/coordinator";
+	connectProjectRuntimeGateway,
+	createProjectRuntimeGateway,
+	stopProjectRuntime,
+} from "@nunomoura/codewiki/runtime";
 
 function filesUnder(root) {
 	const files = [];
@@ -102,13 +88,13 @@ assert.deepEqual(packageJson.pi, { extensions: ["dist/clients/pi/extension.js"] 
 assert.equal(packageJson.pi.skills, undefined);
 assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 	".",
-	"./coordinator",
 	"./package.json",
 	"./pi-sdk",
+	"./runtime",
 ]);
-assert.deepEqual(packageJson.exports["./coordinator"], {
-	types: "./dist/host/coordinator-entrypoint.d.ts",
-	import: "./dist/host/coordinator-entrypoint.js",
+assert.deepEqual(packageJson.exports["./runtime"], {
+	types: "./dist/runtime/index.d.ts",
+	import: "./dist/runtime/index.js",
 });
 assert.deepEqual(packageJson.exports["./pi-sdk"], {
 \ttypes: "./dist/execution/pi/sdk-semantic-session.d.ts",
@@ -221,8 +207,12 @@ assert.equal(
 	existsSync(join(packageRoot, "dist", "host", "app", "installed-runtime.js")),
 	true,
 );
-assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.d.ts")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "gateway.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "gateway.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "input-validation.js")), false);
@@ -313,53 +303,43 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "effects", "product-release-manifest.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "execution", "pi", "process-worker-adapter.js")), true);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
-const coordinator = new ProjectCoordinator(process.cwd(), {
-	generationId: "packed:coordinator",
-	executionPolicy: "unattended",
-});
-assert.equal(coordinator.snapshot().generationId, "packed:coordinator");
-coordinator.close();
-const service = await startProjectCoordinatorService(process.cwd(), {
-	generationId: "packed:service",
-});
-const remoteClient = await connectProjectCoordinatorClient(process.cwd(), {
-	clientId: "packed:client",
+const runtimeModule = await import("@nunomoura/codewiki/runtime");
+assert.deepEqual(Object.keys(runtimeModule).sort(), [
+	"connectProjectRuntimeGateway",
+	"createProjectRuntimeGateway",
+	"stopProjectRuntime",
+]);
+assert.equal(typeof createProjectRuntimeGateway, "function");
+const runtimeGateway = await connectProjectRuntimeGateway(process.cwd(), {
+	clientId: "packed:runtime-client",
 	kind: "test",
 	supervision: "approved",
 });
-assert.equal((await remoteClient.state()).supervisorCount, 1);
-assert.equal(typeof remoteClient.react, "function");
-assert.equal(typeof remoteClient.inspect, "function");
-assert.equal(typeof remoteClient.submitCandidate, "function");
-assert.equal(typeof remoteClient.reconcileWorkers, "function");
-assert.equal(typeof remoteClient.events, "function");
-assert.equal((await remoteClient.events(0)).events[0].state, "client_connected");
-assert.equal(remoteClient.semanticExecution, "client_candidate");
-assert.equal(typeof scheduleRuntimeReactions, "function");
-assert.equal(typeof createCodeWikiLoopExecutionPorts, "function");
-assert.equal(typeof scheduleImplementationWorkerAssignments, "function");
-assert.equal(typeof scheduleImplementationWorkerClaimRelease, "function");
-assert.equal(typeof scheduleImplementationWorkerIntegration, "function");
-assert.equal(typeof scheduleProjectBranchMerge, "function");
-assert.equal(typeof scheduleProjectBranchPush, "function");
-assert.equal(typeof scheduleProductPublication, "function");
-assert.equal(typeof scheduleProductRelease, "function");
-assert.equal(typeof createOciContainerImplementationWorkerAdapter, "function");
-assert.equal(typeof ImplementationWorkerDispatcher, "function");
-assert.equal(IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION, 1);
-assert.equal(typeof ensureProjectCoordinatorService, "function");
-assert.equal(typeof stopProjectCoordinatorService, "function");
-await remoteClient.disconnect();
-await service.close();
-await ensureProjectCoordinatorService(process.cwd());
-const daemonClient = await connectProjectCoordinatorClient(process.cwd(), {
-	clientId: "packed:daemon-client",
-	kind: "test",
-	supervision: "approved",
-});
-assert.equal(daemonClient.semanticExecution, "client_candidate");
-await daemonClient.disconnect();
-await stopProjectCoordinatorService(process.cwd());
+assert.equal((await runtimeGateway.queries.state()).supervisorCount, 1);
+assert.equal(typeof runtimeGateway.queries.inspect, "function");
+assert.equal(typeof runtimeGateway.queries.decisionAttention, "function");
+assert.equal(typeof runtimeGateway.commands.selectDecision, "function");
+assert.equal(typeof runtimeGateway.commands.submitCandidate, "function");
+assert.deepEqual(Object.keys(runtimeGateway.commands).sort(), [
+	"selectDecision",
+	"submitCandidate",
+]);
+assert.equal(
+	(await runtimeGateway.events.read(0)).events[0].state,
+	"client_connected",
+);
+await runtimeGateway.connection.heartbeat();
+await runtimeGateway.connection.disconnect();
+await stopProjectRuntime(process.cwd());
+await assert.rejects(
+	import("@nunomoura/codewiki/coordinator"),
+	(error) => error?.code === "ERR_PACKAGE_PATH_NOT_EXPORTED",
+);
+const runtimeDeclarations = readFileSync(
+	join(packageRoot, "dist", "runtime", "gateway.d.ts"),
+	"utf8",
+);
+assert.equal(runtimeDeclarations.includes("ProjectCoordinator"), false);
 assert.deepEqual(buildWikiState({ records: [] }).traceIds, []);
 assert.deepEqual(buildWorkState({ records: [] }).changeIds, []);
 assert.match(buildWorkState({ records: [] }).snapshotDigest, /^sha256:[a-f0-9]{64}$/);
@@ -455,7 +435,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "work-state", "session.js")), 
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "reactor.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "project.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "entrypoint.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "entrypoint.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "process.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "daemon.js")), true);

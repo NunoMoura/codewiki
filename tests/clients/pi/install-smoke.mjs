@@ -52,9 +52,9 @@ try {
 	assert.equal(manifest.bin, undefined);
 	assert.deepEqual(Object.keys(manifest.exports).sort(), [
 		".",
-		"./coordinator",
 		"./package.json",
 		"./pi-sdk",
+		"./runtime",
 	]);
 	assert.deepEqual(manifest.pi, { extensions: ["dist/clients/pi/extension.js"] });
 

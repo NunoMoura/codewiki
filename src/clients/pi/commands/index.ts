@@ -178,7 +178,7 @@ async function startDashboard(
 		inProcess: true,
 		persistent: false,
 		previewControl: piPreviewControl(root),
-		projectCoordinatorClient: connectProjectCoordinator,
+		connectProjectRuntime: connectProjectCoordinator,
 	});
 	return {
 		command: "dashboard",
