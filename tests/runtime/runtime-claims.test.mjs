@@ -145,6 +145,15 @@ describe("runtime claim events", () => {
 					claimId: "claim-WU-runtime",
 					status: "completed",
 					message: "Worker evidence consumed by implementation.",
+					executionError: {
+						role: "worker",
+						kind: "output_missing",
+						message: "Worker report was unavailable.",
+						recoverable: true,
+						retryable: true,
+						suggestedAction: "release_claim",
+						refs: ["worker-1", "WU-runtime"],
+					},
 					sessionId: "session-1",
 					sessionFile: "/tmp/session-1.jsonl",
 					refs: ["tests/runtime/runtime-claims.test.mjs"],
@@ -170,6 +179,8 @@ describe("runtime claim events", () => {
 			release.data?.message,
 			"Worker evidence consumed by implementation.",
 		);
+		assert.equal(release.data?.executionError?.kind, "output_missing");
+		assert.equal("hostError" in release.data, false);
 		assert.equal(release.data?.sessionId, "session-1");
 		assert.equal(release.data?.sessionFile, "/tmp/session-1.jsonl");
 		assert.equal(

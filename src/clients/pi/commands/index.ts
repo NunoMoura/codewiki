@@ -24,7 +24,7 @@ import {
 	buildCodewikiAppUrlMessage,
 	closeCodewikiAppServer,
 	startCodewikiAppServer,
-} from "../../../host/app/server.ts";
+} from "../../../server/app/server.ts";
 import { stopProjectCoordinatorService } from "../../../runtime/coordinator/service.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
 import {

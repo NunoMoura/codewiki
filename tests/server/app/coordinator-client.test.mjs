@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { startCodewikiAppServer } from "../../../src/host/app/server.ts";
+import { startCodewikiAppServer } from "../../../src/server/app/server.ts";
 import { bootstrapCodewiki } from "../../../src/project/bootstrap.ts";
 import {
 	connectProjectCoordinatorClient,

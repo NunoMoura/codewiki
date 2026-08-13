@@ -53,13 +53,13 @@ import { pathToFileURL } from "node:url";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
 	CLIENT_SERVER_PROTOCOL,
-	HOST_PAIRING_PROTOCOL,
-	HOST_REGISTRY_PROTOCOL,
+	CLIENT_PAIRING_PROTOCOL,
+	SERVER_REGISTRY_PROTOCOL,
 	buildWikiState,
 	buildWorkState,
-	issueHostPairing,
+	issueClientPairing,
 	normalizeClientServerQuery,
-	normalizeHostRegistrySnapshot,
+	normalizeServerRegistrySnapshot,
 	runWikiConfig,
 } from "@nunomoura/codewiki";
 import {
@@ -197,18 +197,18 @@ for (const name of [
 		name,
 	);
 }
-assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "daemon.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "host", "app", "server.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "app", "daemon.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "app", "server.js")), true);
 assert.equal(
-	existsSync(join(packageRoot, "dist", "host", "app", "request-error.js")),
+	existsSync(join(packageRoot, "dist", "server", "app", "request-error.js")),
 	false,
 );
 assert.equal(
-	existsSync(join(packageRoot, "dist", "host", "app", "installed-runtime.js")),
+	existsSync(join(packageRoot, "dist", "server", "app", "installed-runtime.js")),
 	true,
 );
-assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "host", "coordinator-entrypoint.d.ts")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "coordinator-entrypoint.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "coordinator-entrypoint.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "gateway.js")), true);
@@ -217,20 +217,27 @@ assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.js")), false)
 assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-server.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-server.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-pairing.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-pairing.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "input-validation.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "host", "pairing", "commands.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "host", "pairing", "commands.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "host")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "state.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "state.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "pairing", "commands.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "pairing", "commands.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "error-handling", "host-errors.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "error-handling", "execution-errors.js")), false);
 assert.equal(CLIENT_SERVER_PROTOCOL.id, "codewiki.client-server");
 assert.equal(CLIENT_SERVER_PROTOCOL.version, "1.0.0");
-assert.equal(HOST_REGISTRY_PROTOCOL.version, "1.0.0");
-assert.equal(HOST_PAIRING_PROTOCOL.version, "1.0.0");
-assert.equal(typeof issueHostPairing, "function");
+assert.equal(SERVER_REGISTRY_PROTOCOL.id, "codewiki.server-registry");
+assert.equal(SERVER_REGISTRY_PROTOCOL.version, "1.0.0");
+assert.equal(CLIENT_PAIRING_PROTOCOL.id, "codewiki.client-pairing");
+assert.equal(CLIENT_PAIRING_PROTOCOL.version, "1.0.0");
+assert.equal(typeof issueClientPairing, "function");
 assert.equal(
-	normalizeHostRegistrySnapshot({
-		protocolId: HOST_REGISTRY_PROTOCOL.id,
-		protocolVersion: HOST_REGISTRY_PROTOCOL.version,
+	normalizeServerRegistrySnapshot({
+		protocolId: SERVER_REGISTRY_PROTOCOL.id,
+		protocolVersion: SERVER_REGISTRY_PROTOCOL.version,
 		generation: 1,
 		generatedAt: "2026-08-13T10:00:00.000Z",
 		actors: [],

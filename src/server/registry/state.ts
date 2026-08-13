@@ -20,8 +20,8 @@ import {
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 
-export const HOST_REGISTRY_PROTOCOL = Object.freeze({
-	id: "codewiki.host-registry",
+export const SERVER_REGISTRY_PROTOCOL = Object.freeze({
+	id: "codewiki.server-registry",
 	version: "1.0.0",
 } as const);
 
@@ -30,71 +30,71 @@ const MAX_REGISTRY_BYTES = 4 * 1_024 * 1_024;
 const REGISTRY_FILE = "registry.json";
 const REGISTRY_LOCK_FILE = "registry.lock";
 
-export type HostActorKind = "user" | "service";
-export type HostActorStatus = "active" | "disabled";
-export type HostPairingStatus = "active" | "revoked";
-export type HostProjectStatus = "active" | "disabled";
+export type ServerActorKind = "user" | "service";
+export type ServerActorStatus = "active" | "disabled";
+export type ClientPairingStatus = "active" | "revoked";
+export type ServerProjectStatus = "active" | "disabled";
 
-export interface HostActorRecord {
+export interface ServerActorRecord {
 	readonly actorId: string;
-	readonly actorKind: HostActorKind;
+	readonly actorKind: ServerActorKind;
 	readonly authenticatedIdentityRefs: readonly string[];
-	readonly status: HostActorStatus;
+	readonly status: ServerActorStatus;
 	readonly createdAt: string;
 	readonly updatedAt: string;
 }
 
-export interface HostClientPairingRecord {
+export interface ClientPairingRecord {
 	readonly pairingId: string;
 	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
 	readonly authenticationRef: string;
 	readonly authenticatedIdentityRef: string;
 	readonly actorId: string;
-	readonly status: HostPairingStatus;
+	readonly status: ClientPairingStatus;
 	readonly pairedAt: string;
 	readonly updatedAt: string;
 	readonly expiresAt?: string;
 }
 
-export interface HostProjectRegistration {
+export interface ServerProjectRegistration {
 	readonly projectId: string;
 	readonly repositoryIdentity: Sha256Digest;
 	readonly projectRoot: string;
 	readonly runtimeRouteRef: string;
-	readonly status: HostProjectStatus;
+	readonly status: ServerProjectStatus;
 	readonly registeredAt: string;
 	readonly updatedAt: string;
 }
 
-export interface HostRegistrySnapshot {
-	readonly protocolId: typeof HOST_REGISTRY_PROTOCOL.id;
-	readonly protocolVersion: typeof HOST_REGISTRY_PROTOCOL.version;
+export interface ServerRegistrySnapshot {
+	readonly protocolId: typeof SERVER_REGISTRY_PROTOCOL.id;
+	readonly protocolVersion: typeof SERVER_REGISTRY_PROTOCOL.version;
 	readonly generation: number;
 	readonly generatedAt: string;
-	readonly actors: readonly HostActorRecord[];
-	readonly pairings: readonly HostClientPairingRecord[];
-	readonly projects: readonly HostProjectRegistration[];
+	readonly actors: readonly ServerActorRecord[];
+	readonly pairings: readonly ClientPairingRecord[];
+	readonly projects: readonly ServerProjectRegistration[];
 }
 
-/** Result supplied by a trusted Host authentication adapter after proof verification. */
-export interface HostAuthenticationAssertion {
+/** Result supplied by a trusted Server authentication adapter after proof verification. */
+export interface ServerAuthenticationAssertion {
 	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
 	readonly authenticationRef: string;
 	readonly authenticatedIdentityRef: string;
 }
 
-export interface ResolvedHostConnection {
+export interface ResolvedServerConnection {
 	readonly actor: ClientServerActorContext;
 	readonly client: ClientServerTransportContext;
-	readonly project: HostProjectRegistration;
+	readonly project: ServerProjectRegistration;
 }
 
-export async function readHostRegistrySnapshot(
-	hostStateRoot: string,
-): Promise<HostRegistrySnapshot | undefined> {
-	const path = registryPath(hostStateRoot);
+export async function readServerRegistrySnapshot(
+	serverStateRoot: string,
+): Promise<ServerRegistrySnapshot | undefined> {
+	const path = registryPath(serverStateRoot);
 	let handle;
 	try {
 		handle = await open(
@@ -113,7 +113,7 @@ export async function readHostRegistrySnapshot(
 			(process.platform !== "win32" && (metadata.mode & 0o077) !== 0)
 		) {
 			throw new Error(
-				"Host registry file is invalid, non-private, or exceeds its byte limit.",
+				"Server registry file is invalid, non-private, or exceeds its byte limit.",
 			);
 		}
 		const bytes = await handle.readFile("utf8");
@@ -122,11 +122,11 @@ export async function readHostRegistrySnapshot(
 			parsed = JSON.parse(bytes);
 		} catch (error) {
 			const reason = error instanceof Error ? error.message : String(error);
-			throw new Error(`Host registry JSON is invalid: ${reason}`);
+			throw new Error(`Server registry JSON is invalid: ${reason}`);
 		}
-		const snapshot = normalizeHostRegistrySnapshot(parsed);
+		const snapshot = normalizeServerRegistrySnapshot(parsed);
 		if (canonicalJson(snapshot) !== bytes) {
-			throw new Error("Host registry file is not canonical JSON.");
+			throw new Error("Server registry file is not canonical JSON.");
 		}
 		return snapshot;
 	} finally {
@@ -134,32 +134,32 @@ export async function readHostRegistrySnapshot(
 	}
 }
 
-export async function writeHostRegistrySnapshot(input: {
-	readonly hostStateRoot: string;
+export async function writeServerRegistrySnapshot(input: {
+	readonly serverStateRoot: string;
 	readonly expectedGeneration: number;
-	readonly snapshot: HostRegistrySnapshot;
-}): Promise<HostRegistrySnapshot> {
+	readonly snapshot: ServerRegistrySnapshot;
+}): Promise<ServerRegistrySnapshot> {
 	if (!Number.isSafeInteger(input.expectedGeneration) || input.expectedGeneration < 0) {
-		throw new Error("Host registry expected generation must be a non-negative safe integer.");
+		throw new Error("Server registry expected generation must be a non-negative safe integer.");
 	}
-	const snapshot = normalizeHostRegistrySnapshot(input.snapshot);
+	const snapshot = normalizeServerRegistrySnapshot(input.snapshot);
 	if (snapshot.generation !== input.expectedGeneration + 1) {
-		throw new Error("Host registry next generation must increment expected generation by one.");
+		throw new Error("Server registry next generation must increment expected generation by one.");
 	}
-	return withRegistryLock(input.hostStateRoot, async () => {
-		const current = await readHostRegistrySnapshot(input.hostStateRoot);
+	return withRegistryLock(input.serverStateRoot, async () => {
+		const current = await readServerRegistrySnapshot(input.serverStateRoot);
 		if ((current?.generation ?? 0) !== input.expectedGeneration) {
-			throw new Error("Host registry generation conflict.");
+			throw new Error("Server registry generation conflict.");
 		}
 		if (current) assertRegistryTransition(current, snapshot);
-		await persistRegistry(input.hostStateRoot, snapshot);
+		await persistRegistry(input.serverStateRoot, snapshot);
 		return snapshot;
 	});
 }
 
-export function normalizeHostRegistrySnapshot(
+export function normalizeServerRegistrySnapshot(
 	value: unknown,
-): HostRegistrySnapshot {
+): ServerRegistrySnapshot {
 	const input = exactObject(
 		value,
 		[
@@ -171,17 +171,17 @@ export function normalizeHostRegistrySnapshot(
 			"pairings",
 			"projects",
 		],
-		"Host registry snapshot",
+		"Server registry snapshot",
 	);
 	if (
-		input.protocolId !== HOST_REGISTRY_PROTOCOL.id ||
-		input.protocolVersion !== HOST_REGISTRY_PROTOCOL.version
+		input.protocolId !== SERVER_REGISTRY_PROTOCOL.id ||
+		input.protocolVersion !== SERVER_REGISTRY_PROTOCOL.version
 	) {
-		throw new Error("Host registry protocol binding is invalid.");
+		throw new Error("Server registry protocol binding is invalid.");
 	}
 	const snapshot = Object.freeze({
-		protocolId: HOST_REGISTRY_PROTOCOL.id,
-		protocolVersion: HOST_REGISTRY_PROTOCOL.version,
+		protocolId: SERVER_REGISTRY_PROTOCOL.id,
+		protocolVersion: SERVER_REGISTRY_PROTOCOL.version,
 		generation: integer(input.generation, "generation", 1),
 		generatedAt: timestamp(input.generatedAt, "generatedAt"),
 		actors: records(input.actors, "actors", normalizeActor),
@@ -192,33 +192,33 @@ export function normalizeHostRegistrySnapshot(
 	return snapshot;
 }
 
-export function resolveHostConnection(input: {
-	readonly registry: HostRegistrySnapshot;
+export function resolveServerConnection(input: {
+	readonly registry: ServerRegistrySnapshot;
 	readonly expectedRegistryGeneration: number;
-	readonly authentication: HostAuthenticationAssertion;
+	readonly authentication: ServerAuthenticationAssertion;
 	readonly repositoryIdentity: Sha256Digest;
 	readonly now?: Date;
-}): ResolvedHostConnection {
-	const registry = normalizeHostRegistrySnapshot(input.registry);
+}): ResolvedServerConnection {
+	const registry = normalizeServerRegistrySnapshot(input.registry);
 	const expectedGeneration = integer(
 		input.expectedRegistryGeneration,
 		"expectedRegistryGeneration",
 		1,
 	);
 	if (registry.generation !== expectedGeneration) {
-		throw new Error("Host registry generation is stale.");
+		throw new Error("Server registry generation is stale.");
 	}
-	const authentication = normalizeHostAuthenticationAssertion(input.authentication);
+	const authentication = normalizeServerAuthenticationAssertion(input.authentication);
 	const repositoryIdentity = assertSha256Digest(
 		input.repositoryIdentity,
 		"repositoryIdentity",
 	);
 	const now = input.now ?? new Date();
 	if (!Number.isFinite(now.getTime())) {
-		throw new Error("Host registry resolution time is invalid.");
+		throw new Error("Server registry resolution time is invalid.");
 	}
 	if (Date.parse(registry.generatedAt) > now.getTime()) {
-		throw new Error("Host registry snapshot is future-dated.");
+		throw new Error("Server registry snapshot is future-dated.");
 	}
 	const pairing = activePairing(registry, authentication, now);
 	const actor = activeActor(registry, pairing, authentication);
@@ -239,64 +239,64 @@ export function resolveHostConnection(input: {
 }
 
 function activePairing(
-	registry: HostRegistrySnapshot,
-	authentication: HostAuthenticationAssertion,
+	registry: ServerRegistrySnapshot,
+	authentication: ServerAuthenticationAssertion,
 	now: Date,
-): HostClientPairingRecord {
+): ClientPairingRecord {
 	const pairing = registry.pairings.find(
 		(record) => record.authenticationRef === authentication.authenticationRef,
 	);
 	if (!pairing || pairing.status !== "active") {
-		throw new Error("Host client pairing is not active.");
+		throw new Error("Client pairing is not active.");
 	}
 	if (
 		pairing.clientKind !== authentication.clientKind ||
 		pairing.clientInstanceId !== authentication.clientInstanceId ||
 		pairing.authenticatedIdentityRef !== authentication.authenticatedIdentityRef
 	) {
-		throw new Error("Host authentication assertion does not match pairing.");
+		throw new Error("Server authentication assertion does not match pairing.");
 	}
 	if (pairing.expiresAt && Date.parse(pairing.expiresAt) <= now.getTime()) {
-		throw new Error("Host client pairing has expired.");
+		throw new Error("Client pairing has expired.");
 	}
 	return pairing;
 }
 
 function activeActor(
-	registry: HostRegistrySnapshot,
-	pairing: HostClientPairingRecord,
-	authentication: HostAuthenticationAssertion,
-): HostActorRecord {
+	registry: ServerRegistrySnapshot,
+	pairing: ClientPairingRecord,
+	authentication: ServerAuthenticationAssertion,
+): ServerActorRecord {
 	const actor = registry.actors.find(
 		(record) => record.actorId === pairing.actorId,
 	);
 	if (!actor || actor.status !== "active") {
-		throw new Error("Host actor mapping is not active.");
+		throw new Error("Server registry actor mapping is not active.");
 	}
 	if (
 		!actor.authenticatedIdentityRefs.includes(
 			authentication.authenticatedIdentityRef,
 		)
 	) {
-		throw new Error("Host authenticated identity is not mapped to actor.");
+		throw new Error("Server authenticated identity is not mapped to actor.");
 	}
 	return actor;
 }
 
 function activeProject(
-	registry: HostRegistrySnapshot,
+	registry: ServerRegistrySnapshot,
 	repositoryIdentity: Sha256Digest,
-): HostProjectRegistration {
+): ServerProjectRegistration {
 	const project = registry.projects.find(
 		(record) => record.repositoryIdentity === repositoryIdentity,
 	);
 	if (!project || project.status !== "active") {
-		throw new Error("Host project registration is not active.");
+		throw new Error("Server project registration is not active.");
 	}
 	return project;
 }
 
-function normalizeActor(value: unknown, index: number): HostActorRecord {
+function normalizeActor(value: unknown, index: number): ServerActorRecord {
 	const label = `actors[${index}]`;
 	const input = exactObject(
 		value,
@@ -334,7 +334,7 @@ function normalizeActor(value: unknown, index: number): HostActorRecord {
 function normalizePairing(
 	value: unknown,
 	index: number,
-): HostClientPairingRecord {
+): ClientPairingRecord {
 	const label = `pairings[${index}]`;
 	const input = exactObject(
 		value,
@@ -391,7 +391,7 @@ function normalizePairing(
 function normalizeProject(
 	value: unknown,
 	index: number,
-): HostProjectRegistration {
+): ServerProjectRegistration {
 	const label = `projects[${index}]`;
 	const input = exactObject(
 		value,
@@ -428,9 +428,9 @@ function normalizeProject(
 	});
 }
 
-export function normalizeHostAuthenticationAssertion(
+export function normalizeServerAuthenticationAssertion(
 	value: unknown,
-): HostAuthenticationAssertion {
+): ServerAuthenticationAssertion {
 	const input = exactObject(
 		value,
 		[
@@ -439,7 +439,7 @@ export function normalizeHostAuthenticationAssertion(
 			"authenticationRef",
 			"authenticatedIdentityRef",
 		],
-		"Host authentication assertion",
+		"Server authentication assertion",
 	);
 	return Object.freeze({
 		clientKind: choice(
@@ -464,7 +464,7 @@ export function normalizeHostAuthenticationAssertion(
 	});
 }
 
-function assertRegistryConsistency(registry: HostRegistrySnapshot): void {
+function assertRegistryConsistency(registry: ServerRegistrySnapshot): void {
 	assertRegistryUniqueKeys(registry);
 	const actorById = new Map(
 		registry.actors.map((record) => [record.actorId, record]),
@@ -474,7 +474,7 @@ function assertRegistryConsistency(registry: HostRegistrySnapshot): void {
 	assertRegistryChronology(registry);
 }
 
-function assertRegistryUniqueKeys(registry: HostRegistrySnapshot): void {
+function assertRegistryUniqueKeys(registry: ServerRegistrySnapshot): void {
 	assertUnique(registry.actors, (record) => record.actorId, "actorId");
 	assertUnique(registry.projects, (record) => record.projectId, "projectId");
 	assertUnique(
@@ -495,14 +495,14 @@ function assertRegistryUniqueKeys(registry: HostRegistrySnapshot): void {
 	);
 }
 
-function assertStableActorIdentities(actors: readonly HostActorRecord[]): void {
+function assertStableActorIdentities(actors: readonly ServerActorRecord[]): void {
 	const actorByIdentity = new Map<string, string>();
 	for (const actor of actors) {
 		for (const identityRef of actor.authenticatedIdentityRefs) {
 			const existing = actorByIdentity.get(identityRef);
 			if (existing && existing !== actor.actorId) {
 				throw new Error(
-					`Host registry authenticated identity ${identityRef} maps to multiple actors.`,
+					`Server registry authenticated identity ${identityRef} maps to multiple actors.`,
 				);
 			}
 			actorByIdentity.set(identityRef, actor.actorId);
@@ -511,32 +511,32 @@ function assertStableActorIdentities(actors: readonly HostActorRecord[]): void {
 }
 
 function assertPairingMappings(
-	pairings: readonly HostClientPairingRecord[],
-	actorById: ReadonlyMap<string, HostActorRecord>,
+	pairings: readonly ClientPairingRecord[],
+	actorById: ReadonlyMap<string, ServerActorRecord>,
 ): void {
 	const activeClientInstances = new Set<string>();
 	for (const pairing of pairings) {
 		const actor = actorById.get(pairing.actorId);
 		if (!actor) {
-			throw new Error(`Host pairing ${pairing.pairingId} references unknown actor.`);
+			throw new Error(`Client pairing ${pairing.pairingId} references unknown actor.`);
 		}
 		if (!actor.authenticatedIdentityRefs.includes(pairing.authenticatedIdentityRef)) {
 			throw new Error(
-				`Host pairing ${pairing.pairingId} identity does not match actor mapping.`,
+				`Client pairing ${pairing.pairingId} identity does not match actor mapping.`,
 			);
 		}
 		if (pairing.status !== "active") continue;
 		const key = `${pairing.clientKind}\u0000${pairing.clientInstanceId}`;
 		if (activeClientInstances.has(key)) {
 			throw new Error(
-				"Host registry has multiple active pairings for one client instance.",
+				"Server registry has multiple active pairings for one client instance.",
 			);
 		}
 		activeClientInstances.add(key);
 	}
 }
 
-function assertRegistryChronology(registry: HostRegistrySnapshot): void {
+function assertRegistryChronology(registry: ServerRegistrySnapshot): void {
 	for (const actor of registry.actors) {
 		assertChronology(actor.createdAt, actor.updatedAt, registry.generatedAt, "actor");
 	}
@@ -548,7 +548,7 @@ function assertRegistryChronology(registry: HostRegistrySnapshot): void {
 			"pairing",
 		);
 		if (pairing.expiresAt && Date.parse(pairing.expiresAt) <= Date.parse(pairing.pairedAt)) {
-			throw new Error("Host pairing expiry chronology is invalid.");
+			throw new Error("Client pairing expiry chronology is invalid.");
 		}
 	}
 	for (const project of registry.projects) {
@@ -568,16 +568,16 @@ function assertChronology(
 	label: string,
 ): void {
 	if (Date.parse(createdAt) > Date.parse(updatedAt) || Date.parse(updatedAt) > Date.parse(generatedAt)) {
-		throw new Error(`Host ${label} chronology is invalid.`);
+		throw new Error(`Server registry ${label} chronology is invalid.`);
 	}
 }
 
 function assertRegistryTransition(
-	current: HostRegistrySnapshot,
-	next: HostRegistrySnapshot,
+	current: ServerRegistrySnapshot,
+	next: ServerRegistrySnapshot,
 ): void {
 	if (Date.parse(next.generatedAt) <= Date.parse(current.generatedAt)) {
-		throw new Error("Host registry generatedAt must advance with generation.");
+		throw new Error("Server registry generatedAt must advance with generation.");
 	}
 	assertActorTransition(current.actors, next.actors);
 	assertPairingTransition(current.pairings, next.pairings);
@@ -585,19 +585,19 @@ function assertRegistryTransition(
 }
 
 function assertActorTransition(
-	current: readonly HostActorRecord[],
-	next: readonly HostActorRecord[],
+	current: readonly ServerActorRecord[],
+	next: readonly ServerActorRecord[],
 ): void {
 	const nextById = new Map(next.map((record) => [record.actorId, record]));
 	for (const existing of current) {
 		const replacement = nextById.get(existing.actorId);
-		if (!replacement) throw new Error("Host registry cannot delete an actor record.");
+		if (!replacement) throw new Error("Server registry cannot delete an actor record.");
 		if (replacement.actorKind !== existing.actorKind) {
-			throw new Error("Host registry cannot change actor kind.");
+			throw new Error("Server registry cannot change actor kind.");
 		}
 		for (const identityRef of existing.authenticatedIdentityRefs) {
 			if (!replacement.authenticatedIdentityRefs.includes(identityRef)) {
-				throw new Error("Host registry cannot remove an actor identity mapping.");
+				throw new Error("Server registry cannot remove an actor identity mapping.");
 			}
 		}
 		assertUpdatedAtTransition(
@@ -613,13 +613,13 @@ function assertActorTransition(
 }
 
 function assertPairingTransition(
-	current: readonly HostClientPairingRecord[],
-	next: readonly HostClientPairingRecord[],
+	current: readonly ClientPairingRecord[],
+	next: readonly ClientPairingRecord[],
 ): void {
 	const nextById = new Map(next.map((record) => [record.pairingId, record]));
 	for (const existing of current) {
 		const replacement = nextById.get(existing.pairingId);
-		if (!replacement) throw new Error("Host registry cannot delete a pairing record.");
+		if (!replacement) throw new Error("Server registry cannot delete a pairing record.");
 		for (const field of [
 			"clientKind",
 			"clientInstanceId",
@@ -630,7 +630,7 @@ function assertPairingTransition(
 			"expiresAt",
 		] as const) {
 			if (replacement[field] !== existing[field]) {
-				throw new Error(`Host registry cannot change pairing ${field}.`);
+				throw new Error(`Server registry cannot change pairing ${field}.`);
 			}
 		}
 		assertUpdatedAtTransition(
@@ -644,13 +644,13 @@ function assertPairingTransition(
 }
 
 function assertProjectTransition(
-	current: readonly HostProjectRegistration[],
-	next: readonly HostProjectRegistration[],
+	current: readonly ServerProjectRegistration[],
+	next: readonly ServerProjectRegistration[],
 ): void {
 	const nextById = new Map(next.map((record) => [record.projectId, record]));
 	for (const existing of current) {
 		const replacement = nextById.get(existing.projectId);
-		if (!replacement) throw new Error("Host registry cannot delete a project record.");
+		if (!replacement) throw new Error("Server registry cannot delete a project record.");
 		for (const field of [
 			"repositoryIdentity",
 			"projectRoot",
@@ -658,7 +658,7 @@ function assertProjectTransition(
 			"registeredAt",
 		] as const) {
 			if (replacement[field] !== existing[field]) {
-				throw new Error(`Host registry cannot change project ${field}.`);
+				throw new Error(`Server registry cannot change project ${field}.`);
 			}
 		}
 		assertUpdatedAtTransition(
@@ -678,10 +678,10 @@ function assertUpdatedAtTransition(
 	label: string,
 ): void {
 	if (Date.parse(next) < Date.parse(current)) {
-		throw new Error(`Host registry ${label} updatedAt cannot move backward.`);
+		throw new Error(`Server registry ${label} updatedAt cannot move backward.`);
 	}
 	if (changed && Date.parse(next) <= Date.parse(current)) {
-		throw new Error(`Host registry ${label} update must advance updatedAt.`);
+		throw new Error(`Server registry ${label} update must advance updatedAt.`);
 	}
 }
 
@@ -691,22 +691,22 @@ function assertStatusDoesNotReactivate(
 	label: string,
 ): void {
 	if ((current === "disabled" || current === "revoked") && next === "active") {
-		throw new Error(`Host registry cannot reactivate ${label} record.`);
+		throw new Error(`Server registry cannot reactivate ${label} record.`);
 	}
 }
 
 async function withRegistryLock<T>(
-	hostStateRoot: string,
+	serverStateRoot: string,
 	run: () => Promise<T>,
 ): Promise<T> {
-	const path = join(hostStateRoot, REGISTRY_LOCK_FILE);
-	await mkdir(hostStateRoot, {recursive: true, mode: 0o700});
+	const path = join(serverStateRoot, REGISTRY_LOCK_FILE);
+	await mkdir(serverStateRoot, {recursive: true, mode: 0o700});
 	let handle;
 	try {
 		handle = await open(path, "wx", 0o600);
 	} catch (error) {
 		if (isAlreadyExists(error)) {
-			throw new Error("Another Host registry write is in progress.");
+			throw new Error("Another Server registry write is in progress.");
 		}
 		throw error;
 	}
@@ -719,14 +719,14 @@ async function withRegistryLock<T>(
 }
 
 async function persistRegistry(
-	hostStateRoot: string,
-	snapshot: HostRegistrySnapshot,
+	serverStateRoot: string,
+	snapshot: ServerRegistrySnapshot,
 ): Promise<void> {
-	const path = registryPath(hostStateRoot);
+	const path = registryPath(serverStateRoot);
 	const temporary = `${path}.tmp-${process.pid}-${randomUUID()}`;
 	const bytes = canonicalJson(snapshot);
 	if (Buffer.byteLength(bytes) > MAX_REGISTRY_BYTES) {
-		throw new Error("Host registry file exceeds its byte limit.");
+		throw new Error("Server registry file exceeds its byte limit.");
 	}
 	let handle;
 	try {
@@ -751,11 +751,11 @@ async function persistRegistry(
 	}
 }
 
-function registryPath(hostStateRoot: string): string {
-	if (!isAbsolute(hostStateRoot)) {
-		throw new Error("Host state root must be absolute.");
+function registryPath(serverStateRoot: string): string {
+	if (!isAbsolute(serverStateRoot)) {
+		throw new Error("Server state root must be absolute.");
 	}
-	return join(hostStateRoot, REGISTRY_FILE);
+	return join(serverStateRoot, REGISTRY_FILE);
 }
 
 function records<T>(
@@ -793,7 +793,7 @@ function assertUnique<T>(
 	for (const record of records) {
 		const value = key(record);
 		if (seen.has(value)) {
-			throw new Error(`Host registry ${field} values must be unique.`);
+			throw new Error(`Server registry ${field} values must be unique.`);
 		}
 		seen.add(value);
 	}

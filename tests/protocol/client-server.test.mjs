@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+	CLIENT_PAIRING_PROTOCOL,
+	normalizeClientPairingIssueCommand,
+	normalizeClientPairingRevokeCommand,
+} from "../../src/protocol/client-pairing.ts";
+import {
 	CLIENT_SERVER_PROTOCOL,
 	serverTransportDeduplicationDigest,
 	normalizeClientServerCommand,
@@ -56,6 +61,57 @@ function snapshot() {
 		redacted: false,
 	};
 }
+
+describe("Client pairing protocol", () => {
+	it("normalizes strict issue and revoke messages without the retired ID", () => {
+		assert.deepEqual(
+			normalizeClientPairingIssueCommand({
+				protocolId: CLIENT_PAIRING_PROTOCOL.id,
+				protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
+				kind: "issue",
+				expectedRegistryGeneration: 7,
+				pairingId: "pairing:cli-laptop",
+				clientKind: "cli",
+				clientInstanceId: "cli:laptop",
+				expiresInSeconds: 3_600,
+			}),
+			{
+				protocolId: CLIENT_PAIRING_PROTOCOL.id,
+				protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
+				kind: "issue",
+				expectedRegistryGeneration: 7,
+				pairingId: "pairing:cli-laptop",
+				clientKind: "cli",
+				clientInstanceId: "cli:laptop",
+				expiresInSeconds: 3_600,
+			},
+		);
+		assert.equal(
+			normalizeClientPairingRevokeCommand({
+				protocolId: CLIENT_PAIRING_PROTOCOL.id,
+				protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
+				kind: "revoke",
+				expectedRegistryGeneration: 8,
+				pairingId: "pairing:cli-laptop",
+				expectedAuthenticationRef: "auth:pairing:cli-laptop",
+			}).kind,
+			"revoke",
+		);
+		assert.throws(
+			() =>
+				normalizeClientPairingIssueCommand({
+					protocolId: "codewiki.host-pairing",
+					protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
+					kind: "issue",
+					expectedRegistryGeneration: 7,
+					pairingId: "pairing:cli-laptop",
+					clientKind: "cli",
+					clientInstanceId: "cli:laptop",
+				}),
+			/protocol binding is invalid/,
+		);
+	});
+});
 
 describe("Client/Server protocol", () => {
 	it("keeps accountable actor separate from client interface and delegation", () => {

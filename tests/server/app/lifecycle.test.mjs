@@ -8,21 +8,21 @@ import {
 	assertInstalledCodewikiRuntimeCurrent,
 	captureInstalledCodewikiRuntimeIdentity,
 	installedCodewikiRuntimeHealth,
-} from "../../../src/host/app/installed-runtime.ts";
-import {startCodewikiAppServer} from "../../../src/host/app/server.ts";
+} from "../../../src/server/app/installed-runtime.ts";
+import {startCodewikiAppServer} from "../../../src/server/app/server.ts";
+import { CLIENT_PAIRING_PROTOCOL } from "../../../src/protocol/client-pairing.ts";
 import {
-	HOST_PAIRING_PROTOCOL,
-	issueHostPairing,
-	revokeHostPairing,
-	verifyHostAuthentication,
-} from "../../../src/host/pairing/commands.ts";
+	issueClientPairing,
+	revokeClientPairing,
+	verifyServerAuthentication,
+} from "../../../src/server/pairing/commands.ts";
 import {
-	HOST_REGISTRY_PROTOCOL,
-	normalizeHostRegistrySnapshot,
-	readHostRegistrySnapshot,
-	resolveHostConnection,
-	writeHostRegistrySnapshot,
-} from "../../../src/host/registry/state.ts";
+	SERVER_REGISTRY_PROTOCOL,
+	normalizeServerRegistrySnapshot,
+	readServerRegistrySnapshot,
+	resolveServerConnection,
+	writeServerRegistrySnapshot,
+} from "../../../src/server/registry/state.ts";
 
 function pin(commit, sha256) {
 	return JSON.stringify({
@@ -35,8 +35,8 @@ const digest = (character) => `sha256:${character.repeat(64)}`;
 
 function registry(overrides = {}) {
 	return {
-		protocolId: HOST_REGISTRY_PROTOCOL.id,
-		protocolVersion: HOST_REGISTRY_PROTOCOL.version,
+		protocolId: SERVER_REGISTRY_PROTOCOL.id,
+		protocolVersion: SERVER_REGISTRY_PROTOCOL.version,
 		generation: 7,
 		generatedAt: "2026-08-13T10:00:00.000Z",
 		actors: [
@@ -85,7 +85,7 @@ const authentication = {
 	authenticatedIdentityRef: "identity:local:nuno",
 };
 
-describe("Host App lifecycle", () => {
+describe("Server App lifecycle", () => {
 	it("detects when Pi still has a replaced pinned runtime loaded", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-dashboard-health-"));
 		try {
@@ -98,7 +98,7 @@ describe("Host App lifecycle", () => {
 					"@nunomoura",
 					"codewiki",
 					"dist",
-					"host",
+					"server",
 					"app",
 				),
 				{ recursive: true },
@@ -116,7 +116,7 @@ describe("Host App lifecycle", () => {
 					"@nunomoura",
 					"codewiki",
 					"dist",
-					"host",
+					"server",
 					"app",
 					"server.js",
 				),
@@ -185,7 +185,7 @@ describe("Host App lifecycle", () => {
 
 	it("leaves ordinary non-controller installs unmanaged", () => {
 		const loaded = captureInstalledCodewikiRuntimeIdentity(
-			pathToFileURL("/tmp/codewiki/dist/host/app/server.js").href,
+			pathToFileURL("/tmp/codewiki/dist/server/app/server.js").href,
 		);
 		assert.equal(loaded, undefined);
 		assert.deepEqual(installedCodewikiRuntimeHealth(loaded, "/tmp/codewiki"), {
@@ -194,10 +194,10 @@ describe("Host App lifecycle", () => {
 	});
 });
 
-describe("Host registry and pairing", () => {
+describe("Server registry and Client pairing", () => {
 	it("resolves stable actor, paired client, and project route from trusted authentication", () => {
-		const normalized = normalizeHostRegistrySnapshot(registry());
-		const resolved = resolveHostConnection({
+		const normalized = normalizeServerRegistrySnapshot(registry());
+		const resolved = resolveServerConnection({
 			registry: normalized,
 			expectedRegistryGeneration: normalized.generation,
 			authentication,
@@ -218,23 +218,23 @@ describe("Host registry and pairing", () => {
 	});
 
 	it("persists canonical snapshots under generation CAS and an exclusive writer lock", async () => {
-		const root = await mkdtemp(join(tmpdir(), "codewiki-host-registry-"));
+		const root = await mkdtemp(join(tmpdir(), "codewiki-server-registry-"));
 		try {
-			assert.equal(await readHostRegistrySnapshot(root), undefined);
-			const first = normalizeHostRegistrySnapshot(registry({generation: 1}));
-			await writeHostRegistrySnapshot({
-				hostStateRoot: root,
+			assert.equal(await readServerRegistrySnapshot(root), undefined);
+			const first = normalizeServerRegistrySnapshot(registry({generation: 1}));
+			await writeServerRegistrySnapshot({
+				serverStateRoot: root,
 				expectedGeneration: 0,
 				snapshot: first,
 			});
-			assert.deepEqual(await readHostRegistrySnapshot(root), first);
+			assert.deepEqual(await readServerRegistrySnapshot(root), first);
 			if (process.platform !== "win32") {
 				assert.equal((await stat(join(root, "registry.json"))).mode & 0o777, 0o600);
 			}
 			await assert.rejects(
 				() =>
-					writeHostRegistrySnapshot({
-						hostStateRoot: root,
+					writeServerRegistrySnapshot({
+						serverStateRoot: root,
 						expectedGeneration: 0,
 						snapshot: first,
 					}),
@@ -244,14 +244,14 @@ describe("Host registry and pairing", () => {
 			try {
 				await assert.rejects(
 					() =>
-						writeHostRegistrySnapshot({
-							hostStateRoot: root,
+						writeServerRegistrySnapshot({
+							serverStateRoot: root,
 							expectedGeneration: 1,
-							snapshot: normalizeHostRegistrySnapshot(
+							snapshot: normalizeServerRegistrySnapshot(
 								registry({generation: 2}),
 							),
 						}),
-					/Another Host registry write is in progress/,
+					/Another Server registry write is in progress/,
 				);
 			} finally {
 				await lock.close();
@@ -260,10 +260,10 @@ describe("Host registry and pairing", () => {
 
 			await assert.rejects(
 				() =>
-					writeHostRegistrySnapshot({
-						hostStateRoot: root,
+					writeServerRegistrySnapshot({
+						serverStateRoot: root,
 						expectedGeneration: 1,
-						snapshot: normalizeHostRegistrySnapshot(
+						snapshot: normalizeServerRegistrySnapshot(
 							registry({
 								generation: 2,
 								generatedAt: "2026-08-14T10:00:00.000Z",
@@ -273,7 +273,7 @@ describe("Host registry and pairing", () => {
 					}),
 			/cannot change actor kind/,
 			);
-			const disabled = normalizeHostRegistrySnapshot(
+			const disabled = normalizeServerRegistrySnapshot(
 				registry({
 					generation: 2,
 					generatedAt: "2026-08-14T10:00:00.000Z",
@@ -286,17 +286,17 @@ describe("Host registry and pairing", () => {
 					],
 				}),
 			);
-			await writeHostRegistrySnapshot({
-				hostStateRoot: root,
+			await writeServerRegistrySnapshot({
+				serverStateRoot: root,
 				expectedGeneration: 1,
 				snapshot: disabled,
 			});
 			await assert.rejects(
 				() =>
-					writeHostRegistrySnapshot({
-						hostStateRoot: root,
+					writeServerRegistrySnapshot({
+						serverStateRoot: root,
 						expectedGeneration: 2,
-						snapshot: normalizeHostRegistrySnapshot(
+						snapshot: normalizeServerRegistrySnapshot(
 							registry({
 								generation: 3,
 								generatedAt: "2026-08-15T10:00:00.000Z",
@@ -318,12 +318,20 @@ describe("Host registry and pairing", () => {
 
 	it("rejects unsupported records and ambiguous identity mappings", () => {
 		assert.throws(
-			() => normalizeHostRegistrySnapshot({...registry(), credential: "secret"}),
+			() =>
+				normalizeServerRegistrySnapshot({
+					...registry(),
+					protocolId: "codewiki.host-registry",
+				}),
+			/protocol binding is invalid/,
+		);
+		assert.throws(
+			() => normalizeServerRegistrySnapshot({...registry(), credential: "secret"}),
 			/unsupported field credential/,
 		);
 		assert.throws(
 			() =>
-				normalizeHostRegistrySnapshot(
+				normalizeServerRegistrySnapshot(
 					registry({
 						actors: [
 							...registry().actors,
@@ -335,7 +343,7 @@ describe("Host registry and pairing", () => {
 		);
 		assert.throws(
 			() =>
-				normalizeHostRegistrySnapshot(
+				normalizeServerRegistrySnapshot(
 					registry({
 						pairings: [
 							...registry().pairings,
@@ -357,7 +365,7 @@ describe("Host registry and pairing", () => {
 			clientInstanceId: "cli:desktop",
 			proof: {transient: "not-persisted"},
 		};
-		const verified = await verifyHostAuthentication({
+		const verified = await verifyServerAuthentication({
 			adapter: {
 				adapterId: "local-test",
 				async verify(received) {
@@ -372,12 +380,12 @@ describe("Host registry and pairing", () => {
 			},
 			request,
 		});
-		const issued = issueHostPairing({
-			registry: normalizeHostRegistrySnapshot(registry()),
+		const issued = issueClientPairing({
+			registry: normalizeServerRegistrySnapshot(registry()),
 			authentication: verified,
 			command: {
-				protocolId: HOST_PAIRING_PROTOCOL.id,
-				protocolVersion: HOST_PAIRING_PROTOCOL.version,
+				protocolId: CLIENT_PAIRING_PROTOCOL.id,
+				protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
 				kind: "issue",
 				expectedRegistryGeneration: 7,
 				pairingId: "pairing:cli-desktop",
@@ -402,12 +410,12 @@ describe("Host registry and pairing", () => {
 		});
 		assert.equal(JSON.stringify(issued).includes("not-persisted"), false);
 
-		const revoked = revokeHostPairing({
+		const revoked = revokeClientPairing({
 			registry: issued,
 			authentication: verified,
 			command: {
-				protocolId: HOST_PAIRING_PROTOCOL.id,
-				protocolVersion: HOST_PAIRING_PROTOCOL.version,
+				protocolId: CLIENT_PAIRING_PROTOCOL.id,
+				protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
 				kind: "revoke",
 				expectedRegistryGeneration: 8,
 				pairingId: "pairing:cli-desktop",
@@ -423,7 +431,7 @@ describe("Host registry and pairing", () => {
 	it("fails closed on proof and pairing command drift", async () => {
 		await assert.rejects(
 			() =>
-				verifyHostAuthentication({
+				verifyServerAuthentication({
 					adapter: {
 						adapterId: "unused",
 						async verify() {
@@ -436,7 +444,7 @@ describe("Host registry and pairing", () => {
 		);
 		await assert.rejects(
 			() =>
-				verifyHostAuthentication({
+				verifyServerAuthentication({
 					adapter: {
 						adapterId: "rejecting",
 						async verify() {
@@ -445,11 +453,11 @@ describe("Host registry and pairing", () => {
 					},
 					request: {clientKind: "app", clientInstanceId: "app:new", proof: "x"},
 				}),
-			/^Error: Host authentication adapter rejected proof\.$/,
+			/^Error: Server authentication adapter rejected proof\.$/,
 		);
 		await assert.rejects(
 			() =>
-				verifyHostAuthentication({
+				verifyServerAuthentication({
 					adapter: {
 						adapterId: "forging",
 						async verify() {
@@ -466,12 +474,12 @@ describe("Host registry and pairing", () => {
 			clientKind: "cli",
 			clientInstanceId: "cli:new",
 			authenticationRef: "auth:pairing:cli-new",
-		}) => issueHostPairing({
-			registry: normalizeHostRegistrySnapshot(registry()),
+		}) => issueClientPairing({
+			registry: normalizeServerRegistrySnapshot(registry()),
 			authentication: assertion,
 			command: {
-				protocolId: HOST_PAIRING_PROTOCOL.id,
-				protocolVersion: HOST_PAIRING_PROTOCOL.version,
+				protocolId: CLIENT_PAIRING_PROTOCOL.id,
+				protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
 				kind: "issue",
 				expectedRegistryGeneration: 7,
 				pairingId: "pairing:cli-new",
@@ -481,6 +489,10 @@ describe("Host registry and pairing", () => {
 			},
 			now: new Date("2026-08-14T10:00:00.000Z"),
 		});
+		assert.throws(
+			() => issue({ protocolId: "codewiki.host-pairing" }),
+			/protocol binding is invalid/,
+		);
 		assert.throws(() => issue({authority: "admin"}), /unsupported field authority/);
 		assert.throws(() => issue({expectedRegistryGeneration: 6}), /generation conflict/);
 		assert.throws(() => issue({actorId: "user:unknown"}), /unsupported field actorId/);
@@ -505,12 +517,12 @@ describe("Host registry and pairing", () => {
 			/expiresInSeconds must be a bounded positive safe integer/,
 		);
 		assert.throws(
-			() => revokeHostPairing({
-				registry: normalizeHostRegistrySnapshot(registry()),
+			() => revokeClientPairing({
+				registry: normalizeServerRegistrySnapshot(registry()),
 				authentication,
 				command: {
-					protocolId: HOST_PAIRING_PROTOCOL.id,
-					protocolVersion: HOST_PAIRING_PROTOCOL.version,
+					protocolId: CLIENT_PAIRING_PROTOCOL.id,
+					protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
 					kind: "revoke",
 					expectedRegistryGeneration: 7,
 					pairingId: "pairing:app-laptop",
@@ -525,8 +537,8 @@ describe("Host registry and pairing", () => {
 	it("fails closed for revoked, expired, mismatched, disabled, and unknown records", () => {
 		const now = new Date("2026-08-13T10:00:00.000Z");
 		const resolve = (registryValue, assertion = authentication, identity = digest("1")) => {
-			const normalized = normalizeHostRegistrySnapshot(registryValue);
-			return resolveHostConnection({
+			const normalized = normalizeServerRegistrySnapshot(registryValue);
+			return resolveServerConnection({
 				registry: normalized,
 				expectedRegistryGeneration: normalized.generation,
 				authentication: assertion,
@@ -536,8 +548,8 @@ describe("Host registry and pairing", () => {
 		};
 		assert.throws(
 			() =>
-				resolveHostConnection({
-					registry: normalizeHostRegistrySnapshot(registry()),
+				resolveServerConnection({
+					registry: normalizeServerRegistrySnapshot(registry()),
 					expectedRegistryGeneration: 7,
 					authentication,
 					repositoryIdentity: digest("1"),
@@ -547,8 +559,8 @@ describe("Host registry and pairing", () => {
 		);
 		assert.throws(
 			() =>
-				resolveHostConnection({
-					registry: normalizeHostRegistrySnapshot(registry()),
+				resolveServerConnection({
+					registry: normalizeServerRegistrySnapshot(registry()),
 					expectedRegistryGeneration: 6,
 					authentication,
 					repositoryIdentity: digest("1"),

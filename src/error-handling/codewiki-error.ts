@@ -1,7 +1,6 @@
 export type CodewikiErrorDomain =
 	| "api"
 	| "config"
-	| "host"
 	| "runtime"
 	| "trace";
 
@@ -11,7 +10,6 @@ export type CodewikiRecoveryAction =
 	| "retry"
 	| "ask_user"
 	| "release_claim"
-	| "route_to_trace_host"
 	| "stop";
 
 export interface CodewikiErrorInput {
@@ -94,6 +92,64 @@ export function codewikiErrorData(
 		suggestedAction: error.suggestedAction,
 		refs: [...error.refs],
 		...(error.data ? { data: { ...error.data } } : {}),
+	};
+}
+
+export type CodewikiExecutionRole = "main" | "trace" | "worker";
+
+export type CodewikiExecutionErrorKind =
+	| "spawn_failed"
+	| "session_lost"
+	| "append_conflict"
+	| "worktree_failed"
+	| "permission_denied"
+	| "timeout"
+	| "output_missing"
+	| "output_malformed"
+	| "policy_blocked"
+	| "unknown";
+
+export type CodewikiExecutionRecoveryAction = Extract<
+	CodewikiRecoveryAction,
+	| "retry"
+	| "refresh_trace"
+	| "release_claim"
+	| "ask_user"
+	| "stop"
+>;
+
+export interface CodewikiExecutionError {
+	role: CodewikiExecutionRole;
+	kind: CodewikiExecutionErrorKind;
+	message: string;
+	recoverable: boolean;
+	retryable: boolean;
+	suggestedAction: CodewikiExecutionRecoveryAction;
+	refs: string[];
+	traceId?: string;
+	workUnitId?: string;
+	workerId?: string;
+	claimId?: string;
+	data?: Record<string, unknown>;
+}
+
+export function executionErrorData(
+	error: CodewikiExecutionError | undefined,
+): Record<string, unknown> | undefined {
+	if (!error) return undefined;
+	return {
+		role: error.role,
+		kind: error.kind,
+		message: error.message,
+		recoverable: error.recoverable,
+		retryable: error.retryable,
+		suggestedAction: error.suggestedAction,
+		refs: [...error.refs],
+		...(error.traceId ? { traceId: error.traceId } : {}),
+		...(error.workUnitId ? { workUnitId: error.workUnitId } : {}),
+		...(error.workerId ? { workerId: error.workerId } : {}),
+		...(error.claimId ? { claimId: error.claimId } : {}),
+		...(error.data ? { data: error.data } : {}),
 	};
 }
 

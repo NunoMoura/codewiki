@@ -5,9 +5,9 @@ import {
 	createRuntimeClaimReleaseEvent,
 } from "./events.ts";
 import {
-	hostErrorData,
-	type CodewikiHostError,
-} from "../../error-handling/host-errors.ts";
+	executionErrorData,
+	type CodewikiExecutionError,
+} from "../../error-handling/codewiki-error.ts";
 import type { WorktreeRef } from "../../git/worktrees.ts";
 import type {
 	RuntimeWorkUnitClaimCandidate,
@@ -50,7 +50,7 @@ export interface RuntimeWorkerCompletionReleaseInput {
 	status?: string;
 	message?: string;
 	refs?: string[];
-	hostError?: CodewikiHostError;
+	executionError?: CodewikiExecutionError;
 	sessionId?: string;
 	session_id?: string;
 	sessionFile?: string;
@@ -277,8 +277,8 @@ function completionReleaseData(
 		status,
 		completionStatus: status,
 		...(text(completion.message) ? { message: text(completion.message) } : {}),
-		...(completion.hostError
-			? { hostError: hostErrorData(completion.hostError) }
+		...(completion.executionError
+			? { executionError: executionErrorData(completion.executionError) }
 			: {}),
 		...optionalTextField(
 			"sessionId",

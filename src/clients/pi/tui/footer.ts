@@ -2,7 +2,7 @@ import type { WikiStateSnapshot } from "../../../api/state.ts";
 import {
 	closeInProcessCodewikiAppServer,
 	startCodewikiAppServer,
-} from "../../../host/app/server.ts";
+} from "../../../server/app/server.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
 import {
 	resolveCodewikiExtensionIdentity,

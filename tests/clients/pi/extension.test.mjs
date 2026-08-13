@@ -23,7 +23,7 @@ import {
 import {
 	closeCodewikiAppServer,
 	restoreCodewikiAppServer,
-} from "../../../src/host/app/server.ts";
+} from "../../../src/server/app/server.ts";
 import { isActiveAppTrace } from "../../../src/runtime/queries/app-state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../../src/clients/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../../src/clients/pi/tools/index.ts";

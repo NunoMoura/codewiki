@@ -39,7 +39,7 @@ const criterionEvidence = {
 		criteria: ["backlog-view", "guarded-mutations", "authority-ceiling"],
 		source: [
 			"src/runtime/queries/changes.ts",
-			"src/host/app/server.ts",
+			"src/server/app/server.ts",
 		],
 		tests: [
 			"tests/runtime/queries/changes.test.mjs",

@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { startCodewikiAppServer } from "../../../src/host/app/server.ts";
+import { startCodewikiAppServer } from "../../../src/server/app/server.ts";
 import { parseDashboardPreviewCommand } from "../../../src/preview/dashboard-control.ts";
 
 const digest = `sha256:${"a".repeat(64)}`;

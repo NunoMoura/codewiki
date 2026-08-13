@@ -191,15 +191,22 @@ describe("source architecture", () => {
 				name,
 			);
 		}
-		assert.equal(existsSync(join(sourceRoot, "host", "app", "daemon.ts")), false);
-		assert.equal(existsSync(join(sourceRoot, "host", "app", "server.ts")), true);
-		assert.equal(existsSync(join(sourceRoot, "host", "app", "request-error.ts")), false);
-		assert.equal(existsSync(join(sourceRoot, "host", "registry", "state.ts")), true);
-		assert.equal(existsSync(join(sourceRoot, "host", "pairing", "commands.ts")), true);
+		assert.equal(existsSync(join(sourceRoot, "host")), false);
+		assert.equal(existsSync(join(sourceRoot, "server", "app", "server.ts")), true);
 		assert.equal(
-			existsSync(join(sourceRoot, "host", "app", "installed-runtime.ts")),
+			existsSync(join(sourceRoot, "server", "app", "installed-runtime.ts")),
 			true,
 		);
+		assert.equal(
+			existsSync(join(sourceRoot, "server", "registry", "state.ts")),
+			true,
+		);
+		assert.equal(
+			existsSync(join(sourceRoot, "server", "pairing", "commands.ts")),
+			true,
+		);
+		assert.equal(existsSync("tests/host"), false);
+		assert.equal(existsSync("tests/server/app/lifecycle.test.mjs"), true);
 		assert.equal(
 			existsSync("tests/runtime/dashboard-preview-control.test.mjs"),
 			false,
@@ -215,7 +222,7 @@ describe("source architecture", () => {
 			true,
 		);
 		assert.equal(
-			existsSync(join(sourceRoot, "host", "coordinator-entrypoint.ts")),
+			existsSync(join(sourceRoot, "server", "coordinator-entrypoint.ts")),
 			false,
 		);
 		assert.equal(existsSync(join(sourceRoot, "runtime", "gateway.ts")), true);
@@ -454,10 +461,7 @@ describe("source architecture", () => {
 	it("forbids Server transport from importing Runtime coordinator internals", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			const sourcePath = relative(sourceRoot, source);
-			if (
-				!sourcePath.startsWith("host/") &&
-				!sourcePath.startsWith("server/")
-			) {
+			if (!sourcePath.startsWith("server/")) {
 				continue;
 			}
 			for (const target of targets) {
@@ -476,7 +480,7 @@ describe("source architecture", () => {
 			for (const target of targets) {
 				const targetPath = relative(sourceRoot, target);
 				assert.equal(
-					targetPath.startsWith("host/"),
+					targetPath.startsWith("server/"),
 					false,
 					edgeLabel(source, target),
 				);
