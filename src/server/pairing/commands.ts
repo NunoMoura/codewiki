@@ -5,52 +5,14 @@ import {
 	type ClientPairingRevokeCommand,
 } from "../../protocol/client-pairing.ts";
 import {
-	CLIENT_KINDS,
-	type ClientKind,
-} from "../../protocol/client-server.ts";
-import {
 	normalizeServerAuthenticationAssertion,
-	normalizeServerRegistrySnapshot,
 	type ServerAuthenticationAssertion,
+} from "../authentication/proof.ts";
+import {
+	normalizeServerRegistrySnapshot,
 	type ClientPairingRecord,
 	type ServerRegistrySnapshot,
 } from "../registry/state.ts";
-
-export interface ServerAuthenticationProof {
-	readonly clientKind: ClientKind;
-	readonly clientInstanceId: string;
-	readonly proof: unknown;
-}
-
-export interface ServerAuthenticationAdapter {
-	readonly adapterId: string;
-	verify(input: ServerAuthenticationProof): Promise<ServerAuthenticationAssertion>;
-}
-
-export async function verifyServerAuthentication(input: {
-	readonly adapter: ServerAuthenticationAdapter;
-	readonly request: ServerAuthenticationProof;
-}): Promise<ServerAuthenticationAssertion> {
-	if (!input.adapter || typeof input.adapter.verify !== "function") {
-		throw new Error("Server authentication adapter is invalid.");
-	}
-	boundedText(input.adapter.adapterId, "authentication adapter id");
-	const request = normalizeProofRequest(input.request);
-	let asserted: unknown;
-	try {
-		asserted = await input.adapter.verify(request);
-	} catch {
-		throw new Error("Server authentication adapter rejected proof.");
-	}
-	const assertion = normalizeServerAuthenticationAssertion(asserted);
-	if (
-		assertion.clientKind !== request.clientKind ||
-		assertion.clientInstanceId !== request.clientInstanceId
-	) {
-		throw new Error("Server authentication assertion does not match proof request.");
-	}
-	return assertion;
-}
 
 export function issueClientPairing(input: {
 	readonly registry: ServerRegistrySnapshot;
@@ -171,22 +133,6 @@ function activeMappedActor(
 	return actors[0];
 }
 
-function normalizeProofRequest(value: unknown): ServerAuthenticationProof {
-	const input = exactObject(
-		value,
-		["clientKind", "clientInstanceId", "proof"],
-		"Server authentication proof request",
-	);
-	if (!Object.hasOwn(input, "proof") || input.proof === undefined) {
-		throw new Error("Server authentication proof is required.");
-	}
-	return Object.freeze({
-		clientKind: clientKind(input.clientKind, "proof clientKind"),
-		clientInstanceId: boundedText(input.clientInstanceId, "proof clientInstanceId"),
-		proof: input.proof,
-	});
-}
-
 function assertExpectedGeneration(
 	registry: ServerRegistrySnapshot,
 	expected: number,
@@ -205,60 +151,9 @@ function assertOccurrenceAdvancesRegistry(
 	}
 }
 
-function exactObject(
-	value: unknown,
-	fields: readonly string[],
-	label: string,
-): Record<string, unknown> {
-	if (
-		typeof value !== "object" ||
-		value === null ||
-		Array.isArray(value) ||
-		Object.getPrototypeOf(value) !== Object.prototype
-	) {
-		throw new Error(`${label} must be a plain object.`);
-	}
-	if (Object.getOwnPropertySymbols(value).length > 0) {
-		throw new Error(`${label} cannot contain symbol fields.`);
-	}
-	const input = value as Record<string, unknown>;
-	for (const key of Object.getOwnPropertyNames(input)) {
-		if (!fields.includes(key)) {
-			throw new Error(`${label} received unsupported field ${key}.`);
-		}
-		const descriptor = Object.getOwnPropertyDescriptor(input, key);
-		if (!descriptor?.enumerable || !("value" in descriptor)) {
-			throw new Error(`${label}.${key} must be an enumerable data field.`);
-		}
-	}
-	return input;
-}
-
-function boundedText(value: unknown, field: string, maximum = 512): string {
-	if (
-		typeof value !== "string" ||
-		value.trim() !== value ||
-		value.length === 0 ||
-		value.length > maximum
-	) {
-		throw new Error(`${field} must be bounded non-empty text.`);
-	}
-	return value;
-}
-
 function serverTimestamp(now = new Date()): string {
 	if (!(now instanceof Date) || !Number.isFinite(now.getTime())) {
 		throw new Error("Client pairing clock is invalid.");
 	}
 	return now.toISOString();
-}
-
-function clientKind(value: unknown, field: string): ClientKind {
-	if (
-		typeof value !== "string" ||
-		!(CLIENT_KINDS as readonly string[]).includes(value)
-	) {
-		throw new Error(`${field} is unsupported.`);
-	}
-	return value as ClientKind;
 }

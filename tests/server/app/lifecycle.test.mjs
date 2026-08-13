@@ -11,10 +11,10 @@ import {
 } from "../../../src/server/app/installed-runtime.ts";
 import {startCodewikiAppServer} from "../../../src/server/app/server.ts";
 import { CLIENT_PAIRING_PROTOCOL } from "../../../src/protocol/client-pairing.ts";
+import { verifyServerAuthentication } from "../../../src/server/authentication/proof.ts";
 import {
 	issueClientPairing,
 	revokeClientPairing,
-	verifyServerAuthentication,
 } from "../../../src/server/pairing/commands.ts";
 import {
 	SERVER_REGISTRY_PROTOCOL,

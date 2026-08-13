@@ -239,6 +239,8 @@ The Server ownership clean cut is recorded by `.tmp-worktrees/server-ownership-c
 
 The Server-Runtime isolation clean cut is recorded by `.tmp-worktrees/server-runtime-isolation-clean-cut-manifest.json`, exhaustively anchored to `078f083` with 642 keeps. It extends the narrow Project Runtime gateway with bounded App, Change, and configuration projection queries over authenticated generation-checked, lease-bound RPC and one co-located Runtime-owned projection subscription. Server imports no Runtime query, persistence, coordinator, Trace, Knowledge, or project-state implementation and architecture permits only `runtime/gateway.ts`. Preview control owns project-context loading, so raw Trace records do not cross the Server boundary. Connected remote mode performs no local canonical-state reads or watchers; App pull queries, Preview commands, SSE refresh, Runtime events, reconnect, heartbeat, and shutdown retain behavior. Its green checkpoint is 933 full-suite tests, 118 coordinator tests, 719 packed files, zero production audit vulnerabilities, and unchanged source/test counts at 358/196.
 
+The Server Authentication and Pairing ownership clean cut is recorded by `.tmp-worktrees/server-authentication-pairing-clean-cut-manifest.json`, exhaustively anchored to `74cf826` with 642 keeps, 1 deletion, and 1 planned addition. `src/server/authentication/proof.ts` exclusively owns transient proof requests, trusted adapter assertions, strict normalization, and verification. `src/server/pairing/commands.ts` owns only issue/revoke enrollment transitions, while `src/server/registry/state.ts` retains persistence and connection resolution and consumes the Authentication assertion contract. No compatibility export remains from Pairing. The one-line `src/api/wiki-config.ts` compatibility re-export is deleted and consumers use canonical `src/project/config.ts`, keeping source/test counts flat at 358/196. Its green checkpoint is 934 full-suite tests, 118 coordinator tests, 719 packed files, and zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -299,7 +301,7 @@ Rules:
 - [x] Separate Client-instance transport deduplication from actor-scoped Runtime semantic idempotency.
 - [x] Create a reviewed HEAD-anchored manifest for the Client-Server protocol naming and ownership clean cut; create separate anchored manifests for later Server, Pairing, and Registry cuts.
 - [x] Move `src/host/**` and `tests/host/**` to `src/server/**` and `tests/server/**` without old-path exports.
-- [ ] Split Authentication proof verification from Pairing transitions; keep Session and registry ownership distinct.
+- [x] Split Authentication proof verification from Pairing transitions; keep Session and registry ownership distinct.
 - [x] Move shared wire contracts to `src/protocol/**` and clean-cut protocol IDs to `codewiki.client-server@1.0.0`, `codewiki.client-pairing@1.0.0`, and `codewiki.server-registry@1.0.0` without dual parsing.
 - [ ] Move semantic `src/api/**` handlers to Runtime commands/queries or their domain owners; remove the `api <-> runtime` dependency cycle.
 - [x] Add a narrow Project Runtime gateway for commands, bounded queries, durable operations, and events; Server cannot read Runtime persistence internals.

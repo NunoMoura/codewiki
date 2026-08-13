@@ -19,6 +19,10 @@ import {
 	canonicalJson,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
+import {
+	normalizeServerAuthenticationAssertion,
+	type ServerAuthenticationAssertion,
+} from "../authentication/proof.ts";
 
 export const SERVER_REGISTRY_PROTOCOL = Object.freeze({
 	id: "codewiki.server-registry",
@@ -75,14 +79,6 @@ export interface ServerRegistrySnapshot {
 	readonly actors: readonly ServerActorRecord[];
 	readonly pairings: readonly ClientPairingRecord[];
 	readonly projects: readonly ServerProjectRegistration[];
-}
-
-/** Result supplied by a trusted Server authentication adapter after proof verification. */
-export interface ServerAuthenticationAssertion {
-	readonly clientKind: ClientKind;
-	readonly clientInstanceId: string;
-	readonly authenticationRef: string;
-	readonly authenticatedIdentityRef: string;
 }
 
 export interface ResolvedServerConnection {
@@ -425,42 +421,6 @@ function normalizeProject(
 		status,
 		registeredAt: timestamp(input.registeredAt, `${label}.registeredAt`),
 		updatedAt: timestamp(input.updatedAt, `${label}.updatedAt`),
-	});
-}
-
-export function normalizeServerAuthenticationAssertion(
-	value: unknown,
-): ServerAuthenticationAssertion {
-	const input = exactObject(
-		value,
-		[
-			"clientKind",
-			"clientInstanceId",
-			"authenticationRef",
-			"authenticatedIdentityRef",
-		],
-		"Server authentication assertion",
-	);
-	return Object.freeze({
-		clientKind: choice(
-			input.clientKind,
-			"authentication.clientKind",
-			CLIENT_KINDS,
-		),
-		clientInstanceId: text(
-			input.clientInstanceId,
-			"authentication.clientInstanceId",
-		),
-		authenticationRef: text(
-			input.authenticationRef,
-			"authentication.authenticationRef",
-			4_096,
-		),
-		authenticatedIdentityRef: text(
-			input.authenticatedIdentityRef,
-			"authentication.authenticatedIdentityRef",
-			4_096,
-		),
 	});
 }
 

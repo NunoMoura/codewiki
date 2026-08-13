@@ -25,7 +25,7 @@ export {
 } from "../protocol/client-server.ts";
 export * from "./state.ts";
 export * from "./wiki-archive.ts";
-export * from "./wiki-config.ts";
+export * from "../project/config.ts";
 export * from "./wiki-decide.ts";
 export { runWikiImplement } from "./wiki-implement.ts";
 export type {

@@ -458,6 +458,36 @@ describe("source architecture", () => {
 		}
 	});
 
+	it("keeps Authentication and Pairing in distinct Server owners", () => {
+		const authentication = readFileSync(
+			join(sourceRoot, "server", "authentication", "proof.ts"),
+			"utf8",
+		);
+		const pairing = readFileSync(
+			join(sourceRoot, "server", "pairing", "commands.ts"),
+			"utf8",
+		);
+		const registry = readFileSync(
+			join(sourceRoot, "server", "registry", "state.ts"),
+			"utf8",
+		);
+		assert.match(authentication, /export async function verifyServerAuthentication/);
+		assert.match(authentication, /export interface ServerAuthenticationAssertion/);
+		assert.match(authentication, /export function normalizeServerAuthenticationAssertion/);
+		assert.doesNotMatch(authentication, /issueClientPairing|revokeClientPairing/);
+		assert.match(pairing, /export function issueClientPairing/);
+		assert.match(pairing, /export function revokeClientPairing/);
+		assert.doesNotMatch(
+			pairing,
+			/verifyServerAuthentication|ServerAuthenticationProof|ServerAuthenticationAdapter/,
+		);
+		assert.doesNotMatch(
+			registry,
+			/export (?:interface ServerAuthenticationAssertion|function normalizeServerAuthenticationAssertion)/,
+		);
+		assert.equal(existsSync(join(sourceRoot, "api", "wiki-config.ts")), false);
+	});
+
 	it("allows Server to import only the curated Runtime gateway", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			const sourcePath = relative(sourceRoot, source);

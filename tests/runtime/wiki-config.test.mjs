@@ -7,7 +7,7 @@ import {
 	DEFAULT_WIKI_CONFIG,
 	resolveWikiConfig,
 	runWikiConfig,
-} from "../../src/api/wiki-config.ts";
+} from "../../src/project/config.ts";
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,

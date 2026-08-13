@@ -1,6 +1,6 @@
 import {randomUUID} from "node:crypto";
 
-import { runWikiConfig } from "../../../api/wiki-config.ts";
+import { runWikiConfig } from "../../../project/config.ts";
 import { bootstrapCodewiki } from "../../../project/bootstrap.ts";
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../changes/triage/contracts.ts";
 import {
