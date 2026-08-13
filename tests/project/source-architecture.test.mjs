@@ -220,6 +220,10 @@ describe("source architecture", () => {
 			true,
 		);
 		assert.equal(
+			existsSync(join(sourceRoot, "server", "repository-access", "check.ts")),
+			true,
+		);
+		assert.equal(
 			existsSync(join(sourceRoot, "planning", "exit", "index.ts")),
 			false,
 		);
@@ -504,6 +508,10 @@ describe("source architecture", () => {
 			join(sourceRoot, "server", "registry", "state.ts"),
 			"utf8",
 		);
+		const repositoryAccess = readFileSync(
+			join(sourceRoot, "server", "repository-access", "check.ts"),
+			"utf8",
+		);
 		assert.match(authentication, /export async function verifyServerAuthentication/);
 		assert.match(authentication, /export interface ServerAuthenticationAssertion/);
 		assert.match(authentication, /export function normalizeServerAuthenticationAssertion/);
@@ -517,6 +525,11 @@ describe("source architecture", () => {
 		assert.doesNotMatch(
 			registry,
 			/export (?:interface ServerAuthenticationAssertion|function normalizeServerAuthenticationAssertion)/,
+		);
+		assert.match(repositoryAccess, /export async function checkServerProviderRepositoryAccess/);
+		assert.doesNotMatch(
+			repositoryAccess,
+			/issueClientPairing|openServerSession|runtime\/gateway|runtime\/authorization|authority|capability|permission|role/,
 		);
 		assert.equal(existsSync(join(sourceRoot, "api", "wiki-config.ts")), false);
 	});

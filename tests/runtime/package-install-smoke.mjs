@@ -55,9 +55,11 @@ import {
 	CLIENT_SERVER_PROTOCOL,
 	CLIENT_PAIRING_PROTOCOL,
 	SERVER_REGISTRY_PROTOCOL,
+	SERVER_REPOSITORY_ACCESS_PROTOCOL,
 	SERVER_SESSION_PROTOCOL,
 	buildWikiState,
 	buildWorkState,
+	checkServerProviderRepositoryAccess,
 	enrollServerOidcActor,
 	issueClientPairing,
 	normalizeClientServerQuery,
@@ -127,6 +129,9 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-executor.
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "dev-log.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "tmp.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "trace.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "repository-access", "check.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "repository-access", "check.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "implementation", "worker-observation-authority.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "trace.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "dev-log.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "tmp.js")), false);
@@ -265,6 +270,8 @@ assert.equal(CLIENT_PAIRING_PROTOCOL.id, "codewiki.client-pairing");
 assert.equal(CLIENT_PAIRING_PROTOCOL.version, "1.0.0");
 assert.equal(SERVER_SESSION_PROTOCOL.id, "codewiki.server-session");
 assert.equal(SERVER_SESSION_PROTOCOL.version, "1.0.0");
+assert.equal(SERVER_REPOSITORY_ACCESS_PROTOCOL.version, "1.0.0");
+assert.equal(typeof checkServerProviderRepositoryAccess, "function");
 assert.equal(typeof issueClientPairing, "function");
 assert.equal(typeof openServerSession, "function");
 assert.equal(typeof verifyServerAuthentication, "function");

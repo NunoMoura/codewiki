@@ -15,6 +15,15 @@ export {
 } from "./server/authentication/oidc.ts";
 export * from "./server/authentication/proof.ts";
 export * from "./server/pairing/commands.ts";
+export {
+	SERVER_REPOSITORY_ACCESS_PROTOCOL,
+	checkServerProviderRepositoryAccess,
+	type ServerRepositoryAccess,
+	type ServerRepositoryAccessAdapter,
+	type ServerRepositoryAccessAdapterRequest,
+	type ServerRepositoryAccessObservation,
+	type VerifiedServerRepositoryAccess,
+} from "./server/repository-access/check.ts";
 export * from "./server/registry/enrollment.ts";
 export * from "./server/registry/state.ts";
 export * from "./server/sessions/contracts.ts";

@@ -17,7 +17,7 @@ App | CLI | Pi | Claude Code | Codex | channels
 CodeWiki Client-Server Protocol
         |
 CodeWiki Server
-Authentication | Pairing | Sessions | Registry | Routing | Delivery
+Authentication | Repository Access | Pairing | Sessions | Registry | Routing | Delivery
         |
 Project Runtime gateway
         |
@@ -249,6 +249,8 @@ The personal App Pairing clean cut is recorded by `.tmp-worktrees/server-local-a
 
 The Server OIDC and Actor enrollment clean cut is recorded by `.tmp-worktrees/server-oidc-actor-enrollment-clean-cut-manifest.json`, exhaustively anchored to `40b97ff` with 645 keeps, 2 deletions, and 2 planned additions. Provider-neutral OIDC verification receives opaque proof through a trusted adapter that owns authorization-code exchange, PKCE S256, redirect, discovery, signature, algorithm, and key validation. Server verifies exact Client, canonical HTTPS issuer, audience, high-entropy nonce, issued-at, expiry, adapter, and bounded token lifetime before deriving immutable `(issuer, subject)` identity. Registry advances cleanly to `codewiki.server-registry@2.0.0` with typed `local | oidc` identities and no parser for legacy string-only identity arrays. Generation-bound idempotent enrollment creates only one active User mapping and grants no Pairing, Session, repository membership, delegation, role, project permission, or Runtime authority. Raw codes, tokens, PKCE verifiers, nonces, and mutable profile claims are not persisted. Two test-only five-line Loop declaration files are deleted after their constants move to existing Planning and Implementation owner modules, preserving source/test counts at 358/196. Concrete GitHub/GitLab network adapters and provider repository-access checks remain pending.
 
+The Server provider repository-access clean cut is recorded by `.tmp-worktrees/server-provider-repository-access-clean-cut-manifest.json`, exhaustively anchored to `8216792` with 646 keeps, 2 deletions, and 1 planned addition. `codewiki.server-repository-access@1.0.0` separates coarse provider membership evidence from OIDC Authentication, Actor enrollment, Pairing, Sessions, Registry state, and Runtime authorization. A credential-isolated trusted adapter receives only verifier-proven immutable OIDC identity, the exact CodeWiki repository digest, and an opaque provider repository reference; Server binds exact issuer, provider, adapter, identity, repository, observation time, and bounded expiry into provenance-backed `accessible | inaccessible` evidence. Tokens, roles, permissions, capabilities, project-operation decisions, and authority are absent. A production-dead Worker-observation classifier and its dedicated test are deleted, keeping source count flat at 358 and reducing tests to 195. Concrete GitHub/GitLab HTTP adapters, provider credential storage, automatic rechecks, Pairing endpoint authorization, credential rotation, project membership, and exact Runtime AuthZ remain pending.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -322,7 +324,8 @@ Rules:
 - [x] Implement local Pairing and stable local User mapping for personal App mode.
 - [x] Implement provider-neutral OIDC verification and immutable `(issuer, subject)` Actor enrollment foundation for team mode.
 - [ ] Implement concrete GitHub/GitLab OAuth/OIDC network adapters, secure callback transaction storage, and credential rotation.
-- [ ] Treat provider repository access as coarse project membership only; require secure Server session authentication and exact Runtime AuthZ for every protected operation.
+- [x] Treat provider repository access as separate short-lived coarse membership evidence with no Pairing, Session, project-operation, or Runtime authority.
+- [ ] Require secure Server session authentication and exact Runtime AuthZ for every protected operation.
 - [ ] Keep Clerk, WorkOS, password authentication, and enterprise identity lifecycle dependencies outside the initial foundation.
 - [ ] Ensure browser or terminal closure cannot stop accepted work.
 - [ ] Make adapter capability declaration intersect actor Authority Grants, explicit delegation, project policy, and current Runtime guards.

@@ -20,6 +20,10 @@ import {
 	issueClientPairing,
 	revokeClientPairing,
 } from "../../../src/server/pairing/commands.ts";
+import {
+	assertVerifiedServerRepositoryAccess,
+	checkServerProviderRepositoryAccess,
+} from "../../../src/server/repository-access/check.ts";
 import {enrollServerOidcActor} from "../../../src/server/registry/enrollment.ts";
 import {resolveLocalAppServerConnection} from "../../../src/server/registry/local.ts";
 import {
@@ -349,6 +353,143 @@ describe("Server registry, Client pairing, and Sessions", () => {
 				message,
 			);
 		}
+	});
+
+	it("checks provider repository access as coarse expiring evidence without authority", async () => {
+		const now = new Date("2026-08-13T10:00:00.000Z");
+		const issuer = "https://identity.example.test/tenant";
+		const identity = serverOidcIdentity(issuer, "provider-user-42");
+		const authentication = await verifyServerOidcAuthentication({
+			adapter: {
+				adapterId: "test.oidc@1.0.0",
+				async verify() {
+					return {
+						clientKind: "app",
+						clientInstanceId: "app:browser-1",
+						issuer,
+						subject: identity.subject,
+						audience: "codewiki-team",
+						nonce: "n".repeat(32),
+						issuedAt: "2026-08-13T09:59:30.000Z",
+						expiresAt: "2026-08-13T10:04:30.000Z",
+					};
+				},
+			},
+			request: {
+				clientKind: "app",
+				clientInstanceId: "app:browser-1",
+				proof: "opaque-code-proof",
+			},
+			expectedIssuer: issuer,
+			expectedAudience: "codewiki-team",
+			expectedNonce: "n".repeat(32),
+			now,
+		});
+		const observation = {
+			authenticatedIdentityRef: identity.identityRef,
+			repositoryIdentity: digest("1"),
+			providerRepositoryRef: "github:repository:123456",
+			access: "accessible",
+			checkedAt: "2026-08-13T09:59:59.000Z",
+			expiresAt: "2026-08-13T10:04:59.000Z",
+		};
+		const evidence = await checkServerProviderRepositoryAccess({
+			adapter: {
+				adapterId: "test.github-access@1.0.0",
+				providerId: "github",
+				issuer,
+				async check(request) {
+					assert.deepEqual(request.identity, identity);
+					assert.equal(request.repositoryIdentity, digest("1"));
+					assert.equal(request.providerRepositoryRef, observation.providerRepositoryRef);
+					assert.equal(JSON.stringify(request).includes("opaque-code-proof"), false);
+					return observation;
+				},
+			},
+			authentication,
+			repositoryIdentity: digest("1"),
+			providerRepositoryRef: observation.providerRepositoryRef,
+			now,
+		});
+		assert.equal(evidence.access, "accessible");
+		assert.equal(evidence.repositoryIdentity, digest("1"));
+		assert.match(evidence.evidenceRef, /^repository-access:[a-f0-9]{64}$/);
+		assert.equal(Object.isFrozen(evidence), true);
+		assert.doesNotMatch(JSON.stringify(evidence), /role|permission|capability|authority|token/);
+		assert.doesNotThrow(() => assertVerifiedServerRepositoryAccess(evidence));
+		assert.throws(
+			() => assertVerifiedServerRepositoryAccess(structuredClone(evidence)),
+			/lacks verifier provenance/,
+		);
+		await assert.rejects(
+			() => checkServerProviderRepositoryAccess({
+				adapter: {
+					adapterId: "test.github-access@1.0.0",
+					providerId: "github",
+					issuer,
+					async check() { return observation; },
+				},
+				authentication: structuredClone(authentication),
+				repositoryIdentity: digest("1"),
+				providerRepositoryRef: observation.providerRepositoryRef,
+				now,
+			}),
+			/lacks verifier provenance/,
+		);
+
+		for (const [override, message] of [
+			[{authenticatedIdentityRef: serverOidcIdentity(issuer, "other").identityRef}, /identity does not match/],
+			[{repositoryIdentity: digest("2")}, /repository identity does not match/],
+			[{providerRepositoryRef: "github:repository:other"}, /repository does not match/],
+			[{expiresAt: "2026-08-13T09:59:59.000Z"}, /not currently valid/],
+			[{expiresAt: "2026-08-13T10:20:00.000Z"}, /bounded lifetime/],
+			[{access: "admin"}, /accessible or inaccessible/],
+			[{permission: "admin"}, /unsupported field permission/],
+		]) {
+			await assert.rejects(
+				() => checkServerProviderRepositoryAccess({
+					adapter: {
+						adapterId: "test.github-access@1.0.0",
+						providerId: "github",
+						issuer,
+						async check() { return {...observation, ...override}; },
+					},
+					authentication,
+					repositoryIdentity: digest("1"),
+					providerRepositoryRef: observation.providerRepositoryRef,
+					now,
+				}),
+				message,
+			);
+		}
+		await assert.rejects(
+			() => checkServerProviderRepositoryAccess({
+				adapter: {
+					adapterId: "test.gitlab-access@1.0.0",
+					providerId: "gitlab",
+					issuer,
+					async check() { return observation; },
+				},
+				authentication,
+				repositoryIdentity: digest("1"),
+				providerRepositoryRef: observation.providerRepositoryRef,
+				now,
+			}),
+			/provider-bound identifier/,
+		);
+		const inaccessible = await checkServerProviderRepositoryAccess({
+			adapter: {
+				adapterId: "test.github-access@1.0.0",
+				providerId: "github",
+				issuer,
+				async check() { return {...observation, access: "inaccessible"}; },
+			},
+			authentication,
+			repositoryIdentity: digest("1"),
+			providerRepositoryRef: observation.providerRepositoryRef,
+			now,
+		});
+		assert.equal(inaccessible.access, "inaccessible");
 	});
 
 	it("persists and resolves personal App Authentication, Pairing, and project routing", async () => {
