@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: Alignment
-description: Projects bounded relationship, impact, provenance, and realization views from accepted project truth.
+description: Projects snapshot-bound relationships, impact, provenance, and contribution routing without inventing authority or canonical truth.
 status: stable
 tags: [system, component]
 codewiki_component: alignment
@@ -10,10 +10,12 @@ codewiki_test_patterns: ["tests/alignment/**"]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/account-for-drift.md
-    rationale: Alignment supplies the System responsibility required by this Story.
+    rationale: Alignment supplies bounded impact and provenance facts for accountable decisions.
 ---
 # Alignment
 
-Alignment deterministically projects relationships among accepted Knowledge, Changes, WorkState, source, tests, Git, Evidence, Results, and delivery observations. The graph is a disposable read model; it cannot admit operations, mutate project state, or grant authority.
+Alignment is the condition where relevant desired and executable state is resolved, bound to an active Change, or explicitly unknown. The Alignment Graph is a disposable snapshot-bound projection of relationships among Change revisions, Knowledge, source, tests, Work Items, Evidence, Results, and delivery effects. It cannot create canonical facts, infer causality, or grant authority.
 
-Queries are bounded, read-only, and snapshot-bound. Every response reports provenance, coverage, truncation, and staleness. Unknown relationships remain unknown, and required uncertainty blocks affected unsafe routes.
+Contribution Routing is a read-only Alignment projection over one exact Change revision, project responsibility rules, Actor Profiles, Authority Grants, active Claims, availability, and Worker Offers. It returns eligible reviewers, contributors, and Workers with exact match reasons, coverage, unknowns, and staleness. Profiles indicate likely fit; only Authority Grants permit decisions; Claims indicate current responsibility; immutable operations prove who acted.
+
+Reviewer, assignee, Worker, and machine allocation remain outside immutable Change meaning. Changing availability or responsibility therefore updates projections and Claims without creating a semantic Change revision. Initial routing suggests eligible participants and requires explicit Claims; automatic assignment remains opt-in future behavior.

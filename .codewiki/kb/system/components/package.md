@@ -10,14 +10,16 @@ codewiki_test_patterns: ["tests/runtime/package-*.mjs", "tests/scaffold*.test.mj
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/automate-safe-work.md
-    rationale: Package supplies standalone Host, Client, Runtime, and Managed Execution composition.
+    rationale: Package supplies standalone Server, Client, Project Runtime, and Managed Execution entry contracts.
   - type: realizes
     target: /product/stories/maintainer/enforce-project-standards.md
     rationale: Package transports inspectable digest-pinned Check Packs.
 ---
 # Package
 
-CodeWiki ships as one standalone local product package containing Host Service, first-party Clients, per-project Runtime, semantic owners, and pinned Pi Managed Execution. External Agent Hosts integrate through the Host MCP contract rather than becoming CodeWiki execution packages.
+CodeWiki ships as one standalone local product package containing CodeWiki Server, first-party Clients, per-project Runtime, semantic owners, and pinned Pi Managed Execution. Claude Code, Codex, and other external applications connect as Clients and may accept bounded Worker Assignments through Server MCP; they do not become CodeWiki execution packages.
+
+The broad product API remains `src/index.ts`. The supported operational Runtime surface lives at `src/runtime/index.ts` and publishes as `@nunomoura/codewiki/runtime`; Runtime's internal coordinator remains under `src/runtime/coordinator/**`. No root `coordinator.ts`, `composition/**` package, or public `./coordinator` compatibility export survives the clean cut. A neutral `src/main.ts` may later construct Server and Runtime siblings only when a standalone process genuinely needs that bootstrap.
 
 Check Packs use one content-addressed format over local, exact npm, or exact Git sources. Installation requires project trust, disables lifecycle scripts, pins immutable source and integrity in `.codewiki/check-packs.lock.json`, and materializes inspectable configuration and Check files. Discovery, recommendation, installation, and update grant no enforcement or protected capability.
 

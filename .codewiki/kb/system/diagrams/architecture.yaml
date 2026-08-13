@@ -2,10 +2,10 @@ id: architecture
 purpose: Show every System Component in its owning zone; boundary-crossing behavior belongs to named lifecycle and execution diagrams.
 components:
   - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
-  - { id: host, concept: /system/components/host.md, label: Host Service, zone: core }
-  - { id: api, concept: /system/components/api.md, label: API, zone: core }
+  - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
+  - { id: protocol, concept: /system/components/protocol.md, label: Client-Server Protocol, zone: core }
   - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
-  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: core }
+  - { id: runtime, concept: /system/components/runtime.md, label: Project Runtime, zone: core }
   - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
   - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
@@ -22,8 +22,8 @@ components:
   - { id: benchmarks, concept: /system/components/benchmarks.md, label: Benchmarks, zone: repository }
   - { id: provider, concept: /system/components/provider-boundary.md, label: Provider Boundary, zone: provider }
 connections:
-  - { id: host-invokes-api, from: host, to: api, type: invokes, label: binds transport to one semantic protocol }
-  - { id: api-invokes-runtime, from: api, to: runtime, type: invokes, label: delegates authoritative operations }
+  - { id: server-uses-protocol, from: server, to: protocol, type: invokes, label: validates one transport-neutral contract }
+  - { id: server-invokes-runtime, from: server, to: runtime, type: invokes, label: routes through narrow Runtime gateway }
   - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: normalizes untrusted intent and external captures }
   - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts exact Decision attempt }
   - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt }
@@ -31,7 +31,7 @@ connections:
   - { id: runtime-invokes-verification, from: runtime, to: verification, type: invokes, label: evaluates exact Candidate and policy }
   - { id: verification-consumes-evidence, from: verification, to: evidence, type: consumes, label: resolves Evidence obligations }
   - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: evaluates current guards and scheduling }
-  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded provenance and impact }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded provenance, impact, and routing facts }
   - { id: execution-invokes-preview, from: execution, to: preview, type: invokes, label: captures bounded Candidate observations }
   - { id: knowledge-reads-project, from: knowledge, to: project, type: reads, label: validates protected project profile }
   - { id: change-trace-reads-project, from: change-trace, to: project, type: reads, label: binds repository identity }

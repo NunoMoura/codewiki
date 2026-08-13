@@ -175,7 +175,7 @@ async function projectExplain(
 		refs: [
 			".codewiki/kb/product/stories/maintainer/maintain-intent.md",
 			".codewiki/kb/system/components/runtime.md",
-			".codewiki/kb/system/components/api.md",
+			".codewiki/kb/system/components/protocol.md",
 			".codewiki/kb/system/diagrams/architecture.yaml",
 		],
 		sections: [
@@ -190,7 +190,7 @@ async function projectExplain(
 			{
 				title: "User experience",
 				items: [
-					"Primary host UX is the automatically opened Work Pipeline dashboard; /wiki-dashboard reopens or stops it, and focused /wiki-* commands remain available.",
+					"Primary User Interface is the automatically opened Work Pipeline App; /wiki-dashboard reopens or stops it, and focused /wiki-* commands remain available.",
 					"Internal wiki_* tools provide agent trace context without becoming user UX.",
 				],
 			},

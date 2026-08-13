@@ -27,20 +27,20 @@ export const CURRENT_SOURCE_ROOTS = [
 
 export const TARGET_SOURCE_ROOTS = [
 	"alignment",
-	"api",
 	"changes",
 	"clients",
 	"decision",
 	"evidence",
 	"execution",
 	"git",
-	"host",
 	"implementation",
 	"knowledge",
 	"planning",
 	"preview",
 	"project",
+	"protocol",
 	"runtime",
+	"server",
 	"utils",
 	"verification",
 	"work-state",
@@ -48,7 +48,9 @@ export const TARGET_SOURCE_ROOTS = [
 
 export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"admission",
+	"authorization",
 	"claims",
+	"commands",
 	"coordinator",
 	"effects",
 	"integration",
@@ -82,6 +84,8 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"execution",
 	"host",
 	"preview",
+	"protocol",
+	"server",
 ] as const;
 
 export const LEGACY_SOURCE_FILE_COUNTS = {

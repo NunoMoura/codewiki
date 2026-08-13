@@ -116,7 +116,7 @@ const criterionEvidence = {
 		source: [
 			"README.md",
 			".codewiki/kb/system/components/decision.md",
-			".codewiki/kb/system/components/api.md",
+			".codewiki/kb/system/components/protocol.md",
 			".codewiki/kb/system/components/runtime.md",
 		],
 		tests: [
@@ -170,8 +170,8 @@ describe("control-center reconciliation integration", () => {
 			".codewiki/kb/system/components/decision.md",
 			"utf8",
 		);
-		const tools = readFileSync(
-			".codewiki/kb/system/components/api.md",
+		const protocol = readFileSync(
+			".codewiki/kb/system/components/protocol.md",
 			"utf8",
 		);
 		const runtime = readFileSync(
@@ -183,9 +183,9 @@ describe("control-center reconciliation integration", () => {
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 		assert.match(decision, /one authenticated exact Change revision/i);
 		assert.match(decision, /Runtime owns admission, scheduling, identity, persistence/i);
-		assert.match(tools, /delegates semantics and authority to owners/i);
-		assert.match(tools, /Payloads cannot supply identity, authentication, delegation, authority/i);
-		assert.match(runtime, /authoritative per-project control plane/i);
+		assert.match(protocol, /delegates semantics and authority to owners/i);
+		assert.match(protocol, /Payloads cannot supply identity, authentication, delegation, authority/i);
+		assert.match(runtime, /authoritative semantic control plane/i);
 		assert.match(runtime, /Candidate Manifest matches persisted custody/i);
 	});
 
@@ -194,7 +194,7 @@ describe("control-center reconciliation integration", () => {
 			...filesUnder("src").filter((path) => path.endsWith(".ts")),
 			"README.md",
 			".codewiki/kb/system/components/decision.md",
-			".codewiki/kb/system/components/api.md",
+			".codewiki/kb/system/components/protocol.md",
 			".codewiki/kb/system/components/runtime.md",
 		];
 		const activeText = activeFiles

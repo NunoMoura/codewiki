@@ -1,6 +1,6 @@
 ---
 type: System Component
-title: Runtime
+title: Project Runtime
 description: Owns per-project authority, provenance, admission, scheduling, persistence, synchronization, Integration, recovery, lifecycle, and effects.
 status: stable
 tags: [system, component]
@@ -15,14 +15,18 @@ codewiki_relationships:
     target: /product/stories/maintainer/account-for-drift.md
     rationale: Runtime classifies every observed Candidate and Git state by positive provenance proof.
 ---
-# Runtime
+# Project Runtime
 
-Runtime is the authoritative per-project control plane. It owns identity, admission, actor and authority binding, delegation validation, time, digests, freshness, expected-head CAS, provenance, scheduling, claims, Runtime-owned workbenches, workers, Integration, persistence, synchronization, recovery, lifecycle, final routing, and guarded effects. Runtime authorizes the accountable actor, not the Client interface; changing from App to CLI, Pi, MCP, or a channel does not create a new actor or expand authority.
+Project Runtime is the sole authoritative semantic control plane for one managed project. It is an architectural sibling of CodeWiki Server and exposes a narrow command, query, operation, and event gateway. Server authenticates connections and routes requests through that gateway; Runtime owns project authorization and canonical meaning. The two may be co-located, but Server does not own Runtime, Runtime does not own Server, and Runtime imports neither Server nor Client implementations.
 
-Runtime invokes exactly three semantic Loops—Decision, Planning, and Implementation—plus shared Verification and neutral Managed Execution ports. Loops own Candidate meaning and route recommendations; Verification owns common policy and evaluation machinery; Runtime alone admits attempts, creates canonical Results, selects final routes, and performs effects.
+Runtime owns exact project AuthZ, actor and delegation binding, semantic idempotency, identity, admission, time, digests, freshness, expected-head CAS, provenance, canonical mutation, scheduling, Claims, Assignments, Runtime-owned workbenches, Workers, Integration, persistence, synchronization, recovery, lifecycle, final routing, and guarded effects. Runtime authorizes the accountable actor, not Client kind, User Interface, repository access, job title, profile, model, or Worker ownership.
 
-Runtime recognizes controlled provenance only when an exact Candidate Manifest matches persisted custody. Managed provenance adds a complete Pi execution receipt. MCP-mediated Agent Host work binds admitted operations and workbench identity without claiming complete prompt or agent-loop proof. Any observed tree without matching custody is external provenance, regardless of branch, author, trailer, note, or claimed producer.
+Runtime invokes exactly three semantic Loops—Decision, Planning, and Implementation—plus shared Verification and neutral Execution Ports. Domain modules such as Change, Evidence, and Verification own their contracts and deterministic semantics without needing to live beneath `src/runtime/**`. Runtime owns authority to invoke those semantics, admit their output, persist canonical operations, and perform effects. Loops own Candidate meaning and route recommendations; Verification owns common policy and evaluation machinery; Runtime alone creates canonical Results, selects final routes, and mutates protected state.
 
-External Git state is captured without changing the accepted head, then either admitted against an exact accepted Change or normalized through Change Intake when intent or scope is missing. It receives no inherited execution proof and undergoes fresh policy resolution and Verification. Divergence pauses protected effects; Runtime never silently adopts, overwrites, discards, or certifies it.
+Runtime recognizes controlled provenance only when an exact Candidate Manifest matches persisted custody. Managed provenance adds a complete Pi execution receipt. MCP-mediated Worker activity binds admitted operations and workbench identity without claiming complete external prompt or agent-loop custody. Any observed tree without matching custody is external provenance, regardless of branch, author, trailer, note, Client, Worker, or claimed producer.
 
-Every controlled Candidate producer uses a Runtime-owned isolated worktree. Runtime may claim independent ready Work Items up to `maxWorkers`, dispatch one bounded assignment per worktree through its durable coordinator, recover or cancel that exact job, persist one immutable report, integrate compatible outputs deterministically, and verify the combined Candidate. No direct claim-to-session starter or Host-executed handoff protocol may bypass Runtime scheduling, worktree preparation, report recovery, or claim release. Workers and Agent Clients cannot schedule canonical descendants, share mutable workspaces, write canonical state, or perform guarded effects.
+External Git state is captured without changing accepted head, then either admitted against an exact accepted Change or normalized through Change Intake when intent or scope is missing. It receives no inherited execution proof and undergoes fresh policy resolution and Verification. Divergence pauses protected effects; Runtime never silently adopts, overwrites, discards, or certifies it.
+
+Every controlled Candidate producer uses a Runtime-owned isolated workbench. Runtime may claim independent ready Work Items up to `maxWorkers`, bind one exact Assignment among Work Item, Worker, and Workbench, recover or cancel the durable job, persist one immutable report, integrate compatible outputs deterministically, and verify the combined Candidate. Workers cannot grant Claims, schedule canonical descendants, share mutable workspaces, write canonical state, create authoritative Results, or perform guarded effects.
+
+The supported operational package surface lives at `src/runtime/index.ts` and publishes as `@nunomoura/codewiki/runtime`. The internal coordinator remains under `src/runtime/coordinator/**`; Runtime's public facade is not named Coordinator. Deployment bootstrap remains neutral and will be introduced only when one standalone process truly constructs Server and Runtime siblings.

@@ -143,7 +143,12 @@ describe("source architecture", () => {
 		assert.equal(TARGET_SOURCE_ROOTS.includes("alignment"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("clients"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("execution"), true);
-		assert.equal(TARGET_SOURCE_ROOTS.includes("host"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("protocol"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("runtime"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("server"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("api"), false);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("cli"), false);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("host"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("harnesses"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("benchmarks"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("pi"), false);

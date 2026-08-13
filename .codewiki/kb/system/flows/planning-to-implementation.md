@@ -11,6 +11,6 @@ codewiki_relationships:
 ---
 # Planning to Implementation
 
-Runtime projects eligible Work Items from accepted Planning and current WorkState, acquires bounded claims, and dispatches each assignment to a Runtime-owned isolated workbench through Managed Execution or an admitted MCP Agent Client. Implementation Candidates bind exact obligations, source, tests, Knowledge, configuration, Git base, workbench custody, and provenance.
+Runtime projects eligible Work Items from accepted Planning and current WorkState, acquires bounded Claims, selects current Worker placement from requirements, Worker Offers, policy, consent, privacy, and budget, and dispatches each Assignment to a Runtime-owned isolated Workbench through Managed Execution or an admitted MCP Worker. Implementation Candidates bind exact obligations, source, tests, Knowledge, configuration, Git base, Workbench custody, and provenance.
 
 Runtime integrates only fresh compatible Candidates. Claim loss, base drift, conflicting work, incomplete Evidence, or unsupported capability leaves canonical state unchanged and routes to retry, replanning, or Decision as semantics require.

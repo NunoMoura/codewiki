@@ -14,7 +14,7 @@ codewiki_relationships:
 ---
 # Change Lifecycle
 
-A Client or channel submits bounded material through Host and API. Runtime authenticates, admits expected state, normalizes Change Intake, and requires explicit acceptance before authenticated exact-revision Decision selection. Runtime invokes Decision, then Verification for its immutable Candidate. A passing authorized route accepts exact Knowledge and permits Planning; Runtime similarly invokes Planning, Verification, claimed Implementation, Integration, and final Verification.
+A User or service acts through a Client. CodeWiki Server authenticates the connection, resolves any Pairing and project route, and forwards one bounded Client-Server Protocol request through the selected Project Runtime gateway. Runtime authorizes the actor, admits expected state, normalizes Change Intake, and requires explicit acceptance before authenticated exact-revision Decision selection. Runtime invokes Decision, then Verification for its immutable Candidate. A passing authorized route accepts exact Knowledge and permits Planning; Runtime similarly invokes Planning, Verification, claimed Implementation, Integration, and final Verification.
 
 For every Candidate, Runtime resolves one immutable Exit Policy and assembles bounded Check Invocations. Evaluators return pass, fail, or indeterminate Observations. Runtime validates Candidate, policy, Check, input, route, isolation, freshness, provenance, and output before creating exactly one Result per selected Check. Verification reduces the complete set into one Exit Report. Repair guidance remains separately report-bound and zero-authority; any repair creates a new Candidate and repeats policy and evaluation.
 

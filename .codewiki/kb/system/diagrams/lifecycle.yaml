@@ -1,11 +1,11 @@
 id: lifecycle
-purpose: Show accountable intent entering through Host and Runtime-orchestrated Loops, Verification, accepted Knowledge, and Change Trace.
+purpose: Show accountable intent entering through Client, Server, and Runtime-orchestrated Loops, Verification, Knowledge, and Change Trace.
 components:
   - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
-  - { id: host, concept: /system/components/host.md, label: Host Service, zone: client }
-  - { id: api, concept: /system/components/api.md, label: API, zone: core }
+  - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
+  - { id: protocol, concept: /system/components/protocol.md, label: Client-Server Protocol, zone: core }
   - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
-  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: core }
+  - { id: runtime, concept: /system/components/runtime.md, label: Project Runtime, zone: core }
   - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
   - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
@@ -13,14 +13,14 @@ components:
   - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
 connections:
-  - { id: clients-request-host, from: clients, to: host, type: invokes, label: submits bounded authenticated request }
-  - id: host-invokes-api
-    from: host
-    to: api
+  - id: clients-request-server
+    from: clients
+    to: server
     type: invokes
-    label: translates one versioned protocol binding
+    label: submits bounded authenticated request
     boundary: { type: trust, failure: Reject unauthenticated, malformed, expired, or oversized input. }
-  - { id: api-invokes-runtime, from: api, to: runtime, type: invokes, label: delegates admission and authority }
+  - { id: server-uses-protocol, from: server, to: protocol, type: invokes, label: validates one versioned contract }
+  - { id: server-invokes-runtime, from: server, to: runtime, type: invokes, label: routes authenticated request through Runtime gateway }
   - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: normalizes proposed intent }
   - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns admitted proposed intent }
   - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts selected exact revision }
@@ -50,7 +50,7 @@ connections:
 flows:
   - concept: /system/flows/change-lifecycle.md
     paths:
-      - connections: [clients-request-host, host-invokes-api, api-invokes-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-returns-runtime, runtime-verifies-decision, verification-returns-runtime, runtime-writes-knowledge]
+      - connections: [clients-request-server, server-invokes-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-returns-runtime, runtime-verifies-decision, verification-returns-runtime, runtime-writes-knowledge]
       - connections: [implementation-returns-runtime, runtime-verifies-implementation, verification-returns-runtime-implementation, runtime-writes-change-trace]
   - concept: /system/flows/decision-to-planning.md
     paths:
