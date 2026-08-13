@@ -205,6 +205,16 @@ describe("source architecture", () => {
 			existsSync(join(sourceRoot, "server", "pairing", "commands.ts")),
 			true,
 		);
+		assert.equal(
+			existsSync(join(sourceRoot, "server", "sessions", "contracts.ts")),
+			true,
+		);
+		assert.equal(
+			existsSync(join(sourceRoot, "server", "sessions", "state.ts")),
+			true,
+		);
+		assert.equal(existsSync(join(sourceRoot, "api", "views.ts")), false);
+		assert.equal(existsSync(join(sourceRoot, "api", "traces.ts")), false);
 		assert.equal(existsSync("tests/host"), false);
 		assert.equal(existsSync("tests/server/app/lifecycle.test.mjs"), true);
 		assert.equal(

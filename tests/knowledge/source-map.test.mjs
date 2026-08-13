@@ -53,7 +53,7 @@ function sampleSourceMap() {
 			{
 				id: "traces",
 				doc: ".codewiki/kb/system/components/change-trace.md",
-				sourcePatterns: ["src/traces/**", "src/api/traces.ts"],
+				sourcePatterns: ["src/traces/**", "src/runtime/persistence/trace.ts"],
 				testPatterns: ["tests/traces/**"],
 				generatedViews: [],
 				traceEvents: ["trace_head", "trace_event"],

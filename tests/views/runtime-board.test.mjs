@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { buildRuntimeBoard } from "../../src/api/views.ts";
+import { buildRuntimeBoard } from "../../src/views/runtime-board.ts";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 
 function workItem(id, status, overrides = {}) {

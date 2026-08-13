@@ -55,10 +55,12 @@ import {
 	CLIENT_SERVER_PROTOCOL,
 	CLIENT_PAIRING_PROTOCOL,
 	SERVER_REGISTRY_PROTOCOL,
+	SERVER_SESSION_PROTOCOL,
 	buildWikiState,
 	buildWorkState,
 	issueClientPairing,
 	normalizeClientServerQuery,
+	openServerSession,
 	verifyServerAuthentication,
 	normalizeServerRegistrySnapshot,
 	runWikiConfig,
@@ -222,6 +224,8 @@ assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-pairing.js
 assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-pairing.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "input-validation.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "wiki-config.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "views.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "traces.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "host")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "authentication", "proof.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "authentication", "proof.d.ts")), true);
@@ -229,6 +233,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "state.j
 assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "state.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "pairing", "commands.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "pairing", "commands.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "sessions", "contracts.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "sessions", "contracts.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "sessions", "state.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "sessions", "state.d.ts")), true);
 assert.doesNotMatch(
 	readFileSync(join(packageRoot, "dist", "server", "pairing", "commands.d.ts"), "utf8"),
 	/verifyServerAuthentication|ServerAuthenticationProof|ServerAuthenticationAdapter/,
@@ -245,7 +253,10 @@ assert.equal(SERVER_REGISTRY_PROTOCOL.id, "codewiki.server-registry");
 assert.equal(SERVER_REGISTRY_PROTOCOL.version, "1.0.0");
 assert.equal(CLIENT_PAIRING_PROTOCOL.id, "codewiki.client-pairing");
 assert.equal(CLIENT_PAIRING_PROTOCOL.version, "1.0.0");
+assert.equal(SERVER_SESSION_PROTOCOL.id, "codewiki.server-session");
+assert.equal(SERVER_SESSION_PROTOCOL.version, "1.0.0");
 assert.equal(typeof issueClientPairing, "function");
+assert.equal(typeof openServerSession, "function");
 assert.equal(typeof verifyServerAuthentication, "function");
 assert.equal(
 	normalizeServerRegistrySnapshot({

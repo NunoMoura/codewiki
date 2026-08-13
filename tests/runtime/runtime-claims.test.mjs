@@ -8,13 +8,10 @@ import {
 	createRuntimeClaimEvent,
 	createRuntimeClaimReleaseEvent,
 } from "../../src/runtime/claims/events.ts";
-import {
-	appendTraceRecords,
-	assertValidTraceRecord,
-	createTraceHead,
-	readTrace,
-	traceFilePath,
-} from "../../src/api/traces.ts";
+import {appendTraceRecords} from "../../src/traces/append.ts";
+import {readTrace} from "../../src/traces/reader.ts";
+import {assertValidTraceRecord, traceFilePath} from "../../src/traces/schema.ts";
+import {createTraceHead} from "../../src/traces/writer.ts";
 import { createRuntimeWorkerCompletionReleaseEvents } from "../../src/runtime/claims/work-unit-events.ts";
 import {
 	appendRuntimeLeaseExpirations,

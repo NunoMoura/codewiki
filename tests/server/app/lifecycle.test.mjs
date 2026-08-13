@@ -23,6 +23,13 @@ import {
 	resolveServerConnection,
 	writeServerRegistrySnapshot,
 } from "../../../src/server/registry/state.ts";
+import {
+	authorizeServerEndpoint,
+	normalizeServerSessionRecord,
+	openServerSession,
+	revokeServerSession,
+	rotateServerSession,
+} from "../../../src/server/sessions/state.ts";
 
 function pin(commit, sha256) {
 	return JSON.stringify({
@@ -194,7 +201,7 @@ describe("Server App lifecycle", () => {
 	});
 });
 
-describe("Server registry and Client pairing", () => {
+describe("Server registry, Client pairing, and Sessions", () => {
 	it("resolves stable actor, paired client, and project route from trusted authentication", () => {
 		const normalized = normalizeServerRegistrySnapshot(registry());
 		const resolved = resolveServerConnection({
@@ -597,6 +604,181 @@ describe("Server registry and Client pairing", () => {
 		assert.throws(
 			() => resolve(registry(), authentication, digest("9")),
 			/project registration is not active/,
+		);
+	});
+
+	it("opens, rotates, authorizes, and revokes one temporary Server session", async () => {
+		const connection = resolveServerConnection({
+			registry: normalizeServerRegistrySnapshot(registry()),
+			expectedRegistryGeneration: 7,
+			authentication,
+			repositoryIdentity: digest("1"),
+			now: new Date("2026-08-14T10:00:00.000Z"),
+		});
+		const opened = openServerSession({
+			binding: {
+				actor: connection.actor,
+				client: connection.client,
+				project: {
+					projectId: connection.project.projectId,
+					repositoryIdentity: connection.project.repositoryIdentity,
+					runtimeRouteRef: connection.project.runtimeRouteRef,
+				},
+			},
+			lifetimeSeconds: 600,
+			now: new Date("2026-08-14T10:00:00.000Z"),
+		});
+		assert.equal(opened.session.generation, 1);
+		assert.equal(opened.session.status, "active");
+		assert.equal(JSON.stringify(opened.session).includes(opened.credential), false);
+		assert.equal(Object.hasOwn(opened.session, "role"), false);
+
+		let observed;
+		const authorized = await authorizeServerEndpoint({
+			session: opened.session,
+			credential: opened.credential,
+			expectedSessionGeneration: 1,
+			endpoint: {
+				endpointId: "app.state.read",
+				method: "GET",
+				repositoryIdentity: digest("1"),
+			},
+			adapter: {
+				adapterId: "app-policy",
+				authorize(context) {
+					observed = context;
+					return true;
+				},
+			},
+			now: new Date("2026-08-14T10:01:00.000Z"),
+		});
+		assert.equal(authorized.authorizationAdapterId, "app-policy");
+		assert.equal(authorized.requestContext.actor.actorId, "user:nuno");		assert.equal(authorized.requestContext.client.clientKind, "app");
+		assert.equal(observed.endpoint.endpointId, "app.state.read");
+		assert.equal(Object.hasOwn(observed, "credential"), false);
+
+		const rotated = rotateServerSession({
+			session: opened.session,
+			credential: opened.credential,
+			expectedSessionGeneration: 1,
+			now: new Date("2026-08-14T10:02:00.000Z"),
+		});
+		assert.equal(rotated.session.generation, 2);
+		assert.notEqual(rotated.credential, opened.credential);
+		await assert.rejects(
+			() => authorizeServerEndpoint({
+				session: rotated.session,
+				credential: opened.credential,
+				expectedSessionGeneration: 2,
+				endpoint: {
+					endpointId: "app.state.read",
+					method: "GET",
+					repositoryIdentity: digest("1"),
+				},
+				adapter: {adapterId: "app-policy", authorize: () => true},
+				now: new Date("2026-08-14T10:03:00.000Z"),
+			}),
+			/session credential is invalid/,
+		);
+		const revoked = revokeServerSession({
+			session: rotated.session,
+			credential: rotated.credential,
+			expectedSessionGeneration: 2,
+			now: new Date("2026-08-14T10:04:00.000Z"),
+		});
+		assert.equal(revoked.generation, 3);
+		assert.equal(revoked.status, "revoked");
+		await assert.rejects(
+			() => authorizeServerEndpoint({
+				session: revoked,
+				credential: rotated.credential,
+				expectedSessionGeneration: 3,
+				endpoint: {
+					endpointId: "app.state.read",
+					method: "GET",
+					repositoryIdentity: digest("1"),
+				},
+				adapter: {adapterId: "app-policy", authorize: () => true},
+			}),
+			/session is not active/,
+		);
+	});
+
+	it("fails closed on Session drift, expiry, and endpoint denial", async () => {
+		const opened = openServerSession({
+			binding: {
+				actor: {actorId: "user:nuno", authenticatedIdentityRef: "identity:local:nuno"},
+				client: {
+					clientKind: authentication.clientKind,
+					clientInstanceId: authentication.clientInstanceId,
+					authenticationRef: authentication.authenticationRef,
+				},
+				project: {
+					projectId: "project:codewiki",
+					repositoryIdentity: digest("1"),
+					runtimeRouteRef: "runtime:codewiki",
+				},
+			},
+			lifetimeSeconds: 60,
+			now: new Date("2026-08-14T10:00:00.000Z"),
+		});
+		assert.throws(
+			() => normalizeServerSessionRecord({...opened.session, role: "admin"}),
+			/unsupported field role/,
+		);
+		await assert.rejects(
+			() => authorizeServerEndpoint({
+				session: opened.session,
+				credential: opened.credential,
+				expectedSessionGeneration: 1,
+				endpoint: {endpointId: "app.state.read", method: "GET", repositoryIdentity: digest("1")},
+				adapter: {adapterId: "app-policy", authorize: () => true},
+				authority: "admin",
+			}),
+			/unsupported field authority/,
+		);
+		await assert.rejects(
+			() => authorizeServerEndpoint({
+				session: opened.session,
+				credential: opened.credential,
+				expectedSessionGeneration: 2,
+				endpoint: {endpointId: "app.state.read", method: "GET", repositoryIdentity: digest("1")},
+				adapter: {adapterId: "app-policy", authorize: () => true},
+			}),
+			/session generation is stale/,
+		);
+		await assert.rejects(
+			() => authorizeServerEndpoint({
+				session: opened.session,
+				credential: opened.credential,
+				expectedSessionGeneration: 1,
+				endpoint: {endpointId: "app.state.read", method: "GET", repositoryIdentity: digest("9")},
+				adapter: {adapterId: "app-policy", authorize: () => true},
+				now: new Date("2026-08-14T10:00:30.000Z"),
+			}),
+			/repository binding does not match endpoint/,
+		);
+		await assert.rejects(
+			() => authorizeServerEndpoint({
+				session: opened.session,
+				credential: opened.credential,
+				expectedSessionGeneration: 1,
+				endpoint: {endpointId: "app.state.read", method: "GET", repositoryIdentity: digest("1")},
+				adapter: {adapterId: "app-policy", authorize: () => false},
+				now: new Date("2026-08-14T10:00:30.000Z"),
+			}),
+			/endpoint authorization denied/,
+		);
+		await assert.rejects(
+			() => authorizeServerEndpoint({
+				session: opened.session,
+				credential: opened.credential,
+				expectedSessionGeneration: 1,
+				endpoint: {endpointId: "app.state.read", method: "GET", repositoryIdentity: digest("1")},
+				adapter: {adapterId: "app-policy", authorize: () => true},
+				now: new Date("2026-08-14T10:01:00.000Z"),
+			}),
+			/session has expired/,
 		);
 	});
 });

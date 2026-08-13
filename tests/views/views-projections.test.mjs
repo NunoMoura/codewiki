@@ -12,19 +12,19 @@ import {
 	createTriggerRunTraceHead,
 	createTraceHead,
 } from "../../src/traces/writer.ts";
+import {buildTriggersView} from "../../src/views/triggers.ts";
+import {buildQualityView} from "../../src/views/quality.ts";
+import {buildResumeView} from "../../src/views/resume.ts";
+import {buildStatusView} from "../../src/views/status.ts";
+import {buildTraceBoardView} from "../../src/views/trace-goals.ts";
+import {buildTraceQueueView} from "../../src/views/trace-queue.ts";
+import {buildWorkPlanView} from "../../src/views/work-plan.ts";
+import {buildWorkQueueView} from "../../src/views/work-queue.ts";
 import {
-	buildTriggersView,
-	buildQualityView,
-	buildResumeView,
-	buildStatusView,
-	buildTraceBoardView,
-	buildTraceQueueView,
-	buildWorkPlanView,
-	buildWorkQueueView,
 	formatViewJson,
 	viewFilePath,
 	writeNamedView,
-} from "../../src/api/views.ts";
+} from "../../src/views/writer.ts";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../helpers/planning-work.mjs";
 import { implementationQualityFields } from "../helpers/implementation-change.mjs";

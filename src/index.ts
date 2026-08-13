@@ -7,6 +7,8 @@ export * from "./protocol/client-pairing.ts";
 export * from "./server/authentication/proof.ts";
 export * from "./server/pairing/commands.ts";
 export * from "./server/registry/state.ts";
+export * from "./server/sessions/contracts.ts";
+export * from "./server/sessions/state.ts";
 export * from "./verification/custom-checks/index.ts";
 export {
 	EXIT_OUTCOME_PROTOCOL_VERSION,

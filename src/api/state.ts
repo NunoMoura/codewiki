@@ -1,16 +1,14 @@
 import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import {
-	buildTriggersView,
-	buildBlockersView,
-	buildConflictsView,
-	buildQualityView,
-	buildResumeView,
-	buildStatusView,
-	buildTraceBoardView,
-	buildTraceQueueView,
-	buildWorkPlanView,
-	buildWorkQueueView,
-} from "./views.ts";
+import {buildTriggersView} from "../views/triggers.ts";
+import {buildBlockersView} from "../views/blockers.ts";
+import {buildConflictsView} from "../views/conflicts.ts";
+import {buildQualityView} from "../views/quality.ts";
+import {buildResumeView} from "../views/resume.ts";
+import {buildStatusView} from "../views/status.ts";
+import {buildTraceBoardView} from "../views/trace-goals.ts";
+import {buildTraceQueueView} from "../views/trace-queue.ts";
+import {buildWorkPlanView} from "../views/work-plan.ts";
+import {buildWorkQueueView} from "../views/work-queue.ts";
 import {
 	buildRuntimeBoard,
 	type RuntimeBoard,

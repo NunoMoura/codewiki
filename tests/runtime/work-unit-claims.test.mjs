@@ -9,14 +9,11 @@ import {
 } from "../../src/runtime/claims/work-unit-events.ts";
 import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
 import { selectRuntimeWorkUnitClaims } from "../../src/runtime/claims/work-unit-selection.ts";
-import {
-	TraceAppendConflictError,
-	appendTraceRecords,
-	assertValidTraceRecord,
-	createTraceHead,
-	readTrace,
-	traceFilePath,
-} from "../../src/api/traces.ts";
+import {TraceAppendConflictError} from "../../src/error-handling/trace-errors.ts";
+import {appendTraceRecords} from "../../src/traces/append.ts";
+import {readTrace} from "../../src/traces/reader.ts";
+import {assertValidTraceRecord, traceFilePath} from "../../src/traces/schema.ts";
+import {createTraceHead} from "../../src/traces/writer.ts";
 import { buildWorkQueueView } from "../../src/views/work-queue.ts";
 
 function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {

@@ -14,25 +14,28 @@ import {
 import {
 	TraceAppendConflictError,
 	TraceClosedAppendError,
-	appendSemanticLoopReport,
-	appendTraceRecord,
-	appendTraceRecords,
-	createTriggerRunTraceHead,
-	createLoopIterationEvent,
-	createTailCheckpoint,
-	createTraceHead,
-	formatTraceText,
+} from "../../src/error-handling/trace-errors.ts";
+import {appendSemanticLoopReport} from "../../src/runtime/persistence/trace.ts";
+import {appendTraceRecord, appendTraceRecords} from "../../src/traces/append.ts";
+import {createLoopIterationEvent} from "../../src/traces/events.ts";
+import {
 	parseTraceText,
 	readLastTraceRecord,
 	readTrace,
-	replayTrace,
-	traceFilePath,
-	traceHasEvent,
-	traceRefs,
+} from "../../src/traces/reader.ts";
+import {replayTrace} from "../../src/traces/replay.ts";
+import {
 	buildTraceRetentionStub,
 	createTraceCloseRecord,
-	TRACE_LOOP_VALUES,
-} from "../../src/api/traces.ts";
+} from "../../src/traces/retention.ts";
+import {traceHasEvent, traceRefs} from "../../src/traces/queries.ts";
+import {TRACE_LOOP_VALUES, traceFilePath} from "../../src/traces/schema.ts";
+import {
+	createTailCheckpoint,
+	createTraceHead,
+	createTriggerRunTraceHead,
+	formatTraceText,
+} from "../../src/traces/writer.ts";
 import { decisionQualityFields } from "../helpers/proposed-change.mjs";
 
 function sampleRecords() {
