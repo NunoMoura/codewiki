@@ -1,7 +1,7 @@
 import {
-	HOST_CLIENT_KINDS,
-	type HostClientKind,
-} from "../../api/protocol.ts";
+	CLIENT_KINDS,
+	type ClientKind,
+} from "../../protocol/client-server.ts";
 import {
 	normalizeHostAuthenticationAssertion,
 	normalizeHostRegistrySnapshot,
@@ -16,7 +16,7 @@ export const HOST_PAIRING_PROTOCOL = Object.freeze({
 } as const);
 
 export interface HostAuthenticationProof {
-	readonly clientKind: HostClientKind;
+	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
 	readonly proof: unknown;
 }
@@ -32,7 +32,7 @@ export interface HostPairingIssueCommand {
 	readonly kind: "issue";
 	readonly expectedRegistryGeneration: number;
 	readonly pairingId: string;
-	readonly clientKind: HostClientKind;
+	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
 	readonly expiresInSeconds?: number;
 }
@@ -372,12 +372,12 @@ function boundedPositiveInteger(
 	return value as number;
 }
 
-function clientKind(value: unknown, field: string): HostClientKind {
+function clientKind(value: unknown, field: string): ClientKind {
 	if (
 		typeof value !== "string" ||
-		!(HOST_CLIENT_KINDS as readonly string[]).includes(value)
+		!(CLIENT_KINDS as readonly string[]).includes(value)
 	) {
 		throw new Error(`${field} is unsupported.`);
 	}
-	return value as HostClientKind;
+	return value as ClientKind;
 }

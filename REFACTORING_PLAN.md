@@ -233,6 +233,8 @@ The Host pairing and authentication contract slice is recorded by `.tmp-worktree
 
 The public Runtime gateway clean cut is recorded by `.tmp-worktrees/runtime-public-gateway-clean-cut-manifest.json`, exhaustively anchored to `41340bf` with 637 keeps, 2 deletions, and 2 planned additions. It replaces public `./coordinator` with curated `./runtime`, deletes both `src/host/coordinator-entrypoint.ts` and the duplicate `src/runtime/coordinator/entrypoint.ts`, and adds `src/runtime/index.ts` plus `src/runtime/gateway.ts`. The gateway exposes bounded state, inspection, Decision attention, exact Decision selection, Candidate submission, cursor-bound events, heartbeat, disconnect, and shutdown without exporting Coordinator-named declarations, scheduler/Worker internals, Integration/effect scheduling, Loop bindings, or OCI adapters. Host App coordinator observation consumes the gateway and an architecture gate prevents Host transport from importing `runtime/coordinator/**`. Full Server isolation remains pending because App projection assembly still reads Runtime query and persistence modules directly. Its green checkpoint is 932 full-suite tests, 118 coordinator tests, 719 packed files, zero production audit vulnerabilities, and unchanged source/test counts at 358/196.
 
+The Client-Server protocol ownership clean cut is recorded by `.tmp-worktrees/client-server-protocol-clean-cut-manifest.json`, exhaustively anchored to `6bf2b66` with 638 keeps and 2 moves. It moves the shared wire contract from `src/api/protocol.ts` to `src/protocol/client-server.ts`, moves its focused proof to `tests/protocol/client-server.test.mjs`, clean-cuts the sole accepted ID to `codewiki.client-server@1.0.0`, and replaces Host-named exported wire vocabulary without aliases, dual parsing, or old-path exports. API-only input validation remains with the API error owner. Pairing and registry protocols remain Host-named until their Server ownership cut. Its green checkpoint is 932 full-suite tests, 118 coordinator tests, 719 packed files, zero production audit vulnerabilities, and unchanged source/test counts at 358/196.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -291,7 +293,7 @@ Rules:
 - [x] Define versioned command, bounded query, durable operation, and event envelopes under the historical Host-named protocol.
 - [x] Bind Server-authenticated actor context, separate Client kind/instance, optional explicit delegation, repository, target, expected digest, semantic idempotency key, expiry, capability, and bounded payload on every mutation.
 - [x] Separate Client-instance transport deduplication from actor-scoped Runtime semantic idempotency.
-- [ ] Create a reviewed HEAD-anchored manifest for the naming and ownership clean cut.
+- [x] Create a reviewed HEAD-anchored manifest for the Client-Server protocol naming and ownership clean cut; create separate anchored manifests for later Server, Pairing, and Registry cuts.
 - [ ] Move `src/host/**` and `tests/host/**` to `src/server/**` and `tests/server/**` without old-path exports.
 - [ ] Split Authentication proof verification from Pairing transitions; keep Session and registry ownership distinct.
 - [ ] Move shared wire contracts to `src/protocol/**` and clean-cut protocol IDs to `codewiki.client-server@1.0.0`, `codewiki.client-pairing@1.0.0`, and `codewiki.server-registry@1.0.0` without dual parsing.

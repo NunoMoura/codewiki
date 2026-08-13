@@ -1,7 +1,12 @@
 import { changeContentDigest } from "../changes/digest.ts";
 import { parseChange } from "../changes/schema.ts";
 import type { Change } from "../changes/types.ts";
-import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import {
+	assertKnownInputKeys,
+	createCodewikiApiError,
+	requiredArrayField,
+	requiredStringField,
+} from "../error-handling/api-errors.ts";
 import { ChangeTraceStore } from "../changes/trace-store.ts";
 import {
 	addChangeEvidence,
@@ -21,11 +26,6 @@ import {
 	type ChangeStoreSnapshot,
 } from "../changes/store.ts";
 import { resolveCodewikiProjectRoot } from "../project/root.ts";
-import {
-	assertKnownInputKeys,
-	requiredArrayField,
-	requiredStringField,
-} from "./protocol.ts";
 
 export const WIKI_CHANGE_OPERATIONS = [
 	"list",

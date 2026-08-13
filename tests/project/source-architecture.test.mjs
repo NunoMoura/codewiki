@@ -168,6 +168,11 @@ describe("source architecture", () => {
 		}
 		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
 		assert.equal(existsSync(join(sourceRoot, "dashboard")), false);
+		assert.equal(existsSync(join(sourceRoot, "api", "protocol.ts")), false);
+		assert.equal(
+			existsSync(join(sourceRoot, "protocol", "client-server.ts")),
+			true,
+		);
 		assert.equal(existsSync("tests/dashboard"), false);
 		assert.equal(
 			existsSync(join(sourceRoot, "clients", "pi", "dashboard-session-actions.ts")),

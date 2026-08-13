@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
 import { runWikiDecide } from "../../src/api/wiki-decide.ts";
+import { CodewikiApiError } from "../../src/error-handling/api-errors.ts";
 import { changeTraceId } from "../../src/changes/change-trace.ts";
 import { changeContentDigest } from "../../src/changes/digest.ts";
 import { createChangeRecord } from "../../src/changes/records.ts";
@@ -153,6 +154,37 @@ describe("wiki_decide Change-revision facade", () => {
 		await assert.rejects(
 			runWikiDecide({ ...input, mode: "append" }),
 			/Decision quality did not exit/,
+		);
+	});
+
+	it("rejects malformed facade input with a structured API error", async () => {
+		await assert.rejects(
+			() =>
+				runWikiDecide({
+					changeId: "CHG-api-error",
+					expectedRevision: 1,
+					expectedChangeDigest: `sha256:${"0".repeat(64)}`,
+					expectedWorkStateDigest: `sha256:${"1".repeat(64)}`,
+					disposition: "approve",
+					rationale: "Test invalid append guard.",
+					mode: "append",
+					repoRoot: ".",
+					expectedBytes: -1,
+				}),
+			(error) => {
+				assert.equal(error instanceof CodewikiApiError, true);
+				assert.equal(error.domain, "api");
+				assert.equal(error.code, "invalid_input");
+				assert.equal(error.operation, "wiki_decide");
+				assert.equal(error.field, "expectedBytes");
+				assert.equal(error.suggestedAction, "fix_input");
+				assert.deepEqual(error.data, {
+					operation: "wiki_decide",
+					field: "expectedBytes",
+					value: -1,
+				});
+				return true;
+			},
 		);
 	});
 

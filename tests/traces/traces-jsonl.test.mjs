@@ -7,6 +7,11 @@ import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
 import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
 import { invalidTraceRefs } from "../../src/traces/refs.ts";
 import {
+	CodewikiError,
+	codewikiErrorData,
+	isCodewikiError,
+} from "../../src/error-handling/codewiki-error.ts";
+import {
 	TraceAppendConflictError,
 	TraceClosedAppendError,
 	appendSemanticLoopReport,
@@ -226,6 +231,31 @@ describe("trace JSONL core", () => {
 			await assert.rejects(
 				() => appendTraceRecord(root, event, first.nextBytes),
 				TraceAppendConflictError,
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
+	it("normalizes append conflicts through CodewikiError", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-error-trace-"));
+		try {
+			const [head] = sampleRecords();
+			const first = await appendTraceRecord(root, head, 0);
+			await assert.rejects(
+				() => appendTraceRecord(root, head, first.previousBytes),
+				(error) => {
+					assert.equal(error instanceof TraceAppendConflictError, true);
+					assert.equal(error instanceof CodewikiError, true);
+					assert.equal(isCodewikiError(error), true);
+					assert.equal(error.domain, "trace");
+					assert.equal(error.code, "append_conflict");
+					assert.equal(error.suggestedAction, "refresh_trace");
+					assert.equal(error.data.expectedBytes, first.previousBytes);
+					assert.equal(error.data.actualBytes, first.nextBytes);
+					assert.deepEqual(codewikiErrorData(error)?.refs, [error.path]);
+					return true;
+				},
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });

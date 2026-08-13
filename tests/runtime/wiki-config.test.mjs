@@ -17,6 +17,7 @@ import {
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 } from "../../src/project/config-file.ts";
+import { CodewikiConfigError } from "../../src/error-handling/config-errors.ts";
 import {
 	createTestUserStandard,
 	standardRefsFor,
@@ -298,10 +299,37 @@ describe("wiki_config core facade", () => {
 		}
 	});
 
+	it("reports malformed config files as structured config errors", async () => {
+		const root = await mkdtemp(join(tmpdir(), "codewiki-error-config-"));
+		try {
+			await mkdir(join(root, ".codewiki"), { recursive: true });
+			await writeFile(join(root, ".codewiki", "config.json"), "{bad-json");
+			await assert.rejects(
+				() => loadWikiConfigFile(root),
+				(error) => {
+					assert.equal(error instanceof CodewikiConfigError, true);
+					assert.equal(error.domain, "config");
+					assert.equal(error.path.endsWith(".codewiki/config.json"), true);
+					assert.equal(error.cause instanceof SyntaxError, true);
+					return true;
+				},
+			);
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("rejects invalid runtime, approval, retention, and host settings", () => {
 		assert.throws(
 			() => resolveWikiConfig({ runtime: { maxWorkers: -1 } }),
-			/maxWorkers/,
+			(error) => {
+				assert.equal(error instanceof CodewikiConfigError, true);
+				assert.equal(error.domain, "config");
+				assert.equal(error.code, "invalid_value");
+				assert.equal(error.path, "runtime.maxWorkers");
+				assert.equal(error.suggestedAction, "fix_input");
+				return true;
+			},
 		);
 		assert.throws(
 			() =>

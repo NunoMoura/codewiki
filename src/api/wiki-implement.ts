@@ -1,12 +1,12 @@
 import { changeTraceId } from "../changes/change-trace.ts";
-import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import {
+	assertKnownInputKeys,
+	createCodewikiApiError,
+	requiredStringField,
+} from "../error-handling/api-errors.ts";
 import type { ImplementationEvidencePolicy } from "../implementation/evidence-policy.ts";
 import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
 import { uniqueStrings } from "../loops/quality-standards.ts";
-import {
-	assertKnownInputKeys,
-	requiredStringField,
-} from "./protocol.ts";
 import type { ContentProof } from "../git/content-proof.ts";
 import type { SourceMapContract } from "../knowledge/source-map.ts";
 import {

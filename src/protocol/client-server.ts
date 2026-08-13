@@ -1,4 +1,3 @@
-import { createCodewikiApiError } from "../error-handling/api-errors.ts";
 import {
 	assertSha256Digest,
 	canonicalJson,
@@ -8,8 +7,8 @@ import {
 	type Sha256Digest,
 } from "../utils/canonical-json.ts";
 
-export const HOST_CLIENT_PROTOCOL = Object.freeze({
-	id: "codewiki.host-client",
+export const CLIENT_SERVER_PROTOCOL = Object.freeze({
+	id: "codewiki.client-server",
 	version: "1.0.0",
 	maxPayloadBytes: 65_536,
 	maxEnvelopeBytes: 131_072,
@@ -17,7 +16,7 @@ export const HOST_CLIENT_PROTOCOL = Object.freeze({
 	maxQueryItems: 100,
 });
 
-export const HOST_CLIENT_KINDS = Object.freeze([
+export const CLIENT_KINDS = Object.freeze([
 	"app",
 	"cli",
 	"pi",
@@ -28,44 +27,44 @@ export const HOST_CLIENT_KINDS = Object.freeze([
 	"openclaw",
 ] as const);
 
-export type HostClientKind = (typeof HOST_CLIENT_KINDS)[number];
-export type HostClientOperationStatus =
+export type ClientKind = (typeof CLIENT_KINDS)[number];
+export type ClientServerOperationStatus =
 	| "accepted"
 	| "running"
 	| "succeeded"
 	| "failed"
 	| "cancelled";
-export type HostClientCoverage = "complete" | "partial" | "unavailable";
+export type ClientServerCoverage = "complete" | "partial" | "unavailable";
 
-export interface HostClientActorContext {
+export interface ClientServerActorContext {
 	readonly actorId: string;
 	readonly authenticatedIdentityRef: string;
 }
 
-export interface HostClientTransportContext {
-	readonly clientKind: HostClientKind;
+export interface ClientServerTransportContext {
+	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
 	readonly authenticationRef: string;
 }
 
-export interface HostClientRequestContext {
-	readonly actor: HostClientActorContext;
-	readonly client: HostClientTransportContext;
+export interface ClientServerRequestContext {
+	readonly actor: ClientServerActorContext;
+	readonly client: ClientServerTransportContext;
 	readonly delegationRef?: string;
 }
 
-export interface HostClientSnapshotContext {
+export interface ClientServerSnapshotContext {
 	readonly snapshotDigest: Sha256Digest;
 	readonly provenanceRefs: readonly string[];
-	readonly coverage: HostClientCoverage;
+	readonly coverage: ClientServerCoverage;
 	readonly truncated: boolean;
 	readonly stale: boolean;
 	readonly redacted: boolean;
 }
 
-export interface HostClientCommandEnvelope extends HostClientRequestContext {
-	readonly protocolId: typeof HOST_CLIENT_PROTOCOL.id;
-	readonly protocolVersion: typeof HOST_CLIENT_PROTOCOL.version;
+export interface ClientServerCommandEnvelope extends ClientServerRequestContext {
+	readonly protocolId: typeof CLIENT_SERVER_PROTOCOL.id;
+	readonly protocolVersion: typeof CLIENT_SERVER_PROTOCOL.version;
 	readonly kind: "command";
 	readonly transportRequestId: string;
 	readonly repositoryIdentity: Sha256Digest;
@@ -78,9 +77,9 @@ export interface HostClientCommandEnvelope extends HostClientRequestContext {
 	readonly payload: Readonly<Record<string, CanonicalJsonValue>>;
 }
 
-export interface HostClientQueryEnvelope extends HostClientRequestContext {
-	readonly protocolId: typeof HOST_CLIENT_PROTOCOL.id;
-	readonly protocolVersion: typeof HOST_CLIENT_PROTOCOL.version;
+export interface ClientServerQueryEnvelope extends ClientServerRequestContext {
+	readonly protocolId: typeof CLIENT_SERVER_PROTOCOL.id;
+	readonly protocolVersion: typeof CLIENT_SERVER_PROTOCOL.version;
 	readonly kind: "query";
 	readonly transportRequestId: string;
 	readonly repositoryIdentity: Sha256Digest;
@@ -91,43 +90,43 @@ export interface HostClientQueryEnvelope extends HostClientRequestContext {
 	readonly payload: Readonly<Record<string, CanonicalJsonValue>>;
 }
 
-export interface HostClientQueryResultEnvelope {
-	readonly protocolId: typeof HOST_CLIENT_PROTOCOL.id;
-	readonly protocolVersion: typeof HOST_CLIENT_PROTOCOL.version;
+export interface ClientServerQueryResultEnvelope {
+	readonly protocolId: typeof CLIENT_SERVER_PROTOCOL.id;
+	readonly protocolVersion: typeof CLIENT_SERVER_PROTOCOL.version;
 	readonly kind: "query_result";
 	readonly transportRequestId: string;
 	readonly repositoryIdentity: Sha256Digest;
 	readonly queryName: string;
-	readonly snapshot: HostClientSnapshotContext;
+	readonly snapshot: ClientServerSnapshotContext;
 	readonly payload: Readonly<Record<string, CanonicalJsonValue>>;
 }
 
-export interface HostClientOperationEnvelope {
-	readonly protocolId: typeof HOST_CLIENT_PROTOCOL.id;
-	readonly protocolVersion: typeof HOST_CLIENT_PROTOCOL.version;
+export interface ClientServerOperationEnvelope {
+	readonly protocolId: typeof CLIENT_SERVER_PROTOCOL.id;
+	readonly protocolVersion: typeof CLIENT_SERVER_PROTOCOL.version;
 	readonly kind: "operation";
 	readonly operationId: string;
 	readonly repositoryIdentity: Sha256Digest;
 	readonly actorId: string;
 	readonly commandName: string;
 	readonly semanticIdempotencyDigest: Sha256Digest;
-	readonly status: HostClientOperationStatus;
+	readonly status: ClientServerOperationStatus;
 	readonly acceptedAt: string;
 	readonly updatedAt: string;
 	readonly snapshotDigest: Sha256Digest;
 	readonly payload: Readonly<Record<string, CanonicalJsonValue>>;
 }
 
-export interface HostClientEventEnvelope {
-	readonly protocolId: typeof HOST_CLIENT_PROTOCOL.id;
-	readonly protocolVersion: typeof HOST_CLIENT_PROTOCOL.version;
+export interface ClientServerEventEnvelope {
+	readonly protocolId: typeof CLIENT_SERVER_PROTOCOL.id;
+	readonly protocolVersion: typeof CLIENT_SERVER_PROTOCOL.version;
 	readonly kind: "event";
 	readonly eventId: string;
 	readonly cursor: number;
 	readonly repositoryIdentity: Sha256Digest;
 	readonly eventName: string;
 	readonly occurredAt: string;
-	readonly snapshot: HostClientSnapshotContext;
+	readonly snapshot: ClientServerSnapshotContext;
 	readonly payload: Readonly<Record<string, CanonicalJsonValue>>;
 }
 
@@ -232,21 +231,21 @@ const RESERVED_COMMAND_PAYLOAD_FIELDS = new Set([
 	"verificationResult",
 ]);
 
-export function normalizeHostClientCommand(
+export function normalizeClientServerCommand(
 	value: unknown,
 	now: Date = new Date(),
-): HostClientCommandEnvelope {
-	const input = exactObject(value, COMMAND_FIELDS, "Host/Client command");
+): ClientServerCommandEnvelope {
+	const input = exactObject(value, COMMAND_FIELDS, "Client/Server command");
 	assertProtocol(input, "command");
-	const expiresAt = timestamp(input.expiresAt, "Host/Client command expiresAt");
+	const expiresAt = timestamp(input.expiresAt, "Client/Server command expiresAt");
 	if (Date.parse(expiresAt) <= now.getTime()) {
-		throw new Error("Host/Client command has expired.");
+		throw new Error("Client/Server command has expired.");
 	}
-	const payload = payloadObject(input.payload, "Host/Client command payload");
+	const payload = payloadObject(input.payload, "Client/Server command payload");
 	assertPayloadHasNoReservedFields(payload);
-	return envelope<HostClientCommandEnvelope>({
-		protocolId: HOST_CLIENT_PROTOCOL.id,
-		protocolVersion: HOST_CLIENT_PROTOCOL.version,
+	return envelope<ClientServerCommandEnvelope>({
+		protocolId: CLIENT_SERVER_PROTOCOL.id,
+		protocolVersion: CLIENT_SERVER_PROTOCOL.version,
 		kind: "command",
 		transportRequestId: text(input.transportRequestId, "transportRequestId"),
 		...requestContext(input),
@@ -261,13 +260,13 @@ export function normalizeHostClientCommand(
 	});
 }
 
-export function normalizeHostClientQuery(value: unknown): HostClientQueryEnvelope {
-	const input = exactObject(value, QUERY_FIELDS, "Host/Client query");
+export function normalizeClientServerQuery(value: unknown): ClientServerQueryEnvelope {
+	const input = exactObject(value, QUERY_FIELDS, "Client/Server query");
 	assertProtocol(input, "query");
-	const maxItems = integer(input.maxItems, "maxItems", 1, HOST_CLIENT_PROTOCOL.maxQueryItems);
-	return envelope<HostClientQueryEnvelope>({
-		protocolId: HOST_CLIENT_PROTOCOL.id,
-		protocolVersion: HOST_CLIENT_PROTOCOL.version,
+	const maxItems = integer(input.maxItems, "maxItems", 1, CLIENT_SERVER_PROTOCOL.maxQueryItems);
+	return envelope<ClientServerQueryEnvelope>({
+		protocolId: CLIENT_SERVER_PROTOCOL.id,
+		protocolVersion: CLIENT_SERVER_PROTOCOL.version,
 		kind: "query",
 		transportRequestId: text(input.transportRequestId, "transportRequestId"),
 		...requestContext(input),
@@ -285,44 +284,44 @@ export function normalizeHostClientQuery(value: unknown): HostClientQueryEnvelop
 					),
 				}),
 		maxItems,
-		payload: payloadObject(input.payload, "Host/Client query payload"),
+		payload: payloadObject(input.payload, "Client/Server query payload"),
 	});
 }
 
-export function normalizeHostClientQueryResult(
+export function normalizeClientServerQueryResult(
 	value: unknown,
-): HostClientQueryResultEnvelope {
-	const input = exactObject(value, QUERY_RESULT_FIELDS, "Host/Client query result");
+): ClientServerQueryResultEnvelope {
+	const input = exactObject(value, QUERY_RESULT_FIELDS, "Client/Server query result");
 	assertProtocol(input, "query_result");
-	return envelope<HostClientQueryResultEnvelope>({
-		protocolId: HOST_CLIENT_PROTOCOL.id,
-		protocolVersion: HOST_CLIENT_PROTOCOL.version,
+	return envelope<ClientServerQueryResultEnvelope>({
+		protocolId: CLIENT_SERVER_PROTOCOL.id,
+		protocolVersion: CLIENT_SERVER_PROTOCOL.version,
 		kind: "query_result",
 		transportRequestId: text(input.transportRequestId, "transportRequestId"),
 		repositoryIdentity: assertSha256Digest(input.repositoryIdentity, "repositoryIdentity"),
 		queryName: text(input.queryName, "queryName"),
 		snapshot: snapshotContext(input.snapshot),
-		payload: payloadObject(input.payload, "Host/Client query result payload"),
+		payload: payloadObject(input.payload, "Client/Server query result payload"),
 	});
 }
 
-export function normalizeHostClientOperation(
+export function normalizeClientServerOperation(
 	value: unknown,
-): HostClientOperationEnvelope {
-	const input = exactObject(value, OPERATION_FIELDS, "Host/Client operation");
+): ClientServerOperationEnvelope {
+	const input = exactObject(value, OPERATION_FIELDS, "Client/Server operation");
 	assertProtocol(input, "operation");
-	const acceptedAt = timestamp(input.acceptedAt, "Host/Client operation acceptedAt");
-	const updatedAt = timestamp(input.updatedAt, "Host/Client operation updatedAt");
+	const acceptedAt = timestamp(input.acceptedAt, "Client/Server operation acceptedAt");
+	const updatedAt = timestamp(input.updatedAt, "Client/Server operation updatedAt");
 	if (Date.parse(updatedAt) < Date.parse(acceptedAt)) {
-		throw new Error("Host/Client operation updatedAt cannot precede acceptedAt.");
+		throw new Error("Client/Server operation updatedAt cannot precede acceptedAt.");
 	}
 	const status = input.status;
-	if (!(["accepted", "running", "succeeded", "failed", "cancelled"] as const).includes(status as HostClientOperationStatus)) {
-		throw new Error("Host/Client operation status is unsupported.");
+	if (!(["accepted", "running", "succeeded", "failed", "cancelled"] as const).includes(status as ClientServerOperationStatus)) {
+		throw new Error("Client/Server operation status is unsupported.");
 	}
-	return envelope<HostClientOperationEnvelope>({
-		protocolId: HOST_CLIENT_PROTOCOL.id,
-		protocolVersion: HOST_CLIENT_PROTOCOL.version,
+	return envelope<ClientServerOperationEnvelope>({
+		protocolId: CLIENT_SERVER_PROTOCOL.id,
+		protocolVersion: CLIENT_SERVER_PROTOCOL.version,
 		kind: "operation",
 		operationId: text(input.operationId, "operationId"),
 		repositoryIdentity: assertSha256Digest(input.repositoryIdentity, "repositoryIdentity"),
@@ -332,33 +331,33 @@ export function normalizeHostClientOperation(
 			input.semanticIdempotencyDigest,
 			"semanticIdempotencyDigest",
 		),
-		status: status as HostClientOperationStatus,
+		status: status as ClientServerOperationStatus,
 		acceptedAt,
 		updatedAt,
 		snapshotDigest: assertSha256Digest(input.snapshotDigest, "snapshotDigest"),
-		payload: payloadObject(input.payload, "Host/Client operation payload"),
+		payload: payloadObject(input.payload, "Client/Server operation payload"),
 	});
 }
 
-export function normalizeHostClientEvent(value: unknown): HostClientEventEnvelope {
-	const input = exactObject(value, EVENT_FIELDS, "Host/Client event");
+export function normalizeClientServerEvent(value: unknown): ClientServerEventEnvelope {
+	const input = exactObject(value, EVENT_FIELDS, "Client/Server event");
 	assertProtocol(input, "event");
-	return envelope<HostClientEventEnvelope>({
-		protocolId: HOST_CLIENT_PROTOCOL.id,
-		protocolVersion: HOST_CLIENT_PROTOCOL.version,
+	return envelope<ClientServerEventEnvelope>({
+		protocolId: CLIENT_SERVER_PROTOCOL.id,
+		protocolVersion: CLIENT_SERVER_PROTOCOL.version,
 		kind: "event",
 		eventId: text(input.eventId, "eventId"),
 		cursor: integer(input.cursor, "cursor", 1, Number.MAX_SAFE_INTEGER),
 		repositoryIdentity: assertSha256Digest(input.repositoryIdentity, "repositoryIdentity"),
 		eventName: text(input.eventName, "eventName"),
-		occurredAt: timestamp(input.occurredAt, "Host/Client event occurredAt"),
+		occurredAt: timestamp(input.occurredAt, "Client/Server event occurredAt"),
 		snapshot: snapshotContext(input.snapshot),
-		payload: payloadObject(input.payload, "Host/Client event payload"),
+		payload: payloadObject(input.payload, "Client/Server event payload"),
 	});
 }
 
-export function hostTransportDeduplicationDigest(
-	context: HostClientRequestContext,
+export function serverTransportDeduplicationDigest(
+	context: ClientServerRequestContext,
 	transportRequestId: string,
 ): Sha256Digest {
 	return canonicalJsonDigest({
@@ -369,7 +368,7 @@ export function hostTransportDeduplicationDigest(
 }
 
 export function runtimeSemanticIdempotencyDigest(
-	command: HostClientCommandEnvelope,
+	command: ClientServerCommandEnvelope,
 ): Sha256Digest {
 	return canonicalJsonDigest({
 		protocolId: command.protocolId,
@@ -385,66 +384,19 @@ export function runtimeSemanticIdempotencyDigest(
 	});
 }
 
-export function assertKnownInputKeys(
-	operation: string,
-	input: Record<string, unknown>,
-	knownKeys: readonly string[],
-): void {
-	const known = new Set(knownKeys);
-	const unknown = Object.keys(input).filter((key) => !known.has(key));
-	if (unknown.length === 0) return;
-	throw createCodewikiApiError({
-		operation,
-		code: "invalid_input",
-		field: unknown[0],
-		message: `${operation} received unsupported input field ${unknown[0]}. Use the documented structured input shape.`,
-		data: { unknownFields: unknown, knownFields: knownKeys },
-	});
-}
-
-export function requiredStringField(
-	operation: string,
-	field: string,
-	value: unknown,
-): string {
-	if (typeof value === "string" && value.trim() !== "") return value;
-	throw createCodewikiApiError({
-		operation,
-		code: "missing_required",
-		field,
-		message: `${operation} requires ${field}.`,
-		data: { value },
-	});
-}
-
-export function requiredArrayField(
-	operation: string,
-	field: string,
-	value: unknown,
-): unknown[] {
-	if (Array.isArray(value)) return value;
-	throw createCodewikiApiError({
-		operation,
-		code: "missing_required",
-		field,
-		message: `${operation} requires ${field} array.`,
-		data: { value },
-	});
-}
-
-function requestContext(input: Record<string, unknown>): HostClientRequestContext {
+function requestContext(input: Record<string, unknown>): ClientServerRequestContext {
 	const actor = exactObject(
 		input.actor,
 		["actorId", "authenticatedIdentityRef"],
-		"Host/Client actor context",
+		"Client/Server actor context",
 	);
 	const client = exactObject(
 		input.client,
 		["clientKind", "clientInstanceId", "authenticationRef"],
-		"Host/Client client context",
+		"Client/Server client context",
 	);
-	if (!HOST_CLIENT_KINDS.includes(client.clientKind as HostClientKind)) {
-		throw new Error("Host/Client clientKind is unsupported.");
+	if (!CLIENT_KINDS.includes(client.clientKind as ClientKind)) {
+		throw new Error("Client/Server clientKind is unsupported.");
 	}
 	return {
 		actor: {
@@ -456,7 +408,7 @@ function requestContext(input: Record<string, unknown>): HostClientRequestContex
 			),
 		},
 		client: {
-			clientKind: client.clientKind as HostClientKind,
+			clientKind: client.clientKind as ClientKind,
 			clientInstanceId: text(client.clientInstanceId, "client.clientInstanceId"),
 			authenticationRef: text(
 				client.authenticationRef,
@@ -470,29 +422,29 @@ function requestContext(input: Record<string, unknown>): HostClientRequestContex
 	};
 }
 
-function snapshotContext(value: unknown): HostClientSnapshotContext {
+function snapshotContext(value: unknown): ClientServerSnapshotContext {
 	const input = exactObject(
 		value,
 		["snapshotDigest", "provenanceRefs", "coverage", "truncated", "stale", "redacted"],
-		"Host/Client snapshot context",
+		"Client/Server snapshot context",
 	);
 	const coverage = input.coverage;
-	if (!(["complete", "partial", "unavailable"] as const).includes(coverage as HostClientCoverage)) {
-		throw new Error("Host/Client snapshot coverage is unsupported.");
+	if (!(["complete", "partial", "unavailable"] as const).includes(coverage as ClientServerCoverage)) {
+		throw new Error("Client/Server snapshot coverage is unsupported.");
 	}
-	if (!Array.isArray(input.provenanceRefs) || input.provenanceRefs.length > HOST_CLIENT_PROTOCOL.maxProvenanceRefs) {
-		throw new Error("Host/Client snapshot provenanceRefs are invalid or exceed the limit.");
+	if (!Array.isArray(input.provenanceRefs) || input.provenanceRefs.length > CLIENT_SERVER_PROTOCOL.maxProvenanceRefs) {
+		throw new Error("Client/Server snapshot provenanceRefs are invalid or exceed the limit.");
 	}
 	const provenanceRefs = input.provenanceRefs.map((value, index) =>
 		text(value, `snapshot.provenanceRefs[${index}]`, 4_096),
 	);
 	if (new Set(provenanceRefs).size !== provenanceRefs.length) {
-		throw new Error("Host/Client snapshot provenanceRefs must be unique.");
+		throw new Error("Client/Server snapshot provenanceRefs must be unique.");
 	}
 	return {
 		snapshotDigest: assertSha256Digest(input.snapshotDigest, "snapshot.snapshotDigest"),
 		provenanceRefs: Object.freeze(provenanceRefs),
-		coverage: coverage as HostClientCoverage,
+		coverage: coverage as ClientServerCoverage,
 		truncated: boolean(input.truncated, "snapshot.truncated"),
 		stale: boolean(input.stale, "snapshot.stale"),
 		redacted: boolean(input.redacted, "snapshot.redacted"),
@@ -501,11 +453,11 @@ function snapshotContext(value: unknown): HostClientSnapshotContext {
 
 function assertProtocol(input: Record<string, unknown>, kind: string): void {
 	if (
-		input.protocolId !== HOST_CLIENT_PROTOCOL.id ||
-		input.protocolVersion !== HOST_CLIENT_PROTOCOL.version ||
+		input.protocolId !== CLIENT_SERVER_PROTOCOL.id ||
+		input.protocolVersion !== CLIENT_SERVER_PROTOCOL.version ||
 		input.kind !== kind
 	) {
-		throw new Error(`Host/Client ${kind} protocol binding is invalid.`);
+		throw new Error(`Client/Server ${kind} protocol binding is invalid.`);
 	}
 }
 
@@ -535,7 +487,7 @@ function assertPayloadHasNoReservedFields(
 	if (!value || typeof value !== "object") return;
 	for (const [field, child] of Object.entries(value)) {
 		if (RESERVED_COMMAND_PAYLOAD_FIELDS.has(field)) {
-			throw new Error(`Host/Client command payload cannot supply ${field}.`);
+			throw new Error(`Client/Server command payload cannot supply ${field}.`);
 		}
 		assertPayloadHasNoReservedFields(child);
 	}
@@ -549,16 +501,16 @@ function payloadObject(
 		throw new Error(`${label} must be an object.`);
 	}
 	const payload = toCanonicalJsonValue(value);
-	if (Buffer.byteLength(canonicalJson(payload), "utf8") > HOST_CLIENT_PROTOCOL.maxPayloadBytes) {
-		throw new Error(`${label} exceeds ${HOST_CLIENT_PROTOCOL.maxPayloadBytes} canonical UTF-8 bytes.`);
+	if (Buffer.byteLength(canonicalJson(payload), "utf8") > CLIENT_SERVER_PROTOCOL.maxPayloadBytes) {
+		throw new Error(`${label} exceeds ${CLIENT_SERVER_PROTOCOL.maxPayloadBytes} canonical UTF-8 bytes.`);
 	}
 	return payload as Readonly<Record<string, CanonicalJsonValue>>;
 }
 
 function envelope<T>(value: object): T {
 	const normalized = toCanonicalJsonValue(value);
-	if (Buffer.byteLength(canonicalJson(normalized), "utf8") > HOST_CLIENT_PROTOCOL.maxEnvelopeBytes) {
-		throw new Error(`Host/Client envelope exceeds ${HOST_CLIENT_PROTOCOL.maxEnvelopeBytes} canonical UTF-8 bytes.`);
+	if (Buffer.byteLength(canonicalJson(normalized), "utf8") > CLIENT_SERVER_PROTOCOL.maxEnvelopeBytes) {
+		throw new Error(`Client/Server envelope exceeds ${CLIENT_SERVER_PROTOCOL.maxEnvelopeBytes} canonical UTF-8 bytes.`);
 	}
 	return normalized as T;
 }

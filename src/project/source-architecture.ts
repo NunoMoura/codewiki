@@ -18,6 +18,7 @@ export const CURRENT_SOURCE_ROOTS = [
 	"planning",
 	"preview",
 	"project",
+	"protocol",
 	"runtime",
 	"traces",
 	"utils",

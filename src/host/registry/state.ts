@@ -9,11 +9,11 @@ import {
 } from "node:fs/promises";
 import {dirname, isAbsolute, join, normalize} from "node:path";
 import {
-	HOST_CLIENT_KINDS,
-	type HostClientActorContext,
-	type HostClientKind,
-	type HostClientTransportContext,
-} from "../../api/protocol.ts";
+	CLIENT_KINDS,
+	type ClientServerActorContext,
+	type ClientKind,
+	type ClientServerTransportContext,
+} from "../../protocol/client-server.ts";
 import {
 	assertSha256Digest,
 	canonicalJson,
@@ -46,7 +46,7 @@ export interface HostActorRecord {
 
 export interface HostClientPairingRecord {
 	readonly pairingId: string;
-	readonly clientKind: HostClientKind;
+	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
 	readonly authenticationRef: string;
 	readonly authenticatedIdentityRef: string;
@@ -79,15 +79,15 @@ export interface HostRegistrySnapshot {
 
 /** Result supplied by a trusted Host authentication adapter after proof verification. */
 export interface HostAuthenticationAssertion {
-	readonly clientKind: HostClientKind;
+	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
 	readonly authenticationRef: string;
 	readonly authenticatedIdentityRef: string;
 }
 
 export interface ResolvedHostConnection {
-	readonly actor: HostClientActorContext;
-	readonly client: HostClientTransportContext;
+	readonly actor: ClientServerActorContext;
+	readonly client: ClientServerTransportContext;
 	readonly project: HostProjectRegistration;
 }
 
@@ -355,7 +355,7 @@ function normalizePairing(
 	const clientKind = choice(
 		input.clientKind,
 		`${label}.clientKind`,
-		HOST_CLIENT_KINDS,
+		CLIENT_KINDS,
 	);
 	const status = choice(input.status, `${label}.status`, [
 		"active",
@@ -445,7 +445,7 @@ export function normalizeHostAuthenticationAssertion(
 		clientKind: choice(
 			input.clientKind,
 			"authentication.clientKind",
-			HOST_CLIENT_KINDS,
+			CLIENT_KINDS,
 		),
 		clientInstanceId: text(
 			input.clientInstanceId,

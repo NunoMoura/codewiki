@@ -52,13 +52,13 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
-	HOST_CLIENT_PROTOCOL,
+	CLIENT_SERVER_PROTOCOL,
 	HOST_PAIRING_PROTOCOL,
 	HOST_REGISTRY_PROTOCOL,
 	buildWikiState,
 	buildWorkState,
 	issueHostPairing,
-	normalizeHostClientQuery,
+	normalizeClientServerQuery,
 	normalizeHostRegistrySnapshot,
 	runWikiConfig,
 } from "@nunomoura/codewiki";
@@ -213,14 +213,17 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.js")), true)
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "gateway.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "gateway.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-server.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-server.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "input-validation.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "registry", "state.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "pairing", "commands.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "host", "pairing", "commands.d.ts")), true);
-assert.equal(HOST_CLIENT_PROTOCOL.version, "1.0.0");
+assert.equal(CLIENT_SERVER_PROTOCOL.id, "codewiki.client-server");
+assert.equal(CLIENT_SERVER_PROTOCOL.version, "1.0.0");
 assert.equal(HOST_REGISTRY_PROTOCOL.version, "1.0.0");
 assert.equal(HOST_PAIRING_PROTOCOL.version, "1.0.0");
 assert.equal(typeof issueHostPairing, "function");
@@ -237,9 +240,9 @@ assert.equal(
 	1,
 );
 assert.equal(
-	normalizeHostClientQuery({
-		protocolId: HOST_CLIENT_PROTOCOL.id,
-		protocolVersion: HOST_CLIENT_PROTOCOL.version,
+	normalizeClientServerQuery({
+		protocolId: CLIENT_SERVER_PROTOCOL.id,
+		protocolVersion: CLIENT_SERVER_PROTOCOL.version,
 		kind: "query",
 		transportRequestId: "packed:query",
 		actor: {
