@@ -1,16 +1,25 @@
 import { basename } from "node:path";
 import type { WikiStateSnapshot } from "../../api/state.ts";
 import {
+	knowledgeTopicRefsFromRecords,
 	projectKnowledgeAlignment,
+	readKnowledgeTopicDigests,
 	type KnowledgeAlignmentProjection,
 } from "../../knowledge/topic-alignment.ts";
+import {
+	buildProjectWikiState,
+	readProjectTraceFiles,
+} from "../../project/state-file.ts";
 import {
 	normalizeUiPreviewTargetBinding,
 	uiPreviewTargetBindingValidationIssues,
 	type UiPreviewTargetBinding,
 } from "../../preview/binding.ts";
 import type { PreviewRuntimeStatus } from "../../preview/coordinator.ts";
-import type { DevLogEntry } from "../persistence/dev-log.ts";
+import {
+	readDevLog,
+	type DevLogEntry,
+} from "../persistence/dev-log.ts";
 import {
 	type WorkerObservation,
 	workerObservationFreshness,
@@ -20,8 +29,14 @@ import { implementationQualityStandards } from "../../implementation/quality-sta
 import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../../planning/portfolio-quality.ts";
 import type { TraceEvent, TraceLoop, TraceRecord } from "../../traces/types.ts";
 import { qualityIterationsFromTrace } from "../../views/quality.ts";
-import type { RuntimeChangesState } from "./changes.ts";
-import type { RuntimeConfigurationState } from "./configuration.ts";
+import {
+	loadRuntimeChangesState,
+	type RuntimeChangesState,
+} from "./changes.ts";
+import {
+	loadRuntimeConfigurationState,
+	type RuntimeConfigurationState,
+} from "./configuration.ts";
 import {
 	projectRuntimeDevLog,
 	type RuntimeDevLogProjection,
@@ -260,6 +275,36 @@ interface CodewikiAppStateQueryContext {
 	configuration?: RuntimeConfigurationState;
 	previews?: PreviewRuntimeStatus[];
 	knowledgeTopicDigests?: ReadonlyMap<string, string>;
+}
+
+export async function loadRuntimeAppState(
+	repoRoot: string,
+): Promise<CodewikiAppState> {
+	const traceFiles = await readProjectTraceFiles(repoRoot);
+	const snapshot = await buildProjectWikiState({ repoRoot, traceFiles });
+	const [devLogEntries, knowledgeTopicDigests, changes, configuration] =
+		await Promise.all([
+			Promise.all(
+				snapshot.traceBoard.traces
+					.filter((trace) => !trace.closed)
+					.map(
+						async (trace) =>
+							[trace.traceId, await readDevLog(repoRoot, trace.traceId)] as const,
+					),
+			),
+			readKnowledgeTopicDigests(
+				repoRoot,
+				knowledgeTopicRefsFromRecords(traceFiles.records),
+			),
+			loadRuntimeChangesState(repoRoot),
+			loadRuntimeConfigurationState(repoRoot),
+		]);
+	return buildCodewikiAppState(snapshot, repoRoot, traceFiles.records, {
+		devLogByTrace: new Map(devLogEntries),
+		knowledgeTopicDigests,
+		changes,
+		configuration,
+	});
 }
 
 export function buildCodewikiAppState(

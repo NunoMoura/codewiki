@@ -5,8 +5,6 @@ import {
 	fchmodSync,
 	mkdirSync,
 	openSync,
-	watch,
-	type FSWatcher,
 } from "node:fs";
 import {
 	chmod,
@@ -28,33 +26,20 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
-import {
-	buildProjectWikiState,
-	readProjectTraceFiles,
-} from "../../project/state-file.ts";
-import {
-	knowledgeTopicRefsFromRecords,
-	readKnowledgeTopicDigests,
-} from "../../knowledge/topic-alignment.ts";
 import { openSystemBrowser } from "../../preview/browser-adapter.ts";
 import {
 	parseDashboardPreviewCommand,
 	type DashboardPreviewControl,
 	unavailableDashboardPreviewControl,
 } from "../../preview/dashboard-control.ts";
-import { readDevLog } from "../../runtime/persistence/dev-log.ts";
 import {
 	connectProjectRuntimeGateway,
+	createProjectRuntimeProjectionGateway,
 	type ProjectRuntimeConnectionInput,
 	type ProjectRuntimeGateway,
+	type ProjectRuntimeProjectionGateway,
 } from "../../runtime/gateway.ts";
 import { CODEWIKI_APP_HTML } from "../../clients/app/shell.ts";
-import { loadRuntimeChangesState } from "../../runtime/queries/changes.ts";
-import { loadRuntimeConfigurationState } from "../../runtime/queries/configuration.ts";
-import {
-	buildCodewikiAppState,
-	type CodewikiAppState,
-} from "../../runtime/queries/app-state.ts";
 import {
 	assertInstalledCodewikiRuntimeCurrent,
 	captureInstalledCodewikiRuntimeIdentity,
@@ -100,7 +85,11 @@ interface AppServerRuntime {
 	origin: string;
 	token: string;
 	clients: Set<ServerResponse>;
-	watcher?: FSWatcher;
+	projection: Pick<
+		ProjectRuntimeProjectionGateway,
+		"appState" | "changes" | "configuration"
+	>;
+	unsubscribeProjection?: () => void;
 	broadcastTimer?: NodeJS.Timeout;
 	runtimeHeartbeatTimer?: NodeJS.Timeout;
 	projectRuntime?: ProjectRuntimeGateway;
@@ -661,6 +650,10 @@ async function createAppServerRuntime(
 				supervision: "observer",
 			})
 		: undefined;
+	let localProjection: ProjectRuntimeProjectionGateway | undefined;
+	const projection =
+		projectRuntime?.queries ||
+		(localProjection = createProjectRuntimeProjectionGateway(repoRoot));
 	runtime = {
 		repoRoot,
 		server,
@@ -670,13 +663,16 @@ async function createAppServerRuntime(
 		clients,
 		projectRuntime,
 		projectRuntimeConnector,
+		projection,
 		runtimeEventsClosed: false,
 		previewControl,
 		opened: false,
 		close: () => closeRuntime(runtime),
 	};
 	await writeAppEndpoint(endpoint);
-	runtime.watcher = watchTraceDirectory(runtime);
+	runtime.unsubscribeProjection = localProjection?.subscribe(() =>
+		scheduleBroadcast(runtime),
+	);
 	if (projectRuntime) {
 		runtime.runtimeHeartbeatTimer = setInterval(() => {
 			void runtime.projectRuntime?.connection.heartbeat().catch(() => undefined);
@@ -685,19 +681,6 @@ async function createAppServerRuntime(
 		if (keepAlive) void watchRuntimeEvents(runtime);
 	}
 	return runtime;
-}
-
-function watchTraceDirectory(runtime: AppServerRuntime): FSWatcher | undefined {
-	try {
-		return watch(
-			join(runtime.repoRoot, ".codewiki", "traces"),
-			{ persistent: false },
-			() => scheduleBroadcast(runtime),
-		);
-	} catch (error) {
-		if (isNotFound(error)) return undefined;
-		throw error;
-	}
 }
 
 async function routeRequest(
@@ -759,20 +742,15 @@ async function routeAuthorizedGet(
 		return true;
 	}
 	if (url.pathname === "/api/changes") {
-		writeJson(response, 200, await loadRuntimeChangesState(runtime.repoRoot));
+		writeJson(response, 200, await runtime.projection.changes());
 		return true;
 	}
 	if (url.pathname === "/api/configuration") {
-		writeJson(response, 200, await loadRuntimeConfigurationState(runtime.repoRoot));
+		writeJson(response, 200, await runtime.projection.configuration());
 		return true;
 	}
 	if (url.pathname === "/api/previews") {
-		const traceFiles = await readProjectTraceFiles(runtime.repoRoot);
-		writeJson(
-			response,
-			200,
-			await runtime.previewControl.status(traceFiles.records),
-		);
+		writeJson(response, 200, await runtime.previewControl.status());
 		return true;
 	}
 	if (url.pathname === "/api/meta") {
@@ -815,14 +793,10 @@ async function routeAuthorizedPost(
 	}
 	const command = await readJsonRequest(request);
 	if (url.pathname === "/api/previews/commands") {
-		const traceFiles = await readProjectTraceFiles(runtime.repoRoot);
 		writeJson(
 			response,
 			200,
-			await runtime.previewControl.execute(
-				parseDashboardPreviewCommand(command),
-				traceFiles.records,
-			),
+			await runtime.previewControl.execute(parseDashboardPreviewCommand(command)),
 		);
 		scheduleBroadcast(runtime);
 		scheduleProjectRuntimeObservation(runtime);
@@ -906,35 +880,12 @@ async function readJsonRequest(request: IncomingMessage): Promise<unknown> {
 	}
 }
 
-async function readCodewikiAppState(
-	runtime: AppServerRuntime,
-): Promise<CodewikiAppState> {
-	const repoRoot = runtime.repoRoot;
-	const traceFiles = await readProjectTraceFiles(repoRoot);
-	const snapshot = await buildProjectWikiState({ repoRoot, traceFiles });
-	const [devLogEntries, knowledgeTopicDigests] = await Promise.all([
-		Promise.all(
-			snapshot.traceBoard.traces
-				.filter((trace) => !trace.closed)
-				.map(
-					async (trace) =>
-						[trace.traceId, await readDevLog(repoRoot, trace.traceId)] as const,
-				),
-		),
-		readKnowledgeTopicDigests(
-			repoRoot,
-			knowledgeTopicRefsFromRecords(traceFiles.records),
-		),
+async function readCodewikiAppState(runtime: AppServerRuntime) {
+	const [state, previews] = await Promise.all([
+		runtime.projection.appState(),
+		runtime.previewControl.status(),
 	]);
-	const devLogByTrace = new Map(devLogEntries);
-	const previews = await runtime.previewControl.status(traceFiles.records);
-	return buildCodewikiAppState(snapshot, repoRoot, traceFiles.records, {
-		devLogByTrace,
-		knowledgeTopicDigests,
-		changes: await loadRuntimeChangesState(repoRoot),
-		configuration: await loadRuntimeConfigurationState(repoRoot),
-		previews: [...previews],
-	});
+	return { ...state, previews: [...previews] };
 }
 
 async function attachEventStream(
@@ -995,6 +946,7 @@ async function watchRuntimeEvents(runtime: AppServerRuntime): Promise<void> {
 						supervision: "observer",
 					},
 				);
+				runtime.projection = runtime.projectRuntime.queries;
 				cursor = 0;
 				generationId = undefined;
 				scheduleBroadcast(runtime);
@@ -1021,7 +973,7 @@ async function broadcast(runtime: AppServerRuntime): Promise<void> {
 
 function writeEvent(
 	response: ServerResponse,
-	data: CodewikiAppState,
+	data: Awaited<ReturnType<typeof readCodewikiAppState>>,
 ): void {
 	if (response.destroyed || response.writableEnded) return;
 	response.write(`data: ${JSON.stringify(data)}\n\n`);
@@ -1084,7 +1036,7 @@ async function closeRuntime(runtime: AppServerRuntime): Promise<void> {
 		clearInterval(runtime.runtimeHeartbeatTimer);
 	}
 	await runtime.projectRuntime?.connection.disconnect().catch(() => undefined);
-	runtime.watcher?.close();
+	runtime.unsubscribeProjection?.();
 	for (const client of runtime.clients) client.end();
 	runtime.clients.clear();
 	await new Promise<void>((resolve, reject) => {

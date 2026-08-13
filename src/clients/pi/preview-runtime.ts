@@ -20,7 +20,7 @@ export function piPreviewControl(repoRoot: string): DashboardPreviewControl {
 	const coordinator = createPreviewCoordinator(repoRoot);
 	const runtime = {
 		coordinator,
-		control: createDashboardPreviewControl(coordinator),
+		control: createDashboardPreviewControl(repoRoot, coordinator),
 	};
 	runtimes.set(repoRoot, runtime);
 	return runtime.control;

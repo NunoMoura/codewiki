@@ -1,4 +1,4 @@
-import type { TraceRecord } from "../traces/types.ts";
+import { readProjectTraceRecords } from "../project/state-file.ts";
 import type {
 	PreviewCoordinator,
 	PreviewRuntimeStatus,
@@ -19,32 +19,32 @@ export interface DashboardPreviewCommand {
 }
 
 export interface DashboardPreviewControl {
-	status(records: TraceRecord[]): Promise<PreviewRuntimeStatus[]>;
-	execute(
-		command: DashboardPreviewCommand,
-		records: TraceRecord[],
-	): Promise<PreviewRuntimeStatus[]>;
+	status(): Promise<PreviewRuntimeStatus[]>;
+	execute(command: DashboardPreviewCommand): Promise<PreviewRuntimeStatus[]>;
 }
 
 export function createDashboardPreviewControl(
+	repoRoot: string,
 	coordinator: PreviewCoordinator,
 ): DashboardPreviewControl {
+	const records = () => readProjectTraceRecords(repoRoot);
 	return {
-		status: (records) => coordinator.reconcile(records),
-		async execute(command, records) {
-			const current = await coordinator.reconcile(records);
+		status: async () => coordinator.reconcile(await records()),
+		async execute(command) {
+			const context = await records();
+			const current = await coordinator.reconcile(context);
 			assertExpectedDigest(current, command);
 			if (command.action === "start") {
-				return coordinator.start(command.targetId, records);
+				return coordinator.start(command.targetId, context);
 			}
 			if (command.action === "open") {
 				return coordinator.open(command.targetId);
 			}
 			if (command.action === "capture") {
-				return coordinator.capture(command.targetId, records);
+				return coordinator.capture(command.targetId, context);
 			}
 			if (command.action === "restart") {
-				return coordinator.restart(command.targetId, records);
+				return coordinator.restart(command.targetId, context);
 			}
 			return coordinator.stop(command.targetId);
 		},

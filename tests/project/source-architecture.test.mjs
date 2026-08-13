@@ -458,16 +458,16 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("forbids Server transport from importing Runtime coordinator internals", () => {
+	it("allows Server to import only the curated Runtime gateway", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			const sourcePath = relative(sourceRoot, source);
-			if (!sourcePath.startsWith("server/")) {
-				continue;
-			}
+			if (!sourcePath.startsWith("server/")) continue;
 			for (const target of targets) {
+				const targetPath = relative(sourceRoot, target);
+				if (!targetPath.startsWith("runtime/")) continue;
 				assert.equal(
-					relative(sourceRoot, target).startsWith("runtime/coordinator/"),
-					false,
+					targetPath,
+					"runtime/gateway.ts",
 					edgeLabel(source, target),
 				);
 			}

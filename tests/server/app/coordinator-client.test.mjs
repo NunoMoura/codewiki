@@ -32,6 +32,18 @@ test("Project Runtime gateway exposes bounded grouped operations", async () => {
 				jobs: [{ idempotencyKey: "internal" }],
 			};
 		},
+		appState: async () => {
+			calls.push(["appState"]);
+			return { projectRoot: "/project", summary: { pipeline: 0 } };
+		},
+		changes: async () => {
+			calls.push(["changes"]);
+			return { records: [] };
+		},
+		configuration: async () => {
+			calls.push(["configuration"]);
+			return { source: "default" };
+		},
 		inspect: async (trigger) => {
 			calls.push(["inspect", trigger]);
 			return {
@@ -90,6 +102,14 @@ test("Project Runtime gateway exposes bounded grouped operations", async () => {
 		activeJobCount: 0,
 		completedJobCount: 2,
 	});
+	assert.deepEqual(await gateway.queries.appState(), {
+		projectRoot: "/project",
+		summary: { pipeline: 0 },
+	});
+	assert.deepEqual(await gateway.queries.changes(), { records: [] });
+	assert.deepEqual(await gateway.queries.configuration(), {
+		source: "default",
+	});
 	assert.deepEqual(
 		await gateway.queries.inspect({ kind: "project_truth_changed" }),
 		{
@@ -115,6 +135,9 @@ test("Project Runtime gateway exposes bounded grouped operations", async () => {
 		calls.map(([name]) => name),
 		[
 			"state",
+			"appState",
+			"changes",
+			"configuration",
 			"inspect",
 			"decisionAttention",
 			"selectDecision",

@@ -150,6 +150,9 @@ test("coordinator service authenticates loopback clients and shares supervision"
 		assert.equal(state.clientCount, 2);
 		assert.equal(state.supervisorCount, 1);
 		assert.equal(state.executionPermitted, true);
+		assert.equal((await dashboard.appState()).projectRoot, root);
+		assert.deepEqual((await dashboard.changes()).records, []);
+		assert.equal((await dashboard.configuration()).validation, "valid");
 		const callerSelected = await fetch(
 			`${service.endpoint.origin}/v1/runtime/react`,
 			{

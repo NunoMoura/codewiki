@@ -326,8 +326,19 @@ const runtimeGateway = await connectProjectRuntimeGateway(process.cwd(), {
 	supervision: "approved",
 });
 assert.equal((await runtimeGateway.queries.state()).supervisorCount, 1);
+assert.equal((await runtimeGateway.queries.appState()).projectRoot, process.cwd());
+assert.deepEqual((await runtimeGateway.queries.changes()).records, []);
+assert.equal((await runtimeGateway.queries.configuration()).validation, "valid");
 assert.equal(typeof runtimeGateway.queries.inspect, "function");
 assert.equal(typeof runtimeGateway.queries.decisionAttention, "function");
+assert.deepEqual(Object.keys(runtimeGateway.queries).sort(), [
+	"appState",
+	"changes",
+	"configuration",
+	"decisionAttention",
+	"inspect",
+	"state",
+]);
 assert.equal(typeof runtimeGateway.commands.selectDecision, "function");
 assert.equal(typeof runtimeGateway.commands.submitCandidate, "function");
 assert.deepEqual(Object.keys(runtimeGateway.commands).sort(), [

@@ -1,3 +1,5 @@
+import { watch, type FSWatcher } from "node:fs";
+import { join } from "node:path";
 import type {
 	BacklogTriageQueryRequest,
 	BacklogTriageQueryResult,
@@ -8,6 +10,18 @@ import {
 	connectEnsuredProjectCoordinatorClient,
 } from "./coordinator/process.ts";
 import { stopProjectCoordinatorService } from "./coordinator/service.ts";
+import {
+	loadRuntimeAppState,
+	type CodewikiAppState,
+} from "./queries/app-state.ts";
+import {
+	loadRuntimeChangesState,
+	type RuntimeChangesState,
+} from "./queries/changes.ts";
+import {
+	loadRuntimeConfigurationState,
+	type RuntimeConfigurationState,
+} from "./queries/configuration.ts";
 
 export type ProjectRuntimeClientKind =
 	| "pi"
@@ -99,8 +113,18 @@ export interface ProjectRuntimeEventBatch {
 	events: ProjectRuntimeEvent[];
 }
 
+export interface ProjectRuntimeProjectionGateway {
+	appState(): Promise<CodewikiAppState>;
+	changes(): Promise<RuntimeChangesState>;
+	configuration(): Promise<RuntimeConfigurationState>;
+	subscribe(listener: () => void): () => void;
+}
+
 export interface ProjectRuntimeGatewayClientPort {
 	state(): Promise<ProjectRuntimeState>;
+	appState(): Promise<CodewikiAppState>;
+	changes(): Promise<RuntimeChangesState>;
+	configuration(): Promise<RuntimeConfigurationState>;
 	inspect(trigger: ProjectRuntimeTrigger): Promise<ProjectRuntimeReaction>;
 	decisionAttention(
 		request?: BacklogTriageQueryRequest,
@@ -125,6 +149,9 @@ export interface ProjectRuntimeGatewayClientPort {
 export interface ProjectRuntimeGateway {
 	queries: {
 		state: ProjectRuntimeGatewayClientPort["state"];
+		appState: ProjectRuntimeGatewayClientPort["appState"];
+		changes: ProjectRuntimeGatewayClientPort["changes"];
+		configuration: ProjectRuntimeGatewayClientPort["configuration"];
 		inspect: ProjectRuntimeGatewayClientPort["inspect"];
 		decisionAttention: ProjectRuntimeGatewayClientPort["decisionAttention"];
 	};
@@ -147,6 +174,9 @@ export function createProjectRuntimeGateway(
 	const gateway: ProjectRuntimeGateway = {
 		queries: {
 			state: async () => projectRuntimeState(await client.state()),
+			appState: async () => projection(await client.appState()),
+			changes: async () => projection(await client.changes()),
+			configuration: async () => projection(await client.configuration()),
 			inspect: async (trigger) =>
 				projectRuntimeReaction(await client.inspect(trigger)),
 			decisionAttention: (request) => client.decisionAttention(request),
@@ -172,6 +202,34 @@ export function createProjectRuntimeGateway(
 	Object.freeze(gateway.events);
 	Object.freeze(gateway.connection);
 	return Object.freeze(gateway);
+}
+
+export function createProjectRuntimeProjectionGateway(
+	repoRoot: string,
+): ProjectRuntimeProjectionGateway {
+	return Object.freeze({
+		appState: async () => projection(await loadRuntimeAppState(repoRoot)),
+		changes: async () => projection(await loadRuntimeChangesState(repoRoot)),
+		configuration: async () =>
+			projection(await loadRuntimeConfigurationState(repoRoot)),
+		subscribe(listener: () => void) {
+			let watcher: FSWatcher | undefined;
+			try {
+				watcher = watch(
+					join(repoRoot, ".codewiki", "traces"),
+					{ persistent: false },
+					listener,
+				);
+			} catch (error) {
+				if (!isNotFound(error)) throw error;
+			}
+			return () => watcher?.close();
+		},
+	});
+}
+
+function projection<T>(value: T): T {
+	return structuredClone(value);
 }
 
 function projectRuntimeState(state: ProjectRuntimeState): ProjectRuntimeState {
@@ -255,6 +313,15 @@ function projectRuntimeEventBatch(
 			...(event.message ? { message: event.message } : {}),
 		})),
 	};
+}
+
+function isNotFound(error: unknown): boolean {
+	return Boolean(
+		error &&
+			typeof error === "object" &&
+			"code" in error &&
+			(error as { code?: string }).code === "ENOENT",
+	);
 }
 
 export async function connectProjectRuntimeGateway(

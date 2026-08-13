@@ -63,7 +63,7 @@ export async function runDashboardDev(options) {
 		keepAlive: true,
 		persistent: false,
 		inProcess: true,
-		previewControl: createDashboardPreviewControl(previewCoordinator),
+		previewControl: createDashboardPreviewControl(projectRoot, previewCoordinator),
 	}).catch(async (error) => {
 		await previewCoordinator.close();
 		throw error;

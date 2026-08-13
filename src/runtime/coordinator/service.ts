@@ -6,6 +6,18 @@ import type { Server } from "node:http";
 
 import type { WorktreeCommandRunner } from "../../git/worktrees.ts";
 import {
+	loadRuntimeAppState,
+	type CodewikiAppState,
+} from "../queries/app-state.ts";
+import {
+	loadRuntimeChangesState,
+	type RuntimeChangesState,
+} from "../queries/changes.ts";
+import {
+	loadRuntimeConfigurationState,
+	type RuntimeConfigurationState,
+} from "../queries/configuration.ts";
+import {
 	BACKLOG_TRIAGE_QUERY_PROTOCOL,
 	type BacklogTriageQueryRequest,
 	type BacklogTriageQueryResult,
@@ -174,6 +186,9 @@ export interface ProjectCoordinatorRemoteClient {
 	generationId: string;
 	semanticExecution: ProjectCoordinatorSemanticExecution;
 	state(): Promise<ProjectCoordinatorSnapshot>;
+	appState(): Promise<CodewikiAppState>;
+	changes(): Promise<RuntimeChangesState>;
+	configuration(): Promise<RuntimeConfigurationState>;
 	inspect(trigger: ProjectCoordinatorRemoteTrigger): Promise<RuntimeReaction>;
 	decisionAttention(
 		request?: BacklogTriageQueryRequest,
@@ -462,6 +477,42 @@ export async function connectProjectCoordinatorClient(
 				{ timeoutMs: options.timeoutMs },
 			);
 		},
+		appState() {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<CodewikiAppState>(
+				endpoint,
+				"/v1/runtime/app-state",
+				{
+					method: "POST",
+					body: { connectionId: response.connectionId },
+					timeoutMs: options.timeoutMs,
+				},
+			);
+		},
+		changes() {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<RuntimeChangesState>(
+				endpoint,
+				"/v1/runtime/changes",
+				{
+					method: "POST",
+					body: { connectionId: response.connectionId },
+					timeoutMs: options.timeoutMs,
+				},
+			);
+		},
+		configuration() {
+			assertRemoteClientConnected(disconnected, response.clientId);
+			return requestCoordinatorJson<RuntimeConfigurationState>(
+				endpoint,
+				"/v1/runtime/configuration",
+				{
+					method: "POST",
+					body: { connectionId: response.connectionId },
+					timeoutMs: options.timeoutMs,
+				},
+			);
+		},
 		inspect(trigger) {
 			assertRemoteClientConnected(disconnected, response.clientId);
 			return requestCoordinatorJson<RuntimeReaction>(
@@ -711,6 +762,28 @@ async function routeServiceRequest(
 		await handleEventPoll(runtime, request, response);
 		return;
 	}
+	if (method === "POST" && url.pathname === "/v1/runtime/app-state") {
+		await handleRuntimeProjection(runtime, request, response, loadRuntimeAppState);
+		return;
+	}
+	if (method === "POST" && url.pathname === "/v1/runtime/changes") {
+		await handleRuntimeProjection(
+			runtime,
+			request,
+			response,
+			loadRuntimeChangesState,
+		);
+		return;
+	}
+	if (method === "POST" && url.pathname === "/v1/runtime/configuration") {
+		await handleRuntimeProjection(
+			runtime,
+			request,
+			response,
+			loadRuntimeConfigurationState,
+		);
+		return;
+	}
 	if (method === "POST" && url.pathname === "/v1/runtime/inspect") {
 		await handleRuntimeInspection(runtime, request, response);
 		return;
@@ -776,6 +849,26 @@ async function handleEventPoll(
 				: { waitMs: eventInteger(body.waitMs, 0, 25_000, "waitMs") }),
 		});
 		writeJson(response, 200, batch);
+	} finally {
+		extendLease(runtime, lease);
+	}
+}
+
+async function handleRuntimeProjection<T>(
+	runtime: ServiceRuntime,
+	request: IncomingMessage,
+	response: ServerResponse,
+	load: (repoRoot: string) => Promise<T>,
+): Promise<void> {
+	const body = objectBody(await readJsonBody(request));
+	assertOnlyKeys(body, ["connectionId"]);
+	const lease = requiredLease(runtime, text(body.connectionId));
+	lease.activeRequests += 1;
+	try {
+		await assertCurrentGeneration(runtime);
+		const result = await load(runtime.endpoint.repoRoot);
+		await assertCurrentGeneration(runtime);
+		writeJson(response, 200, result);
 	} finally {
 		extendLease(runtime, lease);
 	}
