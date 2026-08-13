@@ -4,8 +4,18 @@ export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
 export * from "./execution/ports.ts";
 export * from "./protocol/client-pairing.ts";
+export {
+	SERVER_OIDC_AUTHENTICATION_PROTOCOL,
+	serverOidcIdentity,
+	verifyServerOidcAuthentication,
+	type ServerOidcAuthenticationAdapter,
+	type ServerOidcClaims,
+	type ServerOidcIdentity,
+	type VerifiedServerOidcAuthentication,
+} from "./server/authentication/oidc.ts";
 export * from "./server/authentication/proof.ts";
 export * from "./server/pairing/commands.ts";
+export * from "./server/registry/enrollment.ts";
 export * from "./server/registry/state.ts";
 export * from "./server/sessions/contracts.ts";
 export * from "./server/sessions/state.ts";

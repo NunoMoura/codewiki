@@ -123,8 +123,9 @@ function activeMappedActor(
 	const actors = registry.actors.filter(
 		(record) =>
 			record.status === "active" &&
-			record.authenticatedIdentityRefs.includes(
-				authentication.authenticatedIdentityRef,
+			record.authenticatedIdentities.some(
+				(identity) =>
+					identity.identityRef === authentication.authenticatedIdentityRef,
 			),
 	);
 	if (actors.length !== 1) {

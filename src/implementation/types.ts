@@ -1,7 +1,12 @@
 import type { ContentProof } from "../git/content-proof.ts";
 import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
 import type { ExitDetails } from "../traces/types.ts";
+import type {LoopExitDeclaration} from "../verification/contracts.ts";
 import type { ImplementationEvidenceReportInput } from "./review/evidence-report.ts";
+
+export const implementationLoopExitDeclaration = Object.freeze({
+	loop: "implementation" as const,
+}) satisfies LoopExitDeclaration<"implementation">;
 
 export type CheckStatus = "pass" | "fail" | "blocked" | "not-run";
 export type CheckPhase = "red" | "green" | "refactor" | "verify";

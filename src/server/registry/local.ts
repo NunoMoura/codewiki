@@ -103,7 +103,9 @@ async function ensureLocalActorAndProject(input: {
 	for (let attempt = 0; attempt < 4; attempt += 1) {
 		const current = await readServerRegistrySnapshot(input.serverStateRoot);
 		const actor = current?.actors.find((record) =>
-			record.authenticatedIdentityRefs.includes(input.local.authenticatedIdentityRef),
+			record.authenticatedIdentities.some(
+				(identity) => identity.identityRef === input.local.authenticatedIdentityRef,
+			),
 		);
 		const project = current?.projects.find(
 			(record) => record.repositoryIdentity === input.repositoryIdentity,
@@ -125,7 +127,12 @@ async function ensureLocalActorAndProject(input: {
 						{
 							actorId: input.local.actorId,
 							actorKind: "user",
-							authenticatedIdentityRefs: [input.local.authenticatedIdentityRef],
+							authenticatedIdentities: [
+								{
+									kind: "local",
+									identityRef: input.local.authenticatedIdentityRef,
+								},
+							],
 							status: "active",
 							createdAt: occurredAt,
 							updatedAt: occurredAt,

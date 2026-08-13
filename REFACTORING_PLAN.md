@@ -247,6 +247,8 @@ The Server App Session transport clean cut is recorded by `.tmp-worktrees/server
 
 The personal App Pairing clean cut is recorded by `.tmp-worktrees/server-local-app-pairing-clean-cut-manifest.json`, exhaustively anchored to `a78e815` with 645 keeps, 1 deletion, and 1 planned addition. Default App launch now verifies a fresh ephemeral local proof, persists one stable local User identity, project-bound App Pairing, and exact canonical project route in private machine-level Server Registry state, resolves the current Registry generation, and only then opens the App Session. Revoked Pairings, disabled records, identity drift, repository drift, and stale generations fail closed without reactivation. Registry state persists no proof, credential, Runtime role, or project authority. The three-line `src/utils/time.ts` one-consumer abstraction is deleted and its `IsoTimestamp` type moves to the owning legacy Trace type module, keeping source/test counts flat at 358/196.
 
+The Server OIDC and Actor enrollment clean cut is recorded by `.tmp-worktrees/server-oidc-actor-enrollment-clean-cut-manifest.json`, exhaustively anchored to `40b97ff` with 645 keeps, 2 deletions, and 2 planned additions. Provider-neutral OIDC verification receives opaque proof through a trusted adapter that owns authorization-code exchange, PKCE S256, redirect, discovery, signature, algorithm, and key validation. Server verifies exact Client, canonical HTTPS issuer, audience, high-entropy nonce, issued-at, expiry, adapter, and bounded token lifetime before deriving immutable `(issuer, subject)` identity. Registry advances cleanly to `codewiki.server-registry@2.0.0` with typed `local | oidc` identities and no parser for legacy string-only identity arrays. Generation-bound idempotent enrollment creates only one active User mapping and grants no Pairing, Session, repository membership, delegation, role, project permission, or Runtime authority. Raw codes, tokens, PKCE verifiers, nonces, and mutable profile claims are not persisted. Two test-only five-line Loop declaration files are deleted after their constants move to existing Planning and Implementation owner modules, preserving source/test counts at 358/196. Concrete GitHub/GitLab network adapters and provider repository-access checks remain pending.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -308,7 +310,7 @@ Rules:
 - [x] Create a reviewed HEAD-anchored manifest for the Client-Server protocol naming and ownership clean cut; create separate anchored manifests for later Server, Pairing, and Registry cuts.
 - [x] Move `src/host/**` and `tests/host/**` to `src/server/**` and `tests/server/**` without old-path exports.
 - [x] Split Authentication proof verification from Pairing transitions; keep Session and registry ownership distinct.
-- [x] Move shared wire contracts to `src/protocol/**` and clean-cut protocol IDs to `codewiki.client-server@1.0.0`, `codewiki.client-pairing@1.0.0`, and `codewiki.server-registry@1.0.0` without dual parsing.
+- [x] Move shared wire contracts to `src/protocol/**` and clean-cut protocol IDs to `codewiki.client-server@1.0.0`, `codewiki.client-pairing@1.0.0`, and current `codewiki.server-registry@2.0.0` without dual parsing.
 - [ ] Move semantic `src/api/**` handlers to Runtime commands/queries or their domain owners; remove the `api <-> runtime` dependency cycle.
 - [x] Add a narrow Project Runtime gateway for commands, bounded queries, durable operations, and events; Server cannot read Runtime persistence internals.
 - [x] Replace public `./coordinator` with curated `./runtime` backed by `src/runtime/index.ts`; delete duplicate Host/Runtime coordinator entrypoint barrels without aliases.
@@ -318,7 +320,8 @@ Rules:
 - [x] Replace the temporary local App service binding with local Pairing plus Authentication/Registry resolution.
 - [ ] Add reconnect cursors, deep links, redaction, and durable delivery.
 - [x] Implement local Pairing and stable local User mapping for personal App mode.
-- [ ] Implement provider-neutral OIDC with GitHub/GitLab OAuth first for team mode; persist immutable `(issuer, subject)`, not mutable usernames.
+- [x] Implement provider-neutral OIDC verification and immutable `(issuer, subject)` Actor enrollment foundation for team mode.
+- [ ] Implement concrete GitHub/GitLab OAuth/OIDC network adapters, secure callback transaction storage, and credential rotation.
 - [ ] Treat provider repository access as coarse project membership only; require secure Server session authentication and exact Runtime AuthZ for every protected operation.
 - [ ] Keep Clerk, WorkOS, password authentication, and enterprise identity lifecycle dependencies outside the initial foundation.
 - [ ] Ensure browser or terminal closure cannot stop accepted work.

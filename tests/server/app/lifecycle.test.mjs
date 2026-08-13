@@ -11,11 +11,16 @@ import {
 } from "../../../src/server/app/installed-runtime.ts";
 import {startCodewikiAppServer} from "../../../src/server/app/server.ts";
 import { CLIENT_PAIRING_PROTOCOL } from "../../../src/protocol/client-pairing.ts";
+import {
+	serverOidcIdentity,
+	verifyServerOidcAuthentication,
+} from "../../../src/server/authentication/oidc.ts";
 import { verifyServerAuthentication } from "../../../src/server/authentication/proof.ts";
 import {
 	issueClientPairing,
 	revokeClientPairing,
 } from "../../../src/server/pairing/commands.ts";
+import {enrollServerOidcActor} from "../../../src/server/registry/enrollment.ts";
 import {resolveLocalAppServerConnection} from "../../../src/server/registry/local.ts";
 import {
 	SERVER_REGISTRY_PROTOCOL,
@@ -51,7 +56,9 @@ function registry(overrides = {}) {
 			{
 				actorId: "user:nuno",
 				actorKind: "user",
-				authenticatedIdentityRefs: ["identity:local:nuno"],
+				authenticatedIdentities: [
+					{kind: "local", identityRef: "identity:local:nuno"},
+				],
 				status: "active",
 				createdAt: "2026-08-01T10:00:00.000Z",
 				updatedAt: "2026-08-01T10:00:00.000Z",
@@ -226,6 +233,124 @@ describe("Server registry, Client pairing, and Sessions", () => {
 		assert.equal(Object.isFrozen(resolved), true);
 	});
 
+	it("verifies exact OIDC claims and enrolls immutable issuer-subject identity without authority", async () => {
+		const now = new Date("2026-08-13T10:00:00.000Z");
+		const expectedNonce = "n".repeat(32);
+		const claims = {
+			clientKind: "app",
+			clientInstanceId: "app:browser-1",
+			issuer: "https://identity.example.test/tenant",
+			subject: "provider-user-42",
+			audience: "codewiki-team",
+			nonce: expectedNonce,
+			issuedAt: "2026-08-13T09:59:30.000Z",
+			expiresAt: "2026-08-13T10:04:30.000Z",
+		};
+		const verified = await verifyServerOidcAuthentication({
+			adapter: {
+				adapterId: "test.oidc@1.0.0",
+				async verify(request) {
+					assert.equal(request.proof, "opaque-code-proof");
+					assert.equal(request.expected.issuer, claims.issuer);
+					return claims;
+				},
+			},
+			request: {
+				clientKind: "app",
+				clientInstanceId: "app:browser-1",
+				proof: "opaque-code-proof",
+			},
+			expectedIssuer: claims.issuer,
+			expectedAudience: claims.audience,
+			expectedNonce,
+			now,
+		});
+		assert.deepEqual(verified.identity, serverOidcIdentity(claims.issuer, claims.subject));
+		assert.match(verified.assertion.authenticationRef, /^auth:oidc:[a-f0-9]{64}$/);
+		assert.equal(JSON.stringify(verified).includes("opaque-code-proof"), false);
+
+		const base = normalizeServerRegistrySnapshot(registry());
+		const enrolled = enrollServerOidcActor({
+			registry: base,
+			expectedRegistryGeneration: base.generation,
+			authentication: verified,
+			now: new Date("2026-08-13T10:00:01.000Z"),
+		});
+		assert.equal(enrolled.created, true);
+		assert.match(enrolled.actor.actorId, /^user:oidc:/);
+		assert.deepEqual(enrolled.actor.authenticatedIdentities, [verified.identity]);
+		assert.equal(enrolled.registry.pairings.length, base.pairings.length);
+		assert.equal(enrolled.registry.projects.length, base.projects.length);
+		assert.equal(JSON.stringify(enrolled.registry).includes("username"), false);
+		assert.equal(JSON.stringify(enrolled.registry).includes("authority"), false);
+		const replay = enrollServerOidcActor({
+			registry: enrolled.registry,
+			expectedRegistryGeneration: enrolled.registry.generation,
+			authentication: verified,
+		});
+		assert.equal(replay.created, false);
+		assert.equal(replay.registry.generation, enrolled.registry.generation);
+		assert.throws(
+			() => enrollServerOidcActor({
+				registry: enrolled.registry,
+				expectedRegistryGeneration: base.generation,
+				authentication: verified,
+			}),
+			/generation conflict/,
+		);
+		assert.throws(
+			() => enrollServerOidcActor({
+				registry: base,
+				expectedRegistryGeneration: base.generation,
+				authentication: structuredClone(verified),
+			}),
+			/lacks verifier provenance/,
+		);
+		const disabledRegistry = normalizeServerRegistrySnapshot({
+			...enrolled.registry,
+			generation: enrolled.registry.generation + 1,
+			generatedAt: "2026-08-13T10:00:02.000Z",
+			actors: enrolled.registry.actors.map((actor) =>
+				actor.actorId === enrolled.actor.actorId
+					? {...actor, status: "disabled", updatedAt: "2026-08-13T10:00:02.000Z"}
+					: actor,
+			),
+		});
+		assert.throws(
+			() => enrollServerOidcActor({
+				registry: disabledRegistry,
+				expectedRegistryGeneration: disabledRegistry.generation,
+				authentication: verified,
+			}),
+			/not active user enrollment/,
+		);
+
+		for (const [override, message] of [
+			[{nonce: "x".repeat(32)}, /nonce does not match/],
+			[{issuer: "https://other.example.test"}, /issuer does not match/],
+			[{audience: "other-client"}, /audience does not match/],
+			[{clientInstanceId: "app:other"}, /Client request/],
+			[{expiresAt: "2026-08-13T09:59:59.000Z"}, /not currently valid/],
+			[{expiresAt: "2026-08-13T10:20:00.000Z"}, /bounded token lifetime/],
+			[{username: "mutable-name"}, /unsupported field username/],
+		]) {
+			await assert.rejects(
+				() => verifyServerOidcAuthentication({
+					adapter: {
+						adapterId: "test.oidc@1.0.0",
+						async verify() { return {...claims, ...override}; },
+					},
+					request: {clientKind: "app", clientInstanceId: "app:browser-1", proof: "opaque"},
+					expectedIssuer: claims.issuer,
+					expectedAudience: claims.audience,
+					expectedNonce,
+					now,
+				}),
+				message,
+			);
+		}
+	});
+
 	it("persists and resolves personal App Authentication, Pairing, and project routing", async () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-local-app-pairing-"));
 		const serverStateRoot = join(root, "server-state");
@@ -386,6 +511,34 @@ describe("Server registry, Client pairing, and Sessions", () => {
 		assert.throws(
 			() => normalizeServerRegistrySnapshot({...registry(), credential: "secret"}),
 			/unsupported field credential/,
+		);
+		assert.throws(
+			() => normalizeServerRegistrySnapshot({
+				...registry(),
+				protocolVersion: "1.0.0",
+			}),
+			/protocol binding is invalid/,
+		);
+		assert.throws(
+			() => normalizeServerRegistrySnapshot({
+				...registry(),
+				actors: [{
+					...registry().actors[0],
+					authenticatedIdentityRefs: ["identity:local:nuno"],
+				}],
+			}),
+			/unsupported field authenticatedIdentityRefs/,
+		);
+		const oidc = serverOidcIdentity("https://identity.example.test", "subject-1");
+		assert.throws(
+			() => normalizeServerRegistrySnapshot({
+				...registry(),
+				actors: [{
+					...registry().actors[0],
+					authenticatedIdentities: [{...oidc, subject: "subject-1\nadmin"}],
+				}],
+			}),
+			/bounded non-empty text/,
 		);
 		assert.throws(
 			() =>

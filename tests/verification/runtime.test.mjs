@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
 import {decisionLoopExitDeclaration} from "../../src/decision/exit/index.ts";
-import {implementationLoopExitDeclaration} from "../../src/implementation/exit/index.ts";
-import {planningLoopExitDeclaration} from "../../src/planning/exit/index.ts";
+import {implementationLoopExitDeclaration} from "../../src/implementation/types.ts";
+import {planningLoopExitDeclaration} from "../../src/planning/types.ts";
 import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {
 	createLoopExitSuite,

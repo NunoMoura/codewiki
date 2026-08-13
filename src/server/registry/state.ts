@@ -17,6 +17,7 @@ import {
 import {
 	assertSha256Digest,
 	canonicalJson,
+	canonicalJsonDigest,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 import {
@@ -26,7 +27,7 @@ import {
 
 export const SERVER_REGISTRY_PROTOCOL = Object.freeze({
 	id: "codewiki.server-registry",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 const MAX_REGISTRY_RECORDS = 10_000;
@@ -39,10 +40,22 @@ export type ServerActorStatus = "active" | "disabled";
 export type ClientPairingStatus = "active" | "revoked";
 export type ServerProjectStatus = "active" | "disabled";
 
+export type ServerAuthenticatedIdentity =
+	| {
+			readonly kind: "local";
+			readonly identityRef: string;
+	  }
+	| {
+			readonly kind: "oidc";
+			readonly identityRef: string;
+			readonly issuer: string;
+			readonly subject: string;
+	  };
+
 export interface ServerActorRecord {
 	readonly actorId: string;
 	readonly actorKind: ServerActorKind;
-	readonly authenticatedIdentityRefs: readonly string[];
+	readonly authenticatedIdentities: readonly ServerAuthenticatedIdentity[];
 	readonly status: ServerActorStatus;
 	readonly createdAt: string;
 	readonly updatedAt: string;
@@ -269,11 +282,7 @@ function activeActor(
 	if (!actor || actor.status !== "active") {
 		throw new Error("Server registry actor mapping is not active.");
 	}
-	if (
-		!actor.authenticatedIdentityRefs.includes(
-			authentication.authenticatedIdentityRef,
-		)
-	) {
+	if (!hasIdentity(actor, authentication.authenticatedIdentityRef)) {
 		throw new Error("Server authenticated identity is not mapped to actor.");
 	}
 	return actor;
@@ -299,7 +308,7 @@ function normalizeActor(value: unknown, index: number): ServerActorRecord {
 		[
 			"actorId",
 			"actorKind",
-			"authenticatedIdentityRefs",
+			"authenticatedIdentities",
 			"status",
 			"createdAt",
 			"updatedAt",
@@ -317,9 +326,9 @@ function normalizeActor(value: unknown, index: number): ServerActorRecord {
 	return Object.freeze({
 		actorId: text(input.actorId, `${label}.actorId`),
 		actorKind,
-		authenticatedIdentityRefs: uniqueTextArray(
-			input.authenticatedIdentityRefs,
-			`${label}.authenticatedIdentityRefs`,
+		authenticatedIdentities: identities(
+			input.authenticatedIdentities,
+			`${label}.authenticatedIdentities`,
 		),
 		status,
 		createdAt: timestamp(input.createdAt, `${label}.createdAt`),
@@ -458,14 +467,14 @@ function assertRegistryUniqueKeys(registry: ServerRegistrySnapshot): void {
 function assertStableActorIdentities(actors: readonly ServerActorRecord[]): void {
 	const actorByIdentity = new Map<string, string>();
 	for (const actor of actors) {
-		for (const identityRef of actor.authenticatedIdentityRefs) {
-			const existing = actorByIdentity.get(identityRef);
+		for (const identity of actor.authenticatedIdentities) {
+			const existing = actorByIdentity.get(identity.identityRef);
 			if (existing && existing !== actor.actorId) {
 				throw new Error(
-					`Server registry authenticated identity ${identityRef} maps to multiple actors.`,
+					`Server registry authenticated identity ${identity.identityRef} maps to multiple actors.`,
 				);
 			}
-			actorByIdentity.set(identityRef, actor.actorId);
+			actorByIdentity.set(identity.identityRef, actor.actorId);
 		}
 	}
 }
@@ -480,7 +489,7 @@ function assertPairingMappings(
 		if (!actor) {
 			throw new Error(`Client pairing ${pairing.pairingId} references unknown actor.`);
 		}
-		if (!actor.authenticatedIdentityRefs.includes(pairing.authenticatedIdentityRef)) {
+		if (!hasIdentity(actor, pairing.authenticatedIdentityRef)) {
 			throw new Error(
 				`Client pairing ${pairing.pairingId} identity does not match actor mapping.`,
 			);
@@ -555,17 +564,20 @@ function assertActorTransition(
 		if (replacement.actorKind !== existing.actorKind) {
 			throw new Error("Server registry cannot change actor kind.");
 		}
-		for (const identityRef of existing.authenticatedIdentityRefs) {
-			if (!replacement.authenticatedIdentityRefs.includes(identityRef)) {
-				throw new Error("Server registry cannot remove an actor identity mapping.");
+		for (const identity of existing.authenticatedIdentities) {
+			const replacementIdentity = replacement.authenticatedIdentities.find(
+				(candidate) => candidate.identityRef === identity.identityRef,
+			);
+			if (!replacementIdentity || canonicalJson(replacementIdentity) !== canonicalJson(identity)) {
+				throw new Error("Server registry cannot change or remove an actor identity mapping.");
 			}
 		}
 		assertUpdatedAtTransition(
 			existing.updatedAt,
 			replacement.updatedAt,
 			existing.status !== replacement.status ||
-				existing.authenticatedIdentityRefs.length !==
-					replacement.authenticatedIdentityRefs.length,
+				existing.authenticatedIdentities.length !==
+					replacement.authenticatedIdentities.length,
 			"actor",
 		);
 		assertStatusDoesNotReactivate(existing.status, replacement.status, "actor");
@@ -731,17 +743,75 @@ function records<T>(
 	return Object.freeze(value.map(normalize));
 }
 
-function uniqueTextArray(value: unknown, field: string): readonly string[] {
+function identities(
+	value: unknown,
+	field: string,
+): readonly ServerAuthenticatedIdentity[] {
 	if (!Array.isArray(value) || value.length === 0 || value.length > 100) {
 		throw new Error(`${field} must contain between 1 and 100 entries.`);
 	}
 	const normalized = value.map((entry, index) =>
-		text(entry, `${field}[${index}]`, 4_096),
+		normalizeIdentity(entry, `${field}[${index}]`),
 	);
-	if (new Set(normalized).size !== normalized.length) {
-		throw new Error(`${field} must contain unique entries.`);
+	if (
+		new Set(normalized.map((identity) => identity.identityRef)).size !==
+		normalized.length
+	) {
+		throw new Error(`${field} must contain unique identity references.`);
 	}
 	return Object.freeze(normalized);
+}
+
+function normalizeIdentity(
+	value: unknown,
+	field: string,
+): ServerAuthenticatedIdentity {
+	const base = exactObject(
+		value,
+		["kind", "identityRef", "issuer", "subject"],
+		field,
+	);
+	const kind = choice(base.kind, `${field}.kind`, ["local", "oidc"] as const);
+	const identityRef = text(base.identityRef, `${field}.identityRef`, 4_096);
+	if (kind === "local") {
+		if (base.issuer !== undefined || base.subject !== undefined) {
+			throw new Error(`${field} local identity cannot contain OIDC fields.`);
+		}
+		return Object.freeze({kind, identityRef});
+	}
+	const issuer = oidcIssuer(base.issuer, `${field}.issuer`);
+	const subject = text(base.subject, `${field}.subject`, 1_024);
+	const expectedRef = `identity:oidc:${canonicalJsonDigest({issuer, subject}).slice("sha256:".length)}`;
+	if (identityRef !== expectedRef) {
+		throw new Error(`${field}.identityRef does not match OIDC issuer and subject.`);
+	}
+	return Object.freeze({kind, identityRef, issuer, subject});
+}
+
+function hasIdentity(actor: ServerActorRecord, identityRef: string): boolean {
+	return actor.authenticatedIdentities.some(
+		(identity) => identity.identityRef === identityRef,
+	);
+}
+
+function oidcIssuer(value: unknown, field: string): string {
+	const textValue = text(value, field, 2_048);
+	let issuer: URL;
+	try {
+		issuer = new URL(textValue);
+	} catch {
+		throw new Error(`${field} must be a canonical HTTPS URL.`);
+	}
+	if (
+		issuer.protocol !== "https:" ||
+		issuer.username ||
+		issuer.password ||
+		issuer.search ||
+		issuer.hash
+	) {
+		throw new Error(`${field} must be a canonical HTTPS URL.`);
+	}
+	return textValue;
 }
 
 function assertUnique<T>(
@@ -786,7 +856,11 @@ function text(value: unknown, field: string, maximum = 512): string {
 		typeof value !== "string" ||
 		value.trim() !== value ||
 		value.length === 0 ||
-		value.length > maximum
+		value.length > maximum ||
+		[...value].some((character) => {
+			const code = character.codePointAt(0) ?? 0;
+			return code < 32 || code === 127;
+		})
 	) {
 		throw new Error(`${field} must be bounded non-empty text.`);
 	}

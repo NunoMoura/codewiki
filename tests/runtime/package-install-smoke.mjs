@@ -58,10 +58,12 @@ import {
 	SERVER_SESSION_PROTOCOL,
 	buildWikiState,
 	buildWorkState,
+	enrollServerOidcActor,
 	issueClientPairing,
 	normalizeClientServerQuery,
 	openServerSession,
 	verifyServerAuthentication,
+	verifyServerOidcAuthentication,
 	normalizeServerRegistrySnapshot,
 	runWikiConfig,
 } from "@nunomoura/codewiki";
@@ -227,8 +229,12 @@ assert.equal(existsSync(join(packageRoot, "dist", "api", "wiki-config.js")), fal
 assert.equal(existsSync(join(packageRoot, "dist", "api", "views.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "traces.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "host")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "authentication", "oidc.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "authentication", "oidc.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "authentication", "proof.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "authentication", "proof.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "enrollment.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "enrollment.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "local.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "local.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "registry", "state.js")), true);
@@ -254,7 +260,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "error-handling", "execution-e
 assert.equal(CLIENT_SERVER_PROTOCOL.id, "codewiki.client-server");
 assert.equal(CLIENT_SERVER_PROTOCOL.version, "1.0.0");
 assert.equal(SERVER_REGISTRY_PROTOCOL.id, "codewiki.server-registry");
-assert.equal(SERVER_REGISTRY_PROTOCOL.version, "1.0.0");
+assert.equal(SERVER_REGISTRY_PROTOCOL.version, "2.0.0");
 assert.equal(CLIENT_PAIRING_PROTOCOL.id, "codewiki.client-pairing");
 assert.equal(CLIENT_PAIRING_PROTOCOL.version, "1.0.0");
 assert.equal(SERVER_SESSION_PROTOCOL.id, "codewiki.server-session");
@@ -262,6 +268,8 @@ assert.equal(SERVER_SESSION_PROTOCOL.version, "1.0.0");
 assert.equal(typeof issueClientPairing, "function");
 assert.equal(typeof openServerSession, "function");
 assert.equal(typeof verifyServerAuthentication, "function");
+assert.equal(typeof verifyServerOidcAuthentication, "function");
+assert.equal(typeof enrollServerOidcActor, "function");
 assert.equal(
 	normalizeServerRegistrySnapshot({
 		protocolId: SERVER_REGISTRY_PROTOCOL.id,
@@ -296,6 +304,8 @@ assert.equal(
 	}).actor.actorId,
 	"user:packed",
 );
+assert.equal(existsSync(join(packageRoot, "dist", "planning", "exit", "index.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "implementation", "exit", "index.js")), false);
 assert.equal(
 	existsSync(join(packageRoot, "dist", "harnesses")),
 	false,
