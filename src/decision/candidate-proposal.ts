@@ -6,6 +6,12 @@ import {
 
 export type DecisionDisposition = "approve" | "reject" | "defer" | "withdraw";
 
+export interface RuntimeDecisionAuthority {
+	readonly kind: "user" | "policy";
+	readonly actor: string;
+	readonly ref: string;
+}
+
 export interface DecisionCandidateProposal {
 	disposition: DecisionDisposition;
 	rationale: string;

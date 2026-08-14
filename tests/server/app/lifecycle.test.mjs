@@ -17,6 +17,10 @@ import {
 } from "../../../src/server/authentication/oidc.ts";
 import { verifyServerAuthentication } from "../../../src/server/authentication/proof.ts";
 import {
+	issueAuthorizedClientPairing,
+	revokeAuthorizedClientPairing,
+} from "../../../src/server/pairing/authorization.ts";
+import {
 	issueClientPairing,
 	revokeClientPairing,
 } from "../../../src/server/pairing/commands.ts";
@@ -778,6 +782,196 @@ describe("Server registry, Client pairing, and Sessions", () => {
 		assert.equal(revoked.generation, 9);
 		assert.equal(revoked.pairings.at(-1).status, "revoked");
 		assert.equal(revoked.pairings.at(-1).updatedAt, "2026-08-15T10:00:00.000Z");
+	});
+
+	it("authorizes Pairing transitions through exact active Server Session context", async () => {
+		const base = normalizeServerRegistrySnapshot(registry());
+		const opened = openServerSession({
+			binding: {
+				actor: {actorId: "user:nuno", authenticatedIdentityRef: "identity:local:nuno"},
+				client: {
+					clientKind: "app",
+					clientInstanceId: "app:laptop",
+					authenticationRef: "auth:pairing:app-laptop",
+				},
+				project: {
+					projectId: "project:codewiki",
+					repositoryIdentity: digest("1"),
+					runtimeRouteRef: "runtime:codewiki",
+				},
+			},
+			lifetimeSeconds: 600,
+			now: new Date("2026-08-14T09:59:00.000Z"),
+		});
+		const targetAuthentication = await verifyServerAuthentication({
+			adapter: {
+				adapterId: "target-client",
+				async verify() {
+					return {
+						clientKind: "cli",
+						clientInstanceId: "cli:desktop",
+						authenticationRef: "auth:pairing:cli-desktop",
+						authenticatedIdentityRef: "identity:local:nuno",
+					};
+				},
+			},
+			request: {
+				clientKind: "cli",
+				clientInstanceId: "cli:desktop",
+				proof: "opaque-target-proof",
+			},
+		});
+		const issueCommand = {
+			protocolId: CLIENT_PAIRING_PROTOCOL.id,
+			protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
+			kind: "issue",
+			expectedRegistryGeneration: base.generation,
+			pairingId: "pairing:cli-desktop",
+			clientKind: "cli",
+			clientInstanceId: "cli:desktop",
+		};
+		let policyCalls = 0;
+		const issued = await issueAuthorizedClientPairing({
+			registry: base,
+			command: issueCommand,
+			authentication: targetAuthentication,
+			session: opened.session,
+			sessionCredential: opened.credential,
+			expectedSessionGeneration: opened.session.generation,
+			authorization: {
+				adapterId: "pairing-policy",
+				authorize(context) {
+					policyCalls += 1;
+					assert.equal(context.endpoint.endpointId, "server.pairing.issue");
+					assert.equal(context.endpoint.method, "POST");
+					assert.deepEqual(context.command, issueCommand);
+					assert.deepEqual(context.targetClient, {
+						clientKind: "cli",
+						clientInstanceId: "cli:desktop",
+					});
+					assert.equal(JSON.stringify(context).includes(opened.credential), false);
+					return true;
+				},
+			},
+			now: new Date("2026-08-14T10:00:00.000Z"),
+		});
+		assert.equal(policyCalls, 1);
+		assert.equal(issued.registry.generation, base.generation + 1);
+		assert.equal(issued.registry.pairings.at(-1).actorId, "user:nuno");
+		assert.equal(issued.authorization.authorizationAdapterId, "pairing-policy");
+		let duplicatePolicyCalls = 0;
+		await assert.rejects(
+			() => issueAuthorizedClientPairing({
+				registry: issued.registry,
+				command: {...issueCommand, expectedRegistryGeneration: issued.registry.generation},
+				authentication: targetAuthentication,
+				session: opened.session,
+				sessionCredential: opened.credential,
+				expectedSessionGeneration: opened.session.generation,
+				authorization: {
+					adapterId: "pairing-policy",
+					authorize() { duplicatePolicyCalls += 1; return true; },
+				},
+				now: new Date("2026-08-14T10:00:30.000Z"),
+			}),
+			/endpoint authorization denied/,
+		);
+		assert.equal(duplicatePolicyCalls, 0);
+
+		const revokeCommand = {
+			protocolId: CLIENT_PAIRING_PROTOCOL.id,
+			protocolVersion: CLIENT_PAIRING_PROTOCOL.version,
+			kind: "revoke",
+			expectedRegistryGeneration: issued.registry.generation,
+			pairingId: "pairing:cli-desktop",
+			expectedAuthenticationRef: targetAuthentication.authenticationRef,
+		};
+		const revoked = await revokeAuthorizedClientPairing({
+			registry: issued.registry,
+			command: revokeCommand,
+			authentication: targetAuthentication,
+			session: opened.session,
+			sessionCredential: opened.credential,
+			expectedSessionGeneration: opened.session.generation,
+			authorization: {
+				adapterId: "pairing-policy",
+				authorize(context) {
+					assert.equal(context.endpoint.endpointId, "server.pairing.revoke");
+					assert.equal(context.endpoint.method, "DELETE");
+					assert.deepEqual(context.command, revokeCommand);
+					return true;
+				},
+			},
+			now: new Date("2026-08-14T10:01:00.000Z"),
+		});
+		assert.equal(revoked.registry.pairings.at(-1).status, "revoked");
+
+		const attempt = (overrides = {}) => issueAuthorizedClientPairing({
+			registry: base,
+			command: issueCommand,
+			authentication: targetAuthentication,
+			session: opened.session,
+			sessionCredential: opened.credential,
+			expectedSessionGeneration: opened.session.generation,
+			authorization: {adapterId: "pairing-policy", authorize: () => true},
+			now: new Date("2026-08-14T10:00:00.000Z"),
+			...overrides,
+		});
+		await assert.rejects(
+			() => attempt({sessionCredential: "forged"}),
+			/session credential is invalid/,
+		);
+		await assert.rejects(
+			() => attempt({authorization: {adapterId: "deny", authorize: () => false}}),
+			/endpoint authorization denied/,
+		);
+		await assert.rejects(
+			() => attempt({command: {...issueCommand, expectedRegistryGeneration: 6}}),
+			/endpoint authorization denied/,
+		);
+		await assert.rejects(
+			() => attempt({
+				authentication: {...targetAuthentication, authenticatedIdentityRef: "identity:local:other"},
+			}),
+			/lacks verifier provenance/,
+		);
+		const otherAuthentication = await verifyServerAuthentication({
+			adapter: {
+				adapterId: "other-target",
+				async verify() {
+					return {
+						...targetAuthentication,
+						authenticatedIdentityRef: "identity:local:other",
+					};
+				},
+			},
+			request: {
+				clientKind: "cli",
+				clientInstanceId: "cli:desktop",
+				proof: "opaque-other-proof",
+			},
+		});
+		await assert.rejects(
+			() => attempt({authentication: otherAuthentication}),
+			/endpoint authorization denied/,
+		);
+		await assert.rejects(
+			() => attempt({
+				session: {
+					...opened.session,
+					project: {...opened.session.project, runtimeRouteRef: "runtime:other"},
+				},
+			}),
+			/endpoint authorization denied/,
+		);
+		await assert.rejects(
+			() => attempt({authorization: {adapterId: "throw", authorize: () => { throw new Error("x"); }}}),
+			/endpoint authorization denied/,
+		);
+		await assert.rejects(
+			() => attempt({authority: "admin"}),
+			/unsupported field authority/,
+		);
 	});
 
 	it("fails closed on proof and pairing command drift", async () => {

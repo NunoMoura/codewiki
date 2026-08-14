@@ -24,8 +24,10 @@ import {
 } from "../changes/records.ts";
 import { ChangeTraceStore } from "../changes/trace-store.ts";
 import { evaluateChangeDecision } from "../decision/change-quality.ts";
-import type { DecisionDisposition } from "../decision/candidate-proposal.ts";
-import type { RuntimeDecisionAuthority } from "../runtime/admission/authority.ts";
+import type {
+	DecisionDisposition,
+	RuntimeDecisionAuthority,
+} from "../decision/candidate-proposal.ts";
 import { buildProjectWorkState } from "../work-state/project.ts";
 import type { WorkState } from "../work-state/types.ts";
 import { join } from "node:path";

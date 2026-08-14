@@ -3,6 +3,8 @@ import {
 	type ClientKind,
 } from "../../protocol/client-server.ts";
 
+const verifiedServerAuthentications = new WeakSet<object>();
+
 export interface ServerAuthenticationProof {
 	readonly clientKind: ClientKind;
 	readonly clientInstanceId: string;
@@ -67,10 +69,17 @@ function assertionObject(
 	) {
 		throw new Error(`${label} must be a plain object.`);
 	}
+	if (Object.getOwnPropertySymbols(value).length > 0) {
+		throw new Error(`${label} cannot contain symbol fields.`);
+	}
 	const input = value as Record<string, unknown>;
-	for (const key of Object.keys(input)) {
+	for (const key of Object.getOwnPropertyNames(input)) {
 		if (!fields.includes(key)) {
 			throw new Error(`${label} received unsupported field ${key}.`);
+		}
+		const descriptor = Object.getOwnPropertyDescriptor(input, key);
+		if (!descriptor?.enumerable || !("value" in descriptor)) {
+			throw new Error(`${label}.${key} must be an enumerable data field.`);
 		}
 	}
 	return input;
@@ -98,7 +107,26 @@ export async function verifyServerAuthentication(input: {
 	) {
 		throw new Error("Server authentication assertion does not match proof request.");
 	}
+	markVerifiedServerAuthenticationAssertion(assertion);
 	return assertion;
+}
+
+export function assertVerifiedServerAuthenticationAssertion(
+	value: ServerAuthenticationAssertion,
+): void {
+	if (
+		typeof value !== "object" ||
+		value === null ||
+		!verifiedServerAuthentications.has(value)
+	) {
+		throw new Error("Server authentication assertion lacks verifier provenance.");
+	}
+}
+
+export function markVerifiedServerAuthenticationAssertion(
+	value: ServerAuthenticationAssertion,
+): void {
+	verifiedServerAuthentications.add(value);
 }
 
 function normalizeProofRequest(value: unknown): ServerAuthenticationProof {

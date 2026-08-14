@@ -1,6 +1,6 @@
 import {canonicalJsonDigest} from "../../utils/canonical-json.ts";
 import {CLIENT_KINDS, type ClientKind} from "../../protocol/client-server.ts";
-import {
+import {markVerifiedServerAuthenticationAssertion,
 	normalizeServerAuthenticationAssertion,
 	type ServerAuthenticationAssertion,
 	type ServerAuthenticationProof,
@@ -106,7 +106,7 @@ export async function verifyServerOidcAuthentication(input: {
 		}).slice("sha256:".length)}`,
 		authenticatedIdentityRef: identity.identityRef,
 	});
-	const verified = Object.freeze({assertion, identity, adapterId});
+	markVerifiedServerAuthenticationAssertion(assertion); const verified = Object.freeze({assertion, identity, adapterId});
 	verifiedOidcAuthentications.add(verified);
 	return verified;
 }

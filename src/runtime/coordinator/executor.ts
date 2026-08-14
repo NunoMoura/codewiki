@@ -14,8 +14,8 @@ import type {
 import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
+	type RuntimeDecisionAuthority,
 } from "../../decision/candidate-proposal.ts";
-import type { RuntimeDecisionAuthority } from "../admission/authority.ts";
 import { TraceAppendConflictError } from "../../error-handling/trace-errors.ts";
 import type { CandidateProducerPort } from "../../execution/ports.ts";
 import {

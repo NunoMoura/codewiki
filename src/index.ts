@@ -13,8 +13,22 @@ export {
 	type ServerOidcIdentity,
 	type VerifiedServerOidcAuthentication,
 } from "./server/authentication/oidc.ts";
-export * from "./server/authentication/proof.ts";
-export * from "./server/pairing/commands.ts";
+export {
+	normalizeServerAuthenticationAssertion,
+	verifyServerAuthentication,
+	type ServerAuthenticationAdapter,
+	type ServerAuthenticationAssertion,
+	type ServerAuthenticationProof,
+} from "./server/authentication/proof.ts";
+export {
+	SERVER_PAIRING_ENDPOINTS,
+	issueAuthorizedClientPairing,
+	revokeAuthorizedClientPairing,
+	type AuthorizedClientPairingTransition,
+	type ServerPairingAuthorizationAdapter,
+	type ServerPairingAuthorizationCommand,
+	type ServerPairingAuthorizationContext,
+} from "./server/pairing/authorization.ts";
 export {
 	SERVER_REPOSITORY_ACCESS_PROTOCOL,
 	checkServerProviderRepositoryAccess,

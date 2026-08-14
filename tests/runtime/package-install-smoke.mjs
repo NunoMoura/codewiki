@@ -50,6 +50,7 @@ try {
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import * as packageModule from "@nunomoura/codewiki";
 import {
 	CODEWIKI_EXTENSION_AVAILABLE,
 	CLIENT_SERVER_PROTOCOL,
@@ -61,7 +62,8 @@ import {
 	buildWorkState,
 	checkServerProviderRepositoryAccess,
 	enrollServerOidcActor,
-	issueClientPairing,
+	issueAuthorizedClientPairing,
+	revokeAuthorizedClientPairing,
 	normalizeClientServerQuery,
 	openServerSession,
 	verifyServerAuthentication,
@@ -129,6 +131,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-executor.
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "dev-log.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "tmp.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "persistence", "trace.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "pairing", "authorization.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "server", "pairing", "authorization.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "authority.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "authority.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "repository-access", "check.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "server", "repository-access", "check.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "implementation", "worker-observation-authority.js")), false);
@@ -272,7 +278,10 @@ assert.equal(SERVER_SESSION_PROTOCOL.id, "codewiki.server-session");
 assert.equal(SERVER_SESSION_PROTOCOL.version, "1.0.0");
 assert.equal(SERVER_REPOSITORY_ACCESS_PROTOCOL.version, "1.0.0");
 assert.equal(typeof checkServerProviderRepositoryAccess, "function");
-assert.equal(typeof issueClientPairing, "function");
+assert.equal(typeof issueAuthorizedClientPairing, "function");
+assert.equal(typeof revokeAuthorizedClientPairing, "function");
+assert.equal(packageModule.issueClientPairing, undefined);
+assert.equal(packageModule.revokeClientPairing, undefined);
 assert.equal(typeof openServerSession, "function");
 assert.equal(typeof verifyServerAuthentication, "function");
 assert.equal(typeof verifyServerOidcAuthentication, "function");

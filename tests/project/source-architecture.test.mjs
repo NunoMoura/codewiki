@@ -215,10 +215,13 @@ describe("source architecture", () => {
 				name,
 			);
 		}
-		assert.equal(
-			existsSync(join(sourceRoot, "server", "pairing", "commands.ts")),
-			true,
-		);
+		for (const name of ["authorization.ts", "commands.ts"]) {
+			assert.equal(
+				existsSync(join(sourceRoot, "server", "pairing", name)),
+				true,
+				name,
+			);
+		}
 		assert.equal(
 			existsSync(join(sourceRoot, "server", "repository-access", "check.ts")),
 			true,
@@ -504,6 +507,10 @@ describe("source architecture", () => {
 			join(sourceRoot, "server", "pairing", "commands.ts"),
 			"utf8",
 		);
+		const pairingAuthorization = readFileSync(
+			join(sourceRoot, "server", "pairing", "authorization.ts"),
+			"utf8",
+		);
 		const registry = readFileSync(
 			join(sourceRoot, "server", "registry", "state.ts"),
 			"utf8",
@@ -522,6 +529,10 @@ describe("source architecture", () => {
 			pairing,
 			/verifyServerAuthentication|ServerAuthenticationProof|ServerAuthenticationAdapter/,
 		);
+		assert.match(pairingAuthorization, /export async function issueAuthorizedClientPairing/);
+		assert.match(pairingAuthorization, /export async function revokeAuthorizedClientPairing/);
+		assert.match(pairingAuthorization, /authorizeServerEndpoint/);
+		assert.doesNotMatch(pairingAuthorization, /runtime\/gateway|repository-access/);
 		assert.doesNotMatch(
 			registry,
 			/export (?:interface ServerAuthenticationAssertion|function normalizeServerAuthenticationAssertion)/,
