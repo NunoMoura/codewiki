@@ -1,5 +1,5 @@
 export type CodewikiErrorDomain =
-	| "api"
+	| "operation"
 	| "config"
 	| "runtime"
 	| "trace";

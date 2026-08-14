@@ -3,18 +3,18 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runWikiArchive } from "../../src/api/wiki-archive.ts";
-import { runImplementationIteration } from "../../src/implementation/iteration.ts";
-import { runDecisionIterationWithRunner } from "../helpers/canonical-loop-events.mjs";
-import { runPlanningIterationWithRunner } from "../helpers/canonical-loop-events.mjs";
-import { appendTraceRecords } from "../../src/traces/append.ts";
-import { readTrace } from "../../src/traces/reader.ts";
-import { replayTrace } from "../../src/traces/replay.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
-import { createTraceHead } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
-import { implementationQualityFields } from "../helpers/implementation-change.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
+import { runWikiArchive } from "../../../src/runtime/commands/archive.ts";
+import { runImplementationIteration } from "../../../src/implementation/iteration.ts";
+import { runDecisionIterationWithRunner } from "../../helpers/canonical-loop-events.mjs";
+import { runPlanningIterationWithRunner } from "../../helpers/canonical-loop-events.mjs";
+import { appendTraceRecords } from "../../../src/traces/append.ts";
+import { readTrace } from "../../../src/traces/reader.ts";
+import { replayTrace } from "../../../src/traces/replay.ts";
+import { traceFilePath } from "../../../src/traces/schema.ts";
+import { createTraceHead } from "../../../src/traces/writer.ts";
+import { decisionQualityFields } from "../../helpers/proposed-change.mjs";
+import { implementationQualityFields } from "../../helpers/implementation-change.mjs";
+import { planningQualityFields } from "../../helpers/planning-work.mjs";
 
 async function runDecisionFixture(input) {
 	return {
@@ -72,7 +72,7 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 					acceptance: ["Retention refs are previewed and close is guarded."],
 					componentRefs: ["traces"],
 					pathScopes: ["src/traces"],
-					verification: ["tests/traces/wiki-archive.test.mjs"],
+					verification: ["tests/runtime/commands/archive.test.mjs"],
 				},
 			],
 		}),
@@ -87,23 +87,23 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 		createdAt: "2026-06-11T00:00:03.000Z",
 		existingPaths: [
 			"src/traces/retention.ts",
-			"tests/traces/wiki-archive.test.mjs",
+			"tests/runtime/commands/archive.test.mjs",
 		],
 		changeInputs: [
 			{
 				id: "CHG-archive",
 				planningRefs: [planningRef],
 				codePaths: ["src/traces/retention.ts"],
-				testPaths: ["tests/traces/wiki-archive.test.mjs"],
+				testPaths: ["tests/runtime/commands/archive.test.mjs"],
 				checks: [
-					"node --experimental-strip-types --test tests/traces/wiki-archive.test.mjs",
+					"node --experimental-strip-types --test tests/runtime/commands/archive.test.mjs",
 				],
 				checkResults: [
 					{
 						command:
-							"node --experimental-strip-types --test tests/traces/wiki-archive.test.mjs",
+							"node --experimental-strip-types --test tests/runtime/commands/archive.test.mjs",
 						status: "pass",
-						outputRef: "tests/traces/wiki-archive.test.mjs",
+						outputRef: "tests/runtime/commands/archive.test.mjs",
 					},
 				],
 				acceptanceEvidence: ["Archive retention refs are covered."],
@@ -111,7 +111,7 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 					{
 						criterionId: "AC-001",
 						summary: "Archive retention refs are covered.",
-						evidenceRefs: ["tests/traces/wiki-archive.test.mjs"],
+						evidenceRefs: ["tests/runtime/commands/archive.test.mjs"],
 					},
 				],
 				contentProof: { workingTreeDigest: "sha256:abcdef" },

@@ -1,4 +1,4 @@
-import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import { createCodewikiOperationError } from "../../error-handling/operation-errors.ts";
 import {
 	createRuntimeHeartbeatQueue,
 	evaluateRuntimeHeartbeatCyclePolicy,
@@ -6,33 +6,33 @@ import {
 	type HeartbeatCycleResult,
 	type RuntimeHeartbeatCyclePolicyDecision,
 	type RuntimeHeartbeatRequest,
-} from "../runtime/coordinator/index.ts";
+} from "../coordinator/index.ts";
 import {
 	appendRuntimeWorkUnitClaims,
 	createRuntimeWorkUnitClaimEvents,
 	type RuntimeWorkUnitClaimAppendResult,
 	type RuntimeWorkUnitClaimEventBatch,
-} from "../runtime/claims/work-unit-events.ts";
+} from "../claims/work-unit-events.ts";
 import {
 	appendRuntimeLeaseExpirations,
 	planRuntimeLeaseExpirations,
 	type RuntimeLeaseExpirationAppendResult,
 	type RuntimeLeaseExpirationBatch,
-} from "../runtime/claims/leases.ts";
+} from "../claims/leases.ts";
 import {
 	evaluateRuntimeLeaseExpirationPolicy,
 	evaluateRuntimeWorkUnitClaimPolicy,
 	type RuntimeLeaseExpirationPolicyDecision,
 	type RuntimeWorkUnitClaimPolicyDecision,
-} from "../runtime/claims/policy.ts";
+} from "../claims/policy.ts";
 import {
 	selectRuntimeWorkUnitClaims,
 	type RuntimeWorkUnitClaimSelection,
-} from "../runtime/claims/work-unit-selection.ts";
-import type { WorktreeRef } from "../git/worktrees.ts";
-import type { PartialWikiConfig, WikiConfig } from "../project/config.ts";
-import type { TraceRecord } from "../traces/types.ts";
-import type { TriggersView, WorkQueueView } from "../views/types.ts";
+} from "../claims/work-unit-selection.ts";
+import type { WorktreeRef } from "../../git/worktrees.ts";
+import type { PartialWikiConfig, WikiConfig } from "../../project/config.ts";
+import type { TraceRecord } from "../../traces/types.ts";
+import type { TriggersView, WorkQueueView } from "../../views/types.ts";
 
 export type WikiRuntimeMode = "preview" | "append";
 export type WikiRuntimeAction = "work-unit-claims";
@@ -296,7 +296,7 @@ function heartbeatResultFields(
 
 function requiredRecords(value: TraceRecord[] | undefined): TraceRecord[] {
 	if (!value) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_runtime",
 			code: "missing_required",
 			field: "records",
@@ -308,7 +308,7 @@ function requiredRecords(value: TraceRecord[] | undefined): TraceRecord[] {
 
 function requiredQueue(value: WorkQueueView | undefined): WorkQueueView {
 	if (!value) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_runtime",
 			code: "missing_required",
 			field: "queue",
@@ -320,7 +320,7 @@ function requiredQueue(value: WorkQueueView | undefined): WorkQueueView {
 
 function requiredTriggers(value: TriggersView | undefined): TriggersView {
 	if (!value) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_runtime",
 			code: "missing_required",
 			field: "triggers",
@@ -331,7 +331,7 @@ function requiredTriggers(value: TriggersView | undefined): TriggersView {
 }
 
 function unsupportedAction(action: string): Error {
-	return createCodewikiApiError({
+	return createCodewikiOperationError({
 		operation: "wiki_runtime",
 		code: "unsupported_action",
 		field: "action",
@@ -341,7 +341,7 @@ function unsupportedAction(action: string): Error {
 }
 
 function appendBlocked(blockers: string[]): Error {
-	return createCodewikiApiError({
+	return createCodewikiOperationError({
 		operation: "wiki_runtime",
 		code: "append_blocked",
 		message: `wiki_runtime append blocked by policy: ${blockers.join(" ")}`,
@@ -364,7 +364,7 @@ function requiredBatch(
 	batch: RuntimeWorkUnitClaimEventBatch | undefined,
 ): RuntimeWorkUnitClaimEventBatch {
 	if (!batch) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_runtime",
 			code: "missing_required",
 			field: "nextSequenceByTrace",
@@ -376,7 +376,7 @@ function requiredBatch(
 
 function requiredRepoRoot(value: string | undefined): string {
 	if (!value) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_runtime",
 			code: "missing_required",
 			field: "repoRoot",
@@ -390,7 +390,7 @@ function requiredNextSequenceByTrace(
 	value: Record<string, number> | undefined,
 ): Record<string, number> {
 	if (!value) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_runtime",
 			code: "missing_required",
 			field: "nextSequenceByTrace",
@@ -404,7 +404,7 @@ function requiredBytesByTrace(
 	value: Record<string, number> | undefined,
 ): Record<string, number> {
 	if (!value) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_runtime",
 			code: "missing_required",
 			field: "expectedBytesByTrace",

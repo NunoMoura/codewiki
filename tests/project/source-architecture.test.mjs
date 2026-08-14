@@ -8,6 +8,7 @@ import {
 	FORBIDDEN_RUNTIME_SUBDIRECTORIES,
 	IMPORT_CYCLE_BASELINE,
 	LEGACY_SOURCE_FILE_COUNTS,
+	LEGACY_SOURCE_FILES,
 	LEGACY_SOURCE_ROOTS,
 	OUTER_ADAPTER_SOURCE_ROOTS,
 	TARGET_RUNTIME_SUBDIRECTORIES,
@@ -44,21 +45,6 @@ function importEdges(files) {
 		)) {
 			const target = resolveImport(file, match[2], fileSet);
 			if (target) edges.get(file).add(target);
-		}
-	}
-	return edges;
-}
-
-function valueImportEdges(files) {
-	const fileSet = new Set(files);
-	const edges = [];
-	for (const file of files) {
-		const source = readFileSync(file, "utf8");
-		for (const match of source.matchAll(
-			/^import\s+(?!type\b)[\s\S]*?\sfrom\s+(["'])(\.{1,2}\/[^"']+)\1;/gmu,
-		)) {
-			const target = resolveImport(file, match[2], fileSet);
-			if (target) edges.push([file, target]);
 		}
 	}
 	return edges;
@@ -134,15 +120,32 @@ describe("source architecture", () => {
 			.sort();
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
 		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
+			"benchmarks",
 			"change-trace",
+			"cli",
 			"loops",
 			"traces",
 			"views",
 		]);
+		assert.deepEqual(
+			CURRENT_SOURCE_ROOTS.filter(
+				(root) => !TARGET_SOURCE_ROOTS.includes(root),
+			),
+			LEGACY_SOURCE_ROOTS,
+		);
+		assert.deepEqual(LEGACY_SOURCE_FILES, [
+			"src/error-handling/config-errors.ts",
+			"src/error-handling/trace-errors.ts",
+			"src/semantic-loop.ts",
+		]);
+		for (const path of LEGACY_SOURCE_FILES) {
+			assert.equal(existsSync(path), true, path);
+		}
 		assert.equal(TARGET_SOURCE_ROOTS.includes("verification"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("alignment"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("clients"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("execution"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("error-handling"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("protocol"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("runtime"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("server"), true);
@@ -168,6 +171,7 @@ describe("source architecture", () => {
 		}
 		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
 		assert.equal(existsSync(join(sourceRoot, "dashboard")), false);
+		assert.equal(existsSync(join(sourceRoot, "api")), false);
 		assert.equal(existsSync(join(sourceRoot, "api", "protocol.ts")), false);
 		assert.equal(
 			existsSync(join(sourceRoot, "protocol", "client-server.ts")),
@@ -245,6 +249,11 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "project", "config-digest.ts")), false);
 		assert.equal(existsSync(join(sourceRoot, "api", "views.ts")), false);
 		assert.equal(existsSync(join(sourceRoot, "api", "traces.ts")), false);
+		assert.equal(existsSync(join(sourceRoot, "api", "wiki-okf.ts")), false);
+		assert.equal(
+			existsSync(join(sourceRoot, "knowledge", "okf-export.ts")),
+			true,
+		);
 		assert.equal(existsSync("tests/host"), false);
 		assert.equal(existsSync("tests/server/app/lifecycle.test.mjs"), true);
 		assert.equal(
@@ -394,6 +403,7 @@ describe("source architecture", () => {
 
 	it("keeps managed Pi adapters under the Execution owner", () => {
 		for (const name of [
+			"coordinator-daemon.ts",
 			"decision-model-check-session.ts",
 			"decision-research-claims-session.ts",
 			"isolated-json-model-session.ts",
@@ -416,17 +426,57 @@ describe("source architecture", () => {
 			"extension.ts",
 			"identity.ts",
 			"install-scope.ts",
-			"project-coordinator-daemon.ts",
 			"project-service-client.ts",
 		]) {
 			assert.equal(existsSync(join(sourceRoot, "clients", "pi", name)), true, name);
 			assert.equal(existsSync(join(sourceRoot, "pi", name)), false, name);
 		}
 		assert.equal(
+			existsSync(
+				join(sourceRoot, "clients", "pi", "project-coordinator-daemon.ts"),
+			),
+			false,
+		);
+		assert.equal(
 			existsSync(join(sourceRoot, "clients", "pi", "runtime-tool-routing.ts")),
 			false,
 		);
 		assert.equal(existsSync(join(sourceRoot, "pi")), false);
+		assert.equal(existsSync(join(sourceRoot, "pi-extension.ts")), true);
+		const projectServiceClient = readFileSync(
+			join(sourceRoot, "clients", "pi", "project-service-client.ts"),
+			"utf8",
+		);
+		assert.doesNotMatch(
+			projectServiceClient,
+			/execution\/pi|coordinator\/process|spawnDaemon/u,
+		);
+		for (const path of sourceFiles(join(sourceRoot, "clients", "pi"))) {
+			assert.doesNotMatch(
+				readFileSync(path, "utf8"),
+				/\b(?:ensureProjectCoordinatorService|connectEnsuredProjectCoordinatorClient|startProjectCoordinatorService|stopProjectCoordinatorService|spawnProjectCoordinatorDaemon)\b/u,
+				path,
+			);
+		}
+		const packageBootstrap = readFileSync(
+			join(sourceRoot, "pi-extension.ts"),
+			"utf8",
+		);
+		assert.match(packageBootstrap, /connectEnsuredProjectCoordinatorClient/u);
+		assert.match(packageBootstrap, /spawnPiProjectCoordinatorDaemon/u);
+	});
+
+	it("forbids Clients from importing concrete Execution adapters", () => {
+		for (const [source, targets] of importEdges(sourceFiles())) {
+			if (!relative(sourceRoot, source).startsWith("clients/")) continue;
+			for (const target of targets) {
+				assert.equal(
+					relative(sourceRoot, target).startsWith("execution/"),
+					false,
+					edgeLabel(source, target),
+				);
+			}
+		}
 	});
 
 	it("forbids Execution adapters from importing interaction clients", () => {
@@ -482,19 +532,6 @@ describe("source architecture", () => {
 					edgeLabel(source, target),
 				);
 			}
-		}
-	});
-
-	it("forbids Runtime Coordinator from importing API implementations", () => {
-		for (const [source, target] of valueImportEdges(sourceFiles())) {
-			if (!relative(sourceRoot, source).startsWith("runtime/coordinator/")) {
-				continue;
-			}
-			assert.equal(
-				relative(sourceRoot, target).startsWith("api/"),
-				false,
-				edgeLabel(source, target),
-			);
 		}
 	});
 

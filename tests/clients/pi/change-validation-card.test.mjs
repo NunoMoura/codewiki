@@ -13,10 +13,14 @@ import {
 	acceptedChangeFixture,
 	seedChangeAcceptance,
 } from "../../helpers/accepted-change.mjs";
+import { testPiProjectServices } from "../../helpers/pi-project-services.mjs";
 
 function registeredTools() {
 	const tools = [];
-	registerCodewikiTools({ registerTool: (tool) => tools.push(tool) });
+	registerCodewikiTools(
+		{ registerTool: (tool) => tools.push(tool) },
+		testPiProjectServices(),
+	);
 	return tools;
 }
 

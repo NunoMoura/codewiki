@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { InMemoryReviewEvidenceCache } from "../../../src/implementation/review/index.ts";
-import codewikiExtension from "../../../src/clients/pi/extension.ts";
+import codewikiExtension from "../../../src/pi-extension.ts";
 import {
 	createCodeWikiReviewToolResultHandler,
 	pathScopesFromToolEventContext,

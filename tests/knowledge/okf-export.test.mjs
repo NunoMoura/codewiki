@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { describe, it } from "node:test";
 import packageJson from "../../package.json" with { type: "json" };
-import { runWikiOkf } from "../../src/api/wiki-okf.ts";
 import { parseOkfDocument } from "../../src/knowledge/okf-frontmatter.ts";
 import {
 	consumeOkfBundle,
 	exportCodeWikiOkfBundle,
+	runWikiOkf,
 } from "../../src/knowledge/okf-export.ts";
 
 function collectFiles(root) {
@@ -25,7 +25,7 @@ function repoOkfInputFiles() {
 		.map((path) => ({ path, content: readFileSync(path, "utf8") }));
 }
 
-describe("OKF export compatibility API", () => {
+describe("OKF export compatibility operation", () => {
 	it("validates and exports the active CodeWiki KB as native OKF v0.2", () => {
 		const input = repoOkfInputFiles();
 		const validation = runWikiOkf({ action: "validate", files: input });
@@ -167,6 +167,21 @@ Imported body.
 		assert.deepEqual(
 			result.files.map((file) => file.path),
 			["concepts/basic.md"],
+		);
+	});
+
+	it("fails closed on missing files, malformed files, and unsupported actions", () => {
+		assert.throws(
+			() => runWikiOkf({}),
+			/wiki_okf requires a files array\./,
+		);
+		assert.throws(
+			() => runWikiOkf({ files: [{ path: "missing-content.md" }] }),
+			/wiki_okf files\[0\] must include string path and content fields\./,
+		);
+		assert.throws(
+			() => runWikiOkf({ action: "delete", files: [] }),
+			/Unsupported wiki_okf action delete\./,
 		);
 	});
 });

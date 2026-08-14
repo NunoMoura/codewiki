@@ -1,6 +1,4 @@
-import { spawn } from "node:child_process";
 import { realpathSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import {
 	connectProjectCoordinatorClient,
 	requestProjectCoordinatorHealth,
@@ -28,7 +26,10 @@ export async function ensureProjectCoordinatorService(
 	const canonicalRoot = realpathSync(repoRoot);
 	const current = await responsiveEndpoint(canonicalRoot);
 	if (current) return current;
-	(options.spawnDaemon || spawnProjectCoordinatorDaemon)(canonicalRoot);
+	if (!options.spawnDaemon) {
+		throw new Error("Project coordinator daemon spawner is required.");
+	}
+	options.spawnDaemon(canonicalRoot);
 	return waitForResponsiveEndpoint(
 		canonicalRoot,
 		Date.now() + boundedStartTimeout(options.timeoutMs),
@@ -45,35 +46,6 @@ export async function connectEnsuredProjectCoordinatorClient(
 	return connectProjectCoordinatorClient(repoRoot, input, {
 		timeoutMs: options.timeoutMs,
 	});
-}
-
-interface ProjectCoordinatorDaemonSpawnOptions {
-	env?: NodeJS.ProcessEnv;
-}
-
-export function spawnProjectCoordinatorDaemon(
-	repoRoot: string,
-	options: ProjectCoordinatorDaemonSpawnOptions = {},
-): void {
-	const child = spawn(
-		process.execPath,
-		[projectCoordinatorDaemonScriptPath(), repoRoot],
-		{
-			cwd: repoRoot,
-			...(options.env ? { env: { ...process.env, ...options.env } } : {}),
-			detached: true,
-			stdio: "ignore",
-			windowsHide: true,
-		},
-	);
-	child.on("error", () => undefined);
-	child.unref();
-}
-
-export function projectCoordinatorDaemonScriptPath(): string {
-	return fileURLToPath(
-		new URL("../../clients/pi/project-coordinator-daemon.js", import.meta.url),
-	);
 }
 
 async function responsiveEndpoint(

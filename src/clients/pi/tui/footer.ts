@@ -1,4 +1,7 @@
-import type { WikiStateSnapshot } from "../../../api/state.ts";
+import type {
+	ProjectRuntimeGatewayConnector,
+	WikiStateSnapshot,
+} from "../../../runtime/index.ts";
 import {
 	closeInProcessCodewikiAppServer,
 	startCodewikiAppServer,
@@ -20,6 +23,7 @@ const LEGACY_WIDGET_KEYS = ["codewiki-cards"];
 export function registerCodewikiFooter(
 	pi: CodewikiExtensionApi,
 	connectProjectCoordinator = true,
+	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
 ): void {
 	if (typeof pi.on !== "function") return;
 	pi.on("session_shutdown", async (_event, ctx) => {
@@ -49,6 +53,7 @@ export function registerCodewikiFooter(
 					persistent: false,
 					previewControl: piPreviewControl(projectRoot),
 					connectProjectRuntime: connectProjectCoordinator,
+					projectRuntimeConnector,
 				}).catch(() => undefined),
 			);
 		}

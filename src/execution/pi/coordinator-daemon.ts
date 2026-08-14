@@ -1,7 +1,7 @@
+import { spawn } from "node:child_process";
 import { readFileSync, realpathSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
-import { createCodeWikiLoopExecutionPorts } from "../../api/loop-execution.ts";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
 	createShellWorktreeCommandRunner,
 	type WorktreeCommandExecFile,
@@ -10,7 +10,6 @@ import {
 	startProjectCoordinatorDaemon,
 	type ProjectCoordinatorDaemonHandle,
 } from "../../runtime/coordinator/daemon.ts";
-import { spawnProjectCoordinatorDaemon } from "../../runtime/coordinator/process.ts";
 import type { ProjectCoordinatorDecisionStartOptions } from "../../runtime/coordinator/service.ts";
 import type { ImplementationWorkerAdapter } from "../../runtime/workers/implementation-adapter.ts";
 import type { ProjectBranchMergeAuthority } from "../../runtime/effects/project-branch-merge.ts";
@@ -23,16 +22,17 @@ import type {
 	ProductReleaseAdapter,
 	ProductReleasePlan,
 } from "../../runtime/effects/product-release-contract.ts";
-import type {
-	RuntimeLoopExecutionPorts,
-	RuntimeSemanticAdapters,
-	RuntimeSemanticContext,
+import {
+	createCodeWikiLoopExecutionPorts,
+	type RuntimeLoopExecutionPorts,
+	type RuntimeSemanticAdapters,
+	type RuntimeSemanticContext,
 } from "../../runtime/coordinator/executor.ts";
 import {
 	createPiNativeDecisionStartOptions,
 	type PiNativeDecisionHostOptions,
-} from "../../execution/pi/native-decision-host.ts";
-import { createPiProcessImplementationWorkerAdapter } from "../../execution/pi/process-worker-adapter.ts";
+} from "./native-decision-host.ts";
+import { createPiProcessImplementationWorkerAdapter } from "./process-worker-adapter.ts";
 
 export type PiSemanticAdapterLoader = (
 	repoRoot: string,
@@ -66,7 +66,7 @@ export async function loadPiSemanticAdapters(
 				"@earendil-works/pi-coding-agent"
 		)) as typeof import("@earendil-works/pi-coding-agent");
 		const { createPiSdkRuntimeSemanticAdapters } = await import(
-			"../../execution/pi/sdk-semantic-session.ts"
+			"./sdk-semantic-session.ts"
 		);
 		return createPiSdkRuntimeSemanticAdapters({ repoRoot, piSdk });
 	} catch (error) {
@@ -77,11 +77,26 @@ export async function loadPiSemanticAdapters(
 
 export function spawnPiProjectCoordinatorDaemon(repoRoot: string): void {
 	const moduleUrl = resolvePiSdkModuleUrl();
-	spawnProjectCoordinatorDaemon(repoRoot, {
-		...(moduleUrl
-			? { env: { [PI_SDK_MODULE_URL_ENV]: moduleUrl } }
-			: {}),
-	});
+	const child = spawn(
+		process.execPath,
+		[piProjectCoordinatorDaemonScriptPath(), repoRoot],
+		{
+			cwd: repoRoot,
+			...(moduleUrl
+				? {
+						env: {
+							...process.env,
+							[PI_SDK_MODULE_URL_ENV]: moduleUrl,
+						},
+					}
+				: {}),
+			detached: true,
+			stdio: "ignore",
+			windowsHide: true,
+		},
+	);
+	child.on("error", () => undefined);
+	child.unref();
 }
 
 export async function startPiProjectCoordinatorDaemon(
@@ -136,6 +151,10 @@ export async function startPiProjectCoordinatorDaemon(
 			...(options.worktreeExecFile ? { execFile: options.worktreeExecFile } : {}),
 		}),
 	});
+}
+
+function piProjectCoordinatorDaemonScriptPath(): string {
+	return fileURLToPath(new URL("./coordinator-daemon.js", import.meta.url));
 }
 
 function resolvePiSdkModuleUrl(): string | undefined {

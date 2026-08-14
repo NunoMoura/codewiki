@@ -13,8 +13,8 @@ async function fixture() {
 	});
 	await mkdir(join(root, ".codewiki", "traces"), { recursive: true });
 	await writeFile(
-		join(root, ".codewiki", "kb", "system", "components", "api.md"),
-		apiDoc(),
+		join(root, ".codewiki", "kb", "system", "components", "runtime.md"),
+		runtimeDoc(),
 	);
 	await writeFile(
 		join(root, ".codewiki", "traces", "TRACE-explain.jsonl"),
@@ -33,7 +33,7 @@ async function fixture() {
 				sequence: 1,
 				loop: "planning",
 				event: "work_units_created",
-				refs: ["src/api/**"],
+				refs: ["src/runtime/**"],
 				createdAt: "2026-06-17T00:00:01.000Z",
 				data: {
 					exit: { status: "continue", conditions: [] },
@@ -44,16 +44,16 @@ async function fixture() {
 								status: "met",
 								mode: "deterministic",
 								description: "Decision coverage is complete.",
-								refs: ["src/api/index.ts"],
+								refs: ["src/runtime/index.ts"],
 							},
 						],
 						workItems: [
 							{
 								id: "WU-explain",
-								title: "Explain API ownership",
-								componentRefs: ["api"],
-								pathScopes: ["src/api/**"],
-								verification: ["tests/api/**"],
+								title: "Explain Runtime ownership",
+								componentRefs: ["runtime"],
+								pathScopes: ["src/runtime/**"],
+								verification: ["tests/runtime/**"],
 							},
 						],
 					},
@@ -70,30 +70,30 @@ async function okfOnlyFixture() {
 		recursive: true,
 	});
 	await writeFile(
-		join(root, ".codewiki", "kb", "system", "components", "api.md"),
-		apiDoc(),
+		join(root, ".codewiki", "kb", "system", "components", "runtime.md"),
+		runtimeDoc(),
 	);
 	return root;
 }
 
-function apiDoc() {
+function runtimeDoc() {
 	return [
 		"---",
 		"type: Concept",
-		"title: API",
-		"description: Public API facade.",
-		"codewiki_component: api",
+		"title: Runtime",
+		"description: Project Runtime surface.",
+		"codewiki_component: runtime",
 		"codewiki_source_patterns:",
-		"  - src/api/**",
+		"  - src/runtime/**",
 		"codewiki_test_patterns:",
-		"  - tests/api/**",
+		"  - tests/runtime/**",
 		"codewiki_trace_events:",
 		"  - planning.work_units_created",
-		"codewiki_role: public_facade",
+		"codewiki_role: project_runtime",
 		"---",
-		"# API",
+		"# Runtime",
 		"",
-		"Public API facade.",
+		"Project Runtime surface.",
 		"",
 	].join("\n");
 }
@@ -104,12 +104,12 @@ describe("project explain", () => {
 		try {
 			const view = await buildProjectExplainView({
 				repoRoot: root,
-				target: "src/api/index.ts",
+				target: "src/runtime/index.ts",
 			});
 
 			assert.equal(view.kind, "path");
-			assert.equal(view.owner?.componentId, "api");
-			assert.deepEqual(view.owner?.testPatterns, ["tests/api/**"]);
+			assert.equal(view.owner?.componentId, "runtime");
+			assert.deepEqual(view.owner?.testPatterns, ["tests/runtime/**"]);
 			assert.equal(
 				view.traceRefs?.includes(
 					"trace:TRACE-explain:planning:iteration:1#work:WU-explain",
@@ -134,9 +134,9 @@ describe("project explain", () => {
 
 			const testPath = await buildProjectExplainView({
 				repoRoot: root,
-				target: "tests/api/index.test.mjs",
+				target: "tests/runtime/index.test.mjs",
 			});
-			assert.equal(testPath.owner?.componentId, "api");
+			assert.equal(testPath.owner?.componentId, "runtime");
 		} finally {
 			await rm(root, { recursive: true, force: true });
 		}
@@ -147,13 +147,13 @@ describe("project explain", () => {
 		try {
 			const view = await buildProjectExplainView({
 				repoRoot: root,
-				target: "src/api/index.ts",
+				target: "src/runtime/index.ts",
 			});
 
 			assert.equal(view.kind, "path");
-			assert.equal(view.owner?.componentId, "api");
+			assert.equal(view.owner?.componentId, "runtime");
 			assert.deepEqual(view.refs, [
-				".codewiki/kb/system/components/api.md",
+				".codewiki/kb/system/components/runtime.md",
 				".codewiki/kb/system/components/knowledge.md",
 			]);
 		} finally {

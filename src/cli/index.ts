@@ -3,6 +3,7 @@ import { realpathSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import {
+	buildProjectWikiState,
 	runWikiArchive,
 	runWikiConfig,
 	runWikiDecide,
@@ -15,7 +16,7 @@ import {
 	type RunWikiImplementInput,
 	type RunWikiPlanInput,
 	type RunWikiRuntimeInput,
-} from "../api/index.ts";
+} from "../runtime/index.ts";
 import { bootstrapCodewiki } from "../project/bootstrap.ts";
 import {
 	findCodewikiProjectRoot,
@@ -26,7 +27,6 @@ import {
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 } from "../project/config-file.ts";
-import { buildProjectWikiState } from "../project/state-file.ts";
 import { parseJsonObject } from "../utils/json.ts";
 
 export interface CliResult {

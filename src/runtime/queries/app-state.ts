@@ -1,15 +1,15 @@
 import { basename } from "node:path";
-import type { WikiStateSnapshot } from "../../api/state.ts";
+import {
+	buildProjectWikiState,
+	type WikiStateSnapshot,
+} from "./state.ts";
 import {
 	knowledgeTopicRefsFromRecords,
 	projectKnowledgeAlignment,
 	readKnowledgeTopicDigests,
 	type KnowledgeAlignmentProjection,
 } from "../../knowledge/topic-alignment.ts";
-import {
-	buildProjectWikiState,
-	readProjectTraceFiles,
-} from "../../project/state-file.ts";
+import { readProjectTraceFiles } from "../../project/state-file.ts";
 import {
 	normalizeUiPreviewTargetBinding,
 	uiPreviewTargetBindingValidationIssues,

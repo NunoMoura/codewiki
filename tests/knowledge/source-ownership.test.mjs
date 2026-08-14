@@ -9,9 +9,14 @@ import {
 	sourceOwnershipComponentById,
 	sourceOwnershipMapFromOkfBundle,
 	sourceOwnershipOwnerForPath,
+	sourceOwnershipSupportsSourcePath,
 	sourceOwnershipSupportsTestPath,
 	validateSourceOwnershipFromOkfBundle,
 } from "../../src/knowledge/source-ownership.ts";
+import {
+	LEGACY_SOURCE_FILES,
+	LEGACY_SOURCE_ROOTS,
+} from "../../src/project/source-architecture.ts";
 
 function collectFiles(root) {
 	return readdirSync(root)
@@ -68,6 +73,10 @@ describe("OKF-backed intended source ownership", () => {
 			"clients",
 		);
 		assert.equal(
+			sourceOwnershipOwnerForPath(bundle, "src/pi-extension.ts")?.id,
+			"package",
+		);
+		assert.equal(
 			sourceOwnershipOwnerForPath(bundle, "src/execution/pi/worker.ts")?.id,
 			"execution",
 		);
@@ -90,6 +99,19 @@ describe("OKF-backed intended source ownership", () => {
 
 		assert.deepEqual(validateSourceOwnershipFromOkfBundle(bundle), []);
 		assert.equal(new Set(rawPatterns).size, rawPatterns.length);
+	});
+
+	it("accounts every active source file as one target owner or explicit legacy debt", () => {
+		const ownership = sourceOwnershipMapFromOkfBundle(knowledgeBundleFiles());
+		for (const path of collectFiles("src")) {
+			const owners = ownership.components.filter((component) =>
+				sourceOwnershipSupportsSourcePath(component, path),
+			);
+			const legacy =
+				LEGACY_SOURCE_FILES.includes(path) ||
+				LEGACY_SOURCE_ROOTS.some((root) => path.startsWith(`src/${root}/`));
+			assert.equal(owners.length, legacy ? 0 : 1, path);
+		}
 	});
 
 	it("exports realization metadata from Component concepts only", () => {

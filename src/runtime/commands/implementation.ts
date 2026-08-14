@@ -1,18 +1,18 @@
-import { changeTraceId } from "../changes/change-trace.ts";
+import { changeTraceId } from "../../changes/change-trace.ts";
 import {
 	assertKnownInputKeys,
-	createCodewikiApiError,
+	createCodewikiOperationError,
 	requiredStringField,
-} from "../error-handling/api-errors.ts";
-import type { ImplementationEvidencePolicy } from "../implementation/evidence-policy.ts";
-import { resolveLoopQualityJudgeExecutionOptions } from "../loops/judge-provider.ts";
-import { uniqueStrings } from "../loops/quality-standards.ts";
-import type { ContentProof } from "../git/content-proof.ts";
-import type { SourceMapContract } from "../knowledge/source-map.ts";
+} from "../../error-handling/operation-errors.ts";
+import type { ImplementationEvidencePolicy } from "../../implementation/evidence-policy.ts";
+import { resolveLoopQualityJudgeExecutionOptions } from "../../loops/judge-provider.ts";
+import { uniqueStrings } from "../../loops/quality-standards.ts";
+import type { ContentProof } from "../../git/content-proof.ts";
+import type { SourceMapContract } from "../../knowledge/source-map.ts";
 import {
 	changedPaths,
 	normalizeImplementationChanges,
-} from "../implementation/evidence.ts";
+} from "../../implementation/evidence.ts";
 import {
 	createImplementationEvidenceReport,
 	defaultReviewEvidenceCache,
@@ -25,12 +25,12 @@ import {
 	type LanguageReviewPackSkipSummary,
 	type ReviewEvidenceSummary,
 	type ReviewPackSelection,
-} from "../implementation/review/index.ts";
+} from "../../implementation/review/index.ts";
 import {
 	runImplementationIterationWithRunner,
 	type ImplementationIterationInput,
 	type ImplementationIterationResult,
-} from "../implementation/iteration.ts";
+} from "../../implementation/iteration.ts";
 import type {
 	ImplementationArchiveDisposition,
 	AcceptanceEvidenceInput,
@@ -40,32 +40,32 @@ import type {
 	ImplementationQualityAssessmentInput,
 	ImplementationWorkerClaim,
 	SensitiveSurfaceAssessmentInput,
-} from "../implementation/types.ts";
-import { createImplementationMergeContentProof } from "../implementation/merge-proof.ts";
+} from "../../implementation/types.ts";
+import { createImplementationMergeContentProof } from "../../implementation/merge-proof.ts";
 import {
 	aggregateImplementationWorkerReports,
 	type ImplementationWorkerReportInput,
-} from "../implementation/workers.ts";
-import { loadWikiConfigFile } from "../project/config-file.ts";
-import { readProjectSourceMap } from "../project/explain.ts";
-import type { WikiQualityReviewConfig } from "../project/config.ts";
+} from "../../implementation/workers.ts";
+import { loadWikiConfigFile } from "../../project/config-file.ts";
+import { readProjectSourceMap } from "../../project/explain.ts";
+import type { WikiQualityReviewConfig } from "../../project/config.ts";
 import {
 	collectProjectSnapshot,
 	type ProjectSnapshot,
-} from "../project/snapshot.ts";
-import { RuntimeReactor, type RuntimeObservation } from "../runtime/coordinator/reactor.ts";
-import { assertRuntimeSemanticJobId } from "../traces/schema.ts";
+} from "../../project/snapshot.ts";
+import { RuntimeReactor, type RuntimeObservation } from "../coordinator/reactor.ts";
+import { assertRuntimeSemanticJobId } from "../../traces/schema.ts";
 import {
 	appendSemanticLoopReport,
 	assertSemanticLoopReportBatch,
 	type AppendSemanticLoopReportResult,
-} from "../runtime/persistence/trace.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+} from "../persistence/trace.ts";
+import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
 import type {
 	WorkState,
 	WorkStateAssignment,
 	WorkStateWorkItem,
-} from "../work-state/types.ts";
+} from "../../work-state/types.ts";
 
 export type WikiImplementMode = "preview" | "append";
 
@@ -951,7 +951,7 @@ function changesWithLocalProof(
 
 function requiredExpectedBytes(value: number | undefined): number {
 	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_implement",
 			code: "invalid_input",
 			field: "expectedBytes",

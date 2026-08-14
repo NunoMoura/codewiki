@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import { afterEach, describe, it } from "node:test";
 
-import { runWikiChange } from "../../src/api/wiki-change.ts";
+import { runWikiChange } from "../../src/changes/command.ts";
 import { CHANGE_SCHEMA_VERSION } from "../../src/changes/types.ts";
 
 const run = promisify(execFile);
@@ -38,7 +38,7 @@ function change(id = "CHG-api-test") {
 			type: "workflow_change",
 			scope: "system",
 			affectedLayers: ["api", "changes"],
-			targetRefs: ["src/api/wiki-change.ts"],
+			targetRefs: ["src/changes/command.ts"],
 		},
 		impact: {
 			user: "Agents can retain out-of-scope improvements.",
@@ -55,7 +55,7 @@ function change(id = "CHG-api-test") {
 		},
 		delivery: { constraints: [], planningQuestions: [] },
 		evidence: {
-			sourceRefs: ["src/api/wiki-change.ts"],
+			sourceRefs: ["src/changes/command.ts"],
 			proofRefs: [],
 		},
 		safety: {
@@ -142,14 +142,14 @@ describe("wiki_change core facade", () => {
 			expectedHead: read.head,
 			expectedRecordRevision: read.record.recordRevision,
 			changeId: "CHG-api-test",
-			proofRefs: ["tests/changes/wiki-change.test.mjs"],
+			proofRefs: ["tests/changes/command.test.mjs"],
 			actor: "test-agent",
 			createdAt: "2026-07-13T04:01:00.000Z",
 		});
 		assert.equal(revised.record.change.revision, 2);
 		assert.equal(revised.record.recordRevision, 2);
 		assert.deepEqual(revised.record.change.evidence.proofRefs, [
-			"tests/changes/wiki-change.test.mjs",
+			"tests/changes/command.test.mjs",
 		]);
 	});
 

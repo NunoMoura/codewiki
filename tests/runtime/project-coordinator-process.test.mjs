@@ -6,13 +6,24 @@ import test from "node:test";
 import {
 	connectEnsuredProjectCoordinatorClient,
 	ensureProjectCoordinatorService,
-	projectCoordinatorDaemonScriptPath,
 } from "../../src/runtime/coordinator/process.ts";
 import {
 	startProjectCoordinatorService,
 	stopProjectCoordinatorService,
 } from "../../src/runtime/coordinator/service.ts";
 import { readProjectCoordinatorEndpoint } from "../../src/runtime/coordinator/endpoint.ts";
+
+test("project coordinator process fails closed without an injected daemon spawner", async () => {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-coordinator-no-spawner-"));
+	try {
+		await assert.rejects(
+			() => ensureProjectCoordinatorService(root),
+			/Project coordinator daemon spawner is required\./,
+		);
+	} finally {
+		await rm(root, { recursive: true, force: true });
+	}
+});
 
 test("project coordinator process ensure reuses one responsive service", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-coordinator-process-"));
@@ -53,10 +64,6 @@ test("project coordinator process ensure reuses one responsive service", async (
 		await client.disconnect();
 		await stopProjectCoordinatorService(root, { timeoutMs: 2_000 });
 		assert.equal(await readProjectCoordinatorEndpoint(root), undefined);
-		assert.match(
-			projectCoordinatorDaemonScriptPath(),
-			/[\\/]pi[\\/]project-coordinator-daemon\.js$/,
-		);
 	} finally {
 		if (service) await service.close();
 		await rm(root, { recursive: true, force: true });

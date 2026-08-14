@@ -1,18 +1,18 @@
 import { join } from "node:path";
-import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import { traceGoalCloseBlockers } from "../views/trace-goals.ts";
+import { createCodewikiOperationError } from "../../error-handling/operation-errors.ts";
+import { traceGoalCloseBlockers } from "../../views/trace-goals.ts";
 import {
 	appendRuntimeTraceRecord,
 	type AppendTraceResult,
-} from "../runtime/persistence/trace.ts";
+} from "../persistence/trace.ts";
 import {
 	replaceTraceRecords,
 	type ReplaceTraceRecordsResult,
-} from "../traces/append.ts";
+} from "../../traces/append.ts";
 import {
 	buildTraceCloseReleaseNotes,
 	type TraceCloseReleaseNotes,
-} from "../traces/release-notes.ts";
+} from "../../traces/release-notes.ts";
 import {
 	buildTraceArchiveCompactPlan,
 	buildTraceHydrationPlan,
@@ -21,10 +21,10 @@ import {
 	traceRetentionRefs,
 	type TraceHydrationPlan,
 	type TraceRetentionStub,
-} from "../traces/retention.ts";
-import { readTraceFile } from "../traces/reader.ts";
-import { traceFilePath } from "../traces/schema.ts";
-import type { TraceClose, TraceRecord } from "../traces/types.ts";
+} from "../../traces/retention.ts";
+import { readTraceFile } from "../../traces/reader.ts";
+import { traceFilePath } from "../../traces/schema.ts";
+import type { TraceClose, TraceRecord } from "../../traces/types.ts";
 
 export type WikiArchiveMode = "preview" | "append";
 export type WikiArchiveAction =
@@ -74,7 +74,7 @@ export async function runWikiArchive(
 	if (action === "close") return closeResult(input, mode);
 	if (action === "hydrate") return hydrationResult(input, mode);
 	if (action === "compact") return compactResult(input, mode);
-	throw createCodewikiApiError({
+	throw createCodewikiOperationError({
 		operation: "wiki_archive",
 		code: "unsupported_action",
 		field: "action",
@@ -108,7 +108,7 @@ async function closeResult(
 	const records = await closeRecords(input);
 	const closeBlockers = traceGoalCloseBlockers(records);
 	if (closeBlockers.length > 0) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "append_blocked",
 			message: `wiki_archive close blocked by incomplete trace goal: ${closeBlockers.join(" ")}`,
@@ -214,7 +214,7 @@ function hydrationResult(
 
 function assertPreviewOnly(mode: WikiArchiveMode, action: string): void {
 	if (mode !== "preview") {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "invalid_input",
 			field: "mode",
@@ -227,7 +227,7 @@ function assertPreviewOnly(mode: WikiArchiveMode, action: string): void {
 async function closeRecords(input: RunWikiArchiveInput): Promise<TraceRecord[]> {
 	if (input.records) return requiredRecords(input.records);
 	if (!input.traceId) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "invalid_input",
 			field: "traceId",
@@ -240,7 +240,7 @@ async function closeRecords(input: RunWikiArchiveInput): Promise<TraceRecord[]> 
 
 function requiredRecords(records: TraceRecord[] | undefined): TraceRecord[] {
 	if (!records?.length) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "missing_required",
 			field: "records",
@@ -254,7 +254,7 @@ function requiredArchivedRecords(
 	records: TraceRecord[] | undefined,
 ): TraceRecord[] {
 	if (!records?.length) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "missing_required",
 			field: "archivedRecords",
@@ -268,7 +268,7 @@ function requiredStub(
 	stub: TraceRetentionStub | undefined,
 ): TraceRetentionStub {
 	if (!stub) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "missing_required",
 			field: "stub",
@@ -280,7 +280,7 @@ function requiredStub(
 
 function requiredGitRestoreRef(value: string | undefined): string {
 	if (!value?.trim()) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "missing_required",
 			field: "gitRestoreRef",
@@ -292,7 +292,7 @@ function requiredGitRestoreRef(value: string | undefined): string {
 
 function requiredRepoRoot(value: string | undefined): string {
 	if (!value) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "missing_required",
 			field: "repoRoot",
@@ -304,7 +304,7 @@ function requiredRepoRoot(value: string | undefined): string {
 
 function requiredExpectedBytes(value: number | undefined): number {
 	if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_archive",
 			code: "invalid_input",
 			field: "expectedBytes",

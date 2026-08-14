@@ -14,6 +14,6 @@ codewiki_relationships:
 ---
 # Knowledge
 
-Knowledge contains accepted desired state only: active vocabulary, Users, User-owned Stories, visual design, System topology, Components, and Flows. Changes carry transitions, Git carries content history, and Alignment records realization and provenance.
+Knowledge contains accepted desired state only: active vocabulary, Users, User-owned Stories, visual design, System topology, Components, and Flows. Changes carry transitions, Git carries content history, and Alignment records realization and provenance. Knowledge also owns the strict OKF validate, export, and consume operation boundary, which the curated Runtime surface exposes without a parallel API package.
 
 OKF concept identity derives from canonical path. Diagrams own topology; Components own production realization patterns; Flows explain stable directed paths. Generated indexes, dictionaries, overviews, status logs, migration notes, and drift reports are projections rather than authored Knowledge.

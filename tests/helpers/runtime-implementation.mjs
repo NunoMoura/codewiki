@@ -1,6 +1,6 @@
 import { join } from "node:path";
-import { runWikiDecide } from "../../src/api/wiki-decide.ts";
-import { runWikiPlan } from "../../src/api/wiki-plan.ts";
+import { runWikiDecide } from "../../src/decision/command.ts";
+import { runWikiPlan } from "../../src/runtime/commands/planning.ts";
 import { changeTraceId } from "../../src/changes/change-trace.ts";
 import { createChangeRecord } from "../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../src/changes/trace-store.ts";

@@ -73,6 +73,8 @@ The tree below names responsibilities, not permission to create empty directorie
 ```text
 src/
   index.ts
+  pi-extension.ts
+  error-handling/        # shared envelope and operation-failure contract only
   protocol/
     client-server.ts
     client-pairing.ts
@@ -132,7 +134,7 @@ scripts/
 tests/
 ```
 
-`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains an internal Runtime subsystem. Public `./coordinator`, root `coordinator.ts`, and generic `composition/**` do not survive the clean cut. A neutral `src/main.ts` may later construct Server and Runtime siblings only when standalone process bootstrap genuinely requires it.
+`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/error-handling/**` stays a lean Package-owned foundation for the common error envelope, serialization, type guards, and stable operation-failure contract; owner-specific error semantics do not accumulate there. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains an internal Runtime subsystem. Public `./coordinator`, root `coordinator.ts`, and generic `composition/**` do not survive the clean cut. `src/pi-extension.ts` is the neutral shipped Package bootstrap that wires Pi Client registration, the Runtime connection boundary, and the concrete Execution spawner without reversing those owner dependencies. A neutral `src/main.ts` may later construct Server and Runtime siblings only when standalone process bootstrap genuinely requires it.
 
 Target dependency direction is:
 
@@ -141,10 +143,10 @@ clients   -> protocol
 server    -> protocol + Runtime gateway
 runtime   -> domain owners + neutral Execution Ports
 execution -> ports it implements
-bootstrap -> server + runtime + concrete execution
+bootstrap -> clients + server + runtime + concrete execution
 ```
 
-Forbidden directions include `runtime -> server`, `runtime -> clients`, `runtime -> concrete Pi`, `server -> Runtime persistence internals`, `domain -> server`, and `clients -> Server process lifecycle`.
+Forbidden directions include `runtime -> server`, `runtime -> clients`, `runtime -> concrete Pi`, `server -> Runtime persistence internals`, `domain -> server`, and `clients -> Server, Runtime, or concrete Execution process lifecycle`.
 
 Source ownership clean cuts are:
 
@@ -156,9 +158,11 @@ src/cli/**           -> src/clients/cli/**
 src/change-trace/**  -> src/changes/trace/**
 src/traces/**        -> Change Trace or Runtime persistence owner
 src/views/**         -> Alignment, WorkState, or Runtime queries
-src/loops/**         -> Decision, Planning, Implementation, Verification
-src/error-handling/**-> colocated owners
-src/benchmarks/**    -> benchmarks/**
+src/semantic-loop.ts -> Decision, Planning, Implementation, Verification
+src/loops/**                          -> Decision, Planning, Implementation, Verification
+src/error-handling/config-errors.ts   -> Project owner
+src/error-handling/trace-errors.ts    -> Change Trace owner
+src/benchmarks/**                     -> benchmarks/**
 ```
 
 Canonical project layout is:
@@ -253,6 +257,8 @@ The Server provider repository-access clean cut is recorded by `.tmp-worktrees/s
 
 The Server Pairing endpoint authorization clean cut is recorded by `.tmp-worktrees/server-pairing-endpoint-authorization-clean-cut-manifest.json`, exhaustively anchored to `d1dab05` with 647 keeps, 1 deletion, and 1 planned addition. Public Pairing issue and revoke entrypoints now require an active generation-bound Server Session, verifier-proven transition Authentication, exact active Actor identity, current Registry generation, and exact project, repository, and Runtime-route binding before deny-by-default policy sees the fixed action and target Client. Session credentials remain inside Session verification; invalid credentials cannot query Registry-specific binding state, and denial causes no transition. Direct deterministic Pairing commands remain internal and are removed from the root package API. Shared Authentication assertion provenance rejects structurally forged transition assertions. The five-line Runtime Decision authority declaration moves to the Decision Candidate proposal owner and its old file is deleted, preserving source/test counts at 358/195. Pairing credential generation and rotation remain blocked until an approved machine credential-store contract exists; this cut does not create an unusable secret, persist raw secret bytes, or derive deterministic credentials. Concrete GitHub/GitLab adapters, secure provider credential storage, automatic access rechecks, Pairing transport endpoint wiring, project membership, and exact Runtime AuthZ remain pending.
 
+The Runtime API ownership clean cut is recorded by `.tmp-worktrees/runtime-api-ownership-clean-cut-manifest.json`, exhaustively anchored to `2f592c9` with 628 keeps, 17 moves, 4 deletions, and 1 planned addition. It deletes `src/api/**` completely, merges the strict OKF operation into Knowledge and the default Loop execution-port binding into Runtime coordinator, moves Change and Decision commands to their domain owners, and moves Planning, Implementation, archive, work, and state operations to `src/runtime/commands/**` or `src/runtime/queries/**`. Focused tests move with those owners and the duplicate Runtime state-query test merges into one file. `src/runtime/index.ts` is now the explicit operational package surface; the root package remains owner-direct and contract-focused, with no old path, barrel, alias, or shim. Pi-specific coordinator daemon composition moves from Client to Managed Execution, while generic Runtime startup requires an injected spawner and imports no concrete Pi implementation. New neutral `src/pi-extension.ts` Package bootstrap wires Client registration to the Runtime connection boundary and concrete Execution spawner; Client modules import neither lifecycle implementation. Generic command failures use operation-error ownership and domain vocabulary instead of deleted API vocabulary while preserving exact messages and codes. The ownership audit retains the shared CodeWiki error envelope and operation-failure contract as a lean Package foundation instead of deprecating error handling wholesale; only configuration and Change Trace specializations remain explicit colocation debt. Disposable multiprocess, project-local, and external lifecycle probes consume current Runtime service and endpoint artifacts instead of the already-deleted Host entrypoint. Exact validation errors remain stable. Its green checkpoint is 942 full-suite tests, 119 coordinator tests, 715 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities. Source/test counts fall from 358/195 to 356/194.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -315,10 +321,10 @@ Rules:
 - [x] Move `src/host/**` and `tests/host/**` to `src/server/**` and `tests/server/**` without old-path exports.
 - [x] Split Authentication proof verification from Pairing transitions; keep Session and registry ownership distinct.
 - [x] Move shared wire contracts to `src/protocol/**` and clean-cut protocol IDs to `codewiki.client-server@1.0.0`, `codewiki.client-pairing@1.0.0`, and current `codewiki.server-registry@2.0.0` without dual parsing.
-- [ ] Move semantic `src/api/**` handlers to Runtime commands/queries or their domain owners; remove the `api <-> runtime` dependency cycle.
+- [x] Move semantic `src/api/**` handlers to Runtime commands/queries or their domain owners; delete the source root and remove the `api <-> runtime` dependency cycle.
 - [x] Add a narrow Project Runtime gateway for commands, bounded queries, durable operations, and events; Server cannot read Runtime persistence internals.
 - [x] Replace public `./coordinator` with curated `./runtime` backed by `src/runtime/index.ts`; delete duplicate Host/Runtime coordinator entrypoint barrels without aliases.
-- [ ] Move `src/cli/**` to `src/clients/cli/**` and remove Client-to-Server lifecycle imports through neutral bootstrap wiring.
+- [ ] Move `src/cli/**` to `src/clients/cli/**` and remove remaining Client-to-Server and Client-to-Runtime lifecycle imports through protocol and neutral bootstrap wiring.
 - [ ] Implement one machine-level Server registry over separate per-project Runtime processes.
 - [x] Replace Browser App query-token authorization with generation-bound Server Session establishment, an HttpOnly same-site cookie, exact endpoint policy, and shutdown revocation.
 - [x] Replace the temporary local App service binding with local Pairing plus Authentication/Registry resolution.

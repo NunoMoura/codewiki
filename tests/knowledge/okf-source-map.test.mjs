@@ -31,17 +31,17 @@ const sourceMap = {
 			role: "semantic_loop",
 		},
 		{
-			id: "api",
-			doc: ".codewiki/kb/system/components/api.md",
-			sourcePatterns: ["src/api/**"],
-			testPatterns: ["tests/scaffold-core.test.mjs"],
+			id: "runtime",
+			doc: ".codewiki/kb/system/components/runtime.md",
+			sourcePatterns: ["src/runtime/**"],
+			testPatterns: ["tests/runtime/**"],
 			generatedViews: [],
 			traceEvents: [],
-			role: "public_facade",
+			role: "project_runtime",
 		},
 		{
 			id: "cli",
-			doc: ".codewiki/kb/system/components/api.md",
+			doc: ".codewiki/kb/system/components/runtime.md",
 			sourcePatterns: ["src/cli/**"],
 			testPatterns: ["tests/runtime/cli.test.mjs"],
 			generatedViews: [],
@@ -83,20 +83,20 @@ describe("OKF source ownership extension generation", () => {
 			"decision.change_approved",
 		]);
 
-		const api = okfSourceMapExtensionForDoc(
+		const runtime = okfSourceMapExtensionForDoc(
 			sourceMap,
-			".codewiki/kb/system/components/api.md",
+			".codewiki/kb/system/components/runtime.md",
 		);
-		assert.equal("codewiki_component" in api, false);
-		assert.deepEqual(api?.codewiki_components, ["api", "cli"]);
-		assert.deepEqual(api?.codewiki_roles, [
-			"public_facade",
+		assert.equal("codewiki_component" in runtime, false);
+		assert.deepEqual(runtime?.codewiki_components, ["cli", "runtime"]);
+		assert.deepEqual(runtime?.codewiki_roles, [
 			"temporary_development_harness",
+			"project_runtime",
 		]);
-		assert.equal(api?.codewiki_source_map.length, 2);
+		assert.equal(runtime?.codewiki_source_map.length, 2);
 		assert.deepEqual(
-			api?.codewiki_source_map.map((component) => component.id),
-			["api", "cli"],
+			runtime?.codewiki_source_map.map((component) => component.id),
+			["cli", "runtime"],
 		);
 	});
 

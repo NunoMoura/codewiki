@@ -1,13 +1,13 @@
-import { changeContentDigest } from "../changes/digest.ts";
-import { parseChange } from "../changes/schema.ts";
-import type { Change } from "../changes/types.ts";
+import { changeContentDigest } from "./digest.ts";
+import { parseChange } from "./schema.ts";
+import type { Change } from "./types.ts";
 import {
 	assertKnownInputKeys,
-	createCodewikiApiError,
+	createCodewikiOperationError,
 	requiredArrayField,
 	requiredStringField,
-} from "../error-handling/api-errors.ts";
-import { ChangeTraceStore } from "../changes/trace-store.ts";
+} from "../error-handling/operation-errors.ts";
+import { ChangeTraceStore } from "./trace-store.ts";
 import {
 	addChangeEvidence,
 	createChangeRecord,
@@ -18,13 +18,13 @@ import {
 	transitionChangeStatus,
 	type ChangeLinkRelation,
 	type ChangeRecord,
-} from "../changes/records.ts";
+} from "./records.ts";
 import {
 	ChangeStoreConflictError,
 	type ChangeQuery,
 	type ChangeStore,
 	type ChangeStoreSnapshot,
-} from "../changes/store.ts";
+} from "./store.ts";
 import { resolveCodewikiProjectRoot } from "../project/root.ts";
 
 export const WIKI_CHANGE_OPERATIONS = [
@@ -661,7 +661,7 @@ function changeError(
 	field: string,
 	message: string,
 ): Error {
-	return createCodewikiApiError({
+	return createCodewikiOperationError({
 		operation: "wiki_change",
 		code: code === "missing_required" ? "missing_required" : "invalid_input",
 		field,

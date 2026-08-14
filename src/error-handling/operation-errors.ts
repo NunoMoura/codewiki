@@ -3,15 +3,15 @@ import {
 	type CodewikiRecoveryAction,
 } from "./codewiki-error.ts";
 
-export type CodewikiApiErrorCode =
+export type CodewikiOperationErrorCode =
 	| "unsupported_action"
 	| "append_blocked"
 	| "invalid_input"
 	| "missing_required";
 
-export interface CodewikiApiErrorInput {
+export interface CodewikiOperationErrorInput {
 	operation: string;
-	code: CodewikiApiErrorCode;
+	code: CodewikiOperationErrorCode;
 	message: string;
 	field?: string;
 	recoverable?: boolean;
@@ -22,13 +22,13 @@ export interface CodewikiApiErrorInput {
 	cause?: unknown;
 }
 
-export class CodewikiApiError extends CodewikiError {
+export class CodewikiOperationError extends CodewikiError {
 	readonly operation: string;
 	readonly field?: string;
 
-	constructor(input: CodewikiApiErrorInput) {
+	constructor(input: CodewikiOperationErrorInput) {
 		super({
-			domain: "api",
+			domain: "operation",
 			code: input.code,
 			message: input.message,
 			recoverable: input.recoverable ?? true,
@@ -42,16 +42,16 @@ export class CodewikiApiError extends CodewikiError {
 			},
 			cause: input.cause,
 		});
-		this.name = "CodewikiApiError";
+		this.name = "CodewikiOperationError";
 		this.operation = input.operation;
 		if (input.field) this.field = input.field;
 	}
 }
 
-export function createCodewikiApiError(
-	input: CodewikiApiErrorInput,
-): CodewikiApiError {
-	return new CodewikiApiError(input);
+export function createCodewikiOperationError(
+	input: CodewikiOperationErrorInput,
+): CodewikiOperationError {
+	return new CodewikiOperationError(input);
 }
 
 export function assertKnownInputKeys(
@@ -62,7 +62,7 @@ export function assertKnownInputKeys(
 	const known = new Set(knownKeys);
 	const unknown = Object.keys(input).filter((key) => !known.has(key));
 	if (unknown.length === 0) return;
-	throw createCodewikiApiError({
+	throw createCodewikiOperationError({
 		operation,
 		code: "invalid_input",
 		field: unknown[0],
@@ -77,7 +77,7 @@ export function requiredStringField(
 	value: unknown,
 ): string {
 	if (typeof value === "string" && value.trim() !== "") return value;
-	throw createCodewikiApiError({
+	throw createCodewikiOperationError({
 		operation,
 		code: "missing_required",
 		field,
@@ -92,7 +92,7 @@ export function requiredArrayField(
 	value: unknown,
 ): unknown[] {
 	if (Array.isArray(value)) return value;
-	throw createCodewikiApiError({
+	throw createCodewikiOperationError({
 		operation,
 		code: "missing_required",
 		field,

@@ -110,7 +110,7 @@ async function fixture() {
 	await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
 		recursive: true,
 	});
-	await mkdir(join(root, "src", "api"), { recursive: true });
+	await mkdir(join(root, "src", "runtime"), { recursive: true });
 	await writeFile(
 		join(root, ".codewiki", "traces", "TRACE-pi.jsonl"),
 		formatTraceText([
@@ -122,23 +122,23 @@ async function fixture() {
 		]),
 	);
 	await writeFile(
-		join(root, ".codewiki", "kb", "system", "components", "api.md"),
+		join(root, ".codewiki", "kb", "system", "components", "runtime.md"),
 		[
 			"---",
 			"type: Concept",
-			"title: API",
-			"description: API fixture.",
-			"codewiki_component: api",
+			"title: Runtime",
+			"description: Runtime fixture.",
+			"codewiki_component: runtime",
 			"codewiki_source_patterns:",
-			"  - src/api/**",
+			"  - src/runtime/**",
 			"codewiki_test_patterns:",
-			"  - tests/api/**",
+			"  - tests/runtime/**",
 			"codewiki_generated_views:",
 			"  - .codewiki/views/status.json",
 			"codewiki_trace_events:",
 			"  - decision.change_approved",
 			"---",
-			"# API",
+			"# Runtime",
 			"",
 		].join("\n"),
 	);
@@ -226,7 +226,7 @@ describe("Pi extension adapter", () => {
 		}
 		const packageJson = await readJsonFile("package.json");
 		assert.deepEqual(packageJson.pi, {
-			extensions: ["dist/clients/pi/extension.js"],
+			extensions: ["dist/pi-extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
 	});
@@ -561,7 +561,7 @@ describe("Pi extension adapter", () => {
 				() =>
 					toolByName(pi, "wiki_state").execute(
 						"tool-call-invalid-paths",
-						{ sourcePaths: ["src/api/index.ts"] },
+						{ sourcePaths: ["src/runtime/index.ts"] },
 						undefined,
 						undefined,
 						{ cwd: root },
@@ -996,7 +996,7 @@ describe("Pi extension adapter", () => {
 						sequence: 1,
 						loop: "decision",
 						event: "change_approved",
-						refs: ["src/api/index.ts"],
+						refs: ["src/runtime/index.ts"],
 						createdAt: "2026-06-17T00:00:01.000Z",
 						data: {
 							output: {
@@ -1120,15 +1120,15 @@ describe("Pi extension adapter", () => {
 			assert.equal(project.data.kind, "project");
 			assert.match(project.data.title, /CodeWiki project/);
 
-			const path = await command.handler("src/api/index.ts", {
+			const path = await command.handler("src/runtime/index.ts", {
 				cwd: root,
 				ui: { notify: (message) => notifications.push(message) },
 			});
 			assert.equal(path.data.kind, "path");
-			assert.equal(path.data.sections[0].items[0], "api");
+			assert.equal(path.data.sections[0].items[0], "runtime");
 			assert.match(
 				notifications.at(-1),
-				/CodeWiki Explain — Path: src\/api\/index\.ts/,
+				/CodeWiki Explain — Path: src\/runtime\/index\.ts/,
 			);
 			assert.match(path.rendered.join("\n"), /Owner|Component/);
 
@@ -1157,7 +1157,7 @@ describe("Pi extension adapter", () => {
 				{},
 				undefined,
 				undefined,
-				{ cwd: join(root, "src", "api") },
+				{ cwd: join(root, "src", "runtime") },
 			);
 
 			assert.match(result.content[0].text, /wiki_state: all view/);

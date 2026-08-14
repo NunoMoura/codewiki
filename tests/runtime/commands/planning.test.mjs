@@ -4,20 +4,20 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { runWikiDecide } from "../../src/api/wiki-decide.ts";
-import { runWikiPlan } from "../../src/api/wiki-plan.ts";
-import { changeTraceId } from "../../src/changes/change-trace.ts";
-import { changeContentDigest } from "../../src/changes/digest.ts";
+import { runWikiDecide } from "../../../src/decision/command.ts";
+import { runWikiPlan } from "../../../src/runtime/commands/planning.ts";
+import { changeTraceId } from "../../../src/changes/change-trace.ts";
+import { changeContentDigest } from "../../../src/changes/digest.ts";
 import {
 	createChangeRecord,
 	linkChangeRecord,
-} from "../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
-import { readTrace } from "../../src/traces/reader.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
-import { selectRuntimeReaction } from "../../src/runtime/coordinator/reactor.ts";
-import { buildProjectWorkState } from "../../src/work-state/project.ts";
-import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
+} from "../../../src/changes/records.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { readTrace } from "../../../src/traces/reader.ts";
+import { traceFilePath } from "../../../src/traces/schema.ts";
+import { selectRuntimeReaction } from "../../../src/runtime/coordinator/reactor.ts";
+import { buildProjectWorkState } from "../../../src/work-state/project.ts";
+import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
 
 const roots = [];
 

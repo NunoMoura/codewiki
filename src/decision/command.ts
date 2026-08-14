@@ -1,4 +1,4 @@
-import { createCodewikiApiError } from "../error-handling/api-errors.ts";
+import { createCodewikiOperationError } from "../error-handling/operation-errors.ts";
 import {
 	appendTraceRecords,
 	type AppendTraceBatchResult,
@@ -23,11 +23,11 @@ import {
 	type ChangeRecord,
 } from "../changes/records.ts";
 import { ChangeTraceStore } from "../changes/trace-store.ts";
-import { evaluateChangeDecision } from "../decision/change-quality.ts";
+import { evaluateChangeDecision } from "./change-quality.ts";
 import type {
 	DecisionDisposition,
 	RuntimeDecisionAuthority,
-} from "../decision/candidate-proposal.ts";
+} from "./candidate-proposal.ts";
 import { buildProjectWorkState } from "../work-state/project.ts";
 import type { WorkState } from "../work-state/types.ts";
 import { join } from "node:path";
@@ -506,7 +506,7 @@ function assertInput(input: RunWikiDecideInput): void {
 		input.mode === "append" &&
 		(!Number.isSafeInteger(input.expectedBytes) || input.expectedBytes! < 0)
 	) {
-		throw createCodewikiApiError({
+		throw createCodewikiOperationError({
 			operation: "wiki_decide",
 			code: "invalid_input",
 			field: "expectedBytes",

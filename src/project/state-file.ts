@@ -1,38 +1,8 @@
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-import { buildWikiState, type WikiStateSnapshot } from "../api/state.ts";
-import {
-	defaultReviewEvidenceCache,
-	type ReviewEvidenceCacheReader,
-} from "../implementation/review/index.ts";
 import { readTraceFileSnapshot } from "../traces/reader.ts";
 import { isTraceId } from "../traces/schema.ts";
 import type { TraceRecord } from "../traces/types.ts";
-
-export interface BuildProjectWikiStateInput {
-	repoRoot: string;
-	traceId?: string;
-	generatedAt?: string;
-	reviewEvidenceCache?: ReviewEvidenceCacheReader;
-	reviewEvidenceMaxAgeMs?: number;
-	traceFiles?: ProjectTraceFiles;
-}
-
-export async function buildProjectWikiState(
-	input: BuildProjectWikiStateInput,
-): Promise<WikiStateSnapshot> {
-	const traceFiles =
-		input.traceFiles || (await readProjectTraceFiles(input.repoRoot));
-	return buildWikiState({
-		records: traceFiles.records,
-		traceId: input.traceId,
-		generatedAt: input.generatedAt,
-		expectedBytesByTrace: traceFiles.expectedBytesByTrace,
-		reviewEvidenceCache:
-			input.reviewEvidenceCache || defaultReviewEvidenceCache,
-		reviewEvidenceMaxAgeMs: input.reviewEvidenceMaxAgeMs,
-	});
-}
 
 export async function readProjectTraceRecords(
 	repoRoot: string,

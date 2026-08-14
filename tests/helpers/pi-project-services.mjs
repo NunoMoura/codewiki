@@ -19,6 +19,7 @@ export function testPiProjectServices() {
 		async selectDecision() {
 			throw new Error("decision_attention_selection_unavailable");
 		},
+		async stop() {},
 		async disconnect() {},
 	};
 }

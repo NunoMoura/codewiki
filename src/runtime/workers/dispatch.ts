@@ -4,7 +4,7 @@ import { join } from "node:path";
 import {
 	runWikiRuntime,
 	type RunWikiRuntimeInput,
-} from "../../api/wiki-runtime.ts";
+} from "../commands/work.ts";
 import {
 	collectGitStatusSnapshot,
 	runtimeWorktreeInputsFromGitStatus,

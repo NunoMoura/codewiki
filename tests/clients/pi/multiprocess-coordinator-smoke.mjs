@@ -135,7 +135,7 @@ try {
 		"@nunomoura",
 		"codewiki",
 	);
-	assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "extension.js")), true);
+	assert.equal(existsSync(join(packageRoot, "dist", "pi-extension.js")), true);
 	const env = {
 		...process.env,
 		PI_CODING_AGENT_DIR: join(root, "agent"),
@@ -146,16 +146,29 @@ try {
 		cwd: projectRoot,
 		env,
 	});
-	coordinator = await import(
+	const coordinatorService = await import(
 		pathToFileURL(
 			join(
 				packageRoot,
 				"dist",
-				"host",
-				"coordinator-entrypoint.js",
+				"runtime",
+				"coordinator",
+				"service.js",
 			),
 		).href
 	);
+	const coordinatorEndpoint = await import(
+		pathToFileURL(
+			join(
+				packageRoot,
+				"dist",
+				"runtime",
+				"coordinator",
+				"endpoint.js",
+			),
+		).href
+	);
+	coordinator = { ...coordinatorService, ...coordinatorEndpoint };
 	const first = startPi(projectRoot, env, "pi-one");
 	clients.push(first);
 	assert.equal((await first.request("get_state")).success, true);
@@ -183,7 +196,7 @@ try {
 	const endpoint = await coordinator.readProjectCoordinatorEndpoint(projectRoot);
 	assert.equal(endpoint.generationId, dashboardState.generationId);
 	const health = await coordinator.requestProjectCoordinatorHealth(endpoint);
-	assert.equal(health.semanticExecution, "client_candidate");
+	assert.equal(health.semanticExecution, "service");
 	eventClient = await coordinator.connectProjectCoordinatorClient(projectRoot, {
 		clientId: "test:multiprocess-events",
 		kind: "test",

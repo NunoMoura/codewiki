@@ -3,16 +3,16 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runWikiRuntime } from "../../src/api/wiki-runtime.ts";
-import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
-import { createRuntimeClaimEvent } from "../../src/runtime/claims/events.ts";
+import { runWikiRuntime } from "../../../src/runtime/commands/work.ts";
+import { planningQualityStandards } from "../../helpers/canonical-loop-events.mjs";
+import { createRuntimeClaimEvent } from "../../../src/runtime/claims/events.ts";
 import {
 	appendTraceRecord,
 	appendTraceRecords,
-} from "../../src/traces/append.ts";
-import { readTrace } from "../../src/traces/reader.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
-import { createTraceHead } from "../../src/traces/writer.ts";
+} from "../../../src/traces/append.ts";
+import { readTrace } from "../../../src/traces/reader.ts";
+import { traceFilePath } from "../../../src/traces/schema.ts";
+import { createTraceHead } from "../../../src/traces/writer.ts";
 
 function triggers() {
 	return {

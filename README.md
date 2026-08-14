@@ -219,7 +219,7 @@ Alignment means every discrepancy among intent, Knowledge, Planning, source/test
 
 CodeWiki keeps vertical, horizontal, temporal, and delivery alignment separate. Local proof never implies continuing remote state.
 
-OKF provides portable Knowledge; CodeWiki adds software realization, exact authority, Change accountability, and Git/delivery proof.
+OKF provides portable Knowledge; CodeWiki adds software realization, exact authority, Change accountability, and Git/delivery proof. OKF validation, export, and consumption are owned by `src/knowledge/**` and exposed through the curated Runtime surface.
 
 Target Knowledge support is OKF v0.2 with v0.1 fallback consumption, including `sources`, `generated`, `verified`, lifecycle/freshness metadata, meaningful concept types, unknown-field preservation, and inert Attested Computation definitions. Current executable source remains v0.1-only migration state.
 
@@ -237,53 +237,69 @@ After stabilization and explicit activation, an immutable released CodeWiki vers
 
 ```text
 src/
-  semantic-loop.ts
-  changes/
-    trace/
-    intake/
-    triage/
-  work-state/
-  alignment/
-  decision/              # all Decision semantics and attempt composition
-  planning/              # all Planning semantics and attempt composition
-  implementation/        # all Implementation semantics and attempt composition
-  verification/          # shared Check / Result / Exit Report machinery
-    custom-checks/
-    standard-checks/
-    security/
-  evidence/
-    adapters/
-  server/                # authentication, pairing, sessions, transport, and routing
-  runtime/               # generic authoritative project mechanics only
-    coordinator/
-    persistence/
-    synchronization/
-    claims/
-    workbenches/
-    workers/
-    integration/
-    effects/
-    recovery/
-    lifecycle/
-  api/
+  index.ts
+  pi-extension.ts        # neutral shipped Pi package bootstrap
+  error-handling/        # lean shared error envelope and operation contract
+  protocol/
+    client-server.ts
+    client-pairing.ts
   clients/
     app/
     cli/
     pi/
+  server/                # authentication, pairing, sessions, transport, and routing
+    app/
+    authentication/
+    pairing/
+    sessions/
+    registry/
+    routing/
+    delivery/
+    channels/
+    mcp/
+  runtime/               # generic authoritative project mechanics only
+    index.ts
+    gateway.ts
+    commands/
+    admission/
+    authorization/
+    claims/
+    coordinator/
+    workbenches/
+    workers/
+    integration/
+    persistence/
+    synchronization/
+    recovery/
+    effects/
+    queries/
+  changes/
+    intake/
+    triage/
+    review/
+    trace/
+  decision/              # all Decision semantics and attempt composition
+  planning/              # all Planning semantics and attempt composition
+  implementation/        # all Implementation semantics and attempt composition
+  verification/          # shared Check / Result / Exit Report machinery
+  evidence/
+  work-state/
+  alignment/
+  knowledge/
+  project/
   execution/
     ports.ts
     pi/
   preview/
-  knowledge/
   git/
-  error-handling/
-  project/
   utils/
 
 benchmarks/              # nonproduction paired harness and release measurement
+scripts/
+tests/
 ```
 
-Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. CodeWiki Server owns authentication, pairing, sessions, transport, and routing without project authority. Server and Runtime are architectural siblings; Runtime owns generic scheduling, persistence, synchronization, claims, workbenches, workers, Integration, recovery, and effects, and it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Clients own user interaction. Execution implements Runtime-selected neutral ports and owns no Loop policy or canonical authority; Runtime may import `src/execution/ports.ts` but never concrete Pi adapters. Repository-root benchmarks compare every real supported execution adapter alone with the same adapter under CodeWiki and do not ship in the production package. Clean cuts keep no old-path re-exports.
+Decision, Planning, and Implementation own their own Candidate schemas, Check declarations, attempt composition, interpretation, and route recommendation. CodeWiki Server owns authentication, pairing, sessions, transport, and routing without project authority. Server and Runtime are architectural siblings; Runtime owns generic scheduling, persistence, synchronization, claims, workbenches, workers, Integration, recovery, and effects, and it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared machinery, not a fourth Loop, and cannot import Runtime or Loop implementations. Clients own user interaction. Execution implements Runtime-selected neutral ports and owns no Loop policy or canonical authority; Runtime may import `src/execution/ports.ts` but never concrete Pi adapters. Pi-specific coordinator daemon composition therefore lives under `src/execution/pi/**`, while generic Runtime startup requires an injected spawner. Neutral `src/pi-extension.ts` Package bootstrap wires Pi Client registration to the Runtime connection boundary and concrete Execution spawner, so Client modules import neither lifecycle implementation. `src/runtime/index.ts` is the curated command, query, and gateway package surface; no `src/api/**` root exists. Shared error envelope, serialization, type guards, and operation-failure contracts remain in a lean `src/error-handling/**` package, while owner-specific configuration and Change Trace errors move with their semantic owners. Repository-root benchmarks compare every real supported execution adapter alone with the same adapter under CodeWiki and do not ship in the production package. Clean cuts keep no old-path re-exports.
 
 Server Authentication proof verification lives under `src/server/authentication/**`, Actor enrollment and Registry persistence under `src/server/registry/**`, Client Pairing transitions under `src/server/pairing/**`, provider repository-access checks under `src/server/repository-access/**`, and temporary credential state and endpoint-policy context under `src/server/sessions/**`. Personal App launch verifies an ephemeral local proof, persists one local User, App Pairing, and exact project route in private machine-level Registry state, resolves that binding at current Registry generation, then opens the App Session. Provider-neutral OIDC verification accepts only bounded claims from a trusted adapter after adapter-owned authorization-code, PKCE, discovery, and token cryptography; Server binds exact Client, issuer, audience, nonce, time, and adapter before deriving immutable `(issuer, subject)` identity. Actor enrollment grants no Pairing, Session, repository membership, delegation, or Runtime authority. Public Pairing issue and revoke entrypoints require one active Server Session, verifier-proven target Authentication, exact Session/Registry generation, active Actor identity, and current project/repository/Runtime-route binding before deny-by-default policy sees the fixed action and target Client; policy never receives the Session credential. Direct deterministic Pairing transitions are internal and no longer root package exports. Pairing credential generation and rotation remain blocked until an approved machine credential-store contract can retain only the necessary secret boundary without project-file or deterministic-secret fallback. `codewiki.server-repository-access@1.0.0` separately binds that verified identity and the exact CodeWiki repository identity to short-lived provider `accessible | inaccessible` evidence. It stores no token, role, permission, capability, or Runtime grant. Concrete GitHub/GitLab network adapters remain pending. Browser App transport lives under `src/server/app/**`, bounded App/Change/configuration/Dev Log queries live under `src/runtime/queries/**`, and browser presentation lives under `src/clients/app/**`. App launch establishes a generation-bound Server Session through a same-origin endpoint, stores only an `HttpOnly; SameSite=Strict` cookie in the browser, and authorizes every App endpoint against the exact repository binding before dispatch. Bounded authenticated Actor and Client context crosses the Server-Runtime gateway on every Runtime projection and remains attached per event stream; credentials never enter App API query strings or browser storage. Server reaches Runtime only through `src/runtime/gateway.ts`; it does not import Runtime query, persistence, coordinator, Trace, Knowledge, or project-state implementations. The legacy `src/dashboard/**` source root is gone. Internal query reduction still depends on `src/views/**`, `src/loops/**`, `src/verification/**`, `src/change-trace/**`, legacy trace/WorkState paths, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy trace/view fields as executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 
@@ -311,8 +327,6 @@ npm run test:project-local-install
 npm run test:external-lifecycle
 npm run test:external-failures
 npm run test:readiness
-npm run lab:gate
-npm run lab:pipeline -- --gate
 npm run audit:codewiki
 ```
 
@@ -333,7 +347,7 @@ Package manifest retains:
 ```json
 {
   "pi": {
-    "extensions": ["dist/clients/pi/extension.js"]
+    "extensions": ["dist/pi-extension.js"]
   }
 }
 ```

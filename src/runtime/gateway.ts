@@ -172,6 +172,11 @@ export interface ProjectRuntimeGateway {
 	};
 }
 
+export type ProjectRuntimeGatewayConnector = (
+	repoRoot: string,
+	input: ProjectRuntimeConnectionInput,
+) => Promise<ProjectRuntimeGateway>;
+
 export function createProjectRuntimeGateway(
 	client: ProjectRuntimeGatewayClientPort,
 ): ProjectRuntimeGateway {

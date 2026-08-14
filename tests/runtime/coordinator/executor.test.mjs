@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 import { createChangeRecord } from "../../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
-import { createCodeWikiLoopExecutionPorts } from "../../../src/api/loop-execution.ts";
+import { createCodeWikiLoopExecutionPorts } from "../../../src/runtime/coordinator/executor.ts";
 import {
 	runRuntimeSelectedSemanticReaction,
 	runRuntimeSemanticExecutor,

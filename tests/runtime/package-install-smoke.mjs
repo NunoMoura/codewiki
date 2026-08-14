@@ -58,7 +58,6 @@ import {
 	SERVER_REGISTRY_PROTOCOL,
 	SERVER_REPOSITORY_ACCESS_PROTOCOL,
 	SERVER_SESSION_PROTOCOL,
-	buildWikiState,
 	buildWorkState,
 	checkServerProviderRepositoryAccess,
 	enrollServerOidcActor,
@@ -69,11 +68,12 @@ import {
 	verifyServerAuthentication,
 	verifyServerOidcAuthentication,
 	normalizeServerRegistrySnapshot,
-	runWikiConfig,
 } from "@nunomoura/codewiki";
 import {
+	buildWikiState,
 	connectProjectRuntimeGateway,
 	createProjectRuntimeGateway,
+	runWikiConfig,
 	stopProjectRuntime,
 } from "@nunomoura/codewiki/runtime";
 
@@ -93,7 +93,7 @@ assert.equal(packageJson.name, "@nunomoura/codewiki");
 assert.equal(packageJson.private, true);
 assert.equal(packageJson.bin, undefined);
 assert.equal(packageJson.publishConfig, undefined);
-assert.deepEqual(packageJson.pi, { extensions: ["dist/clients/pi/extension.js"] });
+assert.deepEqual(packageJson.pi, { extensions: ["dist/pi-extension.js"] });
 assert.equal(packageJson.pi.skills, undefined);
 assert.deepEqual(Object.keys(packageJson.exports).sort(), [
 	".",
@@ -123,7 +123,7 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "rea
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "job-id.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "executor.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "executor.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "api", "loop-execution.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "api", "loop-execution.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-job-id.js")), false);
@@ -206,6 +206,7 @@ for (const name of [
 	"changes",
 	"configuration",
 	"dev-log",
+	"state",
 ]) {
 	assert.equal(
 		existsSync(join(packageRoot, "dist", "runtime", "queries", name + ".js")),
@@ -229,6 +230,14 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.js")), true)
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "index.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "gateway.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "gateway.d.ts")), true);
+for (const name of ["archive", "implementation", "planning", "work"]) {
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "runtime", "commands", name + ".js")),
+		true,
+		name,
+	);
+}
+assert.equal(existsSync(join(packageRoot, "dist", "api")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "protocol.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "protocol", "client-server.js")), true);
@@ -369,16 +378,40 @@ assert.equal(existsSync(join(packageRoot, "dist", "execution", "pi", "process-wo
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 const runtimeModule = await import("@nunomoura/codewiki/runtime");
 assert.deepEqual(Object.keys(runtimeModule).sort(), [
+	"CHANGE_INTAKE_RUNTIME_PROTOCOL",
+	"buildProjectWikiState",
+	"buildWikiState",
 	"connectProjectRuntimeGateway",
+	"createChangeIntakeRuntime",
+	"createCodeWikiLoopExecutionPorts",
 	"createProjectRuntimeGateway",
+	"runRuntimeSemanticExecutor",
+	"runWikiArchive",
+	"runWikiChange",
+	"runWikiConfig",
+	"runWikiDecide",
+	"runWikiImplement",
+	"runWikiOkf",
+	"runWikiPlan",
+	"runWikiRuntime",
 	"stopProjectRuntime",
+	"wikiChangeOperationMutates",
 ]);
 assert.equal(typeof createProjectRuntimeGateway, "function");
-const runtimeGateway = await connectProjectRuntimeGateway(process.cwd(), {
-	clientId: "packed:runtime-client",
-	kind: "test",
-	supervision: "approved",
-});
+const { spawnPiProjectCoordinatorDaemon } = await import(
+	pathToFileURL(
+		join(packageRoot, "dist", "execution", "pi", "coordinator-daemon.js"),
+	).href
+);
+const runtimeGateway = await connectProjectRuntimeGateway(
+	process.cwd(),
+	{
+		clientId: "packed:runtime-client",
+		kind: "test",
+		supervision: "approved",
+	},
+	{ spawnDaemon: spawnPiProjectCoordinatorDaemon },
+);
 assert.equal((await runtimeGateway.queries.state()).supervisorCount, 1);
 const appRequestContext = {
 	actor: {actorId: "user:pack", authenticatedIdentityRef: "identity:pack"},
@@ -520,7 +553,8 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "ent
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "project-reactors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "process.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "daemon.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "project-coordinator-daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "execution", "pi", "coordinator-daemon.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "project-coordinator-daemon.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "project-service-client.js")), true);
 assert.equal(
 	existsSync(join(packageRoot, "dist", "clients", "pi", "dashboard-session-actions.js")),
@@ -531,13 +565,12 @@ assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "runtime-tool
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-coordinator-daemon.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "project-service-client.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "runtime-tool-routing.js")), false);
-assert.equal(readFileSync(join(packageRoot, "dist", "clients", "pi", "extension.js"), "utf8").includes("lab/"), false);
+assert.equal(readFileSync(join(packageRoot, "dist", "pi-extension.js"), "utf8").includes("lab/"), false);
 assert.equal(readFileSync(join(packageRoot, "dist", "clients", "pi", "prompt", "index.js"), "utf8").includes("lab/"), false);
 
-const extension = await import(pathToFileURL(join(packageRoot, "dist", "clients", "pi", "extension.js")).href);
+const extension = await import(pathToFileURL(join(packageRoot, "dist", "pi-extension.js")).href);
 const prompt = await import(pathToFileURL(join(packageRoot, "dist", "clients", "pi", "prompt", "index.js")).href);
 const tui = await import(pathToFileURL(join(packageRoot, "dist", "clients", "pi", "tui", "index.js")).href);
-assert.equal(extension.piExtensionAvailable, true);
 assert.equal(prompt.codewikiPromptHooksAvailable, true);
 assert.equal(tui.codewikiTuiRenderersAvailable, true);
 assert.equal(typeof tui.renderBootstrapCommand, "function");

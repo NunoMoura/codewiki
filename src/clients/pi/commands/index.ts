@@ -10,7 +10,10 @@ import {
 import { resolveWikiConfigFile } from "../../../project/config-file.ts";
 import { buildProjectExplainView } from "../../../project/explain.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
-import { buildProjectWikiState } from "../../../project/state-file.ts";
+import {
+	buildProjectWikiState,
+	type ProjectRuntimeGatewayConnector,
+} from "../../../runtime/index.ts";
 import {
 	CODEWIKI_DIRECT_COMMANDS,
 	type CodewikiSubcommand,
@@ -25,12 +28,8 @@ import {
 	closeCodewikiAppServer,
 	startCodewikiAppServer,
 } from "../../../server/app/server.ts";
-import { stopProjectCoordinatorService } from "../../../runtime/coordinator/service.ts";
 import { piPreviewControl } from "../preview-runtime.ts";
-import {
-	createPiProjectServiceClients,
-	type PiProjectServiceClientProvider,
-} from "../project-service-client.ts";
+import type { PiProjectServiceClientProvider } from "../project-service-client.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
 import {
 	renderBootstrapCommand,
@@ -47,8 +46,9 @@ import type {
 
 export function registerCodewikiCommands(
 	pi: CodewikiExtensionApi,
-	connectProjectCoordinator = true,
-	projectServices: PiProjectServiceClientProvider = createPiProjectServiceClients(),
+	connectProjectCoordinator: boolean,
+	projectServices: PiProjectServiceClientProvider,
+	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
 ): void {
 	for (const command of CODEWIKI_DIRECT_COMMANDS) {
 		pi.registerCommand(
@@ -59,6 +59,7 @@ export function registerCodewikiCommands(
 				command.description,
 				connectProjectCoordinator,
 				projectServices,
+				projectRuntimeConnector,
 			),
 		);
 	}
@@ -70,6 +71,7 @@ function directWikiCommand(
 	description: string,
 	connectProjectCoordinator: boolean,
 	projectServices: PiProjectServiceClientProvider,
+	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
 ): CodewikiCommandDefinition {
 	return {
 		description,
@@ -81,6 +83,7 @@ function directWikiCommand(
 				pi,
 				connectProjectCoordinator,
 				projectServices,
+				projectRuntimeConnector,
 			);
 		},
 	};
@@ -93,9 +96,17 @@ async function dispatchWikiCommand(
 	pi: CodewikiExtensionApi,
 	connectProjectCoordinator: boolean,
 	projectServices: PiProjectServiceClientProvider,
+	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
 ): Promise<unknown> {
 	if (subcommand === "dashboard") {
-		return await dashboardCommand(args, ctx, pi, connectProjectCoordinator);
+		return await dashboardCommand(
+			args,
+			ctx,
+			pi,
+			connectProjectCoordinator,
+			projectServices,
+			projectRuntimeConnector,
+		);
 	}
 	if (subcommand === "attention") {
 		return await decisionAttentionCommand(args, ctx, pi, projectServices);
@@ -130,12 +141,16 @@ async function dashboardCommand(
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
 	connectProjectCoordinator: boolean,
+	projectServices: PiProjectServiceClientProvider,
+	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
 ): Promise<unknown> {
 	const options = parseDashboardOptions(args);
 	const result = await startDashboard(
 		ctx,
 		options,
 		connectProjectCoordinator,
+		projectServices,
+		projectRuntimeConnector,
 	);
 	emitCommandOutput(
 		pi,
@@ -152,13 +167,15 @@ async function startDashboard(
 	ctx: CodewikiExtensionContext,
 	options: DashboardCommandOptions,
 	connectProjectCoordinator: boolean,
+	projectServices: PiProjectServiceClientProvider,
+	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
 ): Promise<DashboardCommandResult> {
 	const root = await requireCodewikiRoot(ctx);
 	notifyInstallWarning(ctx, root);
 	if (options.stop) {
 		await closeCodewikiAppServer(root);
 		if (connectProjectCoordinator) {
-			await stopProjectCoordinatorService(root).catch(() => undefined);
+			await projectServices.stop(root).catch(() => undefined);
 		}
 		return {
 			command: "dashboard",
@@ -179,6 +196,7 @@ async function startDashboard(
 		persistent: false,
 		previewControl: piPreviewControl(root),
 		connectProjectRuntime: connectProjectCoordinator,
+		projectRuntimeConnector,
 	});
 	return {
 		command: "dashboard",

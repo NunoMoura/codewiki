@@ -90,7 +90,7 @@ describe("install readiness checklist", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 		assert.equal(piExtensionAvailable, true);
 		assert.deepEqual(packageJson.pi, {
-			extensions: ["dist/clients/pi/extension.js"],
+			extensions: ["dist/pi-extension.js"],
 		});
 		assert.equal(packageJson.pi.skills, undefined);
 		assert.equal(packageJson.name, "@nunomoura/codewiki");
@@ -171,7 +171,7 @@ describe("install readiness checklist", () => {
 			.join("\n---\n");
 		assert.doesNotMatch(agentSurfaceText, /wiki_runtime/);
 		assert.doesNotMatch(
-			readFileSync("src/api/state.ts", "utf8"),
+			readFileSync("src/runtime/queries/state.ts", "utf8"),
 			/sourceOwners|sourcePaths/,
 		);
 		assert.doesNotMatch(
@@ -228,7 +228,7 @@ describe("install readiness checklist", () => {
 		assert.equal(packageJson.pi.extensions.includes("lab"), false);
 		assert.equal(existsSync("lab"), false);
 		assert.equal(
-			readFileSync("src/clients/pi/extension.ts", "utf8").includes("lab/"),
+			readFileSync("src/pi-extension.ts", "utf8").includes("lab/"),
 			false,
 		);
 		assert.equal(

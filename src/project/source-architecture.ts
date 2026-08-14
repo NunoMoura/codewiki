@@ -1,5 +1,4 @@
 export const CURRENT_SOURCE_ROOTS = [
-	"api",
 	"benchmarks",
 	"change-trace",
 	"changes",
@@ -31,6 +30,7 @@ export const TARGET_SOURCE_ROOTS = [
 	"changes",
 	"clients",
 	"decision",
+	"error-handling",
 	"evidence",
 	"execution",
 	"git",
@@ -65,10 +65,18 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 ] as const;
 
 export const LEGACY_SOURCE_ROOTS = [
+	"benchmarks",
 	"change-trace",
+	"cli",
 	"loops",
 	"traces",
 	"views",
+] as const;
+
+export const LEGACY_SOURCE_FILES = [
+	"src/error-handling/config-errors.ts",
+	"src/error-handling/trace-errors.ts",
+	"src/semantic-loop.ts",
 ] as const;
 
 export const CORE_SOURCE_ROOTS = [
@@ -79,7 +87,6 @@ export const CORE_SOURCE_ROOTS = [
 ] as const;
 
 export const OUTER_ADAPTER_SOURCE_ROOTS = [
-	"api",
 	"cli",
 	"clients",
 	"execution",
@@ -89,7 +96,9 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 ] as const;
 
 export const LEGACY_SOURCE_FILE_COUNTS = {
+	benchmarks: 2,
 	"change-trace": 19,
+	cli: 1,
 	loops: 10,
 	traces: 12,
 	views: 13,

@@ -4,29 +4,29 @@ import { join } from "node:path";
 import {
 	appendTraceRecords,
 	type AppendTraceBatchResult,
-} from "../traces/append.ts";
-import { createLoopIterationEvent } from "../traces/events.ts";
-import { readTraceFileSnapshot } from "../traces/reader.ts";
+} from "../../traces/append.ts";
+import { createLoopIterationEvent } from "../../traces/events.ts";
+import { readTraceFileSnapshot } from "../../traces/reader.ts";
 import {
 	assertRuntimeSemanticJobId,
 	traceFilePath,
-} from "../traces/schema.ts";
+} from "../../traces/schema.ts";
 import type {
 	LoopQualityStandardResult,
 	TraceEvent,
 	TraceRecord,
-} from "../traces/types.ts";
-import { changeContentDigest } from "../changes/digest.ts";
-import { changeTraceId } from "../changes/change-trace.ts";
+} from "../../traces/types.ts";
+import { changeContentDigest } from "../../changes/digest.ts";
+import { changeTraceId } from "../../changes/change-trace.ts";
 import {
 	evaluatePortfolioPlanning,
 	type PortfolioWorkItemInput,
 	type SprintPlanInput,
-} from "../planning/portfolio-quality.ts";
-import { normalizeUiPreviewTargetBinding } from "../preview/binding.ts";
-import { selectRuntimeReaction } from "../runtime/coordinator/reactor.ts";
-import { buildProjectWorkState } from "../work-state/project.ts";
-import type { WorkState } from "../work-state/types.ts";
+} from "../../planning/portfolio-quality.ts";
+import { normalizeUiPreviewTargetBinding } from "../../preview/binding.ts";
+import { selectRuntimeReaction } from "../coordinator/reactor.ts";
+import { buildProjectWorkState } from "../../work-state/project.ts";
+import type { WorkState } from "../../work-state/types.ts";
 
 export type WikiPlanMode = "preview" | "append";
 

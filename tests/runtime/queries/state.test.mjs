@@ -1,14 +1,26 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
-import { buildWikiState } from "../../src/api/state.ts";
-import { InMemoryReviewEvidenceCache } from "../../src/implementation/review/index.ts";
-import { createTraceCloseRecord } from "../../src/traces/retention.ts";
-import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
-import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
-import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
-import { createTraceHead } from "../../src/traces/writer.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterEach, describe, it } from "node:test";
+import { buildWikiState } from "../../../src/runtime/queries/state.ts";
+import {
+	acceptChangeRecord,
+	createChangeRecord,
+} from "../../../src/changes/records.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { InMemoryReviewEvidenceCache } from "../../../src/implementation/review/index.ts";
+import { buildCodewikiAppState } from "../../../src/runtime/queries/app-state.ts";
+import { loadRuntimeChangesState } from "../../../src/runtime/queries/changes.ts";
+import { readProjectTraceRecords } from "../../../src/work-state/project.ts";
+import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
+import { createTraceCloseRecord } from "../../../src/traces/retention.ts";
+import { runDecisionIteration } from "../../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../../helpers/canonical-loop-events.mjs";
+import { runPlanningIteration } from "../../helpers/canonical-loop-events.mjs";
+import { createTraceHead } from "../../../src/traces/writer.ts";
+import { decisionQualityFields } from "../../helpers/proposed-change.mjs";
+import { planningQualityFields } from "../../helpers/planning-work.mjs";
 
 function nextSequence(events) {
 	return Math.max(0, ...events.map((event) => event.sequence || 0)) + 1;
@@ -64,9 +76,9 @@ function traceRecords(traceId = "TRACE-state") {
 				outcome: "wiki_state returns derived projections.",
 				...planningQualityFields(),
 				acceptance: ["State derives from trace records."],
-				componentRefs: ["api"],
-				pathScopes: ["src/api/state.ts"],
-				verification: ["tests/views/wiki-state.test.mjs"],
+				componentRefs: ["runtime"],
+				pathScopes: ["src/runtime/queries/state.ts"],
+				verification: ["tests/runtime/queries/state.test.mjs"],
 			},
 		],
 	});
@@ -198,7 +210,7 @@ describe("wiki_state core facade", () => {
 			createdAt: "2026-06-11T00:00:02.500Z",
 			report: {
 				phase: "fast",
-				changedPaths: ["src/api/state.ts"],
+				changedPaths: ["src/runtime/queries/state.ts"],
 				sources: [
 					{
 						id: "common.fast.blocking-diagnostics",
@@ -209,7 +221,7 @@ describe("wiki_state core facade", () => {
 				],
 				diagnostics: [
 					{
-						path: "src/api/state.ts",
+						path: "src/runtime/queries/state.ts",
 						severity: "error",
 						message: "Cached fast blocker.",
 						sourceId: "common.fast.blocking-diagnostics",
@@ -230,7 +242,7 @@ describe("wiki_state core facade", () => {
 		assert.equal(state.reviewEvidence?.cachedFast.diagnostics.error, 1);
 		assert.equal(
 			state.reviewEvidence?.blockers[0],
-			"common.fast.blocking-diagnostics: src/api/state.ts:12 Cached fast blocker.",
+			"common.fast.blocking-diagnostics: src/runtime/queries/state.ts:12 Cached fast blocker.",
 		);
 	});
 
@@ -277,7 +289,7 @@ describe("wiki_state core facade", () => {
 		assert.equal(projectState.traceBoard.conflicts.length, 1);
 		assert.equal(
 			projectState.traceBoard.conflicts[0].pathScope,
-			"src/api/state.ts",
+			"src/runtime/queries/state.ts",
 		);
 		assert.equal(projectState.next.action, "wait");
 		assert.equal(selectedState.selectedTraceId, "TRACE-state-b");
@@ -291,5 +303,83 @@ describe("wiki_state core facade", () => {
 			() => buildWikiState({ records, traceId: "TRACE-state-missing" }),
 			/Unknown trace id/,
 		);
+	});
+});
+
+
+const roots = [];
+
+afterEach(async () => {
+	await Promise.all(
+		roots.splice(0).map((root) => rm(root, { recursive: true, force: true })),
+	);
+});
+
+async function project() {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-change-dashboard-"));
+	roots.push(root);
+	return root;
+}
+
+async function appState(root) {
+	const records = await readProjectTraceRecords(root);
+	return buildCodewikiAppState(
+		buildWikiState({ records }),
+		root,
+		records,
+		{
+			changes: await loadRuntimeChangesState(root),
+		},
+	);
+}
+
+describe("Change-rooted App state", () => {
+	it("projects one Pipeline Card for one Change Trace across approval", async () => {
+		const root = await project();
+		const store = new ChangeTraceStore({ repoRoot: root });
+		const pending = createChangeRecord(
+			acceptedChangeFixture({ id: "CHG-dashboard-journey" }),
+		);
+		const created = await store.write({
+			expectedHead: null,
+			records: [pending],
+			message: "Persist Change",
+			actor: "maintainer",
+			createdAt: pending.change.provenance.createdAt,
+		});
+
+		const before = await appState(root);
+		assert.equal(before.summary.pipeline, 1);
+		assert.equal(before.summary.backlog, 1);
+		assert.equal(before.sprintsQueue.length, 1);
+		assert.deepEqual(before.sprintsQueue[0].changeIds, [pending.change.id]);
+		assert.deepEqual(before.sprintsQueue[0].sprintIds, []);
+		assert.equal(before.sprintsQueue[0].stage, "decision");
+		assert.equal(before.sprintsQueue[0].status, "needs_decision");
+		assert.equal(before.sprintsQueue[0].blockerCount, 0);
+		assert.equal(before.sprintsQueue[0].progress, 30);
+
+		const approved = acceptChangeRecord(pending, {
+			changedBy: "maintainer",
+			changedAt: "2026-08-01T03:01:00.000Z",
+			authority: "user",
+			ref: "approval:CHG-dashboard-journey:1",
+		});
+		await store.write({
+			expectedHead: created.head,
+			records: [approved],
+			message: "Approve exact Change",
+			actor: "maintainer",
+			createdAt: "2026-08-01T03:01:00.000Z",
+		});
+
+		const after = await appState(root);
+		assert.equal(after.summary.pipeline, 1);
+		assert.equal(after.summary.backlog, 0);
+		assert.equal(after.sprintsQueue.length, 1);
+		assert.equal(after.sprintsQueue[0].stage, "planning");
+		assert.equal(after.sprintsQueue[0].status, "needs_planning");
+		assert.equal(after.sprintsQueue[0].progress, 40);
+		assert.match(after.sprintsQueue[0].currentAction, /Planning horizon/);
 	});
 });

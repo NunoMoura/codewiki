@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { runWikiDecide } from "../../src/api/wiki-decide.ts";
-import { CodewikiApiError } from "../../src/error-handling/api-errors.ts";
+import { runWikiDecide } from "../../src/decision/command.ts";
+import { CodewikiOperationError } from "../../src/error-handling/operation-errors.ts";
 import { changeTraceId } from "../../src/changes/change-trace.ts";
 import { changeContentDigest } from "../../src/changes/digest.ts";
 import { createChangeRecord } from "../../src/changes/records.ts";
@@ -157,11 +157,11 @@ describe("wiki_decide Change-revision facade", () => {
 		);
 	});
 
-	it("rejects malformed facade input with a structured API error", async () => {
+	it("rejects malformed command input with a structured operation error", async () => {
 		await assert.rejects(
 			() =>
 				runWikiDecide({
-					changeId: "CHG-api-error",
+					changeId: "CHG-operation-error",
 					expectedRevision: 1,
 					expectedChangeDigest: `sha256:${"0".repeat(64)}`,
 					expectedWorkStateDigest: `sha256:${"1".repeat(64)}`,
@@ -172,8 +172,8 @@ describe("wiki_decide Change-revision facade", () => {
 					expectedBytes: -1,
 				}),
 			(error) => {
-				assert.equal(error instanceof CodewikiApiError, true);
-				assert.equal(error.domain, "api");
+				assert.equal(error instanceof CodewikiOperationError, true);
+				assert.equal(error.domain, "operation");
 				assert.equal(error.code, "invalid_input");
 				assert.equal(error.operation, "wiki_decide");
 				assert.equal(error.field, "expectedBytes");
@@ -241,7 +241,7 @@ describe("wiki_decide Change-revision facade", () => {
 					actor: "agent:test",
 					value: "reject",
 					rationale: "Outcome does not justify implementation.",
-					evidenceRefs: ["tests/decision/wiki-decide.test.mjs"],
+					evidenceRefs: ["tests/decision/command.test.mjs"],
 				},
 			],
 		});

@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { createCodeWikiLoopExecutionPorts } from "../../../src/api/loop-execution.ts";
+import { createCodeWikiLoopExecutionPorts } from "../../../src/runtime/coordinator/executor.ts";
 import { writeWikiConfigFile } from "../../../src/project/config-file.ts";
 import { resolveWikiConfig } from "../../../src/project/config.ts";
 import { readImplementationWorkerDispatchPackets } from "../../../src/runtime/workers/implementation-artifacts.ts";

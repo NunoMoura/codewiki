@@ -29,7 +29,7 @@ async function installPackage(root) {
 		"@nunomoura",
 		"codewiki",
 	);
-	assert.equal(existsSync(join(packageRoot, "dist", "clients", "pi", "extension.js")), true);
+	assert.equal(existsSync(join(packageRoot, "dist", "pi-extension.js")), true);
 	const processAdapter = await import(
 		pathToFileURL(
 			join(packageRoot, "dist", "execution", "pi", "process-worker-adapter.js"),

@@ -1,29 +1,34 @@
-import { createCodewikiApiError } from "../error-handling/api-errors.ts";
-import {buildTriggersView} from "../views/triggers.ts";
-import {buildBlockersView} from "../views/blockers.ts";
-import {buildConflictsView} from "../views/conflicts.ts";
-import {buildQualityView} from "../views/quality.ts";
-import {buildResumeView} from "../views/resume.ts";
-import {buildStatusView} from "../views/status.ts";
-import {buildTraceBoardView} from "../views/trace-goals.ts";
-import {buildTraceQueueView} from "../views/trace-queue.ts";
-import {buildWorkPlanView} from "../views/work-plan.ts";
-import {buildWorkQueueView} from "../views/work-queue.ts";
+import { createCodewikiOperationError } from "../../error-handling/operation-errors.ts";
+import {
+	readProjectTraceFiles,
+	type ProjectTraceFiles,
+} from "../../project/state-file.ts";
+import {buildTriggersView} from "../../views/triggers.ts";
+import {buildBlockersView} from "../../views/blockers.ts";
+import {buildConflictsView} from "../../views/conflicts.ts";
+import {buildQualityView} from "../../views/quality.ts";
+import {buildResumeView} from "../../views/resume.ts";
+import {buildStatusView} from "../../views/status.ts";
+import {buildTraceBoardView} from "../../views/trace-goals.ts";
+import {buildTraceQueueView} from "../../views/trace-queue.ts";
+import {buildWorkPlanView} from "../../views/work-plan.ts";
+import {buildWorkQueueView} from "../../views/work-queue.ts";
 import {
 	buildRuntimeBoard,
 	type RuntimeBoard,
 	type RuntimeBoardRuntimePreview,
-} from "../views/runtime-board.ts";
-import { foldProjectTraceRecords } from "../traces/project.ts";
+} from "../../views/runtime-board.ts";
+import { foldProjectTraceRecords } from "../../traces/project.ts";
 import {
+	defaultReviewEvidenceCache,
 	summarizeReviewEvidenceReports,
 	type ImplementationEvidenceReportInput,
 	type ReviewEvidenceCacheReader,
 	type ReviewEvidenceSummary,
-} from "../implementation/review/index.ts";
-import type { TraceRecord } from "../traces/types.ts";
-import { buildWorkState } from "../work-state/projector.ts";
-import type { WorkState } from "../work-state/types.ts";
+} from "../../implementation/review/index.ts";
+import type { TraceRecord } from "../../traces/types.ts";
+import { buildWorkState } from "../../work-state/projector.ts";
+import type { WorkState } from "../../work-state/types.ts";
 import type {
 	TriggersView,
 	BlockersView,
@@ -36,7 +41,32 @@ import type {
 	TraceViewInput,
 	WorkPlanView,
 	WorkQueueView,
-} from "../views/types.ts";
+} from "../../views/types.ts";
+
+export interface BuildProjectWikiStateInput {
+	repoRoot: string;
+	traceId?: string;
+	generatedAt?: string;
+	reviewEvidenceCache?: ReviewEvidenceCacheReader;
+	reviewEvidenceMaxAgeMs?: number;
+	traceFiles?: ProjectTraceFiles;
+}
+
+export async function buildProjectWikiState(
+	input: BuildProjectWikiStateInput,
+): Promise<WikiStateSnapshot> {
+	const traceFiles =
+		input.traceFiles || (await readProjectTraceFiles(input.repoRoot));
+	return buildWikiState({
+		records: traceFiles.records,
+		traceId: input.traceId,
+		generatedAt: input.generatedAt,
+		expectedBytesByTrace: traceFiles.expectedBytesByTrace,
+		reviewEvidenceCache:
+			input.reviewEvidenceCache || defaultReviewEvidenceCache,
+		reviewEvidenceMaxAgeMs: input.reviewEvidenceMaxAgeMs,
+	});
+}
 
 export interface WikiStateAppendTraceHandle {
 	expectedBytes: number;
@@ -415,7 +445,7 @@ function selectTraceId(
 ): string | undefined {
 	if (requestedTraceId) {
 		if (!traceIds.includes(requestedTraceId)) {
-			throw createCodewikiApiError({
+			throw createCodewikiOperationError({
 				operation: "wiki_state",
 				code: "invalid_input",
 				field: "traceId",

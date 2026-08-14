@@ -9,7 +9,7 @@ import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
 import {
 	loadPiSemanticAdapters,
 	startPiProjectCoordinatorDaemon,
-} from "../../../src/clients/pi/project-coordinator-daemon.ts";
+} from "../../../src/execution/pi/coordinator-daemon.ts";
 import { connectProjectCoordinatorClient } from "../../../src/runtime/coordinator/service.ts";
 import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
 

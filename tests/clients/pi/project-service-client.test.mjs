@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { createPiProjectServiceClients } from "../../../src/clients/pi/project-service-client.ts";
+import { connectEnsuredProjectCoordinatorClient } from "../../../src/runtime/coordinator/process.ts";
 import { startProjectCoordinatorService } from "../../../src/runtime/coordinator/service.ts";
 
 test("Pi project-service clients reuse one leased supervised connection", async () => {
@@ -11,15 +12,27 @@ test("Pi project-service clients reuse one leased supervised connection", async 
 	await mkdir(join(root, ".codewiki", "kb"), { recursive: true });
 	let service;
 	let starts = 0;
+	let stops = 0;
 	const clients = createPiProjectServiceClients({
-		timeoutMs: 2_000,
-		spawnDaemon(repoRoot) {
-			starts += 1;
-			void startProjectCoordinatorService(repoRoot, {
-				generationId: `generation:pi-client:${starts}`,
-			}).then((started) => {
-				service = started;
+		connect(repoRoot, input) {
+			return connectEnsuredProjectCoordinatorClient(repoRoot, input, {
+				timeoutMs: 2_000,
+				spawnDaemon() {
+					starts += 1;
+					void startProjectCoordinatorService(repoRoot, {
+						generationId: `generation:pi-client:${starts}`,
+					}).then((started) => {
+						service = started;
+					});
+				},
 			});
+		},
+		async stop() {
+			if (!service) return;
+			assert.equal(service.coordinator.snapshot().clientCount, 0);
+			stops += 1;
+			await service.close();
+			service = undefined;
 		},
 	});
 	const ctx = {
@@ -50,8 +63,9 @@ test("Pi project-service clients reuse one leased supervised connection", async 
 			"generation:pi-client:2",
 		);
 		assert.equal(service.coordinator.snapshot().supervisorCount, 1);
-		await clients.disconnect(root);
-		assert.equal(service.coordinator.snapshot().clientCount, 0);
+		await clients.stop(root);
+		assert.equal(stops, 1);
+		assert.equal(service, undefined);
 	} finally {
 		await clients.disconnect();
 		if (service) await service.close();

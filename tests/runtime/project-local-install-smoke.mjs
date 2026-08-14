@@ -93,12 +93,12 @@ try {
 		"codewiki",
 	);
 	assert.equal(
-		existsSync(join(packageRoot, "dist", "clients", "pi", "extension.js")),
+		existsSync(join(packageRoot, "dist", "pi-extension.js")),
 		true,
 	);
 
 	const { default: codewikiExtension } = await import(
-		pathToFileURL(join(packageRoot, "dist", "clients", "pi", "extension.js")).href
+		pathToFileURL(join(packageRoot, "dist", "pi-extension.js")).href
 	);
 	const pi = mockPi();
 	codewikiExtension(pi.api);
@@ -243,8 +243,9 @@ try {
 		"@nunomoura",
 		"codewiki",
 		"dist",
-		"host",
-		"coordinator-entrypoint.js",
+		"runtime",
+		"coordinator",
+		"service.js",
 	);
 	if (existsSync(coordinatorApi)) {
 		const { stopProjectCoordinatorService } = await import(

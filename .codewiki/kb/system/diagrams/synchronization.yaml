@@ -13,19 +13,30 @@ connections:
     type: reads
     label: binds configured repository and expected head
     boundary: { type: persistence, failure: Block synchronization when configuration cannot be verified. }
-  - id: project-synchronizes-provider
+  - id: project-returns-runtime
     from: project
+    to: runtime
+    type: returns
+    label: returns verified repository binding and expected head
+    boundary: { type: persistence, failure: Block synchronization when configuration identity drifts. }
+  - id: runtime-synchronizes-provider
+    from: runtime
     to: provider
     type: synchronizes
     label: fetches or pushes exact refs
     boundary: { type: network, failure: Preserve local state and report unavailable remote acceptance. }
-  - id: provider-returns-project
+  - id: provider-returns-runtime
     from: provider
-    to: project
+    to: runtime
     type: returns
     label: returns authenticated exact ref state
     boundary: { type: network, failure: Reject unauthenticated, stale, or contradictory provider state. }
-  - { id: project-writes-change-trace, from: project, to: change-trace, type: writes, label: accepts verified canonical history }
+  - id: runtime-writes-change-trace
+    from: runtime
+    to: change-trace
+    type: writes
+    label: accepts verified canonical history
+    boundary: { type: persistence, failure: Preserve the previous canonical head when append validation or compare-and-swap fails. }
   - id: change-trace-produces-alignment
     from: change-trace
     to: alignment
@@ -36,4 +47,4 @@ connections:
 flows:
   - concept: /system/flows/remote-state-synchronization.md
     paths:
-      - connections: [runtime-reads-project, project-synchronizes-provider, provider-returns-project, project-writes-change-trace, change-trace-produces-alignment, alignment-returns-runtime]
+      - connections: [runtime-reads-project, project-returns-runtime, runtime-synchronizes-provider, provider-returns-runtime, runtime-writes-change-trace, change-trace-produces-alignment, alignment-returns-runtime]

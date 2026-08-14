@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../src/index.ts";
 import * as packageApi from "../src/index.ts";
-import * as publicApi from "../src/api/index.ts";
+import * as runtimeApi from "../src/runtime/index.ts";
 import { traceTmpPath } from "../src/runtime/persistence/tmp.ts";
 import packageJson from "../package.json" with { type: "json" };
 import tsconfig from "../tsconfig.json" with { type: "json" };
@@ -11,16 +11,19 @@ import buildTsconfig from "../tsconfig.build.json" with { type: "json" };
 
 const readme = readFileSync("README.md", "utf8");
 const sourceIndex = readFileSync("src/index.ts", "utf8");
-const apiIndex = readFileSync("src/api/index.ts", "utf8");
+const runtimeIndex = readFileSync("src/runtime/index.ts", "utf8");
 
 describe("fresh scaffold", () => {
 	it("exposes the Pi extension for package installs", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 	});
 
-	it("keeps the package root execution-adapter-neutral and the API facade acyclic", () => {
-		assert.match(sourceIndex, /export \* from "\.\/api\/index\.ts"/);
+	it("keeps the package root contract-focused and the Runtime facade acyclic", () => {
+		assert.equal(existsSync("src/api"), false);
+		assert.doesNotMatch(sourceIndex, /from "\.\/api\//);
 		assert.doesNotMatch(sourceIndex, /from "\.\/pi\//);
+		assert.doesNotMatch(runtimeIndex, /from "\.\.\/clients\//);
+		assert.doesNotMatch(runtimeIndex, /from "\.\.\/execution\/pi\//);
 		assert.equal(
 			Object.keys(packageApi).some(
 				(name) => name.startsWith("Pi") || name.startsWith("createPi"),
@@ -31,14 +34,15 @@ describe("fresh scaffold", () => {
 		assert.equal(typeof packageApi.createRepairExecutionInvocation, "function");
 		assert.equal("resolveHarnessCapabilities" in packageApi, false);
 		assert.equal("createRepairHarnessInvocation" in packageApi, false);
-		assert.doesNotMatch(apiIndex, /from "\.\.\/index\.ts"/);
+		assert.equal("runWikiChange" in packageApi, false);
+		assert.equal("buildWikiState" in packageApi, false);
 	});
 
 	it("declares runtime requirements for generated package output", () => {
 		assert.equal(packageJson.engines.node, ">=20.6.0");
 		assert.equal(packageJson.bin, undefined);
 		assert.deepEqual(packageJson.pi, {
-			extensions: ["dist/clients/pi/extension.js"],
+			extensions: ["dist/pi-extension.js"],
 		});
 		assert.equal(packageJson.keywords.includes("pi-package"), true);
 		assert.deepEqual(packageJson.files, [
@@ -84,52 +88,15 @@ describe("fresh scaffold", () => {
 		);
 	});
 
-	it("keeps the package API surface facade runtime- and contract-only", () => {
-		assert.deepEqual(Object.keys(publicApi).sort(), [
-			"BACKLOG_TRIAGE_PROJECTION_PROTOCOL",
-			"BACKLOG_TRIAGE_QUERY_PROTOCOL",
-			"CHANGE_DEFECT_PROFILE_PROTOCOL",
-			"CHANGE_INTAKE_MATERIAL_PROTOCOL",
-			"CHANGE_INTAKE_MATERIAL_TYPES",
+	it("publishes one curated Runtime command and query surface", () => {
+		assert.deepEqual(Object.keys(runtimeApi).sort(), [
 			"CHANGE_INTAKE_RUNTIME_PROTOCOL",
-			"CLIENT_KINDS",
-			"CLIENT_SERVER_PROTOCOL",
-			"CODEWIKI_EXTENSION_AVAILABLE",
-			"DEFAULT_WIKI_CONFIG",
-			"ProjectCoordinator",
-			"TRIAGE_CONFIDENCE",
-			"TRIAGE_EFFORTS",
-			"TRIAGE_LEVELS",
-			"TRIAGE_ORDERINGS",
-			"TRIAGE_REVERSIBILITY",
-			"buildBacklogTriageProjection",
-			"buildProjectWorkState",
+			"buildProjectWikiState",
 			"buildWikiState",
-			"buildWorkState",
+			"connectProjectRuntimeGateway",
 			"createChangeIntakeRuntime",
-			"createDeliveryObservationMaterial",
-			"createDeliveryObservationMaterialFromEvidence",
-			"createKnowledgeDriftMaterial",
-			"createKnowledgeDriftMaterialFromIssue",
-			"createOutcomeFindingMaterial",
-			"createOutcomeFindingMaterialFromEvidence",
-			"createPullRequestFindingMaterial",
-			"createRegressionFindingMaterial",
-			"createSecurityScannerFindingMaterial",
-			"createUserSuggestionMaterial",
-			"createWorkerDiscoveryMaterial",
-			"createWorkerReportDiscoveryMaterials",
-			"normalizeChangeDefectProfile",
-			"normalizeChangeIntakeContent",
-			"normalizeChangeIntakeMaterial",
-			"normalizeChangeSecurityProfile",
-			"normalizeClientServerCommand",
-			"normalizeClientServerEvent",
-			"normalizeClientServerOperation",
-			"normalizeClientServerQuery",
-			"normalizeClientServerQueryResult",
-			"queryBacklogTriage",
-			"resolveWikiConfig",
+			"createCodeWikiLoopExecutionPorts",
+			"createProjectRuntimeGateway",
 			"runRuntimeSemanticExecutor",
 			"runWikiArchive",
 			"runWikiChange",
@@ -139,9 +106,8 @@ describe("fresh scaffold", () => {
 			"runWikiOkf",
 			"runWikiPlan",
 			"runWikiRuntime",
-			"runtimeSemanticIdempotencyDigest",
-			"serverTransportDeduplicationDigest",
-			"validateWikiConfig",
+			"stopProjectRuntime",
+			"wikiChangeOperationMutates",
 		]);
 	});
 

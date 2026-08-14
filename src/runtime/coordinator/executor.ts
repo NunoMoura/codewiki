@@ -1,16 +1,19 @@
-import type {
-	RunWikiDecideInput,
-	RunWikiDecideResult,
-} from "../../api/wiki-decide.ts";
-import type {
-	ImplementationEvidenceSubmission,
-	RunWikiImplementInput,
-	RunWikiImplementResult,
-} from "../../api/wiki-implement.ts";
-import type {
-	RunWikiPlanInput,
-	RunWikiPlanResult,
-} from "../../api/wiki-plan.ts";
+import {
+	runWikiDecide,
+	type RunWikiDecideInput,
+	type RunWikiDecideResult,
+} from "../../decision/command.ts";
+import {
+	runRuntimeSelectedWikiImplement,
+	type ImplementationEvidenceSubmission,
+	type RunWikiImplementInput,
+	type RunWikiImplementResult,
+} from "../commands/implementation.ts";
+import {
+	runRuntimeSelectedWikiPlan,
+	type RunWikiPlanInput,
+	type RunWikiPlanResult,
+} from "../commands/planning.ts";
 import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
@@ -113,6 +116,15 @@ export interface RuntimeLoopExecutionPorts {
 		observation: RuntimeObservation,
 		beforeAppend?: () => void | Promise<void>,
 	) => Promise<RunWikiImplementResult>;
+}
+
+/** Bind domain-owned Loop commands to Runtime's injected execution contract. */
+export function createCodeWikiLoopExecutionPorts(): RuntimeLoopExecutionPorts {
+	return {
+		decision: runWikiDecide,
+		planning: runRuntimeSelectedWikiPlan,
+		implementation: runRuntimeSelectedWikiImplement,
+	};
 }
 
 export type RuntimeSemanticOutcome =

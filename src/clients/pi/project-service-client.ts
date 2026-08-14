@@ -3,15 +3,11 @@ import type {
 	BacklogTriageQueryRequest,
 	BacklogTriageQueryResult,
 } from "../../changes/triage/contracts.ts";
-import type {DecisionAttentionSelectionCommand} from "../../changes/triage/selection.ts";
-import type {DecisionStartResult} from "../../runtime/admission/start.ts";
-import {
-	connectEnsuredProjectCoordinatorClient,
-	type EnsureProjectCoordinatorServiceOptions,
-} from "../../runtime/coordinator/process.ts";
-import type { ProjectCoordinatorRemoteClient } from "../../runtime/coordinator/service.ts";
+import type { DecisionAttentionSelectionCommand } from "../../changes/triage/selection.ts";
+import type { DecisionStartResult } from "../../runtime/admission/start.ts";
+import type { ProjectCoordinatorClientInput } from "../../runtime/coordinator/project.ts";
 import type { RuntimeReaction, RuntimeTrigger } from "../../runtime/coordinator/reactor.ts";
-import { spawnPiProjectCoordinatorDaemon } from "./project-coordinator-daemon.ts";
+import type { ProjectCoordinatorRemoteClient } from "../../runtime/coordinator/service.ts";
 import type { CodewikiExtensionContext } from "./types.ts";
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
@@ -40,6 +36,7 @@ export interface PiProjectServiceClientProvider {
 		>;
 		readonly command: DecisionAttentionSelectionCommand;
 	}): Promise<DecisionStartResult>;
+	stop(repoRoot: string): Promise<void>;
 	disconnect(repoRoot?: string): Promise<void>;
 }
 
@@ -48,12 +45,17 @@ interface ClientEntry {
 	heartbeat: ReturnType<typeof setInterval>;
 }
 
+export interface CreatePiProjectServiceClientsOptions {
+	connect(
+		repoRoot: string,
+		input: ProjectCoordinatorClientInput,
+	): Promise<ProjectCoordinatorRemoteClient>;
+	stop(repoRoot: string): Promise<void>;
+}
+
 export function createPiProjectServiceClients(
-	options: EnsureProjectCoordinatorServiceOptions = {},
+	options: CreatePiProjectServiceClientsOptions,
 ): PiProjectServiceClientProvider {
-	const serviceOptions = options.spawnDaemon
-		? options
-		: { ...options, spawnDaemon: spawnPiProjectCoordinatorDaemon };
 	const instanceId = randomUUID();
 	const clients = new Map<string, ClientEntry>();
 
@@ -80,16 +82,12 @@ export function createPiProjectServiceClients(
 		const current = clients.get(repoRoot);
 		if (current) return current.client;
 		const sessionId = ctx.sessionManager?.getSessionId?.() || "ephemeral";
-		const client = await connectEnsuredProjectCoordinatorClient(
-			repoRoot,
-			{
-				clientId: `pi:${process.pid}:${instanceId}:${sessionId}`,
-				kind: "pi",
-				supervision:
-					ctx.mode === "tui" || ctx.mode === "rpc" ? "approved" : "observer",
-			},
-			serviceOptions,
-		);
+		const client = await options.connect(repoRoot, {
+			clientId: `pi:${process.pid}:${instanceId}:${sessionId}`,
+			kind: "pi",
+			supervision:
+				ctx.mode === "tui" || ctx.mode === "rpc" ? "approved" : "observer",
+		});
 		const entry = {
 			client,
 			heartbeat: setInterval(() => {
@@ -120,6 +118,17 @@ export function createPiProjectServiceClients(
 		}
 	};
 
+	const disconnect = async (repoRoot?: string): Promise<void> => {
+		if (repoRoot) {
+			const entry = clients.get(repoRoot);
+			if (entry) await remove(repoRoot, entry);
+			return;
+		}
+		await Promise.all(
+			[...clients].map(([root, entry]) => remove(root, entry)),
+		);
+	};
+
 	return {
 		inspect(repoRoot, ctx, trigger) {
 			return invoke(repoRoot, ctx, (client) => client.inspect(trigger));
@@ -134,16 +143,11 @@ export function createPiProjectServiceClients(
 				client.selectDecision(input.command),
 			);
 		},
-		async disconnect(repoRoot) {
-			if (repoRoot) {
-				const entry = clients.get(repoRoot);
-				if (entry) await remove(repoRoot, entry);
-				return;
-			}
-			await Promise.all(
-				[...clients].map(([root, entry]) => remove(root, entry)),
-			);
+		async stop(repoRoot) {
+			await disconnect(repoRoot);
+			await options.stop(repoRoot);
 		},
+		disconnect,
 	};
 }
 

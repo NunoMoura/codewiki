@@ -5,7 +5,18 @@ description: Owns append-only typed Change operation history, deterministic redu
 status: stable
 tags: [system, component]
 codewiki_component: change-trace
-codewiki_source_patterns: ["src/changes/trace/**", "src/changes/*.ts"]
+codewiki_source_patterns:
+  - "src/changes/trace/**"
+  - "src/changes/change-trace.ts"
+  - "src/changes/command.ts"
+  - "src/changes/digest.ts"
+  - "src/changes/normalize.ts"
+  - "src/changes/records.ts"
+  - "src/changes/schema.ts"
+  - "src/changes/store.ts"
+  - "src/changes/trace-store.ts"
+  - "src/changes/types.ts"
+  - "src/changes/validation-view.ts"
 codewiki_test_patterns: ["tests/changes/**", "tests/traces/**"]
 codewiki_relationships:
   - type: realizes

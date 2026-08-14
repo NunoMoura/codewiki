@@ -9,7 +9,7 @@ describe("CodeWiki source-repository agent guidance", () => {
 			? readdirSync(".agents/skills")
 			: [];
 		assert.deepEqual(localSkills, []);
-		assert.deepEqual(packageJson.pi.extensions, ["dist/clients/pi/extension.js"]);
+		assert.deepEqual(packageJson.pi.extensions, ["dist/pi-extension.js"]);
 		assert.equal(packageJson.pi.skills, undefined);
 	});
 
