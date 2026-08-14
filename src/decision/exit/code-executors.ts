@@ -1,4 +1,4 @@
-import type {ChangeRevisionContent} from "../../change-trace/contracts.ts";
+import type {ChangeRevisionContent} from "../../changes/trace/contracts.ts";
 import type {CheckCatalog} from "../../verification/catalog.ts";
 import type {
 	CheckExecutorObservation,

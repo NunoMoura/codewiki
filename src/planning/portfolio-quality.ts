@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { LoopQualityStandardResult } from "../traces/types.ts";
+import type { LoopQualityStandardResult } from "../changes/trace/types.ts";
 import {
 	uiPreviewTargetBindingValidationIssues,
 	type UiPreviewTargetBinding,

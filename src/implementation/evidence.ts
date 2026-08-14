@@ -1,5 +1,5 @@
 import type { ContentProof } from "../git/content-proof.ts";
-import type { TraceEvent } from "../traces/types.ts";
+import type { TraceEvent } from "../changes/trace/types.ts";
 import type {
 	AcceptanceEvidenceInput,
 	AcceptanceEvidenceItem,

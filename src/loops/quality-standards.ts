@@ -2,7 +2,7 @@ import type {
 	ExitCriterionResult,
 	LoopQualityStandardMode,
 	LoopQualityStandardResult,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 
 export interface LoopQualityStandardDefinition<TCode extends string> {
 	id: string;

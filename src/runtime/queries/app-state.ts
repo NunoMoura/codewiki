@@ -27,7 +27,7 @@ import {
 import { DECISION_CHANGE_QUALITY_STANDARDS } from "../../decision/change-quality.ts";
 import { implementationQualityStandards } from "../../implementation/quality-standards.ts";
 import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../../planning/portfolio-quality.ts";
-import type { TraceEvent, TraceLoop, TraceRecord } from "../../traces/types.ts";
+import type { TraceEvent, TraceLoop, TraceRecord } from "../../changes/trace/types.ts";
 import { qualityIterationsFromTrace } from "../../views/quality.ts";
 import {
 	loadRuntimeChangesState,

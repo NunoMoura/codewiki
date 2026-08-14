@@ -30,7 +30,7 @@ import {
 	criteriaFromQualityStandards,
 	loopQualityStandardSatisfied,
 } from "../loops/quality-standards.ts";
-import { invalidTraceRefs } from "../traces/refs.ts";
+import { invalidTraceRefs } from "../changes/trace/refs.ts";
 import {
 	evaluateCommonReviewEvidence,
 	mergeImplementationEvidenceReports,
@@ -41,7 +41,7 @@ import type {
 	ExitRemediationItem,
 	ExitRoute,
 	LoopRoutePlan,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 import {
 	acceptanceEvidenceRefs,
 	changedPaths,

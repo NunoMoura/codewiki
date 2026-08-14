@@ -1,4 +1,4 @@
-import {compareText} from "../../change-trace/order.ts";
+import {compareText} from "../trace/order.ts";
 import {
 	CHANGE_DEFECT_CATEGORIES,
 	CHANGE_DEFECT_SEVERITIES,

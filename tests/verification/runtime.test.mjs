@@ -22,7 +22,7 @@ import {createNativeDecisionOperationSequence} from "../../src/runtime/effects/d
 import {
 	createInitialProjectWorkState,
 	createNextChangeOperation,
-} from "../../src/change-trace/index.ts";
+} from "../../src/changes/trace/index.ts";
 import {
 	baseSnapshotFor,
 	openProposedChange,

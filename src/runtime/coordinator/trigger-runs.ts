@@ -1,11 +1,11 @@
 import { mkdir, open } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { isTraceId, traceFilePath } from "../../traces/schema.ts";
+import { isTraceId, traceFilePath } from "../../changes/trace/schema.ts";
 import {
 	createTriggerRunTraceHead,
 	formatTraceLine,
-} from "../../traces/writer.ts";
-import type { TraceHead } from "../../traces/types.ts";
+} from "../../changes/trace/writer.ts";
+import type { TraceHead } from "../../changes/trace/types.ts";
 import type { TriggerView, TriggersView } from "../../views/types.ts";
 import type {
 	QueuedRuntimeHeartbeat,

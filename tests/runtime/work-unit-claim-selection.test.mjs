@@ -61,7 +61,7 @@ describe("runtime work-unit claim selection", () => {
 			queue([
 				{ id: "WU-parent", pathScopes: ["src/views"] },
 				{ id: "WU-child", pathScopes: ["src/views/work-queue.ts"] },
-				{ id: "WU-safe", pathScopes: ["src/traces"] },
+				{ id: "WU-safe", pathScopes: ["src/changes/trace"] },
 			]),
 			{ maxWorkers: 3 },
 		);

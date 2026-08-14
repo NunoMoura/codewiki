@@ -2,15 +2,15 @@ import {
 	assertValidAlignmentGraphSnapshot,
 	type AlignmentGraphEdge,
 	type AlignmentGraphSnapshot,
-} from "../../change-trace/alignment-graph.ts";
-import type {ChangeRevision} from "../../change-trace/contracts.ts";
-import {operationPayload} from "../../change-trace/identity.ts";
-import {compareText, sameText} from "../../change-trace/order.ts";
+} from "../../alignment/graph.ts";
+import type {ChangeRevision} from "../trace/contracts.ts";
+import {operationPayload} from "../trace/identity.ts";
+import {compareText, sameText} from "../trace/order.ts";
 import type {
 	ChangeWorkState,
 	ProjectWorkState,
 	RelationshipProjection,
-} from "../../change-trace/state.ts";
+} from "../trace/state.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,

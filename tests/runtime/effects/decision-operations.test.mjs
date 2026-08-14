@@ -31,7 +31,7 @@ import {
 	createNextChangeOperation,
 	pushSynchronizedStateBatch,
 	synchronizeGitState,
-} from "../../../src/change-trace/index.ts";
+} from "../../../src/changes/trace/index.ts";
 import {
 	buildOpenChangeRecords,
 	createGitProposal,

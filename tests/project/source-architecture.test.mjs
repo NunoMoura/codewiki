@@ -125,13 +125,7 @@ describe("source architecture", () => {
 			.filter((name) => statSync(`src/${name}`).isDirectory())
 			.sort();
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
-		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
-			"benchmarks",
-			"change-trace",
-			"loops",
-			"traces",
-			"views",
-		]);
+		assert.deepEqual(LEGACY_SOURCE_ROOTS, ["benchmarks", "loops", "views"]);
 		assert.deepEqual(
 			CURRENT_SOURCE_ROOTS.filter(
 				(root) => !TARGET_SOURCE_ROOTS.includes(root),
@@ -140,7 +134,6 @@ describe("source architecture", () => {
 		);
 		assert.deepEqual(LEGACY_SOURCE_FILES, [
 			"src/error-handling/config-errors.ts",
-			"src/error-handling/trace-errors.ts",
 			"src/semantic-loop.ts",
 		]);
 		for (const path of LEGACY_SOURCE_FILES) {
@@ -182,6 +175,23 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "dashboard")), false);
 		assert.equal(existsSync(join(sourceRoot, "api")), false);
 		assert.equal(existsSync(join(sourceRoot, "api", "protocol.ts")), false);
+		assert.equal(existsSync(join(sourceRoot, "change-trace")), false);
+		assert.equal(existsSync(join(sourceRoot, "traces")), false);
+		assert.equal(existsSync("src/error-handling/trace-errors.ts"), false);
+		assert.equal(existsSync("tests/traces"), false);
+		for (const path of [
+			"src/alignment/graph.ts",
+			"src/alignment/knowledge.ts",
+			"src/alignment/query.ts",
+			"src/changes/trace/index.ts",
+			"src/changes/trace/schema.ts",
+			"src/changes/trace/storage-errors.ts",
+			"src/changes/trace/store.ts",
+			"tests/alignment/graph-v1.test.mjs",
+			"tests/changes/trace/change-trace-protocol-v1.test.mjs",
+		]) {
+			assert.equal(existsSync(path), true, path);
+		}
 		assert.equal(
 			existsSync(join(sourceRoot, "protocol", "client-server.ts")),
 			true,

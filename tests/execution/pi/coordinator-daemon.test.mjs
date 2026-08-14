@@ -5,7 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { createChangeRecord } from "../../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace/store.ts";
 import {
 	loadPiSemanticAdapters,
 	startPiProjectCoordinatorDaemon,

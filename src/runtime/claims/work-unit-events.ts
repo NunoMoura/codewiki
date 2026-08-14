@@ -16,13 +16,13 @@ import type {
 import {
 	CodewikiTraceError,
 	TraceAppendConflictError,
-} from "../../error-handling/trace-errors.ts";
+} from "../../changes/trace/storage-errors.ts";
 import {
 	appendRuntimeTraceRecords,
 	type AppendTraceBatchResult,
 } from "../persistence/trace.ts";
-import { traceFilePath } from "../../traces/schema.ts";
-import type { TraceEvent } from "../../traces/types.ts";
+import { traceFilePath } from "../../changes/trace/schema.ts";
+import type { TraceEvent } from "../../changes/trace/types.ts";
 
 export interface RuntimeWorkUnitClaimEventOptions {
 	createdAt: string;

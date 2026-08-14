@@ -8,8 +8,8 @@ const criterionEvidence = {
 		criteria: ["foundation-evidence", "obsolete-meaning", "remaining-gaps"],
 		source: [
 			"src/changes/types.ts",
-			"src/changes/change-trace.ts",
-			"src/changes/trace-store.ts",
+			"src/changes/trace/change-record.ts",
+			"src/changes/trace/store.ts",
 			"src/work-state/projector.ts",
 			"src/decision/change-quality.ts",
 			"src/changes/command.ts",
@@ -18,7 +18,7 @@ const criterionEvidence = {
 		],
 		tests: [
 			"tests/changes/change-domain.test.mjs",
-			"tests/changes/change-trace-store.test.mjs",
+			"tests/changes/trace/change-trace-store.test.mjs",
 			"tests/work-state/work-state.test.mjs",
 			"tests/decision/command.test.mjs",
 			"tests/runtime/execution-policy.test.mjs",

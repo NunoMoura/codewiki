@@ -1,4 +1,4 @@
-import type {GitCommandRunner} from "../../change-trace/git-command.ts";
+import type {GitCommandRunner} from "../../changes/trace/git-command.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

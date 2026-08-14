@@ -2,13 +2,13 @@ import {
 	assertValidAlignmentGraphSnapshot,
 	type AlignmentGraphCoverage,
 	type AlignmentGraphSnapshot,
-} from "../change-trace/alignment-graph.ts";
+} from "../alignment/graph.ts";
 import {
 	queryAlignmentGraph,
 	type AlignmentQueryFact,
 	type AlignmentQueryResult,
-} from "../change-trace/alignment-query.ts";
-import type {SynchronizationStatus} from "../change-trace/synchronization.ts";
+} from "../alignment/query.ts";
+import type {SynchronizationStatus} from "../changes/trace/synchronization.ts";
 import type {SemanticLoop} from "../semantic-loop.ts";
 import {
 	assertSha256Digest,

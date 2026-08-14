@@ -1,4 +1,4 @@
-import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
+import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";
 import type {
 	ProductReleaseAdapter,
 	ProductReleaseAdapterInput,

@@ -7,11 +7,11 @@ import { runWikiArchive } from "../../../src/runtime/commands/archive.ts";
 import { runImplementationIteration } from "../../../src/implementation/iteration.ts";
 import { runDecisionIterationWithRunner } from "../../helpers/canonical-loop-events.mjs";
 import { runPlanningIterationWithRunner } from "../../helpers/canonical-loop-events.mjs";
-import { appendTraceRecords } from "../../../src/traces/append.ts";
-import { readTrace } from "../../../src/traces/reader.ts";
-import { replayTrace } from "../../../src/traces/replay.ts";
-import { traceFilePath } from "../../../src/traces/schema.ts";
-import { createTraceHead } from "../../../src/traces/writer.ts";
+import { appendTraceRecords } from "../../../src/changes/trace/append.ts";
+import { readTrace } from "../../../src/changes/trace/reader.ts";
+import { replayTrace } from "../../../src/changes/trace/replay.ts";
+import { traceFilePath } from "../../../src/changes/trace/schema.ts";
+import { createTraceHead } from "../../../src/changes/trace/writer.ts";
 import { decisionQualityFields } from "../../helpers/proposed-change.mjs";
 import { implementationQualityFields } from "../../helpers/implementation-change.mjs";
 import { planningQualityFields } from "../../helpers/planning-work.mjs";
@@ -71,7 +71,7 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 					...planningQualityFields(),
 					acceptance: ["Retention refs are previewed and close is guarded."],
 					componentRefs: ["traces"],
-					pathScopes: ["src/traces"],
+					pathScopes: ["src/changes/trace"],
 					verification: ["tests/runtime/commands/archive.test.mjs"],
 				},
 			],
@@ -86,14 +86,14 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 		startSequence: 3,
 		createdAt: "2026-06-11T00:00:03.000Z",
 		existingPaths: [
-			"src/traces/retention.ts",
+			"src/changes/trace/retention.ts",
 			"tests/runtime/commands/archive.test.mjs",
 		],
 		changeInputs: [
 			{
 				id: "CHG-archive",
 				planningRefs: [planningRef],
-				codePaths: ["src/traces/retention.ts"],
+				codePaths: ["src/changes/trace/retention.ts"],
 				testPaths: ["tests/runtime/commands/archive.test.mjs"],
 				checks: [
 					"node --experimental-strip-types --test tests/runtime/commands/archive.test.mjs",

@@ -7,7 +7,7 @@ import type {
 	WorktreeCommand,
 	WorktreeCommandRunner,
 } from "../../git/worktrees.ts";
-import type { TraceEvent } from "../../traces/types.ts";
+import type { TraceEvent } from "../../changes/trace/types.ts";
 
 const GIT_OBJECT_ID = /^[a-f0-9]{40}(?:[a-f0-9]{24})?$/u;
 const MAX_GIT_OUTPUT_BYTES = 8 * 1024 * 1024;

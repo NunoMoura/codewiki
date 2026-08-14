@@ -2,13 +2,13 @@ import type {
 	BaseSnapshot,
 	ChangeRevisionContent,
 	OperationId,
-} from "../../change-trace/contracts.ts";
+} from "../../changes/trace/contracts.ts";
 import {
 	changeById,
 	type ChangeWorkState,
 	type ProjectWorkState,
 	type RelationshipProjection,
-} from "../../change-trace/state.ts";
+} from "../../changes/trace/state.ts";
 import {createLoopCandidate, type LoopCandidate} from "../../verification/identity.ts";
 import {
 	toCanonicalJsonValue,

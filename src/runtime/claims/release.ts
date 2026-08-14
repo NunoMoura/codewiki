@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 
-import { readTraceFile } from "../../traces/reader.ts";
-import { traceFilePath } from "../../traces/schema.ts";
-import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
+import { readTraceFile } from "../../changes/trace/reader.ts";
+import { traceFilePath } from "../../changes/trace/schema.ts";
+import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";
 import {
 	implementationWorkerJobId,
 	type ImplementationWorkerAssignment,

@@ -2,11 +2,11 @@ import {
 	authorityBindingSchema,
 	type AuthorityBinding,
 	type ChangeRevision,
-} from "../../change-trace/contracts.ts";
+} from "../trace/contracts.ts";
 import type {
 	ChangeWorkState,
 	ProjectWorkState,
-} from "../../change-trace/state.ts";
+} from "../trace/state.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

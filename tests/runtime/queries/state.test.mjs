@@ -8,17 +8,17 @@ import {
 	acceptChangeRecord,
 	createChangeRecord,
 } from "../../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace/store.ts";
 import { InMemoryReviewEvidenceCache } from "../../../src/implementation/review/index.ts";
 import { buildCodewikiAppState } from "../../../src/runtime/queries/app-state.ts";
 import { loadRuntimeChangesState } from "../../../src/runtime/queries/changes.ts";
 import { readProjectTraceRecords } from "../../../src/work-state/project.ts";
 import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
-import { createTraceCloseRecord } from "../../../src/traces/retention.ts";
+import { createTraceCloseRecord } from "../../../src/changes/trace/retention.ts";
 import { runDecisionIteration } from "../../helpers/canonical-loop-events.mjs";
 import { canonicalChangeInput } from "../../helpers/canonical-loop-events.mjs";
 import { runPlanningIteration } from "../../helpers/canonical-loop-events.mjs";
-import { createTraceHead } from "../../../src/traces/writer.ts";
+import { createTraceHead } from "../../../src/changes/trace/writer.ts";
 import { decisionQualityFields } from "../../helpers/proposed-change.mjs";
 import { planningQualityFields } from "../../helpers/planning-work.mjs";
 

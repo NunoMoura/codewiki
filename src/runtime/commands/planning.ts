@@ -4,20 +4,20 @@ import { join } from "node:path";
 import {
 	appendTraceRecords,
 	type AppendTraceBatchResult,
-} from "../../traces/append.ts";
-import { createLoopIterationEvent } from "../../traces/events.ts";
-import { readTraceFileSnapshot } from "../../traces/reader.ts";
+} from "../../changes/trace/append.ts";
+import { createLoopIterationEvent } from "../../changes/trace/events.ts";
+import { readTraceFileSnapshot } from "../../changes/trace/reader.ts";
 import {
 	assertRuntimeSemanticJobId,
 	traceFilePath,
-} from "../../traces/schema.ts";
+} from "../../changes/trace/schema.ts";
 import type {
 	LoopQualityStandardResult,
 	TraceEvent,
 	TraceRecord,
-} from "../../traces/types.ts";
+} from "../../changes/trace/types.ts";
 import { changeContentDigest } from "../../changes/digest.ts";
-import { changeTraceId } from "../../changes/change-trace.ts";
+import { changeTraceId } from "../../changes/trace/change-record.ts";
 import {
 	evaluatePortfolioPlanning,
 	type PortfolioWorkItemInput,

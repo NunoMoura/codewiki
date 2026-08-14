@@ -6,7 +6,7 @@ import {it} from "node:test";
 import {
 	createInitialProjectWorkState,
 	synchronizeGitState,
-} from "../../../src/change-trace/index.ts";
+} from "../../../src/changes/trace/index.ts";
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../src/changes/triage/contracts.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
 import {

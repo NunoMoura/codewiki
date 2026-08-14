@@ -6,9 +6,9 @@ import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
 import { runWikiDecide } from "../../src/decision/command.ts";
-import { changeTraceId } from "../../src/changes/change-trace.ts";
+import { changeTraceId } from "../../src/changes/trace/change-record.ts";
 import { changeContentDigest } from "../../src/changes/digest.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
+import { traceFilePath } from "../../src/changes/trace/schema.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import {
 	LOOP_QUALITY_JUDGE_PROMPT_VERSION,

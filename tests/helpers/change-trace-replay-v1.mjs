@@ -6,7 +6,7 @@ import {
 	createPlanningEpochRecord,
 	reduceAcceptedStateBatch,
 	reduceChangeOperation,
-} from "../../src/change-trace/index.ts";
+} from "../../src/changes/trace/index.ts";
 import {canonicalJsonDigest} from "../../src/utils/canonical-json.ts";
 import {authorityBinding, digest, gitObject} from "./change-trace-v1.mjs";
 

@@ -19,7 +19,7 @@ import {
 	type DecisionCandidateProposal,
 	type RuntimeDecisionAuthority,
 } from "../../decision/candidate-proposal.ts";
-import { TraceAppendConflictError } from "../../error-handling/trace-errors.ts";
+import { TraceAppendConflictError } from "../../changes/trace/storage-errors.ts";
 import type { CandidateProducerPort } from "../../execution/ports.ts";
 import {
 	parseImplementationCandidateContent,

@@ -1,5 +1,5 @@
-import type { AlignmentGraphSnapshot } from "../change-trace/alignment-graph.ts";
-import type { SynchronizationStatus } from "../change-trace/synchronization.ts";
+import type { AlignmentGraphSnapshot } from "../alignment/graph.ts";
+import type { SynchronizationStatus } from "../changes/trace/synchronization.ts";
 import { toCanonicalJsonValue } from "../utils/canonical-json.ts";
 import { assertExactKeys } from "../utils/json.ts";
 import type {

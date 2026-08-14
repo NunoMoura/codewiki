@@ -8,11 +8,11 @@ import {
 import {
 	replaceTraceRecords,
 	type ReplaceTraceRecordsResult,
-} from "../../traces/append.ts";
+} from "../../changes/trace/append.ts";
 import {
 	buildTraceCloseReleaseNotes,
 	type TraceCloseReleaseNotes,
-} from "../../traces/release-notes.ts";
+} from "../../changes/trace/release-notes.ts";
 import {
 	buildTraceArchiveCompactPlan,
 	buildTraceHydrationPlan,
@@ -21,10 +21,10 @@ import {
 	traceRetentionRefs,
 	type TraceHydrationPlan,
 	type TraceRetentionStub,
-} from "../../traces/retention.ts";
-import { readTraceFile } from "../../traces/reader.ts";
-import { traceFilePath } from "../../traces/schema.ts";
-import type { TraceClose, TraceRecord } from "../../traces/types.ts";
+} from "../../changes/trace/retention.ts";
+import { readTraceFile } from "../../changes/trace/reader.ts";
+import { traceFilePath } from "../../changes/trace/schema.ts";
+import type { TraceClose, TraceRecord } from "../../changes/trace/types.ts";
 
 export type WikiArchiveMode = "preview" | "append";
 export type WikiArchiveAction =

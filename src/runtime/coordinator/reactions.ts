@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
 import { join } from "node:path";
-import { changeTraceId } from "../../changes/change-trace.ts";
+import { changeTraceId } from "../../changes/trace/change-record.ts";
 import { stableJson } from "../../changes/digest.ts";
 import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
-import { readTraceFile } from "../../traces/reader.ts";
-import { traceFilePath } from "../../traces/schema.ts";
-import type { TraceEvent } from "../../traces/types.ts";
+import { readTraceFile } from "../../changes/trace/reader.ts";
+import { traceFilePath } from "../../changes/trace/schema.ts";
+import type { TraceEvent } from "../../changes/trace/types.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,

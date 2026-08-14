@@ -4,13 +4,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { changeTraceId } from "../../src/changes/change-trace.ts";
+import { changeTraceId } from "../../src/changes/trace/change-record.ts";
 import {
 	addChangeEvidence,
 	createChangeRecord,
 } from "../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
+import { ChangeTraceStore } from "../../src/changes/trace/store.ts";
+import { traceFilePath } from "../../src/changes/trace/schema.ts";
 import { WorkStateSession } from "../../src/work-state/session.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 

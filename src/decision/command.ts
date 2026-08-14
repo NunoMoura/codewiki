@@ -2,27 +2,27 @@ import { createCodewikiOperationError } from "../error-handling/operation-errors
 import {
 	appendTraceRecords,
 	type AppendTraceBatchResult,
-} from "../traces/append.ts";
-import { readTraceFileSnapshot } from "../traces/reader.ts";
+} from "../changes/trace/append.ts";
+import { readTraceFileSnapshot } from "../changes/trace/reader.ts";
 import {
 	assertRuntimeSemanticJobId,
 	traceFilePath,
-} from "../traces/schema.ts";
-import type { LoopQualityStandardResult, TraceEvent } from "../traces/types.ts";
+} from "../changes/trace/schema.ts";
+import type { LoopQualityStandardResult, TraceEvent } from "../changes/trace/types.ts";
 import {
 	changeTraceEventId,
 	changeTraceId,
 	changeRecordFromTrace,
 	createChangeRecordTraceEvent,
 	type ChangeTraceOperation,
-} from "../changes/change-trace.ts";
+} from "../changes/trace/change-record.ts";
 import { changeContentDigest } from "../changes/digest.ts";
 import {
 	acceptChangeRecord,
 	transitionChangeStatus,
 	type ChangeRecord,
 } from "../changes/records.ts";
-import { ChangeTraceStore } from "../changes/trace-store.ts";
+import { ChangeTraceStore } from "../changes/trace/store.ts";
 import { evaluateChangeDecision } from "./change-quality.ts";
 import type {
 	DecisionDisposition,

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createChangeRevision} from "../../src/change-trace/identity.ts";
+import {createChangeRevision} from "../../src/changes/trace/identity.ts";
 import {
 	CHANGE_DEFECT_PROFILE_PROTOCOL,
 	normalizeChangeDefectProfile,

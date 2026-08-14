@@ -36,7 +36,7 @@ import {
 import { shouldOpenAutomaticDashboard } from "../../../src/clients/pi/tui/footer.ts";
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../src/changes/triage/contracts.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
-import { createTraceHead, formatTraceText } from "../../../src/traces/writer.ts";
+import { createTraceHead, formatTraceText } from "../../../src/changes/trace/writer.ts";
 import {
 	testPiDashboardService,
 	testPiProjectServices,

@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {
-	augmentAlignmentGraphWithKnowledge,
-	projectAlignmentGraph,
-} from "../../src/change-trace/index.ts";
+import {projectAlignmentGraph} from "../../src/alignment/graph.ts";
+import {augmentAlignmentGraphWithKnowledge} from "../../src/alignment/knowledge.ts";
 import {
 	canonicalJsonDigest,
 } from "../../src/utils/canonical-json.ts";
@@ -66,18 +64,18 @@ function frontierFixture(options = {}) {
 		concepts: [
 			{
 				conceptId: "kb:system/traces",
-				path: ".codewiki/kb/system/components/traces.md",
+				path: ".codewiki/kb/system/components/change-trace.md",
 				authority: "accepted",
 				type: "System Responsibility",
-				title: "Change Traces",
+				title: "Change Trace",
 				status: "stable",
 				trustTier: "human-reviewed",
 				stale: options.knowledgeStale ?? false,
 				markdownReferences: [],
 				sourceResources: [],
 				relationships: [],
-				sourcePatterns: ["src/change-trace/**"],
-				testPatterns: ["tests/traces/**"],
+				sourcePatterns: ["src/changes/trace/**"],
+				testPatterns: ["tests/changes/trace/**"],
 			},
 		],
 	});
@@ -137,12 +135,12 @@ function frontierFixture(options = {}) {
 						{
 							code: "api.contract.drift",
 							severity: "error",
-							message: "Alignment query API contract drifted.",
+							message: "Change Trace schema API contract drifted.",
 							...(options.withoutLocation
 								? {}
 								: {
 										location: {
-											ref: "src/change-trace/alignment-query.ts",
+											ref: "src/changes/trace/schema.ts",
 											startLine: 192,
 										},
 									}),
@@ -150,9 +148,9 @@ function frontierFixture(options = {}) {
 								? {}
 								: {
 										repair: {
-											objective: "Restore the Alignment query contract.",
-											actions: ["Correct the bounded query response."],
-											verification: ["Run the Alignment query contract tests."],
+											objective: "Restore the Change Trace schema contract.",
+											actions: ["Correct the bounded schema response."],
+											verification: ["Run the Change Trace schema contract tests."],
 										},
 									}),
 						},
@@ -161,11 +159,11 @@ function frontierFixture(options = {}) {
 									{
 										code: "api.contract.coverage",
 										severity: "warning",
-										message: "Alignment query coverage is incomplete.",
+										message: "Change Trace schema coverage is incomplete.",
 										repair: {
-											objective: "Restore Alignment query coverage.",
+											objective: "Restore Change Trace schema coverage.",
 											actions: ["Add the missing bounded context."],
-											verification: ["Run the Alignment retrieval benchmark."],
+											verification: ["Run the Change Trace schema tests."],
 										},
 									},
 								]
@@ -221,10 +219,10 @@ describe("Candidate-bound Repair Frontier", () => {
 		assert.deepEqual(frontier.references.checkIds, ["api_contract_reviewed"]);
 		assert.deepEqual(frontier.references.evidenceRecordIds, fixture.result.evidenceRecordIds);
 		assert.deepEqual(frontier.references.findingLocations, [
-			"src/change-trace/alignment-query.ts",
+			"src/changes/trace/schema.ts",
 		]);
-		assert.ok(frontier.references.sourceRefs.includes("src/change-trace/**"));
-		assert.ok(frontier.references.testRefs.includes("tests/traces/**"));
+		assert.ok(frontier.references.sourceRefs.includes("src/changes/trace/**"));
+		assert.ok(frontier.references.testRefs.includes("tests/changes/trace/**"));
 		assert.ok(frontier.references.knowledgeRefs.includes("kb:system/traces"));
 		assert.equal(frontier.coverage.requestedRootCount, 2);
 		assert.equal(frontier.coverage.foundRootCount, 2);

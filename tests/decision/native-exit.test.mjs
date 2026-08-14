@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createInitialProjectWorkState} from "../../src/change-trace/index.ts";
+import {createInitialProjectWorkState} from "../../src/changes/trace/index.ts";
 import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
 import {createDecisionCodeExecutors} from "../../src/decision/exit/code-executors.ts";
 import {

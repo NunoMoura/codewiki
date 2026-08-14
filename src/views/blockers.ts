@@ -1,5 +1,5 @@
-import { loopOutputEvents } from "../traces/queries.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { loopOutputEvents } from "../changes/trace/queries.ts";
+import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
 import type { BlockerView, BlockersView, TraceViewInput } from "./types.ts";
 import { conflictsFromTrace } from "./conflicts.ts";
 import { qualityBlockersFromTrace } from "./quality.ts";

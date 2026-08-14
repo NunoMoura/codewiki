@@ -6,7 +6,7 @@ import {it} from "node:test";
 import {
 	createInitialProjectWorkState,
 	synchronizeGitState,
-} from "../../../src/change-trace/index.ts";
+} from "../../../src/changes/trace/index.ts";
 import {resolveWikiConfig} from "../../../src/project/config.ts";
 import {wikiConfigDigest} from "../../../src/project/config-file.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";

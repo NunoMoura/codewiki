@@ -5,7 +5,7 @@ import {
 	createPlanningEpochRecord,
 	createStateCommitManifest,
 	serializeCanonicalChangeOperation,
-} from "../../src/change-trace/index.ts";
+} from "../../src/changes/trace/index.ts";
 import { sha256Digest } from "../../src/utils/canonical-json.ts";
 
 export const digest = (character) => `sha256:${character.repeat(64)}`;

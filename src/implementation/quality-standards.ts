@@ -10,7 +10,7 @@ import {
 	criteriaFromQualityStandards,
 	type LoopQualityStandardDefinition,
 } from "../loops/quality-standards.ts";
-import type { LoopQualityStandardResult } from "../traces/types.ts";
+import type { LoopQualityStandardResult } from "../changes/trace/types.ts";
 import type { ImplementationExitIssue } from "./types.ts";
 
 export { criteriaFromQualityStandards };

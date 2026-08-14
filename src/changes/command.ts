@@ -7,7 +7,7 @@ import {
 	requiredArrayField,
 	requiredStringField,
 } from "../error-handling/operation-errors.ts";
-import { ChangeTraceStore } from "./trace-store.ts";
+import { ChangeTraceStore } from "./trace/store.ts";
 import {
 	addChangeEvidence,
 	createChangeRecord,

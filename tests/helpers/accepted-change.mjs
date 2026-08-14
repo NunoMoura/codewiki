@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { changeContentDigest } from "../../src/changes/digest.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
+import { ChangeTraceStore } from "../../src/changes/trace/store.ts";
 import { createChangeRecord } from "../../src/changes/records.ts";
 import { CHANGE_SCHEMA_VERSION } from "../../src/changes/types.ts";
 

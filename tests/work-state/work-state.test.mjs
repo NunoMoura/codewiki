@@ -4,16 +4,16 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { changeTraceId } from "../../src/changes/change-trace.ts";
+import { changeTraceId } from "../../src/changes/trace/change-record.ts";
 import {
 	acceptChangeRecord,
 	createChangeRecord,
 } from "../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../src/changes/trace-store.ts";
+import { ChangeTraceStore } from "../../src/changes/trace/store.ts";
 import { createRuntimeClaimEvent } from "../../src/runtime/claims/events.ts";
-import { appendTraceRecords } from "../../src/traces/append.ts";
-import { readTrace } from "../../src/traces/reader.ts";
-import { traceFilePath } from "../../src/traces/schema.ts";
+import { appendTraceRecords } from "../../src/changes/trace/append.ts";
+import { readTrace } from "../../src/changes/trace/reader.ts";
+import { traceFilePath } from "../../src/changes/trace/schema.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { acceptedChangeFixture } from "../helpers/accepted-change.mjs";
 

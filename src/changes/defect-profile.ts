@@ -1,5 +1,5 @@
 import {Type} from "typebox";
-import {isCanonicalTraceRef} from "../traces/refs.ts";
+import {isCanonicalTraceRef} from "./trace/refs.ts";
 import {toCanonicalJsonValue} from "../utils/canonical-json.ts";
 import {assertTypeboxSchema} from "../utils/json.ts";
 

@@ -1,12 +1,12 @@
 import type {
 	AuthorityBinding,
 	CanonicalChangeOperation,
-} from "../../change-trace/contracts.ts";
-import {operationPayload} from "../../change-trace/identity.ts";
+} from "../trace/contracts.ts";
+import {operationPayload} from "../trace/identity.ts";
 import type {
 	ChangeWorkState,
 	ProjectWorkState,
-} from "../../change-trace/state.ts";
+} from "../trace/state.ts";
 import {
 	canonicalJsonDigest,
 	type Sha256Digest,

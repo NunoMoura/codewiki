@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { buildProjectExplainView } from "../../src/project/explain.ts";
-import { formatTraceText } from "../../src/traces/writer.ts";
+import { formatTraceText } from "../../src/changes/trace/writer.ts";
 
 async function fixture() {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-explain-"));

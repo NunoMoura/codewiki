@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { resolve, sep } from "node:path";
-import type { TraceRecord } from "../traces/types.ts";
+import type { TraceRecord } from "../changes/trace/types.ts";
 
 export type KnowledgeAlignmentState =
 	| "aligned"

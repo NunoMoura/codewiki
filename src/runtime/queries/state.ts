@@ -18,7 +18,7 @@ import {
 	type RuntimeBoard,
 	type RuntimeBoardRuntimePreview,
 } from "../../views/runtime-board.ts";
-import { foldProjectTraceRecords } from "../../traces/project.ts";
+import { foldProjectTraceRecords } from "../../changes/trace/project.ts";
 import {
 	defaultReviewEvidenceCache,
 	summarizeReviewEvidenceReports,
@@ -26,7 +26,7 @@ import {
 	type ReviewEvidenceCacheReader,
 	type ReviewEvidenceSummary,
 } from "../../implementation/review/index.ts";
-import type { TraceRecord } from "../../traces/types.ts";
+import type { TraceRecord } from "../../changes/trace/types.ts";
 import { buildWorkState } from "../../work-state/projector.ts";
 import type { WorkState } from "../../work-state/types.ts";
 import type {

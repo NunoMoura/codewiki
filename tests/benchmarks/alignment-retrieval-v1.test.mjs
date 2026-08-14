@@ -8,10 +8,8 @@ import {
 	createRecordedAlignmentRetrievalAdapter,
 	createUnavailableAlignmentRetrievalAdapter,
 } from "../../src/benchmarks/retrieval-adapters.ts";
-import {
-	augmentAlignmentGraphWithKnowledge,
-	projectAlignmentGraph,
-} from "../../src/change-trace/index.ts";
+import {projectAlignmentGraph} from "../../src/alignment/graph.ts";
+import {augmentAlignmentGraphWithKnowledge} from "../../src/alignment/knowledge.ts";
 import {digest} from "../helpers/change-trace-v1.mjs";
 import {createThreeBatchJourney} from "../helpers/change-trace-replay-v1.mjs";
 
@@ -19,12 +17,12 @@ const cases = [
 	{
 		id: "claim-authority",
 		query: "Which source defines distributed Claim authority?",
-		relevantRefs: ["src/change-trace/mutation.ts", "system/runtime-work-item-claims"],
+		relevantRefs: ["src/changes/trace/mutation.ts", "system/runtime-work-item-claims"],
 	},
 	{
 		id: "planning-frontier",
 		query: "Why is a Work Item absent from the safe frontier?",
-		relevantRefs: ["src/change-trace/rolling-planning.ts", "system/planning-loop"],
+		relevantRefs: ["src/changes/trace/rolling-planning.ts", "system/planning-loop"],
 	},
 ];
 
@@ -50,16 +48,16 @@ describe("Alignment retrieval benchmark harness", () => {
 			now: () => tick++,
 			adapters: [
 				adapter("plain_search", {
-					"claim-authority": ["unrelated", "src/change-trace/mutation.ts"],
-					"planning-frontier": ["src/change-trace/rolling-planning.ts", "noise"],
+					"claim-authority": ["unrelated", "src/changes/trace/mutation.ts"],
+					"planning-frontier": ["src/changes/trace/rolling-planning.ts", "noise"],
 				}),
 				adapter("pi_lens", {
 					"claim-authority": [
-						"src/change-trace/mutation.ts",
+						"src/changes/trace/mutation.ts",
 						"system/runtime-work-item-claims",
 					],
 					"planning-frontier": [
-						"src/change-trace/rolling-planning.ts",
+						"src/changes/trace/rolling-planning.ts",
 						"system/planning-loop",
 					],
 				}),
@@ -70,11 +68,11 @@ describe("Alignment retrieval benchmark harness", () => {
 				adapter("alignment_graph", {
 					"claim-authority": [
 						"system/runtime-work-item-claims",
-						"src/change-trace/mutation.ts",
+						"src/changes/trace/mutation.ts",
 					],
 					"planning-frontier": [
 						"system/planning-loop",
-						"src/change-trace/rolling-planning.ts",
+						"src/changes/trace/rolling-planning.ts",
 					],
 				}),
 				adapter(
@@ -122,8 +120,8 @@ describe("Alignment retrieval benchmark harness", () => {
 					markdownReferences: [],
 					sourceResources: [],
 					relationships: [],
-					sourcePatterns: ["src/change-trace/mutation.ts"],
-					testPatterns: ["tests/traces/distributed-mutation-v1.test.mjs"],
+					sourcePatterns: ["src/changes/trace/mutation.ts"],
+					testPatterns: ["tests/changes/trace/distributed-mutation-v1.test.mjs"],
 				},
 			],
 		};
@@ -136,7 +134,7 @@ describe("Alignment retrieval benchmark harness", () => {
 				id: "claim-authority",
 				query: "distributed Claim authority mutation",
 				relevantRefs: [
-					"src/change-trace/mutation.ts",
+					"src/changes/trace/mutation.ts",
 					".codewiki/kb/system/claim-authority.md",
 				],
 			},
@@ -150,7 +148,7 @@ describe("Alignment retrieval benchmark harness", () => {
 					snapshotDigest: graph.graphSnapshotDigest,
 					documents: [
 						{
-							ref: "src/change-trace/mutation.ts",
+							ref: "src/changes/trace/mutation.ts",
 							text: "distributed Claim authority mutation takeover",
 						},
 						{
@@ -164,7 +162,7 @@ describe("Alignment retrieval benchmark harness", () => {
 					snapshotDigest: graph.graphSnapshotDigest,
 					refsByCase: {
 						"claim-authority": [
-							"src/change-trace/mutation.ts",
+							"src/changes/trace/mutation.ts",
 							".codewiki/kb/system/claim-authority.md",
 						],
 					},

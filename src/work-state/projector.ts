@@ -3,7 +3,7 @@ import {
 	changeRecordFromTrace,
 	changeRecordOutput,
 	changeTraceId,
-} from "../changes/change-trace.ts";
+} from "../changes/trace/change-record.ts";
 import { changeContentDigest, stableJson } from "../changes/digest.ts";
 import type { ChangeRecord } from "../changes/records.ts";
 import {
@@ -11,7 +11,7 @@ import {
 	uiPreviewTargetBindingValidationIssues,
 	type UiPreviewTargetBinding,
 } from "../preview/binding.ts";
-import type { TraceEvent, TraceHead, TraceRecord } from "../traces/types.ts";
+import type { TraceEvent, TraceHead, TraceRecord } from "../changes/trace/types.ts";
 import { projectProductPublications } from "./publication-projection.ts";
 import { projectProductReleases } from "./release-projection.ts";
 import {

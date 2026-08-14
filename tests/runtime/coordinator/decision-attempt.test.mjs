@@ -6,7 +6,7 @@ import {
 	createNextChangeOperation,
 	pushSynchronizedStateBatch,
 	synchronizeGitState,
-} from "../../../src/change-trace/index.ts";
+} from "../../../src/changes/trace/index.ts";
 import {createDecisionExitRuntime} from "../../../src/decision/exit/runtime.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,

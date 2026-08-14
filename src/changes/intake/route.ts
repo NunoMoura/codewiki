@@ -1,9 +1,9 @@
-import type {ChangeRevisionId} from "../../change-trace/contracts.ts";
+import type {ChangeRevisionId} from "../trace/contracts.ts";
 import {
 	changeById,
 	type ChangeWorkState,
 	type ProjectWorkState,
-} from "../../change-trace/state.ts";
+} from "../trace/state.ts";
 import type {ChangeIntakeFingerprints} from "./deduplicate.ts";
 import {
 	findAcceptedChangeIntakeRequest,

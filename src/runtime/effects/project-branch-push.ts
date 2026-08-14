@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { realpathSync } from "node:fs";
 import { resolve } from "node:path";
 import type { WorktreeCommandRunner } from "../../git/worktrees.ts";
-import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
+import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";
 import type {
 	ProjectCoordinator,
 	ProjectCoordinatorJob,

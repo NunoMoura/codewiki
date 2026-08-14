@@ -2,7 +2,7 @@ import type {
 	ExitRemediationItem,
 	LoopQualityDiagnostic,
 	LoopQualityStandardResult,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 
 export function qualityDiagnosticsFromStandards(
 	standards: LoopQualityStandardResult[],

@@ -2,9 +2,9 @@ import {realpathSync} from "node:fs";
 import {
 	authorityBindingSchema,
 	type AuthorityBinding,
-} from "../../change-trace/contracts.ts";
-import type {GitCommandRunner} from "../../change-trace/git-command.ts";
-import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
+} from "../../changes/trace/contracts.ts";
+import type {GitCommandRunner} from "../../changes/trace/git-command.ts";
+import type {ReplayAdmissionPolicy} from "../../changes/trace/reducer.ts";
 import {
 	DECISION_ATTENTION_SELECTION_PROTOCOL,
 	DecisionAttentionSelectionError,

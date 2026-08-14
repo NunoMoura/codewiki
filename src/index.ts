@@ -240,8 +240,8 @@ export type {
 	TraceCloseReleaseNotes,
 	TraceReleaseNoteChange,
 	TraceReleaseNoteCheck,
-} from "./traces/release-notes.ts";
-export type { TraceEvent, TraceRecord } from "./traces/types.ts";
+} from "./changes/trace/release-notes.ts";
+export type { TraceEvent, TraceRecord } from "./changes/trace/types.ts";
 export { buildProjectWorkState } from "./work-state/project.ts";
 export { buildWorkState } from "./work-state/projector.ts";
 export type {
@@ -263,7 +263,10 @@ export type {
 	WorkPlanView,
 	WorkQueueView,
 } from "./views/types.ts";
-export * from "./change-trace/index.ts";
+export * from "./changes/trace/index.ts";
+export * from "./alignment/graph.ts";
+export * from "./alignment/knowledge.ts";
+export * from "./alignment/query.ts";
 export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
 export * from "./execution/ports.ts";

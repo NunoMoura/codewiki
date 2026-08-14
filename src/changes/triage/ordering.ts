@@ -1,4 +1,4 @@
-import {compareText} from "../../change-trace/order.ts";
+import {compareText} from "../trace/order.ts";
 import {
 	BACKLOG_TRIAGE_PROJECTION_PROTOCOL,
 	type BacklogTriageCandidate,

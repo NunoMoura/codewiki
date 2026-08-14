@@ -1,11 +1,11 @@
-import type { AlignmentGraphSnapshot } from "../change-trace/alignment-graph.ts";
-import type { KnowledgeAlignmentProjection } from "../change-trace/alignment-knowledge.ts";
+import type { AlignmentGraphSnapshot } from "../alignment/graph.ts";
+import type { KnowledgeAlignmentProjection } from "../alignment/knowledge.ts";
 import {
 	queryAlignmentGraph,
 	type AlignmentQueryRequest,
-} from "../change-trace/alignment-query.ts";
-import type { SynchronizationStatus } from "../change-trace/synchronization.ts";
-import { compareText } from "../change-trace/order.ts";
+} from "../alignment/query.ts";
+import type { SynchronizationStatus } from "../changes/trace/synchronization.ts";
+import { compareText } from "../changes/trace/order.ts";
 import type { Sha256Digest } from "../utils/canonical-json.ts";
 import type {
 	AlignmentRetrievalAdapter,

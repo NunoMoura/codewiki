@@ -1,8 +1,8 @@
 import { readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
-import { readTraceFileSnapshot, readTraceFileTail } from "../traces/reader.ts";
-import { isTraceId } from "../traces/schema.ts";
-import type { TraceRecord } from "../traces/types.ts";
+import { readTraceFileSnapshot, readTraceFileTail } from "../changes/trace/reader.ts";
+import { isTraceId } from "../changes/trace/schema.ts";
+import type { TraceRecord } from "../changes/trace/types.ts";
 import { buildWorkState } from "./projector.ts";
 import type { WorkState } from "./types.ts";
 

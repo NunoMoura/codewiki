@@ -7,7 +7,7 @@ import { describe, it } from "node:test";
 import { runCodewikiCli } from "../../../src/clients/cli/index.ts";
 import { planningQualityStandards } from "../../helpers/canonical-loop-events.mjs";
 import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
-import { createTraceHead, formatTraceText } from "../../../src/traces/writer.ts";
+import { createTraceHead, formatTraceText } from "../../../src/changes/trace/writer.ts";
 
 const cliPath = resolve("src/clients/cli/index.ts");
 

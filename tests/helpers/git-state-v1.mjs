@@ -8,7 +8,7 @@ import {
 	pushGitStateCommit,
 	reduceAcceptedStateBatch,
 	replayGitStateHistory,
-} from "../../src/change-trace/index.ts";
+} from "../../src/changes/trace/index.ts";
 import {authorityBinding} from "./change-trace-v1.mjs";
 import {
 	allowAllReplayPolicy,

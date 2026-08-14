@@ -1,4 +1,4 @@
-import { replayTrace } from "../traces/replay.ts";
+import { replayTrace } from "../changes/trace/replay.ts";
 import type { TraceViewInput, ResumeView, WorkPlanCard } from "./types.ts";
 import { buildStatusView } from "./status.ts";
 import { workPlanCardsFromTrace } from "./work-plan.ts";

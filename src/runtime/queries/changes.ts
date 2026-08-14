@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { ChangeTraceStore } from "../../changes/trace-store.ts";
+import { ChangeTraceStore } from "../../changes/trace/store.ts";
 import {
 	buildChangeValidationCard,
 	type ChangeValidationCard,

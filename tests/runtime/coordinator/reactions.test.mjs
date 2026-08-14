@@ -4,10 +4,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { createChangeRecord } from "../../../src/changes/records.ts";
-import { ChangeTraceStore } from "../../../src/changes/trace-store.ts";
+import { ChangeTraceStore } from "../../../src/changes/trace/store.ts";
 import { createCodeWikiLoopExecutionPorts } from "../../../src/runtime/coordinator/executor.ts";
-import { readTraceFileSnapshot } from "../../../src/traces/reader.ts";
-import { traceFilePath } from "../../../src/traces/schema.ts";
+import { readTraceFileSnapshot } from "../../../src/changes/trace/reader.ts";
+import { traceFilePath } from "../../../src/changes/trace/schema.ts";
 import { ProjectCoordinator } from "../../../src/runtime/coordinator/project.ts";
 import {
 	connectProjectCoordinatorClient,

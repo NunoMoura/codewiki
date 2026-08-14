@@ -60,11 +60,13 @@ import {
 	SERVER_SESSION_PROTOCOL,
 	buildWorkState,
 	checkServerProviderRepositoryAccess,
+	createNextChangeOperation,
 	enrollServerOidcActor,
 	issueAuthorizedClientPairing,
 	revokeAuthorizedClientPairing,
 	normalizeClientServerQuery,
 	openServerSession,
+	projectAlignmentGraph,
 	verifyServerAuthentication,
 	verifyServerOidcAuthentication,
 	normalizeServerRegistrySnapshot,
@@ -124,6 +126,13 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "job
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "executor.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "coordinator", "executor.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "api", "loop-execution.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "change-trace")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "traces")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "error-handling", "trace-errors.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "alignment", "graph.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "alignment", "query.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace", "index.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace", "storage-errors.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "reactor.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "semantic-job-id.js")), false);
@@ -289,6 +298,8 @@ assert.equal(SERVER_SESSION_PROTOCOL.id, "codewiki.server-session");
 assert.equal(SERVER_SESSION_PROTOCOL.version, "1.0.0");
 assert.equal(SERVER_REPOSITORY_ACCESS_PROTOCOL.version, "1.0.0");
 assert.equal(typeof checkServerProviderRepositoryAccess, "function");
+assert.equal(typeof createNextChangeOperation, "function");
+assert.equal(typeof projectAlignmentGraph, "function");
 assert.equal(typeof issueAuthorizedClientPairing, "function");
 assert.equal(typeof revokeAuthorizedClientPairing, "function");
 assert.equal(packageModule.issueClientPairing, undefined);
@@ -542,7 +553,7 @@ assert.equal(
 	"legacy trace-host shell is not packaged",
 );
 assert.equal(existsSync(join(packageRoot, "dist", "preview", "evidence.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace-store.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace", "store.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "git-ref-store.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-migration.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "legacy-ref-reader.js")), false);

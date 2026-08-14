@@ -1,18 +1,18 @@
 import type {
 	CanonicalChangeOperation,
 	OperationId,
-} from "../../change-trace/contracts.ts";
-import type {GitCommandRunner} from "../../change-trace/git-command.ts";
-import {projectAlignmentGraph} from "../../change-trace/alignment-graph.ts";
-import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
-import type {ProjectWorkState} from "../../change-trace/state.ts";
+} from "../../changes/trace/contracts.ts";
+import type {GitCommandRunner} from "../../changes/trace/git-command.ts";
+import {projectAlignmentGraph} from "../../alignment/graph.ts";
+import type {ReplayAdmissionPolicy} from "../../changes/trace/reducer.ts";
+import type {ProjectWorkState} from "../../changes/trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	pushSynchronizedStateBatch,
 	type ProjectAuthoritySnapshot,
 	type SynchronizationObservation,
 	type TeamSnapshot,
-} from "../../change-trace/synchronization.ts";
+} from "../../changes/trace/synchronization.ts";
 import {createBacklogTriagePolicy} from "../../changes/triage/policy.ts";
 import {buildBacklogTriageProjection} from "../../changes/triage/projection.ts";
 import type {DecisionAttentionSelectionContext} from "../../changes/triage/selection.ts";

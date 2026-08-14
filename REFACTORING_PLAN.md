@@ -261,6 +261,8 @@ The Runtime API ownership clean cut is recorded by `.tmp-worktrees/runtime-api-o
 
 The Client lifecycle ownership clean cut is recorded by `.tmp-worktrees/client-lifecycle-ownership-clean-cut-manifest.json`, exhaustively anchored to `4eeed50` with 645 keeps and 2 moves. It moves the deterministic CLI and its focused proof to `src/clients/cli/**` and `tests/clients/cli/**` without compatibility paths. Pi Client registration now receives narrow dashboard and project-service ports; neutral `src/pi-extension.ts` alone composes Server App and Preview lifecycle, the Runtime gateway, and the concrete Execution spawner. Client source imports no Server App, Runtime process, or concrete Execution process lifecycle value. Its green checkpoint is 942 full-suite tests, 119 coordinator tests, 715 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities. Source/test counts remain flat at 356/194.
 
+The Change Trace ownership clean cut is recorded by `.tmp-worktrees/change-trace-ownership-clean-cut-manifest.json`, exhaustively anchored to `25b3e7a` with 603 keeps and 45 moves. It consolidates canonical Change protocol, JSONL encoding, Change-backed storage, manifests, reduction, replay, synchronization support, retention, and specialized errors under `src/changes/trace/**`; graph projection, Knowledge augmentation, and bounded queries move directly to `src/alignment/**`. Focused proofs move to `tests/changes/trace/**` and `tests/alignment/**`. `src/change-trace/**`, `src/traces/**`, `src/error-handling/trace-errors.ts`, and `tests/traces/**` are deleted without compatibility paths, while root package exports retain the same names through owner-direct modules. Frozen Change Trace v1 fixtures preserve their content-addressed historical source references and identities as product data, not surviving module paths. Source/test counts remain flat at 356/194; strict ownership accounting advances to 329 target-owned files and 27 explicit legacy files with zero overlap. Its green checkpoint is 942 full-suite tests, 119 coordinator tests, 715 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -396,11 +398,12 @@ Rules:
 
 ### 9. Finish Change, WorkState, Alignment, and synchronization cuts
 
-- [ ] Move canonical Change protocol, encoding, manifests, reduction, and replay to `src/changes/trace/**`.
-- [ ] Move Alignment Graph and bounded queries to `src/alignment/**`.
+- [x] Move canonical Change protocol, encoding, manifests, reduction, and replay to `src/changes/trace/**`.
+- [x] Move Alignment Graph and bounded queries to `src/alignment/**`.
 - [ ] Keep canonical current projection in `src/work-state/**`.
-- [ ] Delete intermediate `src/change-trace/**`, legacy `src/traces/**`, obsolete WorkState paths, and generic `src/views/**` after callers move.
-- [ ] Preserve append-only history, deterministic replay, expected-head CAS, provenance, remote synchronization, and recovery behavior.
+- [x] Delete intermediate `src/change-trace/**` and legacy `src/traces/**` after callers move.
+- [ ] Delete obsolete WorkState paths and generic `src/views/**` after callers move.
+- [x] Preserve append-only history, deterministic replay, expected-head CAS, provenance, remote synchronization, and recovery behavior.
 - [ ] Stabilize read-only bounded snapshot-bound context, state, attention, explanation, and Change queries with coverage, truncation, provenance, and staleness.
 - [ ] Define Actor Profiles, scoped Authority Grants, responsibility rules, Review Requirements, per-requirement Review Claims, and immutable Review Submissions.
 - [ ] Populate owner, user, reviewer, contributor, and Worker eligibility through read-only Contribution Routing before any automatic assignment.

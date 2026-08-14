@@ -5,7 +5,7 @@ import {
 	assertValidCanonicalChangeOperation,
 	createInitialProjectWorkState,
 	operationPayload,
-} from "../../../src/change-trace/index.ts";
+} from "../../../src/changes/trace/index.ts";
 import {createChangeIntakeRuntime} from "../../../src/runtime/admission/change.ts";
 import {allowAllReplayPolicy} from "../../helpers/change-trace-replay-v1.mjs";
 import {

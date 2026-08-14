@@ -3,21 +3,21 @@ import {
 	type AuthorityBinding,
 	type ChangeRevision,
 	type OperationId,
-} from "../../change-trace/contracts.ts";
-import type {GitCommandRunner} from "../../change-trace/git-command.ts";
-import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
+} from "../../changes/trace/contracts.ts";
+import type {GitCommandRunner} from "../../changes/trace/git-command.ts";
+import type {ReplayAdmissionPolicy} from "../../changes/trace/reducer.ts";
 import {
 	changeById,
 	type ChangeWorkState,
 	type LoopAttemptProjection,
 	type LoopAttemptProjectionStatus,
 	type ProjectWorkState,
-} from "../../change-trace/state.ts";
+} from "../../changes/trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	type ProjectAuthoritySnapshot,
 	type TeamSnapshot,
-} from "../../change-trace/synchronization.ts";
+} from "../../changes/trace/synchronization.ts";
 import type {DecisionCandidateProposal} from "../../decision/candidate-proposal.ts";
 import {parseDecisionCandidateProposal} from "../../decision/candidate-proposal.ts";
 import {

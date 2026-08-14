@@ -1,4 +1,4 @@
-import { changeTraceId } from "../../changes/change-trace.ts";
+import { changeTraceId } from "../../changes/trace/change-record.ts";
 import {
 	assertKnownInputKeys,
 	createCodewikiOperationError,
@@ -54,13 +54,13 @@ import {
 	type ProjectSnapshot,
 } from "../../project/snapshot.ts";
 import { RuntimeReactor, type RuntimeObservation } from "../coordinator/reactor.ts";
-import { assertRuntimeSemanticJobId } from "../../traces/schema.ts";
+import { assertRuntimeSemanticJobId } from "../../changes/trace/schema.ts";
 import {
 	appendSemanticLoopReport,
 	assertSemanticLoopReportBatch,
 	type AppendSemanticLoopReportResult,
 } from "../persistence/trace.ts";
-import type { TraceEvent, TraceRecord } from "../../traces/types.ts";
+import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";
 import type {
 	WorkState,
 	WorkStateAssignment,

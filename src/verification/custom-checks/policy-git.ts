@@ -6,7 +6,7 @@ import {
 	type GitCommandRequest,
 	type GitCommandResult,
 	type GitCommandRunner,
-} from "../../change-trace/git-command.ts";
+} from "../../changes/trace/git-command.ts";
 import type {Sha256Digest} from "../../utils/canonical-json.ts";
 
 const CONFIG_PATH = ".codewiki/config.json";

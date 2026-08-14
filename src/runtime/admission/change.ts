@@ -1,4 +1,4 @@
-import {createNextChangeOperation} from "../../change-trace/builder.ts";
+import {createNextChangeOperation} from "../../changes/trace/builder.ts";
 import {
 	authorityBindingSchema,
 	type AuthorityBinding,
@@ -8,24 +8,24 @@ import {
 	type ChangeRevision,
 	type ChangeRevisionClassification,
 	type ChangeRevisionId,
-} from "../../change-trace/contracts.ts";
-import type {GitCommandRunner} from "../../change-trace/git-command.ts";
+} from "../../changes/trace/contracts.ts";
+import type {GitCommandRunner} from "../../changes/trace/git-command.ts";
 import {
 	createChangeRevision,
 	operationPayload,
-} from "../../change-trace/identity.ts";
-import {reduceChangeOperation} from "../../change-trace/reduce-operation.ts";
-import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
+} from "../../changes/trace/identity.ts";
+import {reduceChangeOperation} from "../../changes/trace/reduce-operation.ts";
+import type {ReplayAdmissionPolicy} from "../../changes/trace/reducer.ts";
 import type {
 	ChangeWorkState,
 	ProjectWorkState,
-} from "../../change-trace/state.ts";
+} from "../../changes/trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	pushSynchronizedStateBatch,
 	type ProjectAuthoritySnapshot,
 	type SynchronizationObservation,
-} from "../../change-trace/synchronization.ts";
+} from "../../changes/trace/synchronization.ts";
 import {
 	normalizeChangeDefectProfile,
 	type ChangeDefectCategory,

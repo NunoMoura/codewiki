@@ -1,4 +1,4 @@
-import type {AlignmentGraphProvenanceClass} from "../../change-trace/alignment-graph.ts";
+import type {AlignmentGraphProvenanceClass} from "../../alignment/graph.ts";
 import type {EvidenceAuthority} from "../../evidence/contracts.ts";
 import type {Sha256Digest} from "../../utils/canonical-json.ts";
 import type {ChangeIntakeMaterialType} from "../intake/contracts.ts";

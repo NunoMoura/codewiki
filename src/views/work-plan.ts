@@ -4,9 +4,9 @@ import type {
 	PlanningTrigger,
 	PlanningWorkItem,
 } from "../planning/types.ts";
-import { loopOutputEvents } from "../traces/queries.ts";
-import { replayTrace } from "../traces/replay.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { loopOutputEvents } from "../changes/trace/queries.ts";
+import { replayTrace } from "../changes/trace/replay.ts";
+import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
 import { loopQualityReadiness } from "./quality.ts";
 import type { TraceViewInput, WorkPlanCard, WorkPlanView } from "./types.ts";

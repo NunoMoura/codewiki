@@ -2,7 +2,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { loadWikiConfigFile } from "../project/config-file.ts";
-import type { TraceRecord } from "../traces/types.ts";
+import type { TraceRecord } from "../changes/trace/types.ts";
 import {
 	checkingPreviewBrowserCapability,
 	detectPreviewBrowserCapability,

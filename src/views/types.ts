@@ -6,7 +6,7 @@ import type {
 	TraceLoop,
 	TraceOrigin,
 	TraceRecord,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 
 export type ViewHealth = "green" | "yellow" | "red";
 export type WorkPlanCardStatus = "todo" | "blocked" | "active" | "done";

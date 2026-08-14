@@ -7,15 +7,15 @@ import {
 	createLoopTailCheckpoint,
 	loopExitFromEvaluation,
 	loopProgressFromEvaluation,
-} from "../traces/events.ts";
+} from "../changes/trace/events.ts";
 import type { ContentProof } from "../git/content-proof.ts";
 import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
-import { normalizeTraceRefs } from "../traces/refs.ts";
+import { normalizeTraceRefs } from "../changes/trace/refs.ts";
 import type {
 	TailCheckpoint,
 	TraceEvent,
 	TraceRecord,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 import { implementationWorkerClaimsFromEvents } from "./claims.ts";
 import {
 	acceptanceRequirementsFromPlanningEvents,

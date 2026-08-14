@@ -1,15 +1,15 @@
-import {createNextChangeOperation} from "../../change-trace/builder.ts";
+import {createNextChangeOperation} from "../../changes/trace/builder.ts";
 import type {
 	CanonicalChangeOperation,
 	ChangeRevision,
 	OperationId,
-} from "../../change-trace/contracts.ts";
-import {reduceChangeOperation} from "../../change-trace/reduce-operation.ts";
+} from "../../changes/trace/contracts.ts";
+import {reduceChangeOperation} from "../../changes/trace/reduce-operation.ts";
 import type {
 	ChangeWorkState,
 	LoopAttemptProjection,
 	ProjectWorkState,
-} from "../../change-trace/state.ts";
+} from "../../changes/trace/state.ts";
 import {
 	assertDecisionAttentionSelectionContext,
 	decisionSelectionAuthorizationRequest,

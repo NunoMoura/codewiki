@@ -2,7 +2,7 @@ import type {
 	LoopQualityStandardGate,
 	LoopQualityStandardMethod,
 	LoopQualityStandardResult,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 import {
 	assertValidLoopQualityGraph,
 	type LoopQualityGraph,

@@ -1,6 +1,6 @@
 import type { ChangeRecord } from "../changes/records.ts";
 import type { UiPreviewTargetBinding } from "../preview/binding.ts";
-import type { TraceLoop } from "../traces/types.ts";
+import type { TraceLoop } from "../changes/trace/types.ts";
 
 export const WORK_STATE_SCHEMA_VERSION = 1;
 

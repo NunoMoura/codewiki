@@ -1,7 +1,7 @@
-import { foldProjectTraceRecords } from "../traces/project.ts";
-import { loopOutputEvents } from "../traces/queries.ts";
-import { replayTrace } from "../traces/replay.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { foldProjectTraceRecords } from "../changes/trace/project.ts";
+import { loopOutputEvents } from "../changes/trace/queries.ts";
+import { replayTrace } from "../changes/trace/replay.ts";
+import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
 import {
 	loopIterationQualityComplete,

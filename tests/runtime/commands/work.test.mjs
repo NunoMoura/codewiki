@@ -9,10 +9,10 @@ import { createRuntimeClaimEvent } from "../../../src/runtime/claims/events.ts";
 import {
 	appendTraceRecord,
 	appendTraceRecords,
-} from "../../../src/traces/append.ts";
-import { readTrace } from "../../../src/traces/reader.ts";
-import { traceFilePath } from "../../../src/traces/schema.ts";
-import { createTraceHead } from "../../../src/traces/writer.ts";
+} from "../../../src/changes/trace/append.ts";
+import { readTrace } from "../../../src/changes/trace/reader.ts";
+import { traceFilePath } from "../../../src/changes/trace/schema.ts";
+import { createTraceHead } from "../../../src/changes/trace/writer.ts";
 
 function triggers() {
 	return {

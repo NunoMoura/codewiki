@@ -9,8 +9,8 @@ import {
 } from "../knowledge/source-map.ts";
 import { sourceOwnershipMapFromOkfBundle } from "../knowledge/source-ownership.ts";
 import type { OkfBundleFile } from "../knowledge/okf-validation.ts";
-import { foldProjectTraceRecords } from "../traces/project.ts";
-import type { TraceEvent, TraceRecord } from "../traces/types.ts";
+import { foldProjectTraceRecords } from "../changes/trace/project.ts";
+import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
 import { buildQualityView } from "../views/quality.ts";
 import type { QualityIterationSummary } from "../views/types.ts";
 import { readProjectTraceRecords } from "./state-file.ts";

@@ -14,7 +14,7 @@ import type {TriagePreferenceBinding} from "../../changes/triage/policy.ts";
 import {
 	createGitCommandRunner,
 	type GitCommandRunner,
-} from "../../change-trace/git-command.ts";
+} from "../../changes/trace/git-command.ts";
 import {
 	configFileToPartialWikiConfig,
 	loadWikiConfigFile,

@@ -1,6 +1,6 @@
 import type { ContentProof } from "../git/content-proof.ts";
 import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
-import type { ExitDetails } from "../traces/types.ts";
+import type { ExitDetails } from "../changes/trace/types.ts";
 import type {LoopExitDeclaration} from "../verification/contracts.ts";
 import type { ImplementationEvidenceReportInput } from "./review/evidence-report.ts";
 
@@ -278,7 +278,7 @@ export interface ImplementationExitIssue {
 	changeId?: string;
 	ref?: string;
 	componentRef?: string;
-	route?: import("../traces/types.ts").ExitRoute;
+	route?: import("../changes/trace/types.ts").ExitRoute;
 	workerId?: string;
 	claimId?: string;
 	message: string;

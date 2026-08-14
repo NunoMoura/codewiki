@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
-import type { TraceRecord } from "../traces/types.ts";
+import type { TraceRecord } from "../changes/trace/types.ts";
 import type { TraceUiPreviewTargetBinding } from "./binding.ts";
 import { normalizePreviewSessionId } from "./browser-adapter.ts";
 import type { PreviewIntegrationState } from "./integration.ts";

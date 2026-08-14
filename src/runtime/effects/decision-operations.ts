@@ -5,22 +5,22 @@ import type {
 	CanonicalInlineSemanticArtifact,
 	ChangeOperationKind,
 	OperationId,
-} from "../../change-trace/contracts.ts";
-import {createNextChangeOperation} from "../../change-trace/builder.ts";
-import {reduceChangeOperation} from "../../change-trace/reduce-operation.ts";
-import type {GitCommandRunner} from "../../change-trace/git-command.ts";
-import type {ReplayAdmissionPolicy} from "../../change-trace/reducer.ts";
+} from "../../changes/trace/contracts.ts";
+import {createNextChangeOperation} from "../../changes/trace/builder.ts";
+import {reduceChangeOperation} from "../../changes/trace/reduce-operation.ts";
+import type {GitCommandRunner} from "../../changes/trace/git-command.ts";
+import type {ReplayAdmissionPolicy} from "../../changes/trace/reducer.ts";
 import {
 	changeById,
 	type ChangeWorkState,
 	type ProjectWorkState,
-} from "../../change-trace/state.ts";
+} from "../../changes/trace/state.ts";
 import {
 	createCurrentGitSynchronizer,
 	pushSynchronizedStateBatch,
 	type ProjectAuthoritySnapshot,
 	type SynchronizationObservation,
-} from "../../change-trace/synchronization.ts";
+} from "../../changes/trace/synchronization.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
 import {assertValidEvidenceRecord} from "../../evidence/materialize.ts";
 import {

@@ -1,6 +1,6 @@
-import { loopOutputEvents, traceRefs } from "../traces/queries.ts";
-import { replayTrace } from "../traces/replay.ts";
-import type { TraceLoop, TraceRecord } from "../traces/types.ts";
+import { loopOutputEvents, traceRefs } from "../changes/trace/queries.ts";
+import { replayTrace } from "../changes/trace/replay.ts";
+import type { TraceLoop, TraceRecord } from "../changes/trace/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
 import { conflictsFromTrace } from "./conflicts.ts";
 import {

@@ -3,7 +3,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../../src/index.ts";
-import { assertValidTraceRecord } from "../../src/traces/schema.ts";
+import { assertValidTraceRecord } from "../../src/changes/trace/schema.ts";
 import {
 	formatKnowledgeDriftIssues,
 	lintKnowledgeDrift,

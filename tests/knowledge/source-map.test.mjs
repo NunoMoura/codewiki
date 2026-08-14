@@ -53,8 +53,8 @@ function sampleSourceMap() {
 			{
 				id: "traces",
 				doc: ".codewiki/kb/system/components/change-trace.md",
-				sourcePatterns: ["src/traces/**", "src/runtime/persistence/trace.ts"],
-				testPatterns: ["tests/traces/**"],
+				sourcePatterns: ["src/changes/trace/**", "src/runtime/persistence/trace.ts"],
+				testPatterns: ["tests/changes/trace/**"],
 				generatedViews: [],
 				traceEvents: ["trace_head", "trace_event"],
 				role: "state_truth",
@@ -78,7 +78,7 @@ describe("source ownership map helpers", () => {
 
 		assert.equal(sourceMapExcluded(map, "dist/index.js"), true);
 		assert.equal(
-			sourceMapOwnerForPath(map, "src/traces/append.ts")?.id,
+			sourceMapOwnerForPath(map, "src/changes/trace/append.ts")?.id,
 			"traces",
 		);
 		assert.equal(
@@ -91,7 +91,7 @@ describe("source ownership map helpers", () => {
 		const map = sampleSourceMap();
 		const issues = validateSourceMap(map, {
 			artifactPaths: activeArtifactPaths(),
-			sourcePaths: ["src/traces/append.ts", "src/implementation/iteration.ts"],
+			sourcePaths: ["src/changes/trace/append.ts", "src/implementation/iteration.ts"],
 		});
 
 		assert.deepEqual(issues, []);

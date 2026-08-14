@@ -1,5 +1,5 @@
-import { normalizeTraceRefs } from "../../traces/refs.ts";
-import type { TraceEvent } from "../../traces/types.ts";
+import { normalizeTraceRefs } from "../../changes/trace/refs.ts";
+import type { TraceEvent } from "../../changes/trace/types.ts";
 
 export type RuntimeClaimEventName = "runtime.work_unit.claimed";
 export type RuntimeClaimReleaseEventName =

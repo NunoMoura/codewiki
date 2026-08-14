@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import type { ChangeRecord } from "../changes/records.ts";
 import { changeContentDigest } from "../changes/digest.ts";
 import type { DecisionDisposition } from "./candidate-proposal.ts";
-import type { LoopQualityStandardResult } from "../traces/types.ts";
+import type { LoopQualityStandardResult } from "../changes/trace/types.ts";
 import type { WorkState } from "../work-state/types.ts";
 
 export const DECISION_CHANGE_GRAPH_ID = "codewiki.decision.change";

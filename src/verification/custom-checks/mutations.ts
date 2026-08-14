@@ -1,4 +1,4 @@
-import type {AuthorityBinding} from "../../change-trace/contracts.ts";
+import type {AuthorityBinding} from "../../changes/trace/contracts.ts";
 import {
 	createTriagePreferenceBinding,
 	normalizeTriagePreferenceBindings,

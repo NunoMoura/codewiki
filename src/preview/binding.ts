@@ -1,4 +1,4 @@
-import type { TraceRecord } from "../traces/types.ts";
+import type { TraceRecord } from "../changes/trace/types.ts";
 
 const SAFE_IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,79}$/;
 const EXACT_DIGEST = /^sha256:[a-f0-9]{64}$/;

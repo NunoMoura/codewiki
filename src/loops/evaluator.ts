@@ -2,7 +2,7 @@ import type {
 	LoopQualityRunnerSummary,
 	LoopQualityStandardMethod,
 	LoopQualityStandardResult,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 import {
 	runLoopGraph,
 	type LoopGraphDiagnostic,

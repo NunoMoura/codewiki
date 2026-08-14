@@ -3,13 +3,13 @@ import { IMPLEMENTATION_LOOP_GRAPH } from "../implementation/loop.ts";
 import { implementationQualityStandards } from "../implementation/quality-standards.ts";
 import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../planning/portfolio-quality.ts";
 import type { LoopQualityGraphNode } from "../loops/graph.ts";
-import { loopOutputEvents } from "../traces/queries.ts";
+import { loopOutputEvents } from "../changes/trace/queries.ts";
 import type {
 	LoopQualityStandardResult,
 	TraceEvent,
 	TraceLoop,
 	TraceRecord,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 import type {
 	BlockerView,
 	LoopQualitySummary,

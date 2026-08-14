@@ -1,4 +1,4 @@
-import {isCanonicalTraceRef} from "../../traces/refs.ts";
+import {isCanonicalTraceRef} from "../trace/refs.ts";
 import {
 	normalizeChangeSecurityProfile,
 	type ChangeSecurityProfile,

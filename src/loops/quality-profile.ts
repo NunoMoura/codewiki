@@ -1,5 +1,5 @@
 import type { LoopQualityGraph, LoopQualityGraphNode } from "./graph.ts";
-import type { LoopQualityStandardResult } from "../traces/types.ts";
+import type { LoopQualityStandardResult } from "../changes/trace/types.ts";
 
 export type LoopQualityProfileNodeState =
 	| "active"

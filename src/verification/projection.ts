@@ -2,13 +2,13 @@ import type {
 	CanonicalChangeOperation,
 	CanonicalInlineSemanticArtifact,
 	OperationId,
-} from "../change-trace/contracts.ts";
+} from "../changes/trace/contracts.ts";
 import {
 	materializeProjectWorkState,
 	type ChangeWorkState,
 	type LoopAttemptProjection,
 	type ProjectWorkState,
-} from "../change-trace/state.ts";
+} from "../changes/trace/state.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

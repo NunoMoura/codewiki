@@ -4,11 +4,11 @@ import {tmpdir} from "node:os";
 import {join} from "node:path";
 import {describe, it} from "node:test";
 
+import {projectAlignmentGraph} from "../../src/alignment/graph.ts";
 import {
 	createChangeRevision,
 	createInitialProjectWorkState,
-	projectAlignmentGraph,
-} from "../../src/change-trace/index.ts";
+} from "../../src/changes/trace/index.ts";
 import {normalizeChangeDefectProfile} from "../../src/changes/defect-profile.ts";
 import {createUserSuggestionMaterial} from "../../src/changes/intake/producers.ts";
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../src/changes/triage/contracts.ts";
@@ -524,7 +524,7 @@ describe("snapshot-bound Backlog Triage Projection", () => {
 		const journey = createThreeBatchJourney("CHG-active-target");
 		const blockerRevision = revision("CHG-pending-blocker", {
 			topicRefs: ["kb:system/traces"],
-			targetRefs: ["src/change-trace"],
+			targetRefs: ["src/changes/trace"],
 		});
 		let state = openChange(journey.states[1], {
 			changeId: "CHG-pending-blocker",

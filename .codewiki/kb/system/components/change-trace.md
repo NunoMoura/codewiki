@@ -7,17 +7,15 @@ tags: [system, component]
 codewiki_component: change-trace
 codewiki_source_patterns:
   - "src/changes/trace/**"
-  - "src/changes/change-trace.ts"
   - "src/changes/command.ts"
   - "src/changes/digest.ts"
   - "src/changes/normalize.ts"
   - "src/changes/records.ts"
   - "src/changes/schema.ts"
   - "src/changes/store.ts"
-  - "src/changes/trace-store.ts"
   - "src/changes/types.ts"
   - "src/changes/validation-view.ts"
-codewiki_test_patterns: ["tests/changes/**", "tests/traces/**"]
+codewiki_test_patterns: ["tests/changes/**"]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/recover-history.md
@@ -25,7 +23,7 @@ codewiki_relationships:
 ---
 # Change Trace
 
-A Change Trace is append-only canonical history for one accountable intent carrier. Strict canonical bytes, typed operations, parent identity, authority binding, preconditions, and deterministic reduction make replay and synchronization verifiable. Change Trace Protocol `3.0.0` binds each authority-bearing operation to one accountable `actorId` and one proof-backed `authenticatedIdentityRef`; Client transport identity remains request provenance rather than canonical actor identity.
+A Change Trace is append-only canonical history for one accountable intent carrier. Strict canonical bytes, typed operations, parent identity, authority binding, preconditions, and deterministic reduction make replay and synchronization verifiable. Change Trace Protocol `3.0.0` binds each authority-bearing operation to one accountable `actorId` and one proof-backed `authenticatedIdentityRef`; Client transport identity remains request provenance rather than canonical actor identity. Canonical protocol, JSONL encoding, Change-backed storage, manifests, reduction, replay, synchronization support, retention, and owner-specific errors live together under `src/changes/trace/**`; no legacy Trace source root or cross-domain error path remains.
 
 Mutable allocation does not alter immutable Change meaning. Reviewer, assignee, Worker, and machine identities live in policy-bound requirements, Claims, Assignments, and operations rather than Change revisions. A Review Requirement binds one exact revision, review class, scope, minimum approvals, independence rule, and policy digest. A Review Claim records current responsibility without implying approval. A Review Submission immutably binds one authenticated `approve | request_revision | defer | reject` disposition, rationale, Evidence references, Claim, delegation where applicable, and Runtime-owned time.
 

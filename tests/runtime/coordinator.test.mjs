@@ -13,8 +13,8 @@ import {
 	runtimeHeartbeatKey,
 	runtimeHeartbeatPriority,
 } from "../../src/runtime/coordinator/index.ts";
-import {readTrace} from "../../src/traces/reader.ts";
-import {traceFilePath} from "../../src/traces/schema.ts";
+import {readTrace} from "../../src/changes/trace/reader.ts";
+import {traceFilePath} from "../../src/changes/trace/schema.ts";
 
 function triggerView(overrides = {}) {
 	return {

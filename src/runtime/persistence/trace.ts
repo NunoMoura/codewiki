@@ -1,20 +1,20 @@
-import { CodewikiTraceError } from "../../error-handling/trace-errors.ts";
+import { CodewikiTraceError } from "../../changes/trace/storage-errors.ts";
 import {
 	appendTraceRecord,
 	appendTraceRecords,
 	type AppendTraceBatchResult,
 	type AppendTraceResult,
-} from "../../traces/append.ts";
+} from "../../changes/trace/append.ts";
 export type {
 	AppendTraceBatchResult,
 	AppendTraceResult,
-} from "../../traces/append.ts";
+} from "../../changes/trace/append.ts";
 import type {
 	TailCheckpoint,
 	TraceEvent,
 	TraceLoop,
 	TraceRecord,
-} from "../../traces/types.ts";
+} from "../../changes/trace/types.ts";
 
 export interface SemanticLoopReportResult {
 	traceEvents: TraceEvent[];

@@ -7,10 +7,10 @@ import { runWikiImplement } from "../../../src/runtime/commands/implementation.t
 import { collectWorkerReports } from "../../../src/runtime/workers/reports.ts";
 import { createRuntimeClaimEvent } from "../../../src/runtime/claims/events.ts";
 import { createRuntimeWorkerCompletionReleaseEvents } from "../../../src/runtime/claims/work-unit-events.ts";
-import { appendTraceRecord } from "../../../src/traces/append.ts";
-import { readTrace } from "../../../src/traces/reader.ts";
-import { replayTrace } from "../../../src/traces/replay.ts";
-import { traceFilePath } from "../../../src/traces/schema.ts";
+import { appendTraceRecord } from "../../../src/changes/trace/append.ts";
+import { readTrace } from "../../../src/changes/trace/reader.ts";
+import { replayTrace } from "../../../src/changes/trace/replay.ts";
+import { traceFilePath } from "../../../src/changes/trace/schema.ts";
 import { buildProjectWorkState } from "../../../src/work-state/project.ts";
 import { seedRuntimeImplementation as seedRuntimeImplementationProject } from "../../helpers/runtime-implementation.mjs";
 import { buildWorkQueueView } from "../../../src/views/work-queue.ts";

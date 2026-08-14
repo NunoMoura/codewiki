@@ -7,11 +7,11 @@ import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
 import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
 import { runImplementationIteration } from "../../src/implementation/iteration.ts";
 import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
-import { createTraceCloseRecord } from "../../src/traces/retention.ts";
+import { createTraceCloseRecord } from "../../src/changes/trace/retention.ts";
 import {
 	createTriggerRunTraceHead,
 	createTraceHead,
-} from "../../src/traces/writer.ts";
+} from "../../src/changes/trace/writer.ts";
 import {buildTriggersView} from "../../src/views/triggers.ts";
 import {buildQualityView} from "../../src/views/quality.ts";
 import {buildResumeView} from "../../src/views/resume.ts";

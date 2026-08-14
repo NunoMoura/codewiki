@@ -1,4 +1,4 @@
-import type { TraceEvent } from "../traces/types.ts";
+import type { TraceEvent } from "../changes/trace/types.ts";
 import type {
 	ImplementationWorkerClaim,
 	ImplementationWorkerClaimStatus,

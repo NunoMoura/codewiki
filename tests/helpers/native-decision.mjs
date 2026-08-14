@@ -1,7 +1,7 @@
 import {
 	createChangeRevision,
 	createInitialProjectWorkState,
-} from "../../src/change-trace/index.ts";
+} from "../../src/changes/trace/index.ts";
 import {parseDecisionCandidateProposal} from "../../src/decision/candidate-proposal.ts";
 import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
 import {

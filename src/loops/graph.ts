@@ -3,7 +3,7 @@ import type {
 	ExitQualityGraphRef,
 	LoopQualityStandardMode,
 	TraceLoop,
-} from "../traces/types.ts";
+} from "../changes/trace/types.ts";
 
 export const LOOP_QUALITY_GRAPH_SCHEMA_VERSION = 3;
 
