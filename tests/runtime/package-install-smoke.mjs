@@ -506,6 +506,7 @@ for (const forbiddenPath of [
 	"private",
 	"sealed",
 	join("dist", "lab"),
+	join("dist", "benchmarks"),
 	join("dist", "tests"),
 	join("dist", "ideas"),
 ]) {

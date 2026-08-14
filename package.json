@@ -78,7 +78,6 @@
 	"knip": {
 		"entry": [
 			"src/index.ts",
-			"src/benchmarks/*.ts",
 			"src/pi-extension.ts",
 			"src/execution/pi/coordinator-daemon.ts",
 			"src/execution/pi/sdk-semantic-session.ts",
@@ -88,6 +87,7 @@
 		],
 		"project": [
 			"src/**/*.ts",
+			"benchmarks/**/*.ts",
 			"tests/**/*.mjs"
 		],
 		"ignoreDependencies": []

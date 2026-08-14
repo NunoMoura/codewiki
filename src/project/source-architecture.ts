@@ -1,6 +1,5 @@
 export const CURRENT_SOURCE_ROOTS = [
 	"alignment",
-	"benchmarks",
 	"changes",
 	"clients",
 	"decision",
@@ -60,7 +59,7 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"workers",
 ] as const;
 
-export const LEGACY_SOURCE_ROOTS = ["benchmarks"] as const;
+export const LEGACY_SOURCE_ROOTS = [] as const;
 
 export const LEGACY_SOURCE_FILES = [] as const;
 
@@ -79,9 +78,7 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"server",
 ] as const;
 
-export const LEGACY_SOURCE_FILE_COUNTS = {
-	benchmarks: 2,
-} as const;
+export const LEGACY_SOURCE_FILE_COUNTS = {} as const;
 
 export const FORBIDDEN_RUNTIME_SUBDIRECTORIES = [
 	"decision",

@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {runAlignmentRetrievalBenchmark} from "../../src/benchmarks/alignment-retrieval.ts";
+import {runAlignmentRetrievalBenchmark} from "../../benchmarks/alignment-retrieval.ts";
 import {
 	createAlignmentGraphRetrievalAdapter,
 	createOkfSourceProjectionRetrievalAdapter,
 	createPlainSearchRetrievalAdapter,
 	createRecordedAlignmentRetrievalAdapter,
 	createUnavailableAlignmentRetrievalAdapter,
-} from "../../src/benchmarks/retrieval-adapters.ts";
+} from "../../benchmarks/retrieval-adapters.ts";
 import {projectAlignmentGraph} from "../../src/alignment/graph.ts";
 import {augmentAlignmentGraphWithKnowledge} from "../../src/alignment/knowledge.ts";
 import {digest} from "../helpers/change-trace-v1.mjs";

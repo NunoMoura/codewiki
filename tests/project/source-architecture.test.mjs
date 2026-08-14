@@ -125,7 +125,7 @@ describe("source architecture", () => {
 			.filter((name) => statSync(`src/${name}`).isDirectory())
 			.sort();
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
-		assert.deepEqual(LEGACY_SOURCE_ROOTS, ["benchmarks"]);
+		assert.deepEqual(LEGACY_SOURCE_ROOTS, []);
 		assert.deepEqual(
 			CURRENT_SOURCE_ROOTS.filter(
 				(root) => !TARGET_SOURCE_ROOTS.includes(root),
@@ -160,7 +160,7 @@ describe("source architecture", () => {
 		assert.equal(TARGET_SOURCE_ROOTS.includes("traces"), false);
 	});
 
-	it("forbids new files in legacy source roots", () => {
+	it("keeps nonproduction responsibilities outside source roots", () => {
 		for (const [root, expectedCount] of Object.entries(
 			LEGACY_SOURCE_FILE_COUNTS,
 		)) {
@@ -182,6 +182,9 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "traces")), false);
 		assert.equal(existsSync(join(sourceRoot, "views")), false);
 		assert.equal(existsSync(join(sourceRoot, "loops")), false);
+		assert.equal(existsSync(join(sourceRoot, "benchmarks")), false);
+		assert.equal(existsSync("benchmarks/alignment-retrieval.ts"), true);
+		assert.equal(existsSync("benchmarks/retrieval-adapters.ts"), true);
 		assert.equal(existsSync("src/semantic-loop.ts"), false);
 		assert.equal(existsSync("src/error-handling/trace-errors.ts"), false);
 		assert.equal(existsSync("src/error-handling/config-errors.ts"), false);
@@ -349,7 +352,7 @@ describe("source architecture", () => {
 			assert.doesNotMatch(packageJson.scripts[script], /tests\/harnesses\/pi/u);
 		}
 		const tsconfig = readJson("tsconfig.json");
-		assert.deepEqual(tsconfig.include, ["src/**/*.ts"]);
+		assert.deepEqual(tsconfig.include, ["src/**/*.ts", "benchmarks/**/*.ts"]);
 	});
 
 	it("keeps Runtime subtrees within target responsibilities", () => {

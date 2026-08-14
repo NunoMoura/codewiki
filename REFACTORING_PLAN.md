@@ -270,6 +270,8 @@ The Loop quality ownership clean cut is recorded by `.tmp-worktrees/loop-quality
 
 The Project configuration-error ownership clean cut is recorded by `.tmp-worktrees/project-config-error-ownership-clean-cut-manifest.json`, exhaustively anchored to `101ef73` with 649 keeps and 1 move. The structured configuration error contract moves unchanged from `src/error-handling/config-errors.ts` to `src/project/config-errors.ts`; Project and Preview callers and direct tests use the owner path. Error codes, class identity, messages, structured path/value data, causes, recoverability, and suggested action remain stable. The shared Package error foundation retains generic envelopes and operation contracts only. No alias, compatibility barrel, old-path export, duplicate class, or packed `dist/error-handling/config-errors.*` artifact survives. Source/test counts remain flat at 355/194; strict ownership accounting advances to 353 target-owned files and 2 explicit legacy files with zero overlap. Its green checkpoint is 941 full-suite tests, 119 coordinator tests, 713 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
 
+The Benchmark production extraction clean cut is recorded by `.tmp-worktrees/benchmark-production-extraction-clean-cut-manifest.json`, exhaustively anchored to `1b2c91a` with 649 keeps and 2 moves. Deterministic Alignment retrieval measurement and adapter code moves from `src/benchmarks/**` to repository-root `benchmarks/**`; focused proofs remain under `tests/benchmarks/**`. Benchmark TypeScript stays in the project typecheck but is excluded from `tsconfig.build.json`, production declarations, and npm package contents. Snapshot binding, method order, adapters, metrics, error visibility, and report digests remain unchanged. `src/benchmarks/**` and packed `dist/benchmarks/**` are deleted without aliases, compatibility imports, duplicate harnesses, or replacement production ownership. Production source/test counts fall to 353/194; every production source file now has exactly one target owner, with zero explicit legacy files and zero overlap. Its green checkpoint is 941 full-suite tests, 119 coordinator tests, 709 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -446,7 +448,7 @@ Remaining:
 
 ### 12. Build external product Benchmarks
 
-- [ ] Move supported measurement code from `src/benchmarks/**` to repository-root `benchmarks/**` and do not ship it.
+- [x] Move supported measurement code from `src/benchmarks/**` to repository-root `benchmarks/**`, keep it typechecked, and do not ship it.
 - [ ] Compare the same Worker or managed Agent, model route, task, repository, tools, network, budget, timeout, concurrency, retries, environment, and trials in `alone` and `codewiki` modes.
 - [ ] Use external fixtures and oracles; operational discovery is not Benchmarking.
 - [ ] Benchmark digest-bound repair variants without automatic promotion.

@@ -4,7 +4,7 @@ import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
-} from "../utils/canonical-json.ts";
+} from "../src/utils/canonical-json.ts";
 
 const ALIGNMENT_RETRIEVAL_METHODS = Object.freeze([
 	"plain_search",
