@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: Implementation
-description: Owns realization Candidate semantics, Implementation Checks, worker interpretation, and route recommendations.
+description: Owns realization Candidate semantics, Implementation Checks, and worker interpretation.
 status: stable
 tags: [system, component]
 codewiki_component: implementation
@@ -16,4 +16,4 @@ codewiki_relationships:
 
 Implementation realizes accepted Planning obligations in isolated workbenches and produces a Candidate bound to exact source, tests, Knowledge, configuration, and expected Git bases. Workers report bounded results but cannot schedule work or write canonical state.
 
-Implementation owns realization semantics, Checks, attempt composition, interpretation, quality feedback reduction, and route recommendation. Shared quality graph execution is Verification machinery, while `src/implementation/quality-feedback.ts` translates exact quality outcomes into Implementation-owned diagnostics. Runtime owns claims, worker dispatch, Integration, persistence, expected-head synchronization, recovery, and final effects.
+Implementation owns realization semantics, Checks, attempt composition, interpretation, and quality feedback reduction. Shared Check and legacy quality-graph execution are Verification mechanics, while `src/implementation/quality-feedback.ts` translates exact outcomes into Implementation-owned diagnostics without route authority. Runtime Loop Exit owns the authoritative route; Runtime also owns claims, worker dispatch, Integration, persistence, expected-head synchronization, recovery, and final effects.

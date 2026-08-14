@@ -1,4 +1,9 @@
 import type {ChangeIntakeMaterial} from "../../changes/intake/contracts.ts";
+import type {DecisionCandidate} from "../../decision/exit/candidate.ts";
+import {
+	createDecisionSecurityScannerExecutor,
+	type DecisionSecurityScanContext,
+} from "../../decision/exit/security-scanners.ts";
 import type {EvidenceSubject} from "../../evidence/contracts.ts";
 import type {CheckCatalog} from "../../verification/catalog.ts";
 import type {ResolvedExitPolicy} from "../../verification/contracts.ts";
@@ -16,41 +21,35 @@ import {
 	type SecuritySurfaceClassification,
 	type SecuritySurfaceSignal,
 } from "../../verification/security-surfaces.ts";
-import type {DecisionCandidate} from "./candidate.ts";
-import {
-	createDecisionSecurityScannerExecutor,
-	type DecisionSecurityScanContext,
-} from "./security-scanners.ts";
-
 export type DecisionProtectedCustomCheckConfig = ProtectedCustomCheckConfigSnapshot;
 export type DecisionSecurityFindingIntakeMaterial = ChangeIntakeMaterial;
 export type {DecisionSecurityScanContext};
 
-export interface DecisionSecurityRuntimeConfig {
+export interface DecisionLoopExitSecurityConfig {
 	readonly adapters: readonly SecurityScannerAdapter[];
 	readonly sensitivity: "public" | "project" | "private";
 }
 
-interface PrepareDecisionSecurityRuntimeInput {
+interface PrepareDecisionLoopExitSecurityInput {
 	readonly catalog: CheckCatalog;
 	readonly candidate: DecisionCandidate;
 	readonly changeRef: string;
 	readonly subject: EvidenceSubject;
 	readonly protectedBaseCustomCheckConfig?: ProtectedCustomCheckConfigSnapshot;
 	readonly projectCheckPackSnapshot?: ProjectCheckPackSnapshot;
-	readonly configuration?: DecisionSecurityRuntimeConfig;
+	readonly configuration?: DecisionLoopExitSecurityConfig;
 	readonly scanContext?: DecisionSecurityScanContext;
 }
 
-interface PreparedDecisionSecurityRuntime {
+interface PreparedDecisionLoopExitSecurity {
 	readonly policy: ResolvedExitPolicy;
 	readonly executors: readonly LoopCheckExecutor[];
 	readonly findingIntakeMaterials: readonly ChangeIntakeMaterial[];
 }
 
-export function prepareDecisionSecurityRuntime(
-	input: PrepareDecisionSecurityRuntimeInput,
-): PreparedDecisionSecurityRuntime {
+export function prepareDecisionLoopExitSecurity(
+	input: PrepareDecisionLoopExitSecurityInput,
+): PreparedDecisionLoopExitSecurity {
 	const changeId = input.changeRef.slice("change:".length);
 	const classification = securitySurfaceClassificationForCandidate(
 		input.candidate,

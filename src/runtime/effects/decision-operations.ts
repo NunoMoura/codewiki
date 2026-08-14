@@ -39,7 +39,7 @@ import {
 	createDecisionCandidate,
 	type DecisionCandidate,
 } from "../../decision/exit/candidate.ts";
-import type {DecisionRuntimeRoute} from "../../decision/exit/runtime.ts";
+import type {DecisionLoopExitRoute} from "../loop-exit/decision.ts";
 
 export interface CreateNativeDecisionOperationsInput {
 	readonly state: ProjectWorkState;
@@ -52,7 +52,7 @@ export interface CreateNativeDecisionOperationsInput {
 	readonly policy: ResolvedExitPolicy;
 	readonly evidenceRecords: readonly EvidenceRecord[];
 	readonly report: ExitReport;
-	readonly route: DecisionRuntimeRoute;
+	readonly route: DecisionLoopExitRoute;
 }
 
 export interface NativeDecisionOperationSequence {
@@ -321,7 +321,7 @@ function assertCandidateIdentity(candidate: DecisionCandidate): void {
 	}
 }
 
-function assertRuntimeRouteIdentity(route: DecisionRuntimeRoute): void {
+function assertRuntimeRouteIdentity(route: DecisionLoopExitRoute): void {
 	const {routeDigest, ...body} = route;
 	if (routeDigest !== canonicalJsonDigest(body)) {
 		throw new Error("Native Decision Runtime Route identity is invalid.");
@@ -399,7 +399,7 @@ export interface CommitNativeDecisionOperationSequenceInput {
 	readonly exitPolicy: ResolvedExitPolicy;
 	readonly evidenceRecords: readonly EvidenceRecord[];
 	readonly report: ExitReport;
-	readonly route: DecisionRuntimeRoute;
+	readonly route: DecisionLoopExitRoute;
 	readonly runner?: GitCommandRunner;
 	readonly materializationRoot?: string;
 	readonly signal?: AbortSignal;

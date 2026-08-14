@@ -11,7 +11,7 @@ import {
 	type AuthenticatedDecisionSelectionAuthority,
 	type DecisionAttentionSelectionAuthorizationRequest,
 } from "../../changes/triage/selection.ts";
-import {createDecisionExitRuntime} from "../../decision/exit/runtime.ts";
+import {createDecisionLoopExit} from "../../runtime/loop-exit/decision.ts";
 import type {ProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/configuration.ts";
 import {
 	loadProtectedCustomCheckConfigSnapshot,
@@ -74,14 +74,14 @@ export interface PiNativeDecisionHostOptions {
 	readonly authorizeSelection?: (
 		request: DecisionAttentionSelectionAuthorizationRequest,
 	) => boolean | Promise<boolean>;
-	readonly createExitRuntime?: (
-		input: Parameters<NativeDecisionAttemptExecutorOptions["createExitRuntime"]>[0] & {
+	readonly createLoopExit?: (
+		input: Parameters<NativeDecisionAttemptExecutorOptions["createLoopExit"]>[0] & {
 			readonly protectedConfig: ProtectedCustomCheckConfigSnapshot;
 			readonly projectCheckPackSnapshot: ProjectCheckPackSnapshot;
 		},
 	) =>
-		| ReturnType<typeof createDecisionExitRuntime>
-		| Promise<ReturnType<typeof createDecisionExitRuntime>>;
+		| ReturnType<typeof createDecisionLoopExit>
+		| Promise<ReturnType<typeof createDecisionLoopExit>>;
 	readonly loadEvaluationInput?: NativeDecisionAttemptExecutorOptions["loadEvaluationInput"];
 	readonly runner?: GitCommandRunner;
 	readonly materializationRoot?: string;
@@ -94,9 +94,9 @@ export function createPiNativeDecisionStartOptions(
 	options: PiNativeDecisionHostOptions,
 ): ProjectCoordinatorDecisionStartOptions {
 	const repoRoot = realpathSync(options.repoRoot);
-	if (options.createExitRuntime && options.decisionResearch) {
+	if (options.createLoopExit && options.decisionResearch) {
 		throw new Error(
-			"Pi native Decision host accepts either createExitRuntime or decisionResearch, not both.",
+			"Pi native Decision host accepts either createLoopExit or decisionResearch, not both.",
 		);
 	}
 	assertTypeboxSchema(
@@ -130,8 +130,8 @@ export function createPiNativeDecisionStartOptions(
 		replayPolicy: options.replayPolicy,
 		authorityBinding: runtimeAuthorityBinding,
 		producer,
-		createExitRuntime: (input) =>
-			loadPiNativeDecisionExitRuntime({repoRoot, options, input}),
+		createLoopExit: (input) =>
+			loadPiNativeDecisionLoopExit({repoRoot, options, input}),
 		...(options.loadEvaluationInput
 			? {loadEvaluationInput: options.loadEvaluationInput}
 			: {}),
@@ -155,11 +155,11 @@ export function createPiNativeDecisionStartOptions(
 	});
 }
 
-async function loadPiNativeDecisionExitRuntime(input: {
+async function loadPiNativeDecisionLoopExit(input: {
 	readonly repoRoot: string;
 	readonly options: PiNativeDecisionHostOptions;
 	readonly input: Parameters<
-		NativeDecisionAttemptExecutorOptions["createExitRuntime"]
+		NativeDecisionAttemptExecutorOptions["createLoopExit"]
 	>[0];
 }) {
 	const [protectedConfig, projectCheckPackSnapshot] = await Promise.all([
@@ -180,12 +180,12 @@ async function loadPiNativeDecisionExitRuntime(input: {
 		protectedConfig.projectConfigDigest !== input.input.teamSnapshot.configDigest
 	) {
 		throw new Error(
-			"Pi native Decision Exit Runtime config does not match the current team snapshot.",
+			"Pi native Decision Loop Exit config does not match the current team snapshot.",
 		);
 	}
-	let runtime: ReturnType<typeof createDecisionExitRuntime>;
-	if (input.options.createExitRuntime) {
-		runtime = await input.options.createExitRuntime({
+	let loopExit: ReturnType<typeof createDecisionLoopExit>;
+	if (input.options.createLoopExit) {
+		loopExit = await input.options.createLoopExit({
 			...input.input,
 			protectedConfig,
 			projectCheckPackSnapshot,
@@ -199,7 +199,7 @@ async function loadPiNativeDecisionExitRuntime(input: {
 					now: input.options.now,
 				})
 			: undefined;
-		runtime = createDecisionExitRuntime({
+		loopExit = createDecisionLoopExit({
 			protectedBaseCustomCheckConfig: protectedConfig,
 			projectCheckPackSnapshot,
 			...(researchChecks ? {researchChecks} : {}),
@@ -208,7 +208,7 @@ async function loadPiNativeDecisionExitRuntime(input: {
 	return {
 		protectedSourceHead: protectedConfig.protectedSourceHead,
 		projectConfigDigest: protectedConfig.projectConfigDigest,
-		runtime,
+		loopExit,
 	};
 }
 

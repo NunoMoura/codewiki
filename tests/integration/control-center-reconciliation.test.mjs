@@ -182,11 +182,15 @@ describe("control-center reconciliation integration", () => {
 		assert.match(readme, /persisted pending Change revisions/);
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 		assert.match(decision, /one authenticated exact Change revision/i);
-		assert.match(decision, /Runtime owns admission, scheduling, identity, persistence/i);
+		assert.match(
+			decision,
+			/Runtime Loop Exit invokes shared Verification.*authoritative route/i,
+		);
 		assert.match(protocol, /delegates semantics and authority to owners/i);
 		assert.match(protocol, /Payloads cannot supply identity, authentication, delegation, authority/i);
 		assert.match(runtime, /authoritative semantic control plane/i);
 		assert.match(runtime, /Candidate Manifest matches persisted custody/i);
+		assert.match(runtime, /one common pipeline for all three Loops/i);
 	});
 
 	it("keeps active shipped surfaces on canonical Change vocabulary", () => {

@@ -1,4 +1,4 @@
-import type {DecisionResearchRuntimeConfig} from "../../decision/exit/runtime.ts";
+import type {DecisionLoopExitResearchConfig} from "../../runtime/loop-exit/decision.ts";
 import type {DecisionResearchCollectionPortInput} from "../../decision/exit/research.ts";
 import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {
@@ -23,7 +23,7 @@ export function createPiNativeDecisionResearchRuntimeConfig(input: {
 		| Omit<PiSdkRuntimeSemanticAdapterOptions, "repoRoot">
 		| undefined;
 	readonly now: (() => string) | undefined;
-}): DecisionResearchRuntimeConfig {
+}): DecisionLoopExitResearchConfig {
 	return Object.freeze({
 		route: input.research.route,
 		sensitivity: input.research.sensitivity,

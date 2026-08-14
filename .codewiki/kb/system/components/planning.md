@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: Planning
-description: Owns ordered realization obligations, Planning Candidate semantics, Checks, and route recommendations.
+description: Owns ordered realization obligations, Planning Candidate semantics, and Planning Checks.
 status: stable
 tags: [system, component]
 codewiki_component: planning
@@ -18,4 +18,4 @@ Planning turns approved Decision meaning into immutable ordered Work Items, depe
 
 A Work Item declares required capabilities, tools, skills, scope, dependencies, and acceptance criteria without selecting a person, Worker, machine, or model provider. Runtime matches current Worker Offers and policy, then creates one exact Assignment binding the Work Item, selected Worker, and Runtime-owned Workbench. Planning declares requirements; Runtime selects placement.
 
-Planning owns its Candidate, Checks, attempt composition, interpretation, and route recommendation. Runtime owns scheduling, Claims, Assignments, persistence, freshness, and final routing.
+Planning owns its Candidate, Checks, attempt composition, and interpretation. Runtime Loop Exit invokes shared Verification and owns freshness, authoritative routing, and persistence; Runtime also owns scheduling, Claims, and Assignments.

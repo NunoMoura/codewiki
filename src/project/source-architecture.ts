@@ -51,6 +51,7 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"effects",
 	"integration",
 	"lifecycle",
+	"loop-exit",
 	"persistence",
 	"queries",
 	"recovery",
@@ -84,7 +85,6 @@ export const FORBIDDEN_RUNTIME_SUBDIRECTORIES = [
 	"decision",
 	"planning",
 	"implementation",
-	"loop-exit",
 ] as const;
 
 export const IMPORT_CYCLE_BASELINE = [

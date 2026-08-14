@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: Decision
-description: Owns accepted-intent Candidate semantics, knowledge-impact assessment, Decision Checks, and route recommendations.
+description: Owns accepted-intent Candidate semantics, knowledge-impact assessment, and Decision Checks.
 status: stable
 tags: [system, component]
 codewiki_component: decision
@@ -16,4 +16,4 @@ codewiki_relationships:
 
 Decision evaluates one authenticated exact Change revision. Its Candidate states desired meaning, alternatives, constraints, risks, and either an exact Knowledge transition or explicit unchanged-Knowledge references.
 
-Decision owns its Candidate, Checks, attempt composition, interpretation, and route recommendation. Runtime owns admission, scheduling, identity, persistence, final routing, and effects. Discoveries that alter accepted meaning return here rather than being silently absorbed by Planning or Implementation.
+Decision owns its Candidate, Checks, attempt composition, and interpretation. Runtime Loop Exit invokes shared Verification, admits the exact Exit Report, and owns the authoritative route, persistence, and effects. Discoveries that alter accepted meaning return here rather than being silently absorbed by Planning or Implementation.

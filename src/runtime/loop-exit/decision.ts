@@ -1,58 +1,57 @@
+import type {DecisionCandidate} from "../../decision/exit/candidate.ts";
+import {createDecisionCodeExecutors} from "../../decision/exit/code-executors.ts";
+import {
+	decisionEvidenceSubject,
+	resolveDecisionEvidenceObligations,
+} from "../../decision/exit/evidence.ts";
+import {
+	createDecisionModelCheckExecutors,
+	type DecisionModelCheckTransport,
+} from "../../decision/exit/model-checks.ts";
+import {
+	createDecisionResearchExecutors,
+	type DecisionResearchClaimsTransport,
+} from "../../decision/exit/research-executors.ts";
+import type {DecisionResearchCollectionPort} from "../../decision/exit/research.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
+import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
 import {
 	createLoopExitResultCache,
 	type LoopExitResultCache,
 } from "../../verification/cache.ts";
 import {createCheckCatalog} from "../../verification/catalog.ts";
+import type {ExitReport, ResolvedExitPolicy} from "../../verification/contracts.ts";
 import {
 	assertProjectCheckPackSnapshot,
 	createCustomCodeCheckExecutors,
 	type CustomCodeCapabilitySnapshot,
 	type ProjectCheckPackSnapshot,
 } from "../../verification/custom-checks/index.ts";
-import type {ExitReport, ResolvedExitPolicy} from "../../verification/contracts.ts";
-import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
-import {
-	canonicalJsonDigest,
-	toCanonicalJsonValue,
-	type Sha256Digest,
-} from "../../utils/canonical-json.ts";
-import {
-	createDecisionResearchExecutors,
-	type DecisionResearchClaimsTransport,
-} from "./research-executors.ts";
-import type {DecisionResearchCollectionPort} from "./research.ts";
 import {
 	createLoopExitRunner,
 	type LoopCheckExecutor,
 	type LoopExitRunnerLimits,
 } from "../../verification/runner.ts";
-import type {DecisionCandidate} from "./candidate.ts";
-import {createDecisionCodeExecutors} from "./code-executors.ts";
 import {
-	decisionEvidenceSubject,
-	resolveDecisionEvidenceObligations,
-} from "./evidence.ts";
-import {
-	createDecisionModelCheckExecutors,
-	type DecisionModelCheckTransport,
-} from "./model-checks.ts";
-import {
-	prepareDecisionSecurityRuntime,
+	prepareDecisionLoopExitSecurity,
+	type DecisionLoopExitSecurityConfig,
 	type DecisionProtectedCustomCheckConfig,
 	type DecisionSecurityFindingIntakeMaterial,
-	type DecisionSecurityRuntimeConfig,
 	type DecisionSecurityScanContext,
-} from "./runtime-security.ts";
+} from "./decision-security.ts";
+import {
+	routeRuntimeLoopExit,
+	type RuntimeLoopExitRoute,
+} from "./router.ts";
 
-export interface DecisionResearchRuntimeConfig {
+export interface DecisionLoopExitResearchConfig {
 	readonly route: WikiModelRouteConfig;
 	readonly sensitivity: "public" | "project" | "private";
 	readonly collectEvidence: DecisionResearchCollectionPort;
 	readonly transport: DecisionResearchClaimsTransport;
 }
 
-interface CreateDecisionExitRuntimeInput {
+interface CreateDecisionLoopExitInput {
 	readonly additionalExecutors?: readonly LoopCheckExecutor[];
 	readonly customCodeCapabilitySnapshot?: CustomCodeCapabilitySnapshot;
 	readonly protectedBaseCustomCheckConfig?: DecisionProtectedCustomCheckConfig;
@@ -67,11 +66,11 @@ interface CreateDecisionExitRuntimeInput {
 			readonly transport: DecisionModelCheckTransport;
 		};
 	};
-	readonly securityScanners?: DecisionSecurityRuntimeConfig;
-	readonly researchChecks?: DecisionResearchRuntimeConfig;
+	readonly securityScanners?: DecisionLoopExitSecurityConfig;
+	readonly researchChecks?: DecisionLoopExitResearchConfig;
 }
 
-interface RunDecisionExitInput {
+interface RunDecisionLoopExitInput {
 	readonly candidate: DecisionCandidate;
 	readonly changeRef: string;
 	readonly evidenceRecords?: readonly EvidenceRecord[];
@@ -79,35 +78,32 @@ interface RunDecisionExitInput {
 	readonly signal?: AbortSignal;
 }
 
-export interface DecisionRuntimeRoute {
-	readonly schemaVersion: "1.0.0";
-	readonly candidateDigest: Sha256Digest;
-	readonly exitReportDigest: Sha256Digest;
-	readonly requestedDisposition: DecisionCandidate["content"]["disposition"];
-	readonly route: "planning" | "repair" | "waiting" | "complete" | "withdrawn";
-	readonly reasonCode: string;
-	readonly routeDigest: Sha256Digest;
-}
+export type DecisionLoopExitRoute = RuntimeLoopExitRoute<
+	"planning" | "repair" | "waiting" | "complete" | "withdrawn",
+	{
+		readonly requestedDisposition: DecisionCandidate["content"]["disposition"];
+	}
+>;
 
-interface DecisionExitRun {
+interface DecisionLoopExitRun {
 	readonly policy: ResolvedExitPolicy;
 	readonly result: Awaited<
 		ReturnType<ReturnType<typeof createLoopExitRunner>["run"]>
 	>;
 	readonly collectedEvidenceRecords: readonly EvidenceRecord<"research_citation">[];
-	readonly route: DecisionRuntimeRoute;
+	readonly route: DecisionLoopExitRoute;
 	readonly securityFindingIntakeMaterials: readonly DecisionSecurityFindingIntakeMaterial[];
 }
 
-export function createDecisionExitRuntime(
-	input: CreateDecisionExitRuntimeInput = {},
+export function createDecisionLoopExit(
+	input: CreateDecisionLoopExitInput = {},
 ): {
-	readonly run: (runInput: RunDecisionExitInput) => Promise<DecisionExitRun>;
+	readonly run: (runInput: RunDecisionLoopExitInput) => Promise<DecisionLoopExitRun>;
 	readonly cache: LoopExitResultCache;
 } {
 	if ("customChecks" in input) {
 		throw new Error(
-			"Decision Exit Runtime received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
+			"Decision Loop Exit received unsupported field customChecks; use protectedBaseCustomCheckConfig.",
 		);
 	}
 	assertIndependentSecurityRoute(input.modelChecks);
@@ -129,13 +125,13 @@ export function createDecisionExitRuntime(
 	const cache = input.cache ?? createLoopExitResultCache();
 	return Object.freeze({
 		cache,
-		async run(runInput: RunDecisionExitInput): Promise<DecisionExitRun> {
+		async run(runInput: RunDecisionLoopExitInput): Promise<DecisionLoopExitRun> {
 			assertRunInput(runInput);
 			const subject = decisionEvidenceSubject({
 				candidate: runInput.candidate,
 				changeRef: runInput.changeRef,
 			});
-			const security = prepareDecisionSecurityRuntime({
+			const security = prepareDecisionLoopExitSecurity({
 				catalog,
 				candidate: runInput.candidate,
 				changeRef: runInput.changeRef,
@@ -228,7 +224,7 @@ export function createDecisionExitRuntime(
 				policy,
 				result,
 				collectedEvidenceRecords: research.collectedEvidenceRecords,
-				route: deriveDecisionRuntimeRoute(
+				route: routeDecisionLoopExit(
 					runInput.candidate,
 					result.report,
 				),
@@ -245,7 +241,7 @@ async function admittedDecisionResearch(input: {
 	readonly subject: ReturnType<typeof decisionEvidenceSubject>;
 	readonly policy: ResolvedExitPolicy;
 	readonly suppliedEvidenceRecords: readonly EvidenceRecord[];
-	readonly configuration: DecisionResearchRuntimeConfig | undefined;
+	readonly configuration: DecisionLoopExitResearchConfig | undefined;
 	readonly signal: AbortSignal;
 }): Promise<{
 	readonly freshnessBoundary?: string;
@@ -291,44 +287,29 @@ async function admittedDecisionResearch(input: {
 	});
 }
 
-export function deriveDecisionRuntimeRoute(
+export function routeDecisionLoopExit(
 	candidate: DecisionCandidate,
 	report: ExitReport,
-): DecisionRuntimeRoute {
+): DecisionLoopExitRoute {
 	if (
 		report.loop !== "decision" ||
 		report.candidateDigest !== candidate.digest
 	) {
-		throw new Error("Decision Runtime Route requires the exact Candidate Exit Report.");
+		throw new Error(
+			"Decision Loop Exit requires the exact Candidate Exit Report.",
+		);
 	}
-	let route: DecisionRuntimeRoute["route"];
-	let reasonCode: string;
-	if (report.status === "fail") {
-		route = "repair";
-		reasonCode = "decision-checks-failed";
-	} else if (report.status === "indeterminate") {
-		route = "waiting";
-		reasonCode = "decision-assurance-indeterminate";
-	} else {
-		({route, reasonCode} = passedDecisionRoute(candidate.content.disposition));
-	}
-	const body = {
-		schemaVersion: "1.0.0" as const,
-		candidateDigest: candidate.digest,
-		exitReportDigest: report.reportDigest,
-		requestedDisposition: candidate.content.disposition,
-		route,
-		reasonCode,
-	};
-	return toCanonicalJsonValue({
-		...body,
-		routeDigest: canonicalJsonDigest(body),
-	}) as unknown as DecisionRuntimeRoute;
+	return routeRuntimeLoopExit({
+		candidate,
+		report,
+		passed: passedDecisionRoute(candidate.content.disposition),
+		details: {requestedDisposition: candidate.content.disposition},
+	});
 }
 
 function passedDecisionRoute(
 	disposition: DecisionCandidate["content"]["disposition"],
-): Pick<DecisionRuntimeRoute, "route" | "reasonCode"> {
+): Pick<DecisionLoopExitRoute, "route" | "reasonCode"> {
 	switch (disposition) {
 		case "approve":
 			return {route: "planning", reasonCode: "decision-approved"};
@@ -344,7 +325,7 @@ function passedDecisionRoute(
 }
 
 function assertIndependentSecurityRoute(
-	modelChecks: CreateDecisionExitRuntimeInput["modelChecks"],
+	modelChecks: CreateDecisionLoopExitInput["modelChecks"],
 ): void {
 	const independent = modelChecks?.independentSecurity?.route;
 	const primary = modelChecks?.route;
@@ -360,19 +341,19 @@ function assertIndependentSecurityRoute(
 	}
 }
 
-function assertRunInput(input: RunDecisionExitInput): void {
+function assertRunInput(input: RunDecisionLoopExitInput): void {
 	if ("researchFreshnessBoundary" in input) {
 		throw new Error(
-			"Decision exit runtime received unsupported field researchFreshnessBoundary; Runtime owns research freshness.",
+			"Decision Loop Exit received unsupported field researchFreshnessBoundary; Runtime owns research freshness.",
 		);
 	}
 	if (input.candidate.loop !== "decision") {
-		throw new Error("Decision exit runtime requires a Decision Candidate.");
+		throw new Error("Decision Loop Exit requires a Decision Candidate.");
 	}
 	if (!/^change:[A-Za-z0-9._-]+$/.test(input.changeRef)) {
-		throw new Error("Decision exit runtime changeRef is invalid.");
+		throw new Error("Decision Loop Exit changeRef is invalid.");
 	}
 	if (!input.candidate.observedBase.canonicalRefs.includes(input.changeRef)) {
-		throw new Error("Decision exit runtime changeRef is not bound by Candidate.");
+		throw new Error("Decision Loop Exit changeRef is not bound by Candidate.");
 	}
 }

@@ -24,8 +24,8 @@ import {
 	createDecisionCandidate,
 	type DecisionCandidate,
 } from "../../decision/exit/candidate.ts";
-import type {DecisionSecurityScanContext} from "../../decision/exit/runtime-security.ts";
-import type {createDecisionExitRuntime} from "../../decision/exit/runtime.ts";
+import type {DecisionSecurityScanContext} from "../../decision/exit/security-scanners.ts";
+import type {createDecisionLoopExit} from "../loop-exit/decision.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
 import type {ProjectCoordinatorRecovery} from "./project.ts";
 import type {DecisionAttemptExecutor} from "../admission/start.ts";
@@ -126,10 +126,10 @@ export interface NativeDecisionEvaluationInput {
 	readonly securityScan?: DecisionSecurityScanContext;
 }
 
-export interface NativeDecisionExitRuntimeBinding {
+export interface NativeDecisionLoopExitBinding {
 	readonly protectedSourceHead: string;
 	readonly projectConfigDigest: Sha256Digest;
-	readonly runtime: ReturnType<typeof createDecisionExitRuntime>;
+	readonly loopExit: ReturnType<typeof createDecisionLoopExit>;
 }
 
 export interface NativeDecisionAttemptResult {
@@ -154,13 +154,13 @@ export interface NativeDecisionAttemptExecutorOptions {
 	readonly replayPolicy: ReplayAdmissionPolicy;
 	readonly authorityBinding: AuthorityBinding;
 	readonly producer: NativeDecisionCandidateProducer;
-	readonly createExitRuntime: (input: {
+	readonly createLoopExit: (input: {
 		readonly state: ProjectWorkState;
 		readonly teamSnapshot: TeamSnapshot;
 		readonly signal: AbortSignal;
 	}) =>
-		| NativeDecisionExitRuntimeBinding
-		| Promise<NativeDecisionExitRuntimeBinding>;
+		| NativeDecisionLoopExitBinding
+		| Promise<NativeDecisionLoopExitBinding>;
 	readonly loadEvaluationInput?: (input: {
 		readonly candidate: DecisionCandidate;
 		readonly state: ProjectWorkState;
@@ -199,7 +199,7 @@ export function createNativeDecisionAttemptExecutor(
 			if (current.attempt.status !== "active") {
 				return attemptResult(current);
 			}
-			const exitRuntime = await boundExitRuntime({
+			const loopExit = await boundLoopExit({
 				options,
 				current,
 				signal: input.signal,
@@ -225,7 +225,7 @@ export function createNativeDecisionAttemptExecutor(
 					signal: input.signal,
 				})) ?? {},
 			);
-			const exit = await exitRuntime.run({
+			const exit = await loopExit.run({
 				candidate,
 				changeRef: `change:${input.changeId}`,
 				evidenceRecords: evaluationInput.evidenceRecords,
@@ -276,31 +276,31 @@ export function createNativeDecisionAttemptExecutor(
 	});
 }
 
-async function boundExitRuntime(input: {
+async function boundLoopExit(input: {
 	readonly options: NativeDecisionAttemptExecutorOptions;
 	readonly current: CurrentAttempt;
 	readonly signal: AbortSignal;
-}): Promise<ReturnType<typeof createDecisionExitRuntime>> {
-	const binding = await input.options.createExitRuntime({
+}): Promise<ReturnType<typeof createDecisionLoopExit>> {
+	const binding = await input.options.createLoopExit({
 		state: input.current.state,
 		teamSnapshot: input.current.teamSnapshot,
 		signal: input.signal,
 	});
 	assertOnlyKeys({
 		value: binding,
-		allowed: ["protectedSourceHead", "projectConfigDigest", "runtime"],
-		label: "Native Decision Exit Runtime binding",
+		allowed: ["protectedSourceHead", "projectConfigDigest", "loopExit"],
+		label: "Native Decision Loop Exit binding",
 	});
 	if (
 		binding.protectedSourceHead !== input.current.teamSnapshot.protectedSourceHead ||
 		binding.projectConfigDigest !== input.current.teamSnapshot.configDigest ||
-		typeof binding.runtime?.run !== "function"
+		typeof binding.loopExit?.run !== "function"
 	) {
 		throw new Error(
-			"Native Decision Exit Runtime is not bound to the current protected project snapshot.",
+			"Native Decision Loop Exit is not bound to the current protected project snapshot.",
 		);
 	}
-	return binding.runtime;
+	return binding.loopExit;
 }
 
 function candidateProductionRequest(input: {

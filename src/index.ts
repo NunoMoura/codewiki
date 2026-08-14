@@ -467,7 +467,7 @@ export {
 	type NativeDecisionCandidateProducer,
 	type NativeDecisionCandidateProductionRequest,
 	type NativeDecisionEvaluationInput,
-	type NativeDecisionExitRuntimeBinding,
+	type NativeDecisionLoopExitBinding,
 } from "./runtime/coordinator/decision-attempt.ts";
 export {
 	commitNativeDecisionOperationSequence,

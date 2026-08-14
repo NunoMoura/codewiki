@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {decisionLoopExitDeclaration} from "../../src/decision/exit/index.ts";
 import {implementationLoopExitDeclaration} from "../../src/implementation/types.ts";
 import {planningLoopExitDeclaration} from "../../src/planning/types.ts";
 import {createCheckCatalog} from "../../src/verification/catalog.ts";
@@ -17,7 +16,9 @@ import {
 	repairProfileSetDigest,
 } from "../../src/verification/repair-profiles.ts";
 import {createVerificationRuntime} from "../../src/verification/runtime.ts";
-import {deriveDecisionRuntimeRoute} from "../../src/decision/exit/runtime.ts";
+
+const decisionLoopExitDeclaration = Object.freeze({loop: "decision"});
+import {routeDecisionLoopExit} from "../../src/runtime/loop-exit/decision.ts";
 import {createNativeDecisionOperationSequence} from "../../src/runtime/effects/decision-operations.ts";
 import {
 	createInitialProjectWorkState,
@@ -131,7 +132,7 @@ function persistedVerificationFixture(disposition = "satisfied") {
 		execution: check.execution,
 	});
 	const report = createExitReport({policy: resolved, checkResults: [result]});
-	const route = deriveDecisionRuntimeRoute(candidate, report);
+	const route = routeDecisionLoopExit(candidate, report);
 	const sequence = createNativeDecisionOperationSequence({
 		state: started,
 		changeId,

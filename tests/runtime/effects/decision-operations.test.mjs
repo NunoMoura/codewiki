@@ -5,7 +5,7 @@ import {createCheckCatalog} from "../../../src/verification/catalog.ts";
 import {createResolvedExitPolicy} from "../../../src/verification/contracts.ts";
 import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
 import {createCheckResult, createExitReport} from "../../../src/verification/results.ts";
-import {deriveDecisionRuntimeRoute} from "../../../src/decision/exit/runtime.ts";
+import {routeDecisionLoopExit} from "../../../src/runtime/loop-exit/decision.ts";
 import {EVIDENCE_SCHEMA_VERSION} from "../../../src/evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../../src/evidence/materialize.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
@@ -134,7 +134,7 @@ function nativeDecisionArtifacts(
 		execution: check.execution,
 	});
 	const report = createExitReport({policy, checkResults: [result]});
-	const route = deriveDecisionRuntimeRoute(candidate, report);
+	const route = routeDecisionLoopExit(candidate, report);
 	return {candidate, policy, report, route};
 }
 

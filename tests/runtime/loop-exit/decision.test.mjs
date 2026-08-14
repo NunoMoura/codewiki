@@ -1,22 +1,23 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createInitialProjectWorkState} from "../../src/changes/trace/index.ts";
-import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
-import {createDecisionCodeExecutors} from "../../src/decision/exit/code-executors.ts";
+import {createInitialProjectWorkState} from "../../../src/changes/trace/index.ts";
+import {createDecisionCandidate} from "../../../src/decision/exit/candidate.ts";
+import {createDecisionCodeExecutors} from "../../../src/decision/exit/code-executors.ts";
 import {
-	createDecisionExitRuntime,
-	deriveDecisionRuntimeRoute,
-} from "../../src/decision/exit/runtime.ts";
-import {createCheckCatalog} from "../../src/verification/catalog.ts";
-import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
-import {resolveExitPolicy} from "../../src/verification/resolve-policy.ts";
-import {createLoopExitRunner} from "../../src/verification/runner.ts";
+	createDecisionLoopExit,
+	routeDecisionLoopExit,
+} from "../../../src/runtime/loop-exit/decision.ts";
+import {routeRuntimeLoopExit} from "../../../src/runtime/loop-exit/router.ts";
+import {createCheckCatalog} from "../../../src/verification/catalog.ts";
+import {createResolvedExitPolicy} from "../../../src/verification/contracts.ts";
+import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
+import {createLoopExitRunner} from "../../../src/verification/runner.ts";
 import {
 	nativeDecisionCandidate,
 	nativeDecisionRevision,
 	nativeDecisionState,
-} from "../helpers/native-decision.mjs";
+} from "../../helpers/native-decision.mjs";
 
 const CODE_CHECK_IDS = [
 	"active_change_overlap_accounted",
@@ -36,6 +37,33 @@ const CODE_CHECK_IDS = [
 function stateWithRevision(changeId, revision = nativeDecisionRevision({changeId})) {
 	return nativeDecisionState([{changeId, revision}]);
 }
+
+it("applies one Runtime-owned status router across all semantic Loops", () => {
+	const candidateDigest = `sha256:${"a".repeat(64)}`;
+	const reportDigest = `sha256:${"b".repeat(64)}`;
+	const passTargets = {
+		decision: "planning",
+		planning: "implementation",
+		implementation: "complete",
+	};
+	for (const loop of ["decision", "planning", "implementation"]) {
+		for (const [status, expectedRoute, expectedReason] of [
+			["fail", "repair", `${loop}-checks-failed`],
+			["indeterminate", "waiting", `${loop}-assurance-indeterminate`],
+			["pass", passTargets[loop], `${loop}-passed`],
+		]) {
+			const route = routeRuntimeLoopExit({
+				candidate: {loop, digest: candidateDigest},
+				report: {loop, candidateDigest, reportDigest, status},
+				passed: {route: passTargets[loop], reasonCode: `${loop}-passed`},
+				details: {},
+			});
+			assert.equal(route.route, expectedRoute);
+			assert.equal(route.reasonCode, expectedReason);
+			assert.match(route.routeDigest, /^sha256:[0-9a-f]{64}$/u);
+		}
+	}
+});
 
 function policyFor(candidate, checkIds = CODE_CHECK_IDS) {
 	const catalog = createCheckCatalog();
@@ -121,7 +149,7 @@ describe("native Decision Candidate and Code Checks", () => {
 			state: stateWithRevision(changeId),
 			changeId,
 		});
-		const native = await createDecisionExitRuntime().run({
+		const native = await createDecisionLoopExit().run({
 			candidate,
 			changeRef: `change:${changeId}`,
 		});
@@ -159,7 +187,7 @@ describe("native Decision Candidate and Code Checks", () => {
 			}).run({candidate, policy});
 			assert.equal(result.report.status, "pass");
 			assert.equal(
-				deriveDecisionRuntimeRoute(candidate, result.report).route,
+				routeDecisionLoopExit(candidate, result.report).route,
 				expectedRoute,
 			);
 		}
@@ -227,7 +255,7 @@ describe("native Decision Candidate and Code Checks", () => {
 		});
 		assert.equal(candidate.content.revision.classification.kind, "unknown");
 		assert.equal(candidate.content.revision.safety.risk, "unknown");
-		const result = await createDecisionExitRuntime().run({
+		const result = await createDecisionLoopExit().run({
 			candidate,
 			changeRef: `change:${changeId}`,
 		});

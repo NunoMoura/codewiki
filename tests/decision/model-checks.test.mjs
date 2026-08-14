@@ -10,9 +10,9 @@ import {
 	createDecisionModelCheckExecutors,
 } from "../../src/decision/exit/model-checks.ts";
 import {
-	createDecisionExitRuntime,
-	deriveDecisionRuntimeRoute,
-} from "../../src/decision/exit/runtime.ts";
+	createDecisionLoopExit,
+	routeDecisionLoopExit,
+} from "../../src/runtime/loop-exit/decision.ts";
 import {collectDecisionResearchEvidence} from "../../src/runtime/effects/research-collection.ts";
 import {createCheckCatalog} from "../../src/verification/catalog.ts";
 import {createResolvedExitPolicy} from "../../src/verification/contracts.ts";
@@ -577,7 +577,7 @@ describe("native Decision Model Checks", () => {
 			producer: {kind: "user", id: "maintainer-security", version: "1.0.0"},
 		});
 		const requests = [];
-		const runtime = createDecisionExitRuntime({
+		const runtime = createDecisionLoopExit({
 			securityScanners: securityScannerConfiguration(),
 			modelChecks: {
 				route: route(),
@@ -654,7 +654,7 @@ describe("native Decision Model Checks", () => {
 		assert.deepEqual(result.securityFindingIntakeMaterials, []);
 
 		const blockedModelCheckIds = [];
-		const scannerBlocked = createDecisionExitRuntime({
+		const scannerBlocked = createDecisionLoopExit({
 			securityScanners: securityScannerConfiguration(scannerFinding()),
 			modelChecks: {
 				route: route(),
@@ -707,7 +707,7 @@ describe("native Decision Model Checks", () => {
 			incompleteScannerConfiguration.adapters.filter(
 				(adapter) => adapter.scannerType !== "authorization_test",
 			);
-		const incompleteScannerRuntime = createDecisionExitRuntime({
+		const incompleteScannerRuntime = createDecisionLoopExit({
 			securityScanners: incompleteScannerConfiguration,
 			modelChecks: {
 				route: route(),
@@ -741,7 +741,7 @@ describe("native Decision Model Checks", () => {
 			"indeterminate",
 		);
 
-		const challenged = createDecisionExitRuntime({
+		const challenged = createDecisionLoopExit({
 			securityScanners: securityScannerConfiguration(),
 			modelChecks: {
 				route: route(),
@@ -781,7 +781,7 @@ describe("native Decision Model Checks", () => {
 	it("wires model Evidence into complete native Decision execution", async () => {
 		const setup = fixture();
 		let calls = 0;
-		const runtime = createDecisionExitRuntime({
+		const runtime = createDecisionLoopExit({
 			modelChecks: {
 				route: route(),
 				transport: {
@@ -888,7 +888,7 @@ describe("native Decision Model Checks", () => {
 		let researchCalls = 0;
 		let scannerCalls = 0;
 		let researchConclusion = "supported";
-		const runtime = createDecisionExitRuntime({
+		const runtime = createDecisionLoopExit({
 			securityScanners: securityScannerConfiguration(null, () => {
 				scannerCalls += 1;
 			}),
@@ -1240,7 +1240,7 @@ describe("native Decision Model Checks", () => {
 				scenario === "unsupported" ? "fail" : "indeterminate",
 			);
 			assert.equal(
-				deriveDecisionRuntimeRoute(setup.candidate, result.report).route,
+				routeDecisionLoopExit(setup.candidate, result.report).route,
 				scenario === "unsupported" ? "repair" : "waiting",
 			);
 			assert.equal(
@@ -1284,7 +1284,7 @@ describe("native Decision Model Checks", () => {
 		);
 		assert.throws(
 			() =>
-				createDecisionExitRuntime({
+				createDecisionLoopExit({
 					modelChecks: {
 						route: route(),
 						transport: {execute: async () => ({status: "unavailable"})},

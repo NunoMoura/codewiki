@@ -186,6 +186,9 @@ describe("source architecture", () => {
 		assert.equal(existsSync("benchmarks/alignment-retrieval.ts"), true);
 		assert.equal(existsSync("benchmarks/retrieval-adapters.ts"), true);
 		assert.equal(existsSync("src/semantic-loop.ts"), false);
+		assert.equal(existsSync("src/decision/exit/index.ts"), false);
+		assert.equal(existsSync("src/decision/exit/runtime.ts"), false);
+		assert.equal(existsSync("src/decision/exit/runtime-security.ts"), false);
 		assert.equal(existsSync("src/error-handling/trace-errors.ts"), false);
 		assert.equal(existsSync("src/error-handling/config-errors.ts"), false);
 		assert.equal(existsSync("src/views/writer.ts"), false);
@@ -202,6 +205,9 @@ describe("source architecture", () => {
 			"src/changes/trace/store.ts",
 			"src/runtime/queries/projection-types.ts",
 			"src/runtime/queries/runtime-board.ts",
+			"src/runtime/loop-exit/decision-security.ts",
+			"src/runtime/loop-exit/decision.ts",
+			"src/runtime/loop-exit/router.ts",
 			"src/verification/quality/evaluator.ts",
 			"src/verification/quality/graph.ts",
 			"src/verification/quality/runner.ts",
@@ -211,6 +217,7 @@ describe("source architecture", () => {
 			"src/work-state/work-queue.ts",
 			"tests/alignment/graph-v1.test.mjs",
 			"tests/changes/trace/change-trace-protocol-v1.test.mjs",
+			"tests/runtime/loop-exit/decision.test.mjs",
 			"tests/runtime/queries/state-projections.test.mjs",
 			"tests/verification/quality/evaluator.test.mjs",
 		]) {
@@ -353,6 +360,24 @@ describe("source architecture", () => {
 		}
 		const tsconfig = readJson("tsconfig.json");
 		assert.deepEqual(tsconfig.include, ["src/**/*.ts", "benchmarks/**/*.ts"]);
+	});
+
+	it("keeps Loop Exit orchestration and routing under Runtime", () => {
+		for (const loopRoot of ["decision", "planning", "implementation"]) {
+			assert.equal(
+				existsSync(join(sourceRoot, loopRoot, "exit", "runtime.ts")),
+				false,
+				loopRoot,
+			);
+		}
+		assert.equal(
+			existsSync(join(sourceRoot, "runtime", "loop-exit", "router.ts")),
+			true,
+		);
+		assert.equal(
+			existsSync(join(sourceRoot, "runtime", "loop-exit", "decision.ts")),
+			true,
+		);
 	});
 
 	it("keeps Runtime subtrees within target responsibilities", () => {
