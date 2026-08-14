@@ -37,7 +37,10 @@ import { shouldOpenAutomaticDashboard } from "../../../src/clients/pi/tui/footer
 import {BACKLOG_TRIAGE_QUERY_PROTOCOL} from "../../../src/changes/triage/contracts.ts";
 import {DECISION_ATTENTION_SELECTION_PROTOCOL} from "../../../src/changes/triage/selection.ts";
 import { createTraceHead, formatTraceText } from "../../../src/traces/writer.ts";
-import { testPiProjectServices } from "../../helpers/pi-project-services.mjs";
+import {
+	testPiDashboardService,
+	testPiProjectServices,
+} from "../../helpers/pi-project-services.mjs";
 
 const testServerStateRoot = join(
 	tmpdir(),
@@ -47,9 +50,10 @@ process.env.CODEWIKI_SERVER_STATE_ROOT = testServerStateRoot;
 after(() => rm(testServerStateRoot, {recursive: true, force: true}));
 
 function registerTestExtension(pi) {
+	const projectServices = testPiProjectServices();
 	registerCodewikiExtension(pi, {
-		projectServices: testPiProjectServices(),
-		connectDashboardCoordinator: false,
+		dashboardService: testPiDashboardService(projectServices),
+		projectServices,
 	});
 }
 
@@ -285,8 +289,8 @@ describe("Pi extension adapter", () => {
 				},
 			};
 			registerCodewikiExtension(pi.api, {
+				dashboardService: testPiDashboardService(projectServices),
 				projectServices,
-				connectDashboardCoordinator: false,
 			});
 			const context = {
 				cwd: root,

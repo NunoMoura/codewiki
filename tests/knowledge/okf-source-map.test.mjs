@@ -42,11 +42,11 @@ const sourceMap = {
 		{
 			id: "cli",
 			doc: ".codewiki/kb/system/components/runtime.md",
-			sourcePatterns: ["src/cli/**"],
-			testPatterns: ["tests/runtime/cli.test.mjs"],
+			sourcePatterns: ["src/clients/cli/**"],
+			testPatterns: ["tests/clients/cli/**"],
 			generatedViews: [],
 			traceEvents: [],
-			role: "temporary_development_harness",
+			role: "deterministic_client",
 		},
 		{
 			id: "knowledge",
@@ -90,7 +90,7 @@ describe("OKF source ownership extension generation", () => {
 		assert.equal("codewiki_component" in runtime, false);
 		assert.deepEqual(runtime?.codewiki_components, ["cli", "runtime"]);
 		assert.deepEqual(runtime?.codewiki_roles, [
-			"temporary_development_harness",
+			"deterministic_client",
 			"project_runtime",
 		]);
 		assert.equal(runtime?.codewiki_source_map.length, 2);
@@ -147,7 +147,7 @@ describe("OKF source ownership extension generation", () => {
 			"knowledge",
 		);
 		assert.equal(
-			sourceMapOwnerForPath(reconstructed, "src/cli/index.ts")?.id,
+			sourceMapOwnerForPath(reconstructed, "src/clients/cli/index.ts")?.id,
 			"cli",
 		);
 	});
@@ -162,7 +162,7 @@ describe("OKF source ownership extension generation", () => {
 			"knowledge",
 		);
 		assert.equal(
-			okfSourceMapOwnerForPath(extensions, "src/cli/index.ts", {
+			okfSourceMapOwnerForPath(extensions, "src/clients/cli/index.ts", {
 				defaults: sourceMap.defaults,
 			})?.id,
 			"cli",

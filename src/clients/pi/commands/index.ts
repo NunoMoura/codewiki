@@ -10,10 +10,7 @@ import {
 import { resolveWikiConfigFile } from "../../../project/config-file.ts";
 import { buildProjectExplainView } from "../../../project/explain.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
-import {
-	buildProjectWikiState,
-	type ProjectRuntimeGatewayConnector,
-} from "../../../runtime/index.ts";
+import { buildProjectWikiState } from "../../../runtime/index.ts";
 import {
 	CODEWIKI_DIRECT_COMMANDS,
 	type CodewikiSubcommand,
@@ -23,12 +20,6 @@ import {
 	projectLocalInstallWarning,
 } from "../install-scope.ts";
 import { resolveCodewikiExtensionIdentity } from "../identity.ts";
-import {
-	buildCodewikiAppUrlMessage,
-	closeCodewikiAppServer,
-	startCodewikiAppServer,
-} from "../../../server/app/server.ts";
-import { piPreviewControl } from "../preview-runtime.ts";
 import type { PiProjectServiceClientProvider } from "../project-service-client.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../rendering/message-renderers.ts";
 import {
@@ -40,15 +31,15 @@ import {
 } from "../tui/index.ts";
 import type {
 	CodewikiCommandDefinition,
+	CodewikiDashboardService,
 	CodewikiExtensionApi,
 	CodewikiExtensionContext,
 } from "../types.ts";
 
 export function registerCodewikiCommands(
 	pi: CodewikiExtensionApi,
-	connectProjectCoordinator: boolean,
 	projectServices: PiProjectServiceClientProvider,
-	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
+	dashboardService: CodewikiDashboardService,
 ): void {
 	for (const command of CODEWIKI_DIRECT_COMMANDS) {
 		pi.registerCommand(
@@ -57,9 +48,8 @@ export function registerCodewikiCommands(
 				pi,
 				command.subcommand,
 				command.description,
-				connectProjectCoordinator,
 				projectServices,
-				projectRuntimeConnector,
+				dashboardService,
 			),
 		);
 	}
@@ -69,9 +59,8 @@ function directWikiCommand(
 	pi: CodewikiExtensionApi,
 	subcommand: CodewikiSubcommand,
 	description: string,
-	connectProjectCoordinator: boolean,
 	projectServices: PiProjectServiceClientProvider,
-	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
+	dashboardService: CodewikiDashboardService,
 ): CodewikiCommandDefinition {
 	return {
 		description,
@@ -81,9 +70,8 @@ function directWikiCommand(
 				tokens(args),
 				ctx,
 				pi,
-				connectProjectCoordinator,
 				projectServices,
-				projectRuntimeConnector,
+				dashboardService,
 			);
 		},
 	};
@@ -94,18 +82,15 @@ async function dispatchWikiCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
-	connectProjectCoordinator: boolean,
 	projectServices: PiProjectServiceClientProvider,
-	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
+	dashboardService: CodewikiDashboardService,
 ): Promise<unknown> {
 	if (subcommand === "dashboard") {
 		return await dashboardCommand(
 			args,
 			ctx,
 			pi,
-			connectProjectCoordinator,
-			projectServices,
-			projectRuntimeConnector,
+			dashboardService,
 		);
 	}
 	if (subcommand === "attention") {
@@ -140,18 +125,10 @@ async function dashboardCommand(
 	args: string[],
 	ctx: CodewikiExtensionContext,
 	pi: CodewikiExtensionApi,
-	connectProjectCoordinator: boolean,
-	projectServices: PiProjectServiceClientProvider,
-	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
+	dashboardService: CodewikiDashboardService,
 ): Promise<unknown> {
 	const options = parseDashboardOptions(args);
-	const result = await startDashboard(
-		ctx,
-		options,
-		connectProjectCoordinator,
-		projectServices,
-		projectRuntimeConnector,
-	);
+	const result = await startDashboard(ctx, options, dashboardService);
 	emitCommandOutput(
 		pi,
 		ctx,
@@ -166,17 +143,12 @@ async function dashboardCommand(
 async function startDashboard(
 	ctx: CodewikiExtensionContext,
 	options: DashboardCommandOptions,
-	connectProjectCoordinator: boolean,
-	projectServices: PiProjectServiceClientProvider,
-	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
+	dashboardService: CodewikiDashboardService,
 ): Promise<DashboardCommandResult> {
 	const root = await requireCodewikiRoot(ctx);
 	notifyInstallWarning(ctx, root);
 	if (options.stop) {
-		await closeCodewikiAppServer(root);
-		if (connectProjectCoordinator) {
-			await projectServices.stop(root).catch(() => undefined);
-		}
+		await dashboardService.stop(root);
 		return {
 			command: "dashboard",
 			json: options.json,
@@ -188,15 +160,10 @@ async function startDashboard(
 		};
 	}
 	const open = options.open ?? (!options.json && ctx.mode === "tui");
-	const dashboard = await startCodewikiAppServer({
+	const dashboard = await dashboardService.start({
 		repoRoot: root,
 		open,
 		keepAlive: ctx.mode === "tui",
-		inProcess: true,
-		persistent: false,
-		previewControl: piPreviewControl(root),
-		connectProjectRuntime: connectProjectCoordinator,
-		projectRuntimeConnector,
 	});
 	return {
 		command: "dashboard",
@@ -209,7 +176,7 @@ async function startDashboard(
 }
 
 function renderDashboardMessage(url: string): string[] {
-	return [buildCodewikiAppUrlMessage(url)];
+	return [`▸ Click to open CodeWiki dashboard: ${url}`];
 }
 
 interface DecisionAttentionCommandOptions {

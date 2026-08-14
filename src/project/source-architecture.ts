@@ -2,7 +2,6 @@ export const CURRENT_SOURCE_ROOTS = [
 	"benchmarks",
 	"change-trace",
 	"changes",
-	"cli",
 	"clients",
 	"decision",
 	"error-handling",
@@ -67,7 +66,6 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 export const LEGACY_SOURCE_ROOTS = [
 	"benchmarks",
 	"change-trace",
-	"cli",
 	"loops",
 	"traces",
 	"views",
@@ -87,7 +85,6 @@ export const CORE_SOURCE_ROOTS = [
 ] as const;
 
 export const OUTER_ADAPTER_SOURCE_ROOTS = [
-	"cli",
 	"clients",
 	"execution",
 	"preview",
@@ -98,7 +95,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	benchmarks: 2,
 	"change-trace": 19,
-	cli: 1,
 	loops: 10,
 	traces: 12,
 	views: 13,

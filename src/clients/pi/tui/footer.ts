@@ -1,18 +1,11 @@
-import type {
-	ProjectRuntimeGatewayConnector,
-	WikiStateSnapshot,
-} from "../../../runtime/index.ts";
-import {
-	closeInProcessCodewikiAppServer,
-	startCodewikiAppServer,
-} from "../../../server/app/server.ts";
+import type { WikiStateSnapshot } from "../../../runtime/index.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
 import {
 	resolveCodewikiExtensionIdentity,
 	type CodewikiExtensionIdentity,
 } from "../identity.ts";
-import { closePiPreviewRuntime, piPreviewControl } from "../preview-runtime.ts";
 import type {
+	CodewikiDashboardService,
 	CodewikiExtensionApi,
 	CodewikiExtensionContext,
 } from "../types.ts";
@@ -22,17 +15,13 @@ const LEGACY_WIDGET_KEYS = ["codewiki-cards"];
 
 export function registerCodewikiFooter(
 	pi: CodewikiExtensionApi,
-	connectProjectCoordinator = true,
-	projectRuntimeConnector?: ProjectRuntimeGatewayConnector,
+	dashboardService: CodewikiDashboardService,
 ): void {
 	if (typeof pi.on !== "function") return;
 	pi.on("session_shutdown", async (_event, ctx) => {
 		const projectRoot = await resolveEventProjectRoot(ctx);
 		if (projectRoot) {
-			await closeInProcessCodewikiAppServer(projectRoot).catch(
-				() => undefined,
-			);
-			await closePiPreviewRuntime(projectRoot).catch(() => undefined);
+			await dashboardService.shutdown(projectRoot).catch(() => undefined);
 		}
 	});
 	pi.on("session_start", async (event, ctx) => {
@@ -44,18 +33,15 @@ export function registerCodewikiFooter(
 		);
 		let dashboardLive = false;
 		if (projectRoot) {
-			dashboardLive = Boolean(
-				await startCodewikiAppServer({
-					repoRoot: projectRoot,
-					open: shouldOpenAutomaticDashboard(event, ctx),
-					keepAlive: ctx.mode === "tui",
-					inProcess: true,
-					persistent: false,
-					previewControl: piPreviewControl(projectRoot),
-					connectProjectRuntime: connectProjectCoordinator,
-					projectRuntimeConnector,
-				}).catch(() => undefined),
-			);
+				dashboardLive = Boolean(
+					await dashboardService
+						.start({
+							repoRoot: projectRoot,
+							open: shouldOpenAutomaticDashboard(event, ctx),
+							keepAlive: ctx.mode === "tui",
+						})
+						.catch(() => undefined),
+				);
 		}
 		clearLegacyCodewikiWidgets(ctx);
 		setCodewikiFooterStatus(

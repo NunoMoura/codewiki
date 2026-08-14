@@ -198,10 +198,6 @@ export async function closeInProcessCodewikiAppServer(
 	await appServers.get(repoRoot)?.close();
 }
 
-export function buildCodewikiAppUrlMessage(url: string): string {
-	return `▸ Click to open CodeWiki dashboard: ${url}`;
-}
-
 async function startPersistentAppServer(
 	options: CodewikiAppServerOptions,
 ): Promise<CodewikiAppServerHandle> {

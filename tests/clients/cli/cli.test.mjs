@@ -4,12 +4,12 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { describe, it } from "node:test";
-import { runCodewikiCli } from "../../src/cli/index.ts";
-import { planningQualityStandards } from "../helpers/canonical-loop-events.mjs";
-import { seedRuntimeImplementation } from "../helpers/runtime-implementation.mjs";
-import { createTraceHead, formatTraceText } from "../../src/traces/writer.ts";
+import { runCodewikiCli } from "../../../src/clients/cli/index.ts";
+import { planningQualityStandards } from "../../helpers/canonical-loop-events.mjs";
+import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
+import { createTraceHead, formatTraceText } from "../../../src/traces/writer.ts";
 
-const cliPath = resolve("src/cli/index.ts");
+const cliPath = resolve("src/clients/cli/index.ts");
 
 async function writeJsonInput(root, name, value) {
 	const path = join(root, name);

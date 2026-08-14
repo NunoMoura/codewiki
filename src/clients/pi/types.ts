@@ -121,6 +121,20 @@ export type CodewikiMessageRenderer = (
 	theme: unknown,
 ) => CodewikiRenderComponent | undefined;
 
+export interface CodewikiDashboardStartInput {
+	repoRoot: string;
+	open: boolean;
+	keepAlive: boolean;
+}
+
+export interface CodewikiDashboardService {
+	start(
+		input: CodewikiDashboardStartInput,
+	): Promise<{ url: string; opened: boolean }>;
+	stop(repoRoot: string): Promise<void>;
+	shutdown(repoRoot: string): Promise<void>;
+}
+
 export interface CodewikiExtensionApi {
 	registerTool(definition: CodewikiToolDefinition): void;
 	registerCommand(name: string, definition: CodewikiCommandDefinition): void;

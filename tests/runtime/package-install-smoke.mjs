@@ -183,6 +183,8 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "handoff.js")), fal
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-start.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "pi", "worker-reports.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "clients", "app", "shell.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "clients", "cli", "index.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "cli")), false);
 assert.equal(
 	existsSync(
 		join(

@@ -50,6 +50,12 @@ function importEdges(files) {
 	return edges;
 }
 
+function valueImportSpecifiers(source) {
+	return [...source.matchAll(/import\s+(?!type\b)[\s\S]*?\sfrom\s+(["'])([^"']+)\1;/g)].map(
+		(match) => match[2],
+	);
+}
+
 function resolveImport(file, specifier, fileSet) {
 	const base = resolve(file, "..");
 	const unresolved = resolve(base, specifier);
@@ -122,7 +128,6 @@ describe("source architecture", () => {
 		assert.deepEqual(LEGACY_SOURCE_ROOTS, [
 			"benchmarks",
 			"change-trace",
-			"cli",
 			"loops",
 			"traces",
 			"views",
@@ -169,6 +174,10 @@ describe("source architecture", () => {
 				root,
 			);
 		}
+		assert.equal(existsSync(join(sourceRoot, "cli")), false);
+		assert.equal(existsSync(join(sourceRoot, "clients", "cli", "index.ts")), true);
+		assert.equal(existsSync("tests/runtime/cli.test.mjs"), false);
+		assert.equal(existsSync("tests/clients/cli/cli.test.mjs"), true);
 		assert.equal(existsSync(join(sourceRoot, "harnesses")), false);
 		assert.equal(existsSync(join(sourceRoot, "dashboard")), false);
 		assert.equal(existsSync(join(sourceRoot, "api")), false);
@@ -457,6 +466,18 @@ describe("source architecture", () => {
 				/\b(?:ensureProjectCoordinatorService|connectEnsuredProjectCoordinatorClient|startProjectCoordinatorService|stopProjectCoordinatorService|spawnProjectCoordinatorDaemon)\b/u,
 				path,
 			);
+		}
+		for (const path of sourceFiles(join(sourceRoot, "clients"))) {
+			for (const specifier of valueImportSpecifiers(
+				readFileSync(path, "utf8"),
+			)) {
+				assert.equal(specifier.includes("/server/"), false, `${path}: ${specifier}`);
+				assert.doesNotMatch(
+					specifier,
+					/runtime\/(?:gateway|coordinator\/(?:daemon|process|service))/u,
+					`${path}: ${specifier}`,
+				);
+			}
 		}
 		const packageBootstrap = readFileSync(
 			join(sourceRoot, "pi-extension.ts"),

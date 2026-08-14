@@ -84,7 +84,7 @@ describe("fresh scaffold", () => {
 		assert.doesNotMatch(readme, /codewiki bootstrap/);
 		assert.doesNotMatch(
 			readme,
-			/node --experimental-strip-types src\/cli\/index\.ts/,
+			/node --experimental-strip-types src\/(?:clients\/cli|cli)\/index\.ts/,
 		);
 	});
 

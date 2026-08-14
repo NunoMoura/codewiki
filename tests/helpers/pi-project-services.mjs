@@ -1,4 +1,37 @@
 import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
+import {
+	closeCodewikiAppServer,
+	closeInProcessCodewikiAppServer,
+	startCodewikiAppServer,
+} from "../../src/server/app/server.ts";
+import {
+	closePiPreviewRuntime,
+	piPreviewControl,
+} from "../../src/clients/pi/preview-runtime.ts";
+
+export function testPiDashboardService(projectServices) {
+	return {
+		start(input) {
+			return startCodewikiAppServer({
+				...input,
+				inProcess: true,
+				persistent: false,
+				previewControl: piPreviewControl(input.repoRoot),
+				connectProjectRuntime: false,
+			});
+		},
+		async stop(repoRoot) {
+			await closeCodewikiAppServer(repoRoot);
+			await projectServices.stop(repoRoot).catch(() => undefined);
+		},
+		async shutdown(repoRoot) {
+			await Promise.all([
+				closeInProcessCodewikiAppServer(repoRoot),
+				closePiPreviewRuntime(repoRoot),
+			]);
+		},
+	};
+}
 
 export function testPiProjectServices() {
 	const reactors = new Map();

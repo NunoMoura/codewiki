@@ -16,18 +16,18 @@ import {
 	type RunWikiImplementInput,
 	type RunWikiPlanInput,
 	type RunWikiRuntimeInput,
-} from "../runtime/index.ts";
-import { bootstrapCodewiki } from "../project/bootstrap.ts";
+} from "../../runtime/index.ts";
+import { bootstrapCodewiki } from "../../project/bootstrap.ts";
 import {
 	findCodewikiProjectRoot,
 	resolveCodewikiProjectRoot,
-} from "../project/root.ts";
+} from "../../project/root.ts";
 import {
 	loadWikiConfigFile,
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
-} from "../project/config-file.ts";
-import { parseJsonObject } from "../utils/json.ts";
+} from "../../project/config-file.ts";
+import { parseJsonObject } from "../../utils/json.ts";
 
 export interface CliResult {
 	status: number;
