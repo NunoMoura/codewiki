@@ -74,7 +74,7 @@ export const LEGACY_SOURCE_FILES = [
 ] as const;
 
 export const CORE_SOURCE_ROOTS = [
-	"change-trace",
+	"alignment",
 	"changes",
 	"evidence",
 	"verification",

@@ -136,6 +136,12 @@ describe("source architecture", () => {
 			"src/error-handling/config-errors.ts",
 			"src/semantic-loop.ts",
 		]);
+		assert.deepEqual(CORE_SOURCE_ROOTS, [
+			"alignment",
+			"changes",
+			"evidence",
+			"verification",
+		]);
 		for (const path of LEGACY_SOURCE_FILES) {
 			assert.equal(existsSync(path), true, path);
 		}
