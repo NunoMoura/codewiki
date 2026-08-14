@@ -62,9 +62,7 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 
 export const LEGACY_SOURCE_ROOTS = ["benchmarks"] as const;
 
-export const LEGACY_SOURCE_FILES = [
-	"src/error-handling/config-errors.ts",
-] as const;
+export const LEGACY_SOURCE_FILES = [] as const;
 
 export const CORE_SOURCE_ROOTS = [
 	"alignment",

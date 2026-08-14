@@ -1,4 +1,4 @@
-import { CodewikiError } from "./codewiki-error.ts";
+import { CodewikiError } from "../error-handling/codewiki-error.ts";
 
 export type CodewikiConfigErrorCode =
 	| "missing_required"

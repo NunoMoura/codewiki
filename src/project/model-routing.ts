@@ -1,4 +1,4 @@
-import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
+import { createCodewikiConfigError } from "./config-errors.ts";
 
 export type WikiModelQuality = "standard" | "high" | "critical";
 export type WikiModelLatency = "fast" | "balanced" | "slow";

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { createCodewikiConfigError } from "../error-handling/config-errors.ts";
+import { createCodewikiConfigError } from "../project/config-errors.ts";
 
 export type PreviewEvidenceViewport = "desktop" | "mobile";
 

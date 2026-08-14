@@ -17,7 +17,7 @@ import {
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 } from "../../src/project/config-file.ts";
-import { CodewikiConfigError } from "../../src/error-handling/config-errors.ts";
+import { CodewikiConfigError } from "../../src/project/config-errors.ts";
 import {
 	createTestUserStandard,
 	standardRefsFor,

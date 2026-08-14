@@ -132,9 +132,7 @@ describe("source architecture", () => {
 			),
 			LEGACY_SOURCE_ROOTS,
 		);
-		assert.deepEqual(LEGACY_SOURCE_FILES, [
-			"src/error-handling/config-errors.ts",
-		]);
+		assert.deepEqual(LEGACY_SOURCE_FILES, []);
 		assert.deepEqual(CORE_SOURCE_ROOTS, [
 			"alignment",
 			"changes",
@@ -186,6 +184,7 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "loops")), false);
 		assert.equal(existsSync("src/semantic-loop.ts"), false);
 		assert.equal(existsSync("src/error-handling/trace-errors.ts"), false);
+		assert.equal(existsSync("src/error-handling/config-errors.ts"), false);
 		assert.equal(existsSync("src/views/writer.ts"), false);
 		assert.equal(existsSync("tests/traces"), false);
 		assert.equal(existsSync("tests/views"), false);
@@ -204,6 +203,7 @@ describe("source architecture", () => {
 			"src/verification/quality/graph.ts",
 			"src/verification/quality/runner.ts",
 			"src/implementation/quality-feedback.ts",
+			"src/project/config-errors.ts",
 			"src/work-state/projection-types.ts",
 			"src/work-state/work-queue.ts",
 			"tests/alignment/graph-v1.test.mjs",

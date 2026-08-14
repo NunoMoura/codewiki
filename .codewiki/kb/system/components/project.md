@@ -14,7 +14,7 @@ codewiki_relationships:
 ---
 # Project Configuration
 
-Project Configuration identifies the repository root, protected CodeWiki settings, Check defaults, model routes, source architecture, responsibility rules, and bootstrap boundaries. Configuration digests bind every policy-sensitive attempt and cannot be weakened by Clients, Workers, installed packages, or untrusted repository content.
+Project Configuration identifies the repository root, protected CodeWiki settings, Check defaults, model routes, source architecture, responsibility rules, and bootstrap boundaries. Project-owned structured configuration errors preserve exact invalid paths, bounded values, recovery guidance, and causes. Configuration digests bind every policy-sensitive attempt and cannot be weakened by Clients, Workers, installed packages, or untrusted repository content.
 
 Responsibility rules may define domain stewardship, review classes, scoped Authority Grants, independence requirements, and contribution-routing inputs. Profiles and ownership hints improve matching but grant no authority. Repository-provider access supplies coarse membership only; Runtime still authorizes each exact operation against current project policy and state.
 

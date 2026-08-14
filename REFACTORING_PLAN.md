@@ -161,7 +161,7 @@ src/views/**                         -> Alignment, WorkState, or Runtime queries
 src/semantic-loop.ts                 -> Verification contracts
 src/loops/feedback.ts                -> Implementation
 other src/loops/**                    -> Verification quality machinery
-src/error-handling/config-errors.ts   -> Project owner
+src/error-handling/config-errors.ts   -> src/project/config-errors.ts
 src/error-handling/trace-errors.ts    -> Change Trace owner
 src/benchmarks/**                     -> benchmarks/**
 ```
@@ -268,6 +268,8 @@ The View ownership clean cut is recorded by `.tmp-worktrees/view-ownership-clean
 
 The Loop quality ownership clean cut is recorded by `.tmp-worktrees/loop-quality-ownership-clean-cut-manifest.json`, exhaustively anchored to `0d68c1d` with 634 keeps, 15 moves, and 1 deletion. Shared graph, declarative pack, activation profile, bounded runner, judge, prompt, provider-resolution, standard, and evaluator mechanics move to `src/verification/quality/**`; the Implementation-only feedback reducer moves to `src/implementation/quality-feedback.ts`; and five focused proofs move to `tests/verification/quality/**`. The closed semantic Loop discriminator merges into Verification contracts instead of surviving as a one-line generic package. `src/loops/**`, `tests/loops/**`, `src/semantic-loop.ts`, and packed `dist/loops/**` are deleted without aliases, compatibility barrels, old-path exports, duplicate contracts, or replacement generic Loop ownership. Decision, Planning, and Implementation retain Candidate-specific Check composition, interpretation, and route ownership. Graph identities, quality result shapes, judge behavior, deterministic evaluation, trace bytes, and root package contracts remain unchanged. Source/test file counts fall to 355/194; strict ownership accounting advances to 352 target-owned files and 3 explicit legacy files with zero overlap. Its green checkpoint is 941 full-suite tests, 119 coordinator tests, 713 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
 
+The Project configuration-error ownership clean cut is recorded by `.tmp-worktrees/project-config-error-ownership-clean-cut-manifest.json`, exhaustively anchored to `101ef73` with 649 keeps and 1 move. The structured configuration error contract moves unchanged from `src/error-handling/config-errors.ts` to `src/project/config-errors.ts`; Project and Preview callers and direct tests use the owner path. Error codes, class identity, messages, structured path/value data, causes, recoverability, and suggested action remain stable. The shared Package error foundation retains generic envelopes and operation contracts only. No alias, compatibility barrel, old-path export, duplicate class, or packed `dist/error-handling/config-errors.*` artifact survives. Source/test counts remain flat at 355/194; strict ownership accounting advances to 353 target-owned files and 2 explicit legacy files with zero overlap. Its green checkpoint is 941 full-suite tests, 119 coordinator tests, 713 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -310,6 +312,7 @@ Rules:
 - [x] Create and execute the reviewed `03ea724`-anchored controlled Implementation worker keep/move/delete manifest before removing direct session and manual Host handoff bypasses.
 - [x] Create and execute the reviewed `0d68c1d`-anchored Loop quality ownership manifest before deleting generic Loop source and test roots.
 - [x] Move shared quality evaluator mechanics to Verification, move quality feedback to Implementation, and merge the semantic Loop discriminator into Verification contracts without compatibility paths.
+- [x] Create and execute the reviewed `101ef73`-anchored Project configuration-error ownership manifest and delete the old Package error path without compatibility exports.
 - [ ] Delete legacy Quality, obsolete Loop compatibility, and old ChangeRecord contracts as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
