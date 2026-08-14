@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import type {
 	LoopQualityStandardMethod,
 	LoopQualityStandardResult,
-} from "../changes/trace/types.ts";
+} from "../../changes/trace/types.ts";
 import type {
 	LoopQualityGraphNode,
 	LoopQualityJudgeNodeSpec,

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { runLoopQualityGraphEvaluation } from "../../src/loops/evaluator.ts";
-import { LOOP_QUALITY_GRAPH_SCHEMA_VERSION } from "../../src/loops/graph.ts";
+import { runLoopQualityGraphEvaluation } from "../../../src/verification/quality/evaluator.ts";
+import { LOOP_QUALITY_GRAPH_SCHEMA_VERSION } from "../../../src/verification/quality/graph.ts";
 
 test("keeps observe and warn rollouts non-authoritative while enforce remains blocking", async () => {
 	async function evaluateRollout(rollout) {

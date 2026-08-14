@@ -1,5 +1,5 @@
 import type {WikiModelThinking} from "../../project/model-routing.ts";
-import type {SemanticLoop} from "../../semantic-loop.ts";
+import type {SemanticLoop} from "../contracts.ts";
 import {
 	TRIAGE_PREFERENCE_DIMENSIONS,
 	type TriagePreferenceDimension,

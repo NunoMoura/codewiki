@@ -3,7 +3,7 @@ import type {
 	CanonicalJsonValue,
 	Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import type { SemanticLoop } from "../../semantic-loop.ts";
+import type { SemanticLoop } from "../../verification/contracts.ts";
 import {
 	changeDefectProfileSchema,
 	type ChangeDefectProfile,

@@ -2,7 +2,7 @@ import type {
 	LoopQualityRunnerSummary,
 	LoopQualityStandardMethod,
 	LoopQualityStandardResult,
-} from "../changes/trace/types.ts";
+} from "../../changes/trace/types.ts";
 import {
 	runLoopGraph,
 	type LoopGraphDiagnostic,
@@ -18,7 +18,7 @@ import {
 	type LoopQualityJudgeResolution,
 	type LoopQualityJudgeVerdict,
 } from "./judge.ts";
-import { uniqueStrings } from "./quality-standards.ts";
+import { uniqueStrings } from "./standards.ts";
 import {
 	clampQualityScore,
 	loopQualityGraphRef,
@@ -35,7 +35,7 @@ import {
 	loopQualityProfileActivationForNode,
 	loopQualityProfileNodeIsInactive,
 	type LoopQualityProfile,
-} from "./quality-profile.ts";
+} from "./profile.ts";
 
 export interface EvaluateLoopQualityGraphOptions<TIssue, TCode extends string> {
 	graph: LoopQualityGraph<TCode>;

@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { runLoopQualityGraphEvaluation } from "../../src/loops/evaluator.ts";
-import { LOOP_QUALITY_GRAPH_SCHEMA_VERSION } from "../../src/loops/graph.ts";
-import { MemoryLoopQualityJudgeCache } from "../../src/loops/judge.ts";
+import { runLoopQualityGraphEvaluation } from "../../../src/verification/quality/evaluator.ts";
+import { LOOP_QUALITY_GRAPH_SCHEMA_VERSION } from "../../../src/verification/quality/graph.ts";
+import { MemoryLoopQualityJudgeCache } from "../../../src/verification/quality/judge.ts";
 
 function toyGraph(nodes) {
 	return {

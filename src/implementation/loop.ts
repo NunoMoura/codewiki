@@ -8,7 +8,7 @@ import {
 import {
 	loopQualityRunnerSummary,
 	type RunLoopQualityGraphResult,
-} from "../loops/evaluator.ts";
+} from "../verification/quality/evaluator.ts";
 import {
 	loopGraphLayers,
 	loopQualityGraphRef,
@@ -16,20 +16,20 @@ import {
 	loopQualityMethodForMode,
 	type LoopQualityGraph,
 	type LoopQualityGraphNode,
-} from "../loops/graph.ts";
+} from "../verification/quality/graph.ts";
 import {
 	parseLoopQualityPack,
 	type LoopQualityPack,
 	type LoopQualityPackEvaluatorId,
 	type LoopQualityPackEvidenceAdapterId,
 	type LoopQualityPackStandard,
-} from "../loops/quality-pack.ts";
-import { composeLoopQualityPacks } from "../loops/runner.ts";
-import { qualityDiagnosticsFromStandards } from "../loops/feedback.ts";
+} from "../verification/quality/pack.ts";
+import { composeLoopQualityPacks } from "../verification/quality/runner.ts";
+import { qualityDiagnosticsFromStandards } from "./quality-feedback.ts";
 import {
 	criteriaFromQualityStandards,
 	loopQualityStandardSatisfied,
-} from "../loops/quality-standards.ts";
+} from "../verification/quality/standards.ts";
 import { invalidTraceRefs } from "../changes/trace/refs.ts";
 import {
 	evaluateCommonReviewEvidence,

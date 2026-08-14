@@ -2,7 +2,7 @@ import {
 	EVIDENCE_SCHEMA_VERSION,
 	type EvidenceMaterial,
 } from "../../evidence/contracts.ts";
-import type {SemanticLoop} from "../../semantic-loop.ts";
+import type {SemanticLoop} from "../contracts.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

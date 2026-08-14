@@ -3,13 +3,13 @@ import {
 	runLoopQualityGraphEvaluation,
 	type LoopQualityJudgeExecutionOptions,
 	type RunLoopQualityGraphResult,
-} from "../loops/evaluator.ts";
-import type { LoopQualityGraph } from "../loops/graph.ts";
+} from "../verification/quality/evaluator.ts";
+import type { LoopQualityGraph } from "../verification/quality/graph.ts";
 import {
 	buildLoopQualityStandard,
 	criteriaFromQualityStandards,
 	type LoopQualityStandardDefinition,
-} from "../loops/quality-standards.ts";
+} from "../verification/quality/standards.ts";
 import type { LoopQualityStandardResult } from "../changes/trace/types.ts";
 import type { ImplementationExitIssue } from "./types.ts";
 

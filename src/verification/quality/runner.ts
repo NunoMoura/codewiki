@@ -2,7 +2,7 @@ import type {
 	LoopQualityStandardGate,
 	LoopQualityStandardMethod,
 	LoopQualityStandardResult,
-} from "../changes/trace/types.ts";
+} from "../../changes/trace/types.ts";
 import {
 	assertValidLoopQualityGraph,
 	type LoopQualityGraph,
@@ -13,7 +13,7 @@ import {
 	LOOP_QUALITY_PACK_EVALUATOR_IDS,
 	LOOP_QUALITY_PACK_EVIDENCE_ADAPTER_IDS,
 	type LoopQualityPack,
-} from "./quality-pack.ts";
+} from "./pack.ts";
 
 export type LoopGraphNodeStatus = "pass" | "fail" | "block" | "skip";
 export type LoopGraphDiagnosticSeverity = "blocking" | "warning" | "info";

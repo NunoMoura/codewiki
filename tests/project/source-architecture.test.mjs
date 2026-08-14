@@ -125,7 +125,7 @@ describe("source architecture", () => {
 			.filter((name) => statSync(`src/${name}`).isDirectory())
 			.sort();
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
-		assert.deepEqual(LEGACY_SOURCE_ROOTS, ["benchmarks", "loops"]);
+		assert.deepEqual(LEGACY_SOURCE_ROOTS, ["benchmarks"]);
 		assert.deepEqual(
 			CURRENT_SOURCE_ROOTS.filter(
 				(root) => !TARGET_SOURCE_ROOTS.includes(root),
@@ -134,7 +134,6 @@ describe("source architecture", () => {
 		);
 		assert.deepEqual(LEGACY_SOURCE_FILES, [
 			"src/error-handling/config-errors.ts",
-			"src/semantic-loop.ts",
 		]);
 		assert.deepEqual(CORE_SOURCE_ROOTS, [
 			"alignment",
@@ -184,10 +183,13 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "change-trace")), false);
 		assert.equal(existsSync(join(sourceRoot, "traces")), false);
 		assert.equal(existsSync(join(sourceRoot, "views")), false);
+		assert.equal(existsSync(join(sourceRoot, "loops")), false);
+		assert.equal(existsSync("src/semantic-loop.ts"), false);
 		assert.equal(existsSync("src/error-handling/trace-errors.ts"), false);
 		assert.equal(existsSync("src/views/writer.ts"), false);
 		assert.equal(existsSync("tests/traces"), false);
 		assert.equal(existsSync("tests/views"), false);
+		assert.equal(existsSync("tests/loops"), false);
 		for (const path of [
 			"src/alignment/graph.ts",
 			"src/alignment/knowledge.ts",
@@ -198,11 +200,16 @@ describe("source architecture", () => {
 			"src/changes/trace/store.ts",
 			"src/runtime/queries/projection-types.ts",
 			"src/runtime/queries/runtime-board.ts",
+			"src/verification/quality/evaluator.ts",
+			"src/verification/quality/graph.ts",
+			"src/verification/quality/runner.ts",
+			"src/implementation/quality-feedback.ts",
 			"src/work-state/projection-types.ts",
 			"src/work-state/work-queue.ts",
 			"tests/alignment/graph-v1.test.mjs",
 			"tests/changes/trace/change-trace-protocol-v1.test.mjs",
 			"tests/runtime/queries/state-projections.test.mjs",
+			"tests/verification/quality/evaluator.test.mjs",
 		]) {
 			assert.equal(existsSync(path), true, path);
 		}

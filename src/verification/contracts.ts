@@ -2,7 +2,6 @@ import {Type} from "typebox";
 import type { EvidenceId } from "../evidence/contracts.ts";
 import type { EvidenceObligationResolution } from "../evidence/obligation-resolution.ts";
 import type { EvidenceObligation } from "../evidence/obligations.ts";
-import type { SemanticLoop } from "../semantic-loop.ts";
 import {assertExactKeys, assertTypeboxSchema} from "../utils/json.ts";
 import {
 	assertSha256Digest,
@@ -19,6 +18,8 @@ import {
 } from "./repair-profiles.ts";
 
 export { resolvedExitPolicyDigest };
+
+export type SemanticLoop = "decision" | "planning" | "implementation";
 
 export const LOOP_EXIT_SCHEMA_VERSION = 3;
 

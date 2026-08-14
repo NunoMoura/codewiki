@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { parseLoopQualityPack } from "../../src/loops/quality-pack.ts";
+import { parseLoopQualityPack } from "../../../src/verification/quality/pack.ts";
 import {
 	composeLoopQualityPacks,
 	runLoopGraph,
-} from "../../src/loops/runner.ts";
+} from "../../../src/verification/quality/runner.ts";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

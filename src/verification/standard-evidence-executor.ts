@@ -19,7 +19,7 @@ import {
 	type StandardEvidenceCheckIngestionResult,
 	type StandardEvidenceCheckSelector,
 } from "./standard-evidence-checks.ts";
-import type {SemanticLoop} from "../semantic-loop.ts";
+import type {SemanticLoop} from "./contracts.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,

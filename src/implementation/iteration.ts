@@ -9,7 +9,7 @@ import {
 	loopProgressFromEvaluation,
 } from "../changes/trace/events.ts";
 import type { ContentProof } from "../git/content-proof.ts";
-import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
+import type { LoopQualityJudgeExecutionOptions } from "../verification/quality/evaluator.ts";
 import { normalizeTraceRefs } from "../changes/trace/refs.ts";
 import type {
 	TailCheckpoint,

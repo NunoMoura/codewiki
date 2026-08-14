@@ -5,17 +5,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { runWikiDecide } from "../../src/decision/command.ts";
-import { changeTraceId } from "../../src/changes/trace/change-record.ts";
-import { changeContentDigest } from "../../src/changes/digest.ts";
-import { traceFilePath } from "../../src/changes/trace/schema.ts";
-import { buildProjectWorkState } from "../../src/work-state/project.ts";
+import { runWikiDecide } from "../../../src/decision/command.ts";
+import { changeTraceId } from "../../../src/changes/trace/change-record.ts";
+import { changeContentDigest } from "../../../src/changes/digest.ts";
+import { traceFilePath } from "../../../src/changes/trace/schema.ts";
+import { buildProjectWorkState } from "../../../src/work-state/project.ts";
 import {
 	LOOP_QUALITY_JUDGE_PROMPT_VERSION,
 	buildLoopQualityJudgePrompt,
-} from "../../src/loops/judge-prompts.ts";
-import { resolveLoopQualityJudgeProviderConfig } from "../../src/loops/judge-provider.ts";
-import { seedChangeAcceptance } from "../helpers/accepted-change.mjs";
+} from "../../../src/verification/quality/judge-prompts.ts";
+import { resolveLoopQualityJudgeProviderConfig } from "../../../src/verification/quality/judge-provider.ts";
+import { seedChangeAcceptance } from "../../helpers/accepted-change.mjs";
 
 const ENV_KEYS = [
 	"CODEWIKI_LOOP_QUALITY_JUDGE_URL",

@@ -4,7 +4,7 @@ import {
 	type EvidenceObligationResolution,
 } from "../evidence/obligation-resolution.ts";
 import type { EvidenceObligation } from "../evidence/obligations.ts";
-import type { SemanticLoop } from "../semantic-loop.ts";
+import type { SemanticLoop } from "./contracts.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

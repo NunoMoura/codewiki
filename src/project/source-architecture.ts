@@ -11,7 +11,6 @@ export const CURRENT_SOURCE_ROOTS = [
 	"implementation",
 	"knowledge",
 	"verification",
-	"loops",
 	"planning",
 	"preview",
 	"project",
@@ -61,11 +60,10 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"workers",
 ] as const;
 
-export const LEGACY_SOURCE_ROOTS = ["benchmarks", "loops"] as const;
+export const LEGACY_SOURCE_ROOTS = ["benchmarks"] as const;
 
 export const LEGACY_SOURCE_FILES = [
 	"src/error-handling/config-errors.ts",
-	"src/semantic-loop.ts",
 ] as const;
 
 export const CORE_SOURCE_ROOTS = [
@@ -85,7 +83,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	benchmarks: 2,
-	loops: 10,
 } as const;
 
 export const FORBIDDEN_RUNTIME_SUBDIRECTORIES = [

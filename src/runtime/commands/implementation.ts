@@ -5,8 +5,8 @@ import {
 	requiredStringField,
 } from "../../error-handling/operation-errors.ts";
 import type { ImplementationEvidencePolicy } from "../../implementation/evidence-policy.ts";
-import { resolveLoopQualityJudgeExecutionOptions } from "../../loops/judge-provider.ts";
-import { uniqueStrings } from "../../loops/quality-standards.ts";
+import { resolveLoopQualityJudgeExecutionOptions } from "../../verification/quality/judge-provider.ts";
+import { uniqueStrings } from "../../verification/quality/standards.ts";
 import type { ContentProof } from "../../git/content-proof.ts";
 import type { SourceMapContract } from "../../knowledge/source-map.ts";
 import {

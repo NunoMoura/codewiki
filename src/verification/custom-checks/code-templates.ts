@@ -1,5 +1,5 @@
 import type {EvidenceObligation} from "../../evidence/obligations.ts";
-import type {SemanticLoop} from "../../semantic-loop.ts";
+import type {SemanticLoop} from "../contracts.ts";
 import {
 	canonicalJsonDigest,
 	type Sha256Digest,

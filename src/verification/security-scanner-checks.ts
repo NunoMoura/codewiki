@@ -4,7 +4,7 @@ import type {
 } from "../evidence/contracts.ts";
 import type {EvidenceObligationResolution} from "../evidence/obligation-resolution.ts";
 import {reduceEvidenceObligation} from "../evidence/obligations.ts";
-import type {SemanticLoop} from "../semantic-loop.ts";
+import type {SemanticLoop} from "./contracts.ts";
 import type {CheckCatalog} from "./catalog.ts";
 import type {CheckDefinition, CheckResult} from "./contracts.ts";
 import type {

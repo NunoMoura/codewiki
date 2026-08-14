@@ -9,7 +9,7 @@ import {
 	type AlignmentQueryResult,
 } from "../alignment/query.ts";
 import type {SynchronizationStatus} from "../changes/trace/synchronization.ts";
-import type {SemanticLoop} from "../semantic-loop.ts";
+import type {SemanticLoop} from "./contracts.ts";
 import {
 	assertSha256Digest,
 	canonicalJson,

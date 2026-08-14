@@ -129,6 +129,8 @@ assert.equal(existsSync(join(packageRoot, "dist", "api", "loop-execution.js")), 
 assert.equal(existsSync(join(packageRoot, "dist", "change-trace")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "traces")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "views")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "loops")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "semantic-loop.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "error-handling", "trace-errors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "queries", "projection-types.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "queries", "runtime-board.js")), true);
@@ -136,6 +138,10 @@ assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projection-type
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "work-queue.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "alignment", "graph.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "alignment", "query.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "verification", "quality", "evaluator.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "verification", "quality", "graph.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "verification", "quality", "runner.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "implementation", "quality-feedback.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace", "index.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace", "storage-errors.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), false);

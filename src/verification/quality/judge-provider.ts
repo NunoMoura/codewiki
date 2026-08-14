@@ -1,5 +1,5 @@
-import { loadWikiConfigFile } from "../project/config-file.ts";
-import type { WikiConfig } from "../project/config.ts";
+import { loadWikiConfigFile } from "../../project/config-file.ts";
+import type { WikiConfig } from "../../project/config.ts";
 import {
 	LOOP_QUALITY_JUDGE_PROMPT_VERSION,
 	buildLoopQualityJudgeBatchPrompt,

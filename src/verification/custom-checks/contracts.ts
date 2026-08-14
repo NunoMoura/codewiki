@@ -2,7 +2,7 @@ import {
 	CHANGE_KIND_VALUES,
 	type ChangeKind,
 } from "../../changes/types.ts";
-import type { SemanticLoop } from "../../semantic-loop.ts";
+import type { SemanticLoop } from "../contracts.ts";
 import {
 	canonicalJson,
 	canonicalJsonDigest,

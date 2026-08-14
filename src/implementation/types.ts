@@ -1,5 +1,5 @@
 import type { ContentProof } from "../git/content-proof.ts";
-import type { LoopQualityJudgeExecutionOptions } from "../loops/evaluator.ts";
+import type { LoopQualityJudgeExecutionOptions } from "../verification/quality/evaluator.ts";
 import type { ExitDetails } from "../changes/trace/types.ts";
 import type {LoopExitDeclaration} from "../verification/contracts.ts";
 import type { ImplementationEvidenceReportInput } from "./review/evidence-report.ts";

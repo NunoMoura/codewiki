@@ -1,5 +1,5 @@
 import type { TSchema } from "typebox";
-import type { SemanticLoop } from "../semantic-loop.ts";
+import type { SemanticLoop } from "./contracts.ts";
 import { assertTypeboxSchema } from "../utils/json.ts";
 
 export function candidateContentRecord(

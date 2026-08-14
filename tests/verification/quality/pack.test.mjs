@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { assertValidLoopQualityGraph } from "../../src/loops/graph.ts";
+import { assertValidLoopQualityGraph } from "../../../src/verification/quality/graph.ts";
 import {
 	LOOP_QUALITY_PACK_SCHEMA_VERSION,
 	parseLoopQualityPack,
-} from "../../src/loops/quality-pack.ts";
+} from "../../../src/verification/quality/pack.ts";
 
 function validPack() {
 	return {

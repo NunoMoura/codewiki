@@ -1,4 +1,4 @@
-import type { SemanticLoop } from "../../semantic-loop.ts";
+import type { SemanticLoop } from "../contracts.ts";
 
 export const CUSTOM_CHECK_TYPE_CATALOG_VERSION = "1.0.0" as const;
 

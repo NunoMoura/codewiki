@@ -1,4 +1,4 @@
-import type { SemanticLoop } from "../../semantic-loop.ts";
+import type { SemanticLoop } from "../../verification/contracts.ts";
 
 export type IsoTimestamp = string;
 export type TraceLoop = SemanticLoop;

@@ -3,7 +3,7 @@ import {
 	createEvidenceObligation,
 } from "../evidence/obligations.ts";
 import type { EvidenceObligation } from "../evidence/obligations.ts";
-import type { SemanticLoop } from "../semantic-loop.ts";
+import type { SemanticLoop } from "./contracts.ts";
 import type { CustomCheckDefinition } from "./custom-checks/contracts.ts";
 import type {CustomCheckEvaluatorStandardBinding} from "./custom-checks/model-evaluator.ts";
 import {

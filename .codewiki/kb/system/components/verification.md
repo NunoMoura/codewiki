@@ -85,4 +85,4 @@ Verification compiles matched variants, bounded structured signals, and one exac
 
 Guidance may stale, truncate, disappear, or vary independently without changing Exit Report truth. Any repair produces a new Candidate, invalidates prior Results and guidance, and re-enters the same policy and evaluation path.
 
-Verification imports neither Runtime nor Loop implementations. Loop packages own Candidate meaning, Loop-specific Check composition, interpretation, and route recommendations; Verification owns common policy, invocation, Observation, Result, reduction, and deterministic repair-guidance contracts.
+Shared quality graph, pack, profile, runner, judge, and evaluator mechanics live under `src/verification/quality/**`; Implementation owns feedback reduction. Verification owns the closed semantic Loop discriminator and imports neither Runtime nor Loop implementations. Loop packages retain Candidate Checks, interpretation, and routes.

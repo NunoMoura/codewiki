@@ -3,7 +3,7 @@ import {
 	assertValidEvidenceObligationResolution,
 	type EvidenceObligationResolution,
 } from "../evidence/obligation-resolution.ts";
-import type { SemanticLoop } from "../semantic-loop.ts";
+import type { SemanticLoop } from "./contracts.ts";
 import {
 	assertValidResolvedExitPolicy,
 	LOOP_EXIT_SCHEMA_VERSION,

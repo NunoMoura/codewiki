@@ -157,9 +157,10 @@ other src/api/**     -> Runtime commands/queries or domain owner
 src/cli/**           -> src/clients/cli/**
 src/change-trace/**  -> src/changes/trace/**
 src/traces/**        -> Change Trace or Runtime persistence owner
-src/views/**         -> Alignment, WorkState, or Runtime queries
-src/semantic-loop.ts -> Decision, Planning, Implementation, Verification
-src/loops/**                          -> Decision, Planning, Implementation, Verification
+src/views/**                         -> Alignment, WorkState, or Runtime queries
+src/semantic-loop.ts                 -> Verification contracts
+src/loops/feedback.ts                -> Implementation
+other src/loops/**                    -> Verification quality machinery
 src/error-handling/config-errors.ts   -> Project owner
 src/error-handling/trace-errors.ts    -> Change Trace owner
 src/benchmarks/**                     -> benchmarks/**
@@ -265,6 +266,8 @@ The Change Trace ownership clean cut is recorded by `.tmp-worktrees/change-trace
 
 The View ownership clean cut is recorded by `.tmp-worktrees/view-ownership-clean-cut-manifest.json`, exhaustively anchored to `5eca8b6` with 634 keeps, 14 moves, 1 deletion, and 1 planned addition. Deterministic blocker, conflict, quality-readiness, trace-goal, trace-board, work-plan, and work-queue reductions and contracts move to `src/work-state/**`; status, resume, trace-queue, trigger, and runtime-board reductions and contracts move to `src/runtime/queries/**`. Focused proofs move to `tests/runtime/queries/**`. `src/views/**` and `tests/views/**` are deleted without compatibility paths or packed artifacts. The unexported test-only disposable View writer and its sole proof are deleted rather than preserved as dead production code; `.codewiki/views/` remains disposable product vocabulary. Public root type names and projection shapes remain stable. Source/test file counts remain flat at 356/194; strict ownership accounting advances to 342 target-owned files and 14 explicit legacy files with zero overlap. Its green checkpoint is 941 full-suite tests, 119 coordinator tests, 715 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
 
+The Loop quality ownership clean cut is recorded by `.tmp-worktrees/loop-quality-ownership-clean-cut-manifest.json`, exhaustively anchored to `0d68c1d` with 634 keeps, 15 moves, and 1 deletion. Shared graph, declarative pack, activation profile, bounded runner, judge, prompt, provider-resolution, standard, and evaluator mechanics move to `src/verification/quality/**`; the Implementation-only feedback reducer moves to `src/implementation/quality-feedback.ts`; and five focused proofs move to `tests/verification/quality/**`. The closed semantic Loop discriminator merges into Verification contracts instead of surviving as a one-line generic package. `src/loops/**`, `tests/loops/**`, `src/semantic-loop.ts`, and packed `dist/loops/**` are deleted without aliases, compatibility barrels, old-path exports, duplicate contracts, or replacement generic Loop ownership. Decision, Planning, and Implementation retain Candidate-specific Check composition, interpretation, and route ownership. Graph identities, quality result shapes, judge behavior, deterministic evaluation, trace bytes, and root package contracts remain unchanged. Source/test file counts fall to 355/194; strict ownership accounting advances to 352 target-owned files and 3 explicit legacy files with zero overlap. Its green checkpoint is 941 full-suite tests, 119 coordinator tests, 713 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -305,6 +308,8 @@ Rules:
 - [x] Create and execute the reviewed `9cddba3`-anchored factual activity keep/delete manifest before removing projection-authored causality.
 - [x] Create and execute the reviewed `06031a5`-anchored Runtime App query keep/move manifest before deleting the final Dashboard roots.
 - [x] Create and execute the reviewed `03ea724`-anchored controlled Implementation worker keep/move/delete manifest before removing direct session and manual Host handoff bypasses.
+- [x] Create and execute the reviewed `0d68c1d`-anchored Loop quality ownership manifest before deleting generic Loop source and test roots.
+- [x] Move shared quality evaluator mechanics to Verification, move quality feedback to Implementation, and merge the semantic Loop discriminator into Verification contracts without compatibility paths.
 - [ ] Delete legacy Quality, obsolete Loop compatibility, and old ChangeRecord contracts as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
