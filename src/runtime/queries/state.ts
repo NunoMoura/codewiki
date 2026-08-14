@@ -3,21 +3,21 @@ import {
 	readProjectTraceFiles,
 	type ProjectTraceFiles,
 } from "../../project/state-file.ts";
-import {buildTriggersView} from "../../views/triggers.ts";
-import {buildBlockersView} from "../../views/blockers.ts";
-import {buildConflictsView} from "../../views/conflicts.ts";
-import {buildQualityView} from "../../views/quality.ts";
-import {buildResumeView} from "../../views/resume.ts";
-import {buildStatusView} from "../../views/status.ts";
-import {buildTraceBoardView} from "../../views/trace-goals.ts";
-import {buildTraceQueueView} from "../../views/trace-queue.ts";
-import {buildWorkPlanView} from "../../views/work-plan.ts";
-import {buildWorkQueueView} from "../../views/work-queue.ts";
+import {buildTriggersView} from "./triggers.ts";
+import {buildBlockersView} from "../../work-state/blockers.ts";
+import {buildConflictsView} from "../../work-state/conflicts.ts";
+import {buildQualityView} from "../../work-state/quality.ts";
+import {buildResumeView} from "./resume.ts";
+import {buildStatusView} from "./status.ts";
+import {buildTraceBoardView} from "../../work-state/trace-goals.ts";
+import {buildTraceQueueView} from "./trace-queue.ts";
+import {buildWorkPlanView} from "../../work-state/work-plan.ts";
+import {buildWorkQueueView} from "../../work-state/work-queue.ts";
 import {
 	buildRuntimeBoard,
 	type RuntimeBoard,
 	type RuntimeBoardRuntimePreview,
-} from "../../views/runtime-board.ts";
+} from "./runtime-board.ts";
 import { foldProjectTraceRecords } from "../../changes/trace/project.ts";
 import {
 	defaultReviewEvidenceCache,
@@ -30,18 +30,20 @@ import type { TraceRecord } from "../../changes/trace/types.ts";
 import { buildWorkState } from "../../work-state/projector.ts";
 import type { WorkState } from "../../work-state/types.ts";
 import type {
-	TriggersView,
 	BlockersView,
 	ConflictsView,
 	QualityView,
-	ResumeView,
-	StatusView,
 	TraceBoardView,
-	TraceQueueView,
 	TraceViewInput,
 	WorkPlanView,
 	WorkQueueView,
-} from "../../views/types.ts";
+} from "../../work-state/projection-types.ts";
+import type {
+	ResumeView,
+	StatusView,
+	TraceQueueView,
+	TriggersView,
+} from "./projection-types.ts";
 
 export interface BuildProjectWikiStateInput {
 	repoRoot: string;

@@ -10,7 +10,7 @@ import {
 	type WikiConfigAutomationMode,
 	type WikiConfigWorktreeIsolation,
 } from "../../project/config.ts";
-import type { WorkQueueItem, WorkQueueView } from "../../views/types.ts";
+import type { WorkQueueItem, WorkQueueView } from "../../work-state/projection-types.ts";
 import { runtimeAutomationBlockers } from "../admission/automation.ts";
 import type { RuntimeWorkUnitClaimSelection } from "./work-unit-selection.ts";
 

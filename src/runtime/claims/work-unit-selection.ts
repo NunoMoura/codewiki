@@ -1,6 +1,6 @@
 import type { WorktreeRef } from "../../git/worktrees.ts";
 import { pathMatchesPattern } from "../../knowledge/source-map.ts";
-import type { WorkQueueItem, WorkQueueView } from "../../views/types.ts";
+import type { WorkQueueItem, WorkQueueView } from "../../work-state/projection-types.ts";
 
 type RuntimeWorkUnitClaimHoldReason = "capacity" | "path_conflict";
 

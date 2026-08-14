@@ -19,7 +19,6 @@ export const CURRENT_SOURCE_ROOTS = [
 	"runtime",
 	"server",
 	"utils",
-	"views",
 	"work-state",
 ] as const;
 
@@ -62,11 +61,7 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"workers",
 ] as const;
 
-export const LEGACY_SOURCE_ROOTS = [
-	"benchmarks",
-	"loops",
-	"views",
-] as const;
+export const LEGACY_SOURCE_ROOTS = ["benchmarks", "loops"] as const;
 
 export const LEGACY_SOURCE_FILES = [
 	"src/error-handling/config-errors.ts",
@@ -91,7 +86,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 export const LEGACY_SOURCE_FILE_COUNTS = {
 	benchmarks: 2,
 	loops: 10,
-	views: 13,
 } as const;
 
 export const FORBIDDEN_RUNTIME_SUBDIRECTORIES = [

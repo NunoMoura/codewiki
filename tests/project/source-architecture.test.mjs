@@ -125,7 +125,7 @@ describe("source architecture", () => {
 			.filter((name) => statSync(`src/${name}`).isDirectory())
 			.sort();
 		assert.deepEqual(roots, [...CURRENT_SOURCE_ROOTS].sort());
-		assert.deepEqual(LEGACY_SOURCE_ROOTS, ["benchmarks", "loops", "views"]);
+		assert.deepEqual(LEGACY_SOURCE_ROOTS, ["benchmarks", "loops"]);
 		assert.deepEqual(
 			CURRENT_SOURCE_ROOTS.filter(
 				(root) => !TARGET_SOURCE_ROOTS.includes(root),
@@ -183,8 +183,11 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "api", "protocol.ts")), false);
 		assert.equal(existsSync(join(sourceRoot, "change-trace")), false);
 		assert.equal(existsSync(join(sourceRoot, "traces")), false);
+		assert.equal(existsSync(join(sourceRoot, "views")), false);
 		assert.equal(existsSync("src/error-handling/trace-errors.ts"), false);
+		assert.equal(existsSync("src/views/writer.ts"), false);
 		assert.equal(existsSync("tests/traces"), false);
+		assert.equal(existsSync("tests/views"), false);
 		for (const path of [
 			"src/alignment/graph.ts",
 			"src/alignment/knowledge.ts",
@@ -193,8 +196,13 @@ describe("source architecture", () => {
 			"src/changes/trace/schema.ts",
 			"src/changes/trace/storage-errors.ts",
 			"src/changes/trace/store.ts",
+			"src/runtime/queries/projection-types.ts",
+			"src/runtime/queries/runtime-board.ts",
+			"src/work-state/projection-types.ts",
+			"src/work-state/work-queue.ts",
 			"tests/alignment/graph-v1.test.mjs",
 			"tests/changes/trace/change-trace-protocol-v1.test.mjs",
+			"tests/runtime/queries/state-projections.test.mjs",
 		]) {
 			assert.equal(existsSync(path), true, path);
 		}

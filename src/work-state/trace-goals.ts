@@ -13,7 +13,7 @@ import type {
 	TraceGoalResolutionStatus,
 	TraceGoalView,
 	TraceViewInput,
-} from "./types.ts";
+} from "./projection-types.ts";
 
 const RESOLVED_RESOLUTION_KINDS = new Set([
 	"already-implemented",

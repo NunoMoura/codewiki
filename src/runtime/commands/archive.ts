@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { createCodewikiOperationError } from "../../error-handling/operation-errors.ts";
-import { traceGoalCloseBlockers } from "../../views/trace-goals.ts";
+import { traceGoalCloseBlockers } from "../../work-state/trace-goals.ts";
 import {
 	appendRuntimeTraceRecord,
 	type AppendTraceResult,

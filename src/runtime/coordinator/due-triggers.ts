@@ -1,4 +1,4 @@
-import type { TriggerView, TriggersView } from "../../views/types.ts";
+import type {TriggerView, TriggersView} from "../queries/projection-types.ts";
 import type { RuntimeHeartbeatRequest } from "./types.ts";
 
 export interface RuntimeDueTriggerHeartbeatPlan {

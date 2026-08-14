@@ -17,7 +17,7 @@ import {
 	appendRuntimeLeaseExpirations,
 	planRuntimeLeaseExpirations,
 } from "../../src/runtime/claims/leases.ts";
-import { buildWorkQueueView } from "../../src/views/work-queue.ts";
+import { buildWorkQueueView } from "../../src/work-state/work-queue.ts";
 
 function planningEvent() {
 	return {

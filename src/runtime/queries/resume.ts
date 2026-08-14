@@ -1,7 +1,8 @@
-import { replayTrace } from "../changes/trace/replay.ts";
-import type { TraceViewInput, ResumeView, WorkPlanCard } from "./types.ts";
+import { replayTrace } from "../../changes/trace/replay.ts";
+import type {TraceViewInput, WorkPlanCard} from "../../work-state/projection-types.ts";
+import type {ResumeView} from "./projection-types.ts";
 import { buildStatusView } from "./status.ts";
-import { workPlanCardsFromTrace } from "./work-plan.ts";
+import { workPlanCardsFromTrace } from "../../work-state/work-plan.ts";
 
 export function buildResumeView(input: TraceViewInput): ResumeView {
 	const state = replayTrace(input.records);

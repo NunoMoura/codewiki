@@ -1,21 +1,21 @@
-import type { PlanningTrigger } from "../planning/types.ts";
-import { foldProjectTraceRecords } from "../changes/trace/project.ts";
-import { loopOutputEvents } from "../changes/trace/queries.ts";
-import { replayTrace } from "../changes/trace/replay.ts";
-import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
+import type { PlanningTrigger } from "../../planning/types.ts";
+import { foldProjectTraceRecords } from "../../changes/trace/project.ts";
+import { loopOutputEvents } from "../../changes/trace/queries.ts";
+import { replayTrace } from "../../changes/trace/replay.ts";
+import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";
 import {
 	loopIterationQualityComplete,
 	loopQualityReadiness,
-} from "./quality.ts";
-import { buildTraceGoalView } from "./trace-goals.ts";
+} from "../../work-state/quality.ts";
+import { buildTraceGoalView } from "../../work-state/trace-goals.ts";
+import type {TraceViewInput} from "../../work-state/projection-types.ts";
 import type {
 	TriggerDueView,
 	TriggerRunView,
 	TriggerStatus,
 	TriggerView,
 	TriggersView,
-	TraceViewInput,
-} from "./types.ts";
+} from "./projection-types.ts";
 
 interface TriggerProjection {
 	traceId: string;

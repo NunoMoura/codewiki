@@ -32,7 +32,8 @@ import {
 import type { WorktreeRef } from "../../git/worktrees.ts";
 import type { PartialWikiConfig, WikiConfig } from "../../project/config.ts";
 import type { TraceRecord } from "../../changes/trace/types.ts";
-import type { TriggersView, WorkQueueView } from "../../views/types.ts";
+import type {WorkQueueView} from "../../work-state/projection-types.ts";
+import type {TriggersView} from "../queries/projection-types.ts";
 
 export type WikiRuntimeMode = "preview" | "append";
 export type WikiRuntimeAction = "work-unit-claims";

@@ -1,33 +1,25 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { describe, it } from "node:test";
-import { runDecisionIteration } from "../helpers/canonical-loop-events.mjs";
-import { canonicalChangeInput } from "../helpers/canonical-loop-events.mjs";
-import { runImplementationIteration } from "../../src/implementation/iteration.ts";
-import { runPlanningIteration } from "../helpers/canonical-loop-events.mjs";
-import { createTraceCloseRecord } from "../../src/changes/trace/retention.ts";
+import { runDecisionIteration } from "../../helpers/canonical-loop-events.mjs";
+import { canonicalChangeInput } from "../../helpers/canonical-loop-events.mjs";
+import { runImplementationIteration } from "../../../src/implementation/iteration.ts";
+import { runPlanningIteration } from "../../helpers/canonical-loop-events.mjs";
+import { createTraceCloseRecord } from "../../../src/changes/trace/retention.ts";
 import {
 	createTriggerRunTraceHead,
 	createTraceHead,
-} from "../../src/changes/trace/writer.ts";
-import {buildTriggersView} from "../../src/views/triggers.ts";
-import {buildQualityView} from "../../src/views/quality.ts";
-import {buildResumeView} from "../../src/views/resume.ts";
-import {buildStatusView} from "../../src/views/status.ts";
-import {buildTraceBoardView} from "../../src/views/trace-goals.ts";
-import {buildTraceQueueView} from "../../src/views/trace-queue.ts";
-import {buildWorkPlanView} from "../../src/views/work-plan.ts";
-import {buildWorkQueueView} from "../../src/views/work-queue.ts";
-import {
-	formatViewJson,
-	viewFilePath,
-	writeNamedView,
-} from "../../src/views/writer.ts";
-import { decisionQualityFields } from "../helpers/proposed-change.mjs";
-import { planningQualityFields } from "../helpers/planning-work.mjs";
-import { implementationQualityFields } from "../helpers/implementation-change.mjs";
+} from "../../../src/changes/trace/writer.ts";
+import {buildTriggersView} from "../../../src/runtime/queries/triggers.ts";
+import {buildQualityView} from "../../../src/work-state/quality.ts";
+import {buildResumeView} from "../../../src/runtime/queries/resume.ts";
+import {buildStatusView} from "../../../src/runtime/queries/status.ts";
+import {buildTraceBoardView} from "../../../src/work-state/trace-goals.ts";
+import {buildTraceQueueView} from "../../../src/runtime/queries/trace-queue.ts";
+import {buildWorkPlanView} from "../../../src/work-state/work-plan.ts";
+import {buildWorkQueueView} from "../../../src/work-state/work-queue.ts";
+import { decisionQualityFields } from "../../helpers/proposed-change.mjs";
+import { planningQualityFields } from "../../helpers/planning-work.mjs";
+import { implementationQualityFields } from "../../helpers/implementation-change.mjs";
 
 function decisionEvents(traceId = "TRACE-views") {
 	const changeInput = canonicalChangeInput({
@@ -103,9 +95,9 @@ function queueTrace(traceId, options = {}) {
 			outcome: "Queued work is executable.",
 			...planningQualityFields(),
 			acceptance: ["Queued work has evidence."],
-			componentRefs: ["component.views"],
-			pathScopes: [options.pathScope || "src/views"],
-			verification: ["tests/views/views-projections.test.mjs"],
+			componentRefs: ["component.work-state"],
+			pathScopes: [options.pathScope || "src/work-state"],
+			verification: ["tests/runtime/queries/state-projections.test.mjs"],
 			dependsOn: options.dependsOn || [],
 		},
 	];
@@ -133,14 +125,14 @@ function queueTrace(traceId, options = {}) {
 					{
 						id: "IC-queue",
 						planningRefs: [planningEvent.id],
-						codePaths: ["src/views/work-queue.ts"],
-						testPaths: ["tests/views/views-projections.test.mjs"],
+						codePaths: ["src/work-state/work-queue.ts"],
+						testPaths: ["tests/runtime/queries/state-projections.test.mjs"],
 						checkResults: [{ command: "npm test", status: "pass" }],
 						acceptanceEvidenceItems: [
 							{
 								criterionId: "AC-001",
 								summary: "Queue projection test passed.",
-								evidenceRefs: ["tests/views/views-projections.test.mjs"],
+								evidenceRefs: ["tests/runtime/queries/state-projections.test.mjs"],
 							},
 						],
 						contentProof: { workingTreeDigest: "sha256:456def" },
@@ -237,9 +229,9 @@ function runTrace(input) {
 				outcome: "Run work completes.",
 				...planningQualityFields(),
 				acceptance: ["Run evidence exists."],
-				componentRefs: ["component.views"],
-				pathScopes: ["src/views"],
-				verification: ["tests/views/views-projections.test.mjs"],
+				componentRefs: ["component.work-state"],
+				pathScopes: ["src/work-state"],
+				verification: ["tests/runtime/queries/state-projections.test.mjs"],
 			},
 		],
 	});
@@ -253,14 +245,14 @@ function runTrace(input) {
 			{
 				id: "IC-run",
 				planningRefs: [planningEvent.id],
-				codePaths: ["src/views/triggers.ts"],
-				testPaths: ["tests/views/views-projections.test.mjs"],
+				codePaths: ["src/runtime/queries/triggers.ts"],
+				testPaths: ["tests/runtime/queries/state-projections.test.mjs"],
 				checkResults: [{ command: "npm test", status: "pass" }],
 				acceptanceEvidenceItems: [
 					{
 						criterionId: "AC-001",
 						summary: "Run evidence passed.",
-						evidenceRefs: ["tests/views/views-projections.test.mjs"],
+						evidenceRefs: ["tests/runtime/queries/state-projections.test.mjs"],
 					},
 				],
 				contentProof: { workingTreeDigest: "sha256:abcdef" },
@@ -307,9 +299,9 @@ function plannedTrace() {
 					"Status, resume, blockers, conflicts, and work-plan views project traces.",
 				...planningQualityFields(),
 				acceptance: ["Views contain no durable truth."],
-				componentRefs: ["component.views"],
-				pathScopes: ["src/views"],
-				verification: ["tests/views/views-projections.test.mjs"],
+				componentRefs: ["component.work-state"],
+				pathScopes: ["src/work-state"],
+				verification: ["tests/runtime/queries/state-projections.test.mjs"],
 			},
 		],
 	});
@@ -321,7 +313,7 @@ function plannedTrace() {
 	};
 }
 
-describe("trace-backed views", () => {
+describe("trace-backed state projections", () => {
 	it("projects run lineage into status and trace-board views", () => {
 		const head = createTriggerRunTraceHead({
 			traceId: "TRACE-lineage-view",
@@ -358,8 +350,8 @@ describe("trace-backed views", () => {
 		assert.equal(workPlan.cards[0].status, "todo");
 		const planningEvent = planningWorkEvent(plan.traceEvents);
 		assert.equal(workPlan.cards[0].traceRefs.includes(planningEvent.id), true);
-		assert.deepEqual(workPlan.cards[0].componentRefs, ["component.views"]);
-		assert.deepEqual(workPlan.cards[0].pathScopes, ["src/views"]);
+		assert.deepEqual(workPlan.cards[0].componentRefs, ["component.work-state"]);
+		assert.deepEqual(workPlan.cards[0].pathScopes, ["src/work-state"]);
 		assert.equal(status.health, "yellow");
 		assert.equal(status.currentLoop, "implementation");
 		assert.equal(status.readyForClosure, false);
@@ -376,9 +368,9 @@ describe("trace-backed views", () => {
 					outcome: "Trigger is planned.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is planned."],
-					componentRefs: ["component.views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["component.work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 					trigger: {
 						id: "TRG-planned",
 						kind: "schedule",
@@ -402,9 +394,9 @@ describe("trace-backed views", () => {
 					outcome: "Trigger is enabled.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is enabled."],
-					componentRefs: ["component.views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["component.work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 					trigger: {
 						id: "TRG-enabled",
 						kind: "trigger",
@@ -428,9 +420,9 @@ describe("trace-backed views", () => {
 					outcome: "Trigger is enabled without runs.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is enabled."],
-					componentRefs: ["component.views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["component.work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 					trigger: {
 						id: "TRG-enabled-only",
 						kind: "manual",
@@ -509,9 +501,9 @@ describe("trace-backed views", () => {
 					outcome: "Trigger becomes due on schedule.",
 					...planningQualityFields(),
 					acceptance: ["Trigger due state is projected."],
-					componentRefs: ["component.views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["component.work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 					trigger: {
 						id: "TRG-due",
 						kind: "schedule",
@@ -566,9 +558,9 @@ describe("trace-backed views", () => {
 					outcome: "Trigger is visible to runtime views.",
 					...planningQualityFields(),
 					acceptance: ["Trigger is projected."],
-					componentRefs: ["component.views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["component.work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 					trigger: {
 						id: "TRG-view",
 						kind: "trigger",
@@ -607,8 +599,8 @@ describe("trace-backed views", () => {
 				{
 					id: "IC-views",
 					planningRefs: [planningEvent.id],
-					codePaths: ["src/views/work-plan.ts"],
-					testPaths: ["tests/views/views-projections.test.mjs"],
+					codePaths: ["src/work-state/work-plan.ts"],
+					testPaths: ["tests/runtime/queries/state-projections.test.mjs"],
 					checks: ["npm test"],
 					checkResults: [{ command: "npm test", status: "pass" }],
 					acceptanceEvidence: ["View projection tests passed."],
@@ -616,7 +608,7 @@ describe("trace-backed views", () => {
 						{
 							criterionId: "AC-001",
 							summary: "View projection tests passed.",
-							evidenceRefs: ["tests/views/views-projections.test.mjs"],
+							evidenceRefs: ["tests/runtime/queries/state-projections.test.mjs"],
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:123abc" },
@@ -664,9 +656,9 @@ describe("trace-backed views", () => {
 					outcome: "Corrected planning work is implemented.",
 					...planningQualityFields(),
 					acceptance: ["Corrected plan is covered."],
-					componentRefs: ["views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 				},
 			],
 		});
@@ -686,15 +678,15 @@ describe("trace-backed views", () => {
 				{
 					id: "IC-corrected",
 					planningRefs: [planningEvent.id],
-					codePaths: ["src/views/trace-goals.ts"],
-					testPaths: ["tests/views/views-projections.test.mjs"],
+					codePaths: ["src/work-state/trace-goals.ts"],
+					testPaths: ["tests/runtime/queries/state-projections.test.mjs"],
 					checks: ["npm test"],
 					checkResults: [{ command: "npm test", status: "pass" }],
 					acceptanceEvidenceItems: [
 						{
 							criterionId: "AC-001",
 							summary: "Corrected plan is covered.",
-							evidenceRefs: ["tests/views/views-projections.test.mjs"],
+							evidenceRefs: ["tests/runtime/queries/state-projections.test.mjs"],
 						},
 					],
 					contentProof: { workingTreeDigest: "sha256:123abc" },
@@ -829,9 +821,9 @@ describe("trace-backed views", () => {
 					outcome: "Dependency is available for scheduling.",
 					...planningQualityFields(),
 					acceptance: ["Dependency can run first."],
-					componentRefs: ["component.views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["component.work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 				},
 				{
 					id: "WU-waiting",
@@ -839,9 +831,9 @@ describe("trace-backed views", () => {
 					outcome: "Waiting work depends on another work unit.",
 					...planningQualityFields(),
 					acceptance: ["Waiting work waits."],
-					componentRefs: ["component.views"],
-					pathScopes: ["src/views"],
-					verification: ["tests/views/views-projections.test.mjs"],
+					componentRefs: ["component.work-state"],
+					pathScopes: ["src/work-state"],
+					verification: ["tests/runtime/queries/state-projections.test.mjs"],
 					dependsOn: ["WU-dependency"],
 				},
 			],
@@ -969,35 +961,5 @@ describe("trace-backed views", () => {
 			byId["WU-active-claim"].claimExpiresAt,
 			"2026-06-11T00:00:08.000Z",
 		);
-	});
-
-	it("formats and writes named disposable view files", async () => {
-		const root = await mkdtemp(join(tmpdir(), "codewiki-views-"));
-		try {
-			const view = { health: "green", blockers: [] };
-			assert.equal(viewFilePath("status"), ".codewiki/views/status.json");
-			assert.equal(
-				viewFilePath("work-queue"),
-				".codewiki/views/work-queue.json",
-			);
-			assert.equal(
-				viewFilePath("trace-board"),
-				".codewiki/views/trace-board.json",
-			);
-			assert.equal(viewFilePath("triggers"), ".codewiki/views/triggers.json");
-			assert.equal(
-				viewFilePath("runtime-board"),
-				".codewiki/views/runtime-board.json",
-			);
-			assert.equal(viewFilePath("quality"), ".codewiki/views/quality.json");
-			assert.equal(
-				formatViewJson(view),
-				'{\n  "health": "green",\n  "blockers": []\n}\n',
-			);
-			const path = await writeNamedView(root, "status", view);
-			assert.equal(await readFile(path, "utf8"), formatViewJson(view));
-		} finally {
-			await rm(root, { recursive: true, force: true });
-		}
 	});
 });

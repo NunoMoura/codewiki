@@ -11,8 +11,8 @@ import { sourceOwnershipMapFromOkfBundle } from "../knowledge/source-ownership.t
 import type { OkfBundleFile } from "../knowledge/okf-validation.ts";
 import { foldProjectTraceRecords } from "../changes/trace/project.ts";
 import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
-import { buildQualityView } from "../views/quality.ts";
-import type { QualityIterationSummary } from "../views/types.ts";
+import { buildQualityView } from "../work-state/quality.ts";
+import type { QualityIterationSummary } from "../work-state/projection-types.ts";
 import { readProjectTraceRecords } from "./state-file.ts";
 
 export type ProjectExplainKind =

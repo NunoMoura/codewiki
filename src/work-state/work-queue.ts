@@ -14,7 +14,7 @@ import type {
 	WorkQueueItem,
 	WorkQueueItemStatus,
 	WorkQueueView,
-} from "./types.ts";
+} from "./projection-types.ts";
 
 export function buildWorkQueueView(input: TraceViewInput): WorkQueueView {
 	const fold = foldProjectTraceRecords(input.records);

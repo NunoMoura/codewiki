@@ -255,14 +255,16 @@ export type {
 export type {
 	BlockersView,
 	ConflictsView,
-	ResumeView,
-	StatusView,
 	TraceBoardView,
-	TraceQueueView,
-	TriggersView,
 	WorkPlanView,
 	WorkQueueView,
-} from "./views/types.ts";
+} from "./work-state/projection-types.ts";
+export type {
+	ResumeView,
+	StatusView,
+	TraceQueueView,
+	TriggersView,
+} from "./runtime/queries/projection-types.ts";
 export * from "./changes/trace/index.ts";
 export * from "./alignment/graph.ts";
 export * from "./alignment/knowledge.ts";

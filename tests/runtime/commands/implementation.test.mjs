@@ -13,7 +13,7 @@ import { replayTrace } from "../../../src/changes/trace/replay.ts";
 import { traceFilePath } from "../../../src/changes/trace/schema.ts";
 import { buildProjectWorkState } from "../../../src/work-state/project.ts";
 import { seedRuntimeImplementation as seedRuntimeImplementationProject } from "../../helpers/runtime-implementation.mjs";
-import { buildWorkQueueView } from "../../../src/views/work-queue.ts";
+import { buildWorkQueueView } from "../../../src/work-state/work-queue.ts";
 import { implementationQualityFields } from "../../helpers/implementation-change.mjs";
 
 async function fixture() {

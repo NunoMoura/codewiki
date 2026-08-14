@@ -263,6 +263,8 @@ The Client lifecycle ownership clean cut is recorded by `.tmp-worktrees/client-l
 
 The Change Trace ownership clean cut is recorded by `.tmp-worktrees/change-trace-ownership-clean-cut-manifest.json`, exhaustively anchored to `25b3e7a` with 603 keeps and 45 moves. It consolidates canonical Change protocol, JSONL encoding, Change-backed storage, manifests, reduction, replay, synchronization support, retention, and specialized errors under `src/changes/trace/**`; graph projection, Knowledge augmentation, and bounded queries move directly to `src/alignment/**`. Focused proofs move to `tests/changes/trace/**` and `tests/alignment/**`. `src/change-trace/**`, `src/traces/**`, `src/error-handling/trace-errors.ts`, and `tests/traces/**` are deleted without compatibility paths, while root package exports retain the same names through owner-direct modules. Frozen Change Trace v1 fixtures preserve their content-addressed historical source references and identities as product data, not surviving module paths. Source/test counts remain flat at 356/194; strict ownership accounting advances to 329 target-owned files and 27 explicit legacy files with zero overlap. Its green checkpoint is 942 full-suite tests, 119 coordinator tests, 715 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
 
+The View ownership clean cut is recorded by `.tmp-worktrees/view-ownership-clean-cut-manifest.json`, exhaustively anchored to `5eca8b6` with 634 keeps, 14 moves, 1 deletion, and 1 planned addition. Deterministic blocker, conflict, quality-readiness, trace-goal, trace-board, work-plan, and work-queue reductions and contracts move to `src/work-state/**`; status, resume, trace-queue, trigger, and runtime-board reductions and contracts move to `src/runtime/queries/**`. Focused proofs move to `tests/runtime/queries/**`. `src/views/**` and `tests/views/**` are deleted without compatibility paths or packed artifacts. The unexported test-only disposable View writer and its sole proof are deleted rather than preserved as dead production code; `.codewiki/views/` remains disposable product vocabulary. Public root type names and projection shapes remain stable. Source/test file counts remain flat at 356/194; strict ownership accounting advances to 342 target-owned files and 14 explicit legacy files with zero overlap. Its green checkpoint is 941 full-suite tests, 119 coordinator tests, 715 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -303,7 +305,7 @@ Rules:
 - [x] Create and execute the reviewed `9cddba3`-anchored factual activity keep/delete manifest before removing projection-authored causality.
 - [x] Create and execute the reviewed `06031a5`-anchored Runtime App query keep/move manifest before deleting the final Dashboard roots.
 - [x] Create and execute the reviewed `03ea724`-anchored controlled Implementation worker keep/move/delete manifest before removing direct session and manual Host handoff bypasses.
-- [ ] Delete legacy Quality, generic View authority, obsolete Loop compatibility, and old Trace/ChangeRecord paths as replacement consumers land.
+- [ ] Delete legacy Quality, obsolete Loop compatibility, and old ChangeRecord contracts as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
 - [x] Move coordinator package composition to Host ownership and remove the generic Harness source/package root.
@@ -400,9 +402,9 @@ Rules:
 
 - [x] Move canonical Change protocol, encoding, manifests, reduction, and replay to `src/changes/trace/**`.
 - [x] Move Alignment Graph and bounded queries to `src/alignment/**`.
-- [ ] Keep canonical current projection in `src/work-state/**`.
+- [x] Keep canonical current projection in `src/work-state/**`.
 - [x] Delete intermediate `src/change-trace/**` and legacy `src/traces/**` after callers move.
-- [ ] Delete obsolete WorkState paths and generic `src/views/**` after callers move.
+- [x] Delete obsolete WorkState paths and generic `src/views/**` after callers move.
 - [x] Preserve append-only history, deterministic replay, expected-head CAS, provenance, remote synchronization, and recovery behavior.
 - [ ] Stabilize read-only bounded snapshot-bound context, state, attention, explanation, and Change queries with coverage, truncation, provenance, and staleness.
 - [ ] Define Actor Profiles, scoped Authority Grants, responsibility rules, Review Requirements, per-requirement Review Claims, and immutable Review Submissions.

@@ -1,5 +1,5 @@
 import { CodewikiTraceError } from "./storage-errors.ts";
-import { traceGoalCloseBlockers } from "../../views/trace-goals.ts";
+import { traceGoalCloseBlockers } from "../../work-state/trace-goals.ts";
 import { latestTailCheckpoint, replayTrace } from "./replay.ts";
 import type { TraceClose, TraceRecord } from "./types.ts";
 

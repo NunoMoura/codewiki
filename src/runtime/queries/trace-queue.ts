@@ -1,13 +1,15 @@
 import type {
+	TraceGoalView,
+	TraceViewInput,
+	WorkQueueItem,
+} from "../../work-state/projection-types.ts";
+import type {
 	TraceQueueCard,
 	TraceQueueItem,
 	TraceQueueView,
-	TraceGoalView,
-	WorkQueueItem,
-} from "./types.ts";
-import type { TraceViewInput } from "./types.ts";
-import { buildTraceBoardView } from "./trace-goals.ts";
-import { buildWorkQueueView } from "./work-queue.ts";
+} from "./projection-types.ts";
+import { buildTraceBoardView } from "../../work-state/trace-goals.ts";
+import { buildWorkQueueView } from "../../work-state/work-queue.ts";
 
 export function buildTraceQueueView(input: TraceViewInput): TraceQueueView {
 	const traceBoard = buildTraceBoardView(input);

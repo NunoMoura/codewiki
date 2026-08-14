@@ -1181,7 +1181,7 @@ describe("implementation iteration runner", () => {
 				{
 					id: "IC-component-drift",
 					planningRefs: [planningEvent.id],
-					codePaths: ["src/views/work-plan.ts"],
+					codePaths: ["src/work-state/work-plan.ts"],
 					checkResults: [
 						{
 							command: "npm test",

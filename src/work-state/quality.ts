@@ -17,7 +17,7 @@ import type {
 	QualityStandardSummary,
 	QualityView,
 	TraceViewInput,
-} from "./types.ts";
+} from "./projection-types.ts";
 
 interface QualityStandardGraphMetadata {
 	layer?: string;

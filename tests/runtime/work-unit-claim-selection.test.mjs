@@ -59,8 +59,8 @@ describe("runtime work-unit claim selection", () => {
 	it("holds work with path conflicts against selected work", () => {
 		const plan = selectRuntimeWorkUnitClaims(
 			queue([
-				{ id: "WU-parent", pathScopes: ["src/views"] },
-				{ id: "WU-child", pathScopes: ["src/views/work-queue.ts"] },
+				{ id: "WU-parent", pathScopes: ["src/work-state"] },
+				{ id: "WU-child", pathScopes: ["src/work-state/work-queue.ts"] },
 				{ id: "WU-safe", pathScopes: ["src/changes/trace"] },
 			]),
 			{ maxWorkers: 3 },
@@ -109,7 +109,7 @@ describe("runtime work-unit claim selection", () => {
 					id: "WU-conflict",
 					pathScopes: ["src/runtime/claims/work-unit-selection.ts"],
 				},
-				{ id: "WU-ready", pathScopes: ["src/views"] },
+				{ id: "WU-ready", pathScopes: ["src/work-state"] },
 			]),
 			{ maxWorkers: 2 },
 		);

@@ -14,7 +14,7 @@ import {appendTraceRecords} from "../../src/changes/trace/append.ts";
 import {readTrace} from "../../src/changes/trace/reader.ts";
 import {assertValidTraceRecord, traceFilePath} from "../../src/changes/trace/schema.ts";
 import {createTraceHead} from "../../src/changes/trace/writer.ts";
-import { buildWorkQueueView } from "../../src/views/work-queue.ts";
+import { buildWorkQueueView } from "../../src/work-state/work-queue.ts";
 
 function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {
 	const changeRef = `trace:${traceId}:decision:iteration:1#change:CHG-${workUnitId}`;
@@ -69,7 +69,7 @@ async function seedTrace(root, event) {
 describe("runtime work-unit claim helper claim batch", () => {
 	it("turns work-unit claim selection items into runtime claim trace events", () => {
 		const first = planningEvent("TRACE-claim-a", "WU-a", "src/runtime");
-		const second = planningEvent("TRACE-claim-b", "WU-b", "src/views");
+		const second = planningEvent("TRACE-claim-b", "WU-b", "src/work-state");
 		const queue = buildWorkQueueView({ records: [first, second] });
 		const plan = selectRuntimeWorkUnitClaims(queue, { maxWorkers: 2 });
 		const batch = createRuntimeWorkUnitClaimEvents(plan, {
@@ -133,7 +133,7 @@ describe("runtime work-unit claim helper claim batch", () => {
 		const blocked = planningEvent(
 			"TRACE-quality-blocked",
 			"WU-quality-blocked",
-			"src/views",
+			"src/work-state",
 		);
 		blocked.data.output.qualityStandards =
 			blocked.data.output.qualityStandards.map((standard) =>
@@ -183,7 +183,7 @@ describe("runtime work-unit claim helper claim batch", () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-claim-"));
 		try {
 			const first = planningEvent("TRACE-append-a", "WU-a", "src/runtime");
-			const second = planningEvent("TRACE-append-b", "WU-b", "src/views");
+			const second = planningEvent("TRACE-append-b", "WU-b", "src/work-state");
 			const firstSeed = await seedTrace(root, first);
 			const secondSeed = await seedTrace(root, second);
 			const plan = selectRuntimeWorkUnitClaims(
@@ -238,7 +238,7 @@ describe("runtime work-unit claim helper claim batch", () => {
 		const root = await mkdtemp(join(tmpdir(), "codewiki-claim-conflict-"));
 		try {
 			const first = planningEvent("TRACE-preflight-a", "WU-a", "src/runtime");
-			const second = planningEvent("TRACE-preflight-b", "WU-b", "src/views");
+			const second = planningEvent("TRACE-preflight-b", "WU-b", "src/work-state");
 			const firstSeed = await seedTrace(root, first);
 			await seedTrace(root, second);
 			const plan = selectRuntimeWorkUnitClaims(

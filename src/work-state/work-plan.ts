@@ -9,7 +9,7 @@ import { replayTrace } from "../changes/trace/replay.ts";
 import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
 import { blockersFromTrace } from "./blockers.ts";
 import { loopQualityReadiness } from "./quality.ts";
-import type { TraceViewInput, WorkPlanCard, WorkPlanView } from "./types.ts";
+import type { TraceViewInput, WorkPlanCard, WorkPlanView } from "./projection-types.ts";
 
 export function buildWorkPlanView(cards: WorkPlanCard[]): WorkPlanView;
 export function buildWorkPlanView(input: TraceViewInput): WorkPlanView;

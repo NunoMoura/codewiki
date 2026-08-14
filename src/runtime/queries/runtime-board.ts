@@ -1,27 +1,26 @@
-import type { TraceEvent } from "../changes/trace/types.ts";
+import type { TraceEvent } from "../../changes/trace/types.ts";
 import type {
 	TraceBoardConflict,
 	TraceBoardView,
-	TriggerView,
-	TriggersView,
 	WorkQueueItem,
 	WorkQueueView,
-} from "./types.ts";
+} from "../../work-state/projection-types.ts";
+import type {TriggerView, TriggersView} from "./projection-types.ts";
 import type {
 	HeartbeatCycleResult,
 	RuntimeHeartbeatCyclePolicyDecision,
-} from "../runtime/coordinator/index.ts";
-import type { RuntimeLeaseExpirationBatch } from "../runtime/claims/leases.ts";
+} from "../coordinator/index.ts";
+import type { RuntimeLeaseExpirationBatch } from "../claims/leases.ts";
 import type {
 	RuntimeLeaseExpirationPolicyDecision,
 	RuntimeWorkUnitClaimPolicyDecision,
-} from "../runtime/claims/policy.ts";
+} from "../claims/policy.ts";
 import {
 	selectRuntimeWorkUnitClaims,
 	type RuntimeHeldWorkUnitClaim,
 	type RuntimeWorkUnitClaimCandidate,
 	type RuntimeWorkUnitClaimSelection,
-} from "../runtime/claims/work-unit-selection.ts";
+} from "../claims/work-unit-selection.ts";
 
 export type RuntimeBoardBlockerKind =
 	| "trace_conflict"
@@ -44,7 +43,7 @@ export interface RuntimeBoardRuntimePreview {
 	};
 }
 
-export interface RuntimeBoardInput {
+interface RuntimeBoardInput {
 	generatedAt?: string;
 	traceBoard: TraceBoardView;
 	workQueue: WorkQueueView;

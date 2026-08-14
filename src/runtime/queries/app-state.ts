@@ -28,7 +28,7 @@ import { DECISION_CHANGE_QUALITY_STANDARDS } from "../../decision/change-quality
 import { implementationQualityStandards } from "../../implementation/quality-standards.ts";
 import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../../planning/portfolio-quality.ts";
 import type { TraceEvent, TraceLoop, TraceRecord } from "../../changes/trace/types.ts";
-import { qualityIterationsFromTrace } from "../../views/quality.ts";
+import { qualityIterationsFromTrace } from "../../work-state/quality.ts";
 import {
 	loadRuntimeChangesState,
 	type RuntimeChangesState,
@@ -45,9 +45,9 @@ import type {
 	QualityIterationSummary,
 	QualityStandardSummary,
 	TraceGoalStatus,
-	TraceQueueCard,
 	WorkQueueItem,
-} from "../../views/types.ts";
+} from "../../work-state/projection-types.ts";
+import type {TraceQueueCard} from "./projection-types.ts";
 
 export type CodewikiPipelineStage =
 	| "change"

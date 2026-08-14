@@ -6,7 +6,7 @@ import {
 	formatTraceLine,
 } from "../../changes/trace/writer.ts";
 import type { TraceHead } from "../../changes/trace/types.ts";
-import type { TriggerView, TriggersView } from "../../views/types.ts";
+import type {TriggerView, TriggersView} from "../queries/projection-types.ts";
 import type {
 	QueuedRuntimeHeartbeat,
 	RuntimeHeartbeatIntent,

@@ -2,7 +2,7 @@ import { planningConflicts } from "../planning/conflicts.ts";
 import type { PlanningWorkItem } from "../planning/types.ts";
 import { loopOutputEvents } from "../changes/trace/queries.ts";
 import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
-import type { ConflictsView, ConflictView, TraceViewInput } from "./types.ts";
+import type { ConflictsView, ConflictView, TraceViewInput } from "./projection-types.ts";
 
 export function buildConflictsView(conflicts: ConflictView[]): ConflictsView;
 export function buildConflictsView(input: TraceViewInput): ConflictsView;

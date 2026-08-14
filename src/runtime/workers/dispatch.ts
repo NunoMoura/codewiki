@@ -19,7 +19,7 @@ import type { ImplementationWorkerReportInput } from "../../implementation/worke
 import { loadWikiConfigFile } from "../../project/config-file.ts";
 import type { WikiConfig } from "../../project/config.ts";
 import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";
-import { buildWorkQueueView } from "../../views/work-queue.ts";
+import { buildWorkQueueView } from "../../work-state/work-queue.ts";
 import type { WorkState } from "../../work-state/types.ts";
 import { createImplementationWorkerPrompt } from "./prompt.ts";
 import {

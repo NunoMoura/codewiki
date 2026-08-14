@@ -1,17 +1,18 @@
-import { loopOutputEvents, traceRefs } from "../changes/trace/queries.ts";
-import { replayTrace } from "../changes/trace/replay.ts";
-import type { TraceLoop, TraceRecord } from "../changes/trace/types.ts";
-import { blockersFromTrace } from "./blockers.ts";
-import { conflictsFromTrace } from "./conflicts.ts";
+import { loopOutputEvents, traceRefs } from "../../changes/trace/queries.ts";
+import { replayTrace } from "../../changes/trace/replay.ts";
+import type { TraceLoop, TraceRecord } from "../../changes/trace/types.ts";
+import { blockersFromTrace } from "../../work-state/blockers.ts";
+import { conflictsFromTrace } from "../../work-state/conflicts.ts";
 import {
 	buildQualityView,
 	loopIterationQualityComplete,
 	planningIterationClaimable,
 	qualityBlockersFromTrace,
-} from "./quality.ts";
-import { buildTraceGoalView } from "./trace-goals.ts";
-import type { StatusView, TraceViewInput, ViewHealth } from "./types.ts";
-import { workPlanCardsFromTrace } from "./work-plan.ts";
+} from "../../work-state/quality.ts";
+import { buildTraceGoalView } from "../../work-state/trace-goals.ts";
+import type {TraceViewInput} from "../../work-state/projection-types.ts";
+import type {StatusView, ViewHealth} from "./projection-types.ts";
+import { workPlanCardsFromTrace } from "../../work-state/work-plan.ts";
 
 export function buildStatusView(input: TraceViewInput): StatusView {
 	const state = replayTrace(input.records);
