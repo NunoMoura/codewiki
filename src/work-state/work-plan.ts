@@ -1,9 +1,9 @@
-import { planningConflicts } from "../planning/conflicts.ts";
+import { planningConflicts } from "../loops/planning/conflicts.ts";
 import type {
 	AcceptanceCriterion,
 	PlanningTrigger,
 	PlanningWorkItem,
-} from "../planning/types.ts";
+} from "../loops/planning/types.ts";
 import { loopOutputEvents } from "../changes/trace/queries.ts";
 import { replayTrace } from "../changes/trace/replay.ts";
 import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";

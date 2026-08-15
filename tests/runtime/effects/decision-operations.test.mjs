@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../../src/verification/catalog.ts";
-import {createResolvedExitPolicy} from "../../../src/verification/contracts.ts";
-import {resolveExitPolicy} from "../../../src/verification/resolve-policy.ts";
-import {createCheckResult, createExitReport} from "../../../src/verification/results.ts";
-import {routeDecisionLoopExit} from "../../../src/runtime/loop-exit/decision.ts";
+import {createCheckCatalog} from "../../../src/checks/catalog.ts";
+import {createResolvedExitPolicy} from "../../../src/checks/contracts.ts";
+import {resolveExitPolicy} from "../../../src/checks/resolve-policy.ts";
+import {createCheckResult, createExitReport} from "../../../src/checks/results.ts";
+import {deriveDecisionLifecycleTransition} from "../../../src/runtime/lifecycle/decision.ts";
 import {EVIDENCE_SCHEMA_VERSION} from "../../../src/evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../../src/evidence/materialize.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
@@ -134,7 +134,7 @@ function nativeDecisionArtifacts(
 		execution: check.execution,
 	});
 	const report = createExitReport({policy, checkResults: [result]});
-	const route = routeDecisionLoopExit(candidate, report);
+	const route = deriveDecisionLifecycleTransition(candidate, report);
 	return {candidate, policy, report, route};
 }
 

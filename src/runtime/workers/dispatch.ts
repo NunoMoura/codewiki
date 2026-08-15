@@ -15,7 +15,7 @@ import {
 	type RuntimeWorktreePlan,
 	type WorktreeCommandRunner,
 } from "../../git/worktrees.ts";
-import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../../loops/implementation/workers.ts";
 import { loadWikiConfigFile } from "../../project/config-file.ts";
 import type { WikiConfig } from "../../project/config.ts";
 import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";

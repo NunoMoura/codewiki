@@ -23,9 +23,9 @@ const sourceMap = {
 	components: [
 		{
 			id: "decision",
-			doc: ".codewiki/kb/system/components/decision-loop.md",
-			sourcePatterns: ["src/decision/**"],
-			testPatterns: ["tests/decision/**"],
+			doc: ".codewiki/kb/system/components/decision.md",
+			sourcePatterns: ["src/loops/decision/**"],
+			testPatterns: ["tests/loops/decision/**"],
 			generatedViews: [],
 			traceEvents: ["decision.change_approved"],
 			role: "semantic_loop",
@@ -74,11 +74,11 @@ describe("OKF source ownership extension generation", () => {
 	it("generates CodeWiki OKF extension fields for single and shared docs", () => {
 		const decision = okfSourceMapExtensionForDoc(
 			sourceMap,
-			".codewiki/kb/system/components/decision-loop.md",
+			".codewiki/kb/system/components/decision.md",
 		);
 		assert.equal(decision?.codewiki_component, "decision");
 		assert.deepEqual(decision?.codewiki_components, ["decision"]);
-		assert.deepEqual(decision?.codewiki_source_patterns, ["src/decision/**"]);
+		assert.deepEqual(decision?.codewiki_source_patterns, ["src/loops/decision/**"]);
 		assert.deepEqual(decision?.codewiki_trace_events, [
 			"decision.change_approved",
 		]);
@@ -103,7 +103,7 @@ describe("OKF source ownership extension generation", () => {
 	it("merges generated extension fields while preserving unknown producer metadata", () => {
 		const fields = okfSourceMapExtensionForDoc(
 			sourceMap,
-			".codewiki/kb/system/components/decision-loop.md",
+			".codewiki/kb/system/components/decision.md",
 		);
 		assert.ok(fields);
 		const merged = mergeOkfSourceMapExtension(
@@ -120,7 +120,7 @@ describe("OKF source ownership extension generation", () => {
 		assert.equal(merged.type, "Reference");
 		assert.equal(merged.unknown_producer_key, "preserve me");
 		assert.equal(merged.codewiki_component, "decision");
-		assert.deepEqual(merged.codewiki_source_patterns, ["src/decision/**"]);
+		assert.deepEqual(merged.codewiki_source_patterns, ["src/loops/decision/**"]);
 	});
 
 	it("round-trips source ownership through generated OKF extension metadata", () => {

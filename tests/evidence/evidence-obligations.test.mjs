@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { EVIDENCE_SCHEMA_VERSION } from "../../src/evidence/contracts.ts";
-import { canonicalJsonDigest } from "../../src/verification/identity.ts";
+import { canonicalJsonDigest } from "../../src/checks/identity.ts";
 import { materializeEvidenceRecord } from "../../src/evidence/materialize.ts";
 import { assertValidEvidenceObligationResolution } from "../../src/evidence/obligation-resolution.ts";
 import {

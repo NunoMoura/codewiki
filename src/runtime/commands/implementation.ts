@@ -4,15 +4,15 @@ import {
 	createCodewikiOperationError,
 	requiredStringField,
 } from "../../error-handling/operation-errors.ts";
-import type { ImplementationEvidencePolicy } from "../../implementation/evidence-policy.ts";
-import { resolveLoopQualityJudgeExecutionOptions } from "../../verification/quality/judge-provider.ts";
-import { uniqueStrings } from "../../verification/quality/standards.ts";
+import type { ImplementationEvidencePolicy } from "../../loops/implementation/evidence-policy.ts";
+import { resolveLoopQualityJudgeExecutionOptions } from "../../checks/quality/judge-provider.ts";
+import { uniqueStrings } from "../../checks/quality/standards.ts";
 import type { ContentProof } from "../../git/content-proof.ts";
 import type { SourceMapContract } from "../../knowledge/source-map.ts";
 import {
 	changedPaths,
 	normalizeImplementationChanges,
-} from "../../implementation/evidence.ts";
+} from "../../loops/implementation/evidence.ts";
 import {
 	createImplementationEvidenceReport,
 	defaultReviewEvidenceCache,
@@ -25,12 +25,12 @@ import {
 	type LanguageReviewPackSkipSummary,
 	type ReviewEvidenceSummary,
 	type ReviewPackSelection,
-} from "../../implementation/review/index.ts";
+} from "../../execution/review/index.ts";
 import {
 	runImplementationIterationWithRunner,
 	type ImplementationIterationInput,
 	type ImplementationIterationResult,
-} from "../../implementation/iteration.ts";
+} from "../../loops/implementation/iteration.ts";
 import type {
 	ImplementationArchiveDisposition,
 	AcceptanceEvidenceInput,
@@ -40,12 +40,12 @@ import type {
 	ImplementationQualityAssessmentInput,
 	ImplementationWorkerClaim,
 	SensitiveSurfaceAssessmentInput,
-} from "../../implementation/types.ts";
-import { createImplementationMergeContentProof } from "../../implementation/merge-proof.ts";
+} from "../../loops/implementation/types.ts";
+import { createImplementationMergeContentProof } from "../../loops/implementation/merge-proof.ts";
 import {
 	aggregateImplementationWorkerReports,
 	type ImplementationWorkerReportInput,
-} from "../../implementation/workers.ts";
+} from "../../loops/implementation/workers.ts";
 import { loadWikiConfigFile } from "../../project/config-file.ts";
 import { readProjectSourceMap } from "../../project/explain.ts";
 import type { WikiQualityReviewConfig } from "../../project/config.ts";

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, it } from "node:test";
 
-import { runWikiDecide } from "../../../src/decision/command.ts";
+import { runWikiDecide } from "../../../src/loops/decision/command.ts";
 import { runWikiPlan } from "../../../src/runtime/commands/planning.ts";
 import { changeTraceId } from "../../../src/changes/trace/change-record.ts";
 import { changeContentDigest } from "../../../src/changes/digest.ts";

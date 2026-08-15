@@ -11,16 +11,16 @@ const criterionEvidence = {
 			"src/changes/trace/change-record.ts",
 			"src/changes/trace/store.ts",
 			"src/work-state/projector.ts",
-			"src/decision/change-quality.ts",
+			"src/loops/decision/change-quality.ts",
 			"src/changes/command.ts",
-			"src/decision/command.ts",
+			"src/loops/decision/command.ts",
 			"src/runtime/workers/execution-policy.ts",
 		],
 		tests: [
 			"tests/changes/change-domain.test.mjs",
 			"tests/changes/trace/change-trace-store.test.mjs",
 			"tests/work-state/work-state.test.mjs",
-			"tests/decision/command.test.mjs",
+			"tests/loops/decision/command.test.mjs",
 			"tests/runtime/execution-policy.test.mjs",
 		],
 	},
@@ -184,13 +184,16 @@ describe("control-center reconciliation integration", () => {
 		assert.match(decision, /one authenticated exact Change revision/i);
 		assert.match(
 			decision,
-			/Runtime Loop Exit invokes shared Verification.*authoritative route/i,
+			/shared Checks Gate.*fixed lifecycle rules/i,
 		);
 		assert.match(protocol, /delegates semantics and authority to owners/i);
 		assert.match(protocol, /Payloads cannot supply identity, authentication, delegation, authority/i);
 		assert.match(runtime, /authoritative semantic control plane/i);
 		assert.match(runtime, /Candidate Manifest matches persisted custody/i);
-		assert.match(runtime, /one common pipeline for all three Loops/i);
+		assert.match(
+			runtime,
+			/exactly four semantic Loops.*Decision, Planning, Implementation, and Review/i,
+		);
 	});
 
 	it("keeps active shipped surfaces on canonical Change vocabulary", () => {

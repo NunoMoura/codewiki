@@ -16,7 +16,7 @@ import {
 import {createBacklogTriagePolicy} from "../../changes/triage/policy.ts";
 import {buildBacklogTriageProjection} from "../../changes/triage/projection.ts";
 import type {DecisionAttentionSelectionContext} from "../../changes/triage/selection.ts";
-import {loadProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/project-config-store.ts";
+import {loadProtectedCustomCheckConfigSnapshot} from "../../checks/packs/project-config-store.ts";
 import type {Sha256Digest} from "../../utils/canonical-json.ts";
 import type {DecisionAttemptAppendInput} from "./start.ts";
 

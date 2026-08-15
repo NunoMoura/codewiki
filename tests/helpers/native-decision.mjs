@@ -2,8 +2,8 @@ import {
 	createChangeRevision,
 	createInitialProjectWorkState,
 } from "../../src/changes/trace/index.ts";
-import {parseDecisionCandidateProposal} from "../../src/decision/candidate-proposal.ts";
-import {createDecisionCandidate} from "../../src/decision/exit/candidate.ts";
+import {parseDecisionCandidateProposal} from "../../src/loops/decision/candidate-proposal.ts";
+import {createDecisionCandidate} from "../../src/loops/decision/candidate.ts";
 import {
 	baseSnapshotFor,
 	buildOperationSequence,

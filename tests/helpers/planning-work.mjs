@@ -4,7 +4,7 @@ export function planningQualityFields(overrides = {}) {
 			"Implement the scoped change described by the decision ref.",
 		],
 		planningDepth: "standard",
-		verification: ["tests/planning/planning-iteration.test.mjs"],
+		verification: ["tests/loops/planning/planning-iteration.test.mjs"],
 		workerProfile: "implementation_worker",
 		planningAssessment: {
 			stance: "worker_ready",

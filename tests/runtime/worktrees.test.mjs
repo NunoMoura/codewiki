@@ -317,11 +317,11 @@ describe("runtime worktree planning", () => {
 			},
 		);
 		const unrelatedDirtySolo = planRuntimeWorkUnitClaimWorktrees(
-			[item("WU-one", ["src/decision"])],
+			[item("WU-one", ["src/loops/decision"])],
 			{
 				mode: "auto",
 				repoRoot: "/tmp/repo/codewiki",
-				dirtyPaths: ["src/planning/loop.ts"],
+				dirtyPaths: ["src/loops/planning/loop.ts"],
 			},
 		);
 

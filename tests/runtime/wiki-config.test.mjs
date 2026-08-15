@@ -11,7 +11,7 @@ import {
 import {
 	activateCustomCheckDefinition,
 	createCustomCheckDefinition,
-} from "../../src/verification/custom-checks/index.ts";
+} from "../../src/checks/packs/index.ts";
 import {
 	loadWikiConfigFile,
 	resolveWikiConfigFile,
@@ -21,7 +21,7 @@ import { CodewikiConfigError } from "../../src/project/config-errors.ts";
 import {
 	createTestUserStandard,
 	standardRefsFor,
-} from "../verification/custom-checks/user-standard-fixture.mjs";
+} from "../checks/packs/user-standard-fixture.mjs";
 
 const USER_STANDARD = createTestUserStandard();
 const USER_STANDARDS = [USER_STANDARD];

@@ -6,7 +6,7 @@ status: stable
 tags: [system, component]
 codewiki_component: review
 codewiki_source_patterns: ["src/loops/review/**"]
-codewiki_test_patterns: ["tests/loops/review/**"]
+codewiki_test_patterns: ["tests/loops/review/**", "tests/loops/contracts.test.mjs"]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/automate-safe-work.md

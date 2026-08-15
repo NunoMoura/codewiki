@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { runDecisionIteration } from "../../helpers/canonical-loop-events.mjs";
 import { canonicalChangeInput } from "../../helpers/canonical-loop-events.mjs";
-import { runImplementationIteration } from "../../../src/implementation/iteration.ts";
+import { runImplementationIteration } from "../../../src/loops/implementation/iteration.ts";
 import { runPlanningIteration } from "../../helpers/canonical-loop-events.mjs";
 import { createTraceCloseRecord } from "../../../src/changes/trace/retention.ts";
 import {

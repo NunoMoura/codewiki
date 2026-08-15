@@ -1,6 +1,6 @@
 import { createChangeRecord } from "../../src/changes/records.ts";
-import { evaluateChangeDecision } from "../../src/decision/change-quality.ts";
-import { evaluatePortfolioPlanning } from "../../src/planning/portfolio-quality.ts";
+import { evaluateChangeDecision } from "../../src/loops/decision/change-quality.ts";
+import { evaluatePortfolioPlanning } from "../../src/loops/planning/portfolio-quality.ts";
 import { acceptedChangeFixture } from "./accepted-change.mjs";
 
 export function canonicalChangeInput(input = {}) {

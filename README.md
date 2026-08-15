@@ -94,7 +94,9 @@ Change
 → Runtime route
 ```
 
-## Checks and exit
+## Legacy Check execution contracts
+
+The contracts in this section remain executable migration state after the ownership cut. They do not define the target Pack, Result, Gate Report, or fixed-lifecycle schemas described by the Knowledge Base and refactoring plan.
 
 ```ts
 type Check = CodeCheck | ModelCheck;
@@ -162,7 +164,7 @@ Backlog is a generated intake view over persisted pending Change revisions; subm
 
 Change Trace Protocol `3.0.0` makes every revision a complete content-addressed semantic input rather than a skeletal issue summary and binds authority through accountable actor plus proof-backed authenticated identity. Revision identity binds current and desired state, rationale and alternatives, classification and affected targets, impact, Knowledge propagation, observable outcomes, delivery constraints, Evidence expectations, safety semantics, acceptance requirements, and any normalized defect profile. Missing assurance remains explicitly absent or unknown; intake claims never become risk or Check authority.
 
-Decision Candidate schema `2.0.0` is materialized only from native `ProjectWorkState` plus the producer's strict disposition/rationale proposal. Runtime derives the current revision, active relationships and overlap accounting, WorkState/Knowledge/source/config/policy refs, and Candidate identity; callers cannot submit observed bases, validation state, authority, or append bindings. Native continuation admission reconstructs this exact Candidate before any canonical write. A host-configured native attempt executor now reloads fresh Git state, verifies an exact protected-source/config-bound Loop Exit binding before producer invocation, runs one versioned producer request and independent evaluation, commits Candidate through attempt end under expected-head CAS, and recovers canonical completion without reinvocation. `createDecisionGitAdmission()` supplies the production selection-side Git glue: fresh protected-config-bound triage projection, short-lived exact context reuse across authorization, expected-WorkState attempt append, no blind stale retry, and canonical post-push verification. `createPiSdkNativeDecisionCandidateProducer()` validates that exact authority-free production request, runs one isolated read-only Pi SDK session, accepts one strict proposal, and propagates cancellation through abort and disposal. `createPiNativeDecisionStartOptions()` composes those pieces for the Pi daemon when the host supplies trusted repository identity, project authority, replay policy, and Runtime continuation authority. Only approved project-local Pi coordinator connections resolve to hashed selection actors; optional project authorization can still deny them. Canonical terminal state recovers after daemon restart without a second model run. Missing mandatory trusted host inputs leave both Decision-attention projection and selection endpoints unavailable.
+Decision Candidate schema `2.0.0` is materialized only from native `ProjectWorkState` plus the producer's strict disposition/rationale proposal. Runtime derives the current revision, active relationships and overlap accounting, WorkState/Knowledge/source/config/policy refs, and Candidate identity; callers cannot submit observed bases, validation state, authority, or append bindings. Native continuation admission reconstructs this exact Candidate before any canonical write. A host-configured native attempt executor now reloads fresh Git state, verifies an exact protected-source/config-bound Decision Gate binding before producer invocation, runs one versioned producer request and independent evaluation, commits Candidate through attempt end under expected-head CAS, and recovers canonical completion without reinvocation. `createDecisionGitAdmission()` supplies the production selection-side Git glue: fresh protected-config-bound triage projection, short-lived exact context reuse across authorization, expected-WorkState attempt append, no blind stale retry, and canonical post-push verification. `createPiSdkNativeDecisionCandidateProducer()` validates that exact authority-free production request, runs one isolated read-only Pi SDK session, accepts one strict proposal, and propagates cancellation through abort and disposal. `createPiNativeDecisionStartOptions()` composes those pieces for the Pi daemon when the host supplies trusted repository identity, project authority, replay policy, and Runtime continuation authority. Only approved project-local Pi coordinator connections resolve to hashed selection actors; optional project authorization can still deny them. Canonical terminal state recovers after daemon restart without a second model run. Missing mandatory trusted host inputs leave both Decision-attention projection and selection endpoints unavailable.
 
 One Change owns one append-only JSONL dossier:
 
@@ -229,7 +231,7 @@ Imported `generated`, `verified`, `status`, `stale_after`, provenance, or Attest
 
 WorkState and Alignment Graph queries are disposable views over canonical sources. Agents may use bounded read-only semantic queries that include snapshot digest, provenance, authority class, coverage, truncation, and staleness. No arbitrary Cypher, graph mutation, canonical graph file, or absence-as-proof under partial coverage.
 
-CodeWiki has no separate project-learning, Feedback Bundle, or self-improvement subsystem. User feedback, benchmark regressions, CI/security findings, worker discoveries, delivery outcomes, and maintainer suggestions enter through normal bounded Change Intake. Improvement then follows the same authenticated selection, Decision, Planning, Implementation, Verification, and release authority as any other Change. CodeWiki never uploads private project traces automatically.
+CodeWiki has no separate project-learning, Feedback Bundle, or self-improvement subsystem. User feedback, benchmark regressions, CI/security findings, worker discoveries, delivery outcomes, and maintainer suggestions enter through normal bounded Change Intake. Improvement then follows the same authenticated selection, Decision, Planning, Implementation, Review, and release authority as any other Change. CodeWiki never uploads private project traces automatically.
 
 After stabilization and explicit activation, an immutable released CodeWiki version may operate on this source repository from an isolated external controller to coordinate the next version. It must not load mutable workspace code or edit its installed package, and dogfood evidence cannot replace independent CI, packed external proof, benchmark oracles, human review, or release authorization.
 
@@ -257,7 +259,7 @@ src/
     delivery/
     channels/
     mcp/
-  runtime/               # generic authoritative project mechanics only
+  runtime/               # authoritative project mechanics and fixed lifecycle
     index.ts
     gateway.ts
     commands/
@@ -268,7 +270,7 @@ src/
     workbenches/
     workers/
     integration/
-    loop-exit/           # common Check invocation, Exit Report admission, and routing
+    lifecycle/
     persistence/
     synchronization/
     recovery/
@@ -279,10 +281,12 @@ src/
     triage/
     review/
     trace/
-  decision/              # all Decision semantics and attempt composition
-  planning/              # all Planning semantics and attempt composition
-  implementation/        # all Implementation semantics and attempt composition
-  verification/          # shared Check / Result / Exit Report machinery
+  checks/                # Check contracts, Packs, execution coordination, and Results
+  loops/
+    decision/
+    planning/
+    implementation/
+    review/
   evidence/
   work-state/
   alignment/
@@ -290,6 +294,8 @@ src/
   project/               # protected configuration, config errors, and architecture
   execution/
     ports.ts
+    review/              # transitional language-review execution
+    security/
     pi/
   preview/
   git/
@@ -300,9 +306,9 @@ scripts/
 tests/
 ```
 
-Decision, Planning, and Implementation own their Candidate schemas, Check declarations, attempt composition, and interpretation. Runtime Loop Exit owns bounded Verification invocation, exact output admission, authoritative routing, persistence, and effects through one common pipeline for all three Loops. CodeWiki Server owns authentication, pairing, sessions, transport, and routing without project authority. Server and Runtime are architectural siblings; Runtime owns generic scheduling, persistence, synchronization, claims, workbenches, workers, Integration, recovery, and effects, and it does not have parallel `decision`, `planning`, `implementation`, or `verification` packages. Verification is shared Check, Result, Exit Report, policy, and repair machinery—not a fourth Loop—and cannot import Runtime or Loop implementations. Clients own user interaction. Execution implements Runtime-selected neutral ports and owns no Loop policy or canonical authority; Runtime may import `src/execution/ports.ts` but never concrete Pi adapters. Pi-specific coordinator daemon composition therefore lives under `src/execution/pi/**`, while generic Runtime startup requires an injected spawner. Neutral `src/pi-extension.ts` Package bootstrap injects narrow dashboard and project-service ports into Pi Client registration, then composes Server App and Preview lifecycle, the Runtime connection boundary, and the concrete Execution spawner. Client modules import none of those process lifecycle implementations. `src/runtime/index.ts` is the curated command, query, and gateway package surface; no `src/api/**` root exists. Shared error envelope, serialization, type guards, and operation-failure contracts remain in a lean `src/error-handling/**` package, while owner-specific configuration and Change Trace errors live with their semantic owners. Repository-root benchmarks compare every real supported execution adapter alone with the same adapter under CodeWiki and do not ship in the production package; no `src/benchmarks/**` production root exists. Clean cuts keep no old-path re-exports.
+Exactly four semantic Loops—Decision, Planning, Implementation, and Review—own their stage Candidates, attempts, and interpretation under `src/loops/**`. Checks is a separate root owner for shared Check, Pack, execution-coordination, cache, Result, and current Gate machinery. Runtime owns authoritative persistence, synchronization, scheduling, Integration, recovery, guarded effects, and fixed lifecycle transitions under `src/runtime/lifecycle/**`; no generic Router chooses stages. CodeWiki Server owns authentication, pairing, sessions, transport, and routing without project authority. Server and Runtime are architectural siblings. Execution implements bounded neutral ports and concrete adapters without Loop policy or canonical authority. Pi-specific coordinator composition lives under `src/execution/pi/**`, concrete security execution lives under `src/execution/security/**`, and moved legacy language-review runners live temporarily under `src/execution/review/**` until Review Gates replace their direct callers. Neutral `src/pi-extension.ts` Package bootstrap composes Pi Client registration, Server App and Preview lifecycle, the Runtime connection boundary, and concrete Execution spawners. `src/runtime/index.ts` is the curated command, query, and gateway package surface; no `src/api/**` root exists. Shared error envelope, serialization, type guards, and operation-failure contracts remain in `src/error-handling/**`, while owner-specific configuration and Change Trace errors live with their semantic owners. Repository-root benchmarks compare supported execution adapters and never ship in the production package. Clean cuts keep no old-path re-exports.
 
-Server Authentication proof verification lives under `src/server/authentication/**`, Actor enrollment and Registry persistence under `src/server/registry/**`, Client Pairing transitions under `src/server/pairing/**`, provider repository-access checks under `src/server/repository-access/**`, and temporary credential state and endpoint-policy context under `src/server/sessions/**`. Personal App launch verifies an ephemeral local proof, persists one local User, App Pairing, and exact project route in private machine-level Registry state, resolves that binding at current Registry generation, then opens the App Session. Provider-neutral OIDC verification accepts only bounded claims from a trusted adapter after adapter-owned authorization-code, PKCE, discovery, and token cryptography; Server binds exact Client, issuer, audience, nonce, time, and adapter before deriving immutable `(issuer, subject)` identity. Actor enrollment grants no Pairing, Session, repository membership, delegation, or Runtime authority. Public Pairing issue and revoke entrypoints require one active Server Session, verifier-proven target Authentication, exact Session/Registry generation, active Actor identity, and current project/repository/Runtime-route binding before deny-by-default policy sees the fixed action and target Client; policy never receives the Session credential. Direct deterministic Pairing transitions are internal and no longer root package exports. Pairing credential generation and rotation remain blocked until an approved machine credential-store contract can retain only the necessary secret boundary without project-file or deterministic-secret fallback. `codewiki.server-repository-access@1.0.0` separately binds that verified identity and the exact CodeWiki repository identity to short-lived provider `accessible | inaccessible` evidence. It stores no token, role, permission, capability, or Runtime grant. Concrete GitHub/GitLab network adapters remain pending. Browser App transport lives under `src/server/app/**`, bounded App/Change/configuration/Dev Log queries live under `src/runtime/queries/**`, and browser presentation lives under `src/clients/app/**`. App launch establishes a generation-bound Server Session through a same-origin endpoint, stores only an `HttpOnly; SameSite=Strict` cookie in the browser, and authorizes every App endpoint against the exact repository binding before dispatch. Bounded authenticated Actor and Client context crosses the Server-Runtime gateway on every Runtime projection and remains attached per event stream; credentials never enter App API query strings or browser storage. Server reaches Runtime only through `src/runtime/gateway.ts`; it does not import Runtime query, persistence, coordinator, Trace, Knowledge, or project-state implementations. The legacy `src/dashboard/**` source root is gone. Canonical Change Trace protocol, JSONL history, Change-backed storage, reduction, replay, synchronization support, retention, and owner-specific errors now live under `src/changes/trace/**`; Alignment projection and bounded queries live under `src/alignment/**`, with no legacy Trace source or test roots. Canonical current-state, blocker, conflict, quality-readiness, trace-goal, trace-board, work-plan, and work-queue projections now live under `src/work-state/**`; snapshot-bound status, resume, trace-queue, trigger, and runtime-board reads live under `src/runtime/queries/**`, with no generic View source or test root. Shared quality graph, pack, profile, runner, judge, and evaluator mechanics now live under `src/verification/quality/**`, while Implementation owns its quality feedback reducer; no generic Loop source or test root or root semantic-Loop module survives. Internal query reduction still depends on transitional Verification-owned `LoopQuality*` contracts, Loop-named Runtime modules, Decision/Planning/Implementation Quality machinery, broad SDK candidate schema, and legacy projection-field vocabulary as executable migration state. Ordered migration and exact deletion map live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
+Server Authentication proof verification lives under `src/server/authentication/**`, Actor enrollment and Registry persistence under `src/server/registry/**`, Client Pairing transitions under `src/server/pairing/**`, provider repository-access checks under `src/server/repository-access/**`, and temporary credential state and endpoint-policy context under `src/server/sessions/**`. Personal App launch verifies an ephemeral local proof, persists one local User, App Pairing, and exact project route in private machine-level Registry state, resolves that binding at current Registry generation, then opens the App Session. Provider-neutral OIDC verification accepts only bounded claims from a trusted adapter after adapter-owned authorization-code, PKCE, discovery, and token cryptography; Server binds exact Client, issuer, audience, nonce, time, and adapter before deriving immutable `(issuer, subject)` identity. Actor enrollment grants no Pairing, Session, repository membership, delegation, or Runtime authority. Public Pairing issue and revoke entrypoints require one active Server Session, verifier-proven target Authentication, exact Session/Registry generation, active Actor identity, and current project/repository/Runtime-route binding before deny-by-default policy sees the fixed action and target Client; policy never receives the Session credential. Direct deterministic Pairing transitions are internal and no longer root package exports. Pairing credential generation and rotation remain blocked until an approved machine credential-store contract can retain only the necessary secret boundary without project-file or deterministic-secret fallback. `codewiki.server-repository-access@1.0.0` separately binds that verified identity and the exact CodeWiki repository identity to short-lived provider `accessible | inaccessible` evidence. It stores no token, role, permission, capability, or Runtime grant. Concrete GitHub/GitLab network adapters remain pending. Browser App transport lives under `src/server/app/**`, bounded App/Change/configuration/Dev Log queries live under `src/runtime/queries/**`, and browser presentation lives under `src/clients/app/**`. App launch establishes a generation-bound Server Session through a same-origin endpoint, stores only an `HttpOnly; SameSite=Strict` cookie in the browser, and authorizes every App endpoint against the exact repository binding before dispatch. Bounded authenticated Actor and Client context crosses the Server-Runtime gateway on every Runtime projection and remains attached per event stream; credentials never enter App API query strings or browser storage. Server reaches Runtime only through `src/runtime/gateway.ts`; it does not import Runtime query, persistence, coordinator, Trace, Knowledge, or project-state implementations. The legacy `src/dashboard/**` source root is gone. Canonical Change Trace protocol, JSONL history, Change-backed storage, reduction, replay, synchronization support, retention, and owner-specific errors now live under `src/changes/trace/**`; Alignment projection and bounded queries live under `src/alignment/**`, with no legacy Trace source or test roots. Canonical current-state, blocker, conflict, quality-readiness, trace-goal, trace-board, work-plan, and work-queue projections now live under `src/work-state/**`; snapshot-bound status, resume, trace-queue, trigger, and runtime-board reads live under `src/runtime/queries/**`, with no generic View source or test root. Shared legacy quality graph, pack, profile, runner, judge, and evaluator mechanics now live under `src/checks/quality/**`, while `src/loops/implementation/**` owns its quality feedback reducer. Internal query reduction still depends on transitional `LoopQuality*`, Exit Report, protected-floor, repair, evaluator, and indeterminate contracts, broad SDK Candidate schemas, and legacy projection-field vocabulary as executable migration state. Ordered replacement and exact deletion work live in [`REFACTORING_PLAN.md`](REFACTORING_PLAN.md).
 
 ## Development requirements
 
@@ -359,7 +365,7 @@ After installing different packed runtime, fully restart Pi rather than relying 
 
 ## Review evidence configuration (current migration)
 
-Current executable source still supports legacy `.codewiki/config.json` `quality.review` evidence-pack settings while the Implementation clean cut is pending. This compatibility surface is not the target Check architecture and grants no semantic authority.
+Current executable source still supports legacy `.codewiki/config.json` `quality.review` evidence-pack settings while the Review Gate migration is pending. This compatibility surface is not the target Check architecture and grants no semantic authority.
 
 ```json
 {
@@ -381,7 +387,7 @@ Before production release, prove:
 
 - exact candidate/Check/Result/Report identity and authority hardening;
 - bounded cancellation-aware Code/Model Check execution;
-- clean Decision, Planning, and Implementation cuts;
+- semantic replacement of legacy Decision, Planning, Implementation, and Review Gate contracts;
 - persisted historical policy/Report meaning;
 - OKF v0.2 compatibility and software alignment profile;
 - packed Pi `0.82.1` compatibility before widening peer range;
@@ -399,7 +405,8 @@ If CodeWiki cannot materially reduce drift, false acceptance, lost context, repe
 - [Design system](.codewiki/kb/product/DESIGN.md)
 - [System architecture](.codewiki/kb/system/diagrams/architecture.yaml)
 - [Alignment](.codewiki/kb/system/components/alignment.md)
-- [Verification](.codewiki/kb/system/components/verification.md)
+- [Checks](.codewiki/kb/system/components/checks.md)
+- [Review](.codewiki/kb/system/components/review.md)
 - [Runtime](.codewiki/kb/system/components/runtime.md)
 - [Knowledge](.codewiki/kb/system/components/knowledge.md)
 - [Lexicon](.codewiki/kb/lexicon.md)

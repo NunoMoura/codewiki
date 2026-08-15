@@ -5,12 +5,12 @@ import {
 	contentProofRefs,
 	implementationEvidenceRefs,
 	normalizeImplementationChanges,
-} from "../../implementation/evidence.ts";
+} from "../../loops/implementation/evidence.ts";
 import type {
 	CheckResult,
 	ImplementationChange,
 	ImplementationChangeInput,
-} from "../../implementation/types.ts";
+} from "../../loops/implementation/types.ts";
 import { replayTrace } from "./replay.ts";
 import type { TraceRecord } from "./types.ts";
 

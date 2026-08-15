@@ -1,3 +1,14 @@
+export const SECURITY_SCANNER_TYPES = Object.freeze([
+	"static_analysis",
+	"dependency_advisory",
+	"secret_detection",
+	"infrastructure_configuration",
+	"authorization_test",
+	"migration_test",
+] as const);
+
+export type SecurityScannerType = (typeof SECURITY_SCANNER_TYPES)[number];
+
 export const EXECUTION_CAPABILITY_NAMES = [
 	"candidate_production",
 	"model_evaluation",

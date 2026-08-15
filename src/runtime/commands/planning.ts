@@ -22,7 +22,7 @@ import {
 	evaluatePortfolioPlanning,
 	type PortfolioWorkItemInput,
 	type SprintPlanInput,
-} from "../../planning/portfolio-quality.ts";
+} from "../../loops/planning/portfolio-quality.ts";
 import { normalizeUiPreviewTargetBinding } from "../../preview/binding.ts";
 import { selectRuntimeReaction } from "../coordinator/reactor.ts";
 import { buildProjectWorkState } from "../../work-state/project.ts";

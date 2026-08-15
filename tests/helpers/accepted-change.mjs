@@ -39,7 +39,7 @@ export function acceptedChangeFixture(overrides = {}) {
 				"decision",
 				"traces",
 			],
-			targetRefs: overrides.targetRefs || ["src/decision/command.ts"],
+			targetRefs: overrides.targetRefs || ["src/loops/decision/command.ts"],
 		},
 		impact: {
 			user:

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { runWikiArchive } from "../../../src/runtime/commands/archive.ts";
-import { runImplementationIteration } from "../../../src/implementation/iteration.ts";
+import { runImplementationIteration } from "../../../src/loops/implementation/iteration.ts";
 import { runDecisionIterationWithRunner } from "../../helpers/canonical-loop-events.mjs";
 import { runPlanningIterationWithRunner } from "../../helpers/canonical-loop-events.mjs";
 import { appendTraceRecords } from "../../../src/changes/trace/append.ts";

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DECISION_RESEARCH_CLAIMS_PROTOCOL } from "../../../src/decision/exit/research-claims-protocol.ts";
+import { DECISION_RESEARCH_CLAIMS_PROTOCOL } from "../../../src/loops/decision/research-claims-protocol.ts";
 import { createPiDecisionResearchClaimsTransport } from "../../../src/execution/pi/decision-research-claims-session.ts";
 import { canonicalJsonDigest } from "../../../src/utils/canonical-json.ts";
 

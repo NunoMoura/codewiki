@@ -7,7 +7,7 @@ import {
 	pushSynchronizedStateBatch,
 	synchronizeGitState,
 } from "../../../src/changes/trace/index.ts";
-import {createDecisionLoopExit} from "../../../src/runtime/loop-exit/decision.ts";
+import {createDecisionGate} from "../../../src/runtime/lifecycle/decision.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
 	createNativeDecisionAttemptExecutor,
@@ -100,11 +100,11 @@ it("executes and recovers one authenticated native Decision attempt without rein
 			currentProject: () => project,
 			replayPolicy: allowAllReplayPolicy,
 			authorityBinding: authorityBinding(),
-			createLoopExit({teamSnapshot}) {
+			createDecisionGate({teamSnapshot}) {
 				return {
 					protectedSourceHead: teamSnapshot.protectedSourceHead,
 					projectConfigDigest: teamSnapshot.configDigest,
-					loopExit: createDecisionLoopExit(),
+					decisionGate: createDecisionGate(),
 				};
 			},
 			producer: {
@@ -141,11 +141,11 @@ it("executes and recovers one authenticated native Decision attempt without rein
 			currentProject: () => project,
 			replayPolicy: allowAllReplayPolicy,
 			authorityBinding: authorityBinding(),
-			createLoopExit({teamSnapshot}) {
+			createDecisionGate({teamSnapshot}) {
 				return {
 					protectedSourceHead: teamSnapshot.protectedSourceHead,
 					projectConfigDigest: digest("0"),
-					loopExit: createDecisionLoopExit(),
+					decisionGate: createDecisionGate(),
 				};
 			},
 			producer: {
@@ -219,8 +219,8 @@ it("executes and recovers one authenticated native Decision attempt without rein
 			currentProject: () => project,
 			replayPolicy: allowAllReplayPolicy,
 			authorityBinding: authorityBinding(),
-			createLoopExit() {
-				throw new Error("completed Decision must not recreate Loop Exit");
+			createDecisionGate() {
+				throw new Error("completed Decision must not recreate Decision Gate");
 			},
 			producer: {
 				produce() {

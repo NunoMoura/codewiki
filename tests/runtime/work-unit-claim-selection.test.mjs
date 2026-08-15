@@ -38,9 +38,9 @@ describe("runtime work-unit claim selection", () => {
 	it("selects ready work-unit claims up to capacity", () => {
 		const plan = selectRuntimeWorkUnitClaims(
 			queue([
-				{ id: "WU-one", pathScopes: ["src/decision"] },
-				{ id: "WU-two", pathScopes: ["src/planning"] },
-				{ id: "WU-three", pathScopes: ["src/implementation"] },
+				{ id: "WU-one", pathScopes: ["src/loops/decision"] },
+				{ id: "WU-two", pathScopes: ["src/loops/planning"] },
+				{ id: "WU-three", pathScopes: ["src/loops/implementation"] },
 			]),
 			{ maxWorkers: 2 },
 		);

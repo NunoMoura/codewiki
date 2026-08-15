@@ -28,7 +28,7 @@ import {
 	createLoopCandidate,
 	type CandidateObservedBase,
 	type LoopCandidate,
-} from "../../verification/identity.ts";
+} from "../../checks/identity.ts";
 import {
 	canonicalJson,
 	canonicalJsonDigest,

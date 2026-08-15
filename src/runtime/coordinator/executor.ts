@@ -2,7 +2,7 @@ import {
 	runWikiDecide,
 	type RunWikiDecideInput,
 	type RunWikiDecideResult,
-} from "../../decision/command.ts";
+} from "../../loops/decision/command.ts";
 import {
 	runRuntimeSelectedWikiImplement,
 	type ImplementationEvidenceSubmission,
@@ -18,18 +18,18 @@ import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
 	type RuntimeDecisionAuthority,
-} from "../../decision/candidate-proposal.ts";
+} from "../../loops/decision/candidate-proposal.ts";
 import { TraceAppendConflictError } from "../../changes/trace/storage-errors.ts";
 import type { CandidateProducerPort } from "../../execution/ports.ts";
 import {
 	parseImplementationCandidateContent,
 	type ImplementationCandidateContent,
-} from "../../implementation/candidate-content.ts";
-import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
+} from "../../loops/implementation/candidate-content.ts";
+import type { ImplementationWorkerReportInput } from "../../loops/implementation/workers.ts";
 import {
 	parsePlanningCandidateContent,
 	type PlanningCandidateContent,
-} from "../../planning/candidate-content.ts";
+} from "../../loops/planning/candidate-content.ts";
 import type {
 	WorkStateAssignment,
 	WorkStateChange,

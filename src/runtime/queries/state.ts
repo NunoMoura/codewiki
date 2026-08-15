@@ -25,7 +25,7 @@ import {
 	type ImplementationEvidenceReportInput,
 	type ReviewEvidenceCacheReader,
 	type ReviewEvidenceSummary,
-} from "../../implementation/review/index.ts";
+} from "../../execution/review/index.ts";
 import type { TraceRecord } from "../../changes/trace/types.ts";
 import { buildWorkState } from "../../work-state/projector.ts";
 import type { WorkState } from "../../work-state/types.ts";

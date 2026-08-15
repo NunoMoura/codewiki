@@ -136,13 +136,18 @@ describe("source architecture", () => {
 		assert.deepEqual(CORE_SOURCE_ROOTS, [
 			"alignment",
 			"changes",
+			"checks",
 			"evidence",
-			"verification",
 		]);
 		for (const path of LEGACY_SOURCE_FILES) {
 			assert.equal(existsSync(path), true, path);
 		}
-		assert.equal(TARGET_SOURCE_ROOTS.includes("verification"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("checks"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("loops"), true);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("verification"), false);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("decision"), false);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("planning"), false);
+		assert.equal(TARGET_SOURCE_ROOTS.includes("implementation"), false);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("alignment"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("clients"), true);
 		assert.equal(TARGET_SOURCE_ROOTS.includes("execution"), true);
@@ -181,7 +186,11 @@ describe("source architecture", () => {
 		assert.equal(existsSync(join(sourceRoot, "change-trace")), false);
 		assert.equal(existsSync(join(sourceRoot, "traces")), false);
 		assert.equal(existsSync(join(sourceRoot, "views")), false);
-		assert.equal(existsSync(join(sourceRoot, "loops")), false);
+		assert.equal(existsSync(join(sourceRoot, "loops")), true);
+		assert.equal(existsSync(join(sourceRoot, "verification")), false);
+		assert.equal(existsSync(join(sourceRoot, "decision")), false);
+		assert.equal(existsSync(join(sourceRoot, "planning")), false);
+		assert.equal(existsSync(join(sourceRoot, "implementation")), false);
 		assert.equal(existsSync(join(sourceRoot, "benchmarks")), false);
 		assert.equal(existsSync("benchmarks/alignment-retrieval.ts"), true);
 		assert.equal(existsSync("benchmarks/retrieval-adapters.ts"), true);
@@ -194,7 +203,11 @@ describe("source architecture", () => {
 		assert.equal(existsSync("src/views/writer.ts"), false);
 		assert.equal(existsSync("tests/traces"), false);
 		assert.equal(existsSync("tests/views"), false);
-		assert.equal(existsSync("tests/loops"), false);
+		assert.equal(existsSync("tests/loops"), true);
+		assert.equal(existsSync("tests/verification"), false);
+		assert.equal(existsSync("tests/decision"), false);
+		assert.equal(existsSync("tests/planning"), false);
+		assert.equal(existsSync("tests/implementation"), false);
 		for (const path of [
 			"src/alignment/graph.ts",
 			"src/alignment/knowledge.ts",
@@ -205,21 +218,21 @@ describe("source architecture", () => {
 			"src/changes/trace/store.ts",
 			"src/runtime/queries/projection-types.ts",
 			"src/runtime/queries/runtime-board.ts",
-			"src/runtime/loop-exit/decision-security.ts",
-			"src/runtime/loop-exit/decision.ts",
-			"src/runtime/loop-exit/router.ts",
-			"src/verification/quality/evaluator.ts",
-			"src/verification/quality/graph.ts",
-			"src/verification/quality/runner.ts",
-			"src/implementation/quality-feedback.ts",
+			"src/runtime/lifecycle/decision-security.ts",
+			"src/runtime/lifecycle/decision.ts",
+			"src/checks/quality/evaluator.ts",
+			"src/checks/quality/graph.ts",
+			"src/checks/quality/runner.ts",
+			"src/loops/implementation/quality-feedback.ts",
+			"src/loops/review/contracts.ts",
 			"src/project/config-errors.ts",
 			"src/work-state/projection-types.ts",
 			"src/work-state/work-queue.ts",
 			"tests/alignment/graph-v1.test.mjs",
 			"tests/changes/trace/change-trace-protocol-v1.test.mjs",
-			"tests/runtime/loop-exit/decision.test.mjs",
+			"tests/runtime/lifecycle/decision.test.mjs",
 			"tests/runtime/queries/state-projections.test.mjs",
-			"tests/verification/quality/evaluator.test.mjs",
+			"tests/checks/quality/evaluator.test.mjs",
 		]) {
 			assert.equal(existsSync(path), true, path);
 		}
@@ -281,11 +294,11 @@ describe("source architecture", () => {
 			true,
 		);
 		assert.equal(
-			existsSync(join(sourceRoot, "planning", "exit", "index.ts")),
+			existsSync(join(sourceRoot, "loops", "planning", "exit", "index.ts")),
 			false,
 		);
 		assert.equal(
-			existsSync(join(sourceRoot, "implementation", "exit", "index.ts")),
+			existsSync(join(sourceRoot, "loops", "implementation", "exit", "index.ts")),
 			false,
 		);
 		assert.equal(
@@ -362,20 +375,20 @@ describe("source architecture", () => {
 		assert.deepEqual(tsconfig.include, ["src/**/*.ts", "benchmarks/**/*.ts"]);
 	});
 
-	it("keeps Loop Exit orchestration and routing under Runtime", () => {
-		for (const loopRoot of ["decision", "planning", "implementation"]) {
+	it("keeps fixed lifecycle transitions under Runtime without a Router", () => {
+		for (const loopRoot of ["decision", "planning", "implementation", "review"]) {
 			assert.equal(
-				existsSync(join(sourceRoot, loopRoot, "exit", "runtime.ts")),
+				existsSync(join(sourceRoot, "loops", loopRoot, "exit", "runtime.ts")),
 				false,
 				loopRoot,
 			);
 		}
 		assert.equal(
-			existsSync(join(sourceRoot, "runtime", "loop-exit", "router.ts")),
-			true,
+			existsSync(join(sourceRoot, "runtime", "loop-exit")),
+			false,
 		);
 		assert.equal(
-			existsSync(join(sourceRoot, "runtime", "loop-exit", "decision.ts")),
+			existsSync(join(sourceRoot, "runtime", "lifecycle", "decision.ts")),
 			true,
 		);
 	});
@@ -445,15 +458,13 @@ describe("source architecture", () => {
 		);
 	});
 
-	it("keeps User Standard distillation composition with Verification", () => {
+	it("keeps User Standard distillation composition with Checks", () => {
 		assert.equal(
 			existsSync(join(sourceRoot, "runtime", "user-standard-distillation.ts")),
 			false,
 		);
 		assert.equal(
-			existsSync(
-				join(sourceRoot, "verification", "custom-checks", "runtime.ts"),
-			),
+			existsSync(join(sourceRoot, "checks", "packs", "runtime.ts")),
 			true,
 		);
 	});
@@ -546,12 +557,14 @@ describe("source architecture", () => {
 		assert.match(packageBootstrap, /spawnPiProjectCoordinatorDaemon/u);
 	});
 
-	it("forbids Clients from importing concrete Execution adapters", () => {
+	it("limits Clients to generic legacy review execution", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			if (!relative(sourceRoot, source).startsWith("clients/")) continue;
 			for (const target of targets) {
+				const targetPath = relative(sourceRoot, target);
+				if (targetPath.startsWith("execution/review/")) continue;
 				assert.equal(
-					relative(sourceRoot, target).startsWith("execution/"),
+					targetPath.startsWith("execution/"),
 					false,
 					edgeLabel(source, target),
 				);
@@ -577,6 +590,8 @@ describe("source architecture", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			if (!CORE_SOURCE_ROOTS.includes(rootFor(source))) continue;
 			for (const target of targets) {
+				const targetPath = relative(sourceRoot, target);
+				if (targetPath === "execution/ports.ts") continue;
 				assert.equal(
 					OUTER_ADAPTER_SOURCE_ROOTS.includes(rootFor(target)),
 					false,
@@ -587,10 +602,8 @@ describe("source architecture", () => {
 	});
 
 	it("forbids Loop packages from importing Runtime implementations", () => {
-		const loopRoots = ["decision", "planning", "implementation"];
 		for (const [source, targets] of importEdges(sourceFiles())) {
-			const sourceRootName = relative(sourceRoot, source).split("/")[0];
-			if (!loopRoots.includes(sourceRootName)) continue;
+			if (!relative(sourceRoot, source).startsWith("loops/")) continue;
 			for (const target of targets) {
 				assert.equal(
 					relative(sourceRoot, target).startsWith("runtime/"),
@@ -601,13 +614,13 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("forbids Verification from importing Runtime or Loop implementations", () => {
-		const forbiddenRoots = ["runtime", "decision", "planning", "implementation"];
+	it("forbids Checks from importing Runtime or Loop implementations", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
-			if (!relative(sourceRoot, source).startsWith("verification/")) continue;
+			if (!relative(sourceRoot, source).startsWith("checks/")) continue;
 			for (const target of targets) {
+				const targetRoot = relative(sourceRoot, target).split("/")[0];
 				assert.equal(
-					forbiddenRoots.includes(relative(sourceRoot, target).split("/")[0]),
+					targetRoot === "runtime" || targetRoot === "loops",
 					false,
 					edgeLabel(source, target),
 				);
@@ -700,7 +713,7 @@ describe("source architecture", () => {
 		}
 	});
 
-	it("allows Runtime to depend only on neutral Execution ports", () => {
+	it("limits Runtime to neutral ports and generic legacy review execution", () => {
 		for (const [source, targets] of importEdges(sourceFiles())) {
 			if (!relative(sourceRoot, source).startsWith("runtime/")) continue;
 			for (const target of targets) {
@@ -711,7 +724,12 @@ describe("source architecture", () => {
 					edgeLabel(source, target),
 				);
 				if (!targetPath.startsWith("execution/")) continue;
-				assert.equal(targetPath, "execution/ports.ts", edgeLabel(source, target));
+				assert.equal(
+					targetPath === "execution/ports.ts" ||
+						targetPath.startsWith("execution/review/"),
+					true,
+					edgeLabel(source, target),
+				);
 			}
 		}
 	});

@@ -129,7 +129,13 @@ assert.equal(existsSync(join(packageRoot, "dist", "api", "loop-execution.js")), 
 assert.equal(existsSync(join(packageRoot, "dist", "change-trace")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "traces")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "views")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "loops")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "loops")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "verification")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "decision")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "planning")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "implementation")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "loop-exit")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "semantic-loop.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "error-handling", "trace-errors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "error-handling", "config-errors.js")), false);
@@ -141,10 +147,14 @@ assert.equal(existsSync(join(packageRoot, "dist", "work-state", "projection-type
 assert.equal(existsSync(join(packageRoot, "dist", "work-state", "work-queue.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "alignment", "graph.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "alignment", "query.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "verification", "quality", "evaluator.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "verification", "quality", "graph.d.ts")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "verification", "quality", "runner.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "implementation", "quality-feedback.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "quality", "evaluator.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "quality", "graph.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "quality", "runner.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "implementation", "quality-feedback.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "review", "contracts.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "execution", "review", "index.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "execution", "security", "scanners.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "runtime", "lifecycle", "decision.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace", "index.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "changes", "trace", "storage-errors.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "runtime-reaction-jobs.js")), false);
@@ -178,14 +188,14 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "prompt.
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "reports.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "handoff.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "verification", "runtime.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "verification", "custom-checks", "runtime.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "verification", "custom-checks", "runtime.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "index.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "packs", "runtime.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "packs", "runtime.d.ts")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "user-standard-distillation.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "user-standard-distillation.d.ts")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research-claims.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "decision", "exit", "research-executors.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research-claims.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research-executors.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "start.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "git.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "change.js")), true);
@@ -314,6 +324,7 @@ assert.equal(SERVER_REPOSITORY_ACCESS_PROTOCOL.version, "1.0.0");
 assert.equal(typeof checkServerProviderRepositoryAccess, "function");
 assert.equal(typeof createNextChangeOperation, "function");
 assert.equal(typeof projectAlignmentGraph, "function");
+assert.equal(typeof packageModule.createReviewAttempt, "function");
 assert.equal(typeof issueAuthorizedClientPairing, "function");
 assert.equal(typeof revokeAuthorizedClientPairing, "function");
 assert.equal(packageModule.issueClientPairing, undefined);
@@ -356,8 +367,8 @@ assert.equal(
 	}).actor.actorId,
 	"user:packed",
 );
-assert.equal(existsSync(join(packageRoot, "dist", "planning", "exit", "index.js")), false);
-assert.equal(existsSync(join(packageRoot, "dist", "implementation", "exit", "index.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "planning", "exit", "index.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "implementation", "exit", "index.js")), false);
 assert.equal(
 	existsSync(join(packageRoot, "dist", "harnesses")),
 	false,

@@ -5,7 +5,7 @@ description: Owns accepted-intent Candidate semantics, knowledge-impact assessme
 status: stable
 tags: [system, component]
 codewiki_component: decision
-codewiki_source_patterns: ["src/loops/decision/**"]
+codewiki_source_patterns: ["src/loops/decision/**", "src/loops/candidate-admission.ts"]
 codewiki_test_patterns: ["tests/loops/decision/**"]
 codewiki_relationships:
   - type: realizes

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { changeTraceId } from "../../changes/trace/change-record.ts";
 import { stableJson } from "../../changes/digest.ts";
-import type { ImplementationWorkerReportInput } from "../../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../../loops/implementation/workers.ts";
 import { readTraceFile } from "../../changes/trace/reader.ts";
 import { traceFilePath } from "../../changes/trace/schema.ts";
 import type { TraceEvent } from "../../changes/trace/types.ts";

@@ -148,6 +148,7 @@ src/
   project/
   execution/
     ports.ts
+    review/
     pi/
   preview/
   git/
@@ -158,7 +159,7 @@ scripts/
 tests/
 ```
 
-`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/error-handling/**` stays a lean Package-owned foundation for the common error envelope, serialization, type guards, and stable operation-failure contract; owner-specific error semantics do not accumulate there. `src/checks/**` owns Check contracts, Pack loading, generic Code and Model execution coordination, cache identity, completed Results, and Gate Reports. `src/loops/**` owns Decision, Planning, Implementation, and Review stage semantics. Runtime invokes Checks, records authoritative Gate state, and applies one fixed lifecycle without a Router. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains an internal Runtime subsystem. Public `./coordinator`, root `coordinator.ts`, generic `composition/**`, `src/runtime/loop-exit/**`, and `src/verification/**` do not survive the clean cut. `src/pi-extension.ts` is the neutral shipped Package bootstrap that wires Pi Client registration, the Runtime connection boundary, and the concrete Execution spawner without reversing those owner dependencies. A neutral `src/main.ts` may later construct Server and Runtime siblings only when standalone process bootstrap genuinely requires it.
+`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/error-handling/**` stays a lean Package-owned foundation for the common error envelope, serialization, type guards, and stable operation-failure contract; owner-specific error semantics do not accumulate there. `src/checks/**` owns Check contracts, Pack loading, generic Code and Model execution coordination, cache identity, completed Results, and Gate Reports. `src/loops/**` owns Decision, Planning, Implementation, and Review stage semantics. Runtime invokes Checks, records authoritative Gate state, and applies one fixed lifecycle without a Router. `src/execution/review/**` temporarily owns moved legacy language-review execution; it is neither the semantic Review Loop nor a Gate. Its existing direct Pi Client and Runtime callers remain bounded migration debt until Review Gates replace those mechanics behind neutral ports. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains an internal Runtime subsystem. Public `./coordinator`, root `coordinator.ts`, generic `composition/**`, `src/runtime/loop-exit/**`, and `src/verification/**` do not survive the clean cut. `src/pi-extension.ts` is the neutral shipped Package bootstrap that wires Pi Client registration, the Runtime connection boundary, and the concrete Execution spawner without reversing those owner dependencies. A neutral `src/main.ts` may later construct Server and Runtime siblings only when standalone process bootstrap genuinely requires it.
 
 Target dependency direction is:
 
@@ -186,7 +187,8 @@ src/views/**                         -> Alignment, WorkState, or Runtime queries
 src/semantic-loop.ts                 -> src/loops contracts or delete
 src/decision/**                      -> src/loops/decision/**
 src/planning/**                      -> src/loops/planning/**
-src/implementation/**                -> src/loops/implementation/**
+src/implementation/review/**         -> src/execution/review/**
+other src/implementation/**           -> src/loops/implementation/**
 src/verification/**                  -> src/checks/** or delete obsolete machinery
 src/runtime/loop-exit/**              -> src/checks/gate/**, Runtime lifecycle, or delete
 legacy Quality and repair machinery   -> atomic Check feedback or delete
@@ -315,6 +317,8 @@ The Benchmark production extraction clean cut is recorded by `.tmp-worktrees/ben
 
 The Runtime Loop Exit ownership clean cut is recorded by `.tmp-worktrees/runtime-loop-exit-ownership-clean-cut-manifest.json`, exhaustively anchored to `771d8ea` with 648 keeps, 3 moves, 1 deletion, and 1 planned addition. Native Decision Check orchestration and security policy assembly move from `src/decision/exit/**` to `src/runtime/loop-exit/**`; one generic Runtime router now reduces `pass | fail | indeterminate` consistently for all three semantic Loops. Decision retains Candidate, Check, Evidence, research, and security-scanner semantics. The test-only Decision exit barrel and all old paths, names, aliases, and compatibility exports are deleted. Decision Exit Report, Runtime Route, canonical trace bytes, operation order, and identities remain unchanged; source and test counts remain flat. Its green checkpoint is 943 full-suite tests, 119 coordinator tests, 709 packed files (1.3 MB packed and 4.6 MB unpacked), passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, and readiness gates, and zero production audit vulnerabilities.
 
+The Checks and four-Loop topology clean cut is recorded by `.tmp-worktrees/checks-four-loop-ownership-clean-cut-manifest.json`, exhaustively anchored to `c250c03` with 507 keeps, 147 moves, 1 deletion, and 1 planned addition. Check mechanics move to `src/checks/**`; Decision, Planning, and Implementation move to `src/loops/**`; legacy implementation-review and security execution move to `src/execution/**`; fixed Decision lifecycle handling moves to `src/runtime/lifecycle/**`; and the generic Router is deleted. The cut adds one immutable exact-head Review attempt binding under `src/loops/review/**` and removes the transitional public Loop Exit names without aliases. It deliberately preserves singular legacy Quality, repair, protected-floor, activation, evaluator, indeterminate, and direct generic review-execution callers for the next contract-replacement slice. Source and test counts remain flat at 353/194. Its green checkpoint is 944 full-suite tests, 119 coordinator tests, 709 packed files, passing Pi install, SDK-package, project-local install, external lifecycle, external failure, and packed-install gates, with zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -360,10 +364,11 @@ Rules:
 - [x] Historical checkpoint: move shared quality mechanics to Verification, move quality feedback to Implementation, and merge the then-current Loop discriminator into Verification contracts without compatibility paths.
 - [x] Historical checkpoint: establish transitional Runtime-owned Loop Exit routing and move native Decision orchestration from Decision to Runtime.
 - [x] Create and execute the reviewed `101ef73`-anchored Project configuration-error ownership manifest and delete the old Package error path without compatibility exports.
-- [ ] Create one reviewed HEAD-anchored manifest for the root Checks and four-Loop clean cut before structural source edits.
-- [ ] Move Decision, Planning, and Implementation under `src/loops/**`; add Review as the fourth Loop with exact-head attempts and fixed feedback return to Implementation.
-- [ ] Move surviving Check contracts, Pack loading, execution coordination, cache, Results, and Gate reduction to `src/checks/**`; delete `src/verification/**`, `src/runtime/loop-exit/**`, per-Loop `exit/**`, and obsolete routing vocabulary without aliases.
-- [ ] Update exact Knowledge concept-count, index, source-ownership, and source-architecture assertions atomically with the source cut; do not weaken target KB ownership metadata to preserve obsolete executable paths.
+- [x] Create and execute the reviewed `c250c03`-anchored manifest for the root Checks and four-Loop topology clean cut.
+- [x] Move Decision, Planning, and Implementation under `src/loops/**` and add one immutable exact-head Review attempt contract under `src/loops/review/**`.
+- [ ] Implement Review attempt persistence, Gate execution, and fixed failed-Review feedback return to Implementation.
+- [x] Move surviving Check contracts, Pack loading, execution coordination, cache, Results, and Gate reduction to `src/checks/**`; delete `src/verification/**`, `src/runtime/loop-exit/**`, per-Loop `exit/**`, and the generic Router without aliases.
+- [x] Update exact Knowledge concept-count, index, source-ownership, and source-architecture assertions atomically with the source cut without weakening desired ownership metadata.
 - [ ] Delete legacy Quality, Repair Profile/Frontier/Brief/Bundle, indeterminate Result, obsolete Loop compatibility, and old ChangeRecord contracts as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.

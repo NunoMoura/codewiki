@@ -1,4 +1,4 @@
-import type { PlanningTrigger } from "../../planning/types.ts";
+import type { PlanningTrigger } from "../../loops/planning/types.ts";
 import { foldProjectTraceRecords } from "../../changes/trace/project.ts";
 import { loopOutputEvents } from "../../changes/trace/queries.ts";
 import { replayTrace } from "../../changes/trace/replay.ts";

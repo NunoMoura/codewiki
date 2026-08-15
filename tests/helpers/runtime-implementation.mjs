@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { runWikiDecide } from "../../src/decision/command.ts";
+import { runWikiDecide } from "../../src/loops/decision/command.ts";
 import { runWikiPlan } from "../../src/runtime/commands/planning.ts";
 import { changeTraceId } from "../../src/changes/trace/change-record.ts";
 import { createChangeRecord } from "../../src/changes/records.ts";

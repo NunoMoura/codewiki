@@ -97,9 +97,9 @@ import {
 	scheduleRuntimeReactions,
 	type RuntimeReactionJobReceipt,
 } from "./reactions.ts";
-import { parseDecisionCandidateProposal } from "../../decision/candidate-proposal.ts";
-import { parseImplementationCandidateContent } from "../../implementation/candidate-content.ts";
-import { parsePlanningCandidateContent } from "../../planning/candidate-content.ts";
+import { parseDecisionCandidateProposal } from "../../loops/decision/candidate-proposal.ts";
+import { parseImplementationCandidateContent } from "../../loops/implementation/candidate-content.ts";
+import { parsePlanningCandidateContent } from "../../loops/planning/candidate-content.ts";
 import type {
 	RunRuntimeSelectedSemanticReactionResult,
 	RuntimeLoopExecutionPorts,

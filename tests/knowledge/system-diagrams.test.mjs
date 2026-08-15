@@ -4,7 +4,7 @@ import { validateSystemDiagrams } from "../../src/knowledge/system-diagrams.ts";
 
 const components = [
 	"/system/components/runtime.md",
-	"/system/components/verification.md",
+	"/system/components/checks.md",
 	"/system/components/change-trace.md",
 ];
 const flows = ["/system/flows/change-lifecycle.md"];
@@ -12,7 +12,7 @@ const flows = ["/system/flows/change-lifecycle.md"];
 function validDiagram() {
 	return {
 		id: "architecture",
-		purpose: "Show the authoritative verification and persistence path.",
+		purpose: "Show the authoritative Checks and persistence path.",
 		components: [
 			{
 				id: "runtime",
@@ -21,9 +21,9 @@ function validDiagram() {
 				zone: "core",
 			},
 			{
-				id: "verification",
-				concept: "/system/components/verification.md",
-				label: "Verification",
+				id: "checks",
+				concept: "/system/components/checks.md",
+				label: "Checks",
 				zone: "core",
 			},
 			{
@@ -35,18 +35,18 @@ function validDiagram() {
 		],
 		connections: [
 			{
-				id: "runtime-invokes-verification",
+				id: "runtime-invokes-checks",
 				from: "runtime",
-				to: "verification",
+				to: "checks",
 				type: "invokes",
-				label: "runs Checks",
+				label: "runs Gate",
 			},
 			{
-				id: "verification-returns-runtime",
-				from: "verification",
+				id: "checks-return-runtime",
+				from: "checks",
 				to: "runtime",
 				type: "returns",
-				label: "returns Exit Report",
+				label: "returns Gate Report",
 			},
 			{
 				id: "runtime-writes-trace",
@@ -66,8 +66,8 @@ function validDiagram() {
 				paths: [
 					{
 						connections: [
-							"runtime-invokes-verification",
-							"verification-returns-runtime",
+							"runtime-invokes-checks",
+							"checks-return-runtime",
 							"runtime-writes-trace",
 						],
 					},
@@ -109,8 +109,8 @@ describe("System diagram contract", () => {
 	it("requires a contiguous path of at least two declared connections", () => {
 		const diagram = validDiagram();
 		diagram.flows[0].paths = [
-			{ connections: ["runtime-invokes-verification"] },
-			{ connections: ["runtime-writes-trace", "verification-returns-runtime"] },
+			{ connections: ["runtime-invokes-checks"] },
+			{ connections: ["runtime-writes-trace", "checks-return-runtime"] },
 		];
 		const issues = validateSystemDiagrams({
 			diagrams: [diagram],

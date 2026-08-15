@@ -1,4 +1,4 @@
-import type {PlanningTrigger} from "../planning/types.ts";
+import type {PlanningTrigger} from "../loops/planning/types.ts";
 import type {
 	LoopQualityStandardGate,
 	LoopQualityStandardMode,

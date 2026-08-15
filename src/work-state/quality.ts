@@ -1,8 +1,8 @@
-import { DECISION_CHANGE_QUALITY_STANDARDS } from "../decision/change-quality.ts";
-import { IMPLEMENTATION_LOOP_GRAPH } from "../implementation/loop.ts";
-import { implementationQualityStandards } from "../implementation/quality-standards.ts";
-import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../planning/portfolio-quality.ts";
-import type { LoopQualityGraphNode } from "../verification/quality/graph.ts";
+import { DECISION_CHANGE_QUALITY_STANDARDS } from "../loops/decision/change-quality.ts";
+import { IMPLEMENTATION_LOOP_GRAPH } from "../loops/implementation/loop.ts";
+import { implementationQualityStandards } from "../loops/implementation/quality-standards.ts";
+import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../loops/planning/portfolio-quality.ts";
+import type { LoopQualityGraphNode } from "../checks/quality/graph.ts";
 import { loopOutputEvents } from "../changes/trace/queries.ts";
 import type {
 	LoopQualityStandardResult,

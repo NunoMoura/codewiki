@@ -9,7 +9,7 @@ import {
 	createChangeRecord,
 } from "../../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../../src/changes/trace/store.ts";
-import { InMemoryReviewEvidenceCache } from "../../../src/implementation/review/index.ts";
+import { InMemoryReviewEvidenceCache } from "../../../src/execution/review/index.ts";
 import { buildCodewikiAppState } from "../../../src/runtime/queries/app-state.ts";
 import { loadRuntimeChangesState } from "../../../src/runtime/queries/changes.ts";
 import { readProjectTraceRecords } from "../../../src/work-state/project.ts";

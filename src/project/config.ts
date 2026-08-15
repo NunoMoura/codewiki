@@ -6,15 +6,15 @@ import {
 import {
 	normalizeProjectChecksConfiguration,
 	type ProjectChecksConfiguration,
-} from "../verification/custom-checks/configuration.ts";
+} from "../checks/packs/configuration.ts";
 import {
 	normalizeCustomCheckDefinitions,
 	type CustomCheckDefinition,
-} from "../verification/custom-checks/contracts.ts";
+} from "../checks/packs/contracts.ts";
 import {
 	normalizeUserStandardDefinitions,
 	type UserStandardDefinition,
-} from "../verification/custom-checks/user-standards.ts";
+} from "../checks/packs/user-standards.ts";
 import {
 	DEFAULT_WIKI_PREVIEW_CONFIG,
 	type PartialWikiPreviewConfig,

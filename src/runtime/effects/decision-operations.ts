@@ -28,8 +28,8 @@ import {
 	type CheckResult,
 	type ExitReport,
 	type ResolvedExitPolicy,
-} from "../../verification/contracts.ts";
-import {assertValidExitReport} from "../../verification/results.ts";
+} from "../../checks/contracts.ts";
+import {assertValidExitReport} from "../../checks/results.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
@@ -38,8 +38,8 @@ import {
 import {
 	createDecisionCandidate,
 	type DecisionCandidate,
-} from "../../decision/exit/candidate.ts";
-import type {DecisionLoopExitRoute} from "../loop-exit/decision.ts";
+} from "../../loops/decision/candidate.ts";
+import type {DecisionLifecycleTransition} from "../lifecycle/decision.ts";
 
 export interface CreateNativeDecisionOperationsInput {
 	readonly state: ProjectWorkState;
@@ -52,7 +52,7 @@ export interface CreateNativeDecisionOperationsInput {
 	readonly policy: ResolvedExitPolicy;
 	readonly evidenceRecords: readonly EvidenceRecord[];
 	readonly report: ExitReport;
-	readonly route: DecisionLoopExitRoute;
+	readonly route: DecisionLifecycleTransition;
 }
 
 export interface NativeDecisionOperationSequence {
@@ -321,7 +321,7 @@ function assertCandidateIdentity(candidate: DecisionCandidate): void {
 	}
 }
 
-function assertRuntimeRouteIdentity(route: DecisionLoopExitRoute): void {
+function assertRuntimeRouteIdentity(route: DecisionLifecycleTransition): void {
 	const {routeDigest, ...body} = route;
 	if (routeDigest !== canonicalJsonDigest(body)) {
 		throw new Error("Native Decision Runtime Route identity is invalid.");
@@ -399,7 +399,7 @@ export interface CommitNativeDecisionOperationSequenceInput {
 	readonly exitPolicy: ResolvedExitPolicy;
 	readonly evidenceRecords: readonly EvidenceRecord[];
 	readonly report: ExitReport;
-	readonly route: DecisionLoopExitRoute;
+	readonly route: DecisionLifecycleTransition;
 	readonly runner?: GitCommandRunner;
 	readonly materializationRoot?: string;
 	readonly signal?: AbortSignal;

@@ -11,13 +11,13 @@ import {
 	type AuthenticatedDecisionSelectionAuthority,
 	type DecisionAttentionSelectionAuthorizationRequest,
 } from "../../changes/triage/selection.ts";
-import {createDecisionLoopExit} from "../../runtime/loop-exit/decision.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../../verification/custom-checks/configuration.ts";
+import {createDecisionGate} from "../../runtime/lifecycle/decision.ts";
+import type {ProtectedCustomCheckConfigSnapshot} from "../../checks/packs/configuration.ts";
 import {
 	loadProtectedCustomCheckConfigSnapshot,
 	loadProtectedProjectCheckPacks,
 	type ProjectCheckPackSnapshot,
-} from "../../verification/custom-checks/project-config-store.ts";
+} from "../../checks/packs/project-config-store.ts";
 import {createDecisionGitAdmission} from "../../runtime/admission/git.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
@@ -74,14 +74,14 @@ export interface PiNativeDecisionHostOptions {
 	readonly authorizeSelection?: (
 		request: DecisionAttentionSelectionAuthorizationRequest,
 	) => boolean | Promise<boolean>;
-	readonly createLoopExit?: (
-		input: Parameters<NativeDecisionAttemptExecutorOptions["createLoopExit"]>[0] & {
+	readonly createDecisionGate?: (
+		input: Parameters<NativeDecisionAttemptExecutorOptions["createDecisionGate"]>[0] & {
 			readonly protectedConfig: ProtectedCustomCheckConfigSnapshot;
 			readonly projectCheckPackSnapshot: ProjectCheckPackSnapshot;
 		},
 	) =>
-		| ReturnType<typeof createDecisionLoopExit>
-		| Promise<ReturnType<typeof createDecisionLoopExit>>;
+		| ReturnType<typeof createDecisionGate>
+		| Promise<ReturnType<typeof createDecisionGate>>;
 	readonly loadEvaluationInput?: NativeDecisionAttemptExecutorOptions["loadEvaluationInput"];
 	readonly runner?: GitCommandRunner;
 	readonly materializationRoot?: string;
@@ -94,9 +94,9 @@ export function createPiNativeDecisionStartOptions(
 	options: PiNativeDecisionHostOptions,
 ): ProjectCoordinatorDecisionStartOptions {
 	const repoRoot = realpathSync(options.repoRoot);
-	if (options.createLoopExit && options.decisionResearch) {
+	if (options.createDecisionGate && options.decisionResearch) {
 		throw new Error(
-			"Pi native Decision host accepts either createLoopExit or decisionResearch, not both.",
+			"Pi native Decision host accepts either createDecisionGate or decisionResearch, not both.",
 		);
 	}
 	assertTypeboxSchema(
@@ -130,8 +130,8 @@ export function createPiNativeDecisionStartOptions(
 		replayPolicy: options.replayPolicy,
 		authorityBinding: runtimeAuthorityBinding,
 		producer,
-		createLoopExit: (input) =>
-			loadPiNativeDecisionLoopExit({repoRoot, options, input}),
+		createDecisionGate: (input) =>
+			loadPiNativeDecisionGate({repoRoot, options, input}),
 		...(options.loadEvaluationInput
 			? {loadEvaluationInput: options.loadEvaluationInput}
 			: {}),
@@ -155,11 +155,11 @@ export function createPiNativeDecisionStartOptions(
 	});
 }
 
-async function loadPiNativeDecisionLoopExit(input: {
+async function loadPiNativeDecisionGate(input: {
 	readonly repoRoot: string;
 	readonly options: PiNativeDecisionHostOptions;
 	readonly input: Parameters<
-		NativeDecisionAttemptExecutorOptions["createLoopExit"]
+		NativeDecisionAttemptExecutorOptions["createDecisionGate"]
 	>[0];
 }) {
 	const [protectedConfig, projectCheckPackSnapshot] = await Promise.all([
@@ -180,12 +180,12 @@ async function loadPiNativeDecisionLoopExit(input: {
 		protectedConfig.projectConfigDigest !== input.input.teamSnapshot.configDigest
 	) {
 		throw new Error(
-			"Pi native Decision Loop Exit config does not match the current team snapshot.",
+			"Pi native Decision Gate config does not match the current team snapshot.",
 		);
 	}
-	let loopExit: ReturnType<typeof createDecisionLoopExit>;
-	if (input.options.createLoopExit) {
-		loopExit = await input.options.createLoopExit({
+	let decisionGate: ReturnType<typeof createDecisionGate>;
+	if (input.options.createDecisionGate) {
+		decisionGate = await input.options.createDecisionGate({
 			...input.input,
 			protectedConfig,
 			projectCheckPackSnapshot,
@@ -199,7 +199,7 @@ async function loadPiNativeDecisionLoopExit(input: {
 					now: input.options.now,
 				})
 			: undefined;
-		loopExit = createDecisionLoopExit({
+		decisionGate = createDecisionGate({
 			protectedBaseCustomCheckConfig: protectedConfig,
 			projectCheckPackSnapshot,
 			...(researchChecks ? {researchChecks} : {}),
@@ -208,7 +208,7 @@ async function loadPiNativeDecisionLoopExit(input: {
 	return {
 		protectedSourceHead: protectedConfig.protectedSourceHead,
 		projectConfigDigest: protectedConfig.projectConfigDigest,
-		loopExit,
+		decisionGate,
 	};
 }
 

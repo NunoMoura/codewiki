@@ -40,10 +40,10 @@ it("rejects ambiguous raw and native Pi Decision host configuration", async () =
 		() =>
 			createPiNativeDecisionStartOptions({
 				repoRoot: process.cwd(),
-				createLoopExit() {},
+				createDecisionGate() {},
 				decisionResearch: {},
 			}),
-		/either createLoopExit or decisionResearch, not both/,
+		/either createDecisionGate or decisionResearch, not both/,
 	);
 	await assert.rejects(
 		startPiProjectCoordinatorDaemon(process.cwd(), {

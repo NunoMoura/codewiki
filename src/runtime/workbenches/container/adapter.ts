@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { lstatSync, realpathSync } from "node:fs";
 import { chmod, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
-import type { ImplementationWorkerReportInput } from "../../../implementation/workers.ts";
+import type { ImplementationWorkerReportInput } from "../../../loops/implementation/workers.ts";
 import {
 	assertImplementationWorkerAssignment,
 	assertImplementationWorkerReport,

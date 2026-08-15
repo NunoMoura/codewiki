@@ -62,8 +62,8 @@ function sampleSourceMap() {
 			{
 				id: "implementation",
 				doc: ".codewiki/kb/system/components/implementation.md",
-				sourcePatterns: ["src/implementation/**"],
-				testPatterns: ["tests/implementation/**"],
+				sourcePatterns: ["src/loops/implementation/**"],
+				testPatterns: ["tests/loops/implementation/**"],
 				generatedViews: [],
 				traceEvents: ["implementation.evidence_accepted"],
 				role: "semantic_loop",
@@ -82,7 +82,7 @@ describe("source ownership map helpers", () => {
 			"traces",
 		);
 		assert.equal(
-			sourceMapOwnerForPath(map, "src/implementation/workers.ts")?.doc,
+			sourceMapOwnerForPath(map, "src/loops/implementation/workers.ts")?.doc,
 			".codewiki/kb/system/components/implementation.md",
 		);
 	});
@@ -91,7 +91,10 @@ describe("source ownership map helpers", () => {
 		const map = sampleSourceMap();
 		const issues = validateSourceMap(map, {
 			artifactPaths: activeArtifactPaths(),
-			sourcePaths: ["src/changes/trace/append.ts", "src/implementation/iteration.ts"],
+			sourcePaths: [
+				"src/changes/trace/append.ts",
+				"src/loops/implementation/iteration.ts",
+			],
 		});
 
 		assert.deepEqual(issues, []);

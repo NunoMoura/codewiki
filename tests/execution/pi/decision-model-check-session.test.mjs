@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {test} from "node:test";
 
-import {DECISION_MODEL_CHECK_REQUEST_PROTOCOL} from "../../../src/decision/exit/model-checks.ts";
+import {DECISION_MODEL_CHECK_REQUEST_PROTOCOL} from "../../../src/loops/decision/model-checks.ts";
 import {createPiDecisionModelCheckTransport} from "../../../src/execution/pi/decision-model-check-session.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
 

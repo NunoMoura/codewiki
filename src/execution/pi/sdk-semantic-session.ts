@@ -10,17 +10,17 @@ import { Type } from "typebox";
 import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
-} from "../../decision/candidate-proposal.ts";
+} from "../../loops/decision/candidate-proposal.ts";
 import {
 	implementationCandidateContentSchema as implementationCandidateSchema,
 	parseImplementationCandidateContent,
 	type ImplementationCandidateContent,
-} from "../../implementation/candidate-content.ts";
+} from "../../loops/implementation/candidate-content.ts";
 import {
 	parsePlanningCandidateContent,
 	planningCandidateContentSchema as planningCandidateSchema,
 	type PlanningCandidateContent,
-} from "../../planning/candidate-content.ts";
+} from "../../loops/planning/candidate-content.ts";
 import type {
 	RuntimeDecisionInvocation,
 	RuntimeImplementationInvocation,

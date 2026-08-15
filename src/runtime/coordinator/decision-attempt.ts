@@ -18,14 +18,14 @@ import {
 	type ProjectAuthoritySnapshot,
 	type TeamSnapshot,
 } from "../../changes/trace/synchronization.ts";
-import type {DecisionCandidateProposal} from "../../decision/candidate-proposal.ts";
-import {parseDecisionCandidateProposal} from "../../decision/candidate-proposal.ts";
+import type {DecisionCandidateProposal} from "../../loops/decision/candidate-proposal.ts";
+import {parseDecisionCandidateProposal} from "../../loops/decision/candidate-proposal.ts";
 import {
 	createDecisionCandidate,
 	type DecisionCandidate,
-} from "../../decision/exit/candidate.ts";
-import type {DecisionSecurityScanContext} from "../../decision/exit/security-scanners.ts";
-import type {createDecisionLoopExit} from "../loop-exit/decision.ts";
+} from "../../loops/decision/candidate.ts";
+import type {DecisionSecurityScanContext} from "../../loops/decision/security-scanners.ts";
+import type {createDecisionGate} from "../lifecycle/decision.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
 import type {ProjectCoordinatorRecovery} from "./project.ts";
 import type {DecisionAttemptExecutor} from "../admission/start.ts";
@@ -126,10 +126,10 @@ export interface NativeDecisionEvaluationInput {
 	readonly securityScan?: DecisionSecurityScanContext;
 }
 
-export interface NativeDecisionLoopExitBinding {
+export interface NativeDecisionGateBinding {
 	readonly protectedSourceHead: string;
 	readonly projectConfigDigest: Sha256Digest;
-	readonly loopExit: ReturnType<typeof createDecisionLoopExit>;
+	readonly decisionGate: ReturnType<typeof createDecisionGate>;
 }
 
 export interface NativeDecisionAttemptResult {
@@ -154,13 +154,13 @@ export interface NativeDecisionAttemptExecutorOptions {
 	readonly replayPolicy: ReplayAdmissionPolicy;
 	readonly authorityBinding: AuthorityBinding;
 	readonly producer: NativeDecisionCandidateProducer;
-	readonly createLoopExit: (input: {
+	readonly createDecisionGate: (input: {
 		readonly state: ProjectWorkState;
 		readonly teamSnapshot: TeamSnapshot;
 		readonly signal: AbortSignal;
 	}) =>
-		| NativeDecisionLoopExitBinding
-		| Promise<NativeDecisionLoopExitBinding>;
+		| NativeDecisionGateBinding
+		| Promise<NativeDecisionGateBinding>;
 	readonly loadEvaluationInput?: (input: {
 		readonly candidate: DecisionCandidate;
 		readonly state: ProjectWorkState;
@@ -199,7 +199,7 @@ export function createNativeDecisionAttemptExecutor(
 			if (current.attempt.status !== "active") {
 				return attemptResult(current);
 			}
-			const loopExit = await boundLoopExit({
+			const decisionGate = await boundDecisionGate({
 				options,
 				current,
 				signal: input.signal,
@@ -225,7 +225,7 @@ export function createNativeDecisionAttemptExecutor(
 					signal: input.signal,
 				})) ?? {},
 			);
-			const exit = await loopExit.run({
+			const gateRun = await decisionGate.run({
 				candidate,
 				changeRef: `change:${input.changeId}`,
 				evidenceRecords: evaluationInput.evidenceRecords,
@@ -237,8 +237,8 @@ export function createNativeDecisionAttemptExecutor(
 			input.signal.throwIfAborted();
 			const evidenceRecords = [
 				...evaluationInput.evidenceRecords,
-				...exit.collectedEvidenceRecords,
-				...exit.result.producedEvidenceRecords,
+				...gateRun.collectedEvidenceRecords,
+				...gateRun.result.producedEvidenceRecords,
 			];
 			const receipt = await commitNativeDecisionOperationSequence({
 				repoRoot: options.repoRoot,
@@ -253,10 +253,10 @@ export function createNativeDecisionAttemptExecutor(
 				expectedWorkStateDigest: current.state.workStateDigest,
 				recordedAt: (options.now ?? (() => new Date().toISOString()))(),
 				candidate,
-				exitPolicy: exit.policy,
+				exitPolicy: gateRun.policy,
 				evidenceRecords,
-				report: exit.result.report,
-				route: exit.route,
+				report: gateRun.result.report,
+				route: gateRun.transition,
 				runner: options.runner,
 				materializationRoot: options.materializationRoot,
 				signal: input.signal,
@@ -276,31 +276,31 @@ export function createNativeDecisionAttemptExecutor(
 	});
 }
 
-async function boundLoopExit(input: {
+async function boundDecisionGate(input: {
 	readonly options: NativeDecisionAttemptExecutorOptions;
 	readonly current: CurrentAttempt;
 	readonly signal: AbortSignal;
-}): Promise<ReturnType<typeof createDecisionLoopExit>> {
-	const binding = await input.options.createLoopExit({
+}): Promise<ReturnType<typeof createDecisionGate>> {
+	const binding = await input.options.createDecisionGate({
 		state: input.current.state,
 		teamSnapshot: input.current.teamSnapshot,
 		signal: input.signal,
 	});
 	assertOnlyKeys({
 		value: binding,
-		allowed: ["protectedSourceHead", "projectConfigDigest", "loopExit"],
-		label: "Native Decision Loop Exit binding",
+		allowed: ["protectedSourceHead", "projectConfigDigest", "decisionGate"],
+		label: "Native Decision Gate binding",
 	});
 	if (
 		binding.protectedSourceHead !== input.current.teamSnapshot.protectedSourceHead ||
 		binding.projectConfigDigest !== input.current.teamSnapshot.configDigest ||
-		typeof binding.loopExit?.run !== "function"
+		typeof binding.decisionGate?.run !== "function"
 	) {
 		throw new Error(
-			"Native Decision Loop Exit is not bound to the current protected project snapshot.",
+			"Native Decision Gate is not bound to the current protected project snapshot.",
 		);
 	}
-	return binding.loopExit;
+	return binding.decisionGate;
 }
 
 function candidateProductionRequest(input: {

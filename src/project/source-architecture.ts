@@ -1,16 +1,14 @@
 export const CURRENT_SOURCE_ROOTS = [
 	"alignment",
 	"changes",
+	"checks",
 	"clients",
-	"decision",
 	"error-handling",
 	"evidence",
 	"execution",
 	"git",
-	"implementation",
 	"knowledge",
-	"verification",
-	"planning",
+	"loops",
 	"preview",
 	"project",
 	"protocol",
@@ -20,27 +18,7 @@ export const CURRENT_SOURCE_ROOTS = [
 	"work-state",
 ] as const;
 
-export const TARGET_SOURCE_ROOTS = [
-	"alignment",
-	"changes",
-	"clients",
-	"decision",
-	"error-handling",
-	"evidence",
-	"execution",
-	"git",
-	"implementation",
-	"knowledge",
-	"planning",
-	"preview",
-	"project",
-	"protocol",
-	"runtime",
-	"server",
-	"utils",
-	"verification",
-	"work-state",
-] as const;
+export const TARGET_SOURCE_ROOTS = [...CURRENT_SOURCE_ROOTS] as const;
 
 export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"admission",
@@ -51,7 +29,6 @@ export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"effects",
 	"integration",
 	"lifecycle",
-	"loop-exit",
 	"persistence",
 	"queries",
 	"recovery",
@@ -67,8 +44,8 @@ export const LEGACY_SOURCE_FILES = [] as const;
 export const CORE_SOURCE_ROOTS = [
 	"alignment",
 	"changes",
+	"checks",
 	"evidence",
-	"verification",
 ] as const;
 
 export const OUTER_ADAPTER_SOURCE_ROOTS = [
@@ -88,9 +65,9 @@ export const FORBIDDEN_RUNTIME_SUBDIRECTORIES = [
 ] as const;
 
 export const IMPORT_CYCLE_BASELINE = [
+	"src/checks/catalog.ts | src/checks/runner.ts | src/checks/security-scanner-checks.ts",
+	"src/checks/contracts.ts | src/checks/identity.ts",
 	"src/evidence/obligation-resolution.ts | src/evidence/obligations.ts",
 	"src/git/worktrees.ts | src/runtime/claims/work-unit-selection.ts",
-	"src/implementation/review/evidence-report.ts | src/implementation/types.ts | src/implementation/worker-proof.ts",
-	"src/verification/catalog.ts | src/verification/runner.ts | src/verification/security-scanner-checks.ts",
-	"src/verification/contracts.ts | src/verification/identity.ts",
+	"src/execution/review/evidence-report.ts | src/loops/implementation/types.ts | src/loops/implementation/worker-proof.ts",
 ] as const;

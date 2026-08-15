@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, it } from "node:test";
-import { InMemoryReviewEvidenceCache } from "../../../src/implementation/review/index.ts";
+import { InMemoryReviewEvidenceCache } from "../../../src/execution/review/index.ts";
 import codewikiExtension from "../../../src/pi-extension.ts";
 import {
 	createCodeWikiReviewToolResultHandler,
@@ -63,10 +63,10 @@ describe("CodeWiki Pi review hooks", () => {
 	it("extracts active path scopes from event and context", () => {
 		assert.deepEqual(
 			pathScopesFromToolEventContext(
-				{ args: { pathScopes: ["src/implementation/"] } },
+				{ args: { pathScopes: ["src/loops/implementation/"] } },
 				{ cwd: process.cwd() },
 			),
-			["src/implementation/"],
+			["src/loops/implementation/"],
 		);
 		assert.deepEqual(
 			pathScopesFromToolEventContext(

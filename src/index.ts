@@ -50,13 +50,13 @@ export type {
 	ImplementationChange,
 	ImplementationChangeInput,
 	ImplementationWorkerClaim,
-} from "./implementation/types.ts";
-export type { ImplementationWorkerReportInput } from "./implementation/workers.ts";
+} from "./loops/implementation/types.ts";
+export type { ImplementationWorkerReportInput } from "./loops/implementation/workers.ts";
 export type {
 	ImplementationWorkerProof,
 	ImplementationWorkerProofConflict,
 	ImplementationWorkerProofInput,
-} from "./implementation/worker-proof.ts";
+} from "./loops/implementation/worker-proof.ts";
 export type {
 	SourceMapComponent,
 	SourceMapContract,
@@ -219,7 +219,7 @@ export type {
 	WorktreeProcessCommand,
 	WorktreeRef,
 } from "./git/worktrees.ts";
-export type { DecisionCandidateProposal } from "./decision/candidate-proposal.ts";
+export type { DecisionCandidateProposal } from "./loops/decision/candidate-proposal.ts";
 export type {
 	ImplementationAcceptanceEvidenceCandidate,
 	ImplementationArchiveDispositionCandidate,
@@ -228,12 +228,18 @@ export type {
 	ImplementationCommandResultCandidate,
 	ImplementationEvidenceCandidate,
 	ImplementationSensitiveSurfaceCandidate,
-} from "./implementation/candidate-content.ts";
+} from "./loops/implementation/candidate-content.ts";
 export type {
 	PlanningCandidateContent,
 	PlanningSprintCandidate,
 	PlanningWorkItemCandidate,
-} from "./planning/candidate-content.ts";
+} from "./loops/planning/candidate-content.ts";
+export {
+	REVIEW_ATTEMPT_SCHEMA_VERSION,
+	createReviewAttempt,
+	type CreateReviewAttemptInput,
+	type ReviewAttempt,
+} from "./loops/review/contracts.ts";
 export type { ProjectSnapshot } from "./project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "./runtime/claims/policy.ts";
 export type {
@@ -311,7 +317,7 @@ export * from "./server/registry/enrollment.ts";
 export * from "./server/registry/state.ts";
 export * from "./server/sessions/contracts.ts";
 export * from "./server/sessions/state.ts";
-export * from "./verification/custom-checks/index.ts";
+export * from "./checks/packs/index.ts";
 export {
 	EXIT_OUTCOME_PROTOCOL_VERSION,
 	REPAIR_BRIEF_PROTOCOL_VERSION,
@@ -340,7 +346,7 @@ export {
 	type RepairGuidanceTruncation,
 	type RepairExecutionInvocation,
 	type RepairResultSignal,
-} from "./verification/repair-bundle.ts";
+} from "./checks/repair/bundle.ts";
 export {
 	MAX_REPAIR_FRONTIER_CHANGES,
 	MAX_REPAIR_FRONTIER_FACTS,
@@ -357,7 +363,7 @@ export {
 	type RepairFrontierReferenceKind,
 	type RepairFrontierReferences,
 	type RepairFrontierTruncation,
-} from "./verification/repair-frontier.ts";
+} from "./checks/repair/frontier.ts";
 export {
 	MAX_REPAIR_PROFILES_PER_CHECK,
 	REPAIR_PROFILE_PROTOCOL_VERSION,
@@ -377,8 +383,8 @@ export {
 	type RepairProfileSourceLayer,
 	type RepairRouteRecommendation,
 	type ResolvedRepairProfile,
-} from "./verification/repair-profiles.ts";
-export * from "./verification/verification-capabilities.ts";
+} from "./checks/repair/profiles.ts";
+export * from "./checks/capabilities.ts";
 export {
 	CHECK_INVOCATION_PROTOCOL_ID,
 	CHECK_INVOCATION_PROTOCOL_VERSION,
@@ -409,13 +415,13 @@ export {
 	type LoopExitDeclaration,
 	type LoopExitSuite,
 	type NormalizeCheckObservationInput,
-} from "./verification/contracts.ts";
+} from "./checks/contracts.ts";
 export {
 	admitCheckObservation,
 	assembleCheckInvocation,
 	type AdmitCheckObservationInput,
 	type AssembleCheckInvocationInput,
-} from "./verification/protocol.ts";
+} from "./checks/protocol.ts";
 export {
 	VERIFICATION_PROJECTION,
 	projectVerificationState,
@@ -427,10 +433,10 @@ export {
 	type VerificationProjectionCoverage,
 	type VerificationProjectionStatus,
 	type VerificationReportProjection,
-} from "./verification/projection.ts";
-export * from "./verification/standard-evidence-checks.ts";
-export * from "./verification/standard-evidence-executor.ts";
-export * from "./verification/security-collectors.ts";
+} from "./work-state/checks.ts";
+export * from "./checks/standard-evidence-checks.ts";
+export * from "./checks/standard-evidence-executor.ts";
+export * from "./execution/security/collectors.ts";
 export * from "./evidence/adapters/sarif.ts";
 export * from "./evidence/adapters/junit.ts";
 export * from "./evidence/adapters/coverage.ts";
@@ -443,7 +449,7 @@ export * from "./evidence/adapters/materialization.ts";
 export {
 	materializeDecisionApprovalReceipt,
 	materializeDecisionResidualRiskApprovalReceipt,
-} from "./decision/exit/evidence.ts";
+} from "./loops/decision/evidence.ts";
 export {
 	DECISION_RESEARCH_COLLECTION_PROTOCOL,
 	collectDecisionResearchEvidence,
@@ -467,7 +473,7 @@ export {
 	type NativeDecisionCandidateProducer,
 	type NativeDecisionCandidateProductionRequest,
 	type NativeDecisionEvaluationInput,
-	type NativeDecisionLoopExitBinding,
+	type NativeDecisionGateBinding,
 } from "./runtime/coordinator/decision-attempt.ts";
 export {
 	commitNativeDecisionOperationSequence,

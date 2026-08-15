@@ -1,4 +1,4 @@
-import type {DecisionCandidate} from "../../decision/exit/candidate.ts";
+import type {DecisionCandidate} from "../../loops/decision/candidate.ts";
 import type {
 	EvidenceCoverage,
 	EvidenceRecord,
@@ -8,7 +8,7 @@ import type {
 import {
 	materializeDecisionResearchCitation,
 	type DecisionResearchCitationMaterial,
-} from "../../decision/exit/research.ts";
+} from "../../loops/decision/research.ts";
 import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,

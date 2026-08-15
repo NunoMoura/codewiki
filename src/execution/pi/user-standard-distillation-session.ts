@@ -4,7 +4,7 @@ import {
 	type UserStandardDistillationObservation,
 	type UserStandardDistillationRequest,
 	type UserStandardDistiller,
-} from "../../verification/custom-checks/index.ts";
+} from "../../checks/packs/index.ts";
 import {canonicalJson, canonicalJsonDigest} from "../../utils/canonical-json.ts";
 import {
 	runPiIsolatedJsonModelSession,

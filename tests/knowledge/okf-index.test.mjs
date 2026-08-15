@@ -30,9 +30,10 @@ describe("OKF index and log navigation", () => {
 		const components = generateOkfDirectoryIndex(bundle, { directory: "system/components" });
 		assert.match(root.content, /CodeWiki Lexicon/);
 		assert.match(root.content, /11 concepts under `product\/`/);
-		assert.match(root.content, /27 concepts under `system\/`/);
+		assert.match(root.content, /29 concepts under `system\/`/);
 		assert.match(components.content, /Change Intake/);
-		assert.match(components.content, /Verification/);
+		assert.match(components.content, /Checks/);
+		assert.match(components.content, /Review/);
 	});
 
 	it("does not require disposable navigation projections in canonical Knowledge", () => {
@@ -44,7 +45,7 @@ describe("OKF index and log navigation", () => {
 	it("treats the active native bundle as semantic concepts only", () => {
 		const result = validateOkfBundle(readKbBundle());
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 39);
+		assert.equal(result.conceptCount, 41);
 		assert.equal(result.reservedCount, 0);
 	});
 

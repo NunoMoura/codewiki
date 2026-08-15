@@ -1,5 +1,5 @@
-import { planningConflicts } from "../planning/conflicts.ts";
-import type { PlanningWorkItem } from "../planning/types.ts";
+import { planningConflicts } from "../loops/planning/conflicts.ts";
+import type { PlanningWorkItem } from "../loops/planning/types.ts";
 import { loopOutputEvents } from "../changes/trace/queries.ts";
 import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
 import type { ConflictsView, ConflictView, TraceViewInput } from "./projection-types.ts";

@@ -21,7 +21,7 @@ export type {
 	WikiChangeOperation,
 	WikiChangeSummary,
 } from "../changes/command.ts";
-export { runWikiDecide } from "../decision/command.ts";
+export { runWikiDecide } from "../loops/decision/command.ts";
 export type {
 	ChangeApproval,
 	ChangeDecisionReport,
@@ -29,7 +29,7 @@ export type {
 	RunWikiDecideInput,
 	RunWikiDecideResult,
 	WikiDecideMode,
-} from "../decision/command.ts";
+} from "../loops/decision/command.ts";
 export { runWikiImplement } from "./commands/implementation.ts";
 export type {
 	ImplementationEvidenceSubmission,
