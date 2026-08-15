@@ -1,12 +1,12 @@
 ---
 type: System Component
 title: Planning
-description: Owns ordered realization obligations, Planning Candidate semantics, and Planning Checks.
+description: Owns ordered realization obligations, Planning Candidate semantics, and Planning attempt interpretation.
 status: stable
 tags: [system, component]
 codewiki_component: planning
-codewiki_source_patterns: ["src/planning/**"]
-codewiki_test_patterns: ["tests/planning/**"]
+codewiki_source_patterns: ["src/loops/planning/**"]
+codewiki_test_patterns: ["tests/loops/planning/**"]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/automate-safe-work.md
@@ -18,4 +18,4 @@ Planning turns approved Decision meaning into immutable ordered Work Items, depe
 
 A Work Item declares required capabilities, tools, skills, scope, dependencies, and acceptance criteria without selecting a person, Worker, machine, or model provider. Runtime matches current Worker Offers and policy, then creates one exact Assignment binding the Work Item, selected Worker, and Runtime-owned Workbench. Planning declares requirements; Runtime selects placement.
 
-Planning owns its Candidate, Checks, attempt composition, and interpretation. Runtime Loop Exit invokes shared Verification and owns freshness, authoritative routing, and persistence; Runtime also owns scheduling, Claims, and Assignments.
+Planning owns Candidate and attempt semantics under `src/loops/planning/**`. Its editable stage Checks live under `.codewiki/check-packs/planning/**` and run through the shared Checks Gate. A failed Gate returns atomic feedback to Planning. A stopped Gate preserves current state and reports operational recovery. A passed Gate advances through Runtime's fixed lifecycle to Implementation. Runtime separately owns scheduling, Claims, Assignments, persistence, and current-state admission.

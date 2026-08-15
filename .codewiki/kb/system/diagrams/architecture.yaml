@@ -9,7 +9,8 @@ components:
   - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
   - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
-  - { id: verification, concept: /system/components/verification.md, label: Verification, zone: core }
+  - { id: review, concept: /system/components/review.md, label: Review, zone: core }
+  - { id: checks, concept: /system/components/checks.md, label: Checks, zone: core }
   - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
   - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
   - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
@@ -28,13 +29,14 @@ connections:
   - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts exact Decision attempt }
   - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt }
   - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts exact Implementation attempt }
-  - { id: runtime-invokes-verification, from: runtime, to: verification, type: invokes, label: evaluates exact Candidate and policy }
-  - { id: verification-consumes-evidence, from: verification, to: evidence, type: consumes, label: resolves Evidence obligations }
+  - { id: runtime-invokes-review, from: runtime, to: review, type: invokes, label: starts exact-head Review attempt }
+  - { id: runtime-invokes-checks, from: runtime, to: checks, type: invokes, label: runs one exact stage Gate }
+  - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: binds exact admitted Evidence inputs }
   - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: evaluates current guards and scheduling }
-  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded provenance, impact, and routing facts }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded provenance, impact, and contribution-routing facts }
   - { id: execution-invokes-preview, from: execution, to: preview, type: invokes, label: captures bounded Candidate observations }
-  - { id: knowledge-reads-project, from: knowledge, to: project, type: reads, label: validates protected project profile }
+  - { id: knowledge-reads-project, from: knowledge, to: project, type: reads, label: validates project profile }
   - { id: change-trace-reads-project, from: change-trace, to: project, type: reads, label: binds repository identity }
-  - { id: package-reads-project, from: package, to: project, type: reads, label: composes product and Pack configuration }
+  - { id: package-reads-project, from: package, to: project, type: reads, label: composes product and Check Pack resources }
   - { id: benchmarks-read-package, from: benchmarks, to: package, type: reads, label: executes packed candidate }
 flows: []

@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: Project Configuration
-description: Owns repository discovery, protected configuration, Check defaults, model routes, bootstrap, and source architecture declarations.
+description: Owns repository discovery, model routes, budgets, bootstrap, Check Pack paths, and source architecture declarations.
 status: stable
 tags: [system, component]
 codewiki_component: project
@@ -14,13 +14,13 @@ codewiki_relationships:
 ---
 # Project Configuration
 
-Project Configuration identifies the repository root, protected CodeWiki settings, Check defaults, model routes, source architecture, responsibility rules, and bootstrap boundaries. Project-owned structured configuration errors preserve exact invalid paths, bounded values, recovery guidance, and causes. Configuration digests bind every policy-sensitive attempt and cannot be weakened by Clients, Workers, installed packages, or untrusted repository content.
+Project Configuration identifies the repository root, CodeWiki settings, Worker and Check model routes, budgets, source architecture, responsibility rules, and bootstrap boundaries. Project-owned structured configuration errors preserve exact invalid paths, bounded values, recovery guidance, and causes. Configuration digests bind every sensitive attempt; operation payloads, Workers, installed packages, and Check output cannot override canonical configuration.
 
 Responsibility rules may define domain stewardship, review classes, scoped Authority Grants, independence requirements, and contribution-routing inputs. Profiles and ownership hints improve matching but grant no authority. Repository-provider access supplies coarse membership only; Runtime still authorizes each exact operation against current project policy and state.
 
-Project-wide Check defaults live in `.codewiki/config.json`; each installed Pack binding has one inherited `config.json`; and a Check directory may contain one optional sparse `config.json` override beside `CHECK.*`. Protected floors apply after all three project-owned layers. Pack and Check scope can narrow inherited applicability or input boundaries but cannot widen a trusted outer boundary.
+Check requirements do not live in `.codewiki/config.json`. They are ordinary tracked files under `.codewiki/check-packs/<stage>/<pack>/<check-id>/`. Folder presence defines the active stage set. There is no protected Check floor, required default, applicability catalog, enforcement tier, or activation transaction. Users may edit or delete all Packs. Runtime snapshots exact files and configuration for each Gate, and a changed snapshot invalidates incompatible cached Results.
 
-Project configuration stores provider, model, execution-profile, budget, and fallback policy identities but never credentials. Check model routes are independent from work-producing Managed Execution routes and have no implicit fallback to an authoring or repair route. A route change alters provenance and invalidates incompatible calibration and cached Results.
+Project configuration stores provider, model, execution-profile, budget, bounded retry, and route identities but never credentials. Worker and Check model policies share provider transport primitives while retaining separate route selection, context, tools, memory, and budgets. Check routes have no implicit fallback to a Worker model. A route change alters execution identity and invalidates incompatible calibration and cached Results.
 
 Canonical project-local layout is:
 
@@ -33,11 +33,23 @@ Canonical project-local layout is:
   traces/
     TRACE-CHG-<id>.jsonl
   check-packs/
+    decision/
+      default/
+      <pack-name>/
+    planning/
+      default/
+      <pack-name>/
+    implementation/
+      default/
+      <pack-name>/
+    review/
+      default/
+      <pack-name>/
   check-packs.lock.json
   views/
   runtime/
 ```
 
-Knowledge under `kb/**`, Change Traces under `traces/**`, protected `config.json`, and tracked Check Pack definitions are source truth. `views/**` contains disposable projections. `runtime/**` contains private operational state that must remain recoverable from canonical project truth and exact receipts. Compact Evidence metadata enters Change Trace while large or private artifact bytes remain in their existing authority boundary; CodeWiki creates no canonical `.codewiki/evidence/` database or generic `.codewiki/changes.log`. Root `CHANGELOG.md` records package releases, not project Change history.
+Knowledge under `kb/**`, Change Traces under `traces/**`, `config.json`, and tracked Check files are source truth. `views/**` contains disposable projections. `runtime/**` contains private operational state recoverable from canonical project truth and exact receipts. Compact Evidence metadata enters Change Trace while large or private artifact bytes remain in their existing authority boundary; CodeWiki creates no canonical `.codewiki/evidence/` database or generic `.codewiki/changes.log`. Root `CHANGELOG.md` records package releases, not project Change history.
 
-Bootstrap creates the compact native Knowledge shape and open editable Default Check Pack without authored projections. Source architecture declarations describe target dependency direction and are checked independently from temporary refactoring progress.
+Bootstrap creates the compact native Knowledge shape and one bare-bones editable `default/` Pack per stage. This happens once. Missing or deleted defaults are never recreated on startup or upgrade. A stage with no Checks remains valid and its Gate passes with a visible warning. Source architecture declarations describe target dependency direction and are checked independently from temporary refactoring progress.

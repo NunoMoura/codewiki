@@ -14,6 +14,6 @@ codewiki_relationships:
 ---
 # WorkState
 
-WorkState is the deterministic current-state projection of accepted Change operations and exact synchronized Git facts. It exposes current revisions, guards, claims, assignments, Loop attempts, Integration state, Evidence obligations, Exit state, and pending authority. Reconstructible blocker, conflict, quality-readiness, trace-goal, trace-board, work-plan, and work-queue reductions and their contracts live under `src/work-state/**`; they are current projection, not canonical history or Runtime authority.
+WorkState is the deterministic current-state projection of accepted Change operations and exact synchronized Git facts. It exposes current revisions, guards, claims, assignments, Decision, Planning, Implementation, and Review attempts, Integration state, Evidence obligations, Check Results, Gate Reports, stopped reasons, empty-stage warnings, and pending authority. Reconstructible blocker, conflict, Gate-readiness, trace-goal, trace-board, work-plan, and work-queue reductions and their contracts live under `src/work-state/**`; they are current projection, not canonical history or Runtime authority.
 
 WorkState is reconstructible and cannot become a second history store. Every consumer binds one exact snapshot digest; stale projections cannot authorize progression.

@@ -23,14 +23,18 @@ Project Runtime gateway
         |
 Authoritative per-project Runtime
 Authority | Provenance | Claims | Assignments | Workbenches
-Integration | Loop Exit | Verification | Recovery | Guarded effects
+Integration | Fixed lifecycle | Gate admission | Recovery | Guarded effects
+        |
+Decision | Planning | Implementation | Review
+        |
+Checks | Check Packs | Code Checks | Model Checks | Gate Reports
         |
 Workers using Workbenches and Model Providers
         |
 Knowledge | Change Trace | Git | Evidence
 ```
 
-One logical CodeWiki Server serves a deployment and routes many Clients to one authoritative Runtime per managed project. Server and Runtime are architectural siblings that may share a process or machine; co-location grants neither ownership over the other. Server owns connection trust, transport, pairing, sessions, project routing, transport deduplication, reconnect, redaction, and delivery. Runtime owns project AuthZ, semantic idempotency, canonical meaning, admission, provenance, persistence, scheduling, Integration, Loop Exit orchestration, authoritative routing, and effects. Verification owns shared Check, Result, Exit Report, policy, and repair mechanics. Server calls one narrow Runtime gateway and never reads Runtime persistence internals.
+One logical CodeWiki Server serves a deployment and routes many Clients to one authoritative Runtime per managed project. Server and Runtime are architectural siblings that may share a process or machine; co-location grants neither ownership over the other. Server owns connection trust, transport, pairing, sessions, project routing, transport deduplication, reconnect, redaction, and delivery. Runtime owns project AuthZ, semantic idempotency, canonical meaning, admission, provenance, persistence, scheduling, Integration, fixed lifecycle, Gate admission, and effects. Checks is a root domain owning Check Pack files, bounded Code and Model Check execution, completed Results, caching, fail-fast reduction, and Gate Reports. Four Loops own Decision, Planning, Implementation, and Review semantics. Server calls one narrow Runtime gateway and never reads Runtime persistence internals.
 
 A User is a human. An Actor is an accountable authenticated User or service. A User Interface is a human-facing surface implemented by a Client. A Client is software that speaks CodeWiki protocol. Claude Code or Codex acts as a Client while inspecting or requesting work and as a Worker only while executing an accepted Assignment. A Worker is an Agent, process, or service executing one bounded Assignment in one Runtime-owned Workbench. A Model Provider supplies local or remote inference and is distinct from the Worker that owns the Agent loop, tools, Workbench, tests, and Candidate. Worker Node remains deferred until physical placement, capacity, health, or draining becomes first-class.
 
@@ -61,10 +65,24 @@ no exact custody match
   -> external provenance
   -> immutable External Candidate Capture
   -> exact accepted-Change admission or Change Intake
-  -> fresh Verification before certification
+  -> fresh Implementation and Review Gates before delivery
 ```
 
-Branch names, commits, authors, trailers, Git notes, and producer claims cannot prove provenance. External work may be useful and certifiable, but inherits no execution proof. Divergence pauses protected effects and is never silently adopted, overwritten, discarded, or certified.
+Branch names, commits, authors, trailers, Git notes, and producer claims cannot prove provenance. External work may be useful and certifiable, but inherits no execution proof. Divergence pauses guarded effects and is never silently adopted, overwritten, discarded, or certified.
+
+### Ratified Checks, Gates, and Loops
+
+Checks, Changes, and Loops are peer root domains. Exactly four semantic Loops exist: Decision, Planning, Implementation, and Review. Runtime applies fixed transitions: passed Decision `approve` advances to Planning while passed `reject | defer | withdraw` keeps its typed terminal or deferred meaning; passed Planning advances to Implementation; passed Implementation advances to Review; passed Review permits guarded delivery; Decision, Planning, and Implementation failure repeats the same Loop; Review failure returns to Implementation; any stopped Gate preserves current state and stops that automation attempt. No generic Router, Loop Exit subsystem, or separate shared Verification component survives.
+
+Active Check content is direct user-editable source under `.codewiki/check-packs/<stage>/<pack>/<check-id>/`, with `check.json` and exactly one `CHECK.md` or `CHECK.mjs`. Bootstrap materializes one deliberately bare-bones `default/` Pack per stage once. Defaults are examples, not protected floors. Users may edit or delete any Pack or every Check; CodeWiki never restores them automatically. Zero Checks passes with a visible non-blocking `no_checks_configured` warning. Malformed content or unavailable execution stops only the affected Gate and never crashes CodeWiki.
+
+Every present Check gates its stage. A Check defines one pass condition, one fail condition, one stable failure code, and one feedback contract. Code and Model are the only Check implementation kinds. Binary and quantitative are the measurement kinds; a quantitative threshold deterministically reduces to pass or fail. Completed Results are only `passed | failed`. Timeout, invalid output, unavailable sandbox or model, exhausted budget, cancellation, failed input collection, or unrecoverable staleness creates a stopped Check Run and Gate, not an indeterminate Result or semantic failure. Failed Results send exact feedback to the responsible Loop; stopped runs send operational recovery to the User.
+
+Checks takes one immutable snapshot of exact stage subject, Pack, input, Evidence, configuration, and execution identities. It resolves exact cache hits, runs remaining Code Checks in bounded parallel, stops before Model Checks when Code fails or stops, otherwise runs Model Checks in bounded parallel, and stops launching queued work after a conclusive failure or stop condition. Model Checks are tool-free and use routes separate from work-producing models. Code Checks run only in admitted sandboxes.
+
+CodeWiki never autonomously authors Check content. After one-time bootstrap, Pack changes occur only through direct project-file edits or explicit authenticated App actions. Users may edit files manually, through a user-controlled external agent following public schemas, or through App forms. The App creates Model Checks from structured requirement/pass/fail/feedback fields, accepts one-file Code Check uploads, previews Checks, and installs marketplace Packs. Check Pack sources follow Pi Package conventions: npm discovery uses the `codewiki-check-pack` keyword, and exact npm versions, Git revisions, or local package paths expose a `codewiki.checkPacks` manifest or conventional `check-packs/` directories. Package sources are transport only: no lifecycle scripts or package code execute during install; resolved source and integrity are recorded, declared resources are vendored into editable `.codewiki/check-packs/**` files, and updates never overwrite local changes silently.
+
+Review is a separate Loop with its own stage Packs because exact-head delivery standards and the Implementation-to-Review feedback cycle are distinct. Human Review Evidence is optional. Projects may rely entirely on independent Code and Model Checks, require authenticated human Review through their own Check, or combine both. A fully automated delivery still requires prior User-configured authority plus a passed fresh Review Gate.
 
 ## Target source topology
 
@@ -103,7 +121,6 @@ src/
     workbenches/
     workers/
     integration/
-    loop-exit/
     persistence/
     synchronization/
     recovery/
@@ -114,10 +131,16 @@ src/
     triage/
     review/
     trace/
-  decision/
-  planning/
-  implementation/
-  verification/
+  checks/
+    contracts/
+    packs/
+    runner/
+    gate/
+  loops/
+    decision/
+    planning/
+    implementation/
+    review/
   evidence/
   work-state/
   alignment/
@@ -135,19 +158,20 @@ scripts/
 tests/
 ```
 
-`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/error-handling/**` stays a lean Package-owned foundation for the common error envelope, serialization, type guards, and stable operation-failure contract; owner-specific error semantics do not accumulate there. `src/runtime/loop-exit/**` owns one common Verification invocation, output-admission, and authoritative-routing pipeline for Decision, Planning, and Implementation; Loop packages own Candidate and Check semantics but no route authority. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains an internal Runtime subsystem. Public `./coordinator`, root `coordinator.ts`, and generic `composition/**` do not survive the clean cut. `src/pi-extension.ts` is the neutral shipped Package bootstrap that wires Pi Client registration, the Runtime connection boundary, and the concrete Execution spawner without reversing those owner dependencies. A neutral `src/main.ts` may later construct Server and Runtime siblings only when standalone process bootstrap genuinely requires it.
+`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/error-handling/**` stays a lean Package-owned foundation for the common error envelope, serialization, type guards, and stable operation-failure contract; owner-specific error semantics do not accumulate there. `src/checks/**` owns Check contracts, Pack loading, generic Code and Model execution coordination, cache identity, completed Results, and Gate Reports. `src/loops/**` owns Decision, Planning, Implementation, and Review stage semantics. Runtime invokes Checks, records authoritative Gate state, and applies one fixed lifecycle without a Router. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains an internal Runtime subsystem. Public `./coordinator`, root `coordinator.ts`, generic `composition/**`, `src/runtime/loop-exit/**`, and `src/verification/**` do not survive the clean cut. `src/pi-extension.ts` is the neutral shipped Package bootstrap that wires Pi Client registration, the Runtime connection boundary, and the concrete Execution spawner without reversing those owner dependencies. A neutral `src/main.ts` may later construct Server and Runtime siblings only when standalone process bootstrap genuinely requires it.
 
 Target dependency direction is:
 
 ```text
 clients   -> protocol
 server    -> protocol + Runtime gateway
-runtime   -> domain owners + neutral Execution Ports
+runtime   -> loops + checks + domain owners + neutral Execution Ports
+checks    -> Evidence contracts + Project configuration + neutral Execution Ports
 execution -> ports it implements
 bootstrap -> clients + server + runtime + concrete execution
 ```
 
-Forbidden directions include `runtime -> server`, `runtime -> clients`, `runtime -> concrete Pi`, `server -> Runtime persistence internals`, `domain -> server`, and `clients -> Server, Runtime, or concrete Execution process lifecycle`.
+Forbidden directions include `runtime -> server`, `runtime -> clients`, `runtime -> concrete Pi`, `checks -> Runtime lifecycle`, `checks -> concrete Pi`, `server -> Runtime persistence internals`, `domain -> server`, and `clients -> Server, Runtime, or concrete Execution process lifecycle`.
 
 Source ownership clean cuts are:
 
@@ -159,9 +183,13 @@ src/cli/**           -> src/clients/cli/**
 src/change-trace/**  -> src/changes/trace/**
 src/traces/**        -> Change Trace or Runtime persistence owner
 src/views/**                         -> Alignment, WorkState, or Runtime queries
-src/semantic-loop.ts                 -> Verification contracts
-src/loops/feedback.ts                -> Implementation
-other src/loops/**                    -> Verification quality machinery
+src/semantic-loop.ts                 -> src/loops contracts or delete
+src/decision/**                      -> src/loops/decision/**
+src/planning/**                      -> src/loops/planning/**
+src/implementation/**                -> src/loops/implementation/**
+src/verification/**                  -> src/checks/** or delete obsolete machinery
+src/runtime/loop-exit/**              -> src/checks/gate/**, Runtime lifecycle, or delete
+legacy Quality and repair machinery   -> atomic Check feedback or delete
 src/error-handling/config-errors.ts   -> src/project/config-errors.ts
 src/error-handling/trace-errors.ts    -> Change Trace owner
 src/benchmarks/**                     -> benchmarks/**
@@ -178,12 +206,24 @@ Canonical project layout is:
   traces/
     TRACE-CHG-<id>.jsonl
   check-packs/
+    decision/
+      default/
+      <pack-name>/
+    planning/
+      default/
+      <pack-name>/
+    implementation/
+      default/
+      <pack-name>/
+    review/
+      default/
+      <pack-name>/
   check-packs.lock.json
   views/      # disposable projections
   runtime/    # private operational state
 ```
 
-Knowledge, Change Traces, protected configuration, and tracked Check definitions are source truth. Compact Evidence metadata enters Change Trace while large or private bytes stay in their existing authority boundary. No canonical `.codewiki/evidence/` database or `.codewiki/changes.log` exists. Root `CHANGELOG.md` records package releases. This source checkout keeps active Change Traces absent because CodeWiki cannot dogfood its own extension during stabilization.
+Knowledge, Change Traces, project configuration, and tracked Check definitions are source truth. Each Check lives directly at `<stage>/<pack>/<check-id>/check.json` beside one `CHECK.md` or `CHECK.mjs`; no extra `checks/` directory exists. `check-packs.lock.json` records installed npm, Git, or local source provenance and local divergence without making files immutable. Compact Evidence metadata enters Change Trace while large or private bytes stay in their existing authority boundary. No canonical `.codewiki/evidence/` database or `.codewiki/changes.log` exists. Root `CHANGELOG.md` records package releases. This source checkout keeps active Change Traces and project Check Packs absent because CodeWiki cannot dogfood its own extension during stabilization.
 
 ## Clean-cut rules and budgets
 
@@ -294,7 +334,8 @@ Rules:
 - [x] Ratify Profile, Authority Grant, Claim, immutable Operation, Contribution Routing, and review lifecycle semantics.
 - [x] Ratify `src/protocol/**`, `src/server/**`, `src/runtime/index.ts`, `@nunomoura/codewiki/runtime`, target dependency direction, and `.codewiki/**` canonical layout.
 - [x] Define controlled, managed, MCP-mediated, and external provenance plus External Candidate Capture.
-- [x] Make Runtime—not Loops—invoke shared Verification and select routes.
+- [x] Supersede Verification and Loop Exit with root Checks, four `src/loops/**` owners, per-stage Gates, and fixed Runtime lifecycle transitions.
+- [x] Ratify bare-bones editable and removable defaults, user-only Pack authoring, npm/Git/local marketplace transport, Code/Model Checks, binary/quantitative measurements, atomic feedback, parallel cache-aware fail-fast execution, and stopped Gate semantics.
 - [x] Preserve first-party App, CLI, and Pi Clients while allowing external Clients to accept bounded Worker Assignments.
 - [ ] Update README and package description after executable topology exists; do not advertise unfinished capability.
 
@@ -316,10 +357,14 @@ Rules:
 - [x] Create and execute the reviewed `06031a5`-anchored Runtime App query keep/move manifest before deleting the final Dashboard roots.
 - [x] Create and execute the reviewed `03ea724`-anchored controlled Implementation worker keep/move/delete manifest before removing direct session and manual Host handoff bypasses.
 - [x] Create and execute the reviewed `0d68c1d`-anchored Loop quality ownership manifest before deleting generic Loop source and test roots.
-- [x] Move shared quality evaluator mechanics to Verification, move quality feedback to Implementation, and merge the semantic Loop discriminator into Verification contracts without compatibility paths.
-- [x] Establish Runtime-owned common Loop Exit routing, move native Decision Loop Exit orchestration from Decision to Runtime, and delete old paths and vocabulary without compatibility exports.
+- [x] Historical checkpoint: move shared quality mechanics to Verification, move quality feedback to Implementation, and merge the then-current Loop discriminator into Verification contracts without compatibility paths.
+- [x] Historical checkpoint: establish transitional Runtime-owned Loop Exit routing and move native Decision orchestration from Decision to Runtime.
 - [x] Create and execute the reviewed `101ef73`-anchored Project configuration-error ownership manifest and delete the old Package error path without compatibility exports.
-- [ ] Delete legacy Quality, obsolete Loop compatibility, and old ChangeRecord contracts as replacement consumers land.
+- [ ] Create one reviewed HEAD-anchored manifest for the root Checks and four-Loop clean cut before structural source edits.
+- [ ] Move Decision, Planning, and Implementation under `src/loops/**`; add Review as the fourth Loop with exact-head attempts and fixed feedback return to Implementation.
+- [ ] Move surviving Check contracts, Pack loading, execution coordination, cache, Results, and Gate reduction to `src/checks/**`; delete `src/verification/**`, `src/runtime/loop-exit/**`, per-Loop `exit/**`, and obsolete routing vocabulary without aliases.
+- [ ] Update exact Knowledge concept-count, index, source-ownership, and source-architecture assertions atomically with the source cut; do not weaken target KB ownership metadata to preserve obsolete executable paths.
+- [ ] Delete legacy Quality, Repair Profile/Frontier/Brief/Bundle, indeterminate Result, obsolete Loop compatibility, and old ChangeRecord contracts as replacement consumers land.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
 - [x] Move coordinator package composition to Host ownership and remove the generic Harness source/package root.
@@ -363,7 +408,7 @@ Rules:
 ### 4. Build CodeWiki App and first-party Clients
 
 - [x] Replace Dashboard-local workflow/session query ownership with bounded Runtime projections; typed Runtime mutation operations remain pending.
-- [ ] Implement App surfaces for Change, Decision, Planning, Implementation, Work Items, Candidates, provenance, Checks, Evidence, Exit Reports, Repair, Integration, and effects.
+- [ ] Implement App surfaces for Change, Decision, Planning, Implementation, Review, Work Items, Candidates, provenance, Check Packs, Code and Model Checks, Evidence, Gate Reports, atomic feedback, stopped recovery, Integration, and effects.
 - [ ] Keep CLI as full deterministic operational and high-authority confirmation surface.
 - [ ] Keep Pi TUI as optional expert Client; it cannot double as controlled execution.
 - [ ] Validate keyboard, assistive technology, reduced motion, contrast, bounded rendering, reconnect, reset, and actionable failure states.
@@ -384,16 +429,17 @@ Rules:
 - [ ] Pin supported Pi SDK version and update package ranges deliberately.
 - [ ] Require explicit ResourceLoader, tool allowlist, isolated agent directory, Runtime-owned worktree, CodeWiki context envelope, exact model route, budgets, cancellation, and disabled ambient prompts/extensions/skills/settings/project-agent config.
 - [ ] Define execution receipts binding Pi version, route, tools, context, claim, worktree, base, timing, cancellation, usage, and output.
-- [ ] Route Decision, Planning, Implementation, Repair, research, assisted authoring, and Model Checks through managed Pi ports where model execution is required.
-- [ ] Keep Pi sessions disposable; canonical continuity uses Change, Candidate, Work Item, operation, and Exit Report identity.
-- [ ] Missing exact capability yields unavailable or indeterminate without fallback or policy weakening.
+- [ ] Route Decision, Planning, Implementation, Review, research, and Model Checks through managed Pi ports where model execution is required.
+- [ ] Keep Pi sessions disposable; canonical continuity uses Change, Candidate, Work Item, operation, Check Result, Gate Report, and Review attempt identity.
+- [ ] Keep Worker and Check model routes, sessions, tools, memory, context, and budgets separate while sharing provider transport and receipt machinery.
+- [ ] Missing exact capability yields bounded retry followed by stopped execution without fallback, policy weakening, fake Check failure, or process crash.
 
 ### 7. Activate Runtime-owned parallel workbenches
 
 - [ ] Make isolated worktrees mandatory for every controlled Candidate producer, including serial execution.
 - [ ] Keep `runtime.maxWorkers = 1` as safe concurrency default.
 - [ ] For `maxWorkers > 1`, claim independent ready Work Items and require one isolated worktree, assignment, worker identity, cancellation path, report, and usage receipt per claim.
-- [ ] Integrate compatible reports deterministically with expected-head CAS, then verify combined Candidate.
+- [ ] Integrate compatible reports deterministically with expected-head CAS, then run the Implementation and Review Gates over the exact integrated head.
 - [ ] Deny canonical descendant scheduling, mutable workspace sharing, implicit authority renewal, canonical writes, and effects from Workers.
 - [ ] Implement cancellation, crash recovery, stale claim recovery, conflict handling, and workbench cleanup.
 
@@ -403,14 +449,15 @@ Rules:
 - [ ] Recognize controlled provenance only from exact persisted Runtime custody.
 - [ ] Detect local dirty trees, direct commits, pushes, PRs, and synchronized branch divergence against accepted state.
 - [ ] Capture tracked changes under Runtime-owned refs/worktrees without mutating user branch; require explicit selection for untracked files.
-- [ ] Route exact accepted-Change captures through Candidate admission and fresh Verification.
+- [ ] Route exact accepted-Change captures through Candidate admission and fresh Implementation and Review Gates.
 - [ ] Route missing-intent or out-of-scope captures through Change Intake, deduplication, triage, proposed Change, and explicit acceptance.
 - [ ] Separate GitHub issue intake from GitHub PR/commit/push Candidate intake.
 - [ ] Project required CodeWiki GitHub Check and branch protection where configured; detect administrator overrides as external divergence on next synchronization.
-- [ ] Create or update one integrated PR per Change after fresh combined Verification; do not create one PR per Work Item by default.
-- [ ] Retrieve authenticated provider reviews and Checks, correlate exact heads, and guard merge with current Runtime authority, policy, and CAS.
-- [ ] Route exact PR findings to current repair when scope remains within the Change or to new Change Intake when intent or scope differs.
-- [ ] Never treat PR state, labels, branch names, authors, or provider conclusions as CodeWiki acceptance, provenance, Result, or merge authority.
+- [ ] Create or update one integrated PR per Change after a passed Implementation Gate; do not create one PR per Work Item by default.
+- [ ] Run the separate Review Loop and its user-owned Packs against the exact integrated head; support fully automated Code and Model review without requiring human Evidence.
+- [ ] Retrieve authenticated provider reviews and Checks when present, correlate exact heads, and guard merge with a passed Review Gate, current Runtime authority, provenance, and CAS.
+- [ ] Send failed Review feedback to Implementation; send out-of-scope findings to Change Intake without a generic Router.
+- [ ] Never treat PR state, labels, branch names, authors, Agent/model identity, or provider conclusions as CodeWiki acceptance, provenance, Check Result, or merge authority.
 
 ### 9. Finish Change, WorkState, Alignment, and synchronization cuts
 
@@ -425,30 +472,38 @@ Rules:
 - [ ] Populate owner, user, reviewer, contributor, and Worker eligibility through read-only Contribution Routing before any automatic assignment.
 - [ ] Keep Profile fit, Authority Grant, active Claim, and authenticated Operation as separate facts; never infer authority from expertise or ownership hints.
 
-### 10. Complete Check Pack and Verification execution
+### 10. Complete root Checks, Check Packs, and Gates
 
-Already complete: local Pack catalog and configuration contracts; conservative Candidate applicability; Candidate-bound policy persistence; Check Invocation/Observation; admitted Results; complete Exit Reports; structured findings; Repair Profiles; Repair Frontiers; Repair Briefs/Bundles; native Verification projection.
+Already reusable: exact Candidate and execution identities; bounded Check protocols; quantitative threshold primitives; isolated Decision Model Check transport; bounded parallel scheduling; exact Result cache keys; structured Evidence adapters; native project Check parsing; and deterministic result-digest foundations. Current ownership, status, repair, and routing contracts are legacy inputs to the clean cut rather than desired API.
 
 Remaining:
 
-- [x] Establish Runtime-owned Loop Exit orchestration and migrate native Decision Check execution and routing to it.
-- [ ] Migrate active legacy Planning, Implementation, and direct Decision Quality consumers through Runtime Loop Exit, preserve native Custom Checks, then delete old contracts and modules.
-- [ ] Materialize Default Pack and exact local/npm/Git installation with `.codewiki/check-packs.lock.json`, no lifecycle scripts, immutable integrity, and trust approval.
-- [ ] Run every code Check in admitted sandbox; no sandbox yields unavailable.
-- [ ] Run every Model Check tool-free with exact Pi route, bounded context, structured output, and isolation; missing capability yields indeterminate or unavailable.
-- [ ] Keep Check evaluator route independent from authoring or repair route.
-- [ ] Implement deterministic forms, developer mode, and explicit Managed Execution-assisted authoring over same tracked files.
-- [ ] Preserve exactly one Result per selected Check and existing fail-closed reduction.
-- [ ] Preserve only SARIF, JUnit XML, LCOV, Cobertura, CycloneDX, SPDX, Pact, OpenAPI, and provider-check receipt as bounded Evidence formats.
+- [ ] Implement `.codewiki/check-packs/<stage>/<pack>/<check-id>/check.json` beside exactly one `CHECK.md` or `CHECK.mjs`, with no extra `checks/` level or required local Pack manifest.
+- [ ] Publish versioned schemas for `check.json`, bounded input selectors, Code and Model Check outputs, completed Results, Gate Reports, warnings, and stopped execution reasons before migration consumers land.
+- [ ] Define and bootstrap one minimal bare-bones `default/` Pack for each of Decision, Planning, Implementation, and Review exactly once; permit users to edit or delete every default and never restore it automatically.
+- [ ] Treat folder presence as the active Check set; remove protected floors, enforcement tiers, required Check IDs, hidden catalogs, and activation transactions.
+- [ ] Make zero Checks pass with persistent `no_checks_configured` warning and make empty named Packs warn without synthetic Results.
+- [ ] Define only Code and Model Check implementations plus binary and quantitative measurements; derive quantitative pass/fail from finite minimum/maximum thresholds.
+- [ ] Require one pass condition, one fail condition, one stable failure code, and one feedback object per Check; permit multiple factual details or locations but no multiple semantic failure classes.
+- [ ] Admit Results only for completed `passed | failed` Checks. Replace indeterminate Results with stopped Check Runs and `passed | failed | stopped` Gate Reports.
+- [ ] Bound retries for timeout, cancellation, missing input, invalid output, unavailable model or sandbox, exhausted budget, and staleness; after exhaustion preserve state and expose exact User recovery.
+- [ ] Resolve exact cache hits, run uncached Code Checks in bounded parallel, fail fast before Model Checks, then run Model Checks in bounded parallel and stop queued work after conclusive failure or stop.
+- [ ] Keep Model Checks tool-free and independent from Worker routes under one fixed structured-output protocol; run deterministic hermetic Code Checks only in bounded admitted sandboxes with network denial and no host fallback.
+- [ ] Delete Check-authored route hints and Repair Profile/Frontier/Brief/Bundle layers; failed Results carry feedback directly to the responsible Loop.
+- [ ] Implement App stage/Pack navigation, Model Check forms, one-file Code Check upload, validation, sandbox preview, delete/edit support, and developer file inspection over the same tracked files.
+- [ ] Keep Check Pack creation and mutation out of CodeWiki-managed Agents and dedicated CLI tooling; publish schemas and examples usable by manual editors and user-controlled external agents.
+- [ ] Implement Pi-style npm discovery with `codewiki-check-pack` plus exact npm, Git, and local installation through `codewiki.checkPacks` or conventional `check-packs/` resources, no lifecycle scripts, vendoring into editable project files, exact source/integrity lock data, and diff-safe updates.
+- [ ] Preserve only SARIF, JUnit XML, LCOV, Cobertura, CycloneDX, SPDX, Pact, OpenAPI, and provider-check receipts as bounded Evidence formats.
 
-### 11. Normalize repair, discovery, and improvement
+### 11. Normalize feedback, discovery, and improvement
 
-- [ ] Define versioned producer-neutral Discovery Finding and shared worker Observation schemas.
-- [ ] Keep current Candidate failure in `Result → Exit Report → Repair Bundle → repaired Candidate`.
-- [ ] Route new or out-of-scope work through Discovery Finding and Change Intake Material.
-- [ ] Keep required out-of-scope blockers blocked until dependency Change or explicit scope expansion is accepted.
+- [ ] Define versioned producer-neutral Discovery Finding and shared Worker-report schemas.
+- [ ] Keep current Candidate failure in `failed Check Result → one atomic feedback object → responsible Loop → fresh Candidate`.
+- [ ] Return Decision, Planning, and Implementation failure to the same Loop; return Review failure to Implementation through fixed Runtime lifecycle.
+- [ ] Send new or out-of-scope work through Discovery Finding and Change Intake Material as secondary intake, not a Router transition.
+- [ ] Keep out-of-scope blockers failed until dependency Change or explicit scope expansion is accepted.
 - [ ] Name deliberate operational discovery Improvement Assessment.
-- [ ] Never let discovery classification convert failing required Check into pass.
+- [ ] Never let discovery classification convert a failed Check into pass.
 - [ ] Never let installed CodeWiki automatically file work against upstream CodeWiki.
 
 ### 12. Build external product Benchmarks
@@ -456,7 +511,7 @@ Remaining:
 - [x] Move supported measurement code from `src/benchmarks/**` to repository-root `benchmarks/**`, keep it typechecked, and do not ship it.
 - [ ] Compare the same Worker or managed Agent, model route, task, repository, tools, network, budget, timeout, concurrency, retries, environment, and trials in `alone` and `codewiki` modes.
 - [ ] Use external fixtures and oracles; operational discovery is not Benchmarking.
-- [ ] Benchmark digest-bound repair variants without automatic promotion.
+- [ ] Benchmark digest-bound atomic feedback variants without automatic promotion.
 - [ ] Block release on false exits, unauthorized effects, or escaped critical defects regardless of aggregate score.
 
 ### 13. Add collaboration channels incrementally
@@ -471,10 +526,10 @@ Remaining:
 ### 14. External proof and release gates
 
 - [ ] Run real Gitleaks, Semgrep, and offline Trivy profiles with exact receipts.
-- [ ] Run sealed scanner/evaluator calibration against independent human-labeled cases.
+- [ ] Run sealed scanner, Code Check, and Model Check calibration against independent human-labeled cases.
 - [ ] Prove provider authentication, actor authority, expected-head mutation, Pi credential isolation, MCP-mediated workbench custody, and OCI execution externally.
 - [ ] Build and pack reviewed candidates, then install only in disposable external projects with isolated Pi settings.
-- [ ] Verify Server/App/CLI/Pi/MCP lifecycle, Check Packs, assisted authoring, managed receipts, external capture, guarded writes, failure paths, and cleanup.
+- [ ] Verify Server/App/CLI/Pi/MCP lifecycle, Check Packs, npm/Git/local installation, manual and App editing, Code/Model execution, Gate outcomes, managed receipts, external capture, guarded writes, failure paths, and cleanup.
 - [ ] Resolve optional Pi SDK dependency advisories or document accepted external constraints.
 - [ ] Publish, release, deploy, mutate providers, or expose public network only with explicit maintainer approval.
 
@@ -510,8 +565,8 @@ External proof does not block local clean cuts:
 Delete this file when:
 
 - target topology and dependency boundaries are realized;
-- CodeWiki Server, Clients, Project Runtime, Worker, Managed Execution, provenance, MCP, and Verification contracts are executable;
-- legacy Harness, Dashboard, trace-host, Quality, Trace, ChangeRecord, generic View, compatibility, and self-dogfood paths are gone;
+- CodeWiki Server, Clients, Project Runtime, Worker, Managed Execution, provenance, MCP, Checks, four Loops, and Gate contracts are executable;
+- legacy Harness, Dashboard, trace-host, Verification, Loop Exit, Router, Quality, Repair Bundle, indeterminate Result, Trace, ChangeRecord, generic View, compatibility, and self-dogfood paths are gone;
 - source, tests, packed output, and Knowledge agree;
 - all hard file budgets and external packed-install gates pass;
 - no remaining local task needs this tracker.

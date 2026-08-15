@@ -7,6 +7,6 @@ tags: [product, user, integration]
 ---
 # Adapter Author
 
-Adapter authors implement first-party Clients, Server protocol bindings, collaboration channels, or internal Execution Ports. They need stable contracts for commands, bounded queries, events, authentication, sessions, pairing, capabilities, Candidate custody, model evaluation, Workers, cancellation, usage, and isolation.
+Adapter authors implement first-party Clients, Server protocol bindings, collaboration channels, or internal Execution Ports. They need stable contracts for commands, bounded queries, events, authentication, sessions, pairing, capabilities, Candidate custody, Worker and Model Check execution, cancellation, usage, and isolation.
 
 Success means a new adapter can participate without duplicating Runtime authority, a semantic Loop, scheduler, canonical store, policy engine, provider credentials, or guarded effects.

@@ -1,5 +1,5 @@
 id: execution
-purpose: Show managed, MCP-mediated, and external Candidate paths through Runtime-owned Workbenches, Integration, Verification, and recovery.
+purpose: Show managed, MCP-mediated, external, Code Check, and Model Check paths through Runtime-owned Workbenches, Integration, Gates, and recovery.
 components:
   - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
   - { id: runtime, concept: /system/components/runtime.md, label: Project Runtime, zone: core }
@@ -7,10 +7,10 @@ components:
   - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
   - { id: execution, concept: /system/components/execution.md, label: Managed Execution, zone: execution }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
+  - { id: checks, concept: /system/components/checks.md, label: Checks, zone: core }
   - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
   - { id: preview, concept: /system/components/preview.md, label: Preview, zone: execution }
   - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
-  - { id: verification, concept: /system/components/verification.md, label: Verification, zone: core }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
 connections:
   - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: selects eligible claimed work }
@@ -40,13 +40,26 @@ connections:
     type: produces
     label: returns bounded observation metadata
     boundary: { type: authority, failure: Reject malformed or unbound observation. }
-  - { id: runtime-invokes-verification, from: runtime, to: verification, type: invokes, label: verifies integrated Candidate and policy }
-  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
+  - { id: runtime-invokes-checks, from: runtime, to: checks, type: invokes, label: starts exact stage Gate }
+  - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: resolves exact bounded Check inputs }
+  - id: checks-invoke-execution
+    from: checks
+    to: execution
+    type: invokes
+    label: runs sandboxed Code Checks or tool-free Model Checks
+    boundary: { type: authority, failure: Return stopped execution without creating a Check Result. }
+  - id: execution-returns-checks
+    from: execution
+    to: checks
+    type: returns
+    label: returns bounded Check Output or stopped fact
+    boundary: { type: authority, failure: Reject malformed or unbound output. }
+  - { id: checks-return-runtime, from: checks, to: runtime, type: returns, label: returns passed, failed, or stopped Gate Report }
   - id: runtime-writes-change-trace
     from: runtime
     to: change-trace
     type: writes
-    label: appends integrated result
+    label: appends integrated Result and Gate state
     boundary: { type: persistence, failure: Reject append and preserve prior accepted head. }
   - id: change-trace-returns-runtime
     from: change-trace
@@ -56,16 +69,16 @@ connections:
     boundary: { type: persistence, failure: Stop recovery on missing or invalid history. }
   - { id: work-state-produces-alignment, from: work-state, to: alignment, type: produces, label: projects coordination and provenance }
   - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns impact, provenance, and contribution-routing facts }
-  - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: routes unmatched external capture to accountable intent }
+  - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: sends unmatched external capture to accountable intent }
   - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns admitted intake state }
 flows:
   - concept: /system/flows/work-item-execution.md
     paths:
       - connections: [runtime-invokes-execution, execution-returns-implementation, implementation-returns-runtime, runtime-invokes-preview, preview-produces-evidence]
-      - connections: [server-returns-runtime, runtime-invokes-verification, verification-returns-runtime, runtime-writes-change-trace]
+      - connections: [runtime-invokes-checks, checks-invoke-execution, execution-returns-checks, checks-return-runtime, runtime-writes-change-trace]
   - concept: /system/flows/external-candidate-admission.md
     paths:
-      - connections: [change-trace-returns-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-verification]
+      - connections: [change-trace-returns-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-checks]
   - concept: /system/flows/recovery.md
     paths:
       - connections: [change-trace-returns-runtime, runtime-reads-work-state, work-state-produces-alignment, alignment-returns-runtime]

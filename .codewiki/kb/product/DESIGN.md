@@ -88,7 +88,7 @@ Keep reading measures broad enough for prose and narrow enough for comparison. D
 
 Desktop uses a stable destination header, context rail, and single primary reading/work surface. Small screens replace persistent rails with labeled controls while retaining current destination, selected Change, and return path.
 
-Use spacing scale consistently. Group facts by semantic owner: intent, current state, candidate, Evidence, Checks, route, and effect. A page may disclose details progressively, but required uncertainty and blocking conditions must remain visible before expansion.
+Use spacing scale consistently. Group facts by semantic owner: intent, current state, Candidate, Evidence, Checks, Gate, Loop stage, and effect. A page may disclose details progressively, but failures, stopped execution, empty-stage warnings, and required Evidence must remain visible before expansion.
 
 ## Elevation & Depth
 
@@ -106,7 +106,7 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Destination navigation** identifies current Work, Product, System, or Design context and preserves keyboard focus on navigation.
 
-**Change selector** shows exact Change identity, revision, current route, and unresolved attention. It never suggests a Change is selected for Decision unless authenticated selection completed.
+**Change selector** shows exact Change identity, revision, current Loop stage, Gate state, and unresolved attention. It never suggests a Change is selected for Decision unless authenticated selection completed.
 
 **State and Evidence rows** show status, authority basis, timestamp, exact identity, and missing or stale conditions. They link to inspectable detail rather than flattening complex Results into one score.
 
@@ -114,23 +114,30 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Source and diagram inspectors** show canonical path or diagram reference, provenance, coverage, truncation, and staleness. They open the owning concept or exact file rather than a copied summary.
 
-**Check authoring** uses deterministic fields for requirement, pass, fail, indeterminate, feedback, Development stage, scope, inputs, model route, and enforcement. An explicit assisted action asks Runtime to invoke Managed Execution for a bounded proposal; it never hides a model call or silently promotes enforcement.
+**Check Pack navigation** groups project files by Decision, Planning, Implementation, and Review, then by `default` or named Pack. Users can inspect, create, rename, edit, and delete any Pack or Check. Empty stages and Packs remain valid but display persistent warnings.
 
-**Model route selection** distinguishes the active authoring or repair model from the configured Check evaluator, names adapter and credential source without exposing secrets, and explains unavailable capabilities or billing boundaries before confirmation.
+**Model Check editing** uses one deterministic form for requirement, pass, fail, feedback, bounded inputs, binary or quantitative measurement, threshold, model profile, and budget. Saving writes the documented `check.json` and `CHECK.md` files. CodeWiki never invokes a model to author or alter them.
 
-**Developer Check mode** exposes the same tracked `CHECK.*` and optional sparse configuration used by regular forms, plus schemas, resolved configuration, Candidate input coverage, sandbox diagnostics, digests, shadow runs, and historical replay. It grants visibility rather than additional authority.
+**Code Check editing** uses the same common fields and accepts one `CHECK.mjs` upload. Syntax, schema, bounds, and sandbox preview errors remain visible before save; browser code never runs directly.
+
+**Model route selection** distinguishes Worker routes from the configured Check model route, names provider and credential source without exposing secrets, and explains unavailable capability, independence, budget, or billing boundaries before a Check runs.
+
+**Developer Check mode** exposes the same tracked `check.json`, `CHECK.md`, and `CHECK.mjs` files used by regular forms, plus schemas, exact input coverage, sandbox diagnostics, content digests, cache identity, preview runs, and historical replay. It grants visibility rather than additional authority.
+
+**Check Pack marketplace** follows npm package-gallery ergonomics while also accepting exact Git and local package sources. Search and inspection identify source, publisher where applicable, resolved version or revision, stages, Code and Model Checks, requested inputs, integrity, and local modifications. Installation, update, and removal are explicit User actions; update never hides a local diff.
 
 **Responsive behavior** preserves hierarchy and available actions across pointer, keyboard, touch, and assistive technology. Reduced-motion preference removes nonessential transition and animation.
 
 ## Do's and Don'ts
 
-- Do show what CodeWiki knows, what it does not know, and why a route is blocked.
+- Do show what CodeWiki knows, which Checks passed or failed, why a Gate stopped, and when no Checks are configured.
 - Do bind approvals and effects to exact visible subjects.
 - Do preserve readable contrast and keyboard focus.
-- Do use screenshots and previews as candidate-bound Evidence, not semantic approval.
-- Do identify every assisted-authoring model separately from the Check model that evaluates Candidates.
+- Do use screenshots and previews as Candidate-bound Evidence, not semantic approval.
+- Do identify Worker and Check model routes separately.
+- Do render one stable failure code and one feedback contract per failed Check while retaining its bounded factual details and locations.
 - Don't display a generic trust score, hidden reasoning, or fabricated certainty.
-- Don't invoke a model, widen Check input, or substitute the active authoring route without an explicit visible choice.
+- Don't invoke a model, widen Check input, or substitute a Worker route for a Check route without an explicit visible choice.
 - Don't make background work appear active without an observed state transition.
 - Don't duplicate System topology or runtime policy in design guidance.
 - Don't let visual polish hide missing Evidence, stale state, or unavailable capability.

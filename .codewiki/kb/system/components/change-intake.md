@@ -13,10 +13,10 @@ codewiki_relationships:
     rationale: Change Intake turns untrusted proposals and discovered work into accountable intent.
   - type: realizes
     target: /product/stories/maintainer/account-for-drift.md
-    rationale: Change Intake gives external and out-of-scope discoveries a visible accountable route.
+    rationale: Change Intake gives external and out-of-scope discoveries a visible accountable path.
 ---
 # Change Intake
 
-Change Intake accepts bounded authenticated material from people, channels, provider issues, Discovery Findings, workers, regressions, security findings, delivery observations, Knowledge drift, and External Candidate Captures. Submitted content is untrusted and cannot supply canonical identity, authority, time, priority, route, scope acceptance, or Check outcome.
+Change Intake accepts bounded authenticated material from people, channels, provider issues, Discovery Findings, workers, regressions, security findings, delivery observations, Knowledge drift, and External Candidate Captures. Submitted content is untrusted and cannot supply canonical identity, authority, time, priority, destination, scope acceptance, or Check outcome.
 
-Runtime authenticates, sanitizes, normalizes, deduplicates, and destination-routes material. An external code capture already matching one accepted Change may enter Candidate admission directly; missing intent or out-of-scope material enters intake, triage, proposed Change, and explicit acceptance before realization. Intake never selects Decision attention or silently expands current scope.
+Runtime authenticates, sanitizes, normalizes, deduplicates, and sends material to its bounded destination. An external code capture already matching one accepted Change may enter Candidate admission directly; missing intent or out-of-scope material enters intake, triage, proposed Change, and explicit acceptance before realization. Intake never selects Decision attention or silently expands current scope.

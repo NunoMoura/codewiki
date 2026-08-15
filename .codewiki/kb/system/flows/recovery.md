@@ -1,7 +1,7 @@
 ---
 type: System Flow
 title: Recovery
-description: Reconstructs coordination from canonical state and reconciles interrupted jobs without trusting private session memory.
+description: Reconstructs coordination from canonical state and reconciles interrupted jobs and Gate attempts without trusting private session memory.
 status: stable
 tags: [system, flow]
 codewiki_relationships:
@@ -11,6 +11,6 @@ codewiki_relationships:
 ---
 # Recovery
 
-Runtime reloads accepted Change Trace, synchronized Git facts, protected configuration, and persisted job receipts, then deterministically rebuilds WorkState and Alignment. It reconciles interrupted claims, workers, Integration attempts, and effects by exact identity.
+Runtime reloads accepted Change Trace, synchronized Git facts, project configuration, current Check Pack files, and persisted job and Gate receipts, then deterministically rebuilds WorkState and Alignment. It reconciles interrupted claims, workers, Integration attempts, Review attempts, Check Runs, and effects by exact identity.
 
-Private session history is never required for correctness. Unknown completion, contradictory receipts, stale snapshots, or unverifiable effects remain visible and block duplicate or unsafe continuation.
+Completed pass/fail Results remain reusable only when Candidate, Check, configuration, input, Evidence, and execution identities still match. Interrupted or stale Check Runs produce no Result and may receive one bounded fresh retry when still eligible. Exhausted retry, unavailable capability, contradictory receipt, or unverifiable effect becomes a visible stopped state. Private session history is never required for correctness, and recovery never invents a pass, failure, or delivery effect.

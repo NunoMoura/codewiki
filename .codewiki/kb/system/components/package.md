@@ -17,7 +17,7 @@ codewiki_relationships:
     rationale: Package supplies standalone Server, Client, Project Runtime, and Managed Execution entry contracts.
   - type: realizes
     target: /product/stories/maintainer/enforce-project-standards.md
-    rationale: Package transports inspectable digest-pinned Check Packs.
+    rationale: Package transports inspectable npm, Git, and local Check Packs into ordinary project files.
 ---
 # Package
 
@@ -27,6 +27,8 @@ The broad product API remains `src/index.ts`. The supported operational Runtime 
 
 Shared error handling stays lean and centralized under `src/error-handling/**`: the CodeWiki error envelope, serialization, type guards, and stable cross-owner operation-failure contract belong to Package. Configuration and Change Trace semantics define their specialized errors with those owners rather than growing a cross-domain error catalog.
 
-Check Packs use one content-addressed format over local, exact npm, or exact Git sources. Installation requires project trust, disables lifecycle scripts, pins immutable source and integrity in `.codewiki/check-packs.lock.json`, and materializes inspectable configuration and Check files. Discovery, recommendation, installation, and update grant no enforcement or protected capability.
+CodeWiki follows Pi Package source ergonomics for marketplace Packs. Discovery searches npm packages carrying the `codewiki-check-pack` keyword. Installation accepts an exact npm version, Git source and revision, or local package path. Each source uses either a `package.json` `codewiki.checkPacks` resource declaration or conventional `check-packs/` directories, and one package may transport Packs for multiple stages. The App resolves the selected source without lifecycle scripts, validates only declared Check resources, and vendors them into `.codewiki/check-packs/<stage>/<pack-name>/`. `.codewiki/check-packs.lock.json` records source kind and location, resolved version or revision, integrity, installed base digest, and local divergence for update diffs; it does not make installed files immutable.
 
-Registry transport distributes definitions and digest-pinned executable closure; Verification owns applicability, policy, Observation, Result, Exit Report, and shared quality-evaluator semantics. Package content cannot introduce credentials, telemetry, install hooks, canonical writes, or unsandboxed execution. Benchmarks, development artifacts, private state, generic Loop ownership, and source-checkout dogfood machinery do not ship. Packed candidates are tested only in disposable external projects.
+Package sources are transport rather than execution environments. Installation runs no Check code, imports no credentials, and grants no lifecycle or effect authority. Marketplace Code Checks are prebundled and later run only in the admitted sandbox; Model Checks later run only through isolated configured routes. Users may edit or delete installed files immediately. Updates are explicit and never overwrite local changes silently. Default Packs ship as package resources and are materialized only once at project bootstrap; deleting them is supported and upgrades do not restore them.
+
+Package content cannot introduce credentials, telemetry, install hooks, canonical writes, unsandboxed execution, protected Check floors, or fixed lifecycle changes. Benchmarks, development artifacts, private state, and source-checkout dogfood machinery do not ship. Packed candidates are tested only in disposable external projects.

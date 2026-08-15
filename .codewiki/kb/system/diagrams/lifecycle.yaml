@@ -1,5 +1,5 @@
 id: lifecycle
-purpose: Show accountable intent entering through Client, Server, and Runtime-orchestrated Loops, Verification, Knowledge, and Change Trace.
+purpose: Show accountable intent moving through Client, Server, four Runtime-orchestrated Loops, stage Gates, Knowledge, and Change Trace.
 components:
   - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
   - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
@@ -9,7 +9,8 @@ components:
   - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
   - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
-  - { id: verification, concept: /system/components/verification.md, label: Verification, zone: core }
+  - { id: review, concept: /system/components/review.md, label: Review, zone: core }
+  - { id: checks, concept: /system/components/checks.md, label: Checks, zone: core }
   - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
 connections:
@@ -25,36 +26,44 @@ connections:
   - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns admitted proposed intent }
   - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts selected exact revision }
   - { id: decision-returns-runtime, from: decision, to: runtime, type: returns, label: returns immutable Decision Candidate }
-  - { id: runtime-verifies-decision, from: runtime, to: verification, type: invokes, label: evaluates Decision Candidate }
-  - { id: verification-returns-runtime, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
+  - { id: runtime-runs-decision-gate, from: runtime, to: checks, type: invokes, label: runs Decision Check Packs }
+  - { id: checks-return-decision-gate, from: checks, to: runtime, type: returns, label: returns exact Decision Gate Report }
   - id: runtime-writes-knowledge
     from: runtime
     to: knowledge
     type: writes
-    label: accepts verified desired state
+    label: accepts passed approved desired state
     boundary: { type: persistence, failure: Preserve prior accepted Knowledge revision. }
   - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts Planning for approved meaning }
   - { id: planning-returns-runtime, from: planning, to: runtime, type: returns, label: returns immutable Planning Candidate }
-  - { id: runtime-verifies-planning, from: runtime, to: verification, type: invokes, label: evaluates Planning Candidate }
-  - { id: verification-returns-runtime-planning, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
-  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts eligible realization }
+  - { id: runtime-runs-planning-gate, from: runtime, to: checks, type: invokes, label: runs Planning Check Packs }
+  - { id: checks-return-planning-gate, from: checks, to: runtime, type: returns, label: returns exact Planning Gate Report }
+  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts eligible realization or feedback revision }
   - { id: implementation-returns-runtime, from: implementation, to: runtime, type: returns, label: returns integrated Implementation Candidate }
-  - { id: runtime-verifies-implementation, from: runtime, to: verification, type: invokes, label: evaluates Implementation Candidate }
-  - { id: verification-returns-runtime-implementation, from: verification, to: runtime, type: returns, label: returns exact Exit Report }
+  - { id: runtime-runs-implementation-gate, from: runtime, to: checks, type: invokes, label: runs Implementation Check Packs }
+  - { id: checks-return-implementation-gate, from: checks, to: runtime, type: returns, label: returns exact Implementation Gate Report }
+  - { id: runtime-invokes-review, from: runtime, to: review, type: invokes, label: starts Review for exact integrated head }
+  - { id: review-returns-runtime, from: review, to: runtime, type: returns, label: returns exact-head Review attempt }
+  - { id: runtime-runs-review-gate, from: runtime, to: checks, type: invokes, label: runs Review Check Packs }
+  - { id: checks-return-review-gate, from: checks, to: runtime, type: returns, label: returns exact Review Gate Report }
   - id: runtime-writes-change-trace
     from: runtime
     to: change-trace
     type: writes
-    label: appends accepted operation
+    label: appends accepted operation and Gate outcome
     boundary: { type: persistence, failure: Reject append and retain prior accepted head. }
 flows:
   - concept: /system/flows/change-lifecycle.md
     paths:
-      - connections: [clients-request-server, server-invokes-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-returns-runtime, runtime-verifies-decision, verification-returns-runtime, runtime-writes-knowledge]
-      - connections: [implementation-returns-runtime, runtime-verifies-implementation, verification-returns-runtime-implementation, runtime-writes-change-trace]
+      - connections: [clients-request-server, server-invokes-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-writes-knowledge]
+      - connections: [implementation-returns-runtime, runtime-runs-implementation-gate, checks-return-implementation-gate, runtime-invokes-review, review-returns-runtime, runtime-runs-review-gate, checks-return-review-gate, runtime-writes-change-trace]
   - concept: /system/flows/decision-to-planning.md
     paths:
-      - connections: [runtime-invokes-decision, decision-returns-runtime, runtime-verifies-decision, verification-returns-runtime, runtime-invokes-planning]
+      - connections: [runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-invokes-planning]
   - concept: /system/flows/planning-to-implementation.md
     paths:
-      - connections: [runtime-invokes-planning, planning-returns-runtime, runtime-verifies-planning, verification-returns-runtime-planning, runtime-invokes-implementation]
+      - connections: [runtime-invokes-planning, planning-returns-runtime, runtime-runs-planning-gate, checks-return-planning-gate, runtime-invokes-implementation]
+  - concept: /system/flows/implementation-to-review.md
+    paths:
+      - connections: [runtime-invokes-implementation, implementation-returns-runtime, runtime-runs-implementation-gate, checks-return-implementation-gate, runtime-invokes-review, review-returns-runtime, runtime-runs-review-gate, checks-return-review-gate]
+      - connections: [checks-return-review-gate, runtime-invokes-implementation]

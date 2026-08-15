@@ -7,6 +7,6 @@ tags: [product, user, authority]
 ---
 # Maintainer
 
-Maintainers define intended outcomes, select exact eligible Change revisions, approve protected boundaries, and inspect why CodeWiki advanced, waited, or blocked work. They need traceable intent, bounded context, visible Evidence gaps, safe recovery, and no hidden automation or data export.
+Maintainers define intended outcomes, select exact eligible Change revisions, approve protected boundaries, and inspect why CodeWiki passed, failed, or stopped each Gate. They need traceable intent, bounded context, visible Evidence gaps, safe recovery, and no hidden automation or data export.
 
-Success means verified project progress without losing authority, provenance, privacy, or a clear route back when evidence is incomplete.
+Success means Gate-certified project progress without losing authority, provenance, privacy, or an exact recovery path when required Evidence or execution is unavailable.
