@@ -92,7 +92,7 @@ describe("Open Knowledge Format v0.1", () => {
 		const sourceMap = sourceOwnershipMapFromOkfBundle(readFullPathKbBundle());
 
 		assert.deepEqual(result.issues, []);
-		assert.equal(result.conceptCount, 41);
+		assert.equal(result.conceptCount, 43);
 		assert.equal(result.reservedCount, 0);
 		assert.equal(sourceMap.components.length, 20);
 		assert.equal(

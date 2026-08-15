@@ -30,8 +30,9 @@ connections:
   - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt }
   - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts exact Implementation attempt }
   - { id: runtime-invokes-review, from: runtime, to: review, type: invokes, label: starts exact-head Review attempt }
-  - { id: runtime-invokes-checks, from: runtime, to: checks, type: invokes, label: runs one exact stage Gate }
+  - { id: runtime-invokes-checks, from: runtime, to: checks, type: invokes, label: loads exact Pack Skills or runs one exact stage Gate }
   - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: binds exact admitted Evidence inputs }
+  - { id: checks-read-alignment, from: checks, to: alignment, type: reads, label: obtains bounded horizontal and vertical facts for Check SDK }
   - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: evaluates current guards and scheduling }
   - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded provenance, impact, and contribution-routing facts }
   - { id: execution-invokes-preview, from: execution, to: preview, type: invokes, label: captures bounded Candidate observations }

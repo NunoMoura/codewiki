@@ -18,7 +18,7 @@ Project Configuration identifies the repository root, CodeWiki settings, Worker 
 
 Responsibility rules may define domain stewardship, review classes, scoped Authority Grants, independence requirements, and contribution-routing inputs. Profiles and ownership hints improve matching but grant no authority. Repository-provider access supplies coarse membership only; Runtime still authorizes each exact operation against current project policy and state.
 
-Check requirements do not live in `.codewiki/config.json`. They are ordinary tracked files under `.codewiki/check-packs/<stage>/<pack>/<check-id>/`. Folder presence defines the active stage set. There is no protected Check floor, required default, applicability catalog, enforcement tier, or activation transaction. Users may edit or delete all Packs. Runtime snapshots exact files and configuration for each Gate, and a changed snapshot invalidates incompatible cached Results.
+Check requirements do not live in `.codewiki/config.json`. They are ordinary tracked files under `.codewiki/check-packs/<stage>/<pack>/<check-id>/`. A Pack may also contain one optional standard Agent Skill under `skill/<skill-name>/`. Folder presence defines the active stage set. There is no protected Check floor, required default, applicability catalog, enforcement tier, or activation transaction. Users may edit or delete all Packs. Runtime snapshots exact Pack Skills for producer attempts and exact Check files and configuration for Gates. Skill and Check identities remain separate so only incompatible attempts or cached Results are invalidated.
 
 Project configuration stores provider, model, execution-profile, budget, bounded retry, and route identities but never credentials. Worker and Check model policies share provider transport primitives while retaining separate route selection, context, tools, memory, and budgets. Check routes have no implicit fallback to a Worker model. A route change alters execution identity and invalidates incompatible calibration and cached Results.
 
@@ -35,6 +35,8 @@ Canonical project-local layout is:
   check-packs/
     decision/
       default/
+        skill/<skill-name>/        # optional
+        <check-id>/
       <pack-name>/
     planning/
       default/
@@ -50,6 +52,6 @@ Canonical project-local layout is:
   runtime/
 ```
 
-Knowledge under `kb/**`, Change Traces under `traces/**`, `config.json`, and tracked Check files are source truth. `views/**` contains disposable projections. `runtime/**` contains private operational state recoverable from canonical project truth and exact receipts. Compact Evidence metadata enters Change Trace while large or private artifact bytes remain in their existing authority boundary; CodeWiki creates no canonical `.codewiki/evidence/` database or generic `.codewiki/changes.log`. Root `CHANGELOG.md` records package releases, not project Change history.
+Knowledge under `kb/**`, Change Traces under `traces/**`, `config.json`, and tracked Pack Skill and Check files are source truth. `views/**` contains disposable projections. `runtime/**` contains private operational state recoverable from canonical project truth and exact receipts. Compact Evidence metadata enters Change Trace while large or private artifact bytes remain in their existing authority boundary; CodeWiki creates no canonical `.codewiki/evidence/` database or generic `.codewiki/changes.log`. Root `CHANGELOG.md` records package releases, not project Change history.
 
-Bootstrap creates the compact native Knowledge shape and one empty bare-bones editable `default/` Pack directory per stage. This happens once. Missing or deleted defaults are never recreated on startup or upgrade. A stage with no Checks remains valid and its Gate passes with a visible warning. Source architecture declarations describe target dependency direction and are checked independently from temporary refactoring progress.
+Bootstrap creates the compact native Knowledge shape and one empty bare-bones editable `default/` Pack directory per stage, without inventing a Skill or Check. This happens once. Missing or deleted defaults are never recreated on startup or upgrade. A stage with no Checks remains valid and its Gate passes with a visible warning. Source architecture declarations describe target dependency direction and are checked independently from temporary refactoring progress.

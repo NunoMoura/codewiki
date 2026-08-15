@@ -5,6 +5,7 @@ components:
   - { id: runtime, concept: /system/components/runtime.md, label: Project Runtime, zone: core }
   - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
   - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
+  - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
   - { id: execution, concept: /system/components/execution.md, label: Managed Execution, zone: execution }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
   - { id: checks, concept: /system/components/checks.md, label: Checks, zone: core }
@@ -18,8 +19,8 @@ connections:
     from: runtime
     to: execution
     type: invokes
-    label: dispatches managed Pi Assignment in isolated Workbench
-    boundary: { type: authority, failure: Reject unsupported capability, missing isolation, or invalid Assignment. }
+    label: dispatches managed Pi Assignment with exact Pack Skills in isolated Workbench
+    boundary: { type: authority, failure: Reject unsupported capability, stale Skill snapshot, missing isolation, or invalid Assignment. }
   - { id: server-returns-runtime, from: server, to: runtime, type: returns, label: returns authenticated MCP-mediated Worker operation }
   - id: execution-returns-implementation
     from: execution
@@ -42,11 +43,24 @@ connections:
     boundary: { type: authority, failure: Reject malformed or unbound observation. }
   - { id: runtime-invokes-checks, from: runtime, to: checks, type: invokes, label: starts exact stage Gate }
   - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: resolves exact bounded Check inputs }
+  - id: checks-read-knowledge
+    from: checks
+    to: knowledge
+    type: reads
+    label: resolves exact bounded OKF facts for Check SDK
+    boundary: { type: persistence, failure: Stop affected Check input resolution when exact Knowledge snapshot is unavailable. }
+  - id: knowledge-returns-checks
+    from: knowledge
+    to: checks
+    type: returns
+    label: returns immutable OKF snapshot facts
+    boundary: { type: persistence, failure: Reject stale, incomplete, or digest-mismatched Knowledge facts. }
+  - { id: checks-read-alignment, from: checks, to: alignment, type: reads, label: resolves horizontal and vertical Check SDK facts }
   - id: checks-invoke-execution
     from: checks
     to: execution
     type: invokes
-    label: runs sandboxed Code Checks or tool-free Model Checks
+    label: runs sandboxed Code Checks over immutable SDK context or tool-free Model Checks
     boundary: { type: authority, failure: Return stopped execution without creating a Check Result. }
   - id: execution-returns-checks
     from: execution
@@ -75,7 +89,7 @@ flows:
   - concept: /system/flows/work-item-execution.md
     paths:
       - connections: [runtime-invokes-execution, execution-returns-implementation, implementation-returns-runtime, runtime-invokes-preview, preview-produces-evidence]
-      - connections: [runtime-invokes-checks, checks-invoke-execution, execution-returns-checks, checks-return-runtime, runtime-writes-change-trace]
+      - connections: [runtime-invokes-checks, checks-read-knowledge, knowledge-returns-checks, checks-invoke-execution, execution-returns-checks, checks-return-runtime, runtime-writes-change-trace]
   - concept: /system/flows/external-candidate-admission.md
     paths:
       - connections: [change-trace-returns-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-checks]

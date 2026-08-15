@@ -27,14 +27,14 @@ Integration | Fixed lifecycle | Gate admission | Recovery | Guarded effects
         |
 Decision | Planning | Implementation | Review
         |
-Checks | Check Packs | Code Checks | Model Checks | Gate Reports
+Checks | Check Packs | Pack Skills | Check SDK | Code Checks | Model Checks | Gate Reports
         |
 Workers using Workbenches and Model Providers
         |
 Knowledge | Change Trace | Git | Evidence
 ```
 
-One logical CodeWiki Server serves a deployment and routes many Clients to one authoritative Runtime per managed project. Server and Runtime are architectural siblings that may share a process or machine; co-location grants neither ownership over the other. Server owns connection trust, transport, pairing, sessions, project routing, transport deduplication, reconnect, redaction, and delivery. Runtime owns project AuthZ, semantic idempotency, canonical meaning, admission, provenance, persistence, scheduling, Integration, fixed lifecycle, Gate admission, and effects. Checks is a root domain owning Check Pack files, bounded Code and Model Check execution, completed Results, caching, fail-fast reduction, and Gate Reports. Four Loops own Decision, Planning, Implementation, and Review semantics. Server calls one narrow Runtime gateway and never reads Runtime persistence internals.
+One logical CodeWiki Server serves a deployment and routes many Clients to one authoritative Runtime per managed project. Server and Runtime are architectural siblings that may share a process or machine; co-location grants neither ownership over the other. Server owns connection trust, transport, pairing, sessions, project routing, transport deduplication, reconnect, redaction, and delivery. Runtime owns project AuthZ, semantic idempotency, canonical meaning, admission, provenance, persistence, scheduling, Integration, fixed lifecycle, Gate admission, and effects. Checks is a root domain owning Check Pack files, optional Pack Skill snapshots, the Check Author SDK contract, bounded Code and Model Check execution, completed Results, caching, fail-fast reduction, and Gate Reports. Four Loops own Decision, Planning, Implementation, and Review semantics. Server calls one narrow Runtime gateway and never reads Runtime persistence internals.
 
 A User is a human. An Actor is an accountable authenticated User or service. A User Interface is a human-facing surface implemented by a Client. A Client is software that speaks CodeWiki protocol. Claude Code or Codex acts as a Client while inspecting or requesting work and as a Worker only while executing an accepted Assignment. A Worker is an Agent, process, or service executing one bounded Assignment in one Runtime-owned Workbench. A Model Provider supplies local or remote inference and is distinct from the Worker that owns the Agent loop, tools, Workbench, tests, and Candidate. Worker Node remains deferred until physical placement, capacity, health, or draining becomes first-class.
 
@@ -74,13 +74,19 @@ Branch names, commits, authors, trailers, Git notes, and producer claims cannot 
 
 Checks, Changes, and Loops are peer root domains. Exactly four semantic Loops exist: Decision, Planning, Implementation, and Review. Runtime applies fixed transitions: passed Decision `approve` advances to Planning while passed `reject | defer | withdraw` keeps its typed terminal or deferred meaning; passed Planning advances to Implementation; passed Implementation advances to Review; passed Review permits guarded delivery; Decision, Planning, and Implementation failure repeats the same Loop; Review failure returns to Implementation; any stopped Gate preserves current state and stops that automation attempt. No generic Router, Loop Exit subsystem, or separate shared Verification component survives.
 
-Active Check content is direct user-editable source under `.codewiki/check-packs/<stage>/<pack>/<check-id>/`, with `check.json` and exactly one `CHECK.md` or `CHECK.mjs`. Bootstrap materializes one deliberately bare-bones `default/` Pack per stage once. Defaults are examples, not protected floors. Users may edit or delete any Pack or every Check; CodeWiki never restores them automatically. Zero Checks passes with a visible non-blocking `no_checks_configured` warning. Malformed content or unavailable execution stops only the affected Gate and never crashes CodeWiki.
+Active Pack content is direct user-editable source under `.codewiki/check-packs/<stage>/<pack>/`. Every Check remains a direct `<check-id>/` directory containing `check.json` and exactly one `CHECK.md` or `CHECK.mjs`. A Pack may additionally contain one optional standard Agent Skill under `skill/<skill-name>/`; there is no extra `checks/` level or required local Pack manifest. Bootstrap materializes one deliberately bare-bones empty `default/` Pack per stage once. Defaults are examples, not protected floors. Users may edit or delete any Pack, Skill, or Check; CodeWiki never restores them automatically. Zero Checks passes with a visible non-blocking `no_checks_configured` warning even when a Skill exists. Malformed content or unavailable execution stops only the affected stage operation and never crashes CodeWiki.
 
-Every present Check gates its stage. A Check defines one pass condition, one fail condition, one stable failure code, and one feedback contract. Code and Model are the only Check implementation kinds. Binary and quantitative are the measurement kinds; a quantitative threshold deterministically reduces to pass or fail. Completed Results are only `passed | failed`. Timeout, invalid output, unavailable sandbox or model, exhausted budget, cancellation, failed input collection, or unrecoverable staleness creates a stopped Check Run and Gate, not an indeterminate Result or semantic failure. Failed Results send exact feedback to the responsible Loop; stopped runs send operational recovery to the User.
+Pack Skills shape producer behavior but never judge output. Runtime supplies exact stage Skills in stable Pack-ID order only to work-producing Agents, and their complete immutable digests bind producer attempts and receipts. Ambient harness Skills remain disabled. Skill scripts and setup guidance may use only tools and capabilities already admitted for the Assignment; `allowed-tools` cannot add authority. Code and Model Check executors never inherit Pack Skills, resources, tools, context, or memory. Skill identity remains separate from Check Pack and Result cache identity.
 
-Checks takes one immutable snapshot of exact stage subject, Pack, input, Evidence, configuration, and execution identities. It resolves exact cache hits, runs remaining Code Checks in bounded parallel, stops before Model Checks when Code fails or stops, otherwise runs Model Checks in bounded parallel, and stops launching queued work after a conclusive failure or stop condition. Model Checks are tool-free and use routes separate from work-producing models. Code Checks run only in admitted sandboxes.
+Every present registered Check gates its stage. A Check defines one pass condition, one fail condition, one stable failure code, and one feedback contract. Code and Model are the only Check implementation kinds. Binary and quantitative are the measurement kinds; a quantitative threshold deterministically reduces to pass or fail. Completed Results are only `passed | failed`. Timeout, invalid output, unavailable sandbox or model, exhausted budget, cancellation, failed input collection, incomplete snapshot query, or unrecoverable staleness creates a stopped Check Run and Gate, not an indeterminate Result or semantic failure. Failed Results send exact feedback to the responsible Loop; stopped runs send operational recovery to the User.
 
-CodeWiki never autonomously authors Check content. After one-time bootstrap, Pack changes occur only through direct project-file edits or explicit authenticated App actions. Users may edit files manually, through a user-controlled external agent following public schemas, or through App forms. The App creates Model Checks from structured requirement/pass/fail/feedback fields, accepts one-file Code Check uploads, previews Checks, and installs marketplace Packs. Check Pack sources follow Pi Package conventions: npm discovery uses the `codewiki-check-pack` keyword, and exact npm versions, Git revisions, or local package paths expose a `codewiki.checkPacks` manifest or conventional `check-packs/` directories. Package sources are transport only: no lifecycle scripts or package code execute during install; resolved source and integrity are recorded, declared resources are vendored into editable `.codewiki/check-packs/**` files, and updates never overwrite local changes silently.
+The Check SDK has two composition layers: Probes gather bounded snapshot-bound facts without deciding pass or fail, and Checks evaluate facts as binary or quantitative judgments. Author source may import pure libraries, Probes, and Checks normally and bundle that complete closure into one readable self-contained `CHECK.mjs`. The top-level Check registered beside `check.json` is the only Result, cache, retry, failure-code, feedback, and Gate boundary. Composed Checks inherit its context, limits, and cancellation and create no independent platform Result. Installed Checks never invoke another installed Check by Pack identity.
+
+Code Checks receive immutable read-only SDK views over declared OKF Knowledge, repository, code, tests, local revisions and commits, exact pull-request Evidence, Change state, and Alignment Graph facts. Queries support horizontal inspection and vertical traversal from Knowledge through source ownership, tests, revisions, accepted work, Evidence, and Results. Every result binds snapshot, provenance, coverage, truncation, and staleness. Checks takes one immutable snapshot of exact stage subject, Check Pack, input, Evidence, configuration, and execution identities, resolves exact cache hits, runs remaining Code Checks in bounded parallel, stops before Model Checks when Code fails or stops, otherwise runs Model Checks in bounded parallel, and stops launching queued work after a conclusive failure or stop condition. Model Checks remain tool-free and separate from work-producing models. Code Checks run only in admitted sandboxes.
+
+CodeWiki never autonomously authors Skill or Check content. After one-time bootstrap, Pack changes occur only through direct project-file edits or explicit authenticated App actions. Users may edit files manually, through a user-controlled external Agent following public schemas, or through App forms. Check Authors keep source, tests, fixtures, and dependencies in their own package or repository; only `check.json` and self-contained `CHECK.mjs` enter the active Pack. The App edits standard Pack Skills, creates Model Checks from structured fields, accepts one-file Code Check uploads, previews Checks, and installs marketplace Packs.
+
+Check Pack transport borrows Pi Package source ergonomics without adopting Pi-specific extensions, prompts, themes, or settings. Npm discovery uses the `codewiki-check-pack` keyword, and exact npm versions, Git revisions, or local package paths expose a `codewiki.checkPacks` manifest or conventional `check-packs/` directories. `package.json` is transport metadata and never replaces `check.json`. Package sources are transport only: no lifecycle scripts, Skill code, or Check code execute during install; resolved source, integrity, separate Skill and Check base digests, complete package digest, and local divergence are recorded; only declared Skill and runtime Check files are vendored; updates never overwrite local changes silently.
 
 Review is a separate Loop with its own stage Packs because exact-head delivery standards and the Implementation-to-Review feedback cycle are distinct. Human Review Evidence is optional. Projects may rely entirely on independent Code and Model Checks, require authenticated human Review through their own Check, or combine both. A fully automated delivery still requires prior User-configured authority plus a passed fresh Review Gate.
 
@@ -225,7 +231,7 @@ Canonical project layout is:
   runtime/    # private operational state
 ```
 
-Knowledge, Change Traces, project configuration, and tracked Check definitions are source truth. Each Check lives directly at `<stage>/<pack>/<check-id>/check.json` beside one `CHECK.md` or `CHECK.mjs`; no extra `checks/` directory exists. `check-packs.lock.json` records installed npm, Git, or local source provenance and local divergence without making files immutable. Compact Evidence metadata enters Change Trace while large or private bytes stay in their existing authority boundary. No canonical `.codewiki/evidence/` database or `.codewiki/changes.log` exists. Root `CHANGELOG.md` records package releases. This source checkout keeps active Change Traces and project Check Packs absent because CodeWiki cannot dogfood its own extension during stabilization.
+Knowledge, Change Traces, project configuration, tracked Pack Skills, and tracked Check definitions are source truth. Each optional Skill lives under `<stage>/<pack>/skill/<skill-name>/`; each Check lives directly at `<stage>/<pack>/<check-id>/check.json` beside one `CHECK.md` or `CHECK.mjs`; no extra `checks/` directory exists. `check-packs.lock.json` records installed npm, Git, or local source provenance, separate Skill and Check base digests, complete package digest, and local divergence without making files immutable. Compact Evidence metadata enters Change Trace while large or private bytes stay in their existing authority boundary. No canonical `.codewiki/evidence/` database or `.codewiki/changes.log` exists. Root `CHANGELOG.md` records package releases. This source checkout keeps active Change Traces and project Check Packs absent because CodeWiki cannot dogfood its own extension during stabilization.
 
 ## Clean-cut rules and budgets
 
@@ -416,7 +422,9 @@ Rules:
 ### 4. Build CodeWiki App and first-party Clients
 
 - [x] Replace Dashboard-local workflow/session query ownership with bounded Runtime projections; typed Runtime mutation operations remain pending.
-- [ ] Implement App surfaces for Change, Decision, Planning, Implementation, Review, Work Items, Candidates, provenance, Check Packs, Code and Model Checks, Evidence, Gate Reports, atomic feedback, stopped recovery, Integration, and effects.
+- [ ] Implement App surfaces for Change, Decision, Planning, Implementation, Review, Work Items, Candidates, provenance, Check Packs, optional Pack Skills, Code and Model Checks, Evidence, Gate Reports, atomic feedback, stopped recovery, Integration, and effects.
+- [ ] Show effective stage Skill composition, exact Skill and Check digests, local divergence, backend compatibility, unavailable Worker capabilities, and the strict separation between producer guidance and Gate judgment.
+- [ ] Add Developer Check mode for SDK input coverage, horizontal and vertical query facts, bundle provenance, sandbox diagnostics, fixture results, preview, and historical replay.
 - [ ] Keep CLI as full deterministic operational and high-authority confirmation surface.
 - [ ] Keep Pi TUI as optional expert Client; it cannot double as controlled execution.
 - [ ] Validate keyboard, assistive technology, reduced motion, contrast, bounded rendering, reconnect, reset, and actionable failure states.
@@ -435,11 +443,14 @@ Rules:
 ### 6. Harden Managed Execution
 
 - [ ] Pin supported Pi SDK version and update package ranges deliberately.
-- [ ] Require explicit ResourceLoader, tool allowlist, isolated agent directory, Runtime-owned worktree, CodeWiki context envelope, exact model route, budgets, cancellation, and disabled ambient prompts/extensions/skills/settings/project-agent config.
-- [ ] Define execution receipts binding Pi version, route, tools, context, claim, worktree, base, timing, cancellation, usage, and output.
+- [ ] Define a host-neutral immutable Pack Skill snapshot and stage-execution port before binding it to Pi's native Skill loader.
+- [ ] Require explicit ResourceLoader, tool allowlist, isolated agent directory, Runtime-owned worktree, CodeWiki context envelope, exact model route, budgets, cancellation, and disabled ambient prompts/extensions/settings/project-agent config and ambient Skills.
+- [ ] Load only exact stage Pack Skills in stable Pack-ID order for work-producing Agents; intersect `allowed-tools`, scripts, and setup guidance with already admitted Worker capabilities.
+- [ ] Prove Code and Model Check executors never inherit Pack Skills, producer tools, context, memory, credentials, or authority.
+- [ ] Define execution receipts binding Pi version, route, tools, exact Pack Skill digests where applicable, immutable Check SDK snapshot identities where applicable, context, claim, worktree, base, timing, cancellation, usage, and output.
 - [ ] Route Decision, Planning, Implementation, Review, research, and Model Checks through managed Pi ports where model execution is required.
-- [ ] Keep Pi sessions disposable; canonical continuity uses Change, Candidate, Work Item, operation, Check Result, Gate Report, and Review attempt identity.
-- [ ] Keep Worker and Check model routes, sessions, tools, memory, context, and budgets separate while sharing provider transport and receipt machinery.
+- [ ] Keep Pi sessions disposable; canonical continuity uses Change, Candidate, Work Item, operation, Skill-bound producer attempt, Check Result, Gate Report, and Review attempt identity.
+- [ ] Keep Worker and Check model routes, sessions, tools, Skills, memory, context, and budgets separate while sharing provider transport and receipt machinery.
 - [ ] Missing exact capability yields bounded retry followed by stopped execution without fallback, policy weakening, fake Check failure, or process crash.
 
 ### 7. Activate Runtime-owned parallel workbenches
@@ -476,13 +487,19 @@ Rules:
 - [x] Delete obsolete WorkState paths and generic `src/views/**` after callers move.
 - [x] Preserve append-only history, deterministic replay, expected-head CAS, provenance, remote synchronization, and recovery behavior.
 - [ ] Stabilize read-only bounded snapshot-bound context, state, attention, explanation, and Change queries with coverage, truncation, provenance, and staleness.
+- [ ] Publish Check-facing immutable query contracts for OKF Knowledge, repository content, code, tests, local revisions, commits, exact pull-request Evidence, Change and Work Item state, and Alignment Graph facts.
+- [ ] Support bounded horizontal inspection and vertical traversal from Knowledge through source ownership, tests, revisions, accepted work, Evidence, Results, and delivery while binding every response to exact snapshot identity.
 - [ ] Define Actor Profiles, scoped Authority Grants, responsibility rules, Review Requirements, per-requirement Review Claims, and immutable Review Submissions.
 - [ ] Populate owner, user, reviewer, contributor, and Worker eligibility through read-only Contribution Routing before any automatic assignment.
 - [ ] Keep Profile fit, Authority Grant, active Claim, and authenticated Operation as separate facts; never infer authority from expertise or ownership hints.
 
-### 10. Complete root Checks, Check Packs, and Gates
+### 10. Complete root Checks, Check Packs, Pack Skills, SDK, and Gates
 
-The active kernel now has exact Candidate and execution identities, versioned Check/Invocation/Output/Result/Gate contracts, stage-first Pack loading, deterministic thresholds, independent Model transport, bounded scheduling and retries, exact completed-Result caching, stopped Gate semantics, and historical Change Trace boundary translation. Remaining work is product authoring, marketplace transport, executable Review persistence, and removal of isolated Loop Quality.
+The active kernel now has exact Candidate and execution identities, versioned Check/Invocation/Output/Result/Gate contracts, stage-first Pack loading, deterministic thresholds, independent Model transport, bounded scheduling and retries, exact completed-Result caching, stopped Gate semantics, and historical Change Trace boundary translation. Remaining work adds optional producer Skills and author-facing repository intelligence without weakening that completed semantic core, then finishes product authoring, marketplace transport, executable Review persistence, and removal of isolated Loop Quality.
+
+Execution order is fixed: ratify and implement Pack Skill loading, immutable snapshots, and producer receipt binding first so Review persistence receives its final attempt identity; complete executable Review persistence next; build the Check SDK and use real first-party replacements for isolated Loop Quality to calibrate it; then land App and marketplace workflows; generate Skill-change proposals only after durable Review and failed-Result history exist. Each structural slice receives a new HEAD-anchored manifest and full external-package gates.
+
+#### Completed Check, Result, and Gate kernel
 
 - [x] Implement `.codewiki/check-packs/<stage>/<pack>/<check-id>/check.json` beside exactly one `CHECK.md` or `CHECK.mjs`, with no extra `checks/` level or required local Pack manifest.
 - [x] Publish versioned schemas for `check.json`, bounded input selectors, Code and Model Check outputs, completed Results, Gate Reports, warnings, and stopped execution reasons before migration consumers land.
@@ -490,16 +507,46 @@ The active kernel now has exact Candidate and execution identities, versioned Ch
 - [x] Treat folder presence as the active Check set; remove protected floors, enforcement tiers, required Check IDs, hidden catalogs, and activation transactions.
 - [x] Make zero Checks pass with persistent `no_checks_configured` warning and make empty named Packs warn without synthetic Results.
 - [x] Define only Code and Model Check implementations plus binary and quantitative measurements; derive quantitative pass/fail from finite minimum/maximum thresholds.
-- [x] Require one pass condition, one fail condition, one stable failure code, and one feedback object per Check; permit multiple factual details or locations but no multiple semantic failure classes.
+- [x] Require one pass condition, one fail condition, one stable failure code, and one feedback object per registered Check; permit multiple factual details or locations but no multiple authoritative failure classes.
 - [x] Admit Results only for completed `passed | failed` Checks. Replace indeterminate Results with stopped Check Runs and `passed | failed | stopped` Gate Reports.
 - [x] Bound retries and stop reasons for timeout, cancellation, missing input, invalid output, unavailable model or sandbox, exhausted budget, and staleness; preserve lifecycle state on stopped Gates.
 - [x] Resolve exact cache hits, run uncached Code Checks in bounded parallel, fail fast before Model Checks, then run Model Checks in bounded parallel and stop queued work after conclusive failure or stop.
 - [x] Keep Model Checks tool-free and independent from Worker routes under one fixed structured-output protocol; delegate Code Checks only to bounded admitted hermetic sandboxes with network denial and no host fallback.
 - [x] Delete Check-authored route hints and Repair Profile/Frontier/Brief/Bundle layers; failed Results carry feedback directly to the responsible Loop.
-- [ ] Implement App stage/Pack navigation, Model Check forms, one-file Code Check upload, validation, sandbox preview, delete/edit support, and developer file inspection over the same tracked files.
-- [x] Keep Check Pack creation and mutation out of CodeWiki-managed Agents and dedicated CLI tooling; publish the core schema and stage-first layout for manual editors and user-controlled external agents.
-- [ ] Implement Pi-style npm discovery with `codewiki-check-pack` plus exact npm, Git, and local installation through `codewiki.checkPacks` or conventional `check-packs/` resources, no lifecycle scripts, vendoring into editable project files, exact source/integrity lock data, and diff-safe updates.
+- [x] Keep Check Pack creation and mutation out of CodeWiki-managed Agents and dedicated Pack-management CLI tooling; publish the core schema and stage-first layout for manual editors and user-controlled external Agents.
 - [x] Preserve only SARIF, JUnit XML, LCOV, Cobertura, CycloneDX, SPDX, Pact, OpenAPI, and provider-check receipts as bounded Evidence formats.
+
+#### Optional Pack Skills
+
+- [ ] Extend each Pack with one optional reserved `skill/<skill-name>/` standard Agent Skill while preserving direct Check directories, no `checks/` level, and no required local Pack manifest.
+- [ ] Validate Skill frontmatter, immediate-parent name, complete bounded file tree, path confinement, project-wide active name uniqueness, and deterministic stable Pack ordering.
+- [ ] Publish immutable Skill snapshot and digest contracts separate from Check Pack snapshot, Check Result, and Gate cache identity.
+- [ ] Bind exact Skill snapshots to producer attempts and execution receipts; make a changed Skill stale only affected producer work.
+- [ ] Keep ambient harness Skills disabled and prove Pack Skills reach only work-producing Agents, never Code or Model Check executors.
+- [ ] Permit standard Skill scripts, references, assets, setup guidance, and `allowed-tools` metadata without allowing them to exceed current Worker capabilities or Runtime authority.
+- [ ] Keep Skill-change analysis non-authoritative and defer automatic proposal generation until Review persistence and failed-Result history are durable.
+
+#### Check Author SDK and composition
+
+- [ ] Define only Probe and Check authoring primitives: Probes return bounded snapshot-bound facts without verdicts; Checks return binary or quantitative judgments.
+- [ ] Make `check.json` registration of the default top-level Check the sole Result, cache, retry, stable failure-code, feedback, and Gate boundary.
+- [ ] Permit source-level import and composition of pure libraries, Probes, and Checks while forbidding runtime invocation of another installed Check by Pack identity.
+- [ ] Bundle the complete author dependency closure into one readable self-contained `CHECK.mjs`; keep author source, tests, fixtures, and dependency installation outside active `.codewiki/check-packs/**` files.
+- [ ] Define deterministic composition semantics for all, any, none, count, iteration, and quantitative score without introducing a workflow DAG or another domain.
+- [ ] Publish read-only SDK facades over exact OKF Knowledge, repository, code, tests, local revisions, commits, pull-request Evidence, Change and Work Item state, and Alignment Graph facts.
+- [ ] Require every SDK query to report snapshot, provenance, coverage, truncation, and staleness and to remain part of exact Invocation and execution identity.
+- [ ] Add bounded diagnostic builders that preserve vertical references from Knowledge through source, tests, revisions, accepted work, Evidence, and Results.
+- [ ] Add SDK validation, readable bundling, fixture testing, admitted sandbox preview, and historical Invocation replay without Pack installation or mutation authority.
+- [ ] Defer external executable APIs and per-tool contracts until a concrete Check cannot be expressed through bundled libraries and snapshot-bound CodeWiki primitives.
+- [ ] Use the first real SDK Checks to replace remaining isolated Loop Quality debt and calibrate the API before public stability.
+
+#### Product authoring and marketplace transport
+
+- [ ] Implement App stage/Pack navigation, optional Skill editing, effective Skill composition, Model Check forms, one-file Code Check upload, validation, sandbox preview, delete/edit support, and developer SDK inspection over the same tracked files.
+- [ ] Implement npm discovery with `codewiki-check-pack` plus exact npm, Git, and local installation through `codewiki.checkPacks` or conventional `check-packs/` resources.
+- [ ] Treat `package.json` only as transport metadata; never replace `check.json` or import Pi extensions, prompts, themes, settings, or lifecycle behavior into the Pack contract.
+- [ ] Run no package lifecycle, Skill, or Check code during installation; vendor only optional Skill and runtime Check files into editable project files.
+- [ ] Record exact source, integrity, separate Skill and Check base digests, complete installed-package digest, and local divergence; make updates explicit and diff-safe.
 
 ### 11. Normalize feedback, discovery, and improvement
 
@@ -510,6 +557,8 @@ The active kernel now has exact Candidate and execution identities, versioned Ch
 - [ ] Keep out-of-scope blockers failed until dependency Change or explicit scope expansion is accepted.
 - [ ] Name deliberate operational discovery Improvement Assessment.
 - [ ] Never let discovery classification convert a failed Check into pass.
+- [ ] Define non-authoritative `SkillChangeProposal` material only after durable Review persistence: bind stage, Pack, base Skill digest, repeated completed failed Results, exact supporting refs, proposed diff, expected behavior change, and risks.
+- [ ] Require authenticated User review and expected-head application for every Skill proposal; stopped Gates, unavailable execution, and malformed outputs never count as semantic evidence for changing guidance.
 - [ ] Never let installed CodeWiki automatically file work against upstream CodeWiki.
 
 ### 12. Build external product Benchmarks
@@ -535,7 +584,9 @@ The active kernel now has exact Candidate and execution identities, versioned Ch
 - [ ] Run sealed scanner, Code Check, and Model Check calibration against independent human-labeled cases.
 - [ ] Prove provider authentication, actor authority, expected-head mutation, Pi credential isolation, MCP-mediated workbench custody, and OCI execution externally.
 - [ ] Build and pack reviewed candidates, then install only in disposable external projects with isolated Pi settings.
-- [ ] Verify Server/App/CLI/Pi/MCP lifecycle, Check Packs, npm/Git/local installation, manual and App editing, Code/Model execution, Gate outcomes, managed receipts, external capture, guarded writes, failure paths, and cleanup.
+- [ ] Verify Server/App/CLI/Pi/MCP lifecycle, Check Packs, optional Pack Skills, npm/Git/local installation, manual and App editing, Code/Model execution, Gate outcomes, managed receipts, external capture, guarded writes, failure paths, and cleanup.
+- [ ] Prove exact Pack Skill activation through the Pi adapter, host-neutral Skill snapshot contracts, Worker capability ceilings, and complete exclusion from Code and Model Check executors.
+- [ ] Prove Check SDK bundle reproducibility, malicious imported-library containment, fixture and historical replay, exact local and pull-request snapshots, and horizontal and vertical OKF/repository/Alignment query coverage.
 - [ ] Resolve optional Pi SDK dependency advisories or document accepted external constraints.
 - [ ] Publish, release, deploy, mutate providers, or expose public network only with explicit maintainer approval.
 
@@ -571,7 +622,7 @@ External proof does not block local clean cuts:
 Delete this file when:
 
 - target topology and dependency boundaries are realized;
-- CodeWiki Server, Clients, Project Runtime, Worker, Managed Execution, provenance, MCP, Checks, four Loops, and Gate contracts are executable;
+- CodeWiki Server, Clients, Project Runtime, Worker, Managed Execution, provenance, MCP, Checks, optional Pack Skills, Check SDK, four Loops, and Gate contracts are executable;
 - legacy Harness, Dashboard, trace-host, Verification, Loop Exit, Router, Quality, Repair Bundle, indeterminate Result, Trace, ChangeRecord, generic View, compatibility, and self-dogfood paths are gone;
 - source, tests, packed output, and Knowledge agree;
 - all hard file budgets and external packed-install gates pass;

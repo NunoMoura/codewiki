@@ -114,17 +114,19 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Source and diagram inspectors** show canonical path or diagram reference, provenance, coverage, truncation, and staleness. They open the owning concept or exact file rather than a copied summary.
 
-**Check Pack navigation** groups project files by Decision, Planning, Implementation, and Review, then by `default` or named Pack. Users can inspect, create, rename, edit, and delete any Pack or Check. Empty stages and Packs remain valid but display persistent warnings.
+**Check Pack navigation** groups project files by Decision, Planning, Implementation, and Review, then by `default` or named Pack. Users can inspect, create, rename, edit, and delete any Pack or Check. Each Pack separately presents its optional standard Agent Skill and its Gate Checks so guidance never appears to be an acceptance decision. Empty stages and Packs remain valid but display persistent Check-based warnings.
 
 **Model Check editing** uses one deterministic form for requirement, pass, fail, feedback, bounded inputs, binary or quantitative measurement, threshold, model profile, and budget. Saving writes the documented `check.json` and `CHECK.md` files. CodeWiki never invokes a model to author or alter them.
 
-**Code Check editing** uses the same common fields and accepts one `CHECK.mjs` upload. Syntax, schema, bounds, and sandbox preview errors remain visible before save; browser code never runs directly.
+**Pack Skill editing** presents standard Skill name, description, `SKILL.md`, scripts, references, assets, other bounded resources, and declared tool guidance. It shows effective stage composition in stable Pack order, exact content digest, backend compatibility, and capabilities unavailable under current Worker policy. Saving changes project files only after an explicit authenticated action; Skill scripts never run in the browser or during package installation.
+
+**Code Check editing** uses the same common fields and accepts one self-contained `CHECK.mjs` upload. Syntax, schema, bounds, and sandbox preview errors remain visible before save; browser code never runs directly.
 
 **Model route selection** distinguishes Worker routes from the configured Check model route, names provider and credential source without exposing secrets, and explains unavailable capability, independence, budget, or billing boundaries before a Check runs.
 
-**Developer Check mode** exposes the same tracked `check.json`, `CHECK.md`, and `CHECK.mjs` files used by regular forms, plus schemas, exact input coverage, sandbox diagnostics, content digests, cache identity, preview runs, and historical replay. It grants visibility rather than additional authority.
+**Developer Check mode** exposes the same tracked `check.json`, `CHECK.md`, and `CHECK.mjs` files used by regular forms, plus schemas, exact input coverage, horizontal and vertical OKF/repository/Alignment query facts, bundle provenance, sandbox diagnostics, content digests, cache identity, preview runs, fixture results, and historical replay. It distinguishes reusable Probes and composed Checks from the single registered top-level Result boundary and grants visibility rather than additional authority.
 
-**Check Pack marketplace** follows npm package-gallery ergonomics while also accepting exact Git and local package sources. Search and inspection identify source, publisher where applicable, resolved version or revision, stages, Code and Model Checks, requested inputs, integrity, and local modifications. Installation, update, and removal are explicit User actions; update never hides a local diff.
+**Check Pack marketplace** follows npm package-gallery ergonomics while also accepting exact Git and local package sources. Search and inspection identify source, publisher where applicable, resolved version or revision, stages, optional Pack Skills, Code and Model Checks, requested inputs, integrity, separate Skill and Check digests, and local modifications. Pi-specific extensions, prompts, themes, and settings are not Pack resources. Installation, update, and removal are explicit User actions; update never hides a local diff.
 
 **Responsive behavior** preserves hierarchy and available actions across pointer, keyboard, touch, and assistive technology. Reduced-motion preference removes nonessential transition and animation.
 
