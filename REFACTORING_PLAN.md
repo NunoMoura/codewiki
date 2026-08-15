@@ -518,9 +518,9 @@ Execution order is fixed: ratify and implement Pack Skill loading, immutable sna
 
 #### Optional Pack Skills
 
-- [ ] Extend each Pack with one optional reserved `skill/<skill-name>/` standard Agent Skill while preserving direct Check directories, no `checks/` level, and no required local Pack manifest.
-- [ ] Validate Skill frontmatter, immediate-parent name, complete bounded file tree, path confinement, project-wide active name uniqueness, and deterministic stable Pack ordering.
-- [ ] Publish immutable Skill snapshot and digest contracts separate from Check Pack snapshot, Check Result, and Gate cache identity.
+- [x] Extend each Pack with one optional reserved `skill/<skill-name>/` standard Agent Skill while preserving direct Check directories, no `checks/` level, and no required local Pack manifest.
+- [x] Validate Skill frontmatter, immediate-parent name, complete bounded file tree, path confinement, project-wide active name uniqueness, and deterministic stable Pack ordering.
+- [x] Publish immutable Skill snapshot and digest contracts separate from Check Pack snapshot, Check Result, and Gate cache identity.
 - [ ] Bind exact Skill snapshots to producer attempts and execution receipts; make a changed Skill stale only affected producer work.
 - [ ] Keep ambient harness Skills disabled and prove Pack Skills reach only work-producing Agents, never Code or Model Check executors.
 - [ ] Permit standard Skill scripts, references, assets, setup guidance, and `allowed-tools` metadata without allowing them to exceed current Worker capabilities or Runtime authority.

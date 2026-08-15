@@ -54,7 +54,7 @@ export function createCheckResult(input: CreateCheckResultInput): CheckResult {
 	assertCheckPackSnapshot(input.snapshot, input.check.stage);
 	assertCheckInvocation(input.invocation);
 	if (
-		input.invocation.packSnapshotDigest !== input.snapshot.digest ||
+		input.invocation.packSnapshotDigest !== input.snapshot.checkPackDigest ||
 		input.invocation.check.checkDigest !== input.check.checkDigest ||
 		input.invocation.subject.stage !== input.check.stage
 	) {
@@ -87,7 +87,7 @@ export function createCheckResult(input: CreateCheckResultInput): CheckResult {
 		schemaVersion: CHECK_RESULT_SCHEMA_VERSION,
 		stage: input.check.stage,
 		subjectDigest: input.invocation.subject.digest,
-		packSnapshotDigest: input.snapshot.digest,
+		packSnapshotDigest: input.snapshot.checkPackDigest,
 		packId: input.check.packId,
 		checkId: input.check.checkId,
 		checkVersion: input.check.definition.version,
@@ -192,7 +192,7 @@ export function createGateReport(input: CreateGateReportInput): GateReport {
 		reductionVersion: GATE_REPORT_REDUCTION_VERSION,
 		stage: input.snapshot.stage,
 		subjectDigest: input.subjectDigest,
-		packSnapshotDigest: input.snapshot.digest,
+		packSnapshotDigest: input.snapshot.checkPackDigest,
 		status,
 		selectedCheckCount: selected.length,
 		results,
@@ -235,7 +235,7 @@ export function assertValidGateReport(
 		throw new Error("Gate Report protocol identity is unsupported.");
 	}
 	assertCheckPackSnapshot(snapshot, report.stage);
-	if (report.packSnapshotDigest !== snapshot.digest) {
+	if (report.packSnapshotDigest !== snapshot.checkPackDigest) {
 		throw new Error("Gate Report Pack snapshot digest does not match.");
 	}
 	const expected = createGateReport({
@@ -301,7 +301,7 @@ function assertResultSnapshotBinding(
 ): void {
 	if (
 		result.stage !== snapshot.stage ||
-		result.packSnapshotDigest !== snapshot.digest
+		result.packSnapshotDigest !== snapshot.checkPackDigest
 	) {
 		throw new Error("Check Result does not belong to Pack snapshot.");
 	}

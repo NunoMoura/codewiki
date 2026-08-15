@@ -76,7 +76,10 @@ export function createNativeDecisionOperationSequence(
 		input.candidate,
 	);
 	const packSnapshotBinding = inlineSemanticArtifact(
-		idFromDigest("check-pack-snapshot:decision", input.packSnapshot.digest),
+		idFromDigest(
+			"check-pack-snapshot:decision",
+			input.packSnapshot.checkPackDigest,
+		),
 		String(input.packSnapshot.schemaVersion),
 		input.packSnapshot,
 	);

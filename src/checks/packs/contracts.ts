@@ -1,5 +1,6 @@
 import {
 	CHECK_DEFINITION_SCHEMA_VERSION,
+	isCheckStage,
 	normalizeCheckDefinition,
 	qualifiedCheckId,
 	type CheckDefinition,
@@ -9,13 +10,23 @@ import {
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,
+	sha256Digest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 
-export const CHECK_PACK_SNAPSHOT_SCHEMA_VERSION = "1.0.0" as const;
+export const CHECK_PACK_SNAPSHOT_SCHEMA_VERSION = "2.0.0" as const;
+export const PACK_SKILL_SNAPSHOT_SCHEMA_VERSION = "1.0.0" as const;
+export const PACK_SKILL_SET_SNAPSHOT_SCHEMA_VERSION = "1.0.0" as const;
 export const MAX_CHECK_PACKS_PER_STAGE = 64;
 export const MAX_CHECKS_PER_GATE = 256;
+export const MAX_PACK_SKILL_FILES = 128;
+export const MAX_PACK_SKILL_FILE_BYTES = 2 * 1024 * 1024;
+export const MAX_PACK_SKILL_MARKDOWN_BYTES = 512 * 1024;
+export const MAX_PACK_SKILL_BYTES = 8 * 1024 * 1024;
+export const MAX_PACK_SKILL_SET_BYTES = 32 * 1024 * 1024;
+export const MAX_PACK_SKILL_PATH_BYTES = 512;
+export const MAX_PACK_SKILL_PATH_DEPTH = 16;
 
 export interface CheckImplementationResource {
 	readonly fileName: "CHECK.mjs" | "CHECK.md";
@@ -45,8 +56,46 @@ export interface CheckPackSnapshot {
 	readonly stage: CheckStage;
 	readonly packs: readonly CheckPack[];
 	readonly checkCount: number;
-	readonly digest: Sha256Digest;
+	readonly checkPackDigest: Sha256Digest;
 }
+
+export interface PackSkillFileSnapshot {
+	readonly path: string;
+	readonly executable: boolean;
+	readonly byteLength: number;
+	readonly digest: Sha256Digest;
+	readonly contentBase64: string;
+}
+
+export interface PackSkillSnapshot {
+	readonly schemaVersion: typeof PACK_SKILL_SNAPSHOT_SCHEMA_VERSION;
+	readonly stage: CheckStage;
+	readonly packId: string;
+	readonly name: string;
+	readonly description: string;
+	readonly license?: string;
+	readonly compatibility?: string;
+	readonly metadata?: Readonly<Record<string, string>>;
+	readonly allowedTools?: string;
+	readonly files: readonly PackSkillFileSnapshot[];
+	readonly fileCount: number;
+	readonly totalBytes: number;
+	readonly skillDigest: Sha256Digest;
+}
+
+export interface PackSkillSetSnapshot {
+	readonly schemaVersion: typeof PACK_SKILL_SET_SNAPSHOT_SCHEMA_VERSION;
+	readonly stage: CheckStage;
+	readonly skills: readonly PackSkillSnapshot[];
+	readonly skillCount: number;
+	readonly totalBytes: number;
+	readonly skillSetDigest: Sha256Digest;
+}
+
+export type CreatePackSkillSnapshotInput = Omit<
+	PackSkillSnapshot,
+	"schemaVersion" | "fileCount" | "totalBytes" | "skillDigest"
+>;
 
 export interface CreatePackagedCheckInput {
 	readonly stage: CheckStage;
@@ -55,6 +104,223 @@ export interface CreatePackagedCheckInput {
 	readonly definition: CheckDefinition;
 	readonly implementationFileName: "CHECK.mjs" | "CHECK.md";
 	readonly implementationContent: string;
+}
+
+export function createPackSkillSnapshot(
+	input: CreatePackSkillSnapshotInput,
+): PackSkillSnapshot {
+	assertSkillStage(input.stage);
+	qualifiedCheckId(input.packId, "pack-skill");
+	const name = normalizedSkillName(input.name);
+	const description = normalizedSkillText(
+		input.description,
+		"Pack Skill description",
+		1_024,
+	);
+	const license = optionalSkillText(input.license, "Pack Skill license", 1_024);
+	const compatibility = optionalSkillText(
+		input.compatibility,
+		"Pack Skill compatibility",
+		500,
+	);
+	const metadata = normalizedSkillMetadata(input.metadata);
+	const allowedTools = optionalSkillTools(input.allowedTools);
+	if (!Array.isArray(input.files) || input.files.length > MAX_PACK_SKILL_FILES) {
+		throw new Error(
+			`Pack Skill ${input.packId}/${name} exceeds ${MAX_PACK_SKILL_FILES} files.`,
+		);
+	}
+	const files = input.files.map(normalizedSkillFile).sort(compareSkillFiles);
+	const seen = new Set<string>();
+	let totalBytes = 0;
+	for (const file of files) {
+		if (seen.has(file.path)) {
+			throw new Error(`Pack Skill ${input.packId}/${name} contains duplicate file ${file.path}.`);
+		}
+		seen.add(file.path);
+		totalBytes += file.byteLength;
+	}
+	if (!seen.has("SKILL.md")) {
+		throw new Error(`Pack Skill ${input.packId}/${name} requires root SKILL.md.`);
+	}
+	if (totalBytes > MAX_PACK_SKILL_BYTES) {
+		throw new Error(
+			`Pack Skill ${input.packId}/${name} exceeds ${MAX_PACK_SKILL_BYTES} bytes.`,
+		);
+	}
+	const body = {
+		schemaVersion: PACK_SKILL_SNAPSHOT_SCHEMA_VERSION,
+		stage: input.stage,
+		packId: input.packId,
+		name,
+		description,
+		...(license === undefined ? {} : {license}),
+		...(compatibility === undefined ? {} : {compatibility}),
+		...(metadata === undefined ? {} : {metadata}),
+		...(allowedTools === undefined ? {} : {allowedTools}),
+		files,
+		fileCount: files.length,
+		totalBytes,
+	};
+	return immutable({...body, skillDigest: canonicalJsonDigest(body)});
+}
+
+export function assertPackSkillSnapshot(
+	snapshot: PackSkillSnapshot,
+	expectedStage?: CheckStage,
+): void {
+	assertExactKeys(
+		snapshot,
+		[
+			"schemaVersion",
+			"stage",
+			"packId",
+			"name",
+			"description",
+			"license",
+			"compatibility",
+			"metadata",
+			"allowedTools",
+			"files",
+			"fileCount",
+			"totalBytes",
+			"skillDigest",
+		],
+		"Pack Skill snapshot",
+	);
+	if (snapshot.schemaVersion !== PACK_SKILL_SNAPSHOT_SCHEMA_VERSION) {
+		throw new Error(
+			`Unsupported Pack Skill snapshot version ${String(snapshot.schemaVersion)}.`,
+		);
+	}
+	if (expectedStage !== undefined && snapshot.stage !== expectedStage) {
+		throw new Error(
+			`Pack Skill snapshot stage ${snapshot.stage} does not match ${expectedStage}.`,
+		);
+	}
+	assertSha256Digest(snapshot.skillDigest, "Pack Skill digest");
+	const expected = createPackSkillSnapshot(snapshot);
+	if (snapshot.skillDigest !== expected.skillDigest) {
+		throw new Error(`Pack Skill ${snapshot.packId}/${snapshot.name} digest does not match its content.`);
+	}
+	if (
+		snapshot.fileCount !== expected.fileCount ||
+		snapshot.totalBytes !== expected.totalBytes
+	) {
+		throw new Error(`Pack Skill ${snapshot.packId}/${snapshot.name} file totals do not match.`);
+	}
+}
+
+export function createPackSkillSetSnapshot(input: {
+	readonly stage: CheckStage;
+	readonly skills: readonly PackSkillSnapshot[];
+}): PackSkillSetSnapshot {
+	assertSkillStage(input.stage);
+	if (!Array.isArray(input.skills) || input.skills.length > MAX_CHECK_PACKS_PER_STAGE) {
+		throw new Error(
+			`Pack Skill set exceeds ${MAX_CHECK_PACKS_PER_STAGE} Skills.`,
+		);
+	}
+	const skills = [...input.skills].sort(comparePackSkills);
+	const packIds = new Set<string>();
+	const names = new Set<string>();
+	let totalBytes = 0;
+	for (const skill of skills) {
+		assertPackSkillSnapshot(skill, input.stage);
+		if (packIds.has(skill.packId)) {
+			throw new Error(`Check Pack ${skill.packId} contains more than one Pack Skill.`);
+		}
+		if (names.has(skill.name)) {
+			throw new Error(`Pack Skill name ${skill.name} is not unique in stage ${input.stage}.`);
+		}
+		packIds.add(skill.packId);
+		names.add(skill.name);
+		totalBytes += skill.totalBytes;
+	}
+	if (totalBytes > MAX_PACK_SKILL_SET_BYTES) {
+		throw new Error(`Pack Skill set exceeds ${MAX_PACK_SKILL_SET_BYTES} bytes.`);
+	}
+	const body = {
+		schemaVersion: PACK_SKILL_SET_SNAPSHOT_SCHEMA_VERSION,
+		stage: input.stage,
+		skills,
+		skillCount: skills.length,
+		totalBytes,
+	};
+	const identity = {
+		...body,
+		skills: skills.map((skill) => ({
+			packId: skill.packId,
+			name: skill.name,
+			skillDigest: skill.skillDigest,
+		})),
+	};
+	return immutable({...body, skillSetDigest: canonicalJsonDigest(identity)});
+}
+
+export function assertPackSkillSetSnapshot(
+	snapshot: PackSkillSetSnapshot,
+	expectedStage?: CheckStage,
+): void {
+	assertExactKeys(
+		snapshot,
+		[
+			"schemaVersion",
+			"stage",
+			"skills",
+			"skillCount",
+			"totalBytes",
+			"skillSetDigest",
+		],
+		"Pack Skill set snapshot",
+	);
+	if (snapshot.schemaVersion !== PACK_SKILL_SET_SNAPSHOT_SCHEMA_VERSION) {
+		throw new Error(
+			`Unsupported Pack Skill set snapshot version ${String(snapshot.schemaVersion)}.`,
+		);
+	}
+	if (expectedStage !== undefined && snapshot.stage !== expectedStage) {
+		throw new Error(
+			`Pack Skill set stage ${snapshot.stage} does not match ${expectedStage}.`,
+		);
+	}
+	assertSha256Digest(snapshot.skillSetDigest, "Pack Skill set digest");
+	const expected = createPackSkillSetSnapshot({
+		stage: snapshot.stage,
+		skills: snapshot.skills,
+	});
+	if (snapshot.skillSetDigest !== expected.skillSetDigest) {
+		throw new Error("Pack Skill set digest does not match its content.");
+	}
+	if (
+		snapshot.skillCount !== expected.skillCount ||
+		snapshot.totalBytes !== expected.totalBytes
+	) {
+		throw new Error("Pack Skill set totals do not match its Skills.");
+	}
+}
+
+export function assertUniquePackSkillNames(
+	snapshots: readonly PackSkillSetSnapshot[],
+): void {
+	const stages = new Set<CheckStage>();
+	const names = new Map<string, PackSkillSnapshot>();
+	for (const snapshot of snapshots) {
+		assertPackSkillSetSnapshot(snapshot);
+		if (stages.has(snapshot.stage)) {
+			throw new Error(`Project Pack Skill snapshots repeat stage ${snapshot.stage}.`);
+		}
+		stages.add(snapshot.stage);
+		for (const skill of snapshot.skills) {
+			const previous = names.get(skill.name);
+			if (previous) {
+				throw new Error(
+					`Pack Skill name ${skill.name} is not project-unique: ${previous.stage}/${previous.packId} and ${skill.stage}/${skill.packId}.`,
+				);
+			}
+			names.set(skill.name, skill);
+		}
+	}
 }
 
 export function createPackagedCheck(
@@ -165,7 +431,7 @@ export function createCheckPackSnapshot(input: {
 		packs,
 		checkCount,
 	};
-	return immutable({...body, digest: canonicalJsonDigest(body)});
+	return immutable({...body, checkPackDigest: canonicalJsonDigest(body)});
 }
 
 export function assertCheckPackSnapshot(
@@ -174,7 +440,7 @@ export function assertCheckPackSnapshot(
 ): void {
 	assertExactKeys(
 		snapshot,
-		["schemaVersion", "stage", "packs", "checkCount", "digest"],
+		["schemaVersion", "stage", "packs", "checkCount", "checkPackDigest"],
 		"Check Pack snapshot",
 	);
 	if (snapshot.schemaVersion !== CHECK_PACK_SNAPSHOT_SCHEMA_VERSION) {
@@ -194,7 +460,7 @@ export function assertCheckPackSnapshot(
 		stage: snapshot.stage,
 		packs: snapshot.packs,
 	});
-	if (snapshot.digest !== expected.digest) {
+	if (snapshot.checkPackDigest !== expected.checkPackDigest) {
 		throw new Error("Check Pack snapshot digest does not match its content.");
 	}
 	if (snapshot.checkCount !== expected.checkCount) {
@@ -286,6 +552,184 @@ export function assertModelCheckRubric(content: string): void {
 			throw new Error(`Model CHECK.md ${required[index]} section cannot be empty.`);
 		}
 	}
+}
+
+function assertSkillStage(stage: CheckStage): void {
+	if (!isCheckStage(stage)) {
+		throw new Error(`Pack Skill stage ${String(stage)} is invalid.`);
+	}
+}
+
+function normalizedSkillName(value: string): string {
+	if (
+		typeof value !== "string" ||
+		value.length > 64 ||
+		!/^[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(value)
+	) {
+		throw new Error(
+			"Pack Skill name must contain 1-64 lowercase letters, digits, or single hyphens.",
+		);
+	}
+	return value;
+}
+
+function normalizedSkillText(
+	value: string,
+	label: string,
+	maximumLength: number,
+): string {
+	if (typeof value !== "string") {
+		throw new Error(`${label} must be text.`);
+	}
+	const normalized = value.trim();
+	if (!normalized || normalized.length > maximumLength) {
+		throw new Error(`${label} must contain 1-${maximumLength} characters.`);
+	}
+	return normalized;
+}
+
+function optionalSkillText(
+	value: string | undefined,
+	label: string,
+	maximumLength: number,
+): string | undefined {
+	return value === undefined
+		? undefined
+		: normalizedSkillText(value, label, maximumLength);
+}
+
+function optionalSkillTools(value: string | undefined): string | undefined {
+	if (value === undefined) return undefined;
+	return normalizedSkillText(value, "Pack Skill allowed-tools", 4_096)
+		.split(/\s+/u)
+		.join(" ");
+}
+
+function normalizedSkillMetadata(
+	value: Readonly<Record<string, string>> | undefined,
+): Readonly<Record<string, string>> | undefined {
+	if (value === undefined) return undefined;
+	if (!value || typeof value !== "object" || Array.isArray(value)) {
+		throw new Error("Pack Skill metadata must be a string map.");
+	}
+	if (Object.getOwnPropertySymbols(value).length > 0) {
+		throw new Error("Pack Skill metadata cannot contain symbol keys.");
+	}
+	const keys = Object.getOwnPropertyNames(value).sort(compareText);
+	if (keys.length > 64) {
+		throw new Error("Pack Skill metadata exceeds 64 entries.");
+	}
+	const normalized: Record<string, string> = Object.create(null);
+	for (const key of keys) {
+		normalized[key] = normalizedSkillMetadataEntry(value, key);
+	}
+	return immutable(normalized);
+}
+
+function normalizedSkillMetadataEntry(
+	value: Readonly<Record<string, string>>,
+	key: string,
+): string {
+	const descriptor = Object.getOwnPropertyDescriptor(value, key);
+	if (
+		!descriptor ||
+		!descriptor.enumerable ||
+		!("value" in descriptor) ||
+		typeof descriptor.value !== "string" ||
+		!key ||
+		key.length > 128 ||
+		descriptor.value.length > 1_024
+	) {
+		throw new Error("Pack Skill metadata requires bounded string keys and values.");
+	}
+	return descriptor.value;
+}
+
+function normalizedSkillFile(
+	file: PackSkillFileSnapshot,
+): PackSkillFileSnapshot {
+	assertExactKeys(
+		file,
+		["path", "executable", "byteLength", "digest", "contentBase64"],
+		"Pack Skill file",
+	);
+	const path = normalizedSkillPath(file.path);
+	if (typeof file.executable !== "boolean") {
+		throw new Error(`Pack Skill file ${path} executable flag must be boolean.`);
+	}
+	const maximumBytes =
+		path === "SKILL.md"
+			? MAX_PACK_SKILL_MARKDOWN_BYTES
+			: MAX_PACK_SKILL_FILE_BYTES;
+	if (
+		!Number.isSafeInteger(file.byteLength) ||
+		file.byteLength < 0 ||
+		file.byteLength > maximumBytes
+	) {
+		throw new Error(`Pack Skill file ${path} exceeds ${maximumBytes} bytes.`);
+	}
+	if (typeof file.contentBase64 !== "string") {
+		throw new Error(`Pack Skill file ${path} content must be canonical base64.`);
+	}
+	const bytes = Buffer.from(file.contentBase64, "base64");
+	if (
+		bytes.toString("base64") !== file.contentBase64 ||
+		bytes.byteLength !== file.byteLength
+	) {
+		throw new Error(`Pack Skill file ${path} content is not canonical base64.`);
+	}
+	assertSha256Digest(file.digest, `Pack Skill file ${path} digest`);
+	if (file.digest !== sha256Digest(bytes)) {
+		throw new Error(`Pack Skill file ${path} digest does not match its bytes.`);
+	}
+	return immutable({
+		path,
+		executable: file.executable,
+		byteLength: file.byteLength,
+		digest: file.digest,
+		contentBase64: file.contentBase64,
+	});
+}
+
+function normalizedSkillPath(value: string): string {
+	if (
+		typeof value !== "string" ||
+		!value ||
+		value.startsWith("/") ||
+		value.includes("\\") ||
+		Buffer.byteLength(value, "utf8") > MAX_PACK_SKILL_PATH_BYTES
+	) {
+		throw new Error("Pack Skill file path is invalid or too long.");
+	}
+	const parts = value.split("/");
+	if (
+		parts.length > MAX_PACK_SKILL_PATH_DEPTH ||
+		parts.some(
+			(part) =>
+				!part ||
+				part === "." ||
+				part === ".." ||
+				/[\u0000-\u001f\u007f]/u.test(part),
+		)
+	) {
+		throw new Error(`Pack Skill file path ${value} is unsafe.`);
+	}
+	return value;
+}
+
+function compareSkillFiles(
+	left: PackSkillFileSnapshot,
+	right: PackSkillFileSnapshot,
+): number {
+	return compareText(left.path, right.path);
+}
+
+function comparePackSkills(
+	left: PackSkillSnapshot,
+	right: PackSkillSnapshot,
+): number {
+	const packOrder = compareText(left.packId, right.packId);
+	return packOrder === 0 ? compareText(left.name, right.name) : packOrder;
 }
 
 function implementationFileName(

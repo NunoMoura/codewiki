@@ -259,7 +259,7 @@ async function runGate(context: {
 				if (
 					cached.invocationDigest !== invocation.invocationDigest ||
 					cached.checkDigest !== check.checkDigest ||
-					cached.packSnapshotDigest !== context.input.snapshot.digest ||
+					cached.packSnapshotDigest !== context.input.snapshot.checkPackDigest ||
 					canonicalJsonDigest(cached.execution) !==
 						canonicalJsonDigest(executor.identity)
 				) {

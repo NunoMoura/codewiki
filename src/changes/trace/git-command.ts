@@ -6,6 +6,7 @@ export interface GitCommandRequest {
 	readonly input?: string;
 	readonly environment?: Readonly<Record<string, string>>;
 	readonly signal?: AbortSignal;
+	readonly stdoutEncoding?: "utf8" | "base64";
 }
 
 export interface GitCommandResult {
@@ -67,7 +68,7 @@ export function createGitCommandRunner(
 				}
 				resolve({
 					exitCode: code ?? 1,
-					stdout: Buffer.concat(stdout).toString("utf8"),
+					stdout: Buffer.concat(stdout).toString(request.stdoutEncoding ?? "utf8"),
 					stderr: Buffer.concat(stderr).toString("utf8"),
 				});
 			});

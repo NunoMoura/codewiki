@@ -692,7 +692,9 @@ function semanticDigestField(
 		case "candidate":
 			return "digest";
 		case "policy":
-			return Object.hasOwn(artifact, "policyDigest") ? "policyDigest" : "digest";
+			if (Object.hasOwn(artifact, "policyDigest")) return "policyDigest";
+			if (Object.hasOwn(artifact, "checkPackDigest")) return "checkPackDigest";
+			return "digest";
 		case "result":
 			return "resultDigest";
 		case "report":

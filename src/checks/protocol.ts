@@ -100,7 +100,7 @@ export function assembleCheckInvocation(
 		protocolId: CHECK_INVOCATION_PROTOCOL_ID,
 		protocolVersion: CHECK_INVOCATION_PROTOCOL_VERSION,
 		subject: input.subject,
-		packSnapshotDigest: input.snapshot.digest,
+		packSnapshotDigest: input.snapshot.checkPackDigest,
 		check: {
 			packId: input.check.packId,
 			checkId: input.check.checkId,

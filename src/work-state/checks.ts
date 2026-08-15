@@ -236,8 +236,9 @@ function projectedPackSnapshotDigest(
 	const payload = operation.body.payload as Record<string, unknown>;
 	const inline = inlineArtifact(payload.policy, "Check Pack snapshot");
 	const artifact = artifactRecord(inline);
-	return artifact.schemaVersion === "1.0.0" && typeof artifact.digest === "string"
-		? requiredDigest(artifact.digest, "Check Pack snapshot digest")
+	return artifact.schemaVersion === "2.0.0" &&
+		typeof artifact.checkPackDigest === "string"
+		? requiredDigest(artifact.checkPackDigest, "Check Pack snapshot digest")
 		: null;
 }
 
