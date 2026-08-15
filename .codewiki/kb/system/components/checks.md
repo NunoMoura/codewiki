@@ -45,7 +45,7 @@ Active project Check content uses one direct, user-editable layout:
 
 A Pack is its stage-local grouping directory; there is no additional `checks/` level or required local Pack manifest. Every Check directory contains `check.json` and exactly one implementation file. `CHECK.mjs` is a Code Check. `CHECK.md` is a Model Check.
 
-CodeWiki materializes one deliberately bare-bones `default/` Pack for each stage only during project bootstrap. Defaults are baseline examples of requirements CodeWiki knows are broadly useful, not protected policy. Users may inspect, edit, replace, or delete any default or every Check. Startup and upgrade never recreate a deliberately removed default. If a stage contains no Checks, its Gate Report remains `status: passed`, carries `selectedCheckCount: 0`, and includes warning code `no_checks_configured` with message `No <Stage> Checks are configured. Gate passed without running Checks.` There is no `passed_with_warning` status. An empty named Pack emits a Pack-specific warning. Neither condition creates a synthetic Result or stops CodeWiki.
+CodeWiki materializes one deliberately empty bare-bones `default/` Pack directory for each stage only during project bootstrap. Empty defaults establish the editable stage layout without inventing a hidden standard or requiring an execution capability. Users may add Checks, replace a default, or delete any default or every Check. Startup and upgrade never recreate a deliberately removed default. If a stage contains no Checks, its Gate Report remains `status: passed`, carries `selectedCheckCount: 0`, and includes warning code `no_checks_configured` with message `No <Stage> Checks are configured. Gate passed without running Checks.` There is no `passed_with_warning` status. An empty named Pack emits a Pack-specific warning. Neither condition creates a synthetic Result or stops CodeWiki.
 
 Outside one-time bootstrap, CodeWiki never autonomously authors, edits, installs, updates, or restores Check Pack files. Users edit them directly or perform explicit creation, marketplace installation, and update actions through the authenticated CodeWiki App. A user-controlled external agent may follow the same public schemas and documentation and edit the same files. Folder presence defines the active stage set; there is no protected Check floor, enforcement tier, activation ceremony, or hidden hardcoded catalog.
 
@@ -69,6 +69,8 @@ A Code Check consumes the language-neutral Check Input and returns one bounded C
 ## Execution and performance
 
 Checks snapshots exact stage files and configuration before each Gate attempt. A mid-run stage subject, Pack, input, or route change makes the attempt stale; Runtime discards it and starts from a fresh snapshot when still eligible. Pack parsing and validation compile once per content digest. Result cache keys bind stage subject, Check, configuration, selected input, Evidence, execution identity, and model route. Only completed pass or fail Results are cacheable.
+
+Checks do not declare dependencies on other Checks. Pack order cannot create hidden prerequisites; each Check consumes only its declared bounded inputs, and Gate reduction uses stable Check identity.
 
 Execution is bounded and fail-fast:
 

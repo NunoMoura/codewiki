@@ -2,6 +2,10 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { createCodewikiConfigError } from "./config-errors.ts";
+import {
+	createGitCommandRunner,
+	type GitCommandRunner,
+} from "../changes/trace/git-command.ts";
 import {canonicalJsonDigest, type Sha256Digest} from "../utils/canonical-json.ts";
 import {
 	runWikiConfig,
@@ -24,6 +28,35 @@ export async function loadWikiConfigFile(
 ): Promise<WikiConfig> {
 	const raw = await readOptionalJson(configPath(repoRoot));
 	return resolveWikiConfig(configFileToPartialWikiConfig(raw));
+}
+
+export async function loadProtectedWikiConfigFile(input: {
+	readonly repoRoot: string;
+	readonly protectedSourceHead: string;
+	readonly runner?: GitCommandRunner;
+	readonly signal?: AbortSignal;
+}): Promise<WikiConfig> {
+	if (!/^[a-f0-9]{40}(?:[a-f0-9]{24})?$/u.test(input.protectedSourceHead)) {
+		throw new Error("Protected source head must be a Git object id.");
+	}
+	const runner = input.runner ?? createGitCommandRunner();
+	const result = await runner({
+		repoRoot: input.repoRoot,
+		args: ["show", `${input.protectedSourceHead}:${WIKI_CONFIG_PATH}`],
+		...(input.signal ? {signal: input.signal} : {}),
+	});
+	if (result.exitCode !== 0) {
+		throw new Error(
+			`Unable to read protected project configuration: ${result.stderr.trim() || "Git failed"}`,
+		);
+	}
+	let value: unknown;
+	try {
+		value = JSON.parse(result.stdout);
+	} catch {
+		throw new Error("Protected project configuration must contain valid JSON.");
+	}
+	return resolveWikiConfig(configFileToPartialWikiConfig(value));
 }
 
 export async function resolveWikiConfigFile(
@@ -102,11 +135,9 @@ export function configFileToPartialWikiConfig(
 		retention: objectRecord(record.retention),
 		hosts: objectRecord(record.hosts),
 		quality: objectRecord(record.quality),
-		checks: objectRecord(record.checks),
 		userStandards: record.userStandards as PartialWikiConfig["userStandards"],
 		triagePreferences:
 			record.triagePreferences as PartialWikiConfig["triagePreferences"],
-		customChecks: record.customChecks as PartialWikiConfig["customChecks"],
 	};
 }
 
@@ -119,10 +150,8 @@ function validateConfigFileKeys(value: unknown): Record<string, unknown> {
 		"retention",
 		"hosts",
 		"quality",
-		"checks",
 		"userStandards",
 		"triagePreferences",
-		"customChecks",
 		"project_name",
 		"codewiki",
 	]);

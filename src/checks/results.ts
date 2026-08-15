@@ -1,816 +1,433 @@
-import type { EvidenceId } from "../evidence/contracts.ts";
 import {
-	assertValidEvidenceObligationResolution,
-	type EvidenceObligationResolution,
-} from "../evidence/obligation-resolution.ts";
-import type { SemanticLoop } from "./contracts.ts";
-import {
-	assertValidResolvedExitPolicy,
-	LOOP_EXIT_SCHEMA_VERSION,
-	normalizeCheckFindings,
-	type CheckBinding,
-	type CheckDefinition,
+	CHECK_RESULT_SCHEMA_VERSION,
+	GATE_REPORT_REDUCTION_VERSION,
+	GATE_REPORT_SCHEMA_VERSION,
+	CheckResultSchema,
+	GateReportSchema,
+	checkPassed,
+	normalizeExecutionIdentity,
+	qualifiedCheckId,
+	type CheckExecutionFact,
 	type CheckExecutionIdentity,
-	type CheckJsonValue,
-	type CheckMeasurement,
-	type CheckObservationFinding,
+	type CheckFailure,
+	type CheckInvocation,
+	type CheckOutput,
 	type CheckResult,
-	type CheckResultStatus,
-	type CheckThreshold,
-	type ExitReport,
-	type ExitReportCheckOutcome,
-	type ExitReportOutcomes,
-	type ExitReportStatus,
-	type ResolvedExitPolicy,
+	type GateReport,
+	type GateStopReason,
+	type GateWarning,
 } from "./contracts.ts";
+import {assertCheckInvocation} from "./protocol.ts";
+import {assertTypeboxSchema} from "../utils/json.ts";
+import {
+	assertCheckPackSnapshot,
+	packagedChecks,
+	type CheckPackSnapshot,
+	type PackagedCheck,
+} from "./packs/contracts.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,
-	loopQualifiedCheckDigest,
 	toCanonicalJsonValue,
-} from "./identity.ts";
+	type Sha256Digest,
+} from "../utils/canonical-json.ts";
 
-const EXIT_REPORT_REDUCTION_VERSION = "2.0.0";
-
-type CheckObservationDisposition =
-	| "satisfied"
-	| "unsatisfied"
-	| "indeterminate";
-
-interface CreateCheckResultInput {
-	loop: SemanticLoop;
-	policy: ResolvedExitPolicy;
-	check: CheckDefinition;
-	disposition: CheckObservationDisposition;
-	invocationDigest?: string;
-	measurement?: CheckMeasurement;
-	evidenceResolutions: EvidenceObligationResolution[];
-	findings?: readonly CheckObservationFinding[];
-	issueClass?: string;
-	feedback?: string;
-	execution: CheckExecutionIdentity;
+export interface CreateCheckResultInput {
+	readonly snapshot: CheckPackSnapshot;
+	readonly check: PackagedCheck;
+	readonly invocation: CheckInvocation;
+	readonly output: CheckOutput;
+	readonly execution: CheckExecutionIdentity;
 }
 
-interface CreateExitReportInput {
-	policy: ResolvedExitPolicy;
-	checkResults: CheckResult[];
+export interface CreateGateReportInput {
+	readonly snapshot: CheckPackSnapshot;
+	readonly subjectDigest: Sha256Digest;
+	readonly results: readonly CheckResult[];
+	readonly executions: readonly CheckExecutionFact[];
+	readonly cacheHitCheckIds?: readonly string[];
+	readonly warnings?: readonly GateWarning[];
+	readonly stoppedReason?: GateStopReason;
 }
 
-export function createCheckResult(
-	input: CreateCheckResultInput,
-): CheckResult {
-	assertExactKeys(
-		input,
-		[
-			"loop",
-			"policy",
-			"check",
-			"disposition",
-			"invocationDigest",
-			"measurement",
-			"evidenceResolutions",
-			"findings",
-			"issueClass",
-			"feedback",
-			"execution",
-		],
-		"Check Result input",
-	);
-	assertValidResolvedExitPolicy(input.policy);
+export function createCheckResult(input: CreateCheckResultInput): CheckResult {
+	assertCheckPackSnapshot(input.snapshot, input.check.stage);
+	assertCheckInvocation(input.invocation);
 	if (
-		input.disposition !== "satisfied" &&
-		input.disposition !== "unsatisfied" &&
-		input.disposition !== "indeterminate"
+		input.invocation.packSnapshotDigest !== input.snapshot.digest ||
+		input.invocation.check.checkDigest !== input.check.checkDigest ||
+		input.invocation.subject.stage !== input.check.stage
 	) {
-		throw new Error(`Check Result disposition ${String(input.disposition)} is invalid.`);
+		throw new Error("Check Result input identities do not match.");
 	}
-	if (input.loop !== input.policy.loop) {
-		throw new Error(
-			`Check Result loop ${input.loop} does not match policy loop ${input.policy.loop}.`,
-		);
+	if (input.output.invocationDigest !== input.invocation.invocationDigest) {
+		throw new Error("Check Result Output does not match its Invocation.");
 	}
-	const binding = requiredBinding(input.policy, input.check.id);
-	assertCheckBinding(input.loop, input.policy, input.check, binding);
-	assertExecution(input.check, input.execution);
-	const measurement = normalizedMeasurement(input.check, input.measurement);
-	const threshold = resolvedThreshold(input.check, binding);
-	const status = derivedStatus(input.disposition, measurement, threshold);
-	const invocationDigest = input.invocationDigest
-		? assertSha256Digest(input.invocationDigest, "Check Result invocationDigest")
-		: undefined;
+	const execution = normalizeExecutionIdentity(input.execution);
+	if (execution.kind !== input.check.definition.implementation.kind) {
+		throw new Error("Check Result execution kind does not match Check Definition.");
+	}
+	if (execution.profile !== input.check.definition.implementation.profile) {
+		throw new Error("Check Result execution profile does not match Check Definition.");
+	}
 	if (
-		input.check.id.startsWith("check-pack:") &&
-		input.disposition !== "indeterminate" &&
-		!invocationDigest
+		input.check.definition.implementation.kind === "model" &&
+		execution.route !== input.check.definition.implementation.route
 	) {
-		throw new Error(
-			`Determinate Check Pack Result ${input.check.id} requires an Invocation digest.`,
-		);
+		throw new Error("Check Result model route does not match Check Definition.");
 	}
-	const findings = normalizeCheckFindings(
-		input.findings ?? [],
-		"Check Result findings",
+	const passed = checkPassed(
+		input.check.definition.measurement,
+		input.output.measurement,
 	);
-	if (status !== "pass" && findings.length === 0) {
-		throw new Error(`Check Result ${input.check.id} ${status} requires findings.`);
-	}
-	const evidence = normalizedCheckEvidence({
-		check: input.check,
-		checkDigest: binding.checkDigest,
-		disposition: input.disposition,
-		resolutions: input.evidenceResolutions,
-	});
-	const issueClass = optionalText(input.issueClass, "issueClass");
-	const feedback = optionalText(input.feedback, "feedback");
-	const resultWithoutDigest = {
-		schemaVersion: LOOP_EXIT_SCHEMA_VERSION,
-		checkId: input.check.id,
-		checkVersion: input.check.version,
-		requirementDigest: input.check.requirementDigest,
-		checkDigest: binding.checkDigest,
-		candidateDigest: input.policy.candidateDigest,
-		policyDigest: input.policy.policyDigest,
-		...(invocationDigest ? {invocationDigest} : {}),
-		status,
-		...(measurement ? { measurement } : {}),
-		...(threshold ? { threshold } : {}),
-		evidenceResolutions: evidence.resolutions,
-		evidenceRecordIds: evidence.recordIds,
-		evidenceInputDigest: evidence.inputDigest,
-		findings,
-		...(issueClass ? { issueClass } : {}),
-		repairTarget: input.check.repairTarget,
-		...(feedback ? { feedback } : {}),
-		execution: normalizedExecution(input.execution),
+	const failure = passed
+		? undefined
+		: failureFromOutput(input.check, input.output);
+	const body = {
+		schemaVersion: CHECK_RESULT_SCHEMA_VERSION,
+		stage: input.check.stage,
+		subjectDigest: input.invocation.subject.digest,
+		packSnapshotDigest: input.snapshot.digest,
+		packId: input.check.packId,
+		checkId: input.check.checkId,
+		checkVersion: input.check.definition.version,
+		checkDigest: input.check.checkDigest,
+		invocationDigest: input.invocation.invocationDigest,
+		inputDigest: input.invocation.inputDigest,
+		evidenceRecordIds: evidenceRecordIds(input.invocation),
+		status: passed ? ("passed" as const) : ("failed" as const),
+		measurement: input.output.measurement,
+		execution,
+		...(failure ? {failure} : {}),
 	};
-	return immutable<CheckResult>({
-		...resultWithoutDigest,
-		resultDigest: canonicalJsonDigest(resultWithoutDigest),
-	});
-}
-
-interface NormalizedCheckEvidence {
-	readonly resolutions: EvidenceObligationResolution[];
-	readonly recordIds: EvidenceId[];
-	readonly inputDigest: string;
-}
-
-function normalizedCheckEvidence(input: {
-	readonly check: CheckDefinition;
-	readonly checkDigest: string;
-	readonly disposition: CheckObservationDisposition;
-	readonly resolutions: EvidenceObligationResolution[];
-}): NormalizedCheckEvidence {
-	const resolutions = normalizedEvidenceResolutions(input.resolutions);
-	const expectedById = new Map(
-		input.check.evidenceObligations.map((obligation) => [obligation.id, obligation]),
-	);
-	for (const resolution of resolutions) {
-		const obligation = expectedById.get(resolution.obligationId);
-		if (!obligation) {
-			throw new Error(
-				`Check Result ${input.check.id} received unknown Evidence obligation resolution ${resolution.obligationId}.`,
-			);
-		}
-		assertValidEvidenceObligationResolution(resolution, obligation);
-		if (resolution.status !== "ready" && input.disposition !== "indeterminate") {
-			throw new Error(
-				`Check Result ${input.check.id} requires indeterminate disposition while Evidence obligation ${resolution.obligationId} is ${resolution.status}.`,
-			);
-		}
-	}
-	for (const obligation of input.check.evidenceObligations) {
-		if (!resolutions.some((entry) => entry.obligationId === obligation.id)) {
-			throw new Error(
-				`Check Result ${input.check.id} is missing Evidence obligation resolution ${obligation.id}.`,
-			);
-		}
-	}
-	const recordIds = evidenceRecordIds(resolutions);
-	return {
-		resolutions,
-		recordIds,
-		inputDigest: checkEvidenceInputDigest(input.checkDigest, resolutions),
-	};
-}
-
-function checkEvidenceInputDigest(
-	checkDigest: string,
-	resolutions: readonly EvidenceObligationResolution[],
-): string {
-	assertSha256Digest(checkDigest, "Check evidence input Check digest");
-	const normalized = normalizedEvidenceResolutions(resolutions);
-	return canonicalJsonDigest({
-		checkDigest,
-		evidenceRecordIds: evidenceRecordIds(normalized),
-		resolutionDigests: normalized.map((entry) => entry.resolutionDigest),
-	});
-}
-
-function normalizedEvidenceResolutions(
-	values: readonly EvidenceObligationResolution[],
-): EvidenceObligationResolution[] {
-	if (!Array.isArray(values)) {
-		throw new Error("Check Result evidenceResolutions must be an array.");
-	}
-	for (const value of values) {
-		assertValidEvidenceObligationResolution(value);
-	}
-	const normalized = [...values].sort((left, right) =>
-		compareText(left.obligationId, right.obligationId),
-	);
-	const ids = normalized.map((entry) => entry.obligationId);
-	if (new Set(ids).size !== ids.length) {
-		throw new Error("Check Result Evidence obligation resolution ids must be unique.");
-	}
-	return normalized;
-}
-
-function evidenceRecordIds(
-	resolutions: readonly EvidenceObligationResolution[],
-): EvidenceId[] {
-	return [...new Set(resolutions.flatMap((entry) => entry.inputEvidenceIds))].sort(
-		compareText,
-	);
+	return immutable({...body, resultDigest: canonicalJsonDigest(body)});
 }
 
 export function assertValidCheckResult(
 	result: CheckResult,
-	policy: ResolvedExitPolicy,
+	snapshot?: CheckPackSnapshot,
 ): void {
-	assertValidResolvedExitPolicy(policy);
-	const binding = requiredBinding(policy, result.checkId);
-	assertResultIdentity(result, policy, binding);
-}
-
-export function createExitReport(input: CreateExitReportInput): ExitReport {
-	assertExactKeys(input, ["policy", "checkResults"], "Exit Report input");
-	assertValidResolvedExitPolicy(input.policy);
-	const checkResults = [...input.checkResults].sort((left, right) =>
-		left.checkId.localeCompare(right.checkId),
+	assertTypeboxSchema(CheckResultSchema, result, "Check Result");
+	assertExactKeys(
+		result,
+		[
+			"schemaVersion",
+			"stage",
+			"subjectDigest",
+			"packSnapshotDigest",
+			"packId",
+			"checkId",
+			"checkVersion",
+			"checkDigest",
+			"invocationDigest",
+			"inputDigest",
+			"evidenceRecordIds",
+			"status",
+			"measurement",
+			"execution",
+			"failure",
+			"resultDigest",
+		],
+		"Check Result",
 	);
-	assertResultSet(input.policy, checkResults);
-	const status = reduceExitStatus(input.policy.bindings, checkResults);
-	const outcomes = exitReportOutcomes(input.policy, checkResults);
-	const blockingCheckIds = exitBlockingCheckIds(outcomes.required);
-	const reportWithoutDigest = {
-		schemaVersion: LOOP_EXIT_SCHEMA_VERSION,
-		reductionVersion: EXIT_REPORT_REDUCTION_VERSION,
-		loop: input.policy.loop,
-		candidateDigest: input.policy.candidateDigest,
-		catalogDigest: input.policy.catalogDigest,
-		policyDigest: input.policy.policyDigest,
-		status,
-		outcomes,
-		blockingCheckIds,
-		checkResults,
-	};
-	return immutable<ExitReport>({
-		...reportWithoutDigest,
-		reportDigest: canonicalJsonDigest(reportWithoutDigest),
-	});
+	if (result.schemaVersion !== CHECK_RESULT_SCHEMA_VERSION) {
+		throw new Error(`Unsupported Check Result version ${String(result.schemaVersion)}.`);
+	}
+	for (const [digest, label] of [
+		[result.subjectDigest, "subject"],
+		[result.packSnapshotDigest, "Pack snapshot"],
+		[result.checkDigest, "Check"],
+		[result.invocationDigest, "Invocation"],
+		[result.inputDigest, "input"],
+		[result.resultDigest, "Result"],
+	] as const) {
+		assertSha256Digest(digest, `Check Result ${label} digest`);
+	}
+	if (result.status !== "passed" && result.status !== "failed") {
+		throw new Error("Completed Check Result status must be passed or failed.");
+	}
+	if (result.status === "failed" && !result.failure) {
+		throw new Error("Failed Check Result requires failure feedback.");
+	}
+	if (result.status === "passed" && result.failure !== undefined) {
+		throw new Error("Passed Check Result cannot contain failure feedback.");
+	}
+	normalizeExecutionIdentity(result.execution);
+	const {resultDigest, ...body} = result;
+	if (resultDigest !== canonicalJsonDigest(body)) {
+		throw new Error("Check Result digest does not match its content.");
+	}
+	if (snapshot) assertResultSnapshotBinding(result, snapshot);
 }
 
-export function assertValidExitReport(
-	report: ExitReport,
-	policy: ResolvedExitPolicy,
+export function createGateReport(input: CreateGateReportInput): GateReport {
+	assertCheckPackSnapshot(input.snapshot);
+	assertSha256Digest(input.subjectDigest, "Gate Report subject digest");
+	const selected = packagedChecks(input.snapshot);
+	const results = [...input.results].sort(compareResults);
+	const executions = [...input.executions].sort(compareExecutionFacts);
+	assertResultSet(results, input.snapshot, input.subjectDigest);
+	assertExecutionFacts(executions, input.snapshot, results);
+	const stoppedReason = input.stoppedReason
+		? normalizeStopReason(input.stoppedReason)
+		: undefined;
+	const status = stoppedReason
+		? ("stopped" as const)
+		: results.some((result) => result.status === "failed")
+			? ("failed" as const)
+			: ("passed" as const);
+	if (status === "passed" && results.length !== selected.length) {
+		throw new Error("Passed Gate requires one completed Result per selected Check.");
+	}
+	const cacheHitCheckIds = normalizedTextList(
+		input.cacheHitCheckIds ?? [],
+		"Gate Report cache hit Check ids",
+	);
+	const warnings = normalizedWarnings([
+		...(input.warnings ?? []),
+		...(stoppedReason ? [] : automaticWarnings(input.snapshot)),
+	]);
+	const body = {
+		schemaVersion: GATE_REPORT_SCHEMA_VERSION,
+		reductionVersion: GATE_REPORT_REDUCTION_VERSION,
+		stage: input.snapshot.stage,
+		subjectDigest: input.subjectDigest,
+		packSnapshotDigest: input.snapshot.digest,
+		status,
+		selectedCheckCount: selected.length,
+		results,
+		executions,
+		cacheHitCheckIds,
+		warnings,
+		...(stoppedReason ? {stoppedReason} : {}),
+	};
+	return immutable({...body, reportDigest: canonicalJsonDigest(body)});
+}
+
+export function assertValidGateReport(
+	report: GateReport,
+	snapshot: CheckPackSnapshot,
 ): void {
+	assertTypeboxSchema(GateReportSchema, report, "Gate Report");
 	assertExactKeys(
 		report,
 		[
 			"schemaVersion",
 			"reductionVersion",
-			"loop",
-			"candidateDigest",
-			"catalogDigest",
-			"policyDigest",
+			"stage",
+			"subjectDigest",
+			"packSnapshotDigest",
 			"status",
-			"outcomes",
-			"blockingCheckIds",
-			"checkResults",
+			"selectedCheckCount",
+			"results",
+			"executions",
+			"cacheHitCheckIds",
+			"warnings",
+			"stoppedReason",
 			"reportDigest",
 		],
-		"Exit Report",
+		"Gate Report",
 	);
-	assertValidResolvedExitPolicy(policy);
-	if (report.schemaVersion !== LOOP_EXIT_SCHEMA_VERSION) {
-		throw new Error(
-			`Exit Report uses unsupported schema version ${report.schemaVersion}.`,
-		);
-	}
-	if (report.reductionVersion !== EXIT_REPORT_REDUCTION_VERSION) {
-		throw new Error(
-			`Exit Report uses unsupported reduction version ${report.reductionVersion}.`,
-		);
-	}
-	if (report.loop !== policy.loop) {
-		throw new Error(`Exit Report loop does not match Resolved Exit Policy.`);
-	}
-	if (report.candidateDigest !== policy.candidateDigest) {
-		throw new Error(`Exit Report candidate does not match Resolved Exit Policy.`);
-	}
-	if (report.catalogDigest !== policy.catalogDigest) {
-		throw new Error(`Exit Report Catalog does not match Resolved Exit Policy.`);
-	}
-	if (report.policyDigest !== policy.policyDigest) {
-		throw new Error(`Exit Report policy digest does not match Resolved Exit Policy.`);
-	}
-	assertResultSet(policy, report.checkResults);
-	const expectedOutcomes = exitReportOutcomes(policy, report.checkResults);
 	if (
-		canonicalJsonDigest(report.outcomes) !== canonicalJsonDigest(expectedOutcomes)
+		report.schemaVersion !== GATE_REPORT_SCHEMA_VERSION ||
+		report.reductionVersion !== GATE_REPORT_REDUCTION_VERSION
 	) {
-		throw new Error("Exit Report outcomes do not match its policy and Results.");
+		throw new Error("Gate Report protocol identity is unsupported.");
 	}
-	const expectedBlockingCheckIds = exitBlockingCheckIds(
-		expectedOutcomes.required,
+	assertCheckPackSnapshot(snapshot, report.stage);
+	if (report.packSnapshotDigest !== snapshot.digest) {
+		throw new Error("Gate Report Pack snapshot digest does not match.");
+	}
+	const expected = createGateReport({
+		snapshot,
+		subjectDigest: report.subjectDigest,
+		results: report.results,
+		executions: report.executions,
+		cacheHitCheckIds: report.cacheHitCheckIds,
+		warnings: report.warnings.filter(
+			(warning) =>
+				report.status === "stopped" ||
+				(warning.code !== "no_checks_configured" && warning.code !== "empty_pack"),
+		),
+		...(report.stoppedReason ? {stoppedReason: report.stoppedReason} : {}),
+	});
+	if (report.reportDigest !== expected.reportDigest) {
+		throw new Error("Gate Report digest does not match its content.");
+	}
+}
+
+function failureFromOutput(
+	check: PackagedCheck,
+	output: CheckOutput,
+): CheckFailure {
+	return immutable({
+		code: check.definition.failure.code,
+		message: check.definition.failure.message,
+		remediation: [...check.definition.failure.remediation],
+		summary: output.summary,
+		details: [...output.details],
+	});
+}
+
+function evidenceRecordIds(invocation: CheckInvocation): string[] {
+	return normalizedTextList(
+		invocation.inputs
+			.filter((selection) => selection.selector.source === "evidence")
+			.flatMap((selection) => selection.items.map((item) => item.ref)),
+		"Check Result Evidence ids",
 	);
-	if (!sameTextList(report.blockingCheckIds, expectedBlockingCheckIds)) {
-		throw new Error("Exit Report blockers do not match its required Results.");
-	}
-	const expectedStatus = reduceExitStatus(policy.bindings, report.checkResults);
-	if (report.status !== expectedStatus) {
-		throw new Error(
-			`Exit Report status mismatch: expected ${expectedStatus}, received ${report.status}.`,
-		);
-	}
-	const { reportDigest, ...reportWithoutDigest } = report;
-	assertSha256Digest(reportDigest, "Exit Report digest");
-	const expectedDigest = canonicalJsonDigest(reportWithoutDigest);
-	if (reportDigest !== expectedDigest) {
-		throw new Error(`Exit Report digest mismatch: expected ${expectedDigest}.`);
-	}
 }
 
 function assertResultSet(
-	policy: ResolvedExitPolicy,
-	results: CheckResult[],
+	results: readonly CheckResult[],
+	snapshot: CheckPackSnapshot,
+	subjectDigest: Sha256Digest,
 ): void {
-	const bindings = new Map(
-		policy.bindings.map((binding) => [binding.checkId, binding]),
-	);
 	const seen = new Set<string>();
 	for (const result of results) {
-		if (seen.has(result.checkId)) {
-			throw new Error(`Duplicate Check Result ${result.checkId}.`);
+		assertValidCheckResult(result, snapshot);
+		if (result.subjectDigest !== subjectDigest) {
+			throw new Error("Gate Result subject does not match Gate Report subject.");
 		}
-		seen.add(result.checkId);
-		const binding = bindings.get(result.checkId);
-		if (!binding) {
-			throw new Error(`Check Result ${result.checkId} is not active in policy.`);
-		}
-		assertResultIdentity(result, policy, binding);
-	}
-	const resultIds = results.map((result) => result.checkId);
-	const sortedResultIds = [...resultIds].sort((left, right) =>
-		left.localeCompare(right),
-	);
-	if (resultIds.some((id, index) => id !== sortedResultIds[index])) {
-		throw new Error("Check Result set is not in canonical Check order.");
-	}
-	for (const binding of policy.bindings) {
-		if (!seen.has(binding.checkId)) {
-			throw new Error(`Selected Check Result ${binding.checkId} is missing.`);
-		}
+		const id = qualifiedCheckId(result.packId, result.checkId);
+		if (seen.has(id)) throw new Error(`Gate Report contains duplicate Result ${id}.`);
+		seen.add(id);
 	}
 }
 
-function assertResultIdentity(
+function assertResultSnapshotBinding(
 	result: CheckResult,
-	policy: ResolvedExitPolicy,
-	binding: CheckBinding,
-): void {
-	assertExactKeys(
-		result,
-		[
-			"schemaVersion",
-			"checkId",
-			"checkVersion",
-			"requirementDigest",
-			"checkDigest",
-			"candidateDigest",
-			"policyDigest",
-			"invocationDigest",
-			"status",
-			"measurement",
-			"threshold",
-			"evidenceResolutions",
-			"evidenceRecordIds",
-			"evidenceInputDigest",
-			"findings",
-			"issueClass",
-			"repairTarget",
-			"feedback",
-			"execution",
-			"resultDigest",
-		],
-		`Check Result ${result.checkId}`,
-	);
-	if (result.schemaVersion !== LOOP_EXIT_SCHEMA_VERSION) {
-		throw new Error(
-			`Check Result ${result.checkId} uses unsupported schema version ${result.schemaVersion}.`,
-		);
-	}
-	if (result.checkVersion !== binding.checkVersion) {
-		throw new Error(`Check Result ${result.checkId} has wrong Check version.`);
-	}
-	if (
-		result.requirementDigest !== binding.requirementDigest ||
-		result.checkDigest !== binding.checkDigest
-	) {
-		throw new Error(`Check Result ${result.checkId} has wrong Check identity.`);
-	}
-	if (result.candidateDigest !== policy.candidateDigest) {
-		throw new Error(`Check Result ${result.checkId} has wrong candidate.`);
-	}
-	if (result.policyDigest !== policy.policyDigest) {
-		throw new Error(`Check Result ${result.checkId} has wrong policy.`);
-	}
-	if (result.invocationDigest) {
-		assertSha256Digest(
-			result.invocationDigest,
-			`Check Result ${result.checkId} invocationDigest`,
-		);
-	}
-	if (
-		result.checkId.startsWith("check-pack:") &&
-		result.status !== "indeterminate" &&
-		!result.invocationDigest
-	) {
-		throw new Error(
-			`Determinate Check Pack Result ${result.checkId} requires an Invocation digest.`,
-		);
-	}
-	if (!isCheckResultStatus(result.status)) {
-		throw new Error(`Check Result ${result.checkId} has invalid status.`);
-	}
-	const findings = normalizeCheckFindings(
-		result.findings,
-		`Check Result ${result.checkId} findings`,
-	);
-	if (canonicalJsonDigest(findings) !== canonicalJsonDigest(result.findings)) {
-		throw new Error(`Check Result ${result.checkId} findings are not canonical.`);
-	}
-	if (result.status !== "pass" && findings.length === 0) {
-		throw new Error(`Check Result ${result.checkId} ${result.status} requires findings.`);
-	}
-	assertResultEvidenceIdentity(result);
-	const { resultDigest, ...resultWithoutDigest } = result;
-	assertSha256Digest(resultDigest, `Check Result ${result.checkId} digest`);
-	const expectedDigest = canonicalJsonDigest(resultWithoutDigest);
-	if (resultDigest !== expectedDigest) {
-		throw new Error(
-			`Check Result ${result.checkId} digest mismatch: expected ${expectedDigest}.`,
-		);
-	}
-}
-
-function assertResultEvidenceIdentity(result: CheckResult): void {
-	const resolutions = normalizedEvidenceResolutions(result.evidenceResolutions);
-	const receivedOrder = result.evidenceResolutions.map(
-		(resolution) => resolution.obligationId,
-	);
-	const expectedOrder = resolutions.map((resolution) => resolution.obligationId);
-	if (!sameTextList(receivedOrder, expectedOrder)) {
-		throw new Error(
-			`Check Result ${result.checkId} Evidence obligation resolutions are not canonical.`,
-		);
-	}
-	const expectedRecordIds = evidenceRecordIds(resolutions);
-	if (!sameTextList(result.evidenceRecordIds, expectedRecordIds)) {
-		throw new Error(
-			`Check Result ${result.checkId} Evidence Record identities do not match its resolutions.`,
-		);
-	}
-	assertSha256Digest(
-		result.evidenceInputDigest,
-		`Check Result ${result.checkId} evidence input digest`,
-	);
-	const expectedInputDigest = checkEvidenceInputDigest(
-		result.checkDigest,
-		resolutions,
-	);
-	if (result.evidenceInputDigest !== expectedInputDigest) {
-		throw new Error(
-			`Check Result ${result.checkId} evidence input digest mismatch: expected ${expectedInputDigest}.`,
-		);
-	}
-}
-
-function sameTextList(
-	left: readonly string[],
-	right: readonly string[],
-): boolean {
-	return (
-		Array.isArray(left) &&
-		left.length === right.length &&
-		left.every((value, index) => value === right[index])
-	);
-}
-
-function assertCheckBinding(
-	loop: SemanticLoop,
-	policy: ResolvedExitPolicy,
-	check: CheckDefinition,
-	binding: CheckBinding,
+	snapshot: CheckPackSnapshot,
 ): void {
 	if (
-		binding.checkVersion !== check.version ||
-		binding.requirementDigest !== check.requirementDigest
+		result.stage !== snapshot.stage ||
+		result.packSnapshotDigest !== snapshot.digest
 	) {
-		throw new Error(`Check ${check.id} does not match its policy binding.`);
+		throw new Error("Check Result does not belong to Pack snapshot.");
 	}
-	const expectedCheckDigest = loopQualifiedCheckDigest({
-		loop,
-		check,
-		configuration: binding.parameters,
-		catalogDigest: policy.catalogDigest,
-	});
-	if (binding.checkDigest !== expectedCheckDigest) {
-		throw new Error(`Check ${check.id} digest does not match its policy binding.`);
+	const check = snapshot.packs
+		.find((pack) => pack.id === result.packId)
+		?.checks.find((entry) => entry.checkId === result.checkId);
+	if (
+		!check ||
+		check.checkDigest !== result.checkDigest ||
+		check.definition.version !== result.checkVersion
+	) {
+		throw new Error(`Check Result ${result.packId}/${result.checkId} identity is stale.`);
 	}
 }
 
-function assertExecution(
-	check: CheckDefinition,
-	execution: CheckExecutionIdentity,
+function assertExecutionFacts(
+	facts: readonly CheckExecutionFact[],
+	snapshot: CheckPackSnapshot,
+	results: readonly CheckResult[],
 ): void {
-	assertExactKeys(
-		execution,
-		[
-			"id",
-			"version",
-			"kind",
-			"adapterVersion",
-			"modelRef",
-			"configurationDigest",
-			"trialPolicy",
-			"aggregationPolicy",
-		],
-		`Check Result ${check.id} execution`,
+	const selected = new Set(
+		packagedChecks(snapshot).map((check) => qualifiedCheckId(check.packId, check.checkId)),
 	);
-	if (
-		execution.id !== check.execution.id ||
-		execution.version !== check.execution.version ||
-		execution.kind !== check.execution.kind
-	) {
-		throw new Error(`Check Result ${check.id} has wrong execution identity.`);
-	}
-	if (execution.configurationDigest) {
-		assertSha256Digest(
-			execution.configurationDigest,
-			`Check Result ${check.id} configurationDigest`,
-		);
-	}
-	for (const [key, value] of Object.entries(execution)) {
-		if (key === "configurationDigest") continue;
-		if (typeof value !== "string" || !value.trim()) {
-			throw new Error(`Check Result ${check.id} execution ${key} is invalid.`);
+	const resultById = new Map(
+		results.map((result) => [qualifiedCheckId(result.packId, result.checkId), result]),
+	);
+	const seen = new Set<string>();
+	for (const fact of facts) {
+		const id = qualifiedCheckId(fact.packId, fact.checkId);
+		if (!selected.has(id)) throw new Error(`Gate execution fact ${id} is not selected.`);
+		if (seen.has(id)) throw new Error(`Gate execution fact ${id} is duplicated.`);
+		seen.add(id);
+		if (!Number.isSafeInteger(fact.attempts) || fact.attempts < 0 || fact.attempts > 3) {
+			throw new Error(`Gate execution fact ${id} attempts are invalid.`);
 		}
-	}
-}
-
-function normalizedExecution(
-	execution: CheckExecutionIdentity,
-): CheckExecutionIdentity {
-	return { ...execution };
-}
-
-function normalizedMeasurement(
-	check: CheckDefinition,
-	measurement: CheckMeasurement | undefined,
-): CheckMeasurement | undefined {
-	if (!measurement) return undefined;
-	if (measurement.shape !== check.measurement.shape) {
-		throw new Error(
-			`Check Result ${check.id} measurement shape ${measurement.shape} does not match ${check.measurement.shape}.`,
-		);
-	}
-	switch (measurement.shape) {
-		case "boolean":
-			assertExactKeys(measurement, ["shape", "value"], "boolean measurement");
-			if (typeof measurement.value !== "boolean") invalidMeasurement(check.id);
-			return { shape: "boolean", value: measurement.value };
-		case "score":
-		case "count":
-			assertExactKeys(measurement, ["shape", "value"], `${measurement.shape} measurement`);
-			if (!Number.isFinite(measurement.value)) invalidMeasurement(check.id);
-			return { shape: measurement.shape, value: measurement.value };
-		case "set":
-			assertExactKeys(measurement, ["shape", "values"], "set measurement");
-			return {
-				shape: "set",
-				values: normalizedTextList(measurement.values, "set value", true),
-			};
-		case "structured":
-			assertExactKeys(
-				measurement,
-				["shape", "schemaRef", "value"],
-				"structured measurement",
-			);
-			if (
-				!measurement.schemaRef.trim() ||
-				measurement.schemaRef !== check.measurement.schemaRef
-			) {
-				throw new Error(
-					`Check Result ${check.id} structured measurement has wrong schemaRef.`,
-				);
+		if (fact.execution) normalizeExecutionIdentity(fact.execution);
+		const result = resultById.get(id);
+		if (fact.status === "completed") {
+			if (!fact.execution) {
+				throw new Error(`Completed Gate execution fact ${id} requires execution identity.`);
 			}
-			return immutable<CheckMeasurement>({
-				shape: "structured",
-				schemaRef: measurement.schemaRef,
-				value: measurement.value,
-			});
-		default:
-			return invalidMeasurement(check.id);
-	}
-}
-
-function resolvedThreshold(
-	check: CheckDefinition,
-	binding: CheckBinding,
-): CheckThreshold | undefined {
-	if (check.measurement.kind !== "quantitative") return undefined;
-	if (check.measurement.shape !== "score" && check.measurement.shape !== "count") {
-		return undefined;
-	}
-	const minimum = numericParameter(
-		binding.parameters.minimum,
-		check.measurement.minimum,
-		"minimum",
-		check.id,
-	);
-	const maximum = numericParameter(
-		binding.parameters.maximum,
-		check.measurement.maximum,
-		"maximum",
-		check.id,
-	);
-	if (minimum === undefined && maximum === undefined) return undefined;
-	if (minimum !== undefined && maximum !== undefined && minimum > maximum) {
-		throw new Error(`Check ${check.id} threshold minimum exceeds maximum.`);
-	}
-	return {
-		...(minimum !== undefined ? { minimum } : {}),
-		...(maximum !== undefined ? { maximum } : {}),
-	};
-}
-
-function numericParameter(
-	configured: CheckJsonValue | undefined,
-	fallback: number | undefined,
-	name: string,
-	checkId: string,
-): number | undefined {
-	const value = configured ?? fallback;
-	if (value === undefined) return undefined;
-	if (typeof value !== "number" || !Number.isFinite(value)) {
-		throw new Error(`Check ${checkId} ${name} threshold must be finite.`);
-	}
-	return value;
-}
-
-function derivedStatus(
-	disposition: CheckObservationDisposition,
-	measurement: CheckMeasurement | undefined,
-	threshold: CheckThreshold | undefined,
-): CheckResultStatus {
-	if (disposition === "indeterminate") {
-		if (measurement) {
-			throw new Error("Indeterminate Check Result cannot include measurement.");
-		}
-		return "indeterminate";
-	}
-	if (!measurement) {
-		throw new Error("Determinate Check Result requires measurement.");
-	}
-	const reported = disposition === "satisfied" ? "pass" : "fail";
-	const measured = measuredStatus(measurement, threshold);
-	if (measured && measured !== reported) {
-		throw new Error(
-			`Check Result disposition contradicts measurement: expected ${measured}.`,
-		);
-	}
-	return measured ?? reported;
-}
-
-function measuredStatus(
-	measurement: CheckMeasurement,
-	threshold: CheckThreshold | undefined,
-): "pass" | "fail" | undefined {
-	if (measurement.shape === "boolean") {
-		return measurement.value ? "pass" : "fail";
-	}
-	if (
-		(measurement.shape === "score" || measurement.shape === "count") &&
-		threshold
-	) {
-		const aboveMinimum =
-			threshold.minimum === undefined || measurement.value >= threshold.minimum;
-		const belowMaximum =
-			threshold.maximum === undefined || measurement.value <= threshold.maximum;
-		return aboveMinimum && belowMaximum ? "pass" : "fail";
-	}
-	return undefined;
-}
-
-function exitReportOutcomes(
-	policy: ResolvedExitPolicy,
-	results: CheckResult[],
-): ExitReportOutcomes {
-	const byId = new Map(results.map((result) => [result.checkId, result]));
-	const required: ExitReportCheckOutcome[] = [];
-	const advisory: ExitReportCheckOutcome[] = [];
-	const observed: ExitReportCheckOutcome[] = [];
-	for (const binding of policy.bindings) {
-		const result = byId.get(binding.checkId);
-		if (!result) {
-			throw new Error(`Selected Check Result ${binding.checkId} is missing.`);
-		}
-		const outcome: ExitReportCheckOutcome = {
-			checkId: binding.checkId,
-			checkVersion: binding.checkVersion,
-			enforcement: binding.enforcement,
-			required: binding.required,
-			status: result.status,
-			resultDigest: result.resultDigest,
-		};
-		switch (binding.enforcement) {
-			case "require":
-				required.push(outcome);
-				break;
-			case "warn":
-				advisory.push(outcome);
-				break;
-			case "observe":
-				observed.push(outcome);
-				break;
-			default:
-				throw new Error(`Check ${binding.checkId} has invalid enforcement.`);
+			if (!result || fact.resultDigest !== result.resultDigest) {
+				throw new Error(`Completed Gate execution fact ${id} requires its Result.`);
+			}
+			if (fact.stopReason !== undefined) {
+				throw new Error(`Completed Gate execution fact ${id} cannot have stop reason.`);
+			}
+		} else {
+			if (fact.resultDigest !== undefined) {
+				throw new Error(`Incomplete Gate execution fact ${id} cannot have Result digest.`);
+			}
+			if (fact.status === "stopped" && !fact.stopReason) {
+				throw new Error(`Stopped Gate execution fact ${id} requires stop reason.`);
+			}
 		}
 	}
-	return {
-		required,
-		advisory,
-		observed,
-		excluded: policy.exclusions.map((exclusion) => ({
-			...exclusion,
-			refs: [...exclusion.refs],
-		})),
-	};
 }
 
-function exitBlockingCheckIds(
-	outcomes: readonly ExitReportCheckOutcome[],
-): string[] {
-	return outcomes.flatMap((outcome) =>
-		outcome.status === "pass" ? [] : [outcome.checkId],
+function automaticWarnings(snapshot: CheckPackSnapshot): GateWarning[] {
+	const warnings: GateWarning[] = snapshot.packs
+		.filter((pack) => pack.checks.length === 0)
+		.map((pack) => ({
+			code: "empty_pack" as const,
+			message: `Check Pack ${pack.id} contains no Checks.`,
+			packId: pack.id,
+		}));
+	if (snapshot.checkCount === 0) {
+		const stageName = `${snapshot.stage[0].toUpperCase()}${snapshot.stage.slice(1)}`;
+		warnings.push({
+			code: "no_checks_configured",
+			message: `No ${stageName} Checks are configured. Gate passed without running Checks.`,
+		});
+	}
+	return warnings;
+}
+
+function normalizedWarnings(values: readonly GateWarning[]): GateWarning[] {
+	const byIdentity = new Map<string, GateWarning>();
+	for (const warning of values) {
+		if (warning.code !== "no_checks_configured" && warning.code !== "empty_pack") {
+			throw new Error(`Gate warning code ${String(warning.code)} is invalid.`);
+		}
+		if (!warning.message.trim() || warning.message !== warning.message.trim()) {
+			throw new Error("Gate warning message must be trimmed non-empty text.");
+		}
+		const key = `${warning.code}:${warning.packId ?? ""}`;
+		byIdentity.set(key, {...warning});
+	}
+	return [...byIdentity.values()].sort((left, right) =>
+		`${left.code}:${left.packId ?? ""}`.localeCompare(`${right.code}:${right.packId ?? ""}`),
 	);
 }
 
-function reduceExitStatus(
-	bindings: CheckBinding[],
-	results: CheckResult[],
-): ExitReportStatus {
-	const byId = new Map(results.map((result) => [result.checkId, result]));
-	const requiredStatuses = bindings.flatMap((binding) =>
-		binding.required ? [byId.get(binding.checkId)?.status] : [],
-	);
-	if (requiredStatuses.includes("fail")) return "fail";
-	if (requiredStatuses.includes("indeterminate")) return "indeterminate";
-	return "pass";
-}
-
-function requiredBinding(
-	policy: ResolvedExitPolicy,
-	checkId: string,
-): CheckBinding {
-	const binding = policy.bindings.find((entry) => entry.checkId === checkId);
-	if (!binding) throw new Error(`Check ${checkId} is not active in policy.`);
-	return binding;
-}
-
-function normalizedTextList(
-	values: string[],
-	label: string,
-	sort: boolean,
-): string[] {
-	if (!Array.isArray(values)) {
-		throw new Error(`Check Result ${label} must be an array.`);
+function normalizeStopReason(reason: GateStopReason): GateStopReason {
+	if (!reason.message.trim() || reason.message !== reason.message.trim()) {
+		throw new Error("Gate stop reason message must be trimmed non-empty text.");
 	}
-	for (const value of values) {
-		if (typeof value !== "string" || !value.trim()) {
-			throw new Error(`Check Result ${label} must be non-empty text.`);
+	return immutable({...reason});
+}
+
+function normalizedTextList(values: readonly string[], label: string): string[] {
+	const normalized = values.map((value, index) => {
+		if (typeof value !== "string" || !value.trim() || value !== value.trim()) {
+			throw new Error(`${label}[${index}] must be trimmed non-empty text.`);
 		}
+		return value;
+	});
+	if (new Set(normalized).size !== normalized.length) {
+		throw new Error(`${label} must be unique.`);
 	}
-	const normalized = [...new Set(values)];
-	return sort ? normalized.sort((left, right) => left.localeCompare(right)) : normalized;
+	return [...normalized].sort();
 }
 
-function optionalText(value: string | undefined, label: string): string | undefined {
-	if (value === undefined) return undefined;
-	if (!value.trim()) throw new Error(`Check Result ${label} cannot be blank.`);
-	return value;
+function compareResults(left: CheckResult, right: CheckResult): number {
+	return qualifiedCheckId(left.packId, left.checkId).localeCompare(
+		qualifiedCheckId(right.packId, right.checkId),
+	);
+}
+
+function compareExecutionFacts(
+	left: CheckExecutionFact,
+	right: CheckExecutionFact,
+): number {
+	return qualifiedCheckId(left.packId, left.checkId).localeCompare(
+		qualifiedCheckId(right.packId, right.checkId),
+	);
 }
 
 function assertExactKeys(
@@ -818,28 +435,17 @@ function assertExactKeys(
 	allowed: readonly string[],
 	label: string,
 ): void {
+	if (!value || typeof value !== "object" || Array.isArray(value)) {
+		throw new Error(`${label} must be an object.`);
+	}
 	const allowedKeys = new Set(allowed);
-	for (const key of Object.keys(value)) {
-		if (!allowedKeys.has(key)) {
-			throw new Error(`${label} contains unsupported field ${key}.`);
+	for (const key of Reflect.ownKeys(value)) {
+		if (typeof key !== "string" || !allowedKeys.has(key)) {
+			throw new Error(`${label} contains unsupported field ${String(key)}.`);
 		}
 	}
 }
 
-function invalidMeasurement(checkId: string): never {
-	throw new Error(`Check Result ${checkId} measurement is invalid.`);
-}
-
-function isCheckResultStatus(value: unknown): value is CheckResultStatus {
-	return value === "pass" || value === "fail" || value === "indeterminate";
-}
-
-function compareText(left: string, right: string): number {
-	if (left < right) return -1;
-	if (left > right) return 1;
-	return 0;
-}
-
-function immutable<T>(value: unknown): T {
+function immutable<T>(value: T): T {
 	return toCanonicalJsonValue(value) as unknown as T;
 }

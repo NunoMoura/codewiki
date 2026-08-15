@@ -65,8 +65,6 @@ export const FORBIDDEN_RUNTIME_SUBDIRECTORIES = [
 ] as const;
 
 export const IMPORT_CYCLE_BASELINE = [
-	"src/checks/catalog.ts | src/checks/runner.ts | src/checks/security-scanner-checks.ts",
-	"src/checks/contracts.ts | src/checks/identity.ts",
 	"src/evidence/obligation-resolution.ts | src/evidence/obligations.ts",
 	"src/git/worktrees.ts | src/runtime/claims/work-unit-selection.ts",
 	"src/execution/review/evidence-report.ts | src/loops/implementation/types.ts | src/loops/implementation/worker-proof.ts",

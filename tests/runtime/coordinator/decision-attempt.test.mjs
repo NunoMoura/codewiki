@@ -206,10 +206,10 @@ it("executes and recovers one authenticated native Decision attempt without rein
 			selected.workState.workStateDigest,
 		);
 		assert.equal(result.attemptOperationId, attempt.operationId);
-		assert.equal(result.status, "failed");
+		assert.equal(result.status, "passed");
 		assert.match(result.candidateId, /^candidate:decision:/);
-		assert.match(result.exitReportOperationId, /^sha256:/);
-		assert.match(result.routeOperationId, /^sha256:/);
+		assert.match(result.gateReportOperationId, /^sha256:/);
+		assert.match(result.transitionOperationId, /^sha256:/);
 		assert.match(result.terminalOperationId, /^sha256:/);
 
 		const noReinvoke = createNativeDecisionAttemptExecutor({

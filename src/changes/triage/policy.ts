@@ -9,7 +9,7 @@ import {
 	isUserStandardPassageId,
 	normalizeUserStandardDefinitions,
 	type UserStandardDefinition,
-} from "../../checks/packs/user-standards.ts";
+} from "./standards.ts";
 
 export const BACKLOG_TRIAGE_POLICY_PROTOCOL = Object.freeze({
 	id: "codewiki.backlog-triage-policy",

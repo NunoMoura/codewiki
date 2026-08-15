@@ -39,14 +39,12 @@ try {
 		smokeScript,
 		`import assert from "node:assert/strict";
 import {
-  createPiDecisionModelCheckTransport,
-  createPiDecisionResearchClaimsTransport,
+  createPiModelCheckTransport,
   createPiSdkNativeDecisionCandidateProducer,
   createPiSdkRuntimeSemanticAdapters,
 } from "@nunomoura/codewiki/pi-sdk";
 
-assert.equal(typeof createPiDecisionModelCheckTransport, "function");
-assert.equal(typeof createPiDecisionResearchClaimsTransport, "function");
+assert.equal(typeof createPiModelCheckTransport, "function");
 assert.equal(typeof createPiSdkNativeDecisionCandidateProducer, "function");
 let sdkOptions;
 const adapters = createPiSdkRuntimeSemanticAdapters({

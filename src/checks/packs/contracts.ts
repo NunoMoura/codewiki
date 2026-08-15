@@ -1,726 +1,305 @@
 import {
-	CHANGE_KIND_VALUES,
-	type ChangeKind,
-} from "../../changes/types.ts";
-import type { SemanticLoop } from "../contracts.ts";
+	CHECK_DEFINITION_SCHEMA_VERSION,
+	normalizeCheckDefinition,
+	qualifiedCheckId,
+	type CheckDefinition,
+	type CheckImplementationKind,
+	type CheckStage,
+} from "../contracts.ts";
 import {
-	canonicalJson,
+	assertSha256Digest,
 	canonicalJsonDigest,
+	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import {
-	getCustomCheckType,
-	isCustomCheckTypeId,
-	type CustomCheckTypeId,
-} from "./check-types.ts";
-import {
-	assertCustomCodeTemplateCapability,
-	normalizeCustomCodeTemplateBinding,
-	type CustomCodeCapabilitySnapshot,
-	type CustomCodeTemplateBinding,
-	type CustomCodeTemplateSelection,
-} from "./code-templates.ts";
-import {
-	isUserStandardId,
-	isUserStandardPassageId,
-	normalizeUserStandardDefinitions,
-	type UserStandardDefinition,
-} from "./user-standards.ts";
 
-export const CUSTOM_CHECK_SCHEMA_VERSION = "4.0.0" as const;
-export const MAX_CUSTOM_CHECKS = 64;
-export const MAX_CUSTOM_CHECKS_PER_TYPE = 16;
-export const MAX_CUSTOM_CHECK_BYTES = 16_384;
+export const CHECK_PACK_SNAPSHOT_SCHEMA_VERSION = "1.0.0" as const;
+export const MAX_CHECK_PACKS_PER_STAGE = 64;
+export const MAX_CHECKS_PER_GATE = 256;
 
-const SEMANTIC_LOOPS: readonly SemanticLoop[] = [
-	"decision",
-	"planning",
-	"implementation",
-];
-const CUSTOM_CHECK_LIFECYCLES = ["draft", "active", "disabled"] as const;
-const CUSTOM_CHECK_EVALUATORS = ["model", "code"] as const;
-const CUSTOM_CHECK_ID = /^custom-check:[0-9a-f]{64}$/;
-const DIGEST = /^sha256:[0-9a-f]{64}$/;
-const PROHIBITED_TEXT = /[\u0000-\u0009\u000b-\u001f\u007f]/u;
-
-export type CustomCheckLifecycle = (typeof CUSTOM_CHECK_LIFECYCLES)[number];
-export type CustomCheckEvaluator = (typeof CUSTOM_CHECK_EVALUATORS)[number];
-
-export interface CustomCheckApplicability {
-	readonly loops?: readonly SemanticLoop[];
-	readonly changeKinds?: readonly ChangeKind[];
-	readonly affectedLayers?: readonly string[];
-	readonly pathScopes?: readonly string[];
+export interface CheckImplementationResource {
+	readonly fileName: "CHECK.mjs" | "CHECK.md";
+	readonly mediaType: "text/javascript" | "text/markdown";
+	readonly content: string;
+	readonly digest: Sha256Digest;
 }
 
-export interface CustomCheckStandardRef {
-	readonly userStandardId: string;
-	readonly standardDigest: Sha256Digest;
-	readonly passageIds: readonly string[];
-}
-
-export interface CustomCheckProposal {
-	readonly checkTypeId: CustomCheckTypeId;
-	readonly evaluator: CustomCheckEvaluator;
-	readonly name: string;
-	readonly requirement: string;
-	readonly repairGuidance?: string;
-	readonly appliesWhen: CustomCheckApplicability;
-	readonly standardRefs: readonly CustomCheckStandardRef[];
-	readonly knowledgeRefs?: readonly string[];
-	readonly codeTemplate?: CustomCodeTemplateSelection | CustomCodeTemplateBinding;
-}
-
-export type CustomCheckDefinition = Omit<CustomCheckProposal, "codeTemplate"> & {
-	readonly codeTemplate?: CustomCodeTemplateBinding;
-	readonly schemaVersion: typeof CUSTOM_CHECK_SCHEMA_VERSION;
-	readonly customCheckId: string;
+export interface PackagedCheck {
+	readonly stage: CheckStage;
+	readonly packId: string;
+	readonly checkId: string;
+	readonly definition: CheckDefinition;
 	readonly definitionDigest: Sha256Digest;
-	readonly lifecycle: CustomCheckLifecycle;
-};
-
-type NormalizedCustomCheckProposal = Omit<CustomCheckProposal, "codeTemplate"> & {
-	readonly codeTemplate?: CustomCodeTemplateBinding;
-};
-
-export function normalizeCustomCheckProposal(
-	proposal: CustomCheckProposal,
-): CustomCheckProposal {
-	const normalized = normalizeProposal(proposal);
-	return Object.freeze(
-		cloneProposal({
-			...normalized,
-			...(normalized.codeTemplate
-				? {
-						codeTemplate: {
-							templateId: normalized.codeTemplate.templateId,
-							parameters: {...normalized.codeTemplate.parameters},
-						},
-					}
-				: {}),
-		}),
-	);
+	readonly implementation: CheckImplementationResource;
+	readonly checkDigest: Sha256Digest;
 }
 
-export function createCustomCheckDefinition(
-	proposal: CustomCheckProposal,
-	userStandards: readonly UserStandardDefinition[],
-): CustomCheckDefinition {
-	const standards = normalizeUserStandardDefinitions(userStandards);
-	const normalized = normalizeProposal(proposal);
-	assertAcceptedStandardRefs(normalized.standardRefs, standards);
-	const customCheckId = `custom-check:${canonicalJsonDigest(normalized).slice(
-		"sha256:".length,
-	)}`;
-	return materializeDefinition(
-		{
-			...normalized,
-			schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
-			customCheckId,
-			lifecycle: "draft",
-		},
-		standards,
-	);
+export interface CheckPack {
+	readonly id: string;
+	readonly checks: readonly PackagedCheck[];
+	readonly digest: Sha256Digest;
 }
 
-export function updateCustomCheckDefinition(
-	current: CustomCheckDefinition,
-	proposal: CustomCheckProposal,
-	userStandards: readonly UserStandardDefinition[],
-): CustomCheckDefinition {
-	const standards = normalizeUserStandardDefinitions(userStandards);
-	assertCustomCheckDefinition(current, standards);
-	const normalized = normalizeProposal(proposal);
-	assertAcceptedStandardRefs(normalized.standardRefs, standards);
-	if (normalized.checkTypeId !== current.checkTypeId) {
-		throw new Error("Custom Check Type cannot change after creation.");
+export interface CheckPackSnapshot {
+	readonly schemaVersion: typeof CHECK_PACK_SNAPSHOT_SCHEMA_VERSION;
+	readonly stage: CheckStage;
+	readonly packs: readonly CheckPack[];
+	readonly checkCount: number;
+	readonly digest: Sha256Digest;
+}
+
+export interface CreatePackagedCheckInput {
+	readonly stage: CheckStage;
+	readonly packId: string;
+	readonly checkId: string;
+	readonly definition: CheckDefinition;
+	readonly implementationFileName: "CHECK.mjs" | "CHECK.md";
+	readonly implementationContent: string;
+}
+
+export function createPackagedCheck(
+	input: CreatePackagedCheckInput,
+): PackagedCheck {
+	qualifiedCheckId(input.packId, input.checkId);
+	const definition = normalizeCheckDefinition(input.definition);
+	if (definition.id !== input.checkId) {
+		throw new Error(
+			`Check Definition id ${definition.id} does not match directory ${input.checkId}.`,
+		);
 	}
-	if (normalized.evaluator !== current.evaluator) {
-		throw new Error("Custom Check evaluator cannot change after creation.");
+	const expectedFileName = implementationFileName(definition.implementation.kind);
+	if (input.implementationFileName !== expectedFileName) {
+		throw new Error(
+			`${definition.implementation.kind} Check ${input.packId}/${input.checkId} requires ${expectedFileName}.`,
+		);
 	}
 	if (
-		normalized.evaluator === "code" &&
-		normalized.codeTemplate?.templateId !== current.codeTemplate?.templateId
+		typeof input.implementationContent !== "string" ||
+		!input.implementationContent.trim()
 	) {
-		throw new Error("Custom Code Check template cannot change after creation.");
-	}
-	return materializeDefinition(
-		{
-			...normalized,
-			schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
-			customCheckId: current.customCheckId,
-			lifecycle: current.lifecycle,
-		},
-		standards,
-	);
-}
-
-export function activateCustomCheckDefinition(
-	current: CustomCheckDefinition,
-	userStandards: readonly UserStandardDefinition[],
-	capabilitySnapshot?: CustomCodeCapabilitySnapshot,
-): CustomCheckDefinition {
-	const standards = normalizeUserStandardDefinitions(userStandards);
-	assertCustomCheckDefinition(current, standards);
-	if (current.evaluator === "code") {
-		if (!current.codeTemplate || !capabilitySnapshot) {
-			throw new Error(
-				`Custom Code Check ${current.customCheckId} requires an executor capability snapshot before activation.`,
-			);
-		}
-		assertCustomCodeTemplateCapability({
-			binding: current.codeTemplate,
-			capabilitySnapshot,
-		});
-	}
-	if (current.lifecycle !== "draft") {
 		throw new Error(
-			`Custom Check ${current.customCheckId} must be draft before activation.`,
+			`Check implementation ${input.packId}/${input.checkId} cannot be blank.`,
 		);
 	}
-	return withLifecycle(current, "active", standards);
-}
-
-export function disableCustomCheckDefinition(
-	current: CustomCheckDefinition,
-	userStandards: readonly UserStandardDefinition[],
-): CustomCheckDefinition {
-	const standards = normalizeUserStandardDefinitions(userStandards);
-	assertCustomCheckDefinition(current, standards);
-	if (current.lifecycle === "disabled") {
-		throw new Error(`Custom Check ${current.customCheckId} is already disabled.`);
+	if (definition.implementation.kind === "model") {
+		assertModelCheckRubric(input.implementationContent);
 	}
-	return withLifecycle(current, "disabled", standards);
-}
-
-export function normalizeCustomCheckDefinitions(
-	value: readonly CustomCheckDefinition[],
-	userStandards: readonly UserStandardDefinition[],
-): CustomCheckDefinition[] {
-	if (!Array.isArray(value)) {
-		throw new Error("Custom Checks must be an array.");
-	}
-	if (value.length > MAX_CUSTOM_CHECKS) {
-		throw new Error(
-			`Custom Checks cannot exceed ${MAX_CUSTOM_CHECKS} definitions per project.`,
-		);
-	}
-	const standards = normalizeUserStandardDefinitions(userStandards);
-	const normalized = value.map((definition) => {
-		assertCustomCheckDefinition(definition, standards);
-		return materializeDefinition(cloneDefinition(definition), standards);
+	const definitionDigest = canonicalJsonDigest(definition);
+	const implementation = Object.freeze({
+		fileName: input.implementationFileName,
+		mediaType:
+			input.implementationFileName === "CHECK.mjs"
+				? ("text/javascript" as const)
+				: ("text/markdown" as const),
+		content: input.implementationContent,
+		digest: canonicalJsonDigest({content: input.implementationContent}),
 	});
-	assertUnique(
-		normalized.map((definition) => definition.customCheckId),
-		"Custom Check ids",
-	);
-	for (const checkTypeId of new Set(
-		normalized.map((definition) => definition.checkTypeId),
-	)) {
-		const activeCount = normalized.filter(
-			(definition) =>
-				definition.checkTypeId === checkTypeId &&
-				definition.lifecycle === "active",
-		).length;
-		if (activeCount > MAX_CUSTOM_CHECKS_PER_TYPE) {
-			throw new Error(
-				`Active Custom Checks for ${checkTypeId} cannot exceed ${MAX_CUSTOM_CHECKS_PER_TYPE}.`,
-			);
-		}
-	}
-	return normalized.sort((left, right) =>
-		compareText(left.customCheckId, right.customCheckId),
-	);
-}
-
-export function customCheckConfigurationDigest(input: {
-	readonly userStandards: readonly UserStandardDefinition[];
-	readonly customChecks: readonly CustomCheckDefinition[];
-}): Sha256Digest {
-	const userStandards = normalizeUserStandardDefinitions(input.userStandards);
-	return canonicalJsonDigest({
-		schemaVersion: CUSTOM_CHECK_SCHEMA_VERSION,
-		userStandards,
-		definitions: normalizeCustomCheckDefinitions(input.customChecks, userStandards),
+	const identity = {
+		stage: input.stage,
+		packId: input.packId,
+		checkId: input.checkId,
+		definitionDigest,
+		implementationFileName: implementation.fileName,
+		implementationDigest: implementation.digest,
+	};
+	return immutable({
+		stage: input.stage,
+		packId: input.packId,
+		checkId: input.checkId,
+		definition,
+		definitionDigest,
+		implementation,
+		checkDigest: canonicalJsonDigest(identity),
 	});
 }
 
-export function assertCustomCheckDefinition(
-	value: CustomCheckDefinition,
-	userStandards: readonly UserStandardDefinition[],
+export function createCheckPack(input: {
+	readonly id: string;
+	readonly checks: readonly PackagedCheck[];
+}): CheckPack {
+	qualifiedCheckId(input.id, "identity-check");
+	const checks = [...input.checks].sort(compareChecks);
+	const seen = new Set<string>();
+	for (const check of checks) {
+		assertPackagedCheck(check);
+		if (check.packId !== input.id) {
+			throw new Error(`Check ${check.checkId} does not belong to Pack ${input.id}.`);
+		}
+		if (seen.has(check.checkId)) {
+			throw new Error(`Check Pack ${input.id} contains duplicate Check ${check.checkId}.`);
+		}
+		seen.add(check.checkId);
+	}
+	const body = {
+		id: input.id,
+		checks,
+	};
+	return immutable({...body, digest: canonicalJsonDigest(body)});
+}
+
+export function createCheckPackSnapshot(input: {
+	readonly stage: CheckStage;
+	readonly packs: readonly CheckPack[];
+}): CheckPackSnapshot {
+	if (input.packs.length > MAX_CHECK_PACKS_PER_STAGE) {
+		throw new Error(
+			`Check Pack snapshot exceeds ${MAX_CHECK_PACKS_PER_STAGE} Packs.`,
+		);
+	}
+	const packs = [...input.packs].sort(comparePacks);
+	const seen = new Set<string>();
+	for (const pack of packs) {
+		assertCheckPack(pack, input.stage);
+		if (seen.has(pack.id)) {
+			throw new Error(`Check Pack snapshot contains duplicate Pack ${pack.id}.`);
+		}
+		seen.add(pack.id);
+	}
+	const checkCount = packs.reduce((count, pack) => count + pack.checks.length, 0);
+	if (checkCount > MAX_CHECKS_PER_GATE) {
+		throw new Error(`Check Pack snapshot exceeds ${MAX_CHECKS_PER_GATE} Checks.`);
+	}
+	const body = {
+		schemaVersion: CHECK_PACK_SNAPSHOT_SCHEMA_VERSION,
+		stage: input.stage,
+		packs,
+		checkCount,
+	};
+	return immutable({...body, digest: canonicalJsonDigest(body)});
+}
+
+export function assertCheckPackSnapshot(
+	snapshot: CheckPackSnapshot,
+	expectedStage?: CheckStage,
 ): void {
-	assertRecord(value, "Custom Check definition");
-	assertKnownKeys(value, "Custom Check definition", [
-		"schemaVersion",
-		"customCheckId",
-		"definitionDigest",
-		"lifecycle",
-		"checkTypeId",
-		"evaluator",
-		"codeTemplate",
-		"name",
-		"requirement",
-		"repairGuidance",
-		"appliesWhen",
-		"standardRefs",
-		"knowledgeRefs",
-	]);
-	if (value.schemaVersion !== CUSTOM_CHECK_SCHEMA_VERSION) {
+	assertExactKeys(
+		snapshot,
+		["schemaVersion", "stage", "packs", "checkCount", "digest"],
+		"Check Pack snapshot",
+	);
+	if (snapshot.schemaVersion !== CHECK_PACK_SNAPSHOT_SCHEMA_VERSION) {
 		throw new Error(
-			`Custom Check schemaVersion must be ${CUSTOM_CHECK_SCHEMA_VERSION}.`,
+			`Unsupported Check Pack snapshot version ${String(snapshot.schemaVersion)}.`,
 		);
 	}
-	if (!CUSTOM_CHECK_ID.test(value.customCheckId)) {
-		throw new Error("Custom Check customCheckId is invalid.");
-	}
-	if (!DIGEST.test(value.definitionDigest)) {
-		throw new Error("Custom Check definitionDigest is invalid.");
-	}
-	if (!CUSTOM_CHECK_LIFECYCLES.includes(value.lifecycle)) {
+	if (expectedStage !== undefined && snapshot.stage !== expectedStage) {
 		throw new Error(
-			`Custom Check lifecycle ${String(value.lifecycle)} is invalid.`,
+			`Check Pack snapshot stage ${snapshot.stage} does not match ${expectedStage}.`,
 		);
 	}
-	const standards = normalizeUserStandardDefinitions(userStandards);
-	const normalizedProposal = normalizeProposal(value, true);
-	assertAcceptedStandardRefs(normalizedProposal.standardRefs, standards);
-	const expectedDigest = canonicalJsonDigest({
-		...normalizedProposal,
-		schemaVersion: value.schemaVersion,
-		customCheckId: value.customCheckId,
+	if (!Array.isArray(snapshot.packs)) {
+		throw new Error("Check Pack snapshot packs must be an array.");
+	}
+	const expected = createCheckPackSnapshot({
+		stage: snapshot.stage,
+		packs: snapshot.packs,
 	});
-	if (value.definitionDigest !== expectedDigest) {
-		throw new Error(
-			`Custom Check ${value.customCheckId} definitionDigest does not match definition.`,
-		);
+	if (snapshot.digest !== expected.digest) {
+		throw new Error("Check Pack snapshot digest does not match its content.");
 	}
-	const bytes = Buffer.byteLength(canonicalJson(value), "utf8");
-	if (bytes > MAX_CUSTOM_CHECK_BYTES) {
-		throw new Error(
-			`Custom Check ${value.customCheckId} exceeds ${MAX_CUSTOM_CHECK_BYTES} UTF-8 bytes.`,
-		);
+	if (snapshot.checkCount !== expected.checkCount) {
+		throw new Error("Check Pack snapshot checkCount does not match its Packs.");
 	}
 }
 
-export function customCheckDefinitionCheckId(
-	definition: Pick<CustomCheckDefinition, "customCheckId">,
-): string {
-	if (!CUSTOM_CHECK_ID.test(definition.customCheckId)) {
-		throw new Error("Custom Check customCheckId is invalid.");
-	}
-	return `custom.${definition.customCheckId.slice("custom-check:".length)}`;
+export function packagedChecks(
+	snapshot: CheckPackSnapshot,
+): PackagedCheck[] {
+	assertCheckPackSnapshot(snapshot);
+	return snapshot.packs.flatMap((pack) => pack.checks);
 }
 
-function withLifecycle(
-	current: CustomCheckDefinition,
-	lifecycle: CustomCheckLifecycle,
-	userStandards: readonly UserStandardDefinition[],
-): CustomCheckDefinition {
-	return materializeDefinition(
-		{
-			...cloneDefinition(current),
-			lifecycle,
-		},
-		userStandards,
+export function requiredPackagedCheck(
+	snapshot: CheckPackSnapshot,
+	packId: string,
+	checkId: string,
+): PackagedCheck {
+	const check = snapshot.packs
+		.find((pack) => pack.id === packId)
+		?.checks.find((entry) => entry.checkId === checkId);
+	if (!check) throw new Error(`Check ${packId}/${checkId} is absent from snapshot.`);
+	return check;
+}
+
+function assertCheckPack(pack: CheckPack, stage: CheckStage): void {
+	assertExactKeys(pack, ["id", "checks", "digest"], "Check Pack");
+	const expected = createCheckPack({id: pack.id, checks: pack.checks});
+	if (pack.digest !== expected.digest) {
+		throw new Error(`Check Pack ${pack.id} digest does not match its content.`);
+	}
+	for (const check of pack.checks) {
+		if (check.stage !== stage) {
+			throw new Error(`Check ${pack.id}/${check.checkId} has wrong stage ${check.stage}.`);
+		}
+	}
+}
+
+function assertPackagedCheck(check: PackagedCheck): void {
+	assertExactKeys(
+		check,
+		[
+			"stage",
+			"packId",
+			"checkId",
+			"definition",
+			"definitionDigest",
+			"implementation",
+			"checkDigest",
+		],
+		"Packaged Check",
 	);
-}
-
-function materializeDefinition(
-	input: Omit<CustomCheckDefinition, "definitionDigest">,
-	userStandards: readonly UserStandardDefinition[],
-): CustomCheckDefinition {
-	const normalizedProposal = normalizeProposal(input, true);
-	assertAcceptedStandardRefs(normalizedProposal.standardRefs, userStandards);
-	const semanticDefinition = {
-		...normalizedProposal,
-		schemaVersion: input.schemaVersion,
-		customCheckId: input.customCheckId,
-	};
-	const definition = {
-		...semanticDefinition,
-		definitionDigest: canonicalJsonDigest(semanticDefinition),
-		lifecycle: input.lifecycle,
-	} as CustomCheckDefinition;
-	assertCustomCheckDefinition(definition, userStandards);
-	return Object.freeze(cloneDefinition(definition));
-}
-
-function normalizeProposal(
-	value: CustomCheckProposal,
-	allowRuntimeFields = false,
-): NormalizedCustomCheckProposal {
-	assertRecord(value, "Custom Check proposal");
-	assertKnownKeys(value, "Custom Check proposal", [
-		"checkTypeId",
-		"evaluator",
-		"codeTemplate",
-		"name",
-		"requirement",
-		"repairGuidance",
-		"appliesWhen",
-		"standardRefs",
-		"knowledgeRefs",
-		...(allowRuntimeFields
-			? ["schemaVersion", "customCheckId", "definitionDigest", "lifecycle"]
-			: []),
-	]);
-	if (!isCustomCheckTypeId(value.checkTypeId)) {
-		throw new Error(`Unknown Custom Check Type ${String(value.checkTypeId)}.`);
-	}
-	const checkType = getCustomCheckType(value.checkTypeId);
-	if (!CUSTOM_CHECK_EVALUATORS.includes(value.evaluator)) {
-		throw new Error("Custom Check evaluator must be model or code.");
-	}
-	const name = boundedText(value.name, "Custom Check name", 80);
-	const requirement = boundedText(
-		value.requirement,
-		"Custom Check requirement",
-		2_000,
-	);
-	const repairGuidance = optionalBoundedText(
-		value.repairGuidance,
-		"Custom Check repairGuidance",
-		1_000,
-	);
-	const appliesWhen = normalizeApplicability(value.appliesWhen, checkType.loops);
-	let codeTemplate: CustomCodeTemplateBinding | undefined;
-	if (value.evaluator === "model") {
-		if (value.codeTemplate !== undefined) {
-			throw new Error("Custom Model Check cannot define codeTemplate.");
-		}
-	} else {
-		if (value.codeTemplate === undefined) {
-			throw new Error("Custom Code Check requires one approved codeTemplate.");
-		}
-		codeTemplate = normalizeCustomCodeTemplateBinding({
-			value: value.codeTemplate,
-			checkTypeId: value.checkTypeId,
-			applicabilityLoops: appliesWhen.loops ?? [],
-			allowRuntimeFields,
-		});
-	}
-	const standardRefs = normalizeCustomCheckStandardRefs(value.standardRefs);
-	const knowledgeRefs = normalizeStringList(
-		value.knowledgeRefs ?? [],
-		"Custom Check knowledgeRefs",
-		8,
-		512,
-	);
-	return {
-		checkTypeId: value.checkTypeId,
-		evaluator: value.evaluator,
-		...(codeTemplate ? {codeTemplate} : {}),
-		name,
-		requirement,
-		...(repairGuidance ? { repairGuidance } : {}),
-		appliesWhen,
-		standardRefs,
-		...(knowledgeRefs.length > 0 ? { knowledgeRefs } : {}),
-	};
-}
-
-export function normalizeCustomCheckStandardRefs(
-	value: readonly CustomCheckStandardRef[],
-): CustomCheckStandardRef[] {
-	if (!Array.isArray(value) || value.length === 0) {
-		throw new Error(
-			"Custom Check standardRefs must contain at least one accepted User Standard binding.",
-		);
-	}
-	if (value.length > 8) {
-		throw new Error("Custom Check standardRefs cannot exceed 8 entries.");
-	}
-	const normalized = value.map((reference) => {
-		assertRecord(reference, "Custom Check standardRef");
-		const record = reference as unknown as Record<string, unknown>;
-		assertKnownKeys(record, "Custom Check standardRef", [
-			"userStandardId",
-			"standardDigest",
-			"passageIds",
-		]);
-		if (!isUserStandardId(record.userStandardId)) {
-			throw new Error("Custom Check standardRef userStandardId is invalid.");
-		}
-		if (typeof record.standardDigest !== "string" || !DIGEST.test(record.standardDigest)) {
-			throw new Error("Custom Check standardRef standardDigest is invalid.");
-		}
-		if (!Array.isArray(record.passageIds) || record.passageIds.length === 0) {
-			throw new Error(
-				"Custom Check standardRef passageIds must contain at least one passage.",
-			);
-		}
-		if (record.passageIds.length > 8) {
-			throw new Error(
-				"Custom Check standardRef passageIds cannot exceed 8 entries.",
-			);
-		}
-		for (const passageId of record.passageIds) {
-			if (!isUserStandardPassageId(passageId)) {
-				throw new Error("Custom Check standardRef contains an invalid passageId.");
-			}
-		}
-		const passageIds = record.passageIds as string[];
-		assertUnique(passageIds, "Custom Check standardRef passageIds");
-		return {
-			userStandardId: record.userStandardId,
-			standardDigest: record.standardDigest as Sha256Digest,
-			passageIds: [...passageIds].sort(compareText),
-		};
+	assertSha256Digest(check.definitionDigest, "Packaged Check definition digest");
+	assertSha256Digest(check.implementation.digest, "Packaged Check implementation digest");
+	assertSha256Digest(check.checkDigest, "Packaged Check digest");
+	const expected = createPackagedCheck({
+		stage: check.stage,
+		packId: check.packId,
+		checkId: check.checkId,
+		definition: check.definition,
+		implementationFileName: check.implementation.fileName,
+		implementationContent: check.implementation.content,
 	});
-	assertUnique(
-		normalized.map((reference) => reference.userStandardId),
-		"Custom Check standardRef User Standard ids",
-	);
-	return normalized.sort((left, right) =>
-		compareText(left.userStandardId, right.userStandardId),
-	);
-}
-
-function assertAcceptedStandardRefs(
-	references: readonly CustomCheckStandardRef[],
-	userStandards: readonly UserStandardDefinition[],
-): void {
-	const standardsById = new Map(
-		normalizeUserStandardDefinitions(userStandards).map((standard) => [
-			standard.userStandardId,
-			standard,
-		]),
-	);
-	for (const reference of references) {
-		const standard = standardsById.get(reference.userStandardId);
-		if (!standard) {
-			throw new Error(
-				`Custom Check User Standard ${reference.userStandardId} does not exist in accepted User Standards.`,
-			);
-		}
-		if (reference.standardDigest !== standard.standardDigest) {
-			throw new Error(
-				`Custom Check User Standard ${reference.userStandardId} standardDigest does not match accepted User Standard.`,
-			);
-		}
-		const acceptedPassageIds = new Set(
-			standard.passages.map((passage) => passage.passageId),
-		);
-		for (const passageId of reference.passageIds) {
-			if (!acceptedPassageIds.has(passageId)) {
-				throw new Error(
-					`Custom Check User Standard ${reference.userStandardId} references unknown passage ${passageId}.`,
-				);
-			}
-		}
-	}
-}
-
-function normalizeApplicability(
-	value: CustomCheckApplicability,
-	eligibleLoops: readonly SemanticLoop[],
-): CustomCheckApplicability {
-	assertRecord(value, "Custom Check appliesWhen");
-	assertKnownKeys(value, "Custom Check appliesWhen", [
-		"loops",
-		"changeKinds",
-		"affectedLayers",
-		"pathScopes",
-	]);
-	const loops = normalizeEnumList(
-		value.loops ?? [],
-		SEMANTIC_LOOPS,
-		"Custom Check appliesWhen.loops",
-	);
-	for (const loop of loops) {
-		if (!eligibleLoops.includes(loop)) {
-			throw new Error(`Custom Check Type is not eligible for ${loop}.`);
-		}
-	}
-	const changeKinds = normalizeEnumList(
-		value.changeKinds ?? [],
-		CHANGE_KIND_VALUES,
-		"Custom Check appliesWhen.changeKinds",
-	);
-	const affectedLayers = normalizeStringList(
-		value.affectedLayers ?? [],
-		"Custom Check appliesWhen.affectedLayers",
-		16,
-		64,
-	).map((layer) => layer.toLowerCase());
-	const pathScopes = normalizeStringList(
-		value.pathScopes ?? [],
-		"Custom Check appliesWhen.pathScopes",
-		16,
-		256,
-	).map(normalizePathScope);
-	return {
-		...(loops.length > 0 ? { loops } : {}),
-		...(changeKinds.length > 0 ? { changeKinds } : {}),
-		...(affectedLayers.length > 0
-			? { affectedLayers: [...new Set(affectedLayers)].sort(compareText) }
-			: {}),
-		...(pathScopes.length > 0
-			? { pathScopes: [...new Set(pathScopes)].sort(compareText) }
-			: {}),
-	};
-}
-
-function cloneDefinition(
-	definition: CustomCheckDefinition,
-): CustomCheckDefinition {
-	return {
-		...definition,
-		...(definition.codeTemplate
-			? {
-					codeTemplate: {
-						...definition.codeTemplate,
-						parameters: {...definition.codeTemplate.parameters},
-						enforcement: [...(definition.codeTemplate.enforcement ?? [])],
-					},
-				}
-			: {}),
-		appliesWhen: {
-			...(definition.appliesWhen.loops
-				? { loops: [...definition.appliesWhen.loops] }
-				: {}),
-			...(definition.appliesWhen.changeKinds
-				? { changeKinds: [...definition.appliesWhen.changeKinds] }
-				: {}),
-			...(definition.appliesWhen.affectedLayers
-				? { affectedLayers: [...definition.appliesWhen.affectedLayers] }
-				: {}),
-			...(definition.appliesWhen.pathScopes
-				? { pathScopes: [...definition.appliesWhen.pathScopes] }
-				: {}),
-		},
-		standardRefs: definition.standardRefs.map((reference) => ({
-			...reference,
-			passageIds: [...reference.passageIds],
-		})),
-		...(definition.knowledgeRefs
-			? { knowledgeRefs: [...definition.knowledgeRefs] }
-			: {}),
-	};
-}
-
-function cloneProposal(proposal: CustomCheckProposal): CustomCheckProposal {
-	const codeTemplate = cloneCodeTemplate(proposal.codeTemplate);
-	return {
-		...proposal,
-		...(codeTemplate ? {codeTemplate} : {}),
-		appliesWhen: {...proposal.appliesWhen},
-		standardRefs: proposal.standardRefs.map((reference) => ({
-			...reference,
-			passageIds: [...reference.passageIds],
-		})),
-		...(proposal.knowledgeRefs
-			? {knowledgeRefs: [...proposal.knowledgeRefs]}
-			: {}),
-	};
-}
-
-function cloneCodeTemplate(
-	template: CustomCheckProposal["codeTemplate"],
-): CustomCheckProposal["codeTemplate"] {
-	if (!template) return undefined;
-	const clone = {
-		...template,
-		parameters: {...template.parameters},
-	};
-	return template.enforcement
-		? {...clone, enforcement: [...template.enforcement]}
-		: clone;
-}
-
-function normalizePathScope(value: string): string {
-	const normalized = value
-		.replaceAll("\\", "/")
-		.replace(/^\.\//u, "")
-		.replace(/\/+$/u, "");
 	if (
-		!normalized ||
-		normalized.startsWith("/") ||
-		normalized.split("/").includes("..") ||
-		/[\u0000*?[\]{}]/u.test(normalized)
+		check.definitionDigest !== expected.definitionDigest ||
+		check.implementation.digest !== expected.implementation.digest ||
+		check.checkDigest !== expected.checkDigest
 	) {
-		throw new Error(`Custom Check path scope ${JSON.stringify(value)} is invalid.`);
+		throw new Error(`Packaged Check ${check.packId}/${check.checkId} identity is invalid.`);
 	}
-	return normalized;
 }
 
-function boundedText(value: unknown, label: string, maximum: number): string {
-	if (typeof value !== "string") throw new Error(`${label} must be text.`);
-	const normalized = value.normalize("NFC").replace(/\r\n?/gu, "\n").trim();
-	if (!normalized) throw new Error(`${label} cannot be blank.`);
-	if (PROHIBITED_TEXT.test(normalized)) {
-		throw new Error(`${label} contains prohibited control characters.`);
-	}
-	if ([...normalized].length > maximum) {
-		throw new Error(`${label} cannot exceed ${maximum} Unicode code points.`);
-	}
-	return normalized;
-}
-
-function optionalBoundedText(
-	value: unknown,
-	label: string,
-	maximum: number,
-): string | undefined {
-	if (value === undefined) return undefined;
-	return boundedText(value, label, maximum);
-}
-
-function normalizeStringList(
-	value: readonly string[],
-	label: string,
-	maximumItems: number,
-	maximumLength: number,
-): string[] {
-	if (!Array.isArray(value)) throw new Error(`${label} must be an array.`);
-	if (value.length > maximumItems) {
-		throw new Error(`${label} cannot exceed ${maximumItems} entries.`);
-	}
-	const normalized = value.map((entry) =>
-		boundedText(entry, `${label} entry`, maximumLength),
-	);
-	assertUnique(normalized, label);
-	return normalized.sort(compareText);
-}
-
-function normalizeEnumList<T extends string>(
-	value: readonly T[],
-	allowed: readonly T[],
-	label: string,
-): T[] {
-	if (!Array.isArray(value)) throw new Error(`${label} must be an array.`);
-	for (const entry of value) {
-		if (!allowed.includes(entry)) {
-			throw new Error(`${label} contains unsupported value ${String(entry)}.`);
-		}
-	}
-	assertUnique([...value], label);
-	return [...value].sort(compareText);
-}
-
-function assertKnownKeys(
-	value: object,
-	label: string,
-	allowed: readonly string[],
-): void {
-	const unsupported = Object.keys(value).filter((key) => !allowed.includes(key));
-	if (unsupported.length > 0) {
+export function assertModelCheckRubric(content: string): void {
+	const required = ["Requirement", "Pass", "Fail", "Feedback"] as const;
+	const headings = [...content.matchAll(/^#{1,6}\s+(Requirement|Pass|Fail|Feedback)\s*$/gimu)];
+	if (
+		headings.length !== required.length ||
+		headings.some((heading, index) => heading[1] !== required[index])
+	) {
 		throw new Error(
-			`${label} received unsupported field${unsupported.length === 1 ? "" : "s"} ${unsupported.join(", ")}.`,
+			"Model CHECK.md requires exactly one ordered Requirement, Pass, Fail, and Feedback section.",
 		);
 	}
-}
-
-function assertRecord(value: unknown, label: string): asserts value is object {
-	if (typeof value !== "object" || value === null || Array.isArray(value)) {
-		throw new Error(`${label} must be an object.`);
+	for (let index = 0; index < headings.length; index += 1) {
+		const start = (headings[index].index ?? 0) + headings[index][0].length;
+		const end = headings[index + 1]?.index ?? content.length;
+		if (!content.slice(start, end).trim()) {
+			throw new Error(`Model CHECK.md ${required[index]} section cannot be empty.`);
+		}
 	}
 }
 
-function assertUnique(values: readonly string[], label: string): void {
-	if (new Set(values).size !== values.length) {
-		throw new Error(`${label} cannot contain duplicates.`);
-	}
+function implementationFileName(
+	kind: CheckImplementationKind,
+): "CHECK.mjs" | "CHECK.md" {
+	return kind === "code" ? "CHECK.mjs" : "CHECK.md";
+}
+
+function compareChecks(left: PackagedCheck, right: PackagedCheck): number {
+	return compareText(left.checkId, right.checkId);
+}
+
+function comparePacks(left: CheckPack, right: CheckPack): number {
+	return compareText(left.id, right.id);
 }
 
 function compareText(left: string, right: string): number {
@@ -728,3 +307,25 @@ function compareText(left: string, right: string): number {
 	if (left > right) return 1;
 	return 0;
 }
+
+function assertExactKeys(
+	value: object,
+	allowed: readonly string[],
+	label: string,
+): void {
+	if (!value || typeof value !== "object" || Array.isArray(value)) {
+		throw new Error(`${label} must be an object.`);
+	}
+	const allowedKeys = new Set(allowed);
+	for (const key of Reflect.ownKeys(value)) {
+		if (typeof key !== "string" || !allowedKeys.has(key)) {
+			throw new Error(`${label} contains unsupported field ${String(key)}.`);
+		}
+	}
+}
+
+function immutable<T>(value: T): T {
+	return toCanonicalJsonValue(value) as unknown as T;
+}
+
+export const CHECK_JSON_SCHEMA_VERSION = CHECK_DEFINITION_SCHEMA_VERSION;

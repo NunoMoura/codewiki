@@ -189,13 +189,17 @@ assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "reports
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "start.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "workers", "handoff.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "checks", "index.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "checks", "packs", "runtime.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "checks", "packs", "runtime.d.ts")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "packs", "defaults.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "packs", "loader.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "execution", "checks", "code.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "execution", "checks", "model.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "changes", "triage", "standards.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "checks", "packs", "runtime.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "user-standard-distillation.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "user-standard-distillation.d.ts")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research-claims.js")), true);
-assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research-executors.js")), true);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research-claims.js")), false);
+assert.equal(existsSync(join(packageRoot, "dist", "loops", "decision", "research-executors.js")), false);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "start.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "git.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "admission", "change.js")), true);
@@ -538,12 +542,10 @@ for (const path of filesUnder(packageRoot)) {
 assert.equal(readdirSync(join(packageRoot, "dist")).includes("pi"), false);
 for (const name of [
 	"decision-model-check-session",
-	"decision-research-claims-session",
 	"isolated-json-model-session",
 	"native-decision-host",
 	"native-decision-research",
 	"sdk-semantic-session",
-	"user-standard-distillation-session",
 ]) {
 	assert.equal(
 		existsSync(join(packageRoot, "dist", "execution", "pi", name + ".js")),
@@ -559,6 +561,16 @@ for (const name of [
 		existsSync(join(packageRoot, "dist", "pi", name + ".js")),
 		false,
 		name,
+	);
+}
+for (const deleted of [
+	"decision-research-claims-session",
+	"user-standard-distillation-session",
+]) {
+	assert.equal(
+		existsSync(join(packageRoot, "dist", "execution", "pi", deleted + ".js")),
+		false,
+		deleted,
 	);
 }
 assert.equal(

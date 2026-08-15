@@ -218,8 +218,11 @@ describe("source architecture", () => {
 			"src/changes/trace/store.ts",
 			"src/runtime/queries/projection-types.ts",
 			"src/runtime/queries/runtime-board.ts",
-			"src/runtime/lifecycle/decision-security.ts",
 			"src/runtime/lifecycle/decision.ts",
+			"src/execution/checks/code.ts",
+			"src/execution/checks/model.ts",
+			"src/checks/packs/defaults.ts",
+			"src/checks/packs/loader.ts",
 			"src/checks/quality/evaluator.ts",
 			"src/checks/quality/graph.ts",
 			"src/checks/quality/runner.ts",
@@ -458,14 +461,18 @@ describe("source architecture", () => {
 		);
 	});
 
-	it("keeps User Standard distillation composition with Checks", () => {
+	it("keeps Change Intake standards outside Checks and removes managed Pack authoring", () => {
 		assert.equal(
-			existsSync(join(sourceRoot, "runtime", "user-standard-distillation.ts")),
+			existsSync(join(sourceRoot, "changes", "triage", "standards.ts")),
+			true,
+		);
+		assert.equal(
+			existsSync(join(sourceRoot, "checks", "packs", "user-standards.ts")),
 			false,
 		);
 		assert.equal(
 			existsSync(join(sourceRoot, "checks", "packs", "runtime.ts")),
-			true,
+			false,
 		);
 	});
 
@@ -484,14 +491,12 @@ describe("source architecture", () => {
 		for (const name of [
 			"coordinator-daemon.ts",
 			"decision-model-check-session.ts",
-			"decision-research-claims-session.ts",
 			"isolated-json-model-session.ts",
 			"native-decision-host.ts",
 			"native-decision-research.ts",
 			"process-session.ts",
 			"process-worker-adapter.ts",
 			"sdk-semantic-session.ts",
-			"user-standard-distillation-session.ts",
 		]) {
 			assert.equal(existsSync(join(sourceRoot, "execution", "pi", name)), true, name);
 			assert.equal(existsSync(join(sourceRoot, "harnesses", "pi", name)), false, name);

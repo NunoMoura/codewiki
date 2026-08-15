@@ -151,6 +151,21 @@ describe("project bootstrap", () => {
 			const config = await loadWikiConfigFile(root);
 			assert.equal(config.project, "bootstrap-fixture");
 			assert.equal(config.hosts.pi.enabled, false);
+			assert.equal("checks" in config, false);
+			assert.equal("customChecks" in config, false);
+			for (const stage of [
+				"decision",
+				"planning",
+				"implementation",
+				"review",
+			]) {
+				assert.deepEqual(
+					await readdir(
+						join(root, ".codewiki", "check-packs", stage, "default"),
+					),
+					[],
+				);
+			}
 
 			const files = await collectFiles(root);
 			const markdown = files

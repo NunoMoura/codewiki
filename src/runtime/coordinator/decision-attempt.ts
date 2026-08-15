@@ -10,7 +10,6 @@ import {
 	changeById,
 	type ChangeWorkState,
 	type LoopAttemptProjection,
-	type LoopAttemptProjectionStatus,
 	type ProjectWorkState,
 } from "../../changes/trace/state.ts";
 import {
@@ -24,7 +23,6 @@ import {
 	createDecisionCandidate,
 	type DecisionCandidate,
 } from "../../loops/decision/candidate.ts";
-import type {DecisionSecurityScanContext} from "../../loops/decision/security-scanners.ts";
 import type {createDecisionGate} from "../lifecycle/decision.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
 import type {ProjectCoordinatorRecovery} from "./project.ts";
@@ -123,7 +121,6 @@ export interface NativeDecisionCandidateProducer {
 
 export interface NativeDecisionEvaluationInput {
 	readonly evidenceRecords?: readonly EvidenceRecord[];
-	readonly securityScan?: DecisionSecurityScanContext;
 }
 
 export interface NativeDecisionGateBinding {
@@ -136,10 +133,10 @@ export interface NativeDecisionAttemptResult {
 	readonly attemptOperationId: OperationId;
 	readonly changeId: string;
 	readonly changeRevisionId: Sha256Digest;
-	readonly status: Exclude<LoopAttemptProjectionStatus, "active">;
+	readonly status: "passed" | "failed" | "stopped";
 	readonly candidateId: string | null;
-	readonly exitReportOperationId: OperationId | null;
-	readonly routeOperationId: OperationId | null;
+	readonly gateReportOperationId: OperationId | null;
+	readonly transitionOperationId: OperationId | null;
 	readonly terminalOperationId: OperationId | null;
 	readonly stateHead: string;
 }
@@ -229,16 +226,12 @@ export function createNativeDecisionAttemptExecutor(
 				candidate,
 				changeRef: `change:${input.changeId}`,
 				evidenceRecords: evaluationInput.evidenceRecords,
-				...(evaluationInput.securityScan
-					? {securityScan: evaluationInput.securityScan}
-					: {}),
 				signal: input.signal,
 			});
 			input.signal.throwIfAborted();
 			const evidenceRecords = [
 				...evaluationInput.evidenceRecords,
 				...gateRun.collectedEvidenceRecords,
-				...gateRun.result.producedEvidenceRecords,
 			];
 			const receipt = await commitNativeDecisionOperationSequence({
 				repoRoot: options.repoRoot,
@@ -253,10 +246,10 @@ export function createNativeDecisionAttemptExecutor(
 				expectedWorkStateDigest: current.state.workStateDigest,
 				recordedAt: (options.now ?? (() => new Date().toISOString()))(),
 				candidate,
-				exitPolicy: gateRun.policy,
+				packSnapshot: gateRun.packSnapshot,
 				evidenceRecords,
-				report: gateRun.result.report,
-				route: gateRun.transition,
+				report: gateRun.report,
+				transition: gateRun.transition,
 				runner: options.runner,
 				materializationRoot: options.materializationRoot,
 				signal: input.signal,
@@ -386,16 +379,14 @@ async function loadCurrentAttempt(input: {
 
 function normalizeEvaluationInput(
 	value: NativeDecisionEvaluationInput,
-): Required<Pick<NativeDecisionEvaluationInput, "evidenceRecords">> &
-	Omit<NativeDecisionEvaluationInput, "evidenceRecords"> {
+): Required<NativeDecisionEvaluationInput> {
 	assertOnlyKeys({
 		value,
-		allowed: ["evidenceRecords", "securityScan"],
+		allowed: ["evidenceRecords"],
 		label: "Native Decision evaluation input",
 	});
 	return Object.freeze({
 		evidenceRecords: Object.freeze([...(value.evidenceRecords ?? [])]),
-		...(value.securityScan ? {securityScan: value.securityScan} : {}),
 	});
 }
 
@@ -474,10 +465,13 @@ function attemptResult(current: CurrentAttempt): NativeDecisionAttemptResult {
 		attemptOperationId: current.attempt.operationId,
 		changeId: current.change.changeId,
 		changeRevisionId: current.attempt.changeRevisionId,
-		status: current.attempt.status,
+		status:
+			current.attempt.status === "passed" || current.attempt.status === "failed"
+				? current.attempt.status
+				: "stopped",
 		candidateId: current.attempt.currentCandidateId,
-		exitReportOperationId: current.attempt.exitReportOperationId,
-		routeOperationId: current.attempt.routeOperationId,
+		gateReportOperationId: current.attempt.exitReportOperationId,
+		transitionOperationId: current.attempt.routeOperationId,
 		terminalOperationId: current.attempt.terminalOperationId,
 		stateHead: current.state.stateHead,
 	});

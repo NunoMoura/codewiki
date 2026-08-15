@@ -30,10 +30,11 @@ describe("fresh scaffold", () => {
 			),
 			false,
 		);
-		assert.equal(typeof packageApi.resolveExecutionCapabilities, "function");
-		assert.equal(typeof packageApi.createRepairExecutionInvocation, "function");
-		assert.equal("resolveHarnessCapabilities" in packageApi, false);
-		assert.equal("createRepairHarnessInvocation" in packageApi, false);
+		assert.equal(typeof packageApi.createChecks, "function");
+		assert.equal(typeof packageApi.createGateRunner, "function");
+		assert.equal(typeof packageApi.CheckDefinitionSchema, "object");
+		assert.equal("createVerificationRuntime" in packageApi, false);
+		assert.equal("createRepairExecutionInvocation" in packageApi, false);
 		assert.equal("runWikiChange" in packageApi, false);
 		assert.equal("buildWikiState" in packageApi, false);
 	});

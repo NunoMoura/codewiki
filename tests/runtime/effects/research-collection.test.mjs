@@ -25,6 +25,7 @@ function fixture() {
 		subject: {
 			changeRefs: [`change:${changeId}`],
 			changeRevisionDigests: [revision.revisionId],
+			candidateDigest: candidate.digest,
 			acceptanceRequirementIds: [],
 		},
 	};
@@ -94,11 +95,10 @@ describe("Decision research collection", () => {
 			id: "trusted-research-connector",
 			version: "1.0.0",
 		});
-		assert.ok(
-			evidence.provenanceRefs.includes(
-				`collector-request:${request.requestDigest}`,
-			),
+		const includesRequestProvenance = evidence.provenanceRefs.includes(
+			`collector-request:${request.requestDigest}`,
 		);
+		assert.equal(includesRequestProvenance, true);
 		assert.ok(
 			evidence.provenanceRefs.some((ref) =>
 				ref.startsWith("collector-receipt:sha256:"),
@@ -170,7 +170,7 @@ describe("Decision research collection", () => {
 		await assert.rejects(
 			collectDecisionResearchEvidence({
 				...setup,
-				subject: {...setup.subject, candidateDigest: setup.candidate.digest},
+				subject: {...setup.subject, candidateDigest: digest("0")},
 				collector: collector(async () => undefined),
 				sensitivity: "project",
 				observedAt: () => "2026-08-03T10:03:00.000Z",

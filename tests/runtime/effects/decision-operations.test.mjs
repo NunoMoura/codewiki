@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import {describe, it} from "node:test";
 
-import {createCheckCatalog} from "../../../src/checks/catalog.ts";
-import {createResolvedExitPolicy} from "../../../src/checks/contracts.ts";
-import {resolveExitPolicy} from "../../../src/checks/resolve-policy.ts";
-import {createCheckResult, createExitReport} from "../../../src/checks/results.ts";
+import {checkSubjectFromCandidate} from "../../../src/checks/identity.ts";
+import {
+	assembleCheckInvocation,
+	subjectInputSelection,
+} from "../../../src/checks/protocol.ts";
+import {createCheckResult, createGateReport} from "../../../src/checks/results.ts";
 import {deriveDecisionLifecycleTransition} from "../../../src/runtime/lifecycle/decision.ts";
 import {EVIDENCE_SCHEMA_VERSION} from "../../../src/evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../../src/evidence/materialize.ts";
@@ -25,6 +27,12 @@ import {
 	gitObject,
 } from "../../helpers/change-trace-v1.mjs";
 import {nativeDecisionCandidate} from "../../helpers/native-decision.mjs";
+import {
+	checkOutput,
+	checkSnapshot,
+	executionIdentity,
+	packagedCheck,
+} from "../../helpers/checks.mjs";
 import {
 	assertValidCanonicalChangeOperation,
 	createInitialProjectWorkState,
@@ -80,62 +88,59 @@ function nativeDecisionArtifacts(
 	rationale = "Exact revision is ready.",
 ) {
 	const candidate = nativeDecisionCandidate({state, changeId, rationale});
-	const revision = candidate.content.revision;
-	const catalog = createCheckCatalog();
-	const resolved = resolveExitPolicy({
-		loop: "decision",
-		candidateDigest: candidate.digest,
-		changes: [
+	const check = packagedCheck({
+		definition: {
+			id: "change-revision-ready",
+			inputs: [
+				{
+					source: "subject",
+					refs: [],
+					required: true,
+					maximumBytes: 1_048_576,
+				},
+			],
+			limits: {
+				timeoutMs: 1_000,
+				maximumAttempts: 1,
+				maximumInputBytes: 2_097_152,
+				maximumOutputBytes: 65_536,
+			},
+		},
+	});
+	const packSnapshot = checkSnapshot([check]);
+	const subject = checkSubjectFromCandidate(candidate);
+	const invocation = assembleCheckInvocation({
+		subject,
+		snapshot: packSnapshot,
+		check,
+		inputs: [subjectInputSelection(subject, check.definition.inputs[0])],
+	});
+	const execution = executionIdentity();
+	const result = createCheckResult({
+		snapshot: packSnapshot,
+		check,
+		invocation,
+		output: checkOutput(invocation),
+		execution,
+	});
+	const report = createGateReport({
+		snapshot: packSnapshot,
+		subjectDigest: candidate.digest,
+		results: [result],
+		executions: [
 			{
-				changeId,
-				revision: revision.ordinal,
-				digest: revision.revisionId,
-				kind:
-					revision.classification.kind === "unknown"
-						? "harden"
-						: revision.classification.kind,
-				type:
-					revision.classification.type === "unknown"
-						? "security_change"
-						: revision.classification.type,
-				risk:
-					revision.safety.risk === "low"
-						? "low"
-						: revision.safety.risk === "moderate"
-							? "medium"
-							: "high",
-				affectedLayers: [...revision.classification.affectedLayers],
+				packId: check.packId,
+				checkId: check.checkId,
+				source: "executed",
+				status: "completed",
+				attempts: 1,
+				execution,
+				resultDigest: result.resultDigest,
 			},
 		],
-		projectTraits: [],
-		technologies: [],
-		paths: [...revision.classification.targetRefs],
 	});
-	const binding = resolved.bindings.find(
-		(candidateBinding) => candidateBinding.checkId === "change_revision_ready",
-	);
-	const policy = createResolvedExitPolicy({
-		loop: "decision",
-		candidateDigest: candidate.digest,
-		catalogDigest: resolved.catalogDigest,
-		selectorInputDigest: resolved.selectorInputDigest,
-		bindings: [binding],
-		protectedCheckIds: [binding.checkId],
-	});
-	const check = catalog.get("change_revision_ready", "decision").check;
-	const result = createCheckResult({
-		loop: "decision",
-		policy,
-		check,
-		disposition: "satisfied",
-		measurement: {shape: "boolean", value: true},
-		evidenceResolutions: [],
-		findings: [],
-		execution: check.execution,
-	});
-	const report = createExitReport({policy, checkResults: [result]});
-	const route = deriveDecisionLifecycleTransition(candidate, report);
-	return {candidate, policy, report, route};
+	const transition = deriveDecisionLifecycleTransition(candidate, report);
+	return {candidate, packSnapshot, report, transition};
 }
 
 const repositoryIdentity = digest("a");
@@ -221,7 +226,7 @@ describe("native Decision canonical operation continuation", () => {
 		assert.equal(sequence.state.loopAttempts[0].status, "passed");
 		assert.equal(
 			sequence.state.loopAttempts[0].routeOperationId,
-			sequence.routeOperationId,
+			sequence.transitionOperationId,
 		);
 		const accepted = reduceBatch(
 			started.state,
@@ -236,13 +241,13 @@ describe("native Decision canonical operation continuation", () => {
 			(operation) => operation.body.kind === "runtime.route_recorded",
 		);
 		assert.equal(routeOperation.body.payload.route, "planning");
-		assert.equal(routeOperation.body.payload.exitReportId, sequence.exitReportId);
+		assert.equal(routeOperation.body.payload.exitReportId, sequence.gateReportId);
 		const artifactOperations = [
 			[sequence.operations[0], "candidate", artifacts.candidate],
-			[sequence.operations[1], "policy", artifacts.policy],
-			[sequence.operations[2], "result", artifacts.report.checkResults[0]],
+			[sequence.operations[1], "policy", artifacts.packSnapshot],
+			[sequence.operations[2], "result", artifacts.report.results[0]],
 			[sequence.operations[3], "report", artifacts.report],
-			[sequence.operations[4], "runtimeRoute", artifacts.route],
+			[sequence.operations[4], "runtimeRoute", artifacts.transition],
 		];
 		for (const [operation, field, expected] of artifactOperations) {
 			const canonicalOperation = /** @type {(typeof sequence.operations)[number]} */ (
@@ -251,8 +256,8 @@ describe("native Decision canonical operation continuation", () => {
 			const inline = canonicalOperation.body.payload[field];
 			assert.equal(Object.hasOwn(inline, "ref"), false);
 			assert.deepEqual(
-				JSON.parse(JSON.stringify(inline.artifact)),
-				JSON.parse(JSON.stringify(expected)),
+				structuredClone(inline.artifact),
+				structuredClone(expected),
 			);
 		}
 		assert.equal(
@@ -296,8 +301,8 @@ describe("native Decision canonical operation continuation", () => {
 		assert.equal(operation.body.payload.evidence.id, evidence.evidenceId);
 		assert.equal(Object.hasOwn(operation.body.payload.evidence, "ref"), false);
 		assert.deepEqual(
-			JSON.parse(JSON.stringify(operation.body.payload.evidence.artifact)),
-			JSON.parse(JSON.stringify(evidence)),
+			structuredClone(operation.body.payload.evidence.artifact),
+			structuredClone(evidence),
 		);
 	});
 
@@ -426,10 +431,10 @@ describe("native Decision canonical operation continuation", () => {
 				expectedWorkStateDigest: selected.workState.workStateDigest,
 				recordedAt: "2026-07-30T15:07:00.000Z",
 				candidate: artifacts.candidate,
-				exitPolicy: artifacts.policy,
+				packSnapshot: artifacts.packSnapshot,
 				evidenceRecords: [],
 				report: artifacts.report,
-				route: artifacts.route,
+				transition: artifacts.transition,
 			});
 			assert.equal(receipt.observation.status, "fresh");
 			assert.equal(receipt.observation.workState.stateHead, receipt.stateHead);
@@ -459,10 +464,10 @@ describe("native Decision canonical operation continuation", () => {
 					expectedWorkStateDigest: selected.workState.workStateDigest,
 					recordedAt: "2026-07-30T15:07:00.000Z",
 					candidate: artifacts.candidate,
-					exitPolicy: artifacts.policy,
+					packSnapshot: artifacts.packSnapshot,
 					evidenceRecords: [],
 					report: artifacts.report,
-					route: artifacts.route,
+					transition: artifacts.transition,
 				}),
 				/must be rerun/,
 			);

@@ -3,11 +3,6 @@ import {
 	canonicalJsonDigest,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import {
-	canonicalIsoTimestamp,
-	compareCanonicalText as compareText,
-	deepFreezeValue as deepFreeze,
-} from "./validation.ts";
 
 export const USER_STANDARD_SCHEMA_VERSION = "1.0.0" as const;
 export const MAX_USER_STANDARDS = 64;
@@ -424,4 +419,30 @@ export function isUserStandardId(value: unknown): value is string {
 
 export function isUserStandardPassageId(value: unknown): value is string {
 	return typeof value === "string" && PASSAGE_ID.test(value);
+}
+
+function deepFreeze<T>(value: T): T {
+	if (typeof value !== "object" || value === null || Object.isFrozen(value)) {
+		return value;
+	}
+	for (const child of Object.values(value)) deepFreeze(child);
+	return Object.freeze(value);
+}
+
+function compareText(left: string, right: string): number {
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
+}
+
+function canonicalIsoTimestamp(value: unknown, field: string): string {
+	if (typeof value !== "string" || !value.trim() || value.length > 64) {
+		throw new Error(`${field} must be a canonical ISO timestamp.`);
+	}
+	const timestamp = value.trim();
+	const parsed = new Date(timestamp);
+	if (!Number.isFinite(parsed.getTime()) || parsed.toISOString() !== timestamp) {
+		throw new Error(`${field} must be a canonical ISO timestamp.`);
+	}
+	return timestamp;
 }

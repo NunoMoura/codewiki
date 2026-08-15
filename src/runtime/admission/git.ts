@@ -16,7 +16,10 @@ import {
 import {createBacklogTriagePolicy} from "../../changes/triage/policy.ts";
 import {buildBacklogTriageProjection} from "../../changes/triage/projection.ts";
 import type {DecisionAttentionSelectionContext} from "../../changes/triage/selection.ts";
-import {loadProtectedCustomCheckConfigSnapshot} from "../../checks/packs/project-config-store.ts";
+import {
+	loadProtectedWikiConfigFile,
+	wikiConfigDigest,
+} from "../../project/config-file.ts";
 import type {Sha256Digest} from "../../utils/canonical-json.ts";
 import type {DecisionAttemptAppendInput} from "./start.ts";
 
@@ -86,20 +89,19 @@ export function createDecisionGitAdmission(
 		) {
 			return cached.context;
 		}
-		const protectedConfig = await loadProtectedCustomCheckConfigSnapshot({
+		const protectedConfig = await loadProtectedWikiConfigFile({
 			repoRoot: options.repoRoot,
 			protectedSourceHead: current.teamSnapshot.protectedSourceHead,
 			runner: options.runner,
 		});
-		if (
-			protectedConfig.projectConfigDigest !== current.teamSnapshot.configDigest
-		) {
+		const projectConfigDigest = wikiConfigDigest(protectedConfig);
+		if (projectConfigDigest !== current.teamSnapshot.configDigest) {
 			throw new Error(
 				"Decision projection protected config does not match the current team snapshot.",
 			);
 		}
 		const policy = createBacklogTriagePolicy({
-			projectConfigDigest: protectedConfig.projectConfigDigest,
+			projectConfigDigest,
 			userStandards: protectedConfig.userStandards,
 			bindings: protectedConfig.triagePreferences,
 		});

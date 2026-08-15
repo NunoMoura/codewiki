@@ -317,125 +317,17 @@ export * from "./server/registry/enrollment.ts";
 export * from "./server/registry/state.ts";
 export * from "./server/sessions/contracts.ts";
 export * from "./server/sessions/state.ts";
+export * from "./checks/contracts.ts";
+export * from "./checks/cache.ts";
+export * from "./checks/identity.ts";
+export * from "./checks/protocol.ts";
+export * from "./checks/results.ts";
+export * from "./checks/runner.ts";
+export * from "./checks/index.ts";
 export * from "./checks/packs/index.ts";
-export {
-	EXIT_OUTCOME_PROTOCOL_VERSION,
-	REPAIR_BRIEF_PROTOCOL_VERSION,
-	REPAIR_BUNDLE_PROTOCOL_VERSION,
-	REPAIR_EXECUTION_INVOCATION_PROTOCOL_VERSION,
-	assertValidExitOutcome,
-	assertValidRepairBrief,
-	assertValidRepairBundle,
-	assertValidRepairExecutionInvocation,
-	createExitOutcome,
-	createRepairBrief,
-	createRepairBundle,
-	createRepairExecutionInvocation,
-	type CreateExitOutcomeInput,
-	type CreateRepairGuidanceInput,
-	type ExitOutcome,
-	type ExitOutcomeRuntimeRouteReference,
-	type MatchedRepairProfile,
-	type RepairBrief,
-	type RepairBriefContext,
-	type RepairBundle,
-	type RepairBundleCoverage,
-	type RepairFindingSignal,
-	type RepairGuidanceDigests,
-	type RepairGuidanceLimits,
-	type RepairGuidanceTruncation,
-	type RepairExecutionInvocation,
-	type RepairResultSignal,
-} from "./checks/repair/bundle.ts";
-export {
-	MAX_REPAIR_FRONTIER_CHANGES,
-	MAX_REPAIR_FRONTIER_FACTS,
-	MAX_REPAIR_FRONTIER_REFS_PER_KIND,
-	REPAIR_FRONTIER_PROTOCOL_VERSION,
-	assertValidRepairFrontier,
-	createRepairFrontier,
-	type CreateRepairFrontierInput,
-	type RepairFrontier,
-	type RepairFrontierCandidateBinding,
-	type RepairFrontierCoverage,
-	type RepairFrontierLimits,
-	type RepairFrontierProvenance,
-	type RepairFrontierReferenceKind,
-	type RepairFrontierReferences,
-	type RepairFrontierTruncation,
-} from "./checks/repair/frontier.ts";
-export {
-	MAX_REPAIR_PROFILES_PER_CHECK,
-	REPAIR_PROFILE_PROTOCOL_VERSION,
-	assertResolvedRepairProfiles,
-	defaultRepairProfiles,
-	matchRepairProfiles,
-	normalizeRepairProfileEntries,
-	overlayResolvedRepairProfiles,
-	repairProfileSetDigest,
-	resolveRepairProfiles,
-	type MatchRepairProfilesInput,
-	type RepairProfileEntry,
-	type RepairProfileLayer,
-	type RepairProfileMatch,
-	type RepairProfileOutcome,
-	type RepairProfileSource,
-	type RepairProfileSourceLayer,
-	type RepairRouteRecommendation,
-	type ResolvedRepairProfile,
-} from "./checks/repair/profiles.ts";
-export * from "./checks/capabilities.ts";
-export {
-	CHECK_INVOCATION_PROTOCOL_ID,
-	CHECK_INVOCATION_PROTOCOL_VERSION,
-	CHECK_INVOCATION_SCHEMA,
-	MAX_CHECK_INVOCATION_BYTES,
-	CHECK_OBSERVATION_PROTOCOL_ID,
-	CHECK_OBSERVATION_PROTOCOL_VERSION,
-	CHECK_OBSERVATION_SCHEMA,
-	MAX_CHECK_OBSERVATION_BYTES,
-	MAX_CHECK_FINDINGS,
-	assertValidCheckInvocation,
-	createCheckInvocation,
-	createLoopExitSuite,
-	normalizeCheckObservation,
-	type CheckInvocation,
-	type CheckInvocationCandidate,
-	type CheckInvocationCheckBinding,
-	type CheckInvocationContext,
-	type CheckInvocationContextItem,
-	type CheckInvocationContextSection,
-	type CheckInvocationCoverageStatus,
-	type CheckInvocationPolicyBinding,
-	type CheckObservation,
-	type CheckObservationFinding,
-	type CheckObservationOutcome,
-	type CheckObservationRepairProposal,
-	type CreateCheckInvocationInput,
-	type LoopExitDeclaration,
-	type LoopExitSuite,
-	type NormalizeCheckObservationInput,
-} from "./checks/contracts.ts";
-export {
-	admitCheckObservation,
-	assembleCheckInvocation,
-	type AdmitCheckObservationInput,
-	type AssembleCheckInvocationInput,
-} from "./checks/protocol.ts";
-export {
-	VERIFICATION_PROJECTION,
-	projectVerificationState,
-	type CandidateVerificationProjection,
-	type ProjectVerificationProjection,
-	type ProjectVerificationProjectionOptions,
-	type VerificationCheckProjection,
-	type VerificationPolicyProjection,
-	type VerificationProjectionCoverage,
-	type VerificationProjectionStatus,
-	type VerificationReportProjection,
-} from "./work-state/checks.ts";
-export * from "./checks/standard-evidence-checks.ts";
-export * from "./checks/standard-evidence-executor.ts";
+export * from "./execution/checks/code.ts";
+export * from "./execution/checks/model.ts";
+export * from "./work-state/checks.ts";
 export * from "./execution/security/collectors.ts";
 export * from "./evidence/adapters/sarif.ts";
 export * from "./evidence/adapters/junit.ts";
@@ -446,10 +338,6 @@ export * from "./evidence/adapters/spdx.ts";
 export * from "./evidence/adapters/pact.ts";
 export * from "./evidence/adapters/openapi.ts";
 export * from "./evidence/adapters/materialization.ts";
-export {
-	materializeDecisionApprovalReceipt,
-	materializeDecisionResidualRiskApprovalReceipt,
-} from "./loops/decision/evidence.ts";
 export {
 	DECISION_RESEARCH_COLLECTION_PROTOCOL,
 	collectDecisionResearchEvidence,

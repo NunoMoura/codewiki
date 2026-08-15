@@ -351,7 +351,7 @@ function assertCollectionSubject(input: {
 	readonly subject: EvidenceSubject;
 }): void {
 	if (
-		input.subject.candidateDigest !== undefined ||
+		input.subject.candidateDigest !== input.candidate.digest ||
 		input.subject.changeRefs.length !== 1 ||
 		input.subject.changeRefs[0] !== `change:${input.candidate.content.changeId}` ||
 		input.subject.changeRevisionDigests.length !== 1 ||

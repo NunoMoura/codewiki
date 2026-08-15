@@ -319,6 +319,8 @@ The Runtime Loop Exit ownership clean cut is recorded by `.tmp-worktrees/runtime
 
 The Checks and four-Loop topology clean cut is recorded by `.tmp-worktrees/checks-four-loop-ownership-clean-cut-manifest.json`, exhaustively anchored to `c250c03` with 507 keeps, 147 moves, 1 deletion, and 1 planned addition. Check mechanics move to `src/checks/**`; Decision, Planning, and Implementation move to `src/loops/**`; legacy implementation-review and security execution move to `src/execution/**`; fixed Decision lifecycle handling moves to `src/runtime/lifecycle/**`; and the generic Router is deleted. The cut adds one immutable exact-head Review attempt binding under `src/loops/review/**` and removes the transitional public Loop Exit names without aliases. It deliberately preserves singular legacy Quality, repair, protected-floor, activation, evaluator, indeterminate, and direct generic review-execution callers for the next contract-replacement slice. Source and test counts remain flat at 353/194. Its green checkpoint is 944 full-suite tests, 119 coordinator tests, 709 packed files, passing Pi install, SDK-package, project-local install, external lifecycle, external failure, and packed-install gates, with zero production audit vulnerabilities.
 
+The Check, Result, and Gate contract clean cut is recorded by `.tmp-worktrees/check-result-gate-contract-clean-cut-manifest.json`, exhaustively anchored to `dd027ea` with 601 keeps, 7 moves, 48 deletions, and 2 planned additions. It publishes strict versioned Check Definition, bounded selector, Invocation, Output, completed Result, warning, stopped-reason, and Gate Report schemas; admits only `passed | failed` Results; and represents operational inability as a stopped Gate with no fabricated Result. Stage-first immutable Pack loading replaces protected floors, activation, hidden catalogs, managed Pack authoring, Repair layers, and specialized Decision orchestration. Execution uses exact cache identity, Code-before-Model fail-fast scheduling, bounded concurrency and retries, fresh per-attempt cancellation, hermetic Code sandbox admission, and independent tool-free Model transport. Runtime-facing Decision state uses Gate and transition vocabulary while the historical Change Trace wire boundary remains byte-compatible. Change Intake owns user-standard distillation. Source and test path counts fall to 323/178. Its green checkpoint is 821 full-suite tests, 119 coordinator tests, 649 packed files, passing Pi install, RPC, multiprocess, SDK, SDK-package, project-local install, external lifecycle, external failure, readiness, and packed-install gates, with zero production audit vulnerabilities.
+
 Rules:
 
 - Until caps pass, each source slice adds no more files than it deletes or merges and should reduce net count.
@@ -341,7 +343,7 @@ Rules:
 - [x] Supersede Verification and Loop Exit with root Checks, four `src/loops/**` owners, per-stage Gates, and fixed Runtime lifecycle transitions.
 - [x] Ratify bare-bones editable and removable defaults, user-only Pack authoring, npm/Git/local marketplace transport, Code/Model Checks, binary/quantitative measurements, atomic feedback, parallel cache-aware fail-fast execution, and stopped Gate semantics.
 - [x] Preserve first-party App, CLI, and Pi Clients while allowing external Clients to accept bounded Worker Assignments.
-- [ ] Update README and package description after executable topology exists; do not advertise unfinished capability.
+- [x] Update README and package description after executable topology exists; do not advertise unfinished capability.
 
 ### 2. Execute deletion-first ownership cut
 
@@ -369,7 +371,8 @@ Rules:
 - [ ] Implement Review attempt persistence, Gate execution, and fixed failed-Review feedback return to Implementation.
 - [x] Move surviving Check contracts, Pack loading, execution coordination, cache, Results, and Gate reduction to `src/checks/**`; delete `src/verification/**`, `src/runtime/loop-exit/**`, per-Loop `exit/**`, and the generic Router without aliases.
 - [x] Update exact Knowledge concept-count, index, source-ownership, and source-architecture assertions atomically with the source cut without weakening desired ownership metadata.
-- [ ] Delete legacy Quality, Repair Profile/Frontier/Brief/Bundle, indeterminate Result, obsolete Loop compatibility, and old ChangeRecord contracts as replacement consumers land.
+- [x] Delete Repair Profile/Frontier/Brief/Bundle, protected-floor/activation machinery, indeterminate Results, obsolete Loop Exit compatibility, and hidden Check catalogs as replacement consumers land.
+- [ ] Delete isolated legacy Loop Quality and old ChangeRecord contracts after their remaining projection consumers move.
 - [x] Move surviving Pi execution modules from `src/harnesses/pi/**` to `src/execution/pi/**` and ports to `src/execution/ports.ts`; rename public Harness vocabulary atomically.
 - [x] Move container/worktree execution custody to Runtime workbench/isolation ownership.
 - [x] Move coordinator package composition to Host ownership and remove the generic Harness source/package root.
@@ -479,26 +482,24 @@ Rules:
 
 ### 10. Complete root Checks, Check Packs, and Gates
 
-Already reusable: exact Candidate and execution identities; bounded Check protocols; quantitative threshold primitives; isolated Decision Model Check transport; bounded parallel scheduling; exact Result cache keys; structured Evidence adapters; native project Check parsing; and deterministic result-digest foundations. Current ownership, status, repair, and routing contracts are legacy inputs to the clean cut rather than desired API.
+The active kernel now has exact Candidate and execution identities, versioned Check/Invocation/Output/Result/Gate contracts, stage-first Pack loading, deterministic thresholds, independent Model transport, bounded scheduling and retries, exact completed-Result caching, stopped Gate semantics, and historical Change Trace boundary translation. Remaining work is product authoring, marketplace transport, executable Review persistence, and removal of isolated Loop Quality.
 
-Remaining:
-
-- [ ] Implement `.codewiki/check-packs/<stage>/<pack>/<check-id>/check.json` beside exactly one `CHECK.md` or `CHECK.mjs`, with no extra `checks/` level or required local Pack manifest.
-- [ ] Publish versioned schemas for `check.json`, bounded input selectors, Code and Model Check outputs, completed Results, Gate Reports, warnings, and stopped execution reasons before migration consumers land.
-- [ ] Define and bootstrap one minimal bare-bones `default/` Pack for each of Decision, Planning, Implementation, and Review exactly once; permit users to edit or delete every default and never restore it automatically.
-- [ ] Treat folder presence as the active Check set; remove protected floors, enforcement tiers, required Check IDs, hidden catalogs, and activation transactions.
-- [ ] Make zero Checks pass with persistent `no_checks_configured` warning and make empty named Packs warn without synthetic Results.
-- [ ] Define only Code and Model Check implementations plus binary and quantitative measurements; derive quantitative pass/fail from finite minimum/maximum thresholds.
-- [ ] Require one pass condition, one fail condition, one stable failure code, and one feedback object per Check; permit multiple factual details or locations but no multiple semantic failure classes.
-- [ ] Admit Results only for completed `passed | failed` Checks. Replace indeterminate Results with stopped Check Runs and `passed | failed | stopped` Gate Reports.
-- [ ] Bound retries for timeout, cancellation, missing input, invalid output, unavailable model or sandbox, exhausted budget, and staleness; after exhaustion preserve state and expose exact User recovery.
-- [ ] Resolve exact cache hits, run uncached Code Checks in bounded parallel, fail fast before Model Checks, then run Model Checks in bounded parallel and stop queued work after conclusive failure or stop.
-- [ ] Keep Model Checks tool-free and independent from Worker routes under one fixed structured-output protocol; run deterministic hermetic Code Checks only in bounded admitted sandboxes with network denial and no host fallback.
-- [ ] Delete Check-authored route hints and Repair Profile/Frontier/Brief/Bundle layers; failed Results carry feedback directly to the responsible Loop.
+- [x] Implement `.codewiki/check-packs/<stage>/<pack>/<check-id>/check.json` beside exactly one `CHECK.md` or `CHECK.mjs`, with no extra `checks/` level or required local Pack manifest.
+- [x] Publish versioned schemas for `check.json`, bounded input selectors, Code and Model Check outputs, completed Results, Gate Reports, warnings, and stopped execution reasons before migration consumers land.
+- [x] Define and bootstrap one minimal bare-bones empty `default/` Pack for each of Decision, Planning, Implementation, and Review; permit users to edit or delete every default and never restore content on upgrade.
+- [x] Treat folder presence as the active Check set; remove protected floors, enforcement tiers, required Check IDs, hidden catalogs, and activation transactions.
+- [x] Make zero Checks pass with persistent `no_checks_configured` warning and make empty named Packs warn without synthetic Results.
+- [x] Define only Code and Model Check implementations plus binary and quantitative measurements; derive quantitative pass/fail from finite minimum/maximum thresholds.
+- [x] Require one pass condition, one fail condition, one stable failure code, and one feedback object per Check; permit multiple factual details or locations but no multiple semantic failure classes.
+- [x] Admit Results only for completed `passed | failed` Checks. Replace indeterminate Results with stopped Check Runs and `passed | failed | stopped` Gate Reports.
+- [x] Bound retries and stop reasons for timeout, cancellation, missing input, invalid output, unavailable model or sandbox, exhausted budget, and staleness; preserve lifecycle state on stopped Gates.
+- [x] Resolve exact cache hits, run uncached Code Checks in bounded parallel, fail fast before Model Checks, then run Model Checks in bounded parallel and stop queued work after conclusive failure or stop.
+- [x] Keep Model Checks tool-free and independent from Worker routes under one fixed structured-output protocol; delegate Code Checks only to bounded admitted hermetic sandboxes with network denial and no host fallback.
+- [x] Delete Check-authored route hints and Repair Profile/Frontier/Brief/Bundle layers; failed Results carry feedback directly to the responsible Loop.
 - [ ] Implement App stage/Pack navigation, Model Check forms, one-file Code Check upload, validation, sandbox preview, delete/edit support, and developer file inspection over the same tracked files.
-- [ ] Keep Check Pack creation and mutation out of CodeWiki-managed Agents and dedicated CLI tooling; publish schemas and examples usable by manual editors and user-controlled external agents.
+- [x] Keep Check Pack creation and mutation out of CodeWiki-managed Agents and dedicated CLI tooling; publish the core schema and stage-first layout for manual editors and user-controlled external agents.
 - [ ] Implement Pi-style npm discovery with `codewiki-check-pack` plus exact npm, Git, and local installation through `codewiki.checkPacks` or conventional `check-packs/` resources, no lifecycle scripts, vendoring into editable project files, exact source/integrity lock data, and diff-safe updates.
-- [ ] Preserve only SARIF, JUnit XML, LCOV, Cobertura, CycloneDX, SPDX, Pact, OpenAPI, and provider-check receipts as bounded Evidence formats.
+- [x] Preserve only SARIF, JUnit XML, LCOV, Cobertura, CycloneDX, SPDX, Pact, OpenAPI, and provider-check receipts as bounded Evidence formats.
 
 ### 11. Normalize feedback, discovery, and improvement
 

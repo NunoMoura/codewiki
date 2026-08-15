@@ -8,6 +8,7 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import { serializeOkfDocument } from "../knowledge/okf-frontmatter.ts";
+import {defaultCheckPackDirectories} from "../checks/packs/defaults.ts";
 import { resolveWikiConfig } from "./config.ts";
 import { WIKI_CONFIG_PATH } from "./config-file.ts";
 
@@ -61,8 +62,15 @@ const TARGET_DIRECTORIES = [
 	".codewiki/kb/system/diagrams",
 	".codewiki/traces",
 	".codewiki/views",
+	...defaultCheckPackDirectories().map((entry) => entry.relativePath),
 ];
-const TARGET_CODEWIKI_ROOTS = new Set(["config.json", "kb", "traces", "views"]);
+const TARGET_CODEWIKI_ROOTS = new Set([
+	"config.json",
+	"check-packs",
+	"kb",
+	"traces",
+	"views",
+]);
 
 const SOURCE_ROOT_CANDIDATES = [
 	"src",

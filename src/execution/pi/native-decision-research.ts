@@ -1,57 +1,35 @@
-import type {DecisionGateResearchConfig} from "../../runtime/lifecycle/decision.ts";
-import type {DecisionResearchCollectionPortInput} from "../../loops/decision/research.ts";
-import type {WikiModelRouteConfig} from "../../project/model-routing.ts";
+import type {DecisionGateEvidenceCollector} from "../../runtime/lifecycle/decision.ts";
+import {decisionEvidenceSubject} from "../../loops/decision/evidence.ts";
 import {
 	collectDecisionResearchEvidence,
 	type DecisionResearchCollector,
 } from "../../runtime/effects/research-collection.ts";
-import type {DecisionResearchClaimsTransport} from "../../loops/decision/research-executors.ts";
-import {createPiDecisionResearchClaimsTransport} from "./decision-research-claims-session.ts";
-import type {PiSdkRuntimeSemanticAdapterOptions} from "./sdk-semantic-session.ts";
 
 export interface PiNativeDecisionResearchOptions {
-	readonly route: WikiModelRouteConfig;
 	readonly sensitivity: "public" | "project" | "private";
 	readonly collector: DecisionResearchCollector;
-	readonly claimsTransport?: DecisionResearchClaimsTransport;
 }
 
-export function createPiNativeDecisionResearchRuntimeConfig(input: {
-	readonly repoRoot: string;
+export function createPiNativeDecisionResearchCollector(input: {
 	readonly research: PiNativeDecisionResearchOptions;
-	readonly semanticSession:
-		| Omit<PiSdkRuntimeSemanticAdapterOptions, "repoRoot">
-		| undefined;
-	readonly now: (() => string) | undefined;
-}): DecisionGateResearchConfig {
+	readonly now?: () => string;
+}): DecisionGateEvidenceCollector {
 	return Object.freeze({
-		route: input.research.route,
-		sensitivity: input.research.sensitivity,
-		collectEvidence: (request: DecisionResearchCollectionPortInput) =>
-			collectDecisionResearchEvidence({
-				...request,
+		async collect(
+			request: Parameters<DecisionGateEvidenceCollector["collect"]>[0],
+		) {
+			const result = await collectDecisionResearchEvidence({
+				candidate: request.candidate,
+				subject: decisionEvidenceSubject({
+					candidate: request.candidate,
+					changeRef: request.changeRef,
+				}),
+				sensitivity: input.research.sensitivity,
+				signal: request.signal,
 				collector: input.research.collector,
 				observedAt: input.now ?? (() => new Date().toISOString()),
-			}),
-		transport:
-			input.research.claimsTransport ??
-			createPiDecisionResearchClaimsTransport({
-				repoRoot: input.repoRoot,
-				...(input.semanticSession?.piSdk
-					? {piSdk: input.semanticSession.piSdk}
-					: {}),
-				...(input.semanticSession?.agentDir
-					? {agentDir: input.semanticSession.agentDir}
-					: {}),
-				...(input.semanticSession?.modelRuntime
-					? {modelRuntime: input.semanticSession.modelRuntime}
-					: {}),
-				...(input.semanticSession?.createAgentSession
-					? {
-							createAgentSession:
-								input.semanticSession.createAgentSession,
-						}
-					: {}),
-			}),
+			});
+			return result.evidenceRecords;
+		},
 	});
 }

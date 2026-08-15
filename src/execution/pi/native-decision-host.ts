@@ -12,12 +12,14 @@ import {
 	type DecisionAttentionSelectionAuthorizationRequest,
 } from "../../changes/triage/selection.ts";
 import {createDecisionGate} from "../../runtime/lifecycle/decision.ts";
-import type {ProtectedCustomCheckConfigSnapshot} from "../../checks/packs/configuration.ts";
 import {
-	loadProtectedCustomCheckConfigSnapshot,
-	loadProtectedProjectCheckPacks,
-	type ProjectCheckPackSnapshot,
-} from "../../checks/packs/project-config-store.ts";
+	createCheckPackSnapshot,
+	type CheckPackSnapshot,
+} from "../../checks/packs/contracts.ts";
+import {
+	CheckPackLoadError,
+	loadProtectedCheckPackSnapshot,
+} from "../../checks/packs/loader.ts";
 import {createDecisionGitAdmission} from "../../runtime/admission/git.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
@@ -35,7 +37,7 @@ import {
 } from "../../utils/canonical-json.ts";
 import {assertTypeboxSchema} from "../../utils/json.ts";
 import {
-	createPiNativeDecisionResearchRuntimeConfig,
+	createPiNativeDecisionResearchCollector,
 	type PiNativeDecisionResearchOptions,
 } from "./native-decision-research.ts";
 export type {PiNativeDecisionResearchOptions} from "./native-decision-research.ts";
@@ -76,8 +78,7 @@ export interface PiNativeDecisionHostOptions {
 	) => boolean | Promise<boolean>;
 	readonly createDecisionGate?: (
 		input: Parameters<NativeDecisionAttemptExecutorOptions["createDecisionGate"]>[0] & {
-			readonly protectedConfig: ProtectedCustomCheckConfigSnapshot;
-			readonly projectCheckPackSnapshot: ProjectCheckPackSnapshot;
+			readonly packSnapshot: CheckPackSnapshot;
 		},
 	) =>
 		| ReturnType<typeof createDecisionGate>
@@ -162,52 +163,49 @@ async function loadPiNativeDecisionGate(input: {
 		NativeDecisionAttemptExecutorOptions["createDecisionGate"]
 	>[0];
 }) {
-	const [protectedConfig, projectCheckPackSnapshot] = await Promise.all([
-		loadProtectedCustomCheckConfigSnapshot({
+	let packSnapshot: CheckPackSnapshot;
+	let packLoadFailure: CheckPackLoadError | undefined;
+	try {
+		packSnapshot = await loadProtectedCheckPackSnapshot({
 			repoRoot: input.repoRoot,
 			protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
+			stage: "decision",
 			runner: input.options.runner,
 			signal: input.input.signal,
-		}),
-		loadProtectedProjectCheckPacks({
-			repoRoot: input.repoRoot,
-			protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
-			runner: input.options.runner,
-			signal: input.input.signal,
-		}),
-	]);
-	if (
-		protectedConfig.projectConfigDigest !== input.input.teamSnapshot.configDigest
-	) {
-		throw new Error(
-			"Pi native Decision Gate config does not match the current team snapshot.",
-		);
-	}
-	let decisionGate: ReturnType<typeof createDecisionGate>;
-	if (input.options.createDecisionGate) {
-		decisionGate = await input.options.createDecisionGate({
-			...input.input,
-			protectedConfig,
-			projectCheckPackSnapshot,
 		});
-	} else {
-		const researchChecks = input.options.decisionResearch
-			? createPiNativeDecisionResearchRuntimeConfig({
-					repoRoot: input.repoRoot,
-					research: input.options.decisionResearch,
-					semanticSession: input.options.semanticSession,
-					now: input.options.now,
-				})
-			: undefined;
-		decisionGate = createDecisionGate({
-			protectedBaseCustomCheckConfig: protectedConfig,
-			projectCheckPackSnapshot,
-			...(researchChecks ? {researchChecks} : {}),
-		});
+	} catch (error) {
+		if (!(error instanceof CheckPackLoadError)) throw error;
+		packLoadFailure = error;
+		packSnapshot = createCheckPackSnapshot({stage: "decision", packs: []});
 	}
+	const decisionGate = packLoadFailure
+		? createDecisionGate({
+				packSnapshot,
+				stoppedReason: {
+					code: "malformed_check",
+					message: packLoadFailure.message,
+					...(packLoadFailure.packId ? {packId: packLoadFailure.packId} : {}),
+					...(packLoadFailure.checkId ? {checkId: packLoadFailure.checkId} : {}),
+				},
+			})
+		: input.options.createDecisionGate
+			? await input.options.createDecisionGate({...input.input, packSnapshot})
+			: createDecisionGate({
+					packSnapshot,
+					...(input.options.decisionResearch
+						? {
+								evidenceCollectors: [
+									createPiNativeDecisionResearchCollector({
+										research: input.options.decisionResearch,
+										now: input.options.now,
+									}),
+								],
+							}
+						: {}),
+				});
 	return {
-		protectedSourceHead: protectedConfig.protectedSourceHead,
-		projectConfigDigest: protectedConfig.projectConfigDigest,
+		protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
+		projectConfigDigest: input.input.teamSnapshot.configDigest,
 		decisionGate,
 	};
 }

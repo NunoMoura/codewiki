@@ -9,22 +9,11 @@ import {
 	runWikiConfig,
 } from "../../src/project/config.ts";
 import {
-	activateCustomCheckDefinition,
-	createCustomCheckDefinition,
-} from "../../src/checks/packs/index.ts";
-import {
 	loadWikiConfigFile,
 	resolveWikiConfigFile,
 	updateWikiConfigFile,
 } from "../../src/project/config-file.ts";
 import { CodewikiConfigError } from "../../src/project/config-errors.ts";
-import {
-	createTestUserStandard,
-	standardRefsFor,
-} from "../checks/packs/user-standard-fixture.mjs";
-
-const USER_STANDARD = createTestUserStandard();
-const USER_STANDARDS = [USER_STANDARD];
 
 describe("wiki_config core facade", () => {
 	it("resolves defaults and deep patches config", () => {
@@ -78,59 +67,25 @@ describe("wiki_config core facade", () => {
 		assert.deepEqual(result.config.quality.review.requiredPacks, []);
 		assert.deepEqual(result.config.userStandards, []);
 		assert.deepEqual(result.config.triagePreferences, []);
-		assert.deepEqual(result.config.customChecks, []);
+		assert.equal("customChecks" in result.config, false);
+		assert.equal("checks" in result.config, false);
 	});
 
-	it("persists only materialized bounded Custom Check definitions", () => {
-		const definition = activateCustomCheckDefinition(
-			createCustomCheckDefinition({
-				checkTypeId: "design_system",
-				evaluator: "model",
-				name: "Use design tokens",
-				requirement: "User-facing spacing must use accepted design tokens.",
-				appliesWhen: {loops: ["decision"], affectedLayers: ["ui"]},
-				standardRefs: standardRefsFor(USER_STANDARD),
-				knowledgeRefs: ["knowledge:design-system"],
-			}, USER_STANDARDS),
-			USER_STANDARDS,
-		);
-		const config = resolveWikiConfig({
-			userStandards: USER_STANDARDS,
-			customChecks: [definition],
-		});
-
-		assert.deepEqual(config.userStandards, USER_STANDARDS);
-		assert.deepEqual(config.customChecks, [definition]);
+	it("rejects obsolete Check configuration because Pack files are source of truth", () => {
 		assert.throws(
-			() =>
-				runWikiConfig({
-					current: config,
-					patch: {customChecks: []},
-				}),
-			/guarded Standards and Checks policy mutation/,
+			() => resolveWikiConfig({checks: {protectedFloors: {}}}),
+			/wiki_config\.checks.*unknown/i,
+		);
+		assert.throws(
+			() => resolveWikiConfig({customChecks: []}),
+			/wiki_config\.customChecks.*unknown/i,
 		);
 		assert.throws(
 			() =>
 				runWikiConfig({
-					current: config,
 					patch: {triagePreferences: []},
 				}),
-			/guarded Standards and Checks policy mutation/,
-		);
-		assert.throws(
-			() =>
-				resolveWikiConfig({
-					userStandards: USER_STANDARDS,
-					customChecks: [
-						{
-							checkTypeId: "design_system",
-							name: "Unmaterialized",
-							requirement: "This lacks Runtime-owned identity.",
-							appliesWhen: {},
-						},
-					],
-				}),
-			/unsupported field|schemaVersion/,
+			/guarded Change Intake policy mutation/,
 		);
 	});
 

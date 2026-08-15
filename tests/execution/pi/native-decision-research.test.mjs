@@ -1,65 +1,52 @@
-import assert from "node:assert/strict";
 import test from "node:test";
+import assert from "node:assert/strict";
+import {createPiNativeDecisionResearchCollector} from "../../../src/execution/pi/native-decision-research.ts";
+import {
+	nativeDecisionCandidate,
+	nativeDecisionRevision,
+	nativeDecisionState,
+} from "../../helpers/native-decision.mjs";
+import {digest} from "../../helpers/checks.mjs";
 
-import {createPiNativeDecisionResearchRuntimeConfig} from "../../../src/execution/pi/native-decision-research.ts";
-
-const digest = (value) => `sha256:${value.repeat(64)}`;
-
-function route() {
-	return {
-		id: "decision-research",
-		provider: "test-provider",
-		model: "test-model",
-		thinking: "medium",
-		tools: "none",
-		timeoutMs: 30_000,
-		maxResponseBytes: 32_768,
-		configurationDigest: digest("4"),
-	};
+function candidate() {
+	const changeId = "CHG-research";
+	const revision = nativeDecisionRevision({changeId});
+	return nativeDecisionCandidate({
+		state: nativeDecisionState([{changeId, revision}]),
+		changeId,
+	});
 }
 
-function collector() {
-	return {
-		id: "trusted-research-connector",
-		version: "1.0.0",
-		configurationDigest: digest("5"),
-		async collect() {
-			throw new Error("not invoked by configuration");
-		},
-	};
-}
-
-test("Pi native Decision research binds injected or default isolated claim transport", () => {
-	const claimsTransport = {async execute() {}};
-	const now = () => "2026-08-04T01:00:00.000Z";
-	const injected = createPiNativeDecisionResearchRuntimeConfig({
-		repoRoot: process.cwd(),
+test("Pi native Decision research remains bounded Evidence collection only", async () => {
+	let received;
+	const collector = createPiNativeDecisionResearchCollector({
 		research: {
-			route: route(),
 			sensitivity: "project",
-			collector: collector(),
-			claimsTransport,
+			collector: {
+				id: "trusted-research-connector",
+				version: "1.0.0",
+				configurationDigest: digest({collector: 1}),
+				async collect(input) {
+					received = input;
+					return {
+						protocol: input.request.protocol,
+						requestDigest: input.request.requestDigest,
+						status: "unavailable",
+						citations: [],
+					};
+				},
+			},
 		},
-		semanticSession: undefined,
-		now,
+		now: () => "2026-08-04T01:00:00.000Z",
 	});
-	assert.equal(injected.transport, claimsTransport);
-	assert.equal(typeof injected.collectEvidence, "function");
-	assert.equal("now" in injected, false);
-	assert.equal("collector" in injected, false);
-
-	const defaultTransport = createPiNativeDecisionResearchRuntimeConfig({
-		repoRoot: process.cwd(),
-		research: {
-			route: route(),
-			sensitivity: "private",
-			collector: collector(),
-		},
-		semanticSession: undefined,
-		now: undefined,
+	const value = candidate();
+	const records = await collector.collect({
+		candidate: value,
+		changeRef: `change:${value.content.changeId}`,
+		signal: new AbortController().signal,
 	});
-	assert.equal(typeof defaultTransport.transport.execute, "function");
-	assert.equal(typeof defaultTransport.collectEvidence, "function");
-	assert.equal("now" in defaultTransport, false);
-	assert.equal("collector" in defaultTransport, false);
+	assert.deepEqual(records, []);
+	assert.equal(received.request.candidate.digest, value.digest);
+	assert.equal("transport" in collector, false);
+	assert.equal("route" in collector, false);
 });

@@ -1,243 +1,247 @@
-import type { EvidenceObligationResolution } from "../evidence/obligation-resolution.ts";
-import { assertExactKeys } from "../utils/json.ts";
 import {
-	MAX_CHECK_OBSERVATION_BYTES,
-	assertValidCheckInvocation,
-	assertValidResolvedExitPolicy,
-	createCheckInvocation,
-	normalizeCheckObservation,
-	type CheckDefinition,
-	type CheckExecutionIdentity,
+	CHECK_INVOCATION_PROTOCOL_ID,
+	CHECK_INVOCATION_PROTOCOL_VERSION,
+	CheckInvocationSchema,
+	normalizeCheckOutput,
+	qualifiedCheckId,
+	type CheckInputItem,
+	type CheckInputSelection,
+	type CheckInputSelector,
 	type CheckInvocation,
-	type CheckInvocationContext,
-	type CheckObservation,
-	type CheckObservationFinding,
-	type CheckResult,
-	type ResolvedExitPolicy,
+	type CheckOutput,
+	type CheckSubject,
 } from "./contracts.ts";
+import {assertCheckSubject} from "./identity.ts";
+import {assertTypeboxSchema} from "../utils/json.ts";
+import type {CheckPackSnapshot, PackagedCheck} from "./packs/contracts.ts";
+import {assertCheckPackSnapshot} from "./packs/contracts.ts";
 import {
 	assertSha256Digest,
-	canonicalJson,
-	createLoopCandidate,
-	loopQualifiedCheckDigest,
-	type LoopCandidate,
-} from "./identity.ts";
-import { createCheckResult } from "./results.ts";
+	canonicalJsonDigest,
+	toCanonicalJsonValue,
+	type Sha256Digest,
+} from "../utils/canonical-json.ts";
 
-export interface AssembleCheckInvocationInput {
-	readonly candidate: LoopCandidate;
-	readonly policy: ResolvedExitPolicy;
-	readonly check: CheckDefinition;
-	readonly context: CheckInvocationContext;
-	readonly maximumInputBytes: number;
+export interface CreateCheckInputSelectionInput {
+	readonly selector: CheckInputSelector;
+	readonly status: "ready" | "unavailable";
+	readonly items?: readonly CheckInputItem[];
+	readonly truncated?: boolean;
+	readonly stale?: boolean;
 }
 
-export interface AdmitCheckObservationInput {
-	readonly invocation: CheckInvocation;
-	readonly policy: ResolvedExitPolicy;
-	readonly check: CheckDefinition;
-	readonly observation: unknown;
-	readonly maximumInputBytes: number;
-	readonly maximumOutputBytes: number;
-	readonly evidenceResolutions: readonly EvidenceObligationResolution[];
-	readonly execution: CheckExecutionIdentity;
+export interface AssembleCheckInvocationInput {
+	readonly subject: CheckSubject;
+	readonly snapshot: CheckPackSnapshot;
+	readonly check: PackagedCheck;
+	readonly inputs: readonly CheckInputSelection[];
+}
+
+export function createCheckInputSelection(
+	input: CreateCheckInputSelectionInput,
+): CheckInputSelection {
+	const items = [...(input.items ?? [])].sort(compareInputItems);
+	for (const item of items) assertInputItem(item, input.selector);
+	if (input.status === "unavailable" && items.length > 0) {
+		throw new Error("Unavailable Check input selection cannot contain items.");
+	}
+	const body = {
+		selector: input.selector,
+		status: input.status,
+		items,
+		truncated: input.truncated ?? false,
+		stale: input.stale ?? false,
+	};
+	assertSelectionBytes(body, input.selector.maximumBytes);
+	return immutable({...body, selectionDigest: canonicalJsonDigest(body)});
+}
+
+export function subjectInputSelection(
+	subject: CheckSubject,
+	selector: CheckInputSelector,
+): CheckInputSelection {
+	if (selector.source !== "subject") {
+		throw new Error("Subject input selection requires subject selector.");
+	}
+	assertCheckSubject(subject);
+	const item = {
+		source: "subject" as const,
+		ref: subject.id,
+		digest: subject.digest,
+		content: subject.content,
+	};
+	return createCheckInputSelection({selector, status: "ready", items: [item]});
 }
 
 export function assembleCheckInvocation(
 	input: AssembleCheckInvocationInput,
 ): CheckInvocation {
-	assertExactKeys(
-		input,
-		["candidate", "policy", "check", "context", "maximumInputBytes"],
-		"Check Invocation assembly input",
+	assertCheckSubject(input.subject);
+	assertCheckPackSnapshot(input.snapshot, input.subject.stage);
+	if (
+		input.check.stage !== input.subject.stage ||
+		input.check.stage !== input.snapshot.stage
+	) {
+		throw new Error("Check Invocation stage identity is inconsistent.");
+	}
+	const present = input.snapshot.packs
+		.find((pack) => pack.id === input.check.packId)
+		?.checks.some((check) => check.checkDigest === input.check.checkDigest);
+	if (!present) {
+		throw new Error(
+			`Check ${qualifiedCheckId(input.check.packId, input.check.checkId)} is absent from snapshot.`,
+		);
+	}
+	const inputs = normalizedSelections(input.check, input.inputs);
+	const inputDigest = canonicalJsonDigest(
+		inputs.map((selection) => selection.selectionDigest),
 	);
-	assertCanonicalCandidate(input.candidate);
-	assertValidResolvedExitPolicy(input.policy);
-	const binding = boundCheck(input.policy, input.check);
-	if (input.candidate.loop !== input.policy.loop) {
-		throw new Error("Check Invocation Candidate loop does not match its policy.");
-	}
-	if (input.candidate.digest !== input.policy.candidateDigest) {
-		throw new Error("Check Invocation Candidate digest does not match its policy.");
-	}
-	return createCheckInvocation({
-		candidate: input.candidate,
-		policy: {
-			candidateDigest: input.policy.candidateDigest,
-			catalogDigest: assertSha256Digest(input.policy.catalogDigest, "catalogDigest"),
-			selectorInputDigest: assertSha256Digest(
-				input.policy.selectorInputDigest,
-				"selectorInputDigest",
-			),
-			policyDigest: assertSha256Digest(input.policy.policyDigest, "policyDigest"),
-		},
+	const body = {
+		protocolId: CHECK_INVOCATION_PROTOCOL_ID,
+		protocolVersion: CHECK_INVOCATION_PROTOCOL_VERSION,
+		subject: input.subject,
+		packSnapshotDigest: input.snapshot.digest,
 		check: {
-			id: input.check.id,
-			version: input.check.version,
-			requirement: input.check.requirement,
-			requirementDigest: assertSha256Digest(
-				input.check.requirementDigest,
-				"requirementDigest",
-			),
-			checkDigest: assertSha256Digest(binding.checkDigest, "checkDigest"),
-			enforcement: binding.enforcement,
-			required: binding.required,
-			parameters: binding.parameters,
+			packId: input.check.packId,
+			checkId: input.check.checkId,
+			checkVersion: input.check.definition.version,
+			checkDigest: input.check.checkDigest,
+			implementationKind: input.check.definition.implementation.kind,
 		},
-		context: input.context,
-		maximumInputBytes: input.maximumInputBytes,
-	});
+		inputs,
+		inputDigest,
+	};
+	const normalized = toCanonicalJsonValue(body);
+	const bytes = Buffer.byteLength(JSON.stringify(normalized), "utf8");
+	if (bytes > input.check.definition.limits.maximumInputBytes) {
+		throw new Error(
+			`Check Invocation exceeds ${input.check.definition.limits.maximumInputBytes} bytes.`,
+		);
+	}
+	return immutable({...body, invocationDigest: canonicalJsonDigest(body)});
 }
 
-export function admitCheckObservation(
-	input: AdmitCheckObservationInput,
-): CheckResult {
-	assertExactKeys(
-		input,
-		[
-			"invocation",
-			"policy",
-			"check",
-			"observation",
-			"maximumInputBytes",
-			"maximumOutputBytes",
-			"evidenceResolutions",
-			"execution",
-		],
-		"Check Observation admission input",
+export function admitCheckOutput(input: {
+	readonly invocation: CheckInvocation;
+	readonly value: unknown;
+	readonly maximumOutputBytes: number;
+}): CheckOutput {
+	assertCheckInvocation(input.invocation);
+	return normalizeCheckOutput(
+		input.value,
+		input.invocation.invocationDigest,
+		input.maximumOutputBytes,
 	);
-	assertValidCheckInvocation(input.invocation, input.maximumInputBytes);
-	const expectedInvocation = assembleCheckInvocation({
-		candidate: input.invocation.candidate as LoopCandidate,
-		policy: input.policy,
-		check: input.check,
-		context: input.invocation.context,
-		maximumInputBytes: input.maximumInputBytes,
-	});
-	if (canonicalJson(input.invocation) !== canonicalJson(expectedInvocation)) {
-		throw new Error("Check Observation admission received wrong Invocation binding.");
-	}
-	assertObservationByteLimit(input.maximumOutputBytes);
+}
 
-	let observation: CheckObservation;
-	try {
-		observation = normalizeCheckObservation({
-			value: input.observation,
-			expectedInvocationDigest: input.invocation.invocationDigest,
-			maximumOutputBytes: input.maximumOutputBytes,
-		});
-	} catch {
-		return resultFromInvalidObservation(input);
+export function assertCheckInvocation(
+	invocation: CheckInvocation,
+): void {
+	assertTypeboxSchema(CheckInvocationSchema, invocation, "Check Invocation");
+	if (
+		invocation.protocolId !== CHECK_INVOCATION_PROTOCOL_ID ||
+		invocation.protocolVersion !== CHECK_INVOCATION_PROTOCOL_VERSION
+	) {
+		throw new Error("Check Invocation protocol identity is unsupported.");
+	}
+	assertCheckSubject(invocation.subject);
+	assertSha256Digest(invocation.packSnapshotDigest, "Check Invocation Pack digest");
+	assertSha256Digest(invocation.check.checkDigest, "Check Invocation Check digest");
+	assertSha256Digest(invocation.inputDigest, "Check Invocation input digest");
+	assertSha256Digest(invocation.invocationDigest, "Check Invocation digest");
+	const expectedInputDigest = canonicalJsonDigest(
+		invocation.inputs.map((selection) => selection.selectionDigest),
+	);
+	if (invocation.inputDigest !== expectedInputDigest) {
+		throw new Error("Check Invocation input digest does not match selections.");
+	}
+	const {invocationDigest, ...body} = invocation;
+	if (invocationDigest !== canonicalJsonDigest(body)) {
+		throw new Error("Check Invocation digest does not match its content.");
+	}
+}
+
+function normalizedSelections(
+	check: PackagedCheck,
+	values: readonly CheckInputSelection[],
+): CheckInputSelection[] {
+	if (!Array.isArray(values)) throw new Error("Check Invocation inputs must be an array.");
+	if (values.length !== check.definition.inputs.length) {
+		throw new Error(`Check ${check.packId}/${check.checkId} input selection count is invalid.`);
+	}
+	const bySource = new Map(values.map((selection) => [selection.selector.source, selection]));
+	if (bySource.size !== values.length) {
+		throw new Error("Check Invocation input sources must be unique.");
+	}
+	return check.definition.inputs.map((selector) => {
+		const selection = bySource.get(selector.source);
+		if (!selection) {
+			throw new Error(`Check Invocation is missing ${selector.source} inputs.`);
+		}
+		assertSelection(selection, selector);
+		return selection;
+	});
+}
+
+function assertSelection(
+	selection: CheckInputSelection,
+	selector: CheckInputSelector,
+): void {
+	if (canonicalJsonDigest(selection.selector) !== canonicalJsonDigest(selector)) {
+		throw new Error(`Check input selector ${selector.source} does not match definition.`);
+	}
+	if (selection.status !== "ready" && selection.status !== "unavailable") {
+		throw new Error(`Check input selection ${selector.source} has invalid status.`);
+	}
+	for (const item of selection.items) assertInputItem(item, selector);
+	const {selectionDigest, ...body} = selection;
+	if (selectionDigest !== canonicalJsonDigest(body)) {
+		throw new Error(`Check input selection ${selector.source} digest is invalid.`);
+	}
+	assertSelectionBytes(body, selector.maximumBytes);
+}
+
+function assertInputItem(item: CheckInputItem, selector: CheckInputSelector): void {
+	if (item.source !== selector.source) {
+		throw new Error(`Check input item ${item.ref} has wrong source ${item.source}.`);
+	}
+	if (!item.ref.trim() || item.ref !== item.ref.trim()) {
+		throw new Error("Check input item ref must be trimmed non-empty text.");
+	}
+	assertSha256Digest(item.digest, "Check input item digest");
+	if (canonicalJsonDigest(item.content) !== item.digest && item.source !== "subject") {
+		throw new Error(`Check input item ${item.ref} digest does not match content.`);
 	}
 	if (
-		observation.outcome !== "indeterminate" &&
-		input.check.measurement.shape !== "boolean"
+		selector.refs.length > 0 &&
+		!selector.refs.some((ref) => inputRefMatches(ref, item.ref))
 	) {
-		throw new Error(
-			`Check Observation protocol requires boolean measurement for ${input.check.id}.`,
-		);
-	}
-	return createCheckResult({
-		loop: input.policy.loop,
-		policy: input.policy,
-		check: input.check,
-		disposition: dispositionFor(observation),
-		invocationDigest: input.invocation.invocationDigest,
-		...(observation.outcome === "indeterminate"
-			? {}
-			: {measurement: {shape: "boolean" as const, value: observation.outcome === "pass"}}),
-		evidenceResolutions: [...input.evidenceResolutions],
-		findings: resultFindings(observation),
-		feedback: observation.summary,
-		execution: input.execution,
-	});
-}
-
-function assertCanonicalCandidate(candidate: LoopCandidate): void {
-	const expected = createLoopCandidate({
-		loop: candidate.loop,
-		schemaVersion: candidate.schemaVersion,
-		content: candidate.content,
-		observedBase: candidate.observedBase,
-	});
-	if (canonicalJson(candidate) !== canonicalJson(expected)) {
-		throw new Error("Check Invocation Candidate is not canonical or has digest drift.");
+		throw new Error(`Check input item ${item.ref} is outside selector refs.`);
 	}
 }
 
-function boundCheck(policy: ResolvedExitPolicy, check: CheckDefinition) {
-	const binding = policy.bindings.find((value) => value.checkId === check.id);
-	if (!binding || binding.checkVersion !== check.version) {
-		throw new Error(`Check ${check.id} is not bound by the Resolved Exit Policy.`);
+function inputRefMatches(selectorRef: string, itemRef: string): boolean {
+	if (selectorRef.endsWith("/**")) {
+		return itemRef.startsWith(selectorRef.slice(0, -2));
 	}
-	const expectedDigest = loopQualifiedCheckDigest({
-		loop: policy.loop,
-		check,
-		configuration: binding.parameters,
-		catalogDigest: policy.catalogDigest,
-	});
-	if (
-		binding.requirementDigest !== check.requirementDigest ||
-		binding.checkDigest !== expectedDigest
-	) {
-		throw new Error(`Check ${check.id} binding identity drifted from its policy.`);
-	}
-	return binding;
+	return selectorRef === itemRef;
 }
 
-function dispositionFor(
-	observation: CheckObservation,
-): "satisfied" | "unsatisfied" | "indeterminate" {
-	switch (observation.outcome) {
-		case "pass":
-			return "satisfied";
-		case "fail":
-			return "unsatisfied";
-		case "indeterminate":
-			return "indeterminate";
-		default:
-			throw new Error("Check Observation outcome is invalid.");
+function assertSelectionBytes(value: unknown, maximumBytes: number): void {
+	const bytes = Buffer.byteLength(JSON.stringify(toCanonicalJsonValue(value)), "utf8");
+	if (bytes > maximumBytes) {
+		throw new Error(`Check input selection exceeds ${maximumBytes} bytes.`);
 	}
 }
 
-function resultFindings(
-	observation: CheckObservation,
-): CheckObservationFinding[] {
-	const findings = [...observation.findings];
-	if (observation.outcome === "indeterminate" && observation.reason) {
-		findings.push({message: observation.reason});
-	}
-	return findings;
+function compareInputItems(left: CheckInputItem, right: CheckInputItem): number {
+	if (left.ref < right.ref) return -1;
+	if (left.ref > right.ref) return 1;
+	return 0;
 }
 
-function assertObservationByteLimit(value: number): void {
-	if (
-		!Number.isSafeInteger(value) ||
-		value <= 0 ||
-		value > MAX_CHECK_OBSERVATION_BYTES
-	) {
-		throw new Error(
-			`Check Observation maximumOutputBytes must be between 1 and ${MAX_CHECK_OBSERVATION_BYTES}.`,
-		);
-	}
+function immutable<T>(value: T): T {
+	return toCanonicalJsonValue(value) as unknown as T;
 }
 
-function resultFromInvalidObservation(
-	input: AdmitCheckObservationInput,
-): CheckResult {
-	return createCheckResult({
-		loop: input.policy.loop,
-		policy: input.policy,
-		check: input.check,
-		disposition: "indeterminate",
-		invocationDigest: input.invocation.invocationDigest,
-		evidenceResolutions: [...input.evidenceResolutions],
-		findings: [
-			{
-				code: "codewiki.evaluator.invalid_output",
-				message: `Check evaluator ${input.check.id} returned unavailable or invalid output; details were redacted.`,
-			},
-		],
-		execution: input.execution,
-	});
-}
+export type {Sha256Digest};

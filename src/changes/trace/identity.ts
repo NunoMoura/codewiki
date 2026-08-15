@@ -608,7 +608,9 @@ function assertInlineSemanticIdentity(
 	assertArtifactOwnedIdentity(artifact, label, kind, expectedId);
 	const hasExpectedGenericPrefix =
 		(kind !== "result" || inline.id.startsWith("check-result:")) &&
-		(kind !== "route" || inline.id.startsWith("runtime-route:"));
+		(kind !== "route" ||
+			inline.id.startsWith("runtime-route:") ||
+			inline.id.startsWith("runtime-transition:"));
 	if (
 		!hasExpectedGenericPrefix ||
 		(expectedId ? inline.id !== expectedId : !inline.id.endsWith(`:${digestHex}`))
@@ -629,7 +631,7 @@ function inlineSemanticDigest(
 			),
 		);
 	}
-	const digestField = semanticDigestField(kind);
+	const digestField = semanticDigestField(artifact, kind);
 	if (!digestField || typeof artifact[digestField] !== "string") {
 		throw new Error(`${label} inline artifact is missing semantic digest.`);
 	}
@@ -654,12 +656,17 @@ function expectedInlineSemanticId(
 	digestHex: string,
 ): string | null {
 	const loop = typeof artifact.loop === "string" ? artifact.loop : null;
+	const stage = typeof artifact.stage === "string" ? artifact.stage : null;
 	if (kind === "candidate" && loop) return `candidate:${loop}:${digestHex}`;
 	if (kind === "policy" && loop) return `exit-policy:${loop}:${digestHex}`;
+	if (kind === "policy" && stage) {
+		return `check-pack-snapshot:${stage}:${digestHex}`;
+	}
 	if (kind === "evidence" && typeof artifact.kind === "string") {
 		return `evidence:${artifact.kind}:${digestHex}`;
 	}
 	if (kind === "report" && loop) return `exit-report:${loop}:${digestHex}`;
+	if (kind === "report" && stage) return `gate-report:${stage}:${digestHex}`;
 	return null;
 }
 
@@ -677,18 +684,23 @@ function assertArtifactOwnedIdentity(
 	}
 }
 
-function semanticDigestField(kind: InlineSemanticArtifactKind): string | null {
+function semanticDigestField(
+	artifact: Record<string, CanonicalJsonValue>,
+	kind: InlineSemanticArtifactKind,
+): string | null {
 	switch (kind) {
 		case "candidate":
 			return "digest";
 		case "policy":
-			return "policyDigest";
+			return Object.hasOwn(artifact, "policyDigest") ? "policyDigest" : "digest";
 		case "result":
 			return "resultDigest";
 		case "report":
 			return "reportDigest";
 		case "route":
-			return "routeDigest";
+			return Object.hasOwn(artifact, "transitionDigest")
+				? "transitionDigest"
+				: "routeDigest";
 		case "evidence":
 			return null;
 		default:

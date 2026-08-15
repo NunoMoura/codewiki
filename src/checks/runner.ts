@@ -1,1060 +1,693 @@
-import type { EvidenceRecord } from "../evidence/contracts.ts";
 import {
-	assertValidEvidenceObligationResolution,
-	type EvidenceObligationResolution,
-} from "../evidence/obligation-resolution.ts";
-import type { EvidenceObligation } from "../evidence/obligations.ts";
-import type { SemanticLoop } from "./contracts.ts";
-import {
-	assertSha256Digest,
-	canonicalJsonDigest,
-	toCanonicalJsonValue,
-	type Sha256Digest,
-} from "../utils/canonical-json.ts";
-import type { CheckCatalog } from "./catalog.ts";
-import {
-	assertValidResolvedExitPolicy,
-	type CheckBinding,
-	type CheckDefinition,
+	qualifiedCheckId,
+	type CheckExecutionFact,
 	type CheckExecutionIdentity,
-	type CheckMeasurement,
+	type CheckInputSelection,
+	type CheckInputSelector,
+	type CheckInvocation,
 	type CheckResult,
-	type ExitReport,
-	type ResolvedExitPolicy,
+	type CheckSubject,
+	type GateReport,
+	type GateStopReason,
 } from "./contracts.ts";
-import type { LoopCandidate } from "./identity.ts";
-import { createCheckResult, createExitReport } from "./results.ts";
 import {
-	createLoopExitResultCache,
-	type LoopExitResultCache,
+	InMemoryCheckResultCache,
+	checkResultCacheKey,
+	type CheckResultCache,
 } from "./cache.ts";
+import {
+	admitCheckOutput,
+	assembleCheckInvocation,
+	createCheckInputSelection,
+	subjectInputSelection,
+	type CreateCheckInputSelectionInput,
+} from "./protocol.ts";
+import {
+	assertValidCheckResult,
+	createCheckResult,
+	createGateReport,
+} from "./results.ts";
+import {
+	assertCheckPackSnapshot,
+	packagedChecks,
+	type CheckPackSnapshot,
+	type PackagedCheck,
+} from "./packs/contracts.ts";
+import {canonicalJsonDigest} from "../utils/canonical-json.ts";
 
-const LOOP_EXIT_RUNNER_VERSION = "1.3.0" as const;
-
-export type CheckObservationDisposition =
-	| "satisfied"
-	| "unsatisfied"
-	| "indeterminate";
-
-export interface CheckExecutorObservation {
-	readonly disposition: CheckObservationDisposition;
-	readonly measurement?: CheckMeasurement;
-	readonly findings?: readonly string[];
-	readonly issueClass?: string;
-	readonly feedback?: string;
-	readonly producedEvidenceRecords?: readonly EvidenceRecord[];
-	readonly producedEvidenceResolutions?: readonly EvidenceObligationResolution[];
-}
-
-export interface LoopCheckExecutorContext {
-	readonly candidate: LoopCandidate;
-	readonly policy: ResolvedExitPolicy;
-	readonly binding: CheckBinding;
-	readonly check: CheckDefinition;
-	readonly evidenceResolutions: readonly EvidenceObligationResolution[];
-	readonly evidenceRecords: readonly EvidenceRecord[];
-	readonly dependencyResults: readonly CheckResult[];
+export interface CheckExecutorContext {
+	readonly check: PackagedCheck;
+	readonly invocation: CheckInvocation;
+	readonly implementation: PackagedCheck["implementation"];
 	readonly signal: AbortSignal;
 }
 
-export interface LoopCheckExecutor {
-	readonly loop: SemanticLoop;
-	readonly checkId: string;
-	readonly checkVersion: string;
-	readonly execution: CheckExecutionIdentity;
-	readonly cacheable?: boolean;
-	readonly producesEvidenceObligationIds?: readonly string[];
-	readonly execute: (
-		context: LoopCheckExecutorContext,
-	) => CheckExecutorObservation | Promise<CheckExecutorObservation>;
+export interface CheckExecutor {
+	readonly identity: CheckExecutionIdentity;
+	supports(check: PackagedCheck): boolean;
+	execute(context: CheckExecutorContext): unknown | Promise<unknown>;
 }
 
-export interface LoopExitRunnerLimits {
-	readonly codeConcurrency?: number;
-	readonly modelConcurrency?: number;
+export interface CheckInputResolverContext {
+	readonly subject: CheckSubject;
+	readonly check: PackagedCheck;
+	readonly selector: CheckInputSelector;
+	readonly signal: AbortSignal;
 }
 
-export interface CreateLoopExitRunnerInput {
-	readonly catalog: CheckCatalog;
-	readonly executors: readonly LoopCheckExecutor[];
-	readonly cache?: LoopExitResultCache;
-	readonly limits?: LoopExitRunnerLimits;
+export interface CheckInputResolver {
+	resolve(
+		context: CheckInputResolverContext,
+	):
+		| CheckInputSelection
+		| CreateCheckInputSelectionInput
+		| Promise<CheckInputSelection | CreateCheckInputSelectionInput>;
 }
 
-interface RunLoopExitInput {
-	readonly candidate: LoopCandidate;
-	readonly policy: ResolvedExitPolicy;
-	readonly evidenceResolutionsByCheck?: Readonly<
-		Record<string, readonly EvidenceObligationResolution[]>
-	>;
-	readonly evidenceRecords?: readonly EvidenceRecord[];
-	readonly precomputedResults?: readonly CheckResult[];
+export interface GateRunnerLimits {
+	readonly maximumCodeConcurrency: number;
+	readonly maximumModelConcurrency: number;
+}
+
+export interface CreateGateRunnerInput {
+	readonly executors?: readonly CheckExecutor[];
+	readonly inputResolver?: CheckInputResolver;
+	readonly cache?: CheckResultCache;
+	readonly limits?: Partial<GateRunnerLimits>;
+}
+
+export interface RunGateInput {
+	readonly subject: CheckSubject;
+	readonly snapshot: CheckPackSnapshot;
 	readonly signal?: AbortSignal;
-	readonly onCheckMaterialized?: (materialization: {
-		readonly result: CheckResult;
-		readonly producedEvidenceRecords: readonly EvidenceRecord[];
-		readonly source: "executed" | "cache" | "precomputed";
-	}) => void | Promise<void>;
 }
 
-type LoopExitNextAction =
-	| {readonly kind: "ready_for_runtime_route"}
-	| {
-			readonly kind: "repair_candidate";
-			readonly failedCheckIds: readonly string[];
-			readonly repairTargets: readonly string[];
-	  }
-	| {
-			readonly kind: "retry_or_wait";
-			readonly indeterminateCheckIds: readonly string[];
-	  };
-
-interface LoopExitRun {
-	readonly report: ExitReport;
-	readonly nextAction: LoopExitNextAction;
-	readonly cacheHitCheckIds: readonly string[];
-	readonly producedEvidenceRecords: readonly EvidenceRecord[];
+export interface GateRunner {
+	run(input: RunGateInput): Promise<GateReport>;
 }
 
-interface LoopExitRunner {
-	readonly run: (input: RunLoopExitInput) => Promise<LoopExitRun>;
-	readonly cache: LoopExitResultCache;
+interface PreparedCheck {
+	readonly check: PackagedCheck;
+	readonly executor: CheckExecutor;
+	readonly invocation: CheckInvocation;
+	readonly cacheKey: ReturnType<typeof checkResultCacheKey>;
 }
 
-interface ExecutionBoundaryFailure {
-	readonly kind:
-		| "cancelled"
-		| "timeout"
-		| "evidence_unavailable"
-		| "operational_failure";
-	readonly finding: string;
+interface BatchOutcome {
+	readonly results: readonly CheckResult[];
+	readonly facts: readonly CheckExecutionFact[];
+	readonly stoppedReason?: GateStopReason;
+	readonly failed: boolean;
 }
 
-interface ExecutedBinding {
-	readonly result: CheckResult;
-	readonly producedEvidenceRecords: readonly EvidenceRecord[];
+interface ExecutedCheck {
+	readonly result?: CheckResult;
+	readonly fact: CheckExecutionFact;
+	readonly stoppedReason?: GateStopReason;
 }
 
-interface ExecuteBindingInput {
-	readonly candidate: LoopCandidate;
-	readonly policy: ResolvedExitPolicy;
-	readonly binding: CheckBinding;
-	readonly check: CheckDefinition;
-	readonly resolutions: readonly EvidenceObligationResolution[];
-	readonly evidenceRecords: readonly EvidenceRecord[];
-	readonly dependencyResults: readonly CheckResult[];
-	readonly executor: LoopCheckExecutor | undefined;
-	readonly signal: AbortSignal | undefined;
-	readonly semaphore: Semaphore;
-}
+const DEFAULT_LIMITS: GateRunnerLimits = Object.freeze({
+	maximumCodeConcurrency: 4,
+	maximumModelConcurrency: 2,
+});
 
-interface Semaphore {
-	readonly run: <T>(task: () => Promise<T>) => Promise<T>;
-}
-
-export function createLoopExitRunner(
-	input: CreateLoopExitRunnerInput,
-): LoopExitRunner {
-	assertRunnerInput(input);
-	const executors = executorRegistry(input.catalog, input.executors);
-	const cache = input.cache ?? createLoopExitResultCache();
-	const code = createSemaphore(input.limits?.codeConcurrency ?? 4);
-	const model = createSemaphore(input.limits?.modelConcurrency ?? 2);
+export function createGateRunner(input: CreateGateRunnerInput = {}): GateRunner {
+	const executors = [...(input.executors ?? [])];
+	const cache = input.cache ?? new InMemoryCheckResultCache();
+	const resolver = input.inputResolver ?? unavailableInputResolver();
+	const limits = normalizedLimits(input.limits);
 	return Object.freeze({
-		cache,
-		run: (runInput: RunLoopExitInput) =>
-			runLoopExit({
+		run: (runInput: RunGateInput) =>
+			runGate({
 				input: runInput,
-				catalog: input.catalog,
 				executors,
 				cache,
-				semaphores: {code, model},
+				resolver,
+				limits,
 			}),
 	});
 }
 
-interface RunLoopExitContext {
-	readonly input: RunLoopExitInput;
-	readonly catalog: CheckCatalog;
-	readonly executors: ReadonlyMap<string, LoopCheckExecutor>;
-	readonly cache: LoopExitResultCache;
-	readonly semaphores: Readonly<Record<"code" | "model", Semaphore>>;
-}
-
-interface CheckSchedulerContext extends RunLoopExitContext {
-	readonly evidenceRecords: ReadonlyMap<string, EvidenceRecord>;
-	readonly precomputedResults: ReadonlyMap<string, CheckResult>;
-	readonly producedEvidenceRecords: Map<string, EvidenceRecord>;
-	readonly cacheHits: Set<string>;
-}
-
-async function runLoopExit(options: RunLoopExitContext): Promise<LoopExitRun> {
-	assertRunInput(options.input, options.catalog);
-	const cacheHits = new Set<string>();
-	const producedEvidenceRecords = new Map<string, EvidenceRecord>();
-	const evidenceRecords = normalizedEvidenceRecords(
-		options.input.evidenceRecords ?? [],
-	);
-	const execute = createCheckScheduler({
-		...options,
-		evidenceRecords,
-		precomputedResults: normalizedPrecomputedResults(
-			options.input.precomputedResults ?? [],
-			options.input.policy,
-			evidenceRecords,
-		),
-		producedEvidenceRecords,
-		cacheHits,
-	});
-	const results = await Promise.all(options.input.policy.bindings.map(execute));
-	const report = createExitReport({policy: options.input.policy, checkResults: results});
-	return immutable({
-		report,
-		nextAction: nextAction(report, options.input.policy),
-		cacheHitCheckIds: [...cacheHits].sort(compareText),
-		producedEvidenceRecords: [...producedEvidenceRecords.values()].sort((left, right) =>
-			compareText(left.evidenceId, right.evidenceId),
-		),
-	});
-}
-
-function createCheckScheduler(
-	context: CheckSchedulerContext,
-): (binding: CheckBinding) => Promise<CheckResult> {
-	const promises = new Map<string, Promise<CheckResult>>();
-	const bindingById = new Map(
-		context.input.policy.bindings.map((binding) => [binding.checkId, binding]),
-	);
-	return function execute(binding: CheckBinding): Promise<CheckResult> {
-		const existing = promises.get(binding.checkId);
-		if (existing) return existing;
-		const promise = Promise.all(
-			binding.dependsOn.map((checkId) =>
-				execute(requiredBinding(bindingById, checkId)),
-			),
-		).then((dependencyResults) =>
-			executeScheduledCheck(context, binding, dependencyResults),
+async function runGate(context: {
+	readonly input: RunGateInput;
+	readonly executors: readonly CheckExecutor[];
+	readonly cache: CheckResultCache;
+	readonly resolver: CheckInputResolver;
+	readonly limits: GateRunnerLimits;
+}): Promise<GateReport> {
+	assertCheckPackSnapshot(context.input.snapshot, context.input.subject.stage);
+	if (context.input.subject.digest !== canonicalJsonDigest({
+		stage: context.input.subject.stage,
+		id: context.input.subject.id,
+		schemaVersion: context.input.subject.schemaVersion,
+		content: context.input.subject.content,
+	}) && !context.input.subject.id.startsWith("candidate:")) {
+		throw new Error("Gate subject digest does not match its content.");
+	}
+	const checks = packagedChecks(context.input.snapshot);
+	if (checks.length === 0) {
+		return createGateReport({
+			snapshot: context.input.snapshot,
+			subjectDigest: context.input.subject.digest,
+			results: [],
+			executions: [],
+		});
+	}
+	if (context.input.signal?.aborted) {
+		return stoppedBeforeExecution(
+			context.input,
+			checks[0],
+			stopReason("cancelled", "Gate was cancelled before Check execution."),
 		);
-		promises.set(binding.checkId, promise);
-		return promise;
-	};
+	}
+	const prepared: PreparedCheck[] = [];
+	const cachedResults: CheckResult[] = [];
+	const facts: CheckExecutionFact[] = [];
+	const cacheHitCheckIds: string[] = [];
+	for (const check of checks) {
+		let executor: CheckExecutor | undefined;
+		try {
+			executor = matchingExecutor(context.executors, check);
+		} catch (error) {
+			return stoppedBeforeExecution(
+				context.input,
+				check,
+				stopReason(
+					"execution_failed",
+					`Check executor admission failed: ${errorMessage(error)}`,
+					check,
+				),
+				facts,
+				cachedResults,
+				cacheHitCheckIds,
+			);
+		}
+		if (!executor) {
+			return stoppedBeforeExecution(
+				context.input,
+				check,
+				stopReason(
+					"executor_unavailable",
+					`No admitted ${check.definition.implementation.kind} executor supports ${qualifiedCheckId(check.packId, check.checkId)}.`,
+					check,
+				),
+				facts,
+				cachedResults,
+				cacheHitCheckIds,
+			);
+		}
+		let selections: CheckInputSelection[];
+		let invocation: CheckInvocation;
+		try {
+			selections = await resolveSelections({
+				subject: context.input.subject,
+				check,
+				resolver: context.resolver,
+				signal: context.input.signal,
+			});
+			const invalidSelection = selections.find(
+				(selection) =>
+					selection.selector.required &&
+					(selection.status !== "ready" || selection.truncated || selection.stale),
+			);
+			if (invalidSelection) {
+				const code = invalidSelection.stale ? "stale_subject" : "missing_inputs";
+				return stoppedBeforeExecution(
+					context.input,
+					check,
+					stopReason(
+						code,
+						`Required ${invalidSelection.selector.source} inputs are not complete for ${qualifiedCheckId(check.packId, check.checkId)}.`,
+						check,
+					),
+					facts,
+					cachedResults,
+					cacheHitCheckIds,
+					executor.identity,
+				);
+			}
+			invocation = assembleCheckInvocation({
+				subject: context.input.subject,
+				snapshot: context.input.snapshot,
+				check,
+				inputs: selections,
+			});
+		} catch (error) {
+			return stoppedBeforeExecution(
+				context.input,
+				check,
+				stopReason(
+					"missing_inputs",
+					`Check input collection failed: ${errorMessage(error)}`,
+					check,
+				),
+				facts,
+				cachedResults,
+				cacheHitCheckIds,
+				executor.identity,
+			);
+		}
+		const cacheKey = checkResultCacheKey({
+			invocation,
+			execution: executor.identity,
+		});
+		let cached: CheckResult | undefined;
+		try {
+			cached = await context.cache.get(cacheKey);
+			if (cached) {
+				assertValidCheckResult(cached, context.input.snapshot);
+				if (
+					cached.invocationDigest !== invocation.invocationDigest ||
+					cached.checkDigest !== check.checkDigest ||
+					cached.packSnapshotDigest !== context.input.snapshot.digest ||
+					canonicalJsonDigest(cached.execution) !==
+						canonicalJsonDigest(executor.identity)
+				) {
+					throw new Error("cached Result identity is stale");
+				}
+			}
+		} catch (error) {
+			return stoppedBeforeExecution(
+				context.input,
+				check,
+				stopReason(
+					"execution_failed",
+					`Check Result cache failed: ${errorMessage(error)}`,
+					check,
+				),
+				facts,
+				cachedResults,
+				cacheHitCheckIds,
+				executor.identity,
+			);
+		}
+		if (cached) {
+			cachedResults.push(cached);
+			cacheHitCheckIds.push(qualifiedCheckId(check.packId, check.checkId));
+			facts.push({
+				packId: check.packId,
+				checkId: check.checkId,
+				source: "cache",
+				status: "completed",
+				attempts: 0,
+				execution: executor.identity,
+				resultDigest: cached.resultDigest,
+			});
+		} else {
+			prepared.push({check, executor, invocation, cacheKey});
+		}
+	}
+	if (cachedResults.some((result) => result.status === "failed")) {
+		return createGateReport({
+			snapshot: context.input.snapshot,
+			subjectDigest: context.input.subject.digest,
+			results: cachedResults,
+			executions: facts,
+			cacheHitCheckIds,
+		});
+	}
+	const codeChecks = prepared.filter(
+		(entry) => entry.check.definition.implementation.kind === "code",
+	);
+	const code = await executeBatch({
+		checks: codeChecks,
+		maximumConcurrency: context.limits.maximumCodeConcurrency,
+		snapshot: context.input.snapshot,
+		cache: context.cache,
+		parentSignal: context.input.signal,
+	});
+	const afterCodeResults = [...cachedResults, ...code.results];
+	const afterCodeFacts = [...facts, ...code.facts];
+	if (code.stoppedReason || code.failed) {
+		return createGateReport({
+			snapshot: context.input.snapshot,
+			subjectDigest: context.input.subject.digest,
+			results: afterCodeResults,
+			executions: afterCodeFacts,
+			cacheHitCheckIds,
+			...(code.stoppedReason ? {stoppedReason: code.stoppedReason} : {}),
+		});
+	}
+	const modelChecks = prepared.filter(
+		(entry) => entry.check.definition.implementation.kind === "model",
+	);
+	const model = await executeBatch({
+		checks: modelChecks,
+		maximumConcurrency: context.limits.maximumModelConcurrency,
+		snapshot: context.input.snapshot,
+		cache: context.cache,
+		parentSignal: context.input.signal,
+	});
+	return createGateReport({
+		snapshot: context.input.snapshot,
+		subjectDigest: context.input.subject.digest,
+		results: [...afterCodeResults, ...model.results],
+		executions: [...afterCodeFacts, ...model.facts],
+		cacheHitCheckIds,
+		...(model.stoppedReason ? {stoppedReason: model.stoppedReason} : {}),
+	});
 }
 
-async function executeScheduledCheck(
-	context: CheckSchedulerContext,
-	binding: CheckBinding,
-	dependencyResults: readonly CheckResult[],
-): Promise<CheckResult> {
-	const precomputed = context.precomputedResults.get(binding.checkId);
-	if (precomputed) {
-		await context.input.onCheckMaterialized?.({
-			result: precomputed,
-			producedEvidenceRecords: [],
-			source: "precomputed",
-		});
-		return precomputed;
-	}
-	const check = requiredCatalogRegistration(
-		context.catalog,
-		binding.checkId,
-		context.input.policy.loop,
-	).check;
-	const availableEvidence = availableEvidenceRecords(context);
-	const resolutions = evidenceResolutions(
-		check,
-		context.input.evidenceResolutionsByCheck?.[binding.checkId],
-		availableEvidence,
-	);
-	const executor = context.executors.get(
-		executorKey(context.input.policy.loop, binding.checkId, binding.checkVersion),
-	);
-	const execution = executor?.execution ?? check.execution;
-	const cacheKey = checkResultCacheKey({
-		candidateDigest: context.input.candidate.digest,
-		policyDigest: context.input.policy.policyDigest,
-		binding,
-		resolutions,
-		dependencyResults,
-		execution,
-	});
-	const cached = executor?.cacheable === false ? undefined : context.cache.get(cacheKey);
-	if (cached) {
-		context.cacheHits.add(binding.checkId);
-		await context.input.onCheckMaterialized?.({
-			result: cached,
-			producedEvidenceRecords: [],
-			source: "cache",
-		});
-		return cached;
-	}
-	const executed = await executeBinding({
-		candidate: context.input.candidate,
-		policy: context.input.policy,
-		binding,
-		check,
-		resolutions,
-		evidenceRecords: evidenceForCheck(
-			resolutions,
-			dependencyResults,
-			availableEvidence,
-		),
-		dependencyResults,
-		executor,
-		signal: context.input.signal,
-		semaphore: context.semaphores[check.execution.kind],
-	});
-	const newlyProduced: EvidenceRecord[] = [];
-	for (const record of executed.producedEvidenceRecords) {
-		const existing =
-			context.evidenceRecords.get(record.evidenceId) ??
-			context.producedEvidenceRecords.get(record.evidenceId);
-		if (existing) {
-			assertSameEvidenceRecord(existing, record);
+async function resolveSelections(input: {
+	readonly subject: CheckSubject;
+	readonly check: PackagedCheck;
+	readonly resolver: CheckInputResolver;
+	readonly signal?: AbortSignal;
+}): Promise<CheckInputSelection[]> {
+	const selections: CheckInputSelection[] = [];
+	for (const selector of input.check.definition.inputs) {
+		if (selector.source === "subject") {
+			selections.push(subjectInputSelection(input.subject, selector));
 			continue;
 		}
-		context.producedEvidenceRecords.set(record.evidenceId, record);
-		newlyProduced.push(record);
-	}
-	if (
-		executor?.cacheable !== false &&
-		executed.producedEvidenceRecords.length === 0 &&
-		executed.result.status !== "indeterminate"
-	) {
-		context.cache.set(cacheKey, executed.result);
-	}
-	await context.input.onCheckMaterialized?.({
-		result: executed.result,
-		producedEvidenceRecords: newlyProduced,
-		source: "executed",
-	});
-	return executed.result;
-}
-
-async function executeBinding(input: ExecuteBindingInput): Promise<ExecutedBinding> {
-	const unavailable = unavailableFinding(input);
-	if (unavailable) {
-		return {result: indeterminateResult(input, unavailable), producedEvidenceRecords: []};
-	}
-	const executor = input.executor as LoopCheckExecutor;
-	const outcome = await input.semaphore.run(() =>
-		executeWithBoundary(executor, input, input.check.timeoutMs),
-	);
-	if ("kind" in outcome) {
-		return {result: indeterminateResult(input, outcome), producedEvidenceRecords: []};
-	}
-	try {
-		const observation = normalizedObservation(outcome, input.check);
-		const produced = normalizedProducedEvidence(input, observation);
-		return {
-			result: createCheckResult({
-			loop: input.policy.loop,
-			policy: input.policy,
+		const value = await input.resolver.resolve({
+			subject: input.subject,
 			check: input.check,
-			disposition: observation.disposition,
-			...(observation.measurement ? {measurement: observation.measurement} : {}),
-			evidenceResolutions: [...produced.resolutions],
-			findings: (observation.findings ?? []).map((message) => ({message})),
-			...(observation.issueClass ? {issueClass: observation.issueClass} : {}),
-			...(observation.feedback ? {feedback: observation.feedback} : {}),
-			execution: executor.execution,
+			selector,
+			signal: input.signal ?? new AbortController().signal,
+		});
+		selections.push(
+			"selectionDigest" in value ? value : createCheckInputSelection(value),
+		);
+	}
+	return selections;
+}
+
+async function executeBatch(input: {
+	readonly checks: readonly PreparedCheck[];
+	readonly maximumConcurrency: number;
+	readonly snapshot: CheckPackSnapshot;
+	readonly cache: CheckResultCache;
+	readonly parentSignal?: AbortSignal;
+}): Promise<BatchOutcome> {
+	if (input.checks.length === 0) return {results: [], facts: [], failed: false};
+	const results: CheckResult[] = [];
+	const facts: CheckExecutionFact[] = [];
+	for (let offset = 0; offset < input.checks.length; offset += input.maximumConcurrency) {
+		const batch = input.checks.slice(offset, offset + input.maximumConcurrency);
+		const controllers = batch.map(() => new AbortController());
+		let terminalIndex = batch.length;
+		const outcomes = await Promise.all(
+			batch.map(async (prepared, index) => {
+				const executed = await executePreparedCheck({
+					prepared,
+					snapshot: input.snapshot,
+					cache: input.cache,
+					controller: controllers[index],
+					parentSignal: input.parentSignal,
+				});
+				if (
+					(executed.stoppedReason || executed.result?.status === "failed") &&
+					index < terminalIndex
+				) {
+					terminalIndex = index;
+					for (let later = index + 1; later < controllers.length; later += 1) {
+						controllers[later].abort();
+					}
+				}
+				return executed;
 			}),
-			producedEvidenceRecords: produced.records,
-		};
-	} catch {
-		return {
-			result: indeterminateResult(input, {
-				kind: "operational_failure",
-				finding: `Check executor ${input.check.id} returned invalid output; details were redacted.`,
-			}),
-			producedEvidenceRecords: [],
-		};
-	}
-}
-
-function normalizedProducedEvidence(
-	input: ExecuteBindingInput,
-	observation: CheckExecutorObservation,
-): {
-	readonly records: readonly EvidenceRecord[];
-	readonly resolutions: readonly EvidenceObligationResolution[];
-} {
-	const producedIds = new Set(input.executor?.producesEvidenceObligationIds ?? []);
-	const records = normalizedEvidenceRecords(
-		observation.producedEvidenceRecords ?? [],
-	);
-	const supplied = suppliedProducedResolutions(input, observation, producedIds);
-	const merged = mergedProducedResolutions(
-		input,
-		observation,
-		producedIds,
-		supplied,
-	);
-	assertProducedEvidenceReferences(input, records, supplied);
-	return {
-		records: [...records.values()].sort((left, right) =>
-			compareText(left.evidenceId, right.evidenceId),
-		),
-		resolutions: merged,
-	};
-}
-
-function suppliedProducedResolutions(
-	input: ExecuteBindingInput,
-	observation: CheckExecutorObservation,
-	producedIds: ReadonlySet<string>,
-): ReadonlyMap<string, EvidenceObligationResolution> {
-	const supplied = new Map<string, EvidenceObligationResolution>();
-	for (const resolution of observation.producedEvidenceResolutions ?? []) {
-		if (!producedIds.has(resolution.obligationId)) {
-			throw new Error(
-				`Check executor ${input.check.id} produced undeclared Evidence obligation ${resolution.obligationId}.`,
-			);
-		}
-		if (supplied.has(resolution.obligationId)) {
-			throw new Error(
-				`Check executor ${input.check.id} duplicated Evidence obligation ${resolution.obligationId}.`,
-			);
-		}
-		const obligation = requiredEvidenceObligation(
-			input.check,
-			resolution.obligationId,
 		);
-		assertValidEvidenceObligationResolution(resolution, obligation);
-		supplied.set(resolution.obligationId, resolution);
-	}
-	return supplied;
-}
-
-function mergedProducedResolutions(
-	input: ExecuteBindingInput,
-	observation: CheckExecutorObservation,
-	producedIds: ReadonlySet<string>,
-	supplied: ReadonlyMap<string, EvidenceObligationResolution>,
-): readonly EvidenceObligationResolution[] {
-	return input.resolutions.map((resolution) => {
-		if (!producedIds.has(resolution.obligationId)) return resolution;
-		const replacement = supplied.get(resolution.obligationId);
-		if (replacement) return replacement;
-		if (
-			resolution.status === "ready" ||
-			observation.disposition === "indeterminate"
-		) {
-			return resolution;
-		}
-		throw new Error(
-			`Check executor ${input.check.id} did not resolve produced Evidence obligation ${resolution.obligationId}.`,
+		const included = outcomes.slice(
+			0,
+			terminalIndex < batch.length ? terminalIndex + 1 : outcomes.length,
 		);
-	});
-}
-
-function assertProducedEvidenceReferences(
-	input: ExecuteBindingInput,
-	records: ReadonlyMap<string, EvidenceRecord>,
-	supplied: ReadonlyMap<string, EvidenceObligationResolution>,
-): void {
-	const availableIds = new Set([
-		...input.evidenceRecords.map((record) => record.evidenceId),
-		...records.keys(),
-	]);
-	for (const resolution of supplied.values()) {
-		for (const evidenceId of resolution.inputEvidenceIds) {
-			if (!availableIds.has(evidenceId)) {
-				throw new Error(
-					`Produced Evidence resolution ${resolution.obligationId} references unavailable Evidence ${evidenceId}.`,
-				);
-			}
+		for (const executed of included) {
+			facts.push(executed.fact);
+			if (executed.result) results.push(executed.result);
 		}
-	}
-	const referencedIds = new Set<string>(
-		[...supplied.values()].flatMap((resolution) => resolution.inputEvidenceIds),
-	);
-	for (const evidenceId of records.keys()) {
-		if (!referencedIds.has(evidenceId)) {
-			throw new Error(`Produced Evidence ${evidenceId} is not bound by a resolution.`);
-		}
-	}
-}
-
-function requiredEvidenceObligation(
-	check: CheckDefinition,
-	obligationId: string,
-): EvidenceObligation {
-	const obligation = check.evidenceObligations.find(
-		(candidate) => candidate.id === obligationId,
-	);
-	if (!obligation) {
-		throw new Error(
-			`Check executor ${check.id} produced unknown Evidence obligation ${obligationId}.`,
-		);
-	}
-	return obligation;
-}
-
-function unavailableFinding(
-	input: ExecuteBindingInput,
-): ExecutionBoundaryFailure | null {
-	if (input.signal?.aborted) {
-		return {kind: "cancelled", finding: `Check ${input.check.id} was cancelled.`};
-	}
-	const producedIds = new Set(input.executor?.producesEvidenceObligationIds ?? []);
-	const blocked = input.resolutions.filter(
-		(resolution) =>
-			resolution.status !== "ready" && !producedIds.has(resolution.obligationId),
-	);
-	if (blocked.length > 0) {
-		return {
-			kind: "evidence_unavailable",
-			finding: `Check ${input.check.id} evidence input is ${blocked
-				.map((resolution) => `${resolution.obligationId}:${resolution.status}`)
-				.join(", ")}.`,
-		};
-	}
-	if (!input.executor) {
-		return {
-			kind: "operational_failure",
-			finding: `Check ${input.check.id} executor is unavailable.`,
-		};
-	}
-	return null;
-}
-
-async function executeWithBoundary(
-	executor: LoopCheckExecutor,
-	input: ExecuteBindingInput,
-	timeoutMs: number,
-): Promise<CheckExecutorObservation | ExecutionBoundaryFailure> {
-	const controller = new AbortController();
-	let timeout: ReturnType<typeof setTimeout> | undefined;
-	let removeAbortListener = (): void => undefined;
-	const boundary = new Promise<ExecutionBoundaryFailure>((resolve) => {
-		const cancel = (): void => {
-			controller.abort(input.signal?.reason);
-			resolve({kind: "cancelled", finding: `Check ${input.check.id} was cancelled.`});
-		};
-		if (input.signal) {
-			input.signal.addEventListener("abort", cancel, {once: true});
-			removeAbortListener = () => input.signal?.removeEventListener("abort", cancel);
-		}
-		timeout = setTimeout(() => {
-			controller.abort(new Error("check_timeout"));
-			resolve({
-				kind: "timeout",
-				finding: `Check ${input.check.id} exceeded ${timeoutMs} ms.`,
-			});
-		}, timeoutMs);
-	});
-	try {
-		const execution = Promise.resolve()
-			.then(() =>
-				executor.execute({
-					candidate: input.candidate,
-					policy: input.policy,
-					binding: input.binding,
-					check: input.check,
-					evidenceResolutions: input.resolutions,
-					evidenceRecords: input.evidenceRecords,
-					dependencyResults: input.dependencyResults,
-					signal: controller.signal,
-				}),
-			)
-			.catch(
-				(_error): ExecutionBoundaryFailure => ({
-					kind: "operational_failure",
-					finding: `Check ${input.check.id} execution failed; executor output was redacted.`,
-				}),
-			);
-		return await Promise.race([execution, boundary]);
-	} finally {
-		if (timeout) clearTimeout(timeout);
-		removeAbortListener();
-	}
-}
-
-function indeterminateResult(
-	input: ExecuteBindingInput,
-	failure: ExecutionBoundaryFailure,
-): CheckResult {
-	const issueClass = issueClassForFailure(failure.kind);
-	return createCheckResult({
-		loop: input.policy.loop,
-		policy: input.policy,
-		check: input.check,
-		disposition: "indeterminate",
-		evidenceResolutions: [...input.resolutions],
-		findings: [{message: failure.finding}],
-		issueClass,
-		feedback: "Retry when exact evidence and execution capacity are available.",
-		execution: input.executor?.execution ?? input.check.execution,
-	});
-}
-
-function issueClassForFailure(
-	kind: ExecutionBoundaryFailure["kind"],
-): string {
-	switch (kind) {
-		case "timeout":
-			return "runtime_timeout";
-		case "cancelled":
-			return "runtime_cancellation";
-		case "evidence_unavailable":
-			return "evidence_input";
-		case "operational_failure":
-			return "runtime_unavailable";
-		default:
-			throw new Error(`Unknown execution boundary failure ${String(kind)}.`);
-	}
-}
-
-function normalizedObservation(
-	value: CheckExecutorObservation,
-	check: CheckDefinition,
-): CheckExecutorObservation {
-	assertObservationShape(value);
-	const measurement = observationMeasurement(value, check);
-	const findings = normalizedTextList(value.findings ?? []);
-	if (value.disposition !== "satisfied" && findings.length === 0) {
-		findings.push(`Check ${check.id} did not establish its requirement.`);
-	}
-	return {
-		disposition: value.disposition,
-		...(measurement ? {measurement} : {}),
-		findings,
-		...(value.issueClass ? {issueClass: requiredText(value.issueClass, "issueClass")} : {}),
-		...(value.feedback ? {feedback: requiredText(value.feedback, "feedback")} : {}),
-		...(value.producedEvidenceRecords
-			? {producedEvidenceRecords: value.producedEvidenceRecords}
-			: {}),
-		...(value.producedEvidenceResolutions
-			? {producedEvidenceResolutions: value.producedEvidenceResolutions}
-			: {}),
-	};
-}
-
-function assertObservationShape(value: CheckExecutorObservation): void {
-	if (!value || typeof value !== "object" || Array.isArray(value)) {
-		throw new Error("executor observation must be an object");
-	}
-	assertExactKeys(
-		value,
-		[
-			"disposition",
-			"measurement",
-			"findings",
-			"issueClass",
-			"feedback",
-			"producedEvidenceRecords",
-			"producedEvidenceResolutions",
-		],
-		"Check executor observation",
-	);
-	if (
-		value.disposition !== "satisfied" &&
-		value.disposition !== "unsatisfied" &&
-		value.disposition !== "indeterminate"
-	) {
-		throw new Error("executor disposition is invalid");
-	}
-}
-
-function observationMeasurement(
-	value: CheckExecutorObservation,
-	check: CheckDefinition,
-): CheckMeasurement | undefined {
-	if (value.measurement) return value.measurement;
-	if (value.disposition === "indeterminate" || check.measurement.shape !== "boolean") {
-		return undefined;
-	}
-	return {shape: "boolean", value: value.disposition === "satisfied"};
-}
-
-function evidenceResolutions(
-	check: CheckDefinition,
-	provided: readonly EvidenceObligationResolution[] | undefined,
-	evidenceRecords: ReadonlyMap<string, EvidenceRecord>,
-): EvidenceObligationResolution[] {
-	const byId = new Map((provided ?? []).map((resolution) => [resolution.obligationId, resolution]));
-	if (byId.size !== (provided ?? []).length) {
-		throw new Error(`Check ${check.id} evidence resolutions contain duplicate obligations.`);
-	}
-	for (const obligationId of byId.keys()) {
-		if (!check.evidenceObligations.some((obligation) => obligation.id === obligationId)) {
-			throw new Error(`Check ${check.id} received foreign obligation ${obligationId}.`);
-		}
-	}
-	return check.evidenceObligations.map((obligation) => {
-		const resolution = byId.get(obligation.id) ?? missingResolution(obligation);
-		assertValidEvidenceObligationResolution(resolution, obligation);
-		for (const evidenceId of resolution.inputEvidenceIds) {
-			if (!evidenceRecords.has(evidenceId)) {
-				throw new Error(
-					`Check ${check.id} resolution references unavailable Evidence ${evidenceId}.`,
-				);
-			}
-		}
-		return resolution;
-	});
-}
-
-function missingResolution(
-	obligation: EvidenceObligation,
-): EvidenceObligationResolution {
-	const withoutDigest = {
-		obligationId: obligation.id,
-		obligationVersion: obligation.version,
-		obligationDigest: canonicalJsonDigest(obligation),
-		status: "missing" as const,
-		inputEvidenceIds: [],
-		eligibleEvidenceIds: [],
-		supportingEvidenceIds: [],
-		contradictoryEvidenceIds: [],
-		neutralEvidenceIds: [],
-		excludedEvidence: [],
-		duplicateEvidenceIds: [],
-		missingCount: obligation.minimumCount,
-	};
-	return immutable({
-		...withoutDigest,
-		resolutionDigest: canonicalJsonDigest(withoutDigest),
-	});
-}
-
-function normalizedPrecomputedResults(
-	values: readonly CheckResult[],
-	policy: ResolvedExitPolicy,
-	evidenceRecords: ReadonlyMap<string, EvidenceRecord>,
-): ReadonlyMap<string, CheckResult> {
-	const active = new Map(policy.bindings.map((binding) => [binding.checkId, binding]));
-	const results = new Map<string, CheckResult>();
-	for (const result of values) {
-		const binding = active.get(result.checkId);
-		if (!binding) {
-			throw new Error(`Loop exit received precomputed inactive Check ${result.checkId}.`);
-		}
-		if (results.has(result.checkId)) {
-			throw new Error(`Loop exit precomputed Check ${result.checkId} is duplicated.`);
-		}
-		if (
-			result.candidateDigest !== policy.candidateDigest ||
-			result.policyDigest !== policy.policyDigest ||
-			result.checkVersion !== binding.checkVersion ||
-			result.checkDigest !== binding.checkDigest
-		) {
-			throw new Error(`Loop exit precomputed Check ${result.checkId} is stale.`);
-		}
-		assertSha256Digest(result.resultDigest, "Precomputed Check Result digest");
-		for (const evidenceId of result.evidenceRecordIds) {
-			if (!evidenceRecords.has(evidenceId)) {
-				throw new Error(
-					`Precomputed Check ${result.checkId} references unavailable Evidence ${evidenceId}.`,
-				);
-			}
-		}
-		results.set(result.checkId, result);
-	}
-	return results;
-}
-
-function normalizedEvidenceRecords(
-	values: readonly EvidenceRecord[],
-): ReadonlyMap<string, EvidenceRecord> {
-	const records = new Map<string, EvidenceRecord>();
-	for (const record of values) {
-		if (records.has(record.evidenceId)) {
-			throw new Error(`Loop exit Evidence ${record.evidenceId} is duplicated.`);
-		}
-		records.set(record.evidenceId, record);
-	}
-	return records;
-}
-
-function assertSameEvidenceRecord(
-	existing: EvidenceRecord,
-	produced: EvidenceRecord,
-): void {
-	if (
-		canonicalJsonDigest(toCanonicalJsonValue(existing)) !==
-		canonicalJsonDigest(toCanonicalJsonValue(produced))
-	) {
-		throw new Error(
-			`Produced Evidence ${produced.evidenceId} conflicts with an existing record.`,
-		);
-	}
-}
-
-function availableEvidenceRecords(
-	context: Pick<CheckSchedulerContext, "evidenceRecords" | "producedEvidenceRecords">,
-): ReadonlyMap<string, EvidenceRecord> {
-	return new Map([
-		...context.evidenceRecords.entries(),
-		...context.producedEvidenceRecords.entries(),
-	]);
-}
-
-function evidenceForCheck(
-	resolutions: readonly EvidenceObligationResolution[],
-	dependencyResults: readonly CheckResult[],
-	records: ReadonlyMap<string, EvidenceRecord>,
-): EvidenceRecord[] {
-	const ids = new Set([
-		...resolutions.flatMap((resolution) => resolution.inputEvidenceIds),
-		...dependencyResults.flatMap((result) => result.evidenceRecordIds),
-	]);
-	return [...ids].sort(compareText).map((id) => {
-		const record = records.get(id);
-		if (!record) {
-			throw new Error(`Check dependency references unavailable Evidence ${id}.`);
-		}
-		return record;
-	});
-}
-
-function checkResultCacheKey(input: {
-	readonly candidateDigest: Sha256Digest;
-	readonly policyDigest: string;
-	readonly binding: CheckBinding;
-	readonly resolutions: readonly EvidenceObligationResolution[];
-	readonly dependencyResults: readonly CheckResult[];
-	readonly execution: CheckExecutionIdentity;
-}): Sha256Digest {
-	return canonicalJsonDigest({
-		runnerVersion: LOOP_EXIT_RUNNER_VERSION,
-		candidateDigest: input.candidateDigest,
-		policyDigest: input.policyDigest,
-		checkDigest: input.binding.checkDigest,
-		binding: input.binding,
-		evidenceResolutionDigests: input.resolutions.map(
-			(resolution) => resolution.resolutionDigest,
-		),
-		dependencyResultDigests: input.dependencyResults.map(
-			(result) => result.resultDigest,
-		),
-		execution: input.execution,
-	});
-}
-
-function executorRegistry(
-	catalog: CheckCatalog,
-	executors: readonly LoopCheckExecutor[],
-): ReadonlyMap<string, LoopCheckExecutor> {
-	const registry = new Map<string, LoopCheckExecutor>();
-	for (const executor of executors) {
-		const registration = requiredCatalogRegistration(
-			catalog,
-			executor.checkId,
-			executor.loop,
-		);
-		if (registration.check.version !== executor.checkVersion) {
-			throw new Error(
-				`Check executor ${executor.checkId} version does not match Catalog.`,
-			);
-		}
-		if (
-			executor.execution.id !== registration.check.execution.id ||
-			executor.execution.version !== registration.check.execution.version ||
-			executor.execution.kind !== registration.check.execution.kind
-		) {
-			throw new Error(`Check executor ${executor.checkId} identity does not match Catalog.`);
-		}
-		const producedIds = normalizedProducedObligationIds(
-			executor.producesEvidenceObligationIds ?? [],
-			executor.checkId,
-		);
-		for (const obligationId of producedIds) {
-			requiredEvidenceObligation(registration.check, obligationId);
-		}
-		const key = executorKey(executor.loop, executor.checkId, executor.checkVersion);
-		if (registry.has(key)) {
-			throw new Error(`Check executor ${executor.checkId} is duplicated for ${executor.loop}.`);
-		}
-		registry.set(
-			key,
-			Object.freeze({
-				...executor,
-				...(producedIds.length > 0
-					? {producesEvidenceObligationIds: Object.freeze(producedIds)}
+		if (terminalIndex < batch.length) {
+			const terminal = outcomes[terminalIndex];
+			return {
+				results: results.sort(compareResults),
+				facts: facts.sort(compareFacts),
+				failed: terminal.result?.status === "failed",
+				...(terminal.stoppedReason
+					? {stoppedReason: terminal.stoppedReason}
 					: {}),
-			}),
-		);
-	}
-	return registry;
-}
-
-function assertRunnerInput(input: CreateLoopExitRunnerInput): void {
-	if (!input?.catalog || !Array.isArray(input.executors)) {
-		throw new Error("Loop exit runner requires Catalog and executors.");
-	}
-	for (const [field, value] of [
-		["codeConcurrency", input.limits?.codeConcurrency ?? 4],
-		["modelConcurrency", input.limits?.modelConcurrency ?? 2],
-	] as const) {
-		if (!Number.isSafeInteger(value) || value < 1 || value > 64) {
-			throw new Error(`Loop exit runner ${field} must be an integer from 1 to 64.`);
+			};
 		}
-	}
-}
-
-function assertRunInput(input: RunLoopExitInput, catalog: CheckCatalog): void {
-	if (!input?.candidate || !input.policy) {
-		throw new Error("Loop exit run requires candidate and policy.");
-	}
-	assertValidResolvedExitPolicy(input.policy);
-	assertSha256Digest(input.candidate.digest, "Candidate digest");
-	if (
-		input.candidate.loop !== input.policy.loop ||
-		input.candidate.digest !== input.policy.candidateDigest
-	) {
-		throw new Error("Loop exit candidate does not match Resolved Exit Policy.");
-	}
-	if (input.policy.catalogDigest !== catalog.digest) {
-		throw new Error("Loop exit policy Catalog digest is stale.");
-	}
-	const checkIds = new Set(input.policy.bindings.map((binding) => binding.checkId));
-	for (const checkId of Object.keys(input.evidenceResolutionsByCheck ?? {})) {
-		if (!checkIds.has(checkId)) {
-			throw new Error(`Loop exit received resolutions for inactive Check ${checkId}.`);
-		}
-	}
-}
-
-function nextAction(
-	report: ExitReport,
-	policy: ResolvedExitPolicy,
-): LoopExitNextAction {
-	if (report.status === "pass") return {kind: "ready_for_runtime_route"};
-	const requiredIds = new Set(
-		policy.bindings.flatMap((binding) =>
-			binding.required ? [binding.checkId] : [],
-		),
-	);
-	if (report.status === "fail") {
-		const failed = report.checkResults.filter(
-			(result) => requiredIds.has(result.checkId) && result.status === "fail",
-		);
-		return {
-			kind: "repair_candidate",
-			failedCheckIds: failed.map((result) => result.checkId).sort(compareText),
-			repairTargets: [...new Set(failed.map((result) => result.repairTarget))].sort(
-				compareText,
-			),
-		};
 	}
 	return {
-		kind: "retry_or_wait",
-		indeterminateCheckIds: report.checkResults
-			.flatMap((result) =>
-				requiredIds.has(result.checkId) && result.status === "indeterminate"
-					? [result.checkId]
-					: [],
-			)
-			.sort(compareText),
+		results: results.sort(compareResults),
+		facts: facts.sort(compareFacts),
+		failed: false,
 	};
 }
 
-function createSemaphore(limit: number): Semaphore {
-	let active = 0;
-	const waiting: Array<() => void> = [];
-	const acquire = async (): Promise<void> => {
-		if (active < limit) {
-			active += 1;
-			return;
+async function executePreparedCheck(input: {
+	readonly prepared: PreparedCheck;
+	readonly snapshot: CheckPackSnapshot;
+	readonly cache: CheckResultCache;
+	readonly controller: AbortController;
+	readonly parentSignal?: AbortSignal;
+}): Promise<ExecutedCheck> {
+	const {check, executor, invocation, cacheKey} = input.prepared;
+	const identity = executor.identity;
+	let attempts = 0;
+	let lastStop: GateStopReason | undefined;
+	while (attempts < check.definition.limits.maximumAttempts) {
+		attempts += 1;
+		if (input.parentSignal?.aborted) {
+			lastStop = stopReason("cancelled", "Gate was cancelled during Check execution.", check);
+			break;
 		}
-		await new Promise<void>((resolve) => waiting.push(resolve));
-		active += 1;
-	};
-	const release = (): void => {
-		active -= 1;
-		waiting.shift()?.();
-	};
-	return {
-		async run<T>(task: () => Promise<T>): Promise<T> {
-			await acquire();
-			try {
-				return await task();
-			} finally {
-				release();
+		const attemptController = new AbortController();
+		const cancelAttempt = (): void => attemptController.abort();
+		input.controller.signal.addEventListener("abort", cancelAttempt, {once: true});
+		if (input.controller.signal.aborted) attemptController.abort();
+		try {
+			const raw = await executeWithBoundary({
+				executor,
+				check,
+				invocation,
+				controller: attemptController,
+				parentSignal: input.parentSignal,
+				timeoutMs: check.definition.limits.timeoutMs,
+			});
+			const output = admitCheckOutput({
+				invocation,
+				value: raw,
+				maximumOutputBytes: check.definition.limits.maximumOutputBytes,
+			});
+			const result = createCheckResult({
+				snapshot: input.snapshot,
+				check,
+				invocation,
+				output,
+				execution: identity,
+			});
+			await input.cache.set(cacheKey, result);
+			return {
+				result,
+				fact: {
+					packId: check.packId,
+					checkId: check.checkId,
+					source: "executed",
+					status: "completed",
+					attempts,
+					execution: identity,
+					resultDigest: result.resultDigest,
+				},
+			};
+		} catch (error) {
+			if (input.controller.signal.aborted && !input.parentSignal?.aborted) {
+				return {
+					fact: {
+						packId: check.packId,
+						checkId: check.checkId,
+						source: "executed",
+						status: "cancelled",
+						attempts,
+						execution: identity,
+					},
+				};
 			}
+			lastStop = boundaryStopReason(error, check);
+		} finally {
+			input.controller.signal.removeEventListener("abort", cancelAttempt);
+		}
+	}
+	const reason =
+		lastStop ?? stopReason("execution_failed", "Check execution stopped.", check);
+	return {
+		stoppedReason: reason,
+		fact: {
+			packId: check.packId,
+			checkId: check.checkId,
+			source: "executed",
+			status: "stopped",
+			attempts,
+			execution: identity,
+			stopReason: reason,
 		},
 	};
 }
 
-function requiredCatalogRegistration(
-	catalog: CheckCatalog,
-	checkId: string,
-	loop: SemanticLoop,
-): NonNullable<ReturnType<CheckCatalog["get"]>> {
-	const registration = catalog.get(checkId, loop);
-	if (!registration) {
-		throw new Error(`Loop exit Catalog has no ${loop} Check ${checkId}.`);
+async function executeWithBoundary(input: {
+	readonly executor: CheckExecutor;
+	readonly check: PackagedCheck;
+	readonly invocation: CheckInvocation;
+	readonly controller: AbortController;
+	readonly parentSignal?: AbortSignal;
+	readonly timeoutMs: number;
+}): Promise<unknown> {
+	let timedOut = false;
+	const onParentAbort = (): void => input.controller.abort();
+	input.parentSignal?.addEventListener("abort", onParentAbort, {once: true});
+	const timeout = setTimeout(() => {
+		timedOut = true;
+		input.controller.abort();
+	}, input.timeoutMs);
+	try {
+		return await Promise.race([
+			Promise.resolve(
+				input.executor.execute({
+					check: input.check,
+					invocation: input.invocation,
+					implementation: input.check.implementation,
+					signal: input.controller.signal,
+				}),
+			),
+			new Promise<never>((_, reject) => {
+				input.controller.signal.addEventListener(
+					"abort",
+					() =>
+						reject(
+							new CheckBoundaryError(
+								timedOut ? "timeout" : "cancelled",
+								timedOut ? "Check execution timed out." : "Check execution was cancelled.",
+							),
+						),
+					{once: true},
+				);
+			}),
+		]);
+	} finally {
+		clearTimeout(timeout);
+		input.parentSignal?.removeEventListener("abort", onParentAbort);
 	}
-	return registration;
 }
 
-function requiredBinding(
-	bindings: ReadonlyMap<string, CheckBinding>,
-	checkId: string,
-): CheckBinding {
-	const binding = bindings.get(checkId);
-	if (!binding) throw new Error(`Loop exit dependency ${checkId} is inactive.`);
-	return binding;
+class CheckBoundaryError extends Error {
+	readonly code: "timeout" | "cancelled";
+
+	constructor(code: "timeout" | "cancelled", message: string) {
+		super(message);
+		this.name = "CheckBoundaryError";
+		this.code = code;
+	}
 }
 
-function normalizedProducedObligationIds(
-	values: readonly string[],
-	checkId: string,
-): string[] {
-	if (!Array.isArray(values) || values.length > 16) {
+function boundaryStopReason(error: unknown, check: PackagedCheck): GateStopReason {
+	if (error instanceof CheckBoundaryError) {
+		return stopReason(error.code, error.message, check);
+	}
+	const message = error instanceof Error ? error.message : String(error);
+	if (message.startsWith("Check Output") || message.includes("measurement")) {
+		return stopReason("invalid_output", `Invalid Check Output: ${message}`, check);
+	}
+	return stopReason("execution_failed", `Check execution failed: ${message}`, check);
+}
+
+function stoppedBeforeExecution(
+	input: RunGateInput,
+	check: PackagedCheck,
+	reason: GateStopReason,
+	previousFacts: readonly CheckExecutionFact[] = [],
+	results: readonly CheckResult[] = [],
+	cacheHitCheckIds: readonly string[] = [],
+	execution?: CheckExecutionIdentity,
+): GateReport {
+	return createGateReport({
+		snapshot: input.snapshot,
+		subjectDigest: input.subject.digest,
+		results,
+		executions: [
+			...previousFacts,
+			{
+				packId: check.packId,
+				checkId: check.checkId,
+				source: "executed",
+				status: "stopped",
+				attempts: 0,
+				...(execution ? {execution} : {}),
+				stopReason: reason,
+			},
+		],
+		cacheHitCheckIds,
+		stoppedReason: reason,
+	});
+}
+
+function matchingExecutor(
+	executors: readonly CheckExecutor[],
+	check: PackagedCheck,
+): CheckExecutor | undefined {
+	const matches = executors.filter((executor) => {
+		const implementation = check.definition.implementation;
+		return (
+			executor.identity.kind === implementation.kind &&
+			executor.identity.profile === implementation.profile &&
+			(implementation.kind !== "model" ||
+				executor.identity.route === implementation.route) &&
+			executor.supports(check)
+		);
+	});
+	if (matches.length > 1) {
 		throw new Error(
-			`Check executor ${checkId} produced Evidence obligation list is invalid.`,
+			`Multiple admitted executors support ${qualifiedCheckId(check.packId, check.checkId)}.`,
 		);
 	}
-	const normalized = values.map((value) => requiredText(value, "obligation id"));
-	const unique = [...new Set(normalized)].sort(compareText);
-	if (unique.length !== normalized.length) {
-		throw new Error(
-			`Check executor ${checkId} produced Evidence obligation list contains duplicates.`,
-		);
+	return matches[0];
+}
+
+function unavailableInputResolver(): CheckInputResolver {
+	return Object.freeze({
+		resolve: (context: CheckInputResolverContext) =>
+			createCheckInputSelection({
+				selector: context.selector,
+				status: "unavailable",
+			}),
+	});
+}
+
+function normalizedLimits(
+	input: Partial<GateRunnerLimits> | undefined,
+): GateRunnerLimits {
+	const limits = {...DEFAULT_LIMITS, ...(input ?? {})};
+	for (const [name, value] of Object.entries(limits)) {
+		if (!Number.isSafeInteger(value) || value < 1 || value > 32) {
+			throw new Error(`Gate runner ${name} must be an integer from 1 to 32.`);
+		}
 	}
-	return unique;
+	return Object.freeze(limits);
 }
 
-function executorKey(
-	loop: SemanticLoop,
-	checkId: string,
-	checkVersion: string,
-): string {
-	return `${loop}:${checkId}@${checkVersion}`;
+function stopReason(
+	code: GateStopReason["code"],
+	message: string,
+	check?: PackagedCheck,
+): GateStopReason {
+	return Object.freeze({
+		code,
+		message,
+		...(check ? {packId: check.packId, checkId: check.checkId} : {}),
+	});
 }
 
-function normalizedTextList(values: readonly string[]): string[] {
-	if (!Array.isArray(values) || values.length > 64) {
-		throw new Error("Check executor findings must contain at most 64 entries.");
-	}
-	return values.map((value) => requiredText(value, "finding"));
+function errorMessage(error: unknown): string {
+	return error instanceof Error ? error.message : String(error);
 }
 
-function requiredText(value: unknown, field: string): string {
-	if (typeof value !== "string" || value.trim().length === 0) {
-		throw new Error(`Check executor ${field} must be a non-empty string.`);
-	}
-	return value.trim();
+function compareResults(left: CheckResult, right: CheckResult): number {
+	return qualifiedCheckId(left.packId, left.checkId).localeCompare(
+		qualifiedCheckId(right.packId, right.checkId),
+	);
 }
 
-function assertExactKeys(
-	value: object,
-	allowed: readonly string[],
-	label: string,
-): void {
-	for (const key of Object.keys(value)) {
-		if (!allowed.includes(key)) throw new Error(`${label} received unsupported field ${key}.`);
-	}
-}
-
-function compareText(left: string, right: string): number {
-	if (left === right) return 0;
-	return left < right ? -1 : 1;
-}
-
-function immutable<T>(value: unknown): T {
-	const canonical = toCanonicalJsonValue(value);
-	return canonical as unknown as T;
+function compareFacts(left: CheckExecutionFact, right: CheckExecutionFact): number {
+	return qualifiedCheckId(left.packId, left.checkId).localeCompare(
+		qualifiedCheckId(right.packId, right.checkId),
+	);
 }
