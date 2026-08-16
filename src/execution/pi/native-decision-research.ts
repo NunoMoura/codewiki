@@ -1,4 +1,4 @@
-import type {DecisionGateEvidenceCollector} from "../../runtime/lifecycle/decision.ts";
+import type {DecisionGateEvidenceCollector} from "../../runtime/lifecycle/gates.ts";
 import {decisionEvidenceSubject} from "../../loops/decision/evidence.ts";
 import {
 	collectDecisionResearchEvidence,

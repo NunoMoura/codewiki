@@ -333,9 +333,9 @@ This remains useful for optional thin client. Current packed installs expose com
 
 After installing different packed runtime, fully restart Pi rather than relying on module reload. Do not install CodeWiki globally or under this repository's `.pi/` directory during stabilization.
 
-## Review evidence configuration (current migration)
+## Review evidence configuration
 
-Current executable source still supports legacy `.codewiki/config.json` `quality.review` evidence-pack settings while the Review Gate migration is pending. This compatibility surface is not the target Check architecture and grants no semantic authority.
+Canonical Review attempts now bind one exact integrated head and tree, admitted Evidence, provider receipt digests, Review Check Pack snapshot, Gate Report, fixed Runtime transition, and expected-head commit receipt. Failed Results project atomic feedback to Implementation; stopped Gates preserve state without fabricating Results. Legacy `.codewiki/config.json` `quality.review` evidence-pack settings remain only for older Implementation evidence collection and grant no Review authority.
 
 ```json
 {
@@ -357,7 +357,7 @@ Before production release, prove:
 
 - exact candidate/Check/Result/Report identity and authority hardening;
 - bounded cancellation-aware Code/Model Check execution;
-- semantic replacement of legacy Decision, Planning, Implementation, and Review Gate contracts;
+- semantic replacement of remaining legacy Planning and Implementation quality contracts;
 - persisted historical policy/Report meaning;
 - OKF v0.2 compatibility and software alignment profile;
 - packed Pi `0.82.1` compatibility before widening peer range;

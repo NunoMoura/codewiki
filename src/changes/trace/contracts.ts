@@ -3,7 +3,7 @@ import type {
 	CanonicalJsonValue,
 	Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import type { SemanticLoop } from "../../checks/contracts.ts";
+import type {CheckStage} from "../../checks/contracts.ts";
 import {
 	changeDefectProfileSchema,
 	type ChangeDefectProfile,
@@ -278,6 +278,7 @@ const semanticLoopSchema = Type.Union([
 	Type.Literal("decision"),
 	Type.Literal("planning"),
 	Type.Literal("implementation"),
+	Type.Literal("review"),
 ]);
 const closureReasonSchema = Type.Union([
 	Type.Literal("completed"),
@@ -1341,4 +1342,4 @@ export type CanonicalProtocolDocument =
 	| ArchiveManifest;
 
 export type CanonicalPayloadValue = CanonicalJsonValue;
-export type ProtocolSemanticLoop = SemanticLoop;
+export type ProtocolSemanticLoop = CheckStage;

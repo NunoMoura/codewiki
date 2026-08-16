@@ -15,7 +15,7 @@ import {
 
 export const CHECKS_PROJECTION = Object.freeze({
 	id: "codewiki.work-state.checks",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 export type CheckProjectionStatus =
@@ -31,6 +31,9 @@ export interface CheckResultProjection {
 	readonly status: "passed" | "failed" | "historical";
 	readonly resultDigest: Sha256Digest;
 	readonly evidenceRecordIds: readonly string[];
+	readonly failureCode?: string;
+	readonly feedbackSummary?: string;
+	readonly remediation?: readonly string[];
 	readonly operationId: OperationId;
 }
 
@@ -49,7 +52,7 @@ export interface CheckAttemptProjection {
 	readonly attemptOperationId: OperationId;
 	readonly stage: LoopAttemptProjection["loop"];
 	readonly status: CheckProjectionStatus;
-	readonly candidateId: string | null;
+	readonly subjectId: string | null;
 	readonly packSnapshotDigest: Sha256Digest | null;
 	readonly results: readonly CheckResultProjection[];
 	readonly report: GateReportProjection | null;
@@ -153,7 +156,7 @@ function projectAttempt(
 		attemptOperationId: attempt.operationId,
 		stage: attempt.loop,
 		status: attemptStatus({attempt, report, stale}),
-		candidateId: attempt.currentCandidateId,
+		subjectId: attempt.currentCandidateId,
 		packSnapshotDigest,
 		results: Object.freeze(results),
 		report,
@@ -173,6 +176,8 @@ function projectResult(
 		artifact.schemaVersion === "1.0.0" &&
 		(artifact.status === "passed" || artifact.status === "failed") &&
 		typeof artifact.resultDigest === "string";
+	const failed = active && artifact.status === "failed";
+	const failure = record(artifact.failure);
 	return Object.freeze({
 		checkId: requiredText(payload.checkId, "Check Result checkId"),
 		status: active
@@ -183,6 +188,16 @@ function projectResult(
 			"Check Result digest",
 		),
 		evidenceRecordIds: Object.freeze(textList(payload.evidenceRecordIds)),
+		...(failed
+			? {
+					failureCode: requiredText(failure.code, "Check Result failure code"),
+					feedbackSummary: requiredText(
+						failure.summary,
+						"Check Result feedback summary",
+					),
+					remediation: Object.freeze(textList(failure.remediation)),
+				}
+			: {}),
 		operationId: operation.operationId,
 	});
 }

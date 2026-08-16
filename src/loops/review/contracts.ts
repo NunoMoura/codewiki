@@ -1,6 +1,15 @@
+import type {
+	CheckFailure,
+	CheckSubject,
+	GateReport,
+} from "../../checks/contracts.ts";
+import type {EvidenceRecord} from "../../evidence/contracts.ts";
+import {assertValidEvidenceRecord} from "../../evidence/materialize.ts";
 import {
 	assertSha256Digest,
+	canonicalJson,
 	canonicalJsonDigest,
+	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 
@@ -43,6 +52,24 @@ export interface ReviewAttempt {
 	readonly attemptDigest: Sha256Digest;
 }
 
+export interface ReviewEvidenceSubmission {
+	readonly integratedHead: string;
+	readonly integratedTree: string;
+	readonly record: EvidenceRecord;
+}
+
+export interface ReviewProviderReceiptBinding {
+	readonly integratedHead: string;
+	readonly receiptDigest: Sha256Digest;
+}
+
+export interface ReviewFeedbackItem {
+	readonly packId: string;
+	readonly checkId: string;
+	readonly resultDigest: Sha256Digest;
+	readonly failure: CheckFailure;
+}
+
 export function createReviewAttempt(
 	input: CreateReviewAttemptInput,
 ): ReviewAttempt {
@@ -79,6 +106,132 @@ export function createReviewAttempt(
 		...body,
 		attemptDigest: canonicalJsonDigest(body),
 	});
+}
+
+export function reviewSubjectFromAttempt(attempt: ReviewAttempt): CheckSubject {
+	const expected = createReviewAttempt({
+		integratedHead: attempt.integratedHead,
+		integratedTree: attempt.integratedTree,
+		targetBranch: attempt.targetBranch,
+		changeIds: attempt.changeIds,
+		workItemIds: attempt.workItemIds,
+		checkPackSnapshotDigest: attempt.checkPackSnapshotDigest,
+		providerReceiptDigests: attempt.providerReceiptDigests,
+		evidenceRecordDigests: attempt.evidenceRecordDigests,
+	});
+	if (canonicalJson(attempt) !== canonicalJson(expected)) {
+		throw new Error("Review attempt identity is invalid.");
+	}
+	const subject = {
+		stage: "review" as const,
+		id: `review-attempt:${attempt.attemptDigest.slice("sha256:".length)}`,
+		schemaVersion: attempt.schemaVersion,
+		content: toCanonicalJsonValue(attempt),
+	};
+	return Object.freeze({...subject, digest: canonicalJsonDigest(subject)});
+}
+
+export function admitReviewEvidence(input: {
+	readonly attempt: ReviewAttempt;
+	readonly evidence: readonly ReviewEvidenceSubmission[];
+	readonly providerReceipts: readonly ReviewProviderReceiptBinding[];
+}): readonly EvidenceRecord[] {
+	const evidence = input.evidence.map((submission) => {
+		assertOnlyKeys(
+			submission,
+			["integratedHead", "integratedTree", "record"],
+			"Review Evidence submission",
+		);
+		if (
+			submission.integratedHead !== input.attempt.integratedHead ||
+			submission.integratedTree !== input.attempt.integratedTree
+		) {
+			throw new Error("Review Evidence does not bind the exact integrated head and tree.");
+		}
+		return submission.record;
+	});
+	assertReviewEvidenceRecords(input.attempt, evidence);
+	const providerDigests = input.providerReceipts.map((receipt) => {
+		assertOnlyKeys(
+			receipt,
+			["integratedHead", "receiptDigest"],
+			"Review provider receipt binding",
+		);
+		if (receipt.integratedHead !== input.attempt.integratedHead) {
+			throw new Error("Review provider receipt does not bind the exact integrated head.");
+		}
+		assertSha256Digest(receipt.receiptDigest, "Review provider receipt digest");
+		return receipt.receiptDigest;
+	});
+	assertExactDigestSet(
+		providerDigests,
+		input.attempt.providerReceiptDigests,
+		"provider receipt",
+	);
+	return Object.freeze([...evidence]);
+}
+
+export function assertReviewEvidenceRecords(
+	attempt: ReviewAttempt,
+	evidence: readonly EvidenceRecord[],
+): void {
+	for (const record of evidence) assertValidEvidenceRecord(record);
+	assertExactDigestSet(
+		evidence.map((record) => canonicalJsonDigest(record)),
+		attempt.evidenceRecordDigests,
+		"Evidence",
+	);
+}
+
+export function reviewFeedbackFromGate(input: {
+	readonly attempt: ReviewAttempt;
+	readonly report: GateReport;
+}): readonly ReviewFeedbackItem[] {
+	if (
+		input.report.stage !== "review" ||
+		input.report.subjectDigest !== reviewSubjectFromAttempt(input.attempt).digest
+	) {
+		throw new Error("Review Gate Report identity does not match Review attempt.");
+	}
+	const feedback: ReviewFeedbackItem[] = [];
+	for (const result of input.report.results) {
+		if (result.status !== "failed" || result.failure === undefined) continue;
+		feedback.push(
+			Object.freeze({
+				packId: result.packId,
+				checkId: result.checkId,
+				resultDigest: result.resultDigest,
+				failure: result.failure,
+			}),
+		);
+	}
+	return Object.freeze(feedback);
+}
+
+function assertExactDigestSet(
+	actual: readonly Sha256Digest[],
+	expected: readonly Sha256Digest[],
+	label: string,
+): void {
+	const normalized = [...new Set(actual)].sort(compareText);
+	if (
+		normalized.length !== actual.length ||
+		normalized.length !== expected.length ||
+		normalized.some((digest, index) => digest !== expected[index])
+	) {
+		throw new Error(`Review ${label} digests do not match the admitted attempt.`);
+	}
+}
+
+function assertOnlyKeys(
+	value: object,
+	allowed: readonly string[],
+	label: string,
+): void {
+	const unsupported = Object.keys(value).filter((key) => !allowed.includes(key));
+	if (unsupported.length > 0) {
+		throw new Error(`${label} has unsupported fields: ${unsupported.join(", ")}.`);
+	}
 }
 
 function assertExactKeys(value: object): void {

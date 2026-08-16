@@ -25,6 +25,15 @@ import type {CheckResultCache} from "../../checks/cache.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
 import type {DecisionCandidate} from "../../loops/decision/candidate.ts";
 import {
+	admitReviewEvidence,
+	reviewFeedbackFromGate,
+	reviewSubjectFromAttempt,
+	type ReviewAttempt,
+	type ReviewEvidenceSubmission,
+	type ReviewFeedbackItem,
+	type ReviewProviderReceiptBinding,
+} from "../../loops/review/contracts.ts";
+import {
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
@@ -76,6 +85,40 @@ export interface DecisionGateRun {
 	readonly report: GateReport;
 	readonly transition: DecisionLifecycleTransition;
 	readonly collectedEvidenceRecords: readonly EvidenceRecord[];
+}
+
+export interface CreateReviewGateInput {
+	readonly packSnapshot: CheckPackSnapshot;
+	readonly executors?: readonly CheckExecutor[];
+	readonly inputResolver?: CheckInputResolver;
+	readonly stoppedReason?: GateStopReason;
+	readonly cache?: CheckResultCache;
+	readonly limits?: Partial<GateRunnerLimits>;
+}
+
+export interface RunReviewGateInput {
+	readonly attempt: ReviewAttempt;
+	readonly evidence: readonly ReviewEvidenceSubmission[];
+	readonly providerReceipts: readonly ReviewProviderReceiptBinding[];
+	readonly signal?: AbortSignal;
+}
+
+export type ReviewLifecycleTransition = Readonly<{
+	readonly schemaVersion: "1.0.0";
+	readonly reviewAttemptDigest: Sha256Digest;
+	readonly gateReportDigest: Sha256Digest;
+	readonly target: "guarded_delivery" | "implementation" | "preserve_state";
+	readonly reasonCode: string;
+	readonly transitionDigest: Sha256Digest;
+}>;
+
+export interface ReviewGateRun {
+	readonly attempt: ReviewAttempt;
+	readonly packSnapshot: CheckPackSnapshot;
+	readonly evidenceRecords: readonly EvidenceRecord[];
+	readonly report: GateReport;
+	readonly feedback: readonly ReviewFeedbackItem[];
+	readonly transition: ReviewLifecycleTransition;
 }
 
 export function createDecisionGate(input: CreateDecisionGateInput = {}): Readonly<{
@@ -146,6 +189,107 @@ export function createDecisionGate(input: CreateDecisionGateInput = {}): Readonl
 			});
 		},
 	});
+}
+
+export function createReviewGate(input: CreateReviewGateInput): Readonly<{
+	run(runInput: RunReviewGateInput): Promise<ReviewGateRun>;
+}> {
+	if (input.packSnapshot.stage !== "review") {
+		throw new Error("Review Gate requires a Review Check Pack snapshot.");
+	}
+	return Object.freeze({
+		async run(runInput: RunReviewGateInput): Promise<ReviewGateRun> {
+			assertReviewGateRunInput(runInput);
+			const subject = reviewSubjectFromAttempt(runInput.attempt);
+			if (
+				runInput.attempt.checkPackSnapshotDigest !==
+				input.packSnapshot.checkPackDigest
+			) {
+				throw new Error("Review attempt Check Pack snapshot is stale.");
+			}
+			const evidenceRecords = admitReviewEvidence({
+				attempt: runInput.attempt,
+				evidence: runInput.evidence,
+				providerReceipts: runInput.providerReceipts,
+			});
+			const report = input.stoppedReason
+				? createGateReport({
+						snapshot: input.packSnapshot,
+						subjectDigest: subject.digest,
+						results: [],
+						executions: [],
+						stoppedReason: input.stoppedReason,
+					})
+				: await createGateRunner({
+						executors: input.executors,
+						inputResolver: evidenceInputResolver({
+							evidenceRecords,
+							fallback: input.inputResolver,
+						}),
+						cache: input.cache,
+						limits: input.limits,
+					}).run({
+						subject,
+						snapshot: input.packSnapshot,
+						signal: runInput.signal,
+					});
+			return Object.freeze({
+				attempt: runInput.attempt,
+				packSnapshot: input.packSnapshot,
+				evidenceRecords,
+				report,
+				feedback: reviewFeedbackFromGate({attempt: runInput.attempt, report}),
+				transition: deriveReviewLifecycleTransition(runInput.attempt, report),
+			});
+		},
+	});
+}
+
+function assertReviewGateRunInput(input: RunReviewGateInput): void {
+	const unsupported = Object.keys(input).filter(
+		(key) => !["attempt", "evidence", "providerReceipts", "signal"].includes(key),
+	);
+	if (unsupported.length > 0) {
+		throw new Error(
+			`Review Gate input has unsupported fields: ${unsupported.join(", ")}.`,
+		);
+	}
+	if (!Array.isArray(input.evidence) || !Array.isArray(input.providerReceipts)) {
+		throw new Error("Review Gate Evidence and provider receipts must be arrays.");
+	}
+}
+
+export function deriveReviewLifecycleTransition(
+	attempt: ReviewAttempt,
+	report: GateReport,
+): ReviewLifecycleTransition {
+	if (
+		report.stage !== "review" ||
+		report.subjectDigest !== reviewSubjectFromAttempt(attempt).digest
+	) {
+		throw new Error("Review Gate Report identity does not match Review attempt.");
+	}
+	let selection: Pick<ReviewLifecycleTransition, "target" | "reasonCode">;
+	if (report.status === "passed") {
+		selection = {target: "guarded_delivery", reasonCode: "review_passed"};
+	} else if (report.status === "failed") {
+		selection = {target: "implementation", reasonCode: "review_checks_failed"};
+	} else {
+		selection = {
+			target: "preserve_state",
+			reasonCode: report.stoppedReason?.code ?? "gate_stopped",
+		};
+	}
+	const body = {
+		schemaVersion: "1.0.0" as const,
+		reviewAttemptDigest: attempt.attemptDigest,
+		gateReportDigest: report.reportDigest,
+		...selection,
+	};
+	return toCanonicalJsonValue({
+		...body,
+		transitionDigest: canonicalJsonDigest(body),
+	}) as unknown as ReviewLifecycleTransition;
 }
 
 export function deriveDecisionLifecycleTransition(

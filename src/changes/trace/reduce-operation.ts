@@ -450,6 +450,13 @@ function reduceLoopAttemptStarted(
 	) {
 		invalid("ACTIVE_AUTHORITY", operation, `${payload.loop} already has an active attempt.`);
 	}
+	if (payload.loop === "review" && !payload.privateAttemptDigest) {
+		invalid(
+			"BINDING_MISMATCH",
+			operation,
+			"Review attempt requires its private attempt digest.",
+		);
+	}
 	const attempt: LoopAttemptProjection = {
 		operationId: operation.operationId,
 		loop: payload.loop,
@@ -459,7 +466,7 @@ function reduceLoopAttemptStarted(
 			: {}),
 		status: "active",
 		candidateOperationIds: [],
-		currentCandidateId: null,
+		currentCandidateId: payload.loop === "review" ? payload.routeId : null,
 		exitPolicyOperationId: null,
 		evidenceOperationIds: [],
 		checkResultOperationIds: [],

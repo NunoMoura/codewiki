@@ -374,7 +374,7 @@ Rules:
 - [x] Create and execute the reviewed `101ef73`-anchored Project configuration-error ownership manifest and delete the old Package error path without compatibility exports.
 - [x] Create and execute the reviewed `c250c03`-anchored manifest for the root Checks and four-Loop topology clean cut.
 - [x] Move Decision, Planning, and Implementation under `src/loops/**` and add one immutable exact-head Review attempt contract under `src/loops/review/**`.
-- [ ] Implement Review attempt persistence, Gate execution, and fixed failed-Review feedback return to Implementation.
+- [x] Implement Review attempt persistence, Gate execution, and fixed failed-Review feedback return to Implementation.
 - [x] Move surviving Check contracts, Pack loading, execution coordination, cache, Results, and Gate reduction to `src/checks/**`; delete `src/verification/**`, `src/runtime/loop-exit/**`, per-Loop `exit/**`, and the generic Router without aliases.
 - [x] Update exact Knowledge concept-count, index, source-ownership, and source-architecture assertions atomically with the source cut without weakening desired ownership metadata.
 - [x] Delete Repair Profile/Frontier/Brief/Bundle, protected-floor/activation machinery, indeterminate Results, obsolete Loop Exit compatibility, and hidden Check catalogs as replacement consumers land.

@@ -28,14 +28,14 @@ import {
 	createDecisionCandidate,
 	type DecisionCandidate,
 } from "../../loops/decision/candidate.ts";
-import type {createDecisionGate} from "../lifecycle/decision.ts";
+import type {createDecisionGate} from "../lifecycle/gates.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
 import type {ProjectCoordinatorRecovery} from "./project.ts";
 import type {DecisionAttemptExecutor} from "../admission/start.ts";
 import {
 	commitNativeDecisionOperationSequence,
 	type NativeDecisionCommitReceipt,
-} from "../effects/decision-operations.ts";
+} from "../effects/gate-operations.ts";
 import {
 	assertSha256Digest,
 	canonicalJsonDigest,

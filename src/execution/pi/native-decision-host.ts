@@ -11,7 +11,7 @@ import {
 	type AuthenticatedDecisionSelectionAuthority,
 	type DecisionAttentionSelectionAuthorizationRequest,
 } from "../../changes/triage/selection.ts";
-import {createDecisionGate} from "../../runtime/lifecycle/decision.ts";
+import {createDecisionGate} from "../../runtime/lifecycle/gates.ts";
 import {
 	createCheckPackSnapshot,
 	type CheckPackSnapshot,

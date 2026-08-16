@@ -9,7 +9,7 @@ import {
 } from "../../../src/changes/trace/index.ts";
 import {createPackSkillSetSnapshot} from "../../../src/checks/packs/contracts.ts";
 import {bindProducerSkills} from "../../../src/execution/ports.ts";
-import {createDecisionGate} from "../../../src/runtime/lifecycle/decision.ts";
+import {createDecisionGate} from "../../../src/runtime/lifecycle/gates.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
 	createNativeDecisionAttemptExecutor,

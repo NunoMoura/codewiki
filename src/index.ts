@@ -236,9 +236,16 @@ export type {
 } from "./loops/planning/candidate-content.ts";
 export {
 	REVIEW_ATTEMPT_SCHEMA_VERSION,
+	admitReviewEvidence,
+	assertReviewEvidenceRecords,
 	createReviewAttempt,
+	reviewFeedbackFromGate,
+	reviewSubjectFromAttempt,
 	type CreateReviewAttemptInput,
 	type ReviewAttempt,
+	type ReviewEvidenceSubmission,
+	type ReviewFeedbackItem,
+	type ReviewProviderReceiptBinding,
 } from "./loops/review/contracts.ts";
 export type { ProjectSnapshot } from "./project/snapshot.ts";
 export type { RuntimeWorkUnitClaimPolicyDecision } from "./runtime/claims/policy.ts";
@@ -365,9 +372,23 @@ export {
 } from "./runtime/coordinator/decision-attempt.ts";
 export {
 	commitNativeDecisionOperationSequence,
+	commitReviewOperationSequence,
 	createNativeDecisionOperationSequence,
+	createReviewOperationSequence,
 	type CommitNativeDecisionOperationSequenceInput,
-	type NativeDecisionCommitReceipt,
+	type CommitReviewOperationSequenceInput,
 	type CreateNativeDecisionOperationsInput,
+	type CreateReviewOperationsInput,
+	type NativeDecisionCommitReceipt,
 	type NativeDecisionOperationSequence,
-} from "./runtime/effects/decision-operations.ts";
+	type ReviewCommitReceipt,
+	type ReviewOperationSequence,
+} from "./runtime/effects/gate-operations.ts";
+export {
+	createReviewGate,
+	deriveReviewLifecycleTransition,
+	type CreateReviewGateInput,
+	type ReviewGateRun,
+	type ReviewLifecycleTransition,
+	type RunReviewGateInput,
+} from "./runtime/lifecycle/gates.ts";

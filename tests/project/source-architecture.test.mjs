@@ -218,7 +218,7 @@ describe("source architecture", () => {
 			"src/changes/trace/store.ts",
 			"src/runtime/queries/projection-types.ts",
 			"src/runtime/queries/runtime-board.ts",
-			"src/runtime/lifecycle/decision.ts",
+			"src/runtime/lifecycle/gates.ts",
 			"src/execution/checks/code.ts",
 			"src/execution/checks/model.ts",
 			"src/checks/packs/defaults.ts",
@@ -233,7 +233,7 @@ describe("source architecture", () => {
 			"src/work-state/work-queue.ts",
 			"tests/alignment/graph-v1.test.mjs",
 			"tests/changes/trace/change-trace-protocol-v1.test.mjs",
-			"tests/runtime/lifecycle/decision.test.mjs",
+			"tests/runtime/lifecycle/gates.test.mjs",
 			"tests/runtime/queries/state-projections.test.mjs",
 			"tests/checks/quality/evaluator.test.mjs",
 		]) {
@@ -391,7 +391,7 @@ describe("source architecture", () => {
 			false,
 		);
 		assert.equal(
-			existsSync(join(sourceRoot, "runtime", "lifecycle", "decision.ts")),
+			existsSync(join(sourceRoot, "runtime", "lifecycle", "gates.ts")),
 			true,
 		);
 	});

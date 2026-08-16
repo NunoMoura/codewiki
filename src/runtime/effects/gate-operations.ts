@@ -8,7 +8,10 @@ import type {
 } from "../../changes/trace/contracts.ts";
 import {createNextChangeOperation} from "../../changes/trace/builder.ts";
 import {reduceChangeOperation} from "../../changes/trace/reduce-operation.ts";
-import type {GitCommandRunner} from "../../changes/trace/git-command.ts";
+import {
+	createGitCommandRunner,
+	type GitCommandRunner,
+} from "../../changes/trace/git-command.ts";
 import type {ReplayAdmissionPolicy} from "../../changes/trace/reducer.ts";
 import {
 	changeById,
@@ -32,6 +35,7 @@ import type {CheckPackSnapshot} from "../../checks/packs/contracts.ts";
 import {assertCheckPackSnapshot} from "../../checks/packs/contracts.ts";
 import {assertValidGateReport} from "../../checks/results.ts";
 import {
+	canonicalJson,
 	canonicalJsonDigest,
 	toCanonicalJsonValue,
 	type Sha256Digest,
@@ -40,7 +44,16 @@ import {
 	createDecisionCandidate,
 	type DecisionCandidate,
 } from "../../loops/decision/candidate.ts";
-import type {DecisionLifecycleTransition} from "../lifecycle/decision.ts";
+import {
+	assertReviewEvidenceRecords,
+	reviewSubjectFromAttempt,
+	type ReviewAttempt,
+} from "../../loops/review/contracts.ts";
+import {
+	deriveReviewLifecycleTransition,
+	type DecisionLifecycleTransition,
+	type ReviewLifecycleTransition,
+} from "../lifecycle/gates.ts";
 
 export interface CreateNativeDecisionOperationsInput {
 	readonly state: ProjectWorkState;
@@ -61,6 +74,29 @@ export interface NativeDecisionOperationSequence {
 	readonly state: ChangeWorkState;
 	readonly attemptOperationId: Sha256Digest;
 	readonly candidateId: string;
+	readonly packSnapshotId: string;
+	readonly gateReportId: string;
+	readonly transitionOperationId: Sha256Digest;
+}
+
+export interface CreateReviewOperationsInput {
+	readonly state: ProjectWorkState;
+	readonly changeId: string;
+	readonly baseSnapshot: BaseSnapshot;
+	readonly authorityBinding: AuthorityBinding;
+	readonly recordedAt: string;
+	readonly attempt: ReviewAttempt;
+	readonly packSnapshot: CheckPackSnapshot;
+	readonly evidenceRecords: readonly EvidenceRecord[];
+	readonly report: GateReport;
+	readonly transition: ReviewLifecycleTransition;
+}
+
+export interface ReviewOperationSequence {
+	readonly operations: readonly CanonicalChangeOperation[];
+	readonly state: ChangeWorkState;
+	readonly attemptOperationId: Sha256Digest;
+	readonly reviewSubjectId: string;
 	readonly packSnapshotId: string;
 	readonly gateReportId: string;
 	readonly transitionOperationId: Sha256Digest;
@@ -203,6 +239,174 @@ export function createNativeDecisionOperationSequence(
 		gateReportId: reportBinding.id,
 		transitionOperationId: transitionOperation.operationId,
 	}) as unknown as NativeDecisionOperationSequence;
+}
+
+export function createReviewOperationSequence(
+	input: CreateReviewOperationsInput,
+): ReviewOperationSequence {
+	assertCheckPackSnapshot(input.packSnapshot);
+	assertValidGateReport(input.report, input.packSnapshot);
+	const change = changeById(input.state, input.changeId);
+	if (!change) throw new Error(`Review Change ${input.changeId} is absent.`);
+	if (
+		input.packSnapshot.stage !== "review" ||
+		input.packSnapshot.checkPackDigest !==
+			input.attempt.checkPackSnapshotDigest ||
+		input.report.stage !== "review" ||
+		input.report.subjectDigest !== reviewSubjectFromAttempt(input.attempt).digest ||
+		input.transition.reviewAttemptDigest !== input.attempt.attemptDigest ||
+		input.transition.gateReportDigest !== input.report.reportDigest
+	) {
+		throw new Error("Review persistence identities do not match.");
+	}
+	assertReviewEvidenceRecords(input.attempt, input.evidenceRecords);
+	const expectedTransition = deriveReviewLifecycleTransition(
+		input.attempt,
+		input.report,
+	);
+	if (canonicalJson(input.transition) !== canonicalJson(expectedTransition)) {
+		throw new Error("Review Runtime transition is not the fixed Gate transition.");
+	}
+	const subject = reviewSubjectFromAttempt(input.attempt);
+	const packSnapshotBinding = inlineSemanticArtifact(
+		idFromDigest("check-pack-snapshot:review", input.packSnapshot.checkPackDigest),
+		String(input.packSnapshot.schemaVersion),
+		input.packSnapshot,
+	);
+	const resultBindings = new Map<string, CanonicalInlineSemanticArtifact>(
+		input.report.results.map((result) => {
+			const id = qualifiedCheckId(result.packId, result.checkId);
+			return [
+				id,
+				inlineSemanticArtifact(
+					idFromDigest(`check-result:review:${id}`, result.resultDigest),
+					String(result.schemaVersion),
+					result,
+				),
+			];
+		}),
+	);
+	const reportBinding = inlineSemanticArtifact(
+		idFromDigest("gate-report:review", input.report.reportDigest),
+		String(input.report.schemaVersion),
+		input.report,
+	);
+	const transitionBinding = inlineSemanticArtifact(
+		idFromDigest(
+			"runtime-transition:review",
+			input.transition.transitionDigest,
+		),
+		input.transition.schemaVersion,
+		input.transition,
+	);
+	let projected = change;
+	const operations: CanonicalChangeOperation[] = [];
+	const append = <K extends ChangeOperationKind>(
+		...values: [
+			K,
+			Parameters<typeof createNextChangeOperation<K>>[1]["payload"],
+		]
+	): CanonicalChangeOperation<K> => {
+		const [kind, payload] = values;
+		const operation = createNextChangeOperation(projected, {
+			changeId: projected.changeId,
+			kind,
+			baseSnapshot: input.baseSnapshot,
+			authorityBinding: input.authorityBinding,
+			recordedAt: operationTimestamp(input.recordedAt, operations.length),
+			payload,
+		});
+		projected = reduceChangeOperation(projected, operation, {
+			planningEpochs: [],
+		});
+		operations.push(operation);
+		return operation;
+	};
+	const started = append("loop.attempt_started", {
+		loop: "review",
+		changeRevisionId: activeChangeRevisionId(change),
+		loopProtocolDigest: canonicalJsonDigest({
+			id: "codewiki.review-loop",
+			version: "1.0.0",
+		}),
+		routeId: subject.id,
+		privateAttemptDigest: input.attempt.attemptDigest,
+	});
+	append("loop.exit_policy_recorded", {
+		attemptOperationId: started.operationId,
+		candidateId: subject.id,
+		policy: packSnapshotBinding,
+	});
+	for (const evidence of sortedEvidence(input.evidenceRecords)) {
+		append("evidence.recorded", {
+			attemptOperationId: started.operationId,
+			candidateId: subject.id,
+			evidence: inlineSemanticArtifact(
+				evidence.evidenceId,
+				evidence.schemaVersion,
+				evidence,
+			),
+			evidenceKind: evidence.kind,
+			authority: evidence.authority,
+			coverage: evidence.coverage,
+		});
+	}
+	for (const result of sortedResults(input.report.results)) {
+		const id = qualifiedCheckId(result.packId, result.checkId);
+		append("check.result_recorded", {
+			attemptOperationId: started.operationId,
+			candidateId: subject.id,
+			result: requiredResultBinding(resultBindings, id),
+			checkId: id,
+			checkVersion: result.checkVersion,
+			status: operationResultStatus(result.status),
+			evidenceRecordIds: [...result.evidenceRecordIds],
+			evidenceInputDigest: result.inputDigest,
+		});
+	}
+	append("loop.exit_report_recorded", {
+		attemptOperationId: started.operationId,
+		candidateId: subject.id,
+		report: reportBinding,
+		status: operationReportStatus(input.report.status),
+		resultIds: sortedResults(input.report.results).map((result) =>
+			requiredResultBinding(
+				resultBindings,
+				qualifiedCheckId(result.packId, result.checkId),
+			).id,
+		),
+	});
+	const transitionOperation = append("runtime.route_recorded", {
+		attemptOperationId: started.operationId,
+		exitReportId: reportBinding.id,
+		route: serializedReviewRoute(input.transition),
+		reasonCode: input.transition.reasonCode,
+		runtimeRoute: transitionBinding,
+		targetChangeId: input.changeId,
+	});
+	append("loop.attempt_ended", {
+		attemptOperationId: started.operationId,
+		status: operationReportStatus(input.report.status),
+		exitReportId: reportBinding.id,
+		routeOperationId: transitionOperation.operationId,
+	});
+	return toCanonicalJsonValue({
+		operations,
+		state: projected,
+		attemptOperationId: started.operationId,
+		reviewSubjectId: subject.id,
+		packSnapshotId: packSnapshotBinding.id,
+		gateReportId: reportBinding.id,
+		transitionOperationId: transitionOperation.operationId,
+	}) as unknown as ReviewOperationSequence;
+}
+
+function serializedReviewRoute(
+	transition: ReviewLifecycleTransition,
+): "complete" | "implementation" | "waiting" {
+	if (transition.target === "guarded_delivery") return "complete";
+	if (transition.target === "implementation") return "implementation";
+	return "waiting";
 }
 
 function assertInput(input: CreateNativeDecisionOperationsInput): {
@@ -441,6 +645,39 @@ export interface CommitNativeDecisionOperationSequenceInput {
 	readonly signal?: AbortSignal;
 }
 
+export interface CommitReviewOperationSequenceInput {
+	readonly repoRoot: string;
+	readonly remote: string;
+	readonly repositoryIdentity: Sha256Digest;
+	readonly currentProject: () =>
+		| ProjectAuthoritySnapshot
+		| Promise<ProjectAuthoritySnapshot>;
+	readonly replayPolicy: ReplayAdmissionPolicy;
+	readonly authorityBinding: AuthorityBinding;
+	readonly changeId: string;
+	readonly expectedTeamSnapshotDigest: Sha256Digest;
+	readonly expectedWorkStateDigest: Sha256Digest;
+	readonly recordedAt: string;
+	readonly attempt: ReviewAttempt;
+	readonly packSnapshot: CheckPackSnapshot;
+	readonly evidenceRecords: readonly EvidenceRecord[];
+	readonly report: GateReport;
+	readonly transition: ReviewLifecycleTransition;
+	readonly runner?: GitCommandRunner;
+	readonly materializationRoot?: string;
+	readonly signal?: AbortSignal;
+}
+
+export interface ReviewCommitReceipt {
+	readonly reviewSubjectId: string;
+	readonly attemptOperationId: Sha256Digest;
+	readonly gateReportId: string;
+	readonly transitionOperationId: Sha256Digest;
+	readonly stateHead: string;
+	readonly sequence: ReviewOperationSequence;
+	readonly observation: SynchronizationObservation;
+}
+
 export interface NativeDecisionCommitReceipt {
 	readonly candidateId: string;
 	readonly attemptOperationId: Sha256Digest;
@@ -449,6 +686,108 @@ export interface NativeDecisionCommitReceipt {
 	readonly stateHead: string;
 	readonly sequence: NativeDecisionOperationSequence;
 	readonly observation: SynchronizationObservation;
+}
+
+export async function commitReviewOperationSequence(
+	input: CommitReviewOperationSequenceInput,
+): Promise<ReviewCommitReceipt> {
+	const runner = input.runner ?? createGitCommandRunner();
+	const synchronizeCurrent = createCurrentGitSynchronizer({
+		repoRoot: input.repoRoot,
+		remote: input.remote,
+		repositoryIdentity: input.repositoryIdentity,
+		currentProject: input.currentProject,
+		policy: input.replayPolicy,
+		runner,
+		materializationRoot: input.materializationRoot,
+		signal: input.signal,
+	});
+	const {observation} = await synchronizeCurrent();
+	if (
+		observation.status !== "fresh" ||
+		!observation.workState ||
+		!observation.teamSnapshot
+	) {
+		throw new Error(
+			`Review commit requires fresh synchronization; current status is ${observation.status}.`,
+		);
+	}
+	if (
+		observation.teamSnapshot.snapshotDigest !==
+			input.expectedTeamSnapshotDigest ||
+		observation.workState.workStateDigest !== input.expectedWorkStateDigest
+	) {
+		throw new Error("Review snapshot is stale and must be rerun.");
+	}
+	if (
+		observation.teamSnapshot.protectedSourceHead !== input.attempt.integratedHead
+	) {
+		throw new Error("Review integrated head is stale and must be rerun.");
+	}
+	const tree = await runner({
+		repoRoot: input.repoRoot,
+		args: ["rev-parse", `${input.attempt.integratedHead}^{tree}`],
+		signal: input.signal,
+	});
+	if (
+		tree.exitCode !== 0 ||
+		tree.stdout.trim() !== input.attempt.integratedTree
+	) {
+		throw new Error("Review integrated tree does not match its exact head.");
+	}
+	const sequence = createReviewOperationSequence({
+		state: observation.workState,
+		changeId: input.changeId,
+		baseSnapshot: {
+			remoteStateHead: observation.teamSnapshot.remoteStateHead,
+			sourceHead: observation.teamSnapshot.protectedSourceHead,
+			knowledgeDigest: observation.teamSnapshot.knowledgeDigest,
+			configDigest: observation.teamSnapshot.configDigest,
+			policyDigest: observation.teamSnapshot.policyDigest,
+		},
+		authorityBinding: input.authorityBinding,
+		recordedAt: input.recordedAt,
+		attempt: input.attempt,
+		packSnapshot: input.packSnapshot,
+		evidenceRecords: input.evidenceRecords,
+		report: input.report,
+		transition: input.transition,
+	});
+	const {pushResult} = await pushSynchronizedStateBatch({
+		repoRoot: input.repoRoot,
+		remote: input.remote,
+		state: observation.workState,
+		records: sequence.operations,
+		policy: input.replayPolicy,
+		observation,
+		runner,
+		signal: input.signal,
+	});
+	if (pushResult.status === "stale") {
+		throw new Error("Review push became stale; Runtime must refetch and rerun Review.");
+	}
+	const {observation: verified} = await synchronizeCurrent();
+	const acceptedIds = new Set(verified.workState?.acceptedOperationIds ?? []);
+	if (
+		verified.status !== "fresh" ||
+		!verified.workState?.stateHead ||
+		!sequence.operations.every((operation) =>
+			acceptedIds.has(operation.operationId),
+		)
+	) {
+		throw new Error(
+			`Accepted Review attempt ${input.attempt.attemptDigest} could not be verified.`,
+		);
+	}
+	return Object.freeze({
+		reviewSubjectId: sequence.reviewSubjectId,
+		attemptOperationId: sequence.attemptOperationId,
+		gateReportId: sequence.gateReportId,
+		transitionOperationId: sequence.transitionOperationId,
+		stateHead: verified.workState.stateHead,
+		sequence,
+		observation: verified,
+	});
 }
 
 export async function commitNativeDecisionOperationSequence(

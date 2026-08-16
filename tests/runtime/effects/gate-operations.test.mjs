@@ -7,18 +7,30 @@ import {
 	subjectInputSelection,
 } from "../../../src/checks/protocol.ts";
 import {createCheckResult, createGateReport} from "../../../src/checks/results.ts";
-import {deriveDecisionLifecycleTransition} from "../../../src/runtime/lifecycle/decision.ts";
+import {
+	deriveDecisionLifecycleTransition,
+	deriveReviewLifecycleTransition,
+} from "../../../src/runtime/lifecycle/gates.ts";
+import {
+	createReviewAttempt,
+	reviewSubjectFromAttempt,
+} from "../../../src/loops/review/contracts.ts";
 import {EVIDENCE_SCHEMA_VERSION} from "../../../src/evidence/contracts.ts";
 import {materializeEvidenceRecord} from "../../../src/evidence/materialize.ts";
 import {canonicalJsonDigest} from "../../../src/utils/canonical-json.ts";
+import {projectChecksState} from "../../../src/work-state/checks.ts";
 import {
 	commitNativeDecisionOperationSequence,
+	commitReviewOperationSequence,
 	createNativeDecisionOperationSequence,
-} from "../../../src/runtime/effects/decision-operations.ts";
+	createReviewOperationSequence,
+} from "../../../src/runtime/effects/gate-operations.ts";
 import {
 	allowAllReplayPolicy,
 	baseSnapshotFor,
+	buildOperationSequence,
 	openProposedChange,
+	revisionFor,
 	reduceBatch,
 } from "../../helpers/change-trace-replay-v1.mjs";
 import {
@@ -57,7 +69,7 @@ function sourceEvidence(change, candidate) {
 			payload: {
 				sourceType: "source",
 				snapshotDigest: digest("6"),
-				paths: ["src/runtime/effects/decision-operations.ts"],
+				paths: ["src/runtime/effects/gate-operations.ts"],
 				symbols: ["createNativeDecisionOperationSequence"],
 				ownershipRefs: ["component:runtime"],
 				observations: ["Native Decision artifacts are inline."],
@@ -80,6 +92,75 @@ function sourceEvidence(change, candidate) {
 			sensitivity: "project",
 		},
 	);
+}
+
+function failedReviewArtifacts(changeId) {
+	const check = packagedCheck({
+		stage: "review",
+		definition: {
+			id: "delivery-ready",
+			failure: {
+				code: "delivery_not_ready",
+				message: "Delivery proof is incomplete.",
+				remediation: ["Add exact delivery proof."],
+			},
+			inputs: [
+				{
+					source: "subject",
+					refs: [],
+					required: true,
+					maximumBytes: 1_048_576,
+				},
+			],
+		},
+	});
+	const packSnapshot = checkSnapshot([check], {stage: "review"});
+	const attempt = createReviewAttempt({
+		integratedHead: "f".repeat(40),
+		integratedTree: "e".repeat(40),
+		targetBranch: "main",
+		changeIds: [`change:${changeId}`],
+		workItemIds: ["work-item:WI-feedback"],
+		checkPackSnapshotDigest: packSnapshot.checkPackDigest,
+		providerReceiptDigests: [],
+		evidenceRecordDigests: [],
+	});
+	const subject = reviewSubjectFromAttempt(attempt);
+	const invocation = assembleCheckInvocation({
+		subject,
+		snapshot: packSnapshot,
+		check,
+		inputs: [subjectInputSelection(subject, check.definition.inputs[0])],
+	});
+	const execution = executionIdentity();
+	const result = createCheckResult({
+		snapshot: packSnapshot,
+		check,
+		invocation,
+		output: checkOutput(invocation, {
+			measurement: {kind: "binary", value: false},
+			summary: "Delivery proof is incomplete.",
+			details: [{message: "Add exact delivery proof."}],
+		}),
+		execution,
+	});
+	const report = createGateReport({
+		snapshot: packSnapshot,
+		subjectDigest: subject.digest,
+		results: [result],
+		executions: [
+			{
+				packId: check.packId,
+				checkId: check.checkId,
+				source: "executed",
+				status: "completed",
+				attempts: 1,
+				execution,
+				resultDigest: result.resultDigest,
+			},
+		],
+	});
+	return {attempt, packSnapshot, report};
 }
 
 function nativeDecisionArtifacts(
@@ -528,5 +609,301 @@ describe("native Decision canonical operation continuation", () => {
 				}),
 			/not the exact Runtime materialization for current WorkState/,
 		);
+	});
+});
+
+describe("Review canonical Gate persistence", () => {
+	it("persists exact Review attempt, Gate, transition, and terminal state", () => {
+		const changeId = "CHG-review-operations";
+		const opened = openProposedChange(
+			createInitialProjectWorkState(),
+			changeId,
+		);
+		const packSnapshot = checkSnapshot([], {stage: "review", packs: []});
+		const attempt = createReviewAttempt({
+			integratedHead: "a".repeat(40),
+			integratedTree: "b".repeat(40),
+			targetBranch: "main",
+			changeIds: [`change:${changeId}`],
+			workItemIds: ["work-item:WI-review"],
+			checkPackSnapshotDigest: packSnapshot.checkPackDigest,
+			providerReceiptDigests: [],
+			evidenceRecordDigests: [],
+		});
+		const subject = reviewSubjectFromAttempt(attempt);
+		const report = createGateReport({
+			snapshot: packSnapshot,
+			subjectDigest: subject.digest,
+			results: [],
+			executions: [],
+		});
+		const transition = deriveReviewLifecycleTransition(attempt, report);
+		const sequence = createReviewOperationSequence({
+			state: opened.state,
+			changeId,
+			baseSnapshot: baseSnapshotFor(opened.state),
+			authorityBinding: authorityBinding(),
+			recordedAt: "2026-08-15T10:00:00.000Z",
+			attempt,
+			packSnapshot,
+			evidenceRecords: [],
+			report,
+			transition,
+		});
+		assert.deepEqual(
+			sequence.operations.map((operation) => operation.body.kind),
+			[
+				"loop.attempt_started",
+				"loop.exit_policy_recorded",
+				"loop.exit_report_recorded",
+				"runtime.route_recorded",
+				"loop.attempt_ended",
+			],
+		);
+		const projected = sequence.state.loopAttempts[0];
+		assert.equal(projected.loop, "review");
+		assert.equal(projected.privateAttemptDigest, attempt.attemptDigest);
+		assert.equal(projected.currentCandidateId, subject.id);
+		assert.equal(projected.status, "passed");
+		assert.equal(sequence.operations.at(-2).body.payload.route, "complete");
+		const accepted = reduceBatch(
+			opened.state,
+			sequence.operations,
+			gitObject("d"),
+		);
+		const projection = projectChecksState(accepted);
+		assert.equal(projection.attempts[0].stage, "review");
+		assert.equal(projection.attempts[0].status, "passed");
+		assert.equal(
+			projection.attempts[0].report.reportDigest,
+			report.reportDigest,
+		);
+		assert.throws(
+			() =>
+				createReviewOperationSequence({
+					state: opened.state,
+					changeId,
+					baseSnapshot: baseSnapshotFor(opened.state),
+					authorityBinding: authorityBinding(),
+					recordedAt: "2026-08-15T10:00:00.000Z",
+					attempt,
+					packSnapshot,
+					evidenceRecords: [],
+					report,
+					transition: {...transition, target: "implementation"},
+				}),
+			/fixed Gate transition/,
+		);
+		const unrelatedCandidate = nativeDecisionCandidate({
+			state: opened.state,
+			changeId,
+			rationale: "Unrelated Evidence identity.",
+		});
+		assert.throws(
+			() =>
+				createReviewOperationSequence({
+					state: opened.state,
+					changeId,
+					baseSnapshot: baseSnapshotFor(opened.state),
+					authorityBinding: authorityBinding(),
+					recordedAt: "2026-08-15T10:00:00.000Z",
+					attempt,
+					packSnapshot,
+					evidenceRecords: [
+						sourceEvidence(opened.state.changes[0], unrelatedCandidate),
+					],
+					report,
+					transition,
+				}),
+			/Evidence digests do not match/,
+		);
+	});
+
+	it("projects persisted failed-Review feedback for Implementation and UI", () => {
+		const changeId = "CHG-review-feedback";
+		const opened = openProposedChange(
+			createInitialProjectWorkState(),
+			changeId,
+		);
+		const artifacts = failedReviewArtifacts(changeId);
+		const sequence = createReviewOperationSequence({
+			state: opened.state,
+			changeId,
+			baseSnapshot: baseSnapshotFor(opened.state),
+			authorityBinding: authorityBinding(),
+			recordedAt: "2026-08-15T10:30:00.000Z",
+			...artifacts,
+			evidenceRecords: [],
+			transition: deriveReviewLifecycleTransition(
+				artifacts.attempt,
+				artifacts.report,
+			),
+		});
+		const accepted = reduceBatch(
+			opened.state,
+			sequence.operations,
+			gitObject("f"),
+		);
+		const projected = projectChecksState(accepted).attempts[0];
+		assert.equal(projected.stage, "review");
+		assert.equal(projected.status, "failed");
+		assert.equal(projected.results[0].failureCode, "delivery_not_ready");
+		assert.equal(
+			projected.results[0].feedbackSummary,
+			"Delivery proof is incomplete.",
+		);
+	});
+
+	it("commits and verifies Review through expected-head synchronization", async () => {
+		const fixture = await createTwoCloneFixture();
+		try {
+			const changeId = "CHG-review-git";
+			await git(fixture.cloneB, ["config", "user.name", "Review Test"]);
+			await git(fixture.cloneB, ["config", "user.email", "review@example.invalid"]);
+			await git(fixture.cloneB, ["checkout", "--orphan", "main"]);
+			await git(fixture.cloneB, ["commit", "--allow-empty", "-m", "source"]);
+			const sourceHead = (
+				await git(fixture.cloneB, ["rev-parse", "HEAD"])
+			).stdout.trim();
+			const initial = createInitialProjectWorkState();
+			const records = buildOperationSequence({
+				changeId,
+				baseSnapshot: {...baseSnapshotFor(initial), sourceHead},
+				specifications: [
+					{
+						kind: "trace.opened",
+						recordedAt: "2026-08-15T11:58:00.000Z",
+						payload: {origin: "user", provenanceRefs: [`request:${changeId}`]},
+					},
+					{
+						kind: "change.proposed",
+						recordedAt: "2026-08-15T11:59:00.000Z",
+						payload: {
+							revision: revisionFor(changeId),
+							provenance: {kind: "user", refs: [`request:${changeId}`]},
+						},
+					},
+				],
+			}).operations;
+			const opened = await createGitProposal(fixture.cloneA, initial, records);
+			assert.equal(
+				(await pushGitProposal(fixture.cloneA, opened.proposal)).status,
+				"accepted",
+			);
+			const project = projectSnapshotFor(opened.projected);
+			const selected = await synchronizeGitState({
+				repoRoot: fixture.cloneB,
+				remote: "origin",
+				repositoryIdentity,
+				currentProject: project,
+				policy: allowAllReplayPolicy,
+			});
+			assert.equal(selected.status, "fresh");
+			const integratedHead = selected.teamSnapshot.protectedSourceHead;
+			const integratedTree = (
+				await git(fixture.cloneB, ["rev-parse", `${integratedHead}^{tree}`])
+			).stdout.trim();
+			const packSnapshot = checkSnapshot([], {stage: "review", packs: []});
+			const attempt = createReviewAttempt({
+				integratedHead,
+				integratedTree,
+				targetBranch: "main",
+				changeIds: [`change:${changeId}`],
+				workItemIds: ["work-item:WI-review-git"],
+				checkPackSnapshotDigest: packSnapshot.checkPackDigest,
+				providerReceiptDigests: [],
+				evidenceRecordDigests: [],
+			});
+			const report = createGateReport({
+				snapshot: packSnapshot,
+				subjectDigest: reviewSubjectFromAttempt(attempt).digest,
+				results: [],
+				executions: [],
+			});
+			const commitInput = {
+				repoRoot: fixture.cloneB,
+				remote: "origin",
+				repositoryIdentity,
+				currentProject: () => project,
+				replayPolicy: allowAllReplayPolicy,
+				authorityBinding: authorityBinding(),
+				changeId,
+				expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
+				expectedWorkStateDigest: selected.workState.workStateDigest,
+				recordedAt: "2026-08-15T12:00:00.000Z",
+				attempt,
+				packSnapshot,
+				evidenceRecords: [],
+				report,
+				transition: deriveReviewLifecycleTransition(attempt, report),
+			};
+			const receipt = await commitReviewOperationSequence(commitInput);
+			assert.equal(receipt.observation.status, "fresh");
+			assert.equal(
+				receipt.observation.workState.changes[0].loopAttempts[0].loop,
+				"review",
+			);
+			await assert.rejects(
+				commitReviewOperationSequence(commitInput),
+				/must be rerun/,
+			);
+		} finally {
+			await fixture.cleanup();
+		}
+	});
+
+	it("projects an operationally stopped Review without a fabricated Result", () => {
+		const changeId = "CHG-review-stopped";
+		const opened = openProposedChange(
+			createInitialProjectWorkState(),
+			changeId,
+		);
+		const check = packagedCheck({stage: "review"});
+		const packSnapshot = checkSnapshot([check], {stage: "review"});
+		const attempt = createReviewAttempt({
+			integratedHead: "c".repeat(40),
+			integratedTree: "d".repeat(40),
+			targetBranch: "main",
+			changeIds: [`change:${changeId}`],
+			workItemIds: ["work-item:WI-stopped"],
+			checkPackSnapshotDigest: packSnapshot.checkPackDigest,
+			providerReceiptDigests: [],
+			evidenceRecordDigests: [],
+		});
+		const report = createGateReport({
+			snapshot: packSnapshot,
+			subjectDigest: reviewSubjectFromAttempt(attempt).digest,
+			results: [],
+			executions: [],
+			stoppedReason: {
+				code: "executor_unavailable",
+				message: "Review executor is unavailable.",
+			},
+		});
+		const sequence = createReviewOperationSequence({
+			state: opened.state,
+			changeId,
+			baseSnapshot: baseSnapshotFor(opened.state),
+			authorityBinding: authorityBinding(),
+			recordedAt: "2026-08-15T11:00:00.000Z",
+			attempt,
+			packSnapshot,
+			evidenceRecords: [],
+			report,
+			transition: deriveReviewLifecycleTransition(attempt, report),
+		});
+		assert.equal(
+			sequence.operations.some(
+				(operation) => operation.body.kind === "check.result_recorded",
+			),
+			false,
+		);
+		const accepted = reduceBatch(
+			opened.state,
+			sequence.operations,
+			gitObject("e"),
+		);
+		assert.equal(accepted.changes[0].loopAttempts[0].status, "indeterminate");
+		assert.equal(projectChecksState(accepted).attempts[0].status, "stopped");
 	});
 });

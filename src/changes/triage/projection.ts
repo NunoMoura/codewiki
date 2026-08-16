@@ -374,7 +374,7 @@ function candidateContext(change: ChangeWorkState): CandidateContext | null {
 
 interface LatestRuntimeRoute {
 	readonly route: string;
-	readonly loop: "decision" | "planning" | "implementation";
+	readonly loop: "decision" | "planning" | "implementation" | "review";
 }
 
 function candidateStatus(latest: LatestRuntimeRoute | null): TriageCandidateStatus | null {

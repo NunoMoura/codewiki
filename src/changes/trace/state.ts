@@ -79,7 +79,7 @@ export interface ChangeClaimProjection {
 
 export interface LoopAttemptProjection {
 	readonly operationId: OperationId;
-	readonly loop: "decision" | "planning" | "implementation";
+	readonly loop: "decision" | "planning" | "implementation" | "review";
 	readonly changeRevisionId: Sha256Digest;
 	readonly privateAttemptDigest?: Sha256Digest;
 	readonly status: LoopAttemptProjectionStatus;
