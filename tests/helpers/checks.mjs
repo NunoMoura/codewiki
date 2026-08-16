@@ -7,11 +7,20 @@ import {createCheckSubject} from "../../src/checks/identity.ts";
 import {
 	createCheckPack,
 	createCheckPackSnapshot,
+	createPackSkillSetSnapshot,
 	createPackagedCheck,
 } from "../../src/checks/packs/contracts.ts";
+import {bindProducerSkills} from "../../src/execution/ports.ts";
 
 export function digest(value) {
 	return canonicalJsonDigest(value);
+}
+
+export function producerSkills(stage = "implementation") {
+	return bindProducerSkills(
+		createPackSkillSetSnapshot({stage, skills: []}),
+		stage,
+	);
 }
 
 export function checkDefinition(overrides = {}) {

@@ -3,10 +3,14 @@ import type { ImplementationWorkerReportInput } from "../../loops/implementation
 import type { ChangeIntakeContent } from "../../changes/intake/contracts.ts";
 import { normalizeChangeIntakeContent } from "../../changes/intake/normalize.ts";
 import type { WorktreeRef } from "../../git/worktrees.ts";
-import type { WorkerExecutionPort } from "../../execution/ports.ts";
+import {
+	assertProducerSkillReceipt,
+	type ProducerSkillReceipt,
+	type WorkerExecutionPort,
+} from "../../execution/ports.ts";
 import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
-export const IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION = 1 as const;
+export const IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION = 2 as const;
 
 export interface ImplementationWorkerAssignment {
 	schemaVersion: typeof IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION;
@@ -23,6 +27,7 @@ export interface ImplementationWorkerAssignment {
 	workStateDigest: string;
 	sourceBaseRef: string;
 	contextDigest: string;
+	producerSkillReceipt: ProducerSkillReceipt;
 	prompt: string;
 	reportPath: string;
 	isolation:
@@ -38,6 +43,7 @@ export interface ImplementationWorkerReport {
 	workItemId: string;
 	status: "completed" | "blocked" | "failed" | "cancelled";
 	reportRef: string;
+	producerSkillReceipt: ProducerSkillReceipt;
 	implementationEvidence?: ImplementationWorkerReportInput;
 	discoveries?: readonly ChangeIntakeContent[];
 	sessionId?: string;
@@ -88,6 +94,7 @@ export function implementationWorkerJobId(
 				reportPath: assignment.reportPath,
 				isolation: assignment.isolation,
 				worktree: assignment.worktree,
+				producerSkillSetDigest: assignment.producerSkillReceipt.skillSetDigest,
 				executionPolicyDigest: assignment.executionPolicy?.digest,
 			}),
 		)
@@ -101,7 +108,7 @@ export function assertImplementationWorkerAssignment(
 		assignment.schemaVersion !== IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION
 	) {
 		throw new Error(
-			"Implementation worker assignment schemaVersion must be 1.",
+			"Implementation worker assignment schemaVersion must be 2.",
 		);
 	}
 	for (const [field, value] of Object.entries({
@@ -120,6 +127,12 @@ export function assertImplementationWorkerAssignment(
 		if (typeof value !== "string" || !value.trim()) {
 			throw new Error(`Implementation worker assignment ${field} is required.`);
 		}
+	}
+	assertProducerSkillReceipt(assignment.producerSkillReceipt);
+	if (assignment.producerSkillReceipt.stage !== "implementation") {
+		throw new Error(
+			"Implementation worker assignment requires an Implementation Skill receipt.",
+		);
 	}
 	if (Buffer.byteLength(assignment.prompt, "utf8") > 64 * 1024) {
 		throw new Error("Implementation worker assignment prompt exceeds 64 KiB.");
@@ -182,6 +195,10 @@ export function assertImplementationWorkerReport(
 	if (!report.reportRef.trim()) {
 		throw new Error("Implementation worker report ref is required.");
 	}
+	assertProducerSkillReceipt(
+		report.producerSkillReceipt,
+		assignment.producerSkillReceipt,
+	);
 	if (report.implementationEvidence) {
 		if (
 			report.implementationEvidence.workerId !== assignment.workerId ||

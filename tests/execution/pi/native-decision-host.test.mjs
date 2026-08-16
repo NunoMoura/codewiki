@@ -97,7 +97,22 @@ it("runs and recovers selected native Decision work through the default Pi host 
 	try {
 		await mkdir(join(fixture.cloneA, ".codewiki"), {recursive: true});
 		await writeFile(join(fixture.cloneA, ".codewiki", "config.json"), "{}\n");
-		await git(fixture.cloneA, ["add", ".codewiki/config.json"]);
+		const skillRoot = join(
+			fixture.cloneA,
+			".codewiki",
+			"check-packs",
+			"decision",
+			"standards",
+			"skill",
+			"decision-guide",
+		);
+		await mkdir(skillRoot, {recursive: true});
+		await writeFile(
+			join(skillRoot, "SKILL.md"),
+			"---\nname: decision-guide\ndescription: Apply protected Decision guidance.\n---\nAssess exact Change meaning.\n",
+			"utf8",
+		);
+		await git(fixture.cloneA, ["add", ".codewiki"]);
 		await git(fixture.cloneA, [
 			"-c",
 			"user.name=CodeWiki Test",
@@ -194,6 +209,18 @@ it("runs and recovers selected native Decision work through the default Pi host 
 				sessionFactory: async (input) => ({
 					async prompt(prompt) {
 						producerRuns += 1;
+						assert.equal(input.producerSkills.receipt.stage, "decision");
+						assert.deepEqual(
+							input.producerSkills.receipt.skills.map((skill) => skill.name),
+							["decision-guide"],
+						);
+						assert.match(
+							Buffer.from(
+								input.producerSkills.snapshot.skills[0].files[0].contentBase64,
+								"base64",
+							).toString("utf8"),
+							/Apply protected Decision guidance/,
+						);
 						assert.match(prompt, new RegExp(candidate.changeRevisionId));
 						input.submitCandidate({
 							disposition: "approve",

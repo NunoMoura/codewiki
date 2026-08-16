@@ -98,12 +98,18 @@ Change
 Project files define stage standards directly:
 
 ```text
-.codewiki/check-packs/<stage>/<pack>/<check-id>/
-├── check.json
-└── CHECK.mjs | CHECK.md
+.codewiki/check-packs/<stage>/<pack>/
+├── skill/<skill-name>/        # optional, at most one per Pack
+│   ├── SKILL.md
+│   └── scripts/ | references/ | assets/ | other resources
+└── <check-id>/
+    ├── check.json
+    └── CHECK.mjs | CHECK.md
 ```
 
-Stages are `decision`, `planning`, `implementation`, and `review`. Pack directories need no manifest. Every present Check gates. Empty Packs are valid and produce `empty_pack`; a stage with zero Checks passes with `selectedCheckCount: 0`, no synthetic Result, and `no_checks_configured`.
+Stages are `decision`, `planning`, `implementation`, and `review`. Pack directories need no manifest. Every present Check gates. Empty Packs and Skill-only Packs are valid; a stage with zero Checks passes with `selectedCheckCount: 0`, no synthetic Result, and `no_checks_configured`.
+
+An optional Pack Skill guides only the work-producing Agent for its stage. Runtime snapshots its complete bounded file tree and binds separate Skill digests to producer attempts and receipts. Managed Pi sessions disable ambient Skills and resources, materialize only the exact stage snapshots, preserve executable files, and keep explicit Worker tool policy authoritative over `allowed-tools` metadata. Code and Model Check executors receive no Pack Skill, producer context, memory, or tools, and Skill identity does not enter Check Result or Gate cache identity.
 
 `check.json` uses the exported `CheckDefinitionSchema` at version `1.0.0`. It binds one atomic requirement, one Code or Model implementation, bounded input selectors, binary or finite quantitative measurement, execution limits, one stable failure code, and one remediation contract. It contains no lifecycle route, authority grant, enforcement tier, activation state, protected floor, arbitrary dependency, or repair subsystem.
 

@@ -18,6 +18,7 @@ import {
 	runOciContainerCommand,
 } from "../../../src/runtime/workbenches/container/adapter.ts";
 import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../../src/runtime/workers/implementation-adapter.ts";
+import {producerSkills} from "../../helpers/checks.mjs";
 
 const IMAGE = `registry.example/codewiki-worker@sha256:${"a".repeat(64)}`;
 
@@ -37,6 +38,7 @@ function assignment(root) {
 		workStateDigest: "sha256:work-state",
 		sourceBaseRef: "git:base:abc123",
 		contextDigest: "sha256:context",
+		producerSkillReceipt: producerSkills().receipt,
 		prompt: "Implement the assigned container-isolated change.",
 		reportPath: join(
 			root,
@@ -162,6 +164,26 @@ test("OCI container adapter runs a hardened digest-pinned worker and recovers it
 	});
 	try {
 		assert.deepEqual(await adapter.availability(), { available: true });
+		await assert.rejects(
+			adapter.execute(
+				{
+					...input,
+					producerSkillReceipt: {
+						...input.producerSkillReceipt,
+						skillSetDigest: `sha256:${"b".repeat(64)}`,
+						skills: [
+							{
+								packId: "standards",
+								name: "implementation-guide",
+								skillDigest: `sha256:${"c".repeat(64)}`,
+							},
+						],
+					},
+				},
+				new AbortController().signal,
+			),
+			/do not support exact Pack Skill delivery/,
+		);
 		const report = await adapter.execute(input, new AbortController().signal);
 		assert.equal(report.status, "completed");
 		assert.equal(report.implementationEvidence.workerId, input.workerId);

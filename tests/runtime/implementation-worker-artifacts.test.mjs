@@ -19,6 +19,7 @@ import {
 	writeImplementationWorkerDispatchPacket,
 } from "../../src/runtime/workers/implementation-artifacts.ts";
 import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../src/runtime/workers/implementation-adapter.ts";
+import {producerSkills} from "../helpers/checks.mjs";
 
 function packetDirectory(root) {
 	return join(root, ".codewiki", "runtime", "worker-assignments");
@@ -69,6 +70,7 @@ function packet(root, suffix, status) {
 				workStateDigest: `sha256:${"b".repeat(64)}`,
 				sourceBaseRef: `git:${"a".repeat(40)}`,
 				contextDigest: `sha256:${"c".repeat(64)}`,
+				producerSkillReceipt: producerSkills().receipt,
 				prompt: `Implement ${workItemId}`,
 				reportPath,
 				isolation: { kind: "worktree", ref: `worktree:${suffix}` },

@@ -65,6 +65,11 @@ import { productReleaseJob } from "../effects/product-release.ts";
 import type { ProjectCoordinator } from "../coordinator/project.ts";
 import { appendRuntimeWorkUnitClaims } from "../claims/work-unit-events.ts";
 import type { RuntimeReactor, RuntimeTrigger } from "../coordinator/reactor.ts";
+import {loadProtectedPackSkillSetSnapshot} from "../../checks/packs/loader.ts";
+import {
+	bindProducerSkills,
+	type ProducerSkillBinding,
+} from "../../execution/ports.ts";
 
 export interface ImplementationWorkerDispatchResult {
 	status: "held" | "quiescent" | "scheduled";
@@ -97,6 +102,10 @@ export interface ImplementationWorkerDispatcherOptions {
 	releaseAdapter?: ProductReleaseAdapter;
 	now?: () => string;
 	beforeAppend?: () => void | Promise<void>;
+	loadImplementationProducerSkills?: (input: {
+		repoRoot: string;
+		protectedSourceHead: string;
+	}) => ProducerSkillBinding | Promise<ProducerSkillBinding>;
 }
 
 interface RecoveredImplementationWorker {
@@ -363,12 +372,35 @@ export class ImplementationWorkerDispatcher {
 			]);
 		}
 
-		const packets = createDispatchPackets(
-			this.options.repoRoot,
-			observation.workState,
-			preview,
+		let producerSkills: ProducerSkillBinding;
+		try {
+			producerSkills = this.options.loadImplementationProducerSkills
+				? await this.options.loadImplementationProducerSkills({
+						repoRoot: this.options.repoRoot,
+						protectedSourceHead: gitStatus.baseSha,
+					})
+				: await loadImplementationProducerSkills({
+						repoRoot: this.options.repoRoot,
+						protectedSourceHead: gitStatus.baseSha,
+					});
+			producerSkills = bindProducerSkills(
+				producerSkills.snapshot,
+				"implementation",
+			);
+		} catch (error) {
+			return complete("held", resumedJobIds, [
+				`implementation_pack_skill_unavailable:${safeBlockerSegment(
+					error instanceof Error ? error.message : String(error),
+				)}`,
+			]);
+		}
+		const packets = createDispatchPackets({
+			repoRoot: this.options.repoRoot,
+			workState: observation.workState,
+			runtime: preview,
 			isolationKind,
-		);
+			producerSkills,
+		});
 		await Promise.all(
 			packets.map((packet) =>
 				writeImplementationWorkerDispatchPacket(this.options.repoRoot, packet),
@@ -765,17 +797,29 @@ export class ImplementationWorkerDispatcher {
 	}
 }
 
-function createDispatchPackets(
-	repoRoot: string,
-	workState: WorkState,
-	runtime: Awaited<ReturnType<typeof runWikiRuntime>>,
-	isolationKind: ImplementationWorkerAssignment["isolation"]["kind"],
-): ImplementationWorkerDispatchPacket[] {
-	const claimEvents = runtime.batch?.events || [];
+async function loadImplementationProducerSkills(input: {
+	repoRoot: string;
+	protectedSourceHead: string;
+}): Promise<ProducerSkillBinding> {
+	const snapshot = await loadProtectedPackSkillSetSnapshot({
+		...input,
+		stage: "implementation",
+	});
+	return bindProducerSkills(snapshot, "implementation");
+}
+
+function createDispatchPackets(input: {
+	repoRoot: string;
+	workState: WorkState;
+	runtime: Awaited<ReturnType<typeof runWikiRuntime>>;
+	isolationKind: ImplementationWorkerAssignment["isolation"]["kind"];
+	producerSkills: ProducerSkillBinding;
+}): ImplementationWorkerDispatchPacket[] {
+	const claimEvents = input.runtime.batch?.events || [];
 	const plans = new Map(
-		runtime.policy.worktrees.map((plan) => [plan.workUnitId, plan]),
+		input.runtime.policy.worktrees.map((plan) => [plan.workUnitId, plan]),
 	);
-	return runtime.plan.selected.map((candidate) => {
+	return input.runtime.plan.selected.map((candidate) => {
 		const claim = claimEvents.find(
 			(event) => text(event.data?.workUnitId) === candidate.workUnitId,
 		);
@@ -792,18 +836,19 @@ function createDispatchPackets(
 			worktree: plan.worktree,
 		});
 		const contextDigest = digest({
-			workStateDigest: workState.snapshotDigest,
+			workStateDigest: input.workState.snapshotDigest,
 			workItemId: candidate.workUnitId,
 			planningRefs: candidate.planningRefs,
 			componentRefs: candidate.componentRefs,
 			pathScopes: candidate.pathScopes,
 			traceRefs: candidate.traceRefs,
+			producerSkillReceipt: input.producerSkills.receipt,
 			prompt,
 		});
 		const reportKey = digest({ claimId, contextDigest }).slice(7, 39);
 		const assignment: ImplementationWorkerAssignment = {
 			schemaVersion: IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
-			repoRoot,
+			repoRoot: input.repoRoot,
 			assignmentId: claimId,
 			workerId,
 			workItemId: candidate.workUnitId,
@@ -813,20 +858,21 @@ function createDispatchPackets(
 			traceRefs: [...candidate.traceRefs],
 			componentRefs: [...candidate.componentRefs],
 			pathScopes: [...candidate.pathScopes],
-			workStateDigest: workState.snapshotDigest,
+			workStateDigest: input.workState.snapshotDigest,
 			sourceBaseRef: `git:${plan.worktree.baseSha || plan.worktree.baseRef || "HEAD"}`,
 			contextDigest,
+			producerSkillReceipt: input.producerSkills.receipt,
 			prompt,
 			reportPath: join(
-				repoRoot,
+				input.repoRoot,
 				".codewiki",
 				"runtime",
 				"workers",
 				`${reportKey}.json`,
 			),
 			isolation: {
-				kind: isolationKind,
-				ref: `${isolationKind}:${digest(plan.worktree).slice(7)}`,
+				kind: input.isolationKind,
+				ref: `${input.isolationKind}:${digest(plan.worktree).slice(7)}`,
 			},
 			worktree: plan.worktree,
 		};

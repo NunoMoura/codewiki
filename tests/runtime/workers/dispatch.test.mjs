@@ -20,6 +20,7 @@ import {
 } from "../../../src/runtime/coordinator/service.ts";
 import { RuntimeReactor } from "../../../src/runtime/coordinator/reactor.ts";
 import { buildProjectWorkState } from "../../../src/work-state/project.ts";
+import {producerSkills} from "../../helpers/checks.mjs";
 import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
 
 const execFile = promisify(execFileCallback);
@@ -57,6 +58,7 @@ function completedResult(assignment, status = "completed") {
 		workItemId: assignment.workItemId,
 		status,
 		reportRef: `runtime-worker-report:${assignment.assignmentId}`,
+		producerSkillReceipt: assignment.producerSkillReceipt,
 	};
 }
 
@@ -104,6 +106,7 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 		adapter,
 		loadConfig: async () => automaticConfig(),
 		collectGitStatus: async () => gitStatus(root),
+		loadImplementationProducerSkills: async () => producerSkills(),
 		worktreeRunner(_command, context) {
 			worktreeSteps.push(context.step);
 			return { exitCode: 0 };
@@ -270,6 +273,7 @@ test("replacement generation resumes active claim from private Assignment packet
 			adapter,
 			loadConfig: async () => automaticConfig(),
 			collectGitStatus: async () => gitStatus(root),
+		loadImplementationProducerSkills: async () => producerSkills(),
 			worktreeRunner() {
 				return { exitCode: 0 };
 			},
@@ -456,6 +460,7 @@ for (const terminalStatus of ["failed", "cancelled"]) {
 			},
 			loadConfig: async () => automaticConfig(),
 			collectGitStatus: async () => gitStatus(root),
+		loadImplementationProducerSkills: async () => producerSkills(),
 			worktreeRunner() {
 				return { exitCode: 0 };
 			},
@@ -541,6 +546,7 @@ test("container-only adapters hold before Claim append when unavailable and prod
 		adapter,
 		loadConfig: async () => automaticConfig(),
 		collectGitStatus: async () => gitStatus(root),
+		loadImplementationProducerSkills: async () => producerSkills(),
 		worktreeRunner() {
 			return { exitCode: 0 };
 		},
@@ -603,6 +609,7 @@ test("worker claims remain held when elected coordinator lacks supervision", asy
 		},
 		loadConfig: async () => automaticConfig(),
 		collectGitStatus: async () => gitStatus(root),
+		loadImplementationProducerSkills: async () => producerSkills(),
 		worktreeRunner() {
 			return { exitCode: 0 };
 		},

@@ -17,6 +17,13 @@ import {
 	type WorkerSession,
 	type WorkerSessionFactory,
 } from "./process-session.ts";
+import {loadPackSkillSetSnapshot} from "../../checks/packs/loader.ts";
+import {
+	assertProducerSkillReceipt,
+	bindProducerSkills,
+	type ProducerSkillReceipt,
+} from "../ports.ts";
+import {materializePiProducerSkills} from "./sdk-semantic-session.ts";
 import {
 	collectWorkerDiscoveries,
 	collectWorkerOutputFiles,
@@ -59,6 +66,16 @@ async function executePiProcessWorker(
 	}
 	if (signal.aborted)
 		throw new Error("Implementation worker assignment aborted.");
+	const skillSnapshot = await loadPackSkillSetSnapshot({
+		repoRoot: assignment.worktree.path,
+		stage: "implementation",
+	});
+	const producerSkills = bindProducerSkills(skillSnapshot, "implementation");
+	assertProducerSkillReceipt(
+		producerSkills.receipt,
+		assignment.producerSkillReceipt,
+	);
+	const materialization = await materializePiProducerSkills(producerSkills);
 	const outputFile = `${assignment.reportPath}.worker-output`;
 	const processFactory = createPiProcessSessionFactory({
 		...options.process,
@@ -66,12 +83,19 @@ async function executePiProcessWorker(
 		outputFile,
 	});
 	const sessionFactory = policySessionFactory(processFactory, assignment);
-	const worker = await executePiWorkerSession(
-		assignment,
-		sessionFactory,
-		signal,
-		options.promptOptions,
-	);
+	let worker: WorkerExecutionObservation;
+	try {
+		worker = await executePiWorkerSession({
+			assignment,
+			sessionFactory,
+			signal,
+			promptOptions: options.promptOptions,
+			producerSkillReceipt: producerSkills.receipt,
+			skillPaths: materialization.skillPaths,
+		});
+	} finally {
+		await materialization.dispose();
+	}
 	let completions: WorkerCompletionInput[];
 	let implementationEvidence;
 	try {
@@ -92,6 +116,7 @@ async function executePiProcessWorker(
 		workerId: assignment.workerId,
 		workItemId: assignment.workItemId,
 		status: implementationWorkerReportStatus(implementationEvidence.status),
+		producerSkillReceipt: producerSkills.receipt,
 		implementationEvidence,
 		...(discoveries.length > 0 ? {discoveries} : {}),
 		...(worker.sessionId ? { sessionId: worker.sessionId } : {}),
@@ -109,12 +134,15 @@ function recoverPiProcessWorker(
 	return recoverImplementationWorkerReport(assignment);
 }
 
-async function executePiWorkerSession(
-	assignment: ImplementationWorkerAssignment,
-	sessionFactory: WorkerSessionFactory,
-	signal: AbortSignal,
-	promptOptions: unknown,
-): Promise<WorkerExecutionObservation> {
+async function executePiWorkerSession(input: {
+	assignment: ImplementationWorkerAssignment;
+	sessionFactory: WorkerSessionFactory;
+	signal: AbortSignal;
+	promptOptions: unknown;
+	producerSkillReceipt: ProducerSkillReceipt;
+	skillPaths: readonly string[];
+}): Promise<WorkerExecutionObservation> {
+	const {assignment, sessionFactory, signal} = input;
 	let session: WorkerSession | undefined;
 	try {
 		session = await sessionFactory.create({
@@ -125,40 +153,56 @@ async function executePiWorkerSession(
 			pathScopes: [...assignment.pathScopes],
 			componentRefs: [...assignment.componentRefs],
 			worktree: assignment.worktree,
+			resourceIsolation: {
+				ambientResourcesDisabled: true,
+				skillPaths: input.skillPaths,
+			},
 			prompt: assignment.prompt,
 		});
-		await session.prompt(assignment.prompt, promptOptions, signal);
-		return workerObservation(assignment, session, "started");
-	} catch (error) {
-		return workerObservation(
+		await session.prompt(assignment.prompt, input.promptOptions, signal);
+		return workerObservation({
 			assignment,
 			session,
-			signal.aborted ? "cancelled" : "failed",
-			signal.aborted
+			status: "started",
+			producerSkillReceipt: input.producerSkillReceipt,
+		});
+	} catch (error) {
+		return workerObservation({
+			assignment,
+			session,
+			status: signal.aborted ? "cancelled" : "failed",
+			producerSkillReceipt: input.producerSkillReceipt,
+			error: signal.aborted
 				? "Implementation worker assignment cancelled."
 				: errorMessage(error),
-		);
+		});
 	}
 }
 
-function workerObservation(
-	assignment: ImplementationWorkerAssignment,
-	session: WorkerSession | undefined,
-	status: WorkerExecutionObservation["status"],
-	error?: string,
-): WorkerExecutionObservation {
+function workerObservation(input: {
+	assignment: ImplementationWorkerAssignment;
+	session?: WorkerSession;
+	status: WorkerExecutionObservation["status"];
+	producerSkillReceipt: ProducerSkillReceipt;
+	error?: string;
+}): WorkerExecutionObservation {
 	return {
-		workUnitId: assignment.workItemId,
-		workerId: assignment.workerId,
-		traceId: assignment.traceId,
-		planningRefs: [...assignment.planningRefs],
-		claimId: assignment.claimId,
-		...(session?.sessionId ? { sessionId: session.sessionId } : {}),
-		...(session?.sessionFile ? { sessionFile: session.sessionFile } : {}),
-		...(session?.outputFile ? { outputFile: session.outputFile } : {}),
-		...(session?.pid ? { pid: session.pid } : {}),
-		status,
-		...(error ? { error } : {}),
+		workUnitId: input.assignment.workItemId,
+		workerId: input.assignment.workerId,
+		traceId: input.assignment.traceId,
+		planningRefs: [...input.assignment.planningRefs],
+		claimId: input.assignment.claimId,
+		producerSkillReceipt: input.producerSkillReceipt,
+		...(input.session?.sessionId ? {sessionId: input.session.sessionId} : {}),
+		...(input.session?.sessionFile
+			? {sessionFile: input.session.sessionFile}
+			: {}),
+		...(input.session?.outputFile
+			? {outputFile: input.session.outputFile}
+			: {}),
+		...(input.session?.pid ? {pid: input.session.pid} : {}),
+		status: input.status,
+		...(input.error ? {error: input.error} : {}),
 	};
 }
 

@@ -127,6 +127,51 @@ describe("Pi process session factory", () => {
 		);
 	});
 
+	it("disables ambient resources only for explicitly isolated managed sessions", async () => {
+		const calls = [];
+		const factory = createPiProcessSessionFactory({
+			command: "pi-test",
+			runner(input) {
+				calls.push(input);
+				return {exitCode: 0, outputFile: input.outputFile};
+			},
+		});
+		const session = await factory.create(
+			sessionInput({
+				resourceIsolation: {
+					ambientResourcesDisabled: true,
+					skillPaths: ["/private/decision-guide/SKILL.md"],
+				},
+			}),
+		);
+		await session.prompt("Run with exact Pack Skills.");
+		assert.deepEqual(calls[0].args.slice(-8), [
+			"--no-extensions",
+			"--no-skills",
+			"--no-prompt-templates",
+			"--no-themes",
+			"--no-context-files",
+			"--skill",
+			"/private/decision-guide/SKILL.md",
+			"Run with exact Pack Skills.",
+		]);
+		const injected = createPiProcessSessionFactory({
+			args: ["--extension", "/ambient/extension.ts"],
+		});
+		const injectedSession = await injected.create(
+			sessionInput({
+				resourceIsolation: {
+					ambientResourcesDisabled: true,
+					skillPaths: [],
+				},
+			}),
+		);
+		await assert.rejects(
+			injectedSession.prompt("run"),
+			/reject explicit ambient resource argument --extension/,
+		);
+	});
+
 	it("applies exact worker policy and attributes bounded usage", async () => {
 		const calls = [];
 		const policy = executionPolicy();

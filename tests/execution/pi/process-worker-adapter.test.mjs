@@ -1,18 +1,24 @@
 import assert from "node:assert/strict";
 import {
+	access,
+	chmod,
 	mkdir,
 	mkdtemp,
 	readFile,
 	rm,
+	stat,
 	symlink,
 	writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import {dirname, join} from "node:path";
 import test from "node:test";
 
+import {loadPackSkillSetSnapshot} from "../../../src/checks/packs/loader.ts";
+import {bindProducerSkills} from "../../../src/execution/ports.ts";
 import { createPiProcessImplementationWorkerAdapter } from "../../../src/execution/pi/process-worker-adapter.ts";
 import { IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION } from "../../../src/runtime/workers/implementation-adapter.ts";
+import {producerSkills} from "../../helpers/checks.mjs";
 
 function assignment(root) {
 	return {
@@ -30,6 +36,7 @@ function assignment(root) {
 		workStateDigest: "sha256:work-state",
 		sourceBaseRef: "git:base:abc123",
 		contextDigest: "sha256:context",
+		producerSkillReceipt: producerSkills().receipt,
 		prompt: "Implement the assigned runtime change.",
 		reportPath: join(
 			root,
@@ -45,6 +52,35 @@ function assignment(root) {
 			baseRef: "abc123",
 		},
 	};
+}
+
+async function installImplementationSkill(worktree) {
+	const root = join(
+		worktree,
+		".codewiki",
+		"check-packs",
+		"implementation",
+		"quality",
+		"skill",
+		"implementation-guide",
+	);
+	await mkdir(join(root, "scripts"), {recursive: true});
+	await writeFile(
+		join(root, "SKILL.md"),
+		[
+			"---",
+			"name: implementation-guide",
+			"description: Follow exact project implementation guidance.",
+			"allowed-tools: Bash Write",
+			"---",
+			"Use scripts/check.sh before reporting completion.",
+		].join("\n"),
+		"utf8",
+	);
+	const script = join(root, "scripts", "check.sh");
+	await writeFile(script, "#!/bin/sh\nprintf 'checked\\n'\n", "utf8");
+	await chmod(script, 0o755);
+	return root;
 }
 
 function workerReport() {
@@ -82,12 +118,50 @@ test("Pi process worker adapter persists and recovers normalized Worker reports"
 	const root = await mkdtemp(join(tmpdir(), "codewiki-process-worker-"));
 	const input = assignment(root);
 	await mkdir(input.worktree.path, { recursive: true });
+	const implementationSkillRoot = await installImplementationSkill(
+		input.worktree.path,
+	);
+	const skillSnapshot = await loadPackSkillSetSnapshot({
+		repoRoot: input.worktree.path,
+		stage: "implementation",
+	});
+	input.producerSkillReceipt = bindProducerSkills(
+		skillSnapshot,
+		"implementation",
+	).receipt;
 	let executions = 0;
+	let materializedSkillPath;
 	const adapter = createPiProcessImplementationWorkerAdapter({
 		process: {
 			async runner(command) {
 				executions += 1;
 				assert.equal(command.cwd, input.worktree.path);
+				for (const flag of [
+					"--no-extensions",
+					"--no-skills",
+					"--no-prompt-templates",
+					"--no-themes",
+					"--no-context-files",
+				]) {
+					assert.ok(command.args.includes(flag));
+				}
+				assert.equal(command.args.includes("--tools"), false);
+				const skillIndex = command.args.indexOf("--skill");
+				assert.ok(skillIndex >= 0);
+				materializedSkillPath = command.args[skillIndex + 1];
+				assert.match(
+					await readFile(materializedSkillPath, "utf8"),
+					/name: implementation-guide/,
+				);
+				assert.equal(command.args.filter((arg) => arg === "--skill").length, 1);
+				assert.notEqual(
+					(
+						await stat(
+							join(dirname(materializedSkillPath), "scripts", "check.sh"),
+						)
+					).mode & 0o111,
+					0,
+				);
 				await mkdir(join(root, ".codewiki", "runtime", "workers"), {
 					recursive: true,
 				});
@@ -107,14 +181,35 @@ test("Pi process worker adapter persists and recovers normalized Worker reports"
 		assert.equal(result.pid, 4242);
 		assert.equal(result.implementationEvidence?.workUnitId, input.workItemId);
 		assert.equal(result.discoveries?.length, 1);
+		assert.equal(result.producerSkillReceipt?.stage, "implementation");
+		assert.equal(result.producerSkillReceipt?.skills.length, 1);
+		assert.equal(
+			result.producerSkillReceipt?.skills[0].name,
+			"implementation-guide",
+		);
+		await assert.rejects(access(materializedSkillPath));
 		assert.equal(
 			result.discoveries?.[0].summary,
 			"Out-of-scope runtime discrepancy",
 		);
 		assert.match(result.reportRef, /^runtime-worker-report:[a-f0-9]{64}$/);
 		assert.equal(executions, 1);
+		await writeFile(
+			join(implementationSkillRoot, "SKILL.md"),
+			"---\nname: implementation-guide\ndescription: Changed guidance.\n---\nUse a changed process.\n",
+			"utf8",
+		);
+		await assert.rejects(
+			adapter.execute(input, new AbortController().signal),
+			/does not match its execution binding/,
+		);
+		assert.equal(executions, 1);
 		const persisted = JSON.parse(await readFile(input.reportPath, "utf8"));
 		assert.equal(persisted.reportRef, result.reportRef);
+		assert.equal(
+			persisted.producerSkillReceipt.skillSetDigest,
+			result.producerSkillReceipt?.skillSetDigest,
+		);
 		const recovered = await adapter.recover(input);
 		assert.deepEqual(recovered, result);
 		assert.equal(executions, 1);

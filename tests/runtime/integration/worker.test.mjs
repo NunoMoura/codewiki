@@ -16,6 +16,7 @@ import { IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION } from "../../../s
 import { implementationWorkerIntegrationJob } from "../../../src/runtime/integration/worker.ts";
 import { RuntimeReactor } from "../../../src/runtime/coordinator/reactor.ts";
 import { appendRuntimeTraceRecords } from "../../../src/runtime/persistence/trace.ts";
+import {producerSkills} from "../../helpers/checks.mjs";
 import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
 
 const execFile = promisify(execFileCallback);
@@ -77,6 +78,7 @@ async function integrationFixture(suffix, pathScopes = ["src/**"]) {
 		workStateDigest: `sha256:${"a".repeat(64)}`,
 		sourceBaseRef: `git:${baseCommit}`,
 		contextDigest: `sha256:${"b".repeat(64)}`,
+		producerSkillReceipt: producerSkills().receipt,
 		prompt: "Implement exact fixture.",
 		reportPath: join(
 			root,
@@ -118,6 +120,7 @@ async function integrationFixture(suffix, pathScopes = ["src/**"]) {
 		workItemId: fixture.workItemId,
 		status: "completed",
 		reportRef: `runtime-worker-report:${assignmentId}`,
+		producerSkillReceipt: assignment.producerSkillReceipt,
 	};
 	const reactor = new RuntimeReactor(root);
 	const beforeClaim = await reactor.observe({

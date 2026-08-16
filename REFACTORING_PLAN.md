@@ -443,10 +443,10 @@ Rules:
 ### 6. Harden Managed Execution
 
 - [ ] Pin supported Pi SDK version and update package ranges deliberately.
-- [ ] Define a host-neutral immutable Pack Skill snapshot and stage-execution port before binding it to Pi's native Skill loader.
+- [x] Define a host-neutral immutable Pack Skill snapshot and stage-execution port before binding it to Pi's native Skill loader.
 - [ ] Require explicit ResourceLoader, tool allowlist, isolated agent directory, Runtime-owned worktree, CodeWiki context envelope, exact model route, budgets, cancellation, and disabled ambient prompts/extensions/settings/project-agent config and ambient Skills.
-- [ ] Load only exact stage Pack Skills in stable Pack-ID order for work-producing Agents; intersect `allowed-tools`, scripts, and setup guidance with already admitted Worker capabilities.
-- [ ] Prove Code and Model Check executors never inherit Pack Skills, producer tools, context, memory, credentials, or authority.
+- [x] Load only exact stage Pack Skills in stable Pack-ID order for work-producing Agents; intersect `allowed-tools`, scripts, and setup guidance with already admitted Worker capabilities.
+- [x] Prove Code and Model Check executors never inherit Pack Skills, producer tools, context, memory, credentials, or authority.
 - [ ] Define execution receipts binding Pi version, route, tools, exact Pack Skill digests where applicable, immutable Check SDK snapshot identities where applicable, context, claim, worktree, base, timing, cancellation, usage, and output.
 - [ ] Route Decision, Planning, Implementation, Review, research, and Model Checks through managed Pi ports where model execution is required.
 - [ ] Keep Pi sessions disposable; canonical continuity uses Change, Candidate, Work Item, operation, Skill-bound producer attempt, Check Result, Gate Report, and Review attempt identity.
@@ -521,9 +521,9 @@ Execution order is fixed: ratify and implement Pack Skill loading, immutable sna
 - [x] Extend each Pack with one optional reserved `skill/<skill-name>/` standard Agent Skill while preserving direct Check directories, no `checks/` level, and no required local Pack manifest.
 - [x] Validate Skill frontmatter, immediate-parent name, complete bounded file tree, path confinement, project-wide active name uniqueness, and deterministic stable Pack ordering.
 - [x] Publish immutable Skill snapshot and digest contracts separate from Check Pack snapshot, Check Result, and Gate cache identity.
-- [ ] Bind exact Skill snapshots to producer attempts and execution receipts; make a changed Skill stale only affected producer work.
-- [ ] Keep ambient harness Skills disabled and prove Pack Skills reach only work-producing Agents, never Code or Model Check executors.
-- [ ] Permit standard Skill scripts, references, assets, setup guidance, and `allowed-tools` metadata without allowing them to exceed current Worker capabilities or Runtime authority.
+- [x] Bind exact Skill snapshots to producer attempts and execution receipts; make a changed Skill stale only affected producer work.
+- [x] Keep ambient harness Skills disabled and prove Pack Skills reach only work-producing Agents, never Code or Model Check executors.
+- [x] Permit standard Skill scripts, references, assets, setup guidance, and `allowed-tools` metadata without allowing them to exceed current Worker capabilities or Runtime authority.
 - [ ] Keep Skill-change analysis non-authoritative and defer automatic proposal generation until Review persistence and failed-Result history are durable.
 
 #### Check Author SDK and composition

@@ -43,12 +43,28 @@ async function installPackage(root) {
 	const worktrees = await import(
 		pathToFileURL(join(packageRoot, "dist", "git", "worktrees.js")).href
 	);
+	const packContracts = await import(
+		pathToFileURL(
+			join(packageRoot, "dist", "checks", "packs", "contracts.js"),
+		).href
+	);
+	const executionPorts = await import(
+		pathToFileURL(join(packageRoot, "dist", "execution", "ports.js")).href
+	);
+	const producerSkills = executionPorts.bindProducerSkills(
+		packContracts.createPackSkillSetSnapshot({
+			stage: "implementation",
+			skills: [],
+		}),
+		"implementation",
+	);
 	return {
 		packageRoot,
 		createPiProcessImplementationWorkerAdapter:
 			processAdapter.createPiProcessImplementationWorkerAdapter,
 		assignmentSchemaVersion:
 			workerContracts.IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION,
+		producerSkillReceipt: producerSkills.receipt,
 		executeRuntimeWorktreeCommands: worktrees.executeRuntimeWorktreeCommands,
 		WorktreeCommandExecutionError: worktrees.WorktreeCommandExecutionError,
 	};
@@ -71,6 +87,7 @@ function assignment(installed, root, id) {
 		workStateDigest: "sha256:work-state",
 		sourceBaseRef: "git:base:abc123",
 		contextDigest: `sha256:context:${id}`,
+		producerSkillReceipt: installed.producerSkillReceipt,
 		prompt: "Implement assigned work.",
 		reportPath: join(root, ".codewiki", "runtime", "workers", `${id}.json`),
 		isolation: { kind: "worktree", ref: `worktree:${id}` },

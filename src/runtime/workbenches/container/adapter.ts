@@ -91,6 +91,11 @@ async function executeContainerWorker(
 	options: ResolvedContainerOptions,
 ): Promise<ImplementationWorkerReport> {
 	assertContainerAssignment(assignment);
+	if (assignment.producerSkillReceipt.skills.length > 0) {
+		throw new Error(
+			"OCI container workers do not support exact Pack Skill delivery.",
+		);
+	}
 	if (signal.aborted) return persistTerminalReport(assignment, "cancelled");
 	const availability = await inspectContainerRuntime(options);
 	if (!availability.available) {
@@ -297,6 +302,7 @@ async function persistContainerOutcome(
 		workerId: assignment.workerId,
 		workItemId: assignment.workItemId,
 		status,
+		producerSkillReceipt: assignment.producerSkillReceipt,
 		...(outcome.implementationEvidence
 			? { implementationEvidence: outcome.implementationEvidence }
 			: {}),
@@ -322,6 +328,7 @@ function persistTerminalReport(
 		workerId: assignment.workerId,
 		workItemId: assignment.workItemId,
 		status,
+		producerSkillReceipt: assignment.producerSkillReceipt,
 		error:
 			status === "cancelled"
 				? "Implementation container worker was cancelled."

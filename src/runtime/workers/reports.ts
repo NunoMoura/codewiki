@@ -3,6 +3,7 @@ import type { ChangeIntakeContent } from "../../changes/intake/contracts.ts";
 import { normalizeChangeIntakeContent } from "../../changes/intake/normalize.ts";
 import type { ImplementationChangeInput } from "../../loops/implementation/types.ts";
 import type { ImplementationWorkerProofInput } from "../../loops/implementation/worker-proof.ts";
+import type {ProducerSkillReceipt} from "../../execution/ports.ts";
 import type {
 	ImplementationWorkerBlockerInput,
 	ImplementationWorkerReportInput,
@@ -14,6 +15,7 @@ export interface WorkerExecutionObservation {
 	traceId: string;
 	planningRefs: string[];
 	claimId?: string;
+	producerSkillReceipt?: ProducerSkillReceipt;
 	sessionId?: string;
 	sessionFile?: string;
 	outputFile?: string;

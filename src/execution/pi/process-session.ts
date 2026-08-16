@@ -65,6 +65,10 @@ export interface WorkerSessionInput {
 	componentRefs: string[];
 	worktree?: WorktreeRef;
 	executionPolicy?: WorkerExecutionPolicySnapshot;
+	resourceIsolation?: {
+		readonly ambientResourcesDisabled: true;
+		readonly skillPaths: readonly string[];
+	};
 	prompt: string;
 }
 
@@ -214,6 +218,9 @@ function processCommandInput(
 	signal?: AbortSignal,
 ): PiProcessCommandRunnerInput {
 	const policy = input.executionPolicy;
+	if (input.resourceIsolation) {
+		assertNoExplicitPiResources(options.args);
+	}
 	if (policy && options.detached) {
 		throw new Error(
 			"Policy-controlled Pi workers require foreground usage monitoring.",
@@ -236,6 +243,19 @@ function processCommandInput(
 			...(options.noSession ? ["--no-session"] : []),
 			...piModelArgs(model),
 			...(policy ? ["--tools", policy.route.allowedTools.join(",")] : []),
+			...(input.resourceIsolation
+				? [
+						"--no-extensions",
+						"--no-skills",
+						"--no-prompt-templates",
+						"--no-themes",
+						"--no-context-files",
+						...input.resourceIsolation.skillPaths.flatMap((path) => [
+							"--skill",
+							path,
+						]),
+					]
+				: []),
 			prompt,
 		],
 		...(options.cwd ? { cwd: options.cwd } : {}),
@@ -251,6 +271,22 @@ function processCommandInput(
 			: { terminationGraceMs: options.terminationGraceMs }),
 		...(signal ? { signal } : {}),
 	};
+}
+
+function assertNoExplicitPiResources(args: readonly string[] | undefined): void {
+	const forbidden = new Set([
+		"--extension",
+		"-e",
+		"--skill",
+		"--prompt-template",
+		"--theme",
+	]);
+	const argument = args?.find((value) => forbidden.has(value));
+	if (argument) {
+		throw new Error(
+			`Policy-controlled Pi workers reject explicit ambient resource argument ${argument}.`,
+		);
+	}
 }
 
 function sameModel(

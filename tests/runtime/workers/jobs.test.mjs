@@ -10,6 +10,7 @@ import {
 } from "../../../src/runtime/workers/implementation-adapter.ts";
 import { scheduleImplementationWorkerAssignments } from "../../../src/runtime/workers/jobs.ts";
 import { ProjectCoordinator } from "../../../src/runtime/coordinator/project.ts";
+import {producerSkills} from "../../helpers/checks.mjs";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
@@ -31,6 +32,7 @@ function assignment(root, id, pathScope) {
 		workStateDigest: `sha256:work-state-${id}`,
 		sourceBaseRef: "git:base:abc123",
 		contextDigest: `sha256:context-${id}`,
+		producerSkillReceipt: producerSkills().receipt,
 		prompt: `Implement ${id}.`,
 		reportPath: join(root, ".codewiki", "runtime", "workers", `${id}.json`),
 		isolation: { kind: "worktree", ref: `worktree:${id}` },
@@ -49,6 +51,7 @@ function result(input, status = "completed") {
 		workItemId: input.workItemId,
 		status,
 		reportRef: `runtime-worker-report:${input.assignmentId}`,
+		producerSkillReceipt: input.producerSkillReceipt,
 	};
 }
 

@@ -7,6 +7,8 @@ import {
 	pushSynchronizedStateBatch,
 	synchronizeGitState,
 } from "../../../src/changes/trace/index.ts";
+import {createPackSkillSetSnapshot} from "../../../src/checks/packs/contracts.ts";
+import {bindProducerSkills} from "../../../src/execution/ports.ts";
 import {createDecisionGate} from "../../../src/runtime/lifecycle/decision.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
@@ -25,6 +27,13 @@ import {
 } from "../../helpers/git-state-v1.mjs";
 
 const repositoryIdentity = digest("a");
+
+function decisionProducerSkills() {
+	return bindProducerSkills(
+		createPackSkillSetSnapshot({stage: "decision", skills: []}),
+		"decision",
+	);
+}
 
 function projectSnapshotFor(state) {
 	return {
@@ -104,14 +113,17 @@ it("executes and recovers one authenticated native Decision attempt without rein
 				return {
 					protectedSourceHead: teamSnapshot.protectedSourceHead,
 					projectConfigDigest: teamSnapshot.configDigest,
+					producerSkills: decisionProducerSkills(),
 					decisionGate: createDecisionGate(),
 				};
 			},
 			producer: {
-				produce({request, signal}) {
+				produce({request, producerSkills, signal}) {
 					producerCalls += 1;
 					producerRequest = request;
 					assert.equal(signal.aborted, false);
+					assert.equal(producerSkills.receipt.stage, "decision");
+					assert.equal(producerSkills.receipt.skills.length, 0);
 					return {
 						disposition: "approve",
 						rationale: "Evaluate the exact selected native revision.",
@@ -145,6 +157,7 @@ it("executes and recovers one authenticated native Decision attempt without rein
 				return {
 					protectedSourceHead: teamSnapshot.protectedSourceHead,
 					projectConfigDigest: digest("0"),
+					producerSkills: decisionProducerSkills(),
 					decisionGate: createDecisionGate(),
 				};
 			},

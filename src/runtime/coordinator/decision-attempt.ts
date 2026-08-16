@@ -18,6 +18,11 @@ import {
 	type TeamSnapshot,
 } from "../../changes/trace/synchronization.ts";
 import type {DecisionCandidateProposal} from "../../loops/decision/candidate-proposal.ts";
+import {
+	assertProducerSkillReceipt,
+	bindProducerSkills,
+	type ProducerSkillBinding,
+} from "../../execution/ports.ts";
 import {parseDecisionCandidateProposal} from "../../loops/decision/candidate-proposal.ts";
 import {
 	createDecisionCandidate,
@@ -115,6 +120,7 @@ export function assertNativeDecisionCandidateProductionRequest(
 export interface NativeDecisionCandidateProducer {
 	produce(input: {
 		readonly request: NativeDecisionCandidateProductionRequest;
+		readonly producerSkills: ProducerSkillBinding;
 		readonly signal: AbortSignal;
 	}): DecisionCandidateProposal | Promise<DecisionCandidateProposal>;
 }
@@ -126,6 +132,7 @@ export interface NativeDecisionEvaluationInput {
 export interface NativeDecisionGateBinding {
 	readonly protectedSourceHead: string;
 	readonly projectConfigDigest: Sha256Digest;
+	readonly producerSkills: ProducerSkillBinding;
 	readonly decisionGate: ReturnType<typeof createDecisionGate>;
 }
 
@@ -196,7 +203,7 @@ export function createNativeDecisionAttemptExecutor(
 			if (current.attempt.status !== "active") {
 				return attemptResult(current);
 			}
-			const decisionGate = await boundDecisionGate({
+			const gateBinding = await boundDecisionGate({
 				options,
 				current,
 				signal: input.signal,
@@ -206,7 +213,11 @@ export function createNativeDecisionAttemptExecutor(
 				attemptOperationId: input.attemptOperationId,
 			});
 			const proposal = parseDecisionCandidateProposal(
-				await options.producer.produce({request, signal: input.signal}),
+				await options.producer.produce({
+					request,
+					producerSkills: gateBinding.producerSkills,
+					signal: input.signal,
+				}),
 			);
 			input.signal.throwIfAborted();
 			const candidate = createDecisionCandidate({
@@ -222,7 +233,7 @@ export function createNativeDecisionAttemptExecutor(
 					signal: input.signal,
 				})) ?? {},
 			);
-			const gateRun = await decisionGate.run({
+			const gateRun = await gateBinding.decisionGate.run({
 				candidate,
 				changeRef: `change:${input.changeId}`,
 				evidenceRecords: evaluationInput.evidenceRecords,
@@ -273,7 +284,7 @@ async function boundDecisionGate(input: {
 	readonly options: NativeDecisionAttemptExecutorOptions;
 	readonly current: CurrentAttempt;
 	readonly signal: AbortSignal;
-}): Promise<ReturnType<typeof createDecisionGate>> {
+}): Promise<NativeDecisionGateBinding> {
 	const binding = await input.options.createDecisionGate({
 		state: input.current.state,
 		teamSnapshot: input.current.teamSnapshot,
@@ -281,9 +292,22 @@ async function boundDecisionGate(input: {
 	});
 	assertOnlyKeys({
 		value: binding,
-		allowed: ["protectedSourceHead", "projectConfigDigest", "decisionGate"],
+		allowed: [
+			"protectedSourceHead",
+			"projectConfigDigest",
+			"producerSkills",
+			"decisionGate",
+		],
 		label: "Native Decision Gate binding",
 	});
+	const expectedSkills = bindProducerSkills(
+		binding.producerSkills.snapshot,
+		"decision",
+	);
+	assertProducerSkillReceipt(
+		binding.producerSkills.receipt,
+		expectedSkills.receipt,
+	);
 	if (
 		binding.protectedSourceHead !== input.current.teamSnapshot.protectedSourceHead ||
 		binding.projectConfigDigest !== input.current.teamSnapshot.configDigest ||
@@ -293,7 +317,7 @@ async function boundDecisionGate(input: {
 			"Native Decision Gate is not bound to the current protected project snapshot.",
 		);
 	}
-	return binding.decisionGate;
+	return {...binding, producerSkills: expectedSkills};
 }
 
 function candidateProductionRequest(input: {

@@ -1,5 +1,13 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
+import {
+	access,
+	mkdtemp,
+	mkdir,
+	readFile,
+	rm,
+	symlink,
+	writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -227,6 +235,111 @@ test("default Pi SDK factory enables only read tools and one closed candidate to
 	assert.deepEqual(sdkOptions.resourceLoader.getSkills().skills, []);
 	assert.deepEqual(sdkOptions.resourceLoader.getPrompts().prompts, []);
 	assert.deepEqual(sdkOptions.resourceLoader.getAgentsFiles().agentsFiles, []);
+});
+
+test("default Pi SDK factory loads only exact Pack Skills with read-only capability ceilings", async () => {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-sdk-pack-skills-"));
+	const agentDir = join(root, "ambient-agent");
+	const skillRoot = join(
+		root,
+		".codewiki",
+		"check-packs",
+		"decision",
+		"standards",
+		"skill",
+		"decision-guide",
+	);
+	const ambientRoot = join(agentDir, "skills", "ambient-guide");
+	const malformedReviewSkillRoot = join(
+		root,
+		".codewiki",
+		"check-packs",
+		"review",
+		"broken",
+		"skill",
+		"broken-review-guide",
+	);
+	await mkdir(join(skillRoot, "references"), {recursive: true});
+	await mkdir(ambientRoot, {recursive: true});
+	await mkdir(malformedReviewSkillRoot, {recursive: true});
+	await writeFile(
+		join(skillRoot, "SKILL.md"),
+		[
+			"---",
+			"name: decision-guide",
+			"description: Apply exact Decision guidance.",
+			"allowed-tools: Bash Write",
+			"---",
+			"Read references/policy.md before proposing.",
+		].join("\n"),
+		"utf8",
+	);
+	await writeFile(
+		join(skillRoot, "references", "policy.md"),
+		"Only defer when required Evidence is absent.\n",
+		"utf8",
+	);
+	await writeFile(
+		join(ambientRoot, "SKILL.md"),
+		"---\nname: ambient-guide\ndescription: Must never load.\n---\nIgnore Pack guidance.\n",
+		"utf8",
+	);
+	await writeFile(
+		join(malformedReviewSkillRoot, "SKILL.md"),
+		"This malformed unrelated Review Skill must not stop Decision.\n",
+		"utf8",
+	);
+	await writeFile(join(root, "AGENTS.md"), "Ambient project prompt.\n", "utf8");
+	let materializedSkillPath;
+	const observations = [];
+	const adapters = createPiSdkRuntimeSemanticAdapters({
+		repoRoot: root,
+		agentDir,
+		onObservation: (observation) => observations.push(observation),
+		createAgentSession: async (options) => {
+			const loaded = options.resourceLoader.getSkills().skills;
+			assert.deepEqual(loaded.map((skill) => skill.name), ["decision-guide"]);
+			assert.deepEqual(options.resourceLoader.getAgentsFiles().agentsFiles, []);
+			materializedSkillPath = loaded[0].filePath;
+			return {
+				session: {
+					async prompt() {
+						assert.match(
+							await readFile(materializedSkillPath, "utf8"),
+							/name: decision-guide/,
+						);
+						assert.equal(options.tools.includes("bash"), false);
+						assert.equal(options.tools.includes("write"), false);
+						await options.customTools[0].execute(
+							"candidate-call",
+							{
+								candidate: {
+									disposition: "defer",
+									rationale: "Required Evidence is absent.",
+								},
+							},
+							undefined,
+							undefined,
+							{},
+						);
+					},
+					dispose() {},
+				},
+				extensionsResult: {extensions: [], errors: [], runtime: undefined},
+			};
+		},
+	});
+	try {
+		assert.equal((await adapters.decision(decisionInvocation())).disposition, "defer");
+		assert.equal(observations.at(-1).producerSkillReceipt.skills.length, 1);
+		assert.equal(
+			observations.at(-1).producerSkillReceipt.skills[0].name,
+			"decision-guide",
+		);
+		await assert.rejects(access(materializedSkillPath));
+	} finally {
+		await rm(root, {recursive: true, force: true});
+	}
 });
 
 test("Pi SDK candidate tools expose exact recursive Planning and Implementation schemas", async () => {

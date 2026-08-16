@@ -1,5 +1,14 @@
-import { realpath } from "node:fs/promises";
-import { isAbsolute, relative, resolve } from "node:path";
+import {
+	chmod,
+	mkdir,
+	mkdtemp,
+	readFile,
+	realpath,
+	rm,
+	writeFile,
+} from "node:fs/promises";
+import {tmpdir} from "node:os";
+import {dirname, isAbsolute, join, relative, resolve} from "node:path";
 import type {
 	createAgentSession as createPiAgentSession,
 	CreateAgentSessionOptions,
@@ -21,6 +30,17 @@ import {
 	planningCandidateContentSchema as planningCandidateSchema,
 	type PlanningCandidateContent,
 } from "../../loops/planning/candidate-content.ts";
+import type {CheckStage} from "../../checks/contracts.ts";
+import {loadPackSkillSetSnapshot} from "../../checks/packs/loader.ts";
+import {
+	assertProducerSkillReceipt,
+	bindProducerSkills,
+	type ExecutionInvocationOptions,
+	type ProducerSkillBinding,
+	type ProducerSkillReceipt,
+	type StageSkillSnapshotPort,
+} from "../ports.ts";
+import {sha256Digest} from "../../utils/canonical-json.ts";
 import type {
 	RuntimeDecisionInvocation,
 	RuntimeImplementationInvocation,
@@ -86,6 +106,7 @@ export type PiSdkSemanticSessionState =
 export interface PiSdkSemanticSessionObservation {
 	role: PiSdkSemanticRole;
 	state: PiSdkSemanticSessionState;
+	producerSkillReceipt: ProducerSkillReceipt;
 	sessionId?: string;
 	sessionFile?: string;
 	message?: string;
@@ -102,6 +123,7 @@ export interface PiSdkBoundedSession {
 export interface PiSdkSemanticSessionFactoryInput {
 	repoRoot: string;
 	role: PiSdkSemanticRole;
+	producerSkills: ProducerSkillBinding;
 	systemPrompt: string;
 	candidateToolName: string;
 	submitCandidate(candidate: unknown): void;
@@ -122,6 +144,8 @@ export interface PiSdkRuntimeSemanticAdapterOptions {
 	timeoutMs?: number;
 	maxInvocationBytes?: number;
 	maxCandidateBytes?: number;
+	loadStageSkills?: StageSkillSnapshotPort;
+	skillMaterializationRoot?: string;
 	sessionFactory?: PiSdkSemanticSessionFactory;
 	onObservation?(observation: PiSdkSemanticSessionObservation): void;
 }
@@ -131,6 +155,7 @@ interface PiSdkSemanticRunnerOptions {
 	timeoutMs: number;
 	maxInvocationBytes: number;
 	maxCandidateBytes: number;
+	loadStageSkills: StageSkillSnapshotPort;
 	sessionFactory: PiSdkSemanticSessionFactory;
 	onObservation?: PiSdkRuntimeSemanticAdapterOptions["onObservation"];
 }
@@ -149,23 +174,25 @@ export function createPiSdkRuntimeSemanticAdapters(
 ): RuntimeSemanticAdapters {
 	const runner = createSemanticRunner(options);
 	return {
-		decision: (input) =>
+		decision: (input, invocationOptions) =>
 			runSemanticSession<RuntimeDecisionInvocation, DecisionCandidateProposal>(
 				runner,
 				"decision",
 				input,
+				invocationOptions,
 			),
-		planning: (input) =>
+		planning: (input, invocationOptions) =>
 			runSemanticSession<RuntimePlanningInvocation, PlanningCandidateContent>(
 				runner,
 				"planning",
 				input,
+				invocationOptions,
 			),
-		implementation: (input) =>
+		implementation: (input, invocationOptions) =>
 			runSemanticSession<
 				RuntimeImplementationInvocation,
 				ImplementationCandidateContent
-			>(runner, "implementation", input),
+			>(runner, "implementation", input, invocationOptions),
 	};
 }
 
@@ -174,16 +201,13 @@ export function createPiSdkNativeDecisionCandidateProducer(
 ): NativeDecisionCandidateProducer {
 	const runner = createSemanticRunner(options);
 	return Object.freeze({
-		produce(input: {
-			readonly request: NativeDecisionCandidateProductionRequest;
-			readonly signal: AbortSignal;
-		}) {
-			const {request, signal} = input;
+		produce(input: Parameters<NativeDecisionCandidateProducer["produce"]>[0]) {
+			const {request, producerSkills, signal} = input;
 			assertNativeDecisionCandidateProductionRequest(request);
 			return runSemanticSession<
 				NativeDecisionCandidateProductionRequest,
 				DecisionCandidateProposal
-			>(runner, "decision", request, signal);
+			>(runner, "decision", request, {signal, producerSkills});
 		},
 	});
 }
@@ -214,18 +238,46 @@ function createSemanticRunner(
 			maximum: MAX_PAYLOAD_BYTES,
 			field: "maxCandidateBytes",
 		}),
+		loadStageSkills:
+			options.loadStageSkills || defaultStageSkillSnapshot(options.repoRoot),
 		sessionFactory:
 			options.sessionFactory || createDefaultPiSdkSessionFactory(options),
 		...(options.onObservation ? {onObservation: options.onObservation} : {}),
 	};
 }
 
+function defaultStageSkillSnapshot(repoRoot: string): StageSkillSnapshotPort {
+	return async ({stage, signal}) => {
+		signal?.throwIfAborted();
+		const snapshot = await loadPackSkillSetSnapshot({repoRoot, stage});
+		signal?.throwIfAborted();
+		return snapshot;
+	};
+}
+
+function validatedProducerSkillBinding(
+	binding: ProducerSkillBinding,
+	stage: CheckStage,
+): ProducerSkillBinding {
+	const expected = bindProducerSkills(binding.snapshot, stage);
+	assertProducerSkillReceipt(binding.receipt, expected.receipt);
+	return expected;
+}
+
 async function runSemanticSession<TInvocation, TCandidate>(
 	options: PiSdkSemanticRunnerOptions,
 	role: PiSdkSemanticRole,
 	invocation: TInvocation,
-	signal?: AbortSignal,
+	invocationOptions: ExecutionInvocationOptions = {},
 ): Promise<TCandidate> {
+	const signal = invocationOptions.signal;
+	signal?.throwIfAborted();
+	const producerSkills = invocationOptions.producerSkills
+		? validatedProducerSkillBinding(invocationOptions.producerSkills, role)
+		: bindProducerSkills(
+				await options.loadStageSkills({stage: role, signal}),
+				role,
+			);
 	signal?.throwIfAborted();
 	const invocationJson = boundedJson(
 		invocation,
@@ -267,10 +319,18 @@ async function runSemanticSession<TInvocation, TCandidate>(
 	}
 
 	try {
-		emitObservation(options, {role, state: "starting"});
+		emitObservation(
+			options,
+			semanticSessionObservation({
+				role,
+				state: "starting",
+				producerSkillReceipt: producerSkills.receipt,
+			}),
+		);
 		const sessionPromise = options.sessionFactory({
 			repoRoot: options.repoRoot,
 			role,
+			producerSkills,
 			systemPrompt: semanticSystemPrompt(role, candidateToolName),
 			candidateToolName,
 			submitCandidate(value) {
@@ -294,7 +354,12 @@ async function runSemanticSession<TInvocation, TCandidate>(
 		session = await Promise.race([sessionPromise, ...cancellationGates]);
 		emitObservation(
 			options,
-			semanticSessionObservation(role, "running", session),
+			semanticSessionObservation({
+				role,
+				state: "running",
+				producerSkillReceipt: producerSkills.receipt,
+				session,
+			}),
 		);
 		await Promise.race([
 			session.prompt(semanticInvocationPrompt(role, invocationJson)),
@@ -308,18 +373,24 @@ async function runSemanticSession<TInvocation, TCandidate>(
 		}
 		emitObservation(
 			options,
-			semanticSessionObservation(role, "completed", session),
+			semanticSessionObservation({
+				role,
+				state: "completed",
+				producerSkillReceipt: producerSkills.receipt,
+				session,
+			}),
 		);
 		return parseSemanticCandidate(role, candidate) as TCandidate;
 	} catch (error) {
 		emitObservation(
 			options,
-			semanticSessionObservation(
+			semanticSessionObservation({
 				role,
-				cancelled ? "cancelled" : "failed",
+				state: cancelled ? "cancelled" : "failed",
+				producerSkillReceipt: producerSkills.receipt,
 				session,
-				boundedMessage(error),
-			),
+				message: boundedMessage(error),
+			}),
 		);
 		throw error;
 	} finally {
@@ -329,18 +400,22 @@ async function runSemanticSession<TInvocation, TCandidate>(
 	}
 }
 
-function semanticSessionObservation(
-	role: PiSdkSemanticRole,
-	state: PiSdkSemanticSessionState,
-	session: PiSdkBoundedSession | undefined,
-	message?: string,
-): PiSdkSemanticSessionObservation {
+function semanticSessionObservation(input: {
+	role: PiSdkSemanticRole;
+	state: PiSdkSemanticSessionState;
+	producerSkillReceipt: ProducerSkillReceipt;
+	session?: PiSdkBoundedSession;
+	message?: string;
+}): PiSdkSemanticSessionObservation {
 	return {
-		role,
-		state,
-		...(session?.sessionId ? {sessionId: session.sessionId} : {}),
-		...(session?.sessionFile ? {sessionFile: session.sessionFile} : {}),
-		...(message ? {message} : {}),
+		role: input.role,
+		state: input.state,
+		producerSkillReceipt: input.producerSkillReceipt,
+		...(input.session?.sessionId ? {sessionId: input.session.sessionId} : {}),
+		...(input.session?.sessionFile
+			? {sessionFile: input.session.sessionFile}
+			: {}),
+		...(input.message ? {message: input.message} : {}),
 	};
 }
 
@@ -353,46 +428,172 @@ async function closeSemanticSession(input: {
 	else await input.session.dispose();
 }
 
+interface PiSkillMaterialization {
+	readonly root?: string;
+	readonly skillPaths: readonly string[];
+	dispose(): Promise<void>;
+}
+
+export async function materializePiProducerSkills(
+	binding: ProducerSkillBinding,
+	materializationRoot = tmpdir(),
+): Promise<PiSkillMaterialization> {
+	const normalized = validatedProducerSkillBinding(
+		binding,
+		binding.snapshot.stage,
+	);
+	if (normalized.snapshot.skillCount === 0) {
+		return Object.freeze({
+			skillPaths: Object.freeze([]),
+			async dispose() {},
+		});
+	}
+	const parent = resolve(materializationRoot);
+	await mkdir(parent, {recursive: true, mode: 0o700});
+	const root = await mkdtemp(join(parent, "codewiki-pack-skills-"));
+	const skillPaths: string[] = [];
+	let disposed = false;
+	try {
+		for (const [index, skill] of normalized.snapshot.skills.entries()) {
+			const skillRoot = join(
+				root,
+				`${String(index).padStart(2, "0")}-${skill.packId}`,
+				skill.name,
+			);
+			for (const file of skill.files) {
+				const path = resolve(skillRoot, file.path);
+				if (!pathIsWithin(skillRoot, path)) {
+					throw new Error("Pack Skill materialization escaped its private root.");
+				}
+				const bytes = Buffer.from(file.contentBase64, "base64");
+				await mkdir(dirname(path), {recursive: true, mode: 0o700});
+				await writeFile(path, bytes, {
+					flag: "wx",
+					mode: file.executable ? 0o500 : 0o400,
+				});
+				await chmod(path, file.executable ? 0o500 : 0o400);
+				const materialized = await readFile(path);
+				if (
+					materialized.byteLength !== file.byteLength ||
+					sha256Digest(materialized) !== file.digest
+				) {
+					throw new Error(
+						`Pack Skill materialization changed ${skill.packId}/${skill.name}/${file.path}.`,
+					);
+				}
+			}
+			skillPaths.push(join(skillRoot, "SKILL.md"));
+		}
+		return Object.freeze({
+			root,
+			skillPaths: Object.freeze(skillPaths),
+			async dispose() {
+				if (disposed) return;
+				disposed = true;
+				await rm(root, {recursive: true, force: true});
+			},
+		});
+	} catch (error) {
+		await rm(root, {recursive: true, force: true});
+		throw error;
+	}
+}
+
 function createDefaultPiSdkSessionFactory(
 	options: PiSdkRuntimeSemanticAdapterOptions,
 ): PiSdkSemanticSessionFactory {
 	return async (input) => {
 		assertPiSdkNodeVersion();
-		const piSdk =
-			options.piSdk || (await import("@earendil-works/pi-coding-agent"));
-		const settingsManager = piSdk.SettingsManager.inMemory();
-		const resourceLoader = new piSdk.DefaultResourceLoader({
-			cwd: input.repoRoot,
-			agentDir: options.agentDir || piSdk.getAgentDir(),
-			settingsManager,
-			extensionFactories: [projectReadBoundaryExtension(input.repoRoot)],
-			noExtensions: true,
-			noSkills: true,
-			noPromptTemplates: true,
-			noThemes: true,
-			noContextFiles: true,
-			systemPrompt: input.systemPrompt,
-		});
-		await resourceLoader.reload();
-		const candidateTool = candidateSubmissionTool(input);
-		const createAgentSession =
-			options.createAgentSession || piSdk.createAgentSession;
-		const { session } = await createAgentSession({
-			cwd: input.repoRoot,
-			agentDir: options.agentDir || piSdk.getAgentDir(),
-			...(options.modelRuntime ? { modelRuntime: options.modelRuntime } : {}),
-			...(options.model ? { model: options.model } : {}),
-			...(options.thinkingLevel
-				? { thinkingLevel: options.thinkingLevel }
-				: {}),
-			tools: [...READ_ONLY_TOOL_NAMES, input.candidateToolName],
-			customTools: [candidateTool],
-			resourceLoader,
-			sessionManager: piSdk.SessionManager.inMemory(input.repoRoot),
-			settingsManager,
-		});
-		return session;
+		const materialization = await materializePiProducerSkills(
+			input.producerSkills,
+			options.skillMaterializationRoot,
+		);
+		try {
+			const piSdk =
+				options.piSdk || (await import("@earendil-works/pi-coding-agent"));
+			const settingsManager = piSdk.SettingsManager.inMemory();
+			const resourceLoader = new piSdk.DefaultResourceLoader({
+				cwd: input.repoRoot,
+				agentDir: options.agentDir || piSdk.getAgentDir(),
+				settingsManager,
+				additionalSkillPaths: [...materialization.skillPaths],
+				extensionFactories: [
+					projectReadBoundaryExtension(
+						input.repoRoot,
+						materialization.root ? [materialization.root] : [],
+					),
+				],
+				noExtensions: true,
+				noSkills: true,
+				noPromptTemplates: true,
+				noThemes: true,
+				noContextFiles: true,
+				skillsOverride(base) {
+					if (base.diagnostics.length > 0) {
+						throw new Error(
+							`Pi rejected Pack Skills: ${base.diagnostics.map((entry) => entry.message).join("; ")}`,
+						);
+					}
+					const skills = materialization.skillPaths.map((path, index) => {
+						const loaded = base.skills.find(
+							(skill) => resolve(skill.filePath) === resolve(path),
+						);
+						const expected = input.producerSkills.snapshot.skills[index];
+						if (!loaded || loaded.name !== expected?.name) {
+							throw new Error("Pi did not load the exact ordered Pack Skills.");
+						}
+						return loaded;
+					});
+					if (skills.length !== base.skills.length) {
+						throw new Error("Pi loaded an ambient or duplicate Skill.");
+					}
+					return {skills, diagnostics: []};
+				},
+				systemPrompt: input.systemPrompt,
+			});
+			await resourceLoader.reload();
+			const candidateTool = candidateSubmissionTool(input);
+			const createAgentSession =
+				options.createAgentSession || piSdk.createAgentSession;
+			const {session} = await createAgentSession({
+				cwd: input.repoRoot,
+				agentDir: options.agentDir || piSdk.getAgentDir(),
+				...(options.modelRuntime ? {modelRuntime: options.modelRuntime} : {}),
+				...(options.model ? {model: options.model} : {}),
+				...(options.thinkingLevel
+					? {thinkingLevel: options.thinkingLevel}
+					: {}),
+				tools: [...READ_ONLY_TOOL_NAMES, input.candidateToolName],
+				customTools: [candidateTool],
+				resourceLoader,
+				sessionManager: piSdk.SessionManager.inMemory(input.repoRoot),
+				settingsManager,
+			});
+			return sessionWithSkillCleanup(session, materialization);
+		} catch (error) {
+			await materialization.dispose();
+			throw error;
+		}
 	};
+}
+
+function sessionWithSkillCleanup(
+	session: PiSdkBoundedSession,
+	materialization: PiSkillMaterialization,
+): PiSdkBoundedSession {
+	return Object.freeze({
+		...(session.sessionId ? {sessionId: session.sessionId} : {}),
+		...(session.sessionFile ? {sessionFile: session.sessionFile} : {}),
+		prompt: (text: string) => session.prompt(text),
+		...(session.abort ? {abort: () => session.abort?.()} : {}),
+		async dispose() {
+			try {
+				await session.dispose();
+			} finally {
+				await materialization.dispose();
+			}
+		},
+	});
 }
 
 function candidateSubmissionTool(
@@ -428,13 +629,20 @@ function candidateSubmissionTool(
 	};
 }
 
-function projectReadBoundaryExtension(repoRoot: string): ExtensionFactory {
+function projectReadBoundaryExtension(
+	repoRoot: string,
+	additionalReadRoots: readonly string[] = [],
+): ExtensionFactory {
 	return (pi) => {
 		pi.on("tool_call", async (event) => {
-			const reason = await validatePiSdkReadOnlyToolCall(repoRoot, {
-				toolName: event.toolName,
-				input: event.input,
-			});
+			const reason = await validatePiSdkReadOnlyToolCall(
+				repoRoot,
+				{
+					toolName: event.toolName,
+					input: event.input,
+				},
+				additionalReadRoots,
+			);
 			return reason ? { block: true, reason } : undefined;
 		});
 	};
@@ -444,6 +652,7 @@ function projectReadBoundaryExtension(repoRoot: string): ExtensionFactory {
 export async function validatePiSdkReadOnlyToolCall(
 	repoRoot: string,
 	call: ReadOnlyToolCall,
+	additionalReadRoots: readonly string[] = [],
 ): Promise<string | undefined> {
 	if (!(READ_ONLY_TOOL_NAMES as readonly string[]).includes(call.toolName)) {
 		return undefined;
@@ -457,14 +666,18 @@ export async function validatePiSdkReadOnlyToolCall(
 		return `Pi SDK ${call.toolName} path must be a non-empty string.`;
 	}
 	const root = await realpath(requiredRepoRoot(repoRoot));
+	const allowedRoots = await Promise.all([
+		root,
+		...additionalReadRoots.map((path) => realpath(resolve(path))),
+	]);
 	let target: string;
 	try {
 		target = await realpath(resolve(root, rawPath));
 	} catch {
 		return `Pi SDK ${call.toolName} path is unavailable inside the project.`;
 	}
-	if (!pathIsWithin(root, target)) {
-		return `Pi SDK ${call.toolName} cannot read outside the project root.`;
+	if (!allowedRoots.some((allowedRoot) => pathIsWithin(allowedRoot, target))) {
+		return `Pi SDK ${call.toolName} cannot read outside the project root or admitted Skill roots.`;
 	}
 	if (call.toolName === "find" && unsafeGlob(input.pattern)) {
 		return "Pi SDK find pattern cannot traverse outside the project root.";

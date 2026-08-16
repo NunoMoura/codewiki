@@ -19,7 +19,9 @@ import {
 import {
 	CheckPackLoadError,
 	loadProtectedCheckPackSnapshot,
+	loadProtectedPackSkillSetSnapshot,
 } from "../../checks/packs/loader.ts";
+import {bindProducerSkills} from "../ports.ts";
 import {createDecisionGitAdmission} from "../../runtime/admission/git.ts";
 import {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
@@ -163,6 +165,17 @@ async function loadPiNativeDecisionGate(input: {
 		NativeDecisionAttemptExecutorOptions["createDecisionGate"]
 	>[0];
 }) {
+	const producerSkillSnapshot = await loadProtectedPackSkillSetSnapshot({
+		repoRoot: input.repoRoot,
+		protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
+		stage: "decision",
+		runner: input.options.runner,
+		signal: input.input.signal,
+	});
+	const producerSkills = bindProducerSkills(
+		producerSkillSnapshot,
+		"decision",
+	);
 	let packSnapshot: CheckPackSnapshot;
 	let packLoadFailure: CheckPackLoadError | undefined;
 	try {
@@ -206,6 +219,7 @@ async function loadPiNativeDecisionGate(input: {
 	return {
 		protectedSourceHead: input.input.teamSnapshot.protectedSourceHead,
 		projectConfigDigest: input.input.teamSnapshot.configDigest,
+		producerSkills,
 		decisionGate,
 	};
 }
