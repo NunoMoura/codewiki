@@ -84,6 +84,7 @@ tags: [system, vocabulary]
 | Review Requirement | Policy-bound review class, scope, minimum approvals, and independence rule for one exact Change revision. | [Change Trace](system/components/change-trace.md) |
 | Review Submission | Immutable authenticated disposition and rationale for one exact Review Requirement and Change revision. | [Change Trace](system/components/change-trace.md) |
 | Run Specification | Immutable Backend request binding one exact producer attempt, Assignment, or Model Check to context, Skills, tools, routes, budgets, cancellation, isolation, and expected receipt obligations. | [Backend Execution](system/components/execution.md) |
+| Runner Bundle | Content-addressed complete Agent Runner execution closure whose manifest, exact artifact bytes, protocol, Node version, DSH source and package closure, Backend Plugins, adapters, and qualification Evidence are retained and bound to every Run. | [Backend Execution](system/components/execution.md) |
 | Session | Temporary authenticated Client connection owned by Server and distinct from durable Pairing. | [CodeWiki Server](system/components/server.md) |
 | Source ownership | Component-declared intended boundary for source and test realization. | [Knowledge](system/components/knowledge.md) |
 | Stage Context | Immutable lazy query facade over exact WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result snapshots for one stage subject. | [Backend Execution](system/components/execution.md) |
