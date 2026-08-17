@@ -108,6 +108,18 @@ export function assertProducerSkillReceipt(
 	receipt: ProducerSkillReceipt,
 	expected?: ProducerSkillReceipt,
 ): void {
+	assertProducerSkillReceiptShape(receipt);
+	assertProducerSkillReceiptHeader(receipt);
+	assertProducerSkillReceiptEntries(receipt.skills);
+	if (
+		expected &&
+		canonicalJsonDigest(receipt) !== canonicalJsonDigest(expected)
+	) {
+		throw new Error("Producer Skill receipt does not match its execution binding.");
+	}
+}
+
+function assertProducerSkillReceiptShape(receipt: ProducerSkillReceipt): void {
 	if (
 		!receipt ||
 		typeof receipt !== "object" ||
@@ -120,6 +132,9 @@ export function assertProducerSkillReceipt(
 	) {
 		throw new Error("Producer Skill receipt shape is invalid.");
 	}
+}
+
+function assertProducerSkillReceiptHeader(receipt: ProducerSkillReceipt): void {
 	if (receipt.schemaVersion !== PRODUCER_SKILL_RECEIPT_SCHEMA_VERSION) {
 		throw new Error("Producer Skill receipt schemaVersion is invalid.");
 	}
@@ -133,9 +148,14 @@ export function assertProducerSkillReceipt(
 		throw new Error("Producer Skill receipt stage or Skills are invalid.");
 	}
 	assertSha256Digest(receipt.skillSetDigest, "Producer Skill set digest");
+}
+
+function assertProducerSkillReceiptEntries(
+	skills: readonly ProducerSkillReceiptEntry[],
+): void {
 	let previousPackId: string | undefined;
 	const names = new Set<string>();
-	for (const skill of receipt.skills) {
+	for (const skill of skills) {
 		if (
 			!skill ||
 			typeof skill !== "object" ||
@@ -156,12 +176,6 @@ export function assertProducerSkillReceipt(
 		previousPackId = skill.packId;
 		names.add(skill.name);
 		assertSha256Digest(skill.skillDigest, "Producer Skill digest");
-	}
-	if (
-		expected &&
-		canonicalJsonDigest(receipt) !== canonicalJsonDigest(expected)
-	) {
-		throw new Error("Producer Skill receipt does not match its execution binding.");
 	}
 }
 
@@ -549,6 +563,23 @@ export interface RunQuiescence {
 	readonly rawLog: RunRawLogReference | null;
 }
 
+export interface RunProcessResultInput {
+	readonly runId: string;
+	readonly requestDigest: Sha256Digest;
+	readonly outcome: Exclude<RunOutcome, "stopped">;
+	readonly startedAt: string;
+	readonly finishedAt: string;
+	readonly executionLedgerDigest: Sha256Digest;
+	readonly outputDigest: Sha256Digest | null;
+	readonly usageDigest: Sha256Digest | null;
+	readonly cancellationDigest: Sha256Digest | null;
+	readonly custodyGaps: readonly RunCustodyGap[];
+}
+
+export interface RunProcessResult extends RunProcessResultInput {
+	readonly resultDigest: Sha256Digest;
+}
+
 export interface RunReceiptInput {
 	readonly handle: RunHandle;
 	readonly outcome: RunOutcome;
@@ -683,6 +714,68 @@ export function createRunQuiescence(
 				? null
 				: rawLogForHandle(handle, createRunRawLogReference(value.rawLog)),
 	});
+}
+
+export function createRunProcessResult(
+	handle: RunHandle,
+	value: RunProcessResultInput,
+): Readonly<RunProcessResult> {
+	assertRunHandle(handle);
+	if (!hasExactKeys(value, RUN_PROCESS_RESULT_INPUT_KEYS)) {
+		throw new Error("Run Process result shape is invalid.");
+	}
+	if (value.runId !== handle.runId || value.requestDigest !== handle.requestDigest) {
+		throw new Error("Run Process result does not match its Run handle.");
+	}
+	if (!RUN_PROCESS_OUTCOMES.includes(value.outcome)) {
+		throw new Error("Run Process result outcome is invalid.");
+	}
+	const startedAt = assertTimestamp(value.startedAt, "Run Process result startedAt");
+	const finishedAt = assertTimestamp(value.finishedAt, "Run Process result finishedAt");
+	assertNotBeforeAcceptance(handle, startedAt, "Run Process result start");
+	if (Date.parse(finishedAt) < Date.parse(startedAt)) {
+		throw new Error("Run Process result finishedAt precedes startedAt.");
+	}
+	const executionLedgerDigest = assertSha256Digest(
+		value.executionLedgerDigest,
+		"Run Process Execution Ledger digest",
+	);
+	const outputDigest = optionalSha256Digest(
+		value.outputDigest,
+		"Run Process output digest",
+	);
+	if (value.outcome === "completed" && outputDigest === null) {
+		throw new Error("Completed Run Process results require an output digest.");
+	}
+	const cancellationDigest = optionalSha256Digest(
+		value.cancellationDigest,
+		"Run Process cancellation digest",
+	);
+	if (value.outcome === "cancelled" && cancellationDigest === null) {
+		throw new Error("Cancelled Run Process results require a cancellation digest.");
+	}
+	const custodyGaps = normalizedRunGapList(
+		value.custodyGaps,
+		RUN_CUSTODY_GAPS,
+		"Run Process result custody gaps",
+	);
+	assertRunReceiptCustody(handle.custody, custodyGaps);
+	const body = Object.freeze({
+		runId: handle.runId,
+		requestDigest: handle.requestDigest,
+		outcome: value.outcome,
+		startedAt,
+		finishedAt,
+		executionLedgerDigest,
+		outputDigest,
+		usageDigest: optionalSha256Digest(
+			value.usageDigest,
+			"Run Process usage digest",
+		),
+		cancellationDigest,
+		custodyGaps,
+	});
+	return Object.freeze({...body, resultDigest: canonicalJsonDigest(body)});
 }
 
 export function createRunReceipt(
@@ -924,6 +1017,11 @@ const RUN_OUTCOMES = Object.freeze([
 	"cancelled",
 	"stopped",
 ] as const);
+const RUN_PROCESS_OUTCOMES: readonly string[] = Object.freeze([
+	"completed",
+	"failed",
+	"cancelled",
+]);
 const RUN_CUSTODY_GAPS = Object.freeze([
 	"delegate-prompts",
 	"delegate-tools",
@@ -963,6 +1061,18 @@ const RUN_HANDLE_KEYS = [
 	"runtimeBuild",
 	"sessionId",
 	"acceptedAt",
+] as const;
+const RUN_PROCESS_RESULT_INPUT_KEYS = [
+	"runId",
+	"requestDigest",
+	"outcome",
+	"startedAt",
+	"finishedAt",
+	"executionLedgerDigest",
+	"outputDigest",
+	"usageDigest",
+	"cancellationDigest",
+	"custodyGaps",
 ] as const;
 const RUN_RECEIPT_INPUT_KEYS = [
 	"handle",
@@ -1668,11 +1778,13 @@ function normalizedDeclaration(
 			`Execution capability ${declaration.capability} requires a reason when ${declaration.status}.`,
 		);
 	}
-	return Object.freeze({
+	const normalized = {
 		capability: declaration.capability,
 		status: declaration.status,
-		...(reason ? { reason } : {}),
-	});
+	};
+	return reason
+		? Object.freeze({...normalized, reason})
+		: Object.freeze(normalized);
 }
 
 function hasExactKeys(

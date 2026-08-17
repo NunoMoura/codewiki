@@ -8,8 +8,11 @@ import {
 	createRunEvent,
 	createRunHandle,
 	createRunQuiescence,
+	createRunProcessResult,
 	createRunRequest,
+	type RunCustodyGap,
 	type RunProcessHandshake,
+	type RunProcessResult,
 	type RunCancellationRequest,
 	type RunEvent,
 	type RunHandle,
@@ -72,6 +75,10 @@ export type RunProcessWireMessage =
 	| {
 			readonly kind: "event";
 			readonly event: RunEvent;
+	  }
+	| {
+			readonly kind: "result";
+			readonly result: RunProcessResult;
 	  }
 	| {
 			readonly kind: "quiescence";
@@ -335,6 +342,11 @@ function normalizeMessage(input: {
 		const event = normalizeEvent(message.event, handle);
 		return Object.freeze({kind: "event", event});
 	}
+	if (message.kind === "result" && input.direction === "run-process-to-runtime") {
+		assertExactKeys(message, ["kind", "result"], "Run Process result message");
+		const result = normalizeResult(message.result, handle);
+		return Object.freeze({kind: "result", result});
+	}
 	if (message.kind === "quiescence" && input.direction === "run-process-to-runtime") {
 		assertExactKeys(message, ["kind", "quiescence"], "Run Process quiescence message");
 		const quiescence = normalizeQuiescence(message.quiescence, handle);
@@ -439,6 +451,44 @@ function normalizeEvent(value: unknown, handle: RunHandle): RunEvent {
 		payloadDigest: event.payloadDigest as Sha256Digest,
 	});
 	assertCanonicalMatch(normalized, event, "Run event");
+	return normalized;
+}
+
+function normalizeResult(
+	value: unknown,
+	handle: RunHandle,
+): RunProcessResult {
+	const result = record(value, "Run Process result");
+	assertExactKeys(
+		result,
+		[
+			"runId",
+			"requestDigest",
+			"outcome",
+			"startedAt",
+			"finishedAt",
+			"executionLedgerDigest",
+			"outputDigest",
+			"usageDigest",
+			"cancellationDigest",
+			"custodyGaps",
+			"resultDigest",
+		],
+		"Run Process result",
+	);
+	const normalized = createRunProcessResult(handle, {
+		runId: result.runId as string,
+		requestDigest: result.requestDigest as Sha256Digest,
+		outcome: result.outcome as "completed" | "failed" | "cancelled",
+		startedAt: result.startedAt as string,
+		finishedAt: result.finishedAt as string,
+		executionLedgerDigest: result.executionLedgerDigest as Sha256Digest,
+		outputDigest: result.outputDigest as Sha256Digest | null,
+		usageDigest: result.usageDigest as Sha256Digest | null,
+		cancellationDigest: result.cancellationDigest as Sha256Digest | null,
+		custodyGaps: result.custodyGaps as readonly RunCustodyGap[],
+	});
+	assertCanonicalMatch(normalized, value, "Run Process result");
 	return normalized;
 }
 

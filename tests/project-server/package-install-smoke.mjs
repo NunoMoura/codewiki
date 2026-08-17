@@ -432,7 +432,23 @@ assert.equal(existsSync(join(packageRoot, "dist", "project-server", "effects", "
 assert.equal(existsSync(join(packageRoot, "dist", "project-server", "effects", "product-release-contract.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "project-server", "effects", "product-release-manifest.js")), true);
 assert.equal(existsSync(join(packageRoot, "dist", "runtime", "pi", "process-worker-adapter.js")), true);
+const dshRuntimeArtifact = join(
+	packageRoot,
+	"dist",
+	"runtime-builds",
+	"dsh-replay-run-process.mjs",
+);
+assert.equal(existsSync(dshRuntimeArtifact), true);
+const dshRuntimeArtifactSource = readFileSync(dshRuntimeArtifact, "utf8");
+assert.equal(dshRuntimeArtifactSource.includes('from "@deepseek-ai/'), false);
+assert.equal(dshRuntimeArtifactSource.includes("from '@deepseek-ai/"), false);
 assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
+const runtimeModule = await import("@nunomoura/codewiki/runtime");
+assert.equal(typeof runtimeModule.createRuntime, "function");
+assert.equal(typeof runtimeModule.runDshAgent, "function");
+assert.equal(typeof runtimeModule.readDshRuntimeProvenance, "function");
+assert.equal(runtimeModule.DSH_REVIEWED_SOURCE.version, "0.1.0-rc.6");
+assert.equal(runtimeModule.DSH_REVIEWED_SOURCE.commit.length, 40);
 const projectServerModule = await import("@nunomoura/codewiki/project-server");
 assert.deepEqual(Object.keys(projectServerModule).sort(), [
 	"CHANGE_INTAKE_RUNTIME_PROTOCOL",

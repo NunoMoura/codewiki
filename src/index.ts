@@ -286,6 +286,8 @@ export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
 export * from "./runtime/contracts.ts";
 export * from "./runtime/builds/store.ts";
+export * from "./runtime/dsh/adapter.ts";
+export * from "./runtime/dsh/provenance.ts";
 export * from "./runtime/processes/node-process-manager.ts";
 export * from "./runtime/runtime.ts";
 export * from "./protocol/client-pairing.ts";

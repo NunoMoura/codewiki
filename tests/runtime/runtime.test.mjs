@@ -39,6 +39,10 @@ describe("Runtime", () => {
 		const request = runRequest();
 		const handle = await runtime.start(request);
 		const quiescence = await runtime.waitForQuiescence(handle);
+		await assert.rejects(
+			runtime.waitForReceipt(handle),
+			/Run Process quiesced without a terminal result/,
+		);
 		const events = runtime.readEvents(handle);
 
 		assert.equal(quiescence.finalEventSequence, 1);

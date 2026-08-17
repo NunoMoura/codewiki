@@ -42,6 +42,7 @@ export const TARGET_PROJECT_SERVER_SUBDIRECTORIES = [
 export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"builds",
 	"checks",
+	"dsh",
 	"pi",
 	"processes",
 	"review",
@@ -66,8 +67,6 @@ export const OUTER_ADAPTER_SOURCE_ROOTS = [
 	"protocol",
 	"runtime",
 ] as const;
-
-export const LEGACY_SOURCE_FILE_COUNTS = {} as const;
 
 export const FORBIDDEN_PROJECT_SERVER_SUBDIRECTORIES = [
 	"decision",

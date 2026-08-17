@@ -53,7 +53,7 @@ CodeWiki
         `-- CodeWiki-authored Run Receipts
 ```
 
-Project Server is the sole authority for one governed project. Runtime is its subordinate execution subsystem and owns no project meaning or lifecycle authority. The optional Pi extension is a Client. Temporary Pi execution remains migration evidence only until the production DSH path proves parity.
+Project Server is the sole authority for one governed project. Runtime is its subordinate execution subsystem and owns no project meaning or lifecycle authority. The DSH path now proves one exact-pinned, replay-qualified, bundled Runtime Build from authenticated Run Process launch through isolated Agent Session JSONL and Runtime-authored Run Receipt. This is the first no-tool qualification slice, not full producer or worker parity. The optional Pi extension is a Client, and temporary Pi execution remains migration evidence until that parity is complete.
 
 ## Exactly four Stage Loops
 
@@ -254,7 +254,7 @@ scripts/
 tests/
 ```
 
-Project Server AuthN, Pairing, Client Sessions, project AuthZ, Stage Loop coordination, persistence, Workbenches, and effects live under `src/project-server/**`. Runtime contracts, Runtime Builds, Run Process management, concrete Check execution, and temporary Pi/review migration adapters live under `src/runtime/**`. Core Stage Loop and Check domains import only neutral Runtime contracts. No legacy `src/server/**`, `src/execution/**`, or compatibility path survives.
+Project Server AuthN, Pairing, Client Sessions, project AuthZ, Stage Loop coordination, persistence, Workbenches, and effects live under `src/project-server/**`. Runtime contracts, Runtime Builds, the CodeWiki DSH Adapter, Run Process management, concrete Check execution, and temporary Pi/review migration adapters live under `src/runtime/**`. Release tooling bundles the exact DSH process closure into a self-contained Runtime Build candidate; qualification, activation, and launch reverify its content digest. Core Stage Loop and Check domains import only neutral Runtime contracts. No legacy `src/server/**`, `src/execution/**`, or compatibility path survives.
 
 Public subpaths are `@nunomoura/codewiki/project-server`, `@nunomoura/codewiki/runtime`, and temporary `@nunomoura/codewiki/pi-sdk`.
 

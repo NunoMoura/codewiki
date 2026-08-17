@@ -3,14 +3,17 @@ import {randomBytes} from "node:crypto";
 import {
 	createRunCancellationRequest,
 	createRunHandle,
+	createRunReceipt,
 	type RunProcessHandshake,
+	type RunProcessResult,
 	type RunCancellationRequest,
 	type RunEvent,
 	type RunHandle,
 	type RunQuiescence,
+	type RunReceipt,
 	type RunRequest,
 } from "./contracts.ts";
-import {canonicalJson} from "../utils/canonical-json.ts";
+import {canonicalJson, canonicalJsonDigest} from "../utils/canonical-json.ts";
 import {
 	admitRunProcessHandshakeResponse,
 	createRunProcessAcceptedEvent,
@@ -46,6 +49,7 @@ export interface Runtime {
 		afterSequence?: number,
 	): readonly RunEvent[];
 	waitForQuiescence(handle: RunHandle): Promise<RunQuiescence>;
+	waitForReceipt(handle: RunHandle): Promise<RunReceipt>;
 	shutdown(): Promise<void>;
 }
 
@@ -71,6 +75,8 @@ export function createRuntime(
 			readSupervisedEvents(state, handle, afterSequence),
 		waitForQuiescence: (handle: RunHandle) =>
 			waitForSupervisedQuiescence(state, handle),
+		waitForReceipt: (handle: RunHandle) =>
+			waitForSupervisedReceipt(state, handle),
 		shutdown: () => shutdownRuntime(state),
 	});
 }
@@ -83,7 +89,9 @@ interface ActiveRun {
 	readonly connection: RunProcessConnection;
 	readonly events: RunEvent[];
 	readonly completion: Deferred<RunQuiescence>;
+	readonly receiptCompletion: Deferred<RunReceipt>;
 	readonly receiveAbort: AbortController;
+	result: RunProcessResult | null;
 	txSequence: number;
 	rxSequence: number;
 	terminal: boolean;
@@ -193,6 +201,13 @@ function waitForSupervisedQuiescence(
 	return runForHandle(state, handle).completion.promise;
 }
 
+function waitForSupervisedReceipt(
+	state: RuntimeState,
+	handle: RunHandle,
+): Promise<RunReceipt> {
+	return runForHandle(state, handle).receiptCompletion.promise;
+}
+
 async function shutdownRuntime(state: RuntimeState): Promise<void> {
 	state.shuttingDown = true;
 	const activeRuns = [...state.runs.values()].filter((run) => !run.terminal);
@@ -261,7 +276,17 @@ async function pumpRun(
 			});
 			active.rxSequence += 1;
 			if (envelope.message.kind === "event") {
+				if (active.result) {
+					throw new Error("Run Process emitted an event after its result.");
+				}
 				appendRunEvent(active, envelope.message.event);
+				continue;
+			}
+			if (envelope.message.kind === "result") {
+				if (active.result) {
+					throw new Error("Run Process emitted more than one result.");
+				}
+				active.result = envelope.message.result;
 				continue;
 			}
 			if (envelope.message.kind !== "quiescence") {
@@ -359,6 +384,41 @@ function completeRun(
 	active.receiveAbort.abort();
 	active.bootstrapKey.fill(0);
 	active.completion.resolve(quiescence);
+	if (!active.result) {
+		active.receiptCompletion.reject(
+			new Error("Run Process quiesced without a terminal result."),
+		);
+		return;
+	}
+	if (!quiescence.rawLog) {
+		active.receiptCompletion.reject(
+			new Error("Run Process quiesced without a raw Agent Session log."),
+		);
+		return;
+	}
+	try {
+		active.receiptCompletion.resolve(
+			createRunReceipt({
+				handle: active.handle,
+				outcome: active.result.outcome,
+				finalEventSequence: quiescence.finalEventSequence,
+				startedAt: active.result.startedAt,
+				finishedAt: active.result.finishedAt,
+				executionLedgerDigest: active.result.executionLedgerDigest,
+				rawLog: quiescence.rawLog,
+				outputDigest: active.result.outputDigest,
+				usageDigest: active.result.usageDigest,
+				cancellationDigest: active.result.cancellationDigest,
+				quiescenceDigest: canonicalJsonDigest(quiescence),
+				custodyGaps: active.result.custodyGaps,
+				operationalGaps: [],
+			}),
+		);
+	} catch (error) {
+		active.receiptCompletion.reject(
+			asError(error, "Runtime could not create the Run Receipt."),
+		);
+	}
 }
 
 async function stopRun(active: ActiveRun, error: Error): Promise<void> {
@@ -369,6 +429,7 @@ async function stopRun(active: ActiveRun, error: Error): Promise<void> {
 	await ignoreFailure(active.connection.terminate());
 	active.bootstrapKey.fill(0);
 	active.completion.reject(error);
+	active.receiptCompletion.reject(error);
 }
 
 interface PendingRunAdmission {
@@ -395,7 +456,9 @@ async function admitRun(input: {
 		handshakeTimeoutMs: input.handshakeTimeoutMs,
 	});
 	const completion = deferred<RunQuiescence>();
+	const receiptCompletion = deferred<RunReceipt>();
 	void suppressRejection(completion.promise);
+	void suppressRejection(receiptCompletion.promise);
 	return {
 		request: pending.request,
 		handle: pending.handle,
@@ -404,7 +467,9 @@ async function admitRun(input: {
 		connection,
 		events: [pending.acceptedEvent],
 		completion,
+		receiptCompletion,
 		receiveAbort: new AbortController(),
+		result: null,
 		txSequence: 1,
 		rxSequence: 0,
 		terminal: false,
