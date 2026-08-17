@@ -8,6 +8,7 @@ import {
 	AGENT_RUNNER_PROTOCOL,
 	EXECUTION_CAPABILITY_NAMES,
 	activateRunnerBundle,
+	admitAgentRunnerHandshake,
 	assertProducerSkillReceipt,
 	bindActiveRunnerBundle,
 	bindProducerSkills,
@@ -208,6 +209,48 @@ describe("execution ports", () => {
 					generatedAt: "2026-08-16T10:02:00.000Z",
 				}),
 			/is not qualified/,
+		);
+	});
+
+	it("admits only a Runner process serving the exact bound bundle and protocol", () => {
+		const bundle = qualifiedRunnerBundle(
+			"a".repeat(40),
+			"0.1.0-rc.6",
+			"evidence",
+		);
+		const binding = {
+			bundleDigest: bundle.bundleDigest,
+			runnerProtocolVersion: AGENT_RUNNER_PROTOCOL.version,
+		};
+		assert.deepEqual(
+			admitAgentRunnerHandshake(binding, {
+				runnerProtocolId: AGENT_RUNNER_PROTOCOL.id,
+				runnerProtocolVersion: AGENT_RUNNER_PROTOCOL.version,
+				runnerBundleDigest: bundle.bundleDigest,
+			}),
+			{
+				runnerProtocolId: AGENT_RUNNER_PROTOCOL.id,
+				runnerProtocolVersion: AGENT_RUNNER_PROTOCOL.version,
+				runnerBundleDigest: bundle.bundleDigest,
+			},
+		);
+		assert.throws(
+			() =>
+				admitAgentRunnerHandshake(binding, {
+					runnerProtocolId: AGENT_RUNNER_PROTOCOL.id,
+					runnerProtocolVersion: AGENT_RUNNER_PROTOCOL.version,
+					runnerBundleDigest: sha256Digest("stale-runner"),
+				}),
+			/Runner process bundle does not match the bound Runner Bundle/,
+		);
+		assert.throws(
+			() =>
+				admitAgentRunnerHandshake(binding, {
+					runnerProtocolId: AGENT_RUNNER_PROTOCOL.id,
+					runnerProtocolVersion: "2.0.0",
+					runnerBundleDigest: bundle.bundleDigest,
+				}),
+			/Runner process protocol does not match the bound Runner protocol/,
 		);
 	});
 

@@ -262,6 +262,57 @@ export interface RunnerBundleBinding {
 	readonly runnerProtocolVersion: string;
 }
 
+export interface AgentRunnerHandshake {
+	readonly runnerProtocolId: typeof AGENT_RUNNER_PROTOCOL.id;
+	readonly runnerProtocolVersion: string;
+	readonly runnerBundleDigest: Sha256Digest;
+}
+
+export function admitAgentRunnerHandshake(
+	binding: RunnerBundleBinding,
+	value: unknown,
+): Readonly<AgentRunnerHandshake> {
+	assertRunnerBundleBinding(binding);
+	if (
+		!value ||
+		typeof value !== "object" ||
+		!hasExactKeys(value, [
+			"runnerProtocolId",
+			"runnerProtocolVersion",
+			"runnerBundleDigest",
+		])
+	) {
+		throw new Error("Runner process handshake shape is invalid.");
+	}
+	const handshake = value as Record<string, unknown>;
+	if (handshake.runnerProtocolId !== AGENT_RUNNER_PROTOCOL.id) {
+		throw new Error("Runner process protocol identity is unsupported.");
+	}
+	assertVersion(
+		handshake.runnerProtocolVersion,
+		"Runner process protocol version",
+	);
+	if (handshake.runnerProtocolVersion !== binding.runnerProtocolVersion) {
+		throw new Error(
+			"Runner process protocol does not match the bound Runner protocol.",
+		);
+	}
+	const runnerBundleDigest = assertSha256Digest(
+		handshake.runnerBundleDigest,
+		"Runner process bundle digest",
+	);
+	if (runnerBundleDigest !== binding.bundleDigest) {
+		throw new Error(
+			"Runner process bundle does not match the bound Runner Bundle.",
+		);
+	}
+	return Object.freeze({
+		runnerProtocolId: AGENT_RUNNER_PROTOCOL.id,
+		runnerProtocolVersion: handshake.runnerProtocolVersion,
+		runnerBundleDigest,
+	});
+}
+
 export function createRunnerBundleManifest(
 	input: RunnerBundleManifest,
 ): RunnerBundleManifest {
@@ -407,14 +458,7 @@ export function resolveRunnerBundleForResume(
 	binding: RunnerBundleBinding,
 ): QualifiedRunnerBundle {
 	assertRunnerBundleRegistrySnapshot(registry);
-	if (!hasExactKeys(binding, ["bundleDigest", "runnerProtocolVersion"])) {
-		throw new Error("Runner Bundle binding shape is invalid.");
-	}
-	assertSha256Digest(binding.bundleDigest, "Runner Bundle binding digest");
-	assertVersion(
-		binding.runnerProtocolVersion,
-		"Runner Bundle binding protocol version",
-	);
+	assertRunnerBundleBinding(binding);
 	const bundle = registry.bundles.find(
 		(entry) => entry.bundleDigest === binding.bundleDigest,
 	);
@@ -543,6 +587,24 @@ function nextRunnerBundleRegistrySnapshot(input: {
 	return snapshot;
 }
 
+function assertRunnerBundleBinding(
+	value: unknown,
+): asserts value is RunnerBundleBinding {
+	if (
+		!value ||
+		typeof value !== "object" ||
+		!hasExactKeys(value, ["bundleDigest", "runnerProtocolVersion"])
+	) {
+		throw new Error("Runner Bundle binding shape is invalid.");
+	}
+	const binding = value as RunnerBundleBinding;
+	assertSha256Digest(binding.bundleDigest, "Runner Bundle binding digest");
+	assertVersion(
+		binding.runnerProtocolVersion,
+		"Runner Bundle binding protocol version",
+	);
+}
+
 function assertRegistryGeneration(
 	registry: RunnerBundleRegistrySnapshot,
 	expectedGeneration: number,
@@ -567,7 +629,7 @@ function assertTimestamp(value: string, field: string): string {
 	return value;
 }
 
-function assertVersion(value: string, field: string): void {
+function assertVersion(value: unknown, field: string): asserts value is string {
 	if (typeof value !== "string" || !/^\d+\.\d+\.\d+$/.test(value)) {
 		throw new Error(`${field} must be an exact semantic version.`);
 	}
