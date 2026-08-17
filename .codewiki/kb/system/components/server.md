@@ -1,7 +1,7 @@
 ---
 type: System Component
 title: CodeWiki Server
-description: Owns Client authentication, connections, pairing, transport, project routing, and delivery without owning project meaning.
+description: Owns Client authentication, connections, pairing, transport, MCP binding, project routing, and delivery without owning project meaning.
 status: stable
 tags: [system, component]
 codewiki_component: server
@@ -14,7 +14,7 @@ codewiki_relationships:
 ---
 # CodeWiki Server
 
-CodeWiki Server is the long-lived protocol edge for the App, CLI, Pi, Claude Code, Codex, and collaboration channels. It is an architectural sibling of each Project Runtime. Server and Runtime may share a process or machine, but co-location grants neither ownership over the other. One logical Server may route many Clients to one authoritative Runtime per managed project.
+CodeWiki Server is the CodeWiki Backend's long-lived protocol edge for the App, CLI, External Agent Clients, and collaboration channels. It is an architectural sibling of each Project Runtime. Server and Runtime may share a process or machine, but co-location grants neither ownership over the other. One logical Server may route many Clients to one authoritative Runtime per governed project.
 
 Server owns authentication adapters, secure sessions, Client pairing, protocol negotiation and envelope validation, Client-instance transport deduplication, project registry and Runtime-route resolution, reconnect cursors, deep links, redaction, and durable outbound delivery. It calls a narrow Runtime gateway and never reads Runtime persistence internals or mutates canonical project state directly. Runtime imports neither Server nor Client implementations.
 
@@ -30,4 +30,8 @@ Browser App launch uses a generation-bound fragment credential only to establish
 
 Server attaches separate actor and Client transport context before forwarding `codewiki.client-server@1.0.0` requests. `actorId` and `authenticatedIdentityRef` identify whom Runtime authorizes. `clientKind`, `clientInstanceId`, and `authenticationRef` identify how the request arrived. An Agent or service acting for a user requires an exact delegation reference; Client kind, repository access, pairing, job title, profile, model identity, and transport never imply authority.
 
-Server never starts Worker sessions, prepares Runtime workbenches, releases Claims, schedules semantic descendants, runs Checks, mutates Git, selects lifecycle transitions, or executes models. MCP 2026-07-28 is the preferred stateless binding where supported. In MCP-specific documentation, “host” may name MCP's normative protocol role; it is not a CodeWiki architecture role. Closing a Client connection does not stop accepted Runtime work, and reconnect uses durable operation identity and bounded snapshots rather than hidden conversation state.
+Server never starts Agent Runs, prepares Runtime Workbenches, releases Claims, schedules semantic descendants, runs Checks, mutates Git, selects lifecycle transitions, or executes models. MCP 2026-07-28 is the preferred stateless External Agent Client binding where supported. In MCP-specific documentation, “host” may name MCP's normative protocol role; it is not CodeWiki Backend, Agent Supervisor, or Agent Runner.
+
+The MCP binding under `src/server/mcp/**` reserves the CodeWiki tool namespace and maps a small stage-oriented surface to authenticated Runtime gateway operations: `codewiki_stage_context`, `codewiki_stage_query`, `codewiki_stage_submit`, `codewiki_stage_status`, and `codewiki_stage_confirm`. Queries accept bounded declarative batches so every harness can retrieve useful context without exposing MCP tools inside its own code runtime. Optional `codewiki_context_run` executes only through the separately admitted fresh read-only query-program boundary. Candidate payloads cannot supply trusted receipts, Gate claims, lifecycle transitions, authority, or effects; Server and Runtime derive those facts.
+
+Each MCP response identifies exact project, stage, subject, snapshot, operation, coverage, truncation, and staleness as applicable. Server-generated receipts prove only CodeWiki calls. They never claim complete custody over an External Agent Client's prompts, tools, Skills, local files, models, subagents, code runtime, or memory. Closing a Client connection does not stop accepted Runtime work, and reconnect uses durable operation identity and bounded snapshots rather than hidden conversation state.

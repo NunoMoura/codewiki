@@ -11,32 +11,28 @@ CodeWiki is a standalone local-first intent-to-production application:
 ```text
 Users and services
         |
-User Interfaces implemented by Clients
-App | CLI | Pi | Claude Code | Codex | channels
+Standalone App | CLI | optional Agent-product Clients | channels
         |
-CodeWiki Client-Server Protocol
+CodeWiki Client-Server Protocol and reserved MCP binding
         |
-CodeWiki Server
-Authentication | Repository Access | Pairing | Sessions | Registry | Routing | Delivery
+Standalone CodeWiki Backend
         |
-Project Runtime gateway
-        |
-Authoritative per-project Runtime
-Authority | Provenance | Claims | Assignments | Workbenches
-Integration | Fixed lifecycle | Gate admission | Recovery | Guarded effects
+CodeWiki Server | one authoritative Project Runtime per governed project
+Authentication | Authority | Provenance | Stage Context | Fixed Lifecycle | Gates | Effects
         |
 Decision | Planning | Implementation | Review
         |
-Checks | Check Packs | Pack Skills | Check SDK | Code Checks | Model Checks | Gate Reports
+Stage Producers | Implementation Workers | Checks
         |
-Workers using Workbenches and Model Providers
+Agent Supervisor -> isolated DSH Agent Runners -> optional Claude/Codex/ACP delegates
+External Agent Clients -> MCP -> Server
         |
-Knowledge | Change Trace | Git | Evidence
+Runtime-owned Workbenches | WorkState | Knowledge | Alignment | Change Trace | Git | Evidence | Results
 ```
 
-One logical CodeWiki Server serves a deployment and routes many Clients to one authoritative Runtime per managed project. Server and Runtime are architectural siblings that may share a process or machine; co-location grants neither ownership over the other. Server owns connection trust, transport, pairing, sessions, project routing, transport deduplication, reconnect, redaction, and delivery. Runtime owns project AuthZ, semantic idempotency, canonical meaning, admission, provenance, persistence, scheduling, Integration, fixed lifecycle, Gate admission, and effects. Checks is a root domain owning Check Pack files, optional Pack Skill snapshots, the Check Author SDK contract, bounded Code and Model Check execution, completed Results, caching, fail-fast reduction, and Gate Reports. Four Loops own Decision, Planning, Implementation, and Review semantics. Server calls one narrow Runtime gateway and never reads Runtime persistence internals.
+CodeWiki is a standalone software-evolution Backend that may run as a local daemon or hosted service. It runs behind the project rather than inside another Agent product. One logical CodeWiki Server serves a deployment and routes many Clients to one authoritative Runtime per governed project. Server and Runtime are architectural siblings that may share a process or machine; co-location grants neither ownership over the other. Server owns connection trust, transport, pairing, sessions, project routing, MCP binding, transport deduplication, reconnect, redaction, and delivery. Runtime owns project AuthZ, semantic idempotency, canonical meaning, Stage Context admission, producer attempts, provenance, persistence, scheduling, Integration, fixed lifecycle, Gate admission, and effects. Checks is a root domain owning Check Pack files, optional Pack Skill snapshots, the Check Author SDK contract, bounded Code and Model Check execution, completed Results, caching, fail-fast reduction, and Gate Reports. Four Stage Loops own Decision, Planning, Implementation, and Review semantics. WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result owners supply immutable Stage Context; no duplicate context graph or store is introduced. Server calls one narrow Runtime gateway and never reads Runtime persistence internals. Agent Supervisor and isolated DSH Agent Runners implement neutral Execution Ports without receiving canonical storage authority.
 
-A User is a human. An Actor is an accountable authenticated User or service. A User Interface is a human-facing surface implemented by a Client. A Client is software that speaks CodeWiki protocol. Claude Code or Codex acts as a Client while inspecting or requesting work and as a Worker only while executing an accepted Assignment. A Worker is an Agent, process, or service executing one bounded Assignment in one Runtime-owned Workbench. A Model Provider supplies local or remote inference and is distinct from the Worker that owns the Agent loop, tools, Workbench, tests, and Candidate. Worker Node remains deferred until physical placement, capacity, health, or draining becomes first-class.
+A User is a human. An Actor is an accountable authenticated User or service. A User Interface is a human-facing surface implemented by a Client. A Client is software that speaks CodeWiki protocol. A Stage Producer creates a Decision, Planning, Implementation, or Review Candidate without owning Gate judgment or transition authority. Worker means only Implementation Worker: an Agent, process, or service executing one accepted Work Item through one bounded Assignment in one Runtime-owned Workbench. A Backend Agent Run uses DSH's native Turn Loop under exact CodeWiki composition. A Delegated Agent Run is launched by Backend Execution through Claude Code, Codex, ACP, or another delegate adapter while declaring unknown child internals. An External Agent Client owns its pipeline and calls CodeWiki through MCP. A Model Provider supplies local or remote inference and is distinct from producer, Worker, Check executor, Client, Agent Runner, and delegate. Worker Node remains deferred until physical placement, capacity, health, or draining becomes first-class.
 
 Authentication proves the identity connecting now. Pairing enrolls one Client installation for one Actor. Session represents one temporary authenticated connection. Runtime Authorization determines whether the Actor may perform one exact project operation. Pairing, Client kind, repository access, job title, profile, model, and Worker ownership grant no project authority. Personal loopback mode uses local pairing. Team mode uses provider-neutral OIDC with GitHub or GitLab OAuth as first adapters and stable `(issuer, subject)` identity. Repository access supplies coarse membership only. CodeWiki adds no password system; hosted identity services remain optional future adapters.
 
@@ -49,17 +45,19 @@ Claim            -> currently responsible
 Operation        -> proves who performed the exact action
 ```
 
-Contribution Routing is a read-only Alignment projection over exact Change revision, responsibility rules, Profiles, Grants, Claims, availability, and Worker Offers. It suggests eligible reviewers, contributors, and Workers with reasons, coverage, unknowns, and staleness; initial assignment remains explicit. Mutable reviewer, assignee, Worker, and machine allocation stays outside immutable Change meaning. Review progresses through exact Review Requirement, Review Claim, and immutable Review Submission. Archive follows an explicit `approve | request_revision | defer | reject` disposition and never substitutes for it.
+Contribution Routing is a read-only Alignment projection over exact Change revision, responsibility rules, Profiles, Grants, Claims, availability, and Worker Offers. It suggests eligible reviewers, contributors, and Implementation Workers with reasons, coverage, unknowns, and staleness; initial assignment remains explicit. Mutable reviewer, contributor, stage-producer, Implementation Worker, and machine allocation stays outside immutable Change meaning. Review progresses through exact Review Requirement, Review Claim, and immutable Review Submission. Archive follows an explicit `approve | request_revision | defer | reject` disposition and never substitutes for it.
 
-One versioned Client-Server command/query/operation/event protocol serves every binding. MCP `2026-07-28` is preferred where supported. MCP may use “host” for its normative protocol role, but Host is not a CodeWiki architecture role. CLI remains deterministic human, scripting, and high-authority confirmation access. Request context separates accountable Actor identity from Client kind/instance and explicit delegation. Pi is the sole shipped fully managed execution engine.
+One versioned Client-Server command/query/operation/event protocol serves every binding. MCP `2026-07-28` is preferred for External Agent Clients where supported; it is an inbound participation surface, not Backend outbound delegation. MCP may use “host” for its normative protocol role, but that role is not CodeWiki Backend, Agent Supervisor, or Agent Runner. CLI remains deterministic human, scripting, and high-authority confirmation access. Request context separates accountable Actor identity from Client kind/instance and explicit delegation. Standalone CodeWiki packages one exact pinned DSH composition inside isolated Agent Runners. The optional Pi extension is an ordinary external Client Integration, not the product host or Agent engine.
 
 Every observed Git state receives positive provenance accounting:
 
 ```text
-exact Runtime Candidate Manifest + custody
+exact Runtime Candidate + stage-appropriate custody
   -> controlled provenance
-  -> managed when complete Pi receipt exists
-  -> MCP-mediated when exact admitted Worker operations exist
+  -> backend-owned when complete DSH input/query/execution receipt exists
+  -> backend-delegated when exact dispatch, process, Workbench, artifacts, and custody gaps exist
+  -> external-client only for exact authenticated CodeWiki operations
+  -> Workbench custody additionally required for Implementation
 
 no exact custody match
   -> external provenance
@@ -68,27 +66,49 @@ no exact custody match
   -> fresh Implementation and Review Gates before delivery
 ```
 
-Branch names, commits, authors, trailers, Git notes, and producer claims cannot prove provenance. External work may be useful and certifiable, but inherits no execution proof. Divergence pauses guarded effects and is never silently adopted, overwritten, discarded, or certified.
+Git remains the content-addressed artifact-history owner; CodeWiki governs semantic transitions between project states. Stage Gates judge immutable stage subjects, which may include a commit or tree but are never inferred from a commit alone. Branch names, commits, authors, trailers, Git notes, and producer claims cannot prove provenance. External work may be useful and certifiable, but inherits no execution proof. Divergence pauses guarded effects and is never silently adopted, overwritten, discarded, or certified. CodeWiki targets accountability closure for accepted transitions rather than surveillance of every incidental Agent or repository interaction.
 
-### Ratified Checks, Gates, and Loops
+### Ratified Checks, Gates, and Stage Loops
 
-Checks, Changes, and Loops are peer root domains. Exactly four semantic Loops exist: Decision, Planning, Implementation, and Review. Runtime applies fixed transitions: passed Decision `approve` advances to Planning while passed `reject | defer | withdraw` keeps its typed terminal or deferred meaning; passed Planning advances to Implementation; passed Implementation advances to Review; passed Review permits guarded delivery; Decision, Planning, and Implementation failure repeats the same Loop; Review failure returns to Implementation; any stopped Gate preserves current state and stops that automation attempt. No generic Router, Loop Exit subsystem, or separate shared Verification component survives.
+Checks, Changes, and Stage Loops are peer root domains. A Change carries one proposed transition from accepted state `S0` to intended state `S1`. Exactly four semantic Stage Loops exist: Decision, Planning, Implementation, and Review. A passed Decision Gate certifies one exact Candidate but accepts no meaning by itself; an authorized Actor must confirm the unchanged Candidate and Gate digest against current WorkState before Runtime applies `approve | reject | defer | withdraw`, and only confirmed `approve` advances to Planning. Passed Planning advances to Implementation; passed Implementation advances to Review; passed Review permits guarded delivery; Decision, Planning, and Implementation failure repeats the same Stage Loop; Review failure returns to Implementation; any stopped Gate preserves current state and stops that automation attempt. No generic Router, Loop Exit subsystem, or separate shared Verification component survives.
 
 Active Pack content is direct user-editable source under `.codewiki/check-packs/<stage>/<pack>/`. Every Check remains a direct `<check-id>/` directory containing `check.json` and exactly one `CHECK.md` or `CHECK.mjs`. A Pack may additionally contain one optional standard Agent Skill under `skill/<skill-name>/`; there is no extra `checks/` level or required local Pack manifest. Bootstrap materializes one deliberately bare-bones empty `default/` Pack per stage once. Defaults are examples, not protected floors. Users may edit or delete any Pack, Skill, or Check; CodeWiki never restores them automatically. Zero Checks passes with a visible non-blocking `no_checks_configured` warning even when a Skill exists. Malformed content or unavailable execution stops only the affected stage operation and never crashes CodeWiki.
 
-Pack Skills shape producer behavior but never judge output. Runtime supplies exact stage Skills in stable Pack-ID order only to work-producing Agents, and their complete immutable digests bind producer attempts and receipts. Ambient harness Skills remain disabled. Skill scripts and setup guidance may use only tools and capabilities already admitted for the Assignment; `allowed-tools` cannot add authority. Code and Model Check executors never inherit Pack Skills, resources, tools, context, or memory. Skill identity remains separate from Check Pack and Result cache identity.
+Pack Skills shape producer behavior but never judge output. Runtime supplies exact stage Skills in stable Pack-ID order only to work-producing Agents, and their complete immutable digests bind producer attempts and receipts. Ambient Agent Runner and delegated-product Skills remain disabled for Backend-owned production. A delegated route is eligible for a Pack Skill only when its adapter binds and receipts the exact supplied bytes. Skill scripts and setup guidance may use only tools and capabilities already admitted for the stage attempt or Implementation Assignment; `allowed-tools` cannot add authority. Code and Model Check executors never inherit Pack Skills, resources, tools, context, or memory. Skill identity remains separate from Check Pack and Result cache identity.
 
-Every present registered Check gates its stage. A Check defines one pass condition, one fail condition, one stable failure code, and one feedback contract. Code and Model are the only Check implementation kinds. Binary and quantitative are the measurement kinds; a quantitative threshold deterministically reduces to pass or fail. Completed Results are only `passed | failed`. Timeout, invalid output, unavailable sandbox or model, exhausted budget, cancellation, failed input collection, incomplete snapshot query, or unrecoverable staleness creates a stopped Check Run and Gate, not an indeterminate Result or semantic failure. Failed Results send exact feedback to the responsible Loop; stopped runs send operational recovery to the User.
+Every present registered Check gates its stage. A Check defines one pass condition, one fail condition, one stable failure code, and one feedback contract. Code and Model are the only Check implementation kinds. Binary and quantitative are the measurement kinds; a quantitative threshold deterministically reduces to pass or fail. Completed Results are only `passed | failed`. Timeout, invalid output, unavailable sandbox or model, exhausted budget, cancellation, failed input collection, incomplete snapshot query, or unrecoverable staleness creates a stopped Check Run and Gate, not an indeterminate Result or semantic failure. Failed Results send exact feedback to the responsible Stage Loop; stopped runs send operational recovery to the User.
 
 The Check SDK has two composition layers: Probes gather bounded snapshot-bound facts without deciding pass or fail, and Checks evaluate facts as binary or quantitative judgments. Author source may import pure libraries, Probes, and Checks normally and bundle that complete closure into one readable self-contained `CHECK.mjs`. The top-level Check registered beside `check.json` is the only Result, cache, retry, failure-code, feedback, and Gate boundary. Composed Checks inherit its context, limits, and cancellation and create no independent platform Result. Installed Checks never invoke another installed Check by Pack identity.
 
-Code Checks receive immutable read-only SDK views over declared OKF Knowledge, repository, code, tests, local revisions and commits, exact pull-request Evidence, Change state, and Alignment Graph facts. Queries support horizontal inspection and vertical traversal from Knowledge through source ownership, tests, revisions, accepted work, Evidence, and Results. Every result binds snapshot, provenance, coverage, truncation, and staleness. Checks takes one immutable snapshot of exact stage subject, Check Pack, input, Evidence, configuration, and execution identities, resolves exact cache hits, runs remaining Code Checks in bounded parallel, stops before Model Checks when Code fails or stops, otherwise runs Model Checks in bounded parallel, and stops launching queued work after a conclusive failure or stop condition. Model Checks remain tool-free and separate from work-producing models. Code Checks run only in admitted sandboxes.
+Code Checks receive one reserved read-only SDK binding over declared OKF Knowledge, repository, code, tests, local revisions and commits, exact pull-request Evidence, Change state, and Alignment facts. Queries support horizontal inspection and vertical traversal from Knowledge through source ownership, tests, revisions, accepted work, Evidence, and Results. Every page binds query and complete snapshot digests, source references, deterministic ordering, provenance, coverage, unknowns, truncation, cursor position, query-engine identity, and staleness. Checks takes one immutable snapshot of exact stage subject, Check Pack, input, Evidence, configuration, and execution identities, resolves exact cache hits, runs remaining Code Checks in bounded parallel, stops before Model Checks when Code fails or stops, otherwise runs Model Checks in bounded parallel, and stops launching queued work after a conclusive failure or stop condition. Model Checks remain tool-free and separate from producer and Implementation Worker models. Code Checks run only in admitted sandboxes, and their query activity remains Skill-free Result provenance rather than producer-session context or cache identity.
 
 CodeWiki never autonomously authors Skill or Check content. After one-time bootstrap, Pack changes occur only through direct project-file edits or explicit authenticated App actions. Users may edit files manually, through a user-controlled external Agent following public schemas, or through App forms. Check Authors keep source, tests, fixtures, and dependencies in their own package or repository; only `check.json` and self-contained `CHECK.mjs` enter the active Pack. The App edits standard Pack Skills, creates Model Checks from structured fields, accepts one-file Code Check uploads, previews Checks, and installs marketplace Packs.
 
-Check Pack transport borrows Pi Package source ergonomics without adopting Pi-specific extensions, prompts, themes, or settings. Npm discovery uses the `codewiki-check-pack` keyword, and exact npm versions, Git revisions, or local package paths expose a `codewiki.checkPacks` manifest or conventional `check-packs/` directories. `package.json` is transport metadata and never replaces `check.json`. Package sources are transport only: no lifecycle scripts, Skill code, or Check code execute during install; resolved source, integrity, separate Skill and Check base digests, complete package digest, and local divergence are recorded; only declared Skill and runtime Check files are vendored; updates never overwrite local changes silently.
+Check Pack transport uses ordinary npm, Git, and local package-source ergonomics without admitting Backend Plugins, DSH or Cordis plugins, product prompts, themes, settings, or hooks. Npm discovery uses the `codewiki-check-pack` keyword, and exact npm versions, Git revisions, or local package paths expose a `codewiki.checkPacks` manifest or conventional `check-packs/` directories. `package.json` is transport metadata and never replaces `check.json`. Package sources are transport only: no lifecycle scripts, Skill code, or Check code execute during install; resolved source, integrity, separate Skill and Check base digests, complete package digest, and local divergence are recorded; only declared Skill and runtime Check files are vendored; updates never overwrite local changes silently.
 
-Review is a separate Loop with its own stage Packs because exact-head delivery standards and the Implementation-to-Review feedback cycle are distinct. Human Review Evidence is optional. Projects may rely entirely on independent Code and Model Checks, require authenticated human Review through their own Check, or combine both. A fully automated delivery still requires prior User-configured authority plus a passed fresh Review Gate.
+Review is a separate Stage Loop with its own stage Packs because exact-head delivery standards and the Implementation-to-Review feedback cycle are distinct. Human Review Evidence is optional. Projects may rely entirely on independent Code and Model Checks, require authenticated human Review through their own Check, or combine both. A fully automated delivery still requires prior User-configured authority plus a passed fresh Review Gate.
+
+Post-Gate Outcome Diagnostics may analyze bounded repeated outcomes and propose exact changes to Skills, Checks, Stage Context APIs, model routes, budgets, or configuration. They never repair the current Candidate, reinterpret a Result, mutate project files, or receive privileged self-evolution authority. Every suggestion is ordinary Change Intake Material and traverses the same four-stage lifecycle.
+
+CodeWiki extensibility has four non-overlapping surfaces. First-party Backend Plugins contribute narrow Agent Runner capabilities such as tools, context bindings, Pack Skill providers, model or delegate adapters, observers, and compaction policy; raw Cordis context and canonical Runtime state remain inaccessible. Check Packs are project-owned policy and guidance files, not executable Backend plugins. Core Adapters implement trusted repository, Workbench, persistence, transport, authentication, and delivery ports. Client Integrations speak CodeWiki protocol. Runtime's authority kernel remains plugin-free, and v1 permits no project-installed or third-party Backend Plugin.
+
+The DSH capability disposition in Knowledge is normative for implementation: adopt scoped lifecycle, Agent registry, standard Turn Loop, append-only Session log, request-reconstruction invariants, prompt/tool assembly, LLM transport, persistence, and subagent mechanics; wrap Skills, compaction, Code Mode, telemetry, and execution storage under CodeWiki contracts; use Claude Code, Codex, and ACP only as custody-limited delegated adapters; and disable ambient profiles, user patches, workspace instructions, filesystem Skills, HMR, dynamic Cordis, creation mode, DSH product UI and Host API, product MCP client, workflows, Ralph, goals, plan mode, model-facing jobs, and local approval/settings authority in production.
+
+### Ratified context, session, and compaction boundary
+
+Architecture evidence was pinned through static source review of Prime Intellect `prime-agent` `0.7.2` at `97b994c3d7c45ca1ae635190e91e9e58ddf2577c` and DeepSeek Harness `0.1.0-rc.5` at `47f943859bef60e4160492346772ded9b24f765a`; their upstream suites were not run. Prime remains a reference. DSH is the selected Agent Runner engine but never CodeWiki authority, and its compatibility-breaking preview status requires an exact package/commit closure plus CodeWiki conformance on every upgrade. Prime demonstrates cumulative structured summaries, safe recent-tail retention, turn-boundary scheduling, file-operation tracking, and compaction-surviving executable scratch, but its best-effort `dill` kernel snapshots and Worker OS authority are unsuitable as canonical state. DSH supplies strict separation between append-only raw events and replaceable model surface, request reconstruction, source-linked compaction events, deterministic tool-result pruning before summarization, scoped Agent composition, replaceable Turn Loop mechanics, fresh programmatic Code Mode, and named native or delegated subagents; its worker-thread and VM containment are explicitly not security boundaries.
+
+CodeWiki therefore separates three concerns:
+
+1. Canonical project truth remains in Change Trace, WorkState, Knowledge, Alignment, repository snapshots, Evidence, Results, and configuration.
+2. Exact Backend-owned execution history remains in an append-only bounded ledger binding every CodeWiki-controlled model-visible prompt, Skill, tool schema, model route, context snapshot, query request and response digest, compaction replacement, budget, usage, output, raw DSH event-log identity, and isolation fact.
+3. The model-facing session surface may be deterministically pruned and lossily compacted, but each checkpoint cites exact replaced ledger ranges, keeps a recent tail, and rehydrates canonical stage facts from their owners.
+
+Decision, Planning, Review, each Implementation Assignment, and each Model Check use isolated sessions. User-facing continuity comes from WorkState and immutable operation identities, not one giant transcript. Exactly one compaction owner operates per session. CodeWiki supplies one state-aware compaction Backend Plugin over DSH's append-only Session events, deterministic tool-result pruning, source-linked surface replacements, cancellation, and request-reconstruction invariants; it rehydrates canonical facts without running a competing scheduler.
+
+Backend Agent Stage Context starts with a compact immutable baseline and expands through typed direct or declarative batch queries. Optional `codewiki_context_run` ships only if benchmarks show material benefit; every run is fresh, read-only, snapshot-bound, import-free, filesystem-free, network-free, process-free, environment-free, credential-free, bounded, cancellable, ledgered, and canonical-JSON-only. Optional cross-call scratch may later use bounded canonical JSON with compare-and-swap, but no persistent Python/V8 heap, provider memory, or summary becomes canonical state.
+
+Backend-owned custody covers every CodeWiki-controlled session input and query. Backend-delegated custody covers exact task dispatch, adapter and configuration policy, process lifecycle, admitted Workbench and artifacts, final output, and declared unknown child internals. External-client custody covers only authenticated CodeWiki operations and admitted Candidate or Workbench state. No Backend Plugin, raw Cordis plugin, delegated harness, External Agent Client, or model-authored workflow may replace authentication, CAS, lifecycle transitions, Gate semantics, provenance, or fixed Runtime invariants.
 
 ## Target source topology
 
@@ -97,7 +117,8 @@ The tree below names responsibilities, not permission to create empty directorie
 ```text
 src/
   index.ts
-  pi-extension.ts
+  main.ts                # primary standalone CodeWiki Backend bootstrap
+  pi-extension.ts        # optional external Pi Client Integration
   error-handling/        # shared envelope and operation-failure contract only
   protocol/
     client-server.ts
@@ -131,6 +152,7 @@ src/
     synchronization/
     recovery/
     effects/
+    stage-context/       # immutable facade over existing query owners
     queries/
   changes/
     intake/
@@ -154,8 +176,12 @@ src/
   project/
   execution/
     ports.ts
-    review/
-    pi/
+    supervisor/          # Agent Supervisor and Runner lifecycle
+    dsh/
+      runner/            # isolated exact DSH composition and process protocol
+      plugins/           # first-party Backend Plugins only
+      delegates/         # Claude Code, Codex, ACP, and future adapters
+    checks/              # Code sandbox and isolated tool-free Model transport
   preview/
   git/
   utils/
@@ -165,20 +191,23 @@ scripts/
 tests/
 ```
 
-`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/error-handling/**` stays a lean Package-owned foundation for the common error envelope, serialization, type guards, and stable operation-failure contract; owner-specific error semantics do not accumulate there. `src/checks/**` owns Check contracts, Pack loading, generic Code and Model execution coordination, cache identity, completed Results, and Gate Reports. `src/loops/**` owns Decision, Planning, Implementation, and Review stage semantics. Runtime invokes Checks, records authoritative Gate state, and applies one fixed lifecycle without a Router. `src/execution/review/**` temporarily owns moved legacy language-review execution; it is neither the semantic Review Loop nor a Gate. Its existing direct Pi Client and Runtime callers remain bounded migration debt until Review Gates replace those mechanics behind neutral ports. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains an internal Runtime subsystem. Public `./coordinator`, root `coordinator.ts`, generic `composition/**`, `src/runtime/loop-exit/**`, and `src/verification/**` do not survive the clean cut. `src/pi-extension.ts` is the neutral shipped Package bootstrap that wires Pi Client registration, the Runtime connection boundary, and the concrete Execution spawner without reversing those owner dependencies. A neutral `src/main.ts` may later construct Server and Runtime siblings only when standalone process bootstrap genuinely requires it.
+`src/protocol/**` contains only shared Client-Server wire contracts. Domain protocols remain with their owners. `src/error-handling/**` stays a lean Package-owned foundation for the common error envelope, serialization, type guards, and stable operation-failure contract; owner-specific error semantics do not accumulate there. `src/checks/**` owns Check contracts, Pack loading, generic Code and Model execution coordination, cache identity, completed Results, and Gate Reports. `src/loops/**` owns Decision, Planning, Implementation, and Review Stage Loop semantics. Runtime invokes Checks, records authoritative Gate state, and applies one fixed lifecycle without a Router. `src/execution/supervisor/**` owns Agent Runner process lifecycle and custody-scoped receipts through neutral ports. `src/execution/dsh/**` owns the exact pinned DSH composition, first-party Backend Plugins, and delegate adapters; no DSH or Cordis value escapes that implementation boundary. `src/execution/checks/**` owns concrete Check transports without Result authority. Existing `src/execution/pi/**` and `src/execution/review/**` are migration debt outside target topology and are deleted after DSH and Review parity rather than retained behind compatibility. `src/runtime/index.ts` is the curated operational package surface published as `@nunomoura/codewiki/runtime`; `src/runtime/coordinator/**` remains internal. Public `./coordinator`, root `coordinator.ts`, generic `composition/**`, `src/runtime/loop-exit/**`, and `src/verification/**` do not survive. `src/main.ts` composes the standalone CodeWiki Backend, including Server, Runtime, first-party Clients, Agent Supervisor, isolated DSH Agent Runners, and Check Runners. `src/pi-extension.ts` is only an optional external Pi Client and owns no Backend lifecycle.
 
 Target dependency direction is:
 
 ```text
-clients   -> protocol
-server    -> protocol + Runtime gateway
-runtime   -> loops + checks + domain owners + neutral Execution Ports
-checks    -> Evidence contracts + Project configuration + neutral Execution Ports
-execution -> ports it implements
-bootstrap -> clients + server + runtime + concrete execution
+clients               -> protocol
+server                -> protocol + Runtime gateway
+runtime               -> Stage Loops + checks + domain owners + neutral Execution Ports
+checks                -> Evidence contracts + Project configuration + neutral Execution Ports
+execution/supervisor  -> neutral Execution Ports + Runner process protocol
+execution/dsh         -> neutral Execution Ports + pinned DSH/Cordis packages
+execution/checks      -> neutral Check execution ports
+main bootstrap        -> clients + server + runtime + Agent Supervisor + concrete DSH/Check Runners
+optional Pi Client    -> protocol only
 ```
 
-Forbidden directions include `runtime -> server`, `runtime -> clients`, `runtime -> concrete Pi`, `checks -> Runtime lifecycle`, `checks -> concrete Pi`, `server -> Runtime persistence internals`, `domain -> server`, and `clients -> Server, Runtime, or concrete Execution process lifecycle`.
+Forbidden directions include `runtime -> server`, `runtime -> clients`, `runtime -> concrete DSH/Cordis/delegate`, `checks -> Runtime lifecycle`, `checks -> concrete DSH/Cordis/delegate`, `Agent Runner -> Runtime persistence internals`, `Backend Plugin -> canonical state/effects`, `server -> Runtime persistence internals`, `domain -> server`, and `clients -> Server, Runtime, Agent Supervisor, or concrete Runner lifecycle`.
 
 Source ownership clean cuts are:
 
@@ -193,7 +222,7 @@ src/views/**                         -> Alignment, WorkState, or Runtime queries
 src/semantic-loop.ts                 -> src/loops contracts or delete
 src/decision/**                      -> src/loops/decision/**
 src/planning/**                      -> src/loops/planning/**
-src/implementation/review/**         -> src/execution/review/**
+src/implementation/review/**         -> src/loops/review/**, Checks, or delete
 other src/implementation/**           -> src/loops/implementation/**
 src/verification/**                  -> src/checks/** or delete obsolete machinery
 src/runtime/loop-exit/**              -> src/checks/gate/**, Runtime lifecycle, or delete
@@ -201,6 +230,8 @@ legacy Quality and repair machinery   -> atomic Check feedback or delete
 src/error-handling/config-errors.ts   -> src/project/config-errors.ts
 src/error-handling/trace-errors.ts    -> Change Trace owner
 src/benchmarks/**                     -> benchmarks/**
+src/execution/pi/**                   -> DSH-backed replacement then delete without compatibility
+src/execution/review/**               -> Review/Checks replacement then delete
 ```
 
 Canonical project layout is:
@@ -340,18 +371,30 @@ Rules:
 
 ### 1. Ratify architecture and replace stale vocabulary
 
-- [x] Define User, Actor, User Interface, Client, CodeWiki Server, Project Runtime, Worker, Assignment, Workbench, and Model Provider in Knowledge.
-- [x] Ratify Server and per-project Runtime as architectural siblings with one-way Server-to-Runtime gateway access.
-- [x] Separate Authentication, Pairing, Session, and Runtime Authorization responsibilities.
-- [x] Ratify Profile, Authority Grant, Claim, immutable Operation, Contribution Routing, and review lifecycle semantics.
+- [x] Define User, Actor, User Interface, Client, CodeWiki Backend, CodeWiki Server, Project Runtime, Agent Supervisor, CodeWiki Agent Runner, Backend Plugin, Worker, Assignment, Workbench, and Model Provider in Knowledge.
+- [x] Ratify standalone CodeWiki Backend as durable authority behind each project, with Server and per-project Runtime as architectural siblings and DSH Agent Runners as isolated execution-plane children.
+- [x] Separate Authentication, Pairing, Session, Runtime Authorization, Agent supervision, Runner execution, delegated execution, and External Agent Client responsibilities.
+- [x] Ratify Profile, Authority Grant, Claim, immutable Operation, Contribution Routing, and Review lifecycle semantics.
 - [x] Ratify `src/protocol/**`, `src/server/**`, `src/runtime/index.ts`, `@nunomoura/codewiki/runtime`, target dependency direction, and `.codewiki/**` canonical layout.
-- [x] Define controlled, managed, MCP-mediated, and external provenance plus External Candidate Capture.
-- [x] Supersede Verification and Loop Exit with root Checks, four `src/loops/**` owners, per-stage Gates, and fixed Runtime lifecycle transitions.
+- [x] Define controlled, Backend-owned, Backend-delegated, external-client, and external provenance plus External Candidate Capture and accountability closure.
+- [x] Supersede Verification and Loop Exit with root Checks, four Stage Loop owners under `src/loops/**`, per-stage Gates, and fixed Runtime lifecycle transitions.
+- [x] Distinguish CodeWiki Stage Loops from DSH and delegated-harness Turn Loops; use DSH's standard Turn Loop rather than reimplementing four semantic loops inside DSH.
 - [x] Ratify bare-bones editable and removable defaults, user-only Pack authoring, npm/Git/local marketplace transport, Code/Model Checks, binary/quantitative measurements, atomic feedback, parallel cache-aware fail-fast execution, and stopped Gate semantics.
-- [x] Preserve first-party App, CLI, and Pi Clients while allowing external Clients to accept bounded Worker Assignments.
-- [x] Update README and package description after executable topology exists; do not advertise unfinished capability.
+- [x] Ratify exact pinned DSH as the sole Backend Agent Runner engine; retain Pi only as optional external Client Integration and temporary execution migration evidence until clean deletion.
+- [x] Ratify inbound MCP for External Agent Clients and outbound DSH subagent adapters for Backend-launched Claude Code, Codex, ACP, and future delegated harnesses.
+- [x] Ratify Backend Plugin, Check Pack, Core Adapter, and Client Integration as separate extension surfaces; v1 permits first-party Backend Plugins only and exposes no raw Cordis project loading.
+- [x] Ratify the DSH adopt/wrap/disable matrix, exact composition, no ambient profiles or Skills, state-aware compaction plugin, runner-local session evidence, and CodeWiki conformance on every DSH upgrade.
+- [x] Narrow Worker to Implementation Worker and distinguish Stage Producer, Check executor, Client, Agent Runner, delegated harness, External Agent Client, and Model Provider.
+- [x] Ratify one proposed `S0 → S1` Change transition, fixed stage projections, and separate passed-Decision Gate from authorized exact-Candidate confirmation.
+- [x] Ratify immutable Stage Context over existing owners, exact Backend-owned Execution Ledgers, custody-limited delegated/external receipts, and fresh bounded programmatic queries.
+- [x] Ratify Git as artifact-history owner and CodeWiki as semantic transition control; commits may enter exact subjects or drift intake but never imply stage progression.
+- [x] Ratify post-Gate Outcome Diagnostics as ordinary Change Intake with no privileged Skill, Check, context, route, plugin, or configuration mutation path.
+- [x] Preserve first-party App and CLI plus optional external Agent-product Clients without making any Client the product host.
+- [ ] Update README and package description only after executable standalone Backend, DSH Runner, and MCP topology exists; do not advertise unfinished capability.
 
-### 2. Execute deletion-first ownership cut
+### 2. Preserve completed deletion-first ownership evidence and finish residual deletion
+
+Checked items below preserve completed historical cuts and their then-current vocabulary; they are not active architecture. Only unchecked items remain executable work.
 
 - [x] Create and execute the reviewed `fafafc8`-anchored trace-host keep/delete manifest covering every tracked file in that slice.
 - [x] Delete remaining Pi/Dashboard trace-host shell, lifecycle branches, HTTP controls, tests, exports, and assets that depend on hidden semantic sessions.
@@ -418,62 +461,93 @@ Rules:
 - [ ] Keep Clerk, WorkOS, password authentication, and enterprise identity lifecycle dependencies outside the initial foundation.
 - [ ] Ensure browser or terminal closure cannot stop accepted work.
 - [ ] Make adapter capability declaration intersect actor Authority Grants, explicit delegation, project policy, and current Runtime guards.
+- [ ] Split `createNativeDecisionAttemptExecutor` into independently recoverable Candidate production, exact Gate execution, durable feedback, authorized exact-digest confirmation, and lifecycle commit steps.
+- [ ] Extend Runtime gateway and Client-Server Protocol with server-derived Decision confirmation identity; Candidate edits, stale WorkState, changed Gate, or missing authority require a fresh Gate and cannot commit.
 
-### 4. Build CodeWiki App and first-party Clients
+### 4. Build standalone CodeWiki App and first-party Clients
 
 - [x] Replace Dashboard-local workflow/session query ownership with bounded Runtime projections; typed Runtime mutation operations remain pending.
-- [ ] Implement App surfaces for Change, Decision, Planning, Implementation, Review, Work Items, Candidates, provenance, Check Packs, optional Pack Skills, Code and Model Checks, Evidence, Gate Reports, atomic feedback, stopped recovery, Integration, and effects.
-- [ ] Show effective stage Skill composition, exact Skill and Check digests, local divergence, backend compatibility, unavailable Worker capabilities, and the strict separation between producer guidance and Gate judgment.
+- [ ] Add primary `src/main.ts` standalone CodeWiki Backend composition over Server, per-project Runtime, App, CLI, Agent Supervisor, isolated DSH Agent Runners, and Check Runners without moving policy into bootstrap.
+- [ ] Implement App stage workspaces for Change, Decision, Planning, Implementation, Review, Work Items, Candidates, provenance, Check Packs, optional Pack Skills, Code and Model Checks, Evidence, Gate Reports, atomic feedback, stopped recovery, Integration, and effects.
+- [ ] Show exact subject, WorkState, proposed transition, producer route and custody, Stage Context snapshot, Skill composition, Gate state, pending authority, and permitted fixed transition for each stage.
+- [ ] Show separate Stage Producer, Implementation Worker, delegate, and Check routes; exact Skill, Check, DSH, and Backend Plugin digests; local divergence; route compatibility; unavailable capabilities; and producer-guidance versus Gate-judgment boundaries.
+- [ ] Add Backend status for Server, Runtime, Agent Supervisor, Agent and Check Runners, Workbenches, exact DSH/plugin closure, upgrade qualification, cancellation, and recovery without presenting process health as project acceptance.
+- [ ] Separate Decision Gate pass from exact digest-bound authorized confirmation and invalidate eligibility after any Candidate change.
+- [ ] Add Backend-owned Execution Ledger, raw DSH session, context-query, Compaction Checkpoint, Backend-delegated receipt, and External Agent Client custody inspection without presenting summaries or partial receipts as canonical truth.
 - [ ] Add Developer Check mode for SDK input coverage, horizontal and vertical query facts, bundle provenance, sandbox diagnostics, fixture results, preview, and historical replay.
 - [ ] Keep CLI as full deterministic operational and high-authority confirmation surface.
-- [ ] Keep Pi TUI as optional expert Client; it cannot double as controlled execution.
+- [ ] Keep Pi TUI only as an optional External Agent Client Integration; delete it if App, CLI, and MCP make its remaining value insufficient.
 - [ ] Validate keyboard, assistive technology, reduced motion, contrast, bounded rendering, reconnect, reset, and actionable failure states.
 
-### 5. Implement stateless MCP Client and Worker binding
+### 5. Implement stage-oriented MCP Server binding
 
-- [ ] Implement modern MCP `2026-07-28` as preferred binding; isolate legacy compatibility only when exact external-client gates require it.
-- [ ] Expose a small stable catalog over Server Protocol for intake, bounded context, work admission, Workbench operations, status, submission, and cancellation.
-- [ ] Carry explicit project, Change, attempt, claim, workbench, expected-tree, and idempotency identities on calls; never rely on MCP session state.
+- [ ] Implement `src/server/mcp/**` over modern MCP `2026-07-28` as the preferred External Agent Client binding; isolate legacy compatibility only when exact external-client gates require it.
+- [ ] Keep MCP explicitly inbound: it lets independently operated harnesses participate but does not replace Backend outbound delegation through DSH subagent adapters.
+- [ ] Reserve the CodeWiki tool namespace and expose only `codewiki_stage_context`, `codewiki_stage_query`, `codewiki_stage_submit`, `codewiki_stage_status`, `codewiki_stage_confirm`, and optional `codewiki_context_run`.
+- [ ] Map every tool to authenticated Runtime gateway operations; MCP payloads cannot assert trusted receipts, Gate outcomes, lifecycle transitions, canonical time, or delivery authority.
+- [ ] Make `codewiki_stage_query` accept bounded declarative batches with exact query/snapshot digests, source refs, ordering, coverage, unknowns, truncation, cursor, query-engine identity, and staleness.
+- [ ] Carry explicit project, stage, subject, Change revision, attempt, Claim, Workbench, expected tree or state, Candidate digest, actor-scoped idempotency, and delegation identities as applicable; never rely on MCP session state.
 - [ ] Return durable CodeWiki operation IDs; MCP disconnect cannot cancel accepted work.
-- [ ] Treat `clientInfo`, JSON-RPC IDs, instructions, and elicitation as non-authoritative.
-- [ ] Provide project integration that strongly directs Claude Code and Codex through MCP using required server configuration, read-only native mutation policy, and supported hooks, while acknowledging those controls are not a universal security boundary.
-- [ ] Classify any resulting unmatched tree as external provenance rather than silently inheriting mediated custody.
-- [ ] Test exact supported Claude Code and Codex versions in disposable external projects.
+- [ ] Treat `clientInfo`, JSON-RPC IDs, instructions, elicitation, external model claims, and Candidate-supplied receipts as non-authoritative.
+- [ ] Record only actual CodeWiki calls as external-client custody and explicitly exclude external prompts, tools, Skills, local reads, subagents, models, code runtimes, and memory.
+- [ ] Do not assume MCP tools appear inside an External Agent Client's Python or TypeScript Code Mode; declarative batch queries remain the universal programmatic surface.
+- [ ] Benchmark direct calls, declarative batches, and optional `codewiki_context_run`; retain the programmatic form only with material context or turn savings.
+- [ ] If retained, make each context run fresh, immutable, import-free, filesystem-free, network-free, process-free, environment-free, credential-free, bounded, cancellable, ledgered, and canonical-JSON-only; optional scratch is bounded canonical JSON with CAS.
+- [ ] Classify any unmatched tree as external provenance rather than silently inheriting external-client custody.
+- [ ] Test exact supported Claude Code, Codex, Pi, DSH, and future External Agent Client versions in disposable external projects independently from Backend-delegated adapter tests.
 
-### 6. Harden Managed Execution
+### 6. Build CodeWiki Agent Runners, exact Stage Context, and state-aware sessions
 
-- [ ] Pin supported Pi SDK version and update package ranges deliberately.
-- [x] Define a host-neutral immutable Pack Skill snapshot and stage-execution port before binding it to Pi's native Skill loader.
-- [ ] Require explicit ResourceLoader, tool allowlist, isolated agent directory, Runtime-owned worktree, CodeWiki context envelope, exact model route, budgets, cancellation, and disabled ambient prompts/extensions/settings/project-agent config and ambient Skills.
-- [x] Load only exact stage Pack Skills in stable Pack-ID order for work-producing Agents; intersect `allowed-tools`, scripts, and setup guidance with already admitted Worker capabilities.
-- [x] Prove Code and Model Check executors never inherit Pack Skills, producer tools, context, memory, credentials, or authority.
-- [ ] Define execution receipts binding Pi version, route, tools, exact Pack Skill digests where applicable, immutable Check SDK snapshot identities where applicable, context, claim, worktree, base, timing, cancellation, usage, and output.
-- [ ] Route Decision, Planning, Implementation, Review, research, and Model Checks through managed Pi ports where model execution is required.
-- [ ] Keep Pi sessions disposable; canonical continuity uses Change, Candidate, Work Item, operation, Skill-bound producer attempt, Check Result, Gate Report, and Review attempt identity.
-- [ ] Keep Worker and Check model routes, sessions, tools, Skills, memory, context, and budgets separate while sharing provider transport and receipt machinery.
-- [ ] Missing exact capability yields bounded retry followed by stopped execution without fallback, policy weakening, fake Check failure, or process crash.
+Existing Pi execution remains temporary migration evidence only. This slice creates the DSH path, proves semantic parity, then removes the Pi executor without a user-facing backend selector, compatibility adapter, or dual-session contract.
 
-### 7. Activate Runtime-owned parallel workbenches
+- [ ] Pin one exact DSH package and commit closure with no loose semver; record its Cordis and Backend Plugin closure and qualify every upgrade before activation.
+- [ ] Define one narrow Run Specification, Agent Run handle, cancellation/quiescence, event, raw-log reference, and custody-scoped Execution Receipt contract under neutral `src/execution/ports.ts`; do not build a generic multi-backend feature matrix.
+- [ ] Implement Agent Supervisor and an authenticated process protocol for isolated CodeWiki Agent Runners; Runner processes receive no Runtime persistence, canonical state, protected-ref, or credential-store handles.
+- [ ] Build a CodeWiki-owned DSH composition from admitted core services rather than stock web/headless profiles; disable profile discovery, user patches, HMR, workspace instructions, filesystem Skills, dynamic Cordis, creation mode, DSH UI/Host, ambient settings, and product MCP client.
+- [ ] Use DSH's standard Agent registry, scoped `setup`, Turn Loop, append-only Session events, request-reconstruction invariant, tool pipeline, LLM adapter, cancellation, and quiescence mechanics; do not reimplement CodeWiki Stage Loops inside DSH.
+- [x] Retain the existing harness-neutral immutable Pack Skill snapshot and Stage Execution Port contracts as migration inputs.
+- [ ] Implement a first-party Pack Skill Backend Plugin that loads only exact stable Pack-ID snapshots and intersects `allowed-tools`, scripts, and setup guidance with capabilities already admitted for the attempt or Assignment.
+- [ ] Define the closed v1 first-party Backend Plugin roster and exact capability contracts for tools, context bindings, Skills, model adapters, delegate adapters, observers, and compaction; expose no raw Cordis project-plugin surface.
+- [x] Preserve proof that Code and Model Check executors never inherit Pack Skills, producer tools, context, memory, credentials, or authority.
+- [ ] Define one Backend Agent Run Specification binding stage, subject, WorkState, repository, Knowledge, Alignment, Pack Skills, tools, model route, DSH/plugin closure, budgets, cancellation, isolation, and custody; only Implementation Assignments receive writable Runtime Workbenches.
+- [ ] Retain immutable raw DSH Session bytes and emit one append-only Execution Ledger plus receipt binding exact model-visible prompts, Skill files, tool schemas, Stage Context, each CodeWiki query request and response digest, compaction relationships, provider/model options, budgets, timing, cancellation, usage, output, and isolation.
+- [ ] Implement one immutable Runtime Stage Context facade over existing WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result query owners; create no duplicate graph or context store.
+- [ ] Route Decision, Planning, Implementation, Review, and research through separate Backend Agent Run ports where model execution is required; use one isolated DSH session per stage attempt and per Implementation Assignment.
+- [ ] Keep every Model Check in an independent tool-free DSH session with separate route, prompt, context, memory, budget, and receipt; no producer tools, Skills, or session ancestry cross the boundary.
+- [ ] Implement deterministic pruning of retained large query/tool results to stable ledger locators before lossy summarization while preserving tool-call/result pairing, source event links, and exact raw history.
+- [ ] Implement one state-aware compaction Backend Plugin over DSH pressure and replacement seams; retain a recent tail and deterministically rehydrate canonical stage, subject, WorkState, Knowledge, Alignment, repository, Skill, authority, and Gate feedback facts.
+- [ ] Enforce exactly one compaction owner per session and keep DSH sessions and provider memory disposable; never depend on a persistent Python/V8 heap, serializer, or summary for recovery.
+- [ ] Benchmark optional `codewiki_context_run` over DSH Code Mode; if retained, expose only fresh immutable generated bindings with canonical-JSON values and no filesystem, imports, network, process, environment, credentials, workflow registration, or persistent heap.
+- [ ] Implement Backend-delegated Claude Code, Codex, and ACP adapters through DSH's subagent seam with explicit capability advertisements, exact Workbench cwd, scrubbed environment, process-tree disposal, final output, resulting-tree receipt, and declared unknown child internals.
+- [ ] Treat stock delegated adapters as non-hermetic until CodeWiki-specific isolation proves exact product settings, tools, model, and trace custody; no adapter may silently claim Backend-owned provenance.
+- [ ] Keep DSH workflows, Ralph, goals, plan mode, task lists, model-facing jobs, approval policy, local credentials, and hook bridges outside product lifecycle; add one only through a separately ratified first-party Backend Plugin need.
+- [ ] Add conformance for request reconstruction, append-only history, tool-call/result pairing, tool-set monotonicity, Skill/context receipt agreement, snapshot agreement, cancellation convergence, process quiescence, session persistence, compaction, delegate cleanup, and sandbox receipt agreement without turning invariants into project Checks.
+- [ ] Prove crash/restart recovery and reject active-session resume across any unqualified DSH, Cordis, Backend Plugin, model adapter, or format change.
+- [ ] Port Decision production, one tool-free Model Check, one Implementation Worker, state-aware compaction, and one delegated Claude/Codex scenario before declaring parity.
+- [ ] Create a HEAD-anchored clean-cut manifest, delete `src/execution/pi/**`, Pi execution tests and package dependencies, and every Pi execution branch after DSH parity; retain only optional `src/clients/pi/**` and `src/pi-extension.ts` Client integration if still valuable.
+- [ ] Missing exact capability, context, Runner, delegate, sandbox, receipt agreement, or isolation yields bounded retry followed by stopped execution without fallback, policy weakening, fake Check failure, or Backend crash.
 
-- [ ] Make isolated worktrees mandatory for every controlled Candidate producer, including serial execution.
-- [ ] Keep `runtime.maxWorkers = 1` as safe concurrency default.
-- [ ] For `maxWorkers > 1`, claim independent ready Work Items and require one isolated worktree, assignment, worker identity, cancellation path, report, and usage receipt per claim.
+### 7. Activate Runtime-owned parallel Implementation workbenches
+
+- [ ] Make isolated worktrees mandatory for every controlled Implementation Assignment, including serial execution; Decision, Planning, and Review producers receive immutable context without Workbench write authority.
+- [ ] Keep `runtime.maxWorkers = 1` as safe Implementation concurrency default.
+- [ ] For `maxWorkers > 1`, claim independent ready Work Items and require one isolated worktree, Assignment, Implementation Worker identity, cancellation path, report, and usage receipt per Claim.
 - [ ] Integrate compatible reports deterministically with expected-head CAS, then run the Implementation and Review Gates over the exact integrated head.
 - [ ] Deny canonical descendant scheduling, mutable workspace sharing, implicit authority renewal, canonical writes, and effects from Workers.
 - [ ] Implement cancellation, crash recovery, stale claim recovery, conflict handling, and workbench cleanup.
 
-### 8. Implement total provenance and External Candidate Intake
+### 8. Implement accountability-closed provenance and External Candidate Intake
 
-- [ ] Define Candidate Manifest and External Candidate Capture schemas with repository, base, head, tree, scope, custody, provenance, and digest bindings.
-- [ ] Recognize controlled provenance only from exact persisted Runtime custody.
-- [ ] Detect local dirty trees, direct commits, pushes, PRs, and synchronized branch divergence against accepted state.
+- [ ] Define Candidate Manifest and External Candidate Capture schemas with repository, base, head, tree, scope, Backend-owned, Backend-delegated, external-client, or external custody, provenance, and digest bindings.
+- [ ] Recognize controlled provenance only from exact persisted Runtime custody, and require each accepted transition to identify prior state, proposed state, producer and custody, judged subject, Checks and Evidence, authority, effects, and resulting state without requiring exhaustive incidental-activity logging.
+- [ ] Detect local dirty trees, direct commits, pushes, PRs, and synchronized branch divergence against accepted state; observation creates Evidence or intake and never advances a Stage Loop by itself.
 - [ ] Capture tracked changes under Runtime-owned refs/worktrees without mutating user branch; require explicit selection for untracked files.
 - [ ] Route exact accepted-Change captures through Candidate admission and fresh Implementation and Review Gates.
 - [ ] Route missing-intent or out-of-scope captures through Change Intake, deduplication, triage, proposed Change, and explicit acceptance.
 - [ ] Separate GitHub issue intake from GitHub PR/commit/push Candidate intake.
 - [ ] Project required CodeWiki GitHub Check and branch protection where configured; detect administrator overrides as external divergence on next synchronization.
 - [ ] Create or update one integrated PR per Change after a passed Implementation Gate; do not create one PR per Work Item by default.
-- [ ] Run the separate Review Loop and its user-owned Packs against the exact integrated head; support fully automated Code and Model review without requiring human Evidence.
+- [ ] Run the separate Review Stage Loop and its user-owned Packs against the exact integrated head; support fully automated Code and Model review without requiring human Evidence.
 - [ ] Retrieve authenticated provider reviews and Checks when present, correlate exact heads, and guard merge with a passed Review Gate, current Runtime authority, provenance, and CAS.
 - [ ] Send failed Review feedback to Implementation; send out-of-scope findings to Change Intake without a generic Router.
 - [ ] Never treat PR state, labels, branch names, authors, Agent/model identity, or provider conclusions as CodeWiki acceptance, provenance, Check Result, or merge authority.
@@ -486,18 +560,20 @@ Rules:
 - [x] Delete intermediate `src/change-trace/**` and legacy `src/traces/**` after callers move.
 - [x] Delete obsolete WorkState paths and generic `src/views/**` after callers move.
 - [x] Preserve append-only history, deterministic replay, expected-head CAS, provenance, remote synchronization, and recovery behavior.
-- [ ] Stabilize read-only bounded snapshot-bound context, state, attention, explanation, and Change queries with coverage, truncation, provenance, and staleness.
-- [ ] Publish Check-facing immutable query contracts for OKF Knowledge, repository content, code, tests, local revisions, commits, exact pull-request Evidence, Change and Work Item state, and Alignment Graph facts.
+- [ ] Stabilize read-only bounded snapshot-bound context, state, attention, explanation, and Change queries with query and complete snapshot digests, source refs, deterministic ordering, coverage, unknowns, truncation, cursor position, query-engine identity, provenance, and staleness.
+- [ ] Define one `QueryPage<T>` contract and bounded declarative batch request reusable by Backend Agents, eligible delegated adapters, MCP, App, and Check SDK adapters without exposing owner internals.
+- [ ] Compose one immutable Stage Context baseline from existing WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result owners; create no second graph, store, or live-working-tree fallback.
+- [ ] Publish Check-facing immutable query contracts for OKF Knowledge, repository content, code, tests, local revisions, commits, exact pull-request Evidence, Change and Work Item state, and Alignment facts.
 - [ ] Support bounded horizontal inspection and vertical traversal from Knowledge through source ownership, tests, revisions, accepted work, Evidence, Results, and delivery while binding every response to exact snapshot identity.
 - [ ] Define Actor Profiles, scoped Authority Grants, responsibility rules, Review Requirements, per-requirement Review Claims, and immutable Review Submissions.
-- [ ] Populate owner, user, reviewer, contributor, and Worker eligibility through read-only Contribution Routing before any automatic assignment.
+- [ ] Populate owner, user, reviewer, contributor, stage-producer, and Implementation Worker eligibility through read-only Contribution Routing before any automatic assignment.
 - [ ] Keep Profile fit, Authority Grant, active Claim, and authenticated Operation as separate facts; never infer authority from expertise or ownership hints.
 
 ### 10. Complete root Checks, Check Packs, Pack Skills, SDK, and Gates
 
-The active kernel now has exact Candidate and execution identities, versioned Check/Invocation/Output/Result/Gate contracts, stage-first Pack loading, deterministic thresholds, independent Model transport, bounded scheduling and retries, exact completed-Result caching, stopped Gate semantics, and historical Change Trace boundary translation. Remaining work adds optional producer Skills and author-facing repository intelligence without weakening that completed semantic core, then finishes product authoring, marketplace transport, executable Review persistence, and removal of isolated Loop Quality.
+The active kernel now has exact Candidate and execution identities, versioned Check/Invocation/Output/Result/Gate contracts, stage-first Pack and Skill snapshots, producer receipt binding, deterministic thresholds, independent Model transport, bounded scheduling and retries, exact completed-Result caching, stopped Gate semantics, executable exact-head Review persistence, and historical Change Trace boundary translation. Remaining work adds immutable repository intelligence and author-facing SDK composition without weakening that completed semantic core, then finishes product authoring, marketplace transport, and isolated Loop Quality removal.
 
-Execution order is fixed: ratify and implement Pack Skill loading, immutable snapshots, and producer receipt binding first so Review persistence receives its final attempt identity; complete executable Review persistence next; build the Check SDK and use real first-party replacements for isolated Loop Quality to calibrate it; then land App and marketplace workflows; generate Skill-change proposals only after durable Review and failed-Result history exist. Each structural slice receives a new HEAD-anchored manifest and full external-package gates.
+Execution order is fixed: establish the isolated DSH Agent Runner, neutral Run Specification, first-party Backend Plugin closure, and conformance suite; implement the shared immutable query page and Stage Context facade; retain exact DSH model-visible inputs and state-aware compaction; prove one delegated adapter and clean-delete Pi execution; split Decision Candidate production, Gate, durable feedback, authorized confirmation, and commit; implement stage-oriented MCP and benchmark optional programmatic querying; build the Check SDK and use real first-party replacements for isolated Loop Quality to calibrate it; then land standalone App, marketplace, and post-Gate Outcome Diagnostics. Each structural source slice receives a new HEAD-anchored manifest and full external-package gates.
 
 #### Completed Check, Result, and Gate kernel
 
@@ -511,9 +587,9 @@ Execution order is fixed: ratify and implement Pack Skill loading, immutable sna
 - [x] Admit Results only for completed `passed | failed` Checks. Replace indeterminate Results with stopped Check Runs and `passed | failed | stopped` Gate Reports.
 - [x] Bound retries and stop reasons for timeout, cancellation, missing input, invalid output, unavailable model or sandbox, exhausted budget, and staleness; preserve lifecycle state on stopped Gates.
 - [x] Resolve exact cache hits, run uncached Code Checks in bounded parallel, fail fast before Model Checks, then run Model Checks in bounded parallel and stop queued work after conclusive failure or stop.
-- [x] Keep Model Checks tool-free and independent from Worker routes under one fixed structured-output protocol; delegate Code Checks only to bounded admitted hermetic sandboxes with network denial and no host fallback.
-- [x] Delete Check-authored route hints and Repair Profile/Frontier/Brief/Bundle layers; failed Results carry feedback directly to the responsible Loop.
-- [x] Keep Check Pack creation and mutation out of CodeWiki-managed Agents and dedicated Pack-management CLI tooling; publish the core schema and stage-first layout for manual editors and user-controlled external Agents.
+- [x] Keep Model Checks tool-free and independent from producer and Implementation Worker routes under one fixed structured-output protocol; delegate Code Checks only to bounded admitted hermetic sandboxes with network denial and no host fallback.
+- [x] Delete Check-authored route hints and Repair Profile/Frontier/Brief/Bundle layers; failed Results carry feedback directly to the responsible Stage Loop.
+- [x] Keep Check Pack creation and mutation out of CodeWiki Backend Agents and dedicated Pack-management CLI tooling; publish the core schema and stage-first layout for manual editors and user-controlled external Agents.
 - [x] Preserve only SARIF, JUnit XML, LCOV, Cobertura, CycloneDX, SPDX, Pact, OpenAPI, and provider-check receipts as bounded Evidence formats.
 
 #### Optional Pack Skills
@@ -523,8 +599,8 @@ Execution order is fixed: ratify and implement Pack Skill loading, immutable sna
 - [x] Publish immutable Skill snapshot and digest contracts separate from Check Pack snapshot, Check Result, and Gate cache identity.
 - [x] Bind exact Skill snapshots to producer attempts and execution receipts; make a changed Skill stale only affected producer work.
 - [x] Keep ambient harness Skills disabled and prove Pack Skills reach only work-producing Agents, never Code or Model Check executors.
-- [x] Permit standard Skill scripts, references, assets, setup guidance, and `allowed-tools` metadata without allowing them to exceed current Worker capabilities or Runtime authority.
-- [ ] Keep Skill-change analysis non-authoritative and defer automatic proposal generation until Review persistence and failed-Result history are durable.
+- [x] Permit standard Skill scripts, references, assets, setup guidance, and `allowed-tools` metadata without allowing them to exceed capabilities admitted for the current stage attempt or Implementation Assignment, or Runtime authority.
+- [ ] Keep Skill improvement analysis non-authoritative and emit only ordinary Outcome Diagnostic findings or Change Intake Material after durable outcome history exists.
 
 #### Check Author SDK and composition
 
@@ -533,11 +609,12 @@ Execution order is fixed: ratify and implement Pack Skill loading, immutable sna
 - [ ] Permit source-level import and composition of pure libraries, Probes, and Checks while forbidding runtime invocation of another installed Check by Pack identity.
 - [ ] Bundle the complete author dependency closure into one readable self-contained `CHECK.mjs`; keep author source, tests, fixtures, and dependency installation outside active `.codewiki/check-packs/**` files.
 - [ ] Define deterministic composition semantics for all, any, none, count, iteration, and quantitative score without introducing a workflow DAG or another domain.
-- [ ] Publish read-only SDK facades over exact OKF Knowledge, repository, code, tests, local revisions, commits, pull-request Evidence, Change and Work Item state, and Alignment Graph facts.
-- [ ] Require every SDK query to report snapshot, provenance, coverage, truncation, and staleness and to remain part of exact Invocation and execution identity.
+- [ ] Publish one reserved read-only `codewiki` SDK binding over exact OKF Knowledge, repository, code, tests, local revisions, commits, pull-request Evidence, Change and Work Item state, Result history, and Alignment facts.
+- [ ] Require every SDK query page to report query and complete snapshot digests, source refs, deterministic ordering, provenance, coverage, unknowns, truncation, cursor position, query-engine identity, and staleness.
+- [ ] Bind Invocation and cache identity to the complete immutable snapshot, Probe implementation, canonical arguments, query-engine/configuration digests, and declared limits; record actual query calls afterward as Result provenance rather than a precomputed cache key.
 - [ ] Add bounded diagnostic builders that preserve vertical references from Knowledge through source, tests, revisions, accepted work, Evidence, and Results.
 - [ ] Add SDK validation, readable bundling, fixture testing, admitted sandbox preview, and historical Invocation replay without Pack installation or mutation authority.
-- [ ] Defer external executable APIs and per-tool contracts until a concrete Check cannot be expressed through bundled libraries and snapshot-bound CodeWiki primitives.
+- [ ] Keep producer `codewiki_context_run` outside the Check SDK; a Code Check receives only its reserved immutable binding, and a Model Check remains tool-free.
 - [ ] Use the first real SDK Checks to replace remaining isolated Loop Quality debt and calibrate the API before public stability.
 
 #### Product authoring and marketplace transport
@@ -548,23 +625,23 @@ Execution order is fixed: ratify and implement Pack Skill loading, immutable sna
 - [ ] Run no package lifecycle, Skill, or Check code during installation; vendor only optional Skill and runtime Check files into editable project files.
 - [ ] Record exact source, integrity, separate Skill and Check base digests, complete installed-package digest, and local divergence; make updates explicit and diff-safe.
 
-### 11. Normalize feedback, discovery, and improvement
+### 11. Normalize feedback, discovery, and Outcome Diagnostics
 
-- [ ] Define versioned producer-neutral Discovery Finding and shared Worker-report schemas.
-- [ ] Keep current Candidate failure in `failed Check Result → one atomic feedback object → responsible Loop → fresh Candidate`.
-- [ ] Return Decision, Planning, and Implementation failure to the same Loop; return Review failure to Implementation through fixed Runtime lifecycle.
+- [ ] Define versioned producer-neutral Discovery Finding, Outcome Diagnostic finding, and Implementation Worker-report schemas.
+- [ ] Keep current Candidate repair in `failed Check Result → one atomic feedback object → responsible Stage Loop → fresh Candidate`.
+- [ ] Return Decision, Planning, and Implementation failure to the same Stage Loop; return Review failure to Implementation through fixed Runtime lifecycle.
 - [ ] Send new or out-of-scope work through Discovery Finding and Change Intake Material as secondary intake, not a Router transition.
-- [ ] Keep out-of-scope blockers failed until dependency Change or explicit scope expansion is accepted.
-- [ ] Name deliberate operational discovery Improvement Assessment.
-- [ ] Never let discovery classification convert a failed Check into pass.
-- [ ] Define non-authoritative `SkillChangeProposal` material only after durable Review persistence: bind stage, Pack, base Skill digest, repeated completed failed Results, exact supporting refs, proposed diff, expected behavior change, and risks.
-- [ ] Require authenticated User review and expected-head application for every Skill proposal; stopped Gates, unavailable execution, and malformed outputs never count as semantic evidence for changing guidance.
-- [ ] Never let installed CodeWiki automatically file work against upstream CodeWiki.
+- [ ] Keep out-of-scope blockers failed until a dependency Change or explicit scope expansion is accepted.
+- [ ] Run Outcome Diagnostics only after one Gate or across bounded retained outcome history; never let diagnostic classification convert a failed Check into pass or alter the current Candidate.
+- [ ] Permit bounded non-authoritative findings or exact diffs for Skills, Checks, Stage Context APIs, model routes, budgets, and configuration; bind stage, base digests, supporting Results and refs, expected behavior, uncertainty, and risks.
+- [ ] Normalize every diagnostic suggestion as ordinary deduplicated Change Intake Material; require Decision, Planning, Implementation, Review, authenticated authority, and expected-head application before mutation.
+- [ ] Stopped Gates, unavailable execution, malformed outputs, and model speculation never count as semantic evidence for changing guidance or policy.
+- [ ] Never let installed CodeWiki automatically mutate project policy or file work against upstream CodeWiki.
 
 ### 12. Build external product Benchmarks
 
 - [x] Move supported measurement code from `src/benchmarks/**` to repository-root `benchmarks/**`, keep it typechecked, and do not ship it.
-- [ ] Compare the same Worker or managed Agent, model route, task, repository, tools, network, budget, timeout, concurrency, retries, environment, and trials in `alone` and `codewiki` modes.
+- [ ] Compare the same stage producer or Implementation Worker, model route, task, repository, tools, network, budget, timeout, concurrency, retries, environment, and trials in `alone` and `codewiki` modes.
 - [ ] Use external fixtures and oracles; operational discovery is not Benchmarking.
 - [ ] Benchmark digest-bound atomic feedback variants without automatic promotion.
 - [ ] Block release on false exits, unauthorized effects, or escaped critical defects regardless of aggregate score.
@@ -576,18 +653,18 @@ Execution order is fixed: ratify and implement Pack Skill loading, immutable sna
 - [ ] Keep submitting intake distinct from accepting Change or granting protected authority.
 - [ ] Evaluate optional OpenClaw connector before native broad-channel expansion.
 - [ ] Add native WhatsApp only when demand justifies credential, delivery, and maintenance cost.
-- [ ] Never inject ambient channel history, secrets, or full diffs into Managed Execution by default.
+- [ ] Never inject ambient channel history, secrets, or full diffs into Backend Agent or Delegated Agent Runs by default.
 
 ### 14. External proof and release gates
 
 - [ ] Run real Gitleaks, Semgrep, and offline Trivy profiles with exact receipts.
 - [ ] Run sealed scanner, Code Check, and Model Check calibration against independent human-labeled cases.
-- [ ] Prove provider authentication, actor authority, expected-head mutation, Pi credential isolation, MCP-mediated workbench custody, and OCI execution externally.
-- [ ] Build and pack reviewed candidates, then install only in disposable external projects with isolated Pi settings.
-- [ ] Verify Server/App/CLI/Pi/MCP lifecycle, Check Packs, optional Pack Skills, npm/Git/local installation, manual and App editing, Code/Model execution, Gate outcomes, managed receipts, external capture, guarded writes, failure paths, and cleanup.
-- [ ] Prove exact Pack Skill activation through the Pi adapter, host-neutral Skill snapshot contracts, Worker capability ceilings, and complete exclusion from Code and Model Check executors.
+- [ ] Prove provider authentication, Actor authority, exact Decision confirmation, expected-head mutation, DSH Runner credential isolation, delegated-adapter custody, MCP operation-scoped custody, Implementation Workbench custody, and OCI execution externally.
+- [ ] Build and pack reviewed candidates, then install only in disposable external projects with isolated CodeWiki Backend homes, DSH Runner state, provider credentials, and optional Client-product settings.
+- [ ] Verify standalone Backend/Server/App/CLI, Agent Supervisor, DSH Agent and Check Runners, optional Pi Client, External Agent Client MCP lifecycle, Backend-delegated Claude Code/Codex/ACP lifecycle, Stage Context, state-aware compaction, Check Packs, optional Pack Skills, npm/Git/local installation, manual and App editing, Code/Model execution, Gate outcomes, Backend-owned Ledgers, custody-limited receipts, external capture, guarded writes, failure paths, and cleanup.
+- [ ] Prove exact Pack Skill activation through the first-party DSH Backend Plugin, harness-neutral Skill snapshots, delegated-route eligibility, Stage Producer and Implementation Worker capability ceilings, and complete exclusion from Code and Model Check executors.
 - [ ] Prove Check SDK bundle reproducibility, malicious imported-library containment, fixture and historical replay, exact local and pull-request snapshots, and horizontal and vertical OKF/repository/Alignment query coverage.
-- [ ] Resolve optional Pi SDK dependency advisories or document accepted external constraints.
+- [ ] Resolve pinned DSH, Cordis, delegate SDK, and model-adapter dependency advisories or document accepted external constraints.
 - [ ] Publish, release, deploy, mutate providers, or expose public network only with explicit maintainer approval.
 
 ## Per-slice gates
@@ -614,7 +691,7 @@ External proof does not block local clean cuts:
 - real Gitleaks, Semgrep, Trivy, OCI, provider/user-auth, channel ingress, and sealed calibration;
 - automatic distributed expiry without trusted remote time;
 - public network exposure and provider delivery credentials;
-- optional Pi SDK dependency advisories;
+- DSH preview churn, delegate product compatibility, and external dependency advisories;
 - Graphify adapters and controlled paired Benchmark environments.
 
 ## Completion and deletion condition
@@ -622,8 +699,8 @@ External proof does not block local clean cuts:
 Delete this file when:
 
 - target topology and dependency boundaries are realized;
-- CodeWiki Server, Clients, Project Runtime, Worker, Managed Execution, provenance, MCP, Checks, optional Pack Skills, Check SDK, four Loops, and Gate contracts are executable;
-- legacy Harness, Dashboard, trace-host, Verification, Loop Exit, Router, Quality, Repair Bundle, indeterminate Result, Trace, ChangeRecord, generic View, compatibility, and self-dogfood paths are gone;
+- standalone CodeWiki Backend, Server, Clients, per-project Runtime, Agent Supervisor, isolated DSH Agent and Check Runners, Backend Agent and Delegated Agent Runs, Stage Producers, Implementation Workers, Stage Context, exact Backend-owned Ledgers, custody-limited receipts, state-aware compaction, provenance, MCP, Checks, optional Pack Skills, Check SDK, four Stage Loops, and Gate contracts are executable;
+- legacy Pi execution, generic Harness, Dashboard, trace-host, Verification, Loop Exit, Router, Quality, Repair Bundle, indeterminate Result, Trace, ChangeRecord, generic View, compatibility, and self-dogfood paths are gone;
 - source, tests, packed output, and Knowledge agree;
 - all hard file budgets and external packed-install gates pass;
 - no remaining local task needs this tracker.

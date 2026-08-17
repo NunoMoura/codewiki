@@ -1,5 +1,5 @@
 id: architecture
-purpose: Show every System Component in its owning zone; boundary-crossing behavior belongs to named lifecycle and execution diagrams.
+purpose: Show every System Component inside the standalone CodeWiki Backend or across its Client, repository, execution, and provider boundaries; detailed behavior belongs to named lifecycle and execution diagrams.
 components:
   - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
   - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
@@ -14,18 +14,18 @@ components:
   - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
   - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
   - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
-  - { id: execution, concept: /system/components/execution.md, label: Managed Execution, zone: execution }
+  - { id: execution, concept: /system/components/execution.md, label: Backend Execution, zone: execution }
   - { id: preview, concept: /system/components/preview.md, label: Preview, zone: execution }
   - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
   - { id: project, concept: /system/components/project.md, label: Project Configuration, zone: repository }
-  - { id: package, concept: /system/components/package.md, label: Package, zone: repository }
+  - { id: package, concept: /system/components/package.md, label: CodeWiki Backend Package, zone: repository }
   - { id: benchmarks, concept: /system/components/benchmarks.md, label: Benchmarks, zone: repository }
   - { id: provider, concept: /system/components/provider-boundary.md, label: Provider Boundary, zone: provider }
 connections:
   - { id: server-uses-protocol, from: server, to: protocol, type: invokes, label: validates one transport-neutral contract }
-  - { id: server-invokes-runtime, from: server, to: runtime, type: invokes, label: routes through narrow Runtime gateway }
-  - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: normalizes untrusted intent and external captures }
+  - { id: server-invokes-runtime, from: server, to: runtime, type: invokes, label: routes native and MCP stage operations through Runtime gateway }
+  - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: normalizes untrusted intent, external captures, and Outcome Diagnostics }
   - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts exact Decision attempt }
   - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt }
   - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts exact Implementation attempt }
@@ -33,11 +33,11 @@ connections:
   - { id: runtime-invokes-checks, from: runtime, to: checks, type: invokes, label: loads exact Pack Skills or runs one exact stage Gate }
   - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: binds exact admitted Evidence inputs }
   - { id: checks-read-alignment, from: checks, to: alignment, type: reads, label: obtains bounded horizontal and vertical facts for Check SDK }
-  - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: evaluates current guards and scheduling }
-  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded provenance, impact, and contribution-routing facts }
+  - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: freezes stage context and evaluates current guards and scheduling }
+  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded context, provenance, impact, and contribution-routing facts }
   - { id: execution-invokes-preview, from: execution, to: preview, type: invokes, label: captures bounded Candidate observations }
   - { id: knowledge-reads-project, from: knowledge, to: project, type: reads, label: validates project profile }
   - { id: change-trace-reads-project, from: change-trace, to: project, type: reads, label: binds repository identity }
-  - { id: package-reads-project, from: package, to: project, type: reads, label: composes product and Check Pack resources }
+  - { id: package-reads-project, from: package, to: project, type: reads, label: composes standalone product and passive Check Pack resources }
   - { id: benchmarks-read-package, from: benchmarks, to: package, type: reads, label: executes packed candidate }
 flows: []

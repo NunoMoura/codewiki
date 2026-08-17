@@ -12,6 +12,8 @@ As a maintainer, I want CodeWiki to preserve current accepted intent as desired 
 
 ## Acceptance signals
 
-- A Decision Candidate binds an exact desired-Knowledge revision or explicitly records no Knowledge delta.
-- An authenticated maintainer approves the exact semantic transition.
-- Implementation discoveries that change meaning route back to Decision.
+- A Decision Candidate binds an exact proposed transition from accepted state to intended Knowledge, or explicitly records no Knowledge delta.
+- Gate pass certifies only that exact Candidate against present Checks.
+- An authenticated authorized maintainer separately confirms the unchanged passed Candidate and Gate digest before Runtime accepts the semantic transition.
+- Any Candidate edit requires a fresh Gate, and Implementation discoveries that change meaning route back to Decision.
+- Git commits preserve artifact states but never substitute for accepted intent, Decision confirmation, or a Runtime lifecycle transition.

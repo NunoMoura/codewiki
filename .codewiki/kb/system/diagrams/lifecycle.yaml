@@ -1,5 +1,5 @@
 id: lifecycle
-purpose: Show accountable intent moving through Client, Server, four Runtime-orchestrated Loops, stage Gates, Knowledge, and Change Trace.
+purpose: Show one proposed transition moving from a Client into the standalone CodeWiki Backend through Server, four Runtime-orchestrated Stage Loops, exact Gates, Decision confirmation, Knowledge, and Change Trace.
 components:
   - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
   - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
@@ -27,13 +27,26 @@ connections:
   - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts selected exact revision }
   - { id: decision-returns-runtime, from: decision, to: runtime, type: returns, label: returns immutable Decision Candidate }
   - { id: runtime-runs-decision-gate, from: runtime, to: checks, type: invokes, label: runs Decision Check Packs }
-  - { id: checks-return-decision-gate, from: checks, to: runtime, type: returns, label: returns exact Decision Gate Report }
+  - { id: checks-return-decision-gate, from: checks, to: runtime, type: returns, label: returns exact Decision Gate Report without accepting meaning }
+  - { id: runtime-offers-decision-confirmation, from: runtime, to: server, type: returns, label: offers exact passed Candidate for authorized confirmation }
+  - id: server-returns-decision-confirmation
+    from: server
+    to: clients
+    type: returns
+    label: presents Candidate and Gate digests plus consequence
+    boundary: { type: trust, failure: Hide confirmation when its exact binding is stale or unavailable. }
   - id: runtime-writes-knowledge
     from: runtime
     to: knowledge
     type: writes
-    label: accepts passed approved desired state
-    boundary: { type: persistence, failure: Preserve prior accepted Knowledge revision. }
+    label: accepts authorized confirmed desired state
+    boundary: { type: persistence, failure: Reject stale, changed, unauthorized, or unconfirmed Candidate and preserve prior accepted Knowledge. }
+  - id: knowledge-returns-runtime
+    from: knowledge
+    to: runtime
+    type: returns
+    label: returns accepted confirmed Knowledge identity
+    boundary: { type: persistence, failure: Stop progression when accepted Knowledge cannot be confirmed. }
   - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts Planning for approved meaning }
   - { id: planning-returns-runtime, from: planning, to: runtime, type: returns, label: returns immutable Planning Candidate }
   - { id: runtime-runs-planning-gate, from: runtime, to: checks, type: invokes, label: runs Planning Check Packs }
@@ -55,11 +68,11 @@ connections:
 flows:
   - concept: /system/flows/change-lifecycle.md
     paths:
-      - connections: [clients-request-server, server-invokes-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-writes-knowledge]
+      - connections: [clients-request-server, server-invokes-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-offers-decision-confirmation, server-returns-decision-confirmation, clients-request-server, server-invokes-runtime, runtime-writes-knowledge, knowledge-returns-runtime]
       - connections: [implementation-returns-runtime, runtime-runs-implementation-gate, checks-return-implementation-gate, runtime-invokes-review, review-returns-runtime, runtime-runs-review-gate, checks-return-review-gate, runtime-writes-change-trace]
   - concept: /system/flows/decision-to-planning.md
     paths:
-      - connections: [runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-invokes-planning]
+      - connections: [runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-offers-decision-confirmation, server-returns-decision-confirmation, clients-request-server, server-invokes-runtime, runtime-writes-knowledge, knowledge-returns-runtime, runtime-invokes-planning]
   - concept: /system/flows/planning-to-implementation.md
     paths:
       - connections: [runtime-invokes-planning, planning-returns-runtime, runtime-runs-planning-gate, checks-return-planning-gate, runtime-invokes-implementation]

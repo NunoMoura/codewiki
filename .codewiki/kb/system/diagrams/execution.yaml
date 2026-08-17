@@ -1,12 +1,12 @@
 id: execution
-purpose: Show managed, MCP-mediated, external, Code Check, and Model Check paths through Runtime-owned Workbenches, Integration, Gates, and recovery.
+purpose: Show Backend Agent Runs, Delegated Agent Runs, External Agent Client custody, immutable context, Implementation Workers, Code and Model Checks, Integration, Gates, and recovery.
 components:
   - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
   - { id: runtime, concept: /system/components/runtime.md, label: Project Runtime, zone: core }
   - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
   - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
   - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
-  - { id: execution, concept: /system/components/execution.md, label: Managed Execution, zone: execution }
+  - { id: execution, concept: /system/components/execution.md, label: Backend Execution, zone: execution }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
   - { id: checks, concept: /system/components/checks.md, label: Checks, zone: core }
   - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
@@ -14,19 +14,43 @@ components:
   - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
 connections:
-  - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: selects eligible claimed work }
+  - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: freezes current stage context or selects eligible claimed work }
+  - id: runtime-reads-knowledge
+    from: runtime
+    to: knowledge
+    type: reads
+    label: resolves accepted intent for immutable stage context
+    boundary: { type: persistence, failure: Stop stage context when exact Knowledge is unavailable. }
+  - id: knowledge-returns-runtime
+    from: knowledge
+    to: runtime
+    type: returns
+    label: returns exact accepted Knowledge snapshot
+    boundary: { type: persistence, failure: Reject stale or digest-mismatched Knowledge. }
+  - id: runtime-invokes-backend-producer
+    from: runtime
+    to: execution
+    type: invokes
+    label: submits exact Backend Agent or eligible delegate Run Specification
+    boundary: { type: authority, failure: Reject stale context, unsupported capability, unqualified plugin or delegate, ambient resource, or receipt mismatch. }
+  - id: execution-returns-producer
+    from: execution
+    to: runtime
+    type: returns
+    label: returns Candidate material and custody-scoped Execution Receipt
+    boundary: { type: authority, failure: Reject malformed output, incomplete Backend-owned ledger, undeclared delegate gap, or missing custody. }
   - id: runtime-invokes-execution
     from: runtime
     to: execution
     type: invokes
-    label: dispatches managed Pi Assignment with exact Pack Skills in isolated Workbench
-    boundary: { type: authority, failure: Reject unsupported capability, stale Skill snapshot, missing isolation, or invalid Assignment. }
-  - { id: server-returns-runtime, from: server, to: runtime, type: returns, label: returns authenticated MCP-mediated Worker operation }
+    label: dispatches Backend-owned or delegated Assignment in isolated Workbench
+    boundary: { type: authority, failure: Reject unsupported capability, stale Skill snapshot, ineligible delegate, missing isolation, or invalid Assignment. }
+  - { id: server-returns-runtime, from: server, to: runtime, type: returns, label: returns authenticated External Agent Client stage or Workbench operation }
   - id: execution-returns-implementation
     from: execution
     to: implementation
     type: returns
-    label: returns managed Candidate material and receipt
+    label: returns Candidate material and custody-scoped receipt
     boundary: { type: authority, failure: Reject malformed output or missing receipt. }
   - { id: implementation-returns-runtime, from: implementation, to: runtime, type: returns, label: returns exact Candidate Manifest for Integration }
   - id: runtime-invokes-preview
@@ -86,6 +110,9 @@ connections:
   - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: sends unmatched external capture to accountable intent }
   - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns admitted intake state }
 flows:
+  - concept: /system/flows/change-lifecycle.md
+    paths:
+      - connections: [runtime-reads-knowledge, knowledge-returns-runtime, runtime-invokes-backend-producer, execution-returns-producer]
   - concept: /system/flows/work-item-execution.md
     paths:
       - connections: [runtime-invokes-execution, execution-returns-implementation, implementation-returns-runtime, runtime-invokes-preview, preview-produces-evidence]

@@ -13,6 +13,6 @@ As a maintainer, I want CodeWiki to account for differences among accepted inten
 ## Acceptance signals
 
 - Every observed Candidate or Git tree has positively proven controlled provenance or explicit external provenance.
-- External state is captured without altering accepted head and routed through exact Change admission or Change Intake.
+- External state is captured without altering accepted head and routed through exact Change admission or Change Intake; observing a commit never advances a Stage Loop by itself.
 - Queries expose identity, source provenance, coverage, truncation, and staleness.
 - Required unknowns or divergence pause affected protected effects.

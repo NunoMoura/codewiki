@@ -68,9 +68,9 @@ tags: [product, design]
 
 ## Overview
 
-CodeWiki should feel calm, exact, and inspectable. It helps people understand project state and authority without disguising uncertainty as confidence. Warm paper surfaces, deep ink, restrained forest actions, and compact technical metadata make durable work feel deliberate rather than theatrical.
+CodeWiki should feel calm, exact, and inspectable. It is the standalone software-evolution Backend behind a project, not a skin around one Agent product. It helps people understand project state and authority without disguising uncertainty as confidence. Warm paper surfaces, deep ink, restrained forest actions, and compact technical metadata make durable work feel deliberate rather than theatrical.
 
-Visual design presents bounded project facts. It never invents lifecycle state, confidence, completion, activity, approval, or causality. System components own those facts; this document owns how visible facts are arranged and distinguished.
+Git artifact history, CodeWiki semantic state, and Agent execution evidence remain visibly distinct. Visual design presents bounded project facts. It never invents lifecycle state, confidence, completion, activity, approval, custody, or causality. System components own those facts; this document owns how visible facts are arranged and distinguished.
 
 ## Colors
 
@@ -88,7 +88,7 @@ Keep reading measures broad enough for prose and narrow enough for comparison. D
 
 Desktop uses a stable destination header, context rail, and single primary reading/work surface. Small screens replace persistent rails with labeled controls while retaining current destination, selected Change, and return path.
 
-Use spacing scale consistently. Group facts by semantic owner: intent, current state, Candidate, Evidence, Checks, Gate, Loop stage, and effect. A page may disclose details progressively, but failures, stopped execution, empty-stage warnings, and required Evidence must remain visible before expansion.
+Use spacing scale consistently. Group facts by semantic owner: intent, current state, Candidate, Evidence, Checks, Gate, Stage Loop, and effect. A page may disclose details progressively, but failures, stopped execution, empty-stage warnings, and required Evidence must remain visible before expansion.
 
 ## Elevation & Depth
 
@@ -106,11 +106,19 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Destination navigation** identifies current Work, Product, System, or Design context and preserves keyboard focus on navigation.
 
-**Change selector** shows exact Change identity, revision, current Loop stage, Gate state, and unresolved attention. It never suggests a Change is selected for Decision unless authenticated selection completed.
+**Change selector** shows exact Change identity, proposed accepted-to-intended transition, revision, current Stage Loop, Gate state, and unresolved attention. It never suggests a Change is selected for Decision unless authenticated selection completed.
+
+**Stage workspace** organizes Decision, Planning, Implementation, and Review as fixed derived views. Each view shows exact subject, current WorkState, producer route and custody, context snapshot, Pack Skills, Checks, attempts, Gate feedback, pending authority, and permitted fixed transition. It never exposes a configurable workflow graph or second activation manifest.
+
+**Backend status** distinguishes CodeWiki Server, Project Runtime, Agent Supervisor, Agent Runner, Check Runner, and Workbench health. It shows exact DSH and first-party Backend Plugin closure, upgrade qualification, active Run identities, cancellation, and recovery without presenting Runner availability as project acceptance.
 
 **State and Evidence rows** show status, authority basis, timestamp, exact identity, and missing or stale conditions. They link to inspectable detail rather than flattening complex Results into one score.
 
-**Action controls** separate safe reads from protected actions. Disabled actions explain the unmet guard. Confirmation states name exact subject and consequence.
+**Execution custody** distinguishes Backend Agent Runs, Delegated Agent Runs, and External Agent Client activity. Backend-owned views may show complete DSH version, prompt, Skill, tool, model-route, context, query, budget, compaction, raw-session, usage, output, and isolation receipts. Delegated views show exact task, adapter, configuration policy, process lifecycle, Workbench base and result, final output, and declared unknown child internals. External-client views show only authenticated CodeWiki calls and admitted artifacts. No partial receipt appears as complete custody.
+
+**Context and history inspection** starts from compact stage context, then exposes bounded source-linked queries, coverage, unknowns, truncation, staleness, and retained exact model-visible ledger ranges. Compaction summaries remain visibly non-authoritative projections. Optional programmatic query runs show exact snapshot, code digest, limits, canonical JSON output, and receipt without presenting an opaque persistent heap.
+
+**Action controls** separate safe reads from protected actions. Disabled actions explain the unmet guard. Decision Gate pass and semantic confirmation are separate visible states. Confirmation names exact Candidate and Gate digests, current WorkState, accountable actor, and consequence; any edit invalidates confirmation eligibility until a fresh Gate passes.
 
 **Source and diagram inspectors** show canonical path or diagram reference, provenance, coverage, truncation, and staleness. They open the owning concept or exact file rather than a copied summary.
 
@@ -118,15 +126,15 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Model Check editing** uses one deterministic form for requirement, pass, fail, feedback, bounded inputs, binary or quantitative measurement, threshold, model profile, and budget. Saving writes the documented `check.json` and `CHECK.md` files. CodeWiki never invokes a model to author or alter them.
 
-**Pack Skill editing** presents standard Skill name, description, `SKILL.md`, scripts, references, assets, other bounded resources, and declared tool guidance. It shows effective stage composition in stable Pack order, exact content digest, backend compatibility, and capabilities unavailable under current Worker policy. Saving changes project files only after an explicit authenticated action; Skill scripts never run in the browser or during package installation.
+**Pack Skill editing** presents standard Skill name, description, `SKILL.md`, scripts, references, assets, other bounded resources, and declared tool guidance. It shows effective stage composition in stable Pack order, exact content digest, Backend Agent and delegate-route compatibility, and capabilities unavailable under current producer or Implementation Worker policy. Saving changes project files only after an explicit authenticated action; Skill scripts never run in the browser or during package installation.
 
 **Code Check editing** uses the same common fields and accepts one self-contained `CHECK.mjs` upload. Syntax, schema, bounds, and sandbox preview errors remain visible before save; browser code never runs directly.
 
-**Model route selection** distinguishes Worker routes from the configured Check model route, names provider and credential source without exposing secrets, and explains unavailable capability, independence, budget, or billing boundaries before a Check runs.
+**Model route selection** distinguishes stage-producer, Implementation Worker, and configured Check model routes, names provider and credential source without exposing secrets, and explains unavailable capability, independence, budget, or billing boundaries before execution.
 
 **Developer Check mode** exposes the same tracked `check.json`, `CHECK.md`, and `CHECK.mjs` files used by regular forms, plus schemas, exact input coverage, horizontal and vertical OKF/repository/Alignment query facts, bundle provenance, sandbox diagnostics, content digests, cache identity, preview runs, fixture results, and historical replay. It distinguishes reusable Probes and composed Checks from the single registered top-level Result boundary and grants visibility rather than additional authority.
 
-**Check Pack marketplace** follows npm package-gallery ergonomics while also accepting exact Git and local package sources. Search and inspection identify source, publisher where applicable, resolved version or revision, stages, optional Pack Skills, Code and Model Checks, requested inputs, integrity, separate Skill and Check digests, and local modifications. Pi-specific extensions, prompts, themes, and settings are not Pack resources. Installation, update, and removal are explicit User actions; update never hides a local diff.
+**Check Pack marketplace** follows npm package-gallery ergonomics while also accepting exact Git and local package sources. Search and inspection identify source, publisher where applicable, resolved version or revision, stages, optional Pack Skills, Code and Model Checks, requested inputs, integrity, separate Skill and Check digests, and local modifications. Backend Plugins, DSH or Cordis plugins, product prompts, themes, settings, and lifecycle hooks are not Pack resources. Installation, update, and removal are explicit User actions; update never hides a local diff.
 
 **Responsive behavior** preserves hierarchy and available actions across pointer, keyboard, touch, and assistive technology. Reduced-motion preference removes nonessential transition and animation.
 
@@ -136,10 +144,11 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 - Do bind approvals and effects to exact visible subjects.
 - Do preserve readable contrast and keyboard focus.
 - Do use screenshots and previews as Candidate-bound Evidence, not semantic approval.
-- Do identify Worker and Check model routes separately.
+- Do identify stage-producer, Implementation Worker, and Check model routes separately.
 - Do render one stable failure code and one feedback contract per failed Check while retaining its bounded factual details and locations.
 - Don't display a generic trust score, hidden reasoning, or fabricated certainty.
-- Don't invoke a model, widen Check input, or substitute a Worker route for a Check route without an explicit visible choice.
+- Don't invoke a model, widen Check input, or substitute a producer or Implementation Worker route for a Check route without an explicit visible choice.
+- Don't present a compaction summary, delegated receipt, External Agent Client receipt, or Agent-generated proposal as canonical truth or complete custody.
 - Don't make background work appear active without an observed state transition.
 - Don't duplicate System topology or runtime policy in design guidance.
 - Don't let visual polish hide missing Evidence, stale state, or unavailable capability.
