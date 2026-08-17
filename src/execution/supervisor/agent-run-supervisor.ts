@@ -38,7 +38,7 @@ export interface AgentRunnerProcessLauncher {
 	}): Promise<AgentRunnerProcessConnection>;
 }
 
-export interface AgentSupervisor {
+export interface AgentRunSupervisor {
 	start(specification: AgentRunSpecification): Promise<AgentRunHandle>;
 	cancel(request: AgentRunCancellationRequest): Promise<void>;
 	readEvents(
@@ -49,7 +49,7 @@ export interface AgentSupervisor {
 	shutdown(): Promise<void>;
 }
 
-export interface AgentSupervisorOptions {
+export interface AgentRunSupervisorOptions {
 	readonly launcher: AgentRunnerProcessLauncher;
 	readonly now?: () => string;
 	readonly random?: (size: number) => Uint8Array;
@@ -58,10 +58,10 @@ export interface AgentSupervisorOptions {
 	readonly processExitTimeoutMs?: number;
 }
 
-export function createAgentSupervisor(
-	options: AgentSupervisorOptions,
-): AgentSupervisor {
-	const state = createSupervisorState(options);
+export function createAgentRunSupervisor(
+	options: AgentRunSupervisorOptions,
+): AgentRunSupervisor {
+	const state = createAgentRunSupervisorState(options);
 	return Object.freeze({
 		start: (specification: AgentRunSpecification) =>
 			startSupervisedRun(state, specification),
@@ -71,7 +71,7 @@ export function createAgentSupervisor(
 			readSupervisedEvents(state, handle, afterSequence),
 		waitForQuiescence: (handle: AgentRunHandle) =>
 			waitForSupervisedQuiescence(state, handle),
-		shutdown: () => shutdownSupervisor(state),
+		shutdown: () => shutdownAgentRunSupervisor(state),
 	});
 }
 
@@ -98,7 +98,7 @@ interface Deferred<T> {
 	readonly reject: (reason: Error) => void;
 }
 
-interface SupervisorState {
+interface AgentRunSupervisorState {
 	readonly launcher: AgentRunnerProcessLauncher;
 	readonly now: () => string;
 	readonly random: (size: number) => Uint8Array;
@@ -109,9 +109,11 @@ interface SupervisorState {
 	shuttingDown: boolean;
 }
 
-function createSupervisorState(options: AgentSupervisorOptions): SupervisorState {
+function createAgentRunSupervisorState(
+	options: AgentRunSupervisorOptions,
+): AgentRunSupervisorState {
 	if (!options || typeof options.launcher?.launch !== "function") {
-		throw new Error("Agent Supervisor requires a Runner process launcher.");
+		throw new Error("Agent Run Supervisor requires a Runner process launcher.");
 	}
 	return {
 		launcher: options.launcher,
@@ -119,17 +121,17 @@ function createSupervisorState(options: AgentSupervisorOptions): SupervisorState
 		random: options.random ?? ((size) => randomBytes(size)),
 		handshakeTimeoutMs: boundedDuration(
 			options.handshakeTimeoutMs ?? 10_000,
-			"Agent Supervisor handshakeTimeoutMs",
+			"Agent Run Supervisor handshakeTimeoutMs",
 			60_000,
 		),
 		cancellationGraceMs: boundedDuration(
 			options.cancellationGraceMs ?? 5_000,
-			"Agent Supervisor cancellationGraceMs",
+			"Agent Run Supervisor cancellationGraceMs",
 			60_000,
 		),
 		processExitTimeoutMs: boundedDuration(
 			options.processExitTimeoutMs ?? 5_000,
-			"Agent Supervisor processExitTimeoutMs",
+			"Agent Run Supervisor processExitTimeoutMs",
 			60_000,
 		),
 		runs: new Map(),
@@ -138,10 +140,10 @@ function createSupervisorState(options: AgentSupervisorOptions): SupervisorState
 }
 
 async function startSupervisedRun(
-	state: SupervisorState,
+	state: AgentRunSupervisorState,
 	specification: AgentRunSpecification,
 ): Promise<AgentRunHandle> {
-	if (state.shuttingDown) throw new Error("Agent Supervisor is shutting down.");
+	if (state.shuttingDown) throw new Error("Agent Run Supervisor is shutting down.");
 	const runKey = keyFor(specification.runId, specification.specDigest);
 	if (state.runs.has(runKey)) throw new Error("Agent Run is already supervised.");
 	const active = await admitAgentRun({
@@ -163,7 +165,7 @@ async function startSupervisedRun(
 }
 
 async function cancelSupervisedRun(
-	state: SupervisorState,
+	state: AgentRunSupervisorState,
 	request: AgentRunCancellationRequest,
 ): Promise<void> {
 	const active = activeFor(state, request.runId, request.specDigest);
@@ -171,7 +173,7 @@ async function cancelSupervisedRun(
 }
 
 function readSupervisedEvents(
-	state: SupervisorState,
+	state: AgentRunSupervisorState,
 	handle: AgentRunHandle,
 	afterSequence = -1,
 ): readonly AgentRunEvent[] {
@@ -185,13 +187,13 @@ function readSupervisedEvents(
 }
 
 function waitForSupervisedQuiescence(
-	state: SupervisorState,
+	state: AgentRunSupervisorState,
 	handle: AgentRunHandle,
 ): Promise<AgentRunQuiescence> {
 	return runForHandle(state, handle).completion.promise;
 }
 
-async function shutdownSupervisor(state: SupervisorState): Promise<void> {
+async function shutdownAgentRunSupervisor(state: AgentRunSupervisorState): Promise<void> {
 	state.shuttingDown = true;
 	const activeRuns = [...state.runs.values()].filter((run) => !run.terminal);
 	await Promise.all(
@@ -201,7 +203,7 @@ async function shutdownSupervisor(state: SupervisorState): Promise<void> {
 
 async function shutdownAgentRun(
 	active: ActiveRun,
-	state: SupervisorState,
+	state: AgentRunSupervisorState,
 ): Promise<void> {
 	if (!active.cancellationSent) {
 		const request = createAgentRunCancellationRequest(active.handle, {
@@ -222,7 +224,7 @@ async function shutdownAgentRun(
 }
 
 function activeFor(
-	state: SupervisorState,
+	state: AgentRunSupervisorState,
 	runId: string,
 	specDigest: string,
 ): ActiveRun {
@@ -232,7 +234,7 @@ function activeFor(
 }
 
 function runForHandle(
-	state: SupervisorState,
+	state: AgentRunSupervisorState,
 	handle: AgentRunHandle,
 ): ActiveRun {
 	const active = activeFor(state, handle.runId, handle.specDigest);
@@ -566,7 +568,7 @@ function challengeExpiry(
 
 function exactRandomBytes(value: Uint8Array, size: number): Uint8Array {
 	if (!(value instanceof Uint8Array) || value.byteLength !== size) {
-		throw new Error(`Agent Supervisor random source must return exactly ${size} bytes.`);
+		throw new Error(`Agent Run Supervisor random source must return exactly ${size} bytes.`);
 	}
 	return new Uint8Array(value);
 }

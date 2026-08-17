@@ -23,7 +23,7 @@ codewiki_relationships:
 ---
 # Backend Execution
 
-Backend Execution turns validated Runtime work into bounded Agent and Check runs. Agent Supervisor submits immutable Run Specifications to isolated CodeWiki Agent Runners, observes cancellation and quiescence, and returns custody-scoped receipts. Each Runner uses one exact pinned DeepSeek Harness (DSH) composition. DSH owns generic Turn Loop, streaming, tool pairing, session events, compaction mechanics, provider transport, and child-process coordination. CodeWiki owns every Stage Loop, subject, context, Pack Skill, capability, route, budget, Workbench, Candidate, Check Result, Gate, transition, and effect.
+Backend Execution turns validated Runtime work into bounded Agent and Check runs. Agent Run Supervisor owns each logical Backend Agent Run lifecycle: immutable specification dispatch, exact Runner authentication, event and cancellation ordering, quiescence, process-exit proof, and custody-scoped receipt. A narrower Runner process launcher handles OS spawn, private pipes, exit, and forced termination. Each Runner uses one exact pinned DeepSeek Harness (DSH) composition. DSH owns generic Turn Loop, streaming, tool pairing, session events, compaction mechanics, provider transport, and child-process coordination. CodeWiki owns every Stage Loop, subject, context, Pack Skill, capability, route, budget, Workbench, Candidate, Check Result, Gate, transition, and effect.
 
 Runners receive bounded capabilities, not canonical storage handles, and cannot directly mutate project truth, Gates, or protected refs. A crash stops execution without rewriting accepted state. Core domains import no DSH or Cordis implementation.
 

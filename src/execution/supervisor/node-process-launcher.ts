@@ -7,7 +7,7 @@ import {canonicalJson, type Sha256Digest} from "../../utils/canonical-json.ts";
 import type {
 	AgentRunnerProcessConnection,
 	AgentRunnerProcessLauncher,
-} from "./supervisor.ts";
+} from "./agent-run-supervisor.ts";
 import type {
 	AgentRunnerAuthenticatedEnvelope,
 	AgentRunnerProcessChallenge,

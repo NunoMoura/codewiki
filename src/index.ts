@@ -286,7 +286,7 @@ export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
 export * from "./execution/ports.ts";
 export * from "./execution/supervisor/node-process-launcher.ts";
-export * from "./execution/supervisor/supervisor.ts";
+export * from "./execution/supervisor/agent-run-supervisor.ts";
 export * from "./protocol/client-pairing.ts";
 export {
 	SERVER_OIDC_AUTHENTICATION_PROTOCOL,

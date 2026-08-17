@@ -110,7 +110,7 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Stage workspace** organizes Decision, Planning, Implementation, and Review as fixed derived views. Each view shows exact subject, current WorkState, producer route and custody, context snapshot, Pack Skills, Checks, attempts, Gate feedback, pending authority, and permitted fixed transition. It never exposes a configurable workflow graph or second activation manifest.
 
-**Backend status** distinguishes CodeWiki Server, Project Runtime, Agent Supervisor, Agent Runner, Check Runner, and Workbench health. It shows exact DSH and first-party Backend Plugin closure, upgrade qualification, active Run identities, cancellation, and recovery without presenting Runner availability as project acceptance.
+**Backend status** distinguishes CodeWiki Server, Project Runtime, Agent Run Supervisor, Agent Runner, Check Runner, and Workbench health. It shows exact DSH and first-party Backend Plugin closure, upgrade qualification, active Run identities, cancellation, and recovery without presenting Runner availability as project acceptance.
 
 **State and Evidence rows** show status, authority basis, timestamp, exact identity, and missing or stale conditions. They link to inspectable detail rather than flattening complex Results into one score.
 

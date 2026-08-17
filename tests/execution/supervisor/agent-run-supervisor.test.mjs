@@ -25,17 +25,17 @@ import {
 	sealAgentRunnerEnvelope,
 } from "../../../src/execution/supervisor/process-protocol.ts";
 import {createNodeAgentRunnerProcessLauncher} from "../../../src/execution/supervisor/node-process-launcher.ts";
-import {createAgentSupervisor} from "../../../src/execution/supervisor/supervisor.ts";
+import {createAgentRunSupervisor} from "../../../src/execution/supervisor/agent-run-supervisor.ts";
 import {canonicalJsonDigest, sha256Digest} from "../../../src/utils/canonical-json.ts";
 
 const NOW = "2026-08-16T10:00:00.000Z";
 const ACCEPTED_AT = "2026-08-16T10:00:01.000Z";
 const DEADLINE = "2026-08-16T10:01:00.000Z";
 
-describe("Agent Supervisor", () => {
+describe("Agent Run Supervisor", () => {
 	it("admits one exact Runner, sequences events, proves exit, and erases its key", async () => {
 		const launcher = new FakeRunnerLauncher({completeAfterStart: true});
-		const supervisor = createAgentSupervisor(supervisorOptions(launcher));
+		const supervisor = createAgentRunSupervisor(agentRunSupervisorOptions(launcher));
 		const specification = runSpecification();
 		const handle = await supervisor.start(specification);
 		const quiescence = await supervisor.waitForQuiescence(handle);
@@ -58,7 +58,7 @@ describe("Agent Supervisor", () => {
 
 	it("uses expected event sequence as cancellation CAS and waits for quiescence", async () => {
 		const launcher = new FakeRunnerLauncher({completeAfterStart: false});
-		const supervisor = createAgentSupervisor(supervisorOptions(launcher));
+		const supervisor = createAgentRunSupervisor(agentRunSupervisorOptions(launcher));
 		const handle = await supervisor.start(runSpecification());
 		await until(() => supervisor.readEvents(handle).length === 2);
 
@@ -90,7 +90,7 @@ describe("Agent Supervisor", () => {
 
 	it("terminates and erases the key when Runner authentication fails", async () => {
 		const launcher = new FakeRunnerLauncher({invalidHandshake: true});
-		const supervisor = createAgentSupervisor(supervisorOptions(launcher));
+		const supervisor = createAgentRunSupervisor(agentRunSupervisorOptions(launcher));
 
 		await assert.rejects(
 			() => supervisor.start(runSpecification()),
@@ -116,7 +116,7 @@ describe("Agent Supervisor", () => {
 				maxFrameBytes: 1_000_000,
 				terminationGraceMs: 1_000,
 			});
-			const supervisor = createAgentSupervisor(supervisorOptions(launcher));
+			const supervisor = createAgentRunSupervisor(agentRunSupervisorOptions(launcher));
 			const handle = await supervisor.start(runSpecification());
 			const quiescence = await supervisor.waitForQuiescence(handle);
 
@@ -135,7 +135,7 @@ describe("Agent Supervisor", () => {
 			completeAfterStart: false,
 			rejectCancellation: true,
 		});
-		const supervisor = createAgentSupervisor(supervisorOptions(launcher));
+		const supervisor = createAgentRunSupervisor(agentRunSupervisorOptions(launcher));
 		const handle = await supervisor.start(runSpecification());
 		await until(() => supervisor.readEvents(handle).length === 2);
 		const completion = supervisor.waitForQuiescence(handle);
@@ -399,7 +399,7 @@ function send(value) {
 `;
 }
 
-function supervisorOptions(launcher) {
+function agentRunSupervisorOptions(launcher) {
 	let nowCalls = 0;
 	return {
 		launcher,

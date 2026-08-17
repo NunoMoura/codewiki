@@ -56,7 +56,7 @@ interface AgentRunnerHandshakeResponse {
 	readonly proof: AgentRunnerProcessMac;
 }
 
-export type AgentSupervisorWireMessage =
+export type AgentRunSupervisorWireMessage =
 	| {
 			readonly kind: "start";
 			readonly specification: AgentRunSpecification;
@@ -79,7 +79,7 @@ export type AgentRunnerWireMessage =
 	  };
 
 export type AgentRunnerProcessMessage =
-	| AgentSupervisorWireMessage
+	| AgentRunSupervisorWireMessage
 	| AgentRunnerWireMessage;
 
 export interface AgentRunnerAuthenticatedEnvelope {
