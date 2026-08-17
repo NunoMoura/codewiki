@@ -6,6 +6,7 @@ import {
 } from "../../src/checks/packs/contracts.ts";
 import {
 	AGENT_RUNNER_PROTOCOL,
+	AGENT_RUN_RECEIPT_SCHEMA_VERSION,
 	AGENT_RUN_SPEC_SCHEMA_VERSION,
 	EXECUTION_CAPABILITY_NAMES,
 	activateRunnerBundle,
@@ -13,6 +14,11 @@ import {
 	assertProducerSkillReceipt,
 	bindActiveRunnerBundle,
 	bindProducerSkills,
+	createAgentRunCancellationRequest,
+	createAgentRunEvent,
+	createAgentRunExecutionReceipt,
+	createAgentRunHandle,
+	createAgentRunQuiescence,
 	createAgentRunRawLogReference,
 	createAgentRunSpecification,
 	createQualifiedRunnerBundle,
@@ -334,6 +340,124 @@ describe("execution ports", () => {
 		);
 	});
 
+	it("binds handle, events, cancellation, and quiescence to one exact Run Specification", () => {
+		const bundle = qualifiedRunnerBundle(
+			"a".repeat(40),
+			"0.1.0-rc.6",
+			"evidence",
+		);
+		const spec = agentRunSpecification(bundle.bundleDigest);
+		const handle = createAgentRunHandle(spec, "2026-08-16T10:00:01.000Z");
+		const event = createAgentRunEvent(handle, {
+			sequence: 0,
+			kind: "accepted",
+			occurredAt: "2026-08-16T10:00:01.000Z",
+			payloadDigest: sha256Digest("accepted-event"),
+		});
+		const cancellation = createAgentRunCancellationRequest(handle, {
+			expectedEventSequence: 0,
+			reason: "user",
+			requestedAt: "2026-08-16T10:00:02.000Z",
+		});
+		const rawLog = agentRunRawLog(bundle.bundleDigest);
+		const quiescence = createAgentRunQuiescence(handle, {
+			finalEventSequence: 3,
+			quiescedAt: "2026-08-16T10:00:03.000Z",
+			proofDigest: sha256Digest("quiescence-proof"),
+			rawLog,
+		});
+
+		assert.equal(handle.specDigest, spec.specDigest);
+		assert.equal(event.runId, spec.runId);
+		assert.equal(cancellation.expectedEventSequence, 0);
+		assert.equal(quiescence.rawLog?.digest, rawLog.digest);
+		assert.equal(Object.isFrozen(quiescence), true);
+		assert.throws(
+			() =>
+				createAgentRunEvent(handle, {
+					sequence: 1,
+					kind: "unknown",
+					occurredAt: "2026-08-16T10:00:02.000Z",
+					payloadDigest: sha256Digest("unknown-event"),
+				}),
+			/Agent Run event kind is invalid/,
+		);
+	});
+
+	it("records complete backend-owned and honestly limited delegated receipts", () => {
+		const bundle = qualifiedRunnerBundle(
+			"a".repeat(40),
+			"0.1.0-rc.6",
+			"evidence",
+		);
+		const ownedSpec = agentRunSpecification(bundle.bundleDigest);
+		const ownedHandle = createAgentRunHandle(
+			ownedSpec,
+			"2026-08-16T10:00:01.000Z",
+		);
+		const owned = createAgentRunExecutionReceipt({
+			handle: ownedHandle,
+			outcome: "completed",
+			finalEventSequence: 4,
+			startedAt: "2026-08-16T10:00:01.000Z",
+			finishedAt: "2026-08-16T10:00:04.000Z",
+			executionLedgerDigest: sha256Digest("ledger"),
+			rawLog: agentRunRawLog(bundle.bundleDigest),
+			outputDigest: sha256Digest("output"),
+			usageDigest: sha256Digest("usage"),
+			cancellationDigest: null,
+			quiescenceDigest: sha256Digest("quiescence"),
+			custodyGaps: [],
+			operationalGaps: [],
+		});
+		const {receiptDigest, ...receiptBody} = owned;
+		assert.equal(owned.schemaVersion, AGENT_RUN_RECEIPT_SCHEMA_VERSION);
+		assert.equal(receiptDigest, canonicalJsonDigest(receiptBody));
+
+		const delegatedSpec = agentRunSpecification(bundle.bundleDigest, {
+			custody: "backend-delegated",
+		});
+		const delegated = createAgentRunExecutionReceipt({
+			handle: createAgentRunHandle(
+				delegatedSpec,
+				"2026-08-16T10:00:01.000Z",
+			),
+			outcome: "completed",
+			finalEventSequence: 4,
+			startedAt: "2026-08-16T10:00:01.000Z",
+			finishedAt: "2026-08-16T10:00:04.000Z",
+			executionLedgerDigest: sha256Digest("delegate-ledger"),
+			rawLog: agentRunRawLog(bundle.bundleDigest),
+			outputDigest: sha256Digest("delegate-output"),
+			usageDigest: null,
+			cancellationDigest: null,
+			quiescenceDigest: sha256Digest("delegate-quiescence"),
+			custodyGaps: ["delegate-usage", "delegate-tools"],
+			operationalGaps: [],
+		});
+		assert.deepEqual(delegated.custodyGaps, ["delegate-tools", "delegate-usage"]);
+
+		assert.throws(
+			() =>
+				createAgentRunExecutionReceipt(
+					agentRunReceiptInput(ownedHandle, bundle.bundleDigest, {
+						executionLedgerDigest: null,
+						operationalGaps: ["execution-ledger-incomplete"],
+					}),
+				),
+			/Operationally incomplete Agent Runs must be stopped/,
+		);
+		assert.throws(
+			() =>
+				createAgentRunExecutionReceipt(
+					agentRunReceiptInput(ownedHandle, bundle.bundleDigest, {
+						custodyGaps: ["delegate-trace"],
+					}),
+				),
+			/Backend-owned Agent Run receipts cannot declare delegated custody gaps/,
+		);
+	});
+
 	it("resumes only the exact bound bundle while allowing explicit rollback", () => {
 		const first = qualifiedRunnerBundle("a".repeat(40), "0.1.0-rc.5", "first");
 		const second = qualifiedRunnerBundle("b".repeat(40), "0.1.0-rc.6", "second");
@@ -413,7 +537,7 @@ function agentRunSpecification(bundleDigest, overrides = {}) {
 	return createAgentRunSpecification({
 		runId: "run-001",
 		operationId: "operation-001",
-		custody: "backend-owned",
+		custody: overrides.custody || "backend-owned",
 		role,
 		stage,
 		subject: {
@@ -456,6 +580,39 @@ function agentRunSpecification(bundleDigest, overrides = {}) {
 		createdAt: "2026-08-16T10:00:00.000Z",
 		deadlineAt: "2026-08-16T10:01:00.000Z",
 	});
+}
+
+function agentRunRawLog(runnerBundleDigest) {
+	return createAgentRunRawLogReference({
+		encoding: "jsonl",
+		formatVersion: 0,
+		sessionId: "session-001",
+		storageId: "runner-log-001",
+		byteLength: 2048,
+		digest: sha256Digest("raw-log"),
+		runnerBundleDigest,
+	});
+}
+
+function agentRunReceiptInput(handle, runnerBundleDigest, overrides = {}) {
+	return {
+		handle,
+		outcome: overrides.outcome || "completed",
+		finalEventSequence: 4,
+		startedAt: "2026-08-16T10:00:01.000Z",
+		finishedAt: "2026-08-16T10:00:04.000Z",
+		executionLedgerDigest:
+			overrides.executionLedgerDigest === undefined
+				? sha256Digest("ledger")
+				: overrides.executionLedgerDigest,
+		rawLog: agentRunRawLog(runnerBundleDigest),
+		outputDigest: sha256Digest("output"),
+		usageDigest: sha256Digest("usage"),
+		cancellationDigest: null,
+		quiescenceDigest: sha256Digest("quiescence"),
+		custodyGaps: overrides.custodyGaps || [],
+		operationalGaps: overrides.operationalGaps || [],
+	};
 }
 
 function runnerManifest(dshSourceCommit, dshVersion) {

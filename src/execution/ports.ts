@@ -482,6 +482,504 @@ export function createAgentRunSpecification(
 	return Object.freeze({...body, specDigest: canonicalJsonDigest(body)});
 }
 
+export const AGENT_RUN_RECEIPT_SCHEMA_VERSION = "1.0.0" as const;
+
+export const AGENT_RUN_EVENT_KINDS = Object.freeze([
+	"accepted",
+	"runner-started",
+	"session-event",
+	"cancellation-requested",
+	"quiescent",
+	"receipt-committed",
+] as const);
+
+export type AgentRunEventKind = (typeof AGENT_RUN_EVENT_KINDS)[number];
+export type AgentRunCancellationReason =
+	| "user"
+	| "deadline"
+	| "runtime-shutdown"
+	| "superseded"
+	| "policy-stop";
+export type AgentRunOutcome = "completed" | "failed" | "cancelled" | "stopped";
+export type AgentRunCustodyGap =
+	| "delegate-prompts"
+	| "delegate-tools"
+	| "delegate-model-route"
+	| "delegate-usage"
+	| "delegate-trace"
+	| "delegate-memory"
+	| "delegate-settings";
+export type AgentRunOperationalGap =
+	| "raw-log-unavailable"
+	| "execution-ledger-incomplete"
+	| "quiescence-unproven";
+
+export interface AgentRunHandle {
+	readonly runId: string;
+	readonly specDigest: Sha256Digest;
+	readonly custody: AgentRunCustody;
+	readonly runnerBundle: RunnerBundleBinding;
+	readonly sessionId: string;
+	readonly acceptedAt: string;
+}
+
+export interface AgentRunEvent {
+	readonly runId: string;
+	readonly specDigest: Sha256Digest;
+	readonly sequence: number;
+	readonly kind: AgentRunEventKind;
+	readonly occurredAt: string;
+	readonly payloadDigest: Sha256Digest;
+}
+
+export interface AgentRunCancellationRequest {
+	readonly runId: string;
+	readonly specDigest: Sha256Digest;
+	readonly expectedEventSequence: number;
+	readonly reason: AgentRunCancellationReason;
+	readonly requestedAt: string;
+}
+
+export interface AgentRunQuiescence {
+	readonly runId: string;
+	readonly specDigest: Sha256Digest;
+	readonly finalEventSequence: number;
+	readonly quiescedAt: string;
+	readonly proofDigest: Sha256Digest;
+	readonly rawLog: AgentRunRawLogReference | null;
+}
+
+export interface AgentRunExecutionReceiptInput {
+	readonly handle: AgentRunHandle;
+	readonly outcome: AgentRunOutcome;
+	readonly finalEventSequence: number;
+	readonly startedAt: string;
+	readonly finishedAt: string;
+	readonly executionLedgerDigest: Sha256Digest | null;
+	readonly rawLog: AgentRunRawLogReference | null;
+	readonly outputDigest: Sha256Digest | null;
+	readonly usageDigest: Sha256Digest | null;
+	readonly cancellationDigest: Sha256Digest | null;
+	readonly quiescenceDigest: Sha256Digest | null;
+	readonly custodyGaps: readonly AgentRunCustodyGap[];
+	readonly operationalGaps: readonly AgentRunOperationalGap[];
+}
+
+export interface AgentRunExecutionReceipt
+	extends Omit<AgentRunExecutionReceiptInput, "handle">,
+		AgentRunHandle {
+	readonly schemaVersion: typeof AGENT_RUN_RECEIPT_SCHEMA_VERSION;
+	readonly receiptDigest: Sha256Digest;
+}
+
+export function createAgentRunHandle(
+	spec: AgentRunSpecification,
+	acceptedAtValue: string,
+): Readonly<AgentRunHandle> {
+	assertAgentRunSpecification(spec);
+	const acceptedAt = assertTimestamp(acceptedAtValue, "Agent Run acceptedAt");
+	if (
+		Date.parse(acceptedAt) < Date.parse(spec.createdAt) ||
+		Date.parse(acceptedAt) >= Date.parse(spec.deadlineAt)
+	) {
+		throw new Error("Agent Run acceptedAt is outside its Run Specification window.");
+	}
+	return Object.freeze({
+		runId: spec.runId,
+		specDigest: spec.specDigest,
+		custody: spec.custody,
+		runnerBundle: Object.freeze({...spec.runnerBundle}),
+		sessionId: spec.session.sessionId,
+		acceptedAt,
+	});
+}
+
+export function createAgentRunEvent(
+	handle: AgentRunHandle,
+	value: {
+		readonly sequence: number;
+		readonly kind: AgentRunEventKind;
+		readonly occurredAt: string;
+		readonly payloadDigest: Sha256Digest;
+	},
+): Readonly<AgentRunEvent> {
+	assertAgentRunHandle(handle);
+	assertNonNegativeInteger(value.sequence, "Agent Run event sequence");
+	if (!AGENT_RUN_EVENT_KINDS.includes(value.kind)) {
+		throw new Error("Agent Run event kind is invalid.");
+	}
+	const occurredAt = assertTimestamp(value.occurredAt, "Agent Run event occurredAt");
+	assertNotBeforeAcceptance(handle, occurredAt, "Agent Run event");
+	return Object.freeze({
+		runId: handle.runId,
+		specDigest: handle.specDigest,
+		sequence: value.sequence,
+		kind: value.kind,
+		occurredAt,
+		payloadDigest: assertSha256Digest(
+			value.payloadDigest,
+			"Agent Run event payload digest",
+		),
+	});
+}
+
+export function createAgentRunCancellationRequest(
+	handle: AgentRunHandle,
+	value: {
+		readonly expectedEventSequence: number;
+		readonly reason: AgentRunCancellationReason;
+		readonly requestedAt: string;
+	},
+): Readonly<AgentRunCancellationRequest> {
+	assertAgentRunHandle(handle);
+	assertNonNegativeInteger(
+		value.expectedEventSequence,
+		"Agent Run cancellation expectedEventSequence",
+	);
+	if (!AGENT_RUN_CANCELLATION_REASONS.includes(value.reason)) {
+		throw new Error("Agent Run cancellation reason is invalid.");
+	}
+	const requestedAt = assertTimestamp(
+		value.requestedAt,
+		"Agent Run cancellation requestedAt",
+	);
+	assertNotBeforeAcceptance(handle, requestedAt, "Agent Run cancellation");
+	return Object.freeze({
+		runId: handle.runId,
+		specDigest: handle.specDigest,
+		expectedEventSequence: value.expectedEventSequence,
+		reason: value.reason,
+		requestedAt,
+	});
+}
+
+export function createAgentRunQuiescence(
+	handle: AgentRunHandle,
+	value: {
+		readonly finalEventSequence: number;
+		readonly quiescedAt: string;
+		readonly proofDigest: Sha256Digest;
+		readonly rawLog: AgentRunRawLogReference | null;
+	},
+): Readonly<AgentRunQuiescence> {
+	assertAgentRunHandle(handle);
+	assertNonNegativeInteger(
+		value.finalEventSequence,
+		"Agent Run quiescence finalEventSequence",
+	);
+	const quiescedAt = assertTimestamp(value.quiescedAt, "Agent Run quiescedAt");
+	assertNotBeforeAcceptance(handle, quiescedAt, "Agent Run quiescence");
+	return Object.freeze({
+		runId: handle.runId,
+		specDigest: handle.specDigest,
+		finalEventSequence: value.finalEventSequence,
+		quiescedAt,
+		proofDigest: assertSha256Digest(
+			value.proofDigest,
+			"Agent Run quiescence proof digest",
+		),
+		rawLog:
+			value.rawLog === null
+				? null
+				: rawLogForHandle(handle, createAgentRunRawLogReference(value.rawLog)),
+	});
+}
+
+export function createAgentRunExecutionReceipt(
+	value: AgentRunExecutionReceiptInput,
+): Readonly<AgentRunExecutionReceipt> {
+	if (!hasExactKeys(value, AGENT_RUN_RECEIPT_INPUT_KEYS)) {
+		throw new Error("Agent Run Execution Receipt shape is invalid.");
+	}
+	assertAgentRunHandle(value.handle);
+	if (!AGENT_RUN_OUTCOMES.includes(value.outcome)) {
+		throw new Error("Agent Run receipt outcome is invalid.");
+	}
+	assertNonNegativeInteger(
+		value.finalEventSequence,
+		"Agent Run receipt finalEventSequence",
+	);
+	const startedAt = assertTimestamp(value.startedAt, "Agent Run receipt startedAt");
+	const finishedAt = assertTimestamp(value.finishedAt, "Agent Run receipt finishedAt");
+	assertNotBeforeAcceptance(value.handle, startedAt, "Agent Run receipt start");
+	if (Date.parse(finishedAt) < Date.parse(startedAt)) {
+		throw new Error("Agent Run receipt finishedAt precedes startedAt.");
+	}
+	const custodyGaps = normalizedAgentRunGapList(
+		value.custodyGaps,
+		AGENT_RUN_CUSTODY_GAPS,
+		"Agent Run custody gaps",
+	);
+	const operationalGaps = normalizedAgentRunGapList(
+		value.operationalGaps,
+		AGENT_RUN_OPERATIONAL_GAPS,
+		"Agent Run operational gaps",
+	);
+	assertAgentRunReceiptCustody(value.handle.custody, custodyGaps);
+	if (operationalGaps.length > 0 && value.outcome !== "stopped") {
+		throw new Error("Operationally incomplete Agent Runs must be stopped.");
+	}
+	const executionLedgerDigest = optionalSha256Digest(
+		value.executionLedgerDigest,
+		"Agent Run Execution Ledger digest",
+	);
+	const rawLog =
+		value.rawLog === null
+			? null
+			: rawLogForHandle(value.handle, createAgentRunRawLogReference(value.rawLog));
+	const quiescenceDigest = optionalSha256Digest(
+		value.quiescenceDigest,
+		"Agent Run quiescence digest",
+	);
+	assertAgentRunReceiptGapAgreement({
+		operationalGaps,
+		executionLedgerDigest,
+		rawLog,
+		quiescenceDigest,
+	});
+	const outputDigest = optionalSha256Digest(
+		value.outputDigest,
+		"Agent Run output digest",
+	);
+	if (value.outcome === "completed" && outputDigest === null) {
+		throw new Error("Completed Agent Runs require an output digest.");
+	}
+	const cancellationDigest = optionalSha256Digest(
+		value.cancellationDigest,
+		"Agent Run cancellation digest",
+	);
+	if (value.outcome === "cancelled" && cancellationDigest === null) {
+		throw new Error("Cancelled Agent Runs require a cancellation digest.");
+	}
+	const body = Object.freeze({
+		schemaVersion: AGENT_RUN_RECEIPT_SCHEMA_VERSION,
+		runId: value.handle.runId,
+		specDigest: value.handle.specDigest,
+		custody: value.handle.custody,
+		runnerBundle: Object.freeze({...value.handle.runnerBundle}),
+		sessionId: value.handle.sessionId,
+		acceptedAt: value.handle.acceptedAt,
+		outcome: value.outcome,
+		finalEventSequence: value.finalEventSequence,
+		startedAt,
+		finishedAt,
+		executionLedgerDigest,
+		rawLog,
+		outputDigest,
+		usageDigest: optionalSha256Digest(
+			value.usageDigest,
+			"Agent Run usage digest",
+		),
+		cancellationDigest,
+		quiescenceDigest,
+		custodyGaps,
+		operationalGaps,
+	});
+	return Object.freeze({...body, receiptDigest: canonicalJsonDigest(body)});
+}
+
+function assertAgentRunSpecification(
+	value: AgentRunSpecification,
+): void {
+	if (!hasExactKeys(value, AGENT_RUN_SPEC_KEYS)) {
+		throw new Error("Agent Run Specification persisted shape is invalid.");
+	}
+	const {schemaVersion, specDigest, ...input} = value;
+	if (schemaVersion !== AGENT_RUN_SPEC_SCHEMA_VERSION) {
+		throw new Error("Agent Run Specification schemaVersion is invalid.");
+	}
+	assertSha256Digest(specDigest, "Agent Run Specification digest");
+	const expected = createAgentRunSpecification(input);
+	if (specDigest !== expected.specDigest) {
+		throw new Error("Agent Run Specification digest does not match its content.");
+	}
+}
+
+function assertAgentRunHandle(value: AgentRunHandle): void {
+	if (!hasExactKeys(value, AGENT_RUN_HANDLE_KEYS)) {
+		throw new Error("Agent Run handle shape is invalid.");
+	}
+	assertIdentifier(value.runId, "Agent Run handle runId");
+	assertSha256Digest(value.specDigest, "Agent Run handle spec digest");
+	if (value.custody !== "backend-owned" && value.custody !== "backend-delegated") {
+		throw new Error("Agent Run handle custody is invalid.");
+	}
+	assertRunnerBundleBinding(value.runnerBundle);
+	assertIdentifier(value.sessionId, "Agent Run handle sessionId");
+	assertTimestamp(value.acceptedAt, "Agent Run handle acceptedAt");
+}
+
+function rawLogForHandle(
+	handle: AgentRunHandle,
+	rawLog: AgentRunRawLogReference,
+): AgentRunRawLogReference {
+	if (rawLog.sessionId !== handle.sessionId) {
+		throw new Error("Agent Run raw log does not match the handle session.");
+	}
+	if (rawLog.runnerBundleDigest !== handle.runnerBundle.bundleDigest) {
+		throw new Error("Agent Run raw log does not match the handle Runner Bundle.");
+	}
+	return rawLog;
+}
+
+function assertNotBeforeAcceptance(
+	handle: AgentRunHandle,
+	timestamp: string,
+	label: string,
+): void {
+	if (Date.parse(timestamp) < Date.parse(handle.acceptedAt)) {
+		throw new Error(`${label} precedes acceptance.`);
+	}
+}
+
+function normalizedAgentRunGapList<T extends string>(
+	value: readonly T[],
+	allowed: readonly T[],
+	field: string,
+): readonly T[] {
+	if (!Array.isArray(value) || value.length > allowed.length) {
+		throw new Error(`${field} are invalid.`);
+	}
+	const gaps = [...value].sort((left, right) => {
+		if (left < right) return -1;
+		if (left > right) return 1;
+		return 0;
+	});
+	for (let index = 0; index < gaps.length; index += 1) {
+		if (!allowed.includes(gaps[index] as T) || gaps[index - 1] === gaps[index]) {
+			throw new Error(`${field} are invalid.`);
+		}
+	}
+	return Object.freeze(gaps);
+}
+
+function assertAgentRunReceiptCustody(
+	custody: AgentRunCustody,
+	gaps: readonly AgentRunCustodyGap[],
+): void {
+	if (custody === "backend-owned" && gaps.length > 0) {
+		throw new Error(
+			"Backend-owned Agent Run receipts cannot declare delegated custody gaps.",
+		);
+	}
+	if (custody === "backend-delegated" && gaps.length === 0) {
+		throw new Error("Backend-delegated Agent Run receipts must declare custody gaps.");
+	}
+}
+
+function assertAgentRunReceiptGapAgreement(input: {
+	readonly operationalGaps: readonly AgentRunOperationalGap[];
+	readonly executionLedgerDigest: Sha256Digest | null;
+	readonly rawLog: AgentRunRawLogReference | null;
+	readonly quiescenceDigest: Sha256Digest | null;
+}): void {
+	assertGapMatchesNull(
+		input.operationalGaps,
+		"execution-ledger-incomplete",
+		input.executionLedgerDigest,
+		"Execution Ledger",
+	);
+	assertGapMatchesNull(
+		input.operationalGaps,
+		"raw-log-unavailable",
+		input.rawLog,
+		"raw log",
+	);
+	assertGapMatchesNull(
+		input.operationalGaps,
+		"quiescence-unproven",
+		input.quiescenceDigest,
+		"quiescence proof",
+	);
+}
+
+function assertGapMatchesNull(
+	gaps: readonly AgentRunOperationalGap[],
+	gap: AgentRunOperationalGap,
+	value: unknown,
+	label: string,
+): void {
+	if ((value === null) !== gaps.includes(gap)) {
+		throw new Error(`Agent Run ${label} availability disagrees with operational gaps.`);
+	}
+}
+
+function optionalSha256Digest(
+	value: Sha256Digest | null,
+	field: string,
+): Sha256Digest | null {
+	return value === null ? null : assertSha256Digest(value, field);
+}
+
+const AGENT_RUN_CANCELLATION_REASONS = Object.freeze([
+	"user",
+	"deadline",
+	"runtime-shutdown",
+	"superseded",
+	"policy-stop",
+] as const);
+const AGENT_RUN_OUTCOMES = Object.freeze([
+	"completed",
+	"failed",
+	"cancelled",
+	"stopped",
+] as const);
+const AGENT_RUN_CUSTODY_GAPS = Object.freeze([
+	"delegate-prompts",
+	"delegate-tools",
+	"delegate-model-route",
+	"delegate-usage",
+	"delegate-trace",
+	"delegate-memory",
+	"delegate-settings",
+] as const);
+const AGENT_RUN_OPERATIONAL_GAPS = Object.freeze([
+	"raw-log-unavailable",
+	"execution-ledger-incomplete",
+	"quiescence-unproven",
+] as const);
+
+const AGENT_RUN_SPEC_KEYS = [
+	"schemaVersion",
+	"runId",
+	"operationId",
+	"custody",
+	"role",
+	"stage",
+	"subject",
+	"runnerBundle",
+	"session",
+	"inputs",
+	"workspace",
+	"budget",
+	"createdAt",
+	"deadlineAt",
+	"specDigest",
+] as const;
+const AGENT_RUN_HANDLE_KEYS = [
+	"runId",
+	"specDigest",
+	"custody",
+	"runnerBundle",
+	"sessionId",
+	"acceptedAt",
+] as const;
+const AGENT_RUN_RECEIPT_INPUT_KEYS = [
+	"handle",
+	"outcome",
+	"finalEventSequence",
+	"startedAt",
+	"finishedAt",
+	"executionLedgerDigest",
+	"rawLog",
+	"outputDigest",
+	"usageDigest",
+	"cancellationDigest",
+	"quiescenceDigest",
+	"custodyGaps",
+	"operationalGaps",
+] as const;
+
 function normalizeAgentRunSubject(
 	value: AgentRunSpecificationInput["subject"],
 ): AgentRunSpecificationInput["subject"] {
