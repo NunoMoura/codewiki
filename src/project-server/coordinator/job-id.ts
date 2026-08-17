@@ -1,0 +1,21 @@
+import { createHash } from "node:crypto";
+import type { ProjectServerReaction } from "./reactor.ts";
+
+export function runtimeSemanticJobId(
+	reaction: ProjectServerReaction,
+	mode: "append" | "preview" = "append",
+	contextDigest?: string,
+): string {
+	const digest = createHash("sha256")
+		.update(
+			JSON.stringify({
+				schemaVersion: reaction.schemaVersion,
+				mode,
+				observedWorkStateDigest: reaction.observedWorkStateDigest,
+				selection: reaction.selection,
+				contextDigest,
+			}),
+		)
+		.digest("hex");
+	return `runtime-reaction:${digest}`;
+}

@@ -242,9 +242,9 @@ function runtimeClaimsByRef(
 		(record): record is TraceEvent =>
 			record.type === "trace_event" && record.event.startsWith("runtime."),
 	);
-	const releases = events.filter(isRuntimeReleaseEvent).map(runtimeRelease);
+	const releases = events.filter(isProjectServerReleaseEvent).map(runtimeRelease);
 	return events
-		.filter(isRuntimeClaimEvent)
+		.filter(isProjectServerClaimEvent)
 		.map(runtimeClaim)
 		.filter((claim) => !claimExpired(claim, generatedAt))
 		.filter((claim) => !claimReleased(claim, releases));
@@ -282,11 +282,11 @@ function runtimeRelease(event: TraceEvent): RuntimeClaimRelease {
 	};
 }
 
-function isRuntimeClaimEvent(event: TraceEvent): boolean {
+function isProjectServerClaimEvent(event: TraceEvent): boolean {
 	return event.event === "runtime.work_unit.claimed";
 }
 
-function isRuntimeReleaseEvent(event: TraceEvent): boolean {
+function isProjectServerReleaseEvent(event: TraceEvent): boolean {
 	return [
 		"runtime.work_unit.claim.released",
 		"runtime.work_unit.claim.expired",

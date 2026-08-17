@@ -4,22 +4,22 @@ import type {
 	BacklogTriageQueryResult,
 } from "../../changes/triage/contracts.ts";
 import type { DecisionAttentionSelectionCommand } from "../../changes/triage/selection.ts";
-import type { DecisionStartResult } from "../../runtime/admission/start.ts";
-import type { ProjectCoordinatorClientInput } from "../../runtime/coordinator/project.ts";
-import type { RuntimeReaction, RuntimeTrigger } from "../../runtime/coordinator/reactor.ts";
-import type { ProjectCoordinatorRemoteClient } from "../../runtime/coordinator/service.ts";
+import type { DecisionStartResult } from "../../project-server/admission/start.ts";
+import type { ProjectCoordinatorClientInput } from "../../project-server/coordinator/project.ts";
+import type { ProjectServerReaction, ProjectServerTrigger } from "../../project-server/coordinator/reactor.ts";
+import type { ProjectCoordinatorRemoteClient } from "../../project-server/coordinator/service.ts";
 import type { CodewikiExtensionContext } from "./types.ts";
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
 
-type RemoteTrigger = Omit<RuntimeTrigger, "occurredAt">;
+type RemoteTrigger = Omit<ProjectServerTrigger, "occurredAt">;
 
 export interface PiProjectServiceClientProvider {
 	inspect(
 		repoRoot: string,
 		ctx: Pick<CodewikiExtensionContext, "mode" | "sessionManager">,
 		trigger: RemoteTrigger,
-	): Promise<RuntimeReaction>;
+	): Promise<ProjectServerReaction>;
 	decisionAttention(input: {
 		readonly repoRoot: string;
 		readonly context: Pick<

@@ -28,12 +28,12 @@ import {
 	createUserStandardDefinition,
 	createUserStandardSourceSnapshot,
 } from "../../src/changes/triage/standards.ts";
-import {createDecisionStartRuntime} from "../../src/runtime/admission/start.ts";
-import {ProjectCoordinator} from "../../src/runtime/coordinator/project.ts";
+import {createDecisionStartProjectServer} from "../../src/project-server/admission/start.ts";
+import {ProjectCoordinator} from "../../src/project-server/coordinator/project.ts";
 import {
 	connectProjectCoordinatorClient,
 	startProjectCoordinatorService,
-} from "../../src/runtime/coordinator/service.ts";
+} from "../../src/project-server/coordinator/service.ts";
 import {
 	canonicalJson,
 	canonicalJsonDigest,
@@ -718,7 +718,7 @@ describe("authenticated exact-revision Decision attention selection", () => {
 		const ran = new Promise((resolve) => {
 			markRun = resolve;
 		});
-		const runtime = createDecisionStartRuntime({
+		const runtime = createDecisionStartProjectServer({
 			coordinator,
 			loadCurrentContext: context.load,
 			authorize(request) {
@@ -797,7 +797,7 @@ describe("authenticated exact-revision Decision attention selection", () => {
 		const recovered = new Promise((resolve) => {
 			markRecovered = resolve;
 		});
-		const restarted = createDecisionStartRuntime({
+		const restarted = createDecisionStartProjectServer({
 			coordinator: restartedCoordinator,
 			loadCurrentContext: context.load,
 			authorize: () => {
@@ -942,7 +942,7 @@ describe("authenticated exact-revision Decision attention selection", () => {
 		});
 		const starts = [];
 		let completions = 0;
-		const runtime = createDecisionStartRuntime({
+		const runtime = createDecisionStartProjectServer({
 			coordinator,
 			loadCurrentContext: context.load,
 			authorize: () => true,
@@ -986,7 +986,7 @@ describe("authenticated exact-revision Decision attention selection", () => {
 			executionPolicy: "unattended",
 			generationId: "decision-start-rejection-test",
 		});
-		const runtime = createDecisionStartRuntime({
+		const runtime = createDecisionStartProjectServer({
 			coordinator,
 			loadCurrentContext: context.load,
 			authorize: () => true,
@@ -1019,7 +1019,7 @@ describe("authenticated exact-revision Decision attention selection", () => {
 			asOf: "2026-09-30T10:00:01.000Z",
 		});
 		let contextLoads = 0;
-		const drifting = createDecisionStartRuntime({
+		const drifting = createDecisionStartProjectServer({
 			coordinator,
 			loadCurrentContext() {
 				contextLoads += 1;
@@ -1040,7 +1040,7 @@ describe("authenticated exact-revision Decision attention selection", () => {
 			drifting.start({command, authority: selectionAuthority()}),
 			(error) => error.code === "conflict" && /projection is stale/.test(error.message),
 		);
-		const denied = createDecisionStartRuntime({
+		const denied = createDecisionStartProjectServer({
 			coordinator,
 			loadCurrentContext: context.load,
 			authorize: () => false,

@@ -9,14 +9,14 @@ import {
 	runWikiDecide,
 	runWikiImplement,
 	runWikiPlan,
-	runWikiRuntime,
+	runProjectServer,
 	type RunWikiArchiveInput,
 	type RunWikiConfigInput,
 	type RunWikiDecideInput,
 	type RunWikiImplementInput,
 	type RunWikiPlanInput,
-	type RunWikiRuntimeInput,
-} from "../../runtime/index.ts";
+	type RunWikiProjectServerInput,
+} from "../../project-server/index.ts";
 import { bootstrapCodewiki } from "../../project/bootstrap.ts";
 import {
 	findCodewikiProjectRoot,
@@ -136,11 +136,11 @@ async function implementCommand(
 async function runtimeCommand(
 	flags: Record<string, string[]>,
 ): Promise<CliResult> {
-	const input = await requiredInput<RunWikiRuntimeInput>(flags);
+	const input = await requiredInput<RunWikiProjectServerInput>(flags);
 	if (!input.config && input.repoRoot) {
 		input.config = await loadWikiConfigFile(input.repoRoot);
 	}
-	return jsonResult(await runWikiRuntime(input));
+	return jsonResult(await runProjectServer(input));
 }
 
 async function archiveCommand(

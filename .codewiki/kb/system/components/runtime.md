@@ -1,57 +1,90 @@
 ---
 type: System Component
-title: Project Runtime
-description: Owns per-project authority, provenance, admission, scheduling, persistence, synchronization, Integration, recovery, fixed lifecycle, and effects.
+title: Runtime
+description: Executes immutable Run Requests through exact Runtime Builds and controlled Run Processes, then creates bounded Run Receipts without project authority.
 status: stable
 tags: [system, component]
 codewiki_component: runtime
-codewiki_source_patterns: ["src/runtime/**", "src/git/**", "src/utils/**"]
+codewiki_source_patterns: ["src/runtime/**"]
 codewiki_test_patterns: ["tests/runtime/**"]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/automate-safe-work.md
-    rationale: Runtime supplies authoritative coordination and guarded progression.
+    rationale: Runtime supplies isolated accountable execution for Project Server-issued Runs.
   - type: realizes
-    target: /product/stories/maintainer/account-for-drift.md
-    rationale: Runtime classifies every observed Candidate and Git state by positive provenance proof.
+    target: /product/stories/maintainer/enforce-project-standards.md
+    rationale: Runtime supplies isolated Code and Model Check execution without Result authority.
+  - type: realizes
+    target: /product/stories/check-author/author-composable-checks.md
+    rationale: Runtime supplies immutable input and sandbox boundaries for authored Code Checks.
+  - type: realizes
+    target: /product/stories/agent/retrieve-bounded-context.md
+    rationale: Runtime delivers exact lazy Stage Context and receipt-bound DSH compaction.
 ---
-# Project Runtime
+# Runtime
 
-Project Runtime is the sole authoritative semantic control plane for one governed project. It is an architectural sibling of CodeWiki Server inside the standalone CodeWiki Backend and exposes a narrow command, query, operation, and event gateway. Server authenticates connections and routes requests; Runtime owns project authorization and canonical meaning. The two may be co-located, but neither owns the other, and Runtime imports neither Server, Client, DSH, Cordis, nor delegated-harness implementations.
-
-Runtime owns exact project AuthZ, Actor and delegation binding, semantic idempotency, identity, admission, time, digests, freshness, expected-head compare-and-swap, provenance, canonical mutation, Stage Producer attempts, scheduling, Claims, Assignments, Runtime-owned Workbenches, Implementation Workers, Integration, persistence, synchronization, recovery, fixed lifecycle, and guarded effects. Runtime authorizes the accountable Actor, not Client kind, User Interface, repository access, job title, profile, model, Agent Runner, producer, delegate, or Worker ownership.
-
-CodeWiki governs transitions between project states while Git owns content-addressed artifact history. A commit, branch, pull request, author, trailer, note, or provider status may identify Evidence or part of an immutable stage subject; none is a lifecycle transition by itself. Runtime is event-driven: accepted intent, Candidate submission, Gate completion, authority confirmation, scheduled reconciliation, or observed repository divergence may wake work. It does not infer stages from commits or continuously mutate the repository merely because it runs in the background.
-
-Runtime invokes exactly four semantic Loops, named Stage Loops in current architecture: Decision, Planning, Implementation, and Review, under `src/loops/**`. Checks is a separate root domain under `src/checks/**`; it owns Check Pack loading, Code and Model Check coordination, completed Results, caching, fail-fast execution, and Gate Reports. Backend Execution owns Agent supervision, DSH Agent Runners, delegate adapters, and sandbox transports. Stage Loops own exact subjects, Candidate and attempt semantics, and feedback interpretation. Runtime freezes Stage Context from existing WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result owners before any Backend Agent Run, Delegated Agent Run, or External Agent Client submission. Checks never selects lifecycle transitions.
-
-Runtime applies one fixed lifecycle:
+Runtime is the Project Server-owned execution subsystem. It accepts immutable Run Requests, executes bounded Runs, controls Run Processes, and creates CodeWiki-authored Run Receipts. It owns no project meaning, Client authentication, project authorization, Stage Loop, Candidate admission, Check Result, Gate reduction, lifecycle transition, Workbench custody, or guarded effect.
 
 ```text
-Decision `approve` passed + authorized exact-Candidate confirmation → Planning
-Decision `reject | defer | withdraw` passed + authorized confirmation → typed terminal or deferred state
-Decision failed                      → Decision
-Planning passed                      → Implementation
-Planning failed                      → Planning
-Implementation passed                → Review
-Implementation failed                → Implementation
-Review passed                         → guarded delivery
-Review failed                         → Implementation
-Any Gate stopped                      → stop this automation attempt and preserve current state
+Project Server
+  -> Run Request
+  -> Runtime
+  -> Run Process
+  -> DSH Adapter
+  -> DSH Agent + AgentLoop + Agent Session
+  -> Runtime
+  -> Run Receipt
+  -> Project Server
 ```
 
-Decision's typed `approve | reject | defer | withdraw` disposition determines what Runtime may do after the Candidate passes its Gate. Gate pass means the exact Candidate meets present project Checks; it is not semantic acceptance. Runtime applies the disposition only after an authorized Actor confirms that exact passed Candidate and Gate digest against current WorkState. Editing any Candidate bytes requires a fresh Gate. Check files, Backend Plugins, Agent Runs, and model-authored workflows cannot alter lifecycle transitions or perform effects. Out-of-scope Review findings and post-Gate Outcome Diagnostics may enter Change Intake as secondary material without changing the primary lifecycle.
+Run Request and Run Receipt form the semantic boundary between Project Server and Runtime. The Run Process protocol is a narrower transport boundary internal to Runtime. DSH is an in-process library behind the CodeWiki DSH Adapter; it does not speak the Run Process protocol and receives no canonical project storage handle.
 
-A Gate Report is `passed`, `failed`, or `stopped`. Runtime records only completed pass/fail Check Results. Operational inability to produce a valid Result stops the Gate after bounded retries, creates no Check Result, and causes neither an infinite wait nor a process crash. A stage with zero Checks passes with a visible `no_checks_configured` warning. Zero configured Checks do not bypass identity, authority, isolation, provenance, freshness, synchronization, or effect guards.
+## Run lifecycle
 
-## Custody and accountability
+One Run Request binds exact role, stage, subject, custody, Runtime Build, Agent Session, Stage Context and static inputs, prompts, Pack Skills, admitted tools, model route, repository snapshot or Implementation Workbench, budgets, creation time, and deadline. Runtime validates and freezes the request before accepting it. Project Server remains responsible for deciding why the Run exists and what may follow it.
 
-Runtime recognizes controlled provenance only when the exact Candidate matches persisted custody appropriate to its stage; for repository-bearing work, the exact Candidate Manifest matches persisted custody and exact Workbench custody is proven. Backend-owned provenance adds a complete Backend Agent Run receipt and CodeWiki-controlled Execution Ledger. Backend-delegated provenance binds exact dispatch, delegate identity, explicit configuration policy, process lifecycle, Workbench, final output, resulting artifacts, and declared unknown child internals. External-client provenance binds only authenticated CodeWiki context, query, submission, confirmation, and Workbench operations. Candidate-supplied receipt or Gate claims are untrusted. Any observed tree without matching custody is external provenance regardless of branch, author, trailer, note, Client, delegate, Worker, or claimed producer.
+Runtime owns one logical Run lifecycle across its OS process lifecycle: acceptance, authenticated process binding, ordered events, cancellation, deadline enforcement, quiescence, process-exit proof, forced termination, raw-log reference, and final Run Receipt. A Run Process Manager handles shell-free spawn, private pipes, empty ambient environment, bounded frames, exit observation, and termination as internal plumbing rather than a separate product component.
 
-CodeWiki targets accountability closure, not total activity surveillance. For every accepted transition, Runtime can identify exact prior and proposed states, producer and custody class, judged subject, Checks and Evidence, accountable authority, applied effects, and resulting state. Backend Execution additionally retains exact model-visible inputs for Backend Agent Runs. Delegated or external execution is never represented as fully observed when its inner prompts, tools, local reads, models, or memory are unavailable.
+A Run Receipt is issued only by Runtime after validating the request binding, observed events, custody, logs, ledger, quiescence, and process exit. `completed` means the declared output and required execution facts are present. Missing raw log, Execution Ledger, quiescence, or process-exit proof forces `stopped`; Runtime never fabricates completion. Backend-delegated custody records visibility gaps honestly.
 
-External Git state is captured without changing accepted head, then either admitted against one exact accepted Change or normalized through Change Intake when intent or scope is missing. It receives no inherited execution proof and runs fresh stage Checks. Divergence pauses guarded effects; Runtime never silently adopts, overwrites, discards, or certifies it.
+Run failure cannot mutate accepted project state. Runtime returns a bounded stopped receipt or operational fact; Project Server decides whether to retry from canonical state, resume the exact Agent Session, or stop the Stage Loop attempt.
 
-Every Stage Producer attempt binds one exact subject, Stage Context snapshot, Skill set, producer route, budget, cancellation, custody class, and receipt. Decision, Planning, and Review producers receive immutable context and no Implementation Workbench authority. Runtime may claim independent ready Work Items up to `maxWorkers`, bind one exact Assignment among Work Item, Implementation Worker, and isolated Workbench, dispatch a Backend-owned or Backend-delegated run through neutral Execution Ports, recover or cancel the durable job, persist one immutable report, integrate compatible outputs deterministically, and run the Implementation and Review Gates over the exact integrated head. Implementation Workers cannot grant Claims, schedule canonical descendants, share mutable workspaces, write canonical state, create authoritative Results, or perform guarded effects.
+## Runtime Builds
 
-The supported operational package surface lives at `src/runtime/index.ts` and publishes as `@nunomoura/codewiki/runtime`. It explicitly exports bounded commands and queries from Runtime or their semantic domain owner; there is no parallel `src/api/**` package. Snapshot-bound status, resume, trace-queue, trigger, and runtime-board reductions and their query-facing contracts live directly under `src/runtime/queries/**`; no generic source-level View owner mediates those reads. The internal coordinator remains under `src/runtime/coordinator/**`; Runtime's public facade is not named Coordinator. Generic Runtime process startup requires injected neutral Execution Ports and never resolves concrete DSH, Cordis, Pi, Claude Code, or Codex values. Standalone `src/main.ts` composes the CodeWiki Backend; optional product Clients remain outside Runtime lifecycle ownership.
+A Runtime Build is the immutable content-addressed execution closure for DSH-backed Runs. Its manifest binds Run protocol, Node version, reviewed DSH source commit, executed DSH and Cordis package closures, Runtime Plugins, model and delegate adapters, and executable artifact bytes. Reviewed source provenance and executed package closure remain independent facts unless an upstream attestation proves equivalence.
+
+Qualification supplies exact suite and Evidence digests. Runtime stores qualified builds and artifact bytes in a private canonical registry. Expected-generation compare-and-swap selects one active build for new Runs. A Run Request permanently binds one build digest and protocol version. New activation never changes an existing Run; exact Agent Session resume requires the original retained build. Missing, altered, unqualified, protocol-incompatible, or Node-incompatible artifacts stop execution without fallback. Rollback changes only the active build for future Runs.
+
+There is no user-facing build selector, Pi fallback, or permanent multi-engine mode. The temporary Pi implementation remains migration evidence under `src/runtime/pi/**` until the DSH path proves semantic parity, then it is deleted.
+
+## DSH Adapter
+
+The CodeWiki-owned DSH Adapter lives inside each DSH-backed Run Process. It translates Run Request into exact DSH Agent construction and scoped setup, then translates DSH events and terminal output into Runtime-observed facts. DSH remains unmodified upstream package code.
+
+Runtime adopts DSH's standard AgentLoop for model request, streaming, tool call/result pairing, continuation, cancellation convergence, Agent Session events, compaction mechanics, provider transport, and delegated child-process plumbing. CodeWiki owns exact prompts, Skills, tools, Stage Context bindings, routes, secret references, budgets, compaction policy, observations, and receipt obligations.
+
+The production composition disables ambient profiles, user settings and patches, filesystem Skill discovery, workspace instructions, dynamic Cordis plugins, creation mode, DSH UI and Host API, product MCP client, and DSH workflow/goal/task drivers. DSH never selects a CodeWiki stage, retry, transition, Check Result, Gate outcome, or effect.
+
+Each Runtime Plugin contributes one first-party allowlisted capability through the DSH Adapter: tool, context binding, Skill provider, model/delegate adapter, observer, or compaction policy. Project files install no executable Runtime Plugins. Effective capability is the intersection of CodeWiki release ceiling, Project Server authorization, Run Request, and any narrower Skill declaration.
+
+## Run kinds and isolation
+
+A model-driven producer, Implementation Worker, Review producer, or Model Check receives a separate DSH Agent and Agent Session. A Stage Loop may issue several Runs across failed attempts, but no DSH AgentLoop owns the surrounding Stage Loop. Each Model Check uses a separate tool-free Agent Session with no producer Skill, tools, memory, query facade, or fallback.
+
+Code Checks use deterministic admitted sandboxes rather than DSH. A Run Sandbox term is reserved for enforced filesystem, network, process, environment, credential, and resource containment; an ordinary child process is called a Run Process and is not mislabeled as a security sandbox.
+
+Only an Implementation Run may receive a writable Workbench. Project Server owns the Workbench, Assignment, base and resulting tree, command policy, and Integration. Runtime receives only the bounded capability described by the Run Request. Decision, Planning, Review, and Model Check Runs receive no writable Workbench authority.
+
+Delegated Runs launch Claude Code, Codex, ACP, or another exact adapter. Runtime controls dispatch, admitted task and artifacts, process lifecycle, cancellation, and Workbench capability where applicable. The delegated harness owns unobserved inner prompts, settings, tools, models, and continuation; the Run Receipt declares those gaps. External Agent Clients do not execute through Runtime and retain ownership of their own pipelines.
+
+## Context, ledger, and compaction
+
+DSH-backed Runs receive one immutable Stage Context over exact WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result snapshots. Bounded direct and batch queries carry deterministic order, query and snapshot digests, source refs, coverage, unknowns, truncation, cursor, engine identity, and staleness. No live-tree, ambient filesystem, network, environment, credential, or unlogged context fallback exists.
+
+Every CodeWiki-controlled model-visible input, query, replacement, usage record, output, and cancellation fact enters the append-only Execution Ledger. Raw DSH Agent Session bytes remain versioned evidence, not canonical project state. Compaction changes model-visible surface only. Each checkpoint cites replaced ranges and retains exact history; CodeWiki policy rehydrates canonical stage and project facts while DSH performs event replacement mechanics. Opaque Python or V8 heap state is never canonical or recovery-critical.
+
+## Authority and API
+
+Runtime cannot write Change Trace, WorkState, Knowledge, Project Configuration, Gate state, Workbench custody, or protected refs. Runtime Plugins and Run Processes receive no such capability. Project Server alone validates Run Receipt against the exact producer attempt, Assignment, or Check invocation and decides Candidate admission or further action.
+
+Runtime public contracts live at `src/runtime/index.ts` and publish as `@nunomoura/codewiki/runtime`. Core domains import only neutral `src/runtime/contracts.ts`; concrete DSH, Pi, delegate, process, and sandbox implementations remain outer adapters. Runtime is the only unqualified CodeWiki architecture term named Runtime. Upstream names such as `DSH RuntimeContext` remain explicitly DSH-qualified implementation details.

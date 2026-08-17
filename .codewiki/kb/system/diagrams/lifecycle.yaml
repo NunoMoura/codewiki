@@ -1,11 +1,11 @@
 id: lifecycle
-purpose: Show one proposed transition moving from a Client into the standalone CodeWiki Backend through Server, four Runtime-orchestrated Stage Loops, exact Gates, Decision confirmation, Knowledge, and Change Trace.
+purpose: Show one proposed transition moving from a Client through one Project Server, four Stage Loops, Runtime Runs, exact Gates, Decision confirmation, Knowledge, and Change Trace.
 components:
   - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
-  - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
-  - { id: protocol, concept: /system/components/protocol.md, label: Client-Server Protocol, zone: core }
+  - { id: project-server, concept: /system/components/project-server.md, label: Project Server, zone: core }
+  - { id: protocol, concept: /system/components/protocol.md, label: Client-Project Server Protocol, zone: core }
+  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: execution }
   - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
-  - { id: runtime, concept: /system/components/runtime.md, label: Project Runtime, zone: core }
   - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
   - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
@@ -14,53 +14,106 @@ components:
   - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
 connections:
-  - id: clients-request-server
+  - id: clients-request-project-server
     from: clients
-    to: server
+    to: project-server
     type: invokes
-    label: submits bounded authenticated request
+    label: submits bounded request
     boundary: { type: trust, failure: Reject unauthenticated, malformed, expired, or oversized input. }
-  - { id: server-uses-protocol, from: server, to: protocol, type: invokes, label: validates one versioned contract }
-  - { id: server-invokes-runtime, from: server, to: runtime, type: invokes, label: routes authenticated request through Runtime gateway }
-  - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: normalizes proposed intent }
-  - { id: intake-returns-runtime, from: intake, to: runtime, type: returns, label: returns admitted proposed intent }
-  - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts selected exact revision }
-  - { id: decision-returns-runtime, from: decision, to: runtime, type: returns, label: returns immutable Decision Candidate }
-  - { id: runtime-runs-decision-gate, from: runtime, to: checks, type: invokes, label: runs Decision Check Packs }
-  - { id: checks-return-decision-gate, from: checks, to: runtime, type: returns, label: returns exact Decision Gate Report without accepting meaning }
-  - { id: runtime-offers-decision-confirmation, from: runtime, to: server, type: returns, label: offers exact passed Candidate for authorized confirmation }
-  - id: server-returns-decision-confirmation
-    from: server
+  - { id: project-server-uses-protocol, from: project-server, to: protocol, type: invokes, label: validates one versioned contract }
+  - { id: protocol-returns-project-server, from: protocol, to: project-server, type: returns, label: returns normalized Actor and Client request context }
+  - { id: project-server-invokes-intake, from: project-server, to: intake, type: invokes, label: normalizes proposed intent }
+  - { id: intake-returns-project-server, from: intake, to: project-server, type: returns, label: returns admitted proposed intent }
+  - { id: project-server-invokes-decision, from: project-server, to: decision, type: invokes, label: starts selected exact revision }
+  - id: decision-invokes-runtime
+    from: decision
+    to: runtime
+    type: invokes
+    label: requests one bounded Decision producer Run
+    boundary: { type: authority, failure: Stop Decision attempt when exact execution is unavailable. }
+  - id: runtime-returns-decision
+    from: runtime
+    to: decision
+    type: returns
+    label: returns producer output and Run Receipt
+    boundary: { type: authority, failure: Reject incomplete or mismatched receipt. }
+  - { id: decision-returns-project-server, from: decision, to: project-server, type: returns, label: returns immutable Decision Candidate }
+  - { id: project-server-runs-decision-gate, from: project-server, to: checks, type: invokes, label: runs Decision Check Packs }
+  - { id: checks-return-decision-gate, from: checks, to: project-server, type: returns, label: returns exact Decision Gate Report }
+  - id: project-server-offers-decision-confirmation
+    from: project-server
     to: clients
     type: returns
-    label: presents Candidate and Gate digests plus consequence
+    label: presents exact passed Candidate, Gate digest, and consequence
     boundary: { type: trust, failure: Hide confirmation when its exact binding is stale or unavailable. }
-  - id: runtime-writes-knowledge
-    from: runtime
+  - id: clients-return-decision-confirmation
+    from: clients
+    to: project-server
+    type: returns
+    label: returns authenticated exact-Candidate confirmation
+    boundary: { type: trust, failure: Reject changed, stale, unauthorized, or mismatched confirmation. }
+  - id: project-server-writes-knowledge
+    from: project-server
     to: knowledge
     type: writes
     label: accepts authorized confirmed desired state
-    boundary: { type: persistence, failure: Reject stale, changed, unauthorized, or unconfirmed Candidate and preserve prior accepted Knowledge. }
-  - id: knowledge-returns-runtime
+    boundary: { type: persistence, failure: Preserve prior accepted Knowledge on failed append. }
+  - id: knowledge-returns-project-server
     from: knowledge
-    to: runtime
+    to: project-server
     type: returns
     label: returns accepted confirmed Knowledge identity
     boundary: { type: persistence, failure: Stop progression when accepted Knowledge cannot be confirmed. }
-  - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts Planning for approved meaning }
-  - { id: planning-returns-runtime, from: planning, to: runtime, type: returns, label: returns immutable Planning Candidate }
-  - { id: runtime-runs-planning-gate, from: runtime, to: checks, type: invokes, label: runs Planning Check Packs }
-  - { id: checks-return-planning-gate, from: checks, to: runtime, type: returns, label: returns exact Planning Gate Report }
-  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts eligible realization or feedback revision }
-  - { id: implementation-returns-runtime, from: implementation, to: runtime, type: returns, label: returns integrated Implementation Candidate }
-  - { id: runtime-runs-implementation-gate, from: runtime, to: checks, type: invokes, label: runs Implementation Check Packs }
-  - { id: checks-return-implementation-gate, from: checks, to: runtime, type: returns, label: returns exact Implementation Gate Report }
-  - { id: runtime-invokes-review, from: runtime, to: review, type: invokes, label: starts Review for exact integrated head }
-  - { id: review-returns-runtime, from: review, to: runtime, type: returns, label: returns exact-head Review attempt }
-  - { id: runtime-runs-review-gate, from: runtime, to: checks, type: invokes, label: runs Review Check Packs }
-  - { id: checks-return-review-gate, from: checks, to: runtime, type: returns, label: returns exact Review Gate Report }
-  - id: runtime-writes-change-trace
+  - { id: project-server-invokes-planning, from: project-server, to: planning, type: invokes, label: starts Planning for approved meaning }
+  - id: planning-invokes-runtime
+    from: planning
+    to: runtime
+    type: invokes
+    label: requests one bounded Planning producer Run
+    boundary: { type: authority, failure: Stop Planning attempt when exact execution is unavailable. }
+  - id: runtime-returns-planning
     from: runtime
+    to: planning
+    type: returns
+    label: returns producer output and Run Receipt
+    boundary: { type: authority, failure: Reject incomplete or mismatched receipt. }
+  - { id: planning-returns-project-server, from: planning, to: project-server, type: returns, label: returns immutable Planning Candidate }
+  - { id: project-server-runs-planning-gate, from: project-server, to: checks, type: invokes, label: runs Planning Check Packs }
+  - { id: checks-return-planning-gate, from: checks, to: project-server, type: returns, label: returns exact Planning Gate Report }
+  - { id: project-server-invokes-implementation, from: project-server, to: implementation, type: invokes, label: starts eligible realization or feedback revision }
+  - id: implementation-invokes-runtime
+    from: implementation
+    to: runtime
+    type: invokes
+    label: requests one bounded Run per assigned Implementation Worker
+    boundary: { type: authority, failure: Stop affected Assignment without changing canonical state. }
+  - id: runtime-returns-implementation
+    from: runtime
+    to: implementation
+    type: returns
+    label: returns worker output and Run Receipt
+    boundary: { type: authority, failure: Reject output lacking exact Assignment and Workbench custody. }
+  - { id: implementation-returns-project-server, from: implementation, to: project-server, type: returns, label: returns integrated Implementation Candidate }
+  - { id: project-server-runs-implementation-gate, from: project-server, to: checks, type: invokes, label: runs Implementation Check Packs }
+  - { id: checks-return-implementation-gate, from: checks, to: project-server, type: returns, label: returns exact Implementation Gate Report }
+  - { id: project-server-invokes-review, from: project-server, to: review, type: invokes, label: starts Review for exact integrated head }
+  - id: review-invokes-runtime
+    from: review
+    to: runtime
+    type: invokes
+    label: requests one bounded Review producer Run
+    boundary: { type: authority, failure: Stop Review attempt when exact execution is unavailable. }
+  - id: runtime-returns-review
+    from: runtime
+    to: review
+    type: returns
+    label: returns Review output and Run Receipt
+    boundary: { type: authority, failure: Reject incomplete or mismatched receipt. }
+  - { id: review-returns-project-server, from: review, to: project-server, type: returns, label: returns exact-head Review Candidate }
+  - { id: project-server-runs-review-gate, from: project-server, to: checks, type: invokes, label: runs Review Check Packs }
+  - { id: checks-return-review-gate, from: checks, to: project-server, type: returns, label: returns exact Review Gate Report }
+  - id: project-server-writes-change-trace
+    from: project-server
     to: change-trace
     type: writes
     label: appends accepted operation and Gate outcome
@@ -68,15 +121,15 @@ connections:
 flows:
   - concept: /system/flows/change-lifecycle.md
     paths:
-      - connections: [clients-request-server, server-invokes-runtime, runtime-invokes-intake, intake-returns-runtime, runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-offers-decision-confirmation, server-returns-decision-confirmation, clients-request-server, server-invokes-runtime, runtime-writes-knowledge, knowledge-returns-runtime]
-      - connections: [implementation-returns-runtime, runtime-runs-implementation-gate, checks-return-implementation-gate, runtime-invokes-review, review-returns-runtime, runtime-runs-review-gate, checks-return-review-gate, runtime-writes-change-trace]
+      - connections: [clients-request-project-server, project-server-uses-protocol, protocol-returns-project-server, project-server-invokes-intake, intake-returns-project-server, project-server-invokes-decision, decision-invokes-runtime, runtime-returns-decision, decision-returns-project-server, project-server-runs-decision-gate, checks-return-decision-gate, project-server-offers-decision-confirmation, clients-return-decision-confirmation, project-server-writes-knowledge, knowledge-returns-project-server]
+      - connections: [implementation-returns-project-server, project-server-runs-implementation-gate, checks-return-implementation-gate, project-server-invokes-review, review-invokes-runtime, runtime-returns-review, review-returns-project-server, project-server-runs-review-gate, checks-return-review-gate, project-server-writes-change-trace]
   - concept: /system/flows/decision-to-planning.md
     paths:
-      - connections: [runtime-invokes-decision, decision-returns-runtime, runtime-runs-decision-gate, checks-return-decision-gate, runtime-offers-decision-confirmation, server-returns-decision-confirmation, clients-request-server, server-invokes-runtime, runtime-writes-knowledge, knowledge-returns-runtime, runtime-invokes-planning]
+      - connections: [project-server-invokes-decision, decision-invokes-runtime, runtime-returns-decision, decision-returns-project-server, project-server-runs-decision-gate, checks-return-decision-gate, project-server-offers-decision-confirmation, clients-return-decision-confirmation, project-server-writes-knowledge, knowledge-returns-project-server, project-server-invokes-planning]
   - concept: /system/flows/planning-to-implementation.md
     paths:
-      - connections: [runtime-invokes-planning, planning-returns-runtime, runtime-runs-planning-gate, checks-return-planning-gate, runtime-invokes-implementation]
+      - connections: [project-server-invokes-planning, planning-invokes-runtime, runtime-returns-planning, planning-returns-project-server, project-server-runs-planning-gate, checks-return-planning-gate, project-server-invokes-implementation]
   - concept: /system/flows/implementation-to-review.md
     paths:
-      - connections: [runtime-invokes-implementation, implementation-returns-runtime, runtime-runs-implementation-gate, checks-return-implementation-gate, runtime-invokes-review, review-returns-runtime, runtime-runs-review-gate, checks-return-review-gate]
-      - connections: [checks-return-review-gate, runtime-invokes-implementation]
+      - connections: [project-server-invokes-implementation, implementation-invokes-runtime, runtime-returns-implementation, implementation-returns-project-server, project-server-runs-implementation-gate, checks-return-implementation-gate, project-server-invokes-review, review-invokes-runtime, runtime-returns-review, review-returns-project-server, project-server-runs-review-gate, checks-return-review-gate]
+      - connections: [checks-return-review-gate, project-server-invokes-implementation]

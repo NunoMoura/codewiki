@@ -14,14 +14,14 @@ const criterionEvidence = {
 			"src/loops/decision/change-quality.ts",
 			"src/changes/command.ts",
 			"src/loops/decision/command.ts",
-			"src/runtime/workers/execution-policy.ts",
+			"src/project-server/workers/execution-policy.ts",
 		],
 		tests: [
 			"tests/changes/change-domain.test.mjs",
 			"tests/changes/trace/change-trace-store.test.mjs",
 			"tests/work-state/work-state.test.mjs",
 			"tests/loops/decision/command.test.mjs",
-			"tests/runtime/execution-policy.test.mjs",
+			"tests/project-server/execution-policy.test.mjs",
 		],
 	},
 	"WU-change-validation-cards-v1": {
@@ -38,23 +38,23 @@ const criterionEvidence = {
 	"WU-changes-backlog-dashboard-v1": {
 		criteria: ["backlog-view", "guarded-mutations", "authority-ceiling"],
 		source: [
-			"src/runtime/queries/changes.ts",
-			"src/server/app/server.ts",
+			"src/project-server/queries/changes.ts",
+			"src/project-server/app/server.ts",
 		],
 		tests: [
-			"tests/runtime/queries/changes.test.mjs",
+			"tests/project-server/queries/changes.test.mjs",
 			"tests/clients/app/shell.test.mjs",
 		],
 	},
 	"WU-dashboard-execution-configuration-v1": {
 		criteria: ["config-projection", "safe-patch", "authority-invariants"],
 		source: [
-			"src/runtime/queries/configuration.ts",
+			"src/project-server/queries/configuration.ts",
 			"src/project/config-file.ts",
 		],
 		tests: [
-			"tests/runtime/queries/configuration.test.mjs",
-			"tests/runtime/wiki-config.test.mjs",
+			"tests/project-server/queries/configuration.test.mjs",
+			"tests/project-server/wiki-config.test.mjs",
 		],
 	},
 	"WU-change-intake-contract-v1": {
@@ -76,10 +76,10 @@ const criterionEvidence = {
 			"src/changes/intake/producers.ts",
 			"src/changes/intake/deduplicate.ts",
 			"src/changes/intake/route.ts",
-			"src/runtime/admission/change.ts",
-			"src/runtime/workers/implementation-adapter.ts",
-			"src/runtime/workers/reports.ts",
-			"src/execution/pi/process-worker-adapter.ts",
+			"src/project-server/admission/change.ts",
+			"src/project-server/workers/implementation-adapter.ts",
+			"src/project-server/workers/reports.ts",
+			"src/runtime/pi/process-worker-adapter.ts",
 			"src/changes/triage/contracts.ts",
 			"src/changes/triage/estimates.ts",
 			"src/changes/triage/ordering.ts",
@@ -88,27 +88,27 @@ const criterionEvidence = {
 		],
 		tests: [
 			"tests/changes/change-intake.test.mjs",
-			"tests/runtime/admission/change.test.mjs",
+			"tests/project-server/admission/change.test.mjs",
 			"tests/changes/change-intake-producers.test.mjs",
 			"tests/changes/defect-profile.test.mjs",
 			"tests/changes/backlog-triage.test.mjs",
-			"tests/execution/pi/process-worker-adapter.test.mjs",
+			"tests/runtime/pi/process-worker-adapter.test.mjs",
 		],
 	},
 	"WU-worker-execution-policy-integration-v1": {
 		criteria: ["policy-dispatch", "explicit-propagation", "fail-closed"],
 		source: [
-			"src/runtime/workers/dispatch.ts",
-			"src/runtime/workers/prompt.ts",
-			"src/runtime/workers/execution-policy.ts",
-			"src/execution/pi/process-session.ts",
-			"src/runtime/workers/observation.ts",
+			"src/project-server/workers/dispatch.ts",
+			"src/project-server/workers/prompt.ts",
+			"src/project-server/workers/execution-policy.ts",
+			"src/runtime/pi/process-session.ts",
+			"src/project-server/workers/observation.ts",
 		],
 		tests: [
-			"tests/runtime/workers/dispatch.test.mjs",
-			"tests/runtime/workers/prompt.test.mjs",
-			"tests/execution/pi/process-session.test.mjs",
-			"tests/runtime/worker-observation.test.mjs",
+			"tests/project-server/workers/dispatch.test.mjs",
+			"tests/project-server/workers/prompt.test.mjs",
+			"tests/runtime/pi/process-session.test.mjs",
+			"tests/project-server/worker-observation.test.mjs",
 		],
 	},
 	"WU-control-center-integration-proof-v1": {
@@ -121,8 +121,8 @@ const criterionEvidence = {
 		],
 		tests: [
 			"tests/integration/control-center-reconciliation.test.mjs",
-			"tests/runtime/readiness-checklist.test.mjs",
-			"tests/runtime/package-install-smoke.mjs",
+			"tests/project-server/readiness-checklist.test.mjs",
+			"tests/project-server/package-install-smoke.mjs",
 		],
 	},
 };
@@ -174,11 +174,11 @@ describe("control-center reconciliation integration", () => {
 			".codewiki/kb/system/components/protocol.md",
 			"utf8",
 		);
-		const runtime = readFileSync(
-			".codewiki/kb/system/components/runtime.md",
+		const projectServer = readFileSync(
+			".codewiki/kb/system/components/project-server.md",
 			"utf8",
 		);
-		assert.match(readme, /## Work and project control plane/);
+		assert.match(readme, /## Primary product boundary/);
 		assert.match(readme, /persisted pending Change revisions/);
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 		assert.match(decision, /one authenticated exact Change revision/i);
@@ -188,11 +188,11 @@ describe("control-center reconciliation integration", () => {
 		);
 		assert.match(protocol, /delegates semantics and authority to owners/i);
 		assert.match(protocol, /Payloads cannot supply identity, authentication, delegation, authority/i);
-		assert.match(runtime, /authoritative semantic control plane/i);
-		assert.match(runtime, /Candidate Manifest matches persisted custody/i);
+		assert.match(projectServer, /authoritative semantic control plane/i);
+		assert.match(projectServer, /Controlled provenance requires exact persisted custody/i);
 		assert.match(
-			runtime,
-			/exactly four semantic Loops.*Decision, Planning, Implementation, and Review/i,
+			projectServer,
+			/exactly four Stage Loops.*Decision, Planning, Implementation, and Review/i,
 		);
 	});
 
@@ -202,6 +202,7 @@ describe("control-center reconciliation integration", () => {
 			"README.md",
 			".codewiki/kb/system/components/decision.md",
 			".codewiki/kb/system/components/protocol.md",
+			".codewiki/kb/system/components/project-server.md",
 			".codewiki/kb/system/components/runtime.md",
 		];
 		const activeText = activeFiles

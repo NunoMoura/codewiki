@@ -25,7 +25,7 @@ describe("CodeWiki native Knowledge profile", () => {
 			),
 			document(
 				"system/components/runtime.md",
-				"type: System Component\nstatus: stable\ncodewiki_source_patterns: [src/runtime/**]",
+				"type: System Component\nstatus: stable\ncodewiki_source_patterns: [src/project-server/**]",
 			),
 			document("system/flows/change-lifecycle.md", "type: System Flow\nstatus: stable"),
 		];
@@ -61,7 +61,7 @@ describe("CodeWiki native Knowledge profile", () => {
 		const issues = validateCodeWikiKbDocument(
 			document(
 				"system/flows/change-lifecycle.md",
-				"type: System Flow\nstatus: stable\ncodewiki_source_patterns: [src/runtime/**]",
+				"type: System Flow\nstatus: stable\ncodewiki_source_patterns: [src/project-server/**]",
 			),
 		);
 

@@ -1,50 +1,50 @@
 id: synchronization
-purpose: Show provider-neutral Git synchronization with expected-head compare-and-swap, accepted Change history, and post-mutation alignment verification.
+purpose: Show Project Server-owned provider-neutral Git synchronization with expected-head compare-and-swap, accepted Change history, and post-mutation alignment verification.
 components:
-  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: core }
+  - { id: project-server, concept: /system/components/project-server.md, label: Project Server, zone: core }
   - { id: project, concept: /system/components/project.md, label: Project Configuration, zone: repository }
   - { id: provider, concept: /system/components/provider-boundary.md, label: Trusted Git Host Boundary, zone: provider }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
   - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
 connections:
-  - id: runtime-reads-project
-    from: runtime
+  - id: project-server-reads-project
+    from: project-server
     to: project
     type: reads
     label: binds configured repository and expected head
     boundary: { type: persistence, failure: Block synchronization when configuration cannot be verified. }
-  - id: project-returns-runtime
+  - id: project-returns-project-server
     from: project
-    to: runtime
+    to: project-server
     type: returns
     label: returns verified repository binding and expected head
     boundary: { type: persistence, failure: Block synchronization when configuration identity drifts. }
-  - id: runtime-synchronizes-provider
-    from: runtime
+  - id: project-server-synchronizes-provider
+    from: project-server
     to: provider
     type: synchronizes
     label: fetches or pushes exact refs
     boundary: { type: network, failure: Preserve local state and report unavailable remote acceptance. }
-  - id: provider-returns-runtime
+  - id: provider-returns-project-server
     from: provider
-    to: runtime
+    to: project-server
     type: returns
     label: returns authenticated exact ref state
     boundary: { type: network, failure: Reject unauthenticated, stale, or contradictory provider state. }
-  - id: runtime-writes-change-trace
-    from: runtime
+  - id: project-server-writes-change-trace
+    from: project-server
     to: change-trace
     type: writes
     label: accepts verified canonical history
-    boundary: { type: persistence, failure: Preserve the previous canonical head when append validation or compare-and-swap fails. }
+    boundary: { type: persistence, failure: Preserve previous canonical head when append validation or compare-and-swap fails. }
   - id: change-trace-produces-alignment
     from: change-trace
     to: alignment
     type: produces
     label: projects accepted identities and provenance
     boundary: { type: persistence, failure: Block projection when canonical history cannot be reduced. }
-  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: confirms synchronized identities }
+  - { id: alignment-returns-project-server, from: alignment, to: project-server, type: returns, label: confirms synchronized identities }
 flows:
   - concept: /system/flows/remote-state-synchronization.md
     paths:
-      - connections: [runtime-reads-project, project-returns-runtime, runtime-synchronizes-provider, provider-returns-runtime, runtime-writes-change-trace, change-trace-produces-alignment, alignment-returns-runtime]
+      - connections: [project-server-reads-project, project-returns-project-server, project-server-synchronizes-provider, provider-returns-project-server, project-server-writes-change-trace, change-trace-produces-alignment, alignment-returns-project-server]

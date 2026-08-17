@@ -68,7 +68,7 @@ tags: [product, design]
 
 ## Overview
 
-CodeWiki should feel calm, exact, and inspectable. It is the standalone software-evolution Backend behind a project, not a skin around one Agent product. It helps people understand project state and authority without disguising uncertainty as confidence. Warm paper surfaces, deep ink, restrained forest actions, and compact technical metadata make durable work feel deliberate rather than theatrical.
+CodeWiki should feel calm, exact, and inspectable. It is the standalone software-evolution CodeWiki behind a project, not a skin around one Agent product. It helps people understand project state and authority without disguising uncertainty as confidence. Warm paper surfaces, deep ink, restrained forest actions, and compact technical metadata make durable work feel deliberate rather than theatrical.
 
 Git artifact history, CodeWiki semantic state, and Agent execution evidence remain visibly distinct. Visual design presents bounded project facts. It never invents lifecycle state, confidence, completion, activity, approval, custody, or causality. System components own those facts; this document owns how visible facts are arranged and distinguished.
 
@@ -110,11 +110,11 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Stage workspace** organizes Decision, Planning, Implementation, and Review as fixed derived views. Each view shows exact subject, current WorkState, producer route and custody, context snapshot, Pack Skills, Checks, attempts, Gate feedback, pending authority, and permitted fixed transition. It never exposes a configurable workflow graph or second activation manifest.
 
-**Backend status** distinguishes CodeWiki Server, Project Runtime, Agent Run Supervisor, Agent Runner, Check Runner, and Workbench health. It shows exact DSH and first-party Backend Plugin closure, upgrade qualification, active Run identities, cancellation, and recovery without presenting Runner availability as project acceptance.
+**CodeWiki status** distinguishes Project Server, Runtime, Run Process, Check Run Process, and Workbench health. It shows exact DSH and first-party Runtime Plugin closure, upgrade qualification, active Run identities, cancellation, and recovery without presenting Run Process availability as project acceptance.
 
 **State and Evidence rows** show status, authority basis, timestamp, exact identity, and missing or stale conditions. They link to inspectable detail rather than flattening complex Results into one score.
 
-**Execution custody** distinguishes Backend Agent Runs, Delegated Agent Runs, and External Agent Client activity. Backend-owned views may show complete DSH version, prompt, Skill, tool, model-route, context, query, budget, compaction, raw-session, usage, output, and isolation receipts. Delegated views show exact task, adapter, configuration policy, process lifecycle, Workbench base and result, final output, and declared unknown child internals. External-client views show only authenticated CodeWiki calls and admitted artifacts. No partial receipt appears as complete custody.
+**Execution custody** distinguishes Runs, Delegated Runs, and External Agent Client activity. Backend-owned views may show complete DSH version, prompt, Skill, tool, model-route, context, query, budget, compaction, raw-session, usage, output, and isolation receipts. Delegated views show exact task, adapter, configuration policy, process lifecycle, Workbench base and result, final output, and declared unknown child internals. External-client views show only authenticated CodeWiki calls and admitted artifacts. No partial receipt appears as complete custody.
 
 **Context and history inspection** starts from compact stage context, then exposes bounded source-linked queries, coverage, unknowns, truncation, staleness, and retained exact model-visible ledger ranges. Compaction summaries remain visibly non-authoritative projections. Optional programmatic query runs show exact snapshot, code digest, limits, canonical JSON output, and receipt without presenting an opaque persistent heap.
 
@@ -126,7 +126,7 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Model Check editing** uses one deterministic form for requirement, pass, fail, feedback, bounded inputs, binary or quantitative measurement, threshold, model profile, and budget. Saving writes the documented `check.json` and `CHECK.md` files. CodeWiki never invokes a model to author or alter them.
 
-**Pack Skill editing** presents standard Skill name, description, `SKILL.md`, scripts, references, assets, other bounded resources, and declared tool guidance. It shows effective stage composition in stable Pack order, exact content digest, Backend Agent and delegate-route compatibility, and capabilities unavailable under current producer or Implementation Worker policy. Saving changes project files only after an explicit authenticated action; Skill scripts never run in the browser or during package installation.
+**Pack Skill editing** presents standard Skill name, description, `SKILL.md`, scripts, references, assets, other bounded resources, and declared tool guidance. It shows effective stage composition in stable Pack order, exact content digest, DSH-backed Run and delegate-route compatibility, and capabilities unavailable under current producer or Implementation Worker policy. Saving changes project files only after an explicit authenticated action; Skill scripts never run in the browser or during package installation.
 
 **Code Check editing** uses the same common fields and accepts one self-contained `CHECK.mjs` upload. Syntax, schema, bounds, and sandbox preview errors remain visible before save; browser code never runs directly.
 
@@ -134,7 +134,7 @@ Use a small, consistent outline icon set for navigation, status support, disclos
 
 **Developer Check mode** exposes the same tracked `check.json`, `CHECK.md`, and `CHECK.mjs` files used by regular forms, plus schemas, exact input coverage, horizontal and vertical OKF/repository/Alignment query facts, bundle provenance, sandbox diagnostics, content digests, cache identity, preview runs, fixture results, and historical replay. It distinguishes reusable Probes and composed Checks from the single registered top-level Result boundary and grants visibility rather than additional authority.
 
-**Check Pack marketplace** follows npm package-gallery ergonomics while also accepting exact Git and local package sources. Search and inspection identify source, publisher where applicable, resolved version or revision, stages, optional Pack Skills, Code and Model Checks, requested inputs, integrity, separate Skill and Check digests, and local modifications. Backend Plugins, DSH or Cordis plugins, product prompts, themes, settings, and lifecycle hooks are not Pack resources. Installation, update, and removal are explicit User actions; update never hides a local diff.
+**Check Pack marketplace** follows npm package-gallery ergonomics while also accepting exact Git and local package sources. Search and inspection identify source, publisher where applicable, resolved version or revision, stages, optional Pack Skills, Code and Model Checks, requested inputs, integrity, separate Skill and Check digests, and local modifications. Runtime Plugins, DSH or Cordis plugins, product prompts, themes, settings, and lifecycle hooks are not Pack resources. Installation, update, and removal are explicit User actions; update never hides a local diff.
 
 **Responsive behavior** preserves hierarchy and available actions across pointer, keyboard, touch, and assistive technology. Reduced-motion preference removes nonessential transition and animation.
 

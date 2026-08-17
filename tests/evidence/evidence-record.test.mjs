@@ -384,7 +384,7 @@ describe("Evidence Record foundation", () => {
 					},
 					runtimeFor("source_observation"),
 				),
-			/Evidence material cannot supply runtime-owned fields: evidenceId, subject, producer, authority, freshnessBoundary, sensitivity\./,
+			/Evidence material cannot supply Project Server-owned fields: evidenceId, subject, producer, authority, freshnessBoundary, sensitivity\./,
 		);
 		assert.throws(
 			() =>

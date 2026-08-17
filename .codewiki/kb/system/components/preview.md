@@ -6,7 +6,7 @@ status: stable
 tags: [system, component]
 codewiki_component: preview
 codewiki_source_patterns: ["src/preview/**"]
-codewiki_test_patterns: ["tests/runtime/preview-*.test.mjs"]
+codewiki_test_patterns: ["tests/project-server/preview-*.test.mjs"]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/enforce-project-standards.md

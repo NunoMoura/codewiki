@@ -26,7 +26,7 @@ function content(overrides = {}) {
 		summary: "Bounded source finding",
 		observedBehavior: "Observed behavior differs from accepted intent.",
 		desiredBehavior: "Behavior matches accepted intent.",
-		affectedRefs: ["src/runtime/example.ts"],
+		affectedRefs: ["src/project-server/example.ts"],
 		sourceRefs: ["trace:intake-producer:source:1"],
 		claimedCategory: "behavior",
 		claimedSeverity: "medium",

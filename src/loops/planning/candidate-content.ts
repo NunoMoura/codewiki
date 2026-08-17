@@ -104,16 +104,16 @@ export function parsePlanningCandidateContent(
 		RUNTIME_FIELDS,
 	);
 	if (!Array.isArray(candidate.sprints)) {
-		throw new Error("Runtime planning candidate sprints must be an array.");
+		throw new Error("Project Server planning candidate sprints must be an array.");
 	}
 	if (!Array.isArray(candidate.workItems)) {
-		throw new Error("Runtime planning candidate workItems must be an array.");
+		throw new Error("Project Server planning candidate workItems must be an array.");
 	}
 	requiredCandidateText(candidate.rationale, "planning", "rationale");
 	assertCandidateSchema(
 		planningCandidateContentSchema,
 		candidate,
-		"Runtime planning candidate",
+		"Project Server planning candidate",
 	);
 	return candidate as PlanningCandidateContent;
 }

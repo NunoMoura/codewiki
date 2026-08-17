@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 import { describe, it } from "node:test";
 import { runCodewikiCli } from "../../../src/clients/cli/index.ts";
 import { planningQualityStandards } from "../../helpers/canonical-loop-events.mjs";
-import { seedRuntimeImplementation } from "../../helpers/runtime-implementation.mjs";
+import { seedProjectServerImplementation } from "../../helpers/project-server-implementation.mjs";
 import { createTraceHead, formatTraceText } from "../../../src/changes/trace/writer.ts";
 
 const cliPath = resolve("src/clients/cli/index.ts");
@@ -206,7 +206,7 @@ describe("CLI adapter", () => {
 	it("runs write facade commands from JSON input", async () => {
 		const root = await fixture();
 		try {
-			const implementation = await seedRuntimeImplementation(root, {
+			const implementation = await seedProjectServerImplementation(root, {
 				suffix: "cli-command",
 				workItemId: "WU-cli-command",
 			});

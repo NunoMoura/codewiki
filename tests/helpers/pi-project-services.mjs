@@ -1,13 +1,13 @@
-import { RuntimeReactor } from "../../src/runtime/coordinator/reactor.ts";
+import { ProjectServerReactor } from "../../src/project-server/coordinator/reactor.ts";
 import {
 	closeCodewikiAppServer,
 	closeInProcessCodewikiAppServer,
 	startCodewikiAppServer,
-} from "../../src/server/app/server.ts";
+} from "../../src/project-server/app/server.ts";
 import {
 	closePiPreviewRuntime,
 	piPreviewControl,
-} from "../../src/clients/pi/preview-runtime.ts";
+} from "../../src/clients/pi/preview-project-server.ts";
 
 export function testPiDashboardService(projectServices) {
 	return {
@@ -17,7 +17,7 @@ export function testPiDashboardService(projectServices) {
 				inProcess: true,
 				persistent: false,
 				previewControl: piPreviewControl(input.repoRoot),
-				connectProjectRuntime: false,
+				connectProjectServer: false,
 			});
 		},
 		async stop(repoRoot) {
@@ -38,7 +38,7 @@ export function testPiProjectServices() {
 	const reactorFor = (root) => {
 		const current = reactors.get(root);
 		if (current) return current;
-		const reactor = new RuntimeReactor(root);
+		const reactor = new ProjectServerReactor(root);
 		reactors.set(root, reactor);
 		return reactor;
 	};

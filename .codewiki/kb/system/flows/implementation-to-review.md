@@ -14,8 +14,8 @@ codewiki_relationships:
 ---
 # Implementation to Review
 
-Runtime integrates fresh compatible Implementation output and runs the Implementation Gate. A passed Gate advances the exact integrated revision to Review. When configured, Runtime creates or updates one integrated pull request for the Change and correlates provider Checks, authenticated reviews, and other admitted Evidence to that exact head.
+Project Server integrates fresh compatible Implementation output and runs the Implementation Gate. A passed Gate advances the exact integrated revision to Review. When configured, Project Server creates or updates one integrated pull request for the Change and correlates provider Checks, authenticated reviews, and other admitted Evidence to that exact head.
 
 Review runs the project files under `.codewiki/check-packs/review/**`. Automated Code and Model Checks are sufficient when project policy permits a fully automated cycle; human Review Evidence is optional unless the user adds a Check that requires it. The Review Gate passes only when every present Review Check passes. No Review Checks produces a visible non-blocking warning and a passing Gate.
 
-A failed Review Gate returns atomic feedback to Implementation. A new integrated head invalidates prior Review Results and starts a fresh attempt. A stopped Gate leaves canonical state unchanged and exposes its bounded recovery action. A passed Gate permits Runtime to perform only separately authorized, fresh, expected-head-safe delivery effects. Out-of-scope discoveries enter Change Intake as secondary material rather than changing the fixed Review-to-Implementation lifecycle.
+A failed Review Gate returns atomic feedback to Implementation. A new integrated head invalidates prior Review Results and starts a fresh attempt. A stopped Gate leaves canonical state unchanged and exposes its bounded recovery action. A passed Gate permits Project Server to perform only separately authorized, fresh, expected-head-safe delivery effects. Out-of-scope discoveries enter Change Intake as secondary material rather than changing the fixed Review-to-Implementation lifecycle.

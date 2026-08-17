@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { validateSystemDiagrams } from "../../src/knowledge/system-diagrams.ts";
 
 const components = [
-	"/system/components/runtime.md",
+	"/system/components/project-server.md",
 	"/system/components/checks.md",
 	"/system/components/change-trace.md",
 ];
@@ -15,9 +15,9 @@ function validDiagram() {
 		purpose: "Show the authoritative Checks and persistence path.",
 		components: [
 			{
-				id: "runtime",
-				concept: "/system/components/runtime.md",
-				label: "Runtime",
+				id: "project-server",
+				concept: "/system/components/project-server.md",
+				label: "Project Server",
 				zone: "core",
 			},
 			{
@@ -35,22 +35,22 @@ function validDiagram() {
 		],
 		connections: [
 			{
-				id: "runtime-invokes-checks",
-				from: "runtime",
+				id: "project-server-invokes-checks",
+				from: "project-server",
 				to: "checks",
 				type: "invokes",
 				label: "runs Gate",
 			},
 			{
-				id: "checks-return-runtime",
+				id: "checks-return-project-server",
 				from: "checks",
-				to: "runtime",
+				to: "project-server",
 				type: "returns",
 				label: "returns Gate Report",
 			},
 			{
-				id: "runtime-writes-trace",
-				from: "runtime",
+				id: "project-server-writes-trace",
+				from: "project-server",
 				to: "trace",
 				type: "writes",
 				label: "accepts operations",
@@ -66,9 +66,9 @@ function validDiagram() {
 				paths: [
 					{
 						connections: [
-							"runtime-invokes-checks",
-							"checks-return-runtime",
-							"runtime-writes-trace",
+							"project-server-invokes-checks",
+							"checks-return-project-server",
+							"project-server-writes-trace",
 						],
 					},
 				],
@@ -109,8 +109,8 @@ describe("System diagram contract", () => {
 	it("requires a contiguous path of at least two declared connections", () => {
 		const diagram = validDiagram();
 		diagram.flows[0].paths = [
-			{ connections: ["runtime-invokes-checks"] },
-			{ connections: ["runtime-writes-trace", "checks-return-runtime"] },
+			{ connections: ["project-server-invokes-checks"] },
+			{ connections: ["project-server-writes-trace", "checks-return-project-server"] },
 		];
 		const issues = validateSystemDiagrams({
 			diagrams: [diagram],

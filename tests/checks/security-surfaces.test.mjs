@@ -73,7 +73,7 @@ test("security-surface classifier records unresolved generic security signals wi
 test("security-surface classifier does not treat ordinary source-file refs as filesystem authority", () => {
 	const classification = classifySecuritySurfaces(
 		classifierInput({
-			targetRefs: ["src/runtime/service.ts"],
+			targetRefs: ["src/project-server/service.ts"],
 			signals: [
 				{ref: "revision.intent.0", value: "Simplify service naming and documentation."},
 			],

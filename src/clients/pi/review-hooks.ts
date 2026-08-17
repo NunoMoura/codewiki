@@ -9,7 +9,7 @@ import {
 	type ImplementationEvidenceReport,
 	type LanguageReviewPackSkipSummary,
 	type ReviewEvidenceCache,
-} from "../../execution/review/index.ts";
+} from "../../runtime/review/index.ts";
 import { loadWikiConfigFile } from "../../project/config-file.ts";
 import type {
 	CodewikiCustomMessage,

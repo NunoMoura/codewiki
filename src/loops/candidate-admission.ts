@@ -16,12 +16,12 @@ export function assertCandidateContentKeys(
 	loop: SemanticLoop,
 	candidate: Record<string, unknown>,
 	allowedKeys: readonly string[],
-	runtimeKeys: readonly string[],
+	projectServerKeys: readonly string[],
 ): void {
-	const claimed = runtimeKeys.filter((key) => key in candidate);
+	const claimed = projectServerKeys.filter((key) => key in candidate);
 	if (claimed.length > 0) {
 		throw new Error(
-			`Runtime ${loop} candidate cannot supply runtime-owned fields: ${claimed.join(", ")}.`,
+			`Project Server ${loop} candidate cannot supply Project Server-owned fields: ${claimed.join(", ")}.`,
 		);
 	}
 	const unsupported = Object.keys(candidate).filter(
@@ -29,7 +29,7 @@ export function assertCandidateContentKeys(
 	);
 	if (unsupported.length > 0) {
 		throw new Error(
-			`Runtime ${loop} candidate received unsupported fields: ${unsupported.join(", ")}.`,
+			`Project Server ${loop} candidate received unsupported fields: ${unsupported.join(", ")}.`,
 		);
 	}
 }

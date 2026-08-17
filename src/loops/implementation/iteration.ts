@@ -41,7 +41,7 @@ import {
 	mergeImplementationEvidenceReports,
 	type ImplementationEvidenceReportInput,
 	type ReviewEvidenceCacheReader,
-} from "../../execution/review/index.ts";
+} from "../../runtime/review/index.ts";
 import type {
 	AcceptanceRequirement,
 	ImplementationArchiveDisposition,

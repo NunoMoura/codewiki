@@ -4,9 +4,9 @@ import { runDecisionIteration } from "../../helpers/canonical-loop-events.mjs";
 import { canonicalChangeInput } from "../../helpers/canonical-loop-events.mjs";
 import { runImplementationIteration } from "../../../src/loops/implementation/iteration.ts";
 import {
-	createRuntimeClaimEvent,
-	createRuntimeClaimReleaseEvent,
-} from "../../../src/runtime/claims/events.ts";
+	createProjectServerClaimEvent,
+	createProjectServerClaimReleaseEvent,
+} from "../../../src/project-server/claims/events.ts";
 import {
 	contentProofRefs,
 	normalizeImplementationChanges,
@@ -89,7 +89,7 @@ function planningWorkEvent(events, workUnitId = "WU-001") {
 }
 
 function runtimeClaimEvent(planningEvent, overrides = {}) {
-	return createRuntimeClaimEvent({
+	return createProjectServerClaimEvent({
 		traceId: planningEvent.traceId,
 		id: `${planningEvent.traceId}:runtime:claim:${overrides.claimId || "claim-WU-001"}`,
 		parentId: planningEvent.id,
@@ -1097,7 +1097,7 @@ describe("implementation iteration runner", () => {
 			claimId: "claim-released",
 			workerId: "worker-released",
 		});
-		const release = createRuntimeClaimReleaseEvent({
+		const release = createProjectServerClaimReleaseEvent({
 			traceId: planningEvent.traceId,
 			id: "TRACE-implementation:runtime:release:claim-released",
 			parentId: claim.id,

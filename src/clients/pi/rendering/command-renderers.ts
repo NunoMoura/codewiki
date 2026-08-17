@@ -5,7 +5,7 @@ import type { CodewikiExtensionIdentity } from "../identity.ts";
 import type { ProjectExplainView } from "../../../project/explain.ts";
 import type { WikiConfigFileResult } from "../../../project/config-file.ts";
 import type { RunWikiConfigResult } from "../../../project/config.ts";
-import type {ResumeView} from "../../../runtime/queries/projection-types.ts";
+import type {ResumeView} from "../../../project-server/queries/projection-types.ts";
 
 export interface CommandRenderOptions {
 	width?: number;

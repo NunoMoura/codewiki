@@ -1,11 +1,11 @@
 id: architecture
-purpose: Show every System Component inside the standalone CodeWiki Backend or across its Client, repository, execution, and provider boundaries; detailed behavior belongs to named lifecycle and execution diagrams.
+purpose: Show every System Component inside CodeWiki or across its Client, Runtime, repository, and provider boundaries; detailed behavior belongs to named lifecycle and Runtime diagrams.
 components:
   - { id: clients, concept: /system/components/clients.md, label: Clients, zone: client }
-  - { id: server, concept: /system/components/server.md, label: CodeWiki Server, zone: core }
-  - { id: protocol, concept: /system/components/protocol.md, label: Client-Server Protocol, zone: core }
+  - { id: project-server, concept: /system/components/project-server.md, label: Project Server, zone: core }
+  - { id: protocol, concept: /system/components/protocol.md, label: Client-Project Server Protocol, zone: core }
   - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
-  - { id: runtime, concept: /system/components/runtime.md, label: Project Runtime, zone: core }
+  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: execution }
   - { id: decision, concept: /system/components/decision.md, label: Decision, zone: core }
   - { id: planning, concept: /system/components/planning.md, label: Planning, zone: core }
   - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
@@ -14,30 +14,37 @@ components:
   - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
   - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
   - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
-  - { id: execution, concept: /system/components/execution.md, label: Backend Execution, zone: execution }
   - { id: preview, concept: /system/components/preview.md, label: Preview, zone: execution }
   - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
   - { id: project, concept: /system/components/project.md, label: Project Configuration, zone: repository }
-  - { id: package, concept: /system/components/package.md, label: CodeWiki Backend Package, zone: repository }
+  - { id: package, concept: /system/components/package.md, label: CodeWiki Package, zone: repository }
   - { id: benchmarks, concept: /system/components/benchmarks.md, label: Benchmarks, zone: repository }
   - { id: provider, concept: /system/components/provider-boundary.md, label: Provider Boundary, zone: provider }
 connections:
-  - { id: server-uses-protocol, from: server, to: protocol, type: invokes, label: validates one transport-neutral contract }
-  - { id: server-invokes-runtime, from: server, to: runtime, type: invokes, label: routes native and MCP stage operations through Runtime gateway }
-  - { id: runtime-invokes-intake, from: runtime, to: intake, type: invokes, label: normalizes untrusted intent, external captures, and Outcome Diagnostics }
-  - { id: runtime-invokes-decision, from: runtime, to: decision, type: invokes, label: starts exact Decision attempt }
-  - { id: runtime-invokes-planning, from: runtime, to: planning, type: invokes, label: starts exact Planning attempt }
-  - { id: runtime-invokes-implementation, from: runtime, to: implementation, type: invokes, label: starts exact Implementation attempt }
-  - { id: runtime-invokes-review, from: runtime, to: review, type: invokes, label: starts exact-head Review attempt }
-  - { id: runtime-invokes-checks, from: runtime, to: checks, type: invokes, label: loads exact Pack Skills or runs one exact stage Gate }
+  - { id: project-server-uses-protocol, from: project-server, to: protocol, type: invokes, label: validates authenticated transport-neutral requests }
+  - id: project-server-invokes-runtime
+    from: project-server
+    to: runtime
+    type: invokes
+    label: submits one immutable Run Request
+    boundary: { type: authority, failure: Reject unauthorized, stale, malformed, or unsupported Run Request. }
+  - { id: project-server-invokes-intake, from: project-server, to: intake, type: invokes, label: normalizes untrusted intent, external captures, and Outcome Diagnostics }
+  - { id: project-server-invokes-decision, from: project-server, to: decision, type: invokes, label: starts exact Decision attempt }
+  - { id: project-server-invokes-planning, from: project-server, to: planning, type: invokes, label: starts exact Planning attempt }
+  - { id: project-server-invokes-implementation, from: project-server, to: implementation, type: invokes, label: starts exact Implementation attempt }
+  - { id: project-server-invokes-review, from: project-server, to: review, type: invokes, label: starts exact-head Review attempt }
+  - { id: project-server-invokes-checks, from: project-server, to: checks, type: invokes, label: loads exact Pack Skills or runs one exact stage Gate }
   - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: binds exact admitted Evidence inputs }
-  - { id: checks-read-alignment, from: checks, to: alignment, type: reads, label: obtains bounded horizontal and vertical facts for Check SDK }
-  - { id: runtime-reads-work-state, from: runtime, to: work-state, type: reads, label: freezes stage context and evaluates current guards and scheduling }
-  - { id: alignment-returns-runtime, from: alignment, to: runtime, type: returns, label: returns bounded context, provenance, impact, and contribution-routing facts }
-  - { id: execution-invokes-preview, from: execution, to: preview, type: invokes, label: captures bounded Candidate observations }
+  - { id: checks-read-alignment, from: checks, to: alignment, type: reads, label: obtains bounded Check SDK facts }
+  - { id: project-server-reads-work-state, from: project-server, to: work-state, type: reads, label: freezes stage context and evaluates guards and scheduling }
+  - { id: alignment-returns-project-server, from: alignment, to: project-server, type: returns, label: returns bounded context, provenance, and impact }
+  - { id: runtime-invokes-preview, from: runtime, to: preview, type: invokes, label: captures bounded Run observations }
   - { id: knowledge-reads-project, from: knowledge, to: project, type: reads, label: validates project profile }
   - { id: change-trace-reads-project, from: change-trace, to: project, type: reads, label: binds repository identity }
-  - { id: package-reads-project, from: package, to: project, type: reads, label: composes standalone product and passive Check Pack resources }
+  - { id: package-reads-project, from: package, to: project, type: reads, label: composes CodeWiki and passive Check Pack resources }
   - { id: benchmarks-read-package, from: benchmarks, to: package, type: reads, label: executes packed candidate }
-flows: []
+flows:
+  - concept: /system/flows/work-item-execution.md
+    paths:
+      - connections: [project-server-invokes-runtime, runtime-invokes-preview]

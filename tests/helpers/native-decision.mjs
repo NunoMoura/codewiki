@@ -14,7 +14,7 @@ import {gitObject} from "./change-trace-v1.mjs";
 export function nativeDecisionRevision(options = {}) {
 	const changeId = options.changeId ?? "CHG-native-decision";
 	const desiredState = options.desiredState ?? `Accepted behavior for ${changeId} is explicit.`;
-	const targetRefs = options.targetRefs ?? ["src/runtime/native-decision.ts"];
+	const targetRefs = options.targetRefs ?? ["src/project-server/native-decision.ts"];
 	return createChangeRevision({
 		title: options.title ?? `Decide ${changeId}`,
 		intent: {

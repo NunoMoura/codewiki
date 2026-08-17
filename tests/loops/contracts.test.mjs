@@ -29,7 +29,7 @@ describe("Loop-owned candidate content admission", () => {
 					},
 					occurredAt: "2026-08-11T00:00:00.000Z",
 				}),
-			/Runtime decision candidate cannot supply runtime-owned fields: authority, occurredAt/,
+			/Project Server decision candidate cannot supply Project Server-owned fields: authority, occurredAt/,
 		);
 	});
 
@@ -55,7 +55,7 @@ describe("Loop-owned candidate content admission", () => {
 					actor: "model:planner",
 					createdAt: "2026-08-11T00:00:00.000Z",
 				}),
-			/Runtime planning candidate cannot supply runtime-owned fields: actor, createdAt/,
+			/Project Server planning candidate cannot supply Project Server-owned fields: actor, createdAt/,
 		);
 	});
 
@@ -113,7 +113,7 @@ describe("Loop-owned candidate content admission", () => {
 						{ ...candidate.workItems[0], planning_refs: ["forged"] },
 					],
 				}),
-			/Runtime planning candidate received unsupported field planning_refs at \/workItems\/0\./,
+			/Project Server planning candidate received unsupported field planning_refs at \/workItems\/0\./,
 		);
 		assert.throws(
 			() =>
@@ -123,7 +123,7 @@ describe("Loop-owned candidate content admission", () => {
 						{ ...candidate.workItems[0], acceptanceCriteria: ["legacy"] },
 					],
 				}),
-			/Runtime planning candidate received unsupported field acceptanceCriteria/,
+			/Project Server planning candidate received unsupported field acceptanceCriteria/,
 		);
 	});
 
@@ -139,7 +139,7 @@ describe("Loop-owned candidate content admission", () => {
 					requireTddEvidence: false,
 					aggregateContentProof: { digest: "sha256:forged" },
 				}),
-			/Runtime implementation candidate cannot supply runtime-owned fields: requireTddEvidence, aggregateContentProof/,
+			/Project Server implementation candidate cannot supply Project Server-owned fields: requireTddEvidence, aggregateContentProof/,
 		);
 	});
 
@@ -207,7 +207,7 @@ describe("Loop-owned candidate content admission", () => {
 						},
 					],
 				}),
-			/Runtime implementation candidate received unsupported field criterionId/,
+			/Project Server implementation candidate received unsupported field criterionId/,
 		);
 		assert.throws(
 			() =>
@@ -219,7 +219,7 @@ describe("Loop-owned candidate content admission", () => {
 						},
 					],
 				}),
-			/Runtime implementation candidate received unsupported field acceptance_requirement_id at \/evidence\/0\/commandResults\/0\./,
+			/Project Server implementation candidate received unsupported field acceptance_requirement_id at \/evidence\/0\/commandResults\/0\./,
 		);
 	});
 });

@@ -3,27 +3,28 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { CODEWIKI_EXTENSION_AVAILABLE } from "../src/index.ts";
 import * as packageApi from "../src/index.ts";
+import * as projectServerApi from "../src/project-server/index.ts";
 import * as runtimeApi from "../src/runtime/index.ts";
-import { traceTmpPath } from "../src/runtime/persistence/tmp.ts";
+import { traceTmpPath } from "../src/project-server/persistence/tmp.ts";
 import packageJson from "../package.json" with { type: "json" };
 import tsconfig from "../tsconfig.json" with { type: "json" };
 import buildTsconfig from "../tsconfig.build.json" with { type: "json" };
 
 const readme = readFileSync("README.md", "utf8");
 const sourceIndex = readFileSync("src/index.ts", "utf8");
-const runtimeIndex = readFileSync("src/runtime/index.ts", "utf8");
+const projectServerIndex = readFileSync("src/project-server/index.ts", "utf8");
 
 describe("fresh scaffold", () => {
 	it("exposes the Pi extension for package installs", () => {
 		assert.equal(CODEWIKI_EXTENSION_AVAILABLE, true);
 	});
 
-	it("keeps the package root contract-focused and the Runtime facade acyclic", () => {
+	it("keeps the package root contract-focused and the Project Server facade acyclic", () => {
 		assert.equal(existsSync("src/api"), false);
 		assert.doesNotMatch(sourceIndex, /from "\.\/api\//);
 		assert.doesNotMatch(sourceIndex, /from "\.\/pi\//);
-		assert.doesNotMatch(runtimeIndex, /from "\.\.\/clients\//);
-		assert.doesNotMatch(runtimeIndex, /from "\.\.\/execution\/pi\//);
+		assert.doesNotMatch(projectServerIndex, /from "\.\.\/clients\//);
+		assert.doesNotMatch(projectServerIndex, /from "\.\.\/execution\/pi\//);
 		assert.equal(
 			Object.keys(packageApi).some(
 				(name) => name.startsWith("Pi") || name.startsWith("createPi"),
@@ -58,13 +59,17 @@ describe("fresh scaffold", () => {
 				types: "./dist/index.d.ts",
 				import: "./dist/index.js",
 			},
+			"./project-server": {
+				types: "./dist/project-server/index.d.ts",
+				import: "./dist/project-server/index.js",
+			},
 			"./runtime": {
 				types: "./dist/runtime/index.d.ts",
 				import: "./dist/runtime/index.js",
 			},
 			"./pi-sdk": {
-				types: "./dist/execution/pi/sdk-semantic-session.d.ts",
-				import: "./dist/execution/pi/sdk-semantic-session.js",
+				types: "./dist/runtime/pi/sdk-semantic-session.d.ts",
+				import: "./dist/runtime/pi/sdk-semantic-session.js",
 			},
 			"./package.json": "./package.json",
 		});
@@ -89,16 +94,17 @@ describe("fresh scaffold", () => {
 		);
 	});
 
-	it("publishes one curated Runtime command and query surface", () => {
-		assert.deepEqual(Object.keys(runtimeApi).sort(), [
+	it("publishes one curated Project Server command and query surface", () => {
+		assert.deepEqual(Object.keys(projectServerApi).sort(), [
 			"CHANGE_INTAKE_RUNTIME_PROTOCOL",
 			"buildProjectWikiState",
 			"buildWikiState",
-			"connectProjectRuntimeGateway",
-			"createChangeIntakeRuntime",
+			"connectProjectServerApi",
+			"createChangeIntakeProjectServer",
 			"createCodeWikiLoopExecutionPorts",
-			"createProjectRuntimeGateway",
-			"runRuntimeSemanticExecutor",
+			"createProjectServerApi",
+			"runProjectServer",
+			"runProjectServerSemanticExecutor",
 			"runWikiArchive",
 			"runWikiChange",
 			"runWikiConfig",
@@ -106,10 +112,18 @@ describe("fresh scaffold", () => {
 			"runWikiImplement",
 			"runWikiOkf",
 			"runWikiPlan",
-			"runWikiRuntime",
-			"stopProjectRuntime",
+			"stopProjectServer",
 			"wikiChangeOperationMutates",
 		]);
+	});
+
+	it("publishes Runtime execution contracts without Project Server authority", () => {
+		assert.equal(typeof runtimeApi.createRuntime, "function");
+		assert.equal(typeof runtimeApi.createRunRequest, "function");
+		assert.equal(typeof runtimeApi.createRunReceipt, "function");
+		assert.equal(typeof runtimeApi.createRuntimeBuildManifest, "function");
+		assert.equal("runWikiChange" in runtimeApi, false);
+		assert.equal("createProjectServerApi" in runtimeApi, false);
 	});
 
 	it("keeps temporary trace scratch under runtime tmp", () => {

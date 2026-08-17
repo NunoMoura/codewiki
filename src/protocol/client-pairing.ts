@@ -1,7 +1,7 @@
 import {
 	CLIENT_KINDS,
 	type ClientKind,
-} from "./client-server.ts";
+} from "./client-project-server.ts";
 
 export const CLIENT_PAIRING_PROTOCOL = Object.freeze({
 	id: "codewiki.client-pairing",

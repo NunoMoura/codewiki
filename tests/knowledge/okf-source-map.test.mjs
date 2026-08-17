@@ -33,8 +33,8 @@ const sourceMap = {
 		{
 			id: "runtime",
 			doc: ".codewiki/kb/system/components/runtime.md",
-			sourcePatterns: ["src/runtime/**"],
-			testPatterns: ["tests/runtime/**"],
+			sourcePatterns: ["src/project-server/**"],
+			testPatterns: ["tests/project-server/**"],
 			generatedViews: [],
 			traceEvents: [],
 			role: "project_runtime",
@@ -178,13 +178,13 @@ describe("OKF source ownership extension generation", () => {
 					fields: {
 						codewiki_components: ["package"],
 						codewiki_source_patterns: ["package.json"],
-						codewiki_test_patterns: ["tests/runtime/package-install-smoke.mjs"],
+						codewiki_test_patterns: ["tests/project-server/package-install-smoke.mjs"],
 						codewiki_source_map: [
 							{
 								id: "package",
 								doc: "README.md",
 								source_patterns: ["package.json"],
-								test_patterns: ["tests/runtime/package-install-smoke.mjs"],
+								test_patterns: ["tests/project-server/package-install-smoke.mjs"],
 								role: "package_entrypoint",
 							},
 						],
@@ -204,14 +204,14 @@ describe("OKF source ownership extension generation", () => {
 							codewiki_components: ["package"],
 							codewiki_source_patterns: ["package.json"],
 							codewiki_test_patterns: [
-								"tests/runtime/package-install-smoke.mjs",
+								"tests/project-server/package-install-smoke.mjs",
 							],
 							codewiki_source_map: [
 								{
 									id: "package",
 									doc: "README.md",
 									source_patterns: ["package.json"],
-									test_patterns: ["tests/runtime/package-install-smoke.mjs"],
+									test_patterns: ["tests/project-server/package-install-smoke.mjs"],
 								},
 							],
 						},

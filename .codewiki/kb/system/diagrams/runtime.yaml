@@ -1,0 +1,111 @@
+id: runtime
+purpose: Show Project Server ownership around Runtime Runs, exact context, Implementation Workbenches, Checks, Gates, and recovery.
+components:
+  - { id: project-server, concept: /system/components/project-server.md, label: Project Server, zone: core }
+  - { id: runtime, concept: /system/components/runtime.md, label: Runtime, zone: execution }
+  - { id: work-state, concept: /system/components/work-state.md, label: WorkState, zone: core }
+  - { id: alignment, concept: /system/components/alignment.md, label: Alignment, zone: core }
+  - { id: knowledge, concept: /system/components/knowledge.md, label: Knowledge, zone: repository }
+  - { id: implementation, concept: /system/components/implementation.md, label: Implementation, zone: core }
+  - { id: checks, concept: /system/components/checks.md, label: Checks, zone: core }
+  - { id: intake, concept: /system/components/change-intake.md, label: Change Intake, zone: core }
+  - { id: preview, concept: /system/components/preview.md, label: Preview, zone: execution }
+  - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
+  - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
+connections:
+  - { id: project-server-reads-work-state, from: project-server, to: work-state, type: reads, label: freezes current Stage Context or selects eligible claimed work }
+  - id: project-server-reads-knowledge
+    from: project-server
+    to: knowledge
+    type: reads
+    label: resolves accepted intent for immutable Stage Context
+    boundary: { type: persistence, failure: Stop context creation when exact Knowledge is unavailable. }
+  - id: knowledge-returns-project-server
+    from: knowledge
+    to: project-server
+    type: returns
+    label: returns exact accepted Knowledge snapshot
+    boundary: { type: persistence, failure: Reject stale or digest-mismatched Knowledge. }
+  - id: project-server-invokes-runtime
+    from: project-server
+    to: runtime
+    type: invokes
+    label: submits one exact DSH-backed, delegated, Code Check, or Model Check Run Request
+    boundary: { type: authority, failure: Reject stale context, unsupported capability, unqualified Runtime Build, invalid Workbench capability, or malformed request. }
+  - id: runtime-returns-project-server
+    from: runtime
+    to: project-server
+    type: returns
+    label: returns output and one custody-scoped Run Receipt
+    boundary: { type: authority, failure: Stop Run on malformed output, incomplete ledger, undeclared custody gap, failed quiescence, or missing process-exit proof. }
+  - { id: project-server-invokes-implementation, from: project-server, to: implementation, type: invokes, label: admits exact Runtime output to the active Assignment }
+  - { id: implementation-returns-project-server, from: implementation, to: project-server, type: returns, label: returns exact Candidate Manifest for Integration }
+  - id: project-server-invokes-preview
+    from: project-server
+    to: preview
+    type: invokes
+    label: requests Candidate-bound observation
+    boundary: { type: authority, failure: Keep Candidate unchanged and report unavailable Preview. }
+  - id: preview-produces-evidence
+    from: preview
+    to: evidence
+    type: produces
+    label: returns bounded observation metadata
+    boundary: { type: authority, failure: Reject malformed or unbound observation. }
+  - { id: project-server-invokes-checks, from: project-server, to: checks, type: invokes, label: starts exact stage Gate }
+  - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: resolves exact bounded Check inputs }
+  - id: checks-read-knowledge
+    from: checks
+    to: knowledge
+    type: reads
+    label: resolves bounded OKF facts for Check SDK
+    boundary: { type: persistence, failure: Stop affected input resolution when exact Knowledge is unavailable. }
+  - id: knowledge-returns-checks
+    from: knowledge
+    to: checks
+    type: returns
+    label: returns immutable OKF snapshot facts
+    boundary: { type: persistence, failure: Reject stale, incomplete, or digest-mismatched facts. }
+  - id: checks-invoke-runtime
+    from: checks
+    to: runtime
+    type: invokes
+    label: requests sandboxed Code Check or tool-free Model Check Run
+    boundary: { type: authority, failure: Stop Check execution without creating a Check Result. }
+  - id: runtime-returns-checks
+    from: runtime
+    to: checks
+    type: returns
+    label: returns bounded Check Output and Run Receipt or stopped fact
+    boundary: { type: authority, failure: Reject malformed or unbound Check output. }
+  - { id: checks-return-project-server, from: checks, to: project-server, type: returns, label: returns passed, failed, or stopped Gate Report }
+  - id: project-server-writes-change-trace
+    from: project-server
+    to: change-trace
+    type: writes
+    label: appends integrated Result and Gate state
+    boundary: { type: persistence, failure: Reject append and preserve prior accepted head. }
+  - id: change-trace-returns-project-server
+    from: change-trace
+    to: project-server
+    type: returns
+    label: reloads accepted history
+    boundary: { type: persistence, failure: Stop recovery on missing or invalid history. }
+  - { id: work-state-produces-alignment, from: work-state, to: alignment, type: produces, label: projects coordination and provenance }
+  - { id: alignment-returns-project-server, from: alignment, to: project-server, type: returns, label: returns impact, provenance, and contribution-routing facts }
+  - { id: project-server-invokes-intake, from: project-server, to: intake, type: invokes, label: sends unmatched external capture to accountable intent }
+  - { id: intake-returns-project-server, from: intake, to: project-server, type: returns, label: returns admitted intake state }
+flows:
+  - concept: /system/flows/change-lifecycle.md
+    paths:
+      - connections: [project-server-reads-knowledge, knowledge-returns-project-server, project-server-invokes-runtime, runtime-returns-project-server]
+  - concept: /system/flows/work-item-execution.md
+    paths:
+      - connections: [project-server-invokes-runtime, runtime-returns-project-server, project-server-invokes-implementation, implementation-returns-project-server, project-server-invokes-preview, preview-produces-evidence]
+      - connections: [project-server-invokes-checks, checks-read-knowledge, knowledge-returns-checks, checks-invoke-runtime, runtime-returns-checks, checks-return-project-server, project-server-writes-change-trace]
+  - concept: /system/flows/external-candidate-admission.md
+    paths:
+      - connections: [change-trace-returns-project-server, project-server-invokes-intake, intake-returns-project-server, project-server-invokes-checks]
+  - concept: /system/flows/recovery.md
+    paths:
+      - connections: [change-trace-returns-project-server, project-server-reads-work-state, work-state-produces-alignment, alignment-returns-project-server]

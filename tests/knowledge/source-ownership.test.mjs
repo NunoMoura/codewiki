@@ -43,7 +43,7 @@ describe("OKF-backed intended source ownership", () => {
 		assert.equal(ownership.id, CODEWIKI_SOURCE_OWNERSHIP_ID);
 		assert.deepEqual(ownership.sourceRefs, CODEWIKI_SOURCE_OWNERSHIP_REFS);
 		assert.deepEqual(ownership.defaults, CODEWIKI_SOURCE_OWNERSHIP_DEFAULTS);
-		assert.equal(ownership.components.length, 20);
+		assert.equal(ownership.components.length, 19);
 		assert.equal(
 			components.get("knowledge")?.doc,
 			".codewiki/kb/system/components/knowledge.md",
@@ -61,8 +61,8 @@ describe("OKF-backed intended source ownership", () => {
 	it("answers target owner and test queries without requiring paths to exist yet", () => {
 		const bundle = knowledgeBundleFiles();
 		assert.equal(
-			sourceOwnershipComponentById(bundle, "execution")?.doc,
-			".codewiki/kb/system/components/execution.md",
+			sourceOwnershipComponentById(bundle, "runtime")?.doc,
+			".codewiki/kb/system/components/runtime.md",
 		);
 		assert.equal(
 			sourceOwnershipOwnerForPath(bundle, "src/alignment/queries/context.ts")?.id,
@@ -77,8 +77,8 @@ describe("OKF-backed intended source ownership", () => {
 			"package",
 		);
 		assert.equal(
-			sourceOwnershipOwnerForPath(bundle, "src/execution/pi/worker.ts")?.id,
-			"execution",
+			sourceOwnershipOwnerForPath(bundle, "src/runtime/pi/worker.ts")?.id,
+			"runtime",
 		);
 		assert.equal(
 			sourceOwnershipSupportsTestPath(
@@ -122,7 +122,7 @@ describe("OKF-backed intended source ownership", () => {
 			(extension) => extension.path === ".codewiki/kb/system/components/package.md",
 		);
 
-		assert.equal(extensions.length, 20);
+		assert.equal(extensions.length, 19);
 		assert.ok(packageExtension);
 		assert.deepEqual(packageExtension.fields.codewiki_components, ["package"]);
 		assert.equal(

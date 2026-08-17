@@ -209,7 +209,7 @@ export function parseImplementationCandidateContent(
 	);
 	if (candidate.evidence !== undefined) {
 		if (!Array.isArray(candidate.evidence)) {
-			throw new Error("Runtime implementation candidate evidence must be an array.");
+			throw new Error("Project Server implementation candidate evidence must be an array.");
 		}
 		for (const value of candidate.evidence) {
 			const evidence = candidateNestedRecord(value, "Implementation evidence");
@@ -219,7 +219,7 @@ export function parseImplementationCandidateContent(
 	assertCandidateSchema(
 		implementationCandidateContentSchema,
 		candidate,
-		"Runtime implementation candidate",
+		"Project Server implementation candidate",
 	);
 	return candidate as ImplementationCandidateContent;
 }

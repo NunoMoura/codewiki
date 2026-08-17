@@ -1,8 +1,8 @@
 import { resolve } from "node:path";
 import { pathMatchesPattern } from "../knowledge/source-map.ts";
-import { traceTmpPath } from "../runtime/persistence/tmp.ts";
+import { traceTmpPath } from "../project-server/persistence/tmp.ts";
 import type { WikiConfigWorktreeIsolation } from "../project/config.ts";
-import type { RuntimeWorkUnitClaimCandidate } from "../runtime/claims/work-unit-selection.ts";
+import type { ProjectServerWorkUnitClaimCandidate } from "../project-server/claims/work-unit-selection.ts";
 
 export interface WorktreeRef {
 	path: string;
@@ -24,7 +24,7 @@ export interface WorktreeCommandPlan {
 	worktreeCleanup: WorktreeCommand[];
 }
 
-export interface RuntimeWorktreePlan {
+export interface ProjectServerWorktreePlan {
 	workUnitId: string;
 	traceId: string;
 	workerId: string;
@@ -35,7 +35,7 @@ export interface RuntimeWorktreePlan {
 	commands: WorktreeCommandPlan;
 }
 
-interface RuntimeWorktreePlanOptions {
+interface ProjectServerWorktreePlanOptions {
 	mode: WikiConfigWorktreeIsolation;
 	repoRoot?: string;
 	projectName?: string;
@@ -54,7 +54,7 @@ export type WorktreeCommandStep =
 	| "worktree.cleanup";
 
 export interface WorktreeCommandExecutionContext {
-	plan: RuntimeWorktreePlan;
+	plan: ProjectServerWorktreePlan;
 	step: WorktreeCommandStep;
 	command: string;
 	commandIndex: number;
@@ -111,24 +111,24 @@ export class WorktreeCommandExecutionError extends Error {
 	}
 }
 
-export function planRuntimeWorkUnitClaimWorktrees(
-	items: RuntimeWorkUnitClaimCandidate[],
-	options: RuntimeWorktreePlanOptions,
-): RuntimeWorktreePlan[] {
+export function planProjectServerWorkUnitClaimWorktrees(
+	items: ProjectServerWorkUnitClaimCandidate[],
+	options: ProjectServerWorktreePlanOptions,
+): ProjectServerWorktreePlan[] {
 	return items.map((item, index) =>
 		planRuntimeWorkUnitClaimWorktree(item, index, items, options),
 	);
 }
 
-export async function executeRuntimeWorktreeCommands(
-	plans: RuntimeWorktreePlan | RuntimeWorktreePlan[],
+export async function executeProjectServerWorktreeCommands(
+	plans: ProjectServerWorktreePlan | ProjectServerWorktreePlan[],
 	options: ExecuteRuntimeWorktreeCommandsOptions = {},
 ): Promise<WorktreeCommandExecutionResult> {
 	const dryRun = options.dryRun !== false;
 	const steps = options.steps || ["worktree.prepare", "worktree.verify"];
 	if (!dryRun && !options.runner) {
 		throw new Error(
-			"executeRuntimeWorktreeCommands requires a runner when dryRun is false.",
+			"executeProjectServerWorktreeCommands requires a runner when dryRun is false.",
 		);
 	}
 	const records: WorktreeCommandExecutionRecord[] = [];
@@ -146,11 +146,11 @@ export async function executeRuntimeWorktreeCommands(
 }
 
 function planRuntimeWorkUnitClaimWorktree(
-	item: RuntimeWorkUnitClaimCandidate,
+	item: ProjectServerWorkUnitClaimCandidate,
 	index: number,
-	items: RuntimeWorkUnitClaimCandidate[],
-	options: RuntimeWorktreePlanOptions,
-): RuntimeWorktreePlan {
+	items: ProjectServerWorkUnitClaimCandidate[],
+	options: ProjectServerWorktreePlanOptions,
+): ProjectServerWorktreePlan {
 	const workerId = workerIdForItem(item, index, options);
 	const reason = worktreeReason(item, items, options);
 	const required = reason !== "not_required";
@@ -170,7 +170,7 @@ function planRuntimeWorkUnitClaimWorktree(
 }
 
 async function executeWorktreeStep(
-	plan: RuntimeWorktreePlan,
+	plan: ProjectServerWorktreePlan,
 	step: WorktreeCommandStep,
 	options: Pick<ExecuteRuntimeWorktreeCommandsOptions, "runner"> & {
 		dryRun: boolean;
@@ -186,7 +186,7 @@ async function executeWorktreeStep(
 }
 
 async function executeWorktreeCommand(
-	plan: RuntimeWorktreePlan,
+	plan: ProjectServerWorktreePlan,
 	step: WorktreeCommandStep,
 	command: WorktreeCommand,
 	commandIndex: number,
@@ -206,7 +206,7 @@ async function executeWorktreeCommand(
 }
 
 function executionRecordBase(
-	plan: RuntimeWorktreePlan,
+	plan: ProjectServerWorktreePlan,
 	step: WorktreeCommandStep,
 	command: WorktreeCommand,
 	commandIndex: number,
@@ -226,7 +226,7 @@ function executionRecordBase(
 }
 
 function commandsForStep(
-	plan: RuntimeWorktreePlan,
+	plan: ProjectServerWorktreePlan,
 	step: WorktreeCommandStep,
 ): WorktreeCommand[] {
 	return plan.commands[commandKeyForStep(step)];
@@ -258,9 +258,9 @@ function normalizeRunnerResult(
 }
 
 function worktreeReason(
-	item: RuntimeWorkUnitClaimCandidate,
-	items: RuntimeWorkUnitClaimCandidate[],
-	options: RuntimeWorktreePlanOptions,
+	item: ProjectServerWorkUnitClaimCandidate,
+	items: ProjectServerWorkUnitClaimCandidate[],
+	options: ProjectServerWorktreePlanOptions,
 ): string {
 	if (options.mode === "none") return "not_required";
 	if (options.mode === "worktree") return "policy_required";
@@ -272,9 +272,9 @@ function worktreeReason(
 }
 
 function worktreeRef(input: {
-	item: RuntimeWorkUnitClaimCandidate;
+	item: ProjectServerWorkUnitClaimCandidate;
 	workerId: string;
-	options: RuntimeWorktreePlanOptions;
+	options: ProjectServerWorktreePlanOptions;
 }): WorktreeRef {
 	const baseRef = input.options.baseSha || input.options.baseRef || "HEAD";
 	const branch = [
@@ -292,8 +292,8 @@ function worktreeRef(input: {
 }
 
 function worktreePath(
-	options: RuntimeWorktreePlanOptions,
-	item: RuntimeWorkUnitClaimCandidate,
+	options: ProjectServerWorktreePlanOptions,
+	item: ProjectServerWorkUnitClaimCandidate,
 	workerId: string,
 ): string {
 	if (options.worktreeRoot) {
@@ -312,8 +312,8 @@ function worktreePath(
 }
 
 function defaultWorktreeRoot(
-	options: RuntimeWorktreePlanOptions,
-	item: RuntimeWorkUnitClaimCandidate,
+	options: ProjectServerWorktreePlanOptions,
+	item: ProjectServerWorkUnitClaimCandidate,
 ): string {
 	const repoRoot = resolve(options.repoRoot || ".");
 	return resolve(repoRoot, traceTmpPath(item.traceId, "worktree"));
@@ -370,7 +370,7 @@ function worktreeCommandDisplay(command: WorktreeCommand): string {
 }
 
 function dirtyPathsOverlap(
-	item: RuntimeWorkUnitClaimCandidate,
+	item: ProjectServerWorkUnitClaimCandidate,
 	dirtyPaths: string[],
 ): boolean {
 	return item.pathScopes.some((scope) =>
@@ -413,9 +413,9 @@ function normalizePath(path: string): string {
 }
 
 function workerIdForItem(
-	item: RuntimeWorkUnitClaimCandidate,
+	item: ProjectServerWorkUnitClaimCandidate,
 	index: number,
-	options: RuntimeWorktreePlanOptions,
+	options: ProjectServerWorktreePlanOptions,
 ): string {
 	return (
 		options.workerIds?.[item.workUnitId] ||

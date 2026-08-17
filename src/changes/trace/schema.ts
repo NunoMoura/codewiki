@@ -72,7 +72,7 @@ export function isChangeId(value: unknown): value is string {
 	return typeof value === "string" && /^CHG-[A-Za-z0-9._-]+$/.test(value);
 }
 
-export function assertRuntimeSemanticJobId(
+export function assertProjectServerSemanticJobId(
 	value: string | undefined,
 	operation: string,
 ): void {

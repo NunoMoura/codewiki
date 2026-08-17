@@ -15,7 +15,7 @@ import {
 	TraceAppendConflictError,
 	TraceClosedAppendError,
 } from "../../../src/changes/trace/storage-errors.ts";
-import {appendSemanticLoopReport} from "../../../src/runtime/persistence/trace.ts";
+import {appendSemanticLoopReport} from "../../../src/project-server/persistence/trace.ts";
 import {appendTraceRecord, appendTraceRecords} from "../../../src/changes/trace/append.ts";
 import {createLoopIterationEvent} from "../../../src/changes/trace/events.ts";
 import {

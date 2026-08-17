@@ -23,11 +23,11 @@ import {
 import {
 	closeCodewikiAppServer,
 	restoreCodewikiAppServer,
-} from "../../../src/server/app/server.ts";
-import { isActiveAppTrace } from "../../../src/runtime/queries/app-state.ts";
+} from "../../../src/project-server/app/server.ts";
+import { isActiveAppTrace } from "../../../src/project-server/queries/app-state.ts";
 import { CODEWIKI_COMMAND_MESSAGE_TYPE } from "../../../src/clients/pi/rendering/message-renderers.ts";
 import { CODEWIKI_TOOL_NAMES } from "../../../src/clients/pi/tools/index.ts";
-import { appendDevLogEntry } from "../../../src/runtime/persistence/dev-log.ts";
+import { appendDevLogEntry } from "../../../src/project-server/persistence/dev-log.ts";
 import {
 	CODEWIKI_FOOTER_STATUS_KEY,
 	codewikiTuiRenderersAvailable,
@@ -46,7 +46,7 @@ const testServerStateRoot = join(
 	tmpdir(),
 	`codewiki-extension-server-state-${process.pid}`,
 );
-process.env.CODEWIKI_SERVER_STATE_ROOT = testServerStateRoot;
+process.env.CODEWIKI_PROJECT_SERVER_STATE_ROOT = testServerStateRoot;
 after(() => rm(testServerStateRoot, {recursive: true, force: true}));
 
 function registerTestExtension(pi) {
@@ -114,7 +114,7 @@ async function fixture() {
 	await mkdir(join(root, ".codewiki", "kb", "system", "components"), {
 		recursive: true,
 	});
-	await mkdir(join(root, "src", "runtime"), { recursive: true });
+	await mkdir(join(root, "src", "project-server"), { recursive: true });
 	await writeFile(
 		join(root, ".codewiki", "traces", "TRACE-pi.jsonl"),
 		formatTraceText([
@@ -126,23 +126,23 @@ async function fixture() {
 		]),
 	);
 	await writeFile(
-		join(root, ".codewiki", "kb", "system", "components", "runtime.md"),
+		join(root, ".codewiki", "kb", "system", "components", "project-server.md"),
 		[
 			"---",
 			"type: Concept",
-			"title: Runtime",
-			"description: Runtime fixture.",
-			"codewiki_component: runtime",
+			"title: Project Server",
+			"description: Project Server fixture.",
+			"codewiki_component: project-server",
 			"codewiki_source_patterns:",
-			"  - src/runtime/**",
+			"  - src/project-server/**",
 			"codewiki_test_patterns:",
-			"  - tests/runtime/**",
+			"  - tests/project-server/**",
 			"codewiki_generated_views:",
 			"  - .codewiki/views/status.json",
 			"codewiki_trace_events:",
 			"  - decision.change_approved",
 			"---",
-			"# Runtime",
+			"# Project Server",
 			"",
 		].join("\n"),
 	);
@@ -565,7 +565,7 @@ describe("Pi extension adapter", () => {
 				() =>
 					toolByName(pi, "wiki_state").execute(
 						"tool-call-invalid-paths",
-						{ sourcePaths: ["src/runtime/index.ts"] },
+						{ sourcePaths: ["src/project-server/index.ts"] },
 						undefined,
 						undefined,
 						{ cwd: root },
@@ -1000,7 +1000,7 @@ describe("Pi extension adapter", () => {
 						sequence: 1,
 						loop: "decision",
 						event: "change_approved",
-						refs: ["src/runtime/index.ts"],
+						refs: ["src/project-server/index.ts"],
 						createdAt: "2026-06-17T00:00:01.000Z",
 						data: {
 							output: {
@@ -1124,15 +1124,15 @@ describe("Pi extension adapter", () => {
 			assert.equal(project.data.kind, "project");
 			assert.match(project.data.title, /CodeWiki project/);
 
-			const path = await command.handler("src/runtime/index.ts", {
+			const path = await command.handler("src/project-server/index.ts", {
 				cwd: root,
 				ui: { notify: (message) => notifications.push(message) },
 			});
 			assert.equal(path.data.kind, "path");
-			assert.equal(path.data.sections[0].items[0], "runtime");
+			assert.equal(path.data.sections[0].items[0], "project-server");
 			assert.match(
 				notifications.at(-1),
-				/CodeWiki Explain — Path: src\/runtime\/index\.ts/,
+				/CodeWiki Explain — Path: src\/project-server\/index\.ts/,
 			);
 			assert.match(path.rendered.join("\n"), /Owner|Component/);
 

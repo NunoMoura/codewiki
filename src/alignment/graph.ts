@@ -189,7 +189,7 @@ const OPERATION_GRAPH_PROJECTORS: Readonly<
 	"evidence.recorded": projectEvidence,
 	"check.result_recorded": projectCheckResult,
 	"loop.exit_report_recorded": projectExitReport,
-	"runtime.route_recorded": projectRuntimeRoute,
+	"runtime.route_recorded": projectServerRoute,
 	"planning.epoch_bound": projectPlanningEpochBinding,
 	"work_item_claim.acquired": projectWorkItemClaim,
 	"work_item_claim.released": projectWorkItemClaimRelease,
@@ -1001,7 +1001,7 @@ function projectExitReport(
 	);
 }
 
-function projectRuntimeRoute(
+function projectServerRoute(
 	graph: GraphAccumulator,
 	operation: CanonicalChangeOperation,
 ): void {

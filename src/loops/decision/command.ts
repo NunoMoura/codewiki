@@ -5,7 +5,7 @@ import {
 } from "../../changes/trace/append.ts";
 import { readTraceFileSnapshot } from "../../changes/trace/reader.ts";
 import {
-	assertRuntimeSemanticJobId,
+	assertProjectServerSemanticJobId,
 	traceFilePath,
 } from "../../changes/trace/schema.ts";
 import type { LoopQualityStandardResult, TraceEvent } from "../../changes/trace/types.ts";
@@ -26,7 +26,7 @@ import { ChangeTraceStore } from "../../changes/trace/store.ts";
 import { evaluateChangeDecision } from "./change-quality.ts";
 import type {
 	DecisionDisposition,
-	RuntimeDecisionAuthority,
+	ProjectServerDecisionAuthority,
 } from "./candidate-proposal.ts";
 import { buildProjectWorkState } from "../../work-state/project.ts";
 import type { WorkState } from "../../work-state/types.ts";
@@ -41,7 +41,7 @@ export interface RunWikiDecideInput {
 	expectedWorkStateDigest: string;
 	disposition: DecisionDisposition;
 	rationale: string;
-	authority?: RuntimeDecisionAuthority;
+	authority?: ProjectServerDecisionAuthority;
 	occurredAt?: string;
 	mode?: WikiDecideMode;
 	repoRoot?: string;
@@ -57,7 +57,7 @@ export interface ChangeApproval {
 	observedWorkStateDigest: string;
 	qualityRef: string;
 	approvedAt: string;
-	authorityKind: RuntimeDecisionAuthority["kind"];
+	authorityKind: ProjectServerDecisionAuthority["kind"];
 	authorityRef: string;
 }
 
@@ -491,7 +491,7 @@ function assertInput(input: RunWikiDecideInput): void {
 		throw new Error("wiki_decide disposition is invalid.");
 	}
 	requiredText(input.rationale, "rationale");
-	assertRuntimeSemanticJobId(input.runtimeJobId, "wiki_decide");
+	assertProjectServerSemanticJobId(input.runtimeJobId, "wiki_decide");
 	if (input.authority) {
 		if (!["user", "policy"].includes(input.authority.kind)) {
 			throw new Error("wiki_decide authority.kind is invalid.");
@@ -516,7 +516,7 @@ function assertInput(input: RunWikiDecideInput): void {
 	}
 }
 
-function requiredAuthority(input: RunWikiDecideInput): RuntimeDecisionAuthority {
+function requiredAuthority(input: RunWikiDecideInput): ProjectServerDecisionAuthority {
 	if (!input.authority)
 		throw new Error("wiki_decide requires exact authority.");
 	return input.authority;

@@ -10,8 +10,8 @@ import {
 	type RunWikiChangeInput,
 	type RunWikiChangeResult,
 	type WikiStateSnapshot,
-} from "../../../runtime/index.ts";
-import type { RuntimeReaction } from "../../../runtime/coordinator/reactor.ts";
+} from "../../../project-server/index.ts";
+import type { ProjectServerReaction } from "../../../project-server/coordinator/reactor.ts";
 import { buildChangeValidationCard } from "../../../changes/validation-view.ts";
 import {
 	resolveWikiConfigFile,
@@ -617,7 +617,7 @@ function optionalStateView(value: unknown): WikiStateToolView | undefined {
 function stateToolModelPayload(
 	snapshot: WikiStateSnapshot,
 	view: WikiStateToolView | undefined,
-	runtimeReaction: RuntimeReaction,
+	runtimeReaction: ProjectServerReaction,
 ): unknown {
 	const traceId = snapshot.selectedTraceId;
 	if (traceId) {
@@ -660,7 +660,7 @@ function stateToolModelPayload(
 function stateToolPayload(
 	snapshot: WikiStateSnapshot,
 	view: WikiStateToolView | undefined,
-	runtimeReaction: RuntimeReaction,
+	runtimeReaction: ProjectServerReaction,
 ): unknown {
 	if (!view) return { ...snapshot, runtimeReaction };
 	return {

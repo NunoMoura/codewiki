@@ -29,8 +29,8 @@ function knowledgeProjection(state) {
 				markdownReferences: [],
 				sourceResources: ["https://example.invalid/runtime-design"],
 				relationships: [],
-				sourcePatterns: ["src/runtime/**"],
-				testPatterns: ["tests/runtime/**"],
+				sourcePatterns: ["src/project-server/**"],
+				testPatterns: ["tests/project-server/**"],
 			},
 			{
 				conceptId: "kb:system/traces",

@@ -33,7 +33,7 @@ async function fixture() {
 				sequence: 1,
 				loop: "planning",
 				event: "work_units_created",
-				refs: ["src/runtime/**"],
+				refs: ["src/project-server/**"],
 				createdAt: "2026-06-17T00:00:01.000Z",
 				data: {
 					exit: { status: "continue", conditions: [] },
@@ -44,7 +44,7 @@ async function fixture() {
 								status: "met",
 								mode: "deterministic",
 								description: "Decision coverage is complete.",
-								refs: ["src/runtime/index.ts"],
+								refs: ["src/project-server/index.ts"],
 							},
 						],
 						workItems: [
@@ -52,8 +52,8 @@ async function fixture() {
 								id: "WU-explain",
 								title: "Explain Runtime ownership",
 								componentRefs: ["runtime"],
-								pathScopes: ["src/runtime/**"],
-								verification: ["tests/runtime/**"],
+								pathScopes: ["src/project-server/**"],
+								verification: ["tests/project-server/**"],
 							},
 						],
 					},
@@ -81,19 +81,19 @@ function runtimeDoc() {
 		"---",
 		"type: Concept",
 		"title: Runtime",
-		"description: Project Runtime surface.",
+		"description: Project Server surface.",
 		"codewiki_component: runtime",
 		"codewiki_source_patterns:",
-		"  - src/runtime/**",
+		"  - src/project-server/**",
 		"codewiki_test_patterns:",
-		"  - tests/runtime/**",
+		"  - tests/project-server/**",
 		"codewiki_trace_events:",
 		"  - planning.work_units_created",
 		"codewiki_role: project_runtime",
 		"---",
 		"# Runtime",
 		"",
-		"Project Runtime surface.",
+		"Project Server surface.",
 		"",
 	].join("\n");
 }
@@ -104,12 +104,12 @@ describe("project explain", () => {
 		try {
 			const view = await buildProjectExplainView({
 				repoRoot: root,
-				target: "src/runtime/index.ts",
+				target: "src/project-server/index.ts",
 			});
 
 			assert.equal(view.kind, "path");
 			assert.equal(view.owner?.componentId, "runtime");
-			assert.deepEqual(view.owner?.testPatterns, ["tests/runtime/**"]);
+			assert.deepEqual(view.owner?.testPatterns, ["tests/project-server/**"]);
 			assert.equal(
 				view.traceRefs?.includes(
 					"trace:TRACE-explain:planning:iteration:1#work:WU-explain",
@@ -134,7 +134,7 @@ describe("project explain", () => {
 
 			const testPath = await buildProjectExplainView({
 				repoRoot: root,
-				target: "tests/runtime/index.test.mjs",
+				target: "tests/project-server/index.test.mjs",
 			});
 			assert.equal(testPath.owner?.componentId, "runtime");
 		} finally {
@@ -147,7 +147,7 @@ describe("project explain", () => {
 		try {
 			const view = await buildProjectExplainView({
 				repoRoot: root,
-				target: "src/runtime/index.ts",
+				target: "src/project-server/index.ts",
 			});
 
 			assert.equal(view.kind, "path");

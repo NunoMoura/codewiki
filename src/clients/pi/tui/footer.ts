@@ -1,4 +1,4 @@
-import type { WikiStateSnapshot } from "../../../runtime/index.ts";
+import type { WikiStateSnapshot } from "../../../project-server/index.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
 import {
 	resolveCodewikiExtensionIdentity,

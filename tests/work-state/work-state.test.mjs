@@ -10,7 +10,7 @@ import {
 	createChangeRecord,
 } from "../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../src/changes/trace/store.ts";
-import { createRuntimeClaimEvent } from "../../src/runtime/claims/events.ts";
+import { createProjectServerClaimEvent } from "../../src/project-server/claims/events.ts";
 import { appendTraceRecords } from "../../src/changes/trace/append.ts";
 import { readTrace } from "../../src/changes/trace/reader.ts";
 import { traceFilePath } from "../../src/changes/trace/schema.ts";
@@ -199,7 +199,7 @@ describe("WorkState", () => {
 			planningEvent("CHG-contributor", "CHG-assigned", "WI-contributor"),
 		);
 		await appendEvent(root, "CHG-assigned", ({ traceId, parentId, sequence }) =>
-			createRuntimeClaimEvent({
+			createProjectServerClaimEvent({
 				traceId,
 				id: "evt-claim-assigned",
 				parentId,

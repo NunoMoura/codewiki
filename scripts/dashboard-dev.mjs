@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { realpath, stat } from "node:fs/promises";
-import { dirname, relative, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { startCodewikiAppServer } from "../src/server/app/server.ts";
+import { startCodewikiAppServer } from "../src/project-server/app/server.ts";
 import { openPreviewBrowser } from "../src/preview/browser-adapter.ts";
 import { createPreviewCoordinator } from "../src/preview/coordinator.ts";
 import { createDashboardPreviewControl } from "../src/preview/dashboard-control.ts";
@@ -63,6 +63,7 @@ export async function runDashboardDev(options) {
 		keepAlive: true,
 		persistent: false,
 		inProcess: true,
+		projectServerStateRoot: join(projectRoot, ".codewiki", "dashboard-dev-state"),
 		previewControl: createDashboardPreviewControl(projectRoot, previewCoordinator),
 	}).catch(async (error) => {
 		await previewCoordinator.close();

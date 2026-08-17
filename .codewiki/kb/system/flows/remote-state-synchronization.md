@@ -11,6 +11,6 @@ codewiki_relationships:
 ---
 # Remote State Synchronization
 
-Runtime fetches provider-neutral Git refs, validates canonical bytes and identities, reduces accepted history, and compares the exact expected remote head before push. After mutation it resynchronizes and verifies every accepted identity.
+Project Server fetches provider-neutral Git refs, validates canonical bytes and identities, reduces accepted history, and compares the exact expected remote head before push. After mutation it resynchronizes and verifies every accepted identity.
 
 Network failure, unknown required protocol, malformed history, stale base, or head mismatch rejects the mutation. Local work remains recoverable, but no caller may infer remote acceptance without post-push verification.

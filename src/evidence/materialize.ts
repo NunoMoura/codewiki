@@ -108,7 +108,7 @@ function admittedEvidenceMaterial(value: unknown): EvidenceMaterial {
 	const claimed = RUNTIME_FIELDS.filter((field) => Object.hasOwn(source, field));
 	if (claimed.length > 0) {
 		throw new Error(
-			`Evidence material cannot supply runtime-owned fields: ${claimed.join(", ")}.`,
+			`Evidence material cannot supply Project Server-owned fields: ${claimed.join(", ")}.`,
 		);
 	}
 	assertExactKeys(source, MATERIAL_FIELDS, "Evidence material");

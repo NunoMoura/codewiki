@@ -10,7 +10,7 @@ import {
 import { resolveWikiConfigFile } from "../../../project/config-file.ts";
 import { buildProjectExplainView } from "../../../project/explain.ts";
 import { findCodewikiProjectRoot } from "../../../project/root.ts";
-import { buildProjectWikiState } from "../../../runtime/index.ts";
+import { buildProjectWikiState } from "../../../project-server/index.ts";
 import {
 	CODEWIKI_DIRECT_COMMANDS,
 	type CodewikiSubcommand,

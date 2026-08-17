@@ -23,4 +23,4 @@ As a maintainer, I want CodeWiki to apply project expectations as bounded Checks
 - A stage with no Checks passes with a visible `no_checks_configured` warning; malformed content stops only the affected Gate.
 - Review may use automated Model or Code Checks, provider Evidence, optional human Review Evidence, or any user-chosen combination.
 - Npm packages use a simple discoverable Check Pack manifest or conventional `check-packs/` tree, install without lifecycle scripts, and materialize only editable Skill and runtime Check files through the App; `package.json` remains transport metadata and never replaces `check.json`.
-- Check Packs cannot install Backend Plugins, DSH or Cordis plugins, Agent Runner settings, credentials, or lifecycle behavior.
+- Check Packs cannot install Runtime Plugins, DSH or Cordis plugins, Run Process settings, credentials, or lifecycle behavior.

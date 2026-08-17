@@ -10,7 +10,7 @@ import {
 	createPackSkillSetSnapshot,
 	createPackagedCheck,
 } from "../../src/checks/packs/contracts.ts";
-import {bindProducerSkills} from "../../src/execution/ports.ts";
+import {bindProducerSkills} from "../../src/runtime/contracts.ts";
 
 export function digest(value) {
 	return canonicalJsonDigest(value);

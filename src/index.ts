@@ -2,27 +2,27 @@ export const CODEWIKI_EXTENSION_AVAILABLE = true as const;
 
 export {
 	CLIENT_KINDS,
-	CLIENT_SERVER_PROTOCOL,
+	CLIENT_PROJECT_SERVER_PROTOCOL,
 	serverTransportDeduplicationDigest,
-	normalizeClientServerCommand,
-	normalizeClientServerEvent,
-	normalizeClientServerOperation,
-	normalizeClientServerQuery,
-	normalizeClientServerQueryResult,
+	normalizeClientProjectServerCommand,
+	normalizeClientProjectServerEvent,
+	normalizeClientProjectServerOperation,
+	normalizeClientProjectServerQuery,
+	normalizeClientProjectServerQueryResult,
 	runtimeSemanticIdempotencyDigest,
-	type ClientServerActorContext,
-	type ClientServerCommandEnvelope,
-	type ClientServerCoverage,
-	type ClientServerEventEnvelope,
+	type ClientProjectServerActorContext,
+	type ClientProjectServerCommandEnvelope,
+	type ClientProjectServerCoverage,
+	type ClientProjectServerEventEnvelope,
 	type ClientKind,
-	type ClientServerOperationEnvelope,
-	type ClientServerOperationStatus,
-	type ClientServerQueryEnvelope,
-	type ClientServerQueryResultEnvelope,
-	type ClientServerRequestContext,
-	type ClientServerSnapshotContext,
-	type ClientServerTransportContext,
-} from "./protocol/client-server.ts";
+	type ClientProjectServerOperationEnvelope,
+	type ClientProjectServerOperationStatus,
+	type ClientProjectServerQueryEnvelope,
+	type ClientProjectServerQueryResultEnvelope,
+	type ClientProjectServerRequestContext,
+	type ClientProjectServerSnapshotContext,
+	type ClientProjectServerTransportContext,
+} from "./protocol/client-project-server.ts";
 export {
 	DEFAULT_WIKI_CONFIG,
 	resolveWikiConfig,
@@ -210,7 +210,7 @@ export type {
 } from "./git/status.ts";
 export type {
 	ExecuteRuntimeWorktreeCommandsOptions,
-	RuntimeWorktreePlan,
+	ProjectServerWorktreePlan,
 	WorktreeCommand,
 	WorktreeCommandExecutionRecord,
 	WorktreeCommandExecutionResult,
@@ -248,7 +248,7 @@ export {
 	type ReviewProviderReceiptBinding,
 } from "./loops/review/contracts.ts";
 export type { ProjectSnapshot } from "./project/snapshot.ts";
-export type { RuntimeWorkUnitClaimPolicyDecision } from "./runtime/claims/policy.ts";
+export type { ProjectServerWorkUnitClaimPolicyDecision } from "./project-server/claims/policy.ts";
 export type {
 	TraceCloseReleaseNotes,
 	TraceReleaseNoteChange,
@@ -277,56 +277,56 @@ export type {
 	StatusView,
 	TraceQueueView,
 	TriggersView,
-} from "./runtime/queries/projection-types.ts";
+} from "./project-server/queries/projection-types.ts";
 export * from "./changes/trace/index.ts";
 export * from "./alignment/graph.ts";
 export * from "./alignment/knowledge.ts";
 export * from "./alignment/query.ts";
 export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
-export * from "./execution/ports.ts";
-export * from "./execution/runner-bundles/store.ts";
-export * from "./execution/supervisor/node-process-launcher.ts";
-export * from "./execution/supervisor/agent-run-supervisor.ts";
+export * from "./runtime/contracts.ts";
+export * from "./runtime/builds/store.ts";
+export * from "./runtime/processes/node-process-manager.ts";
+export * from "./runtime/runtime.ts";
 export * from "./protocol/client-pairing.ts";
 export {
-	SERVER_OIDC_AUTHENTICATION_PROTOCOL,
-	serverOidcIdentity,
-	verifyServerOidcAuthentication,
-	type ServerOidcAuthenticationAdapter,
-	type ServerOidcClaims,
-	type ServerOidcIdentity,
-	type VerifiedServerOidcAuthentication,
-} from "./server/authentication/oidc.ts";
+	PROJECT_SERVER_OIDC_AUTHENTICATION_PROTOCOL,
+	projectServerOidcIdentity,
+	verifyProjectServerOidcAuthentication,
+	type ProjectServerOidcAuthenticationAdapter,
+	type ProjectServerOidcClaims,
+	type ProjectServerOidcIdentity,
+	type VerifiedProjectServerOidcAuthentication,
+} from "./project-server/authentication/oidc.ts";
 export {
-	normalizeServerAuthenticationAssertion,
-	verifyServerAuthentication,
-	type ServerAuthenticationAdapter,
-	type ServerAuthenticationAssertion,
-	type ServerAuthenticationProof,
-} from "./server/authentication/proof.ts";
+	normalizeProjectServerAuthenticationAssertion,
+	verifyProjectServerAuthentication,
+	type ProjectServerAuthenticationAdapter,
+	type ProjectServerAuthenticationAssertion,
+	type ProjectServerAuthenticationProof,
+} from "./project-server/authentication/proof.ts";
 export {
-	SERVER_PAIRING_ENDPOINTS,
+	PROJECT_SERVER_PAIRING_ENDPOINTS,
 	issueAuthorizedClientPairing,
 	revokeAuthorizedClientPairing,
 	type AuthorizedClientPairingTransition,
-	type ServerPairingAuthorizationAdapter,
-	type ServerPairingAuthorizationCommand,
-	type ServerPairingAuthorizationContext,
-} from "./server/pairing/authorization.ts";
+	type ProjectServerPairingAuthorizationAdapter,
+	type ProjectServerPairingAuthorizationCommand,
+	type ProjectServerPairingAuthorizationContext,
+} from "./project-server/pairing/authorization.ts";
 export {
-	SERVER_REPOSITORY_ACCESS_PROTOCOL,
-	checkServerProviderRepositoryAccess,
-	type ServerRepositoryAccess,
-	type ServerRepositoryAccessAdapter,
-	type ServerRepositoryAccessAdapterRequest,
-	type ServerRepositoryAccessObservation,
-	type VerifiedServerRepositoryAccess,
-} from "./server/repository-access/check.ts";
-export * from "./server/registry/enrollment.ts";
-export * from "./server/registry/state.ts";
-export * from "./server/sessions/contracts.ts";
-export * from "./server/sessions/state.ts";
+	PROJECT_SERVER_REPOSITORY_ACCESS_PROTOCOL,
+	checkProjectServerProviderRepositoryAccess,
+	type ProjectServerRepositoryAccess,
+	type ProjectServerRepositoryAccessAdapter,
+	type ProjectServerRepositoryAccessAdapterRequest,
+	type ProjectServerRepositoryAccessObservation,
+	type VerifiedProjectServerRepositoryAccess,
+} from "./project-server/repository-access/check.ts";
+export * from "./project-server/registry/enrollment.ts";
+export * from "./project-server/registry/state.ts";
+export * from "./project-server/sessions/contracts.ts";
+export * from "./project-server/sessions/state.ts";
 export * from "./checks/contracts.ts";
 export * from "./checks/cache.ts";
 export * from "./checks/identity.ts";
@@ -335,10 +335,10 @@ export * from "./checks/results.ts";
 export * from "./checks/runner.ts";
 export * from "./checks/index.ts";
 export * from "./checks/packs/index.ts";
-export * from "./execution/checks/code.ts";
-export * from "./execution/checks/model.ts";
+export * from "./runtime/checks/code.ts";
+export * from "./runtime/checks/model.ts";
 export * from "./work-state/checks.ts";
-export * from "./execution/security/collectors.ts";
+export * from "./runtime/security/collectors.ts";
 export * from "./evidence/adapters/sarif.ts";
 export * from "./evidence/adapters/junit.ts";
 export * from "./evidence/adapters/coverage.ts";
@@ -356,12 +356,12 @@ export {
 	type DecisionResearchCollectionResult,
 	type DecisionResearchCollector,
 	type DecisionResearchCollectorBinding,
-} from "./runtime/effects/research-collection.ts";
+} from "./project-server/effects/research-collection.ts";
 export {
 	createDecisionGitAdmission,
 	type DecisionGitAdmission,
 	type DecisionGitAdmissionOptions,
-} from "./runtime/admission/git.ts";
+} from "./project-server/admission/git.ts";
 export {
 	DECISION_CANDIDATE_PRODUCTION_PROTOCOL,
 	assertNativeDecisionCandidateProductionRequest,
@@ -372,7 +372,7 @@ export {
 	type NativeDecisionCandidateProductionRequest,
 	type NativeDecisionEvaluationInput,
 	type NativeDecisionGateBinding,
-} from "./runtime/coordinator/decision-attempt.ts";
+} from "./project-server/coordinator/decision-attempt.ts";
 export {
 	commitNativeDecisionOperationSequence,
 	commitReviewOperationSequence,
@@ -386,7 +386,7 @@ export {
 	type NativeDecisionOperationSequence,
 	type ReviewCommitReceipt,
 	type ReviewOperationSequence,
-} from "./runtime/effects/gate-operations.ts";
+} from "./project-server/effects/gate-operations.ts";
 export {
 	createReviewGate,
 	deriveReviewLifecycleTransition,
@@ -394,4 +394,4 @@ export {
 	type ReviewGateRun,
 	type ReviewLifecycleTransition,
 	type RunReviewGateInput,
-} from "./runtime/lifecycle/gates.ts";
+} from "./project-server/lifecycle/gates.ts";

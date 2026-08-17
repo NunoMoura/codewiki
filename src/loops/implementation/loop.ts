@@ -35,7 +35,7 @@ import {
 	evaluateCommonReviewEvidence,
 	mergeImplementationEvidenceReports,
 	type ImplementationEvidenceReport,
-} from "../../execution/review/index.ts";
+} from "../../runtime/review/index.ts";
 import type {
 	ExitFinding,
 	ExitRemediationItem,

@@ -6,7 +6,7 @@ import {
 
 export type DecisionDisposition = "approve" | "reject" | "defer" | "withdraw";
 
-export interface RuntimeDecisionAuthority {
+export interface ProjectServerDecisionAuthority {
 	readonly kind: "user" | "policy";
 	readonly actor: string;
 	readonly ref: string;
@@ -48,7 +48,7 @@ export function parseDecisionCandidateProposal(
 		RUNTIME_FIELDS,
 	);
 	if (!DISPOSITIONS.includes(candidate.disposition as DecisionDisposition)) {
-		throw new Error("Runtime decision candidate disposition is invalid.");
+		throw new Error("Project Server decision candidate disposition is invalid.");
 	}
 	requiredCandidateText(candidate.rationale, "decision", "rationale");
 	return candidate as unknown as DecisionCandidateProposal;

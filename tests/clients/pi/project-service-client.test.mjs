@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { createPiProjectServiceClients } from "../../../src/clients/pi/project-service-client.ts";
-import { connectEnsuredProjectCoordinatorClient } from "../../../src/runtime/coordinator/process.ts";
-import { startProjectCoordinatorService } from "../../../src/runtime/coordinator/service.ts";
+import { connectEnsuredProjectCoordinatorClient } from "../../../src/project-server/coordinator/process.ts";
+import { startProjectCoordinatorService } from "../../../src/project-server/coordinator/service.ts";
 
 test("Pi project-service clients reuse one leased supervised connection", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-pi-project-service-"));
