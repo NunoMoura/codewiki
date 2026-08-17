@@ -81,7 +81,11 @@ Delegated Runs launch Claude Code, Codex, ACP, or another exact adapter. Runtime
 
 DSH-backed Runs receive one immutable Stage Context over exact WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result snapshots. Bounded direct and batch queries carry deterministic order, query and snapshot digests, source refs, coverage, unknowns, truncation, cursor, engine identity, and staleness. No live-tree, ambient filesystem, network, environment, credential, or unlogged context fallback exists.
 
-Every CodeWiki-controlled model-visible input, query, replacement, usage record, output, and cancellation fact enters the append-only Execution Ledger. Raw DSH Agent Session bytes remain versioned evidence, not canonical project state. Compaction changes model-visible surface only. Each checkpoint cites replaced ranges and retains exact history; CodeWiki policy rehydrates canonical stage and project facts while DSH performs event replacement mechanics. Opaque Python or V8 heap state is never canonical or recovery-critical.
+Every CodeWiki-controlled model-visible input, query, replacement, usage record, output, and cancellation fact enters the append-only Execution Ledger. Ledger headers bind the exact Run Request, Runtime Build, Agent Session, Stage Context, static inputs, model route, tools, and Skills. Entries retain canonical payloads in contiguous sequence with payload digests and a previous-entry digest chain. Durable append requires expected-head compare-and-swap; restart recovery revalidates the complete chain rather than trusting filenames or cached state.
+
+Raw DSH Agent Session bytes remain versioned evidence, not canonical project state. Runtime retains them by exact byte length and digest and revalidates stored bytes on every receipt read. A completed Run Receipt commits only after its exact Execution Ledger and raw log are durably present. Receipt commit is immutable, identity-keyed, atomic, and compare-and-swap guarded; recovery rejects missing, mismatched, corrupted, or misnamed evidence.
+
+Compaction changes model-visible surface only. Each checkpoint cites replaced ranges and retains exact history; CodeWiki policy rehydrates canonical stage and project facts while DSH performs event replacement mechanics. Opaque Python or V8 heap state is never canonical or recovery-critical.
 
 ## Authority and API
 

@@ -42,9 +42,13 @@ export const TARGET_PROJECT_SERVER_SUBDIRECTORIES = [
 export const TARGET_RUNTIME_SUBDIRECTORIES = [
 	"builds",
 	"checks",
+	"context",
 	"dsh",
+	"evidence",
+	"persistence",
 	"pi",
 	"processes",
+	"receipts",
 	"review",
 	"security",
 ] as const;

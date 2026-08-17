@@ -178,8 +178,13 @@ src/
     runtime.ts
     builds/
     checks/
+    context/
+    dsh/
+    evidence/
+    persistence/
     pi/                            # temporary migration evidence
     processes/
+    receipts/
     review/                        # temporary legacy review execution
     security/
   utils/
@@ -222,8 +227,8 @@ No compatibility exports preserve former `src/server/**`, `src/execution/**`, or
 - [x] Rename Run Request, Run, Run Process, Runtime Build, and Run Receipt contracts without aliases.
 - [x] Persist qualified Runtime Builds and active pointer through expected-generation compare-and-swap.
 - [x] Implement authenticated isolated Node Run Process management and Runtime logical lifecycle control.
-- [ ] Build repository-owned production DSH Adapter and exact reproducible Runtime Build closure.
-- [ ] Establish auditable reviewed-source versus executed-package provenance.
+- [x] Build repository-owned production DSH Adapter and exact reproducible Runtime Build closure.
+- [x] Establish auditable reviewed-source versus executed-package provenance.
 - [ ] Qualify Decision, Planning, Implementation, Review, tool-free Model Check, delegated harness, cancellation, compaction, crash recovery, hostile ambient configuration, and two-build rollback scenarios.
 - [ ] Implement durable Execution Ledger, raw-log retention, exact Stage Context, and state-aware compaction.
 - [ ] Implement durable Run Receipt persistence and receipt-commit compare-and-swap.
