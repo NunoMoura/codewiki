@@ -6,12 +6,15 @@ import {
 } from "../../src/checks/packs/contracts.ts";
 import {
 	AGENT_RUNNER_PROTOCOL,
+	AGENT_RUN_SPEC_SCHEMA_VERSION,
 	EXECUTION_CAPABILITY_NAMES,
 	activateRunnerBundle,
 	admitAgentRunnerHandshake,
 	assertProducerSkillReceipt,
 	bindActiveRunnerBundle,
 	bindProducerSkills,
+	createAgentRunRawLogReference,
+	createAgentRunSpecification,
 	createQualifiedRunnerBundle,
 	createRunnerBundleManifest,
 	createRunnerBundleRegistrySnapshot,
@@ -254,6 +257,83 @@ describe("execution ports", () => {
 		);
 	});
 
+	it("binds one immutable backend Agent Run to exact inputs and Runner Bundle", () => {
+		const bundle = qualifiedRunnerBundle(
+			"a".repeat(40),
+			"0.1.0-rc.6",
+			"evidence",
+		);
+		const spec = agentRunSpecification(bundle.bundleDigest);
+		const {specDigest, ...digestBody} = spec;
+		assert.equal(spec.schemaVersion, AGENT_RUN_SPEC_SCHEMA_VERSION);
+		assert.equal(specDigest, canonicalJsonDigest(digestBody));
+		assert.equal(Object.isFrozen(spec), true);
+		assert.equal(Object.isFrozen(spec.inputs), true);
+		assert.notEqual(
+			specDigest,
+			agentRunSpecification(bundle.bundleDigest, {
+				promptDigest: sha256Digest("changed-prompt"),
+			}).specDigest,
+		);
+	});
+
+	it("fails closed on role, tool, Workbench, and resume binding drift", () => {
+		const bundle = qualifiedRunnerBundle(
+			"a".repeat(40),
+			"0.1.0-rc.6",
+			"evidence",
+		);
+		assert.throws(
+			() =>
+				agentRunSpecification(bundle.bundleDigest, {
+					role: "model-check",
+					stage: "review",
+					producerSkillSetDigest: sha256Digest("forbidden-skill"),
+				}),
+			/Model Check Agent Runs cannot receive producer Skills or tools/,
+		);
+		assert.throws(
+			() =>
+				agentRunSpecification(bundle.bundleDigest, {
+					role: "implementation-worker",
+					stage: "implementation",
+				}),
+			/Implementation Worker Agent Runs require Runtime Workbench custody/,
+		);
+
+		const rawLog = createAgentRunRawLogReference({
+			encoding: "jsonl",
+			formatVersion: 0,
+			sessionId: "session-001",
+			storageId: "runner-log-001",
+			byteLength: 2048,
+			digest: sha256Digest("raw-log"),
+			runnerBundleDigest: bundle.bundleDigest,
+		});
+		assert.throws(
+			() =>
+				agentRunSpecification(bundle.bundleDigest, {
+					session: {
+						mode: "resume",
+						sessionId: "different-session",
+						resumeLog: rawLog,
+					},
+				}),
+			/Resume log session does not match the Agent Run session/,
+		);
+		assert.throws(
+			() =>
+				agentRunSpecification(sha256Digest("different-bundle"), {
+					session: {
+						mode: "resume",
+						sessionId: "session-001",
+						resumeLog: rawLog,
+					},
+				}),
+			/Resume log Runner Bundle does not match the Agent Run binding/,
+		);
+	});
+
 	it("resumes only the exact bound bundle while allowing explicit rollback", () => {
 		const first = qualifiedRunnerBundle("a".repeat(40), "0.1.0-rc.5", "first");
 		const second = qualifiedRunnerBundle("b".repeat(40), "0.1.0-rc.6", "second");
@@ -317,6 +397,66 @@ describe("execution ports", () => {
 		assert.equal(bindActiveRunnerBundle(registry).bundleDigest, first.bundleDigest);
 	});
 });
+
+function agentRunSpecification(bundleDigest, overrides = {}) {
+	const provider = "deepseek";
+	const model = "deepseek-v4-flash";
+	const optionsDigest = sha256Digest("route-options");
+	const role = overrides.role || "decision-producer";
+	const stage = overrides.stage || "decision";
+	const workspace =
+		overrides.workspace ||
+		({
+			kind: "immutable",
+			repositorySnapshotDigest: sha256Digest("repository"),
+		});
+	return createAgentRunSpecification({
+		runId: "run-001",
+		operationId: "operation-001",
+		custody: "backend-owned",
+		role,
+		stage,
+		subject: {
+			id: "change-001",
+			digest: sha256Digest("subject"),
+		},
+		runnerBundle: {
+			bundleDigest,
+			runnerProtocolVersion: AGENT_RUNNER_PROTOCOL.version,
+		},
+		session:
+			overrides.session ||
+			({mode: "create", sessionId: "session-001", resumeLog: null}),
+		inputs: {
+			stageContextDigest: sha256Digest("stage-context"),
+			staticInputManifestDigest: sha256Digest("static-inputs"),
+			systemPromptDigest: sha256Digest("system-prompt"),
+			promptDigest: overrides.promptDigest || sha256Digest("prompt"),
+			producerSkillSetDigest:
+				overrides.producerSkillSetDigest === undefined
+					? null
+					: overrides.producerSkillSetDigest,
+			toolMode: role === "model-check" ? "none" : "admitted",
+			toolSetDigest: sha256Digest(role === "model-check" ? "no-tools" : "tools"),
+			modelRoute: {
+				provider,
+				model,
+				optionsDigest,
+				routeDigest: canonicalJsonDigest({provider, model, optionsDigest}),
+			},
+		},
+		workspace,
+		budget: {
+			timeoutMs: 60_000,
+			maxModelRequests: 8,
+			maxToolCalls: role === "model-check" ? 0 : 16,
+			maxInputTokens: 64_000,
+			maxOutputTokens: 8_000,
+		},
+		createdAt: "2026-08-16T10:00:00.000Z",
+		deadlineAt: "2026-08-16T10:01:00.000Z",
+	});
+}
 
 function runnerManifest(dshSourceCommit, dshVersion) {
 	return createRunnerBundleManifest({

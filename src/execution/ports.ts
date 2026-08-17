@@ -313,6 +313,457 @@ export function admitAgentRunnerHandshake(
 	});
 }
 
+export const AGENT_RUN_SPEC_SCHEMA_VERSION = "1.0.0" as const;
+
+export type AgentRunCustody = "backend-owned" | "backend-delegated";
+export type AgentRunRole =
+	| "decision-producer"
+	| "planning-producer"
+	| "implementation-worker"
+	| "review-producer"
+	| "decision-research"
+	| "model-check";
+export type AgentRunToolMode = "none" | "admitted";
+
+export interface AgentRunRawLogReference {
+	readonly encoding: "jsonl" | "jsonl-zstd";
+	readonly formatVersion: number;
+	readonly sessionId: string;
+	readonly storageId: string;
+	readonly byteLength: number;
+	readonly digest: Sha256Digest;
+	readonly runnerBundleDigest: Sha256Digest;
+}
+
+export type AgentRunSessionBinding =
+	| {
+			readonly mode: "create";
+			readonly sessionId: string;
+			readonly resumeLog: null;
+	  }
+	| {
+			readonly mode: "resume";
+			readonly sessionId: string;
+			readonly resumeLog: AgentRunRawLogReference;
+	  };
+
+export interface AgentRunModelRouteBinding {
+	readonly provider: string;
+	readonly model: string;
+	readonly optionsDigest: Sha256Digest;
+	readonly routeDigest: Sha256Digest;
+}
+
+export interface AgentRunInputBindings {
+	readonly stageContextDigest: Sha256Digest;
+	readonly staticInputManifestDigest: Sha256Digest;
+	readonly systemPromptDigest: Sha256Digest;
+	readonly promptDigest: Sha256Digest;
+	readonly producerSkillSetDigest: Sha256Digest | null;
+	readonly toolMode: AgentRunToolMode;
+	readonly toolSetDigest: Sha256Digest;
+	readonly modelRoute: AgentRunModelRouteBinding;
+}
+
+export type AgentRunWorkspaceBinding =
+	| {
+			readonly kind: "immutable";
+			readonly repositorySnapshotDigest: Sha256Digest;
+	  }
+	| {
+			readonly kind: "runtime-workbench";
+			readonly repositorySnapshotDigest: Sha256Digest;
+			readonly assignmentId: string;
+			readonly workbenchRef: string;
+	  };
+
+export interface AgentRunBudget {
+	readonly timeoutMs: number;
+	readonly maxModelRequests: number;
+	readonly maxToolCalls: number;
+	readonly maxInputTokens: number;
+	readonly maxOutputTokens: number;
+}
+
+export interface AgentRunSpecificationInput {
+	readonly runId: string;
+	readonly operationId: string;
+	readonly custody: AgentRunCustody;
+	readonly role: AgentRunRole;
+	readonly stage: CheckStage;
+	readonly subject: {
+		readonly id: string;
+		readonly digest: Sha256Digest;
+	};
+	readonly runnerBundle: RunnerBundleBinding;
+	readonly session: AgentRunSessionBinding;
+	readonly inputs: AgentRunInputBindings;
+	readonly workspace: AgentRunWorkspaceBinding;
+	readonly budget: AgentRunBudget;
+	readonly createdAt: string;
+	readonly deadlineAt: string;
+}
+
+export interface AgentRunSpecification extends AgentRunSpecificationInput {
+	readonly schemaVersion: typeof AGENT_RUN_SPEC_SCHEMA_VERSION;
+	readonly specDigest: Sha256Digest;
+}
+
+export function createAgentRunRawLogReference(
+	value: AgentRunRawLogReference,
+): Readonly<AgentRunRawLogReference> {
+	if (!hasExactKeys(value, AGENT_RUN_RAW_LOG_KEYS)) {
+		throw new Error("Agent Run raw-log reference shape is invalid.");
+	}
+	if (value.encoding !== "jsonl" && value.encoding !== "jsonl-zstd") {
+		throw new Error("Agent Run raw-log encoding is invalid.");
+	}
+	assertNonNegativeInteger(value.formatVersion, "Agent Run raw-log formatVersion");
+	assertIdentifier(value.sessionId, "Agent Run raw-log sessionId");
+	assertIdentifier(value.storageId, "Agent Run raw-log storageId");
+	assertPositiveInteger(value.byteLength, "Agent Run raw-log byteLength");
+	return Object.freeze({
+		encoding: value.encoding,
+		formatVersion: value.formatVersion,
+		sessionId: value.sessionId,
+		storageId: value.storageId,
+		byteLength: value.byteLength,
+		digest: assertSha256Digest(value.digest, "Agent Run raw-log digest"),
+		runnerBundleDigest: assertSha256Digest(
+			value.runnerBundleDigest,
+			"Agent Run raw-log Runner Bundle digest",
+		),
+	});
+}
+
+export function createAgentRunSpecification(
+	value: AgentRunSpecificationInput,
+): Readonly<AgentRunSpecification> {
+	if (!hasExactKeys(value, AGENT_RUN_SPEC_INPUT_KEYS)) {
+		throw new Error("Agent Run Specification shape is invalid.");
+	}
+	assertIdentifier(value.runId, "Agent Run runId");
+	assertIdentifier(value.operationId, "Agent Run operationId");
+	if (value.custody !== "backend-owned" && value.custody !== "backend-delegated") {
+		throw new Error("Agent Run custody is invalid.");
+	}
+	assertAgentRunRoleStage(value.role, value.stage);
+	if (value.role === "model-check" && value.custody !== "backend-owned") {
+		throw new Error("Model Check Agent Runs must use backend-owned custody.");
+	}
+	const subject = normalizeAgentRunSubject(value.subject);
+	assertRunnerBundleBinding(value.runnerBundle);
+	const runnerBundle = Object.freeze({...value.runnerBundle});
+	const session = normalizeAgentRunSession(value.session, runnerBundle);
+	const inputs = normalizeAgentRunInputs(value.inputs, value.role);
+	const workspace = normalizeAgentRunWorkspace(value.workspace, value.role);
+	const budget = normalizeAgentRunBudget(value.budget, inputs.toolMode);
+	const createdAt = assertTimestamp(value.createdAt, "Agent Run createdAt");
+	const deadlineAt = assertTimestamp(value.deadlineAt, "Agent Run deadlineAt");
+	if (Date.parse(deadlineAt) <= Date.parse(createdAt)) {
+		throw new Error("Agent Run deadlineAt must be later than createdAt.");
+	}
+	const body = Object.freeze({
+		schemaVersion: AGENT_RUN_SPEC_SCHEMA_VERSION,
+		runId: value.runId,
+		operationId: value.operationId,
+		custody: value.custody,
+		role: value.role,
+		stage: value.stage,
+		subject,
+		runnerBundle,
+		session,
+		inputs,
+		workspace,
+		budget,
+		createdAt,
+		deadlineAt,
+	});
+	return Object.freeze({...body, specDigest: canonicalJsonDigest(body)});
+}
+
+function normalizeAgentRunSubject(
+	value: AgentRunSpecificationInput["subject"],
+): AgentRunSpecificationInput["subject"] {
+	if (!hasExactKeys(value, ["id", "digest"])) {
+		throw new Error("Agent Run subject shape is invalid.");
+	}
+	assertIdentifier(value.id, "Agent Run subject id");
+	return Object.freeze({
+		id: value.id,
+		digest: assertSha256Digest(value.digest, "Agent Run subject digest"),
+	});
+}
+
+function normalizeAgentRunSession(
+	value: AgentRunSessionBinding,
+	runnerBundle: RunnerBundleBinding,
+): AgentRunSessionBinding {
+	if (!hasExactKeys(value, ["mode", "sessionId", "resumeLog"])) {
+		throw new Error("Agent Run session shape is invalid.");
+	}
+	assertIdentifier(value.sessionId, "Agent Run sessionId");
+	if (value.mode === "create") {
+		if (value.resumeLog !== null) {
+			throw new Error("New Agent Run sessions cannot carry a resume log.");
+		}
+		return Object.freeze({mode: "create", sessionId: value.sessionId, resumeLog: null});
+	}
+	if (value.mode !== "resume" || !value.resumeLog) {
+		throw new Error("Agent Run session mode is invalid.");
+	}
+	const resumeLog = createAgentRunRawLogReference(value.resumeLog);
+	if (resumeLog.sessionId !== value.sessionId) {
+		throw new Error("Resume log session does not match the Agent Run session.");
+	}
+	if (resumeLog.runnerBundleDigest !== runnerBundle.bundleDigest) {
+		throw new Error(
+			"Resume log Runner Bundle does not match the Agent Run binding.",
+		);
+	}
+	return Object.freeze({mode: "resume", sessionId: value.sessionId, resumeLog});
+}
+
+function normalizeAgentRunInputs(
+	value: AgentRunInputBindings,
+	role: AgentRunRole,
+): AgentRunInputBindings {
+	if (!hasExactKeys(value, AGENT_RUN_INPUT_KEYS)) {
+		throw new Error("Agent Run input bindings shape is invalid.");
+	}
+	const producerSkillSetDigest =
+		value.producerSkillSetDigest === null
+			? null
+			: assertSha256Digest(
+					value.producerSkillSetDigest,
+					"Agent Run producer Skill set digest",
+				);
+	if (value.toolMode !== "none" && value.toolMode !== "admitted") {
+		throw new Error("Agent Run toolMode is invalid.");
+	}
+	if (
+		role === "model-check" &&
+		(producerSkillSetDigest !== null || value.toolMode !== "none")
+	) {
+		throw new Error("Model Check Agent Runs cannot receive producer Skills or tools.");
+	}
+	return Object.freeze({
+		stageContextDigest: assertSha256Digest(
+			value.stageContextDigest,
+			"Agent Run Stage Context digest",
+		),
+		staticInputManifestDigest: assertSha256Digest(
+			value.staticInputManifestDigest,
+			"Agent Run static input manifest digest",
+		),
+		systemPromptDigest: assertSha256Digest(
+			value.systemPromptDigest,
+			"Agent Run system prompt digest",
+		),
+		promptDigest: assertSha256Digest(value.promptDigest, "Agent Run prompt digest"),
+		producerSkillSetDigest,
+		toolMode: value.toolMode,
+		toolSetDigest: assertSha256Digest(
+			value.toolSetDigest,
+			"Agent Run tool set digest",
+		),
+		modelRoute: normalizeAgentRunModelRoute(value.modelRoute),
+	});
+}
+
+function normalizeAgentRunModelRoute(
+	value: AgentRunModelRouteBinding,
+): AgentRunModelRouteBinding {
+	if (!hasExactKeys(value, ["provider", "model", "optionsDigest", "routeDigest"])) {
+		throw new Error("Agent Run model route shape is invalid.");
+	}
+	assertBoundedText(value.provider, "Agent Run model provider", 128);
+	assertBoundedText(value.model, "Agent Run model", 256);
+	const optionsDigest = assertSha256Digest(
+		value.optionsDigest,
+		"Agent Run model options digest",
+	);
+	const routeDigest = assertSha256Digest(value.routeDigest, "Agent Run model route digest");
+	if (
+		routeDigest !==
+		canonicalJsonDigest({provider: value.provider, model: value.model, optionsDigest})
+	) {
+		throw new Error("Agent Run model route digest does not match its route.");
+	}
+	return Object.freeze({
+		provider: value.provider,
+		model: value.model,
+		optionsDigest,
+		routeDigest,
+	});
+}
+
+function normalizeAgentRunWorkspace(
+	value: AgentRunWorkspaceBinding,
+	role: AgentRunRole,
+): AgentRunWorkspaceBinding {
+	if (value.kind === "immutable") {
+		if (!hasExactKeys(value, ["kind", "repositorySnapshotDigest"])) {
+			throw new Error("Immutable Agent Run workspace shape is invalid.");
+		}
+		if (role === "implementation-worker") {
+			throw new Error(
+				"Implementation Worker Agent Runs require Runtime Workbench custody.",
+			);
+		}
+		return Object.freeze({
+			kind: "immutable",
+			repositorySnapshotDigest: assertSha256Digest(
+				value.repositorySnapshotDigest,
+				"Agent Run repository snapshot digest",
+			),
+		});
+	}
+	if (
+		value.kind !== "runtime-workbench" ||
+		!hasExactKeys(value, [
+			"kind",
+			"repositorySnapshotDigest",
+			"assignmentId",
+			"workbenchRef",
+		])
+	) {
+		throw new Error("Agent Run Runtime Workbench shape is invalid.");
+	}
+	if (role !== "implementation-worker") {
+		throw new Error("Only Implementation Worker Agent Runs may receive a Runtime Workbench.");
+	}
+	assertIdentifier(value.assignmentId, "Agent Run Assignment id");
+	assertIdentifier(value.workbenchRef, "Agent Run Workbench ref");
+	return Object.freeze({
+		kind: "runtime-workbench",
+		repositorySnapshotDigest: assertSha256Digest(
+			value.repositorySnapshotDigest,
+			"Agent Run repository snapshot digest",
+		),
+		assignmentId: value.assignmentId,
+		workbenchRef: value.workbenchRef,
+	});
+}
+
+function normalizeAgentRunBudget(
+	value: AgentRunBudget,
+	toolMode: AgentRunToolMode,
+): AgentRunBudget {
+	if (!hasExactKeys(value, AGENT_RUN_BUDGET_KEYS)) {
+		throw new Error("Agent Run budget shape is invalid.");
+	}
+	assertPositiveInteger(value.timeoutMs, "Agent Run timeoutMs");
+	assertPositiveInteger(value.maxModelRequests, "Agent Run maxModelRequests");
+	assertNonNegativeInteger(value.maxToolCalls, "Agent Run maxToolCalls");
+	assertPositiveInteger(value.maxInputTokens, "Agent Run maxInputTokens");
+	assertPositiveInteger(value.maxOutputTokens, "Agent Run maxOutputTokens");
+	if (toolMode === "none" && value.maxToolCalls !== 0) {
+		throw new Error("Tool-free Agent Runs require maxToolCalls 0.");
+	}
+	if (toolMode === "admitted" && value.maxToolCalls === 0) {
+		throw new Error("Tool-admitted Agent Runs require a positive maxToolCalls budget.");
+	}
+	return Object.freeze({...value});
+}
+
+function assertAgentRunRoleStage(role: AgentRunRole, stage: CheckStage): void {
+	const expectedStage: Readonly<Record<Exclude<AgentRunRole, "model-check">, CheckStage>> = {
+		"decision-producer": "decision",
+		"planning-producer": "planning",
+		"implementation-worker": "implementation",
+		"review-producer": "review",
+		"decision-research": "decision",
+	};
+	if (role === "model-check") {
+		if (!["decision", "planning", "implementation", "review"].includes(stage)) {
+			throw new Error("Model Check Agent Run stage is invalid.");
+		}
+		return;
+	}
+	if (!(role in expectedStage) || expectedStage[role] !== stage) {
+		throw new Error(`Agent Run role ${role} does not match stage ${stage}.`);
+	}
+}
+
+function assertIdentifier(value: unknown, field: string): asserts value is string {
+	if (
+		typeof value !== "string" ||
+		!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/.test(value)
+	) {
+		throw new Error(`${field} is invalid.`);
+	}
+}
+
+function assertBoundedText(value: unknown, field: string, maximum: number): void {
+	if (
+		typeof value !== "string" ||
+		value.length < 1 ||
+		value.length > maximum ||
+		value.trim() !== value ||
+		/[\u0000-\u001f\u007f]/.test(value)
+	) {
+		throw new Error(`${field} is invalid.`);
+	}
+}
+
+function assertPositiveInteger(value: unknown, field: string): void {
+	if (!Number.isSafeInteger(value) || (value as number) < 1) {
+		throw new Error(`${field} must be a positive safe integer.`);
+	}
+}
+
+function assertNonNegativeInteger(value: unknown, field: string): void {
+	if (!Number.isSafeInteger(value) || (value as number) < 0) {
+		throw new Error(`${field} must be a non-negative safe integer.`);
+	}
+}
+
+const AGENT_RUN_RAW_LOG_KEYS = [
+	"encoding",
+	"formatVersion",
+	"sessionId",
+	"storageId",
+	"byteLength",
+	"digest",
+	"runnerBundleDigest",
+] as const;
+
+const AGENT_RUN_SPEC_INPUT_KEYS = [
+	"runId",
+	"operationId",
+	"custody",
+	"role",
+	"stage",
+	"subject",
+	"runnerBundle",
+	"session",
+	"inputs",
+	"workspace",
+	"budget",
+	"createdAt",
+	"deadlineAt",
+] as const;
+
+const AGENT_RUN_INPUT_KEYS = [
+	"stageContextDigest",
+	"staticInputManifestDigest",
+	"systemPromptDigest",
+	"promptDigest",
+	"producerSkillSetDigest",
+	"toolMode",
+	"toolSetDigest",
+	"modelRoute",
+] as const;
+
+const AGENT_RUN_BUDGET_KEYS = [
+	"timeoutMs",
+	"maxModelRequests",
+	"maxToolCalls",
+	"maxInputTokens",
+	"maxOutputTokens",
+] as const;
+
 export function createRunnerBundleManifest(
 	input: RunnerBundleManifest,
 ): RunnerBundleManifest {
