@@ -285,6 +285,7 @@ export * from "./alignment/query.ts";
 export * from "./knowledge/codewiki-kb-profile.ts";
 export * from "./knowledge/system-diagrams.ts";
 export * from "./execution/ports.ts";
+export * from "./execution/supervisor/node-process-launcher.ts";
 export * from "./execution/supervisor/supervisor.ts";
 export * from "./protocol/client-pairing.ts";
 export {

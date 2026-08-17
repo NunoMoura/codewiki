@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import {Buffer} from "node:buffer";
+import {mkdtemp, rm, writeFile} from "node:fs/promises";
+import {tmpdir} from "node:os";
+import {join, resolve} from "node:path";
 import {describe, it} from "node:test";
+import {pathToFileURL} from "node:url";
 
 import {
 	AGENT_RUNNER_PROTOCOL,
@@ -20,6 +24,7 @@ import {
 	openAgentRunnerEnvelope,
 	sealAgentRunnerEnvelope,
 } from "../../../src/execution/supervisor/process-protocol.ts";
+import {createNodeAgentRunnerProcessLauncher} from "../../../src/execution/supervisor/node-process-launcher.ts";
 import {createAgentSupervisor} from "../../../src/execution/supervisor/supervisor.ts";
 import {canonicalJsonDigest, sha256Digest} from "../../../src/utils/canonical-json.ts";
 
@@ -93,6 +98,36 @@ describe("Agent Supervisor", () => {
 		);
 		assert.equal(launcher.connection?.terminated, true);
 		assert.equal(launcher.lastLaunchInput?.bootstrapKey.every((byte) => byte === 0), true);
+	});
+
+	it("runs one exact child through private key, command, and event file descriptors", async () => {
+		const directory = await mkdtemp(join(tmpdir(), "codewiki-agent-runner-"));
+		try {
+			const scriptPath = join(directory, "runner.mjs");
+			await writeFile(scriptPath, nodeRunnerFixtureSource(), {mode: 0o700});
+			const launcher = createNodeAgentRunnerProcessLauncher({
+				resolveArtifact: async (challenge) => ({
+					runnerBundleDigest: challenge.runnerBundleDigest,
+					runnerProtocolVersion: challenge.runnerProtocolVersion,
+					executable: process.execPath,
+					args: [scriptPath],
+					cwd: directory,
+				}),
+				maxFrameBytes: 1_000_000,
+				terminationGraceMs: 1_000,
+			});
+			const supervisor = createAgentSupervisor(supervisorOptions(launcher));
+			const handle = await supervisor.start(runSpecification());
+			const quiescence = await supervisor.waitForQuiescence(handle);
+
+			assert.equal(quiescence.finalEventSequence, 1);
+			assert.deepEqual(
+				supervisor.readEvents(handle).map((event) => event.kind),
+				["accepted", "runner-started"],
+			);
+		} finally {
+			await rm(directory, {recursive: true, force: true});
+		}
 	});
 
 	it("forces termination when shutdown cancellation cannot cross the process channel", async () => {
@@ -262,6 +297,106 @@ class FakeRunnerConnection {
 		}
 		this.incoming.push(value);
 	}
+}
+
+function nodeRunnerFixtureSource() {
+	const ports = pathToFileURL(resolve("src/execution/ports.ts")).href;
+	const protocol = pathToFileURL(
+		resolve("src/execution/supervisor/process-protocol.ts"),
+	).href;
+	return `
+import {createReadStream, createWriteStream, readFileSync} from "node:fs";
+import {createInterface} from "node:readline";
+import {
+  createAgentRunEvent,
+  createAgentRunQuiescence,
+} from ${JSON.stringify(ports)};
+import {
+  createAgentRunnerHandshakeResponse,
+  openAgentRunnerEnvelope,
+  sealAgentRunnerEnvelope,
+} from ${JSON.stringify(protocol)};
+
+if (process.argv.length !== 2 || Object.keys(process.env).length !== 0) {
+  throw new Error("Runner received ambient argv or environment state.");
+}
+const bootstrapKey = new Uint8Array(readFileSync(3));
+const commands = createInterface({
+  input: createReadStream("", {fd: 4, autoClose: false}),
+  crlfDelay: Infinity,
+});
+const events = createWriteStream("", {fd: 5, autoClose: false});
+let challenge;
+let handle;
+let commandSequence = 0;
+let runnerSequence = 0;
+for await (const line of commands) {
+  const value = JSON.parse(line);
+  if (!challenge) {
+    challenge = value;
+    await send(createAgentRunnerHandshakeResponse({
+      challenge,
+      handshake: {
+        runnerProtocolId: challenge.runnerProtocolId,
+        runnerProtocolVersion: challenge.runnerProtocolVersion,
+        runnerBundleDigest: challenge.runnerBundleDigest,
+      },
+      bootstrapKey,
+    }));
+    continue;
+  }
+  const envelope = openAgentRunnerEnvelope({
+    challenge,
+    expectedDirection: "supervisor-to-runner",
+    expectedSequence: commandSequence,
+    value,
+    handle,
+    bootstrapKey,
+  });
+  commandSequence += 1;
+  if (envelope.message.kind !== "start") continue;
+  handle = envelope.message.handle;
+  const event = createAgentRunEvent(handle, {
+    sequence: 1,
+    kind: "runner-started",
+    occurredAt: "2026-08-16T10:00:02.000Z",
+    payloadDigest: "sha256:" + "1".repeat(64),
+  });
+  await send(sealAgentRunnerEnvelope({
+    challenge,
+    direction: "runner-to-supervisor",
+    sequence: runnerSequence++,
+    message: {kind: "event", event},
+    handle,
+    bootstrapKey,
+  }));
+  const quiescence = createAgentRunQuiescence(handle, {
+    finalEventSequence: 1,
+    quiescedAt: "2026-08-16T10:00:03.000Z",
+    proofDigest: "sha256:" + "2".repeat(64),
+    rawLog: null,
+  });
+  await send(sealAgentRunnerEnvelope({
+    challenge,
+    direction: "runner-to-supervisor",
+    sequence: runnerSequence++,
+    message: {kind: "quiescence", quiescence},
+    handle,
+    bootstrapKey,
+  }));
+}
+bootstrapKey.fill(0);
+events.end();
+
+function send(value) {
+  return new Promise((resolve, reject) => {
+    events.write(JSON.stringify(value) + "\\n", (error) => {
+      if (error) reject(error);
+      else resolve();
+    });
+  });
+}
+`;
 }
 
 function supervisorOptions(launcher) {
