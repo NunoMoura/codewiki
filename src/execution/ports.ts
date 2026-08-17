@@ -220,6 +220,397 @@ export interface SessionIsolationPort {
 	readonly sessionIsolation: SessionIsolationKind;
 }
 
+export const AGENT_RUNNER_PROTOCOL = Object.freeze({
+	id: "codewiki.agent-runner",
+	version: "1.0.0",
+} as const);
+
+export const RUNNER_BUNDLE_SCHEMA_VERSION = "1.0.0" as const;
+export const RUNNER_BUNDLE_REGISTRY_SCHEMA_VERSION = "1.0.0" as const;
+
+export interface RunnerBundleManifest {
+	readonly schemaVersion: typeof RUNNER_BUNDLE_SCHEMA_VERSION;
+	readonly runnerProtocolVersion: string;
+	readonly nodeVersion: string;
+	readonly dshSourceCommit: string;
+	readonly dshPackageClosureDigest: Sha256Digest;
+	readonly cordisClosureDigest: Sha256Digest;
+	readonly backendPluginClosureDigest: Sha256Digest;
+	readonly modelAdapterClosureDigest: Sha256Digest;
+	readonly delegateAdapterClosureDigest: Sha256Digest;
+	readonly runnerArtifactDigest: Sha256Digest;
+}
+
+export interface QualifiedRunnerBundle {
+	readonly manifest: RunnerBundleManifest;
+	readonly bundleDigest: Sha256Digest;
+	readonly qualificationSuiteDigest: Sha256Digest;
+	readonly qualificationEvidenceDigest: Sha256Digest;
+	readonly qualifiedAt: string;
+}
+
+export interface RunnerBundleRegistrySnapshot {
+	readonly schemaVersion: typeof RUNNER_BUNDLE_REGISTRY_SCHEMA_VERSION;
+	readonly generation: number;
+	readonly generatedAt: string;
+	readonly activeBundleDigest: Sha256Digest | null;
+	readonly bundles: readonly QualifiedRunnerBundle[];
+}
+
+export interface RunnerBundleBinding {
+	readonly bundleDigest: Sha256Digest;
+	readonly runnerProtocolVersion: string;
+}
+
+export function createRunnerBundleManifest(
+	input: RunnerBundleManifest,
+): RunnerBundleManifest {
+	if (!hasExactKeys(input, RUNNER_BUNDLE_MANIFEST_KEYS)) {
+		throw new Error("Runner Bundle manifest shape is invalid.");
+	}
+	if (input.schemaVersion !== RUNNER_BUNDLE_SCHEMA_VERSION) {
+		throw new Error("Runner Bundle manifest schemaVersion is invalid.");
+	}
+	assertVersion(input.runnerProtocolVersion, "Runner protocol version");
+	assertVersion(input.nodeVersion, "Runner Bundle Node version");
+	if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(input.dshSourceCommit)) {
+		throw new Error(
+			"Runner Bundle DSH source commit must be a lowercase full Git object id.",
+		);
+	}
+	for (const field of RUNNER_BUNDLE_DIGEST_FIELDS) {
+		assertSha256Digest(input[field], `Runner Bundle ${field}`);
+	}
+	return Object.freeze({...input});
+}
+
+export function createQualifiedRunnerBundle(input: {
+	readonly manifest: RunnerBundleManifest;
+	readonly qualificationSuiteDigest: Sha256Digest;
+	readonly qualificationEvidenceDigest: Sha256Digest;
+	readonly qualifiedAt: string;
+}): QualifiedRunnerBundle {
+	const manifest = createRunnerBundleManifest(input.manifest);
+	return Object.freeze({
+		manifest,
+		bundleDigest: canonicalJsonDigest(manifest),
+		qualificationSuiteDigest: assertSha256Digest(
+			input.qualificationSuiteDigest,
+			"Runner Bundle qualification suite digest",
+		),
+		qualificationEvidenceDigest: assertSha256Digest(
+			input.qualificationEvidenceDigest,
+			"Runner Bundle qualification Evidence digest",
+		),
+		qualifiedAt: assertTimestamp(input.qualifiedAt, "Runner Bundle qualifiedAt"),
+	});
+}
+
+export function createRunnerBundleRegistrySnapshot(input: {
+	readonly generatedAt: string;
+}): RunnerBundleRegistrySnapshot {
+	return Object.freeze({
+		schemaVersion: RUNNER_BUNDLE_REGISTRY_SCHEMA_VERSION,
+		generation: 0,
+		generatedAt: assertTimestamp(
+			input.generatedAt,
+			"Runner Bundle registry generatedAt",
+		),
+		activeBundleDigest: null,
+		bundles: Object.freeze([]),
+	});
+}
+
+export function qualifyRunnerBundle(input: {
+	readonly registry: RunnerBundleRegistrySnapshot;
+	readonly expectedGeneration: number;
+	readonly bundle: QualifiedRunnerBundle;
+	readonly generatedAt: string;
+}): RunnerBundleRegistrySnapshot {
+	assertRunnerBundleRegistrySnapshot(input.registry);
+	assertRegistryGeneration(input.registry, input.expectedGeneration);
+	assertQualifiedRunnerBundle(input.bundle);
+	if (
+		input.registry.bundles.some(
+			(bundle) => bundle.bundleDigest === input.bundle.bundleDigest,
+		)
+	) {
+		throw new Error(`Runner Bundle ${input.bundle.bundleDigest} is already qualified.`);
+	}
+	if (input.registry.bundles.length >= 64) {
+		throw new Error("Runner Bundle registry exceeds its qualified bundle limit.");
+	}
+	return nextRunnerBundleRegistrySnapshot({
+		registry: input.registry,
+		generatedAt: input.generatedAt,
+		activeBundleDigest: input.registry.activeBundleDigest,
+		bundles: [...input.registry.bundles, input.bundle],
+	});
+}
+
+export function activateRunnerBundle(input: {
+	readonly registry: RunnerBundleRegistrySnapshot;
+	readonly expectedGeneration: number;
+	readonly bundleDigest: Sha256Digest;
+	readonly generatedAt: string;
+}): RunnerBundleRegistrySnapshot {
+	assertRunnerBundleRegistrySnapshot(input.registry);
+	assertRegistryGeneration(input.registry, input.expectedGeneration);
+	const bundleDigest = assertSha256Digest(
+		input.bundleDigest,
+		"Runner Bundle activation digest",
+	);
+	const bundle = input.registry.bundles.find(
+		(entry) => entry.bundleDigest === bundleDigest,
+	);
+	if (!bundle) throw new Error(`Runner Bundle ${bundleDigest} is not qualified.`);
+	if (bundle.manifest.runnerProtocolVersion !== AGENT_RUNNER_PROTOCOL.version) {
+		throw new Error(
+			`Runner Bundle ${bundleDigest} uses unsupported Runner protocol ${bundle.manifest.runnerProtocolVersion}.`,
+		);
+	}
+	if (input.registry.activeBundleDigest === bundleDigest) {
+		throw new Error(`Runner Bundle ${bundleDigest} is already active.`);
+	}
+	return nextRunnerBundleRegistrySnapshot({
+		registry: input.registry,
+		generatedAt: input.generatedAt,
+		activeBundleDigest: bundleDigest,
+		bundles: input.registry.bundles,
+	});
+}
+
+export function bindActiveRunnerBundle(
+	registry: RunnerBundleRegistrySnapshot,
+): Readonly<RunnerBundleBinding> {
+	assertRunnerBundleRegistrySnapshot(registry);
+	if (!registry.activeBundleDigest) {
+		throw new Error("Runner Bundle registry has no active qualified bundle.");
+	}
+	const bundle = registry.bundles.find(
+		(entry) => entry.bundleDigest === registry.activeBundleDigest,
+	);
+	if (!bundle) throw new Error("Runner Bundle registry active binding is invalid.");
+	if (bundle.manifest.runnerProtocolVersion !== AGENT_RUNNER_PROTOCOL.version) {
+		throw new Error(
+			`Active Runner Bundle uses unsupported Runner protocol ${bundle.manifest.runnerProtocolVersion}.`,
+		);
+	}
+	return Object.freeze({
+		bundleDigest: bundle.bundleDigest,
+		runnerProtocolVersion: bundle.manifest.runnerProtocolVersion,
+	});
+}
+
+export function resolveRunnerBundleForResume(
+	registry: RunnerBundleRegistrySnapshot,
+	binding: RunnerBundleBinding,
+): QualifiedRunnerBundle {
+	assertRunnerBundleRegistrySnapshot(registry);
+	if (!hasExactKeys(binding, ["bundleDigest", "runnerProtocolVersion"])) {
+		throw new Error("Runner Bundle binding shape is invalid.");
+	}
+	assertSha256Digest(binding.bundleDigest, "Runner Bundle binding digest");
+	assertVersion(
+		binding.runnerProtocolVersion,
+		"Runner Bundle binding protocol version",
+	);
+	const bundle = registry.bundles.find(
+		(entry) => entry.bundleDigest === binding.bundleDigest,
+	);
+	if (!bundle) {
+		throw new Error("Exact Runner Bundle required for resume is unavailable.");
+	}
+	if (bundle.manifest.runnerProtocolVersion !== binding.runnerProtocolVersion) {
+		throw new Error("Runner protocol version does not match the bound bundle.");
+	}
+	if (binding.runnerProtocolVersion !== AGENT_RUNNER_PROTOCOL.version) {
+		throw new Error(
+			`Bound Runner protocol ${binding.runnerProtocolVersion} is unsupported by this Supervisor.`,
+		);
+	}
+	return bundle;
+}
+
+export function assertRunnerBundleRegistrySnapshot(
+	value: unknown,
+): asserts value is RunnerBundleRegistrySnapshot {
+	if (
+		!value ||
+		typeof value !== "object" ||
+		!hasExactKeys(value, RUNNER_BUNDLE_REGISTRY_KEYS)
+	) {
+		throw new Error("Runner Bundle registry snapshot shape is invalid.");
+	}
+	const registry = value as RunnerBundleRegistrySnapshot;
+	if (registry.schemaVersion !== RUNNER_BUNDLE_REGISTRY_SCHEMA_VERSION) {
+		throw new Error("Runner Bundle registry schemaVersion is invalid.");
+	}
+	if (!Number.isSafeInteger(registry.generation) || registry.generation < 0) {
+		throw new Error(
+			"Runner Bundle registry generation must be a non-negative safe integer.",
+		);
+	}
+	assertTimestamp(registry.generatedAt, "Runner Bundle registry generatedAt");
+	if (registry.activeBundleDigest !== null) {
+		assertSha256Digest(
+			registry.activeBundleDigest,
+			"Runner Bundle registry active bundle digest",
+		);
+	}
+	assertRunnerBundleRegistryBundles(registry);
+}
+
+function assertRunnerBundleRegistryBundles(
+	registry: RunnerBundleRegistrySnapshot,
+): void {
+	if (!Array.isArray(registry.bundles) || registry.bundles.length > 64) {
+		throw new Error("Runner Bundle registry bundles are invalid.");
+	}
+	let previous: Sha256Digest | undefined;
+	for (const value of registry.bundles) {
+		assertQualifiedRunnerBundle(value);
+		if (previous && value.bundleDigest <= previous) {
+			throw new Error("Runner Bundle registry order or uniqueness is invalid.");
+		}
+		previous = value.bundleDigest;
+	}
+	if (
+		registry.activeBundleDigest &&
+		!registry.bundles.some(
+			(bundle) => bundle.bundleDigest === registry.activeBundleDigest,
+		)
+	) {
+		throw new Error("Runner Bundle registry active bundle is not qualified.");
+	}
+}
+
+function assertQualifiedRunnerBundle(
+	value: unknown,
+): asserts value is QualifiedRunnerBundle {
+	if (
+		!value ||
+		typeof value !== "object" ||
+		!hasExactKeys(value, RUNNER_BUNDLE_QUALIFICATION_KEYS)
+	) {
+		throw new Error("Qualified Runner Bundle shape is invalid.");
+	}
+	const bundle = value as QualifiedRunnerBundle;
+	const manifest = createRunnerBundleManifest(bundle.manifest);
+	assertSha256Digest(bundle.bundleDigest, "Qualified Runner Bundle digest");
+	if (bundle.bundleDigest !== canonicalJsonDigest(manifest)) {
+		throw new Error("Qualified Runner Bundle digest does not match its manifest.");
+	}
+	assertSha256Digest(
+		bundle.qualificationSuiteDigest,
+		"Runner Bundle qualification suite digest",
+	);
+	assertSha256Digest(
+		bundle.qualificationEvidenceDigest,
+		"Runner Bundle qualification Evidence digest",
+	);
+	assertTimestamp(bundle.qualifiedAt, "Runner Bundle qualifiedAt");
+}
+
+function nextRunnerBundleRegistrySnapshot(input: {
+	readonly registry: RunnerBundleRegistrySnapshot;
+	readonly generatedAt: string;
+	readonly activeBundleDigest: Sha256Digest | null;
+	readonly bundles: readonly QualifiedRunnerBundle[];
+}): RunnerBundleRegistrySnapshot {
+	const generatedAt = assertTimestamp(
+		input.generatedAt,
+		"Runner Bundle registry generatedAt",
+	);
+	if (Date.parse(generatedAt) < Date.parse(input.registry.generatedAt)) {
+		throw new Error("Runner Bundle registry time cannot move backward.");
+	}
+	const bundles = Object.freeze(
+		[...input.bundles].sort((left, right) => {
+			if (left.bundleDigest < right.bundleDigest) return -1;
+			if (left.bundleDigest > right.bundleDigest) return 1;
+			return 0;
+		}),
+	);
+	const snapshot = Object.freeze({
+		schemaVersion: RUNNER_BUNDLE_REGISTRY_SCHEMA_VERSION,
+		generation: input.registry.generation + 1,
+		generatedAt,
+		activeBundleDigest: input.activeBundleDigest,
+		bundles,
+	});
+	assertRunnerBundleRegistrySnapshot(snapshot);
+	return snapshot;
+}
+
+function assertRegistryGeneration(
+	registry: RunnerBundleRegistrySnapshot,
+	expectedGeneration: number,
+): void {
+	if (
+		!Number.isSafeInteger(expectedGeneration) ||
+		expectedGeneration < 0 ||
+		registry.generation !== expectedGeneration
+	) {
+		throw new Error("Runner Bundle registry generation conflict.");
+	}
+}
+
+function assertTimestamp(value: string, field: string): string {
+	if (
+		typeof value !== "string" ||
+		Number.isNaN(Date.parse(value)) ||
+		new Date(value).toISOString() !== value
+	) {
+		throw new Error(`${field} must be an exact UTC ISO timestamp.`);
+	}
+	return value;
+}
+
+function assertVersion(value: string, field: string): void {
+	if (typeof value !== "string" || !/^\d+\.\d+\.\d+$/.test(value)) {
+		throw new Error(`${field} must be an exact semantic version.`);
+	}
+}
+
+const RUNNER_BUNDLE_MANIFEST_KEYS = [
+	"schemaVersion",
+	"runnerProtocolVersion",
+	"nodeVersion",
+	"dshSourceCommit",
+	"dshPackageClosureDigest",
+	"cordisClosureDigest",
+	"backendPluginClosureDigest",
+	"modelAdapterClosureDigest",
+	"delegateAdapterClosureDigest",
+	"runnerArtifactDigest",
+] as const;
+
+const RUNNER_BUNDLE_DIGEST_FIELDS = [
+	"dshPackageClosureDigest",
+	"cordisClosureDigest",
+	"backendPluginClosureDigest",
+	"modelAdapterClosureDigest",
+	"delegateAdapterClosureDigest",
+	"runnerArtifactDigest",
+] as const;
+
+const RUNNER_BUNDLE_QUALIFICATION_KEYS = [
+	"manifest",
+	"bundleDigest",
+	"qualificationSuiteDigest",
+	"qualificationEvidenceDigest",
+	"qualifiedAt",
+] as const;
+
+const RUNNER_BUNDLE_REGISTRY_KEYS = [
+	"schemaVersion",
+	"generation",
+	"generatedAt",
+	"activeBundleDigest",
+	"bundles",
+] as const;
+
 export function resolveExecutionCapabilities(
 	input: ExecutionCapabilityInput,
 ): readonly ExecutionCapabilityDeclaration[] {

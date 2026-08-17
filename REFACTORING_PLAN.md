@@ -500,6 +500,7 @@ Checked items below preserve completed historical cuts and their then-current vo
 
 Existing Pi execution remains temporary migration evidence only. This slice creates the DSH path, proves semantic parity, then removes the Pi executor without a user-facing backend selector, compatibility adapter, or dual-session contract.
 
+- [x] Define the content-addressed Runner Bundle manifest, independent reviewed-source and executed-package closure digests, qualification Evidence binding, expected-generation activation CAS, exact new-run binding, rollback, and same-bundle-only resume contract under neutral Execution Ports.
 - [ ] Pin one exact DSH package and commit closure with no loose semver; record its Cordis and Backend Plugin closure and qualify every upgrade before activation.
 - [ ] Define one narrow Run Specification, Agent Run handle, cancellation/quiescence, event, raw-log reference, and custody-scoped Execution Receipt contract under neutral `src/execution/ports.ts`; do not build a generic multi-backend feature matrix.
 - [ ] Implement Agent Supervisor and an authenticated process protocol for isolated CodeWiki Agent Runners; Runner processes receive no Runtime persistence, canonical state, protected-ref, or credential-store handles.
