@@ -37,7 +37,7 @@ function planningEvent() {
 			exit: { status: "exit", targetLoop: "implementation" },
 			output: {
 				qualityStandards: planningQualityStandards([]),
-				workItems: [
+				workUnits: [
 					{
 						id: "WU-runtime",
 						title: "Schedule runtime work",

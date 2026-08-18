@@ -56,7 +56,7 @@ import {assertTypeboxSchema} from "../../utils/json.ts";
 
 export const CHANGE_INTAKE_RUNTIME_PROTOCOL = Object.freeze({
 	id: "codewiki.change-intake-runtime",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 export interface ChangeIntakeAuthenticationRequest {
@@ -783,7 +783,7 @@ function directSourceCorrelation(
 						(assignment) =>
 							assignment.operationId === material.binding.assignmentOperationId &&
 							assignment.claimOperationId ===
-								material.binding.workItemClaimOperationId,
+								material.binding.workUnitClaimOperationId,
 					),
 				"worker Assignment",
 			);

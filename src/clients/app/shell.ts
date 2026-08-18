@@ -1021,7 +1021,7 @@ function traceStateText(entry) {
 	const facts = [];
 	if (trace.workerCount) facts.push(trace.workerCount + ' ' + pluralLabel(trace.workerCount, 'worker'));
 	const taskCount = (trace.items || []).length;
-	if (taskCount) facts.push(taskCount + ' ' + pluralLabel(taskCount, 'Work Item'));
+	if (taskCount) facts.push(taskCount + ' ' + pluralLabel(taskCount, 'Work Unit'));
 	const action = entry.blocked
 		? '✕ Blocked — ' + ((trace.blockers || [])[0] || trace.currentAction)
 		: titleCase(entry.stage) + ' — ' + trace.currentAction;
@@ -1165,7 +1165,7 @@ function renderTraceOverview(trace) {
 		['current action', trace.currentAction || 'No next action recorded.'],
 		['stage', titleCase(trace.stage || trace.loop || 'waiting')],
 		['workers', String(trace.workerCount || 0)],
-		['Work Items', String((trace.items || []).length)],
+		['Work Units', String((trace.items || []).length)],
 		['blockers', String((trace.blockers || []).length)],
 	].forEach(function(entry) {
 		const row = document.createElement('div'); row.className = 'review-row';
@@ -1255,7 +1255,7 @@ function renderLivePreviewTarget(binding, preview) {
 		['viewports', (preview?.viewports || []).join(', ') || 'pending'],
 		['Changes', (preview?.changeIds || binding.contributingChangeIds || []).join(', ') || 'not correlated'],
 		['Sprint', (preview?.sprintIds || []).join(', ') || 'pending'],
-		['Work Items', (preview?.workItemIds || binding.workItemIds || []).join(', ') || 'not correlated'],
+		['Work Units', (preview?.workUnitIds || binding.workUnitIds || []).join(', ') || 'not correlated'],
 		['integration', integration ? integration.visibility + ' · ' + String(integration.workingTreeDigest || '').slice(0, 19) : 'not observed'],
 		['checkout', integration ? String(integration.gitHead || '').slice(0, 12) + (integration.dirty ? ' + dirty' : ' + clean') : 'pending'],
 	].forEach(function(entry) {

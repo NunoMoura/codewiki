@@ -205,13 +205,13 @@ function decisionChanges(records: TraceRecord[]): DecisionProjection[] {
 function workUnitsFromTrace(records: TraceRecord[]): WorkProjection[] {
 	const implementationRefs = implementedPlanningRefs(records);
 	const planned = activePlanningEvents(records).flatMap((event) =>
-		objectList(objectRecord(event.data?.output).workItems).map((item) => {
+		objectList(objectRecord(event.data?.output).workUnits).map((item) => {
 			const id = text(item.id) || event.id;
 			const ref = iterationSubref(event, "work", id);
 			return {
 				id,
 				ref,
-				changeRefs: workItemChangeRefs(item),
+				changeRefs: workUnitChangeRefs(item),
 				pathScopes: stringList(item.pathScopes),
 				implemented: implementationRefs.has(ref),
 			};
@@ -258,8 +258,8 @@ function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
 
 function planningDecisionRefs(event: TraceEvent): string[] {
 	return unique([
-		...objectList(objectRecord(event.data?.output).workItems).flatMap(
-			workItemChangeRefs,
+		...objectList(objectRecord(event.data?.output).workUnits).flatMap(
+			workUnitChangeRefs,
 		),
 		...objectList(objectRecord(event.data?.output).resolutions).map(
 			(resolution) => text(resolution.changeRef),
@@ -267,7 +267,7 @@ function planningDecisionRefs(event: TraceEvent): string[] {
 	]).filter(Boolean);
 }
 
-function workItemChangeRefs(item: Record<string, unknown>): string[] {
+function workUnitChangeRefs(item: Record<string, unknown>): string[] {
 	const owningChangeRef = text(item.owningChangeId)
 		? `change:${text(item.owningChangeId)}`
 		: "";

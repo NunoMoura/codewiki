@@ -46,7 +46,7 @@ function binding(configuredProfile) {
 		targetDigest: uiPreviewTargetDigest(configuredTarget),
 		profileId: configuredProfile.id,
 		profileDigest: previewProfileDigest(configuredProfile),
-		workItemIds: ["WU-capture"],
+		workUnitIds: ["WU-capture"],
 		contributingChangeIds: ["CHG-capture"],
 		required: true,
 		activation: "implementation",
@@ -67,7 +67,7 @@ const integration = {
 	visibleChangeIds: ["CHG-capture"],
 	conflictingChangeIds: [],
 	sprintIds: ["SPR-capture"],
-	workItemIds: ["WU-capture"],
+	workUnitIds: ["WU-capture"],
 };
 
 const records = [

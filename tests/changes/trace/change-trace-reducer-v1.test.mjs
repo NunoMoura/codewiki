@@ -59,7 +59,7 @@ describe("Change Trace deterministic reducer", () => {
 		assert.equal(full.planningEpochs[0].operationId, journey.epoch.operationId);
 		assert.equal(full.changes[0].planningEpochBindings.length, 1);
 		assert.deepEqual(
-			full.changes[0].planningEpochBindings[0].workItemIds,
+			full.changes[0].planningEpochBindings[0].workUnitIds,
 			["work-reducer"],
 		);
 	});

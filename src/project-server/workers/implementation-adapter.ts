@@ -10,14 +10,14 @@ import {
 } from "../../runtime/contracts.ts";
 import type { WorkerExecutionPolicySnapshot } from "./execution-policy.ts";
 
-export const IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION = 2 as const;
+export const IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION = 3 as const;
 
 export interface ImplementationWorkerAssignment {
 	schemaVersion: typeof IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION;
 	repoRoot: string;
 	assignmentId: string;
 	workerId: string;
-	workItemId: string;
+	workUnitId: string;
 	claimId: string;
 	traceId: string;
 	planningRefs: string[];
@@ -40,7 +40,7 @@ export interface ImplementationWorkerAssignment {
 export interface ImplementationWorkerReport {
 	assignmentId: string;
 	workerId: string;
-	workItemId: string;
+	workUnitId: string;
 	status: "completed" | "blocked" | "failed" | "cancelled";
 	reportRef: string;
 	producerSkillReceipt: ProducerSkillReceipt;
@@ -78,7 +78,7 @@ export function implementationWorkerJobId(
 				repoRoot: assignment.repoRoot,
 				assignmentId: assignment.assignmentId,
 				workerId: assignment.workerId,
-				workItemId: assignment.workItemId,
+				workUnitId: assignment.workUnitId,
 				claimId: assignment.claimId,
 				traceId: assignment.traceId,
 				planningRefs: [...assignment.planningRefs].sort(compareText),
@@ -108,14 +108,14 @@ export function assertImplementationWorkerAssignment(
 		assignment.schemaVersion !== IMPLEMENTATION_WORKER_ASSIGNMENT_SCHEMA_VERSION
 	) {
 		throw new Error(
-			"Implementation worker assignment schemaVersion must be 2.",
+			"Implementation worker assignment schemaVersion must be 3.",
 		);
 	}
 	for (const [field, value] of Object.entries({
 		repoRoot: assignment.repoRoot,
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
-		workItemId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		claimId: assignment.claimId,
 		traceId: assignment.traceId,
 		workStateDigest: assignment.workStateDigest,
@@ -186,7 +186,7 @@ export function assertImplementationWorkerReport(
 	if (
 		report.assignmentId !== assignment.assignmentId ||
 		report.workerId !== assignment.workerId ||
-		report.workItemId !== assignment.workItemId
+		report.workUnitId !== assignment.workUnitId
 	) {
 		throw new Error(
 			"Implementation worker report identity does not match assignment.",
@@ -202,7 +202,7 @@ export function assertImplementationWorkerReport(
 	if (report.implementationEvidence) {
 		if (
 			report.implementationEvidence.workerId !== assignment.workerId ||
-			report.implementationEvidence.workUnitId !== assignment.workItemId
+			report.implementationEvidence.workUnitId !== assignment.workUnitId
 		) {
 			throw new Error(
 				"Implementation worker evidence identity does not match assignment.",

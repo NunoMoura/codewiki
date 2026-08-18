@@ -34,7 +34,7 @@ import type {
 	WorkStateAssignment,
 	WorkStateChange,
 	WorkStateSprint,
-	WorkStateWorkItem,
+	WorkStateWorkUnit,
 } from "../../work-state/types.ts";
 import {
 	ProjectServerReactor,
@@ -82,7 +82,7 @@ export interface ProjectServerImplementationInvocation {
 	loop: "implementation";
 	observedWorkStateDigest: string;
 	sprint: WorkStateSprint;
-	workItems: WorkStateWorkItem[];
+	workUnits: WorkStateWorkUnit[];
 	assignments: WorkStateAssignment[];
 	workerReports: ImplementationWorkerReportInput[];
 }
@@ -492,15 +492,15 @@ async function executeSelectedSemanticWork(input: {
 	);
 	if (!sprint)
 		throw new Error(`Project Server Sprint ${selection.sprintId} was not found.`);
-	const selectedIds = new Set(selection.workItemIds);
-	const workItems = observation.workState.workItems.filter((item) =>
+	const selectedIds = new Set(selection.workUnitIds);
+	const workUnits = observation.workState.workUnits.filter((item) =>
 		selectedIds.has(item.id),
 	);
 	const assignments = observation.workState.assignments.filter((assignment) =>
-		selectedIds.has(assignment.workItemId),
+		selectedIds.has(assignment.workUnitId),
 	);
 	const selectedWorkerReports = runtimeSelectedWorkerReports(
-		selection.workItemIds,
+		selection.workUnitIds,
 		assignments,
 		implementationWorkerReports,
 	);
@@ -509,7 +509,7 @@ async function executeSelectedSemanticWork(input: {
 			loop: "implementation",
 			observedWorkStateDigest: observation.workState.snapshotDigest,
 			sprint,
-			workItems,
+			workUnits,
 			assignments,
 			workerReports: selectedWorkerReports,
 		}),
@@ -539,9 +539,9 @@ async function executeSelectedSemanticWork(input: {
 function runtimePlanningContent(candidate: PlanningCandidateContent) {
 	return {
 		...candidate,
-		workItems: candidate.workItems.map(
-			({ acceptanceRequirements, ...workItem }) => ({
-				...workItem,
+		workUnits: candidate.workUnits.map(
+			({ acceptanceRequirements, ...workUnit }) => ({
+				...workUnit,
 				acceptanceCriteria: acceptanceRequirements,
 			}),
 		),
@@ -595,24 +595,24 @@ function requiredChange(
 }
 
 function runtimeSelectedWorkerReports(
-	workItemIds: string[],
+	workUnitIds: string[],
 	assignments: WorkStateAssignment[],
 	workerReports: ImplementationWorkerReportInput[],
 ): ImplementationWorkerReportInput[] {
 	if (workerReports.length === 0) return [];
-	const selected = new Set(workItemIds);
+	const selected = new Set(workUnitIds);
 	const seen = new Set<string>();
 	for (const result of workerReports) {
 		if (!selected.has(result.workUnitId) || seen.has(result.workUnitId)) {
 			throw new Error(
-				`Project Server Implementation worker report ${result.workUnitId} is not an exact selected Work Item.`,
+				`Project Server Implementation worker report ${result.workUnitId} is not an exact selected Work Unit.`,
 			);
 		}
 		seen.add(result.workUnitId);
 		const assignment = assignments.find(
 			(candidate) =>
 				candidate.status === "claimed" &&
-				candidate.workItemId === result.workUnitId &&
+				candidate.workUnitId === result.workUnitId &&
 				candidate.id === result.claimId &&
 				candidate.workerId === result.workerId,
 		);
@@ -622,10 +622,10 @@ function runtimeSelectedWorkerReports(
 			);
 		}
 	}
-	for (const workItemId of selected) {
-		if (!seen.has(workItemId)) {
+	for (const workUnitId of selected) {
+		if (!seen.has(workUnitId)) {
 			throw new Error(
-				`Project Server Implementation worker report is missing for ${workItemId}.`,
+				`Project Server Implementation worker report is missing for ${workUnitId}.`,
 			);
 		}
 	}

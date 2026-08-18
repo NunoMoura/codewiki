@@ -143,7 +143,7 @@ describe("runtime semantic executor", () => {
 				implementation: () => ({
 					evidence: [
 						{
-							workItemId: seeded.workItemId,
+							workUnitId: seeded.workUnitId,
 							commands: ["npm test"],
 							commandResults: [
 								{

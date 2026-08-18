@@ -70,7 +70,7 @@ export function productReleaseJob(
 		},
 		conflictRefs: [
 			`trace:${identity.traceId}`,
-			`work-item:${identity.workItemId}`,
+			`work-unit:${identity.workUnitId}`,
 			`publication:${identity.publicationTargetId}:${identity.publicationChannel}`,
 			`release:${identity.targetId}:${identity.channel}`,
 			`release-destination:${identity.destinationRef}`,
@@ -206,7 +206,7 @@ function releaseAdapterInput(
 		repoRoot: identity.repoRoot,
 		jobId: identity.jobId,
 		traceId: identity.traceId,
-		workItemId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		publicationEventId: identity.publicationEventId,
 		publicationTargetId: identity.publicationTargetId,
 		publicationRevision: identity.publicationRevision,

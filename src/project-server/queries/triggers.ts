@@ -64,7 +64,7 @@ function triggerProjections(records: TraceRecord[]): TriggerProjection[] {
 	const state = replayTrace(records);
 	return loopOutputEvents(records, "planning").flatMap((event) => {
 		const readiness = loopQualityReadiness(event);
-		return objectList(objectRecord(event.data?.output).workItems).flatMap(
+		return objectList(objectRecord(event.data?.output).workUnits).flatMap(
 			(item) => {
 				const trigger = triggerSpec(item.trigger);
 				if (!trigger) return [];

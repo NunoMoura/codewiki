@@ -68,7 +68,7 @@ function traceRecords(traceId = "TRACE-state") {
 		decisionEvents: decision.traceEvents,
 		startSequence: nextSequence(decision.traceEvents),
 		createdAt: "2026-06-11T00:00:02.000Z",
-		workItemInputs: [
+		workUnitInputs: [
 			{
 				id: "WU-state",
 				title: "Create wiki_state facade",
@@ -127,7 +127,7 @@ describe("wiki_state core facade", () => {
 		});
 	});
 
-	it("ignores non-exited planning work items in queue projections", () => {
+	it("ignores non-exited planning work units in queue projections", () => {
 		const records = traceRecords("TRACE-state-planning-repair");
 		const planning = records.find(
 			(record) => record.type === "trace_event" && record.loop === "planning",
@@ -138,9 +138,9 @@ describe("wiki_state core facade", () => {
 		blockedPlanning.sequence = planning.sequence + 1;
 		blockedPlanning.event = "planning_blocked";
 		blockedPlanning.data.exit.status = "continue";
-		blockedPlanning.data.output.workItems[0].id = "WU-ghost";
-		blockedPlanning.data.output.workItems[0].title = "Ghost blocked plan";
-		blockedPlanning.data.output.workItems[0].pathScopes = ["src/ghost.ts"];
+		blockedPlanning.data.output.workUnits[0].id = "WU-ghost";
+		blockedPlanning.data.output.workUnits[0].title = "Ghost blocked plan";
+		blockedPlanning.data.output.workUnits[0].pathScopes = ["src/ghost.ts"];
 
 		const state = buildWikiState({
 			records: [...records, blockedPlanning],

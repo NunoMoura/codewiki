@@ -506,9 +506,9 @@ function applyWorkStateChangeJourney(
 		blockers,
 		changeIds: [change.id],
 		sprintIds: [...change.sprintIds],
-		workUnitRefs: [...change.workItemIds],
-		activeWorkCount: snapshot.workState.workItems.filter(
-			(item) => change.workItemIds.includes(item.id) && !item.implemented,
+		workUnitRefs: [...change.workUnitIds],
+		activeWorkCount: snapshot.workState.workUnits.filter(
+			(item) => change.workUnitIds.includes(item.id) && !item.implemented,
 		).length,
 	};
 }
@@ -1049,7 +1049,7 @@ function traceEventDetails(event: TraceEvent): string[] {
 			.filter(Boolean);
 	}
 	if (event.loop === "planning") {
-		return objectList(output.workItems)
+		return objectList(output.workUnits)
 			.map(planningWorkSummary)
 			.filter(Boolean);
 	}
@@ -1371,11 +1371,11 @@ function traceEventDetail(record: TraceEvent): string {
 			: traceEventFallback(data, record.event);
 	}
 	if (record.loop === "planning") {
-		const workItems = objectList(output.workItems).length;
+		const workUnits = objectList(output.workUnits).length;
 		const resolutions = objectList(output.resolutions).length;
 		const parts = [];
-		if (workItems > 0) {
-			parts.push(`${workItems} ${plural(workItems, "work item")} created`);
+		if (workUnits > 0) {
+			parts.push(`${workUnits} ${plural(workUnits, "work unit")} created`);
 		}
 		if (resolutions > 0) {
 			parts.push(`${resolutions} ${plural(resolutions, "decision")} resolved`);
@@ -1503,7 +1503,7 @@ export function projectSprintPlan(
 					targetDigest: stringValue(target.targetDigest),
 					profileId: stringValue(target.profileId),
 					profileDigest: stringValue(target.profileDigest),
-					workItemIds: stringValues(target.workItemIds),
+					workUnitIds: stringValues(target.workUnitIds),
 					contributingChangeIds: stringValues(target.contributingChangeIds),
 					required: target.required !== false,
 					activation: stringValue(target.activation),

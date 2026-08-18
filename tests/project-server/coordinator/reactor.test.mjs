@@ -64,7 +64,7 @@ function change(id, currentLoop, targetRefs = [], links = []) {
 		realizationStatus: "not_started",
 		outcomeStatus: "pending",
 		sprintIds: [],
-		workItemIds: [],
+		workUnitIds: [],
 		rollbackBoundary: "Revert Sprint work as one boundary.",
 		assignmentIds: [],
 		blockers: [],
@@ -78,12 +78,12 @@ function state(overrides = {}) {
 		snapshotDigest: "sha256:work-state",
 		changeIds: [],
 		sprintIds: [],
-		workItemIds: [],
+		workUnitIds: [],
 		rollbackBoundary: "Revert Sprint work as one boundary.",
 		assignmentIds: [],
 		changes: [],
 		sprints: [],
-		workItems: [],
+		workUnits: [],
 		assignments: [],
 		blockers: [],
 		sources: { traceCount: 0, recordCount: 0, changeTraceCount: 0 },
@@ -172,7 +172,7 @@ describe("runtime reactor", () => {
 						source: "planning",
 						goal: "Implement runtime",
 						participatingChangeIds: ["CHG-implementation"],
-						workItemIds: ["WI-done", "WI-ready", "WI-blocked"],
+						workUnitIds: ["WI-done", "WI-ready", "WI-blocked"],
 						rollbackBoundary: "Revert Sprint work as one boundary.",
 						dependencyIds: [],
 						integrationRefs: [],
@@ -180,7 +180,7 @@ describe("runtime reactor", () => {
 						blockers: [],
 					},
 				],
-				workItems: [
+				workUnits: [
 					{ id: "WI-done", implemented: true, blockers: [] },
 					{ id: "WI-ready", implemented: false, blockers: [] },
 					{ id: "WI-blocked", implemented: false, blockers: ["conflict"] },
@@ -191,7 +191,7 @@ describe("runtime reactor", () => {
 
 		assert.equal(reaction.selection.loop, "implementation");
 		assert.equal(reaction.selection.sprintId, "SPR-runtime");
-		assert.deepEqual(reaction.selection.workItemIds, ["WI-ready"]);
+		assert.deepEqual(reaction.selection.workUnitIds, ["WI-ready"]);
 	});
 
 	it("keeps a pending-Change-only WorkState quiescent", () => {
@@ -228,7 +228,7 @@ describe("runtime reactor", () => {
 							"CHG-c-implementation",
 							"CHG-d-implementation",
 						],
-						workItemIds: ["WI-ready"],
+						workUnitIds: ["WI-ready"],
 						rollbackBoundary: "Revert Sprint work as one boundary.",
 						dependencyIds: [],
 						integrationRefs: [],
@@ -236,7 +236,7 @@ describe("runtime reactor", () => {
 						blockers: [],
 					},
 				],
-				workItems: [{ id: "WI-ready", implemented: false, blockers: [] }],
+				workUnits: [{ id: "WI-ready", implemented: false, blockers: [] }],
 			}),
 			trigger,
 			{ maxPlanningChanges: 4, maxReactions: 4 },

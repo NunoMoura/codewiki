@@ -96,8 +96,8 @@ function canonicalPlanningIteration(input) {
 	const changeId =
 		decision?.data?.output?.changeRecord?.change?.id || "CHG-canonical-test";
 	const sprintId = "SPR-canonical-test";
-	const sourceItems = input.workItemInputs || [];
-	const workItems = sourceItems.map((item, index) => ({
+	const sourceItems = input.workUnitInputs || [];
+	const workUnits = sourceItems.map((item, index) => ({
 		id: item.id || `WI-canonical-${index + 1}`,
 		sprintId,
 		owningChangeId: changeId,
@@ -130,7 +130,7 @@ function canonicalPlanningIteration(input) {
 			id: sprintId,
 			goal: "Execute canonical test plan.",
 			participatingChangeIds: [changeId],
-			workItemIds: workItems.map((item) => item.id),
+			workUnitIds: workUnits.map((item) => item.id),
 			rollbackBoundary: "Revert Sprint work as one boundary.",
 			dependsOn: [],
 			integrationRefs: [],
@@ -139,11 +139,11 @@ function canonicalPlanningIteration(input) {
 	const quality = evaluatePortfolioPlanning({
 		changeIds: [changeId],
 		sprints,
-		workItems: workItems.map((item) => ({
+		workUnits: workUnits.map((item) => ({
 			...item,
 			acceptanceCriteria: item.acceptanceCriteria.map((entry) => entry.text),
 		})),
-		workState: { changes: [], workItems: [], assignments: [] },
+		workState: { changes: [], workUnits: [], assignments: [] },
 	});
 	const event = {
 		type: "trace_event",
@@ -162,7 +162,7 @@ function canonicalPlanningIteration(input) {
 				epochId: "PE-canonical-test",
 				participantChangeIds: [changeId],
 				sprints,
-				workItems,
+				workUnits,
 				qualityStandards: quality.standards,
 			},
 			exit: { status: "exit", route: "implementation", passed: true },
@@ -172,7 +172,7 @@ function canonicalPlanningIteration(input) {
 	return {
 		traceEvents: [event],
 		traceRecords: [event, checkpoint],
-		workItems,
+		workUnits,
 		output: event.data.output,
 		exit: event.data.exit,
 	};
@@ -194,7 +194,7 @@ function tailCheckpoint(event, summary) {
 export function planningQualityStandards() {
 	const sample = canonicalPlanningIteration({
 		traceId: "TRACE-quality-template",
-		workItemInputs: [{ id: "WI-quality-template" }],
+		workUnitInputs: [{ id: "WI-quality-template" }],
 	});
 	return sample.output.qualityStandards;
 }

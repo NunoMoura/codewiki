@@ -78,14 +78,14 @@ function records(
 						{
 							id: "SPR-preview",
 							participatingChangeIds: ["CHG-preview"],
-							workItemIds: ["WU-preview"],
+							workUnitIds: ["WU-preview"],
 							uiPreviewTargets: targetBindings || [
 								{
 									targetId: "dashboard-detail",
 									targetDigest,
 									profileId: "web",
 									profileDigest,
-									workItemIds: ["WU-preview"],
+									workUnitIds: ["WU-preview"],
 									contributingChangeIds: ["CHG-preview"],
 									required: true,
 									activation: "implementation",
@@ -124,7 +124,7 @@ function integrationState(binding) {
 		visibleChangeIds: [...binding.contributingChangeIds],
 		conflictingChangeIds: [],
 		sprintIds: [...binding.sprintIds],
-		workItemIds: [...binding.workItemIds],
+		workUnitIds: [...binding.workUnitIds],
 	};
 }
 
@@ -233,7 +233,7 @@ describe("preview coordinator", () => {
 			targetDigest: uiPreviewTargetDigest(configuredTarget),
 			profileId: "web",
 			profileDigest: previewProfileDigest(configured),
-			workItemIds: ["WU-preview"],
+			workUnitIds: ["WU-preview"],
 			contributingChangeIds: ["CHG-preview"],
 			required: true,
 			activation: "implementation",
@@ -366,7 +366,7 @@ describe("preview coordinator", () => {
 						traceIds: [...input.binding.traceIds],
 						changeIds: [...input.binding.contributingChangeIds],
 						sprintIds: [...input.binding.sprintIds],
-						workItemIds: [...input.binding.workItemIds],
+						workUnitIds: [...input.binding.workUnitIds],
 						implementation: [],
 						integration: input.integration,
 						capturedAt: "2026-07-18T12:02:00.000Z",

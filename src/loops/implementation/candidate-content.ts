@@ -89,7 +89,7 @@ export const implementationSensitiveSurfaceCandidateSchema = Type.Object(
 
 export const implementationEvidenceCandidateSchema = Type.Object(
 	{
-		workItemId: requiredTextSchema,
+		workUnitId: requiredTextSchema,
 		assignmentId: Type.Optional(Type.String()),
 		codePaths: Type.Optional(stringArraySchema),
 		docPaths: Type.Optional(stringArraySchema),

@@ -45,7 +45,7 @@ function planningEvents() {
 		traceId: "TRACE-implementation",
 		decisionEvents: decisionTraceEvents,
 		createdAt: "2026-06-11T00:00:00.000Z",
-		workItemInputs: [
+		workUnitInputs: [
 			{
 				id: "WU-001",
 				title: "Implement trace-backed evidence",
@@ -74,7 +74,7 @@ function approvedDecisionRef(events) {
 
 function planningWorkEvent(events, workUnitId = "WU-001") {
 	const iteration = events.find((event) => event.loop === "planning");
-	const item = iteration?.data?.output?.workItems?.find(
+	const item = iteration?.data?.output?.workUnits?.find(
 		(candidate) => candidate.id === workUnitId,
 	);
 	assert.ok(iteration);

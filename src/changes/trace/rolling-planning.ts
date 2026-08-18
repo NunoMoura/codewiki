@@ -22,7 +22,7 @@ import type {
 	ChangeWorkState,
 	LoopAttemptProjection,
 	ProjectWorkState,
-	WorkItemClaimProjection,
+	WorkUnitClaimProjection,
 } from "./state.ts";
 import {
 	createLoopCandidate,
@@ -38,9 +38,9 @@ import {
 } from "../../utils/canonical-json.ts";
 import { assertExactKeys, assertTypeboxSchema } from "../../utils/json.ts";
 
-export const ROLLING_PLANNING_CANDIDATE_SCHEMA_VERSION = "1.0.0";
+export const ROLLING_PLANNING_CANDIDATE_SCHEMA_VERSION = "2.0.0";
 
-export const rollingPlanningWorkItemCandidateSchema = Type.Object(
+export const rollingPlanningWorkUnitCandidateSchema = Type.Object(
 	{
 		id: Type.String({minLength: 1, pattern: "\\S"}),
 		sprintId: Type.String({minLength: 1, pattern: "\\S"}),
@@ -51,7 +51,7 @@ export const rollingPlanningWorkItemCandidateSchema = Type.Object(
 			Type.String({minLength: 1, pattern: "^CHG-[A-Za-z0-9._-]+$"}),
 			{maxItems: 256},
 		),
-		dependsOnWorkItemIds: Type.Array(Type.String({minLength: 1, pattern: "\\S"}), {
+		dependsOnWorkUnitIds: Type.Array(Type.String({minLength: 1, pattern: "\\S"}), {
 			maxItems: 2_048,
 		}),
 		acceptanceRequirements: Type.Array(planningAcceptanceRequirementSchema, {
@@ -72,7 +72,7 @@ export const rollingPlanningCandidateContentSchema = Type.Object(
 			{minItems: 1, maxItems: 256},
 		),
 		sprints: Type.Array(planningSprintSchema, {minItems: 1, maxItems: 256}),
-		workItems: Type.Array(rollingPlanningWorkItemCandidateSchema, {
+		workUnits: Type.Array(rollingPlanningWorkUnitCandidateSchema, {
 			minItems: 1,
 			maxItems: 512,
 		}),
@@ -122,7 +122,7 @@ export interface ResolvedRollingPlanningEpoch {
 	)[];
 }
 
-export type RollingWorkItemStatus =
+export type RollingWorkUnitStatus =
 	| "ready"
 	| "waiting"
 	| "claimed"
@@ -135,11 +135,11 @@ export type RollingWorkItemStatus =
 	| "blocked"
 	| "route_back";
 
-export interface RollingPlanningWorkItemView {
+export interface RollingPlanningWorkUnitView {
 	readonly id: string;
 	readonly sprintId: string;
 	readonly owningChangeId: string;
-	readonly status: RollingWorkItemStatus;
+	readonly status: RollingWorkUnitStatus;
 	readonly assignmentOperationId: string | null;
 	readonly claimOperationId: string | null;
 }
@@ -149,7 +149,7 @@ export interface RollingPlanningView {
 	readonly planningCandidateId: string | null;
 	readonly sprintIds: readonly string[];
 	readonly safeExecutionFrontier: readonly string[];
-	readonly workItems: readonly RollingPlanningWorkItemView[];
+	readonly workUnits: readonly RollingPlanningWorkUnitView[];
 }
 
 export function createRollingPlanningCandidate(
@@ -179,14 +179,14 @@ export function resolveRollingPlanningEpoch(
 		input.state,
 		input.candidate.content.participantChangeIds,
 	);
-	const workItems = materializeWorkItems(
-		input.candidate.content.workItems,
+	const workUnits = materializeWorkUnits(
+		input.candidate.content.workUnits,
 		participants,
 	);
 	const planningFields: MaterializedPlanningFields = {
 		participants,
 		sprints: input.candidate.content.sprints,
-		workItems,
+		workUnits,
 		activeWorkDispositions: input.candidate.content.activeWorkDispositions,
 	};
 	const safeExecutionFrontier = deriveSafeExecutionFrontier(
@@ -204,7 +204,7 @@ export function resolveRollingPlanningEpoch(
 		exitReportId: input.exitReport.id,
 		participants: planningFields.participants,
 		sprints: planningFields.sprints,
-		workItems: planningFields.workItems,
+		workUnits: planningFields.workUnits,
 		activeWorkDispositions: planningFields.activeWorkDispositions,
 		safeExecutionFrontier,
 	});
@@ -227,7 +227,7 @@ export function resolveRollingPlanningEpoch(
 				participantRevisionId: participant.revisionId,
 				planningCandidateId: input.candidate.id,
 				exitReportId: input.exitReport.id,
-				workItemIds: workItemIdsForChange(epoch, participant.changeId),
+				workUnitIds: workUnitIdsForChange(epoch, participant.changeId),
 			},
 		});
 	});
@@ -248,25 +248,25 @@ export function projectRollingPlanningView(
 			planningCandidateId: null,
 			sprintIds: [],
 			safeExecutionFrontier: [],
-			workItems: [],
+			workUnits: [],
 		}) as unknown as RollingPlanningView;
 	}
 	const frontier = new Set(epoch.body.safeExecutionFrontier);
 	const dispositions = new Map(
-		epoch.body.activeWorkDispositions.map((entry) => [entry.workItemId, entry]),
+		epoch.body.activeWorkDispositions.map((entry) => [entry.workUnitId, entry]),
 	);
-	const workItems = epoch.body.workItems.map((workItem) => {
-		const assignment = latestAssignment(state, workItem.id);
-		const claim = activeWorkItemClaim(state, workItem.id);
+	const workUnits = epoch.body.workUnits.map((workUnit) => {
+		const assignment = latestAssignment(state, workUnit.id);
+		const claim = activeWorkUnitClaim(state, workUnit.id);
 		return {
-			id: workItem.id,
-			sprintId: workItem.sprintId,
-			owningChangeId: workItem.owningChange.changeId,
-			status: projectedWorkItemStatus(
+			id: workUnit.id,
+			sprintId: workUnit.sprintId,
+			owningChangeId: workUnit.owningChange.changeId,
+			status: projectedWorkUnitStatus(
 				assignment,
 				claim,
-				dispositions.get(workItem.id)?.disposition,
-				frontier.has(workItem.id),
+				dispositions.get(workUnit.id)?.disposition,
+				frontier.has(workUnit.id),
 			),
 			assignmentOperationId: assignment?.operationId ?? null,
 			claimOperationId: claim?.operationId ?? null,
@@ -277,13 +277,13 @@ export function projectRollingPlanningView(
 		planningCandidateId: epoch.body.planningCandidateId,
 		sprintIds: epoch.body.sprints.map((sprint) => sprint.id),
 		safeExecutionFrontier: epoch.body.safeExecutionFrontier,
-		workItems,
+		workUnits,
 	}) as unknown as RollingPlanningView;
 }
 
 type MaterializedPlanningFields = Pick<
 	PlanningEpochBody,
-	"participants" | "sprints" | "workItems" | "activeWorkDispositions"
+	"participants" | "sprints" | "workUnits" | "activeWorkDispositions"
 >;
 
 function deriveSafeExecutionFrontier(
@@ -293,21 +293,21 @@ function deriveSafeExecutionFrontier(
 	validateActiveWorkDispositions(state, content);
 	const completed = new Set(
 		allAssignments(state).flatMap((assignment) =>
-			assignment.status === "completed" ? [assignment.workItemId] : [],
+			assignment.status === "completed" ? [assignment.workUnitId] : [],
 		),
 	);
 	const dispositions = new Map(
-		content.activeWorkDispositions.map((entry) => [entry.workItemId, entry]),
+		content.activeWorkDispositions.map((entry) => [entry.workUnitId, entry]),
 	);
-	return content.workItems
-		.flatMap((workItem) => {
-			if (completed.has(workItem.id)) return [];
-			const disposition = dispositions.get(workItem.id)?.disposition;
+	return content.workUnits
+		.flatMap((workUnit) => {
+			if (completed.has(workUnit.id)) return [];
+			const disposition = dispositions.get(workUnit.id)?.disposition;
 			if (disposition && disposition !== "preserve") return [];
-			return workItem.dependsOnWorkItemIds.every((dependency) =>
+			return workUnit.dependsOnWorkUnitIds.every((dependency) =>
 				completed.has(dependency),
 			)
-				? [workItem.id]
+				? [workUnit.id]
 				: [];
 		})
 		.sort(compareText);
@@ -319,20 +319,20 @@ function validateActiveWorkDispositions(
 ): void {
 	const active = activeWorkById(state);
 	const dispositions = new Map(
-		content.activeWorkDispositions.map((entry) => [entry.workItemId, entry]),
+		content.activeWorkDispositions.map((entry) => [entry.workUnitId, entry]),
 	);
 	assertDispositionCoverage(
 		active,
 		dispositions,
 		content.activeWorkDispositions.length,
 	);
-	for (const [workItemId, disposition] of dispositions) {
+	for (const [workUnitId, disposition] of dispositions) {
 		validateActiveWorkDisposition({
 			state,
 			content,
-			workItemId,
+			workUnitId,
 			disposition,
-			activeWork: active.get(workItemId) as ActiveWork,
+			activeWork: active.get(workUnitId) as ActiveWork,
 		});
 	}
 }
@@ -347,14 +347,14 @@ function assertDispositionCoverage(
 	if (dispositions.size !== entryCount) {
 		throw new Error("Rolling Planning Candidate has duplicate active-work dispositions.");
 	}
-	for (const workItemId of active.keys()) {
-		if (!dispositions.has(workItemId)) {
-			throw new Error(`Active Work Item ${workItemId} requires an explicit disposition.`);
+	for (const workUnitId of active.keys()) {
+		if (!dispositions.has(workUnitId)) {
+			throw new Error(`Active Work Unit ${workUnitId} requires an explicit disposition.`);
 		}
 	}
-	for (const workItemId of dispositions.keys()) {
-		if (!active.has(workItemId)) {
-			throw new Error(`Disposition ${workItemId} does not identify active work.`);
+	for (const workUnitId of dispositions.keys()) {
+		if (!active.has(workUnitId)) {
+			throw new Error(`Disposition ${workUnitId} does not identify active work.`);
 		}
 	}
 }
@@ -362,7 +362,7 @@ function assertDispositionCoverage(
 function validateActiveWorkDisposition(input: {
 	readonly state: ProjectWorkState;
 	readonly content: MaterializedPlanningFields;
-	readonly workItemId: string;
+	readonly workUnitId: string;
 	readonly disposition: ActiveWorkDisposition;
 	readonly activeWork: ActiveWork;
 }): void {
@@ -371,59 +371,59 @@ function validateActiveWorkDisposition(input: {
 		input.activeWork.assignment?.operationId
 	) {
 		throw new Error(
-			`Disposition ${input.workItemId} must bind the exact active Assignment.`,
+			`Disposition ${input.workUnitId} must bind the exact active Assignment.`,
 		);
 	}
 	if (input.disposition.disposition === "preserve") {
-		assertPreservedWorkItem(
+		assertPreservedWorkUnit(
 			input.state,
 			input.content,
-			input.workItemId,
+			input.workUnitId,
 			input.activeWork,
 		);
 	}
-	assertMigrationReplacement(input.workItemId, input.disposition);
+	assertMigrationReplacement(input.workUnitId, input.disposition);
 }
 
-function assertPreservedWorkItem(
+function assertPreservedWorkUnit(
 	state: ProjectWorkState,
 	content: MaterializedPlanningFields,
-	workItemId: string,
+	workUnitId: string,
 	activeWork: ActiveWork,
 ): void {
-	const previous = previousWorkItem(state, activeWork);
-	const proposed = content.workItems.find((item) => item.id === workItemId);
-	if (!previous || !proposed || !sameWorkItemMeaning(previous, proposed)) {
+	const previous = previousWorkUnit(state, activeWork);
+	const proposed = content.workUnits.find((item) => item.id === workUnitId);
+	if (!previous || !proposed || !sameWorkUnitMeaning(previous, proposed)) {
 		throw new Error(
-			`Preserved Work Item ${workItemId} changed immutable Planning meaning.`,
+			`Preserved Work Unit ${workUnitId} changed immutable Planning meaning.`,
 		);
 	}
 }
 
 function assertMigrationReplacement(
-	workItemId: string,
+	workUnitId: string,
 	disposition: ActiveWorkDisposition,
 ): void {
 	if (disposition.disposition === "migrate") {
 		if (
-			!disposition.replacementWorkItemId ||
-			disposition.replacementWorkItemId === workItemId
+			!disposition.replacementWorkUnitId ||
+			disposition.replacementWorkUnitId === workUnitId
 		) {
 			throw new Error(
-				`Migrated Work Item ${workItemId} requires a distinct replacement.`,
+				`Migrated Work Unit ${workUnitId} requires a distinct replacement.`,
 			);
 		}
 		return;
 	}
-	if (disposition.replacementWorkItemId) {
+	if (disposition.replacementWorkUnitId) {
 		throw new Error(
-			`Disposition ${workItemId} may only name a replacement when migrating.`,
+			`Disposition ${workUnitId} may only name a replacement when migrating.`,
 		);
 	}
 }
 
 interface ActiveWork {
-	readonly claim: WorkItemClaimProjection | null;
+	readonly claim: WorkUnitClaimProjection | null;
 	readonly assignment: AssignmentProjection | null;
 	readonly planningEpochId: string;
 }
@@ -431,9 +431,9 @@ interface ActiveWork {
 function activeWorkById(state: ProjectWorkState): Map<string, ActiveWork> {
 	const active = new Map<string, ActiveWork>();
 	for (const change of state.changes) {
-		for (const claim of change.workItemClaims) {
+		for (const claim of change.workUnitClaims) {
 			if (claim.status !== "active") continue;
-			active.set(claim.workItemId, {
+			active.set(claim.workUnitId, {
 				claim,
 				assignment: null,
 				planningEpochId: claim.planningEpochId,
@@ -443,8 +443,8 @@ function activeWorkById(state: ProjectWorkState): Map<string, ActiveWork> {
 			if (assignment.status !== "active" && assignment.status !== "cancel_requested") {
 				continue;
 			}
-			const existing = active.get(assignment.workItemId);
-			active.set(assignment.workItemId, {
+			const existing = active.get(assignment.workUnitId);
+			active.set(assignment.workUnitId, {
 				claim: existing?.claim ?? null,
 				assignment,
 				planningEpochId: assignment.planningEpochId,
@@ -454,17 +454,17 @@ function activeWorkById(state: ProjectWorkState): Map<string, ActiveWork> {
 	return active;
 }
 
-function sameWorkItemMeaning(
-	left: PlanningEpochBody["workItems"][number],
-	right: PlanningEpochBody["workItems"][number],
+function sameWorkUnitMeaning(
+	left: PlanningEpochBody["workUnits"][number],
+	right: PlanningEpochBody["workUnits"][number],
 ): boolean {
-	const withoutTails = (workItem: PlanningEpochBody["workItems"][number]) => ({
-		...workItem,
+	const withoutTails = (workUnit: PlanningEpochBody["workUnits"][number]) => ({
+		...workUnit,
 		owningChange: {
-			changeId: workItem.owningChange.changeId,
-			revisionId: workItem.owningChange.revisionId,
+			changeId: workUnit.owningChange.changeId,
+			revisionId: workUnit.owningChange.revisionId,
 		},
-		contributingChanges: workItem.contributingChanges.map((binding) => ({
+		contributingChanges: workUnit.contributingChanges.map((binding) => ({
 			changeId: binding.changeId,
 			revisionId: binding.revisionId,
 		})),
@@ -472,16 +472,16 @@ function sameWorkItemMeaning(
 	return canonicalJson(withoutTails(left)) === canonicalJson(withoutTails(right));
 }
 
-function previousWorkItem(
+function previousWorkUnit(
 	state: ProjectWorkState,
 	active: ActiveWork,
-): PlanningEpochBody["workItems"][number] | null {
+): PlanningEpochBody["workUnits"][number] | null {
 	const epoch = state.planningEpochs.find(
 		(candidate) => candidate.operationId === active.planningEpochId,
 	);
 	return (
-		epoch?.body.workItems.find((item) => {
-			const activeId = active.assignment?.workItemId ?? active.claim?.workItemId;
+		epoch?.body.workUnits.find((item) => {
+			const activeId = active.assignment?.workUnitId ?? active.claim?.workUnitId;
 			return item.id === activeId;
 		}) ?? null
 	);
@@ -509,29 +509,29 @@ function materializeParticipants(
 	});
 }
 
-function materializeWorkItems(
-	workItems: RollingPlanningCandidateContent["workItems"],
+function materializeWorkUnits(
+	workUnits: RollingPlanningCandidateContent["workUnits"],
 	participants: readonly ChangeBinding[],
-): PlanningEpochBody["workItems"] {
+): PlanningEpochBody["workUnits"] {
 	const bindings = new Map(
 		participants.map((participant) => [participant.changeId, participant]),
 	);
-	return workItems.map((candidate) => {
-		const {owningChangeId, contributingChangeIds, ...workItem} = candidate;
+	return workUnits.map((candidate) => {
+		const {owningChangeId, contributingChangeIds, ...workUnit} = candidate;
 		const owningChange = bindings.get(owningChangeId);
 		if (!owningChange) {
-			throw new Error(`Work Item ${candidate.id} owner ${owningChangeId} is not a participant.`);
+			throw new Error(`Work Unit ${candidate.id} owner ${owningChangeId} is not a participant.`);
 		}
 		const contributingChanges = contributingChangeIds.map((changeId) => {
 			const binding = bindings.get(changeId);
 			if (!binding) {
 				throw new Error(
-					`Work Item ${candidate.id} contributor ${changeId} is not a participant.`,
+					`Work Unit ${candidate.id} contributor ${changeId} is not a participant.`,
 				);
 			}
 			return binding;
 		});
-		return {...workItem, owningChange, contributingChanges};
+		return {...workUnit, owningChange, contributingChanges};
 	});
 }
 
@@ -650,7 +650,7 @@ function assertCandidateCopiedExactly(
 	const candidateFields = {
 		participantChangeIds: content.participantChangeIds,
 		sprints: content.sprints,
-		workItems: content.workItems,
+		workUnits: content.workUnits,
 		activeWorkDispositions: content.activeWorkDispositions,
 	};
 	const epochFields = {
@@ -658,10 +658,10 @@ function assertCandidateCopiedExactly(
 			(participant) => participant.changeId,
 		),
 		sprints: body.sprints,
-		workItems: body.workItems.map((workItem) => {
-			const {owningChange, contributingChanges, ...workItemFields} = workItem;
+		workUnits: body.workUnits.map((workUnit) => {
+			const {owningChange, contributingChanges, ...workUnitFields} = workUnit;
 			return {
-				...workItemFields,
+				...workUnitFields,
 				owningChangeId: owningChange.changeId,
 				contributingChangeIds: contributingChanges.map(
 					(contributor) => contributor.changeId,
@@ -692,28 +692,28 @@ function requirePlanningBase(
 	};
 }
 
-function workItemIdsForChange(
+function workUnitIdsForChange(
 	epoch: PlanningEpochRecord,
 	changeId: string,
 ): string[] {
-	return epoch.body.workItems
-		.flatMap((workItem) =>
-			workItem.owningChange.changeId === changeId ||
-			workItem.contributingChanges.some(
+	return epoch.body.workUnits
+		.flatMap((workUnit) =>
+			workUnit.owningChange.changeId === changeId ||
+			workUnit.contributingChanges.some(
 				(contributor) => contributor.changeId === changeId,
 			)
-				? [workItem.id]
+				? [workUnit.id]
 				: [],
 		)
 		.sort(compareText);
 }
 
-function projectedWorkItemStatus(
+function projectedWorkUnitStatus(
 	assignment: AssignmentProjection | null,
-	claim: WorkItemClaimProjection | null,
+	claim: WorkUnitClaimProjection | null,
 	disposition: PlanningEpochBody["activeWorkDispositions"][number]["disposition"] | undefined,
 	inFrontier: boolean,
-): RollingWorkItemStatus {
+): RollingWorkUnitStatus {
 	if (assignment?.status === "completed") return "completed";
 	if (assignment?.status === "failed") return "failed";
 	if (assignment?.status === "cancelled") return "cancelled";
@@ -732,22 +732,22 @@ function projectedWorkItemStatus(
 
 function latestAssignment(
 	state: ProjectWorkState,
-	workItemId: string,
+	workUnitId: string,
 ): AssignmentProjection | null {
 	const assignments = allAssignments(state).filter(
-		(assignment) => assignment.workItemId === workItemId,
+		(assignment) => assignment.workUnitId === workUnitId,
 	);
 	return assignments.at(-1) ?? null;
 }
 
-function activeWorkItemClaim(
+function activeWorkUnitClaim(
 	state: ProjectWorkState,
-	workItemId: string,
-): WorkItemClaimProjection | null {
+	workUnitId: string,
+): WorkUnitClaimProjection | null {
 	for (const change of state.changes) {
-		const claim = change.workItemClaims.find(
+		const claim = change.workUnitClaims.find(
 			(candidate) =>
-				candidate.workItemId === workItemId && candidate.status === "active",
+				candidate.workUnitId === workUnitId && candidate.status === "active",
 		);
 		if (claim) return claim;
 	}

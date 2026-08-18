@@ -208,7 +208,7 @@ describe("CLI adapter", () => {
 		try {
 			const implementation = await seedProjectServerImplementation(root, {
 				suffix: "cli-command",
-				workItemId: "WU-cli-command",
+				workUnitId: "WU-cli-command",
 			});
 			const traceHead = createTraceHead({
 				traceId: "TRACE-cli-command",
@@ -219,7 +219,7 @@ describe("CLI adapter", () => {
 				implement: {
 					repoRoot: root,
 					expectedWorkStateDigest: implementation.expectedWorkStateDigest,
-					evidence: [{ workItemId: "WU-cli-command" }],
+					evidence: [{ workUnitId: "WU-cli-command" }],
 				},
 				runtime: {
 					queue: {

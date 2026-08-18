@@ -85,7 +85,7 @@ function nextLoop(
 ): TraceLoop | null {
 	const decisions = changeRefs(records);
 	if (decisions.length === 0) return "decision";
-	const workUnits = planningWorkItems(records);
+	const workUnits = planningWorkUnits(records);
 	const planningCoverage = new Set(
 		workUnits.flatMap((item) => item.changeRefs),
 	);
@@ -130,13 +130,13 @@ function changeRefs(records: TraceRecord[]): string[] {
 		});
 }
 
-function planningWorkItems(
+function planningWorkUnits(
 	records: TraceRecord[],
 ): Array<{ changeRefs: string[] }> {
 	return loopOutputEvents(records, "planning")
 		.filter(planningIterationClaimable)
 		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).workItems).map((item) => {
+			objectList(objectRecord(event.data?.output).workUnits).map((item) => {
 				const owningChangeRef = text(item.owningChangeId)
 					? `change:${text(item.owningChangeId)}`
 					: "";

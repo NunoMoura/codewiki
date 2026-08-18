@@ -30,7 +30,7 @@ async function releaseFixture(suffix) {
 			schemaVersion: 1,
 			runtimeJobId: `product-publication:${"c".repeat(64)}`,
 			traceId: seeded.traceId,
-			workItemId: seeded.workItemId,
+			workUnitId: seeded.workUnitId,
 			pushEventId: `${seeded.traceId}:runtime:project-branch-push:1:proof`,
 			commit,
 			tree,
@@ -202,8 +202,8 @@ test("exact published artifact promotes to release channel and appends proof", a
 			false,
 		);
 		const workState = await buildProjectWorkState({ repoRoot: context.root });
-		const item = workState.workItems.find(
-			(candidate) => candidate.id === context.seeded.workItemId,
+		const item = workState.workUnits.find(
+			(candidate) => candidate.id === context.seeded.workUnitId,
 		);
 		assert.equal(item?.releaseProofs?.[0]?.eventId, event.id);
 	} finally {

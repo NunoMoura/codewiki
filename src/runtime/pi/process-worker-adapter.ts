@@ -114,7 +114,7 @@ async function executePiProcessWorker(
 	const reportWithoutRef = {
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
-		workItemId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		status: implementationWorkerReportStatus(implementationEvidence.status),
 		producerSkillReceipt: producerSkills.receipt,
 		implementationEvidence,
@@ -147,7 +147,7 @@ async function executePiWorkerSession(input: {
 	try {
 		session = await sessionFactory.create({
 			workerId: assignment.workerId,
-			workUnitId: assignment.workItemId,
+			workUnitId: assignment.workUnitId,
 			traceId: assignment.traceId,
 			planningRefs: [...assignment.planningRefs],
 			pathScopes: [...assignment.pathScopes],
@@ -187,7 +187,7 @@ function workerObservation(input: {
 	error?: string;
 }): WorkerExecutionObservation {
 	return {
-		workUnitId: input.assignment.workItemId,
+		workUnitId: input.assignment.workUnitId,
 		workerId: input.assignment.workerId,
 		traceId: input.assignment.traceId,
 		planningRefs: [...input.assignment.planningRefs],

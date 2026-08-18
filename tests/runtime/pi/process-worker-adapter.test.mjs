@@ -26,7 +26,7 @@ function assignment(root) {
 		repoRoot: root,
 		assignmentId: "assignment:process-worker",
 		workerId: "worker:process-worker",
-		workItemId: "work:process-worker",
+		workUnitId: "work:process-worker",
 		claimId: "claim:process-worker",
 		traceId: "TRACE-CHG-process-worker",
 		planningRefs: ["trace:TRACE-CHG-process-worker#planning:1"],
@@ -179,7 +179,7 @@ test("Pi process worker adapter persists and recovers normalized Worker reports"
 		const result = await adapter.execute(input, new AbortController().signal);
 		assert.equal(result.status, "completed");
 		assert.equal(result.pid, 4242);
-		assert.equal(result.implementationEvidence?.workUnitId, input.workItemId);
+		assert.equal(result.implementationEvidence?.workUnitId, input.workUnitId);
 		assert.equal(result.discoveries?.length, 1);
 		assert.equal(result.producerSkillReceipt?.stage, "implementation");
 		assert.equal(result.producerSkillReceipt?.skills.length, 1);

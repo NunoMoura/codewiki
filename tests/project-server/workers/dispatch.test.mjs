@@ -55,7 +55,7 @@ function completedResult(assignment, status = "completed") {
 	return {
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
-		workItemId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		status,
 		reportRef: `runtime-worker-report:${assignment.assignmentId}`,
 		producerSkillReceipt: assignment.producerSkillReceipt,
@@ -119,11 +119,11 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 			occurredAt: "2026-07-21T10:00:00.000Z",
 		});
 		assert.equal(dispatch.status, "scheduled");
-		assert.deepEqual(dispatch.pendingWorkItemIds, [fixture.workItemId]);
+		assert.deepEqual(dispatch.pendingWorkUnitIds, [fixture.workUnitId]);
 		assert.equal(dispatch.scheduledJobIds.length, 1);
 		await waitForCoordinator(coordinator);
 		assert.equal(executions.length, 1);
-		assert.equal(executions[0].workItemId, fixture.workItemId);
+		assert.equal(executions[0].workUnitId, fixture.workUnitId);
 		assert.equal(executions[0].traceId, fixture.traceId);
 		assert.equal(executions[0].planningRefs[0], fixture.planningRef);
 		assert.equal(executions[0].sourceBaseRef, `git:${TEST_BASE_SHA}`);
@@ -181,7 +181,7 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 					refs: [fixture.planningRef],
 					createdAt: "2026-07-21T10:00:02.000Z",
 					data: {
-						output: { coveredWorkItemRefs: [fixture.workItemId] },
+						output: { coveredWorkUnitRefs: [fixture.workUnitId] },
 					},
 				},
 			],
@@ -191,7 +191,7 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 			kind: "project_truth_changed",
 			occurredAt: "2026-07-21T10:00:03.000Z",
 		});
-		assert.deepEqual(releasing.reviewReadyWorkItemIds, []);
+		assert.deepEqual(releasing.reviewReadyWorkUnitIds, []);
 		assert.equal(
 			releasing.scheduledJobIds.some((jobId) =>
 				jobId.startsWith("implementation-integration:"),
@@ -207,7 +207,7 @@ test("elected runtime derives claims and exact worker Assignments from WorkState
 		await waitForCoordinator(coordinator);
 		const released = await buildProjectWorkState({ repoRoot: root });
 		assert.equal(released.assignments[0].status, "released");
-		assert.equal(released.workItems[0].implemented, true);
+		assert.equal(released.workUnits[0].implemented, true);
 		const settled = await new ProjectServerReactor(root).observe({
 			kind: "timer_due",
 			occurredAt: "2026-07-21T10:00:04.000Z",
@@ -307,8 +307,8 @@ test("replacement generation resumes active claim from private Assignment packet
 	try {
 		const resumed = await dispatchWith(replacement, "2026-07-21T11:01:00.000Z");
 		assert.equal(resumed.status, "scheduled");
-		assert.deepEqual(resumed.pendingWorkItemIds, []);
-		assert.deepEqual(resumed.reviewReadyWorkItemIds, [fixture.workItemId]);
+		assert.deepEqual(resumed.pendingWorkUnitIds, []);
+		assert.deepEqual(resumed.reviewReadyWorkUnitIds, [fixture.workUnitId]);
 		assert.equal(resumed.scheduledJobIds.length, 1);
 		await waitForCoordinator(replacement);
 		assert.equal(executions, 1);
@@ -330,7 +330,7 @@ test("replacement generation resumes active claim from private Assignment packet
 			"2026-07-21T11:02:00.000Z",
 		);
 		assert.equal(rejected.status, "quiescent");
-		assert.deepEqual(rejected.pendingWorkItemIds, [fixture.workItemId]);
+		assert.deepEqual(rejected.pendingWorkUnitIds, [fixture.workUnitId]);
 		assert.deepEqual(rejected.scheduledJobIds, []);
 		assert.equal(executions, 1);
 	} finally {
@@ -372,7 +372,7 @@ test("authenticated project-service clients trigger automatic worker reconciliat
 					assert.equal(invocation.workerReports.length, 1);
 					assert.equal(
 						invocation.workerReports[0].workUnitId,
-						fixture.workItemId,
+						fixture.workUnitId,
 					);
 					return {};
 				},
@@ -402,12 +402,12 @@ test("authenticated project-service clients trigger automatic worker reconciliat
 			kind: "project_truth_changed",
 		});
 		assert.equal(dispatch.status, "scheduled");
-		assert.deepEqual(dispatch.pendingWorkItemIds, [fixture.workItemId]);
+		assert.deepEqual(dispatch.pendingWorkUnitIds, [fixture.workUnitId]);
 		await waitForCoordinator(service.coordinator);
 		assert.equal(executions, 1);
 		const ready = await client.reconcileWorkers({ kind: "timer_due" });
-		assert.deepEqual(ready.pendingWorkItemIds, []);
-		assert.deepEqual(ready.reviewReadyWorkItemIds, [fixture.workItemId]);
+		assert.deepEqual(ready.pendingWorkUnitIds, []);
+		assert.deepEqual(ready.reviewReadyWorkUnitIds, [fixture.workUnitId]);
 		const semanticReceipts = await client.react(
 			{ kind: "timer_due" },
 			"preview",
@@ -476,7 +476,7 @@ for (const terminalStatus of ["failed", "cancelled"]) {
 				kind: "timer_due",
 				occurredAt: "2026-07-21T11:30:01.000Z",
 			});
-			assert.deepEqual(releasing.reviewReadyWorkItemIds, []);
+			assert.deepEqual(releasing.reviewReadyWorkUnitIds, []);
 			assert.equal(
 				releasing.scheduledJobIds.some((jobId) =>
 					jobId.startsWith("implementation-worker-release:"),
@@ -486,8 +486,8 @@ for (const terminalStatus of ["failed", "cancelled"]) {
 			await waitForCoordinator(coordinator);
 			const state = await buildProjectWorkState({ repoRoot: root });
 			assert.equal(state.assignments[0].status, "released");
-			assert.equal(state.workItems[0].id, fixture.workItemId);
-			assert.equal(state.workItems[0].implemented, false);
+			assert.equal(state.workUnits[0].id, fixture.workUnitId);
+			assert.equal(state.workUnits[0].implemented, false);
 			const records = (await readFile(
 				join(root, ".codewiki", "traces", `${fixture.traceId}.jsonl`),
 				"utf8",
@@ -575,7 +575,7 @@ test("container-only adapters hold before Claim append when unavailable and prod
 		assert.equal(scheduled.status, "scheduled");
 		await waitForCoordinator(coordinator);
 		assert.equal(executions.length, 1);
-		assert.equal(executions[0].workItemId, fixture.workItemId);
+		assert.equal(executions[0].workUnitId, fixture.workUnitId);
 		assert.equal(executions[0].isolation.kind, "container");
 		assert.match(executions[0].isolation.ref, /^container:[a-f0-9]{64}$/u);
 		const [packet] = await readImplementationWorkerDispatchPackets(root);

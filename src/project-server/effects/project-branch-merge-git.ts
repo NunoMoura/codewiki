@@ -20,7 +20,7 @@ interface ProjectBranchMergeGitInput {
 
 interface ProjectBranchMergeGitIdentity {
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	integrationJobId: string;
 	targetBranch: string;
 	expectedTargetCommit: string;
@@ -306,7 +306,7 @@ function mergeRunnerPlan(
 	identity: ProjectBranchMergeGitIdentity,
 ): ProjectServerWorktreePlan {
 	return {
-		workUnitId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		traceId: identity.traceId,
 		workerId: "codewiki-project-branch-merge",
 		required: true,

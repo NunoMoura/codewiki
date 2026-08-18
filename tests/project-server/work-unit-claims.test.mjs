@@ -32,7 +32,7 @@ function planningEvent(traceId, workUnitId, pathScope, sequence = 1) {
 			exit: { status: "exit", targetLoop: "implementation" },
 			output: {
 				qualityStandards: planningQualityStandards([]),
-				workItems: [
+				workUnits: [
 					{
 						id: workUnitId,
 						title: `Work ${workUnitId}`,

@@ -9,7 +9,7 @@ import type {
 } from "./product-publication-contract.ts";
 import type { ProductPublicationManifestIdentity } from "./product-publication-manifest.ts";
 
-const PRODUCT_PUBLICATION_SCHEMA_VERSION = 1 as const;
+const PRODUCT_PUBLICATION_SCHEMA_VERSION = 2 as const;
 const PRODUCT_PUBLICATION_EVENT = "runtime.product.published";
 
 export interface ProductPublicationProofInput {
@@ -23,7 +23,7 @@ export interface ProductPublicationProofInput {
 export interface ProductPublicationReceipt {
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	pushEventId: string;
 	targetId: string;
 	channel: string;
@@ -40,7 +40,7 @@ export interface ProductPublicationReceipt {
 export interface PublicationIdentity extends ProductPublicationManifestIdentity {
 	repoRoot: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	pushJobId: string;
 	commit: string;
 	tree: string;
@@ -65,7 +65,7 @@ export function productPublicationPushEventMatches(
 		event.event === "runtime.project_branch.pushed" &&
 		event.traceId === identity.traceId &&
 		text(event.data?.runtimeJobId) === identity.pushJobId &&
-		text(event.data?.workItemId) === identity.workItemId &&
+		text(event.data?.workUnitId) === identity.workUnitId &&
 		text(event.data?.commit) === identity.commit &&
 		text(event.data?.tree) === identity.tree &&
 		text(event.data?.contentProof) === identity.contentProof
@@ -82,7 +82,7 @@ export function productPublicationEventMatches(
 	return (
 		event.parentId === identity.pushEventId &&
 		text(event.data?.runtimeJobId) === identity.jobId &&
-		text(event.data?.workItemId) === identity.workItemId &&
+		text(event.data?.workUnitId) === identity.workUnitId &&
 		text(event.data?.pushEventId) === identity.pushEventId &&
 		text(target?.targetId) === identity.targetId &&
 		text(target?.kind) === identity.targetKind &&
@@ -131,7 +131,7 @@ export function createProductPublicationEvent(options: {
 			schemaVersion: PRODUCT_PUBLICATION_SCHEMA_VERSION,
 			runtimeJobId: identity.jobId,
 			traceId: identity.traceId,
-			workItemId: identity.workItemId,
+			workUnitId: identity.workUnitId,
 			pushEventId: identity.pushEventId,
 			pushProjectServerJobId: identity.pushJobId,
 			commit: identity.commit,
@@ -177,7 +177,7 @@ export function createProductPublicationIdentity(
 	const base = {
 		repoRoot: realpathSync(input.repoRoot),
 		traceId: input.pushEvent.traceId,
-		workItemId: requiredText(data.workItemId),
+		workUnitId: requiredText(data.workUnitId),
 		pushEventId: input.pushEvent.id,
 		pushJobId: requiredText(data.runtimeJobId),
 		commit: requiredText(data.commit),
@@ -212,7 +212,7 @@ function assertPublicationInput(input: ProductPublicationProofInput): void {
 		!safeId(input.pushEvent.id) ||
 		!safeId(input.pushEvent.traceId) ||
 		!safeId(requiredText(pushData.runtimeJobId)) ||
-		!safeId(requiredText(pushData.workItemId)) ||
+		!safeId(requiredText(pushData.workUnitId)) ||
 		!gitObjectId(requiredText(pushData.commit)) ||
 		!gitObjectId(requiredText(pushData.tree)) ||
 		!safePublicationRef(requiredText(pushData.contentProof))
@@ -292,7 +292,7 @@ export function productPublicationReceipt(
 	return {
 		jobId: identity.jobId,
 		traceId: identity.traceId,
-		workItemId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		pushEventId: identity.pushEventId,
 		targetId: identity.targetId,
 		channel: identity.channel,

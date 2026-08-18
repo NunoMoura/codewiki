@@ -9,7 +9,7 @@ import type {
 } from "./product-release-contract.ts";
 import type { ProductReleaseManifestIdentity } from "./product-release-manifest.ts";
 
-const PRODUCT_RELEASE_SCHEMA_VERSION = 1 as const;
+const PRODUCT_RELEASE_SCHEMA_VERSION = 2 as const;
 const PRODUCT_RELEASE_EVENT = "runtime.product.released";
 
 export interface ProductReleaseProofInput {
@@ -23,7 +23,7 @@ export interface ProductReleaseProofInput {
 export interface ProductReleaseReceipt {
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	publicationEventId: string;
 	targetId: string;
 	channel: string;
@@ -41,7 +41,7 @@ export interface ProductReleaseReceipt {
 export interface ReleaseIdentity extends ProductReleaseManifestIdentity {
 	repoRoot: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	publicationJobId: string;
 	publicationTargetId: string;
 	publicationTargetKind: string;
@@ -75,7 +75,7 @@ export function productReleasePublicationEventMatches(
 		event.event === "runtime.product.published" &&
 		event.traceId === identity.traceId &&
 		text(event.data?.runtimeJobId) === identity.publicationJobId &&
-		text(event.data?.workItemId) === identity.workItemId &&
+		text(event.data?.workUnitId) === identity.workUnitId &&
 		text(target?.targetId) === identity.publicationTargetId &&
 		text(target?.kind) === identity.publicationTargetKind &&
 		text(target?.channel) === identity.publicationChannel &&
@@ -105,7 +105,7 @@ export function productReleaseEventMatches(
 	return (
 		event.parentId === identity.publicationEventId &&
 		text(event.data?.runtimeJobId) === identity.jobId &&
-		text(event.data?.workItemId) === identity.workItemId &&
+		text(event.data?.workUnitId) === identity.workUnitId &&
 		text(event.data?.publicationEventId) === identity.publicationEventId &&
 		text(target?.targetId) === identity.targetId &&
 		text(target?.kind) === identity.targetKind &&
@@ -154,7 +154,7 @@ export function createProductReleaseEvent(options: {
 			schemaVersion: PRODUCT_RELEASE_SCHEMA_VERSION,
 			runtimeJobId: identity.jobId,
 			traceId: identity.traceId,
-			workItemId: identity.workItemId,
+			workUnitId: identity.workUnitId,
 			publicationEventId: identity.publicationEventId,
 			publicationProjectServerJobId: identity.publicationJobId,
 			publicationRevision: identity.publicationRevision,
@@ -205,7 +205,7 @@ export function createProductReleaseIdentity(
 	const base = {
 		repoRoot: realpathSync(input.repoRoot),
 		traceId: input.publicationEvent.traceId,
-		workItemId: requiredText(data.workItemId),
+		workUnitId: requiredText(data.workUnitId),
 		publicationEventId: input.publicationEvent.id,
 		publicationJobId: requiredText(data.runtimeJobId),
 		publicationTargetId: requiredText(publicationTarget.targetId),
@@ -272,7 +272,7 @@ function assertCanonicalPublicationInput(input: ProductReleaseProofInput): {
 		!safeId(input.publicationEvent.id) ||
 		!safeId(input.publicationEvent.traceId) ||
 		!safeId(requiredText(data.runtimeJobId)) ||
-		!safeId(requiredText(data.workItemId)) ||
+		!safeId(requiredText(data.workUnitId)) ||
 		!gitObjectId(requiredText(data.commit)) ||
 		!gitObjectId(requiredText(data.tree)) ||
 		!safeProductReleaseRef(requiredText(data.contentProof)) ||
@@ -377,7 +377,7 @@ export function productReleaseReceipt(
 	return {
 		jobId: identity.jobId,
 		traceId: identity.traceId,
-		workItemId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		publicationEventId: identity.publicationEventId,
 		targetId: identity.targetId,
 		channel: identity.channel,

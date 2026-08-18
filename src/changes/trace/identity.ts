@@ -49,7 +49,7 @@ export type CreateChangeOperationInput<K extends ChangeOperationKind> = Omit<
 
 export type CreatePlanningEpochInput = Omit<
 	PlanningEpochBody,
-	"protocol" | "kind" | "kindVersion" | "globalWorkItemGraphDigest"
+	"protocol" | "kind" | "kindVersion" | "globalWorkUnitGraphDigest"
 >;
 
 export interface CreateStateCommitManifestInput {
@@ -162,7 +162,7 @@ export function createPlanningEpochRecord(
 		kind: OPERATION_DEFINITIONS["planning.epoch_recorded"].kind,
 		kindVersion: OPERATION_DEFINITIONS["planning.epoch_recorded"].kindVersion,
 		...normalized,
-		globalWorkItemGraphDigest: planningWorkItemGraphDigest(normalized),
+		globalWorkUnitGraphDigest: planningWorkUnitGraphDigest(normalized),
 	});
 	assertValidPlanningEpochBody(body);
 	const record = canonicalObject<PlanningEpochRecord>({
@@ -294,10 +294,10 @@ export function parseArchiveManifest(text: string): ArchiveManifest {
 	return value;
 }
 
-export function planningWorkItemGraphDigest(
+export function planningWorkUnitGraphDigest(
 	value: Pick<
 		PlanningEpochBody,
-		"participants" | "sprints" | "workItems" | "activeWorkDispositions"
+		"participants" | "sprints" | "workUnits" | "activeWorkDispositions"
 	>,
 ): `sha256:${string}` {
 	return canonicalJsonDigest({
@@ -307,26 +307,26 @@ export function planningWorkItemGraphDigest(
 		})),
 		sprints: value.sprints.map((sprint) => ({
 			id: sprint.id,
-			workItemIds: sprint.workItemIds,
+			workUnitIds: sprint.workUnitIds,
 			dependsOnSprintIds: sprint.dependsOnSprintIds,
 		})),
-		workItems: value.workItems.map((workItem) => ({
-			id: workItem.id,
-			sprintId: workItem.sprintId,
-			owningChangeId: workItem.owningChange.changeId,
-			contributingChangeIds: workItem.contributingChanges.map(
+		workUnits: value.workUnits.map((workUnit) => ({
+			id: workUnit.id,
+			sprintId: workUnit.sprintId,
+			owningChangeId: workUnit.owningChange.changeId,
+			contributingChangeIds: workUnit.contributingChanges.map(
 				(binding) => binding.changeId,
 			),
-			dependsOnWorkItemIds: workItem.dependsOnWorkItemIds,
+			dependsOnWorkUnitIds: workUnit.dependsOnWorkUnitIds,
 		})),
 		activeWorkDispositions: value.activeWorkDispositions.map((entry) => ({
-			workItemId: entry.workItemId,
+			workUnitId: entry.workUnitId,
 			disposition: entry.disposition,
 			...(entry.activeAssignmentOperationId
 				? {activeAssignmentOperationId: entry.activeAssignmentOperationId}
 				: {}),
-			...(entry.replacementWorkItemId
-				? {replacementWorkItemId: entry.replacementWorkItemId}
+			...(entry.replacementWorkUnitId
+				? {replacementWorkUnitId: entry.replacementWorkUnitId}
 				: {}),
 		})),
 	});
@@ -340,18 +340,18 @@ function assertValidPlanningEpochBody(
 	assertIsoTimestamp(body.recordedAt, "Planning epoch recordedAt");
 	assertSortedObjects(body.participants, participantKey, "Planning participants");
 	assertSortedObjects(body.sprints, (entry) => entry.id, "Planning sprints");
-	assertSortedObjects(body.workItems, (entry) => entry.id, "Planning Work Items");
+	assertSortedObjects(body.workUnits, (entry) => entry.id, "Planning Work Units");
 	assertSortedObjects(
 		body.activeWorkDispositions,
-		(entry) => entry.workItemId,
+		(entry) => entry.workUnitId,
 		"Planning active-work dispositions",
 	);
 	assertSortedUnique(body.safeExecutionFrontier, "Planning safe execution frontier");
 	assertPlanningReferences(body);
-	const expectedGraphDigest = planningWorkItemGraphDigest(body);
-	if (body.globalWorkItemGraphDigest !== expectedGraphDigest) {
+	const expectedGraphDigest = planningWorkUnitGraphDigest(body);
+	if (body.globalWorkUnitGraphDigest !== expectedGraphDigest) {
 		throw new Error(
-			`Planning Work Item graph digest mismatch: expected ${expectedGraphDigest}.`,
+			`Planning Work Unit graph digest mismatch: expected ${expectedGraphDigest}.`,
 		);
 	}
 }
@@ -484,7 +484,7 @@ function assertPayloadIdentities(body: ChangeOperationBody): void {
 			assertSplitIdentity(body.changeId, payload);
 			return;
 		case "change_claim.takeover_recorded":
-		case "work_item_claim.takeover_recorded":
+		case "work_unit_claim.takeover_recorded":
 			assertAuthenticatedTakeover(body);
 			return;
 		default:
@@ -789,7 +789,7 @@ function assertPayloadSetOrder(body: ChangeOperationBody): void {
 		"sourceRefs",
 		"evidenceRecordIds",
 		"resultIds",
-		"workItemIds",
+		"workUnitIds",
 		"assignmentOperationIds",
 		"sourceCandidateIds",
 		"conflictRefs",
@@ -832,32 +832,32 @@ const PLANNING_SET_FIELDS = new Set([
 ]);
 
 type PlanningSprint = PlanningEpochBody["sprints"][number];
-type PlanningWorkItem = PlanningEpochBody["workItems"][number];
+type PlanningWorkUnit = PlanningEpochBody["workUnits"][number];
 type ActiveWorkDisposition = PlanningEpochBody["activeWorkDispositions"][number];
 
 function assertPlanningReferences(body: PlanningEpochBody): void {
 	const participantIds = new Set(body.participants.map((entry) => entry.changeId));
 	const sprintIds = new Set(body.sprints.map((entry) => entry.id));
-	const workItemIds = new Set(body.workItems.map((entry) => entry.id));
+	const workUnitIds = new Set(body.workUnits.map((entry) => entry.id));
 	body.sprints.forEach((sprint) =>
-		assertSprintReferences(sprint, participantIds, sprintIds, workItemIds),
+		assertSprintReferences(sprint, participantIds, sprintIds, workUnitIds),
 	);
-	body.workItems.forEach((workItem) =>
-		assertWorkItemReferences(workItem, participantIds, sprintIds, workItemIds),
+	body.workUnits.forEach((workUnit) =>
+		assertWorkUnitReferences(workUnit, participantIds, sprintIds, workUnitIds),
 	);
 	assertAcyclic(
 		body.sprints.map((entry) => [entry.id, entry.dependsOnSprintIds] as const),
 		"Planning Sprint graph",
 	);
 	assertAcyclic(
-		body.workItems.map((entry) => [entry.id, entry.dependsOnWorkItemIds] as const),
-		"Planning Work Item graph",
+		body.workUnits.map((entry) => [entry.id, entry.dependsOnWorkUnitIds] as const),
+		"Planning Work Unit graph",
 	);
-	body.safeExecutionFrontier.forEach((workItemId) =>
-		assertKnownWorkItem(workItemId, workItemIds, "Planning safe execution frontier"),
+	body.safeExecutionFrontier.forEach((workUnitId) =>
+		assertKnownWorkUnit(workUnitId, workUnitIds, "Planning safe execution frontier"),
 	);
 	body.activeWorkDispositions.forEach((entry) =>
-		assertActiveWorkDisposition(entry, workItemIds),
+		assertActiveWorkDisposition(entry, workUnitIds),
 	);
 }
 
@@ -865,18 +865,18 @@ function assertSprintReferences(
 	sprint: PlanningSprint,
 	participantIds: ReadonlySet<string>,
 	sprintIds: ReadonlySet<string>,
-	workItemIds: ReadonlySet<string>,
+	workUnitIds: ReadonlySet<string>,
 ): void {
 	assertSortedUnique(sprint.participantChangeIds, `Sprint ${sprint.id} participants`);
-	assertSortedUnique(sprint.workItemIds, `Sprint ${sprint.id} Work Items`);
+	assertSortedUnique(sprint.workUnitIds, `Sprint ${sprint.id} Work Units`);
 	assertSortedUnique(sprint.dependsOnSprintIds, `Sprint ${sprint.id} dependencies`);
 	for (const changeId of sprint.participantChangeIds) {
 		if (!participantIds.has(changeId)) {
 			throw new Error(`Sprint ${sprint.id} references unknown Change ${changeId}.`);
 		}
 	}
-	for (const workItemId of sprint.workItemIds) {
-		assertKnownWorkItem(workItemId, workItemIds, `Sprint ${sprint.id}`);
+	for (const workUnitId of sprint.workUnitIds) {
+		assertKnownWorkUnit(workUnitId, workUnitIds, `Sprint ${sprint.id}`);
 	}
 	for (const dependency of sprint.dependsOnSprintIds) {
 		if (!sprintIds.has(dependency) || dependency === sprint.id) {
@@ -885,68 +885,68 @@ function assertSprintReferences(
 	}
 }
 
-function assertWorkItemReferences(
-	workItem: PlanningWorkItem,
+function assertWorkUnitReferences(
+	workUnit: PlanningWorkUnit,
 	participantIds: ReadonlySet<string>,
 	sprintIds: ReadonlySet<string>,
-	workItemIds: ReadonlySet<string>,
+	workUnitIds: ReadonlySet<string>,
 ): void {
-	if (!sprintIds.has(workItem.sprintId)) {
+	if (!sprintIds.has(workUnit.sprintId)) {
 		throw new Error(
-			`Work Item ${workItem.id} references unknown Sprint ${workItem.sprintId}.`,
+			`Work Unit ${workUnit.id} references unknown Sprint ${workUnit.sprintId}.`,
 		);
 	}
-	if (!participantIds.has(workItem.owningChange.changeId)) {
-		throw new Error(`Work Item ${workItem.id} owner is not a Planning participant.`);
+	if (!participantIds.has(workUnit.owningChange.changeId)) {
+		throw new Error(`Work Unit ${workUnit.id} owner is not a Planning participant.`);
 	}
 	assertSortedObjects(
-		workItem.contributingChanges,
+		workUnit.contributingChanges,
 		participantKey,
-		`Work Item ${workItem.id} contributing Changes`,
+		`Work Unit ${workUnit.id} contributing Changes`,
 	);
 	assertSortedUnique(
-		workItem.dependsOnWorkItemIds,
-		`Work Item ${workItem.id} dependencies`,
+		workUnit.dependsOnWorkUnitIds,
+		`Work Unit ${workUnit.id} dependencies`,
 	);
-	for (const dependency of workItem.dependsOnWorkItemIds) {
-		if (!workItemIds.has(dependency) || dependency === workItem.id) {
+	for (const dependency of workUnit.dependsOnWorkUnitIds) {
+		if (!workUnitIds.has(dependency) || dependency === workUnit.id) {
 			throw new Error(
-				`Work Item ${workItem.id} has invalid dependency ${dependency}.`,
+				`Work Unit ${workUnit.id} has invalid dependency ${dependency}.`,
 			);
 		}
 	}
 	assertSortedObjects(
-		workItem.acceptanceRequirements,
+		workUnit.acceptanceRequirements,
 		(entry) => entry.id,
-		`Work Item ${workItem.id} acceptance requirements`,
+		`Work Unit ${workUnit.id} acceptance requirements`,
 	);
-	walkSetFields(workItem, `Work Item ${workItem.id}`, PLANNING_SET_FIELDS);
+	walkSetFields(workUnit, `Work Unit ${workUnit.id}`, PLANNING_SET_FIELDS);
 }
 
-function assertKnownWorkItem(
-	workItemId: string,
-	workItemIds: ReadonlySet<string>,
+function assertKnownWorkUnit(
+	workUnitId: string,
+	workUnitIds: ReadonlySet<string>,
 	context: string,
 ): void {
-	if (!workItemIds.has(workItemId)) {
-		throw new Error(`${context} references unknown Work Item ${workItemId}.`);
+	if (!workUnitIds.has(workUnitId)) {
+		throw new Error(`${context} references unknown Work Unit ${workUnitId}.`);
 	}
 }
 
 function assertActiveWorkDisposition(
 	entry: ActiveWorkDisposition,
-	workItemIds: ReadonlySet<string>,
+	workUnitIds: ReadonlySet<string>,
 ): void {
-	assertKnownWorkItem(entry.workItemId, workItemIds, "Active-work disposition");
-	if (entry.disposition === "migrate" && !entry.replacementWorkItemId) {
+	assertKnownWorkUnit(entry.workUnitId, workUnitIds, "Active-work disposition");
+	if (entry.disposition === "migrate" && !entry.replacementWorkUnitId) {
 		throw new Error(
-			`Migration disposition for ${entry.workItemId} requires replacementWorkItemId.`,
+			`Migration disposition for ${entry.workUnitId} requires replacementWorkUnitId.`,
 		);
 	}
-	if (entry.replacementWorkItemId) {
-		assertKnownWorkItem(
-			entry.replacementWorkItemId,
-			workItemIds,
+	if (entry.replacementWorkUnitId) {
+		assertKnownWorkUnit(
+			entry.replacementWorkUnitId,
+			workUnitIds,
 			"Active-work disposition",
 		);
 	}
@@ -1052,21 +1052,21 @@ function normalizePlanningEpochInput(
 			input.sprints.map((sprint) => ({
 				...sprint,
 				participantChangeIds: sortedUnique(sprint.participantChangeIds),
-				workItemIds: sortedUnique(sprint.workItemIds),
+				workUnitIds: sortedUnique(sprint.workUnitIds),
 				dependsOnSprintIds: sortedUnique(sprint.dependsOnSprintIds),
 			})),
 			(entry) => entry.id,
 		),
-		workItems: sortedObjects(
-			input.workItems.map((workItem) => ({
-				...workItem,
+		workUnits: sortedObjects(
+			input.workUnits.map((workUnit) => ({
+				...workUnit,
 				contributingChanges: sortedObjects(
-					workItem.contributingChanges,
+					workUnit.contributingChanges,
 					participantKey,
 				),
-				dependsOnWorkItemIds: sortedUnique(workItem.dependsOnWorkItemIds),
+				dependsOnWorkUnitIds: sortedUnique(workUnit.dependsOnWorkUnitIds),
 				acceptanceRequirements: sortedObjects(
-					workItem.acceptanceRequirements.map((requirement) => ({
+					workUnit.acceptanceRequirements.map((requirement) => ({
 						...requirement,
 						evidenceObligationIds: sortedUnique(
 							requirement.evidenceObligationIds,
@@ -1076,21 +1076,21 @@ function normalizePlanningEpochInput(
 					(entry) => entry.id,
 				),
 				scope: {
-					...workItem.scope,
-					sourcePaths: sortedUnique(workItem.scope.sourcePaths),
-					knowledgeRefs: sortedUnique(workItem.scope.knowledgeRefs),
-					componentRefs: sortedUnique(workItem.scope.componentRefs),
+					...workUnit.scope,
+					sourcePaths: sortedUnique(workUnit.scope.sourcePaths),
+					knowledgeRefs: sortedUnique(workUnit.scope.knowledgeRefs),
+					componentRefs: sortedUnique(workUnit.scope.componentRefs),
 				},
 				workbench: {
-					...workItem.workbench,
-					toolIds: sortedUnique(workItem.workbench.toolIds),
-					skillIds: sortedUnique(workItem.workbench.skillIds),
-					contextRefs: sortedUnique(workItem.workbench.contextRefs),
+					...workUnit.workbench,
+					toolIds: sortedUnique(workUnit.workbench.toolIds),
+					skillIds: sortedUnique(workUnit.workbench.skillIds),
+					contextRefs: sortedUnique(workUnit.workbench.contextRefs),
 				},
 				integration: {
-					...workItem.integration,
+					...workUnit.integration,
 					requiredCheckIds: sortedUnique(
-						workItem.integration.requiredCheckIds,
+						workUnit.integration.requiredCheckIds,
 					),
 				},
 			})),
@@ -1098,7 +1098,7 @@ function normalizePlanningEpochInput(
 		),
 		activeWorkDispositions: sortedObjects(
 			input.activeWorkDispositions,
-			(entry) => entry.workItemId,
+			(entry) => entry.workUnitId,
 		),
 		safeExecutionFrontier: sortedUnique(input.safeExecutionFrontier),
 	});

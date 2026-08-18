@@ -70,7 +70,7 @@ export function productPublicationJob(
 		},
 		conflictRefs: [
 			`trace:${identity.traceId}`,
-			`work-item:${identity.workItemId}`,
+			`work-unit:${identity.workUnitId}`,
 			`publication:${identity.targetId}:${identity.channel}`,
 			`publication-destination:${identity.destinationRef}`,
 		],
@@ -205,7 +205,7 @@ async function verifiedAdapterInput(
 		repoRoot: identity.repoRoot,
 		jobId: identity.jobId,
 		traceId: identity.traceId,
-		workItemId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		pushEventId: identity.pushEventId,
 		target: { ...input.plan.target },
 		artifact,

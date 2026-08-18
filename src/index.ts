@@ -232,7 +232,7 @@ export type {
 export type {
 	PlanningCandidateContent,
 	PlanningSprintCandidate,
-	PlanningWorkItemCandidate,
+	PlanningWorkUnitCandidate,
 } from "./loops/planning/candidate-content.ts";
 export {
 	REVIEW_ATTEMPT_SCHEMA_VERSION,
@@ -263,7 +263,7 @@ export type {
 	WorkStateBlocker,
 	WorkStateChange,
 	WorkStateSprint,
-	WorkStateWorkItem,
+	WorkStateWorkUnit,
 } from "./work-state/types.ts";
 export type {
 	BlockersView,

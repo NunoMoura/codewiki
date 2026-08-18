@@ -17,12 +17,12 @@ import {
 
 export const CHANGE_REDUCTION_PROTOCOL = Object.freeze({
 	id: "codewiki.change-reduction",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 export const WORK_STATE_REDUCER = Object.freeze({
 	id: "codewiki.work-state-reducer",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 export type TraceProjectionStatus = "open" | "closed";
@@ -97,13 +97,13 @@ export interface PlanningEpochBindingProjection {
 	readonly operationId: OperationId;
 	readonly planningEpochId: PlanningEpochId;
 	readonly participantRevisionId: Sha256Digest;
-	readonly workItemIds: readonly string[];
+	readonly workUnitIds: readonly string[];
 }
 
-export interface WorkItemClaimProjection {
+export interface WorkUnitClaimProjection {
 	readonly operationId: OperationId;
 	readonly planningEpochId: PlanningEpochId;
-	readonly workItemId: string;
+	readonly workUnitId: string;
 	readonly assignmentAttemptId: string;
 	readonly workerId: string;
 	readonly workbenchId: string;
@@ -115,7 +115,7 @@ export interface AssignmentProjection {
 	readonly operationId: OperationId;
 	readonly claimOperationId: OperationId;
 	readonly planningEpochId: PlanningEpochId;
-	readonly workItemId: string;
+	readonly workUnitId: string;
 	readonly assignmentAttemptId: string;
 	readonly workerId: string;
 	readonly workbenchId: string;
@@ -163,7 +163,7 @@ export interface ChangeWorkState {
 	readonly changeClaims: readonly ChangeClaimProjection[];
 	readonly loopAttempts: readonly LoopAttemptProjection[];
 	readonly planningEpochBindings: readonly PlanningEpochBindingProjection[];
-	readonly workItemClaims: readonly WorkItemClaimProjection[];
+	readonly workUnitClaims: readonly WorkUnitClaimProjection[];
 	readonly assignments: readonly AssignmentProjection[];
 	readonly integrationAttempts: readonly IntegrationAttemptProjection[];
 	readonly contradictions: readonly ContradictionProjection[];
@@ -250,7 +250,7 @@ export function emptyChangeWorkState(
 		changeClaims: [],
 		loopAttempts: [],
 		planningEpochBindings: [],
-		workItemClaims: [],
+		workUnitClaims: [],
 		assignments: [],
 		integrationAttempts: [],
 		contradictions: [],

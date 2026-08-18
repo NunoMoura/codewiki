@@ -1,17 +1,17 @@
 import type { TraceEvent } from "../changes/trace/types.ts";
-import type { WorkStateReleaseProof, WorkStateWorkItem } from "./types.ts";
+import type { WorkStateReleaseProof, WorkStateWorkUnit } from "./types.ts";
 
 export function projectProductReleases(
 	events: TraceEvent[],
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 ): void {
 	for (const event of events.filter(
 		(candidate) => candidate.event === "runtime.product.released",
 	)) {
 		const proof = releaseProof(event);
-		const item = proof ? workItemMap.get(proof.workItemId) : undefined;
+		const item = proof ? workUnitMap.get(proof.workUnitId) : undefined;
 		if (!proof || !item) continue;
-		const { workItemId: _, ...projected } = proof;
+		const { workUnitId: _, ...projected } = proof;
 		item.releaseProofs = [
 			...(item.releaseProofs || []).filter(
 				(candidate) => candidate.eventId !== event.id,
@@ -23,14 +23,14 @@ export function projectProductReleases(
 
 function releaseProof(
 	event: TraceEvent,
-): (WorkStateReleaseProof & { workItemId: string }) | undefined {
+): (WorkStateReleaseProof & { workUnitId: string }) | undefined {
 	const target = objectValue(event.data?.target);
 	const artifact = objectValue(event.data?.artifact);
 	const previous = objectValue(event.data?.previousChannel);
 	const authority = objectValue(event.data?.authority);
 	const targetKind = releaseTargetKind(target?.kind);
 	const proof = {
-		workItemId: text(event.data?.workItemId),
+		workUnitId: text(event.data?.workUnitId),
 		jobId: text(event.data?.runtimeJobId),
 		publicationEventId: text(event.data?.publicationEventId),
 		targetId: text(target?.targetId),
@@ -50,7 +50,7 @@ function releaseProof(
 		authorityRef: text(authority?.ref),
 	};
 	if (
-		!proof.workItemId ||
+		!proof.workUnitId ||
 		!proof.jobId ||
 		!proof.publicationEventId ||
 		!proof.targetId ||
@@ -90,7 +90,7 @@ function releaseProof(
 		authorityActor: proof.authorityActor,
 		authorityRef: proof.authorityRef,
 		releasedAt: event.createdAt,
-		workItemId: proof.workItemId,
+		workUnitId: proof.workUnitId,
 	};
 }
 

@@ -66,7 +66,7 @@ function changeInput(planningRef) {
 
 function evidenceInput(overrides = {}) {
 	const { id: _id, planningRefs: _planningRefs, ...evidence } = changeInput("");
-	return { workItemId: "WU-implement", ...evidence, ...overrides };
+	return { workUnitId: "WU-implement", ...evidence, ...overrides };
 }
 
 describe("wiki_implement core facade", () => {

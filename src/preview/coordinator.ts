@@ -56,7 +56,7 @@ export interface PreviewRuntimeStatus {
 	traceIds: string[];
 	changeIds: string[];
 	sprintIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 	viewports: string[];
 	state: PreviewRuntimeState;
 	url?: string;
@@ -771,7 +771,7 @@ function blockedTargetStatus(input: {
 		traceIds: [...input.binding.traceIds],
 		changeIds: [...input.binding.contributingChangeIds],
 		sprintIds: [...input.binding.sprintIds],
-		workItemIds: [...input.binding.workItemIds],
+		workUnitIds: [...input.binding.workUnitIds],
 		viewports: [...(input.target?.viewports || [])],
 		state: "blocked",
 		managed: false,
@@ -795,7 +795,7 @@ function runtimeStatuses(runtime: RuntimeEntry): PreviewRuntimeStatus[] {
 		traceIds: [...entry.binding.traceIds],
 		changeIds: [...entry.binding.contributingChangeIds],
 		sprintIds: [...entry.binding.sprintIds],
-		workItemIds: [...entry.binding.workItemIds],
+		workUnitIds: [...entry.binding.workUnitIds],
 		viewports: [...entry.target.viewports],
 		state: runtime.state,
 		url: previewTargetUrl(runtime.profile.url, entry.target),
@@ -849,7 +849,7 @@ function copyEvidenceCapture(
 		traceIds: [...capture.traceIds],
 		changeIds: [...capture.changeIds],
 		sprintIds: [...capture.sprintIds],
-		workItemIds: [...capture.workItemIds],
+		workUnitIds: [...capture.workUnitIds],
 		implementation: capture.implementation.map((entry) => ({ ...entry })),
 		integration: copyIntegrationState(capture.integration),
 		screenshots: capture.screenshots.map((screenshot) => ({ ...screenshot })),
@@ -867,7 +867,7 @@ function copyIntegrationState(
 		visibleChangeIds: [...integration.visibleChangeIds],
 		conflictingChangeIds: [...integration.conflictingChangeIds],
 		sprintIds: [...integration.sprintIds],
-		workItemIds: [...integration.workItemIds],
+		workUnitIds: [...integration.workUnitIds],
 	};
 }
 

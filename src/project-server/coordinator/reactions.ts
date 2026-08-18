@@ -34,7 +34,7 @@ export interface ProjectServerReactionJobEvidence {
 }
 
 export interface ProjectServerReactionJobReceipt {
-	schemaVersion: 1;
+	schemaVersion: 2;
 	jobId: string;
 	loop: "decision" | "planning" | "implementation";
 	status: "completed" | "previewed" | "routed" | "stale";
@@ -68,7 +68,7 @@ export interface ScheduleProjectServerReactionsInput {
 	maxReactions?: number;
 	maxPlanningChanges?: number;
 	maxCasRetries?: number;
-	blockedImplementationWorkItemIds?: string[];
+	blockedImplementationWorkUnitIds?: string[];
 	implementationWorkerReports?: ImplementationWorkerReportInput[];
 	beforeAppend?: () => void | Promise<void>;
 }
@@ -86,12 +86,12 @@ export async function scheduleProjectServerReactions(
 		maxReactions: input.maxReactions,
 		maxPlanningChanges: input.maxPlanningChanges,
 	});
-	const blocked = new Set(input.blockedImplementationWorkItemIds || []);
+	const blocked = new Set(input.blockedImplementationWorkUnitIds || []);
 	const reactions = observation.reactions.filter(
 		(reaction) =>
 			!blockedImplementationReaction({
 				reaction,
-				blockedWorkItemIds: blocked,
+				blockedWorkUnitIds: blocked,
 			}),
 	);
 	return Promise.all(
@@ -122,7 +122,7 @@ function workerReportsForReaction(input: {
 }): ImplementationWorkerReportInput[] {
 	const selection = input.reaction.selection;
 	if (selection?.loop !== "implementation") return [];
-	const selected = new Set(selection.workItemIds);
+	const selected = new Set(selection.workUnitIds);
 	return input.workerReports
 		.filter((result) => selected.has(result.workUnitId))
 		.sort(compareWorkerReports);
@@ -146,13 +146,13 @@ function workerReportContextDigest(
 
 function blockedImplementationReaction(input: {
 	readonly reaction: ProjectServerReaction;
-	readonly blockedWorkItemIds: Set<string>;
+	readonly blockedWorkUnitIds: Set<string>;
 }): boolean {
 	const selection = input.reaction.selection;
 	return Boolean(
 		selection?.loop === "implementation" &&
-			selection.workItemIds.some((workItemId) =>
-				input.blockedWorkItemIds.has(workItemId),
+			selection.workUnitIds.some((workUnitId) =>
+				input.blockedWorkUnitIds.has(workUnitId),
 			),
 	);
 }
@@ -316,7 +316,7 @@ function reactionConflictRefs(reaction: ProjectServerReaction): string[] {
 	}
 	return [
 		...selection.changeIds.map((changeId) => `change:${changeId}`),
-		...selection.workItemIds.map((workItemId) => `work-item:${workItemId}`),
+		...selection.workUnitIds.map((workUnitId) => `work-unit:${workUnitId}`),
 	];
 }
 
@@ -364,7 +364,7 @@ function receipt(
 	status: ProjectServerReactionJobReceipt["status"],
 	evidence: ProjectServerReactionJobEvidence[],
 ): ProjectServerReactionJobReceipt {
-	return { schemaVersion: 1, jobId, loop, status, evidence };
+	return { schemaVersion: 2, jobId, loop, status, evidence };
 }
 
 function objectRecord(value: unknown): Record<string, unknown> {

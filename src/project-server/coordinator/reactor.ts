@@ -10,7 +10,7 @@ import type {
 	WorkStateSprint,
 } from "../../work-state/types.ts";
 
-export const RUNTIME_REACTION_SCHEMA_VERSION = 1;
+export const RUNTIME_REACTION_SCHEMA_VERSION = 2;
 
 export type ProjectServerTriggerKind =
 	| "session_started"
@@ -47,7 +47,7 @@ export interface ProjectServerImplementationSelection {
 	loop: "implementation";
 	sprintId: string;
 	changeIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 }
 
 export type ProjectServerLoopSelection =
@@ -206,7 +206,7 @@ export function selectProjectServerReactions(
 				loop: "implementation",
 				sprintId: implementation.id,
 				changeIds: [...implementation.participatingChangeIds].sort(compareText),
-				workItemIds: readyWorkItemIds(workState, implementation),
+				workUnitIds: readyWorkUnitIds(workState, implementation),
 			}),
 		);
 	}
@@ -244,15 +244,15 @@ function implementationSprint(
 	workState: WorkState,
 	changeId: string,
 ): WorkStateSprint | undefined {
-	const workItemsById = new Map(
-		workState.workItems.map((item) => [item.id, item]),
+	const workUnitsById = new Map(
+		workState.workUnits.map((item) => [item.id, item]),
 	);
 	return workState.sprints
 		.filter((sprint) => !sprint.complete && sprint.blockers.length === 0)
 		.filter((sprint) => sprint.participatingChangeIds.includes(changeId))
 		.filter((sprint) =>
-			sprint.workItemIds.some((id) => {
-				const item = workItemsById.get(id);
+			sprint.workUnitIds.some((id) => {
+				const item = workUnitsById.get(id);
 				return item ? !item.implemented && item.blockers.length === 0 : false;
 			}),
 		)
@@ -319,13 +319,13 @@ function runtimeChangeRef(change: WorkStateChange): ProjectServerChangeRef {
 	};
 }
 
-function readyWorkItemIds(
+function readyWorkUnitIds(
 	workState: WorkState,
 	sprint: WorkStateSprint,
 ): string[] {
-	return sprint.workItemIds
+	return sprint.workUnitIds
 		.filter((id) => {
-			const item = workState.workItems.find((workItem) => workItem.id === id);
+			const item = workState.workUnits.find((workUnit) => workUnit.id === id);
 			return item ? !item.implemented && item.blockers.length === 0 : false;
 		})
 		.sort(compareText);

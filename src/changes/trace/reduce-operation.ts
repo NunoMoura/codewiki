@@ -24,7 +24,7 @@ import {
 	type LoopAttemptProjection,
 	type PlanningEpochBindingProjection,
 	type RelationshipProjection,
-	type WorkItemClaimProjection,
+	type WorkUnitClaimProjection,
 } from "./state.ts";
 import { canonicalJsonDigest } from "../../utils/canonical-json.ts";
 import { throwProtocolFailure } from "./errors.ts";
@@ -82,9 +82,9 @@ const OPERATION_REDUCERS: Readonly<Record<ChangeOperationKind, OperationReducer>
 		"loop.exit_report_recorded": reduceExitReportRecorded,
 		"runtime.route_recorded": reduceRuntimeRouteRecorded,
 		"planning.epoch_bound": reducePlanningEpochBound,
-		"work_item_claim.acquired": reduceWorkItemClaimAcquired,
-		"work_item_claim.released": reduceWorkItemClaimReleased,
-		"work_item_claim.takeover_recorded": reduceWorkItemClaimTakeover,
+		"work_unit_claim.acquired": reduceWorkUnitClaimAcquired,
+		"work_unit_claim.released": reduceWorkUnitClaimReleased,
+		"work_unit_claim.takeover_recorded": reduceWorkUnitClaimTakeover,
 		"assignment.dispatched": reduceAssignmentDispatched,
 		"assignment.cancel_requested": reduceAssignmentCancelRequested,
 		"assignment.terminal_recorded": reduceAssignmentTerminalRecorded,
@@ -251,7 +251,7 @@ function reduceTraceClosed(
 	const activeAuthority = [
 		...state.changeClaims.filter((entry) => entry.status === "active"),
 		...state.loopAttempts.filter((entry) => entry.status === "active"),
-		...state.workItemClaims.filter((entry) => entry.status === "active"),
+		...state.workUnitClaims.filter((entry) => entry.status === "active"),
 		...state.assignments.filter(
 			(entry) => entry.status === "active" || entry.status === "cancel_requested",
 		),
@@ -640,22 +640,22 @@ function reducePlanningEpochBound(
 	) {
 		invalid("BINDING_MISMATCH", operation, "Planning Candidate or Exit Report does not match.");
 	}
-	const expectedWorkItems = epoch.body.workItems
-		.flatMap((workItem) =>
-			workItem.owningChange.changeId === state.changeId ||
-			workItem.contributingChanges.some((entry) => entry.changeId === state.changeId)
-				? [workItem.id]
+	const expectedWorkUnits = epoch.body.workUnits
+		.flatMap((workUnit) =>
+			workUnit.owningChange.changeId === state.changeId ||
+			workUnit.contributingChanges.some((entry) => entry.changeId === state.changeId)
+				? [workUnit.id]
 				: [],
 		)
 		.sort(compareText);
-	if (!sameText(payload.workItemIds, expectedWorkItems)) {
-		invalid("BINDING_MISMATCH", operation, "Planning Work Item bindings do not match.");
+	if (!sameText(payload.workUnitIds, expectedWorkUnits)) {
+		invalid("BINDING_MISMATCH", operation, "Planning Work Unit bindings do not match.");
 	}
 	const binding: PlanningEpochBindingProjection = {
 		operationId: operation.operationId,
 		planningEpochId: payload.planningEpochId,
 		participantRevisionId: payload.participantRevisionId,
-		workItemIds: payload.workItemIds,
+		workUnitIds: payload.workUnitIds,
 	};
 	return canonicalStateValue({
 		...state,
@@ -663,33 +663,33 @@ function reducePlanningEpochBound(
 	});
 }
 
-function reduceWorkItemClaimAcquired(
+function reduceWorkUnitClaimAcquired(
 	state: ChangeWorkState,
 	operation: CanonicalChangeOperation,
 	context: ChangeOperationReductionContext,
 ): ChangeWorkState {
-	const payload = payloadOf(operation, "work_item_claim.acquired");
-	assertWorkItemClaimAdmission(state, operation, context);
-	const claim = activeWorkItemClaimProjection(operation, payload);
+	const payload = payloadOf(operation, "work_unit_claim.acquired");
+	assertWorkUnitClaimAdmission(state, operation, context);
+	const claim = activeWorkUnitClaimProjection(operation, payload);
 	return canonicalStateValue({
 		...state,
-		workItemClaims: [...state.workItemClaims, claim],
+		workUnitClaims: [...state.workUnitClaims, claim],
 	});
 }
 
-function reduceWorkItemClaimReleased(
+function reduceWorkUnitClaimReleased(
 	state: ChangeWorkState,
 	operation: CanonicalChangeOperation,
 ): ChangeWorkState {
 	const claimOperationId = payloadOf(
 		operation,
-		"work_item_claim.released",
+		"work_unit_claim.released",
 	).claimOperationId;
-	const workItemClaims = updateProjection({
-		entries: state.workItemClaims,
+	const workUnitClaims = updateProjection({
+		entries: state.workUnitClaims,
 		operationId: claimOperationId,
 		update: (entry) => {
-			requireActive(entry.status, operation, "Work Item Claim");
+			requireActive(entry.status, operation, "Work Unit Claim");
 			return {
 				...entry,
 				status: "released" as const,
@@ -697,22 +697,22 @@ function reduceWorkItemClaimReleased(
 			};
 		},
 		operation,
-		label: "Work Item Claim",
+		label: "Work Unit Claim",
 	});
-	return canonicalStateValue({...state, workItemClaims});
+	return canonicalStateValue({...state, workUnitClaims});
 }
 
-function reduceWorkItemClaimTakeover(
+function reduceWorkUnitClaimTakeover(
 	state: ChangeWorkState,
 	operation: CanonicalChangeOperation,
 	context: ChangeOperationReductionContext,
 ): ChangeWorkState {
-	const payload = payloadOf(operation, "work_item_claim.takeover_recorded");
+	const payload = payloadOf(operation, "work_unit_claim.takeover_recorded");
 	const superseded = updateProjection({
-		entries: state.workItemClaims,
+		entries: state.workUnitClaims,
 		operationId: payload.priorClaimOperationId,
 		update: (entry) => {
-			requireActive(entry.status, operation, "Work Item Claim");
+			requireActive(entry.status, operation, "Work Unit Claim");
 			return {
 				...entry,
 				status: "taken_over" as const,
@@ -720,35 +720,35 @@ function reduceWorkItemClaimTakeover(
 			};
 		},
 		operation,
-		label: "Work Item Claim",
+		label: "Work Unit Claim",
 	});
-	assertWorkItemClaimAdmission(
-		{...state, workItemClaims: superseded},
+	assertWorkUnitClaimAdmission(
+		{...state, workUnitClaims: superseded},
 		operation,
 		context,
 	);
-	const replacement = activeWorkItemClaimProjection(operation, payload);
+	const replacement = activeWorkUnitClaimProjection(operation, payload);
 	return canonicalStateValue({
 		...state,
-		workItemClaims: [...superseded, replacement],
+		workUnitClaims: [...superseded, replacement],
 	});
 }
 
-function activeWorkItemClaimProjection(
+function activeWorkUnitClaimProjection(
 	operation: CanonicalChangeOperation,
 	payload: Pick<
-		ChangeOperationPayload<"work_item_claim.acquired">,
+		ChangeOperationPayload<"work_unit_claim.acquired">,
 		| "planningEpochId"
-		| "workItemId"
+		| "workUnitId"
 		| "assignmentAttemptId"
 		| "workerId"
 		| "workbenchId"
 	>,
-): WorkItemClaimProjection {
+): WorkUnitClaimProjection {
 	return {
 		operationId: operation.operationId,
 		planningEpochId: payload.planningEpochId,
-		workItemId: payload.workItemId,
+		workUnitId: payload.workUnitId,
 		assignmentAttemptId: payload.assignmentAttemptId,
 		workerId: payload.workerId,
 		workbenchId: payload.workbenchId,
@@ -757,30 +757,30 @@ function activeWorkItemClaimProjection(
 	};
 }
 
-function assertWorkItemClaimAdmission(
+function assertWorkUnitClaimAdmission(
 	state: ChangeWorkState,
 	operation: CanonicalChangeOperation,
 	context: ChangeOperationReductionContext,
 ): void {
-	const payload = workItemClaimPayload(operation);
+	const payload = workUnitClaimPayload(operation);
 	const binding = state.planningEpochBindings.find(
 		(entry) => entry.planningEpochId === payload.planningEpochId,
 	);
-	if (!binding || !binding.workItemIds.includes(payload.workItemId)) {
-		invalid("BINDING_MISMATCH", operation, "Work Item is not bound to this Change.");
+	if (!binding || !binding.workUnitIds.includes(payload.workUnitId)) {
+		invalid("BINDING_MISMATCH", operation, "Work Unit is not bound to this Change.");
 	}
 	const epoch = context.planningEpochs.find(
 		(record) => record.operationId === payload.planningEpochId,
 	);
-	if (!epoch?.body.safeExecutionFrontier.includes(payload.workItemId)) {
-		invalid("INVALID_PRECONDITION", operation, "Work Item is not on the safe frontier.");
+	if (!epoch?.body.safeExecutionFrontier.includes(payload.workUnitId)) {
+		invalid("INVALID_PRECONDITION", operation, "Work Unit is not on the safe frontier.");
 	}
 	if (
-		state.workItemClaims.some(
-			(entry) => entry.workItemId === payload.workItemId && entry.status === "active",
+		state.workUnitClaims.some(
+			(entry) => entry.workUnitId === payload.workUnitId && entry.status === "active",
 		)
 	) {
-		invalid("ACTIVE_AUTHORITY", operation, "Work Item already has an active Claim.");
+		invalid("ACTIVE_AUTHORITY", operation, "Work Unit already has an active Claim.");
 	}
 }
 
@@ -789,10 +789,10 @@ function reduceAssignmentDispatched(
 	operation: CanonicalChangeOperation,
 ): ChangeWorkState {
 	const payload = payloadOf(operation, "assignment.dispatched");
-	const claim = activeWorkItemClaim(state, payload.claimOperationId, operation);
+	const claim = activeWorkUnitClaim(state, payload.claimOperationId, operation);
 	for (const field of [
 		"planningEpochId",
-		"workItemId",
+		"workUnitId",
 		"assignmentAttemptId",
 		"workerId",
 		"workbenchId",
@@ -805,7 +805,7 @@ function reduceAssignmentDispatched(
 		operationId: operation.operationId,
 		claimOperationId: payload.claimOperationId,
 		planningEpochId: payload.planningEpochId,
-		workItemId: payload.workItemId,
+		workUnitId: payload.workUnitId,
 		assignmentAttemptId: payload.assignmentAttemptId,
 		workerId: payload.workerId,
 		workbenchId: payload.workbenchId,
@@ -842,7 +842,7 @@ function reduceWorkerReportRecorded(
 	operation: CanonicalChangeOperation,
 ): ChangeWorkState {
 	const payload = payloadOf(operation, "worker.report_recorded");
-	activeWorkItemClaim(state, payload.claimOperationId, operation);
+	activeWorkUnitClaim(state, payload.claimOperationId, operation);
 	const assignments = updateAssignment(
 		state,
 		payload.assignmentOperationId,
@@ -1035,18 +1035,18 @@ function updateProjection<T extends {readonly operationId: OperationId}>({
 	);
 }
 
-function activeWorkItemClaim(
+function activeWorkUnitClaim(
 	state: ChangeWorkState,
 	claimOperationId: OperationId,
 	operation: CanonicalChangeOperation,
-): WorkItemClaimProjection {
-	const claim = state.workItemClaims.find(
+): WorkUnitClaimProjection {
+	const claim = state.workUnitClaims.find(
 		(entry) => entry.operationId === claimOperationId,
 	);
 	if (!claim) {
-		invalid("REFERENCE_NOT_FOUND", operation, `Work Item Claim ${claimOperationId} is absent.`);
+		invalid("REFERENCE_NOT_FOUND", operation, `Work Unit Claim ${claimOperationId} is absent.`);
 	}
-	requireActive(claim.status, operation, "Work Item Claim");
+	requireActive(claim.status, operation, "Work Unit Claim");
 	return claim;
 }
 
@@ -1221,16 +1221,16 @@ function contradictionValue(operation: CanonicalChangeOperation): {
 	}
 }
 
-function workItemClaimPayload(
+function workUnitClaimPayload(
 	operation: CanonicalChangeOperation,
-): ChangeOperationPayload<"work_item_claim.acquired"> {
+): ChangeOperationPayload<"work_unit_claim.acquired"> {
 	if (
-		operation.body.kind !== "work_item_claim.acquired" &&
-		operation.body.kind !== "work_item_claim.takeover_recorded"
+		operation.body.kind !== "work_unit_claim.acquired" &&
+		operation.body.kind !== "work_unit_claim.takeover_recorded"
 	) {
-		throw new Error(`Expected Work Item Claim operation, received ${operation.body.kind}.`);
+		throw new Error(`Expected Work Unit Claim operation, received ${operation.body.kind}.`);
 	}
-	return operation.body.payload as ChangeOperationPayload<"work_item_claim.acquired">;
+	return operation.body.payload as ChangeOperationPayload<"work_unit_claim.acquired">;
 }
 
 function invalid(

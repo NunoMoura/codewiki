@@ -1165,7 +1165,7 @@ describe("Pi extension adapter", () => {
 			);
 
 			assert.match(result.content[0].text, /wiki_state: all view/);
-			assert.match(result.content[0].text, /active work item/);
+			assert.match(result.content[0].text, /active work unit/);
 			assert.deepEqual(result.details.result.traceIds, ["TRACE-pi"]);
 			assert.equal(result.details.result.runtimeReaction.status, "quiescent");
 			assert.equal(result.details.result.sourceOwners, undefined);

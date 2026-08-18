@@ -64,14 +64,14 @@ import type { TraceEvent, TraceRecord } from "../../changes/trace/types.ts";
 import type {
 	WorkState,
 	WorkStateAssignment,
-	WorkStateWorkItem,
+	WorkStateWorkUnit,
 } from "../../work-state/types.ts";
 
 export type WikiImplementMode = "preview" | "append";
 
 /** Normalized evidence supplied by a worker or semantic adapter. Project Server owns routing and proof. */
 export interface ImplementationEvidenceSubmission {
-	workItemId: string;
+	workUnitId: string;
 	assignmentId?: string;
 	codePaths?: string[];
 	docPaths?: string[];
@@ -86,7 +86,7 @@ export interface ImplementationEvidenceSubmission {
 }
 
 const IMPLEMENTATION_EVIDENCE_FIELDS = new Set([
-	"workItemId",
+	"workUnitId",
 	"assignmentId",
 	"codePaths",
 	"docPaths",
@@ -160,7 +160,7 @@ export interface RunWikiImplementResult {
 	selection: {
 		sprintId: string;
 		changeId: string;
-		workItemIds: string[];
+		workUnitIds: string[];
 	};
 	proofPaths: string[];
 	snapshot: ProjectSnapshot;
@@ -369,18 +369,18 @@ async function runtimeImplementationContext(
 	const sources = implementationEvidenceSources(input);
 	if (sources.length === 0) {
 		throw new Error(
-			"Implementation requires worker reports or explicit evidence for runtime-selected Work Items.",
+			"Implementation requires worker reports or explicit evidence for runtime-selected Work Units.",
 		);
 	}
-	const selectedIds = new Set(selection.workItemIds);
+	const selectedIds = new Set(selection.workUnitIds);
 	const selectedItems = sources.map((source) => {
-		const workItemId = evidenceWorkItemId(source);
-		if (!selectedIds.has(workItemId)) {
+		const workUnitId = evidenceWorkUnitId(source);
+		if (!selectedIds.has(workUnitId)) {
 			throw new Error(
-				`Implementation evidence targets ${workItemId}, but runtime selected ${selection.workItemIds.join(", ")}.`,
+				`Implementation evidence targets ${workUnitId}, but runtime selected ${selection.workUnitIds.join(", ")}.`,
 			);
 		}
-		return requiredWorkItem(observation.workState, workItemId);
+		return requiredWorkUnit(observation.workState, workUnitId);
 	});
 	const changeIds = uniqueStrings(
 		selectedItems.map((item) => requiredOwningChangeId(item)),
@@ -392,18 +392,18 @@ async function runtimeImplementationContext(
 	}
 	const changeId = changeIds[0];
 	const traceId = changeTraceId(changeId);
-	const workItemIds = uniqueStrings(selectedItems.map((item) => item.id));
+	const workUnitIds = uniqueStrings(selectedItems.map((item) => item.id));
 	const traceRecords = observation.records.filter(
 		(record) => record.traceId === traceId,
 	);
-	const planningEvents = selectedPlanningEvents(traceRecords, workItemIds);
+	const planningEvents = selectedPlanningEvents(traceRecords, workUnitIds);
 	if (planningEvents.length === 0) {
 		throw new Error(
-			`Project Server found no Planning event for selected Work Items in ${traceId}.`,
+			`Project Server found no Planning event for selected Work Units in ${traceId}.`,
 		);
 	}
-	const assignments = selectedAssignments(observation.workState, workItemIds);
-	const claimEvents = selectedClaimEvents(traceRecords, workItemIds);
+	const assignments = selectedAssignments(observation.workState, workUnitIds);
+	const claimEvents = selectedClaimEvents(traceRecords, workUnitIds);
 	const expectedBytes = observation.expectedBytesByTrace[traceId];
 	if (!Number.isInteger(expectedBytes) || expectedBytes < 0) {
 		throw new Error(`Project Server has no append handle for ${traceId}.`);
@@ -413,7 +413,7 @@ async function runtimeImplementationContext(
 		selection: {
 			sprintId: selection.sprintId,
 			changeId,
-			workItemIds,
+			workUnitIds,
 		},
 		input: {
 			...input,
@@ -422,7 +422,7 @@ async function runtimeImplementationContext(
 			changeInputs: sources.map((source) =>
 				runtimeOwnedChangeInput(
 					source,
-					requiredWorkItem(observation.workState, evidenceWorkItemId(source)),
+					requiredWorkUnit(observation.workState, evidenceWorkUnitId(source)),
 					assignments,
 					planningEvents,
 				),
@@ -446,11 +446,11 @@ function implementationEvidenceSources(
 	}
 	const explicit = (input.evidence || []).map((entry) => {
 		assertEvidenceDoesNotClaimProjectServerAuthority(entry);
-		const { workItemId, assignmentId, ...evidence } = entry;
+		const { workUnitId, assignmentId, ...evidence } = entry;
 		return {
 			...evidence,
-			id: `submitted:${workItemId}`,
-			workUnitId: workItemId,
+			id: `submitted:${workUnitId}`,
+			workUnitId: workUnitId,
 			...(assignmentId ? { claimId: assignmentId } : {}),
 		} as ImplementationChangeInput;
 	});
@@ -461,7 +461,7 @@ function implementationEvidenceSources(
 		...workerAggregation.changeInputs,
 		...(input.workerReports || []).flatMap((result) =>
 			workerAggregation.changeInputs.some(
-				(change) => evidenceWorkItemId(change) === result.workUnitId,
+				(change) => evidenceWorkUnitId(change) === result.workUnitId,
 			)
 				? []
 				: [
@@ -474,11 +474,11 @@ function implementationEvidenceSources(
 					],
 		),
 	];
-	const explicitWorkItems = new Set(explicit.map(evidenceWorkItemId));
+	const explicitWorkUnits = new Set(explicit.map(evidenceWorkUnitId));
 	return [
 		...explicit,
 		...worker.filter(
-			(entry) => !explicitWorkItems.has(evidenceWorkItemId(entry)),
+			(entry) => !explicitWorkUnits.has(evidenceWorkUnitId(entry)),
 		),
 	];
 }
@@ -495,46 +495,46 @@ function assertEvidenceDoesNotClaimProjectServerAuthority(
 	}
 }
 
-function evidenceWorkItemId(input: ImplementationChangeInput): string {
+function evidenceWorkUnitId(input: ImplementationChangeInput): string {
 	const value = input.workUnitId;
-	if (!value) throw new Error("Implementation evidence requires workItemId.");
+	if (!value) throw new Error("Implementation evidence requires workUnitId.");
 	return value;
 }
 
-function requiredWorkItem(
+function requiredWorkUnit(
 	workState: WorkState,
-	workItemId: string,
-): WorkStateWorkItem {
-	const item = workState.workItems.find(
-		(candidate) => candidate.id === workItemId,
+	workUnitId: string,
+): WorkStateWorkUnit {
+	const item = workState.workUnits.find(
+		(candidate) => candidate.id === workUnitId,
 	);
 	if (!item)
-		throw new Error(`Project Server-selected Work Item ${workItemId} was not found.`);
+		throw new Error(`Project Server-selected Work Unit ${workUnitId} was not found.`);
 	return item;
 }
 
-function requiredOwningChangeId(item: WorkStateWorkItem): string {
+function requiredOwningChangeId(item: WorkStateWorkUnit): string {
 	if (!item.owningChangeId) {
-		throw new Error(`Work Item ${item.id} has no owning Change.`);
+		throw new Error(`Work Unit ${item.id} has no owning Change.`);
 	}
 	return item.owningChangeId;
 }
 
 function selectedAssignments(
 	workState: WorkState,
-	workItemIds: string[],
+	workUnitIds: string[],
 ): WorkStateAssignment[] {
-	const selected = new Set(workItemIds);
+	const selected = new Set(workUnitIds);
 	return workState.assignments.filter((assignment) =>
-		selected.has(assignment.workItemId),
+		selected.has(assignment.workUnitId),
 	);
 }
 
 function selectedClaimEvents(
 	records: TraceRecord[],
-	workItemIds: string[],
+	workUnitIds: string[],
 ): TraceEvent[] {
-	const selected = new Set(workItemIds);
+	const selected = new Set(workUnitIds);
 	return records.filter(
 		(record): record is TraceEvent =>
 			record.type === "trace_event" &&
@@ -545,22 +545,22 @@ function selectedClaimEvents(
 
 function selectedPlanningEvents(
 	records: TraceRecord[],
-	workItemIds: string[],
+	workUnitIds: string[],
 ): TraceEvent[] {
-	const selected = new Set(workItemIds);
+	const selected = new Set(workUnitIds);
 	return records.flatMap((record) => {
 		if (record.type !== "trace_event" || record.loop !== "planning") return [];
 		const output = objectRecord(record.data?.output);
-		const workItems = objectList(output.workItems).filter((item) =>
+		const workUnits = objectList(output.workUnits).filter((item) =>
 			selected.has(text(item.id)),
 		);
-		if (workItems.length === 0) return [];
+		if (workUnits.length === 0) return [];
 		return [
 			{
 				...record,
 				data: {
 					...record.data,
-					output: { ...output, workItems },
+					output: { ...output, workUnits },
 				},
 			},
 		];
@@ -569,18 +569,18 @@ function selectedPlanningEvents(
 
 function runtimeOwnedChangeInput(
 	source: ImplementationChangeInput,
-	item: WorkStateWorkItem,
+	item: WorkStateWorkUnit,
 	assignments: WorkStateAssignment[],
 	planningEvents: TraceEvent[],
 ): ImplementationChangeInput {
 	const assignment = assignmentForEvidence(source, item.id, assignments);
 	const planningEvent = planningEvents.find((event) =>
-		objectList(objectRecord(event.data?.output).workItems).some(
+		objectList(objectRecord(event.data?.output).workUnits).some(
 			(candidate) => text(candidate.id) === item.id,
 		),
 	);
 	if (!planningEvent) {
-		throw new Error(`Planning event for Work Item ${item.id} was not found.`);
+		throw new Error(`Planning event for Work Unit ${item.id} was not found.`);
 	}
 	const evidence = { ...source } as Record<string, unknown>;
 	for (const key of RUNTIME_OWNED_CHANGE_INPUT_KEYS) delete evidence[key];
@@ -606,24 +606,24 @@ const RUNTIME_OWNED_CHANGE_INPUT_KEYS = [
 
 function assignmentForEvidence(
 	source: ImplementationChangeInput,
-	workItemId: string,
+	workUnitId: string,
 	assignments: WorkStateAssignment[],
 ): WorkStateAssignment | undefined {
 	const assignmentId = text(source.claimId);
 	if (assignmentId) {
 		const exact = assignments.find(
 			(candidate) =>
-				candidate.id === assignmentId && candidate.workItemId === workItemId,
+				candidate.id === assignmentId && candidate.workUnitId === workUnitId,
 		);
 		if (!exact) {
 			throw new Error(
-				`Assignment ${assignmentId} does not belong to Work Item ${workItemId}.`,
+				`Assignment ${assignmentId} does not belong to Work Unit ${workUnitId}.`,
 			);
 		}
 		return exact;
 	}
 	return assignments
-		.filter((candidate) => candidate.workItemId === workItemId)
+		.filter((candidate) => candidate.workUnitId === workUnitId)
 		.sort((left, right) => right.id.localeCompare(left.id))[0];
 }
 

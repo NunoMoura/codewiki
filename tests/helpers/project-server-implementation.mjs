@@ -83,21 +83,21 @@ export async function seedProjectServerImplementationPortfolio(root, specs) {
 				id: sprintId,
 				goal: "Integrate runtime host portfolio work.",
 				participatingChangeIds: specs.map((spec) => spec.changeId),
-				workItemIds: specs.map((spec) => spec.workItemId),
+				workUnitIds: specs.map((spec) => spec.workUnitId),
 				rollbackBoundary: "Revert portfolio fixture together.",
 				dependsOn: [],
 				integrationRefs: ["integration:runtime-portfolio-fixture"],
 			},
 		],
-		workItems: specs.map((spec) => ({
-			id: spec.workItemId,
+		workUnits: specs.map((spec) => ({
+			id: spec.workUnitId,
 			sprintId,
 			owningChangeId: spec.changeId,
 			contributingChangeIds: [],
-			title: `Implement ${spec.workItemId}`,
+			title: `Implement ${spec.workUnitId}`,
 			outcome: "Runtime host evidence is integrated.",
 			technicalRequirements: ["Preserve runtime authority."],
-			acceptanceCriteria: [`${spec.workItemId} evidence passes.`],
+			acceptanceCriteria: [`${spec.workUnitId} evidence passes.`],
 			componentRefs: ["api"],
 			pathScopes: spec.pathScopes,
 			verification: spec.verification,
@@ -121,7 +121,7 @@ export async function seedProjectServerImplementationPortfolio(root, specs) {
 				...spec,
 				traceId,
 				planningEvents: [planningEvent],
-				planningRef: `trace:${planningEvent.id}#work:${spec.workItemId}`,
+				planningRef: `trace:${planningEvent.id}#work:${spec.workUnitId}`,
 				records: trace.records,
 				expectedBytes: trace.bytes,
 				nextSequence:
@@ -139,7 +139,7 @@ export async function seedProjectServerImplementationPortfolio(root, specs) {
 export async function seedProjectServerImplementation(root, options = {}) {
 	const suffix = options.suffix || "runtime-implementation";
 	const changeId = options.changeId || `CHG-${suffix}`;
-	const workItemId = options.workItemId || "WU-implement";
+	const workUnitId = options.workUnitId || "WU-implement";
 	const sprintId = options.sprintId || `SPR-${suffix}`;
 	const traceId = changeTraceId(changeId);
 	const record = createChangeRecord(
@@ -184,7 +184,7 @@ export async function seedProjectServerImplementation(root, options = {}) {
 				id: sprintId,
 				goal: options.goal || "Exercise Project Server-owned Implementation context.",
 				participatingChangeIds: [changeId],
-				workItemIds: [workItemId],
+				workUnitIds: [workUnitId],
 				rollbackBoundary: "Revert implementation test changes together.",
 				dependsOn: [],
 				integrationRefs: [],
@@ -193,9 +193,9 @@ export async function seedProjectServerImplementation(root, options = {}) {
 					: {}),
 			},
 		],
-		workItems: [
+		workUnits: [
 			{
-				id: workItemId,
+				id: workUnitId,
 				sprintId,
 				owningChangeId: changeId,
 				contributingChangeIds: [],
@@ -216,7 +216,7 @@ export async function seedProjectServerImplementation(root, options = {}) {
 			},
 		],
 		actor: "runtime:test",
-		rationale: "Create one bounded implementation Work Item.",
+		rationale: "Create one bounded implementation Work Unit.",
 		createdAt: options.planningAt || "2026-06-11T00:00:02.000Z",
 		mode: "append",
 		expectedBytesByChangeId: { [changeId]: trace.bytes },
@@ -228,8 +228,8 @@ export async function seedProjectServerImplementation(root, options = {}) {
 		changeId,
 		traceId,
 		sprintId,
-		workItemId,
-		planningRef: `trace:${planningEvent.id}#work:${workItemId}`,
+		workUnitId,
+		planningRef: `trace:${planningEvent.id}#work:${workUnitId}`,
 		planningEvents: [planningEvent],
 		records: trace.records,
 		expectedWorkStateDigest: workState.snapshotDigest,

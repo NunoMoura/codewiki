@@ -52,7 +52,7 @@ export interface ProductReleaseAdapterInput {
 	repoRoot: string;
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	publicationEventId: string;
 	publicationTargetId: string;
 	publicationRevision: string;

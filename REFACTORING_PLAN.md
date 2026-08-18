@@ -272,18 +272,28 @@ DSH receives no provider credentials and ideally no raw network. Runtime supplie
 - [x] Validate all Knowledge links, limits, diagrams, and source-pattern coverage.
 - [x] Commit documentation-only green checkpoint.
 
-### Slice 2 — Work Unit vocabulary and rolling-planning deletion
+### Slice 2A — Executable Work Unit vocabulary
 
-Create a new exhaustive HEAD-anchored implementation manifest after Slice 1 commit.
+- [x] Create an exhaustive HEAD-anchored vocabulary manifest after Slice 1.
+- [x] Rename executable `WorkItem`, `workItem`, `work_item`, `work-item`, and user-facing terms to `WorkUnit`, `workUnit`, `work_unit`, and `work-unit` in one breaking cut.
+- [x] Rename Change Trace operation kinds, payload fields, graph facts, query families, Claims, Assignments, effects, projections, fixtures, tests, and UI vocabulary without aliases.
+- [x] Advance affected Change Trace, Planning epoch, WorkState, Alignment, Change Intake, Review, Assignment, dispatch, integration, effect, and coordinator schema identities.
+- [x] Regenerate exact canonical fixture bytes and identities.
+- [x] Commit one green executable vocabulary checkpoint.
 
-- Rename executable `WorkItem` contracts, fields, commands, projections, tests, and UI vocabulary to `WorkUnit` in one breaking cut.
+Success: no active executable or Knowledge `Work Item` spelling or parser survives; historical changelog prose remains history rather than a compatibility surface.
+
+### Slice 2B — Rolling-planning deletion
+
+Create a new exhaustive HEAD-anchored deletion manifest after Slice 2A commit.
+
 - Delete `src/changes/trace/rolling-planning.ts` and rolling epoch contracts, reducers, views, active-work dispositions, planning horizons, participant-Change semantics, Sprint execution-plan ownership, and obsolete tests.
 - Replace portfolio Planning Candidate schemas with one Change-scoped graph-delta schema.
 - Remove `contributingChangeIds`; enforce exactly one owning Change per Work Unit.
 - Preserve cross-Change dependencies through explicit graph edges.
-- Update exports, package smoke, fixtures, and canonical protocol version where bytes change.
+- Update exports, package smoke, fixtures, and canonical protocol versions where bytes change.
 
-Success: no executable or Knowledge `Work Item`, rolling-planning, horizon, participant, or canonical Sprint-plan compatibility surface remains.
+Success: no rolling-planning, horizon, participant, or canonical Sprint-plan compatibility surface remains.
 
 ### Slice 3 — Decision active-Change compatibility
 

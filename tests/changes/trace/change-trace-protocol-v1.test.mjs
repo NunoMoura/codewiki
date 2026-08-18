@@ -202,33 +202,33 @@ describe("project and structural protocol records", () => {
 		const operation = proposedOperation();
 		const epoch = planningEpoch(operation);
 		assert.match(epoch.operationId, /^sha256:[0-9a-f]{64}$/);
-		assert.match(epoch.body.globalWorkItemGraphDigest, /^sha256:[0-9a-f]{64}$/);
+		assert.match(epoch.body.globalWorkUnitGraphDigest, /^sha256:[0-9a-f]{64}$/);
 		assert.equal(parsePlanningEpochRecord(serializePlanningEpochRecord(epoch)).operationId, epoch.operationId);
-		assert.equal(Object.isFrozen(epoch.body.workItems), true);
+		assert.equal(Object.isFrozen(epoch.body.workUnits), true);
 
 		const invalid = clone(epoch);
 		invalid.body.safeExecutionFrontier = ["unknown-work"];
 		invalid.operationId = sha256Digest(canonicalJson(invalid.body));
 		assert.throws(
 			() => assertValidPlanningEpochRecord(invalid),
-			/unknown Work Item/,
+			/unknown Work Unit/,
 		);
 	});
 
 	it("rejects cyclic Planning dependencies", () => {
 		const operation = proposedOperation();
 		const valid = planningEpoch(operation);
-		const work = valid.body.workItems[0];
+		const work = valid.body.workUnits[0];
 		assert.throws(
 			() =>
 				createPlanningEpochRecord({
 					...valid.body,
-					workItems: [
-						{...work, id: "work-a", dependsOnWorkItemIds: ["work-b"]},
-						{...work, id: "work-b", dependsOnWorkItemIds: ["work-a"]},
+					workUnits: [
+						{...work, id: "work-a", dependsOnWorkUnitIds: ["work-b"]},
+						{...work, id: "work-b", dependsOnWorkUnitIds: ["work-a"]},
 					],
 					sprints: [
-						{...valid.body.sprints[0], workItemIds: ["work-a", "work-b"]},
+						{...valid.body.sprints[0], workUnitIds: ["work-a", "work-b"]},
 					],
 					safeExecutionFrontier: [],
 				}),
@@ -275,10 +275,10 @@ describe("frozen protocol fixtures", () => {
 		const archive = archiveManifest(operation);
 		const documents = {operation, epoch, state, archive};
 		const expectedIds = {
-			operation: "sha256:1aec014f729366ec85f832132fc99b747094336a1db1f9527f7a8cbc5f4c161e",
-			epoch: "sha256:8531e203ab920228d7d6cd13701ba746452ddb10bc413dc6a70f46d81ccb77b7",
-			state: "sha256:1b2734f631f335352df29a34fd4928ad83c6f5a9f2c600577cd300825e8666d9",
-			archive: "sha256:4dbd5c8320094121c1f54d4578819b15ab8d3544cb9990f4bbea5987e4f6a316",
+			operation: "sha256:313746c46360ae7a20c1cc987fbb1b0122dae43b75d0ad64c7c60d091b8f5a78",
+			epoch: "sha256:edfcccccbbcba8d2e7a2991accc0d27075f3d4f33ccb145a8f0008c3aa0e0589",
+			state: "sha256:a058d0a029789ec78f09ef4cba21444d85a9ae66a6d375b809bfdefd6d5a6d76",
+			archive: "sha256:07c8e0dc0cc20d104ee0b9927f879450bbb756d1f5c01bc27d04000046eb4f23",
 		};
 		for (const [name, document] of Object.entries(documents)) {
 			const bytes = await readFile(new URL(`${name}.json`, fixtureDirectory), "utf8");

@@ -415,7 +415,7 @@ function planningWorkRefsForPath(
 	owner: SourceMapComponent | undefined,
 ): string[] {
 	if (event.loop !== "planning") return [];
-	return objectList(objectRecord(event.data?.output).workItems)
+	return objectList(objectRecord(event.data?.output).workUnits)
 		.filter((item) => planningWorkTouchesPath(item, target, owner))
 		.map((item) => `trace:${event.id}#work:${text(item.id) || "unknown"}`);
 }

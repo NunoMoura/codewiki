@@ -333,7 +333,7 @@ export function buildPlanningEpochRecords({
 				tailOperationId: change.tailOperationId,
 			};
 		});
-	const workItemId = `work-${suffix}`;
+	const workUnitId = `work-${suffix}`;
 	const sprintId = `sprint-${suffix}`;
 	const epoch = createPlanningEpochRecord({
 		recordedAt: "2026-07-30T13:20:00.000Z",
@@ -350,20 +350,20 @@ export function buildPlanningEpochRecords({
 				id: sprintId,
 				goal: "Prove deterministic reduction.",
 				participantChangeIds: participants.map((entry) => entry.changeId),
-				workItemIds: [workItemId],
+				workUnitIds: [workUnitId],
 				dependsOnSprintIds: [],
 				integrationBoundary: "One exact state batch.",
 			},
 		],
-		workItems: [
+		workUnits: [
 			{
-				id: workItemId,
+				id: workUnitId,
 				sprintId,
 				title: "Implement reducer",
 				outcome: "Full and incremental replay converge.",
 				owningChange: participants[0],
 				contributingChanges: participants.slice(1),
-				dependsOnWorkItemIds: [],
+				dependsOnWorkUnitIds: [],
 				acceptanceRequirements: [
 					{
 						id: "replay-equivalence",
@@ -393,7 +393,7 @@ export function buildPlanningEpochRecords({
 			},
 		],
 		activeWorkDispositions: [],
-		safeExecutionFrontier: [workItemId],
+		safeExecutionFrontier: [workUnitId],
 	});
 	const bindings = participants.flatMap((participant) => {
 		const change = state.changes.find(
@@ -413,13 +413,13 @@ export function buildPlanningEpochRecords({
 						participantRevisionId: participant.revisionId,
 						planningCandidateId: artifacts.candidate.id,
 						exitReportId: artifacts.report.id,
-						workItemIds: [workItemId],
+						workUnitIds: [workUnitId],
 					},
 				},
 			],
 		}).operations;
 	});
-	return {epoch, workItemId, records: [epoch, ...bindings]};
+	return {epoch, workUnitId, records: [epoch, ...bindings]};
 }
 
 export function createThreeBatchJourney(changeId = "CHG-reducer") {

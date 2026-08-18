@@ -1,5 +1,5 @@
 import { planningConflicts } from "../loops/planning/conflicts.ts";
-import type { PlanningWorkItem } from "../loops/planning/types.ts";
+import type { PlanningWorkUnit } from "../loops/planning/types.ts";
 import { loopOutputEvents } from "../changes/trace/queries.ts";
 import type { TraceEvent, TraceRecord } from "../changes/trace/types.ts";
 import type { ConflictsView, ConflictView, TraceViewInput } from "./projection-types.ts";
@@ -19,7 +19,7 @@ export function buildConflictsView(
 
 export function conflictsFromTrace(records: TraceRecord[]): ConflictView[] {
 	const implementedIds = implementedWorkUnitIds(records);
-	const items = planningWorkItemsForConflicts(records).filter(
+	const items = planningWorkUnitsForConflicts(records).filter(
 		(item) => !implementedIds.has(item.id),
 	);
 	return planningConflicts(items).flatMap((conflict) =>
@@ -32,14 +32,14 @@ export function conflictsFromTrace(records: TraceRecord[]): ConflictView[] {
 	);
 }
 
-function planningWorkItemsForConflicts(
+function planningWorkUnitsForConflicts(
 	records: TraceRecord[],
-): PlanningWorkItem[] {
+): PlanningWorkUnit[] {
 	return loopOutputEvents(records, "planning")
 		.filter((event) => !supersededByLaterPlanningIteration(event, records))
 		.filter((event) => activePlanningConflictSource(event))
 		.flatMap((event) =>
-			objectList(objectRecord(event.data?.output).workItems).map(
+			objectList(objectRecord(event.data?.output).workUnits).map(
 				(item) =>
 					({
 						id: text(item.id) || event.id,
@@ -63,7 +63,7 @@ function planningWorkItemsForConflicts(
 						workerProfile: text(item.workerProfile),
 						planningAssessment: item.planningAssessment,
 						dependsOn: stringList(item.dependsOn),
-					}) as PlanningWorkItem,
+					}) as PlanningWorkUnit,
 			),
 		);
 }

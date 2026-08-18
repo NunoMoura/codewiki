@@ -189,8 +189,8 @@ function plannedChangeRefs(records: TraceRecord[]): Set<string> {
 		loopOutputEvents(records, "planning")
 			.filter(planningIterationClaimable)
 			.flatMap((event) => [
-				...objectList(objectRecord(event.data?.output).workItems).flatMap(
-					workItemChangeRefs,
+				...objectList(objectRecord(event.data?.output).workUnits).flatMap(
+					workUnitChangeRefs,
 				),
 				...objectList(objectRecord(event.data?.output).resolutions).map(
 					(resolution) => text(resolution.changeRef),
@@ -367,11 +367,11 @@ function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
 		.filter(planningIterationExited)
 		.flatMap((event) => {
 			const quality = loopQualityReadiness(event);
-			return objectList(objectRecord(event.data?.output).workItems).map(
+			return objectList(objectRecord(event.data?.output).workUnits).map(
 				(item) => {
 					const id = text(item.id) || event.id;
 					const sourceEventId = iterationSubref(event, "work", id);
-					const changeRefs = workItemChangeRefs(item);
+					const changeRefs = workUnitChangeRefs(item);
 					const pathScopes = stringList(item.pathScopes);
 					return {
 						id,
@@ -400,7 +400,7 @@ function planningWorkUnits(records: TraceRecord[]): WorkUnitProjection[] {
 	return planned;
 }
 
-function workItemChangeRefs(item: Record<string, unknown>): string[] {
+function workUnitChangeRefs(item: Record<string, unknown>): string[] {
 	const owningChangeRef = text(item.owningChangeId)
 		? `change:${text(item.owningChangeId)}`
 		: "";

@@ -15,7 +15,7 @@ export const planningUiPreviewTargetCandidateSchema = Type.Object(
 		targetDigest: requiredTextSchema,
 		profileId: requiredTextSchema,
 		profileDigest: requiredTextSchema,
-		workItemIds: stringArraySchema,
+		workUnitIds: stringArraySchema,
 		contributingChangeIds: stringArraySchema,
 		required: Type.Boolean(),
 		activation: Type.Literal("implementation"),
@@ -32,7 +32,7 @@ export const planningSprintCandidateSchema = Type.Object(
 		id: requiredTextSchema,
 		goal: requiredTextSchema,
 		participatingChangeIds: stringArraySchema,
-		workItemIds: stringArraySchema,
+		workUnitIds: stringArraySchema,
 		rollbackBoundary: requiredTextSchema,
 		dependsOn: stringArraySchema,
 		integrationRefs: stringArraySchema,
@@ -43,7 +43,7 @@ export const planningSprintCandidateSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
-export const planningWorkItemCandidateSchema = Type.Object(
+export const planningWorkUnitCandidateSchema = Type.Object(
 	{
 		id: requiredTextSchema,
 		sprintId: requiredTextSchema,
@@ -65,7 +65,7 @@ export const planningWorkItemCandidateSchema = Type.Object(
 export const planningCandidateContentSchema = Type.Object(
 	{
 		sprints: Type.Array(planningSprintCandidateSchema),
-		workItems: Type.Array(planningWorkItemCandidateSchema),
+		workUnits: Type.Array(planningWorkUnitCandidateSchema),
 		rationale: requiredTextSchema,
 	},
 	{ additionalProperties: false },
@@ -74,14 +74,14 @@ export const planningCandidateContentSchema = Type.Object(
 export type PlanningSprintCandidate = Static<
 	typeof planningSprintCandidateSchema
 >;
-export type PlanningWorkItemCandidate = Static<
-	typeof planningWorkItemCandidateSchema
+export type PlanningWorkUnitCandidate = Static<
+	typeof planningWorkUnitCandidateSchema
 >;
 export type PlanningCandidateContent = Static<
 	typeof planningCandidateContentSchema
 >;
 
-const CANDIDATE_FIELDS = ["sprints", "workItems", "rationale"] as const;
+const CANDIDATE_FIELDS = ["sprints", "workUnits", "rationale"] as const;
 const RUNTIME_FIELDS = [
 	"actor",
 	"createdAt",
@@ -106,8 +106,8 @@ export function parsePlanningCandidateContent(
 	if (!Array.isArray(candidate.sprints)) {
 		throw new Error("Project Server planning candidate sprints must be an array.");
 	}
-	if (!Array.isArray(candidate.workItems)) {
-		throw new Error("Project Server planning candidate workItems must be an array.");
+	if (!Array.isArray(candidate.workUnits)) {
+		throw new Error("Project Server planning candidate workUnits must be an array.");
 	}
 	requiredCandidateText(candidate.rationale, "planning", "rationale");
 	assertCandidateSchema(

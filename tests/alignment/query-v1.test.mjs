@@ -75,9 +75,9 @@ describe("bounded Alignment Graph queries", () => {
 		for (const type of [
 			"requirement_requires_evidence_obligation",
 			"requirement_requires_check",
-			"work_item_scoped_to_source",
-			"work_item_scoped_to_knowledge",
-			"work_item_scoped_to_component",
+			"work_unit_scoped_to_source",
+			"work_unit_scoped_to_knowledge",
+			"work_unit_scoped_to_component",
 			"knowledge_ref_resolves_to",
 			"references",
 			"constrains",
@@ -165,9 +165,9 @@ describe("bounded Alignment Graph queries", () => {
 			graph,
 			{
 				...common,
-				family: "work_item_readiness",
+				family: "work_unit_readiness",
 				planningEpochId: journey.epoch.operationId,
-				workItemId: journey.epoch.body.workItems[0].id,
+				workUnitId: journey.epoch.body.workUnits[0].id,
 				depth: 4,
 			},
 			"fresh",
@@ -183,7 +183,7 @@ describe("bounded Alignment Graph queries", () => {
 			true,
 		);
 		assert.equal(
-			readiness.facts.some((fact) => fact.type === "work_item_has_stable_ref"),
+			readiness.facts.some((fact) => fact.type === "work_unit_has_stable_ref"),
 			true,
 		);
 

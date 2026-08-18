@@ -57,10 +57,10 @@ function approvedDecisionRef(events) {
 function planningWorkEvent(events, workUnitId) {
 	const iteration = events.find((event) => event.loop === "planning");
 	const item = workUnitId
-		? iteration?.data?.output?.workItems?.find(
+		? iteration?.data?.output?.workUnits?.find(
 				(candidate) => candidate.id === workUnitId,
 			)
-		: iteration?.data?.output?.workItems?.[0];
+		: iteration?.data?.output?.workUnits?.[0];
 	if (!iteration || !item) return undefined;
 	return {
 		...iteration,
@@ -83,11 +83,11 @@ function queueTrace(traceId, options = {}) {
 	});
 	const decisions = decisionEvents(traceId);
 	const changeRef = approvedDecisionRef(decisions);
-	const configuredWorkItemInputs =
-		typeof options.workItemInputs === "function"
-			? options.workItemInputs(changeRef)
-			: options.workItemInputs;
-	const workItemInputs = configuredWorkItemInputs || [
+	const configuredWorkUnitInputs =
+		typeof options.workUnitInputs === "function"
+			? options.workUnitInputs(changeRef)
+			: options.workUnitInputs;
+	const workUnitInputs = configuredWorkUnitInputs || [
 		{
 			id: options.workUnitId || "WU-queue",
 			title: options.workUnitTitle || "Queued work",
@@ -108,9 +108,9 @@ function queueTrace(traceId, options = {}) {
 				decisionEvents: decisions,
 				startSequence: nextSequence(decisions),
 				createdAt: "2026-06-11T00:00:02.000Z",
-				workItemInputs,
+				workUnitInputs,
 			});
-	const workUnitId = options.workUnitId || workItemInputs[0]?.id || "WU-queue";
+	const workUnitId = options.workUnitId || workUnitInputs[0]?.id || "WU-queue";
 	const planningEvent = plan
 		? planningWorkEvent(plan.traceEvents, workUnitId)
 		: undefined;
@@ -221,7 +221,7 @@ function runTrace(input) {
 		decisionEvents: decisions,
 		startSequence: nextSequence(decisions),
 		createdAt: "2026-06-11T00:00:05.000Z",
-		workItemInputs: [
+		workUnitInputs: [
 			{
 				id: "WU-run",
 				title: "Run run",
@@ -290,7 +290,7 @@ function plannedTrace() {
 		decisionEvents: decisions,
 		startSequence: nextSequence(decisions),
 		createdAt: "2026-06-11T00:00:02.000Z",
-		workItemInputs: [
+		workUnitInputs: [
 			{
 				id: "WU-views",
 				title: "Generate generated views",
@@ -360,7 +360,7 @@ describe("trace-backed state projections", () => {
 
 	it("projects triggers with enabled and run state", () => {
 		const plannedTrace = queueTrace("TRACE-trigger-planned", {
-			workItemInputs: (changeRef) => [
+			workUnitInputs: (changeRef) => [
 				{
 					id: "WU-trigger-planned",
 					title: "Trigger planned work",
@@ -386,7 +386,7 @@ describe("trace-backed state projections", () => {
 		});
 		const enabledTrace = queueTrace("TRACE-trigger-enabled", {
 			implemented: true,
-			workItemInputs: (changeRef) => [
+			workUnitInputs: (changeRef) => [
 				{
 					id: "WU-trigger-enabled",
 					title: "Trigger enabled work",
@@ -412,7 +412,7 @@ describe("trace-backed state projections", () => {
 		});
 		const enabledOnlyTrace = queueTrace("TRACE-trigger-enabled-only", {
 			implemented: true,
-			workItemInputs: (changeRef) => [
+			workUnitInputs: (changeRef) => [
 				{
 					id: "WU-trigger-enabled-only",
 					title: "Trigger enabled-only work",
@@ -493,7 +493,7 @@ describe("trace-backed state projections", () => {
 	it("marks enabled scheduled triggers due when current run is missing", () => {
 		const trace = queueTrace("TRACE-trigger-due", {
 			implemented: true,
-			workItemInputs: (changeRef) => [
+			workUnitInputs: (changeRef) => [
 				{
 					id: "WU-trigger-due",
 					title: "Due trigger work",
@@ -550,7 +550,7 @@ describe("trace-backed state projections", () => {
 
 	it("projects planning triggers into work-plan and work-queue views", () => {
 		const trace = queueTrace("TRACE-trigger-view", {
-			workItemInputs: (changeRef) => [
+			workUnitInputs: (changeRef) => [
 				{
 					id: "WU-trigger-view",
 					title: "Trigger view work",
@@ -648,7 +648,7 @@ describe("trace-backed state projections", () => {
 			traceId: head.traceId,
 			decisionEvents: decisions,
 			startSequence: nextSequence([...decisions, ...plan.traceEvents]),
-			workItemInputs: [
+			workUnitInputs: [
 				{
 					id: "WU-corrected",
 					title: "Corrected view work",
@@ -814,7 +814,7 @@ describe("trace-backed state projections", () => {
 		});
 		const waiting = queueTrace("TRACE-queue-waiting", {
 			workUnitId: "WU-waiting",
-			workItemInputs: (changeRef) => [
+			workUnitInputs: (changeRef) => [
 				{
 					id: "WU-dependency",
 					changeRefs: [changeRef],

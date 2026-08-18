@@ -18,7 +18,7 @@ interface ProjectBranchPushGitInput {
 
 interface ProjectBranchPushGitIdentity {
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	remote: string;
 	targetBranch: string;
 	expectedRemoteCommit: string | null;
@@ -241,7 +241,7 @@ function pushRunnerPlan(
 	identity: ProjectBranchPushGitIdentity,
 ): ProjectServerWorktreePlan {
 	return {
-		workUnitId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		traceId: identity.traceId,
 		workerId: "codewiki-project-branch-push",
 		required: true,

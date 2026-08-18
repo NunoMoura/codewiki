@@ -2,7 +2,7 @@ import type { ChangeRecord } from "../changes/records.ts";
 import type { UiPreviewTargetBinding } from "../preview/binding.ts";
 import type { TraceLoop } from "../changes/trace/types.ts";
 
-export const WORK_STATE_SCHEMA_VERSION = 1;
+export const WORK_STATE_SCHEMA_VERSION = 2;
 
 export type WorkStateApprovalStatus =
 	| "pending"
@@ -48,7 +48,7 @@ export interface WorkStateChange {
 	realizationStatus: WorkStateRealizationStatus;
 	outcomeStatus: WorkStateOutcomeStatus;
 	sprintIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 	assignmentIds: string[];
 	blockers: string[];
 	currentLoop?: TraceLoop;
@@ -63,7 +63,7 @@ export interface WorkStateSprint {
 	digest?: string;
 	goal: string;
 	participatingChangeIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 	dependencyIds: string[];
 	integrationRefs: string[];
 	uiPreviewTargets: UiPreviewTargetBinding[];
@@ -157,7 +157,7 @@ export interface WorkStateReleaseProof {
 	releasedAt: string;
 }
 
-export interface WorkStateWorkItem {
+export interface WorkStateWorkUnit {
 	id: string;
 	sprintId: string;
 	owningChangeId?: string;
@@ -187,7 +187,7 @@ export type WorkStateAssignmentStatus =
 
 export interface WorkStateAssignment {
 	id: string;
-	workItemId: string;
+	workUnitId: string;
 	owningChangeId?: string;
 	workerId?: string;
 	status: WorkStateAssignmentStatus;
@@ -203,7 +203,7 @@ export interface WorkStateBlocker {
 	message: string;
 	changeId?: string;
 	sprintId?: string;
-	workItemId?: string;
+	workUnitId?: string;
 	refs: string[];
 }
 
@@ -213,11 +213,11 @@ export interface WorkState {
 	snapshotDigest: string;
 	changeIds: string[];
 	sprintIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 	assignmentIds: string[];
 	changes: WorkStateChange[];
 	sprints: WorkStateSprint[];
-	workItems: WorkStateWorkItem[];
+	workUnits: WorkStateWorkUnit[];
 	assignments: WorkStateAssignment[];
 	blockers: WorkStateBlocker[];
 	sources: {

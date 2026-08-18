@@ -49,7 +49,7 @@ export interface PreviewEvidenceCapture {
 	traceIds: string[];
 	changeIds: string[];
 	sprintIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 	implementation: PreviewImplementationCorrelation[];
 	integration: PreviewIntegrationState;
 	capturedAt: string;
@@ -179,7 +179,7 @@ export async function capturePreviewEvidence(
 			traceIds: [...input.binding.traceIds],
 			changeIds: [...input.binding.contributingChangeIds],
 			sprintIds: [...input.binding.sprintIds],
-			workItemIds: [...input.binding.workItemIds],
+			workUnitIds: [...input.binding.workUnitIds],
 			implementation: implementationCorrelations(
 				input.records,
 				input.binding.traceIds,

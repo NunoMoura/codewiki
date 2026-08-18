@@ -63,7 +63,7 @@ async function pushFixture(suffix) {
 	await git(root, [
 		"commit",
 		"-qm",
-		`codewiki: integrate ${seeded.workItemId}`,
+		`codewiki: integrate ${seeded.workUnitId}`,
 		"-m",
 		`CodeWiki-Integration-Job: ${integrationJobId}`,
 	]);
@@ -92,7 +92,7 @@ async function pushFixture(suffix) {
 			schemaVersion: 1,
 			runtimeJobId: integrationJobId,
 			traceId: seeded.traceId,
-			workItemId: seeded.workItemId,
+			workUnitId: seeded.workUnitId,
 			parentCommit: baseCommit,
 			commit,
 			tree,
@@ -257,8 +257,8 @@ test("exact merged branch pushes normally and appends external-effect proof", as
 		assert.equal(recovered.status, "completed");
 		assert.deepEqual(recovered.result, receipt);
 		const workState = await buildProjectWorkState({ repoRoot: context.root });
-		const item = workState.workItems.find(
-			(candidate) => candidate.id === context.seeded.workItemId,
+		const item = workState.workUnits.find(
+			(candidate) => candidate.id === context.seeded.workUnitId,
 		);
 		assert.equal(item.pushProofs?.[0]?.eventId, proof.id);
 	} finally {

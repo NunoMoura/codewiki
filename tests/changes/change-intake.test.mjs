@@ -55,7 +55,7 @@ function validMaterials() {
 		material("worker_discovery", {
 			workerReportId: "report:01",
 			assignmentOperationId: SHA_B,
-			workItemClaimOperationId: SHA_A,
+			workUnitClaimOperationId: SHA_A,
 			baseTree: GIT_A,
 			resultTree: GIT_B,
 		}),
@@ -113,7 +113,7 @@ describe("closed Change intake material", () => {
 		);
 		for (const entry of normalized) {
 			assert.equal(entry.protocolId, "codewiki.change-intake-material");
-			assert.equal(entry.protocolVersion, "1.1.0");
+			assert.equal(entry.protocolVersion, "2.0.0");
 			assert.equal(Object.isFrozen(entry), true);
 			assert.equal(Object.isFrozen(entry.binding), true);
 			assert.equal(Object.isFrozen(entry.content), true);

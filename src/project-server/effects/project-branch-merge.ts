@@ -17,7 +17,7 @@ import {
 
 const INTEGRATION_EVENT = "runtime.integration.proven";
 const MERGE_EVENT = "runtime.project_branch.merged";
-const MERGE_SCHEMA_VERSION = 1 as const;
+const MERGE_SCHEMA_VERSION = 2 as const;
 const GIT_OBJECT_ID = /^[a-f0-9]{40}(?:[a-f0-9]{24})?$/u;
 const TARGET_BRANCH = /^refs\/heads\/[A-Za-z0-9][A-Za-z0-9._/-]{0,240}$/u;
 
@@ -42,7 +42,7 @@ export interface ProjectBranchMergeInput {
 export interface ProjectBranchMergeReceipt {
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	integrationEventId: string;
 	targetBranch: string;
 	previousCommit: string;
@@ -54,7 +54,7 @@ export interface ProjectBranchMergeReceipt {
 interface MergeIdentity {
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	integrationEventId: string;
 	integrationJobId: string;
 	targetBranch: string;
@@ -89,7 +89,7 @@ export function projectBranchMergeJob(
 		lane: { kind: "effect", targetRef: identity.targetBranch },
 		conflictRefs: [
 			`trace:${identity.traceId}`,
-			`work-item:${identity.workItemId}`,
+			`work-unit:${identity.workUnitId}`,
 			`project-branch:${identity.targetBranch}`,
 		],
 		effect: "write",
@@ -188,7 +188,7 @@ function integrationEventMatches(
 		event.traceId === identity.traceId &&
 		event.event === INTEGRATION_EVENT &&
 		text(event.data?.runtimeJobId) === identity.integrationJobId &&
-		text(event.data?.workItemId) === identity.workItemId &&
+		text(event.data?.workUnitId) === identity.workUnitId &&
 		text(event.data?.parentCommit) === identity.expectedTargetCommit &&
 		text(event.data?.commit) === identity.commit &&
 		text(event.data?.tree) === identity.tree &&
@@ -223,7 +223,7 @@ function mergeEvent(
 			schemaVersion: MERGE_SCHEMA_VERSION,
 			runtimeJobId: identity.jobId,
 			traceId: identity.traceId,
-			workItemId: identity.workItemId,
+			workUnitId: identity.workUnitId,
 			integrationEventId: identity.integrationEventId,
 			integrationProjectServerJobId: identity.integrationJobId,
 			targetBranch: identity.targetBranch,
@@ -253,7 +253,7 @@ function mergeIdentity(
 	}
 	const identity = {
 		traceId: input.integrationEvent.traceId,
-		workItemId: requiredText(data?.workItemId),
+		workUnitId: requiredText(data?.workUnitId),
 		integrationEventId: input.integrationEvent.id,
 		integrationJobId: requiredText(data?.runtimeJobId),
 		targetBranch: input.authority.targetBranch,
@@ -329,7 +329,7 @@ function mergeReceipt(
 	return {
 		jobId: identity.jobId,
 		traceId: identity.traceId,
-		workItemId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		integrationEventId: identity.integrationEventId,
 		targetBranch: identity.targetBranch,
 		previousCommit: identity.expectedTargetCommit,

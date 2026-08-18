@@ -35,7 +35,7 @@ function planningTraceEvents(traceId = "TRACE-review-evidence-cache") {
 	return runPlanningIteration({
 		traceId,
 		decisionEvents: decision.traceEvents,
-		workItemInputs: [
+		workUnitInputs: [
 			{
 				id: "WU-cache",
 				title: "Implement review evidence cache",
@@ -53,7 +53,7 @@ function planningTraceEvents(traceId = "TRACE-review-evidence-cache") {
 
 function workRef(events) {
 	const event = events.find((candidate) => candidate.loop === "planning");
-	const work = event.data.output.workItems[0];
+	const work = event.data.output.workUnits[0];
 	return `trace:${event.id}#work:${work.id}`;
 }
 

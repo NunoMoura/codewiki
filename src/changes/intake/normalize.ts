@@ -64,7 +64,7 @@ const BINDING_FIELDS = Object.freeze({
 	worker_discovery: [
 		"workerReportId",
 		"assignmentOperationId",
-		"workItemClaimOperationId",
+		"workUnitClaimOperationId",
 		"baseTree",
 		"resultTree",
 	],
@@ -316,9 +316,9 @@ function workerDiscoveryBinding(
 			value.assignmentOperationId,
 			"binding.assignmentOperationId",
 		),
-		workItemClaimOperationId: assertSha256Digest(
-			value.workItemClaimOperationId,
-			"binding.workItemClaimOperationId",
+		workUnitClaimOperationId: assertSha256Digest(
+			value.workUnitClaimOperationId,
+			"binding.workUnitClaimOperationId",
 		),
 		baseTree: gitObjectId(value.baseTree, "binding.baseTree"),
 		resultTree: gitObjectId(value.resultTree, "binding.resultTree"),

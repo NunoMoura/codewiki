@@ -33,7 +33,7 @@ export interface ImplementationWorkerClaimReleaseInput {
 export interface ImplementationWorkerClaimReleaseReceipt {
 	jobId: string;
 	claimId: string;
-	workItemId: string;
+	workUnitId: string;
 	eventId: string;
 }
 
@@ -50,10 +50,10 @@ export function implementationWorkerClaimReleaseJob(
 	const jobId = releaseJobId(input.assignment, input.report);
 	return {
 		idempotencyKey: jobId,
-		lane: { kind: "assignment", workItemId: input.assignment.workItemId },
+		lane: { kind: "assignment", workUnitId: input.assignment.workUnitId },
 		conflictRefs: [
 			`trace:${input.assignment.traceId}`,
-			`work-item:${input.assignment.workItemId}`,
+			`work-unit:${input.assignment.workUnitId}`,
 			...input.assignment.pathScopes.map((path) => `path:${path}`),
 		],
 		effect: "write",
@@ -94,9 +94,9 @@ export function implementationWorkerClaimReleaseJob(
 			assertClaimMatchesAssignment(claim, input.assignment);
 			if (
 				input.report.status === "completed" &&
-				!observation.workState.workItems.find(
+				!observation.workState.workUnits.find(
 					(item) =>
-						item.id === input.assignment.workItemId && item.implemented,
+						item.id === input.assignment.workUnitId && item.implemented,
 				)
 			) {
 				throw new Error(
@@ -126,7 +126,7 @@ function releaseBatch(
 			{
 				traceId: input.assignment.traceId,
 				workerId: input.assignment.workerId,
-				workUnitId: input.assignment.workItemId,
+				workUnitId: input.assignment.workUnitId,
 				claimId: input.assignment.claimId,
 				planningRefs: [...input.assignment.planningRefs],
 				status: input.report.status,
@@ -166,7 +166,7 @@ function releaseJobId(
 				repoRoot: assignment.repoRoot,
 				assignmentId: assignment.assignmentId,
 				claimId: assignment.claimId,
-				workItemId: assignment.workItemId,
+				workUnitId: assignment.workUnitId,
 				workerId: assignment.workerId,
 				reportStatus: report.status,
 				reportRef: report.reportRef,
@@ -204,7 +204,7 @@ function assertClaimMatchesAssignment(
 		claim.traceId !== assignment.traceId ||
 		claim.data?.claimId !== assignment.claimId ||
 		claim.data?.workerId !== assignment.workerId ||
-		claim.data?.workUnitId !== assignment.workItemId ||
+		claim.data?.workUnitId !== assignment.workUnitId ||
 		claim.data?.runtimeJobId !== implementationWorkerJobId(assignment) ||
 		typeof claim.data?.runtimeAssignmentDigest !== "string"
 	) {
@@ -222,7 +222,7 @@ function releaseReceipt(
 	return {
 		jobId,
 		claimId: assignment.claimId,
-		workItemId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		eventId,
 	};
 }

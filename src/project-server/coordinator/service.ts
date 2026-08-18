@@ -1117,8 +1117,8 @@ async function handleProjectServerReaction(
 			maxReactions: runtime.maxReactions,
 			maxPlanningChanges: runtime.maxPlanningChanges,
 			maxCasRetries: runtime.maxCasRetries,
-			blockedImplementationWorkItemIds:
-				workerReconciliation?.dispatch.pendingWorkItemIds,
+			blockedImplementationWorkUnitIds:
+				workerReconciliation?.dispatch.pendingWorkUnitIds,
 			implementationWorkerReports: workerReconciliation?.workerReports,
 			beforeAppend: () => assertCurrentGeneration(runtime),
 		});

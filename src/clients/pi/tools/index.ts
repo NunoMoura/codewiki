@@ -122,7 +122,7 @@ function wikiStateTool(
 		name: WIKI_STATE_TOOL_NAME,
 		label: "CodeWiki State",
 		description:
-			"Internal agent read of bounded WorkState-backed Change, Sprint, Work Item, Assignment, blocker, and quality projections for the current project.",
+			"Internal agent read of bounded WorkState-backed Change, Sprint, Work Unit, Assignment, blocker, and quality projections for the current project.",
 		promptSnippet:
 			"Read internal CodeWiki WorkState views for the current repository.",
 		promptGuidelines: [
@@ -184,12 +184,12 @@ function wikiStateTool(
 				generatedAt,
 			});
 			const view = optionalStateView(input.view);
-			const activeWorkItems = snapshot.workQueue.items.filter(
+			const activeWorkUnits = snapshot.workQueue.items.filter(
 				(item) => item.status !== "done",
 			).length;
 			const reviewBlockers = snapshot.reviewEvidence?.blockers.length || 0;
 			return toolResult(
-				`wiki_state: ${view || "all"} view, ${snapshot.traceIds.length} trace(s), ${activeWorkItems} active work item(s), ${reviewBlockers} review blocker(s).`,
+				`wiki_state: ${view || "all"} view, ${snapshot.traceIds.length} trace(s), ${activeWorkUnits} active work unit(s), ${reviewBlockers} review blocker(s).`,
 				stateToolPayload(snapshot, view, runtimeReaction),
 				warning,
 				stateToolModelPayload(snapshot, view, runtimeReaction),
@@ -343,11 +343,11 @@ function wikiChangeTool(): CodewikiToolDefinition {
 		description:
 			"Persist, query, or refine Change revisions in canonical JSONL Change Traces; the Changes Backlog is a generated view.",
 		promptSnippet:
-			"Capture and refine intent in the owning Change Trace without widening the active Work Item.",
+			"Capture and refine intent in the owning Change Trace without widening the active Work Unit.",
 		promptGuidelines: [
 			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
 			"Change intake uses the dedicated Runtime-owned source-specific admission contract, not wiki_change.",
-			"wiki_change cannot approve Changes, create Planning-owned Sprints or Work Items, launch workers, edit source, publish, or advance controllers.",
+			"wiki_change cannot approve Changes, create Planning-owned Sprints or Work Units, launch workers, edit source, publish, or advance controllers.",
 			"Mutations require exact Change Trace store-head and record-revision guards; list, get, and validate are read-only.",
 		],
 		executionMode: "sequential",
@@ -680,7 +680,7 @@ function stateToolViewData(
 				snapshotDigest: snapshot.workState.snapshotDigest,
 				changeIds: snapshot.workState.changeIds,
 				sprintIds: snapshot.workState.sprintIds,
-				workItemIds: snapshot.workState.workItemIds,
+				workUnitIds: snapshot.workState.workUnitIds,
 				assignmentIds: snapshot.workState.assignmentIds,
 			},
 			traceIds: snapshot.traceIds,
@@ -696,7 +696,7 @@ function stateToolViewData(
 		return {
 			changes: snapshot.workState.changes,
 			sprints: snapshot.workState.sprints,
-			workItems: snapshot.workState.workItems,
+			workUnits: snapshot.workState.workUnits,
 			assignments: snapshot.workState.assignments,
 			workPlan: snapshot.workPlan,
 			workQueue: snapshot.workQueue,

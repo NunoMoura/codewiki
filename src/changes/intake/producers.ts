@@ -25,7 +25,7 @@ export interface PullRequestFindingProducerInput {
 export interface WorkerDiscoveryProducerInput {
 	readonly workerReportId: string;
 	readonly assignmentOperationId: string;
-	readonly workItemClaimOperationId: string;
+	readonly workUnitClaimOperationId: string;
 	readonly baseTree: string;
 	readonly resultTree: string;
 	readonly content: ChangeIntakeContent;
@@ -34,7 +34,7 @@ export interface WorkerDiscoveryProducerInput {
 export interface WorkerReportDiscoveryProducerInput {
 	readonly workerReportId: string;
 	readonly assignmentOperationId: string;
-	readonly workItemClaimOperationId: string;
+	readonly workUnitClaimOperationId: string;
 	readonly baseTree: string;
 	readonly resultTree: string;
 	readonly discoveries: readonly ChangeIntakeContent[];
@@ -153,7 +153,7 @@ export function createWorkerDiscoveryMaterial(
 		[
 			"workerReportId",
 			"assignmentOperationId",
-			"workItemClaimOperationId",
+			"workUnitClaimOperationId",
 			"baseTree",
 			"resultTree",
 			"content",
@@ -163,7 +163,7 @@ export function createWorkerDiscoveryMaterial(
 	return produce("worker_discovery", {
 		workerReportId: input.workerReportId,
 		assignmentOperationId: input.assignmentOperationId,
-		workItemClaimOperationId: input.workItemClaimOperationId,
+		workUnitClaimOperationId: input.workUnitClaimOperationId,
 		baseTree: input.baseTree,
 		resultTree: input.resultTree,
 	}, input.content);
@@ -177,7 +177,7 @@ export function createWorkerReportDiscoveryMaterials(
 		[
 			"workerReportId",
 			"assignmentOperationId",
-			"workItemClaimOperationId",
+			"workUnitClaimOperationId",
 			"baseTree",
 			"resultTree",
 			"discoveries",
@@ -192,7 +192,7 @@ export function createWorkerReportDiscoveryMaterials(
 			createWorkerDiscoveryMaterial({
 				workerReportId: input.workerReportId,
 				assignmentOperationId: input.assignmentOperationId,
-				workItemClaimOperationId: input.workItemClaimOperationId,
+				workUnitClaimOperationId: input.workUnitClaimOperationId,
 				baseTree: input.baseTree,
 				resultTree: input.resultTree,
 				content,

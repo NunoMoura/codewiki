@@ -139,20 +139,20 @@ function filesUnder(root) {
 
 describe("control-center reconciliation integration", () => {
 	it("maps every reconciled acceptance area to existing source and tests", () => {
-		for (const [workItemId, evidence] of Object.entries(criterionEvidence)) {
+		for (const [workUnitId, evidence] of Object.entries(criterionEvidence)) {
 			assert.equal(
 				new Set(evidence.criteria).size,
 				evidence.criteria.length,
-				`${workItemId} criteria`,
+				`${workUnitId} criteria`,
 			);
 			assert.equal(
 				evidence.source.length > 0,
 				true,
-				`${workItemId} source proof`,
+				`${workUnitId} source proof`,
 			);
-			assert.equal(evidence.tests.length > 0, true, `${workItemId} test proof`);
+			assert.equal(evidence.tests.length > 0, true, `${workUnitId} test proof`);
 			for (const path of [...evidence.source, ...evidence.tests]) {
-				assert.equal(existsSync(path), true, `${workItemId}: ${path}`);
+				assert.equal(existsSync(path), true, `${workUnitId}: ${path}`);
 			}
 		}
 	});
@@ -182,10 +182,8 @@ describe("control-center reconciliation integration", () => {
 		assert.match(readme, /persisted pending Change revisions/);
 		assert.match(readme, /fully (?:exit and )?restart Pi/i);
 		assert.match(decision, /one authenticated exact Change revision/i);
-		assert.match(
-			decision,
-			/shared Checks Gate.*fixed lifecycle rules/i,
-		);
+		assert.match(decision, /shared Checks Gate/i);
+		assert.match(decision, /Project Server uses expected-head compare-and-swap/i);
 		assert.match(protocol, /delegates semantics and authority to owners/i);
 		assert.match(protocol, /Payloads cannot supply identity, authentication, delegation, authority/i);
 		assert.match(projectServer, /authoritative semantic control plane/i);

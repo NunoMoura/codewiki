@@ -11,7 +11,7 @@ const binding = {
 	targetDigest: `sha256:${"a".repeat(64)}`,
 	profileId: "web",
 	profileDigest: `sha256:${"b".repeat(64)}`,
-	workItemIds: ["WU-dashboard"],
+	workUnitIds: ["WU-dashboard"],
 	contributingChangeIds: ["CHG-dashboard", "CHG-shared"],
 	required: true,
 	activation: "implementation",

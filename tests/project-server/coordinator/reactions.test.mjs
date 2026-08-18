@@ -107,7 +107,7 @@ test("Implementation reaction identity includes stable exact worker-report conte
 		selection: {
 			loop: "implementation",
 			sprintId: "SPR-worker-report-context",
-			workItemIds: ["WU-worker-report-context"],
+			workUnitIds: ["WU-worker-report-context"],
 			changeIds: ["CHG-worker-report-context"],
 			pathScopes: ["src/worker-report.ts"],
 			componentRefs: ["runtime"],

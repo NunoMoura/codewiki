@@ -112,18 +112,18 @@ function activeChangeClaim(observation, changeId) {
 	return change.changeClaims.find((claim) => claim.status === "active");
 }
 
-function activeWorkItemClaim(observation, changeId) {
+function activeWorkUnitClaim(observation, changeId) {
 	const change = observation.workState.changes.find(
 		(candidate) => candidate.changeId === changeId,
 	);
-	return change.workItemClaims.find((claim) => claim.status === "active");
+	return change.workUnitClaims.find((claim) => claim.status === "active");
 }
 
-function workItemRequest(state, epoch, changeId, actorId) {
+function workUnitRequest(state, epoch, changeId, actorId) {
 	return {
 		changeId,
 		planningEpochId: epoch.epoch.operationId,
-		workItemId: epoch.workItemId,
+		workUnitId: epoch.workUnitId,
 		assignmentAttemptId: `attempt-${actorId}`,
 		workerId: actorId,
 		workbenchId: `workbench-${actorId}`,
@@ -260,41 +260,41 @@ describe("guarded distributed mutation", () => {
 		}
 	});
 
-	it("serializes Work Item Claim acquire, release, retry, and takeover", async () => {
+	it("serializes Work Unit Claim acquire, release, retry, and takeover", async () => {
 		const fixture = await createTwoCloneFixture();
 		try {
-			const changeId = "CHG-work-item-claim-runtime";
+			const changeId = "CHG-work-unit-claim-runtime";
 			const {state, epoch} = await seedPlanning(fixture, changeId);
 			const runtimes = [
 				mutationRuntime(fixture, fixture.cloneA, state, "worker-a"),
 				mutationRuntime(fixture, fixture.cloneB, state, "worker-b"),
 			];
 			const requests = [
-				workItemRequest(state, epoch, changeId, "worker-a"),
-				workItemRequest(state, epoch, changeId, "worker-b"),
+				workUnitRequest(state, epoch, changeId, "worker-a"),
+				workUnitRequest(state, epoch, changeId, "worker-b"),
 			];
 			const raced = await Promise.allSettled([
-				runtimes[0].acquireWorkItemClaim(requests[0]),
-				runtimes[1].acquireWorkItemClaim(requests[1]),
+				runtimes[0].acquireWorkUnitClaim(requests[0]),
+				runtimes[1].acquireWorkUnitClaim(requests[1]),
 			]);
 			assert.equal(raced.filter((result) => result.status === "fulfilled").length, 1);
 			const rejected = raced.find((result) => result.status === "rejected");
 			assert.equal(rejected.reason.code, "ACTIVE_AUTHORITY");
 			const winnerIndex = raced.findIndex((result) => result.status === "fulfilled");
 			const winner = raced[winnerIndex].value;
-			const repeated = await runtimes[winnerIndex].acquireWorkItemClaim(
+			const repeated = await runtimes[winnerIndex].acquireWorkUnitClaim(
 				requests[winnerIndex],
 			);
 			assert.equal(repeated.status, "already_accepted");
 			assert.equal(repeated.operationId, winner.operationId);
-			await runtimes[winnerIndex].releaseWorkItemClaim({
+			await runtimes[winnerIndex].releaseWorkUnitClaim({
 				changeId,
 				claimOperationId: winner.operationId,
 				reason: "completed",
 			});
 
 			const nextIndex = winnerIndex === 0 ? 1 : 0;
-			const next = await runtimes[nextIndex].acquireWorkItemClaim(requests[nextIndex]);
+			const next = await runtimes[nextIndex].acquireWorkUnitClaim(requests[nextIndex]);
 			const unauthenticated = mutationRuntime(
 				fixture,
 				fixture.cloneA,
@@ -303,8 +303,8 @@ describe("guarded distributed mutation", () => {
 			);
 			await assert.rejects(
 				() =>
-					unauthenticated.takeoverWorkItemClaim({
-						...workItemRequest(state, epoch, changeId, "worker-unauthenticated"),
+					unauthenticated.takeoverWorkUnitClaim({
+						...workUnitRequest(state, epoch, changeId, "worker-unauthenticated"),
 						priorClaimOperationId: next.operationId,
 						reason: "Maintainer-directed recovery.",
 					}),
@@ -317,14 +317,14 @@ describe("guarded distributed mutation", () => {
 				"worker-takeover",
 				true,
 			);
-			const takeover = await takeoverRuntime.takeoverWorkItemClaim({
-				...workItemRequest(state, epoch, changeId, "worker-takeover"),
+			const takeover = await takeoverRuntime.takeoverWorkUnitClaim({
+				...workUnitRequest(state, epoch, changeId, "worker-takeover"),
 				priorClaimOperationId: next.operationId,
 				reason: "Maintainer-directed recovery.",
 			});
 			assert.equal(takeover.status, "accepted");
 			const final = await takeoverRuntime.synchronize();
-			assert.equal(activeWorkItemClaim(final, changeId).operationId, takeover.operationId);
+			assert.equal(activeWorkUnitClaim(final, changeId).operationId, takeover.operationId);
 		} finally {
 			await fixture.cleanup();
 		}

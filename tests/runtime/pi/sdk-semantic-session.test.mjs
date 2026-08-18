@@ -358,7 +358,7 @@ test("Pi SDK candidate tools expose exact recursive Planning and Implementation 
 							? {
 									candidate: {
 										sprints: [],
-										workItems: [],
+										workUnits: [],
 										rationale: "No work selected.",
 									},
 								}
@@ -379,7 +379,7 @@ test("Pi SDK candidate tools expose exact recursive Planning and Implementation 
 		loop: "implementation",
 		observedWorkStateDigest: "sha256:work-state",
 		sprint: { id: "SPR-sdk" },
-		workItems: [],
+		workUnits: [],
 		assignments: [],
 		workerReports: [],
 	});
@@ -394,7 +394,7 @@ test("Pi SDK candidate tools expose exact recursive Planning and Implementation 
 			"id",
 			"goal",
 			"participatingChangeIds",
-			"workItemIds",
+			"workUnitIds",
 			"rollbackBoundary",
 			"dependsOn",
 			"integrationRefs",
@@ -402,7 +402,7 @@ test("Pi SDK candidate tools expose exact recursive Planning and Implementation 
 		],
 	);
 	assert.equal(
-		planningCandidate.properties.workItems.items.additionalProperties,
+		planningCandidate.properties.workUnits.items.additionalProperties,
 		false,
 	);
 
@@ -444,7 +444,7 @@ test("Pi SDK semantic adapter maps implementation to its candidate role", async 
 			loop: "implementation",
 			observedWorkStateDigest: "sha256:work-state",
 			sprint: { id: "SPR-sdk" },
-			workItems: [],
+			workUnits: [],
 			assignments: [],
 			workerReports: [
 				{
@@ -505,14 +505,14 @@ test("Pi SDK semantic adapter requires exactly one object candidate", async () =
 		repoRoot: process.cwd(),
 		sessionFactory: async (input) => ({
 			async prompt() {
-				input.submitCandidate({ sprints: [], workItems: [] });
+				input.submitCandidate({ sprints: [], workUnits: [] });
 			},
 			dispose() {},
 		}),
 	});
 	await assert.rejects(
 		wrongRoleShape.decision(decisionInvocation()),
-		/Project Server decision candidate received unsupported fields: sprints, workItems/,
+		/Project Server decision candidate received unsupported fields: sprints, workUnits/,
 	);
 });
 

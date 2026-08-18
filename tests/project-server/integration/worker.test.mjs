@@ -68,7 +68,7 @@ async function integrationFixture(suffix, pathScopes = ["src/**"]) {
 		repoRoot: root,
 		assignmentId,
 		workerId,
-		workItemId: fixture.workItemId,
+		workUnitId: fixture.workUnitId,
 		claimId,
 		traceId: fixture.traceId,
 		planningRefs: [fixture.planningRef],
@@ -100,7 +100,7 @@ async function integrationFixture(suffix, pathScopes = ["src/**"]) {
 		claimEventId: `${fixture.traceId}:runtime:claim:${suffix}`,
 		assignment,
 		worktreePlan: {
-			workUnitId: fixture.workItemId,
+			workUnitId: fixture.workUnitId,
 			traceId: fixture.traceId,
 			workerId,
 			required: true,
@@ -117,7 +117,7 @@ async function integrationFixture(suffix, pathScopes = ["src/**"]) {
 	const report = {
 		assignmentId,
 		workerId,
-		workItemId: fixture.workItemId,
+		workUnitId: fixture.workUnitId,
 		status: "completed",
 		reportRef: `runtime-worker-report:${assignmentId}`,
 		producerSkillReceipt: assignment.producerSkillReceipt,
@@ -148,7 +148,7 @@ async function integrationFixture(suffix, pathScopes = ["src/**"]) {
 				data: {
 					claimId,
 					workerId,
-					workUnitId: fixture.workItemId,
+					workUnitId: fixture.workUnitId,
 					planningRefs: [fixture.planningRef],
 					pathScopes,
 					runtimeJobId: implementationWorkerJobId(assignment),
@@ -179,7 +179,7 @@ async function integrationFixture(suffix, pathScopes = ["src/**"]) {
 		event: "evidence_accepted",
 		refs: [fixture.planningRef],
 		createdAt: "2026-07-22T10:00:01.000Z",
-		data: { output: { coveredWorkItemRefs: [fixture.workItemId] } },
+		data: { output: { coveredWorkUnitRefs: [fixture.workUnitId] } },
 	};
 	await appendProjectServerTraceRecords(root, [acceptanceEvent], beforeAcceptance.expectedBytesByTrace[fixture.traceId]);
 	return {

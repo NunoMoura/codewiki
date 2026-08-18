@@ -11,13 +11,13 @@ import {
 
 export const CHANGE_TRACE_PROTOCOL = Object.freeze({
 	id: "codewiki.change-trace",
-	version: "3.0.0",
+	version: "4.0.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 
 export const PLANNING_EPOCH_PROTOCOL = Object.freeze({
 	id: "codewiki.planning-epoch",
-	version: "1.0.0",
+	version: "2.0.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 
@@ -59,9 +59,9 @@ export const CHANGE_OPERATION_KINDS = [
 	"loop.exit_report_recorded",
 	"runtime.route_recorded",
 	"planning.epoch_bound",
-	"work_item_claim.acquired",
-	"work_item_claim.released",
-	"work_item_claim.takeover_recorded",
+	"work_unit_claim.acquired",
+	"work_unit_claim.released",
+	"work_unit_claim.takeover_recorded",
 	"assignment.dispatched",
 	"assignment.cancel_requested",
 	"assignment.terminal_recorded",
@@ -105,7 +105,7 @@ export type AuthorityCapability =
 	| "change_claim.manage"
 	| "loop.record"
 	| "planning.bind"
-	| "work_item_claim.manage"
+	| "work_unit_claim.manage"
 	| "assignment.manage"
 	| "integration.record"
 	| "source.effect"
@@ -750,14 +750,14 @@ const planningEpochBoundPayloadSchema = Type.Object(
 		participantRevisionId: digestSchema,
 		planningCandidateId: idSchema,
 		exitReportId: idSchema,
-		workItemIds: idListSchema,
+		workUnitIds: idListSchema,
 	},
 	{ additionalProperties: false },
 );
-const workItemClaimAcquiredPayloadSchema = Type.Object(
+const workUnitClaimAcquiredPayloadSchema = Type.Object(
 	{
 		planningEpochId: digestSchema,
-		workItemId: idSchema,
+		workUnitId: idSchema,
 		assignmentAttemptId: idSchema,
 		workerId: idSchema,
 		workbenchId: idSchema,
@@ -768,11 +768,11 @@ const workItemClaimAcquiredPayloadSchema = Type.Object(
 	},
 	{ additionalProperties: false },
 );
-const workItemClaimTakeoverPayloadSchema = Type.Object(
+const workUnitClaimTakeoverPayloadSchema = Type.Object(
 	{
 		priorClaimOperationId: digestSchema,
 		planningEpochId: digestSchema,
-		workItemId: idSchema,
+		workUnitId: idSchema,
 		assignmentAttemptId: idSchema,
 		workerId: idSchema,
 		workbenchId: idSchema,
@@ -788,7 +788,7 @@ const assignmentDispatchedPayloadSchema = Type.Object(
 	{
 		claimOperationId: digestSchema,
 		planningEpochId: digestSchema,
-		workItemId: idSchema,
+		workUnitId: idSchema,
 		assignmentAttemptId: idSchema,
 		workerId: idSchema,
 		workbenchId: idSchema,
@@ -966,9 +966,9 @@ export const changeOperationPayloadSchemas = Object.freeze({
 	"loop.exit_report_recorded": loopExitReportRecordedPayloadSchema,
 	"runtime.route_recorded": runtimeRouteRecordedPayloadSchema,
 	"planning.epoch_bound": planningEpochBoundPayloadSchema,
-	"work_item_claim.acquired": workItemClaimAcquiredPayloadSchema,
-	"work_item_claim.released": claimReleasedPayloadSchema,
-	"work_item_claim.takeover_recorded": workItemClaimTakeoverPayloadSchema,
+	"work_unit_claim.acquired": workUnitClaimAcquiredPayloadSchema,
+	"work_unit_claim.released": claimReleasedPayloadSchema,
+	"work_unit_claim.takeover_recorded": workUnitClaimTakeoverPayloadSchema,
 	"assignment.dispatched": assignmentDispatchedPayloadSchema,
 	"assignment.cancel_requested": assignmentCancelRequestedPayloadSchema,
 	"assignment.terminal_recorded": assignmentTerminalRecordedPayloadSchema,
@@ -1081,13 +1081,13 @@ export const planningSprintSchema = Type.Object(
 		id: idSchema,
 		goal: requiredTextSchema,
 		participantChangeIds: Type.Array(changeIdSchema, { minItems: 1, maxItems: 256 }),
-		workItemIds: Type.Array(idSchema, { minItems: 1, maxItems: 512 }),
+		workUnitIds: Type.Array(idSchema, { minItems: 1, maxItems: 512 }),
 		dependsOnSprintIds: idListSchema,
 		integrationBoundary: requiredTextSchema,
 	},
 	{ additionalProperties: false },
 );
-export const planningWorkItemSchema = Type.Object(
+export const planningWorkUnitSchema = Type.Object(
 	{
 		id: idSchema,
 		sprintId: idSchema,
@@ -1095,7 +1095,7 @@ export const planningWorkItemSchema = Type.Object(
 		outcome: requiredTextSchema,
 		owningChange: changeBindingSchema,
 		contributingChanges: Type.Array(changeBindingSchema, { maxItems: 256 }),
-		dependsOnWorkItemIds: idListSchema,
+		dependsOnWorkUnitIds: idListSchema,
 		acceptanceRequirements: Type.Array(planningAcceptanceRequirementSchema, {
 			minItems: 1,
 			maxItems: 256,
@@ -1108,7 +1108,7 @@ export const planningWorkItemSchema = Type.Object(
 );
 export const activeWorkDispositionSchema = Type.Object(
 	{
-		workItemId: idSchema,
+		workUnitId: idSchema,
 		disposition: Type.Union([
 			Type.Literal("preserve"),
 			Type.Literal("pause"),
@@ -1118,7 +1118,7 @@ export const activeWorkDispositionSchema = Type.Object(
 			Type.Literal("route_back"),
 		]),
 		activeAssignmentOperationId: Type.Optional(digestSchema),
-		replacementWorkItemId: Type.Optional(idSchema),
+		replacementWorkUnitId: Type.Optional(idSchema),
 		reason: requiredTextSchema,
 	},
 	{ additionalProperties: false },
@@ -1135,12 +1135,12 @@ export interface PlanningEpochBody {
 	readonly exitReportId: string;
 	readonly participants: readonly ChangeBinding[];
 	readonly sprints: readonly Static<typeof planningSprintSchema>[];
-	readonly workItems: readonly Static<typeof planningWorkItemSchema>[];
+	readonly workUnits: readonly Static<typeof planningWorkUnitSchema>[];
 	readonly activeWorkDispositions: readonly Static<
 		typeof activeWorkDispositionSchema
 	>[];
 	readonly safeExecutionFrontier: readonly string[];
-	readonly globalWorkItemGraphDigest: Sha256Digest;
+	readonly globalWorkUnitGraphDigest: Sha256Digest;
 }
 
 export interface PlanningEpochRecord {
@@ -1177,12 +1177,12 @@ export const planningEpochBodySchema = Type.Object(
 		exitReportId: idSchema,
 		participants: Type.Array(changeBindingSchema, { minItems: 1, maxItems: 256 }),
 		sprints: Type.Array(planningSprintSchema, { minItems: 1, maxItems: 256 }),
-		workItems: Type.Array(planningWorkItemSchema, { minItems: 1, maxItems: 2_048 }),
+		workUnits: Type.Array(planningWorkUnitSchema, { minItems: 1, maxItems: 2_048 }),
 		activeWorkDispositions: Type.Array(activeWorkDispositionSchema, {
 			maxItems: 2_048,
 		}),
 		safeExecutionFrontier: idListSchema,
-		globalWorkItemGraphDigest: digestSchema,
+		globalWorkUnitGraphDigest: digestSchema,
 	},
 	{ additionalProperties: false },
 );

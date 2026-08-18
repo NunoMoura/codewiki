@@ -123,7 +123,7 @@ async function planningInput(root, overrides = {}) {
 				id: "SPR-shared-runtime",
 				goal: "Realize both approved shared-runtime Changes.",
 				participatingChangeIds: changeIds,
-				workItemIds: ["WI-shared-runtime"],
+				workUnitIds: ["WI-shared-runtime"],
 				rollbackBoundary: "Revert Sprint work as one boundary.",
 				dependsOn: [],
 				integrationRefs: ["integration:main"],
@@ -133,7 +133,7 @@ async function planningInput(root, overrides = {}) {
 						targetDigest: `sha256:${"a".repeat(64)}`,
 						profileId: "web",
 						profileDigest: `sha256:${"b".repeat(64)}`,
-						workItemIds: ["WI-shared-runtime"],
+						workUnitIds: ["WI-shared-runtime"],
 						contributingChangeIds: changeIds,
 						required: true,
 						activation: "implementation",
@@ -142,7 +142,7 @@ async function planningInput(root, overrides = {}) {
 				],
 			},
 		],
-		workItems: [
+		workUnits: [
 			{
 				id: "WI-shared-runtime",
 				sprintId: "SPR-shared-runtime",
@@ -223,20 +223,20 @@ describe("wiki_plan portfolio facade", () => {
 				targetDigest: `sha256:${"a".repeat(64)}`,
 				profileId: "web",
 				profileDigest: `sha256:${"b".repeat(64)}`,
-				workItemIds: ["WI-shared-runtime"],
+				workUnitIds: ["WI-shared-runtime"],
 				contributingChangeIds: [...input.expectedChangeIds].sort(),
 				required: true,
 				activation: "implementation",
 				autoOpen: "once_per_target",
 			},
 		]);
-		assert.equal(workState.workItems.length, 1);
+		assert.equal(workState.workUnits.length, 1);
 		assert.equal(
-			workState.workItems[0].owningChangeId,
+			workState.workUnits[0].owningChangeId,
 			input.expectedChangeIds[0],
 		);
 		assert.deepEqual(
-			workState.workItems[0].contributesToChangeIds,
+			workState.workUnits[0].contributesToChangeIds,
 			input.expectedChangeIds.slice(1),
 		);
 		assert.equal(workState.blockers.length, 0);
@@ -268,7 +268,7 @@ describe("wiki_plan portfolio facade", () => {
 	it("rejects UI preview target correlation outside Sprint authority", async () => {
 		const { root } = await setupApprovedPortfolio();
 		const input = await planningInput(root);
-		input.sprints[0].uiPreviewTargets[0].workItemIds = ["WI-other"];
+		input.sprints[0].uiPreviewTargets[0].workUnitIds = ["WI-other"];
 		const preview = await runWikiPlan({ ...input, mode: "preview" });
 		assert.equal(preview.report.exit.status, "continue");
 		assert.deepEqual(

@@ -84,7 +84,7 @@ describe("closed Change intake producers", () => {
 			createWorkerDiscoveryMaterial({
 				workerReportId: "runtime-worker-report:01",
 				assignmentOperationId: digest("2"),
-				workItemClaimOperationId: digest("3"),
+				workUnitClaimOperationId: digest("3"),
 				baseTree: gitObject("a"),
 				resultTree: gitObject("b"),
 				content: content(),
@@ -171,7 +171,7 @@ describe("closed Change intake producers", () => {
 		const materials = createWorkerReportDiscoveryMaterials({
 			workerReportId: "runtime-worker-report:batch",
 			assignmentOperationId: digest("a"),
-			workItemClaimOperationId: digest("b"),
+			workUnitClaimOperationId: digest("b"),
 			baseTree: gitObject("c"),
 			resultTree: gitObject("d"),
 			discoveries: [content(), content({summary: "Second discrepancy"})],
@@ -184,7 +184,7 @@ describe("closed Change intake producers", () => {
 				createWorkerReportDiscoveryMaterials({
 					workerReportId: "runtime-worker-report:too-many",
 					assignmentOperationId: digest("a"),
-					workItemClaimOperationId: digest("b"),
+					workUnitClaimOperationId: digest("b"),
 					baseTree: gitObject("c"),
 					resultTree: gitObject("d"),
 					discoveries: Array.from({length: 17}, () => content()),

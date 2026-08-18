@@ -22,7 +22,7 @@ import {
 	type ImplementationWorkerReport,
 } from "./implementation-adapter.ts";
 
-export const IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION = 1 as const;
+export const IMPLEMENTATION_WORKER_DISPATCH_PACKET_SCHEMA_VERSION = 2 as const;
 
 const MAX_PACKET_BYTES = 256 * 1024;
 const MAX_REPORT_BYTES = 1024 * 1024;
@@ -265,7 +265,7 @@ function assertPacket(
 	if (
 		packet.assignment.repoRoot !== repoRoot ||
 		!packet.claimEventId?.trim() ||
-		packet.worktreePlan.workUnitId !== packet.assignment.workItemId
+		packet.worktreePlan.workUnitId !== packet.assignment.workUnitId
 	) {
 		throw new Error("Implementation worker packet identity is invalid.");
 	}

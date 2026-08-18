@@ -16,7 +16,7 @@ export interface PreviewIntegrationState {
 	visibleChangeIds: string[];
 	conflictingChangeIds: string[];
 	sprintIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 }
 
 export interface ReadPreviewIntegrationStateInput {
@@ -125,7 +125,7 @@ export async function readPreviewIntegrationState(
 		),
 		conflictingChangeIds,
 		sprintIds: unique(input.binding.sprintIds),
-		workItemIds: unique(input.binding.workItemIds),
+		workUnitIds: unique(input.binding.workUnitIds),
 	};
 }
 

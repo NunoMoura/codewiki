@@ -109,7 +109,7 @@ export function acceptanceRequirementsFromPlanningEvents(
 	events: TraceEvent[],
 ): AcceptanceRequirement[] {
 	return [
-		...planningWorkItemsFromIterationEvents(events).flatMap((item) =>
+		...planningWorkUnitsFromIterationEvents(events).flatMap((item) =>
 			objectList<AcceptanceEvidenceInput>(item.acceptanceCriteria).map(
 				(criterion, index) => ({
 					planningRef: item.planningRef,
@@ -128,7 +128,7 @@ export function acceptanceRequirementsFromPlanningEvents(
 
 export function planningRefsFromEvents(events: TraceEvent[]): string[] {
 	return unique(
-		planningWorkItemsFromIterationEvents(events).map(
+		planningWorkUnitsFromIterationEvents(events).map(
 			(item) => item.planningRef,
 		),
 	);
@@ -137,7 +137,7 @@ export function planningRefsFromEvents(events: TraceEvent[]): string[] {
 export function planningScopesFromEvents(
 	events: TraceEvent[],
 ): PlanningImplementationScope[] {
-	return planningWorkItemsFromIterationEvents(events).map((item) => ({
+	return planningWorkUnitsFromIterationEvents(events).map((item) => ({
 		planningRef: item.planningRef,
 		workUnitId: item.id,
 		componentRefs: stringList(item.componentRefs),
@@ -183,7 +183,7 @@ export function changedPaths(change: ImplementationChange): string[] {
 	return unique([...change.codePaths, ...change.docPaths, ...change.testPaths]);
 }
 
-function planningWorkItemsFromIterationEvents(
+function planningWorkUnitsFromIterationEvents(
 	events: TraceEvent[],
 ): Array<Record<string, unknown> & { planningRef: string; id: string }> {
 	return events.flatMap((event) => {
@@ -191,7 +191,7 @@ function planningWorkItemsFromIterationEvents(
 			return [];
 		}
 		return objectList<Record<string, unknown>>(
-			objectRecord(event.data?.output).workItems,
+			objectRecord(event.data?.output).workUnits,
 		).map((item) => ({
 			...item,
 			id: text(item.id),

@@ -29,7 +29,7 @@ function reviewAttempt(snapshot, overrides = {}) {
 		integratedTree: "b".repeat(40),
 		targetBranch: "main",
 		changeIds: ["change:CHG-review"],
-		workItemIds: ["work-item:WI-review"],
+		workUnitIds: ["work-unit:WI-review"],
 		checkPackSnapshotDigest: snapshot.checkPackDigest,
 		providerReceiptDigests: [],
 		evidenceRecordDigests: [],

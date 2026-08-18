@@ -36,7 +36,7 @@ async function publicationFixture(suffix) {
 			schemaVersion: 1,
 			runtimeJobId: `project-branch-push:${"c".repeat(64)}`,
 			traceId: seeded.traceId,
-			workItemId: seeded.workItemId,
+			workUnitId: seeded.workUnitId,
 			commit,
 			tree,
 			contentProof: `git-tree:${tree}`,
@@ -200,8 +200,8 @@ test("exact artifact publishes through adapter and appends canonical proof", asy
 			false,
 		);
 		const workState = await buildProjectWorkState({ repoRoot: context.root });
-		const item = workState.workItems.find(
-			(candidate) => candidate.id === context.seeded.workItemId,
+		const item = workState.workUnits.find(
+			(candidate) => candidate.id === context.seeded.workUnitId,
 		);
 		assert.equal(item?.publicationProofs?.[0]?.eventId, event.id);
 		assert.equal(item?.publicationProofs?.[0]?.operationId, "operation:proof:1");

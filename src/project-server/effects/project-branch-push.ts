@@ -22,7 +22,7 @@ import { appendProjectServerTraceRecord } from "../persistence/trace.ts";
 
 const MERGE_EVENT = "runtime.project_branch.merged";
 const PUSH_EVENT = "runtime.project_branch.pushed";
-const PUSH_SCHEMA_VERSION = 1 as const;
+const PUSH_SCHEMA_VERSION = 2 as const;
 const GIT_OBJECT_ID = /^[a-f0-9]{40}(?:[a-f0-9]{24})?$/u;
 const TARGET_BRANCH = /^refs\/heads\/[A-Za-z0-9][A-Za-z0-9._/-]{0,240}$/u;
 const REMOTE_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/u;
@@ -50,7 +50,7 @@ export interface ProjectBranchPushInput {
 export interface ProjectBranchPushReceipt {
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	mergeEventId: string;
 	remote: string;
 	targetBranch: string;
@@ -63,7 +63,7 @@ export interface ProjectBranchPushReceipt {
 interface PushIdentity {
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	mergeEventId: string;
 	mergeJobId: string;
 	remote: string;
@@ -101,7 +101,7 @@ export function projectBranchPushJob(
 		},
 		conflictRefs: [
 			`trace:${identity.traceId}`,
-			`work-item:${identity.workItemId}`,
+			`work-unit:${identity.workUnitId}`,
 			`project-branch:${identity.targetBranch}`,
 			`git-remote:${identity.remote}:${identity.targetBranch}`,
 		],
@@ -227,7 +227,7 @@ function mergeEventMatches(event: TraceEvent, identity: PushIdentity): boolean {
 		event.traceId === identity.traceId &&
 		event.event === MERGE_EVENT &&
 		text(event.data?.runtimeJobId) === identity.mergeJobId &&
-		text(event.data?.workItemId) === identity.workItemId &&
+		text(event.data?.workUnitId) === identity.workUnitId &&
 		text(event.data?.targetBranch) === identity.targetBranch &&
 		text(event.data?.commit) === identity.commit &&
 		text(event.data?.tree) === identity.tree &&
@@ -264,7 +264,7 @@ function pushEvent(
 			schemaVersion: PUSH_SCHEMA_VERSION,
 			runtimeJobId: identity.jobId,
 			traceId: identity.traceId,
-			workItemId: identity.workItemId,
+			workUnitId: identity.workUnitId,
 			mergeEventId: identity.mergeEventId,
 			mergeProjectServerJobId: identity.mergeJobId,
 			remote: identity.remote,
@@ -295,7 +295,7 @@ function pushIdentity(
 	}
 	const identity = {
 		traceId: input.mergeEvent.traceId,
-		workItemId: requiredText(data?.workItemId),
+		workUnitId: requiredText(data?.workUnitId),
 		mergeEventId: input.mergeEvent.id,
 		mergeJobId: requiredText(data?.runtimeJobId),
 		remote: input.authority.remote,
@@ -381,7 +381,7 @@ function pushReceipt(
 	return {
 		jobId: identity.jobId,
 		traceId: identity.traceId,
-		workItemId: identity.workItemId,
+		workUnitId: identity.workUnitId,
 		mergeEventId: identity.mergeEventId,
 		remote: identity.remote,
 		targetBranch: identity.targetBranch,

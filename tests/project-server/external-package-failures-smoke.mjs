@@ -77,7 +77,7 @@ function assignment(installed, root, id) {
 		repoRoot: root,
 		assignmentId: `assignment:${id}`,
 		workerId: `worker:${id}`,
-		workItemId: `work:${id}`,
+		workUnitId: `work:${id}`,
 		claimId: `claim:${id}`,
 		traceId: `TRACE-CHG-${id}`,
 		planningRefs: [`trace:TRACE-CHG-${id}#planning:1`],

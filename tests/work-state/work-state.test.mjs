@@ -79,7 +79,7 @@ async function appendEvent(root, changeId, create) {
 	return event;
 }
 
-function planningEvent(changeId, otherChangeId, workItemId) {
+function planningEvent(changeId, otherChangeId, workUnitId) {
 	return ({ traceId, parentId, sequence }) => ({
 		type: "trace_event",
 		id: `evt-plan-${changeId}`,
@@ -105,13 +105,13 @@ function planningEvent(changeId, otherChangeId, workItemId) {
 						digest: "sha256:sprint-plan",
 						goal: "Deliver both related UI Changes",
 						participatingChangeIds: [changeId, otherChangeId],
-						workItemIds: [workItemId],
+						workUnitIds: [workUnitId],
 						rollbackBoundary: "Revert shared UI Sprint together.",
 					},
 				],
-				workItems: [
+				workUnits: [
 					{
-						id: workItemId,
+						id: workUnitId,
 						sprintId: "SPR-shared-ui",
 						owningChangeId: changeId,
 						contributingChangeIds: [],
@@ -119,7 +119,7 @@ function planningEvent(changeId, otherChangeId, workItemId) {
 						dependsOn: [],
 						componentRefs: ["component:dashboard"],
 						pathScopes: ["src/dashboard/**"],
-						acceptanceCriteria: [{ id: `AC-${workItemId}` }],
+						acceptanceCriteria: [{ id: `AC-${workUnitId}` }],
 					},
 				],
 			},
@@ -173,13 +173,13 @@ describe("WorkState", () => {
 			"CHG-work-left",
 			"CHG-work-right",
 		]);
-		assert.deepEqual(state.sprints[0].workItemIds, ["WI-left", "WI-right"]);
+		assert.deepEqual(state.sprints[0].workUnitIds, ["WI-left", "WI-right"]);
 		assert.deepEqual(
 			state.changes.map((change) => change.planningStatus),
 			["planned", "planned"],
 		);
 		assert.deepEqual(
-			state.workItems.map((item) => item.owningChangeId),
+			state.workUnits.map((item) => item.owningChangeId),
 			["CHG-work-left", "CHG-work-right"],
 		);
 		assert.deepEqual(state.blockers, []);
@@ -208,7 +208,7 @@ describe("WorkState", () => {
 				claimId: "ASN-assigned",
 				workerId: "worker-1",
 				workUnitId: "WI-assigned",
-				planningRefs: ["evt-plan-CHG-assigned#work-item:WI-assigned"],
+				planningRefs: ["evt-plan-CHG-assigned#work-unit:WI-assigned"],
 				pathScopes: ["src/dashboard/**"],
 			}),
 		);
@@ -223,13 +223,13 @@ describe("WorkState", () => {
 				sequence,
 				loop: "implementation",
 				event: "evidence_accepted",
-				refs: ["evt-plan-CHG-assigned#work-item:WI-assigned"],
+				refs: ["evt-plan-CHG-assigned#work-unit:WI-assigned"],
 				createdAt: "2026-08-01T01:04:00.000Z",
 				data: {
 					iteration: 1,
 					trigger: "worker_results",
 					output: {
-						coveredWorkItemRefs: ["WI-assigned"],
+						coveredWorkUnitRefs: ["WI-assigned"],
 					},
 					exit: { status: "continue", conditions: [] },
 					progress: {},
@@ -254,7 +254,7 @@ describe("WorkState", () => {
 				createdAt: "2026-08-01T01:05:00.000Z",
 				data: {
 					runtimeJobId: `implementation-integration:${"c".repeat(64)}`,
-					workItemId: "WI-assigned",
+					workUnitId: "WI-assigned",
 					targetRef: "project:default",
 					targetRefs: [],
 					baseCommit: "d".repeat(40),
@@ -271,7 +271,7 @@ describe("WorkState", () => {
 		assert.deepEqual(state.assignmentIds, ["ASN-assigned"]);
 		assert.equal(state.assignments[0].owningChangeId, "CHG-assigned");
 		assert.equal(
-			state.workItems.find((item) => item.id === "WI-assigned").implemented,
+			state.workUnits.find((item) => item.id === "WI-assigned").implemented,
 			true,
 		);
 		assert.equal(
@@ -285,7 +285,7 @@ describe("WorkState", () => {
 			"active",
 		);
 		assert.deepEqual(
-			state.workItems.find((item) => item.id === "WI-assigned")
+			state.workUnits.find((item) => item.id === "WI-assigned")
 				.integrationProofs,
 			[
 				{

@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { buildProjectServerBoard } from "../../../src/project-server/queries/project-board.ts";
 import { planningQualityStandards } from "../../helpers/canonical-loop-events.mjs";
 
-function workItem(id, status, overrides = {}) {
+function workUnit(id, status, overrides = {}) {
 	return {
 		id,
 		kind: "work-unit",
@@ -30,13 +30,13 @@ function workItem(id, status, overrides = {}) {
 
 function workQueue() {
 	const items = [
-		workItem("WU-ready-a", "ready", { pathScopes: ["src/a.ts"] }),
-		workItem("WU-ready-b", "ready", { pathScopes: ["src/b.ts"] }),
-		workItem("WU-claimed", "claimed", {
+		workUnit("WU-ready-a", "ready", { pathScopes: ["src/a.ts"] }),
+		workUnit("WU-ready-b", "ready", { pathScopes: ["src/b.ts"] }),
+		workUnit("WU-claimed", "claimed", {
 			pathScopes: ["src/c.ts"],
 			claimedBy: "worker-1",
 		}),
-		workItem("WU-blocked", "blocked", {
+		workUnit("WU-blocked", "blocked", {
 			pathScopes: ["src/d.ts"],
 			blockers: ["Needs implementation evidence."],
 		}),

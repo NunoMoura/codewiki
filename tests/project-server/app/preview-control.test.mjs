@@ -20,7 +20,7 @@ function fakePreviewControl() {
 			traceIds: ["TRACE-preview"],
 			changeIds: ["CHG-preview"],
 			sprintIds: ["SPR-preview"],
-			workItemIds: ["WU-preview"],
+			workUnitIds: ["WU-preview"],
 			viewports: ["desktop"],
 			state: "ready",
 			url: "http://127.0.0.1:4173",

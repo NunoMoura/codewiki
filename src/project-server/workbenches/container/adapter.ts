@@ -38,7 +38,7 @@ export {
 } from "./command.ts";
 export type { OciContainerWorkerAdapterOptions } from "./options.ts";
 
-export const OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION = 1 as const;
+export const OCI_CONTAINER_WORKER_ENVELOPE_SCHEMA_VERSION = 2 as const;
 
 const MAX_OUTCOME_BYTES = 1024 * 1024;
 export interface OciContainerWorkerEnvelope {
@@ -300,7 +300,7 @@ async function persistContainerOutcome(
 	const reportWithoutRef = {
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
-		workItemId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		status,
 		producerSkillReceipt: assignment.producerSkillReceipt,
 		...(outcome.implementationEvidence
@@ -326,7 +326,7 @@ function persistTerminalReport(
 	return persistImplementationWorkerReport(assignment, {
 		assignmentId: assignment.assignmentId,
 		workerId: assignment.workerId,
-		workItemId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		status,
 		producerSkillReceipt: assignment.producerSkillReceipt,
 		error:

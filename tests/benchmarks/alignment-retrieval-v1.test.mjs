@@ -17,11 +17,11 @@ const cases = [
 	{
 		id: "claim-authority",
 		query: "Which source defines distributed Claim authority?",
-		relevantRefs: ["src/changes/trace/mutation.ts", "system/runtime-work-item-claims"],
+		relevantRefs: ["src/changes/trace/mutation.ts", "system/runtime-work-unit-claims"],
 	},
 	{
 		id: "planning-frontier",
-		query: "Why is a Work Item absent from the safe frontier?",
+		query: "Why is a Work Unit absent from the safe frontier?",
 		relevantRefs: ["src/changes/trace/rolling-planning.ts", "system/planning-loop"],
 	},
 ];
@@ -54,7 +54,7 @@ describe("Alignment retrieval benchmark harness", () => {
 				adapter("pi_lens", {
 					"claim-authority": [
 						"src/changes/trace/mutation.ts",
-						"system/runtime-work-item-claims",
+						"system/runtime-work-unit-claims",
 					],
 					"planning-frontier": [
 						"src/changes/trace/rolling-planning.ts",
@@ -62,12 +62,12 @@ describe("Alignment retrieval benchmark harness", () => {
 					],
 				}),
 				adapter("okf_source_projection", {
-					"claim-authority": ["system/runtime-work-item-claims"],
+					"claim-authority": ["system/runtime-work-unit-claims"],
 					"planning-frontier": ["system/planning-loop"],
 				}),
 				adapter("alignment_graph", {
 					"claim-authority": [
-						"system/runtime-work-item-claims",
+						"system/runtime-work-unit-claims",
 						"src/changes/trace/mutation.ts",
 					],
 					"planning-frontier": [

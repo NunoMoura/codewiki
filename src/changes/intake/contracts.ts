@@ -8,7 +8,7 @@ import {
 
 export const CHANGE_INTAKE_MATERIAL_PROTOCOL = Object.freeze({
 	id: "codewiki.change-intake-material",
-	version: "1.1.0",
+	version: "2.0.0",
 	maxCanonicalBytes: 16_384,
 	maxAffectedRefs: 16,
 	maxSourceRefs: 16,
@@ -87,7 +87,7 @@ export interface PullRequestFindingMaterial
 export interface WorkerDiscoveryBinding {
 	readonly workerReportId: string;
 	readonly assignmentOperationId: Sha256Digest;
-	readonly workItemClaimOperationId: Sha256Digest;
+	readonly workUnitClaimOperationId: Sha256Digest;
 	readonly baseTree: GitObjectId;
 	readonly resultTree: GitObjectId;
 }

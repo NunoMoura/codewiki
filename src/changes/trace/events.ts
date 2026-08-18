@@ -131,7 +131,7 @@ function planningEventName(
 	output: Record<string, unknown>,
 ): PlanningTraceEventName {
 	if (exit.status === "exit") {
-		return objectList(output.workItems).length > 0
+		return objectList(output.workUnits).length > 0
 			? "work_units_created"
 			: "decisions_resolved";
 	}

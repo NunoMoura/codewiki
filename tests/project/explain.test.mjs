@@ -47,7 +47,7 @@ async function fixture() {
 								refs: ["src/project-server/index.ts"],
 							},
 						],
-						workItems: [
+						workUnits: [
 							{
 								id: "WU-explain",
 								title: "Explain Runtime ownership",

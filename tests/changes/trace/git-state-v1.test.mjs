@@ -63,7 +63,7 @@ function buildChangeClaimRecord(state, changeId, actorId) {
 	}).operations;
 }
 
-function buildWorkItemClaimRecord(state, changeId, epoch, workItemId, actorId) {
+function buildWorkUnitClaimRecord(state, changeId, epoch, workUnitId, actorId) {
 	const change = state.changes.find((entry) => entry.changeId === changeId);
 	return buildOperationSequence({
 		change,
@@ -73,11 +73,11 @@ function buildWorkItemClaimRecord(state, changeId, epoch, workItemId, actorId) {
 		planningEpochs: [epoch],
 		specifications: [
 			{
-				kind: "work_item_claim.acquired",
+				kind: "work_unit_claim.acquired",
 				recordedAt: "2026-07-30T15:30:00.000Z",
 				payload: {
 					planningEpochId: epoch.operationId,
-					workItemId,
+					workUnitId,
 					assignmentAttemptId: `attempt-${actorId}`,
 					workerId: actorId,
 					workbenchId: `workbench-${actorId}`,
@@ -278,7 +278,7 @@ describe("provider-neutral Git state CAS", () => {
 		}
 	});
 
-	it("accepts atomic multi-Change Planning and one Work Item Claim", async () => {
+	it("accepts atomic multi-Change Planning and one Work Unit Claim", async () => {
 		const fixture = await createTwoCloneFixture();
 		try {
 			const initial = createInitialProjectWorkState();
@@ -313,18 +313,18 @@ describe("provider-neutral Git state CAS", () => {
 			const states = await Promise.all([sync(fixture.cloneA), sync(fixture.cloneB)]);
 			const ownerChangeId = changeIds[0];
 			const claimRecords = [
-				buildWorkItemClaimRecord(
+				buildWorkUnitClaimRecord(
 					states[0],
 					ownerChangeId,
 					epoch.epoch,
-					epoch.workItemId,
+					epoch.workUnitId,
 					"worker-a",
 				),
-				buildWorkItemClaimRecord(
+				buildWorkUnitClaimRecord(
 					states[1],
 					ownerChangeId,
 					epoch.epoch,
-					epoch.workItemId,
+					epoch.workUnitId,
 					"worker-b",
 				),
 			];
@@ -342,11 +342,11 @@ describe("provider-neutral Git state CAS", () => {
 			const refreshed = await sync(staleRepo);
 			assert.throws(
 				() =>
-					buildWorkItemClaimRecord(
+					buildWorkUnitClaimRecord(
 						refreshed,
 						ownerChangeId,
 						epoch.epoch,
-						epoch.workItemId,
+						epoch.workUnitId,
 						staleWorker,
 					),
 				(error) => error?.code === "ACTIVE_AUTHORITY",
@@ -355,7 +355,7 @@ describe("provider-neutral Git state CAS", () => {
 				(change) => change.changeId === ownerChangeId,
 			);
 			assert.equal(
-				owner.workItemClaims.filter((claim) => claim.status === "active").length,
+				owner.workUnitClaims.filter((claim) => claim.status === "active").length,
 				1,
 			);
 		} finally {

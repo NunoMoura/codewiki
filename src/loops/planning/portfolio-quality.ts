@@ -7,20 +7,20 @@ import {
 import type { WorkState } from "../../work-state/types.ts";
 
 export const PLANNING_PORTFOLIO_GRAPH_ID = "codewiki.planning.portfolio";
-export const PLANNING_PORTFOLIO_GRAPH_VERSION = "1.0.0";
+export const PLANNING_PORTFOLIO_GRAPH_VERSION = "2.0.0";
 
 export interface SprintPlanInput {
 	id: string;
 	goal: string;
 	participatingChangeIds: string[];
-	workItemIds: string[];
+	workUnitIds: string[];
 	rollbackBoundary: string;
 	dependsOn: string[];
 	integrationRefs: string[];
 	uiPreviewTargets?: UiPreviewTargetBinding[];
 }
 
-export interface PortfolioWorkItemInput {
+export interface PortfolioWorkUnitInput {
 	id: string;
 	sprintId: string;
 	owningChangeId: string;
@@ -39,7 +39,7 @@ export interface PortfolioWorkItemInput {
 export interface EvaluatePortfolioPlanningInput {
 	changeIds: string[];
 	sprints: SprintPlanInput[];
-	workItems: PortfolioWorkItemInput[];
+	workUnits: PortfolioWorkUnitInput[];
 	workState: WorkState;
 }
 
@@ -84,59 +84,59 @@ const DEFINITIONS: StandardDefinition[] = [
 				: unmet("Every Sprint needs a rollback boundary."),
 	),
 	definition(
-		"work_item_ownership",
-		"Every Work Item has exactly one owning Change.",
+		"work_unit_ownership",
+		"Every Work Unit has exactly one owning Change.",
 		workOwnership,
 	),
 	definition(
 		"acceptance_clarity",
-		"Work Item outcomes and acceptance criteria are explicit.",
+		"Work Unit outcomes and acceptance criteria are explicit.",
 		(input) =>
-			input.workItems.every(
+			input.workUnits.every(
 				(item) => hasText(item.outcome) && item.acceptanceCriteria.length > 0,
 			)
 				? met()
-				: unmet("Every Work Item needs outcome and acceptance criteria."),
+				: unmet("Every Work Unit needs outcome and acceptance criteria."),
 	),
 	definition(
 		"technical_requirements_complete",
 		"Technical requirements are explicit.",
 		(input) =>
-			input.workItems.every((item) => item.technicalRequirements.length > 0)
+			input.workUnits.every((item) => item.technicalRequirements.length > 0)
 				? met()
-				: unmet("Every Work Item needs technical requirements."),
+				: unmet("Every Work Unit needs technical requirements."),
 	),
 	definition(
 		"verification_complete",
-		"Verification is explicit for every Work Item.",
+		"Verification is explicit for every Work Unit.",
 		(input) =>
-			input.workItems.every((item) => item.verification.length > 0)
+			input.workUnits.every((item) => item.verification.length > 0)
 				? met()
-				: unmet("Every Work Item needs verification."),
+				: unmet("Every Work Unit needs verification."),
 	),
 	definition(
 		"source_ownership_aligned",
 		"Component and path ownership scopes are explicit.",
 		(input) =>
-			input.workItems.every(
+			input.workUnits.every(
 				(item) => item.componentRefs.length > 0 && item.pathScopes.length > 0,
 			)
 				? met()
-				: unmet("Every Work Item needs component refs and path scopes."),
+				: unmet("Every Work Unit needs component refs and path scopes."),
 	),
 	definition(
 		"dependencies_valid",
-		"Sprint and Work Item dependencies exist and are acyclic.",
+		"Sprint and Work Unit dependencies exist and are acyclic.",
 		dependencyQuality,
 	),
 	definition(
 		"path_conflicts_ordered",
-		"Overlapping Work Item paths are ordered.",
+		"Overlapping Work Unit paths are ordered.",
 		pathConflictQuality,
 	),
 	definition(
 		"claimed_work_stable",
-		"Planning does not overwrite active claimed Work Items.",
+		"Planning does not overwrite active claimed Work Units.",
 		claimedWorkQuality,
 	),
 	definition(
@@ -219,7 +219,7 @@ function approvedCoverage(input: EvaluatePortfolioPlanningInput) {
 }
 
 function sprintCoherence(input: EvaluatePortfolioPlanningInput) {
-	const workIds = new Set(input.workItems.map((item) => item.id));
+	const workIds = new Set(input.workUnits.map((item) => item.id));
 	const valid =
 		input.sprints.length > 0 &&
 		input.sprints.every(
@@ -227,20 +227,20 @@ function sprintCoherence(input: EvaluatePortfolioPlanningInput) {
 				hasText(sprint.id) &&
 				hasText(sprint.goal) &&
 				sprint.participatingChangeIds.length > 0 &&
-				sprint.workItemIds.length > 0 &&
-				sprint.workItemIds.every((id) => workIds.has(id)),
+				sprint.workUnitIds.length > 0 &&
+				sprint.workUnitIds.every((id) => workIds.has(id)),
 		);
 	return valid
 		? met(input.sprints.map((sprint) => `sprint:${sprint.id}`))
-		: unmet("Every Sprint needs goal, participants, and known Work Items.");
+		: unmet("Every Sprint needs goal, participants, and known Work Units.");
 }
 
 function workOwnership(input: EvaluatePortfolioPlanningInput) {
 	const horizon = new Set(input.changeIds);
 	const sprints = new Map(input.sprints.map((sprint) => [sprint.id, sprint]));
 	const valid =
-		input.workItems.length > 0 &&
-		input.workItems.every((item) => {
+		input.workUnits.length > 0 &&
+		input.workUnits.every((item) => {
 			const sprint = sprints.get(item.sprintId);
 			return (
 				horizon.has(item.owningChangeId) &&
@@ -248,17 +248,17 @@ function workOwnership(input: EvaluatePortfolioPlanningInput) {
 					(id) => horizon.has(id) && id !== item.owningChangeId,
 				) &&
 				Boolean(sprint?.participatingChangeIds.includes(item.owningChangeId)) &&
-				Boolean(sprint?.workItemIds.includes(item.id))
+				Boolean(sprint?.workUnitIds.includes(item.id))
 			);
 		});
 	return valid
-		? met(input.workItems.map((item) => `work:${item.id}`))
-		: unmet("Work Item ownership or Sprint membership is invalid.");
+		? met(input.workUnits.map((item) => `work:${item.id}`))
+		: unmet("Work Unit ownership or Sprint membership is invalid.");
 }
 
 function dependencyQuality(input: EvaluatePortfolioPlanningInput) {
 	const sprintIds = new Set(input.sprints.map((sprint) => sprint.id));
-	const workIds = new Set(input.workItems.map((item) => item.id));
+	const workIds = new Set(input.workUnits.map((item) => item.id));
 	if (
 		input.sprints.some((sprint) =>
 			sprint.dependsOn.some((id) => !sprintIds.has(id)),
@@ -267,34 +267,34 @@ function dependencyQuality(input: EvaluatePortfolioPlanningInput) {
 		return unmet("Sprint dependency references unknown Sprint.");
 	}
 	if (
-		input.workItems.some((item) =>
+		input.workUnits.some((item) =>
 			item.dependsOn.some((id) => !workIds.has(id)),
 		)
 	) {
-		return unmet("Work Item dependency references unknown Work Item.");
+		return unmet("Work Unit dependency references unknown Work Unit.");
 	}
 	return hasCycle(input.sprints.map((item) => [item.id, item.dependsOn])) ||
-		hasCycle(input.workItems.map((item) => [item.id, item.dependsOn]))
+		hasCycle(input.workUnits.map((item) => [item.id, item.dependsOn]))
 		? unmet("Planning dependencies contain a cycle.")
 		: met();
 }
 
 function pathConflictQuality(input: EvaluatePortfolioPlanningInput) {
-	for (let leftIndex = 0; leftIndex < input.workItems.length; leftIndex += 1) {
-		const left = input.workItems[leftIndex];
+	for (let leftIndex = 0; leftIndex < input.workUnits.length; leftIndex += 1) {
+		const left = input.workUnits[leftIndex];
 		for (
 			let rightIndex = leftIndex + 1;
-			rightIndex < input.workItems.length;
+			rightIndex < input.workUnits.length;
 			rightIndex += 1
 		) {
-			const right = input.workItems[rightIndex];
+			const right = input.workUnits[rightIndex];
 			if (!pathsOverlap(left.pathScopes, right.pathScopes)) continue;
 			if (
 				!left.dependsOn.includes(right.id) &&
 				!right.dependsOn.includes(left.id)
 			) {
 				return unmet(
-					`Overlapping Work Items ${left.id} and ${right.id} need explicit ordering.`,
+					`Overlapping Work Units ${left.id} and ${right.id} need explicit ordering.`,
 				);
 			}
 		}
@@ -304,23 +304,23 @@ function pathConflictQuality(input: EvaluatePortfolioPlanningInput) {
 
 function claimedWorkQuality(input: EvaluatePortfolioPlanningInput) {
 	const activeIds = new Set(
-		input.workState.workItems
+		input.workState.workUnits
 			.filter(
 				(item) =>
 					!item.implemented &&
 					input.workState.assignments.some(
 						(assignment) =>
-							assignment.workItemId === item.id &&
+							assignment.workUnitId === item.id &&
 							!["completed", "failed", "released"].includes(assignment.status),
 					),
 			)
 			.map((item) => item.id),
 	);
-	const collisions = input.workItems.filter((item) => activeIds.has(item.id));
+	const collisions = input.workUnits.filter((item) => activeIds.has(item.id));
 	return collisions.length === 0
 		? met()
 		: unmet(
-				`Planning cannot replace claimed Work Items: ${collisions.map((item) => item.id).join(", ")}.`,
+				`Planning cannot replace claimed Work Units: ${collisions.map((item) => item.id).join(", ")}.`,
 			);
 }
 
@@ -331,7 +331,7 @@ function previewTargetQuality(input: EvaluatePortfolioPlanningInput) {
 				return unmet(`Sprint ${sprint.id} has an invalid UI preview target.`);
 			}
 			if (
-				target.workItemIds.some((id) => !sprint.workItemIds.includes(id)) ||
+				target.workUnitIds.some((id) => !sprint.workUnitIds.includes(id)) ||
 				target.contributingChangeIds.some(
 					(id) => !sprint.participatingChangeIds.includes(id),
 				)

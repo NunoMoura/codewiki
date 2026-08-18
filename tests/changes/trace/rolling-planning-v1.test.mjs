@@ -57,8 +57,8 @@ function candidateContentFromState(state, changeIds, suffix) {
 	return {
 		participantChangeIds: [...changeIds].sort(),
 		sprints: template.sprints,
-		workItems: template.workItems.map((workItem) => {
-			const {owningChange, contributingChanges, ...fields} = workItem;
+		workUnits: template.workUnits.map((workUnit) => {
+			const {owningChange, contributingChanges, ...fields} = workUnit;
 			return {
 				...fields,
 				owningChangeId: owningChange.changeId,
@@ -119,10 +119,10 @@ async function commitEpoch(fixture, state, candidate, report, recordedAt) {
 }
 
 async function appendActiveAssignment(fixture, state, epoch, changeId) {
-	const workItem = epoch.body.workItems[0];
+	const workUnit = epoch.body.workUnits[0];
 	const claimFields = {
 		planningEpochId: epoch.operationId,
-		workItemId: workItem.id,
+		workUnitId: workUnit.id,
 		assignmentAttemptId: "attempt-rolling-active",
 		workerId: "worker-rolling",
 		workbenchId: "workbench-rolling",
@@ -140,7 +140,7 @@ async function appendActiveAssignment(fixture, state, epoch, changeId) {
 		planningEpochs: state.planningEpochs,
 		specifications: [
 			{
-				kind: "work_item_claim.acquired",
+				kind: "work_unit_claim.acquired",
 				recordedAt: "2026-07-30T19:00:00.000Z",
 				payload: claimFields,
 			},
@@ -170,17 +170,17 @@ describe("rolling Planning", () => {
 			const changeIds = ["CHG-rolling-a", "CHG-rolling-b"];
 			const initialState = await seedChanges(fixture, changeIds);
 			const content = candidateContentFromState(initialState, changeIds, "rolling");
-			const first = content.workItems[0];
+			const first = content.workUnits[0];
 			const dependent = {
 				...first,
 				id: "work-rolling-dependent",
 				title: "Verify rolling frontier",
 				outcome: "Dependent work waits for completion.",
-				dependsOnWorkItemIds: [first.id],
+				dependsOnWorkUnitIds: [first.id],
 			};
-			content.workItems = [first, dependent];
+			content.workUnits = [first, dependent];
 			content.sprints = [
-				{...content.sprints[0], workItemIds: [first.id, dependent.id]},
+				{...content.sprints[0], workUnitIds: [first.id, dependent.id]},
 			];
 			const candidate = createCandidate(initialState, content);
 			const exited = await acceptPlanningExits(
@@ -211,7 +211,7 @@ describe("rolling Planning", () => {
 			}
 			const view = projectRollingPlanningView(receipt.observation.workState);
 			assert.deepEqual(
-				view.workItems.map((item) => [item.id, item.status]),
+				view.workUnits.map((item) => [item.id, item.status]),
 				[
 					[first.id, "ready"],
 					[dependent.id, "waiting"],
@@ -293,7 +293,7 @@ describe("rolling Planning", () => {
 			const preservedContent = candidateContentFromState(state, [changeId], "active");
 			preservedContent.activeWorkDispositions = [
 				{
-					workItemId: preservedContent.workItems[0].id,
+					workUnitId: preservedContent.workUnits[0].id,
 					disposition: "preserve",
 					activeAssignmentOperationId: assignment.assignmentOperationId,
 					reason: "Exact scope and bindings remain valid.",
@@ -314,7 +314,7 @@ describe("rolling Planning", () => {
 				recordedAt: "2026-07-30T18:40:00.000Z",
 			});
 			assert.deepEqual(resolved.epoch.body.safeExecutionFrontier, [
-				preservedContent.workItems[0].id,
+				preservedContent.workUnits[0].id,
 			]);
 			receipt = await commitEpoch(
 				fixture,
@@ -335,7 +335,7 @@ describe("rolling Planning", () => {
 			const pausedContent = candidateContentFromState(state, [changeId], "active");
 			pausedContent.activeWorkDispositions = [
 				{
-					workItemId: pausedContent.workItems[0].id,
+					workUnitId: pausedContent.workUnits[0].id,
 					disposition: "pause",
 					activeAssignmentOperationId: assignment.assignmentOperationId,
 					reason: "New global dependency requires explicit pause.",
@@ -358,11 +358,11 @@ describe("rolling Planning", () => {
 			const pausedEpoch = receipt.observation.workState.planningEpochs.at(-1);
 			assert.deepEqual(pausedEpoch.body.safeExecutionFrontier, []);
 			assert.equal(
-				projectRollingPlanningView(receipt.observation.workState).workItems[0].status,
+				projectRollingPlanningView(receipt.observation.workState).workUnits[0].status,
 				"paused",
 			);
 			assert.equal(
-				receipt.observation.workState.changes[0].workItemClaims.find(
+				receipt.observation.workState.changes[0].workUnitClaims.find(
 					(claim) => claim.operationId === assignment.claimOperationId,
 				).status,
 				"active",

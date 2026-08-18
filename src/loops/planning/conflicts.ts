@@ -1,4 +1,4 @@
-import type { PlanningWorkItem } from "./types.ts";
+import type { PlanningWorkUnit } from "./types.ts";
 
 export interface PlanningConflict {
 	leftId: string;
@@ -6,9 +6,9 @@ export interface PlanningConflict {
 	pathScopes: string[];
 }
 
-export function workItemsConflict(
-	left: PlanningWorkItem,
-	right: PlanningWorkItem,
+export function workUnitsConflict(
+	left: PlanningWorkUnit,
+	right: PlanningWorkUnit,
 ): boolean {
 	return (
 		conflictPathScopes(left, right).length > 0 &&
@@ -17,7 +17,7 @@ export function workItemsConflict(
 }
 
 export function planningConflicts(
-	items: PlanningWorkItem[],
+	items: PlanningWorkUnit[],
 ): PlanningConflict[] {
 	const conflicts: PlanningConflict[] = [];
 	for (let leftIndex = 0; leftIndex < items.length; leftIndex += 1) {
@@ -38,8 +38,8 @@ export function planningConflicts(
 }
 
 function conflictPathScopes(
-	left: PlanningWorkItem,
-	right: PlanningWorkItem,
+	left: PlanningWorkUnit,
+	right: PlanningWorkUnit,
 ): string[] {
 	const conflicts: string[] = [];
 	for (const leftScope of left.pathScopes) {
@@ -62,8 +62,8 @@ function overlappingScope(left: string, right: string): string | undefined {
 }
 
 function orderedByDependency(
-	left: PlanningWorkItem,
-	right: PlanningWorkItem,
+	left: PlanningWorkUnit,
+	right: PlanningWorkUnit,
 ): boolean {
 	return left.dependsOn.includes(right.id) || right.dependsOn.includes(left.id);
 }

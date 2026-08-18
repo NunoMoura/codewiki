@@ -62,7 +62,7 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 			decisionEvents: decision.loopResult.traceEvents,
 			startSequence: 2,
 			createdAt: "2026-06-11T00:00:02.000Z",
-			workItemInputs: [
+			workUnitInputs: [
 				{
 					id: "WU-archive",
 					title: "Preview archive retention refs",
@@ -78,8 +78,8 @@ async function archiveRecords(traceId = "TRACE-wiki-archive") {
 		}),
 	};
 	const planningEvent = planning.loopResult.traceEvents[0];
-	const workItem = planningEvent.data.output.workItems[0];
-	const planningRef = `trace:${planningEvent.id}#work:${workItem.id}`;
+	const workUnit = planningEvent.data.output.workUnits[0];
+	const planningRef = `trace:${planningEvent.id}#work:${workUnit.id}`;
 	const implementation = runImplementationIteration({
 		traceId,
 		planningEvents: planning.loopResult.traceEvents,

@@ -13,14 +13,14 @@ import {
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 
-export const REVIEW_ATTEMPT_SCHEMA_VERSION = "1.0.0" as const;
+export const REVIEW_ATTEMPT_SCHEMA_VERSION = "2.0.0" as const;
 
 const REVIEW_ATTEMPT_FIELDS = [
 	"integratedHead",
 	"integratedTree",
 	"targetBranch",
 	"changeIds",
-	"workItemIds",
+	"workUnitIds",
 	"checkPackSnapshotDigest",
 	"providerReceiptDigests",
 	"evidenceRecordDigests",
@@ -33,7 +33,7 @@ export interface CreateReviewAttemptInput {
 	readonly integratedTree: string;
 	readonly targetBranch: string;
 	readonly changeIds: readonly string[];
-	readonly workItemIds: readonly string[];
+	readonly workUnitIds: readonly string[];
 	readonly checkPackSnapshotDigest: Sha256Digest;
 	readonly providerReceiptDigests: readonly Sha256Digest[];
 	readonly evidenceRecordDigests: readonly Sha256Digest[];
@@ -45,7 +45,7 @@ export interface ReviewAttempt {
 	readonly integratedTree: string;
 	readonly targetBranch: string;
 	readonly changeIds: readonly string[];
-	readonly workItemIds: readonly string[];
+	readonly workUnitIds: readonly string[];
 	readonly checkPackSnapshotDigest: Sha256Digest;
 	readonly providerReceiptDigests: readonly Sha256Digest[];
 	readonly evidenceRecordDigests: readonly Sha256Digest[];
@@ -78,7 +78,7 @@ export function createReviewAttempt(
 	const integratedTree = gitObjectId(input.integratedTree, "integratedTree");
 	const targetBranch = identity(input.targetBranch, "targetBranch");
 	const changeIds = identities(input.changeIds, "changeIds", true);
-	const workItemIds = identities(input.workItemIds, "workItemIds", true);
+	const workUnitIds = identities(input.workUnitIds, "workUnitIds", true);
 	assertSha256Digest(
 		input.checkPackSnapshotDigest,
 		"Review Check Pack snapshot digest",
@@ -97,7 +97,7 @@ export function createReviewAttempt(
 		integratedTree,
 		targetBranch,
 		changeIds,
-		workItemIds,
+		workUnitIds,
 		checkPackSnapshotDigest: input.checkPackSnapshotDigest,
 		providerReceiptDigests,
 		evidenceRecordDigests,
@@ -114,7 +114,7 @@ export function reviewSubjectFromAttempt(attempt: ReviewAttempt): CheckSubject {
 		integratedTree: attempt.integratedTree,
 		targetBranch: attempt.targetBranch,
 		changeIds: attempt.changeIds,
-		workItemIds: attempt.workItemIds,
+		workUnitIds: attempt.workUnitIds,
 		checkPackSnapshotDigest: attempt.checkPackSnapshotDigest,
 		providerReceiptDigests: attempt.providerReceiptDigests,
 		evidenceRecordDigests: attempt.evidenceRecordDigests,

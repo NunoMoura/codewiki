@@ -58,11 +58,11 @@ export interface TakeoverChangeClaimInput {
 	readonly reason: string;
 }
 
-export type AcquireWorkItemClaimInput = Readonly<{changeId: string}> &
-	ChangeOperationPayload<"work_item_claim.acquired">;
+export type AcquireWorkUnitClaimInput = Readonly<{changeId: string}> &
+	ChangeOperationPayload<"work_unit_claim.acquired">;
 
-export type TakeoverWorkItemClaimInput = Readonly<{changeId: string}> &
-	ChangeOperationPayload<"work_item_claim.takeover_recorded">;
+export type TakeoverWorkUnitClaimInput = Readonly<{changeId: string}> &
+	ChangeOperationPayload<"work_unit_claim.takeover_recorded">;
 
 export interface DistributedMutationRuntime {
 	readonly synchronize: () => Promise<SynchronizationObservation>;
@@ -75,14 +75,14 @@ export interface DistributedMutationRuntime {
 	readonly takeoverChangeClaim: (
 		input: TakeoverChangeClaimInput,
 	) => Promise<MutationReceipt>;
-	readonly acquireWorkItemClaim: (
-		input: AcquireWorkItemClaimInput,
+	readonly acquireWorkUnitClaim: (
+		input: AcquireWorkUnitClaimInput,
 	) => Promise<MutationReceipt>;
-	readonly releaseWorkItemClaim: (
+	readonly releaseWorkUnitClaim: (
 		input: ReleaseClaimInput,
 	) => Promise<MutationReceipt>;
-	readonly takeoverWorkItemClaim: (
-		input: TakeoverWorkItemClaimInput,
+	readonly takeoverWorkUnitClaim: (
+		input: TakeoverWorkUnitClaimInput,
 	) => Promise<MutationReceipt>;
 }
 
@@ -90,9 +90,9 @@ type ClaimMutationKind =
 	| "change_claim.acquired"
 	| "change_claim.released"
 	| "change_claim.takeover_recorded"
-	| "work_item_claim.acquired"
-	| "work_item_claim.released"
-	| "work_item_claim.takeover_recorded";
+	| "work_unit_claim.acquired"
+	| "work_unit_claim.released"
+	| "work_unit_claim.takeover_recorded";
 
 export function createDistributedMutationRuntime(
 	input: DistributedMutationRuntimeInput,
@@ -215,30 +215,30 @@ export function createDistributedMutationRuntime(
 				purpose: request.purpose,
 				reason: request.reason,
 			})),
-		acquireWorkItemClaim: (request: AcquireWorkItemClaimInput) =>
-			execute(request.changeId, "work_item_claim.acquired", () =>
-				workItemClaimPayload(request),
+		acquireWorkUnitClaim: (request: AcquireWorkUnitClaimInput) =>
+			execute(request.changeId, "work_unit_claim.acquired", () =>
+				workUnitClaimPayload(request),
 			),
-		releaseWorkItemClaim: (request: ReleaseClaimInput) =>
-			execute(request.changeId, "work_item_claim.released", () => ({
+		releaseWorkUnitClaim: (request: ReleaseClaimInput) =>
+			execute(request.changeId, "work_unit_claim.released", () => ({
 				claimOperationId: request.claimOperationId,
 				reason: request.reason,
 			})),
-		takeoverWorkItemClaim: (request: TakeoverWorkItemClaimInput) =>
-			execute(request.changeId, "work_item_claim.takeover_recorded", () => ({
-				...workItemClaimPayload(request),
+		takeoverWorkUnitClaim: (request: TakeoverWorkUnitClaimInput) =>
+			execute(request.changeId, "work_unit_claim.takeover_recorded", () => ({
+				...workUnitClaimPayload(request),
 				priorClaimOperationId: request.priorClaimOperationId,
 				reason: request.reason,
 			})),
 	});
 }
 
-function workItemClaimPayload(
-	request: AcquireWorkItemClaimInput | TakeoverWorkItemClaimInput,
-): ChangeOperationPayload<"work_item_claim.acquired"> {
+function workUnitClaimPayload(
+	request: AcquireWorkUnitClaimInput | TakeoverWorkUnitClaimInput,
+): ChangeOperationPayload<"work_unit_claim.acquired"> {
 	return {
 		planningEpochId: request.planningEpochId,
-		workItemId: request.workItemId,
+		workUnitId: request.workUnitId,
 		assignmentAttemptId: request.assignmentAttemptId,
 		workerId: request.workerId,
 		workbenchId: request.workbenchId,
@@ -275,8 +275,8 @@ function findAlreadyAccepted<K extends ClaimMutationKind>(
 			? operation
 			: null;
 	}
-	if (kind === "work_item_claim.acquired") {
-		return change.workItemClaims.some(
+	if (kind === "work_unit_claim.acquired") {
+		return change.workUnitClaims.some(
 			(claim) => claim.operationId === operation.operationId && claim.status === "active",
 		)
 			? operation
@@ -294,7 +294,7 @@ function validateClaimMutation<K extends ClaimMutationKind>(input: {
 }): void {
 	if (
 		input.kind === "change_claim.takeover_recorded" ||
-		input.kind === "work_item_claim.takeover_recorded"
+		input.kind === "work_unit_claim.takeover_recorded"
 	) {
 		if (
 			!input.authority.authenticationEvidenceId ||
@@ -306,7 +306,7 @@ function validateClaimMutation<K extends ClaimMutationKind>(input: {
 	}
 	if (
 		input.kind === "change_claim.released" ||
-		input.kind === "work_item_claim.released"
+		input.kind === "work_unit_claim.released"
 	) {
 		const released = input.payload as ChangeOperationPayload<"change_claim.released">;
 		const claimOperation = input.change.operations.find(

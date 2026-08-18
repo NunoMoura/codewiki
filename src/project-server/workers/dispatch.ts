@@ -74,8 +74,8 @@ import {
 export interface ImplementationWorkerDispatchResult {
 	status: "held" | "quiescent" | "scheduled";
 	workStateDigest: string;
-	pendingWorkItemIds: string[];
-	reviewReadyWorkItemIds: string[];
+	pendingWorkUnitIds: string[];
+	reviewReadyWorkUnitIds: string[];
 	scheduledJobIds: string[];
 	blockers: string[];
 }
@@ -198,7 +198,7 @@ export class ImplementationWorkerDispatcher {
 			records: observation.records,
 			generatedAt: trigger.occurredAt,
 		});
-		const workerRequiredWorkItemIds = queue.items.flatMap((item) =>
+		const workerRequiredWorkUnitIds = queue.items.flatMap((item) =>
 			item.kind === "work-unit" &&
 			(item.status === "ready" || item.status === "claimed")
 				? [item.id]
@@ -206,7 +206,7 @@ export class ImplementationWorkerDispatcher {
 		);
 		const isolationKind = implementationWorkerIsolationKind(this.options);
 		const adapterAvailability =
-			workerRequiredWorkItemIds.length > 0
+			workerRequiredWorkUnitIds.length > 0
 				? await inspectWorkerAdapter(this.options.adapter)
 				: { available: true as const };
 		const resumed = await this.resumePackets(
@@ -260,7 +260,7 @@ export class ImplementationWorkerDispatcher {
 			...productReleases.jobIds,
 			...releaseJobIds,
 		];
-		const pending = new Set(workerRequiredWorkItemIds);
+		const pending = new Set(workerRequiredWorkUnitIds);
 		for (const result of workerReports) pending.delete(result.workUnitId);
 		const complete = (
 			status: ImplementationWorkerDispatchResult["status"],
@@ -271,7 +271,7 @@ export class ImplementationWorkerDispatcher {
 				dispatchResult({
 					status,
 					workState: observation.workState,
-					pendingWorkItemIds: pending,
+					pendingWorkUnitIds: pending,
 					workerReports,
 					scheduledJobIds: jobIds,
 					blockers,
@@ -414,7 +414,7 @@ export class ImplementationWorkerDispatcher {
 		});
 		assertStableClaims(packets, appended.events);
 		const scheduled = this.schedulePackets(packets);
-		for (const packet of packets) pending.add(packet.assignment.workItemId);
+		for (const packet of packets) pending.add(packet.assignment.workUnitId);
 		return complete("scheduled", [...resumedJobIds, ...scheduled], []);
 	}
 
@@ -510,8 +510,8 @@ export class ImplementationWorkerDispatcher {
 		const candidates = workers.flatMap((worker) => {
 			if (worker.report.status !== "completed") return [];
 			const assignment = worker.packet.assignment;
-			const item = workState.workItems.find(
-				(candidate) => candidate.id === assignment.workItemId,
+			const item = workState.workUnits.find(
+				(candidate) => candidate.id === assignment.workUnitId,
 			);
 			if (!item?.implemented || integrationAlreadyProven(worker, records)) {
 				return [];
@@ -522,7 +522,7 @@ export class ImplementationWorkerDispatcher {
 			const acceptanceEvent = implementationAcceptanceEvent(
 				records,
 				assignment.traceId,
-				assignment.workItemId,
+				assignment.workUnitId,
 			);
 			return sprint && acceptanceEvent ? [{ worker, sprint, acceptanceEvent }] : [];
 		});
@@ -837,7 +837,7 @@ function createDispatchPackets(input: {
 		});
 		const contextDigest = digest({
 			workStateDigest: input.workState.snapshotDigest,
-			workItemId: candidate.workUnitId,
+			workUnitId: candidate.workUnitId,
 			planningRefs: candidate.planningRefs,
 			componentRefs: candidate.componentRefs,
 			pathScopes: candidate.pathScopes,
@@ -851,7 +851,7 @@ function createDispatchPackets(input: {
 			repoRoot: input.repoRoot,
 			assignmentId: claimId,
 			workerId,
-			workItemId: candidate.workUnitId,
+			workUnitId: candidate.workUnitId,
 			claimId,
 			traceId: candidate.traceId,
 			planningRefs: [...candidate.planningRefs],
@@ -894,13 +894,13 @@ function authorizedClaimBatch(
 	if (!batch) {
 		throw new Error("Implementation worker dispatch requires claim events.");
 	}
-	const packetsByWorkItem = new Map(
-		packets.map((packet) => [packet.assignment.workItemId, packet]),
+	const packetsByWorkUnit = new Map(
+		packets.map((packet) => [packet.assignment.workUnitId, packet]),
 	);
 	return {
 		...batch,
 		events: batch.events.map((event) => {
-			const packet = packetsByWorkItem.get(text(event.data?.workUnitId));
+			const packet = packetsByWorkUnit.get(text(event.data?.workUnitId));
 			if (!packet) {
 				throw new Error(
 					`Implementation worker dispatch has no packet for ${event.id}.`,
@@ -928,7 +928,7 @@ function packetMatchesClaim(
 		assignment.traceId === claim.traceId &&
 		assignment.claimId === text(claim.data?.claimId) &&
 		assignment.workerId === text(claim.data?.workerId) &&
-		assignment.workItemId === text(claim.data?.workUnitId) &&
+		assignment.workUnitId === text(claim.data?.workUnitId) &&
 		implementationWorkerJobId(assignment) === text(claim.data?.runtimeJobId) &&
 		digest(packet) === text(claim.data?.runtimeAssignmentDigest) &&
 		[...assignment.planningRefs, ...assignment.pathScopes].every((ref) =>
@@ -1158,7 +1158,7 @@ function integrationAlreadyProven(
 function implementationAcceptanceEvent(
 	records: TraceRecord[],
 	traceId: string,
-	workItemId: string,
+	workUnitId: string,
 ): TraceEvent | undefined {
 	for (let index = records.length - 1; index >= 0; index -= 1) {
 		const record = records[index];
@@ -1167,7 +1167,7 @@ function implementationAcceptanceEvent(
 			record.traceId === traceId &&
 			record.loop === "implementation" &&
 			record.event === "evidence_accepted" &&
-			implementationEventCoversWorkItem(record, workItemId)
+			implementationEventCoversWorkUnit(record, workUnitId)
 		) {
 			return record;
 		}
@@ -1175,21 +1175,21 @@ function implementationAcceptanceEvent(
 	return undefined;
 }
 
-function implementationEventCoversWorkItem(
+function implementationEventCoversWorkUnit(
 	event: TraceEvent,
-	workItemId: string,
+	workUnitId: string,
 ): boolean {
 	const output = objectValue(event.data?.output);
 	return [
-		...stringList(output?.coveredWorkItemRefs),
+		...stringList(output?.coveredWorkUnitRefs),
 		...objectList(output?.changes).flatMap((change) =>
 			stringList(change.planningRefs),
 		),
 	].some(
 		(ref) =>
-			ref === workItemId ||
-			ref.endsWith(`#work:${workItemId}`) ||
-			ref.endsWith(`#work-item:${workItemId}`),
+			ref === workUnitId ||
+			ref.endsWith(`#work:${workUnitId}`) ||
+			ref.endsWith(`#work-unit:${workUnitId}`),
 	);
 }
 
@@ -1199,8 +1199,8 @@ function workerReportCanRelease(
 ): boolean {
 	if (worker.report.status !== "completed") return true;
 	return Boolean(
-		workState.workItems.find(
-			(item) => item.id === worker.packet.assignment.workItemId,
+		workState.workUnits.find(
+			(item) => item.id === worker.packet.assignment.workUnitId,
 		)?.implemented,
 	);
 }
@@ -1213,7 +1213,7 @@ function reviewWorkerReport(
 	return {
 		...(evidence || {}),
 		workerId: assignment.workerId,
-		workUnitId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		claimId: assignment.claimId,
 		planningRefs: [...assignment.planningRefs],
 		status: report.status,
@@ -1234,7 +1234,7 @@ function runtimeReconciliation(
 function dispatchResult(input: {
 	status: ImplementationWorkerDispatchResult["status"];
 	workState: WorkState;
-	pendingWorkItemIds: Set<string>;
+	pendingWorkUnitIds: Set<string>;
 	workerReports: ImplementationWorkerReportInput[];
 	scheduledJobIds: string[];
 	blockers: string[];
@@ -1242,8 +1242,8 @@ function dispatchResult(input: {
 	return {
 		status: input.status,
 		workStateDigest: input.workState.snapshotDigest,
-		pendingWorkItemIds: [...input.pendingWorkItemIds].sort(compareText),
-		reviewReadyWorkItemIds: input.workerReports
+		pendingWorkUnitIds: [...input.pendingWorkUnitIds].sort(compareText),
+		reviewReadyWorkUnitIds: input.workerReports
 			.map((result) => result.workUnitId)
 			.sort(compareText),
 		scheduledJobIds: [...new Set(input.scheduledJobIds)].sort(compareText),

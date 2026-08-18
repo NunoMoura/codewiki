@@ -11,7 +11,7 @@ export interface UiPreviewTargetBindingInput {
 	targetDigest?: string;
 	profileId?: string;
 	profileDigest?: string;
-	workItemIds?: string[];
+	workUnitIds?: string[];
 	contributingChangeIds?: string[];
 	required?: boolean;
 	activation?: PreviewBindingActivation | string;
@@ -23,7 +23,7 @@ export interface UiPreviewTargetBinding {
 	targetDigest: string;
 	profileId: string;
 	profileDigest: string;
-	workItemIds: string[];
+	workUnitIds: string[];
 	contributingChangeIds: string[];
 	required: boolean;
 	activation: PreviewBindingActivation;
@@ -43,7 +43,7 @@ export function normalizeUiPreviewTargetBinding(
 		targetDigest: text(input.targetDigest),
 		profileId: text(input.profileId),
 		profileDigest: text(input.profileDigest),
-		workItemIds: normalizedStrings(input.workItemIds),
+		workUnitIds: normalizedStrings(input.workUnitIds),
 		contributingChangeIds: normalizedStrings(input.contributingChangeIds),
 		required: input.required === undefined ? true : (input.required as boolean),
 		activation:
@@ -77,8 +77,8 @@ export function uiPreviewTargetBindingValidationIssues(
 			issues.push(`Preview ${field} must be an exact sha256 digest.`);
 		}
 	}
-	if (binding.workItemIds.length === 0) {
-		issues.push("Preview workItemIds must identify planned work.");
+	if (binding.workUnitIds.length === 0) {
+		issues.push("Preview workUnitIds must identify planned work.");
 	}
 	if (binding.contributingChangeIds.length === 0) {
 		issues.push(
@@ -86,7 +86,7 @@ export function uiPreviewTargetBindingValidationIssues(
 		);
 	}
 	if (
-		binding.workItemIds.some((id) => !SAFE_IDENTIFIER.test(id)) ||
+		binding.workUnitIds.some((id) => !SAFE_IDENTIFIER.test(id)) ||
 		binding.contributingChangeIds.some((id) => !SAFE_IDENTIFIER.test(id))
 	) {
 		issues.push("Preview correlation ids must be bounded safe identifiers.");
@@ -118,7 +118,7 @@ export function traceUiPreviewTargetBindings(
 		const output = objectRecord(record.data?.output);
 		for (const sprint of objectList(output?.sprints)) {
 			const sprintId = text(sprint.id);
-			const sprintWorkItemIds = stringList(sprint.workItemIds);
+			const sprintWorkUnitIds = stringList(sprint.workUnitIds);
 			const sprintChangeIds = stringList(sprint.participatingChangeIds);
 			for (const value of objectList(sprint.uiPreviewTargets)) {
 				const binding = normalizeUiPreviewTargetBinding({
@@ -126,7 +126,7 @@ export function traceUiPreviewTargetBindings(
 					targetDigest: text(value.targetDigest),
 					profileId: text(value.profileId),
 					profileDigest: text(value.profileDigest),
-					workItemIds: stringList(value.workItemIds),
+					workUnitIds: stringList(value.workUnitIds),
 					contributingChangeIds: stringList(value.contributingChangeIds),
 					required: boolean(value.required),
 					activation: text(value.activation),
@@ -135,7 +135,7 @@ export function traceUiPreviewTargetBindings(
 				if (uiPreviewTargetBindingValidationIssues(binding).length > 0)
 					continue;
 				if (
-					binding.workItemIds.some((id) => !sprintWorkItemIds.includes(id)) ||
+					binding.workUnitIds.some((id) => !sprintWorkUnitIds.includes(id)) ||
 					binding.contributingChangeIds.some(
 						(id) => !sprintChangeIds.includes(id),
 					)
@@ -154,9 +154,9 @@ export function traceUiPreviewTargetBindings(
 				const current = bindings.get(key);
 				bindings.set(key, {
 					...binding,
-					workItemIds: unique([
-						...(current?.workItemIds || []),
-						...binding.workItemIds,
+					workUnitIds: unique([
+						...(current?.workUnitIds || []),
+						...binding.workUnitIds,
 					]),
 					contributingChangeIds: unique([
 						...(current?.contributingChangeIds || []),

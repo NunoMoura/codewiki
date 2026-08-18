@@ -60,7 +60,7 @@ export interface PlanningWorkAssessment {
 	concerns: string[];
 }
 
-export interface PlanningWorkItem {
+export interface PlanningWorkUnit {
 	id: string;
 	title: string;
 	changeRefs: string[];

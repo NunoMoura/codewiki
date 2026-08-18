@@ -2,7 +2,7 @@ import { planningConflicts } from "../loops/planning/conflicts.ts";
 import type {
 	AcceptanceCriterion,
 	PlanningTrigger,
-	PlanningWorkItem,
+	PlanningWorkUnit,
 } from "../loops/planning/types.ts";
 import { loopOutputEvents } from "../changes/trace/queries.ts";
 import { replayTrace } from "../changes/trace/replay.ts";
@@ -24,17 +24,17 @@ export function buildWorkPlanView(
 	};
 }
 
-interface TracePlanningWorkItem extends PlanningWorkItem {
+interface TracePlanningWorkUnit extends PlanningWorkUnit {
 	traceEventId: string;
 	qualityStandards: WorkPlanCard["qualityStandards"];
 	qualityBlockers: string[];
 }
 
 export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
-	const items = acceptedPlanningWorkItemsFromTrace(records);
+	const items = acceptedPlanningWorkUnitsFromTrace(records);
 	const implementationRefs = implementationRefsByPlanningRef(records);
 	const activeItems = items.filter((item) =>
-		traceRefsForWorkItem(item).every((ref) => !implementationRefs.has(ref)),
+		traceRefsForWorkUnit(item).every((ref) => !implementationRefs.has(ref)),
 	);
 	const conflicts = planningConflicts(activeItems);
 	const blockedIds = new Map<string, string[]>();
@@ -54,7 +54,7 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 	);
 	const runtimeRefs = activeRuntimeRefs(records);
 	return items.map((item) => {
-		const itemTraceRefs = traceRefsForWorkItem(item);
+		const itemTraceRefs = traceRefsForWorkUnit(item);
 		const implementedBy = unique(
 			itemTraceRefs.flatMap((ref) => implementationRefs.get(ref) || []),
 		);
@@ -88,10 +88,10 @@ export function workPlanCardsFromTrace(records: TraceRecord[]): WorkPlanCard[] {
 	});
 }
 
-export function planningWorkItemsFromTrace(
+export function planningWorkUnitsFromTrace(
 	records: TraceRecord[],
-): PlanningWorkItem[] {
-	return acceptedPlanningWorkItemsFromTrace(records).map(
+): PlanningWorkUnit[] {
+	return acceptedPlanningWorkUnitsFromTrace(records).map(
 		({
 			traceEventId: _traceEventId,
 			qualityStandards: _qualityStandards,
@@ -101,14 +101,14 @@ export function planningWorkItemsFromTrace(
 	);
 }
 
-function acceptedPlanningWorkItemsFromTrace(
+function acceptedPlanningWorkUnitsFromTrace(
 	records: TraceRecord[],
-): TracePlanningWorkItem[] {
+): TracePlanningWorkUnit[] {
 	const plannedItems = activePlanningEvents(records).flatMap((event) => {
 		const quality = loopQualityReadiness(event);
-		return objectList(objectRecord(event.data?.output).workItems).map(
+		return objectList(objectRecord(event.data?.output).workUnits).map(
 			(item) => {
-				const id = text(item.id) || `${event.id}:work-item`;
+				const id = text(item.id) || `${event.id}:work-unit`;
 				const acceptanceCriteria = acceptanceCriteriaList(
 					item.acceptanceCriteria,
 					[],
@@ -169,7 +169,7 @@ function activePlanningEvents(records: TraceRecord[]): TraceEvent[] {
 
 function planningChangeRefs(event: TraceEvent): string[] {
 	return unique(
-		objectList(objectRecord(event.data?.output).workItems).flatMap((item) => [
+		objectList(objectRecord(event.data?.output).workUnits).flatMap((item) => [
 			...(text(item.owningChangeId)
 				? [`change:${text(item.owningChangeId)}`]
 				: []),
@@ -246,7 +246,7 @@ function workPlanStatus(input: {
 	return "todo";
 }
 
-function traceRefsForWorkItem(item: TracePlanningWorkItem): string[] {
+function traceRefsForWorkUnit(item: TracePlanningWorkUnit): string[] {
 	return unique([
 		item.traceEventId,
 		item.id,
@@ -315,7 +315,7 @@ function iterationSubref(event: TraceEvent, kind: string, id: string): string {
 
 function planningAssessment(
 	value: unknown,
-): TracePlanningWorkItem["planningAssessment"] {
+): TracePlanningWorkUnit["planningAssessment"] {
 	const record = objectRecord(value);
 	return {
 		stance: text(record.stance),
@@ -346,7 +346,7 @@ function acceptanceCriteriaList(
 	}));
 }
 
-function planningDepth(value: unknown): PlanningWorkItem["planningDepth"] {
+function planningDepth(value: unknown): PlanningWorkUnit["planningDepth"] {
 	const normalized = text(value).toLowerCase().replace(/_/g, "-");
 	if (!normalized) return "standard";
 	if (

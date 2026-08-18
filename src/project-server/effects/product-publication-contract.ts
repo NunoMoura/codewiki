@@ -54,7 +54,7 @@ export interface ProductPublicationAdapterInput {
 	repoRoot: string;
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	pushEventId: string;
 	target: ProductPublicationTarget;
 	artifact: ProductPublicationArtifact;

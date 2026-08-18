@@ -28,7 +28,7 @@ function assignment(root) {
 		repoRoot: root,
 		assignmentId: "assignment:container-worker",
 		workerId: "worker:container-worker",
-		workItemId: "work:container-worker",
+		workUnitId: "work:container-worker",
 		claimId: "claim:container-worker",
 		traceId: "TRACE-CHG-container-worker",
 		planningRefs: ["trace:TRACE-CHG-container-worker#planning:1"],
@@ -59,7 +59,7 @@ function assignment(root) {
 function completedEvidence(input) {
 	return {
 		workerId: input.workerId,
-		workUnitId: input.workItemId,
+		workUnitId: input.workUnitId,
 		status: "completed",
 		planningRefs: input.planningRefs,
 		changedFiles: ["src/project-server/container-example.ts"],

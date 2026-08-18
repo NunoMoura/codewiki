@@ -72,14 +72,14 @@ export interface ProjectServerTrigger {
 }
 
 export interface ProjectServerReaction {
-	schemaVersion: 1;
+	schemaVersion: 2;
 	status: "ready" | "quiescent";
 	trigger: ProjectServerTrigger & { occurredAt?: string };
 	observedWorkStateDigest: string;
 }
 
 export interface ProjectServerOperationReceipt {
-	schemaVersion: 1;
+	schemaVersion: 2;
 	jobId: string;
 	loop: "decision" | "planning" | "implementation";
 	status: "completed" | "previewed" | "routed" | "stale";

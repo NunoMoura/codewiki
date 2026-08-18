@@ -17,7 +17,7 @@ export interface ScheduleImplementationWorkerAssignmentsInput {
 export interface ImplementationWorkerJobReceipt {
 	jobId: string;
 	assignmentId: string;
-	workItemId: string;
+	workUnitId: string;
 	report: ImplementationWorkerReport;
 }
 
@@ -25,7 +25,7 @@ export function scheduleImplementationWorkerAssignments(
 	input: ScheduleImplementationWorkerAssignmentsInput,
 ): Promise<ImplementationWorkerJobReceipt[]> {
 	const assignmentIds = new Set<string>();
-	const workItemIds = new Set<string>();
+	const workUnitIds = new Set<string>();
 	for (const assignment of input.assignments) {
 		assertImplementationWorkerAssignment(assignment);
 		if (assignmentIds.has(assignment.assignmentId)) {
@@ -33,13 +33,13 @@ export function scheduleImplementationWorkerAssignments(
 				`Duplicate implementation worker assignment ${assignment.assignmentId}.`,
 			);
 		}
-		if (workItemIds.has(assignment.workItemId)) {
+		if (workUnitIds.has(assignment.workUnitId)) {
 			throw new Error(
-				`Implementation worker batch repeats Work Item ${assignment.workItemId}.`,
+				`Implementation worker batch repeats Work Unit ${assignment.workUnitId}.`,
 			);
 		}
 		assignmentIds.add(assignment.assignmentId);
-		workItemIds.add(assignment.workItemId);
+		workUnitIds.add(assignment.workUnitId);
 	}
 	return Promise.all(
 		input.assignments.map((assignment) =>
@@ -62,7 +62,7 @@ export async function scheduleImplementationWorkerAssignment(input: {
 	const jobId = implementationWorkerJobId(assignment);
 	const report = await input.coordinator.schedule({
 		idempotencyKey: jobId,
-		lane: { kind: "assignment", workItemId: assignment.workItemId },
+		lane: { kind: "assignment", workUnitId: assignment.workUnitId },
 		effect: "write",
 		conflictRefs: assignmentConflictRefs(assignment),
 		recover: async () => {
@@ -80,7 +80,7 @@ export async function scheduleImplementationWorkerAssignment(input: {
 	return {
 		jobId,
 		assignmentId: assignment.assignmentId,
-		workItemId: assignment.workItemId,
+		workUnitId: assignment.workUnitId,
 		report: report,
 	};
 }
@@ -89,7 +89,7 @@ function assignmentConflictRefs(
 	assignment: ImplementationWorkerAssignment,
 ): string[] {
 	return [
-		`work-item:${assignment.workItemId}`,
+		`work-unit:${assignment.workUnitId}`,
 		`claim:${assignment.claimId}`,
 		...assignment.componentRefs.map((ref) => `component:${ref}`),
 		...assignment.pathScopes.map((scope) => `path:${scope}`),

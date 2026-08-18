@@ -17,7 +17,7 @@ import { compareText } from "../changes/trace/order.ts";
 
 export type AlignmentQueryFamily =
 	| "change_context"
-	| "work_item_readiness"
+	| "work_unit_readiness"
 	| "loop_assurance"
 	| "knowledge_impact"
 	| "delivery_chain"
@@ -35,10 +35,10 @@ export interface ChangeContextQuery extends AlignmentQueryBase {
 	readonly changeId: string;
 }
 
-export interface WorkItemReadinessQuery extends AlignmentQueryBase {
-	readonly family: "work_item_readiness";
+export interface WorkUnitReadinessQuery extends AlignmentQueryBase {
+	readonly family: "work_unit_readiness";
 	readonly planningEpochId: string;
-	readonly workItemId: string;
+	readonly workUnitId: string;
 }
 
 export interface LoopAssuranceQuery extends AlignmentQueryBase {
@@ -63,7 +63,7 @@ export interface ContradictionsQuery extends AlignmentQueryBase {
 
 export type AlignmentQueryRequest =
 	| ChangeContextQuery
-	| WorkItemReadinessQuery
+	| WorkUnitReadinessQuery
 	| LoopAssuranceQuery
 	| KnowledgeImpactQuery
 	| DeliveryChainQuery
@@ -116,36 +116,36 @@ const DELIVERY_OPERATION_KINDS = new Set([
 const FAMILY_EDGE_TYPES: Readonly<
 	Record<Exclude<AlignmentQueryFamily, "change_context">, ReadonlySet<string>>
 > = Object.freeze({
-	work_item_readiness: new Set([
-		"epoch_contains_work_item",
-		"work_item_belongs_to_epoch",
-		"sprint_contains_work_item",
-		"work_item_depends_on_work_item",
+	work_unit_readiness: new Set([
+		"epoch_contains_work_unit",
+		"work_unit_belongs_to_epoch",
+		"sprint_contains_work_unit",
+		"work_unit_depends_on_work_unit",
 		"epoch_safe_execution_frontier",
-		"work_item_realizes_change",
-		"work_item_has_stable_ref",
-		"work_item_contributed_by_change",
-		"work_item_has_requirement",
+		"work_unit_realizes_change",
+		"work_unit_has_stable_ref",
+		"work_unit_contributed_by_change",
+		"work_unit_has_requirement",
 		"requirement_requires_evidence_obligation",
 		"requirement_requires_check",
-		"work_item_scoped_to_source",
-		"work_item_scoped_to_knowledge",
-		"work_item_scoped_to_component",
-		"work_item_uses_tool",
-		"work_item_uses_skill",
-		"work_item_uses_context",
-		"work_item_requires_integration_check",
-		"work_item_integrates_to_ref",
-		"worker_claims_work_item",
-		"claim_authorizes_work_item",
-		"worker_holds_work_item_claim",
-		"work_item_dispatched_as_assignment",
+		"work_unit_scoped_to_source",
+		"work_unit_scoped_to_knowledge",
+		"work_unit_scoped_to_component",
+		"work_unit_uses_tool",
+		"work_unit_uses_skill",
+		"work_unit_uses_context",
+		"work_unit_requires_integration_check",
+		"work_unit_integrates_to_ref",
+		"worker_claims_work_unit",
+		"claim_authorizes_work_unit",
+		"worker_holds_work_unit_claim",
+		"work_unit_dispatched_as_assignment",
 		"assignment_uses_claim",
-		"work_item_claim_taken_over_by",
-		"work_item_claim_released_by",
+		"work_unit_claim_taken_over_by",
+		"work_unit_claim_released_by",
 		"epoch_disposes_active_work",
 		"epoch_disposes_active_assignment",
-		"work_item_migrates_to_work_item",
+		"work_unit_migrates_to_work_unit",
 	]),
 	loop_assurance: new Set([
 		"attempt_has_candidate",
@@ -170,7 +170,7 @@ const FAMILY_EDGE_TYPES: Readonly<
 		"derived_from",
 		"source_realizes_knowledge",
 		"test_verifies_knowledge",
-		"work_item_scoped_to_knowledge",
+		"work_unit_scoped_to_knowledge",
 	]),
 	delivery_chain: new Set([
 		"integration_merged_commit",
@@ -248,9 +248,9 @@ function queryRoots(
 			return existingRoots(graph, [`change:${request.changeId}`]);
 		case "delivery_chain":
 			return deliveryRoots(graph, request.changeId);
-		case "work_item_readiness":
+		case "work_unit_readiness":
 			return existingRoots(graph, [
-				`work-item:${request.planningEpochId}:${request.workItemId}`,
+				`work-unit:${request.planningEpochId}:${request.workUnitId}`,
 			]);
 		case "loop_assurance":
 			return existingRoots(graph, [`candidate:${request.candidateId}`]);
@@ -425,7 +425,7 @@ const QUERY_FAMILY_FIELDS: Readonly<
 	Record<AlignmentQueryFamily, readonly string[]>
 > = Object.freeze({
 	change_context: ["changeId"],
-	work_item_readiness: ["planningEpochId", "workItemId"],
+	work_unit_readiness: ["planningEpochId", "workUnitId"],
 	loop_assurance: ["candidateId"],
 	knowledge_impact: ["conceptId"],
 	delivery_chain: ["changeId"],

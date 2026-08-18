@@ -40,7 +40,7 @@ const MAX_CHANGED_PATHS = 1_024;
 const MAX_REPO_PATH_BYTES = 1_024;
 const GIT_OBJECT_ID = /^[a-f0-9]{40}(?:[a-f0-9]{24})?$/;
 const INTEGRATION_EVENT = "runtime.integration.proven";
-const INTEGRATION_SCHEMA_VERSION = 1 as const;
+const INTEGRATION_SCHEMA_VERSION = 2 as const;
 
 export interface ImplementationWorkerIntegrationInput {
 	repoRoot: string;
@@ -59,7 +59,7 @@ export interface ImplementationWorkerIntegrationInput {
 export interface ImplementationWorkerIntegrationReceipt {
 	jobId: string;
 	traceId: string;
-	workItemId: string;
+	workUnitId: string;
 	claimId: string;
 	targetRef: string;
 	commit: string;
@@ -123,7 +123,7 @@ export function implementationWorkerIntegrationJob(
 		},
 		conflictRefs: [
 			`trace:${input.packet.assignment.traceId}`,
-			`work-item:${input.packet.assignment.workItemId}`,
+			`work-unit:${input.packet.assignment.workUnitId}`,
 			`claim:${input.packet.assignment.claimId}`,
 			...input.packet.assignment.pathScopes.map((path) => `path:${path}`),
 			...identity.targetRefs.map((ref) => `integration-target:${ref}`),
@@ -240,7 +240,7 @@ async function integrateWorkerPatch(
 			"commit",
 			"--no-gpg-sign",
 			"-m",
-			`codewiki: integrate ${input.packet.assignment.workItemId}`,
+			`codewiki: integrate ${input.packet.assignment.workUnitId}`,
 			"-m",
 			commitTrailers(input, identity, patch.patchDigest),
 		],
@@ -571,8 +571,8 @@ async function assertCanonicalAcceptance(
 		occurredAt: input.createdAt,
 	});
 	const assignment = input.packet.assignment;
-	const item = observation.workState.workItems.find(
-		(candidate) => candidate.id === assignment.workItemId,
+	const item = observation.workState.workUnits.find(
+		(candidate) => candidate.id === assignment.workUnitId,
 	);
 	if (!item?.implemented) {
 		throw new Error(
@@ -596,7 +596,7 @@ async function assertCanonicalAcceptance(
 		acceptance.traceId !== assignment.traceId ||
 		acceptance.loop !== "implementation" ||
 		acceptance.event !== "evidence_accepted" ||
-		!eventCoversWorkItem(acceptance, assignment.workItemId)
+		!eventCoversWorkUnit(acceptance, assignment.workUnitId)
 	) {
 		throw new Error("Implementation integration acceptance evidence is stale.");
 	}
@@ -621,7 +621,7 @@ function claimMatchesPacket(
 			claim.traceId === assignment.traceId &&
 			claim.data?.claimId === assignment.claimId &&
 			claim.data?.workerId === assignment.workerId &&
-			claim.data?.workUnitId === assignment.workItemId &&
+			claim.data?.workUnitId === assignment.workUnitId &&
 			claim.data?.runtimeJobId === implementationWorkerJobId(assignment) &&
 			claim.data?.runtimeAssignmentDigest === sha256Ref(stableJson(packet)) &&
 			[...assignment.planningRefs, ...assignment.pathScopes].every((ref) =>
@@ -658,7 +658,7 @@ function integrationEvent(
 			runtimeJobId: identity.jobId,
 			traceId: assignment.traceId,
 			sprintId: input.sprintId,
-			workItemId: assignment.workItemId,
+			workUnitId: assignment.workUnitId,
 			claimId: assignment.claimId,
 			assignmentId: assignment.assignmentId,
 			workerId: assignment.workerId,
@@ -698,7 +698,7 @@ function integrationIdentity(
 				repoRoot: resolve(input.repoRoot),
 				traceId: assignment.traceId,
 				sprintId: input.sprintId,
-				workItemId: assignment.workItemId,
+				workUnitId: assignment.workUnitId,
 				claimId: assignment.claimId,
 				assignmentId: assignment.assignmentId,
 				acceptanceEventId: input.acceptanceEvent.id,
@@ -754,7 +754,7 @@ function assertIntegrationInput(
 		input.report.status !== "completed" ||
 		input.report.assignmentId !== assignment.assignmentId ||
 		input.report.workerId !== assignment.workerId ||
-		input.report.workItemId !== assignment.workItemId ||
+		input.report.workUnitId !== assignment.workUnitId ||
 		!input.packet.claimEventId
 	) {
 		throw new Error("Implementation integration worker identity is invalid.");
@@ -868,7 +868,7 @@ function integrationRunnerPlan(
 	identity: IntegrationIdentity,
 ): ProjectServerWorktreePlan {
 	return {
-		workUnitId: input.packet.assignment.workItemId,
+		workUnitId: input.packet.assignment.workUnitId,
 		traceId: input.packet.assignment.traceId,
 		workerId: input.packet.assignment.workerId,
 		required: true,
@@ -1095,7 +1095,7 @@ function integrationReceipt(
 	return {
 		jobId: identity.jobId,
 		traceId: input.packet.assignment.traceId,
-		workItemId: input.packet.assignment.workItemId,
+		workUnitId: input.packet.assignment.workUnitId,
 		claimId: input.packet.assignment.claimId,
 		targetRef: identity.targetRef,
 		commit,
@@ -1104,18 +1104,18 @@ function integrationReceipt(
 	};
 }
 
-function eventCoversWorkItem(event: TraceEvent, workItemId: string): boolean {
+function eventCoversWorkUnit(event: TraceEvent, workUnitId: string): boolean {
 	const output = objectValue(event.data?.output);
 	return [
-		...stringList(output?.coveredWorkItemRefs),
+		...stringList(output?.coveredWorkUnitRefs),
 		...objectList(output?.changes).flatMap((change) =>
 			stringList(change.planningRefs),
 		),
 	].some(
 		(ref) =>
-			ref === workItemId ||
-			ref.endsWith(`#work:${workItemId}`) ||
-			ref.endsWith(`#work-item:${workItemId}`),
+			ref === workUnitId ||
+			ref.endsWith(`#work:${workUnitId}`) ||
+			ref.endsWith(`#work-unit:${workUnitId}`),
 	);
 }
 
@@ -1126,7 +1126,7 @@ function commitTrailers(
 ): string {
 	return [
 		`CodeWiki-Integration-Job: ${identity.jobId}`,
-		`CodeWiki-Work-Item: ${input.packet.assignment.workItemId}`,
+		`CodeWiki-Work-Item: ${input.packet.assignment.workUnitId}`,
 		`CodeWiki-Claim: ${input.packet.assignment.claimId}`,
 		`CodeWiki-Worker-Patch: ${workerPatchDigest}`,
 	].join("\n");

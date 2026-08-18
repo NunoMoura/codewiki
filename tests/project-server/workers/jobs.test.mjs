@@ -22,7 +22,7 @@ function assignment(root, id, pathScope) {
 		repoRoot: root,
 		assignmentId: `assignment:${id}`,
 		workerId: `worker:${id}`,
-		workItemId: `work:${id}`,
+		workUnitId: `work:${id}`,
 		claimId: `claim:${id}`,
 		traceId: `TRACE-CHG-${id}`,
 		planningRefs: [`trace:TRACE-CHG-${id}#planning:1`],
@@ -48,7 +48,7 @@ function result(input, status = "completed") {
 	return {
 		assignmentId: input.assignmentId,
 		workerId: input.workerId,
-		workItemId: input.workItemId,
+		workUnitId: input.workUnitId,
 		status,
 		reportRef: `runtime-worker-report:${input.assignmentId}`,
 		producerSkillReceipt: input.producerSkillReceipt,
@@ -275,13 +275,13 @@ test("implementation worker jobs reject assignments without isolated worktree cu
 	}
 });
 
-test("implementation worker batches reject repeated Work Items", async () => {
+test("implementation worker batches reject repeated Work Units", async () => {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-worker-duplicate-"));
 	const coordinator = new ProjectCoordinator(root);
 	const first = assignment(root, "duplicate-one", "src/one/**");
 	const second = {
 		...assignment(root, "duplicate-two", "src/two/**"),
-		workItemId: first.workItemId,
+		workUnitId: first.workUnitId,
 	};
 	try {
 		assert.throws(
@@ -297,7 +297,7 @@ test("implementation worker batches reject repeated Work Items", async () => {
 				},
 				assignments: [first, second],
 			}),
-			/repeats Work Item/,
+			/repeats Work Unit/,
 		);
 	} finally {
 		coordinator.close();

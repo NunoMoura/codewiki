@@ -28,7 +28,7 @@ import {
 	type WorkStateMergeProof,
 	type WorkStatePushProof,
 	type WorkStateSprint,
-	type WorkStateWorkItem,
+	type WorkStateWorkUnit,
 } from "./types.ts";
 
 interface BuildWorkStateInput {
@@ -53,7 +53,7 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 	const changeRecords = changeRecordsById(groups);
 	const approvals = approvalsByChangeId(groups, changeRecords);
 	const sprintMap = new Map<string, WorkStateSprint>();
-	const workItemMap = new Map<string, WorkStateWorkItem>();
+	const workUnitMap = new Map<string, WorkStateWorkUnit>();
 	const assignmentMap = new Map<string, WorkStateAssignment>();
 	const blockers: WorkStateBlocker[] = [];
 	const planningEpochs = new Map<string, PlanningEpochObservation>();
@@ -62,28 +62,28 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 		projectPlanningGroup({
 			group,
 			sprintMap,
-			workItemMap,
+			workUnitMap,
 			blockers,
 			planningEpochs,
 		});
 	}
 	for (const group of groups.values()) {
-		projectAssignments(group, workItemMap, assignmentMap);
-		projectImplementation(group, workItemMap);
-		projectIntegration(group, workItemMap);
-		projectProjectBranchMerges(group, workItemMap);
-		projectProjectBranchPushes(group, workItemMap);
-		projectProductPublications(group.events, workItemMap);
-		projectProductReleases(group.events, workItemMap);
+		projectAssignments(group, workUnitMap, assignmentMap);
+		projectImplementation(group, workUnitMap);
+		projectIntegration(group, workUnitMap);
+		projectProjectBranchMerges(group, workUnitMap);
+		projectProjectBranchPushes(group, workUnitMap);
+		projectProductPublications(group.events, workUnitMap);
+		projectProductReleases(group.events, workUnitMap);
 		projectEventBlockers(group, blockers);
 	}
-	applyAssignmentRefs(workItemMap, assignmentMap);
+	applyAssignmentRefs(workUnitMap, assignmentMap);
 	applyPlanningEpochIntegrity(planningEpochs, sprintMap, blockers);
 
 	const sprints = [...sprintMap.values()]
-		.map((sprint) => finalizedSprint(sprint, workItemMap, blockers))
+		.map((sprint) => finalizedSprint(sprint, workUnitMap, blockers))
 		.sort((left, right) => left.id.localeCompare(right.id));
-	const workItems = [...workItemMap.values()].sort((left, right) =>
+	const workUnits = [...workUnitMap.values()].sort((left, right) =>
 		left.id.localeCompare(right.id),
 	);
 	const assignments = [...assignmentMap.values()].sort((left, right) =>
@@ -95,7 +95,7 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 				record,
 				approval: approvals.get(record.change.id),
 				sprints,
-				workItems,
+				workUnits,
 				assignments,
 				blockers,
 				group: groups.get(changeTraceId(record.change.id)),
@@ -113,11 +113,11 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 		...(input.generatedAt ? { generatedAt: input.generatedAt } : {}),
 		changeIds: changes.map((change) => change.id),
 		sprintIds: sprints.map((sprint) => sprint.id),
-		workItemIds: workItems.map((item) => item.id),
+		workUnitIds: workUnits.map((item) => item.id),
 		assignmentIds: assignments.map((assignment) => assignment.id),
 		changes,
 		sprints,
-		workItems,
+		workUnits,
 		assignments,
 		blockers: sortedBlockers,
 		sources: {
@@ -239,7 +239,7 @@ function approvalStatus(record: ChangeRecord): WorkStateApproval["status"] {
 function projectPlanningGroup(input: {
 	group: TraceGroup;
 	sprintMap: Map<string, WorkStateSprint>;
-	workItemMap: Map<string, WorkStateWorkItem>;
+	workUnitMap: Map<string, WorkStateWorkUnit>;
 	blockers: WorkStateBlocker[];
 	planningEpochs: Map<string, PlanningEpochObservation>;
 }): void {
@@ -275,7 +275,7 @@ function projectPlanningGroup(input: {
 				...(text(plan.digest) ? { digest: text(plan.digest) } : {}),
 				goal: text(plan.goal) || text(plan.summary) || input.group.head.title,
 				participatingChangeIds: planParticipants,
-				workItemIds: stringList(plan.workItemIds),
+				workUnitIds: stringList(plan.workUnitIds),
 				dependencyIds: stringList(plan.dependsOn),
 				integrationRefs: stringList(plan.integrationRefs),
 				uiPreviewTargets: projectedUiPreviewTargets(plan.uiPreviewTargets),
@@ -283,15 +283,15 @@ function projectPlanningGroup(input: {
 				blockers: [],
 			});
 		}
-		for (const item of objectList(output.workItems)) {
-			projectWorkItem({
+		for (const item of objectList(output.workUnits)) {
+			projectWorkUnit({
 				item,
 				event,
 				epochId,
 				sprintIds,
 				participatingChanges,
 				sprintMap: input.sprintMap,
-				workItemMap: input.workItemMap,
+				workUnitMap: input.workUnitMap,
 				blockers: input.blockers,
 			});
 		}
@@ -311,14 +311,14 @@ function projectPlanningGroup(input: {
 	}
 }
 
-function projectWorkItem(input: {
+function projectWorkUnit(input: {
 	item: Record<string, unknown>;
 	event: TraceEvent;
 	epochId?: string;
 	sprintIds: string[];
 	participatingChanges: string[];
 	sprintMap: Map<string, WorkStateSprint>;
-	workItemMap: Map<string, WorkStateWorkItem>;
+	workUnitMap: Map<string, WorkStateWorkUnit>;
 	blockers: WorkStateBlocker[];
 }): void {
 	const id = text(input.item.id);
@@ -334,7 +334,7 @@ function projectWorkItem(input: {
 	const contributesToChangeIds = unique([
 		...stringList(input.item.contributingChangeIds),
 	]).filter((changeId) => changeId !== owningChangeId);
-	const projected: WorkStateWorkItem = {
+	const projected: WorkStateWorkUnit = {
 		id,
 		sprintId,
 		...(owningChangeId ? { owningChangeId } : {}),
@@ -354,42 +354,42 @@ function projectWorkItem(input: {
 		implemented: false,
 		blockers: [],
 	};
-	const existing = input.workItemMap.get(id);
+	const existing = input.workUnitMap.get(id);
 	if (
 		existing &&
 		(existing.sprintId !== projected.sprintId ||
 			existing.owningChangeId !== projected.owningChangeId)
 	) {
 		const blocker: WorkStateBlocker = {
-			id: `work-item-conflict:${id}`,
-			message: `Work Item ${id} has conflicting Sprint or owning Change facts.`,
+			id: `work-unit-conflict:${id}`,
+			message: `Work Unit ${id} has conflicting Sprint or owning Change facts.`,
 			...(owningChangeId ? { changeId: owningChangeId } : {}),
 			sprintId,
-			workItemId: id,
+			workUnitId: id,
 			refs: unique([existing.planningEventId, input.event.id]),
 		};
 		input.blockers.push(blocker);
 		projected.blockers.push(blocker.message);
 	}
-	input.workItemMap.set(id, mergeWorkItem(existing, projected));
+	input.workUnitMap.set(id, mergeWorkUnit(existing, projected));
 	const sprint = input.sprintMap.get(sprintId);
-	if (sprint) sprint.workItemIds = unique([...sprint.workItemIds, id]);
+	if (sprint) sprint.workUnitIds = unique([...sprint.workUnitIds, id]);
 }
 
 function projectAssignments(
 	group: TraceGroup,
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 	assignmentMap: Map<string, WorkStateAssignment>,
 ): void {
 	for (const event of group.events) {
 		if (event.event === "runtime.work_unit.claimed") {
-			const workItemId = text(event.data?.workUnitId);
-			if (!workItemId) continue;
-			const item = workItemMap.get(workItemId);
+			const workUnitId = text(event.data?.workUnitId);
+			if (!workUnitId) continue;
+			const item = workUnitMap.get(workUnitId);
 			const id = text(event.data?.claimId) || event.id;
 			assignmentMap.set(id, {
 				id,
-				workItemId,
+				workUnitId,
 				...(item?.owningChangeId
 					? { owningChangeId: item.owningChangeId }
 					: {}),
@@ -409,12 +409,12 @@ function projectAssignments(
 		if (!terminalStatus) continue;
 		const id = text(event.data?.claimId) || event.id;
 		const existing = assignmentMap.get(id);
-		const workItemId = text(event.data?.workUnitId) || existing?.workItemId;
-		if (!workItemId) continue;
-		const item = workItemMap.get(workItemId);
+		const workUnitId = text(event.data?.workUnitId) || existing?.workUnitId;
+		if (!workUnitId) continue;
+		const item = workUnitMap.get(workUnitId);
 		assignmentMap.set(id, {
 			id,
-			workItemId,
+			workUnitId,
 			...(existing?.owningChangeId || item?.owningChangeId
 				? { owningChangeId: existing?.owningChangeId || item?.owningChangeId }
 				: {}),
@@ -435,20 +435,20 @@ function projectAssignments(
 
 function projectImplementation(
 	group: TraceGroup,
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 ): void {
 	for (const event of group.events.filter(
 		(candidate) => candidate.loop === "implementation",
 	)) {
 		const output = objectValue(event.data?.output);
 		const coveredIds = unique([
-			...stringList(output?.coveredWorkItemRefs).flatMap(workItemIdsFromRef),
+			...stringList(output?.coveredWorkUnitRefs).flatMap(workUnitIdsFromRef),
 			...objectList(output?.changes).flatMap((change) =>
-				stringList(change.planningRefs).flatMap(workItemIdsFromRef),
+				stringList(change.planningRefs).flatMap(workUnitIdsFromRef),
 			),
 		]);
 		for (const id of coveredIds) {
-			const item = workItemMap.get(id);
+			const item = workUnitMap.get(id);
 			if (item) item.implemented = true;
 		}
 	}
@@ -456,13 +456,13 @@ function projectImplementation(
 
 function projectIntegration(
 	group: TraceGroup,
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 ): void {
 	for (const event of group.events.filter(
 		(candidate) => candidate.event === "runtime.integration.proven",
 	)) {
-		const workItemId = text(event.data?.workItemId);
-		const item = workItemId ? workItemMap.get(workItemId) : undefined;
+		const workUnitId = text(event.data?.workUnitId);
+		const item = workUnitId ? workUnitMap.get(workUnitId) : undefined;
 		const jobId = text(event.data?.runtimeJobId);
 		const targetRef = text(event.data?.targetRef);
 		const baseCommit = text(event.data?.baseCommit);
@@ -530,13 +530,13 @@ function projectEventBlockers(
 
 function projectProjectBranchMerges(
 	group: TraceGroup,
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 ): void {
 	for (const event of group.events.filter(
 		(candidate) => candidate.event === "runtime.project_branch.merged",
 	)) {
-		const workItemId = text(event.data?.workItemId);
-		const item = workItemId ? workItemMap.get(workItemId) : undefined;
+		const workUnitId = text(event.data?.workUnitId);
+		const item = workUnitId ? workUnitMap.get(workUnitId) : undefined;
 		const authority = objectValue(event.data?.authority);
 		const jobId = text(event.data?.runtimeJobId);
 		const integrationEventId = text(event.data?.integrationEventId);
@@ -588,13 +588,13 @@ function projectProjectBranchMerges(
 
 function projectProjectBranchPushes(
 	group: TraceGroup,
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 ): void {
 	for (const event of group.events.filter(
 		(candidate) => candidate.event === "runtime.project_branch.pushed",
 	)) {
-		const workItemId = text(event.data?.workItemId);
-		const item = workItemId ? workItemMap.get(workItemId) : undefined;
+		const workUnitId = text(event.data?.workUnitId);
+		const item = workUnitId ? workUnitMap.get(workUnitId) : undefined;
 		const authority = objectValue(event.data?.authority);
 		const jobId = text(event.data?.runtimeJobId);
 		const mergeEventId = text(event.data?.mergeEventId);
@@ -649,11 +649,11 @@ function projectProjectBranchPushes(
 }
 
 function applyAssignmentRefs(
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 	assignmentMap: Map<string, WorkStateAssignment>,
 ): void {
 	for (const assignment of assignmentMap.values()) {
-		const item = workItemMap.get(assignment.workItemId);
+		const item = workUnitMap.get(assignment.workUnitId);
 		if (item)
 			item.assignmentIds = unique([...item.assignmentIds, assignment.id]);
 	}
@@ -686,17 +686,17 @@ function applyPlanningEpochIntegrity(
 
 function finalizedSprint(
 	sprint: WorkStateSprint,
-	workItemMap: Map<string, WorkStateWorkItem>,
+	workUnitMap: Map<string, WorkStateWorkUnit>,
 	blockers: WorkStateBlocker[],
 ): WorkStateSprint {
-	const items = sprint.workItemIds.flatMap((id) => {
-		const item = workItemMap.get(id);
+	const items = sprint.workUnitIds.flatMap((id) => {
+		const item = workUnitMap.get(id);
 		return item ? [item] : [];
 	});
 	return {
 		...sprint,
 		participatingChangeIds: unique(sprint.participatingChangeIds),
-		workItemIds: unique(sprint.workItemIds),
+		workUnitIds: unique(sprint.workUnitIds),
 		dependencyIds: unique(sprint.dependencyIds),
 		integrationRefs: unique(sprint.integrationRefs),
 		complete: items.length > 0 && items.every((item) => item.implemented),
@@ -713,7 +713,7 @@ function changeView(input: {
 	record: ChangeRecord;
 	approval: WorkStateApproval | undefined;
 	sprints: WorkStateSprint[];
-	workItems: WorkStateWorkItem[];
+	workUnits: WorkStateWorkUnit[];
 	assignments: WorkStateAssignment[];
 	blockers: WorkStateBlocker[];
 	group?: TraceGroup;
@@ -722,21 +722,21 @@ function changeView(input: {
 	const sprintIds = input.sprints.flatMap((sprint) =>
 		sprint.participatingChangeIds.includes(id) ? [sprint.id] : [],
 	);
-	const workItemIds = input.workItems.flatMap((item) =>
+	const workUnitIds = input.workUnits.flatMap((item) =>
 		item.owningChangeId === id || item.contributesToChangeIds.includes(id)
 			? [item.id]
 			: [],
 	);
 	const assignmentIds = input.assignments.flatMap((assignment) =>
 		assignment.owningChangeId === id ||
-		workItemIds.includes(assignment.workItemId)
+		workUnitIds.includes(assignment.workUnitId)
 			? [assignment.id]
 			: [],
 	);
 	const changeBlockers = input.blockers.flatMap((blocker) =>
 		blocker.changeId === id ||
 		(blocker.sprintId && sprintIds.includes(blocker.sprintId)) ||
-		(blocker.workItemId && workItemIds.includes(blocker.workItemId))
+		(blocker.workUnitId && workUnitIds.includes(blocker.workUnitId))
 			? [blocker.message]
 			: [],
 	);
@@ -748,8 +748,8 @@ function changeView(input: {
 		changeBlockers,
 	);
 	const realizationStatus = changeRealizationStatus(
-		workItemIds,
-		input.workItems,
+		workUnitIds,
+		input.workUnits,
 		changeBlockers,
 	);
 	const outcomeStatus = outcomeStatusFromEvents(input.group?.events || []);
@@ -767,7 +767,7 @@ function changeView(input: {
 		realizationStatus,
 		outcomeStatus,
 		sprintIds: unique(sprintIds),
-		workItemIds: unique(workItemIds),
+		workUnitIds: unique(workUnitIds),
 		assignmentIds: unique(assignmentIds),
 		blockers: unique(changeBlockers),
 		...(currentLoop ? { currentLoop } : {}),
@@ -810,13 +810,13 @@ function changePlanningStatus(
 }
 
 function changeRealizationStatus(
-	workItemIds: string[],
-	items: WorkStateWorkItem[],
+	workUnitIds: string[],
+	items: WorkStateWorkUnit[],
 	blockers: string[],
 ): WorkStateRealizationStatus {
 	if (blockers.length > 0) return "blocked";
-	if (workItemIds.length === 0) return "not_started";
-	const relevant = items.filter((item) => workItemIds.includes(item.id));
+	if (workUnitIds.length === 0) return "not_started";
+	const relevant = items.filter((item) => workUnitIds.includes(item.id));
 	return relevant.every((item) => item.implemented) ? "realized" : "active";
 }
 
@@ -858,7 +858,7 @@ function nextActionForChange(
 		return "Include approved Change in Planning horizon.";
 	if (realizationStatus === "blocked") return "Resolve implementation blocker.";
 	if (realizationStatus !== "realized")
-		return "Execute and validate ready Work Items.";
+		return "Execute and validate ready Work Units.";
 	if (outcomeStatus === "pending") return "Record outcome disposition.";
 	return undefined;
 }
@@ -879,7 +879,7 @@ function mergeSprint(
 			...current.participatingChangeIds,
 			...next.participatingChangeIds,
 		]),
-		workItemIds: unique([...current.workItemIds, ...next.workItemIds]),
+		workUnitIds: unique([...current.workUnitIds, ...next.workUnitIds]),
 		dependencyIds: unique([...current.dependencyIds, ...next.dependencyIds]),
 		integrationRefs: unique([
 			...current.integrationRefs,
@@ -893,10 +893,10 @@ function mergeSprint(
 	});
 }
 
-function mergeWorkItem(
-	current: WorkStateWorkItem | undefined,
-	next: WorkStateWorkItem,
-): WorkStateWorkItem {
+function mergeWorkUnit(
+	current: WorkStateWorkUnit | undefined,
+	next: WorkStateWorkUnit,
+): WorkStateWorkUnit {
 	if (!current) return next;
 	return {
 		...current,
@@ -935,8 +935,8 @@ function assignmentTerminalStatus(
 	return undefined;
 }
 
-function workItemIdsFromRef(ref: string): string[] {
-	const subref = /#(?:work-unit|work-item):([^#]+)$/.exec(ref);
+function workUnitIdsFromRef(ref: string): string[] {
+	const subref = /#(?:work-unit|work-unit):([^#]+)$/.exec(ref);
 	if (subref) return [subref[1]];
 	return [ref];
 }
@@ -972,7 +972,7 @@ function projectedUiPreviewTargets(value: unknown): UiPreviewTargetBinding[] {
 				targetDigest: text(target.targetDigest),
 				profileId: text(target.profileId),
 				profileDigest: text(target.profileDigest),
-				workItemIds: stringList(target.workItemIds),
+				workUnitIds: stringList(target.workUnitIds),
 				contributingChangeIds: stringList(target.contributingChangeIds),
 				required:
 					typeof target.required === "boolean" ? target.required : undefined,

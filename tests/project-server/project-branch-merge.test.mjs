@@ -57,7 +57,7 @@ async function mergeFixture(suffix) {
 	await git(root, [
 		"commit",
 		"-qm",
-		`codewiki: integrate ${seeded.workItemId}`,
+		`codewiki: integrate ${seeded.workUnitId}`,
 		"-m",
 		`CodeWiki-Integration-Job: ${integrationJobId}`,
 	]);
@@ -90,7 +90,7 @@ async function mergeFixture(suffix) {
 			schemaVersion: 1,
 			runtimeJobId: integrationJobId,
 			traceId: seeded.traceId,
-			workItemId: seeded.workItemId,
+			workUnitId: seeded.workUnitId,
 			claimId: `claim-${suffix}`,
 			assignmentId: `assignment-${suffix}`,
 			workerId: `worker-${suffix}`,
@@ -237,8 +237,8 @@ test("exact Integration commit fast-forwards project branch and appends merge pr
 			false,
 		);
 		const workState = await buildProjectWorkState({ repoRoot: context.root });
-		const item = workState.workItems.find(
-			(candidate) => candidate.id === context.seeded.workItemId,
+		const item = workState.workUnits.find(
+			(candidate) => candidate.id === context.seeded.workUnitId,
 		);
 		assert.deepEqual(item.mergeProofs, [
 			{

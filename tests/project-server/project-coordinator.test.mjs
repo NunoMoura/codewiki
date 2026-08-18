@@ -214,7 +214,7 @@ test("project coordinator serializes Planning and overlapping target resources",
 	}
 });
 
-test("project coordinator holds conflicting Work Items while starting independent work", async () => {
+test("project coordinator holds conflicting Work Units while starting independent work", async () => {
 	const root = mkdtempSync(join(tmpdir(), "codewiki-coordinator-workers-"));
 	try {
 		const coordinator = new ProjectCoordinator(root, {
@@ -228,7 +228,7 @@ test("project coordinator holds conflicting Work Items while starting independen
 		let overlappingStarted = false;
 		const shared = coordinator.schedule({
 			idempotencyKey: "assignment:shared",
-			lane: { kind: "assignment", workItemId: "WI-shared" },
+			lane: { kind: "assignment", workUnitId: "WI-shared" },
 			conflictRefs: ["path:src/shared.ts"],
 			async run() {
 				sharedStarted.resolve();
@@ -238,7 +238,7 @@ test("project coordinator holds conflicting Work Items while starting independen
 		});
 		const independent = coordinator.schedule({
 			idempotencyKey: "assignment:independent",
-			lane: { kind: "assignment", workItemId: "WI-independent" },
+			lane: { kind: "assignment", workUnitId: "WI-independent" },
 			conflictRefs: ["path:src/other.ts"],
 			run() {
 				independentStarted.resolve();
@@ -247,7 +247,7 @@ test("project coordinator holds conflicting Work Items while starting independen
 		});
 		const overlapping = coordinator.schedule({
 			idempotencyKey: "assignment:overlapping",
-			lane: { kind: "assignment", workItemId: "WI-overlapping" },
+			lane: { kind: "assignment", workUnitId: "WI-overlapping" },
 			conflictRefs: ["path:src/shared.ts"],
 			run() {
 				overlappingStarted = true;
@@ -266,7 +266,7 @@ test("project coordinator holds conflicting Work Items while starting independen
 				),
 			{
 				idempotencyKey: "assignment:overlapping",
-				lane: { kind: "assignment", workItemId: "WI-overlapping" },
+				lane: { kind: "assignment", workUnitId: "WI-overlapping" },
 				state: "queued",
 				heldReason: "conflict",
 				blockingJobKeys: ["assignment:shared"],

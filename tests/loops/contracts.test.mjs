@@ -37,12 +37,12 @@ describe("Loop-owned candidate content admission", () => {
 		assert.deepEqual(
 			parsePlanningCandidateContent({
 				sprints: [],
-				workItems: [],
+				workUnits: [],
 				rationale: "No worker-ready work yet.",
 			}),
 			{
 				sprints: [],
-				workItems: [],
+				workUnits: [],
 				rationale: "No worker-ready work yet.",
 			},
 		);
@@ -50,7 +50,7 @@ describe("Loop-owned candidate content admission", () => {
 			() =>
 				parsePlanningCandidateContent({
 					sprints: [],
-					workItems: [],
+					workUnits: [],
 					rationale: "Caller attempted provenance control.",
 					actor: "model:planner",
 					createdAt: "2026-08-11T00:00:00.000Z",
@@ -66,7 +66,7 @@ describe("Loop-owned candidate content admission", () => {
 					id: "SPR-1",
 					goal: "Deliver exact candidate admission.",
 					participatingChangeIds: ["CHG-1"],
-					workItemIds: ["WI-1"],
+					workUnitIds: ["WI-1"],
 					rollbackBoundary: "Revert candidate admission together.",
 					dependsOn: [],
 					integrationRefs: [],
@@ -76,7 +76,7 @@ describe("Loop-owned candidate content admission", () => {
 							targetDigest: `sha256:${"a".repeat(64)}`,
 							profileId: "web",
 							profileDigest: `sha256:${"b".repeat(64)}`,
-							workItemIds: ["WI-1"],
+							workUnitIds: ["WI-1"],
 							contributingChangeIds: ["CHG-1"],
 							required: true,
 							activation: "implementation",
@@ -85,7 +85,7 @@ describe("Loop-owned candidate content admission", () => {
 					],
 				},
 			],
-			workItems: [
+			workUnits: [
 				{
 					id: "WI-1",
 					sprintId: "SPR-1",
@@ -109,18 +109,18 @@ describe("Loop-owned candidate content admission", () => {
 			() =>
 				parsePlanningCandidateContent({
 					...candidate,
-					workItems: [
-						{ ...candidate.workItems[0], planning_refs: ["forged"] },
+					workUnits: [
+						{ ...candidate.workUnits[0], planning_refs: ["forged"] },
 					],
 				}),
-			/Project Server planning candidate received unsupported field planning_refs at \/workItems\/0\./,
+			/Project Server planning candidate received unsupported field planning_refs at \/workUnits\/0\./,
 		);
 		assert.throws(
 			() =>
 				parsePlanningCandidateContent({
 					...candidate,
-					workItems: [
-						{ ...candidate.workItems[0], acceptanceCriteria: ["legacy"] },
+					workUnits: [
+						{ ...candidate.workUnits[0], acceptanceCriteria: ["legacy"] },
 					],
 				}),
 			/Project Server planning candidate received unsupported field acceptanceCriteria/,
@@ -147,7 +147,7 @@ describe("Loop-owned candidate content admission", () => {
 		const candidate = {
 			evidence: [
 				{
-					workItemId: "WI-1",
+					workUnitId: "WI-1",
 					codePaths: ["src/loops/implementation/candidate-content.ts"],
 					commandResults: [
 						{
@@ -186,14 +186,14 @@ describe("Loop-owned candidate content admission", () => {
 		assert.throws(
 			() =>
 				parseImplementationCandidateContent({
-					evidence: [{ workItemId: "WI-1", changed_files: ["forged"] }],
+					evidence: [{ workUnitId: "WI-1", changed_files: ["forged"] }],
 				}),
 			/Implementation evidence received unsupported field changed_files\./,
 		);
 		assert.throws(
 			() =>
 				parseImplementationCandidateContent({
-					evidence: [{ workItemId: "WI-1", checkResults: [] }],
+					evidence: [{ workUnitId: "WI-1", checkResults: [] }],
 				}),
 			/Implementation evidence received unsupported field checkResults\./,
 		);
@@ -202,7 +202,7 @@ describe("Loop-owned candidate content admission", () => {
 				parseImplementationCandidateContent({
 					evidence: [
 						{
-							workItemId: "WI-1",
+							workUnitId: "WI-1",
 							commandResults: [{ criterionId: "legacy" }],
 						},
 					],
@@ -214,7 +214,7 @@ describe("Loop-owned candidate content admission", () => {
 				parseImplementationCandidateContent({
 					evidence: [
 						{
-							workItemId: "WI-1",
+							workUnitId: "WI-1",
 							commandResults: [{ acceptance_requirement_id: "AR-1" }],
 						},
 					],
@@ -231,7 +231,7 @@ describe("Review attempt identity", () => {
 		integratedTree: "b".repeat(40),
 		targetBranch: "main",
 		changeIds: ["change:CHG-2", "change:CHG-1"],
-		workItemIds: ["WI-2", "WI-1"],
+		workUnitIds: ["WI-2", "WI-1"],
 		checkPackSnapshotDigest: digest("c"),
 		providerReceiptDigests: [digest("e"), digest("d")],
 		evidenceRecordDigests: [digest("f")],
@@ -242,13 +242,13 @@ describe("Review attempt identity", () => {
 		const reordered = createReviewAttempt({
 			...input(),
 			changeIds: [...input().changeIds].reverse(),
-			workItemIds: [...input().workItemIds].reverse(),
+			workUnitIds: [...input().workUnitIds].reverse(),
 			providerReceiptDigests: [...input().providerReceiptDigests].reverse(),
 		});
 
-		assert.equal(attempt.schemaVersion, "1.0.0");
+		assert.equal(attempt.schemaVersion, "2.0.0");
 		assert.deepEqual(attempt.changeIds, ["change:CHG-1", "change:CHG-2"]);
-		assert.deepEqual(attempt.workItemIds, ["WI-1", "WI-2"]);
+		assert.deepEqual(attempt.workUnitIds, ["WI-1", "WI-2"]);
 		assert.equal(attempt.attemptDigest, reordered.attemptDigest);
 		assert.equal(Object.isFrozen(attempt), true);
 		assert.equal(Object.isFrozen(attempt.changeIds), true);

@@ -27,7 +27,7 @@ function packetDirectory(root) {
 
 function packet(root, suffix, status) {
 	const claimId = `claim:${suffix}`;
-	const workItemId = `WU-${suffix}`;
+	const workUnitId = `WU-${suffix}`;
 	const worktreePath = join(
 		root,
 		".codewiki",
@@ -60,10 +60,10 @@ function packet(root, suffix, status) {
 				repoRoot: root,
 				assignmentId: claimId,
 				workerId: `worker:${suffix}`,
-				workItemId,
+				workUnitId,
 				claimId,
 				traceId: `TRACE-${suffix}`,
-				planningRefs: [`TRACE-${suffix}:planning:iteration:1#work:${workItemId}`],
+				planningRefs: [`TRACE-${suffix}:planning:iteration:1#work:${workUnitId}`],
 				traceRefs: [`trace:TRACE-${suffix}`],
 				componentRefs: ["runtime"],
 				pathScopes: [`src/${suffix}/**`],
@@ -71,13 +71,13 @@ function packet(root, suffix, status) {
 				sourceBaseRef: `git:${"a".repeat(40)}`,
 				contextDigest: `sha256:${"c".repeat(64)}`,
 				producerSkillReceipt: producerSkills().receipt,
-				prompt: `Implement ${workItemId}`,
+				prompt: `Implement ${workUnitId}`,
 				reportPath,
 				isolation: { kind: "worktree", ref: `worktree:${suffix}` },
 				worktree,
 			},
 			worktreePlan: {
-				workUnitId: workItemId,
+				workUnitId: workUnitId,
 				traceId: `TRACE-${suffix}`,
 				workerId: `worker:${suffix}`,
 				required: true,
@@ -94,7 +94,7 @@ function packet(root, suffix, status) {
 		report: {
 			assignmentId: claimId,
 			workerId: `worker:${suffix}`,
-			workItemId,
+			workUnitId,
 			status,
 			reportRef: `runtime-worker-report:${suffix}`,
 		},

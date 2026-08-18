@@ -126,12 +126,12 @@ export function planningEpoch(operation = proposedOperation()) {
 				id: "sprint-protocol",
 				goal: "Land deterministic protocol foundation.",
 				participantChangeIds: [operation.body.changeId],
-				workItemIds: ["work-protocol"],
+				workUnitIds: ["work-protocol"],
 				dependsOnSprintIds: [],
 				integrationBoundary: "One reviewed protocol commit.",
 			},
 		],
-		workItems: [
+		workUnits: [
 			{
 				id: "work-protocol",
 				sprintId: "sprint-protocol",
@@ -139,7 +139,7 @@ export function planningEpoch(operation = proposedOperation()) {
 				outcome: "Exact schemas and identities are executable.",
 				owningChange: participant,
 				contributingChanges: [],
-				dependsOnWorkItemIds: [],
+				dependsOnWorkUnitIds: [],
 				acceptanceRequirements: [
 					{
 						id: "protocol-tests",

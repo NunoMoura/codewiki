@@ -20,7 +20,7 @@ import { changeContentDigest } from "../../changes/digest.ts";
 import { changeTraceId } from "../../changes/trace/change-record.ts";
 import {
 	evaluatePortfolioPlanning,
-	type PortfolioWorkItemInput,
+	type PortfolioWorkUnitInput,
 	type SprintPlanInput,
 } from "../../loops/planning/portfolio-quality.ts";
 import { normalizeUiPreviewTargetBinding } from "../../preview/binding.ts";
@@ -34,7 +34,7 @@ export interface RunWikiPlanInput {
 	expectedWorkStateDigest: string;
 	expectedChangeIds: string[];
 	sprints: SprintPlanInput[];
-	workItems: PortfolioWorkItemInput[];
+	workUnits: PortfolioWorkUnitInput[];
 	actor: string;
 	rationale: string;
 	createdAt?: string;
@@ -45,7 +45,7 @@ export interface RunWikiPlanInput {
 }
 
 export interface PlanningEpochReport {
-	schemaVersion: 1;
+	schemaVersion: 2;
 	planningEpochId: string;
 	digest: string;
 	observedWorkStateDigest: string;
@@ -56,7 +56,7 @@ export interface PlanningEpochReport {
 		changeDigest: string;
 	}>;
 	sprints: SprintPlanInput[];
-	workItems: PortfolioWorkItemInput[];
+	workUnits: PortfolioWorkUnitInput[];
 	qualityRef: string;
 	qualityStandards: LoopQualityStandardResult[];
 	exit: { status: "continue" | "exit" };
@@ -81,7 +81,7 @@ const INPUT_KEYS = [
 	"expectedWorkStateDigest",
 	"expectedChangeIds",
 	"sprints",
-	"workItems",
+	"workUnits",
 	"actor",
 	"rationale",
 	"createdAt",
@@ -134,15 +134,15 @@ async function runWikiPlanForSelectedChanges(
 	}
 	assertApprovedChanges(workState, selectedChangeIds);
 	const sprints = normalizedSprints(input.sprints);
-	const workItems = normalizedWorkItems(input.workItems);
+	const workUnits = normalizedWorkUnits(input.workUnits);
 	const quality = evaluatePortfolioPlanning({
 		changeIds: selectedChangeIds,
 		sprints,
-		workItems,
+		workUnits,
 		workState,
 	});
 	const unsigned = {
-		schemaVersion: 1 as const,
+		schemaVersion: 2 as const,
 		observedWorkStateDigest: workState.snapshotDigest,
 		participantChanges: selectedChangeIds.map((changeId) => {
 			const change = requiredWorkStateChange(workState, changeId);
@@ -154,7 +154,7 @@ async function runWikiPlanForSelectedChanges(
 			};
 		}),
 		sprints,
-		workItems,
+		workUnits,
 		qualityRef: quality.qualityRef,
 		qualityStandards: quality.standards,
 		exit: {
@@ -219,7 +219,7 @@ function planningEvent(
 		observedWorkStateDigest: report.observedWorkStateDigest,
 		participantChanges: report.participantChanges,
 		sprints: report.sprints,
-		workItems: report.workItems.map((item) => ({
+		workUnits: report.workUnits.map((item) => ({
 			...item,
 			acceptanceCriteria: item.acceptanceCriteria.map((text, index) => ({
 				id: `AC-${item.id}-${index + 1}`,
@@ -250,7 +250,7 @@ function planningEvent(
 						`ui-preview-target:${target.targetId}@${target.targetDigest}`,
 				),
 			),
-			...report.workItems.map((item) => `work:${item.id}`),
+			...report.workUnits.map((item) => `work:${item.id}`),
 		],
 		createdAt,
 		iteration: events.filter((event) => event.loop === "planning").length + 1,
@@ -264,7 +264,7 @@ function planningEvent(
 				...(standard.refs ? { refs: standard.refs } : {}),
 			})),
 			targetLoop: "implementation",
-			nextAction: "Claim ready Work Items under Sprint integration policy.",
+			nextAction: "Claim ready Work Units under Sprint integration policy.",
 		},
 		progress: {
 			changedRefs: [
@@ -275,7 +275,7 @@ function planningEvent(
 							`ui-preview-target:${target.targetId}@${target.targetDigest}`,
 					),
 				),
-				...report.workItems.map((item) => `work:${item.id}`),
+				...report.workUnits.map((item) => `work:${item.id}`),
 			],
 		},
 		data: {
@@ -376,7 +376,7 @@ function normalizedSprints(values: SprintPlanInput[]): SprintPlanInput[] {
 			value.participatingChangeIds,
 			"sprints.participatingChangeIds",
 		),
-		workItemIds: stringArray(value.workItemIds, "sprints.workItemIds"),
+		workUnitIds: stringArray(value.workUnitIds, "sprints.workUnitIds"),
 		rollbackBoundary: requiredText(
 			value.rollbackBoundary,
 			"sprints.rollbackBoundary",
@@ -401,39 +401,39 @@ function normalizedSprints(values: SprintPlanInput[]): SprintPlanInput[] {
 	return sprints.sort((left, right) => left.id.localeCompare(right.id));
 }
 
-function normalizedWorkItems(
-	values: PortfolioWorkItemInput[],
-): PortfolioWorkItemInput[] {
+function normalizedWorkUnits(
+	values: PortfolioWorkUnitInput[],
+): PortfolioWorkUnitInput[] {
 	const items = values.map((value) => ({
-		id: requiredText(value.id, "workItems.id"),
-		sprintId: requiredText(value.sprintId, "workItems.sprintId"),
+		id: requiredText(value.id, "workUnits.id"),
+		sprintId: requiredText(value.sprintId, "workUnits.sprintId"),
 		owningChangeId: requiredText(
 			value.owningChangeId,
-			"workItems.owningChangeId",
+			"workUnits.owningChangeId",
 		),
 		contributingChangeIds: stringArray(
 			value.contributingChangeIds,
-			"workItems.contributingChangeIds",
+			"workUnits.contributingChangeIds",
 		),
-		title: requiredText(value.title, "workItems.title"),
-		outcome: requiredText(value.outcome, "workItems.outcome"),
+		title: requiredText(value.title, "workUnits.title"),
+		outcome: requiredText(value.outcome, "workUnits.outcome"),
 		technicalRequirements: stringArray(
 			value.technicalRequirements,
-			"workItems.technicalRequirements",
+			"workUnits.technicalRequirements",
 		),
 		acceptanceCriteria: stringArray(
 			value.acceptanceCriteria,
-			"workItems.acceptanceCriteria",
+			"workUnits.acceptanceCriteria",
 		),
-		componentRefs: stringArray(value.componentRefs, "workItems.componentRefs"),
-		pathScopes: stringArray(value.pathScopes, "workItems.pathScopes"),
-		verification: stringArray(value.verification, "workItems.verification"),
-		workerProfile: requiredText(value.workerProfile, "workItems.workerProfile"),
-		dependsOn: stringArray(value.dependsOn, "workItems.dependsOn"),
+		componentRefs: stringArray(value.componentRefs, "workUnits.componentRefs"),
+		pathScopes: stringArray(value.pathScopes, "workUnits.pathScopes"),
+		verification: stringArray(value.verification, "workUnits.verification"),
+		workerProfile: requiredText(value.workerProfile, "workUnits.workerProfile"),
+		dependsOn: stringArray(value.dependsOn, "workUnits.dependsOn"),
 	}));
 	assertUnique(
 		items.map((item) => item.id),
-		"Work Item ids",
+		"Work Unit ids",
 	);
 	return items.sort((left, right) => left.id.localeCompare(right.id));
 }
@@ -464,8 +464,8 @@ function assertInput(input: RunWikiPlanInput): void {
 	stringArray(input.expectedChangeIds, "expectedChangeIds");
 	if (!Array.isArray(input.sprints))
 		throw new Error("wiki_plan sprints must be an array.");
-	if (!Array.isArray(input.workItems))
-		throw new Error("wiki_plan workItems must be an array.");
+	if (!Array.isArray(input.workUnits))
+		throw new Error("wiki_plan workUnits must be an array.");
 	requiredText(input.actor, "actor");
 	requiredText(input.rationale, "rationale");
 	assertProjectServerSemanticJobId(input.runtimeJobId, "wiki_plan");

@@ -25,7 +25,7 @@ const AUTHENTICATION_EVIDENCE_ID = "EVD-intake-authenticated-source";
 function material(submissionId, overrides = {}) {
 	return {
 		protocolId: "codewiki.change-intake-material",
-		protocolVersion: "1.1.0",
+		protocolVersion: "2.0.0",
 		materialType: "user_suggestion",
 		binding: {channel: "api", submissionId},
 		content: {
@@ -149,7 +149,7 @@ describe("Project Server-owned Change intake admission", () => {
 				proposedOperation,
 				"change.proposed",
 			);
-			assert.equal(proposedOperation.body.protocol.version, "3.0.0");
+			assert.equal(proposedOperation.body.protocol.version, "4.0.0");
 			assert.equal(
 				proposedPayload.intakeMaterial.digest,
 				created.materialDigest,
