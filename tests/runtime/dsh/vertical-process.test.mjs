@@ -8,6 +8,13 @@ import {after, describe, it} from "node:test";
 import {buildDshRuntimeCandidate} from "../../../scripts/build-dsh-runtime.mjs";
 
 import {
+	STAGE_CONTEXT_QUERY_ENGINE_DIGEST,
+	STAGE_CONTEXT_QUERY_ENGINE_ID,
+	STAGE_CONTEXT_QUERY_ENGINE_VERSION,
+	createStageContextBundle,
+} from "../../../src/runtime/context/bundle.ts";
+import {createStageContextSnapshot} from "../../../src/runtime/context/contracts.ts";
+import {
 	RUN_PROTOCOL,
 	createQualifiedRuntimeBuild,
 	createRunRequest,
@@ -19,6 +26,9 @@ import {
 	createStoredNodeRuntimeBuildResolver,
 	qualifyStoredRuntimeBuild,
 } from "../../../src/runtime/builds/store.ts";
+import {
+	DSH_STAGE_CONTEXT_TOOL_SET_DIGEST,
+} from "../../../src/runtime/dsh/context-tools.ts";
 import {readDshRuntimeProvenance} from "../../../src/runtime/dsh/provenance.ts";
 import {
 	createNodeRunProcessManager,
@@ -37,6 +47,13 @@ const replayFixturePath = resolve(
 	"fixtures/replay-session.jsonl",
 );
 const replayFixtureDigest = sha256Digest(await readFile(replayFixturePath));
+const stageContextReplayFixturePath = resolve(
+	testDirectory,
+	"fixtures/replay-stage-context.jsonl",
+);
+const stageContextReplayFixtureDigest = sha256Digest(
+	await readFile(stageContextReplayFixturePath),
+);
 const packageLockPath = resolve(repositoryRoot, "package-lock.json");
 const temporaryDirectories = [];
 const candidateRoot = await mkdtemp(join(tmpdir(), "codewiki-dsh-candidate-"));
@@ -116,6 +133,29 @@ describe("DSH Runtime vertical process", () => {
 		}
 	});
 
+	it("transports immutable Stage Context into admitted tools across authenticated process boundary", async () => {
+		const fixture = await runtimeFixture("context", {admitted: true});
+		const runtime = createRuntime({processManager: fixture.processManager});
+		try {
+			const handle = await runtime.start(fixture.request);
+			const receipt = await runtime.waitForReceipt(handle);
+			assert.equal(receipt.outcome, "completed");
+			assert.equal(
+				receipt.outputDigest,
+				canonicalJsonDigest({text: "Stage Context query complete."}),
+			);
+			assert.ok(receipt.executionLedgerDigest);
+			assert.deepEqual(receipt.operationalGaps, []);
+			const rawLogPath = await onlyJsonlFile(fixture.sessionRoot);
+			const rawLog = await readFile(rawLogPath, "utf8");
+			assert.match(rawLog, /query_stage_context/);
+			assert.match(rawLog, /Bounded execution mechanics/);
+			assert.match(rawLog, /Stage Context query complete\./);
+		} finally {
+			await runtime.shutdown();
+		}
+	});
+
 	it("creates no receipt when bound static input bytes are changed", async () => {
 		const fixture = await runtimeFixture("tampered");
 		await writeFile(
@@ -135,7 +175,7 @@ describe("DSH Runtime vertical process", () => {
 	});
 });
 
-async function runtimeFixture(suffix) {
+async function runtimeFixture(suffix, options = {}) {
 	const root = await mkdtemp(join(tmpdir(), `codewiki-dsh-process-${suffix}-`));
 	temporaryDirectories.push(root);
 	const stateRoot = join(root, "runtime-state");
@@ -154,6 +194,14 @@ async function runtimeFixture(suffix) {
 		generatedAt: "2026-08-17T20:02:00.000Z",
 	});
 	const binding = await bindActiveStoredRuntimeBuild({stateRoot});
+	const runId = `run-dsh-process-${suffix}`;
+	const stageContextBundle = options.admitted ? processContextBundle(runId) : null;
+	const selectedReplayFixturePath = options.admitted
+		? stageContextReplayFixturePath
+		: replayFixturePath;
+	const selectedReplayFixtureDigest = options.admitted
+		? stageContextReplayFixtureDigest
+		: replayFixtureDigest;
 	const manifest = Object.freeze({
 		schemaVersion: "1.0.0",
 		runtimeBuildDigest: binding.buildDigest,
@@ -162,16 +210,18 @@ async function runtimeFixture(suffix) {
 		prompt: "Return qualification text.",
 		workspacePath: root,
 		sessionRoot,
-		replayFixturePath,
-		replayFixtureDigest,
+		stageContextBundle,
+		replayFixturePath: selectedReplayFixturePath,
+		replayFixtureDigest: selectedReplayFixtureDigest,
 	});
 	const manifestPath = join(root, "input-manifest.json");
 	await writeFile(manifestPath, canonicalJson(manifest));
 	const request = runRequest({
-		runId: `run-dsh-process-${suffix}`,
+		runId,
 		sessionId: `session-dsh-process-${suffix}`,
 		buildDigest: binding.buildDigest,
 		staticInputManifestDigest: canonicalJsonDigest(manifest),
+		stageContextBundle,
 	});
 	const storedResolver = createStoredNodeRuntimeBuildResolver({stateRoot});
 	const processManager = createNodeRunProcessManager({
@@ -195,7 +245,13 @@ async function runtimeFixture(suffix) {
 	};
 }
 
-function runRequest({runId, sessionId, buildDigest, staticInputManifestDigest}) {
+function runRequest({
+	runId,
+	sessionId,
+	buildDigest,
+	staticInputManifestDigest,
+	stageContextBundle,
+}) {
 	const createdAt = new Date(Date.now() - 1_000).toISOString();
 	const deadlineAt = new Date(Date.now() + 30_000).toISOString();
 	const optionsDigest = digest("model-options");
@@ -219,13 +275,15 @@ function runRequest({runId, sessionId, buildDigest, staticInputManifestDigest}) 
 		runtimeBuild: {buildDigest, runProtocolVersion: RUN_PROTOCOL.version},
 		session: {mode: "create", sessionId, resumeLog: null},
 		inputs: {
-			stageContextDigest: digest("stage-context"),
+			stageContextDigest: stageContextBundle?.context.contextDigest ?? digest("stage-context"),
 			staticInputManifestDigest,
 			systemPromptDigest: canonicalJsonDigest("CodeWiki deterministic qualification"),
 			promptDigest: canonicalJsonDigest("Return qualification text."),
 			producerSkillSetDigest: null,
-			toolMode: "none",
-			toolSetDigest: digest("no-tools"),
+			toolMode: stageContextBundle ? "admitted" : "none",
+			toolSetDigest: stageContextBundle
+				? DSH_STAGE_CONTEXT_TOOL_SET_DIGEST
+				: digest("no-tools"),
 			modelRoute,
 		},
 		workspace: {
@@ -234,13 +292,60 @@ function runRequest({runId, sessionId, buildDigest, staticInputManifestDigest}) 
 		},
 		budget: {
 			timeoutMs: 30_000,
-			maxModelRequests: 1,
-			maxToolCalls: 0,
+			maxModelRequests: stageContextBundle ? 2 : 1,
+			maxToolCalls: stageContextBundle ? 2 : 0,
 			maxInputTokens: 1_024,
 			maxOutputTokens: 64,
 		},
 		createdAt,
 		deadlineAt,
+	});
+}
+
+function processContextBundle(runId) {
+	const context = createStageContextSnapshot({
+		stage: "decision",
+		subject: {id: `subject-${runId}`, digest: digest("subject")},
+		changeRevisionDigest: digest("revision"),
+		sources: {
+			workState: digest("work-state"),
+			knowledge: digest("knowledge"),
+			alignment: digest("alignment"),
+			repository: digest("repository"),
+			change: digest("change"),
+			evidence: digest("evidence"),
+			result: digest("result"),
+		},
+		producerSkillSetDigest: null,
+		gateFeedbackDigest: null,
+		capturedAt: "2026-08-17T20:00:00.000Z",
+		stale: false,
+		coverage: {status: "complete", unknowns: []},
+		queryEngine: {
+			id: STAGE_CONTEXT_QUERY_ENGINE_ID,
+			version: STAGE_CONTEXT_QUERY_ENGINE_VERSION,
+			digest: STAGE_CONTEXT_QUERY_ENGINE_DIGEST,
+		},
+	});
+	return createStageContextBundle({
+		context,
+		routes: [{
+			owner: "knowledge",
+			operation: "concepts",
+			arguments: {ids: ["runtime"]},
+			items: [{
+				value: {id: "runtime", summary: "Bounded execution mechanics."},
+				sourceReferences: [{
+					owner: "knowledge",
+					id: "runtime",
+					digest: digest("runtime"),
+					location: "knowledge/runtime.md",
+				}],
+			}],
+			coverage: "complete",
+			unknowns: [],
+			stale: false,
+		}],
 	});
 }
 

@@ -230,9 +230,9 @@ No compatibility exports preserve former `src/server/**`, `src/execution/**`, or
 - [x] Build repository-owned production DSH Adapter and exact reproducible Runtime Build closure.
 - [x] Establish auditable reviewed-source versus executed-package provenance.
 - [ ] Qualify Decision, Planning, Implementation, Review, tool-free Model Check, delegated harness, cancellation, compaction, crash recovery, hostile ambient configuration, and two-build rollback scenarios.
-- [ ] Implement durable Execution Ledger, raw-log retention, exact Stage Context, and state-aware compaction.
-- [ ] Implement durable Run Receipt persistence and receipt-commit compare-and-swap.
-- [ ] Implement stage-oriented MCP tools and bounded declarative context queries.
+- [ ] Complete state-aware compaction; durable Execution Ledger storage, raw-log retention, and exact Stage Context contracts are implemented.
+- [x] Implement durable Run Receipt persistence and receipt-commit compare-and-swap.
+- [ ] Implement stage-oriented MCP tools; immutable bounded declarative Stage Context queries and fixed native DSH direct/batch query tools are implemented.
 - [ ] Split native Decision execution into recoverable Candidate production, Gate execution, feedback, confirmation, and lifecycle commit.
 - [ ] Implement Check Author SDK, Outcome Diagnostics, and npm/Git/local Pack transport.
 - [ ] Prove DSH parity, then delete `src/runtime/pi/**` without selector or fallback.

@@ -15,6 +15,8 @@ As an agent, I want compact current stage context and lazy exact queries so I ca
 - One immutable stage-context envelope binds exact subject, Change revision, repository snapshot, WorkState, Knowledge, Alignment, Pack Skills, Gate feedback, coverage, and staleness.
 - WorkState answers current coordination, guards, attempts, feedback, and pending authority; Knowledge answers accepted intent; Alignment answers bounded impact, provenance, and relationships.
 - Typed direct and declarative batch queries expand context lazily with deterministic ordering, complete snapshot identity, source references, coverage, unknowns, truncation, cursor position, query-engine identity, and staleness.
+- Tool-admitted DSH Runs expose only the fixed digest-bound `query_stage_context` and `query_stage_context_batch` tools; both resolve pre-admitted routes from the authenticated immutable bundle and never receive a project storage handle.
+- Unknown routes return explicit unknown coverage, while malformed or cross-route cursors fail closed without ambient lookup.
 - Runs expose no live-working-tree fallback, ambient project read, network lookup, credential access, or unlogged dynamic context.
 - Every CodeWiki-controlled model-visible input and query is bound to the Run's Execution Ledger and receipt; delegated routes identify any context that cannot be proven inside the child.
 - Compaction preserves exact history, rehydrates canonical facts from their owners, and summarizes only unresolved conversational state plus a recent tail.

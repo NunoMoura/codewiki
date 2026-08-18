@@ -79,7 +79,9 @@ Delegated Runs launch Claude Code, Codex, ACP, or another exact adapter. Runtime
 
 ## Context, ledger, and compaction
 
-DSH-backed Runs receive one immutable Stage Context over exact WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result snapshots. Bounded direct and batch queries carry deterministic order, query and snapshot digests, source refs, coverage, unknowns, truncation, cursor, engine identity, and staleness. No live-tree, ambient filesystem, network, environment, credential, or unlogged context fallback exists.
+DSH-backed Runs receive one immutable Stage Context over exact WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result snapshots. Its bundle contains only digest-bound declarative routes and canonical items, never callbacks or project handles. Direct and batch results bind deterministic order, query and snapshot digests, source refs, coverage, unknowns, truncation, cursor, engine, and staleness. No ambient fallback exists.
+
+Tool-admitted Runs expose only fixed-digest `query_stage_context` and `query_stage_context_batch`. Both resolve the authenticated bundle; unknown routes report unknown coverage and invalid cursors fail closed. Tool-free Runs receive neither bundle nor tools.
 
 Every CodeWiki-controlled model-visible input, query, replacement, usage record, output, and cancellation fact enters the append-only Execution Ledger. Ledger headers bind the exact Run Request, Runtime Build, Agent Session, Stage Context, static inputs, model route, tools, and Skills. Entries retain canonical payloads in contiguous sequence with payload digests and a previous-entry digest chain. Durable append requires expected-head compare-and-swap; restart recovery revalidates the complete chain rather than trusting filenames or cached state.
 

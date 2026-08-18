@@ -5,7 +5,17 @@ import {dirname, join, resolve} from "node:path";
 import {fileURLToPath} from "node:url";
 import {after, describe, it} from "node:test";
 
+import {
+	STAGE_CONTEXT_QUERY_ENGINE_DIGEST,
+	STAGE_CONTEXT_QUERY_ENGINE_ID,
+	STAGE_CONTEXT_QUERY_ENGINE_VERSION,
+	createStageContextBundle,
+} from "../../../src/runtime/context/bundle.ts";
+import {createStageContextSnapshot} from "../../../src/runtime/context/contracts.ts";
 import {runDshAgent} from "../../../src/runtime/dsh/adapter.ts";
+import {
+	DSH_STAGE_CONTEXT_TOOL_SET_DIGEST,
+} from "../../../src/runtime/dsh/context-tools.ts";
 import {createDshReplayModelInstaller} from "../../../src/runtime/dsh/replay.ts";
 import {createRunRequest} from "../../../src/runtime/contracts.ts";
 import {
@@ -18,6 +28,11 @@ const fixturePath = resolve(
 	"fixtures/replay-session.jsonl",
 );
 const fixtureDigest = sha256Digest(await readFile(fixturePath));
+const stageContextFixturePath = resolve(
+	dirname(fileURLToPath(import.meta.url)),
+	"fixtures/replay-stage-context.jsonl",
+);
+const stageContextFixtureDigest = sha256Digest(await readFile(stageContextFixturePath));
 const temporaryDirectories = [];
 
 after(async () => {
@@ -91,6 +106,51 @@ describe("CodeWiki DSH Adapter", () => {
 		assert.equal(left.output, right.output);
 	});
 
+	it("executes admitted Stage Context tools and binds exact queries into its ledger", async () => {
+		const root = await temporaryRoot();
+		const stageContextBundle = contextBundle();
+		const request = runRequest(
+			"run-dsh-context",
+			"session-dsh-context",
+			stageContextBundle,
+		);
+		const result = await runDshAgent({
+			request,
+			artifacts: artifacts(root),
+			stageContextBundle,
+			installModelAdapter: createDshReplayModelInstaller({
+				fixturePath: stageContextFixturePath,
+				fixtureDigest: stageContextFixtureDigest,
+			}),
+		});
+
+		assert.equal(result.outcome, "completed");
+		assert.equal(result.output, "Stage Context query complete.");
+		assert.ok(result.sessionEvents.some((event) => event.type === "tool/call"));
+		assert.ok(result.sessionEvents.some((event) => event.type === "tool/result"));
+		assert.equal(result.executionLedgerDigest, result.executionLedger.ledgerDigest);
+		assert.deepEqual(
+			result.executionLedger.entries.map(({kind}) => kind),
+			[
+				"static-input",
+				"tool-call",
+				"stage-context-query",
+				"tool-result",
+				"model-request",
+				"model-request",
+				"model-output",
+				"model-output",
+				"usage",
+				"output",
+			],
+		);
+		const queryEntry = result.executionLedger.entries.find(
+			({kind}) => kind === "stage-context-query",
+		);
+		assert.deepEqual(queryEntry.payload.result.items.map(({id}) => id), ["runtime"]);
+		assert.equal(queryEntry.payload.result.coverage, "complete");
+	});
+
 	it("rejects model-visible bytes that do not match the Run Request", async () => {
 		const root = await temporaryRoot();
 		await assert.rejects(
@@ -122,7 +182,7 @@ function artifacts(root) {
 	};
 }
 
-function runRequest(runId, sessionId) {
+function runRequest(runId, sessionId, stageContextBundle = null) {
 	const optionsDigest = digest("model-options");
 	const modelRoute = {
 		provider: "codewiki-replay",
@@ -147,13 +207,15 @@ function runRequest(runId, sessionId) {
 		},
 		session: {mode: "create", sessionId, resumeLog: null},
 		inputs: {
-			stageContextDigest: digest("stage-context"),
+			stageContextDigest: stageContextBundle?.context.contextDigest ?? digest("stage-context"),
 			staticInputManifestDigest: digest("static-inputs"),
 			systemPromptDigest: canonicalJsonDigest("CodeWiki deterministic qualification"),
 			promptDigest: canonicalJsonDigest("Return qualification text."),
 			producerSkillSetDigest: null,
-			toolMode: "none",
-			toolSetDigest: digest("no-tools"),
+			toolMode: stageContextBundle ? "admitted" : "none",
+			toolSetDigest: stageContextBundle
+				? DSH_STAGE_CONTEXT_TOOL_SET_DIGEST
+				: digest("no-tools"),
 			modelRoute,
 		},
 		workspace: {
@@ -162,13 +224,60 @@ function runRequest(runId, sessionId) {
 		},
 		budget: {
 			timeoutMs: 30_000,
-			maxModelRequests: 1,
-			maxToolCalls: 0,
+			maxModelRequests: stageContextBundle ? 2 : 1,
+			maxToolCalls: stageContextBundle ? 2 : 0,
 			maxInputTokens: 1_024,
 			maxOutputTokens: 64,
 		},
 		createdAt: "2026-08-17T20:00:00.000Z",
 		deadlineAt: "2026-08-17T20:01:00.000Z",
+	});
+}
+
+function contextBundle() {
+	const context = createStageContextSnapshot({
+		stage: "decision",
+		subject: {id: "subject-run-dsh-context", digest: digest("subject")},
+		changeRevisionDigest: digest("revision"),
+		sources: {
+			workState: digest("work-state"),
+			knowledge: digest("knowledge"),
+			alignment: digest("alignment"),
+			repository: digest("repository"),
+			change: digest("change"),
+			evidence: digest("evidence"),
+			result: digest("result"),
+		},
+		producerSkillSetDigest: null,
+		gateFeedbackDigest: null,
+		capturedAt: "2026-08-17T20:00:00.000Z",
+		stale: false,
+		coverage: {status: "complete", unknowns: []},
+		queryEngine: {
+			id: STAGE_CONTEXT_QUERY_ENGINE_ID,
+			version: STAGE_CONTEXT_QUERY_ENGINE_VERSION,
+			digest: STAGE_CONTEXT_QUERY_ENGINE_DIGEST,
+		},
+	});
+	return createStageContextBundle({
+		context,
+		routes: [{
+			owner: "knowledge",
+			operation: "concepts",
+			arguments: {ids: ["runtime"]},
+			items: [{
+				value: {id: "runtime", summary: "Bounded execution mechanics."},
+				sourceReferences: [{
+					owner: "knowledge",
+					id: "runtime",
+					digest: digest("runtime"),
+					location: "knowledge/runtime.md",
+				}],
+			}],
+			coverage: "complete",
+			unknowns: [],
+			stale: false,
+		}],
 	});
 }
 

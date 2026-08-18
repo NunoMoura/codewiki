@@ -1,4 +1,4 @@
-import {createReadStream, createWriteStream, readFileSync} from "node:fs";
+import {createReadStream, createWriteStream, lstatSync, readFileSync} from "node:fs";
 import {once} from "node:events";
 import {isAbsolute, resolve} from "node:path";
 import {pathToFileURL} from "node:url";
@@ -13,6 +13,10 @@ import {
 	type RunHandle,
 	type RunRequest,
 } from "../contracts.ts";
+import {
+	assertStageContextBundle,
+	type StageContextBundle,
+} from "../context/bundle.ts";
 import {runDshAgent} from "../dsh/adapter.ts";
 import {createDshReplayModelInstaller} from "../dsh/replay.ts";
 import {
@@ -30,6 +34,7 @@ import {
 
 const INPUT_MANIFEST_VERSION = "1.0.0" as const;
 const MAX_FRAME_BYTES = 1_048_576;
+const MAX_INPUT_MANIFEST_BYTES = 12 * 1_024 * 1_024;
 
 interface DshRunProcessInputManifest {
 	readonly schemaVersion: typeof INPUT_MANIFEST_VERSION;
@@ -39,6 +44,7 @@ interface DshRunProcessInputManifest {
 	readonly prompt: string;
 	readonly workspacePath: string;
 	readonly sessionRoot: string;
+	readonly stageContextBundle: StageContextBundle | null;
 	readonly replayFixturePath: string;
 	readonly replayFixtureDigest: Sha256Digest;
 }
@@ -58,6 +64,7 @@ function createDshRunProcessInputManifest(
 		"prompt",
 		"workspacePath",
 		"sessionRoot",
+			"stageContextBundle",
 			"replayFixturePath",
 			"replayFixtureDigest",
 		])
@@ -81,8 +88,16 @@ function createDshRunProcessInputManifest(
 	assertText(input.prompt, "DSH prompt", 1_048_576);
 	assertAbsolute(input.workspacePath, "DSH workspace path");
 	assertAbsolute(input.sessionRoot, "DSH session root");
+	const stageContextBundle = input.stageContextBundle === null
+		? null
+		: assertStageContextBundle(input.stageContextBundle);
 	assertAbsolute(input.replayFixturePath, "DSH replay fixture path");
-	return Object.freeze({...input, runtimeBuildDigest, replayFixtureDigest});
+	return Object.freeze({
+		...input,
+		runtimeBuildDigest,
+		replayFixtureDigest,
+		stageContextBundle,
+	});
 }
 
 async function runDshRunProcess(
@@ -127,6 +142,13 @@ function readDshInputManifest(
 	manifestPath: string,
 ): Readonly<DshRunProcessInputManifest> {
 	assertAbsolute(manifestPath, "DSH Run Process input manifest path");
+	const metadata = lstatSync(manifestPath);
+	if (!metadata.isFile()) {
+		throw new Error("DSH Run Process input manifest must be a regular file.");
+	}
+	if (metadata.size > MAX_INPUT_MANIFEST_BYTES) {
+		throw new Error("DSH Run Process input manifest exceeds its byte limit.");
+	}
 	return createDshRunProcessInputManifest(
 		parseJson(readFileSync(manifestPath, "utf8"), "DSH input manifest"),
 	);
@@ -252,6 +274,7 @@ async function executeDshProcessRun(input: {
 			workspacePath: input.manifest.workspacePath,
 			sessionRoot: input.manifest.sessionRoot,
 		},
+		stageContextBundle: input.manifest.stageContextBundle,
 		installModelAdapter: createDshReplayModelInstaller({
 			fixturePath: input.manifest.replayFixturePath,
 			fixtureDigest: input.manifest.replayFixtureDigest,

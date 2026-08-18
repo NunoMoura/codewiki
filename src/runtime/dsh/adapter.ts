@@ -25,6 +25,22 @@ import {
 	type RunRequest,
 } from "../contracts.ts";
 import {
+	assertStageContextBundle,
+	type StageContextBundle,
+} from "../context/bundle.ts";
+import {
+	appendExecutionLedgerEntry,
+	createExecutionLedger,
+	createExecutionLedgerHeader,
+	type ExecutionLedger,
+	type ExecutionLedgerEntryInput,
+} from "../evidence/execution-ledger.ts";
+import {
+	DSH_STAGE_CONTEXT_TOOL_SET_DIGEST,
+	registerDshStageContextTools,
+	type DshStageContextToolRegistration,
+} from "./context-tools.ts";
+import {
 	canonicalJsonDigest,
 	sha256Digest,
 	type Sha256Digest,
@@ -60,6 +76,7 @@ export interface DshRunResult {
 	readonly output: string;
 	readonly outputDigest: Sha256Digest;
 	readonly usageDigest: Sha256Digest | null;
+	readonly executionLedger: ExecutionLedger;
 	readonly executionLedgerDigest: Sha256Digest;
 	readonly rawLog: RunRawLogReference;
 	readonly rawLogPath: string;
@@ -69,6 +86,7 @@ export interface DshRunResult {
 export interface RunDshAgentOptions {
 	readonly request: RunRequest;
 	readonly artifacts: DshRunArtifacts;
+	readonly stageContextBundle?: StageContextBundle | null;
 	readonly installModelAdapter: DshModelAdapterInstaller;
 	readonly signal?: AbortSignal;
 	readonly now?: () => string;
@@ -80,13 +98,24 @@ export async function runDshAgent(
 	assertDshRunOptions(options);
 	const now = options.now ?? (() => new Date().toISOString());
 	const startedAt = now();
-	const execution = await createDshExecution(options);
+	const execution = await createDshExecution(options, startedAt, now);
 	try {
 		const snapshot = await executeDshSession(execution, options);
-		return buildDshRunResult({options, snapshot, startedAt, finishedAt: now()});
+		return buildDshRunResult({
+			options,
+			execution,
+			snapshot,
+			startedAt,
+			finishedAt: now(),
+		});
 	} finally {
 		await disposeDshExecution(execution);
 	}
+}
+
+interface DshExecutionLedger {
+	record(entry: ExecutionLedgerEntryInput): void;
+	current(): ExecutionLedger;
 }
 
 interface DshExecution {
@@ -94,6 +123,8 @@ interface DshExecution {
 	readonly fibers: readonly Fiber[];
 	readonly modelLease: DshModelAdapterLease;
 	readonly agentHandle: AgentHandle;
+	readonly ledger: DshExecutionLedger;
+	readonly toolRegistration?: DshStageContextToolRegistration;
 	readonly removeAbortListener?: () => void;
 }
 
@@ -104,14 +135,78 @@ interface DshSessionSnapshot {
 	readonly rawPath: string;
 }
 
+function createDshExecutionLedger(
+	options: RunDshAgentOptions,
+	startedAt: string,
+): DshExecutionLedger {
+	let ledger = createExecutionLedger(createExecutionLedgerHeader({
+		request: options.request,
+		createdAt: startedAt,
+	}));
+	ledger = appendExecutionLedgerEntry(ledger, {
+		kind: "static-input",
+		occurredAt: startedAt,
+		modelVisible: true,
+		payload: {
+			systemPrompt: options.artifacts.systemPrompt,
+			prompt: options.artifacts.prompt,
+			stageContextBundle: options.stageContextBundle ?? null,
+			inputBindings: options.request.inputs,
+		},
+	});
+	return {
+		record: (entry) => {
+			ledger = appendExecutionLedgerEntry(ledger, entry);
+		},
+		current: () => ledger,
+	};
+}
+
+function recordModelFacts(
+	ledger: DshExecutionLedger,
+	events: readonly SessionEvent[],
+	occurredAt: string,
+): void {
+	for (const event of events) {
+		if (event.type === "request/header" || event.type === "request/context") {
+			ledger.record({
+				kind: "model-request",
+				occurredAt,
+				modelVisible: true,
+				payload: event,
+			});
+		} else if (event.type === "assistant/message") {
+			ledger.record({
+				kind: "model-output",
+				occurredAt,
+				modelVisible: true,
+				payload: event,
+			});
+		}
+	}
+}
+
 async function createDshExecution(
 	options: RunDshAgentOptions,
+	startedAt: string,
+	now: () => string,
 ): Promise<DshExecution> {
 	const context = new Context();
 	const fibers = await mountDshContext(context, options.artifacts);
+	const ledger = createDshExecutionLedger(options, startedAt);
 	let modelLease: DshModelAdapterLease | undefined;
 	let agentHandle: AgentHandle | undefined;
+	let toolRegistration: DshStageContextToolRegistration | undefined;
 	try {
+		if (options.request.inputs.toolMode === "admitted") {
+			toolRegistration = registerDshStageContextTools({
+				context,
+				bundle: assertStageContextBundle(options.stageContextBundle),
+				maxToolCalls: options.request.budget.maxToolCalls,
+				record: (entry) => ledger.record(entry),
+				now,
+			});
+		}
 		modelLease = await options.installModelAdapter({context, request: options.request});
 		agentHandle = await context.agents.create({
 			sessionId: SessionId(options.request.session.sessionId),
@@ -127,11 +222,14 @@ async function createDshExecution(
 			fibers,
 			modelLease,
 			agentHandle,
+			ledger,
+			toolRegistration,
 			removeAbortListener: bindDshCancellation(agentHandle, options.signal),
 		};
 	} catch (error) {
 		if (agentHandle) await agentHandle.dispose();
 		if (modelLease) await modelLease.dispose();
+		toolRegistration?.dispose();
 		await disposeFibers(fibers);
 		throw error;
 	}
@@ -205,6 +303,7 @@ async function executeDshSession(
 
 function buildDshRunResult(input: {
 	readonly options: RunDshAgentOptions;
+	readonly execution: DshExecution;
 	readonly snapshot: DshSessionSnapshot;
 	readonly startedAt: string;
 	readonly finishedAt: string;
@@ -233,18 +332,22 @@ function buildDshRunResult(input: {
 		digest: sha256Digest(snapshot.rawContent),
 		runtimeBuildDigest: options.request.runtimeBuild.buildDigest,
 	});
-	const executionLedgerDigest = canonicalJsonDigest({
-		runId: options.request.runId,
-		requestDigest: options.request.requestDigest,
-		runtimeBuildDigest: options.request.runtimeBuild.buildDigest,
-		sessionId: options.request.session.sessionId,
-		modelRoute: options.request.inputs.modelRoute,
-		inputDigests: options.request.inputs,
-		sessionEvents,
-		outputDigest,
-		usageDigest,
-		outcome,
+	recordModelFacts(input.execution.ledger, snapshot.events, input.finishedAt);
+	if (usageDigest !== null) {
+		input.execution.ledger.record({
+			kind: "usage",
+			occurredAt: input.finishedAt,
+			modelVisible: false,
+			payload: {usage, usageDigest},
+		});
+	}
+	input.execution.ledger.record({
+		kind: "output",
+		occurredAt: input.finishedAt,
+		modelVisible: true,
+		payload: {outcome, output, outputDigest},
 	});
+	const executionLedger = input.execution.ledger.current();
 	return Object.freeze({
 		outcome,
 		startedAt: input.startedAt,
@@ -252,7 +355,8 @@ function buildDshRunResult(input: {
 		output,
 		outputDigest,
 		usageDigest,
-		executionLedgerDigest,
+		executionLedger,
+		executionLedgerDigest: executionLedger.ledgerDigest,
 		rawLog,
 		rawLogPath: snapshot.rawPath,
 		sessionEvents,
@@ -263,6 +367,7 @@ async function disposeDshExecution(execution: DshExecution): Promise<void> {
 	execution.removeAbortListener?.();
 	await execution.agentHandle.dispose();
 	await execution.modelLease.dispose();
+	execution.toolRegistration?.dispose();
 	await disposeFibers(execution.fibers);
 }
 
@@ -282,11 +387,28 @@ function assertDshRunOptions(options: RunDshAgentOptions): void {
 	if (options.request.session.mode !== "create") {
 		throw new Error("This DSH Adapter slice supports fresh Agent Sessions only.");
 	}
-	if (
-		options.request.inputs.toolMode !== "none" ||
-		options.request.budget.maxToolCalls !== 0
-	) {
-		throw new Error("This DSH Adapter slice permits no tools.");
+	if (options.request.inputs.toolMode === "none") {
+		if (options.request.budget.maxToolCalls !== 0) {
+			throw new Error("Tool-free DSH Runs require a zero tool-call budget.");
+		}
+		if (options.stageContextBundle !== undefined && options.stageContextBundle !== null) {
+			throw new Error("Tool-free DSH Runs cannot receive a Stage Context bundle.");
+		}
+	} else {
+		const bundle = assertStageContextBundle(options.stageContextBundle);
+		if (bundle.context.contextDigest !== options.request.inputs.stageContextDigest) {
+			throw new Error("DSH Stage Context bundle does not match its Run Request digest.");
+		}
+		if (
+			bundle.context.stage !== options.request.stage ||
+			bundle.context.subject.id !== options.request.subject.id ||
+			bundle.context.subject.digest !== options.request.subject.digest
+		) {
+			throw new Error("DSH Stage Context bundle does not match its Run subject.");
+		}
+		if (options.request.inputs.toolSetDigest !== DSH_STAGE_CONTEXT_TOOL_SET_DIGEST) {
+			throw new Error("DSH Stage Context tool set does not match its Run Request digest.");
+		}
 	}
 	if (
 		canonicalJsonDigest(options.artifacts.systemPrompt) !==

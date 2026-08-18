@@ -53,7 +53,7 @@ CodeWiki
         `-- CodeWiki-authored Run Receipts
 ```
 
-Project Server is the sole authority for one governed project. Runtime is its subordinate execution subsystem and owns no project meaning or lifecycle authority. The DSH path now proves one exact-pinned, replay-qualified, bundled Runtime Build from authenticated Run Process launch through isolated Agent Session JSONL and Runtime-authored Run Receipt. This is the first no-tool qualification slice, not full producer or worker parity. The optional Pi extension is a Client, and temporary Pi execution remains migration evidence until that parity is complete.
+Project Server is the sole authority for one governed project. Runtime is its subordinate execution subsystem and owns no project meaning or lifecycle authority. The DSH path now proves one exact-pinned, replay-qualified, bundled Runtime Build from authenticated Run Process launch through isolated Agent Session JSONL and Runtime-authored Run Receipt. Tool-admitted Runs may receive one authenticated immutable Stage Context bundle and exactly two digest-bound native query tools—direct and batch—without live project access. Live provider routes, full producer/worker qualification, compaction, resume, and parity remain pending. The optional Pi extension is a Client, and temporary Pi execution remains migration evidence until that parity is complete.
 
 ## Exactly four Stage Loops
 
