@@ -38,7 +38,7 @@ connections:
     label: returns producer output and Run Receipt
     boundary: { type: authority, failure: Reject incomplete or mismatched receipt. }
   - { id: decision-returns-project-server, from: decision, to: project-server, type: returns, label: returns immutable Decision Candidate }
-  - { id: project-server-runs-decision-gate, from: project-server, to: checks, type: invokes, label: runs Decision Check Packs }
+  - { id: project-server-runs-decision-gate, from: project-server, to: checks, type: invokes, label: runs exact Decision policy including active-Change compatibility }
   - { id: checks-return-decision-gate, from: checks, to: project-server, type: returns, label: returns exact Decision Gate Report }
   - id: project-server-offers-decision-confirmation
     from: project-server
@@ -64,7 +64,7 @@ connections:
     type: returns
     label: returns accepted confirmed Knowledge identity
     boundary: { type: persistence, failure: Stop progression when accepted Knowledge cannot be confirmed. }
-  - { id: project-server-invokes-planning, from: project-server, to: planning, type: invokes, label: starts Planning for approved meaning }
+  - { id: project-server-invokes-planning, from: project-server, to: planning, type: invokes, label: starts Change-scoped Planning for one ratified Change }
   - id: planning-invokes-runtime
     from: planning
     to: runtime
@@ -77,10 +77,10 @@ connections:
     type: returns
     label: returns producer output and Run Receipt
     boundary: { type: authority, failure: Reject incomplete or mismatched receipt. }
-  - { id: planning-returns-project-server, from: planning, to: project-server, type: returns, label: returns immutable Planning Candidate }
-  - { id: project-server-runs-planning-gate, from: project-server, to: checks, type: invokes, label: runs Planning Check Packs }
-  - { id: checks-return-planning-gate, from: checks, to: project-server, type: returns, label: returns exact Planning Gate Report }
-  - { id: project-server-invokes-implementation, from: project-server, to: implementation, type: invokes, label: starts eligible realization or feedback revision }
+  - { id: planning-returns-project-server, from: planning, to: project-server, type: returns, label: returns immutable Change-scoped Work Graph delta Candidate }
+  - { id: project-server-runs-planning-gate, from: project-server, to: checks, type: invokes, label: runs Planning policy over exact graph delta }
+  - { id: checks-return-planning-gate, from: checks, to: project-server, type: returns, label: returns exact Planning Gate Report for CAS application }
+  - { id: project-server-invokes-implementation, from: project-server, to: implementation, type: invokes, label: starts one eligible Work Unit realization or feedback revision }
   - id: implementation-invokes-runtime
     from: implementation
     to: runtime
@@ -93,10 +93,10 @@ connections:
     type: returns
     label: returns worker output and Run Receipt
     boundary: { type: authority, failure: Reject output lacking exact Assignment and Workbench custody. }
-  - { id: implementation-returns-project-server, from: implementation, to: project-server, type: returns, label: returns integrated Implementation Candidate }
-  - { id: project-server-runs-implementation-gate, from: project-server, to: checks, type: invokes, label: runs Implementation Check Packs }
-  - { id: checks-return-implementation-gate, from: checks, to: project-server, type: returns, label: returns exact Implementation Gate Report }
-  - { id: project-server-invokes-review, from: project-server, to: review, type: invokes, label: starts Review for exact integrated head }
+  - { id: implementation-returns-project-server, from: implementation, to: project-server, type: returns, label: returns one exact Work Unit Candidate }
+  - { id: project-server-runs-implementation-gate, from: project-server, to: checks, type: invokes, label: runs same stage-wide Implementation policy with Work Unit-specific inputs }
+  - { id: checks-return-implementation-gate, from: checks, to: project-server, type: returns, label: returns exact Work Unit Gate Report for private-lineage admission }
+  - { id: project-server-invokes-review, from: project-server, to: review, type: invokes, label: starts aggregate Review after all required Work Units pass and integrate }
   - id: review-invokes-runtime
     from: review
     to: runtime

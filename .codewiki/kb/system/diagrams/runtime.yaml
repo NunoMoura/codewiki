@@ -13,12 +13,12 @@ components:
   - { id: evidence, concept: /system/components/evidence.md, label: Evidence, zone: core }
   - { id: change-trace, concept: /system/components/change-trace.md, label: Change Trace, zone: repository }
 connections:
-  - { id: project-server-reads-work-state, from: project-server, to: work-state, type: reads, label: freezes current Stage Context or selects eligible claimed work }
+  - { id: project-server-reads-work-state, from: project-server, to: work-state, type: reads, label: builds material or Gate packages and selects ready Work Units }
   - id: project-server-reads-knowledge
     from: project-server
     to: knowledge
     type: reads
-    label: resolves accepted intent for immutable Stage Context
+    label: resolves accepted intent for immutable producer material or Gate package
     boundary: { type: persistence, failure: Stop context creation when exact Knowledge is unavailable. }
   - id: knowledge-returns-project-server
     from: knowledge
@@ -39,7 +39,7 @@ connections:
     label: returns output and one custody-scoped Run Receipt
     boundary: { type: authority, failure: Stop Run on malformed output, incomplete ledger, undeclared custody gap, failed quiescence, or missing process-exit proof. }
   - { id: project-server-invokes-implementation, from: project-server, to: implementation, type: invokes, label: admits exact Runtime output to the active Assignment }
-  - { id: implementation-returns-project-server, from: implementation, to: project-server, type: returns, label: returns exact Candidate Manifest for Integration }
+  - { id: implementation-returns-project-server, from: implementation, to: project-server, type: returns, label: returns exact Work Unit Candidate for policy and lineage admission }
   - id: project-server-invokes-preview
     from: project-server
     to: preview
@@ -52,7 +52,7 @@ connections:
     type: produces
     label: returns bounded observation metadata
     boundary: { type: authority, failure: Reject malformed or unbound observation. }
-  - { id: project-server-invokes-checks, from: project-server, to: checks, type: invokes, label: starts exact stage Gate }
+  - { id: project-server-invokes-checks, from: project-server, to: checks, type: invokes, label: starts exact Gate over frozen Gate Evaluation Package }
   - { id: checks-consume-evidence, from: checks, to: evidence, type: consumes, label: resolves exact bounded Check inputs }
   - id: checks-read-knowledge
     from: checks
@@ -83,7 +83,7 @@ connections:
     from: project-server
     to: change-trace
     type: writes
-    label: appends integrated Result and Gate state
+    label: appends Results, unit Gates, integration, and completion state
     boundary: { type: persistence, failure: Reject append and preserve prior accepted head. }
   - id: change-trace-returns-project-server
     from: change-trace
@@ -99,7 +99,7 @@ flows:
   - concept: /system/flows/change-lifecycle.md
     paths:
       - connections: [project-server-reads-knowledge, knowledge-returns-project-server, project-server-invokes-runtime, runtime-returns-project-server]
-  - concept: /system/flows/work-item-execution.md
+  - concept: /system/flows/work-unit-execution.md
     paths:
       - connections: [project-server-invokes-runtime, runtime-returns-project-server, project-server-invokes-implementation, implementation-returns-project-server, project-server-invokes-preview, preview-produces-evidence]
       - connections: [project-server-invokes-checks, checks-read-knowledge, knowledge-returns-checks, checks-invoke-runtime, runtime-returns-checks, checks-return-project-server, project-server-writes-change-trace]

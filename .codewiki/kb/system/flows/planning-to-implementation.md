@@ -1,18 +1,18 @@
 ---
 type: System Flow
 title: Planning to Implementation
-description: Gates ordered Planning, claims eligible Work Items, and integrates exact realization Candidates against current accepted meaning.
+description: Gates one Change-scoped Work Graph delta, applies it by CAS, and schedules ready Work Units without global replanning.
 status: stable
 tags: [system, flow]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/automate-safe-work.md
-    rationale: Planning to Implementation provides the stable cross-component behavior required by this Story.
+    rationale: Planning to Implementation turns one ratified Change into accountable parallel realization.
 ---
 # Planning to Implementation
 
-Project Server runs the Planning Gate over the exact Planning Candidate and `.codewiki/check-packs/planning/**` snapshot. Failure returns atomic feedback to Planning; stopped execution preserves current state. A passed Gate advances through the fixed lifecycle to Implementation.
+Project Server runs the Planning Gate over one exact Change-scoped Planning Candidate and the resolved `.codewiki/check-packs/planning/**` snapshot. The Gate verifies complete ratified-Change coverage, one owning Change per Work Unit, independently judgeable outcomes, acyclic internal and cross-Change dependencies, ordering for overlapping scopes, declarative resource and custody requirements, and explicit aggregate Review obligations. Failure returns atomic feedback to that Change's Planning continuity; stopped execution preserves current state.
 
-Project Server projects eligible Work Items from accepted Planning and current WorkState, acquires bounded Claims, and selects current Implementation Worker placement from requirements, Worker Offers, custody requirements, policy, consent, privacy, and budget. It dispatches each Assignment to one Project Server-owned isolated Workbench as a Run, an eligible Delegated Run, or an admitted External Agent Client operation through MCP. Implementation Candidates bind exact obligations, source, tests, Knowledge, configuration, Git base, Workbench custody, execution custody class, and provenance.
+A passed Candidate remains only a proposed Work Graph delta. Project Server revalidates the ratified Change revision and observed global Work Graph digest, rejects mutation of unrelated accepted or active Work Units, and CAS-appends the new immutable units and edges. A stale graph triggers deterministic revalidation and, when relevant, another Planning attempt. No planning horizon, Sprint replacement, or rolling portfolio epoch exists.
 
-Project Server integrates only fresh compatible Candidates. Claim loss, base drift, conflicting work, incomplete receipts, or unsupported capability cannot alter canonical state. Recoverable failures receive bounded retries; otherwise the Implementation attempt stops with an exact reason. Semantic realization failures return atomic Check feedback to Implementation through the fixed lifecycle.
+Project Server derives readiness from the accepted global Work Graph and WorkState. It acquires bounded Claims, matches current Worker Offers and policy to declared capabilities, custody, consent, privacy, and budget, and creates one exact Assignment and isolated Workbench per selected Work Unit. Runtime receives only authorized Run Requests and owns no queue, Claim, Assignment, placement, or canonical scheduling state. Independent ready Work Units may execute concurrently; dependency and overlap edges constrain admission.

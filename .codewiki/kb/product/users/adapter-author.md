@@ -7,7 +7,7 @@ tags: [product, user, integration]
 ---
 # Adapter Author
 
-Adapter Authors implement first-party Clients, Project Server and MCP bindings, collaboration channels, repository or Workbench Core Adapters, model routes, delegated-harness adapters, or first-party Runtime Plugins. They need stable contracts for commands, Stage Context, bounded direct and batch queries, events, authentication, Sessions, Pairing, capabilities, Candidate custody, Implementation Worker and Model Check execution, cancellation, usage, compaction provenance, process quiescence, and isolation.
+Adapter Authors implement first-party Clients, Project Server and MCP bindings, collaboration channels, repository or Workbench Core Adapters, model routes, delegated-harness adapters, or first-party Runtime Plugins. They need stable contracts for commands, Project Material Generations, Gate Evaluation Packages, bounded typed direct, batch, and programmatic queries, events, authentication, continuity and leases, Pairing, capabilities, Candidate custody, Implementation Worker and isolated Model Check execution, cancellation, usage, compaction provenance, process quiescence, and isolation.
 
 A Runtime Plugin may use Cordis internally inside the DSH Run Process but registers only one narrow CodeWiki capability. Raw Cordis context, Project Server persistence, canonical state handles, protected refs, credentials beyond an admitted opaque capability, and lifecycle transitions are outside its contract. Project files cannot install Runtime Plugins.
 

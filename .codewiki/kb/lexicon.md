@@ -22,7 +22,7 @@ tags: [system, vocabulary]
 | Runtime Plugin | First-party trusted capability admitted into a Run Process through the CodeWiki DSH Adapter; it cannot extend Project Server authority or become project policy. | [Runtime](system/components/runtime.md) |
 | DSH Adapter | CodeWiki-owned translation layer inside a Run Process that maps one Run Request to exact DSH setup and maps DSH events and output back to Runtime facts. | [Runtime](system/components/runtime.md) |
 | DSH AgentLoop | Upstream DSH model-request, tool-execution, streaming, and continuation mechanism used inside a model-driven Run. | [Runtime](system/components/runtime.md) |
-| DSH Agent Session | Isolated DSH conversation and event state for one model-driven Run, distinct from a Client Session. | [Runtime](system/components/runtime.md) |
+| DSH Agent Session | Isolated persistent DSH conversation and event state for one logical Decision, Planning, Work Unit Implementation, Review, or single Model Check continuity; producer Sessions may span several bounded Runs. | [Runtime](system/components/runtime.md) |
 | DeepSeek Harness | Exact pinned upstream execution library used through the CodeWiki DSH Adapter inside Run Processes; it owns AgentLoop mechanics but no CodeWiki lifecycle or authority. | [Runtime](system/components/runtime.md) |
 | Client Session | Temporary authenticated Client connection owned by Project Server and distinct from durable Pairing and DSH Agent Session. | [Project Server](system/components/project-server.md) |
 | Check Run Process | Runtime-controlled isolated process for a Code Check or tool-free Model Check; it reports bounded facts without owning Check Result or Gate authority. | [Runtime](system/components/runtime.md) |
@@ -32,12 +32,12 @@ tags: [system, vocabulary]
 | Alignment | Condition where relevant desired and executable state is resolved, bound to active Change, or explicitly unknown. | [Alignment](system/components/alignment.md) |
 | Alignment Graph | Disposable snapshot-bound projection of relationships, impact, and provenance. | [Alignment](system/components/alignment.md) |
 | Approval | Authenticated acceptance of one exact policy-scoped subject that implies no other approval. | [Project Server](system/components/project-server.md) |
-| Assignment | Exact Project Server binding among one accepted Work Item, one Implementation Worker, and one Workbench. | [Project Server](system/components/project-server.md) |
+| Assignment | Exact Project Server binding among one accepted Work Unit, one Implementation Worker, and one Workbench. | [Project Server](system/components/project-server.md) |
 | Authority Grant | Project-controlled capability grant scoped to an Actor or team, exact subjects, policy identity, and optional validity interval. | [Project Server](system/components/project-server.md) |
 | Backend-delegated provenance | Controlled provenance for a CodeWiki-launched delegated harness, binding exact Assignment or producer task, Workbench, process lifecycle, final output, resulting artifacts, and declared custody gaps without claiming unknown child internals. | [Runtime](system/components/runtime.md) |
 | Backend-owned provenance | Controlled provenance augmented by a complete admitted Run receipt and exact CodeWiki-controlled session-input ledger. | [Runtime](system/components/runtime.md) |
 | Benchmark | Controlled externally-oracled comparison of the same product task without and with CodeWiki. | [Benchmarks](system/components/benchmarks.md) |
-| Candidate | Immutable role-specific output proposed for one exact Stage Loop attempt. | [Decision](system/components/decision.md) |
+| Candidate | Immutable role-specific proposal with exactly one producing Run; Work Unit Candidates qualify local realization while Review binds the exact aggregate Change lineage. | [Decision](system/components/decision.md) |
 | Candidate Manifest | Project Server-owned identity binding a Candidate to repository, base, tree, scope, custody, and provenance. | [Project Server](system/components/project-server.md) |
 | Change | Accountable intent carrying a proposed transition from accepted state to intended state plus its durable immutable-operation dossier. | [Change Trace](system/components/change-trace.md) |
 | Change Intake Material | Bounded untrusted suggestion, finding, provider issue, or external code capture that may propose or reinforce a Change. | [Change Intake](system/components/change-intake.md) |
@@ -70,25 +70,26 @@ tags: [system, vocabulary]
 | External Candidate Capture | Immutable fingerprint and retained material for observed Git state lacking exact Project Server custody. | [Project Server](system/components/project-server.md) |
 | External-client provenance | Controlled provenance binding authenticated CodeWiki operations and any admitted Workbench custody without claiming the External Agent Client's internal execution. | [Project Server](system/components/project-server.md) |
 | External provenance | Fail-closed Candidate provenance assigned when exact Project Server custody cannot be proven. | [Project Server](system/components/project-server.md) |
-| Gate | Stage boundary that runs the present Check Packs for one exact subject and returns one Gate Report without selecting a route. | [Checks](system/components/checks.md) |
+| Gate | Boundary that runs one resolved stage-wide Check Pack policy over one exact Candidate and frozen Gate Evaluation Package, returning one Gate Report without selecting a route. | [Checks](system/components/checks.md) |
 | Gate Report | Immutable `passed`, `failed`, or `stopped` stage outcome carrying exact Results, execution facts, warnings, and any operational stop reason. | [Checks](system/components/checks.md) |
 | Implementation | Stage Loop that realizes accepted Planning obligations in source, tests, and Integration. | [Implementation](system/components/implementation.md) |
 | Improvement Assessment | Explicit deliberate process for producing Discovery Findings outside failed-Check feedback. | [Change Intake](system/components/change-intake.md) |
-| Integration | Project Server-owned combination and admission of isolated realization into one exact Candidate tree. | [Project Server](system/components/project-server.md) |
+| Integration | Project Server-owned expected-head-safe admission of passing Work Unit Candidates into one private Change lineage whose aggregate head becomes Review subject. | [Project Server](system/components/project-server.md) |
 | Knowledge | Accepted desired Product, System, and Design state stored as an OKF bundle. | [Knowledge](system/components/knowledge.md) |
 | Model Check | Tool-free isolated model run over exact bounded input through a separately configured Check model route. | [Checks](system/components/checks.md) |
 | Model Provider | Local or remote inference supplier used by a Stage Producer, Implementation Worker, or Model Check; it owns no Stage Loop, tools, Workbench, Candidate, Check Result, or authority. | [Runtime](system/components/runtime.md) |
 | Outcome Diagnostics | Post-Gate bounded analysis of repeated outcomes that may propose ordinary Change Intake Material for Skills, Checks, context APIs, routes, or configuration without mutating them. | [Change Intake](system/components/change-intake.md) |
 | Pack Skill | Optional Agent Skill contained by one Check Pack and supplied only to work-producing Agents for that stage. | [Checks](system/components/checks.md) |
 | Pairing | Durable Project Server enrollment of one Client installation for one Actor; it grants connection eligibility, not project authority. | [Project Server](system/components/project-server.md) |
-| Planning | Stage Loop that turns approved Decision into ordered immutable realization obligations. | [Planning](system/components/planning.md) |
+| Planning | Change-scoped Stage Loop that turns one ratified Change into an immutable Work Graph delta without regenerating a global plan. | [Planning](system/components/planning.md) |
 | Probe | Reusable Check SDK function that returns bounded snapshot-bound facts with provenance and coverage without deciding pass or fail. | [Checks](system/components/checks.md) |
-| Review | Stage Loop that applies exact-head delivery standards after Implementation and returns failed feedback to Implementation until Review passes or stops. | [Review](system/components/review.md) |
+| Review | Independent Change-scoped Stage Loop that judges the exact aggregate integrated Work Unit lineage against complete acceptance and delivery standards. | [Review](system/components/review.md) |
 | Review Claim | Current responsibility for one exact Review Requirement and Change revision; it is not approval. | [Change Trace](system/components/change-trace.md) |
 | Review Requirement | Policy-bound review class, scope, minimum approvals, and independence rule for one exact Change revision. | [Change Trace](system/components/change-trace.md) |
 | Review Submission | Immutable authenticated disposition and rationale for one exact Review Requirement and Change revision. | [Change Trace](system/components/change-trace.md) |
 | Source ownership | Component-declared intended boundary for source and test realization. | [Knowledge](system/components/knowledge.md) |
-| Stage Context | Immutable lazy query facade over exact WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result snapshots for one stage subject. | [Runtime](system/components/runtime.md) |
+| Project Material Generation | Immutable content-addressed locally queryable producer substrate built by Project Server from exact WorkState, Knowledge, Alignment, repository, Change, Evidence, and Result snapshots; it may refresh only at controlled boundaries. | [Runtime](system/components/runtime.md) |
+| Gate Evaluation Package | Immutable Candidate-checkpoint package containing only declared exact Check and Gate inputs; it is separate from producer material and provides no live Project Server handle. | [Checks](system/components/checks.md) |
 | Stage Loop | One of Decision, Planning, Implementation, or Review and no other CodeWiki capability. | [Project Server](system/components/project-server.md) |
 | Stage Producer | Agent or deterministic service that proposes one Decision, Planning, Implementation, or Review Candidate without owning Gate judgment or lifecycle authority. | [Runtime](system/components/runtime.md) |
 | Stopped Gate | Gate attempt that produced no valid complete outcome because execution, capability, input, budget, cancellation, or freshness failed operationally. | [Checks](system/components/checks.md) |
@@ -96,8 +97,9 @@ tags: [system, vocabulary]
 | User | Human operating CodeWiki through a User Interface. | [Clients](system/components/clients.md) |
 | User Interface | Human-facing surface implemented by a Client; headless Clients have none. | [Clients](system/components/clients.md) |
 | User Standard | Project expectation expressed directly as one or more editable Checks. | [Checks](system/components/checks.md) |
-| Work Item | Immutable Planning obligation eligible for isolated Implementation work. | [Planning](system/components/planning.md) |
+| Work Graph | Canonical Project Server-owned dependency graph formed from accepted immutable Change-scoped Planning deltas and current Work Unit state. | [Planning](system/components/planning.md) |
+| Work Unit | Immutable singly owned Planning obligation with independently judgeable outcome, acceptance slice, dependencies, scope, resource requirements, and verification. | [Planning](system/components/planning.md) |
 | Workbench | Project Server-owned isolated repository and command environment for one exact Assignment. | [Project Server](system/components/project-server.md) |
-| Worker | Implementation Worker: Agent, process, or service executing one accepted Work Item through one bounded Assignment in one Project Server-owned Workbench. | [Runtime](system/components/runtime.md) |
+| Worker | Implementation Worker: Agent, process, or service executing one accepted Work Unit through one bounded Assignment in one Project Server-owned Workbench. | [Runtime](system/components/runtime.md) |
 | Worker Offer | Bounded Implementation Worker capabilities, tools, model-route labels, availability, concurrency, custody class, ownership, and allowed projects. | [Runtime](system/components/runtime.md) |
-| WorkState | Deterministic current-state projection used for guards, stage context, scheduling, and state-aware rehydration. | [WorkState](system/components/work-state.md) |
+| WorkState | Deterministic current-state projection used for guards, Work Graph readiness, material construction, integration completion, and state-aware rehydration. | [WorkState](system/components/work-state.md) |

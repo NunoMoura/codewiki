@@ -53,7 +53,7 @@ CodeWiki
         `-- CodeWiki-authored Run Receipts
 ```
 
-Project Server is the sole authority for one governed project. Runtime is its subordinate execution subsystem and owns no project meaning or lifecycle authority. The DSH path now proves one exact-pinned, replay-qualified, bundled Runtime Build from authenticated Run Process launch through isolated Agent Session JSONL and Runtime-authored Run Receipt. Tool-admitted Runs may receive one authenticated immutable Stage Context bundle and exactly two digest-bound native query tools—direct and batch—without live project access. Live provider routes, full producer/worker qualification, compaction, resume, and parity remain pending. The optional Pi extension is a Client, and temporary Pi execution remains migration evidence until that parity is complete.
+Project Server is the sole authority for one governed project. Runtime is its subordinate execution subsystem and owns no project meaning, Work Graph, queue, integration, or lifecycle authority. The DSH path proves one exact-pinned replay Runtime Build from authenticated Run Process launch through isolated Agent Session JSONL and Runtime-authored Run Receipt. Current replay tooling still carries one immutable `StageContextBundle` with direct and batch queries; ratified production architecture replaces that transport with locally mounted content-addressed Project Material Generations and freezes separate Gate Evaluation Packages at Candidate checkpoint. Persistent multi-Run Session continuity, live provider transport, mounted material, Work Unit execution, compaction, secure Code Mode, cancellation/resume, and Pi parity remain implementation gates. Temporary Pi execution remains migration evidence.
 
 ## Exactly four Stage Loops
 
@@ -65,24 +65,24 @@ Project Server
 `-- Review
 ```
 
-A Stage Loop may issue one or more bounded Runs. DSH AgentLoop handles model/tool continuation inside a model-driven Run; it is not a CodeWiki Stage Loop.
+A producer DSH Agent Session may span several separately bounded Runs, but every Candidate has exactly one producing Run. DSH AgentLoop owns model/tool continuation and compaction mechanics; it is not a CodeWiki Stage Loop.
 
-- **Decision** evaluates one exact Change revision and proposes `approve | reject | defer | withdraw`.
-- **Planning** creates coherent immutable realization obligations and worker-ready Work Items.
-- **Implementation** realizes accepted obligations through isolated Assignment-bound Workbenches.
-- **Review** applies exact-head delivery standards and returns failed feedback to Implementation.
+- **Decision** evaluates one exact Change revision, active-portfolio compatibility, and `approve | reject | defer | withdraw`.
+- **Planning** creates one immutable Change-scoped Work Graph delta without replacing a global plan.
+- **Implementation** independently realizes and gates each accepted Work Unit through an isolated Assignment-bound Workbench under one shared stage-wide policy.
+- **Review** judges the exact aggregate integrated Change lineage and complete Change outcome.
 
-Every stage attempt follows one model:
+Every Candidate attempt follows one authority model:
 
 ```text
-exact stage subject and context
--> optional Run Request
--> Runtime executes Run
+refreshable producer Project Material Generation
+-> exact Run Request and exclusive Session lease
+-> Runtime executes bounded Run
 -> Run Receipt
 -> immutable Candidate
--> current Check Pack snapshot
+-> frozen Gate Evaluation Package and resolved stage-wide Check Pack
 -> Gate
--> Project Server retries, stops, or applies fixed transition
+-> Project Server retries, stops, integrates one Work Unit, completes aggregate Review, or applies guarded transition
 ```
 
 ## Check Packs, Results, and Gates
@@ -99,13 +99,13 @@ Project files define stage standards directly:
     └── CHECK.mjs | CHECK.md
 ```
 
-Stages are `decision`, `planning`, `implementation`, and `review`. Pack directories need no manifest. Every present Check gates. Empty Packs and Skill-only Packs are valid; a stage with zero Checks passes with `selectedCheckCount: 0`, no synthetic Result, and `no_checks_configured`.
+Stages are `decision`, `planning`, `implementation`, and `review`. Pack directories need no manifest. Project Server deterministically resolves every active Pack in one stage into one stage-wide policy snapshot. Implementation applies the same resolved policy to every Work Unit Candidate; only frozen unit-specific inputs differ. No Work Unit, Planning Candidate, worker, or route selects a bespoke Pack. Every present Check gates. Empty Packs and Skill-only Packs are valid; a stage with zero Checks passes with `selectedCheckCount: 0`, no synthetic Result, and `no_checks_configured`.
 
 An optional Pack Skill guides only the work-producing Agent for its stage. Project Server snapshots its complete bounded file tree and binds separate Skill digests to producer attempts and receipts. Managed Pi sessions disable ambient Skills and resources, materialize only the exact stage snapshots, preserve executable files, and keep explicit Worker tool policy authoritative over `allowed-tools` metadata. Code and Model Check executors receive no Pack Skill, producer context, memory, or tools, and Skill identity does not enter Check Result or Gate cache identity.
 
 `check.json` uses the exported `CheckDefinitionSchema` at version `1.0.0`. It binds one atomic requirement, one Code or Model implementation, bounded input selectors, binary or finite quantitative measurement, execution limits, one stable failure code, and one remediation contract. It contains no lifecycle route, authority grant, enforcement tier, activation state, protected floor, arbitrary dependency, or repair subsystem.
 
-Code Checks use `CHECK.mjs`. Checks delegates them only to an admitted sandbox that declares hermetic, bounded, credential-free, network-denied execution. CodeWiki does not execute project JavaScript directly in the host process. Model Checks use `CHECK.md`; each Pack-selected route, profile, and token ceiling is independent from work-producing Worker routes. The fixed Model Check request supplies no tools, memory, conversational context, Worker state, or lifecycle authority.
+Code Checks use `CHECK.mjs`. Checks delegates them only to an admitted sandbox that declares hermetic, bounded, credential-free, network-denied execution. CodeWiki does not execute project JavaScript directly in the host process. Model Checks use `CHECK.md`; each Pack-selected route, profile, and token ceiling is independent from work-producing Worker routes. Every top-level Model Check invocation uses its own fresh isolated tool-free session, may run in bounded parallel, and receives no producer material query, memory, conversation, Worker state, or lifecycle authority.
 
 Code and Model implementations return the same strict structured output: exact Invocation digest, binary or quantitative measurement, bounded summary, and bounded factual details. Checks derives the verdict. Completed Results are only `passed | failed`; a failed Result receives the Check's authored failure code and feedback. Timeout, cancellation, unavailable execution, missing inputs, malformed output, exhausted retries, or stale identity creates no Result and stops only that Gate.
 
@@ -121,7 +121,7 @@ Change Trace keeps its existing serialized operation-kind and route-field vocabu
 
 ## Work and project control plane
 
-Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Project Server exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Accepted User Standard preferences may influence protected deterministic triage ordering, but lower order is not Check failure and no model emits final rank. An authenticated user selects an exact revision to start Decision; selection grants no disposition. `codewiki.decision-attention-selection@2.0.0` binds that command to one actor-scoped idempotency key, exact Change revision, and the projection digest that already commits WorkState, triage Candidates, graph, protected config, and policy. Project Server then appends canonical `loop.attempt_started`; its operation ID is also the revision-bound job key. Pending Changes and generic triggers remain quiescent until selection. The authenticated coordinator exposes a bounded bootstrap query plus strict projection-bound follow-up queries. Pi agents may inspect this through read-only `wiki_attention`; users may browse with `/wiki-attention` and start one exact attempt only through `/wiki-select <change-id> --revision <revision-id> --projection <digest>`. No model-callable selection tool exists. Planning later decomposes approved Changes and owns Work Item execution ordering.
+Backlog is a generated intake view over persisted pending Change revisions; submission grants no semantic or execution authority. Project Server exposes one content-addressed triage projection and one bounded user/agent query with explicit readiness, supported estimates, overlap, freshness, frontier, fairness, and ordering reasons. Accepted User Standard preferences may influence protected deterministic triage ordering, but lower order is not Check failure and no model emits final rank. An authenticated user selects an exact revision to start Decision; selection grants no disposition. `codewiki.decision-attention-selection@2.0.0` binds that command to one actor-scoped idempotency key, exact Change revision, and the projection digest that already commits WorkState, triage Candidates, graph, protected config, and policy. Project Server then appends canonical `loop.attempt_started`; its operation ID is also the revision-bound job key. Pending Changes and generic triggers remain quiescent until selection. The authenticated coordinator exposes a bounded bootstrap query plus strict projection-bound follow-up queries. Pi agents may inspect this through read-only `wiki_attention`; users may browse with `/wiki-attention` and start one exact attempt only through `/wiki-select <change-id> --revision <revision-id> --projection <digest>`. No model-callable selection tool exists. Planning later decomposes one ratified Change into a graph delta and declares dependencies and strategic parallelism; Project Server owns live readiness, queueing, Claims, Assignments, and placement.
 
 Change Trace Protocol `3.0.0` makes every revision a complete content-addressed semantic input rather than a skeletal issue summary and binds authority through accountable actor plus proof-backed authenticated identity. Revision identity binds current and desired state, rationale and alternatives, classification and affected targets, impact, Knowledge propagation, observable outcomes, delivery constraints, Evidence expectations, safety semantics, acceptance requirements, and any normalized defect profile. Missing assurance remains explicitly absent or unknown; intake claims never become risk or Check authority.
 
@@ -144,19 +144,19 @@ Dashboard destinations are:
 
 Change detail is a cross-cutting dossier, not a private copy of the pipeline.
 
-Project Server derives a compatible bounded job set from WorkState, admits exact lanes/Claims/capacity, invokes semantic sessions or workers, runs subject-bound Gates, and guards writes/effects. It allows unrelated authenticated selected Decision jobs and Work Item work concurrently while serializing overlapping selected scopes, one accepted Planning writer, overlapping paths, shared Integration targets, and external effects.
+Project Server derives ready Work Units from the canonical global Work Graph and WorkState, admits exact Claims, Assignments, custody, and capacity, invokes producer Sessions or workers, runs subject-bound Gates, integrates passing unit outputs into private Change lineages, and guards writes and effects. Change-scoped Planning deltas may proceed concurrently but apply through Work Graph expected-head CAS. Independent Work Units may execute and gate concurrently; integration lineages, overlapping scopes, protected targets, and external effects remain serialized where authority requires.
 
 `WorkState` is a disposable projection over Change Traces, Knowledge, source/test ownership, source/tests/Git, configuration, delivery evidence, and bounded Project Server observations. JSONL is streamed and indexed in memory; process loss causes rebuild. No SQLite or graph database belongs to the current architecture.
 
 ## Workers, Integration, and effects
 
-Planning creates worker-ready Work Items rather than the smallest possible tasks. Project Server selects `routine`, `standard`, or `complex` Implementation tier from structured facts; callers and workers cannot self-label work routine.
+Planning creates independently judgeable worker-ready Work Units owned by exactly one Change, with acceptance coverage, dependencies, scope, verification, and declarative resource requirements. Project Server selects current placement and any `routine`, `standard`, or `complex` execution tier from structured facts; callers and workers cannot self-label.
 
-Project Server resolves each Assignment into one private digest-bound Workbench containing exact source, context, Loop Protocol, Pi Skills/tools, model route, selected Check Pack and Evidence inputs, isolation, budgets, and Worker Report contract. Only a matching canonical Claim activates it.
+Project Server resolves each Assignment into one private digest-bound Workbench containing exact source, owning Change and Work Unit obligations, dependency outputs, Project Material Generation, Skills/tools, model route, shared Implementation Check Pack policy, isolation, budgets, and Candidate contract. Only a matching canonical Claim activates it.
 
-Workers are isolated and non-authoritative. A completed Worker Report is candidate evidence only.
+Workers are isolated and non-authoritative. Every Work Unit Candidate has one producing Run and receives the same resolved Implementation policy with unit-specific Gate inputs. A passing Gate advances only that unit.
 
-Accepted worker output enters a serialized private Integration workspace. Exact Integration proof binds Claim, Assignment, Worker Report, base/parent/commit/tree, changed paths, patch digest, and trusted checks. It does not imply branch merge, push, publication, release, deployment, or outcome.
+Passing fresh output enters the owning Change's serialized private integration lineage through expected-head CAS. Integration proof binds Claim, Assignment, Candidate, Gate, base/parent/commit/tree, changed paths, patch digest, and custody. Gate pass, integration, aggregate completion, Review, branch merge, push, publication, release, deployment, and outcome remain separate facts and authority boundaries.
 
 Each later boundary is separately guarded and authorized:
 

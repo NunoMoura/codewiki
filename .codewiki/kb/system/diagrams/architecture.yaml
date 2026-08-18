@@ -45,6 +45,6 @@ connections:
   - { id: package-reads-project, from: package, to: project, type: reads, label: composes CodeWiki and passive Check Pack resources }
   - { id: benchmarks-read-package, from: benchmarks, to: package, type: reads, label: executes packed candidate }
 flows:
-  - concept: /system/flows/work-item-execution.md
+  - concept: /system/flows/work-unit-execution.md
     paths:
       - connections: [project-server-invokes-runtime, runtime-invokes-preview]

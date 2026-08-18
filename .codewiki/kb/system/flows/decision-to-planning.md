@@ -1,16 +1,18 @@
 ---
 type: System Flow
 title: Decision to Planning
-description: Transfers passed approved meaning into ordered realization obligations without allowing Planning to rewrite intent.
+description: Ratifies semantically compatible Change meaning and transfers it into one Change-scoped Work Graph delta without global replanning.
 status: stable
 tags: [system, flow]
 codewiki_relationships:
   - type: realizes
     target: /product/stories/maintainer/maintain-intent.md
-    rationale: Decision to Planning provides the stable cross-component behavior required by this Story.
+    rationale: Decision to Planning preserves accepted meaning and active-Change compatibility before decomposition.
 ---
 # Decision to Planning
 
-Project Server reads one exact Decision Candidate and runs the Decision Gate against the current Change revision, stage-context snapshot, Knowledge transition, and `.codewiki/check-packs/decision/**` snapshot. A failed Gate returns its atomic feedback to durable WorkState for Decision. A stopped Gate preserves current state. A passed Gate makes that exact Candidate eligible for confirmation but accepts no meaning by itself. An authorized actor confirms the unchanged Candidate and Gate digest against current WorkState; only confirmed `approve` accepts intended state and advances through the fixed lifecycle to Planning. Confirmed `reject`, `defer`, or `withdraw` follows its typed terminal or deferred meaning. Any Candidate edit requires a fresh Gate.
+Project Server runs the Decision Gate over the exact Decision Candidate and a frozen Gate Evaluation Package. The editable default Decision Check Pack combines deterministic overlap accounting with an `active_change_compatibility` Model Check over relevant accepted nonterminal Change revisions, explicit relationships, accepted Work Graph projection, complete coverage, and active-portfolio digest. The invariant is no unresolved semantic contradiction, not no overlap. Dependencies and technical ordering remain Planning concerns; resource contention remains a scheduler concern.
 
-Planning decomposes accepted meaning into Work Items, dependencies, acceptance criteria, and Knowledge realization obligations. If Planning discovers ambiguous intent, changed risk, conflicting authority, or a semantic Knowledge change, it records the issue without silently reinterpreting the approved Candidate; changing accepted meaning requires a new Decision operation.
+A failed Gate returns atomic feedback to Decision. A stopped Gate preserves current state. A passed Gate makes only that exact Candidate eligible for confirmation. An authorized actor confirms its unchanged bytes and Gate digest against current WorkState and active-portfolio head. Project Server applies the disposition through expected-head compare-and-swap; if another Change was accepted meanwhile, affected compatibility Results become stale. Only confirmed `approve` ratifies intended state and advances to Planning.
+
+Planning decomposes that one ratified Change into an immutable Work Graph delta containing singly owned Work Units, acceptance coverage, dependencies, technical requirements, resource requirements, verification, and aggregate Review obligations. It reads the global graph but does not create a replacement portfolio plan. Ambiguous intent, changed risk, conflicting authority, or a semantic Knowledge change returns through an explicit Decision operation rather than silent reinterpretation.
