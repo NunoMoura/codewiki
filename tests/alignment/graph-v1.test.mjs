@@ -16,7 +16,7 @@ import {
 } from "../helpers/change-trace-replay-v1.mjs";
 
 describe("Alignment Graph projector v1", () => {
-	it("projects canonical Change, Loop, Planning, Work Unit, and provenance facts", () => {
+	it("projects canonical Change, Loop, and provenance facts", () => {
 		const journey = createThreeBatchJourney("CHG-graph");
 		const state = journey.states[2];
 		const graph = projectAlignmentGraph(state);
@@ -41,9 +41,6 @@ describe("Alignment Graph projector v1", () => {
 			"check_result",
 			"exit_report",
 			"runtime_route",
-			"planning_epoch",
-			"sprint",
-			"work_unit",
 		]) {
 			assert.equal(nodeTypes.has(type), true, `missing node type ${type}`);
 		}
@@ -58,12 +55,6 @@ describe("Alignment Graph projector v1", () => {
 			"candidate_has_exit_report",
 			"exit_report_has_result",
 			"exit_report_routes_to",
-			"project_has_planning_epoch",
-			"change_participates_in_epoch",
-			"epoch_contains_sprint",
-			"epoch_contains_work_unit",
-			"work_unit_realizes_change",
-			"epoch_safe_execution_frontier",
 		]) {
 			assert.equal(edgeTypes.has(type), true, `missing edge type ${type}`);
 		}
@@ -135,7 +126,7 @@ describe("Alignment Graph projector v1", () => {
 			/not an accepted prefix/,
 		);
 		const wrongVersion = structuredClone(previous);
-		wrongVersion.projector.version = "3.0.0";
+		wrongVersion.projector.version = "2.0.0";
 		assert.throws(
 			() => projectAlignmentGraphIncremental(wrongVersion, journey.states[1]),
 			/version mismatch/,

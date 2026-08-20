@@ -375,9 +375,7 @@ function createFeedbackSequence(input: {
 			],
 		},
 	});
-	reduceChangeOperation(input.route.change, operation, {
-		planningEpochs: input.state.planningEpochs,
-	});
+	reduceChangeOperation(input.route.change, operation, {});
 	return Object.freeze({
 		action: "reinforced",
 		changeId: input.route.change.changeId,
@@ -421,9 +419,7 @@ function createNewChangeSequence(input: {
 			provenanceRefs: [...provenanceRefs],
 		},
 	});
-	const openedState = reduceChangeOperation(null, opened, {
-		planningEpochs: input.state.planningEpochs,
-	});
+	const openedState = reduceChangeOperation(null, opened, {});
 	const proposed = createNextChangeOperation(openedState, {
 		changeId: input.route.changeId,
 		kind: "change.proposed",
@@ -442,9 +438,7 @@ function createNewChangeSequence(input: {
 			},
 		},
 	});
-	const proposedState = reduceChangeOperation(openedState, proposed, {
-		planningEpochs: input.state.planningEpochs,
-	});
+	const proposedState = reduceChangeOperation(openedState, proposed, {});
 	const operations: CanonicalChangeOperation[] = [opened, proposed];
 	let relationshipOperationId: Sha256Digest | null = null;
 	if (input.route.discoveredFrom) {
@@ -467,9 +461,7 @@ function createNewChangeSequence(input: {
 				relationship,
 			},
 		});
-		reduceChangeOperation(proposedState, relationshipOperation, {
-			planningEpochs: input.state.planningEpochs,
-		});
+		reduceChangeOperation(proposedState, relationshipOperation, {});
 		operations.push(relationshipOperation);
 		relationshipOperationId = relationshipOperation.operationId;
 	}

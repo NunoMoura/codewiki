@@ -9,7 +9,6 @@ import {authorityBinding, digest} from "../../helpers/change-trace-v1.mjs";
 import {
 	allowAllReplayPolicy,
 	buildPassingPlanningExit,
-	buildPlanningEpochRecords,
 	planningArtifacts,
 } from "../../helpers/change-trace-replay-v1.mjs";
 import {
@@ -94,15 +93,13 @@ async function seedPlanning(fixture, changeId) {
 	const planning = await createGitProposal(fixture.cloneA, state, exit.operations);
 	assert.equal((await pushGitProposal(fixture.cloneA, planning.proposal)).status, "accepted");
 	state = planning.projected;
-	const epoch = buildPlanningEpochRecords({
+	return {
 		state,
-		participantChangeIds: [changeId],
-		artifacts,
-		suffix: "distributed-claim",
-	});
-	const bound = await createGitProposal(fixture.cloneA, state, epoch.records);
-	assert.equal((await pushGitProposal(fixture.cloneA, bound.proposal)).status, "accepted");
-	return {state: bound.projected, epoch};
+		graphDelta: {
+			workGraphDeltaId: digest("4"),
+			workUnitId: "work-distributed-claim",
+		},
+	};
 }
 
 function activeChangeClaim(observation, changeId) {
@@ -119,11 +116,11 @@ function activeWorkUnitClaim(observation, changeId) {
 	return change.workUnitClaims.find((claim) => claim.status === "active");
 }
 
-function workUnitRequest(state, epoch, changeId, actorId) {
+function workUnitRequest(state, graphDelta, changeId, actorId) {
 	return {
 		changeId,
-		planningEpochId: epoch.epoch.operationId,
-		workUnitId: epoch.workUnitId,
+		workGraphDeltaId: graphDelta.workGraphDeltaId,
+		workUnitId: graphDelta.workUnitId,
 		assignmentAttemptId: `attempt-${actorId}`,
 		workerId: actorId,
 		workbenchId: `workbench-${actorId}`,
@@ -264,14 +261,14 @@ describe("guarded distributed mutation", () => {
 		const fixture = await createTwoCloneFixture();
 		try {
 			const changeId = "CHG-work-unit-claim-runtime";
-			const {state, epoch} = await seedPlanning(fixture, changeId);
+			const {state, graphDelta} = await seedPlanning(fixture, changeId);
 			const runtimes = [
 				mutationRuntime(fixture, fixture.cloneA, state, "worker-a"),
 				mutationRuntime(fixture, fixture.cloneB, state, "worker-b"),
 			];
 			const requests = [
-				workUnitRequest(state, epoch, changeId, "worker-a"),
-				workUnitRequest(state, epoch, changeId, "worker-b"),
+				workUnitRequest(state, graphDelta, changeId, "worker-a"),
+				workUnitRequest(state, graphDelta, changeId, "worker-b"),
 			];
 			const raced = await Promise.allSettled([
 				runtimes[0].acquireWorkUnitClaim(requests[0]),
@@ -304,7 +301,7 @@ describe("guarded distributed mutation", () => {
 			await assert.rejects(
 				() =>
 					unauthenticated.takeoverWorkUnitClaim({
-						...workUnitRequest(state, epoch, changeId, "worker-unauthenticated"),
+						...workUnitRequest(state, graphDelta, changeId, "worker-unauthenticated"),
 						priorClaimOperationId: next.operationId,
 						reason: "Maintainer-directed recovery.",
 					}),
@@ -318,7 +315,7 @@ describe("guarded distributed mutation", () => {
 				true,
 			);
 			const takeover = await takeoverRuntime.takeoverWorkUnitClaim({
-				...workUnitRequest(state, epoch, changeId, "worker-takeover"),
+				...workUnitRequest(state, graphDelta, changeId, "worker-takeover"),
 				priorClaimOperationId: next.operationId,
 				reason: "Maintainer-directed recovery.",
 			});

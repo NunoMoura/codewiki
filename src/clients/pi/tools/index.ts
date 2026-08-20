@@ -122,7 +122,7 @@ function wikiStateTool(
 		name: WIKI_STATE_TOOL_NAME,
 		label: "CodeWiki State",
 		description:
-			"Internal agent read of bounded WorkState-backed Change, Sprint, Work Unit, Assignment, blocker, and quality projections for the current project.",
+			"Internal agent read of bounded WorkState-backed Change, Work Graph delta, Work Unit, Assignment, blocker, and quality projections for the current project.",
 		promptSnippet:
 			"Read internal CodeWiki WorkState views for the current repository.",
 		promptGuidelines: [
@@ -347,7 +347,7 @@ function wikiChangeTool(): CodewikiToolDefinition {
 		promptGuidelines: [
 			"Search before creating a Change and reinforce an existing match instead of duplicating it.",
 			"Change intake uses the dedicated Runtime-owned source-specific admission contract, not wiki_change.",
-			"wiki_change cannot approve Changes, create Planning-owned Sprints or Work Units, launch workers, edit source, publish, or advance controllers.",
+			"wiki_change cannot approve Changes, create Planning-owned Work Graph deltas or Work Units, launch workers, edit source, publish, or advance controllers.",
 			"Mutations require exact Change Trace store-head and record-revision guards; list, get, and validate are read-only.",
 		],
 		executionMode: "sequential",
@@ -648,7 +648,7 @@ function stateToolModelPayload(
 		view: view || "all",
 		runtimeReaction,
 		changeCount: snapshot.workState.changeIds.length,
-		sprintCount: snapshot.workState.sprintIds.length,
+		workGraphDeltaCount: snapshot.workState.workGraphDeltaIds.length,
 		traceCount: snapshot.traceIds.length,
 		traceSummary: snapshot.traceBoard.summary,
 		workQueueSummary: snapshot.workQueue.summary,
@@ -679,7 +679,7 @@ function stateToolViewData(
 			workState: {
 				snapshotDigest: snapshot.workState.snapshotDigest,
 				changeIds: snapshot.workState.changeIds,
-				sprintIds: snapshot.workState.sprintIds,
+				workGraphDeltaIds: snapshot.workState.workGraphDeltaIds,
 				workUnitIds: snapshot.workState.workUnitIds,
 				assignmentIds: snapshot.workState.assignmentIds,
 			},
@@ -695,7 +695,7 @@ function stateToolViewData(
 	if (view === "board") {
 		return {
 			changes: snapshot.workState.changes,
-			sprints: snapshot.workState.sprints,
+			workGraphDeltas: snapshot.workState.workGraphDeltas,
 			workUnits: snapshot.workState.workUnits,
 			assignments: snapshot.workState.assignments,
 			workPlan: snapshot.workPlan,

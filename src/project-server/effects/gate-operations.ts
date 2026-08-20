@@ -162,7 +162,7 @@ export function createNativeDecisionOperationSequence(
 			recordedAt: operationTimestamp(input.recordedAt, operations.length),
 			payload,
 		});
-		projected = reduceChangeOperation(projected, operation, {planningEpochs: []});
+		projected = reduceChangeOperation(projected, operation, {});
 		operations.push(operation);
 		return operation;
 	};
@@ -316,9 +316,7 @@ export function createReviewOperationSequence(
 			recordedAt: operationTimestamp(input.recordedAt, operations.length),
 			payload,
 		});
-		projected = reduceChangeOperation(projected, operation, {
-			planningEpochs: [],
-		});
+		projected = reduceChangeOperation(projected, operation, {});
 		operations.push(operation);
 		return operation;
 	};

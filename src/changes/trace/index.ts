@@ -9,5 +9,3 @@ export * from "./git-command.ts";
 export * from "./git-state.ts";
 export * from "./synchronization.ts";
 export * from "./mutation.ts";
-export * from "./rolling-planning.ts";
-export * from "./planning-mutation.ts";

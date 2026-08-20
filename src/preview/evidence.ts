@@ -48,7 +48,7 @@ export interface PreviewEvidenceCapture {
 	url: string;
 	traceIds: string[];
 	changeIds: string[];
-	sprintIds: string[];
+	workGraphDeltaIds: string[];
 	workUnitIds: string[];
 	implementation: PreviewImplementationCorrelation[];
 	integration: PreviewIntegrationState;
@@ -177,8 +177,8 @@ export async function capturePreviewEvidence(
 			...(input.target.scenario ? { scenario: input.target.scenario } : {}),
 			url,
 			traceIds: [...input.binding.traceIds],
-			changeIds: [...input.binding.contributingChangeIds],
-			sprintIds: [...input.binding.sprintIds],
+			changeIds: [...input.binding.changeIds],
+			workGraphDeltaIds: [...input.binding.workGraphDeltaIds],
 			workUnitIds: [...input.binding.workUnitIds],
 			implementation: implementationCorrelations(
 				input.records,

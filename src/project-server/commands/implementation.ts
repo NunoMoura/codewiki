@@ -158,9 +158,9 @@ export interface RunWikiImplementResult {
 	mode: WikiImplementMode;
 	traceId: string;
 	selection: {
-		sprintId: string;
+		workGraphDeltaId: string;
 		changeId: string;
-		workUnitIds: string[];
+		workUnitId: string;
 	};
 	proofPaths: string[];
 	snapshot: ProjectSnapshot;
@@ -372,12 +372,11 @@ async function runtimeImplementationContext(
 			"Implementation requires worker reports or explicit evidence for runtime-selected Work Units.",
 		);
 	}
-	const selectedIds = new Set(selection.workUnitIds);
 	const selectedItems = sources.map((source) => {
 		const workUnitId = evidenceWorkUnitId(source);
-		if (!selectedIds.has(workUnitId)) {
+		if (workUnitId !== selection.workUnitId) {
 			throw new Error(
-				`Implementation evidence targets ${workUnitId}, but runtime selected ${selection.workUnitIds.join(", ")}.`,
+				`Implementation evidence targets ${workUnitId}, but runtime selected ${selection.workUnitId}.`,
 			);
 		}
 		return requiredWorkUnit(observation.workState, workUnitId);
@@ -409,11 +408,15 @@ async function runtimeImplementationContext(
 		throw new Error(`Project Server has no append handle for ${traceId}.`);
 	}
 	const parent = traceRecords.at(-1);
+	const selectedWorkUnit = requiredWorkUnit(
+		observation.workState,
+		selection.workUnitId,
+	);
 	return {
 		selection: {
-			sprintId: selection.sprintId,
+			workGraphDeltaId: selectedWorkUnit.workGraphDeltaId,
 			changeId,
-			workUnitIds,
+			workUnitId: selection.workUnitId,
 		},
 		input: {
 			...input,

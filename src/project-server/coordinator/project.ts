@@ -21,7 +21,7 @@ export type ProjectCoordinatorLane =
 	| { kind: "decision"; changeId: string; changeRevisionId: Sha256Digest }
 	| { kind: "planning" }
 	| { kind: "assignment"; workUnitId: string }
-	| { kind: "implementation"; sprintId: string }
+	| { kind: "implementation"; workUnitId: string }
 	| { kind: "integration"; targetRef: string; baseRef: string }
 	| { kind: "effect"; targetRef: string };
 
@@ -625,7 +625,7 @@ function normalizeLane(lane: ProjectCoordinatorLane): ProjectCoordinatorLane {
 	if (lane.kind === "implementation") {
 		return {
 			kind: lane.kind,
-			sprintId: requiredText(lane.sprintId, "sprintId"),
+			workUnitId: requiredText(lane.workUnitId, "workUnitId"),
 		};
 	}
 	if (lane.kind === "integration") {
@@ -699,7 +699,7 @@ function laneLockRefs(lane: ProjectCoordinatorLane): string[] {
 	if (lane.kind === "planning") return ["planning"];
 	if (lane.kind === "assignment") return [`assignment:${lane.workUnitId}`];
 	if (lane.kind === "implementation") {
-		return [`implementation:${lane.sprintId}`];
+		return [`implementation:${lane.workUnitId}`];
 	}
 	if (lane.kind === "integration") {
 		return [

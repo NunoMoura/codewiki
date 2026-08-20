@@ -222,7 +222,7 @@ function integrationJob(context, overrides = {}) {
 		packet: context.packet,
 		report: context.report,
 		acceptanceEvent: context.acceptanceEvent,
-		sprintId: context.fixture.sprintId,
+		workGraphDeltaId: context.fixture.workGraphDeltaId,
 		targetRefs: [],
 		createdAt: "2026-07-22T10:00:02.000Z",
 		runner: context.runner,

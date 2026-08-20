@@ -43,7 +43,7 @@ describe("Change Trace deterministic reducer", () => {
 		assert.equal(Object.isFrozen(opened.state.changes), true);
 	});
 
-	it("proves full and incremental replay equivalence including Planning epochs", () => {
+	it("proves full and incremental replay equivalence through Planning exit", () => {
 		const journey = createThreeBatchJourney();
 		const full = replayAcceptedStateBatches(
 			journey.batches,
@@ -55,13 +55,8 @@ describe("Change Trace deterministic reducer", () => {
 			journey.initial,
 		);
 		assert.equal(sameWorkState(full, incremental), true);
-		assert.equal(sameWorkState(full, journey.states[2]), true);
-		assert.equal(full.planningEpochs[0].operationId, journey.epoch.operationId);
-		assert.equal(full.changes[0].planningEpochBindings.length, 1);
-		assert.deepEqual(
-			full.changes[0].planningEpochBindings[0].workUnitIds,
-			["work-reducer"],
-		);
+		assert.equal(sameWorkState(full, journey.states[1]), true);
+		assert.equal(full.changes[0].loopAttempts[0].status, "passed");
 	});
 
 	it("rejects unauthorized and stale operations before reduction", () => {
@@ -157,7 +152,7 @@ describe("Change Trace deterministic reducer", () => {
 			payload: {mergeId, role: "source", sources, result, rationale},
 		});
 		assertReductionCode("UNKNOWN_PARENT", () =>
-			reduceChangeOperation(change, merge, {planningEpochs: []}),
+			reduceChangeOperation(change, merge, {}),
 		);
 
 		const valid = buildOperationSequence({
@@ -182,7 +177,7 @@ describe("Change Trace deterministic reducer", () => {
 			postStateDigest: digest("0"),
 		});
 		assertReductionCode("STATE_DIGEST_MISMATCH", () =>
-			reduceChangeOperation(change, badDigest, {planningEpochs: []}),
+			reduceChangeOperation(change, badDigest, {}),
 		);
 	});
 

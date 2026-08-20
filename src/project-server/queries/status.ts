@@ -143,9 +143,6 @@ function planningWorkUnits(
 				return {
 					changeRefs: unique([
 						...(owningChangeRef ? [owningChangeRef] : []),
-						...stringList(item.contributingChangeIds).map(
-							(changeId) => `change:${changeId}`,
-						),
 					]),
 				};
 			}),
@@ -174,12 +171,6 @@ function objectList(value: unknown): Record<string, unknown>[] {
 				(item): item is Record<string, unknown> =>
 					typeof item === "object" && item !== null,
 			)
-		: [];
-}
-
-function stringList(value: unknown): string[] {
-	return Array.isArray(value)
-		? value.map((item) => text(item)).filter(Boolean)
 		: [];
 }
 

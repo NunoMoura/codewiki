@@ -72,7 +72,7 @@ export interface ProjectServerTrigger {
 }
 
 export interface ProjectServerReaction {
-	schemaVersion: 2;
+	schemaVersion: 3;
 	status: "ready" | "quiescent";
 	trigger: ProjectServerTrigger & { occurredAt?: string };
 	observedWorkStateDigest: string;

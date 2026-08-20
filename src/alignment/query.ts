@@ -37,7 +37,6 @@ export interface ChangeContextQuery extends AlignmentQueryBase {
 
 export interface WorkUnitReadinessQuery extends AlignmentQueryBase {
 	readonly family: "work_unit_readiness";
-	readonly planningEpochId: string;
 	readonly workUnitId: string;
 }
 
@@ -250,7 +249,7 @@ function queryRoots(
 			return deliveryRoots(graph, request.changeId);
 		case "work_unit_readiness":
 			return existingRoots(graph, [
-				`work-unit:${request.planningEpochId}:${request.workUnitId}`,
+				`work-unit:${request.workUnitId}`,
 			]);
 		case "loop_assurance":
 			return existingRoots(graph, [`candidate:${request.candidateId}`]);
@@ -425,7 +424,7 @@ const QUERY_FAMILY_FIELDS: Readonly<
 	Record<AlignmentQueryFamily, readonly string[]>
 > = Object.freeze({
 	change_context: ["changeId"],
-	work_unit_readiness: ["planningEpochId", "workUnitId"],
+	work_unit_readiness: ["workUnitId"],
 	loop_assurance: ["candidateId"],
 	knowledge_impact: ["conceptId"],
 	delivery_chain: ["changeId"],

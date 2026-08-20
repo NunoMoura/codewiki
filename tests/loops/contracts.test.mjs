@@ -5,6 +5,41 @@ import { parseImplementationCandidateContent } from "../../src/loops/implementat
 import { parsePlanningCandidateContent } from "../../src/loops/planning/candidate-content.ts";
 import { createReviewAttempt } from "../../src/loops/review/contracts.ts";
 
+function planningCandidate() {
+	return {
+		changeId: "CHG-1",
+		changeRevisionId: `sha256:${"a".repeat(64)}`,
+		observedWorkGraphDigest: `sha256:${"b".repeat(64)}`,
+		workUnits: [
+			{
+				id: "WU-1",
+				owningChangeId: "CHG-1",
+				title: "Tighten admission",
+				outcome: "Nested content is exact.",
+				technicalRequirements: ["Reject unknown fields."],
+				acceptanceRequirements: ["Malformed content fails."],
+				componentRefs: ["component:planning-loop"],
+				pathScopes: ["src/loops/planning/**"],
+				verification: ["npm test"],
+				resourceRequirements: {
+					capabilityIds: ["source.edit"],
+					toolIds: ["node-test"],
+					skillIds: [],
+					custodyRequirements: ["private-workbench"],
+					budgetClass: "standard",
+				},
+			},
+		],
+		dependencyEdges: [],
+		acceptanceCoverage: [
+			{ acceptanceRequirement: "Malformed content fails.", workUnitIds: ["WU-1"] },
+		],
+		uiPreviewTargets: [],
+		integrationRequirements: ["Integrate into private Change lineage."],
+		rationale: "Exact Change-scoped Work Graph delta.",
+	};
+}
+
 describe("Loop-owned candidate content admission", () => {
 	it("keeps Decision authority and time outside candidate content", () => {
 		assert.deepEqual(
@@ -33,25 +68,13 @@ describe("Loop-owned candidate content admission", () => {
 		);
 	});
 
-	it("keeps Planning actor and time outside candidate content", () => {
-		assert.deepEqual(
-			parsePlanningCandidateContent({
-				sprints: [],
-				workUnits: [],
-				rationale: "No worker-ready work yet.",
-			}),
-			{
-				sprints: [],
-				workUnits: [],
-				rationale: "No worker-ready work yet.",
-			},
-		);
+	it("keeps Planning provenance outside candidate content", () => {
+		const candidate = planningCandidate();
+		assert.deepEqual(parsePlanningCandidateContent(candidate), candidate);
 		assert.throws(
 			() =>
 				parsePlanningCandidateContent({
-					sprints: [],
-					workUnits: [],
-					rationale: "Caller attempted provenance control.",
+					...candidate,
 					actor: "model:planner",
 					createdAt: "2026-08-11T00:00:00.000Z",
 				}),
@@ -60,50 +83,7 @@ describe("Loop-owned candidate content admission", () => {
 	});
 
 	it("admits exact nested Planning content and rejects nested drift", () => {
-		const candidate = {
-			sprints: [
-				{
-					id: "SPR-1",
-					goal: "Deliver exact candidate admission.",
-					participatingChangeIds: ["CHG-1"],
-					workUnitIds: ["WI-1"],
-					rollbackBoundary: "Revert candidate admission together.",
-					dependsOn: [],
-					integrationRefs: [],
-					uiPreviewTargets: [
-						{
-							targetId: "dashboard",
-							targetDigest: `sha256:${"a".repeat(64)}`,
-							profileId: "web",
-							profileDigest: `sha256:${"b".repeat(64)}`,
-							workUnitIds: ["WI-1"],
-							contributingChangeIds: ["CHG-1"],
-							required: true,
-							activation: "implementation",
-							autoOpen: "once_per_target",
-						},
-					],
-				},
-			],
-			workUnits: [
-				{
-					id: "WI-1",
-					sprintId: "SPR-1",
-					owningChangeId: "CHG-1",
-					contributingChangeIds: [],
-					title: "Tighten admission",
-					outcome: "Nested content is exact.",
-					technicalRequirements: ["Reject unknown fields."],
-					acceptanceRequirements: ["Malformed content fails."],
-					componentRefs: ["component:planning-loop"],
-					pathScopes: ["src/loops/planning/**"],
-					verification: ["npm test"],
-					workerProfile: "semantic",
-					dependsOn: [],
-				},
-			],
-			rationale: "Exact worker-ready plan.",
-		};
+		const candidate = planningCandidate();
 		assert.deepEqual(parsePlanningCandidateContent(candidate), candidate);
 		assert.throws(
 			() =>

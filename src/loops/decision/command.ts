@@ -293,7 +293,7 @@ function decisionEvent(input: {
 				targetLoop: input.input.disposition === "approve" ? "planning" : null,
 				nextAction:
 					input.input.disposition === "approve"
-						? "Include approved Change in Planning horizon."
+						? "Plan approved Change against current Work Graph."
 						: "Retain terminal Change disposition.",
 			},
 		},

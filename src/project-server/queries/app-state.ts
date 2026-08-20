@@ -26,7 +26,7 @@ import {
 } from "../workers/observation.ts";
 import { DECISION_CHANGE_QUALITY_STANDARDS } from "../../loops/decision/change-quality.ts";
 import { implementationQualityStandards } from "../../loops/implementation/quality-standards.ts";
-import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../../loops/planning/portfolio-quality.ts";
+import { PLANNING_GRAPH_DELTA_QUALITY_STANDARDS } from "../../loops/planning/graph-delta-quality.ts";
 import type { TraceEvent, TraceLoop, TraceRecord } from "../../changes/trace/types.ts";
 import { qualityIterationsFromTrace } from "../../work-state/quality.ts";
 import {
@@ -55,27 +55,27 @@ export type CodewikiPipelineStage =
 	| "planning"
 	| "implementation"
 	| "committed";
-export type CodewikiSprintTracePhase = CodewikiPipelineStage;
-export type CodewikiSprintTracePhaseState =
+export type CodewikiPipelineTracePhase = CodewikiPipelineStage;
+export type CodewikiPipelineTracePhaseState =
 	| "done"
 	| "active"
 	| "blocked"
 	| "todo";
-export type CodewikiSprintTraceQualityStatus =
+export type CodewikiPipelineTraceQualityStatus =
 	| "pending"
 	| "verifying"
 	| "passed"
 	| "failed"
 	| "skipped";
 
-export interface CodewikiSprintTraceSegment {
-	phase: CodewikiSprintTracePhase;
+export interface CodewikiPipelineTraceSegment {
+	phase: CodewikiPipelineTracePhase;
 	label: "Change" | "Decision" | "Planning" | "Implementation" | "Committed";
-	state: CodewikiSprintTracePhaseState;
+	state: CodewikiPipelineTracePhaseState;
 	progress: number;
 }
 
-export interface CodewikiSprintTraceQualityCheck {
+export interface CodewikiPipelineTraceQualityCheck {
 	index: number;
 	loop: TraceLoop;
 	id: string;
@@ -86,12 +86,12 @@ export interface CodewikiSprintTraceQualityCheck {
 	gate?: string;
 	score?: number;
 	scoreThreshold?: number;
-	status: CodewikiSprintTraceQualityStatus;
+	status: CodewikiPipelineTraceQualityStatus;
 	message?: string;
 	refs: string[];
 }
 
-export interface CodewikiSprintTraceQualitySummary {
+export interface CodewikiPipelineTraceQualitySummary {
 	total: number;
 	passed: number;
 	failed: number;
@@ -100,7 +100,7 @@ export interface CodewikiSprintTraceQualitySummary {
 	skipped: number;
 }
 
-export interface CodewikiSprintTraceWorker {
+export interface CodewikiPipelineTraceWorker {
 	workUnitId: string;
 	traceId: string;
 	status: "active" | "selected" | "held";
@@ -133,7 +133,7 @@ export interface CodewikiImplementationReview {
 	acceptanceStatus: "waiting" | "partial" | "ready";
 }
 
-export interface CodewikiSprintTraceItem {
+export interface CodewikiPipelineTraceItem {
 	id: string;
 	kind: string;
 	status: string;
@@ -142,21 +142,21 @@ export interface CodewikiSprintTraceItem {
 	blockers: string[];
 }
 
-export interface CodewikiSprintTraceActivity {
+export interface CodewikiPipelineTraceActivity {
 	kind: TraceLoop | "trace" | "archive";
 	label: string;
 	detail: string;
 	createdAt?: string;
 }
 
-export type CodewikiSprintTraceLoopState =
+export type CodewikiPipelineTraceLoopState =
 	| "active"
 	| "locked"
 	| "blocked"
 	| "skipped"
 	| "pending";
 
-export interface CodewikiSprintTraceFeedItem {
+export interface CodewikiPipelineTraceFeedItem {
 	id: string;
 	createdAt?: string;
 	label: string;
@@ -165,42 +165,42 @@ export interface CodewikiSprintTraceFeedItem {
 	feedback: string[];
 }
 
-export interface CodewikiSprintTraceLoopReport {
+export interface CodewikiPipelineTraceLoopReport {
 	summary: string;
 	bullets: string[];
 	checks: string[];
 	metrics: string[];
 }
 
-export interface CodewikiSprintTraceLoopSection {
+export interface CodewikiPipelineTraceLoopSection {
 	loop: TraceLoop;
-	state: CodewikiSprintTraceLoopState;
+	state: CodewikiPipelineTraceLoopState;
 	statusLabel: string;
 	iterationCount: number;
 	profileLabel: string;
 	summary: string;
-	feed: CodewikiSprintTraceFeedItem[];
-	qualityChecks: CodewikiSprintTraceQualityCheck[];
-	qualitySummary: CodewikiSprintTraceQualitySummary;
-	report: CodewikiSprintTraceLoopReport;
+	feed: CodewikiPipelineTraceFeedItem[];
+	qualityChecks: CodewikiPipelineTraceQualityCheck[];
+	qualitySummary: CodewikiPipelineTraceQualitySummary;
+	report: CodewikiPipelineTraceLoopReport;
 }
 
-export interface CodewikiSprintKnowledgeTopic {
+export interface CodewikiPipelineKnowledgeTopic {
 	ref: string;
 	category: "product" | "system";
 	label: string;
 }
 
-export interface CodewikiSprintPlan {
+export interface CodewikiWorkGraphPlan {
 	accountableGoal: string;
-	knowledgeTopics: CodewikiSprintKnowledgeTopic[];
+	knowledgeTopics: CodewikiPipelineKnowledgeTopic[];
 	uiPreviewTargets: UiPreviewTargetBinding[];
 	noKnowledgeImpactReason?: string;
 	dependencies: string[];
 	rollbackBoundary: string;
 }
 
-export interface CodewikiSprintTraceTouchedFiles {
+export interface CodewikiPipelineTraceTouchedFiles {
 	kbProduct: string[];
 	kbSystem: string[];
 	codeEdits: string[];
@@ -208,7 +208,7 @@ export interface CodewikiSprintTraceTouchedFiles {
 	other: string[];
 }
 
-export interface CodewikiSprintTrace {
+export interface CodewikiPipelineTrace {
 	traceId: string;
 	title: string;
 	status: TraceGoalStatus;
@@ -218,13 +218,13 @@ export interface CodewikiSprintTrace {
 	stage: CodewikiPipelineStage;
 	loop: TraceLoop | "archive" | "archived" | "blocked" | "waiting";
 	progress: number;
-	segments: CodewikiSprintTraceSegment[];
-	qualityChecks: CodewikiSprintTraceQualityCheck[];
-	qualitySummary: CodewikiSprintTraceQualitySummary;
-	primaryQualityChecks: CodewikiSprintTraceQualityCheck[];
-	primaryQualitySummary: CodewikiSprintTraceQualitySummary;
+	segments: CodewikiPipelineTraceSegment[];
+	qualityChecks: CodewikiPipelineTraceQualityCheck[];
+	qualitySummary: CodewikiPipelineTraceQualitySummary;
+	primaryQualityChecks: CodewikiPipelineTraceQualityCheck[];
+	primaryQualitySummary: CodewikiPipelineTraceQualitySummary;
 	qualityCaption: string;
-	loopSections: CodewikiSprintTraceLoopSection[];
+	loopSections: CodewikiPipelineTraceLoopSection[];
 	currentAction: string;
 	workerCount: number;
 	activeWorkCount: number;
@@ -233,19 +233,19 @@ export interface CodewikiSprintTrace {
 	planningRefs: string[];
 	workUnitRefs: string[];
 	changeIds: string[];
-	sprintIds: string[];
-	sprintPlan?: CodewikiSprintPlan;
+	workGraphDeltaIds: string[];
+	workGraphPlan?: CodewikiWorkGraphPlan;
 	previews?: PreviewRuntimeStatus[];
 	knowledgeAlignment: KnowledgeAlignmentProjection;
 	pathScopes: string[];
 	blockers: string[];
-	workers: CodewikiSprintTraceWorker[];
+	workers: CodewikiPipelineTraceWorker[];
 	workerAttempts: CodewikiWorkerAttempt[];
 	implementationReview: CodewikiImplementationReview;
-	items: CodewikiSprintTraceItem[];
-	activities: CodewikiSprintTraceActivity[];
+	items: CodewikiPipelineTraceItem[];
+	activities: CodewikiPipelineTraceActivity[];
 	devLog: ProjectServerDevLogProjection;
-	touchedFiles: CodewikiSprintTraceTouchedFiles;
+	touchedFiles: CodewikiPipelineTraceTouchedFiles;
 }
 
 export interface CodewikiAppState {
@@ -262,7 +262,7 @@ export interface CodewikiAppState {
 		blocked: number;
 	};
 	next: WikiStateSnapshot["next"];
-	sprintsQueue: CodewikiSprintTrace[];
+	pipelineQueue: CodewikiPipelineTrace[];
 	changes?: ProjectServerChangesState;
 	configuration?: ProjectServerConfigurationState;
 	previews?: PreviewRuntimeStatus[];
@@ -317,9 +317,9 @@ export function buildCodewikiAppState(
 		snapshot.traceQueue.cards.map((trace) => [trace.traceId, trace]),
 	);
 	const recordsByTrace = traceRecordsByTraceId(records);
-	const sprintsQueue = snapshot.traceBoard.traces.map((trace) => {
+	const pipelineQueue = snapshot.traceBoard.traces.map((trace) => {
 		const card = cardsByTrace.get(trace.traceId) || traceQueueFallback(trace);
-		return buildSprintTrace(
+		return buildPipelineTrace(
 			snapshot,
 			card,
 			recordsByTrace.get(card.traceId) || [],
@@ -327,7 +327,7 @@ export function buildCodewikiAppState(
 		);
 	});
 	const linkedChangeIds = new Set(
-		sprintsQueue.flatMap((trace) => trace.changeIds),
+		pipelineQueue.flatMap((trace) => trace.changeIds),
 	);
 	const backlogCards =
 		context.changes?.records.filter((card) =>
@@ -348,33 +348,33 @@ export function buildCodewikiAppState(
 		projectName: projectNameFromRoot(projectRoot),
 		generatedAt: snapshot.generatedAt,
 		summary: {
-			pipeline: unlinkedBacklog + acceptedWithoutTrace + sprintsQueue.length,
+			pipeline: unlinkedBacklog + acceptedWithoutTrace + pipelineQueue.length,
 			backlog,
 			decision:
 				acceptedWithoutTrace +
-				sprintsQueue.filter((trace) => trace.stage === "decision").length,
-			planning: sprintsQueue.filter((trace) => trace.stage === "planning")
+				pipelineQueue.filter((trace) => trace.stage === "decision").length,
+			planning: pipelineQueue.filter((trace) => trace.stage === "planning")
 				.length,
-			implementation: sprintsQueue.filter(
+			implementation: pipelineQueue.filter(
 				(trace) => trace.stage === "implementation",
 			).length,
-			committed: sprintsQueue.filter((trace) => trace.committed).length,
-			blocked: sprintsQueue.filter((trace) => trace.blockerCount > 0).length,
+			committed: pipelineQueue.filter((trace) => trace.committed).length,
+			blocked: pipelineQueue.filter((trace) => trace.blockerCount > 0).length,
 		},
 		next: snapshot.next,
-		sprintsQueue,
+		pipelineQueue,
 		...(context.changes ? { changes: context.changes } : {}),
 		...(context.configuration ? { configuration: context.configuration } : {}),
 		...(context.previews ? { previews: context.previews } : {}),
 	};
 }
 
-function buildSprintTrace(
+function buildPipelineTrace(
 	snapshot: WikiStateSnapshot,
 	card: TraceQueueCard,
 	records: TraceRecord[],
 	context: CodewikiAppStateQueryContext,
-): CodewikiSprintTrace {
+): CodewikiPipelineTrace {
 	const items = snapshot.workQueue.items.filter(
 		(item) => item.traceId === card.traceId,
 	);
@@ -385,10 +385,10 @@ function buildSprintTrace(
 			.filter((blocker) => blocker.traceId === card.traceId)
 			.map((blocker) => blocker.message),
 	]);
-	const workers = sprintTraceWorkers(snapshot, card.traceId);
-	const loop = sprintTraceLoop(card, items, blockers);
+	const workers = pipelineTraceWorkers(snapshot, card.traceId);
+	const loop = pipelineTraceLoop(card, items, blockers);
 	const committed = isCommittedAppTrace(card, records);
-	const stage = sprintTraceStage(card, items, committed);
+	const stage = pipelineTraceStage(card, items, committed);
 	const workerAttempts = buildCodewikiWorkerAttempts(
 		records,
 		items,
@@ -396,38 +396,38 @@ function buildSprintTrace(
 			(observation) => observation.traceId === card.traceId,
 		) ?? [],
 	);
-	const loopSections = sprintTraceLoopSections(card, records, loop, blockers);
-	const qualityChecks = sprintTraceQualityChecks(card, records, loop, blockers);
-	const qualitySummary = sprintTraceQualitySummary(qualityChecks);
+	const loopSections = pipelineTraceLoopSections(card, records, loop, blockers);
+	const qualityChecks = pipelineTraceQualityChecks(card, records, loop, blockers);
+	const qualitySummary = pipelineTraceQualitySummary(qualityChecks);
 	const primaryQualityChecks = primaryQualityChecksForTrace(
 		loopSections,
 		loop,
 		qualityChecks,
 	);
-	const primaryQualitySummary = sprintTraceQualitySummary(primaryQualityChecks);
-	const sprintPlan = projectSprintPlan(records);
+	const primaryQualitySummary = pipelineTraceQualitySummary(primaryQualityChecks);
+	const workGraphPlan = projectWorkGraphPlan(records);
 	const previews = context.previews?.filter((status) =>
 		status.traceIds.includes(card.traceId),
 	);
 	const knowledgeAlignment = projectKnowledgeAlignment({
 		records,
-		topicRefs: sprintPlan?.knowledgeTopics.map((topic) => topic.ref) || [],
-		noKnowledgeImpactReason: sprintPlan?.noKnowledgeImpactReason,
+		topicRefs: workGraphPlan?.knowledgeTopics.map((topic) => topic.ref) || [],
+		noKnowledgeImpactReason: workGraphPlan?.noKnowledgeImpactReason,
 		currentDigests: context.knowledgeTopicDigests,
 	});
-	const projection: CodewikiSprintTrace = {
+	const projection: CodewikiPipelineTrace = {
 		traceId: card.traceId,
 		title: card.title || card.traceId,
 		status: card.status,
 		closed: card.closed,
 		committed,
-		...(sprintTraceCommitRef(records)
-			? { commitRef: sprintTraceCommitRef(records) }
+		...(pipelineTraceCommitRef(records)
+			? { commitRef: pipelineTraceCommitRef(records) }
 			: {}),
 		stage,
 		loop,
-		progress: sprintTraceProgress(card, items, blockers, committed),
-		segments: sprintTraceSegments(
+		progress: pipelineTraceProgress(card, items, blockers, committed),
+		segments: pipelineTraceSegments(
 			card,
 			items,
 			blockers,
@@ -438,22 +438,22 @@ function buildSprintTrace(
 		qualitySummary,
 		primaryQualityChecks,
 		primaryQualitySummary,
-		qualityCaption: sprintTraceQualityCaption(
+		qualityCaption: pipelineTraceQualityCaption(
 			card,
 			loop,
 			primaryQualityChecks,
 			primaryQualitySummary,
 		),
 		loopSections,
-		currentAction: sprintTraceAction(snapshot, card, loop, blockers),
+		currentAction: pipelineTraceAction(snapshot, card, loop, blockers),
 		workerCount: workers.length,
 		activeWorkCount: items.filter((item) => item.status !== "done").length,
 		blockerCount: blockers.length,
 		changeRefs: [...card.changeRefs],
 		planningRefs: unique(items.flatMap((item) => item.planningRefs)),
 		workUnitRefs: workUnitRefs(card, items),
-		changeIds: sprintTraceChangeIds(records),
-		...(sprintPlan ? { sprintPlan } : {}),
+		changeIds: pipelineTraceChangeIds(records),
+		...(workGraphPlan ? { workGraphPlan } : {}),
 		...(previews?.length ? { previews } : {}),
 		knowledgeAlignment,
 		pathScopes: unique([
@@ -470,19 +470,19 @@ function buildSprintTrace(
 			blockers,
 			card.closed,
 		),
-		items: items.map(sprintTraceItem),
-		activities: sprintTraceActivities(records),
+		items: items.map(pipelineTraceItem),
+		activities: pipelineTraceActivities(records),
 		devLog: projectServerDevLog(context.devLogByTrace?.get(card.traceId)),
-		touchedFiles: sprintTraceTouchedFiles(records, items, workers, card),
-		sprintIds: [],
+		touchedFiles: pipelineTraceTouchedFiles(records, items, workers, card),
+		workGraphDeltaIds: [],
 	};
 	return applyWorkStateChangeJourney(projection, snapshot);
 }
 
 function applyWorkStateChangeJourney(
-	projection: CodewikiSprintTrace,
+	projection: CodewikiPipelineTrace,
 	snapshot: WikiStateSnapshot,
-): CodewikiSprintTrace {
+): CodewikiPipelineTrace {
 	const change = snapshot.workState.changes.find(
 		(candidate) => candidate.traceId === projection.traceId,
 	);
@@ -505,7 +505,7 @@ function applyWorkStateChangeJourney(
 		blockerCount: blockers.length,
 		blockers,
 		changeIds: [change.id],
-		sprintIds: [...change.sprintIds],
+		workGraphDeltaIds: [...change.workGraphDeltaIds],
 		workUnitRefs: [...change.workUnitIds],
 		activeWorkCount: snapshot.workState.workUnits.filter(
 			(item) => change.workUnitIds.includes(item.id) && !item.implemented,
@@ -516,7 +516,7 @@ function applyWorkStateChangeJourney(
 function changeJourneySegments(
 	change: WikiStateSnapshot["workState"]["changes"][number],
 	committed: boolean,
-): CodewikiSprintTraceSegment[] {
+): CodewikiPipelineTraceSegment[] {
 	const changePhase = changeJourneyChangePhase(change);
 	const decisionPhase = changeJourneyDecisionPhase(change);
 	const planningPhase = changeJourneyPlanningPhase(change);
@@ -553,7 +553,7 @@ function changeJourneySegments(
 
 function changeJourneyChangePhase(
 	change: WikiStateSnapshot["workState"]["changes"][number],
-): Pick<CodewikiSprintTraceSegment, "state" | "progress"> {
+): Pick<CodewikiPipelineTraceSegment, "state" | "progress"> {
 	if (change.record.change.validation.state === "valid") {
 		return { state: "done", progress: 1 };
 	}
@@ -563,7 +563,7 @@ function changeJourneyChangePhase(
 
 function changeJourneyDecisionPhase(
 	change: WikiStateSnapshot["workState"]["changes"][number],
-): Pick<CodewikiSprintTraceSegment, "state" | "progress"> {
+): Pick<CodewikiPipelineTraceSegment, "state" | "progress"> {
 	if (change.approval.status === "approved") {
 		return { state: "done", progress: 1 };
 	}
@@ -575,7 +575,7 @@ function changeJourneyDecisionPhase(
 
 function changeJourneyPlanningPhase(
 	change: WikiStateSnapshot["workState"]["changes"][number],
-): Pick<CodewikiSprintTraceSegment, "state" | "progress"> {
+): Pick<CodewikiPipelineTraceSegment, "state" | "progress"> {
 	if (change.planningStatus === "planned") {
 		return { state: "done", progress: 1 };
 	}
@@ -590,7 +590,7 @@ function changeJourneyPlanningPhase(
 
 function changeJourneyImplementationPhase(
 	change: WikiStateSnapshot["workState"]["changes"][number],
-): Pick<CodewikiSprintTraceSegment, "state" | "progress"> {
+): Pick<CodewikiPipelineTraceSegment, "state" | "progress"> {
 	if (change.realizationStatus === "realized") {
 		return { state: "done", progress: 1 };
 	}
@@ -603,7 +603,7 @@ function changeJourneyImplementationPhase(
 function changeJourneyCommittedPhase(
 	change: WikiStateSnapshot["workState"]["changes"][number],
 	committed: boolean,
-): Pick<CodewikiSprintTraceSegment, "state" | "progress"> {
+): Pick<CodewikiPipelineTraceSegment, "state" | "progress"> {
 	if (committed) return { state: "done", progress: 1 };
 	if (change.realizationStatus === "realized") {
 		return { state: "active", progress: 0 };
@@ -614,7 +614,7 @@ function changeJourneyCommittedPhase(
 function changeJourneyLoop(
 	change: WikiStateSnapshot["workState"]["changes"][number],
 	committed: boolean,
-): CodewikiSprintTrace["loop"] {
+): CodewikiPipelineTrace["loop"] {
 	if (change.currentLoop) return change.currentLoop;
 	if (committed) return "archived";
 	return "waiting";
@@ -657,10 +657,10 @@ function changeJourneyStatus(
 	return "finished";
 }
 
-function sprintTraceWorkers(
+function pipelineTraceWorkers(
 	snapshot: WikiStateSnapshot,
 	traceId: string,
-): CodewikiSprintTraceWorker[] {
+): CodewikiPipelineTraceWorker[] {
 	return [
 		...snapshot.runtimeBoard.activeClaims.map((claim) => ({
 			workUnitId: claim.workUnitId,
@@ -836,7 +836,7 @@ function stringValues(value: unknown): string[] {
 		: [];
 }
 
-function sprintTraceItem(item: WorkQueueItem): CodewikiSprintTraceItem {
+function pipelineTraceItem(item: WorkQueueItem): CodewikiPipelineTraceItem {
 	return {
 		id: item.id,
 		kind: item.kind,
@@ -847,12 +847,12 @@ function sprintTraceItem(item: WorkQueueItem): CodewikiSprintTraceItem {
 	};
 }
 
-function sprintTraceLoopSections(
+function pipelineTraceLoopSections(
 	card: TraceQueueCard,
 	records: TraceRecord[],
-	currentLoop: CodewikiSprintTrace["loop"],
+	currentLoop: CodewikiPipelineTrace["loop"],
 	blockers: string[],
-): CodewikiSprintTraceLoopSection[] {
+): CodewikiPipelineTraceLoopSection[] {
 	const iterations = qualityIterationsFromTrace(records);
 	const events = semanticTraceEvents(records);
 	return TRACE_QUALITY_LOOPS.map((loop) => {
@@ -885,7 +885,7 @@ function sprintTraceLoopSections(
 			state,
 			blockers,
 		);
-		const qualitySummary = sprintTraceQualitySummary(markedChecks);
+		const qualitySummary = pipelineTraceQualitySummary(markedChecks);
 		const iterationCount = Math.max(loopIterations.length, loopEvents.length);
 		return {
 			loop,
@@ -910,10 +910,10 @@ function sprintTraceLoopSections(
 }
 
 function primaryQualityChecksForTrace(
-	sections: CodewikiSprintTraceLoopSection[],
-	loop: CodewikiSprintTrace["loop"],
-	fallback: CodewikiSprintTraceQualityCheck[],
-): CodewikiSprintTraceQualityCheck[] {
+	sections: CodewikiPipelineTraceLoopSection[],
+	loop: CodewikiPipelineTrace["loop"],
+	fallback: CodewikiPipelineTraceQualityCheck[],
+): CodewikiPipelineTraceQualityCheck[] {
 	const current = TRACE_QUALITY_LOOPS.includes(loop as TraceLoop)
 		? sections.find((section) => section.loop === loop)
 		: undefined;
@@ -938,12 +938,12 @@ function semanticTraceEvents(records: TraceRecord[]): TraceEvent[] {
 function loopSectionState(input: {
 	card: TraceQueueCard;
 	loop: TraceLoop;
-	currentLoop: CodewikiSprintTrace["loop"];
+	currentLoop: CodewikiPipelineTrace["loop"];
 	blockers: string[];
 	loopEvents: TraceEvent[];
 	loopIterations: QualityIterationSummary[];
 	events: TraceEvent[];
-}): CodewikiSprintTraceLoopState {
+}): CodewikiPipelineTraceLoopState {
 	if (input.loop === "planning" && planningWasSkipped(input)) return "skipped";
 	const latest = input.loopIterations.at(-1);
 	if (latest && !latest.ready) return "blocked";
@@ -969,17 +969,17 @@ function planningWasSkipped(input: {
 function loopSectionStandards(
 	loop: TraceLoop,
 	latestIteration: QualityIterationSummary | undefined,
-	state: CodewikiSprintTraceLoopState,
+	state: CodewikiPipelineTraceLoopState,
 ): QualityStandardSummary[] {
 	if (state === "skipped") return [];
 	return latestIteration?.standards || REQUIRED_QUALITY_STANDARDS[loop];
 }
 
 function markLoopSectionCurrentCheck(
-	checks: CodewikiSprintTraceQualityCheck[],
-	state: CodewikiSprintTraceLoopState,
+	checks: CodewikiPipelineTraceQualityCheck[],
+	state: CodewikiPipelineTraceLoopState,
 	blockers: string[],
-): CodewikiSprintTraceQualityCheck[] {
+): CodewikiPipelineTraceQualityCheck[] {
 	if (state !== "active" && state !== "blocked") return checks;
 	if (checks.some((check) => check.status === "failed")) return checks;
 	const target =
@@ -995,7 +995,7 @@ function markLoopSectionCurrentCheck(
 	});
 }
 
-function loopSectionStatusLabel(state: CodewikiSprintTraceLoopState): string {
+function loopSectionStatusLabel(state: CodewikiPipelineTraceLoopState): string {
 	if (state === "locked") return "locked";
 	if (state === "blocked") return "blocked";
 	if (state === "active") return "running";
@@ -1005,16 +1005,16 @@ function loopSectionStatusLabel(state: CodewikiSprintTraceLoopState): string {
 
 function loopSectionProfileLabel(
 	loop: TraceLoop,
-	checks: CodewikiSprintTraceQualityCheck[],
+	checks: CodewikiPipelineTraceQualityCheck[],
 ): string {
 	return `${loop} quality profile · ${checks.length} ${plural(checks.length, "standard")}`;
 }
 
 function loopSectionSummary(
 	loop: TraceLoop,
-	state: CodewikiSprintTraceLoopState,
+	state: CodewikiPipelineTraceLoopState,
 	latestIteration: QualityIterationSummary | undefined,
-	summary: CodewikiSprintTraceQualitySummary,
+	summary: CodewikiPipelineTraceQualitySummary,
 ): string {
 	if (state === "skipped")
 		return `${titleCase(loop)} skipped by pipeline profile.`;
@@ -1029,7 +1029,7 @@ function loopSectionSummary(
 	return `${titleCase(loop)} locked · iteration ${latestIteration ? iterationNumber(latestIteration.eventId) : "?"} exited with ${summary.passed}/${summary.total} checks passed.`;
 }
 
-function traceEventFeedItem(event: TraceEvent): CodewikiSprintTraceFeedItem {
+function traceEventFeedItem(event: TraceEvent): CodewikiPipelineTraceFeedItem {
 	const details = traceEventDetails(event);
 	return {
 		id: event.id,
@@ -1079,12 +1079,12 @@ function traceEventFeedback(event: TraceEvent): string[] {
 
 function loopSectionReport(
 	_loop: TraceLoop,
-	state: CodewikiSprintTraceLoopState,
+	state: CodewikiPipelineTraceLoopState,
 	event: TraceEvent | undefined,
 	iteration: QualityIterationSummary | undefined,
 	iterationCount: number,
-	qualitySummary: CodewikiSprintTraceQualitySummary,
-): CodewikiSprintTraceLoopReport {
+	qualitySummary: CodewikiPipelineTraceQualitySummary,
+): CodewikiPipelineTraceLoopReport {
 	if (state === "skipped") {
 		return {
 			summary: "",
@@ -1110,7 +1110,7 @@ function loopReportMetrics(
 	event: TraceEvent | undefined,
 	iteration: QualityIterationSummary | undefined,
 	iterationCount: number,
-	qualitySummary: CodewikiSprintTraceQualitySummary,
+	qualitySummary: CodewikiPipelineTraceQualitySummary,
 ): string[] {
 	const data = objectRecord(event?.data);
 	const exit = objectRecord(data.exit);
@@ -1132,7 +1132,7 @@ function loopReportMetrics(
 
 function qualityChecksMetric(
 	iteration: QualityIterationSummary | undefined,
-	summary: CodewikiSprintTraceQualitySummary,
+	summary: CodewikiPipelineTraceQualitySummary,
 	nodes: Record<string, unknown>[],
 ): string {
 	const total = iteration?.standards.length || nodes.length || summary.total;
@@ -1242,12 +1242,12 @@ function iterationNumber(eventId: string): string {
 	return eventId.match(/iteration:(\d+)/)?.[1] || "?";
 }
 
-function sprintTraceTouchedFiles(
+function pipelineTraceTouchedFiles(
 	records: TraceRecord[],
 	items: WorkQueueItem[],
-	workers: CodewikiSprintTraceWorker[],
+	workers: CodewikiPipelineTraceWorker[],
 	card: TraceQueueCard,
-): CodewikiSprintTraceTouchedFiles {
+): CodewikiPipelineTraceTouchedFiles {
 	const paths = unique([
 		...traceRecordPaths(records),
 		...items.flatMap((item) => item.pathScopes),
@@ -1299,20 +1299,20 @@ function isOtherTouchedPath(path: string): boolean {
 	);
 }
 
-function sprintTraceActivities(
+function pipelineTraceActivities(
 	records: TraceRecord[],
-): CodewikiSprintTraceActivity[] {
+): CodewikiPipelineTraceActivity[] {
 	const activities = records
-		.map(sprintTraceActivity)
-		.filter((activity): activity is CodewikiSprintTraceActivity =>
+		.map(pipelineTraceActivity)
+		.filter((activity): activity is CodewikiPipelineTraceActivity =>
 			Boolean(activity),
 		);
 	return activities.slice(Math.max(0, activities.length - 8)).reverse();
 }
 
-function sprintTraceActivity(
+function pipelineTraceActivity(
 	record: TraceRecord,
-): CodewikiSprintTraceActivity | undefined {
+): CodewikiPipelineTraceActivity | undefined {
 	if (record.type === "trace_head") {
 		return {
 			kind: "trace",
@@ -1333,7 +1333,7 @@ function sprintTraceActivity(
 	return traceEventActivity(record);
 }
 
-function traceEventActivity(record: TraceEvent): CodewikiSprintTraceActivity {
+function traceEventActivity(record: TraceEvent): CodewikiPipelineTraceActivity {
 	const loop = record.loop || "trace";
 	return {
 		kind: loop,
@@ -1447,18 +1447,18 @@ export function isCommittedAppTrace(
 	return (
 		card.closed &&
 		card.status === "closed_complete" &&
-		Boolean(sprintTraceCommitRef(records))
+		Boolean(pipelineTraceCommitRef(records))
 	);
 }
 
-function sprintTraceCommitRef(records: TraceRecord[]): string | undefined {
+function pipelineTraceCommitRef(records: TraceRecord[]): string | undefined {
 	const close = records.find((record) => record.type === "trace_close");
 	return close?.type === "trace_close" && close.gitRestoreRef.trim()
 		? close.gitRestoreRef.trim()
 		: undefined;
 }
 
-function sprintTraceStage(
+function pipelineTraceStage(
 	card: TraceQueueCard,
 	items: WorkQueueItem[],
 	committed: boolean,
@@ -1477,9 +1477,9 @@ function sprintTraceStage(
 	return "decision";
 }
 
-export function projectSprintPlan(
+export function projectWorkGraphPlan(
 	records: TraceRecord[],
-): CodewikiSprintPlan | undefined {
+): CodewikiWorkGraphPlan | undefined {
 	const events = semanticTraceEvents(records);
 	const knowledgeTopics = events
 		.filter((event) => event.loop === "decision")
@@ -1494,9 +1494,8 @@ export function projectSprintPlan(
 		const event = events[index];
 		if (event?.loop !== "planning") continue;
 		const output = objectRecord(event.data?.output);
-		const sprint = objectList(output?.sprints)[0];
-		if (!sprint) continue;
-		const uiPreviewTargets = objectList(sprint.uiPreviewTargets)
+		if (!stringValue(output?.workGraphDeltaId)) continue;
+		const uiPreviewTargets = objectList(output?.uiPreviewTargets)
 			.map((target) =>
 				normalizeUiPreviewTargetBinding({
 					targetId: stringValue(target.targetId),
@@ -1504,7 +1503,7 @@ export function projectSprintPlan(
 					profileId: stringValue(target.profileId),
 					profileDigest: stringValue(target.profileDigest),
 					workUnitIds: stringValues(target.workUnitIds),
-					contributingChangeIds: stringValues(target.contributingChangeIds),
+					changeIds: stringValues(target.changeIds),
 					required: target.required !== false,
 					activation: stringValue(target.activation),
 					autoOpen: stringValue(target.autoOpen),
@@ -1514,26 +1513,31 @@ export function projectSprintPlan(
 				(target) => uiPreviewTargetBindingValidationIssues(target).length === 0,
 			);
 		return {
-			accountableGoal: stringValue(sprint.goal),
+			accountableGoal: stringValue(output.rationale),
 			knowledgeTopics: unique(knowledgeTopics).flatMap(
-				projectSprintKnowledgeTopic,
+				projectWorkGraphKnowledgeTopic,
 			),
 			uiPreviewTargets,
-			dependencies: unique(stringValues(sprint.dependsOn)),
-			rollbackBoundary: stringValue(sprint.rollbackBoundary),
+			dependencies: unique(
+				objectList(output.dependencyEdges).flatMap((edge) => [
+					...stringValues([edge.fromWorkUnitId]),
+					...stringValues([edge.toWorkUnitId]),
+				]),
+			),
+			rollbackBoundary: stringValues(output.integrationRequirements).join("; "),
 		};
 	}
 	return undefined;
 }
 
-function projectSprintKnowledgeTopic(
+function projectWorkGraphKnowledgeTopic(
 	ref: string,
-): CodewikiSprintKnowledgeTopic[] {
+): CodewikiPipelineKnowledgeTopic[] {
 	const match = /^(?:\.codewiki\/kb\/|kb:)(product|system)\/(.+)\.md$/.exec(
 		ref,
 	);
 	if (!match) return [];
-	const category = match[1] as CodewikiSprintKnowledgeTopic["category"];
+	const category = match[1] as CodewikiPipelineKnowledgeTopic["category"];
 	const label = (match[2] || "")
 		.split("/")
 		.map((part) => titleCase(part.replace(/[-_]/g, " ")))
@@ -1541,7 +1545,7 @@ function projectSprintKnowledgeTopic(
 	return [{ ref, category, label }];
 }
 
-function sprintTraceChangeIds(records: TraceRecord[]): string[] {
+function pipelineTraceChangeIds(records: TraceRecord[]): string[] {
 	const headIds = records.flatMap((record) =>
 		record.type === "trace_head" && record.changeId ? [record.changeId] : [],
 	);
@@ -1570,11 +1574,11 @@ function traceRecordRefs(record: TraceRecord): string[] {
 	return [];
 }
 
-function sprintTraceLoop(
+function pipelineTraceLoop(
 	card: TraceQueueCard,
 	items: WorkQueueItem[],
 	blockers: string[],
-): CodewikiSprintTrace["loop"] {
+): CodewikiPipelineTrace["loop"] {
 	if (card.closed) return "archived";
 	if (blockers.length > 0 || card.status === "blocked") return "blocked";
 	if (items.some((item) => item.status === "claimed")) return "implementation";
@@ -1584,10 +1588,10 @@ function sprintTraceLoop(
 	return "decision";
 }
 
-function sprintTraceAction(
+function pipelineTraceAction(
 	snapshot: WikiStateSnapshot,
 	card: TraceQueueCard,
-	loop: CodewikiSprintTrace["loop"],
+	loop: CodewikiPipelineTrace["loop"],
 	blockers: string[],
 ): string {
 	if (snapshot.next.traceId === card.traceId) return snapshot.next.reason;
@@ -1604,7 +1608,7 @@ function sprintTraceAction(
 	return "Waiting for dependencies.";
 }
 
-function sprintTraceProgress(
+function pipelineTraceProgress(
 	card: TraceQueueCard,
 	items: WorkQueueItem[],
 	blockers: string[],
@@ -1629,13 +1633,13 @@ function sprintTraceProgress(
 	return roundToOne(blockers.length > 0 ? Math.min(clamped, 90) : clamped);
 }
 
-function sprintTraceSegments(
+function pipelineTraceSegments(
 	card: TraceQueueCard,
 	items: WorkQueueItem[],
 	blockers: string[],
 	committed: boolean,
-	sections: CodewikiSprintTraceLoopSection[],
-): CodewikiSprintTraceSegment[] {
+	sections: CodewikiPipelineTraceLoopSection[],
+): CodewikiPipelineTraceSegment[] {
 	const decisionState = phaseState(card, blockers, "decision", {
 		complete: decisionDone(card),
 	});
@@ -1645,7 +1649,7 @@ function sprintTraceSegments(
 	const implementationState = phaseState(card, blockers, "implementation", {
 		complete: implementationDone(card, items),
 	});
-	const committedState: CodewikiSprintTracePhaseState = committed
+	const committedState: CodewikiPipelineTracePhaseState = committed
 		? "done"
 		: card.closed
 			? "todo"
@@ -1688,7 +1692,7 @@ function phaseState(
 	blockers: string[],
 	phase: TraceLoop,
 	state: { complete: boolean },
-): CodewikiSprintTracePhaseState {
+): CodewikiPipelineTracePhaseState {
 	if (state.complete) return "done";
 	if (blockers.length > 0 && card.nextLoop === phase) return "blocked";
 	if (card.nextLoop === phase) return "active";
@@ -1696,11 +1700,11 @@ function phaseState(
 }
 
 function segment(
-	phase: CodewikiSprintTracePhase,
-	label: CodewikiSprintTraceSegment["label"],
-	state: CodewikiSprintTracePhaseState,
+	phase: CodewikiPipelineTracePhase,
+	label: CodewikiPipelineTraceSegment["label"],
+	state: CodewikiPipelineTracePhaseState,
 	progress: number,
-): CodewikiSprintTraceSegment {
+): CodewikiPipelineTraceSegment {
 	return {
 		phase,
 		label,
@@ -1710,9 +1714,9 @@ function segment(
 }
 
 function loopSegmentProgress(
-	sections: CodewikiSprintTraceLoopSection[],
+	sections: CodewikiPipelineTraceLoopSection[],
 	loop: TraceLoop,
-	state: CodewikiSprintTracePhaseState,
+	state: CodewikiPipelineTracePhaseState,
 ): number {
 	if (state === "done") return 1;
 	if (state === "todo") return 0;
@@ -1765,18 +1769,18 @@ const TRACE_QUALITY_LOOPS: TraceLoop[] = [
 const REQUIRED_QUALITY_STANDARDS: Record<TraceLoop, QualityStandardSummary[]> =
 	{
 		decision: DECISION_CHANGE_QUALITY_STANDARDS.map(requiredQualityStandard),
-		planning: PLANNING_PORTFOLIO_QUALITY_STANDARDS.map(requiredQualityStandard),
+		planning: PLANNING_GRAPH_DELTA_QUALITY_STANDARDS.map(requiredQualityStandard),
 		implementation: implementationQualityStandards([]).map(
 			requiredQualityStandard,
 		),
 	};
 
-function sprintTraceQualityChecks(
+function pipelineTraceQualityChecks(
 	card: TraceQueueCard,
 	records: TraceRecord[],
-	loop: CodewikiSprintTrace["loop"],
+	loop: CodewikiPipelineTrace["loop"],
 	blockers: string[],
-): CodewikiSprintTraceQualityCheck[] {
+): CodewikiPipelineTraceQualityCheck[] {
 	const latestIterations = latestQualityIterationByLoop(records);
 	const checks = TRACE_QUALITY_LOOPS.flatMap((qualityLoop) => {
 		const iteration = latestIterations.get(qualityLoop);
@@ -1801,7 +1805,7 @@ function qualityCheckFromStandard(input: {
 	loop: TraceLoop;
 	iterationExists: boolean;
 	closed: boolean;
-}): CodewikiSprintTraceQualityCheck {
+}): CodewikiPipelineTraceQualityCheck {
 	const status = qualityCheckStatus(
 		input.standard,
 		input.iterationExists,
@@ -1833,7 +1837,7 @@ function qualityCheckStatus(
 	standard: QualityStandardSummary,
 	iterationExists: boolean,
 	closed: boolean,
-): CodewikiSprintTraceQualityStatus {
+): CodewikiPipelineTraceQualityStatus {
 	if (!iterationExists) return closed ? "skipped" : "pending";
 	if (standard.status === "met") return "passed";
 	if (standard.status === "not_applicable" || standard.status === "escalated") {
@@ -1843,11 +1847,11 @@ function qualityCheckStatus(
 }
 
 function markCurrentQualityCheck(
-	checks: CodewikiSprintTraceQualityCheck[],
-	loop: CodewikiSprintTrace["loop"],
+	checks: CodewikiPipelineTraceQualityCheck[],
+	loop: CodewikiPipelineTrace["loop"],
 	blockers: string[],
 	closed: boolean,
-): CodewikiSprintTraceQualityCheck[] {
+): CodewikiPipelineTraceQualityCheck[] {
 	if (closed) return checks;
 	if (checks.some((check) => check.status === "failed")) return checks;
 	const currentLoop = TRACE_QUALITY_LOOPS.includes(loop as TraceLoop)
@@ -1871,9 +1875,9 @@ function markCurrentQualityCheck(
 	});
 }
 
-function sprintTraceQualitySummary(
-	checks: CodewikiSprintTraceQualityCheck[],
-): CodewikiSprintTraceQualitySummary {
+function pipelineTraceQualitySummary(
+	checks: CodewikiPipelineTraceQualityCheck[],
+): CodewikiPipelineTraceQualitySummary {
 	return {
 		total: checks.length,
 		passed: checks.filter((check) => check.status === "passed").length,
@@ -1884,11 +1888,11 @@ function sprintTraceQualitySummary(
 	};
 }
 
-function sprintTraceQualityCaption(
+function pipelineTraceQualityCaption(
 	card: TraceQueueCard,
-	loop: CodewikiSprintTrace["loop"],
-	checks: CodewikiSprintTraceQualityCheck[],
-	summary: CodewikiSprintTraceQualitySummary,
+	loop: CodewikiPipelineTrace["loop"],
+	checks: CodewikiPipelineTraceQualityCheck[],
+	summary: CodewikiPipelineTraceQualitySummary,
 ): string {
 	const failed = checks.find((check) => check.status === "failed");
 	if (failed) return qualityCaption("Blocked on", failed);
@@ -1905,7 +1909,7 @@ function sprintTraceQualityCaption(
 
 function qualityCaption(
 	prefix: string,
-	check: CodewikiSprintTraceQualityCheck,
+	check: CodewikiPipelineTraceQualityCheck,
 ): string {
 	return `${prefix} ${check.loop} quality · ${friendlyQualityLabel(check.label)}`;
 }
@@ -1957,7 +1961,7 @@ function workUnitRefs(card: TraceQueueCard, items: WorkQueueItem[]): string[] {
 }
 
 export function isActiveAppTrace(
-	trace: Pick<CodewikiSprintTrace, "closed" | "loop">,
+	trace: Pick<CodewikiPipelineTrace, "closed" | "loop">,
 ): boolean {
 	return !trace.closed && trace.loop !== "waiting";
 }

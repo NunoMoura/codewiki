@@ -12,7 +12,7 @@ export interface UiPreviewTargetBindingInput {
 	profileId?: string;
 	profileDigest?: string;
 	workUnitIds?: string[];
-	contributingChangeIds?: string[];
+	changeIds?: string[];
 	required?: boolean;
 	activation?: PreviewBindingActivation | string;
 	autoOpen?: PreviewBindingAutoOpen | string;
@@ -24,7 +24,7 @@ export interface UiPreviewTargetBinding {
 	profileId: string;
 	profileDigest: string;
 	workUnitIds: string[];
-	contributingChangeIds: string[];
+	changeIds: string[];
 	required: boolean;
 	activation: PreviewBindingActivation;
 	autoOpen: PreviewBindingAutoOpen;
@@ -32,7 +32,7 @@ export interface UiPreviewTargetBinding {
 
 export interface TraceUiPreviewTargetBinding extends UiPreviewTargetBinding {
 	traceIds: string[];
-	sprintIds: string[];
+	workGraphDeltaIds: string[];
 }
 
 export function normalizeUiPreviewTargetBinding(
@@ -44,7 +44,7 @@ export function normalizeUiPreviewTargetBinding(
 		profileId: text(input.profileId),
 		profileDigest: text(input.profileDigest),
 		workUnitIds: normalizedStrings(input.workUnitIds),
-		contributingChangeIds: normalizedStrings(input.contributingChangeIds),
+		changeIds: normalizedStrings(input.changeIds),
 		required: input.required === undefined ? true : (input.required as boolean),
 		activation:
 			input.activation === undefined
@@ -80,14 +80,14 @@ export function uiPreviewTargetBindingValidationIssues(
 	if (binding.workUnitIds.length === 0) {
 		issues.push("Preview workUnitIds must identify planned work.");
 	}
-	if (binding.contributingChangeIds.length === 0) {
+	if (binding.changeIds.length === 0) {
 		issues.push(
-			"Preview contributingChangeIds must identify accountable Changes.",
+			"Preview changeIds must identify accountable Changes.",
 		);
 	}
 	if (
 		binding.workUnitIds.some((id) => !SAFE_IDENTIFIER.test(id)) ||
-		binding.contributingChangeIds.some((id) => !SAFE_IDENTIFIER.test(id))
+		binding.changeIds.some((id) => !SAFE_IDENTIFIER.test(id))
 	) {
 		issues.push("Preview correlation ids must be bounded safe identifiers.");
 	}
@@ -116,59 +116,49 @@ export function traceUiPreviewTargetBindings(
 			continue;
 		}
 		const output = objectRecord(record.data?.output);
-		for (const sprint of objectList(output?.sprints)) {
-			const sprintId = text(sprint.id);
-			const sprintWorkUnitIds = stringList(sprint.workUnitIds);
-			const sprintChangeIds = stringList(sprint.participatingChangeIds);
-			for (const value of objectList(sprint.uiPreviewTargets)) {
-				const binding = normalizeUiPreviewTargetBinding({
-					targetId: text(value.targetId),
-					targetDigest: text(value.targetDigest),
-					profileId: text(value.profileId),
-					profileDigest: text(value.profileDigest),
-					workUnitIds: stringList(value.workUnitIds),
-					contributingChangeIds: stringList(value.contributingChangeIds),
-					required: boolean(value.required),
-					activation: text(value.activation),
-					autoOpen: text(value.autoOpen),
-				});
-				if (uiPreviewTargetBindingValidationIssues(binding).length > 0)
-					continue;
-				if (
-					binding.workUnitIds.some((id) => !sprintWorkUnitIds.includes(id)) ||
-					binding.contributingChangeIds.some(
-						(id) => !sprintChangeIds.includes(id),
-					)
-				) {
-					continue;
-				}
-				const key = [
-					binding.targetId,
-					binding.targetDigest,
-					binding.profileId,
-					binding.profileDigest,
-					String(binding.required),
-					binding.activation,
-					binding.autoOpen,
-				].join("\0");
-				const current = bindings.get(key);
-				bindings.set(key, {
-					...binding,
-					workUnitIds: unique([
-						...(current?.workUnitIds || []),
-						...binding.workUnitIds,
-					]),
-					contributingChangeIds: unique([
-						...(current?.contributingChangeIds || []),
-						...binding.contributingChangeIds,
-					]),
-					traceIds: unique([...(current?.traceIds || []), record.traceId]),
-					sprintIds: unique([
-						...(current?.sprintIds || []),
-						...(sprintId ? [sprintId] : []),
-					]),
-				});
-			}
+		const change = objectRecord(output?.change);
+		const owningChangeId = text(change?.changeId);
+		const workGraphDeltaId = text(output?.workGraphDeltaId);
+		const knownWorkUnitIds = objectList(output?.workUnits)
+			.map((unit) => text(unit.id))
+			.filter((id): id is string => Boolean(id));
+		for (const value of objectList(output?.uiPreviewTargets)) {
+			const binding = normalizeUiPreviewTargetBinding({
+				targetId: text(value.targetId),
+				targetDigest: text(value.targetDigest),
+				profileId: text(value.profileId),
+				profileDigest: text(value.profileDigest),
+				workUnitIds: stringList(value.workUnitIds),
+				changeIds: stringList(value.changeIds),
+				required: boolean(value.required),
+				activation: text(value.activation),
+				autoOpen: text(value.autoOpen),
+			});
+			if (uiPreviewTargetBindingValidationIssues(binding).length > 0) continue;
+			if (
+				binding.workUnitIds.some((id) => !knownWorkUnitIds.includes(id)) ||
+				binding.changeIds.some((id) => id !== owningChangeId)
+			) continue;
+			const key = [
+				binding.targetId,
+				binding.targetDigest,
+				binding.profileId,
+				binding.profileDigest,
+				String(binding.required),
+				binding.activation,
+				binding.autoOpen,
+			].join("\0");
+			const current = bindings.get(key);
+			bindings.set(key, {
+				...binding,
+				workUnitIds: unique([...(current?.workUnitIds || []), ...binding.workUnitIds]),
+				changeIds: unique([...(current?.changeIds || []), ...binding.changeIds]),
+				traceIds: unique([...(current?.traceIds || []), record.traceId]),
+				workGraphDeltaIds: unique([
+					...(current?.workGraphDeltaIds || []),
+					...(workGraphDeltaId ? [workGraphDeltaId] : []),
+				]),
+			});
 		}
 	}
 	return [...bindings.values()].sort((left, right) =>

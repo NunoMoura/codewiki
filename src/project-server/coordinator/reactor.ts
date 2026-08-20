@@ -1,4 +1,3 @@
-import type { ChangeRecord } from "../../changes/records.ts";
 import { buildProjectWorkState } from "../../work-state/project.ts";
 import {
 	WorkStateSession,
@@ -7,10 +6,10 @@ import {
 import type {
 	WorkState,
 	WorkStateChange,
-	WorkStateSprint,
+	WorkStateWorkUnit,
 } from "../../work-state/types.ts";
 
-export const RUNTIME_REACTION_SCHEMA_VERSION = 2;
+export const RUNTIME_REACTION_SCHEMA_VERSION = 3;
 
 export type ProjectServerTriggerKind =
 	| "session_started"
@@ -40,14 +39,13 @@ export interface ProjectServerDecisionSelection {
 
 export interface ProjectServerPlanningSelection {
 	loop: "planning";
-	planningHorizon: ProjectServerChangeRef[];
+	change: ProjectServerChangeRef;
 }
 
 export interface ProjectServerImplementationSelection {
 	loop: "implementation";
-	sprintId: string;
-	changeIds: string[];
-	workUnitIds: string[];
+	changeId: string;
+	workUnitId: string;
 }
 
 export type ProjectServerLoopSelection =
@@ -64,7 +62,6 @@ export interface ProjectServerReaction {
 }
 
 export interface SelectProjectServerReactionOptions {
-	maxPlanningChanges?: number;
 	maxReactions?: number;
 }
 
@@ -95,15 +92,11 @@ export function runtimeReactionsShareInvariant(
 		candidate.status !== "ready" ||
 		!expected.selection ||
 		!candidate.selection
-	) {
-		return false;
-	}
+	) return false;
 	if (
 		expected.selection.loop === "implementation" &&
 		expected.observedWorkStateDigest !== candidate.observedWorkStateDigest
-	) {
-		return false;
-	}
+	) return false;
 	return runtimeReactionInvariantKey(expected) === runtimeReactionInvariantKey(candidate);
 }
 
@@ -149,64 +142,47 @@ export class ProjectServerReactor {
 	}
 }
 
-/**
- * Derive one bounded semantic-loop reaction from current project truth.
- * Project Server owns this selection; callers never choose Decision, Planning, or
- * Implementation directly.
- */
 export function selectProjectServerReaction(
 	workState: WorkState,
 	trigger: ProjectServerTrigger,
 	options: SelectProjectServerReactionOptions = {},
 ): ProjectServerReaction {
-	return (
-		selectProjectServerReactions(workState, trigger, {
-			...options,
-			maxReactions: 1,
-		})[0] || quiescentReaction(workState, trigger)
-	);
+	return selectProjectServerReactions(workState, trigger, {
+		...options,
+		maxReactions: 1,
+	})[0] || quiescentReaction(workState, trigger);
 }
 
-/** Derive a bounded compatible horizon for the project coordinator. */
+/** Derive bounded independent reactions. Planning never groups Changes. */
 export function selectProjectServerReactions(
 	workState: WorkState,
 	trigger: ProjectServerTrigger,
 	options: SelectProjectServerReactionOptions = {},
 ): ProjectServerReaction[] {
 	const maxReactions = boundedReactionLimit(options.maxReactions);
-	const planningLimit = boundedPlanningLimit(options.maxPlanningChanges);
 	const candidates = eligibleChanges(workState, trigger);
 	const reactions: ProjectServerReaction[] = [];
-	const selectedSprints = new Set<string>();
-	let planningSelected = false;
+	const selectedWorkUnits = new Set<string>();
 
 	for (const candidate of candidates) {
 		if (reactions.length >= maxReactions) break;
 		if (candidate.currentLoop === "planning") {
-			if (planningSelected) continue;
-			planningSelected = true;
-			const horizon = relatedPlanningChanges(
-				workState,
-				candidate,
-				planningLimit,
-			);
 			reactions.push(
 				readyReaction(workState, trigger, {
 					loop: "planning",
-					planningHorizon: horizon.map(runtimeChangeRef),
+					change: runtimeChangeRef(candidate),
 				}),
 			);
 			continue;
 		}
-		const implementation = implementationSprint(workState, candidate.id);
-		if (!implementation || selectedSprints.has(implementation.id)) continue;
-		selectedSprints.add(implementation.id);
+		const workUnit = readyImplementationWorkUnit(workState, candidate.id);
+		if (!workUnit || selectedWorkUnits.has(workUnit.id)) continue;
+		selectedWorkUnits.add(workUnit.id);
 		reactions.push(
 			readyReaction(workState, trigger, {
 				loop: "implementation",
-				sprintId: implementation.id,
-				changeIds: [...implementation.participatingChangeIds].sort(compareText),
-				workUnitIds: readyWorkUnitIds(workState, implementation),
+				changeId: candidate.id,
+				workUnitId: workUnit.id,
 			}),
 		);
 	}
@@ -220,79 +196,37 @@ export async function inspectProjectServer(
 	return selectProjectServerReaction(workState, input.trigger, input);
 }
 
-
 function eligibleChanges(
 	workState: WorkState,
 	trigger: ProjectServerTrigger,
 ): WorkStateChange[] {
-	return workState.changes.filter(
-		(change) =>
-			change.currentLoop !== undefined && change.currentLoop !== "decision",
-	)
+	return workState.changes
+		.filter(
+			(change) =>
+				change.currentLoop !== undefined && change.currentLoop !== "decision",
+		)
 		.sort((left, right) => {
-			const relevance =
-				triggerRelevance(right, trigger) - triggerRelevance(left, trigger);
+			const relevance = triggerRelevance(right, trigger) - triggerRelevance(left, trigger);
 			if (relevance !== 0) return relevance;
 			const updatedAt = left.record.change.provenance.updatedAt.localeCompare(
 				right.record.change.provenance.updatedAt,
 			);
-			return updatedAt || compareChanges(left, right);
+			return updatedAt || left.id.localeCompare(right.id);
 		});
 }
 
-function implementationSprint(
+function readyImplementationWorkUnit(
 	workState: WorkState,
 	changeId: string,
-): WorkStateSprint | undefined {
-	const workUnitsById = new Map(
-		workState.workUnits.map((item) => [item.id, item]),
-	);
-	return workState.sprints
-		.filter((sprint) => !sprint.complete && sprint.blockers.length === 0)
-		.filter((sprint) => sprint.participatingChangeIds.includes(changeId))
-		.filter((sprint) =>
-			sprint.workUnitIds.some((id) => {
-				const item = workUnitsById.get(id);
-				return item ? !item.implemented && item.blockers.length === 0 : false;
-			}),
+): WorkStateWorkUnit | undefined {
+	const byId = new Map(workState.workUnits.map((unit) => [unit.id, unit]));
+	return workState.workUnits
+		.filter((unit) => unit.owningChangeId === changeId)
+		.filter((unit) => !unit.implemented && unit.blockers.length === 0)
+		.filter((unit) =>
+			unit.dependsOn.every((dependencyId) => byId.get(dependencyId)?.implemented),
 		)
 		.sort((left, right) => left.id.localeCompare(right.id))[0];
-}
-
-function relatedPlanningChanges(
-	workState: WorkState,
-	seed: WorkStateChange,
-	limit: number,
-): WorkStateChange[] {
-	const candidates = workState.changes
-		.filter((change) => change.currentLoop === "planning")
-		.sort(compareChanges);
-	const selected: WorkStateChange[] = [seed];
-	const selectedIds = new Set([seed.id]);
-	while (selected.length < limit) {
-		const related = candidates.find(
-			(candidate) =>
-				!selectedIds.has(candidate.id) &&
-				selected.some((current) =>
-					changesOverlap(current.record, candidate.record),
-				),
-		);
-		if (!related) break;
-		selected.push(related);
-		selectedIds.add(related.id);
-	}
-	return selected.sort(compareChanges);
-}
-
-function changesOverlap(left: ChangeRecord, right: ChangeRecord): boolean {
-	const leftId = left.change.id;
-	const rightId = right.change.id;
-	if (left.links.some((link) => link.targetChangeId === rightId)) return true;
-	if (right.links.some((link) => link.targetChangeId === leftId)) return true;
-	const rightRefs = new Set(right.change.classification.targetRefs);
-	return left.change.classification.targetRefs.some((ref) =>
-		rightRefs.has(ref),
-	);
 }
 
 function triggerRelevance(
@@ -305,9 +239,7 @@ function triggerRelevance(
 			ref === change.traceId ||
 			ref === `change:${change.id}` ||
 			ref === `trace:${change.traceId}`,
-	)
-		? 1
-		: 0;
+	) ? 1 : 0;
 }
 
 function runtimeChangeRef(change: WorkStateChange): ProjectServerChangeRef {
@@ -317,18 +249,6 @@ function runtimeChangeRef(change: WorkStateChange): ProjectServerChangeRef {
 		changeRevision: change.approval.changeRevision,
 		changeDigest: change.approval.changeDigest,
 	};
-}
-
-function readyWorkUnitIds(
-	workState: WorkState,
-	sprint: WorkStateSprint,
-): string[] {
-	return sprint.workUnitIds
-		.filter((id) => {
-			const item = workState.workUnits.find((workUnit) => workUnit.id === id);
-			return item ? !item.implemented && item.blockers.length === 0 : false;
-		})
-		.sort(compareText);
 }
 
 function readyReaction(
@@ -361,9 +281,7 @@ function normalizedTrigger(trigger: ProjectServerTrigger): ProjectServerTrigger 
 	return {
 		kind: trigger.kind,
 		...(trigger.occurredAt ? { occurredAt: trigger.occurredAt } : {}),
-		...(trigger.refs?.length
-			? { refs: [...new Set(trigger.refs)].sort(compareText) }
-			: {}),
+		...(trigger.refs?.length ? { refs: [...new Set(trigger.refs)].sort(compareText) } : {}),
 	};
 }
 
@@ -373,20 +291,6 @@ function boundedReactionLimit(value: number | undefined): number {
 		throw new Error("Project Server maxReactions must be an integer from 1 to 32.");
 	}
 	return value;
-}
-
-function boundedPlanningLimit(value: number | undefined): number {
-	if (value === undefined) return 8;
-	if (!Number.isInteger(value) || value < 1 || value > 32) {
-		throw new Error(
-			"Project Server maxPlanningChanges must be an integer from 1 to 32.",
-		);
-	}
-	return value;
-}
-
-function compareChanges(left: WorkStateChange, right: WorkStateChange): number {
-	return left.id.localeCompare(right.id);
 }
 
 function compareText(left: string, right: string): number {

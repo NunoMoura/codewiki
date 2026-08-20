@@ -6,8 +6,6 @@ import type {
 	ChangeRevision,
 	GitObjectId,
 	OperationId,
-	PlanningEpochId,
-	PlanningEpochRecord,
 } from "./contracts.ts";
 import {
 	canonicalJsonDigest,
@@ -93,16 +91,9 @@ export interface LoopAttemptProjection {
 	readonly terminalOperationId: OperationId | null;
 }
 
-export interface PlanningEpochBindingProjection {
-	readonly operationId: OperationId;
-	readonly planningEpochId: PlanningEpochId;
-	readonly participantRevisionId: Sha256Digest;
-	readonly workUnitIds: readonly string[];
-}
-
 export interface WorkUnitClaimProjection {
 	readonly operationId: OperationId;
-	readonly planningEpochId: PlanningEpochId;
+	readonly workGraphDeltaId: Sha256Digest;
 	readonly workUnitId: string;
 	readonly assignmentAttemptId: string;
 	readonly workerId: string;
@@ -114,7 +105,7 @@ export interface WorkUnitClaimProjection {
 export interface AssignmentProjection {
 	readonly operationId: OperationId;
 	readonly claimOperationId: OperationId;
-	readonly planningEpochId: PlanningEpochId;
+	readonly workGraphDeltaId: Sha256Digest;
 	readonly workUnitId: string;
 	readonly assignmentAttemptId: string;
 	readonly workerId: string;
@@ -162,7 +153,6 @@ export interface ChangeWorkState {
 	readonly relationships: readonly RelationshipProjection[];
 	readonly changeClaims: readonly ChangeClaimProjection[];
 	readonly loopAttempts: readonly LoopAttemptProjection[];
-	readonly planningEpochBindings: readonly PlanningEpochBindingProjection[];
 	readonly workUnitClaims: readonly WorkUnitClaimProjection[];
 	readonly assignments: readonly AssignmentProjection[];
 	readonly integrationAttempts: readonly IntegrationAttemptProjection[];
@@ -175,7 +165,6 @@ export interface ProjectWorkStateBody {
 	readonly stateHead: GitObjectId | null;
 	readonly observedBase: BaseSnapshot | null;
 	readonly changes: readonly ChangeWorkState[];
-	readonly planningEpochs: readonly PlanningEpochRecord[];
 	readonly acceptedOperationIds: readonly OperationId[];
 }
 
@@ -207,7 +196,6 @@ export function createInitialProjectWorkState(): ProjectWorkState {
 		stateHead: null,
 		observedBase: null,
 		changes: [],
-		planningEpochs: [],
 		acceptedOperationIds: [],
 	});
 }
@@ -249,7 +237,6 @@ export function emptyChangeWorkState(
 		relationships: [],
 		changeClaims: [],
 		loopAttempts: [],
-		planningEpochBindings: [],
 		workUnitClaims: [],
 		assignments: [],
 		integrationAttempts: [],
@@ -267,15 +254,6 @@ export function changeById(
 	changeId: string,
 ): ChangeWorkState | undefined {
 	return state.changes.find((change) => change.changeId === changeId);
-}
-
-export function planningEpochById(
-	state: Pick<ProjectWorkState, "planningEpochs">,
-	planningEpochId: PlanningEpochId,
-): PlanningEpochRecord | undefined {
-	return state.planningEpochs.find(
-		(record) => record.operationId === planningEpochId,
-	);
 }
 
 export function operationKindCount(

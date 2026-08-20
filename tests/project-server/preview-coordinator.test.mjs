@@ -74,24 +74,20 @@ function records(
 			createdAt: "2026-07-18T12:01:00.000Z",
 			data: {
 				output: {
-					sprints: [
+					workGraphDeltaId: "WGD-preview",
+					change: { changeId: "CHG-preview" },
+					workUnits: [{ id: "WU-preview" }],
+					uiPreviewTargets: targetBindings || [
 						{
-							id: "SPR-preview",
-							participatingChangeIds: ["CHG-preview"],
+							targetId: "dashboard-detail",
+							targetDigest,
+							profileId: "web",
+							profileDigest,
 							workUnitIds: ["WU-preview"],
-							uiPreviewTargets: targetBindings || [
-								{
-									targetId: "dashboard-detail",
-									targetDigest,
-									profileId: "web",
-									profileDigest,
-									workUnitIds: ["WU-preview"],
-									contributingChangeIds: ["CHG-preview"],
-									required: true,
-									activation: "implementation",
-									autoOpen: "once_per_target",
-								},
-							],
+							changeIds: ["CHG-preview"],
+							required: true,
+							activation: "implementation",
+							autoOpen: "once_per_target",
 						},
 					],
 				},
@@ -121,9 +117,9 @@ function integrationState(binding) {
 		dirty: false,
 		dirtyPaths: [],
 		visibility: "integrated",
-		visibleChangeIds: [...binding.contributingChangeIds],
+		visibleChangeIds: [...binding.changeIds],
 		conflictingChangeIds: [],
-		sprintIds: [...binding.sprintIds],
+		workGraphDeltaIds: [...binding.workGraphDeltaIds],
 		workUnitIds: [...binding.workUnitIds],
 	};
 }
@@ -234,7 +230,7 @@ describe("preview coordinator", () => {
 			profileId: "web",
 			profileDigest: previewProfileDigest(configured),
 			workUnitIds: ["WU-preview"],
-			contributingChangeIds: ["CHG-preview"],
+			changeIds: ["CHG-preview"],
 			required: true,
 			activation: "implementation",
 			autoOpen: "manual",
@@ -364,8 +360,8 @@ describe("preview coordinator", () => {
 						route: input.target.route,
 						url: input.profile.url,
 						traceIds: [...input.binding.traceIds],
-						changeIds: [...input.binding.contributingChangeIds],
-						sprintIds: [...input.binding.sprintIds],
+						changeIds: [...input.binding.changeIds],
+						workGraphDeltaIds: [...input.binding.workGraphDeltaIds],
 						workUnitIds: [...input.binding.workUnitIds],
 						implementation: [],
 						integration: input.integration,

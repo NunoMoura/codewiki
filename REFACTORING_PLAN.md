@@ -277,7 +277,7 @@ DSH receives no provider credentials and ideally no raw network. Runtime supplie
 - [x] Create an exhaustive HEAD-anchored vocabulary manifest after Slice 1.
 - [x] Rename executable `WorkItem`, `workItem`, `work_item`, `work-item`, and user-facing terms to `WorkUnit`, `workUnit`, `work_unit`, and `work-unit` in one breaking cut.
 - [x] Rename Change Trace operation kinds, payload fields, graph facts, query families, Claims, Assignments, effects, projections, fixtures, tests, and UI vocabulary without aliases.
-- [x] Advance affected Change Trace, Planning epoch, WorkState, Alignment, Change Intake, Review, Assignment, dispatch, integration, effect, and coordinator schema identities.
+- [x] Advance affected Change Trace, Planning, WorkState, Alignment, Change Intake, Review, Assignment, dispatch, integration, effect, and coordinator schema identities.
 - [x] Regenerate exact canonical fixture bytes and identities.
 - [x] Commit one green executable vocabulary checkpoint.
 
@@ -287,11 +287,12 @@ Success: no active executable or Knowledge `Work Item` spelling or parser surviv
 
 Create a new exhaustive HEAD-anchored deletion manifest after Slice 2A commit.
 
-- Delete `src/changes/trace/rolling-planning.ts` and rolling epoch contracts, reducers, views, active-work dispositions, planning horizons, participant-Change semantics, Sprint execution-plan ownership, and obsolete tests.
-- Replace portfolio Planning Candidate schemas with one Change-scoped graph-delta schema.
-- Remove `contributingChangeIds`; enforce exactly one owning Change per Work Unit.
-- Preserve cross-Change dependencies through explicit graph edges.
-- Update exports, package smoke, fixtures, and canonical protocol versions where bytes change.
+- [x] Delete `src/changes/trace/rolling-planning.ts` and rolling epoch contracts, reducers, views, active-work dispositions, planning horizons, participant-Change semantics, Sprint execution-plan ownership, and obsolete tests.
+- [x] Replace portfolio Planning Candidate schemas with one Change-scoped graph-delta schema.
+- [x] Remove contributing ownership fields; enforce exactly one owning Change per Work Unit.
+- [x] Preserve cross-Change dependencies through explicit graph edges.
+- [x] Update exports, package smoke, fixtures, and canonical protocol versions where bytes change.
+- [x] Commit one green rolling-planning deletion checkpoint.
 
 Success: no rolling-planning, horizon, participant, or canonical Sprint-plan compatibility surface remains.
 

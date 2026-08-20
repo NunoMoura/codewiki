@@ -55,7 +55,7 @@ export interface PreviewRuntimeStatus {
 	profileDigest?: string;
 	traceIds: string[];
 	changeIds: string[];
-	sprintIds: string[];
+	workGraphDeltaIds: string[];
 	workUnitIds: string[];
 	viewports: string[];
 	state: PreviewRuntimeState;
@@ -769,8 +769,8 @@ function blockedTargetStatus(input: {
 		profileId: input.binding.profileId,
 		profileDigest: input.binding.profileDigest,
 		traceIds: [...input.binding.traceIds],
-		changeIds: [...input.binding.contributingChangeIds],
-		sprintIds: [...input.binding.sprintIds],
+		changeIds: [...input.binding.changeIds],
+		workGraphDeltaIds: [...input.binding.workGraphDeltaIds],
 		workUnitIds: [...input.binding.workUnitIds],
 		viewports: [...(input.target?.viewports || [])],
 		state: "blocked",
@@ -793,8 +793,8 @@ function runtimeStatuses(runtime: RuntimeEntry): PreviewRuntimeStatus[] {
 		profileId: runtime.profile.id,
 		profileDigest: previewProfileDigest(runtime.profile),
 		traceIds: [...entry.binding.traceIds],
-		changeIds: [...entry.binding.contributingChangeIds],
-		sprintIds: [...entry.binding.sprintIds],
+		changeIds: [...entry.binding.changeIds],
+		workGraphDeltaIds: [...entry.binding.workGraphDeltaIds],
 		workUnitIds: [...entry.binding.workUnitIds],
 		viewports: [...entry.target.viewports],
 		state: runtime.state,
@@ -848,7 +848,7 @@ function copyEvidenceCapture(
 		...capture,
 		traceIds: [...capture.traceIds],
 		changeIds: [...capture.changeIds],
-		sprintIds: [...capture.sprintIds],
+		workGraphDeltaIds: [...capture.workGraphDeltaIds],
 		workUnitIds: [...capture.workUnitIds],
 		implementation: capture.implementation.map((entry) => ({ ...entry })),
 		integration: copyIntegrationState(capture.integration),
@@ -866,7 +866,7 @@ function copyIntegrationState(
 		dirtyPaths: [...integration.dirtyPaths],
 		visibleChangeIds: [...integration.visibleChangeIds],
 		conflictingChangeIds: [...integration.conflictingChangeIds],
-		sprintIds: [...integration.sprintIds],
+		workGraphDeltaIds: [...integration.workGraphDeltaIds],
 		workUnitIds: [...integration.workUnitIds],
 	};
 }

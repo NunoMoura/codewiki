@@ -297,15 +297,6 @@ export const OPERATION_DEFINITIONS: Readonly<
 		["exit_report_routes_to"],
 		"latest_valid",
 	]),
-	"planning.epoch_bound": definition([
-		"planning.epoch_bound",
-		"planning.bind",
-		TAIL,
-		"epoch exists and all participant bindings share one accepted batch",
-		"require_atomic_batch",
-		["change_participates_in_epoch", "epoch_contains_work_unit"],
-		"latest_valid",
-	]),
 	"work_unit_claim.acquired": definition([
 		"work_unit_claim.acquired",
 		"work_unit_claim.manage",
@@ -450,25 +441,6 @@ export const OPERATION_DEFINITIONS: Readonly<
 		["change_has_outcome", "delivery_has_outcome"],
 		"append_history",
 	]),
-	"planning.epoch_recorded": Object.freeze({
-		kind: "planning.epoch_recorded",
-		scope: "project",
-		kindVersion: "1.0.0",
-		capability: "planning.bind",
-		parentPolicy: null,
-		precondition:
-			"Candidate and passing Exit Report bind exact fresh participants and active work",
-		reduction: "planning.epoch_recorded",
-		conflictBehavior: "require_atomic_batch",
-		graphProjection: Object.freeze([
-			"project_has_planning_epoch",
-			"epoch_contains_sprint",
-			"epoch_contains_work_unit",
-			"work_unit_realizes_change",
-			"work_unit_depends_on_work_unit",
-		]),
-		supersession: "latest_valid",
-	}),
 });
 
 for (const kind of CHANGE_OPERATION_KINDS) {

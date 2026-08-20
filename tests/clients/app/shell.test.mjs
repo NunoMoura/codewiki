@@ -32,7 +32,6 @@ describe("CodeWiki App browser shell", () => {
 		assert.match(script, /function renderKnowledgeTopics/);
 		assert.match(script, /function renderKnowledgeAlignment/);
 		assert.match(script, /function knowledgeTopicLabel/);
-		assert.doesNotMatch(script, /function renderSprintActions/);
 		assert.doesNotMatch(script, /function executeSessionAction/);
 		assert.match(script, /filter\.startsWith\('topic:'\)/);
 		assert.match(script, /className = 'scope-group'/);

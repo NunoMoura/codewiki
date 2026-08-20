@@ -22,7 +22,6 @@ import {
 } from "./reducer.ts";
 import {
 	serializeCanonicalChangeOperation,
-	serializePlanningEpochRecord,
 	serializeStateCommitManifest,
 } from "./identity.ts";
 import {
@@ -33,7 +32,6 @@ import {
 	augmentAlignmentGraphWithKnowledge,
 	type KnowledgeAlignmentProjection,
 } from "../../alignment/knowledge.ts";
-import type { PlanningEpochRecord } from "./contracts.ts";
 import type { ProjectWorkState } from "./state.ts";
 import {
 	assertSha256Digest,
@@ -361,9 +359,7 @@ async function materializeSynchronization(
 			...batch.records.map((record) =>
 				writeImmutable(
 					join(root, gitStateRecordPath(record)),
-					isPlanningEpoch(record)
-						? serializePlanningEpochRecord(record)
-						: serializeCanonicalChangeOperation(record),
+					serializeCanonicalChangeOperation(record),
 				),
 			),
 		]),
@@ -485,12 +481,6 @@ function assertGitObjectId(value: string, field: string): void {
 	if (!/^[0-9a-f]{40}([0-9a-f]{24})?$/.test(value)) {
 		throw new Error(`${field} must be a Git object ID.`);
 	}
-}
-
-function isPlanningEpoch(
-	record: GitStateHistory["batches"][number]["records"][number],
-): record is PlanningEpochRecord {
-	return record.body.kind === "planning.epoch_recorded";
 }
 
 function digestHex(digest: Sha256Digest): string {

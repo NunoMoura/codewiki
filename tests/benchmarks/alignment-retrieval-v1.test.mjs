@@ -22,7 +22,7 @@ const cases = [
 	{
 		id: "planning-frontier",
 		query: "Why is a Work Unit absent from the safe frontier?",
-		relevantRefs: ["src/changes/trace/rolling-planning.ts", "system/planning-loop"],
+		relevantRefs: ["src/loops/planning/graph-delta-quality.ts", "system/planning-loop"],
 	},
 ];
 
@@ -49,7 +49,7 @@ describe("Alignment retrieval benchmark harness", () => {
 			adapters: [
 				adapter("plain_search", {
 					"claim-authority": ["unrelated", "src/changes/trace/mutation.ts"],
-					"planning-frontier": ["src/changes/trace/rolling-planning.ts", "noise"],
+					"planning-frontier": ["src/loops/planning/graph-delta-quality.ts", "noise"],
 				}),
 				adapter("pi_lens", {
 					"claim-authority": [
@@ -57,7 +57,7 @@ describe("Alignment retrieval benchmark harness", () => {
 						"system/runtime-work-unit-claims",
 					],
 					"planning-frontier": [
-						"src/changes/trace/rolling-planning.ts",
+						"src/loops/planning/graph-delta-quality.ts",
 						"system/planning-loop",
 					],
 				}),
@@ -72,7 +72,7 @@ describe("Alignment retrieval benchmark harness", () => {
 					],
 					"planning-frontier": [
 						"system/planning-loop",
-						"src/changes/trace/rolling-planning.ts",
+						"src/loops/planning/graph-delta-quality.ts",
 					],
 				}),
 				adapter(

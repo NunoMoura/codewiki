@@ -1,7 +1,7 @@
 import { DECISION_CHANGE_QUALITY_STANDARDS } from "../loops/decision/change-quality.ts";
 import { IMPLEMENTATION_LOOP_GRAPH } from "../loops/implementation/loop.ts";
 import { implementationQualityStandards } from "../loops/implementation/quality-standards.ts";
-import { PLANNING_PORTFOLIO_QUALITY_STANDARDS } from "../loops/planning/portfolio-quality.ts";
+import { PLANNING_GRAPH_DELTA_QUALITY_STANDARDS } from "../loops/planning/graph-delta-quality.ts";
 import type { LoopQualityGraphNode } from "../checks/quality/graph.ts";
 import { loopOutputEvents } from "../changes/trace/queries.ts";
 import type {
@@ -36,7 +36,7 @@ const CURRENT_DECISION_STANDARDS = currentStandards(
 	DECISION_CHANGE_QUALITY_STANDARDS,
 );
 const CURRENT_PLANNING_STANDARDS = currentStandards(
-	PLANNING_PORTFOLIO_QUALITY_STANDARDS,
+	PLANNING_GRAPH_DELTA_QUALITY_STANDARDS,
 );
 
 const REQUIRED_QUALITY_STANDARDS: Record<TraceLoop, QualityStandardSummary[]> =
@@ -50,7 +50,7 @@ const REQUIRED_QUALITY_STANDARDS: Record<TraceLoop, QualityStandardSummary[]> =
 	};
 
 function currentStandards(
-	definitions: Array<{
+	definitions: ReadonlyArray<{
 		id: string;
 		description: string;
 		mode: LoopQualityStandardResult["mode"];
@@ -341,10 +341,6 @@ function qualityStandardSummary(
 
 function canonicalQualityStandardDescription(value: string): string {
 	return value
-		.replace(
-			/Sprint Proposal has at least one approved (?:row|change) and stable (?:row|change) ids\./gi,
-			"Decision loop output has at least one Decision and stable Decision ids.",
-		)
 		.replace(/Approved rows\b/g, "Decisions")
 		.replace(/approved rows\b/g, "Decisions")
 		.replace(/Approved changes\b/g, "Decisions")

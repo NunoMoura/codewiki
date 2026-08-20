@@ -101,7 +101,7 @@ describe("wiki_state core facade", () => {
 			"Implement planned work unit WU-state.",
 		);
 		assert.equal(state.workPlan?.cards[0].id, "WU-state");
-		assert.equal(state.quality?.summary.planning.met, 13);
+		assert.equal(state.quality?.summary.planning.met, 7);
 		assert.equal(state.workQueue.summary.ready, 1);
 		assert.equal(state.traceBoard.summary.needs_implementation, 1);
 		assert.equal(state.traceBoard.traces[0].status, "needs_implementation");
@@ -351,13 +351,13 @@ describe("Change-rooted App state", () => {
 		const before = await appState(root);
 		assert.equal(before.summary.pipeline, 1);
 		assert.equal(before.summary.backlog, 1);
-		assert.equal(before.sprintsQueue.length, 1);
-		assert.deepEqual(before.sprintsQueue[0].changeIds, [pending.change.id]);
-		assert.deepEqual(before.sprintsQueue[0].sprintIds, []);
-		assert.equal(before.sprintsQueue[0].stage, "decision");
-		assert.equal(before.sprintsQueue[0].status, "needs_decision");
-		assert.equal(before.sprintsQueue[0].blockerCount, 0);
-		assert.equal(before.sprintsQueue[0].progress, 30);
+		assert.equal(before.pipelineQueue.length, 1);
+		assert.deepEqual(before.pipelineQueue[0].changeIds, [pending.change.id]);
+		assert.deepEqual(before.pipelineQueue[0].workGraphDeltaIds, []);
+		assert.equal(before.pipelineQueue[0].stage, "decision");
+		assert.equal(before.pipelineQueue[0].status, "needs_decision");
+		assert.equal(before.pipelineQueue[0].blockerCount, 0);
+		assert.equal(before.pipelineQueue[0].progress, 30);
 
 		const approved = acceptChangeRecord(pending, {
 			changedBy: "maintainer",
@@ -376,10 +376,10 @@ describe("Change-rooted App state", () => {
 		const after = await appState(root);
 		assert.equal(after.summary.pipeline, 1);
 		assert.equal(after.summary.backlog, 0);
-		assert.equal(after.sprintsQueue.length, 1);
-		assert.equal(after.sprintsQueue[0].stage, "planning");
-		assert.equal(after.sprintsQueue[0].status, "needs_planning");
-		assert.equal(after.sprintsQueue[0].progress, 40);
-		assert.match(after.sprintsQueue[0].currentAction, /Planning horizon/);
+		assert.equal(after.pipelineQueue.length, 1);
+		assert.equal(after.pipelineQueue[0].stage, "planning");
+		assert.equal(after.pipelineQueue[0].status, "needs_planning");
+		assert.equal(after.pipelineQueue[0].progress, 40);
+		assert.match(after.pipelineQueue[0].currentAction, /current Work Graph/);
 	});
 });

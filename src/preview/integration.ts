@@ -15,7 +15,7 @@ export interface PreviewIntegrationState {
 	visibility: PreviewIntegrationVisibility;
 	visibleChangeIds: string[];
 	conflictingChangeIds: string[];
-	sprintIds: string[];
+	workGraphDeltaIds: string[];
 	workUnitIds: string[];
 }
 
@@ -120,11 +120,11 @@ export async function readPreviewIntegrationState(
 		dirty: status.length > 0,
 		dirtyPaths,
 		visibility: conflictingChangeIds.length > 0 ? "conflicted" : "integrated",
-		visibleChangeIds: unique(input.binding.contributingChangeIds).filter(
+		visibleChangeIds: unique(input.binding.changeIds).filter(
 			(id) => !conflictingChangeIds.includes(id),
 		),
 		conflictingChangeIds,
-		sprintIds: unique(input.binding.sprintIds),
+		workGraphDeltaIds: unique(input.binding.workGraphDeltaIds),
 		workUnitIds: unique(input.binding.workUnitIds),
 	};
 }

@@ -38,7 +38,8 @@ function planningInvocation() {
 	return {
 		loop: "planning",
 		observedWorkStateDigest: "sha256:work-state",
-		changes: [decisionInvocation().change],
+		observedWorkGraphDigest: digest("b"),
+		change: decisionInvocation().change,
 	};
 }
 
@@ -357,9 +358,26 @@ test("Pi SDK candidate tools expose exact recursive Planning and Implementation 
 						candidateTool.name.includes("planning")
 							? {
 									candidate: {
-										sprints: [],
-										workUnits: [],
-										rationale: "No work selected.",
+										changeId: "CHG-sdk-session",
+										changeRevisionId: digest("a"),
+										observedWorkGraphDigest: digest("b"),
+										workUnits: [{
+											id: "WU-sdk",
+											owningChangeId: "CHG-sdk-session",
+											title: "SDK Work Unit",
+											outcome: "Schema is exact.",
+											technicalRequirements: ["Preserve authority."],
+											acceptanceRequirements: ["Schema test passes."],
+											componentRefs: ["runtime"],
+											pathScopes: ["src/runtime/**"],
+											verification: ["npm test"],
+											resourceRequirements: { capabilityIds: ["source.edit"], toolIds: ["node-test"], skillIds: [], custodyRequirements: ["private-workbench"], budgetClass: "standard" },
+										}],
+										dependencyEdges: [],
+										acceptanceCoverage: [{ acceptanceRequirement: "Schema test passes.", workUnitIds: ["WU-sdk"] }],
+										uiPreviewTargets: [],
+										integrationRequirements: ["Integrate exact candidate."],
+										rationale: "Produce exact graph delta.",
 									},
 								}
 							: { candidate: { evidence: [] } },
@@ -378,8 +396,7 @@ test("Pi SDK candidate tools expose exact recursive Planning and Implementation 
 	await adapters.implementation({
 		loop: "implementation",
 		observedWorkStateDigest: "sha256:work-state",
-		sprint: { id: "SPR-sdk" },
-		workUnits: [],
+		workUnit: { id: "WU-sdk" },
 		assignments: [],
 		workerReports: [],
 	});
@@ -387,19 +404,13 @@ test("Pi SDK candidate tools expose exact recursive Planning and Implementation 
 	const planning = schemas.get("codewiki_submit_planning_candidate");
 	const planningCandidate = planning.properties.candidate;
 	assert.equal(planningCandidate.additionalProperties, false);
-	assert.equal(planningCandidate.properties.sprints.items.additionalProperties, false);
+	assert.equal(
+		planningCandidate.properties.dependencyEdges.items.additionalProperties,
+		false,
+	);
 	assert.deepEqual(
-		Object.keys(planningCandidate.properties.sprints.items.properties),
-		[
-			"id",
-			"goal",
-			"participatingChangeIds",
-			"workUnitIds",
-			"rollbackBoundary",
-			"dependsOn",
-			"integrationRefs",
-			"uiPreviewTargets",
-		],
+		Object.keys(planningCandidate.properties.dependencyEdges.items.properties),
+		["fromWorkUnitId", "toWorkUnitId", "kind"],
 	);
 	assert.equal(
 		planningCandidate.properties.workUnits.items.additionalProperties,
@@ -505,14 +516,14 @@ test("Pi SDK semantic adapter requires exactly one object candidate", async () =
 		repoRoot: process.cwd(),
 		sessionFactory: async (input) => ({
 			async prompt() {
-				input.submitCandidate({ sprints: [], workUnits: [] });
+				input.submitCandidate({ legacyPlan: [], workUnits: [] });
 			},
 			dispose() {},
 		}),
 	});
 	await assert.rejects(
 		wrongRoleShape.decision(decisionInvocation()),
-		/Project Server decision candidate received unsupported fields: sprints, workUnits/,
+		/Project Server decision candidate received unsupported fields: legacyPlan, workUnits/,
 	);
 });
 

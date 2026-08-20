@@ -149,7 +149,7 @@ describe("Project Server-owned Change intake admission", () => {
 				proposedOperation,
 				"change.proposed",
 			);
-			assert.equal(proposedOperation.body.protocol.version, "4.0.0");
+			assert.equal(proposedOperation.body.protocol.version, "5.0.0");
 			assert.equal(
 				proposedPayload.intakeMaterial.digest,
 				created.materialDigest,

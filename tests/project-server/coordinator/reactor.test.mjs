@@ -1,12 +1,11 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-
 import {
 	selectProjectServerReaction,
 	selectProjectServerReactions,
 } from "../../../src/project-server/coordinator/reactor.ts";
 
-function record(id, targetRefs = [], links = []) {
+function record(id, targetRefs = []) {
 	return {
 		schemaVersion: 1,
 		recordRevision: 1,
@@ -15,74 +14,67 @@ function record(id, targetRefs = [], links = []) {
 			id,
 			revision: 1,
 			status: "accepted",
-			intent: {
-				question: id,
-				currentState: "before",
-				desiredState: "after",
-				rationale: "needed",
-				nonGoals: [],
-			},
-			classification: {
-				kind: "improve",
-				type: "architecture_change",
-				scope: "system",
-				affectedLayers: ["runtime"],
-				targetRefs,
-			},
+			intent: { question: id, currentState: "before", desiredState: "after", rationale: "needed", nonGoals: [] },
+			classification: { kind: "improve", type: "architecture_change", scope: "system", affectedLayers: ["runtime"], targetRefs },
 			impact: { user: "faster", maintainer: "simpler" },
 			evidence: { sourceRefs: [], proofRefs: [] },
 			safety: { risk: "low", failureModes: [] },
-			validation: {
-				state: "valid",
-				issues: [],
-				assessments: [],
-				recommendations: [],
-			},
+			validation: { state: "valid", issues: [], assessments: [], recommendations: [] },
 			estimates: {},
-			provenance: {
-				origin: "user",
-				createdBy: "user",
-				createdAt: "2026-08-02T00:00:00.000Z",
-				updatedAt: "2026-08-02T00:00:00.000Z",
-			},
+			provenance: { origin: "user", createdBy: "user", createdAt: "2026-08-02T00:00:00.000Z", updatedAt: "2026-08-02T00:00:00.000Z" },
 		},
-		links,
+		links: [],
 	};
 }
 
-function change(id, currentLoop, targetRefs = [], links = []) {
+function change(id, currentLoop, targetRefs = []) {
 	return {
 		id,
 		traceId: `TRACE-change-${id}`,
-		record: record(id, targetRefs, links),
-		approval: {
-			status: currentLoop === "decision" ? "pending" : "approved",
-			changeRevision: 1,
-			changeDigest: `sha256:${id}`,
-		},
+		record: record(id, targetRefs),
+		approval: { status: currentLoop === "decision" ? "pending" : "approved", changeRevision: 1, changeDigest: `sha256:${id}` },
 		planningStatus: currentLoop === "decision" ? "unplanned" : "planned",
 		realizationStatus: "not_started",
 		outcomeStatus: "pending",
-		sprintIds: [],
+		workGraphDeltaIds: [],
 		workUnitIds: [],
-		rollbackBoundary: "Revert Sprint work as one boundary.",
+		rollbackBoundary: "Revert exact Change lineage.",
 		assignmentIds: [],
 		blockers: [],
 		...(currentLoop ? { currentLoop } : {}),
 	};
 }
 
+function workUnit(id, owningChangeId, overrides = {}) {
+	return {
+		id,
+		workGraphDeltaId: `WGD-${owningChangeId}`,
+		owningChangeId,
+		title: id,
+		planningEventId: `event:${id}`,
+		dependsOn: [],
+		componentRefs: [],
+		pathScopes: ["src/**"],
+		acceptanceCriterionIds: ["AC-1"],
+		assignmentIds: [],
+		implemented: false,
+		blockers: [],
+		...overrides,
+	};
+}
+
 function state(overrides = {}) {
 	return {
-		schemaVersion: 1,
+		schemaVersion: 3,
 		snapshotDigest: "sha256:work-state",
+		workGraphDigest: `sha256:${"a".repeat(64)}`,
 		changeIds: [],
-		sprintIds: [],
+		workGraphDeltaIds: [],
 		workUnitIds: [],
-		rollbackBoundary: "Revert Sprint work as one boundary.",
+		rollbackBoundary: "Revert exact Change lineage.",
 		assignmentIds: [],
 		changes: [],
-		sprints: [],
+		workGraphDeltas: [],
 		workUnits: [],
 		assignments: [],
 		blockers: [],
@@ -96,191 +88,101 @@ const trigger = { kind: "change_trace_appended", refs: ["z", "a", "a"] };
 describe("runtime reactor", () => {
 	it("does not auto-select pending Decision attention", () => {
 		const reaction = selectProjectServerReaction(
-			state({
-				changes: [
-					change("CHG-plan", "planning", ["src/shared.ts"]),
-					change("CHG-decide", "decision", ["src/shared.ts"]),
-				],
-			}),
+			state({ changes: [change("CHG-plan", "planning"), change("CHG-decide", "decision")] }),
 			trigger,
 		);
-
 		assert.equal(reaction.status, "ready");
 		assert.equal(reaction.selection.loop, "planning");
-		assert.deepEqual(
-			reaction.selection.planningHorizon.map((entry) => entry.changeId),
-			["CHG-plan"],
-		);
+		assert.equal(reaction.selection.change.changeId, "CHG-plan");
 		assert.deepEqual(reaction.trigger.refs, ["a", "z"]);
 	});
 
-	it("prioritizes work named by the triggering event", () => {
+	it("prioritizes exact Change named by trigger", () => {
 		const reaction = selectProjectServerReaction(
-			state({
-				changes: [
-					change("CHG-a-decision", "decision"),
-					change("CHG-z-planning", "planning"),
-				],
-			}),
-			{ kind: "user_response", refs: ["change:CHG-z-planning"] },
+			state({ changes: [change("CHG-a", "planning"), change("CHG-z", "planning")] }),
+			{ kind: "user_response", refs: ["change:CHG-z"] },
 		);
+		assert.equal(reaction.selection.change.changeId, "CHG-z");
+	});
 
-		assert.equal(reaction.selection.loop, "planning");
+	it("selects independent Change-scoped Planning reactions", () => {
+		const reactions = selectProjectServerReactions(
+			state({ changes: [change("CHG-a", "planning"), change("CHG-b", "planning"), change("CHG-c", "planning")] }),
+			trigger,
+			{ maxReactions: 2 },
+		);
 		assert.deepEqual(
-			reaction.selection.planningHorizon.map((entry) => entry.changeId),
-			["CHG-z-planning"],
+			reactions.map((reaction) => reaction.selection.change.changeId),
+			["CHG-a", "CHG-b"],
 		);
 	});
 
-	it("builds a bounded Planning horizon from linked and overlapping Changes", () => {
-		const changes = [
-			change("CHG-a", "planning", ["src/shared.ts"]),
-			change("CHG-b", "planning", ["src/shared.ts"]),
-			change(
-				"CHG-c",
-				"planning",
-				[],
-				[
-					{
-						relation: "depends_on",
-						targetChangeId: "CHG-b",
-						createdBy: "user",
-						createdAt: "2026-08-02T00:00:00.000Z",
-					},
-				],
-			),
-			change("CHG-unrelated", "planning", ["src/other.ts"]),
-		];
-		const reaction = selectProjectServerReaction(state({ changes }), trigger, {
-			maxPlanningChanges: 3,
-		});
-
-		assert.equal(reaction.selection.loop, "planning");
-		assert.deepEqual(
-			reaction.selection.planningHorizon.map((entry) => entry.changeId),
-			["CHG-a", "CHG-b", "CHG-c"],
-		);
-	});
-
-	it("selects one incomplete Sprint with ready implementation work", () => {
+	it("selects one dependency-ready Work Unit", () => {
 		const reaction = selectProjectServerReaction(
 			state({
 				changes: [change("CHG-implementation", "implementation")],
-				sprints: [
-					{
-						id: "SPR-runtime",
-						source: "planning",
-						goal: "Implement runtime",
-						participatingChangeIds: ["CHG-implementation"],
-						workUnitIds: ["WI-done", "WI-ready", "WI-blocked"],
-						rollbackBoundary: "Revert Sprint work as one boundary.",
-						dependencyIds: [],
-						integrationRefs: [],
-						complete: false,
-						blockers: [],
-					},
-				],
 				workUnits: [
-					{ id: "WI-done", implemented: true, blockers: [] },
-					{ id: "WI-ready", implemented: false, blockers: [] },
-					{ id: "WI-blocked", implemented: false, blockers: ["conflict"] },
+					workUnit("WU-done", "CHG-implementation", { implemented: true }),
+					workUnit("WU-ready", "CHG-implementation"),
+					workUnit("WU-blocked", "CHG-implementation", { blockers: ["conflict"] }),
 				],
 			}),
 			trigger,
 		);
-
 		assert.equal(reaction.selection.loop, "implementation");
-		assert.equal(reaction.selection.sprintId, "SPR-runtime");
-		assert.deepEqual(reaction.selection.workUnitIds, ["WI-ready"]);
+		assert.equal(reaction.selection.changeId, "CHG-implementation");
+		assert.equal(reaction.selection.workUnitId, "WU-ready");
 	});
 
-	it("keeps a pending-Change-only WorkState quiescent", () => {
-		const reactions = selectProjectServerReactions(
+	it("waits for integrated dependency state", () => {
+		const reaction = selectProjectServerReaction(
 			state({
-				changes: [
-					change("CHG-a", "decision", ["src/shared.ts"]),
-					change("CHG-b", "decision", ["src/shared.ts"]),
-					change("CHG-c", "decision", ["src/other.ts"]),
+				changes: [change("CHG-implementation", "implementation")],
+				workUnits: [
+					workUnit("WU-a", "CHG-implementation"),
+					workUnit("WU-b", "CHG-implementation", { dependsOn: ["WU-a"] }),
 				],
 			}),
 			trigger,
-			{maxReactions: 4},
 		);
+		assert.equal(reaction.selection.workUnitId, "WU-a");
+	});
 
+	it("keeps pending-Change-only WorkState quiescent", () => {
+		const reactions = selectProjectServerReactions(
+			state({ changes: [change("CHG-a", "decision"), change("CHG-b", "decision")] }),
+			trigger,
+			{ maxReactions: 4 },
+		);
 		assert.deepEqual(reactions, []);
 	});
 
-	it("coalesces one Planning horizon and one reaction per Sprint", () => {
+	it("schedules independent Planning and Implementation units without coalescing", () => {
 		const reactions = selectProjectServerReactions(
 			state({
 				changes: [
-					change("CHG-a-plan", "planning", ["src/shared.ts"]),
-					change("CHG-b-plan", "planning", ["src/shared.ts"]),
+					change("CHG-a-plan", "planning"),
+					change("CHG-b-plan", "planning"),
 					change("CHG-c-implementation", "implementation"),
-					change("CHG-d-implementation", "implementation"),
 				],
-				sprints: [
-					{
-						id: "SPR-shared",
-						source: "planning",
-						goal: "Implement shared Sprint",
-						participatingChangeIds: [
-							"CHG-c-implementation",
-							"CHG-d-implementation",
-						],
-						workUnitIds: ["WI-ready"],
-						rollbackBoundary: "Revert Sprint work as one boundary.",
-						dependencyIds: [],
-						integrationRefs: [],
-						complete: false,
-						blockers: [],
-					},
-				],
-				workUnits: [{ id: "WI-ready", implemented: false, blockers: [] }],
+				workUnits: [workUnit("WU-ready", "CHG-c-implementation")],
 			}),
 			trigger,
-			{ maxPlanningChanges: 4, maxReactions: 4 },
+			{ maxReactions: 4 },
 		);
-
-		assert.deepEqual(
-			reactions.map((reaction) => reaction.selection.loop),
-			["planning", "implementation"],
-		);
-		assert.deepEqual(
-			reactions[0].selection.planningHorizon.map((entry) => entry.changeId),
-			["CHG-a-plan", "CHG-b-plan"],
-		);
-		assert.equal(reactions[1].selection.sprintId, "SPR-shared");
+		assert.deepEqual(reactions.map((reaction) => reaction.selection.loop), ["planning", "planning", "implementation"]);
+		assert.equal(reactions[2].selection.workUnitId, "WU-ready");
 	});
 
 	it("stays quiescent when no eligible work exists", () => {
-		const reaction = selectProjectServerReaction(state(), {
-			kind: "timer_due",
-		});
+		const reaction = selectProjectServerReaction(state(), { kind: "timer_due" });
 		assert.equal(reaction.status, "quiescent");
 		assert.equal(reaction.selection, undefined);
 	});
 
 	it("rejects unbounded reaction batches", () => {
 		assert.throws(
-			() =>
-				selectProjectServerReactions(
-					state({ changes: [change("CHG-plan", "planning")] }),
-					trigger,
-					{ maxReactions: 0 },
-				),
-			/1 to 32/,
-		);
-	});
-
-	it("rejects unbounded Planning horizons", () => {
-		assert.throws(
-			() =>
-				selectProjectServerReaction(
-					state({ changes: [change("CHG-plan", "planning")] }),
-					trigger,
-					{ maxPlanningChanges: 0 },
-				),
+			() => selectProjectServerReactions(state({ changes: [change("CHG-plan", "planning")] }), trigger, { maxReactions: 0 }),
 			/1 to 32/,
 		);
 	});

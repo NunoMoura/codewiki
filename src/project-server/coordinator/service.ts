@@ -128,7 +128,6 @@ export interface ProjectCoordinatorServiceOptions
 	loopExecutionPorts?: ProjectServerLoopExecutionPorts;
 	semanticContext?: ProjectServerSemanticContext;
 	maxReactions?: number;
-	maxPlanningChanges?: number;
 	maxCasRetries?: number;
 	maxEventHistory?: number;
 	workerAdapter?: ImplementationWorkerAdapter;
@@ -244,7 +243,6 @@ interface ProjectServerService {
 	loopExecutionPorts?: ProjectServerLoopExecutionPorts;
 	semanticContext?: ProjectServerSemanticContext;
 	maxReactions?: number;
-	maxPlanningChanges?: number;
 	maxCasRetries?: number;
 	decisionStart?: {
 		readonly runtime: DecisionStartProjectServer;
@@ -366,12 +364,6 @@ export async function startProjectCoordinatorService(
 				1,
 				32,
 				"maxReactions",
-			),
-			maxPlanningChanges: boundedOptionalInteger(
-				options.maxPlanningChanges,
-				1,
-				32,
-				"maxPlanningChanges",
 			),
 			maxCasRetries: boundedOptionalInteger(
 				options.maxCasRetries,
@@ -1115,7 +1107,6 @@ async function handleProjectServerReaction(
 			context: runtime.semanticContext,
 			mode,
 			maxReactions: runtime.maxReactions,
-			maxPlanningChanges: runtime.maxPlanningChanges,
 			maxCasRetries: runtime.maxCasRetries,
 			blockedImplementationWorkUnitIds:
 				workerReconciliation?.dispatch.pendingWorkUnitIds,

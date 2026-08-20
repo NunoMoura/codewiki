@@ -66,7 +66,6 @@ export interface ScheduleProjectServerReactionsInput {
 	context?: ProjectServerSemanticContext;
 	mode?: ProjectServerSemanticMode;
 	maxReactions?: number;
-	maxPlanningChanges?: number;
 	maxCasRetries?: number;
 	blockedImplementationWorkUnitIds?: string[];
 	implementationWorkerReports?: ImplementationWorkerReportInput[];
@@ -84,7 +83,6 @@ export async function scheduleProjectServerReactions(
 ): Promise<ProjectServerReactionJobReceipt[]> {
 	const observation = await input.reactor.observeMany(input.trigger, {
 		maxReactions: input.maxReactions,
-		maxPlanningChanges: input.maxPlanningChanges,
 	});
 	const blocked = new Set(input.blockedImplementationWorkUnitIds || []);
 	const reactions = observation.reactions.filter(
@@ -122,9 +120,8 @@ function workerReportsForReaction(input: {
 }): ImplementationWorkerReportInput[] {
 	const selection = input.reaction.selection;
 	if (selection?.loop !== "implementation") return [];
-	const selected = new Set(selection.workUnitIds);
 	return input.workerReports
-		.filter((result) => selected.has(result.workUnitId))
+		.filter((result) => result.workUnitId === selection.workUnitId)
 		.sort(compareWorkerReports);
 }
 
@@ -151,9 +148,7 @@ function blockedImplementationReaction(input: {
 	const selection = input.reaction.selection;
 	return Boolean(
 		selection?.loop === "implementation" &&
-			selection.workUnitIds.some((workUnitId) =>
-				input.blockedWorkUnitIds.has(workUnitId),
-			),
+			input.blockedWorkUnitIds.has(selection.workUnitId),
 	);
 }
 
@@ -300,7 +295,7 @@ function reactionLane(reaction: ProjectServerReaction): ProjectCoordinatorLane {
 		);
 	}
 	if (selection.loop === "planning") return { kind: "planning" };
-	return { kind: "implementation", sprintId: selection.sprintId };
+	return { kind: "implementation", workUnitId: selection.workUnitId };
 }
 
 function reactionConflictRefs(reaction: ProjectServerReaction): string[] {
@@ -310,13 +305,11 @@ function reactionConflictRefs(reaction: ProjectServerReaction): string[] {
 		return [`change:${selection.change.changeId}`];
 	}
 	if (selection.loop === "planning") {
-		return selection.planningHorizon.map(
-			(change) => `change:${change.changeId}`,
-		);
+		return [`change:${selection.change.changeId}`];
 	}
 	return [
-		...selection.changeIds.map((changeId) => `change:${changeId}`),
-		...selection.workUnitIds.map((workUnitId) => `work-unit:${workUnitId}`),
+		`change:${selection.changeId}`,
+		`work-unit:${selection.workUnitId}`,
 	];
 }
 
@@ -324,10 +317,8 @@ function reactionTraceIds(reaction: ProjectServerReaction): string[] {
 	const selection = reaction.selection;
 	if (!selection) return [];
 	if (selection.loop === "decision") return [selection.change.traceId];
-	if (selection.loop === "planning") {
-		return selection.planningHorizon.map((change) => change.traceId);
-	}
-	return selection.changeIds.map(changeTraceId);
+	if (selection.loop === "planning") return [selection.change.traceId];
+	return [changeTraceId(selection.changeId)];
 }
 
 function semanticOutcomeEvidence(

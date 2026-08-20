@@ -12,12 +12,12 @@ const binding = {
 	profileId: "web",
 	profileDigest: `sha256:${"b".repeat(64)}`,
 	workUnitIds: ["WU-dashboard"],
-	contributingChangeIds: ["CHG-dashboard", "CHG-shared"],
+	changeIds: ["CHG-dashboard", "CHG-shared"],
 	required: true,
 	activation: "implementation",
 	autoOpen: "manual",
 	traceIds: ["TRACE-dashboard"],
-	sprintIds: ["SPR-dashboard"],
+	workGraphDeltaIds: ["SPR-dashboard"],
 };
 
 describe("preview integration checkout state", () => {

@@ -106,7 +106,7 @@ test("Implementation reaction identity includes stable exact worker-report conte
 		observedWorkStateDigest: "sha256:worker-report-context",
 		selection: {
 			loop: "implementation",
-			sprintId: "SPR-worker-report-context",
+			workUnitId: "WU-worker-report-context",
 			workUnitIds: ["WU-worker-report-context"],
 			changeIds: ["CHG-worker-report-context"],
 			pathScopes: ["src/worker-report.ts"],

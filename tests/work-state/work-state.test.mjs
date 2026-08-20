@@ -79,7 +79,7 @@ async function appendEvent(root, changeId, create) {
 	return event;
 }
 
-function planningEvent(changeId, otherChangeId, workUnitId) {
+function planningEvent(changeId, workUnitId) {
 	return ({ traceId, parentId, sequence }) => ({
 		type: "trace_event",
 		id: `evt-plan-${changeId}`,
@@ -87,41 +87,29 @@ function planningEvent(changeId, otherChangeId, workUnitId) {
 		traceId,
 		sequence,
 		loop: "planning",
-		event: "change_planned",
-		refs: [`change:${changeId}@1`, `change:${otherChangeId}@1`],
+		event: "work_units_created",
+		refs: [`change:${changeId}@1`],
 		createdAt: "2026-08-01T01:02:00.000Z",
 		data: {
 			iteration: 1,
-			trigger: "approved_change_portfolio_changed",
+			trigger: "runtime.change_planning",
 			output: {
-				planningEpochId: "PE-shared-ui",
-				participantChanges: [
-					{ changeId, changeRevision: 1 },
-					{ changeId: otherChangeId, changeRevision: 1 },
-				],
-				sprints: [
-					{
-						id: "SPR-shared-ui",
-						digest: "sha256:sprint-plan",
-						goal: "Deliver both related UI Changes",
-						participatingChangeIds: [changeId, otherChangeId],
-						workUnitIds: [workUnitId],
-						rollbackBoundary: "Revert shared UI Sprint together.",
-					},
-				],
-				workUnits: [
-					{
-						id: workUnitId,
-						sprintId: "SPR-shared-ui",
-						owningChangeId: changeId,
-						contributingChangeIds: [],
-						title: `Implement ${changeId}`,
-						dependsOn: [],
-						componentRefs: ["component:dashboard"],
-						pathScopes: ["src/dashboard/**"],
-						acceptanceCriteria: [{ id: `AC-${workUnitId}` }],
-					},
-				],
+				workGraphDeltaId: `WGD-${changeId}`,
+				digest: `sha256:${changeId.endsWith("left") ? "a".repeat(64) : "b".repeat(64)}`,
+				change: { changeId, changeRevision: 1 },
+				workUnits: [{
+					id: workUnitId,
+					owningChangeId: changeId,
+					title: `Implement ${changeId}`,
+					dependsOn: [],
+					componentRefs: ["component:dashboard"],
+					pathScopes: ["src/dashboard/**"],
+					acceptanceCriteria: [{ id: `AC-${workUnitId}` }],
+				}],
+				dependencyEdges: [],
+				acceptanceCoverage: [{ acceptanceRequirement: "Dashboard works.", workUnitIds: [workUnitId] }],
+				uiPreviewTargets: [],
+				integrationRequirements: ["Integrate into private Change lineage."],
 			},
 			exit: { status: "exit", conditions: [] },
 			progress: {},
@@ -130,7 +118,7 @@ function planningEvent(changeId, otherChangeId, workUnitId) {
 }
 
 describe("WorkState", () => {
-	it("projects pending Change journeys without creating Sprint truth", async () => {
+	it("projects pending Change journeys without creating Work Graph truth", async () => {
 		const root = await project();
 		const store = new ChangeTraceStore({ repoRoot: root });
 		const record = createChangeRecord(
@@ -146,34 +134,36 @@ describe("WorkState", () => {
 
 		const state = await buildProjectWorkState({ repoRoot: root });
 		assert.deepEqual(state.changeIds, [record.change.id]);
-		assert.deepEqual(state.sprintIds, []);
+		assert.deepEqual(state.workGraphDeltaIds, []);
 		assert.equal(state.changes[0].approval.status, "pending");
 		assert.equal(state.changes[0].currentLoop, "decision");
 		assert.equal(state.sources.changeTraceCount, 1);
 		assert.match(state.snapshotDigest, /^sha256:[a-f0-9]{64}$/);
 	});
 
-	it("joins one global Planning epoch across two Change Traces", async () => {
+	it("keeps independent Change-scoped graph deltas", async () => {
 		const root = await project();
 		await acceptedChanges(root, ["CHG-work-left", "CHG-work-right"]);
 		await appendEvent(
 			root,
 			"CHG-work-left",
-			planningEvent("CHG-work-left", "CHG-work-right", "WI-left"),
+			planningEvent("CHG-work-left", "WI-left"),
 		);
 		await appendEvent(
 			root,
 			"CHG-work-right",
-			planningEvent("CHG-work-right", "CHG-work-left", "WI-right"),
+			planningEvent("CHG-work-right", "WI-right"),
 		);
 
 		const state = await buildProjectWorkState({ repoRoot: root });
-		assert.deepEqual(state.sprintIds, ["SPR-shared-ui"]);
-		assert.deepEqual(state.sprints[0].participatingChangeIds, [
-			"CHG-work-left",
-			"CHG-work-right",
+		assert.deepEqual(state.workGraphDeltaIds, [
+			"WGD-CHG-work-left",
+			"WGD-CHG-work-right",
 		]);
-		assert.deepEqual(state.sprints[0].workUnitIds, ["WI-left", "WI-right"]);
+		assert.deepEqual(
+			state.workGraphDeltas.map((delta) => delta.workUnitIds),
+			[["WI-left"], ["WI-right"]],
+		);
 		assert.deepEqual(
 			state.changes.map((change) => change.planningStatus),
 			["planned", "planned"],
@@ -191,12 +181,12 @@ describe("WorkState", () => {
 		await appendEvent(
 			root,
 			"CHG-assigned",
-			planningEvent("CHG-assigned", "CHG-contributor", "WI-assigned"),
+			planningEvent("CHG-assigned", "WI-assigned"),
 		);
 		await appendEvent(
 			root,
 			"CHG-contributor",
-			planningEvent("CHG-contributor", "CHG-assigned", "WI-contributor"),
+			planningEvent("CHG-contributor", "WI-contributor"),
 		);
 		await appendEvent(root, "CHG-assigned", ({ traceId, parentId, sequence }) =>
 			createProjectServerClaimEvent({
@@ -305,22 +295,25 @@ describe("WorkState", () => {
 		);
 	});
 
-	it("fails incomplete multi-Change Planning epochs visibly", async () => {
+	it("does not require a matching append in another Change Trace", async () => {
 		const root = await project();
 		await acceptedChanges(root, ["CHG-partial-left", "CHG-partial-right"]);
 		await appendEvent(
 			root,
 			"CHG-partial-left",
-			planningEvent("CHG-partial-left", "CHG-partial-right", "WI-partial"),
+			planningEvent("CHG-partial-left", "WI-partial"),
 		);
-
 		const state = await buildProjectWorkState({ repoRoot: root });
-		assert.equal(state.sprints[0].complete, false);
-		assert.match(state.sprints[0].blockers[0], /missing Change Trace append/);
+		assert.equal(state.workGraphDeltas.length, 1);
+		assert.equal(state.workGraphDeltas[0].owningChangeId, "CHG-partial-left");
+		assert.equal(state.blockers.length, 0);
 		assert.equal(
-			state.changes.find((change) => change.id === "CHG-partial-left")
-				.planningStatus,
-			"incomplete_commit",
+			state.changes.find((change) => change.id === "CHG-partial-left").planningStatus,
+			"planned",
+		);
+		assert.equal(
+			state.changes.find((change) => change.id === "CHG-partial-right").planningStatus,
+			"unplanned",
 		);
 	});
 

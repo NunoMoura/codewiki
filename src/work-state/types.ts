@@ -2,7 +2,7 @@ import type { ChangeRecord } from "../changes/records.ts";
 import type { UiPreviewTargetBinding } from "../preview/binding.ts";
 import type { TraceLoop } from "../changes/trace/types.ts";
 
-export const WORK_STATE_SCHEMA_VERSION = 2;
+export const WORK_STATE_SCHEMA_VERSION = 3;
 
 export type WorkStateApprovalStatus =
 	| "pending"
@@ -47,7 +47,7 @@ export interface WorkStateChange {
 	planningStatus: WorkStatePlanningStatus;
 	realizationStatus: WorkStateRealizationStatus;
 	outcomeStatus: WorkStateOutcomeStatus;
-	sprintIds: string[];
+	workGraphDeltaIds: string[];
 	workUnitIds: string[];
 	assignmentIds: string[];
 	blockers: string[];
@@ -56,19 +56,18 @@ export interface WorkStateChange {
 	lastEventId?: string;
 }
 
-export interface WorkStateSprint {
+export interface WorkStateGraphDelta {
 	id: string;
-	source: "planning";
-	planningEpochId?: string;
-	digest?: string;
-	goal: string;
-	participatingChangeIds: string[];
+	digest: string;
+	owningChangeId: string;
+	planningEventId: string;
 	workUnitIds: string[];
-	dependencyIds: string[];
-	integrationRefs: string[];
+	acceptanceCoverage: Array<{
+		acceptanceRequirement: string;
+		workUnitIds: string[];
+	}>;
+	integrationRequirements: string[];
 	uiPreviewTargets: UiPreviewTargetBinding[];
-	complete: boolean;
-	blockers: string[];
 }
 
 export interface WorkStateIntegrationProof {
@@ -159,12 +158,10 @@ export interface WorkStateReleaseProof {
 
 export interface WorkStateWorkUnit {
 	id: string;
-	sprintId: string;
-	owningChangeId?: string;
-	contributesToChangeIds: string[];
+	workGraphDeltaId: string;
+	owningChangeId: string;
 	title: string;
 	planningEventId: string;
-	planningEpochId?: string;
 	dependsOn: string[];
 	componentRefs: string[];
 	pathScopes: string[];
@@ -202,7 +199,6 @@ export interface WorkStateBlocker {
 	id: string;
 	message: string;
 	changeId?: string;
-	sprintId?: string;
 	workUnitId?: string;
 	refs: string[];
 }
@@ -211,12 +207,13 @@ export interface WorkState {
 	schemaVersion: typeof WORK_STATE_SCHEMA_VERSION;
 	generatedAt?: string;
 	snapshotDigest: string;
+	workGraphDigest: string;
 	changeIds: string[];
-	sprintIds: string[];
+	workGraphDeltaIds: string[];
 	workUnitIds: string[];
 	assignmentIds: string[];
 	changes: WorkStateChange[];
-	sprints: WorkStateSprint[];
+	workGraphDeltas: WorkStateGraphDelta[];
 	workUnits: WorkStateWorkUnit[];
 	assignments: WorkStateAssignment[];
 	blockers: WorkStateBlocker[];

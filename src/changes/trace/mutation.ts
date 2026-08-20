@@ -237,7 +237,7 @@ function workUnitClaimPayload(
 	request: AcquireWorkUnitClaimInput | TakeoverWorkUnitClaimInput,
 ): ChangeOperationPayload<"work_unit_claim.acquired"> {
 	return {
-		planningEpochId: request.planningEpochId,
+		workGraphDeltaId: request.workGraphDeltaId,
 		workUnitId: request.workUnitId,
 		assignmentAttemptId: request.assignmentAttemptId,
 		workerId: request.workerId,

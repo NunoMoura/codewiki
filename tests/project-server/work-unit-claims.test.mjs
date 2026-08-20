@@ -137,7 +137,7 @@ describe("runtime work-unit claim helper claim batch", () => {
 		);
 		blocked.data.output.qualityStandards =
 			blocked.data.output.qualityStandards.map((standard) =>
-				standard.id === "acceptance_clarity"
+				standard.id === "work_unit_obligations"
 					? {
 							...standard,
 							status: "blocked",

@@ -5,21 +5,16 @@ import {
 	CHANGE_OPERATION_KINDS,
 	CHANGE_TRACE_OPERATION_CATALOG,
 	OPERATION_DEFINITIONS,
-	PROJECT_OPERATION_KINDS,
 	assertValidArchiveManifest,
 	assertValidCanonicalChangeOperation,
-	assertValidPlanningEpochRecord,
 	assertValidStateCommitManifest,
 	createCanonicalChangeOperation,
 	createChangeRevision,
-	createPlanningEpochRecord,
 	parseArchiveManifest,
 	parseCanonicalChangeOperation,
-	parsePlanningEpochRecord,
 	parseStateCommitManifest,
 	serializeArchiveManifest,
 	serializeCanonicalChangeOperation,
-	serializePlanningEpochRecord,
 	serializeStateCommitManifest,
 } from "../../../src/changes/trace/index.ts";
 import {
@@ -34,7 +29,6 @@ import {
 	baseSnapshot,
 	changeRevision,
 	digest,
-	planningEpoch,
 	proposedOperation,
 	stateManifest,
 } from "../../helpers/change-trace-v1.mjs";
@@ -50,17 +44,11 @@ function replaceDigest(value) {
 }
 
 describe("Change Trace Protocol catalog", () => {
-	it("closes exactly 42 operation kinds across two semantic scopes", () => {
-		assert.equal(CHANGE_TRACE_OPERATION_CATALOG.length, 42);
-		assert.equal(CHANGE_OPERATION_KINDS.length, 41);
-		assert.deepEqual(PROJECT_OPERATION_KINDS, ["planning.epoch_recorded"]);
-		assert.equal(new Set(CHANGE_TRACE_OPERATION_CATALOG).size, 42);
-		assert.equal(Object.keys(OPERATION_DEFINITIONS).length, 42);
-		assert.equal(
-			OPERATION_DEFINITIONS["planning.epoch_recorded"].capability,
-			"planning.bind",
-		);
-		assert.equal(OPERATION_DEFINITIONS["planning.epoch_recorded"].scope, "project");
+	it("closes exactly 40 Change-scoped operation kinds", () => {
+		assert.equal(CHANGE_TRACE_OPERATION_CATALOG.length, 40);
+		assert.equal(CHANGE_OPERATION_KINDS.length, 40);
+		assert.equal(new Set(CHANGE_TRACE_OPERATION_CATALOG).size, 40);
+		assert.equal(Object.keys(OPERATION_DEFINITIONS).length, 40);
 		for (const kind of CHANGE_OPERATION_KINDS) {
 			const definition = OPERATION_DEFINITIONS[kind];
 			assert.equal(definition.kind, kind);
@@ -198,50 +186,11 @@ describe("content-addressed Change operations", () => {
 });
 
 describe("project and structural protocol records", () => {
-	it("derives one normalized Planning epoch and validates graph references", () => {
-		const operation = proposedOperation();
-		const epoch = planningEpoch(operation);
-		assert.match(epoch.operationId, /^sha256:[0-9a-f]{64}$/);
-		assert.match(epoch.body.globalWorkUnitGraphDigest, /^sha256:[0-9a-f]{64}$/);
-		assert.equal(parsePlanningEpochRecord(serializePlanningEpochRecord(epoch)).operationId, epoch.operationId);
-		assert.equal(Object.isFrozen(epoch.body.workUnits), true);
-
-		const invalid = clone(epoch);
-		invalid.body.safeExecutionFrontier = ["unknown-work"];
-		invalid.operationId = sha256Digest(canonicalJson(invalid.body));
-		assert.throws(
-			() => assertValidPlanningEpochRecord(invalid),
-			/unknown Work Unit/,
-		);
-	});
-
-	it("rejects cyclic Planning dependencies", () => {
-		const operation = proposedOperation();
-		const valid = planningEpoch(operation);
-		const work = valid.body.workUnits[0];
-		assert.throws(
-			() =>
-				createPlanningEpochRecord({
-					...valid.body,
-					workUnits: [
-						{...work, id: "work-a", dependsOnWorkUnitIds: ["work-b"]},
-						{...work, id: "work-b", dependsOnWorkUnitIds: ["work-a"]},
-					],
-					sprints: [
-						{...valid.body.sprints[0], workUnitIds: ["work-a", "work-b"]},
-					],
-					safeExecutionFrontier: [],
-				}),
-			/contains a cycle/,
-		);
-	});
-
 	it("binds State batches without inferring semantics from Git metadata", () => {
 		const operation = proposedOperation();
-		const epoch = planningEpoch(operation);
-		const manifest = stateManifest(operation, epoch);
+		const manifest = stateManifest(operation);
 		assert.equal(parseStateCommitManifest(serializeStateCommitManifest(manifest)).manifestId, manifest.manifestId);
-		assert.deepEqual(manifest.body.operationIds, [operation.operationId, epoch.operationId]);
+		assert.deepEqual(manifest.body.operationIds, [operation.operationId]);
 
 		const invalid = clone(manifest);
 		invalid.body.batchDigest = digest("f");
@@ -270,15 +219,13 @@ describe("project and structural protocol records", () => {
 describe("frozen protocol fixtures", () => {
 	it("matches exact checked-in bytes and identities", async () => {
 		const operation = proposedOperation();
-		const epoch = planningEpoch(operation);
-		const state = stateManifest(operation, epoch);
+		const state = stateManifest(operation);
 		const archive = archiveManifest(operation);
-		const documents = {operation, epoch, state, archive};
+		const documents = {operation, state, archive};
 		const expectedIds = {
-			operation: "sha256:313746c46360ae7a20c1cc987fbb1b0122dae43b75d0ad64c7c60d091b8f5a78",
-			epoch: "sha256:edfcccccbbcba8d2e7a2991accc0d27075f3d4f33ccb145a8f0008c3aa0e0589",
-			state: "sha256:a058d0a029789ec78f09ef4cba21444d85a9ae66a6d375b809bfdefd6d5a6d76",
-			archive: "sha256:07c8e0dc0cc20d104ee0b9927f879450bbb756d1f5c01bc27d04000046eb4f23",
+			operation: "sha256:728bbaad498d900e885a56b098b6ed0dc029eacffaf01c86334cc0ebff5a561f",
+			state: "sha256:1704d59ce0ddd248561b8db741761681af32b9cbc482fcb59e80424c083a3278",
+			archive: "sha256:6ed74f19bfe1604beca56b6cbcfddbd0aa4e471825c9b54c7d8581e89813ce02",
 		};
 		for (const [name, document] of Object.entries(documents)) {
 			const bytes = await readFile(new URL(`${name}.json`, fixtureDirectory), "utf8");

@@ -3,7 +3,6 @@ import {
 	createManifestForRecords,
 	createNextChangeOperation,
 	createChangeRevision,
-	createPlanningEpochRecord,
 	reduceAcceptedStateBatch,
 	reduceChangeOperation,
 } from "../../src/changes/trace/index.ts";
@@ -73,7 +72,6 @@ export function buildOperationSequence({
 	baseSnapshot,
 	authority = authorityBinding(),
 	specifications,
-	planningEpochs = [],
 }) {
 	let projected = change;
 	const operations = [];
@@ -93,7 +91,7 @@ export function buildOperationSequence({
 				? {additionalParents: specification.additionalParents}
 				: {}),
 		});
-		projected = reduceChangeOperation(projected, operation, {planningEpochs});
+		projected = reduceChangeOperation(projected, operation, {});
 		operations.push(operation);
 	}
 	return {change: projected, operations};
@@ -316,112 +314,6 @@ export function buildPassingPlanningExit(
 	});
 }
 
-export function buildPlanningEpochRecords({
-	state,
-	participantChangeIds,
-	artifacts = planningArtifacts(),
-	suffix = "reducer",
-}) {
-	const participants = [...participantChangeIds]
-		.sort()
-		.map((changeId) => {
-			const change = state.changes.find((entry) => entry.changeId === changeId);
-			if (!change) throw new Error(`Change ${changeId} is absent.`);
-			return {
-				changeId,
-				revisionId: change.currentRevision.revisionId,
-				tailOperationId: change.tailOperationId,
-			};
-		});
-	const workUnitId = `work-${suffix}`;
-	const sprintId = `sprint-${suffix}`;
-	const epoch = createPlanningEpochRecord({
-		recordedAt: "2026-07-30T13:20:00.000Z",
-		baseSnapshot: {
-			...baseSnapshotFor(state),
-			workStateDigest: state.workStateDigest,
-		},
-		authorityBinding: authorityBinding({role: "planner"}),
-		planningCandidateId: artifacts.candidate.id,
-		exitReportId: artifacts.report.id,
-		participants,
-		sprints: [
-			{
-				id: sprintId,
-				goal: "Prove deterministic reduction.",
-				participantChangeIds: participants.map((entry) => entry.changeId),
-				workUnitIds: [workUnitId],
-				dependsOnSprintIds: [],
-				integrationBoundary: "One exact state batch.",
-			},
-		],
-		workUnits: [
-			{
-				id: workUnitId,
-				sprintId,
-				title: "Implement reducer",
-				outcome: "Full and incremental replay converge.",
-				owningChange: participants[0],
-				contributingChanges: participants.slice(1),
-				dependsOnWorkUnitIds: [],
-				acceptanceRequirements: [
-					{
-						id: "replay-equivalence",
-						statement: "Replay projections are byte-identical.",
-						evidenceObligationIds: ["test-proof"],
-						checkIds: ["tests-pass"],
-					},
-				],
-				scope: {
-					sourcePaths: ["src/change-trace/**"],
-					knowledgeRefs: ["kb:system/traces"],
-					componentRefs: ["change-traces"],
-				},
-				workbench: {
-					profileId: "typescript",
-					toolIds: ["node-test", "pi-lens"],
-					skillIds: [],
-					contextRefs: ["plan:phase-1"],
-					budgetDigest: digest("3"),
-				},
-				integration: {
-					targetRef: "refs/heads/main",
-					requiredCheckIds: ["tests-pass", "types-pass"],
-					rollbackStrategy: "Reject the state commit.",
-					reviewRequired: true,
-				},
-			},
-		],
-		activeWorkDispositions: [],
-		safeExecutionFrontier: [workUnitId],
-	});
-	const bindings = participants.flatMap((participant) => {
-		const change = state.changes.find(
-			(entry) => entry.changeId === participant.changeId,
-		);
-		return buildOperationSequence({
-			change,
-			changeId: participant.changeId,
-			baseSnapshot: baseSnapshotFor(state),
-			planningEpochs: [epoch],
-			specifications: [
-				{
-					kind: "planning.epoch_bound",
-					recordedAt: "2026-07-30T13:20:01.000Z",
-					payload: {
-						planningEpochId: epoch.operationId,
-						participantRevisionId: participant.revisionId,
-						planningCandidateId: artifacts.candidate.id,
-						exitReportId: artifacts.report.id,
-						workUnitIds: [workUnitId],
-					},
-				},
-			],
-		}).operations;
-	});
-	return {epoch, workUnitId, records: [epoch, ...bindings]};
-}
-
 export function createThreeBatchJourney(changeId = "CHG-reducer") {
 	const initial = createInitialProjectWorkState();
 	const opened = openProposedChange(initial, changeId, gitObject("a"));
@@ -429,27 +321,15 @@ export function createThreeBatchJourney(changeId = "CHG-reducer") {
 	const artifacts = planningArtifacts();
 	const planning = buildPassingPlanningExit(opened.state, changeId, artifacts);
 	const secondBatch = acceptedBatch(opened.state, planning.operations, gitObject("b"));
-	const plannedState = reduceAcceptedStateBatch(
+	const finalState = reduceAcceptedStateBatch(
 		opened.state,
 		secondBatch,
 		allowAllReplayPolicy,
 	);
-	const epoch = buildPlanningEpochRecords({
-		state: plannedState,
-		participantChangeIds: [changeId],
-		artifacts,
-	});
-	const thirdBatch = acceptedBatch(plannedState, epoch.records, gitObject("c"));
-	const finalState = reduceAcceptedStateBatch(
-		plannedState,
-		thirdBatch,
-		allowAllReplayPolicy,
-	);
 	return {
 		initial,
-		batches: [firstBatch, secondBatch, thirdBatch],
-		states: [opened.state, plannedState, finalState],
-		epoch: epoch.epoch,
+		batches: [firstBatch, secondBatch],
+		states: [opened.state, finalState, finalState],
 		candidate: artifacts.candidate,
 		report: artifacts.report,
 	};

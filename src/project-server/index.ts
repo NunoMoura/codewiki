@@ -46,7 +46,7 @@ export type {
 } from "../knowledge/okf-export.ts";
 export { runWikiPlan } from "./commands/planning.ts";
 export type {
-	PlanningEpochReport,
+	WorkGraphDeltaReport,
 	RunWikiPlanInput,
 	RunWikiPlanResult,
 	WikiPlanMode,

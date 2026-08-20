@@ -1,6 +1,5 @@
 import {
 	assertValidCanonicalChangeOperation,
-	assertValidPlanningEpochRecord,
 	assertValidStateCommitManifest,
 	createStateCommitManifest,
 	sameBaseSnapshot,
@@ -14,7 +13,6 @@ import type {
 	GitObjectId,
 	OperationAdmissionRequest,
 	OperationId,
-	PlanningEpochRecord,
 	StateCommitManifest,
 } from "./contracts.ts";
 import { OPERATION_DEFINITIONS } from "./catalog.ts";
@@ -29,11 +27,8 @@ import {
 import { canonicalJson } from "../../utils/canonical-json.ts";
 import { throwProtocolFailure } from "./errors.ts";
 import { compareText, sameText } from "./order.ts";
-import { operationPayload } from "./identity.ts";
 
-export type AcceptedProtocolRecord =
-	| CanonicalChangeOperation
-	| PlanningEpochRecord;
+export type AcceptedProtocolRecord = CanonicalChangeOperation;
 
 export interface AcceptedStateBatch {
 	readonly stateHead: GitObjectId;
@@ -70,21 +65,18 @@ export function reduceAcceptedStateBatch(
 	policy: ReplayAdmissionPolicy,
 ): ProjectWorkState {
 	validateBatchEnvelope(state, batch);
-	const planningEpochs = planningRecords(batch.records);
-	const changeOperations = changeRecords(batch.records);
+	const changeOperations = batch.records;
 	validateRecordIdentities(batch.records);
 	validateRecordOrder(state, batch);
 	const observedBase = validateAdmission(state, batch, policy);
-	validateAtomicBindings(state, changeOperations, planningEpochs);
-	const allPlanningEpochs = [...state.planningEpochs, ...planningEpochs];
+	validateAtomicMerges(changeOperations);
+	validateAtomicSplits(changeOperations);
 	let changes = [...state.changes];
 	for (const operation of changeOperations) {
 		const current = changes.find(
 			(change) => change.changeId === operation.body.changeId,
 		);
-		const next = reduceChangeOperation(current ?? null, operation, {
-			planningEpochs: allPlanningEpochs,
-		});
+		const next = reduceChangeOperation(current ?? null, operation, {});
 		changes = replaceChange(changes, next);
 	}
 	validateManifestTails(state, changes, changeOperations, batch.manifest);
@@ -93,7 +85,6 @@ export function reduceAcceptedStateBatch(
 		stateHead: batch.stateHead,
 		observedBase,
 		changes: changes.sort((left, right) => compareText(left.changeId, right.changeId)),
-		planningEpochs: allPlanningEpochs,
 		acceptedOperationIds: [
 			...state.acceptedOperationIds,
 			...batch.records.map(recordId),
@@ -123,7 +114,7 @@ export function createManifestForRecords(
 		string,
 		{previousTail: OperationId | null; nextTail: OperationId}
 	>();
-	for (const operation of changeRecords(records)) {
+	for (const operation of records) {
 		const current = tails.get(operation.body.changeId);
 		tails.set(operation.body.changeId, {
 			previousTail:
@@ -167,11 +158,7 @@ function validateRecordIdentities(
 	records: readonly AcceptedProtocolRecord[],
 ): void {
 	for (const record of records) {
-		if (isPlanningEpoch(record)) {
-			assertValidPlanningEpochRecord(record);
-		} else {
-			assertValidCanonicalChangeOperation(record);
-		}
+		assertValidCanonicalChangeOperation(record);
 	}
 }
 
@@ -230,16 +217,6 @@ function validateAdmission(
 				"accepted records do not share one exact base snapshot.",
 			);
 		}
-		if (
-			isPlanningEpoch(record) &&
-			record.body.baseSnapshot.workStateDigest !== state.workStateDigest
-		) {
-			batchInvalid(
-				"STALE_BASE",
-				operationId,
-				"Planning epoch WorkState digest is stale.",
-			);
-		}
 		const definition = OPERATION_DEFINITIONS[record.body.kind];
 		const admission: OperationAdmissionRequest = {
 			operationId,
@@ -269,93 +246,8 @@ function validateAdmission(
 	return expectedBase;
 }
 
-function validateAtomicBindings(
-	state: ProjectWorkState,
-	operations: readonly CanonicalChangeOperation[],
-	planningEpochs: readonly PlanningEpochRecord[],
-): void {
-	for (const epoch of planningEpochs) {
-		for (const participant of epoch.body.participants) {
-			const current = changeById(state, participant.changeId);
-			if (
-				!current ||
-				current.currentRevision?.revisionId !== participant.revisionId ||
-				current.tailOperationId !== participant.tailOperationId
-			) {
-				batchInvalid(
-					"ATOMIC_BINDING_MISSING",
-					epoch.operationId,
-					`Planning participant ${participant.changeId} is not exact.`,
-				);
-			}
-			if (!hasPassingPlanningExit(current, epoch)) {
-				batchInvalid(
-					"ATOMIC_BINDING_MISSING",
-					epoch.operationId,
-					`Planning participant ${participant.changeId} lacks the bound passing Planning exit.`,
-				);
-			}
-			const bindings = operations.filter(
-				(operation) =>
-					isOperationKind(operation, "planning.epoch_bound") &&
-					operation.body.changeId === participant.changeId &&
-					operation.body.payload.planningEpochId === epoch.operationId,
-			);
-			if (bindings.length !== 1) {
-				batchInvalid(
-					"ATOMIC_BINDING_MISSING",
-					epoch.operationId,
-					`Planning participant ${participant.changeId} requires one epoch binding.`,
-				);
-			}
-		}
-	}
-	for (const operation of operations) {
-		if (isOperationKind(operation, "planning.epoch_bound")) {
-			if (
-				!planningEpochs.some(
-					(epoch) => epoch.operationId === operation.body.payload.planningEpochId,
-				)
-			) {
-				batchInvalid(
-					"ATOMIC_BINDING_MISSING",
-					operation.operationId,
-					"Planning binding lacks its epoch record in the same batch.",
-				);
-			}
-		}
-	}
-	validateAtomicMerges(operations);
-	validateAtomicSplits(operations);
-}
-
 type MergeOperation = CanonicalChangeOperation<"change.merge_recorded">;
 type SplitOperation = CanonicalChangeOperation<"change.split_recorded">;
-
-function hasPassingPlanningExit(
-	change: ChangeWorkState,
-	epoch: PlanningEpochRecord,
-): boolean {
-	return change.loopAttempts.some((attempt) => {
-		if (
-			attempt.loop !== "planning" ||
-			attempt.status !== "passed" ||
-			attempt.currentCandidateId !== epoch.body.planningCandidateId ||
-			!attempt.exitReportOperationId ||
-			!attempt.routeOperationId
-		) {
-			return false;
-		}
-		const report = change.operations.find(
-			(operation) => operation.operationId === attempt.exitReportOperationId,
-		);
-		return (
-			report?.body.kind === "loop.exit_report_recorded" &&
-			operationPayload(report, "loop.exit_report_recorded").report.id ===
-				epoch.body.exitReportId
-		);
-	});
-}
 
 function validateAtomicMerges(
 	operations: readonly CanonicalChangeOperation[],
@@ -447,26 +339,6 @@ function validateManifestTails(
 			);
 		}
 	}
-}
-
-function planningRecords(
-	records: readonly AcceptedProtocolRecord[],
-): readonly PlanningEpochRecord[] {
-	return records.filter(isPlanningEpoch);
-}
-
-function changeRecords(
-	records: readonly AcceptedProtocolRecord[],
-): readonly CanonicalChangeOperation[] {
-	return records.filter(
-		(record): record is CanonicalChangeOperation => !isPlanningEpoch(record),
-	);
-}
-
-function isPlanningEpoch(
-	record: AcceptedProtocolRecord,
-): record is PlanningEpochRecord {
-	return record.body.kind === "planning.epoch_recorded";
 }
 
 function isOperationKind<K extends ChangeOperationKind>(

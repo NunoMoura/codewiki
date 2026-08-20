@@ -204,7 +204,7 @@ const STANDARD_DEFINITIONS: StandardDefinition[] = [
 				/\b(?:WI|SPR)-[A-Za-z0-9._-]+\b/.test(value),
 			)
 				? unmet(
-						"Change delivery constraints cannot prescribe Work Unit or Sprint identities.",
+						"Change delivery constraints cannot prescribe Work Unit or Work Graph delta identities.",
 					)
 				: met();
 		},

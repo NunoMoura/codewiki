@@ -121,9 +121,6 @@ function acceptedPlanningWorkUnitsFromTrace(
 					: "";
 				const changeRefs = unique([
 					...(owningChangeRef ? [owningChangeRef] : []),
-					...stringList(item.contributingChangeIds).map(
-						(changeId) => `change:${changeId}`,
-					),
 				]);
 				return {
 					id,
@@ -173,9 +170,6 @@ function planningChangeRefs(event: TraceEvent): string[] {
 			...(text(item.owningChangeId)
 				? [`change:${text(item.owningChangeId)}`]
 				: []),
-			...stringList(item.contributingChangeIds).map(
-				(changeId) => `change:${changeId}`,
-			),
 		]),
 	).filter(Boolean);
 }

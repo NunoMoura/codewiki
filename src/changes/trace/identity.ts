@@ -1,7 +1,6 @@
 import {
 	ARCHIVE_MANIFEST_PROTOCOL,
 	CHANGE_TRACE_PROTOCOL,
-	PLANNING_EPOCH_PROTOCOL,
 	STATE_COMMIT_MANIFEST_PROTOCOL,
 	archiveManifestBodySchema,
 	archiveManifestSchema,
@@ -9,8 +8,6 @@ import {
 	changeOperationBodySchema,
 	changeOperationPayloadSchemas,
 	changeRevisionContentSchema,
-	planningEpochBodySchema,
-	planningEpochRecordSchema,
 	stateCommitManifestBodySchema,
 	stateCommitManifestSchema,
 	type ArchiveManifest,
@@ -25,8 +22,6 @@ import {
 	type ChangeRevision,
 	type ChangeRevisionContent,
 	type ChangedTraceTail,
-	type PlanningEpochBody,
-	type PlanningEpochRecord,
 	type StateCommitManifest,
 } from "./contracts.ts";
 import { OPERATION_DEFINITIONS } from "./catalog.ts";
@@ -47,10 +42,6 @@ export type CreateChangeOperationInput<K extends ChangeOperationKind> = Omit<
 	"protocol" | "kindVersion"
 >;
 
-export type CreatePlanningEpochInput = Omit<
-	PlanningEpochBody,
-	"protocol" | "kind" | "kindVersion" | "globalWorkUnitGraphDigest"
->;
 
 export interface CreateStateCommitManifestInput {
 	readonly previousStateHead: StateCommitManifest["body"]["previousStateHead"];
@@ -153,53 +144,6 @@ export function parseCanonicalChangeOperation(
 	return value;
 }
 
-export function createPlanningEpochRecord(
-	input: CreatePlanningEpochInput,
-): PlanningEpochRecord {
-	const normalized = normalizePlanningEpochInput(input);
-	const body = canonicalObject<PlanningEpochBody>({
-		protocol: PLANNING_EPOCH_PROTOCOL,
-		kind: OPERATION_DEFINITIONS["planning.epoch_recorded"].kind,
-		kindVersion: OPERATION_DEFINITIONS["planning.epoch_recorded"].kindVersion,
-		...normalized,
-		globalWorkUnitGraphDigest: planningWorkUnitGraphDigest(normalized),
-	});
-	assertValidPlanningEpochBody(body);
-	const record = canonicalObject<PlanningEpochRecord>({
-		operationId: canonicalJsonDigest(body),
-		body,
-	});
-	assertValidPlanningEpochRecord(record);
-	return record;
-}
-
-export function assertValidPlanningEpochRecord(
-	value: unknown,
-): asserts value is PlanningEpochRecord {
-	assertTypeboxSchema(
-		planningEpochRecordSchema,
-		value,
-		"Planning epoch record",
-	);
-	const record = value as PlanningEpochRecord;
-	assertValidPlanningEpochBody(record.body);
-	const expected = canonicalJsonDigest(record.body);
-	if (record.operationId !== expected) {
-		throw new Error(`Planning epoch identity mismatch: expected ${expected}.`);
-	}
-}
-
-export function serializePlanningEpochRecord(record: PlanningEpochRecord): string {
-	assertValidPlanningEpochRecord(record);
-	return canonicalJson(record);
-}
-
-export function parsePlanningEpochRecord(text: string): PlanningEpochRecord {
-	const value = parseCanonicalJson(text);
-	assertValidPlanningEpochRecord(value);
-	return value;
-}
-
 export function createStateCommitManifest(
 	input: CreateStateCommitManifestInput,
 ): StateCommitManifest {
@@ -292,68 +236,6 @@ export function parseArchiveManifest(text: string): ArchiveManifest {
 	const value = parseCanonicalJson(text);
 	assertValidArchiveManifest(value);
 	return value;
-}
-
-export function planningWorkUnitGraphDigest(
-	value: Pick<
-		PlanningEpochBody,
-		"participants" | "sprints" | "workUnits" | "activeWorkDispositions"
-	>,
-): `sha256:${string}` {
-	return canonicalJsonDigest({
-		participants: value.participants.map((binding) => ({
-			changeId: binding.changeId,
-			revisionId: binding.revisionId,
-		})),
-		sprints: value.sprints.map((sprint) => ({
-			id: sprint.id,
-			workUnitIds: sprint.workUnitIds,
-			dependsOnSprintIds: sprint.dependsOnSprintIds,
-		})),
-		workUnits: value.workUnits.map((workUnit) => ({
-			id: workUnit.id,
-			sprintId: workUnit.sprintId,
-			owningChangeId: workUnit.owningChange.changeId,
-			contributingChangeIds: workUnit.contributingChanges.map(
-				(binding) => binding.changeId,
-			),
-			dependsOnWorkUnitIds: workUnit.dependsOnWorkUnitIds,
-		})),
-		activeWorkDispositions: value.activeWorkDispositions.map((entry) => ({
-			workUnitId: entry.workUnitId,
-			disposition: entry.disposition,
-			...(entry.activeAssignmentOperationId
-				? {activeAssignmentOperationId: entry.activeAssignmentOperationId}
-				: {}),
-			...(entry.replacementWorkUnitId
-				? {replacementWorkUnitId: entry.replacementWorkUnitId}
-				: {}),
-		})),
-	});
-}
-
-function assertValidPlanningEpochBody(
-	value: unknown,
-): asserts value is PlanningEpochBody {
-	assertTypeboxSchema(planningEpochBodySchema, value, "Planning epoch body");
-	const body = value as PlanningEpochBody;
-	assertIsoTimestamp(body.recordedAt, "Planning epoch recordedAt");
-	assertSortedObjects(body.participants, participantKey, "Planning participants");
-	assertSortedObjects(body.sprints, (entry) => entry.id, "Planning sprints");
-	assertSortedObjects(body.workUnits, (entry) => entry.id, "Planning Work Units");
-	assertSortedObjects(
-		body.activeWorkDispositions,
-		(entry) => entry.workUnitId,
-		"Planning active-work dispositions",
-	);
-	assertSortedUnique(body.safeExecutionFrontier, "Planning safe execution frontier");
-	assertPlanningReferences(body);
-	const expectedGraphDigest = planningWorkUnitGraphDigest(body);
-	if (body.globalWorkUnitGraphDigest !== expectedGraphDigest) {
-		throw new Error(
-			`Planning Work Unit graph digest mismatch: expected ${expectedGraphDigest}.`,
-		);
-	}
 }
 
 function assertValidStateCommitManifestBody(
@@ -819,138 +701,6 @@ function assertPayloadSetOrder(body: ChangeOperationBody): void {
 	}
 }
 
-const PLANNING_SET_FIELDS = new Set([
-	"evidenceObligationIds",
-	"checkIds",
-	"sourcePaths",
-	"knowledgeRefs",
-	"componentRefs",
-	"toolIds",
-	"skillIds",
-	"contextRefs",
-	"requiredCheckIds",
-]);
-
-type PlanningSprint = PlanningEpochBody["sprints"][number];
-type PlanningWorkUnit = PlanningEpochBody["workUnits"][number];
-type ActiveWorkDisposition = PlanningEpochBody["activeWorkDispositions"][number];
-
-function assertPlanningReferences(body: PlanningEpochBody): void {
-	const participantIds = new Set(body.participants.map((entry) => entry.changeId));
-	const sprintIds = new Set(body.sprints.map((entry) => entry.id));
-	const workUnitIds = new Set(body.workUnits.map((entry) => entry.id));
-	body.sprints.forEach((sprint) =>
-		assertSprintReferences(sprint, participantIds, sprintIds, workUnitIds),
-	);
-	body.workUnits.forEach((workUnit) =>
-		assertWorkUnitReferences(workUnit, participantIds, sprintIds, workUnitIds),
-	);
-	assertAcyclic(
-		body.sprints.map((entry) => [entry.id, entry.dependsOnSprintIds] as const),
-		"Planning Sprint graph",
-	);
-	assertAcyclic(
-		body.workUnits.map((entry) => [entry.id, entry.dependsOnWorkUnitIds] as const),
-		"Planning Work Unit graph",
-	);
-	body.safeExecutionFrontier.forEach((workUnitId) =>
-		assertKnownWorkUnit(workUnitId, workUnitIds, "Planning safe execution frontier"),
-	);
-	body.activeWorkDispositions.forEach((entry) =>
-		assertActiveWorkDisposition(entry, workUnitIds),
-	);
-}
-
-function assertSprintReferences(
-	sprint: PlanningSprint,
-	participantIds: ReadonlySet<string>,
-	sprintIds: ReadonlySet<string>,
-	workUnitIds: ReadonlySet<string>,
-): void {
-	assertSortedUnique(sprint.participantChangeIds, `Sprint ${sprint.id} participants`);
-	assertSortedUnique(sprint.workUnitIds, `Sprint ${sprint.id} Work Units`);
-	assertSortedUnique(sprint.dependsOnSprintIds, `Sprint ${sprint.id} dependencies`);
-	for (const changeId of sprint.participantChangeIds) {
-		if (!participantIds.has(changeId)) {
-			throw new Error(`Sprint ${sprint.id} references unknown Change ${changeId}.`);
-		}
-	}
-	for (const workUnitId of sprint.workUnitIds) {
-		assertKnownWorkUnit(workUnitId, workUnitIds, `Sprint ${sprint.id}`);
-	}
-	for (const dependency of sprint.dependsOnSprintIds) {
-		if (!sprintIds.has(dependency) || dependency === sprint.id) {
-			throw new Error(`Sprint ${sprint.id} has invalid dependency ${dependency}.`);
-		}
-	}
-}
-
-function assertWorkUnitReferences(
-	workUnit: PlanningWorkUnit,
-	participantIds: ReadonlySet<string>,
-	sprintIds: ReadonlySet<string>,
-	workUnitIds: ReadonlySet<string>,
-): void {
-	if (!sprintIds.has(workUnit.sprintId)) {
-		throw new Error(
-			`Work Unit ${workUnit.id} references unknown Sprint ${workUnit.sprintId}.`,
-		);
-	}
-	if (!participantIds.has(workUnit.owningChange.changeId)) {
-		throw new Error(`Work Unit ${workUnit.id} owner is not a Planning participant.`);
-	}
-	assertSortedObjects(
-		workUnit.contributingChanges,
-		participantKey,
-		`Work Unit ${workUnit.id} contributing Changes`,
-	);
-	assertSortedUnique(
-		workUnit.dependsOnWorkUnitIds,
-		`Work Unit ${workUnit.id} dependencies`,
-	);
-	for (const dependency of workUnit.dependsOnWorkUnitIds) {
-		if (!workUnitIds.has(dependency) || dependency === workUnit.id) {
-			throw new Error(
-				`Work Unit ${workUnit.id} has invalid dependency ${dependency}.`,
-			);
-		}
-	}
-	assertSortedObjects(
-		workUnit.acceptanceRequirements,
-		(entry) => entry.id,
-		`Work Unit ${workUnit.id} acceptance requirements`,
-	);
-	walkSetFields(workUnit, `Work Unit ${workUnit.id}`, PLANNING_SET_FIELDS);
-}
-
-function assertKnownWorkUnit(
-	workUnitId: string,
-	workUnitIds: ReadonlySet<string>,
-	context: string,
-): void {
-	if (!workUnitIds.has(workUnitId)) {
-		throw new Error(`${context} references unknown Work Unit ${workUnitId}.`);
-	}
-}
-
-function assertActiveWorkDisposition(
-	entry: ActiveWorkDisposition,
-	workUnitIds: ReadonlySet<string>,
-): void {
-	assertKnownWorkUnit(entry.workUnitId, workUnitIds, "Active-work disposition");
-	if (entry.disposition === "migrate" && !entry.replacementWorkUnitId) {
-		throw new Error(
-			`Migration disposition for ${entry.workUnitId} requires replacementWorkUnitId.`,
-		);
-	}
-	if (entry.replacementWorkUnitId) {
-		assertKnownWorkUnit(
-			entry.replacementWorkUnitId,
-			workUnitIds,
-			"Active-work disposition",
-		);
-	}
-}
 
 function normalizeChangeRevisionContent(
 	content: ChangeRevisionContent,
@@ -1042,68 +792,6 @@ function normalizeChangeRevisionContent(
 	});
 }
 
-function normalizePlanningEpochInput(
-	input: CreatePlanningEpochInput,
-): CreatePlanningEpochInput {
-	return canonicalObject({
-		...input,
-		participants: sortedObjects(input.participants, participantKey),
-		sprints: sortedObjects(
-			input.sprints.map((sprint) => ({
-				...sprint,
-				participantChangeIds: sortedUnique(sprint.participantChangeIds),
-				workUnitIds: sortedUnique(sprint.workUnitIds),
-				dependsOnSprintIds: sortedUnique(sprint.dependsOnSprintIds),
-			})),
-			(entry) => entry.id,
-		),
-		workUnits: sortedObjects(
-			input.workUnits.map((workUnit) => ({
-				...workUnit,
-				contributingChanges: sortedObjects(
-					workUnit.contributingChanges,
-					participantKey,
-				),
-				dependsOnWorkUnitIds: sortedUnique(workUnit.dependsOnWorkUnitIds),
-				acceptanceRequirements: sortedObjects(
-					workUnit.acceptanceRequirements.map((requirement) => ({
-						...requirement,
-						evidenceObligationIds: sortedUnique(
-							requirement.evidenceObligationIds,
-						),
-						checkIds: sortedUnique(requirement.checkIds),
-					})),
-					(entry) => entry.id,
-				),
-				scope: {
-					...workUnit.scope,
-					sourcePaths: sortedUnique(workUnit.scope.sourcePaths),
-					knowledgeRefs: sortedUnique(workUnit.scope.knowledgeRefs),
-					componentRefs: sortedUnique(workUnit.scope.componentRefs),
-				},
-				workbench: {
-					...workUnit.workbench,
-					toolIds: sortedUnique(workUnit.workbench.toolIds),
-					skillIds: sortedUnique(workUnit.workbench.skillIds),
-					contextRefs: sortedUnique(workUnit.workbench.contextRefs),
-				},
-				integration: {
-					...workUnit.integration,
-					requiredCheckIds: sortedUnique(
-						workUnit.integration.requiredCheckIds,
-					),
-				},
-			})),
-			(entry) => entry.id,
-		),
-		activeWorkDispositions: sortedObjects(
-			input.activeWorkDispositions,
-			(entry) => entry.workUnitId,
-		),
-		safeExecutionFrontier: sortedUnique(input.safeExecutionFrontier),
-	});
-}
-
 function normalizeArchiveManifestInput(
 	input: CreateArchiveManifestInput,
 ): CreateArchiveManifestInput {
@@ -1133,25 +821,6 @@ function walkSetFields(
 		}
 		walkSetFields(entry, `${path}.${key}`, setFields);
 	});
-}
-
-function assertAcyclic(
-	edges: readonly (readonly [string, readonly string[]])[],
-	label: string,
-): void {
-	const dependenciesByNode = new Map(edges);
-	const states = new Map<string, "active" | "done">();
-	const traverse = (nodeId: string): void => {
-		const state = states.get(nodeId);
-		if (state === "done") return;
-		if (state === "active") {
-			throw new Error(`${label} contains a cycle at ${nodeId}.`);
-		}
-		states.set(nodeId, "active");
-		(dependenciesByNode.get(nodeId) ?? []).forEach(traverse);
-		states.set(nodeId, "done");
-	};
-	dependenciesByNode.forEach((_dependencies, nodeId) => traverse(nodeId));
 }
 
 function assertIsoTimestamp(value: string, label: string): void {

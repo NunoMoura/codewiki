@@ -7,16 +7,61 @@ import {
 } from "../candidate-admission.ts";
 
 const requiredTextSchema = Type.String({ minLength: 1, pattern: "\\S" });
-const stringArraySchema = Type.Array(Type.String());
+const digestSchema = Type.String({ pattern: "^sha256:[a-f0-9]{64}$" });
+const stringArraySchema = Type.Array(requiredTextSchema, { uniqueItems: true });
 
-export const planningUiPreviewTargetCandidateSchema = Type.Object(
+export const planningResourceRequirementsSchema = Type.Object(
+	{
+		capabilityIds: stringArraySchema,
+		toolIds: stringArraySchema,
+		skillIds: stringArraySchema,
+		custodyRequirements: stringArraySchema,
+		budgetClass: requiredTextSchema,
+	},
+	{ additionalProperties: false },
+);
+
+export const planningWorkUnitCandidateSchema = Type.Object(
+	{
+		id: requiredTextSchema,
+		owningChangeId: requiredTextSchema,
+		title: requiredTextSchema,
+		outcome: requiredTextSchema,
+		technicalRequirements: stringArraySchema,
+		acceptanceRequirements: stringArraySchema,
+		componentRefs: stringArraySchema,
+		pathScopes: stringArraySchema,
+		verification: stringArraySchema,
+		resourceRequirements: planningResourceRequirementsSchema,
+	},
+	{ additionalProperties: false },
+);
+
+export const planningDependencyEdgeSchema = Type.Object(
+	{
+		fromWorkUnitId: requiredTextSchema,
+		toWorkUnitId: requiredTextSchema,
+		kind: Type.Union([Type.Literal("requires"), Type.Literal("blocks")]),
+	},
+	{ additionalProperties: false },
+);
+
+export const planningAcceptanceCoverageSchema = Type.Object(
+	{
+		acceptanceRequirement: requiredTextSchema,
+		workUnitIds: Type.Array(requiredTextSchema, { minItems: 1, uniqueItems: true }),
+	},
+	{ additionalProperties: false },
+);
+
+export const planningUiPreviewTargetSchema = Type.Object(
 	{
 		targetId: requiredTextSchema,
-		targetDigest: requiredTextSchema,
+		targetDigest: digestSchema,
 		profileId: requiredTextSchema,
-		profileDigest: requiredTextSchema,
-		workUnitIds: stringArraySchema,
-		contributingChangeIds: stringArraySchema,
+		profileDigest: digestSchema,
+		workUnitIds: Type.Array(requiredTextSchema, { minItems: 1, uniqueItems: true }),
+		changeIds: Type.Array(requiredTextSchema, { minItems: 1, uniqueItems: true }),
 		required: Type.Boolean(),
 		activation: Type.Literal("implementation"),
 		autoOpen: Type.Union([
@@ -27,68 +72,56 @@ export const planningUiPreviewTargetCandidateSchema = Type.Object(
 	{ additionalProperties: false },
 );
 
-export const planningSprintCandidateSchema = Type.Object(
-	{
-		id: requiredTextSchema,
-		goal: requiredTextSchema,
-		participatingChangeIds: stringArraySchema,
-		workUnitIds: stringArraySchema,
-		rollbackBoundary: requiredTextSchema,
-		dependsOn: stringArraySchema,
-		integrationRefs: stringArraySchema,
-		uiPreviewTargets: Type.Optional(
-			Type.Array(planningUiPreviewTargetCandidateSchema),
-		),
-	},
-	{ additionalProperties: false },
-);
-
-export const planningWorkUnitCandidateSchema = Type.Object(
-	{
-		id: requiredTextSchema,
-		sprintId: requiredTextSchema,
-		owningChangeId: requiredTextSchema,
-		contributingChangeIds: stringArraySchema,
-		title: requiredTextSchema,
-		outcome: requiredTextSchema,
-		technicalRequirements: stringArraySchema,
-		acceptanceRequirements: stringArraySchema,
-		componentRefs: stringArraySchema,
-		pathScopes: stringArraySchema,
-		verification: stringArraySchema,
-		workerProfile: requiredTextSchema,
-		dependsOn: stringArraySchema,
-	},
-	{ additionalProperties: false },
-);
-
 export const planningCandidateContentSchema = Type.Object(
 	{
-		sprints: Type.Array(planningSprintCandidateSchema),
-		workUnits: Type.Array(planningWorkUnitCandidateSchema),
+		changeId: requiredTextSchema,
+		changeRevisionId: digestSchema,
+		observedWorkGraphDigest: digestSchema,
+		workUnits: Type.Array(planningWorkUnitCandidateSchema, { minItems: 1 }),
+		dependencyEdges: Type.Array(planningDependencyEdgeSchema),
+		acceptanceCoverage: Type.Array(planningAcceptanceCoverageSchema, { minItems: 1 }),
+		uiPreviewTargets: Type.Array(planningUiPreviewTargetSchema),
+		integrationRequirements: Type.Array(requiredTextSchema, {
+			minItems: 1,
+			uniqueItems: true,
+		}),
 		rationale: requiredTextSchema,
 	},
 	{ additionalProperties: false },
 );
 
-export type PlanningSprintCandidate = Static<
-	typeof planningSprintCandidateSchema
+export type PlanningResourceRequirements = Static<
+	typeof planningResourceRequirementsSchema
 >;
 export type PlanningWorkUnitCandidate = Static<
 	typeof planningWorkUnitCandidateSchema
 >;
-export type PlanningCandidateContent = Static<
-	typeof planningCandidateContentSchema
+export type PlanningDependencyEdge = Static<typeof planningDependencyEdgeSchema>;
+export type PlanningAcceptanceCoverage = Static<
+	typeof planningAcceptanceCoverageSchema
 >;
+export type PlanningUiPreviewTarget = Static<typeof planningUiPreviewTargetSchema>;
+export type PlanningCandidateContent = Static<typeof planningCandidateContentSchema>;
 
-const CANDIDATE_FIELDS = ["sprints", "workUnits", "rationale"] as const;
+const CANDIDATE_FIELDS = [
+	"changeId",
+	"changeRevisionId",
+	"observedWorkGraphDigest",
+	"workUnits",
+	"dependencyEdges",
+	"acceptanceCoverage",
+	"uiPreviewTargets",
+	"integrationRequirements",
+	"rationale",
+] as const;
+
 const RUNTIME_FIELDS = [
 	"actor",
 	"createdAt",
 	"repoRoot",
 	"expectedWorkStateDigest",
-	"expectedChangeIds",
-	"expectedBytesByChangeId",
+	"expectedChangeId",
+	"expectedBytes",
 	"runtimeJobId",
 	"mode",
 ] as const;
@@ -103,9 +136,6 @@ export function parsePlanningCandidateContent(
 		CANDIDATE_FIELDS,
 		RUNTIME_FIELDS,
 	);
-	if (!Array.isArray(candidate.sprints)) {
-		throw new Error("Project Server planning candidate sprints must be an array.");
-	}
 	if (!Array.isArray(candidate.workUnits)) {
 		throw new Error("Project Server planning candidate workUnits must be an array.");
 	}

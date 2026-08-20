@@ -406,9 +406,6 @@ function workUnitChangeRefs(item: Record<string, unknown>): string[] {
 		: "";
 	return unique([
 		...(owningChangeRef ? [owningChangeRef] : []),
-		...stringList(item.contributingChangeIds).map(
-			(changeId) => `change:${changeId}`,
-		),
 	]);
 }
 

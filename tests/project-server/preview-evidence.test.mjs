@@ -47,12 +47,12 @@ function binding(configuredProfile) {
 		profileId: configuredProfile.id,
 		profileDigest: previewProfileDigest(configuredProfile),
 		workUnitIds: ["WU-capture"],
-		contributingChangeIds: ["CHG-capture"],
+		changeIds: ["CHG-capture"],
 		required: true,
 		activation: "implementation",
 		autoOpen: "manual",
 		traceIds: ["TRACE-capture"],
-		sprintIds: ["SPR-capture"],
+		workGraphDeltaIds: ["SPR-capture"],
 	};
 }
 
@@ -66,7 +66,7 @@ const integration = {
 	visibility: "integrated",
 	visibleChangeIds: ["CHG-capture"],
 	conflictingChangeIds: [],
-	sprintIds: ["SPR-capture"],
+	workGraphDeltaIds: ["SPR-capture"],
 	workUnitIds: ["WU-capture"],
 };
 

@@ -225,7 +225,7 @@ function decisionExitStatus(record: ChangeRecord): "continue" | "exit" {
 
 function decisionNextAction(record: ChangeRecord): string {
 	if (record.change.status === "accepted") {
-		return "Include this approved Change in the next relevant Planning horizon.";
+		return "Plan this approved Change against current Work Graph.";
 	}
 	if (["deferred", "rejected", "withdrawn"].includes(record.change.status)) {
 		return `Retain the ${record.change.status} Change journey for accountability.`;

@@ -4,7 +4,7 @@ import {
 	buildCodewikiImplementationReview,
 	buildCodewikiWorkerAttempts,
 	isCommittedAppTrace,
-	projectSprintPlan,
+	projectWorkGraphPlan,
 } from "../../../src/project-server/queries/app-state.ts";
 import { createWorkerObservation } from "../../../src/project-server/workers/observation.ts";
 
@@ -37,8 +37,8 @@ const item = {
 };
 
 describe("Project Server App state query", () => {
-	it("projects the latest declared Sprint plan", () => {
-		const plan = projectSprintPlan([
+	it("projects the latest declared Work Graph plan", () => {
+		const plan = projectWorkGraphPlan([
 			{
 				type: "trace_event",
 				id: "decision-1",
@@ -77,32 +77,31 @@ describe("Project Server App state query", () => {
 				createdAt: "2026-07-15T00:01:00.000Z",
 				data: {
 					output: {
-						sprints: [
+						workGraphDeltaId: "WGD-dashboard",
+						rationale: "Make Work Graph Knowledge scope visible.",
+						uiPreviewTargets: [
 							{
-								goal: "Make Sprint Knowledge scope visible.",
-								uiPreviewTargets: [
-									{
-										targetId: "dashboard-detail",
-										targetDigest: `sha256:${"b".repeat(64)}`,
-										profileId: "web",
-										profileDigest: `sha256:${"a".repeat(64)}`,
-										workUnitIds: ["WU-dashboard"],
-										contributingChangeIds: ["CHG-dashboard"],
-										required: true,
-										activation: "implementation",
-										autoOpen: "once_per_target",
-									},
-								],
-								dependsOn: ["CHG-next"],
-								rollbackBoundary: "Revert projection and contract together.",
+								targetId: "dashboard-detail",
+								targetDigest: `sha256:${"b".repeat(64)}`,
+								profileId: "web",
+								profileDigest: `sha256:${"a".repeat(64)}`,
+								workUnitIds: ["WU-dashboard"],
+								changeIds: ["CHG-dashboard"],
+								required: true,
+								activation: "implementation",
+								autoOpen: "once_per_target",
 							},
 						],
+						dependencyEdges: [
+							{ fromWorkUnitId: "WU-dashboard", toWorkUnitId: "WU-next" },
+						],
+						integrationRequirements: ["Revert projection and contract together."],
 					},
 				},
 			},
 		]);
 		assert.deepEqual(plan, {
-			accountableGoal: "Make Sprint Knowledge scope visible.",
+			accountableGoal: "Make Work Graph Knowledge scope visible.",
 			knowledgeTopics: [
 				{
 					ref: ".codewiki/kb/product/overview.md",
@@ -127,13 +126,13 @@ describe("Project Server App state query", () => {
 					profileId: "web",
 					profileDigest: `sha256:${"a".repeat(64)}`,
 					workUnitIds: ["WU-dashboard"],
-					contributingChangeIds: ["CHG-dashboard"],
+					changeIds: ["CHG-dashboard"],
 					required: true,
 					activation: "implementation",
 					autoOpen: "once_per_target",
 				},
 			],
-			dependencies: ["CHG-next"],
+			dependencies: ["WU-dashboard", "WU-next"],
 			rollbackBoundary: "Revert projection and contract together.",
 		});
 	});

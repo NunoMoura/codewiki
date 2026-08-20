@@ -8,10 +8,7 @@ import { runWikiDecide } from "../../../src/loops/decision/command.ts";
 import { runWikiPlan } from "../../../src/project-server/commands/planning.ts";
 import { changeTraceId } from "../../../src/changes/trace/change-record.ts";
 import { changeContentDigest } from "../../../src/changes/digest.ts";
-import {
-	createChangeRecord,
-	linkChangeRecord,
-} from "../../../src/changes/records.ts";
+import { createChangeRecord } from "../../../src/changes/records.ts";
 import { ChangeTraceStore } from "../../../src/changes/trace/store.ts";
 import { readTrace } from "../../../src/changes/trace/reader.ts";
 import { traceFilePath } from "../../../src/changes/trace/schema.ts";
@@ -20,289 +17,152 @@ import { buildProjectWorkState } from "../../../src/work-state/project.ts";
 import { acceptedChangeFixture } from "../../helpers/accepted-change.mjs";
 
 const roots = [];
-
 afterEach(async () => {
-	await Promise.all(
-		roots.splice(0).map((root) => rm(root, { recursive: true, force: true })),
-	);
+	await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
-async function setupApprovedPortfolio() {
-	const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-plan-v2-"));
+async function setupApprovedChange() {
+	const root = await mkdtemp(join(tmpdir(), "codewiki-wiki-plan-v3-"));
 	roots.push(root);
-	const records = [
-		createChangeRecord(
-			acceptedChangeFixture({
-				id: "CHG-plan-a",
-				createdAt: "2026-08-06T00:00:00.000Z",
-				targetRefs: ["src/shared.ts"],
-			}),
-		),
-		createChangeRecord(
-			acceptedChangeFixture({
-				id: "CHG-plan-b",
-				createdAt: "2026-08-06T00:00:01.000Z",
-				targetRefs: ["src/shared.ts"],
-			}),
-		),
-	];
-	const store = new ChangeTraceStore({ repoRoot: root });
-	const persisted = await store.write({
+	const record = createChangeRecord(
+		acceptedChangeFixture({
+			id: "CHG-plan-a",
+			createdAt: "2026-08-06T00:00:00.000Z",
+			targetRefs: ["src/shared.ts"],
+		}),
+	);
+	await new ChangeTraceStore({ repoRoot: root }).write({
 		expectedHead: null,
-		records,
-		message: "Persist Planning portfolio",
+		records: [record],
+		message: "Persist Planning Change",
 		actor: "user",
 		createdAt: "2026-08-06T00:00:00.000Z",
 	});
-	const linked = linkChangeRecord(records[0], {
-		relation: "related",
-		targetChangeId: records[1].change.id,
-		createdBy: "user",
-		createdAt: "2026-08-06T00:00:02.000Z",
+	const workState = await buildProjectWorkState({ repoRoot: root });
+	const path = join(root, traceFilePath(changeTraceId(record.change.id)));
+	await runWikiDecide({
+		repoRoot: root,
+		mode: "append",
+		changeId: record.change.id,
+		expectedRevision: record.change.revision,
+		expectedChangeDigest: changeContentDigest(record.change),
+		expectedWorkStateDigest: workState.snapshotDigest,
+		expectedBytes: (await stat(path)).size,
+		disposition: "approve",
+		rationale: "Approve exact Change for Planning.",
+		authority: { kind: "user", actor: "user", ref: "approval:user:CHG-plan-a" },
+		occurredAt: "2026-08-06T00:01:00.000Z",
 	});
-	await store.write({
-		expectedHead: persisted.head,
-		records: [linked],
-		message: "Relate overlapping Changes",
-		actor: "user",
-		createdAt: "2026-08-06T00:00:02.000Z",
-	});
-	records[0] = linked;
-	for (let index = 0; index < records.length; index += 1) {
-		const workState = await buildProjectWorkState({repoRoot: root});
-		const record = records[index];
-		const changeId = record.change.id;
-		const path = join(root, traceFilePath(changeTraceId(changeId)));
-		await runWikiDecide({
-			repoRoot: root,
-			mode: "append",
-			changeId,
-			expectedRevision: record.change.revision,
-			expectedChangeDigest: changeContentDigest(record.change),
-			expectedWorkStateDigest: workState.snapshotDigest,
-			expectedBytes: (await stat(path)).size,
-			disposition: "approve",
-			rationale: `Approve ${changeId} for portfolio Planning.`,
-			authority: {
-				kind: "user",
-				actor: "user",
-				ref: `approval:user:${changeId}`,
-			},
-			occurredAt: `2026-08-06T00:01:0${index}.000Z`,
-		});
-	}
-	return { root, records };
+	return { root, record };
 }
 
 async function planningInput(root, overrides = {}) {
 	const workState = await buildProjectWorkState({ repoRoot: root });
 	const reaction = selectProjectServerReaction(workState, { kind: "manual_resume" });
 	assert.equal(reaction.selection.loop, "planning");
-	const changeIds = reaction.selection.planningHorizon.map(
-		(entry) => entry.changeId,
-	);
-	const expectedBytesByChangeId = Object.fromEntries(
-		await Promise.all(
-			changeIds.map(async (changeId) => [
-				changeId,
-				(await stat(join(root, traceFilePath(changeTraceId(changeId))))).size,
-			]),
-		),
-	);
+	const changeId = reaction.selection.change.changeId;
+	const change = workState.changes.find((candidate) => candidate.id === changeId);
+	const path = join(root, traceFilePath(changeTraceId(changeId)));
+	const acceptanceRequirement = "Project Server graph-delta tests pass.";
 	return {
 		repoRoot: root,
 		expectedWorkStateDigest: workState.snapshotDigest,
-		expectedChangeIds: changeIds,
-		expectedBytesByChangeId,
+		expectedChangeId: changeId,
+		changeId,
+		changeRevisionId: change.approval.changeDigest,
+		observedWorkGraphDigest: workState.workGraphDigest,
+		expectedBytes: (await stat(path)).size,
 		actor: "agent:planner",
-		rationale:
-			"Group overlapping approved Changes under one rollback boundary.",
+		rationale: "Decompose one ratified Change into owned Work Units.",
 		createdAt: "2026-08-06T00:02:00.000Z",
-		sprints: [
-			{
-				id: "SPR-shared-runtime",
-				goal: "Realize both approved shared-runtime Changes.",
-				participatingChangeIds: changeIds,
-				workUnitIds: ["WI-shared-runtime"],
-				rollbackBoundary: "Revert Sprint work as one boundary.",
-				dependsOn: [],
-				integrationRefs: ["integration:main"],
-				uiPreviewTargets: [
-					{
-						targetId: "shared-runtime-dashboard",
-						targetDigest: `sha256:${"a".repeat(64)}`,
-						profileId: "web",
-						profileDigest: `sha256:${"b".repeat(64)}`,
-						workUnitIds: ["WI-shared-runtime"],
-						contributingChangeIds: changeIds,
-						required: true,
-						activation: "implementation",
-						autoOpen: "once_per_target",
-					},
-				],
-			},
-		],
 		workUnits: [
 			{
-				id: "WI-shared-runtime",
-				sprintId: "SPR-shared-runtime",
-				owningChangeId: changeIds[0],
-				contributingChangeIds: changeIds.slice(1),
+				id: "WU-shared-runtime",
+				owningChangeId: changeId,
 				title: "Implement shared runtime behavior",
-				outcome: "Approved shared runtime behavior is realized.",
-				technicalRequirements: ["Preserve Change trace authority."],
-				acceptanceCriteria: ["Project Server tests pass."],
+				outcome: "Approved runtime behavior is realized.",
+				technicalRequirements: ["Preserve Change Trace authority."],
+				acceptanceRequirements: [acceptanceRequirement],
 				componentRefs: ["runtime"],
 				pathScopes: ["src/shared.ts"],
 				verification: ["node --test tests/project-server/shared.test.mjs"],
-				workerProfile: "implementation",
-				dependsOn: [],
+				resourceRequirements: {
+					capabilityIds: ["source.edit"],
+					toolIds: ["node-test"],
+					skillIds: [],
+					custodyRequirements: ["private-workbench"],
+					budgetClass: "standard",
+				},
 			},
 		],
+		dependencyEdges: [],
+		acceptanceCoverage: [
+			{ acceptanceRequirement, workUnitIds: ["WU-shared-runtime"] },
+		],
+		uiPreviewTargets: [],
+		integrationRequirements: ["Integrate into private Change lineage."],
 		...overrides,
 	};
 }
 
-describe("wiki_plan portfolio facade", () => {
-	it("previews one deterministic Planning epoch without mutation", async () => {
-		const { root } = await setupApprovedPortfolio();
+describe("wiki_plan Change-scoped graph-delta facade", () => {
+	it("previews one deterministic Work Graph delta without mutation", async () => {
+		const { root } = await setupApprovedChange();
 		const input = await planningInput(root);
-		const before = await Promise.all(
-			input.expectedChangeIds.map((changeId) =>
-				readTrace(join(root, traceFilePath(changeTraceId(changeId)))),
-			),
-		);
+		const path = join(root, traceFilePath(changeTraceId(input.changeId)));
+		const before = await readTrace(path);
 		const result = await runWikiPlan({ ...input, mode: "preview" });
-		const after = await Promise.all(
-			input.expectedChangeIds.map((changeId) =>
-				readTrace(join(root, traceFilePath(changeTraceId(changeId)))),
-			),
-		);
-
 		assert.equal(result.report.exit.status, "exit");
-		assert.match(result.report.planningEpochId, /^PE-[a-f0-9]{20}$/);
-		assert.deepEqual(
-			Object.keys(result.events).sort(),
-			[...input.expectedChangeIds].sort(),
-		);
+		assert.match(result.report.workGraphDeltaId, /^WGD-[a-f0-9]{20}$/);
+		assert.deepEqual(Object.keys(result.events), [input.changeId]);
 		assert.equal(result.append, undefined);
-		assert.deepEqual(after, before);
+		assert.deepEqual(await readTrace(path), before);
 	});
 
-	it("appends one shared epoch to every participating Change Trace", async () => {
-		const { root } = await setupApprovedPortfolio();
+	it("appends one Change-owned delta and projects its Work Units", async () => {
+		const { root } = await setupApprovedChange();
 		const input = await planningInput(root);
 		const runtimeJobId = `runtime-reaction:${"1".repeat(64)}`;
-		const result = await runWikiPlan({
-			...input,
-			mode: "append",
-			runtimeJobId,
-		});
+		const result = await runWikiPlan({ ...input, mode: "append", runtimeJobId });
 		const workState = await buildProjectWorkState({ repoRoot: root });
-
-		assert.deepEqual(
-			Object.keys(result.append).sort(),
-			[...input.expectedChangeIds].sort(),
-		);
-		assert.equal(
-			Object.values(result.events).every(
-				(event) => event.data?.runtimeJobId === runtimeJobId,
-			),
-			true,
-		);
-		assert.equal(workState.sprints.length, 1);
-		assert.equal(workState.sprints[0].id, "SPR-shared-runtime");
-		assert.deepEqual(
-			workState.sprints[0].participatingChangeIds,
-			input.expectedChangeIds,
-		);
-		assert.equal(workState.sprints[0].complete, false);
-		assert.deepEqual(workState.sprints[0].uiPreviewTargets, [
-			{
-				targetId: "shared-runtime-dashboard",
-				targetDigest: `sha256:${"a".repeat(64)}`,
-				profileId: "web",
-				profileDigest: `sha256:${"b".repeat(64)}`,
-				workUnitIds: ["WI-shared-runtime"],
-				contributingChangeIds: [...input.expectedChangeIds].sort(),
-				required: true,
-				activation: "implementation",
-				autoOpen: "once_per_target",
-			},
-		]);
-		assert.equal(workState.workUnits.length, 1);
-		assert.equal(
-			workState.workUnits[0].owningChangeId,
-			input.expectedChangeIds[0],
-		);
-		assert.deepEqual(
-			workState.workUnits[0].contributesToChangeIds,
-			input.expectedChangeIds.slice(1),
-		);
+		assert.ok(result.append[input.changeId]);
+		assert.equal(result.events[input.changeId].data.runtimeJobId, runtimeJobId);
+		assert.equal(workState.workGraphDeltas.length, 1);
+		assert.equal(workState.workGraphDeltas[0].owningChangeId, input.changeId);
+		assert.equal(workState.workUnits[0].owningChangeId, input.changeId);
+		assert.equal(workState.workUnits[0].workGraphDeltaId, result.report.workGraphDeltaId);
+		assert.equal(workState.changes[0].planningStatus, "planned");
+		assert.equal(workState.changes[0].currentLoop, "implementation");
 		assert.equal(workState.blockers.length, 0);
-		for (const change of workState.changes) {
-			assert.equal(change.planningStatus, "planned");
-			assert.equal(change.currentLoop, "implementation");
-		}
 	});
 
-	it("fails closed on unsafe multi-Change integration", async () => {
-		const { root } = await setupApprovedPortfolio();
+	it("rejects cross-Change ownership and uncovered acceptance", async () => {
+		const { root } = await setupApprovedChange();
 		const input = await planningInput(root);
-		input.sprints[0].integrationRefs = [];
-		const preview = await runWikiPlan({ ...input, mode: "preview" });
-
+		const invalid = {
+			...input,
+			workUnits: [{ ...input.workUnits[0], owningChangeId: "CHG-other" }],
+			acceptanceCoverage: [
+				{ acceptanceRequirement: "missing", workUnitIds: ["WU-other"] },
+			],
+		};
+		const preview = await runWikiPlan({ ...invalid, mode: "preview" });
 		assert.equal(preview.report.exit.status, "continue");
 		assert.deepEqual(
 			preview.report.qualityStandards
 				.filter((standard) => standard.status !== "met")
 				.map((standard) => standard.id),
-			["integration_safe"],
+			["single_change_ownership", "acceptance_coverage"],
 		);
-		await assert.rejects(
-			runWikiPlan({ ...input, mode: "append" }),
-			/Planning quality did not exit/,
-		);
+		await assert.rejects(runWikiPlan({ ...invalid, mode: "append" }), /Planning quality did not exit/);
 	});
 
-	it("rejects UI preview target correlation outside Sprint authority", async () => {
-		const { root } = await setupApprovedPortfolio();
+	it("rejects stale Change, Work Graph, WorkState, and trace byte guards", async () => {
+		const { root } = await setupApprovedChange();
 		const input = await planningInput(root);
-		input.sprints[0].uiPreviewTargets[0].workUnitIds = ["WI-other"];
-		const preview = await runWikiPlan({ ...input, mode: "preview" });
-		assert.equal(preview.report.exit.status, "continue");
-		assert.deepEqual(
-			preview.report.qualityStandards
-				.filter((standard) => standard.status !== "met")
-				.map((standard) => standard.id),
-			["ui_preview_targets_valid"],
-		);
-	});
-
-	it("rejects stale horizon, WorkState, and per-trace byte guards", async () => {
-		const { root } = await setupApprovedPortfolio();
-		const input = await planningInput(root);
-		await assert.rejects(
-			runWikiPlan({ ...input, expectedChangeIds: ["CHG-plan-a"] }),
-			/Planning horizon changed/,
-		);
-		await assert.rejects(
-			runWikiPlan({
-				...input,
-				expectedWorkStateDigest: `sha256:${"0".repeat(64)}`,
-			}),
-			/Planning WorkState changed/,
-		);
-		await assert.rejects(
-			runWikiPlan({
-				...input,
-				mode: "append",
-				expectedBytesByChangeId: {
-					...input.expectedBytesByChangeId,
-					"CHG-plan-b": 0,
-				},
-			}),
-			/Planning trace bytes changed/,
-		);
+		await assert.rejects(runWikiPlan({ ...input, expectedChangeId: "CHG-other" }), /Planning Change changed/);
+		await assert.rejects(runWikiPlan({ ...input, observedWorkGraphDigest: `sha256:${"0".repeat(64)}` }), /stale Work Graph/);
+		await assert.rejects(runWikiPlan({ ...input, expectedWorkStateDigest: `sha256:${"0".repeat(64)}` }), /Planning WorkState changed/);
+		await assert.rejects(runWikiPlan({ ...input, mode: "append", expectedBytes: 0 }), /Planning trace bytes changed/);
 	});
 });

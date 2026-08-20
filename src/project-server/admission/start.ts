@@ -207,7 +207,7 @@ function createAttemptOperation(input: {
 			privateAttemptDigest: input.idempotencyDigest,
 		},
 	});
-	reduceChangeOperation(input.change, operation, {planningEpochs: []});
+	reduceChangeOperation(input.change, operation, {});
 	return operation;
 }
 

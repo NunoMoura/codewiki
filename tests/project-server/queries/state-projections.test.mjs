@@ -899,7 +899,7 @@ describe("trace-backed state projections", () => {
 		const planning = trace.records.find((record) => record.loop === "planning");
 		planning.data.output.qualityStandards =
 			planning.data.output.qualityStandards.map((standard) =>
-				standard.id === "acceptance_clarity"
+				standard.id === "work_unit_obligations"
 					? {
 							...standard,
 							status: "blocked",

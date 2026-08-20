@@ -231,7 +231,9 @@ export type {
 } from "./loops/implementation/candidate-content.ts";
 export type {
 	PlanningCandidateContent,
-	PlanningSprintCandidate,
+	PlanningAcceptanceCoverage,
+	PlanningDependencyEdge,
+	PlanningResourceRequirements,
 	PlanningWorkUnitCandidate,
 } from "./loops/planning/candidate-content.ts";
 export {
@@ -262,7 +264,7 @@ export type {
 	WorkStateAssignment,
 	WorkStateBlocker,
 	WorkStateChange,
-	WorkStateSprint,
+	WorkStateGraphDelta,
 	WorkStateWorkUnit,
 } from "./work-state/types.ts";
 export type {

@@ -824,7 +824,6 @@ describe("Pi extension adapter", () => {
 			assert.doesNotMatch(html, /<label for="search">/);
 			assert.doesNotMatch(html, /mission-title/);
 			assert.doesNotMatch(html, /CodeWiki \/ local observability/);
-			assert.doesNotMatch(html, /Sprint trace control/);
 			assert.doesNotMatch(html, /trace-ribbon/);
 			assert.doesNotMatch(html, /trace-decision/);
 			assert.doesNotMatch(html, /quality-strip/);
@@ -893,22 +892,22 @@ describe("Pi extension adapter", () => {
 			assert.equal(state.summary.committed, 0);
 			assert.equal(state.summary.decision, 1);
 			assert.equal(Object.hasOwn(state.summary, "archived"), false);
-			assert.equal(state.sprintsQueue[0].traceId, "TRACE-pi");
-			assert.equal(state.sprintsQueue[0].stage, "decision");
-			assert.equal(state.sprintsQueue[0].committed, false);
+			assert.equal(state.pipelineQueue[0].traceId, "TRACE-pi");
+			assert.equal(state.pipelineQueue[0].stage, "decision");
+			assert.equal(state.pipelineQueue[0].committed, false);
 			assert.deepEqual(
-				state.sprintsQueue[0].segments.map((segment) => segment.phase),
+				state.pipelineQueue[0].segments.map((segment) => segment.phase),
 				["change", "decision", "planning", "implementation", "committed"],
 			);
 			assert.ok(
-				state.sprintsQueue[0].segments.every(
+				state.pipelineQueue[0].segments.every(
 					(segment) =>
 						typeof segment.progress === "number" &&
 						segment.progress >= 0 &&
 						segment.progress <= 1,
 				),
 			);
-			assert.equal(state.sprintsQueue[0].devLog.available, true);
+			assert.equal(state.pipelineQueue[0].devLog.available, true);
 			assert.equal(state.changes.available, true);
 			assert.equal(typeof state.configuration.effective.runtime.maxWorkers, "number");
 			assert.equal(Object.hasOwn(state, "sessionActions"), false);
@@ -932,24 +931,24 @@ describe("Pi extension adapter", () => {
 				assert.equal(response.status, 404, pathname);
 			}
 			assert.equal(pi.userMessages.length, 0);
-			assert.equal(state.sprintsQueue[0].devLog.entryCount, 1);
+			assert.equal(state.pipelineQueue[0].devLog.entryCount, 1);
 			assert.equal(
-				state.sprintsQueue[0].devLog.items[0].action,
+				state.pipelineQueue[0].devLog.items[0].action,
 				"worker.started",
 			);
-			assert.ok(state.sprintsQueue[0].qualityChecks.length > 0);
+			assert.ok(state.pipelineQueue[0].qualityChecks.length > 0);
 			assert.equal(
-				typeof state.sprintsQueue[0].qualityChecks[0].standardType,
+				typeof state.pipelineQueue[0].qualityChecks[0].standardType,
 				"string",
 			);
 			assert.equal(
-				typeof state.sprintsQueue[0].qualityChecks[0].layer,
+				typeof state.pipelineQueue[0].qualityChecks[0].layer,
 				"string",
 			);
-			assert.ok(state.sprintsQueue[0].primaryQualityChecks.length > 0);
-			assert.ok(state.sprintsQueue[0].activities.length > 0);
-			assert.equal(state.sprintsQueue[0].loopSections.length, 3);
-			const decisionSection = state.sprintsQueue[0].loopSections.find(
+			assert.ok(state.pipelineQueue[0].primaryQualityChecks.length > 0);
+			assert.ok(state.pipelineQueue[0].activities.length > 0);
+			assert.equal(state.pipelineQueue[0].loopSections.length, 3);
+			const decisionSection = state.pipelineQueue[0].loopSections.find(
 				(section) => section.loop === "decision",
 			);
 			assert.ok(decisionSection);
@@ -963,9 +962,9 @@ describe("Pi extension adapter", () => {
 				decisionSection.report.metrics.join("\n"),
 				/^tokens: not recorded$/m,
 			);
-			assert.ok(Object.hasOwn(state.sprintsQueue[0].touchedFiles, "tests"));
-			assert.equal(typeof state.sprintsQueue[0].qualityCaption, "string");
-			assert.match(state.sprintsQueue[0].currentAction, /proposed changes/i);
+			assert.ok(Object.hasOwn(state.pipelineQueue[0].touchedFiles, "tests"));
+			assert.equal(typeof state.pipelineQueue[0].qualityCaption, "string");
+			assert.match(state.pipelineQueue[0].currentAction, /proposed changes/i);
 
 			const eventsUrl = new URL(opened.url);
 			eventsUrl.hash = "";
@@ -1027,10 +1026,10 @@ describe("Pi extension adapter", () => {
 				),
 			]);
 			assert.ok(
-				updatedEventState.sprintsQueue[0].activities.length >
-					initialEventState.sprintsQueue[0].activities.length,
+				updatedEventState.pipelineQueue[0].activities.length >
+					initialEventState.pipelineQueue[0].activities.length,
 			);
-			assert.deepEqual(updatedEventState.sprintsQueue[0].changeIds, [
+			assert.deepEqual(updatedEventState.pipelineQueue[0].changeIds, [
 				"CHG-live-dashboard",
 			]);
 			await reader.cancel();
@@ -1068,7 +1067,7 @@ describe("Pi extension adapter", () => {
 			});
 			assert.equal(recoveredResponse.status, 200);
 			const recoveredState = await recoveredResponse.json();
-			assert.equal(recoveredState.sprintsQueue[0].traceId, "TRACE-pi");
+			assert.equal(recoveredState.pipelineQueue[0].traceId, "TRACE-pi");
 			assert.equal(typeof recoveredState.summary.decision, "number");
 
 			const resume = await resumeCommand.handler("", {

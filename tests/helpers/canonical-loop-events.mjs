@@ -1,6 +1,6 @@
 import { createChangeRecord } from "../../src/changes/records.ts";
 import { evaluateChangeDecision } from "../../src/loops/decision/change-quality.ts";
-import { evaluatePortfolioPlanning } from "../../src/loops/planning/portfolio-quality.ts";
+import { evaluateGraphDeltaPlanning } from "../../src/loops/planning/graph-delta-quality.ts";
 import { acceptedChangeFixture } from "./accepted-change.mjs";
 
 export function canonicalChangeInput(input = {}) {
@@ -95,55 +95,58 @@ function canonicalPlanningIteration(input) {
 	);
 	const changeId =
 		decision?.data?.output?.changeRecord?.change?.id || "CHG-canonical-test";
-	const sprintId = "SPR-canonical-test";
 	const sourceItems = input.workUnitInputs || [];
-	const workUnits = sourceItems.map((item, index) => ({
-		id: item.id || `WI-canonical-${index + 1}`,
-		sprintId,
-		owningChangeId: changeId,
-		contributingChangeIds: [],
-		title: item.title || `Canonical work ${index + 1}`,
-		outcome: item.outcome || "Implement canonical planned work.",
-		technicalRequirements: item.technicalRequirements || [
-			"Preserve canonical trace authority.",
-		],
-		acceptanceCriteria: (
+	const workUnits = sourceItems.map((item, index) => {
+		const acceptanceCriteria = (
 			item.acceptanceCriteria ||
 			item.acceptance || ["Canonical work is verified."]
 		).map((criterion, criterionIndex) =>
 			typeof criterion === "string"
-				? {
-						id: `AC-${String(criterionIndex + 1).padStart(3, "0")}`,
-						text: criterion,
-					}
+				? { id: `AC-${String(criterionIndex + 1).padStart(3, "0")}`, text: criterion }
 				: criterion,
-		),
-		componentRefs: item.componentRefs || ["source"],
-		pathScopes: item.pathScopes || ["src/**"],
-		verification: item.verification || ["npm test"],
-		workerProfile: item.workerProfile || "implementation",
-		dependsOn: item.dependsOn || [],
-		...(item.trigger ? { trigger: item.trigger } : {}),
-	}));
-	const sprints = [
-		{
-			id: sprintId,
-			goal: "Execute canonical test plan.",
-			participatingChangeIds: [changeId],
-			workUnitIds: workUnits.map((item) => item.id),
-			rollbackBoundary: "Revert Sprint work as one boundary.",
-			dependsOn: [],
-			integrationRefs: [],
-		},
-	];
-	const quality = evaluatePortfolioPlanning({
-		changeIds: [changeId],
-		sprints,
-		workUnits: workUnits.map((item) => ({
-			...item,
-			acceptanceCriteria: item.acceptanceCriteria.map((entry) => entry.text),
+		);
+		return {
+			id: item.id || `WU-canonical-${index + 1}`,
+			owningChangeId: changeId,
+			title: item.title || `Canonical work ${index + 1}`,
+			outcome: item.outcome || "Implement canonical planned work.",
+			technicalRequirements: item.technicalRequirements || ["Preserve canonical trace authority."],
+			acceptanceRequirements: acceptanceCriteria.map((criterion) => criterion.text),
+			acceptanceCriteria,
+			componentRefs: item.componentRefs || ["source"],
+			pathScopes: item.pathScopes || ["src/**"],
+			verification: item.verification || ["npm test"],
+			resourceRequirements: {
+				capabilityIds: ["source.edit"],
+				toolIds: ["node-test"],
+				skillIds: [],
+				custodyRequirements: ["private-workbench"],
+				budgetClass: "standard",
+			},
+			dependsOn: item.dependsOn || [],
+			...(item.trigger ? { trigger: item.trigger } : {}),
+		};
+	});
+	const dependencyEdges = workUnits.flatMap((unit) =>
+		unit.dependsOn.map((dependencyId) => ({
+			fromWorkUnitId: unit.id,
+			toWorkUnitId: dependencyId,
+			kind: "requires",
 		})),
-		workState: { changes: [], workUnits: [], assignments: [] },
+	);
+	const acceptanceCoverage = workUnits.flatMap((unit) =>
+		unit.acceptanceRequirements.map((acceptanceRequirement) => ({
+			acceptanceRequirement,
+			workUnitIds: [unit.id],
+		})),
+	);
+	const quality = evaluateGraphDeltaPlanning({
+		changeId,
+		workUnits,
+		dependencyEdges,
+		acceptanceCoverage,
+		integrationRequirements: ["Integrate into exact Change lineage."],
+		workState: { workUnitIds: [] },
 	});
 	const event = {
 		type: "trace_event",
@@ -159,10 +162,14 @@ function canonicalPlanningIteration(input) {
 		refs: [`change:${changeId}`],
 		data: {
 			output: {
-				epochId: "PE-canonical-test",
-				participantChangeIds: [changeId],
-				sprints,
+				workGraphDeltaId: "WGD-canonical-test",
+				digest: `sha256:${"a".repeat(64)}`,
+				change: { changeId },
 				workUnits,
+				dependencyEdges,
+				acceptanceCoverage,
+				uiPreviewTargets: [],
+				integrationRequirements: ["Integrate into exact Change lineage."],
 				qualityStandards: quality.standards,
 			},
 			exit: { status: "exit", route: "implementation", passed: true },

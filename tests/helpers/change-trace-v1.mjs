@@ -2,7 +2,6 @@ import {
 	createArchiveManifest,
 	createCanonicalChangeOperation,
 	createChangeRevision,
-	createPlanningEpochRecord,
 	createStateCommitManifest,
 	serializeCanonicalChangeOperation,
 } from "../../src/changes/trace/index.ts";
@@ -107,79 +106,10 @@ export function proposedOperation(overrides = {}) {
 	});
 }
 
-export function planningEpoch(operation = proposedOperation()) {
-	const revision = operation.body.payload.revision;
-	const participant = {
-		changeId: operation.body.changeId,
-		revisionId: revision.revisionId,
-		tailOperationId: operation.operationId,
-	};
-	return createPlanningEpochRecord({
-		recordedAt: "2026-07-30T12:05:00.000Z",
-		baseSnapshot: {...baseSnapshot(), workStateDigest: digest("b")},
-		authorityBinding: authorityBinding({role: "planner"}),
-		planningCandidateId: "candidate:planning:fixture",
-		exitReportId: "exit-report:planning:fixture",
-		participants: [participant],
-		sprints: [
-			{
-				id: "sprint-protocol",
-				goal: "Land deterministic protocol foundation.",
-				participantChangeIds: [operation.body.changeId],
-				workUnitIds: ["work-protocol"],
-				dependsOnSprintIds: [],
-				integrationBoundary: "One reviewed protocol commit.",
-			},
-		],
-		workUnits: [
-			{
-				id: "work-protocol",
-				sprintId: "sprint-protocol",
-				title: "Implement protocol identity",
-				outcome: "Exact schemas and identities are executable.",
-				owningChange: participant,
-				contributingChanges: [],
-				dependsOnWorkUnitIds: [],
-				acceptanceRequirements: [
-					{
-						id: "protocol-tests",
-						statement: "Canonical fixture tests pass.",
-						evidenceObligationIds: ["command-proof"],
-						checkIds: ["tests-pass"],
-					},
-				],
-				scope: {
-					sourcePaths: ["src/change-trace/**"],
-					knowledgeRefs: ["kb:system/traces"],
-					componentRefs: ["change-traces"],
-				},
-				workbench: {
-					profileId: "typescript",
-					toolIds: ["pi-lens", "node-test"],
-					skillIds: [],
-					contextRefs: ["plan:phase-1"],
-					budgetDigest: digest("c"),
-				},
-				integration: {
-					targetRef: "refs/heads/main",
-					requiredCheckIds: ["tests-pass", "types-pass"],
-					rollbackStrategy: "Revert exact accepted commit.",
-					reviewRequired: true,
-				},
-			},
-		],
-		activeWorkDispositions: [],
-		safeExecutionFrontier: ["work-protocol"],
-	});
-}
-
-export function stateManifest(
-	operation = proposedOperation(),
-	epoch = planningEpoch(operation),
-) {
+export function stateManifest(operation = proposedOperation()) {
 	return createStateCommitManifest({
 		previousStateHead: operation.body.baseSnapshot.remoteStateHead,
-		operationIds: [operation.operationId, epoch.operationId],
+		operationIds: [operation.operationId],
 		changedTraceTails: [
 			{
 				changeId: operation.body.changeId,

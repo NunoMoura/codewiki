@@ -5,8 +5,6 @@ import {
 	type ChangeOperationKind,
 	type ChangeOperationPayload,
 	type OperationId,
-	type PlanningEpochBody,
-	type PlanningEpochRecord,
 } from "../changes/trace/contracts.ts";
 import type {
 	ContradictionProjection,
@@ -27,7 +25,7 @@ import {
 
 export const ALIGNMENT_GRAPH_PROJECTOR = Object.freeze({
 	id: "codewiki.alignment-graph-projector",
-	version: "2.0.0",
+	version: "3.0.0",
 } as const);
 
 export type AlignmentGraphProvenanceClass =
@@ -157,7 +155,6 @@ function assertAlignmentGraphCoverage(graph: AlignmentGraphSnapshot): void {
 }
 
 type GraphAccumulator = ReturnType<typeof createAccumulator>;
-type PlanningWorkUnit = PlanningEpochBody["workUnits"][number];
 type OperationGraphProjector = (
 	graph: GraphAccumulator,
 	operation: CanonicalChangeOperation,
@@ -190,7 +187,6 @@ const OPERATION_GRAPH_PROJECTORS: Readonly<
 	"check.result_recorded": projectCheckResult,
 	"loop.exit_report_recorded": projectExitReport,
 	"runtime.route_recorded": projectServerRoute,
-	"planning.epoch_bound": projectPlanningEpochBinding,
 	"work_unit_claim.acquired": projectWorkUnitClaim,
 	"work_unit_claim.released": projectWorkUnitClaimRelease,
 	"work_unit_claim.takeover_recorded": projectWorkUnitClaimTakeover,
@@ -234,11 +230,7 @@ export function projectAlignmentGraphIncremental(
 		if (!record) {
 			throw new Error(`Accepted graph record ${operationId} is unavailable.`);
 		}
-		if (isPlanningEpoch(record)) {
-			projectPlanningEpoch(graph, record);
-		} else {
-			projectChangeOperation(graph, record);
-		}
+		projectChangeOperation(graph, record);
 	}
 	for (const change of state.changes) {
 		change.contradictions.forEach((entry) => projectContradiction(graph, entry));
@@ -304,322 +296,6 @@ function projectChangeOperation(
 	});
 	graph.edge("operation_observed_source", operationNode, sourceNode, observed);
 	OPERATION_GRAPH_PROJECTORS[operation.body.kind](graph, operation);
-}
-
-function projectPlanningEpoch(
-	graph: GraphAccumulator,
-	epoch: PlanningEpochRecord,
-): void {
-	const provenance = planningProvenance(epoch);
-	const projectNode = "project:codewiki";
-	const epochNode = planningEpochNodeId(epoch.operationId);
-	graph.node({
-		id: projectNode,
-		type: "project",
-		label: "CodeWiki project",
-		attributes: {},
-		provenance,
-	});
-	graph.node({
-		id: epochNode,
-		type: "planning_epoch",
-		label: epoch.operationId,
-		attributes: {
-			planningCandidateId: epoch.body.planningCandidateId,
-			exitReportId: epoch.body.exitReportId,
-			globalWorkUnitGraphDigest: epoch.body.globalWorkUnitGraphDigest,
-		},
-		provenance,
-	});
-	graph.edge("project_has_planning_epoch", projectNode, epochNode, provenance);
-	const actorNode = `actor:${epoch.body.authorityBinding.actorId}`;
-	graph.node({
-		id: actorNode,
-		type: "actor",
-		label: epoch.body.authorityBinding.actorId,
-		attributes: {},
-		provenance,
-	});
-	graph.edge("actor_authorized_planning_epoch", actorNode, epochNode, provenance, {
-		role: epoch.body.authorityBinding.role,
-	});
-	for (const participant of epoch.body.participants) {
-		graph.edge(
-			"change_participates_in_epoch",
-			changeNodeId(participant.changeId),
-			epochNode,
-			provenance,
-			{revisionId: participant.revisionId},
-		);
-	}
-	for (const sprint of epoch.body.sprints) {
-		const sprintNode = `sprint:${epoch.operationId}:${sprint.id}`;
-		graph.node({
-			id: sprintNode,
-			type: "sprint",
-			label: sprint.goal,
-			attributes: {sprintId: sprint.id},
-			provenance,
-		});
-		graph.edge("epoch_contains_sprint", epochNode, sprintNode, provenance);
-		for (const dependency of sprint.dependsOnSprintIds) {
-			graph.edge(
-				"sprint_depends_on_sprint",
-				sprintNode,
-				`sprint:${epoch.operationId}:${dependency}`,
-				provenance,
-			);
-		}
-	}
-	for (const workUnit of epoch.body.workUnits) {
-		const workUnitNode = workUnitNodeId(epoch.operationId, workUnit.id);
-		graph.node({
-			id: workUnitNode,
-			type: "work_unit",
-			label: workUnit.title,
-			attributes: {workUnitId: workUnit.id, outcome: workUnit.outcome},
-			provenance,
-		});
-		graph.edge("epoch_contains_work_unit", epochNode, workUnitNode, provenance);
-		graph.node({
-			id: workUnitReferenceNodeId(workUnit.id),
-			type: "work_unit_ref",
-			label: workUnit.id,
-			attributes: {workUnitId: workUnit.id},
-			provenance,
-		});
-		graph.edge(
-			"work_unit_has_stable_ref",
-			workUnitNode,
-			workUnitReferenceNodeId(workUnit.id),
-			provenance,
-		);
-		graph.edge(
-			"sprint_contains_work_unit",
-			`sprint:${epoch.operationId}:${workUnit.sprintId}`,
-			workUnitNode,
-			provenance,
-		);
-		graph.edge(
-			"work_unit_realizes_change",
-			workUnitNode,
-			changeNodeId(workUnit.owningChange.changeId),
-			provenance,
-			{revisionId: workUnit.owningChange.revisionId},
-		);
-		for (const dependency of workUnit.dependsOnWorkUnitIds) {
-			graph.edge(
-				"work_unit_depends_on_work_unit",
-				workUnitNode,
-				workUnitNodeId(epoch.operationId, dependency),
-				provenance,
-			);
-		}
-		for (const requirement of workUnit.acceptanceRequirements) {
-			const requirementNode = `work-requirement:${epoch.operationId}:${workUnit.id}:${requirement.id}`;
-			graph.node({
-				id: requirementNode,
-				type: "requirement",
-				label: requirement.statement,
-				attributes: {requirementId: requirement.id},
-				provenance,
-			});
-			graph.edge("work_unit_has_requirement", workUnitNode, requirementNode, provenance);
-			projectRequirementObligations(
-				graph,
-				requirementNode,
-				requirement,
-				provenance,
-			);
-		}
-		projectWorkUnitAlignmentFacts(graph, {
-			epoch,
-			workUnit,
-			workUnitNode,
-			provenance,
-		});
-	}
-	projectActiveWorkDispositions(graph, epoch, provenance);
-	for (const workUnitId of epoch.body.safeExecutionFrontier) {
-		graph.edge(
-			"epoch_safe_execution_frontier",
-			epochNode,
-			workUnitNodeId(epoch.operationId, workUnitId),
-			provenance,
-		);
-	}
-}
-
-function projectRequirementObligations(
-	graph: GraphAccumulator,
-	requirementNode: string,
-	requirement: PlanningWorkUnit["acceptanceRequirements"][number],
-	provenance: AlignmentGraphFactProvenance,
-): void {
-	projectReferenceSet(graph, {
-		from: requirementNode,
-		values: requirement.evidenceObligationIds,
-		nodeType: "evidence_obligation",
-		edgeType: "requirement_requires_evidence_obligation",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: requirementNode,
-		values: requirement.checkIds,
-		nodeType: "check",
-		edgeType: "requirement_requires_check",
-		provenance,
-	});
-}
-
-interface ProjectWorkUnitAlignmentFactsInput {
-	readonly epoch: PlanningEpochRecord;
-	readonly workUnit: PlanningWorkUnit;
-	readonly workUnitNode: string;
-	readonly provenance: AlignmentGraphFactProvenance;
-}
-
-function projectWorkUnitAlignmentFacts(
-	graph: GraphAccumulator,
-	input: ProjectWorkUnitAlignmentFactsInput,
-): void {
-	const {epoch, workUnit, workUnitNode, provenance} = input;
-	for (const contributor of workUnit.contributingChanges) {
-		graph.edge(
-			"work_unit_contributed_by_change",
-			workUnitNode,
-			changeNodeId(contributor.changeId),
-			provenance,
-			{revisionId: contributor.revisionId},
-		);
-	}
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: workUnit.scope.sourcePaths,
-		nodeType: "source_path",
-		edgeType: "work_unit_scoped_to_source",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: workUnit.scope.knowledgeRefs,
-		nodeType: "knowledge",
-		edgeType: "work_unit_scoped_to_knowledge",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: workUnit.scope.componentRefs,
-		nodeType: "component",
-		edgeType: "work_unit_scoped_to_component",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: workUnit.workbench.toolIds,
-		nodeType: "tool",
-		edgeType: "work_unit_uses_tool",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: workUnit.workbench.skillIds,
-		nodeType: "skill",
-		edgeType: "work_unit_uses_skill",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: workUnit.workbench.contextRefs,
-		nodeType: "context",
-		edgeType: "work_unit_uses_context",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: workUnit.integration.requiredCheckIds,
-		nodeType: "check",
-		edgeType: "work_unit_requires_integration_check",
-		provenance,
-	});
-	projectReferenceSet(graph, {
-		from: workUnitNode,
-		values: [workUnit.integration.targetRef],
-		nodeType: "git_ref",
-		edgeType: "work_unit_integrates_to_ref",
-		provenance,
-	});
-	graph.edge(
-		"work_unit_belongs_to_epoch",
-		workUnitNode,
-		planningEpochNodeId(epoch.operationId),
-		provenance,
-	);
-}
-
-function projectActiveWorkDispositions(
-	graph: GraphAccumulator,
-	epoch: PlanningEpochRecord,
-	provenance: AlignmentGraphFactProvenance,
-): void {
-	for (const disposition of epoch.body.activeWorkDispositions) {
-		const workUnitReference = workUnitReferenceNodeId(disposition.workUnitId);
-		graph.edge(
-			"epoch_disposes_active_work",
-			planningEpochNodeId(epoch.operationId),
-			workUnitReference,
-			provenance,
-			{
-				disposition: disposition.disposition,
-				reason: disposition.reason,
-				...(disposition.activeAssignmentOperationId
-					? {activeAssignmentOperationId: disposition.activeAssignmentOperationId}
-					: {}),
-			},
-		);
-		if (disposition.activeAssignmentOperationId) {
-			graph.edge(
-				"epoch_disposes_active_assignment",
-				planningEpochNodeId(epoch.operationId),
-				assignmentNodeId(disposition.activeAssignmentOperationId),
-				provenance,
-				{disposition: disposition.disposition},
-			);
-		}
-		if (disposition.replacementWorkUnitId) {
-			graph.edge(
-				"work_unit_migrates_to_work_unit",
-				workUnitReference,
-				workUnitNodeId(epoch.operationId, disposition.replacementWorkUnitId),
-				provenance,
-			);
-		}
-	}
-}
-
-interface ProjectReferenceSetInput {
-	readonly from: string;
-	readonly values: readonly string[];
-	readonly nodeType: string;
-	readonly edgeType: string;
-	readonly provenance: AlignmentGraphFactProvenance;
-}
-
-function projectReferenceSet(
-	graph: GraphAccumulator,
-	input: ProjectReferenceSetInput,
-): void {
-	for (const value of input.values) {
-		const nodeId = `${input.nodeType}:${value}`;
-		graph.node({
-			id: nodeId,
-			type: input.nodeType,
-			label: value,
-			attributes: {},
-			provenance: input.provenance,
-		});
-		graph.edge(input.edgeType, input.from, nodeId, input.provenance);
-	}
 }
 
 function projectChangeRevision(
@@ -1028,30 +704,6 @@ function projectServerRoute(
 	);
 }
 
-function projectPlanningEpochBinding(
-	graph: GraphAccumulator,
-	operation: CanonicalChangeOperation,
-): void {
-	const payload = payloadOf(operation, "planning.epoch_bound");
-	const provenance = operationProvenance(operation);
-	const epochNode = planningEpochNodeId(payload.planningEpochId);
-	graph.edge(
-		"change_participates_in_epoch",
-		changeNodeId(operation.body.changeId),
-		epochNode,
-		provenance,
-		{participantRevisionId: payload.participantRevisionId},
-	);
-	payload.workUnitIds.forEach((workUnitId) =>
-		graph.edge(
-			"epoch_contains_work_unit",
-			epochNode,
-			workUnitNodeId(payload.planningEpochId, workUnitId),
-			provenance,
-		),
-	);
-}
-
 function projectWorkUnitClaim(
 	graph: GraphAccumulator,
 	operation: CanonicalChangeOperation,
@@ -1079,7 +731,7 @@ function projectWorkUnitClaimNode(
 	operation: CanonicalChangeOperation,
 	payload: Pick<
 		ChangeOperationPayload<"work_unit_claim.acquired">,
-		"planningEpochId" | "workUnitId" | "workerId"
+		"workGraphDeltaId" | "workUnitId" | "workerId"
 	>,
 ): void {
 	const provenance = operationProvenance(operation);
@@ -1092,10 +744,7 @@ function projectWorkUnitClaimNode(
 		provenance,
 	});
 	const workerNode = `actor:${payload.workerId}`;
-	const workUnitNode = workUnitNodeId(
-		payload.planningEpochId,
-		payload.workUnitId,
-	);
+	const workUnitNode = workUnitNodeId(payload.workUnitId);
 	graph.edge(
 		"worker_claims_work_unit",
 		workerNode,
@@ -1136,7 +785,7 @@ function projectAssignment(
 	});
 	graph.edge(
 		"work_unit_dispatched_as_assignment",
-		workUnitNodeId(payload.planningEpochId, payload.workUnitId),
+		workUnitNodeId(payload.workUnitId),
 		assignmentNode,
 		provenance,
 	);
@@ -1557,26 +1206,12 @@ function assertProjectionBase(
 
 function recordsById(
 	state: ProjectWorkState,
-): ReadonlyMap<OperationId, CanonicalChangeOperation | PlanningEpochRecord> {
-	const entries: Array<
-		readonly [OperationId, CanonicalChangeOperation | PlanningEpochRecord]
-	> = [
-		...state.changes.flatMap((change) =>
-			change.operations.map(
-				(operation) => [operation.operationId, operation] as const,
-			),
+): ReadonlyMap<OperationId, CanonicalChangeOperation> {
+	return new Map(
+		state.changes.flatMap((change) =>
+			change.operations.map((operation) => [operation.operationId, operation] as const),
 		),
-		...state.planningEpochs.map(
-			(epoch) => [epoch.operationId, epoch] as const,
-		),
-	];
-	return new Map(entries);
-}
-
-function isPlanningEpoch(
-	record: CanonicalChangeOperation | PlanningEpochRecord,
-): record is PlanningEpochRecord {
-	return record.body.kind === "planning.epoch_recorded";
+	);
 }
 
 function operationProvenance(
@@ -1588,17 +1223,6 @@ function operationProvenance(
 		class: provenanceClass,
 		canonicalRefs: [operation.operationId],
 		observedRefs: [...new Set(observedRefs)].sort(compareText),
-		analysisRefs: [],
-	};
-}
-
-function planningProvenance(
-	epoch: PlanningEpochRecord,
-): AlignmentGraphFactProvenance {
-	return {
-		class: "canonical_binding",
-		canonicalRefs: [epoch.operationId],
-		observedRefs: [],
 		analysisRefs: [],
 	};
 }
@@ -1633,16 +1257,8 @@ function changeNodeId(changeId: string): string {
 	return `change:${changeId}`;
 }
 
-function planningEpochNodeId(planningEpochId: string): string {
-	return `planning-epoch:${planningEpochId}`;
-}
-
-function workUnitNodeId(planningEpochId: string, workUnitId: string): string {
-	return `work-unit:${planningEpochId}:${workUnitId}`;
-}
-
-function workUnitReferenceNodeId(workUnitId: string): string {
-	return `work-unit-ref:${workUnitId}`;
+function workUnitNodeId(workUnitId: string): string {
+	return `work-unit:${workUnitId}`;
 }
 
 function claimNodeId(operationId: string): string {

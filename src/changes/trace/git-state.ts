@@ -3,10 +3,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
 	parseCanonicalChangeOperation,
-	parsePlanningEpochRecord,
 	parseStateCommitManifest,
 	serializeCanonicalChangeOperation,
-	serializePlanningEpochRecord,
 	serializeStateCommitManifest,
 } from "./identity.ts";
 import {
@@ -19,7 +17,6 @@ import {
 import type {
 	GitObjectId,
 	OperationId,
-	PlanningEpochRecord,
 	StateCommitManifest,
 } from "./contracts.ts";
 import type { ProjectWorkState } from "./state.ts";
@@ -33,7 +30,6 @@ import {
 
 export const CODEWIKI_STATE_REF = "refs/heads/codewiki/state" as const;
 const STATE_MANIFEST_DIRECTORY = ".codewiki/state/manifests";
-const PLANNING_RECORD_DIRECTORY = ".codewiki/state/planning";
 const CHANGE_DIRECTORY = ".codewiki/changes";
 const FIXED_COMMIT_DATE = "2000-01-01T00:00:00Z";
 
@@ -393,8 +389,7 @@ async function readStateBatch(
 					commit,
 					"--",
 					CHANGE_DIRECTORY,
-					PLANNING_RECORD_DIRECTORY,
-				],
+					],
 				signal,
 			},
 			"list state records",
@@ -415,11 +410,7 @@ async function readStateBatch(
 				{repoRoot, args: ["show", `${commit}:${path}`], signal},
 				"read state record",
 			);
-			const record: AcceptedProtocolRecord = path.startsWith(
-				`${PLANNING_RECORD_DIRECTORY}/`,
-			)
-				? parsePlanningEpochRecord(recordResult.stdout)
-				: parseCanonicalChangeOperation(recordResult.stdout);
+			const record: AcceptedProtocolRecord = parseCanonicalChangeOperation(recordResult.stdout);
 			if (
 				record.operationId !== operationId ||
 				gitStateRecordPath(record) !== path
@@ -433,9 +424,6 @@ async function readStateBatch(
 }
 
 export function gitStateRecordPath(record: AcceptedProtocolRecord): string {
-	if (isPlanningEpoch(record)) {
-		return `${PLANNING_RECORD_DIRECTORY}/${digestHex(record.operationId)}.json`;
-	}
 	return `${CHANGE_DIRECTORY}/${record.body.changeId}/operations/${digestHex(record.operationId)}.json`;
 }
 
@@ -444,15 +432,7 @@ export function gitStateManifestPath(manifest: StateCommitManifest): string {
 }
 
 function serializeRecord(record: AcceptedProtocolRecord): string {
-	return isPlanningEpoch(record)
-		? serializePlanningEpochRecord(record)
-		: serializeCanonicalChangeOperation(record);
-}
-
-function isPlanningEpoch(
-	record: AcceptedProtocolRecord,
-): record is PlanningEpochRecord {
-	return record.body.kind === "planning.epoch_recorded";
+	return serializeCanonicalChangeOperation(record);
 }
 
 function digestHex(operationId: OperationId): string {

@@ -9,7 +9,6 @@ import {
 	baseSnapshotFor,
 	buildOperationSequence,
 	buildPassingPlanningExit,
-	buildPlanningEpochRecords,
 	planningArtifacts,
 } from "../../helpers/change-trace-replay-v1.mjs";
 import {
@@ -63,20 +62,19 @@ function buildChangeClaimRecord(state, changeId, actorId) {
 	}).operations;
 }
 
-function buildWorkUnitClaimRecord(state, changeId, epoch, workUnitId, actorId) {
+function buildWorkUnitClaimRecord(state, changeId, workGraphDeltaId, workUnitId, actorId) {
 	const change = state.changes.find((entry) => entry.changeId === changeId);
 	return buildOperationSequence({
 		change,
 		changeId,
 		baseSnapshot: baseSnapshotFor(state),
 		authority: authorityBinding({actorId}),
-		planningEpochs: [epoch],
 		specifications: [
 			{
 				kind: "work_unit_claim.acquired",
 				recordedAt: "2026-07-30T15:30:00.000Z",
 				payload: {
-					planningEpochId: epoch.operationId,
+					workGraphDeltaId,
 					workUnitId,
 					assignmentAttemptId: `attempt-${actorId}`,
 					workerId: actorId,
@@ -278,55 +276,23 @@ describe("provider-neutral Git state CAS", () => {
 		}
 	});
 
-	it("accepts atomic multi-Change Planning and one Work Unit Claim", async () => {
+	it("serializes concurrent Claims for one Change-owned Work Unit", async () => {
 		const fixture = await createTwoCloneFixture();
 		try {
 			const initial = createInitialProjectWorkState();
-			const changeIds = ["CHG-planning-a", "CHG-planning-b"];
-			const openRecords = changeIds.flatMap((changeId) =>
+			const changeId = "CHG-planning-claim";
+			const opened = await propose(
+				fixture.cloneA,
+				initial,
 				buildOpenRecords(initial, changeId),
 			);
-			const opened = await propose(fixture.cloneA, initial, openRecords);
 			await push(fixture.cloneA, opened.proposal);
-			const openState = await sync(fixture.cloneA);
-			const artifacts = planningArtifacts("git-atomic");
-			const planningRecords = changeIds.flatMap(
-				(changeId) =>
-					buildPassingPlanningExit(openState, changeId, artifacts).operations,
-			);
-			const planning = await propose(fixture.cloneA, openState, planningRecords);
-			await push(fixture.cloneA, planning.proposal);
-			const plannedState = await sync(fixture.cloneA);
-			const epoch = buildPlanningEpochRecords({
-				state: plannedState,
-				participantChangeIds: changeIds,
-				artifacts,
-				suffix: "git-atomic",
-			});
-			await assert.rejects(
-				() => propose(fixture.cloneA, plannedState, epoch.records.slice(0, -1)),
-				(error) => error?.code === "ATOMIC_BINDING_MISSING",
-			);
-			const atomic = await propose(fixture.cloneA, plannedState, epoch.records);
-			assert.equal(atomic.proposal.manifest.body.changedTraceTails.length, 2);
-			await push(fixture.cloneA, atomic.proposal);
 			const states = await Promise.all([sync(fixture.cloneA), sync(fixture.cloneB)]);
-			const ownerChangeId = changeIds[0];
+			const workGraphDeltaId = `sha256:${"4".repeat(64)}`;
+			const workUnitId = "work-git-claim";
 			const claimRecords = [
-				buildWorkUnitClaimRecord(
-					states[0],
-					ownerChangeId,
-					epoch.epoch,
-					epoch.workUnitId,
-					"worker-a",
-				),
-				buildWorkUnitClaimRecord(
-					states[1],
-					ownerChangeId,
-					epoch.epoch,
-					epoch.workUnitId,
-					"worker-b",
-				),
+				buildWorkUnitClaimRecord(states[0], changeId, workGraphDeltaId, workUnitId, "worker-a"),
+				buildWorkUnitClaimRecord(states[1], changeId, workGraphDeltaId, workUnitId, "worker-b"),
 			];
 			const claims = await Promise.all([
 				propose(fixture.cloneA, states[0], claimRecords[0]),
@@ -341,23 +307,11 @@ describe("provider-neutral Git state CAS", () => {
 			const staleWorker = staleIndex === 0 ? "worker-a" : "worker-b";
 			const refreshed = await sync(staleRepo);
 			assert.throws(
-				() =>
-					buildWorkUnitClaimRecord(
-						refreshed,
-						ownerChangeId,
-						epoch.epoch,
-						epoch.workUnitId,
-						staleWorker,
-					),
+				() => buildWorkUnitClaimRecord(refreshed, changeId, workGraphDeltaId, workUnitId, staleWorker),
 				(error) => error?.code === "ACTIVE_AUTHORITY",
 			);
-			const owner = refreshed.changes.find(
-				(change) => change.changeId === ownerChangeId,
-			);
-			assert.equal(
-				owner.workUnitClaims.filter((claim) => claim.status === "active").length,
-				1,
-			);
+			const owner = refreshed.changes.find((change) => change.changeId === changeId);
+			assert.equal(owner.workUnitClaims.filter((claim) => claim.status === "active").length, 1);
 		} finally {
 			await fixture.cleanup();
 		}

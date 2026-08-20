@@ -371,8 +371,8 @@ button { color: inherit; }
 .card-options > summary::-webkit-details-marker { display: none; }
 .card-options > summary:hover { border-color: var(--interactive-hover); color: var(--interactive-hover); }
 .card-options[open] > summary { border-color: var(--interactive); color: var(--interactive); }
-.sprint-actions > summary { border-color: var(--logo-blue-hover); background: var(--logo-blue-dark); color: #fff; font-size: 18px; font-weight: 900; }
-.sprint-actions > summary:hover, .sprint-actions[open] > summary { border-color: var(--interactive-hover); background: var(--logo-blue-hover); color: #fff; }
+.pipeline-actions > summary { border-color: var(--logo-blue-hover); background: var(--logo-blue-dark); color: #fff; font-size: 18px; font-weight: 900; }
+.pipeline-actions > summary:hover, .pipeline-actions[open] > summary { border-color: var(--interactive-hover); background: var(--logo-blue-hover); color: #fff; }
 .card-options-panel {
 	position: absolute;
 	right: 0;
@@ -804,7 +804,7 @@ const els = {
 function text(node, value) { node.textContent = value == null ? '' : String(value); }
 function isBacklogChange(card) { return card.identity.status === 'pending' || card.identity.status === 'deferred'; }
 function pipelineEntries() {
-	const traces = state?.sprintsQueue || [];
+	const traces = state?.pipelineQueue || [];
 	const linkedChangeIds = new Set(traces.flatMap(function(trace) { return trace.changeIds || []; }));
 	const changes = (state?.changes?.records || []).filter(function(card) {
 		return !linkedChangeIds.has(card.identity.changeId) && (isBacklogChange(card) || card.identity.status === 'accepted');
@@ -818,7 +818,7 @@ function pipelineEntries() {
 		};
 	}).concat(traces.map(function(trace, index) {
 		const stage = trace.stage || (trace.committed ? 'committed' : trace.loop === 'archived' ? 'committed' : trace.loop);
-		const topicMetadata = trace.sprintPlan?.knowledgeTopics || [];
+		const topicMetadata = trace.workGraphPlan?.knowledgeTopics || [];
 		const topics = topicMetadata.map(function(topic) { return topic.ref; });
 		return {
 			kind: 'trace', id: 'trace:' + trace.traceId, stage: stage, trace: trace, sourceIndex: index,
@@ -853,8 +853,8 @@ function render() {
 }
 function renderSearchFilter() {
 	const topicCounts = new Map();
-	(state.sprintsQueue || []).forEach(function(trace) {
-		(trace.sprintPlan?.knowledgeTopics || []).forEach(function(topic) {
+	(state.pipelineQueue || []).forEach(function(trace) {
+		(trace.workGraphPlan?.knowledgeTopics || []).forEach(function(topic) {
 			const current = topicCounts.get(topic.ref);
 			topicCounts.set(topic.ref, { topic: topic, count: (current?.count || 0) + 1 });
 		});
@@ -935,7 +935,7 @@ function renderTracePipelineCard(entry, index) {
 	const headActions = document.createElement('div'); headActions.className = 'trace-head-actions'; headActions.append(renderTraceOptions(entry, index));
 	head.append(title, headActions); row.append(head);
 	const now = document.createElement('div'); now.className = 'trace-now'; text(now, traceStateText(entry)); row.append(now);
-	if (trace.sprintPlan?.knowledgeTopics?.length) row.append(renderKnowledgeTopics(trace.sprintPlan.knowledgeTopics));
+	if (trace.workGraphPlan?.knowledgeTopics?.length) row.append(renderKnowledgeTopics(trace.workGraphPlan.knowledgeTopics));
 	row.append(renderKnowledgeAlignment(trace.knowledgeAlignment));
 	row.append(renderPipelineRail(trace.segments || [], entry, index));
 	if (expandedEntryId === entry.id) row.append(renderDetail(trace));
@@ -1155,7 +1155,7 @@ function detailTabEntries(trace, sections) {
 		};
 	})).concat([
 		{ id: 'committed', label: 'committed', render: function() { return renderCommittedDetail(trace); } },
-		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true, (trace.sprintPlan?.knowledgeTopics || []).map(function(topic) { return topic.ref; }), trace.knowledgeAlignment); } },
+		{ id: 'kb', label: 'KB', render: function() { return renderKnowledgeSection(trace.touchedFiles || {}, true, (trace.workGraphPlan?.knowledgeTopics || []).map(function(topic) { return topic.ref; }), trace.knowledgeAlignment); } },
 		{ id: 'files', label: 'Files', render: function() { return renderTouchedFilesSection(trace.touchedFiles || {}, true); } },
 	]);
 }
@@ -1228,7 +1228,7 @@ function renderImplementationPanel(trace, section) {
 	return node;
 }
 function renderLivePreview(trace) {
-	const bindings = trace.sprintPlan && trace.sprintPlan.uiPreviewTargets;
+	const bindings = trace.workGraphPlan && trace.workGraphPlan.uiPreviewTargets;
 	if (!bindings || !bindings.length) return null;
 	const group = document.createElement('div'); group.className = 'observability-stack';
 	bindings.forEach(function(binding) {
@@ -1253,8 +1253,8 @@ function renderLivePreviewTarget(binding, preview) {
 		['browser', preview?.browser || 'pending'],
 		['browser capability', previewBrowserCapabilityLabel(preview)],
 		['viewports', (preview?.viewports || []).join(', ') || 'pending'],
-		['Changes', (preview?.changeIds || binding.contributingChangeIds || []).join(', ') || 'not correlated'],
-		['Sprint', (preview?.sprintIds || []).join(', ') || 'pending'],
+		['Changes', (preview?.changeIds || binding.changeIds || []).join(', ') || 'not correlated'],
+		['Work Graph delta', (preview?.workGraphDeltaIds || []).join(', ') || 'pending'],
 		['Work Units', (preview?.workUnitIds || binding.workUnitIds || []).join(', ') || 'not correlated'],
 		['integration', integration ? integration.visibility + ' · ' + String(integration.workingTreeDigest || '').slice(0, 19) : 'not observed'],
 		['checkout', integration ? String(integration.gitHead || '').slice(0, 12) + (integration.dirty ? ' + dirty' : ' + clean') : 'pending'],
@@ -1310,7 +1310,7 @@ function renderPreviewEvidence(captures) {
 		const correlation = document.createElement('div'); correlation.className = 'preview-evidence-detail';
 		const integration = capture.integration || {};
 		const iterations = (capture.implementation || []).map(function(entry) { return entry.implementationIterationId || entry.traceEventId || entry.traceId; }).join(', ') || 'before first Implementation iteration';
-		text(correlation, 'target ' + capture.targetId + ' · Changes ' + (capture.changeIds || []).join(', ') + ' · Sprint ' + (capture.sprintIds || []).join(', ') + ' · ' + iterations + ' · git ' + String(integration.gitHead || '').slice(0, 12) + (integration.dirty ? ' + dirty worktree' : '') + ' · manifest ' + String(capture.manifestDigest || '').slice(0, 19));
+		text(correlation, 'target ' + capture.targetId + ' · Changes ' + (capture.changeIds || []).join(', ') + ' · Work Graph delta ' + (capture.workGraphDeltaIds || []).join(', ') + ' · ' + iterations + ' · git ' + String(integration.gitHead || '').slice(0, 12) + (integration.dirty ? ' + dirty worktree' : '') + ' · manifest ' + String(capture.manifestDigest || '').slice(0, 19));
 		item.append(correlation);
 		const observations = document.createElement('div'); observations.className = 'preview-evidence-detail';
 		text(observations, 'console ' + (capture.console?.count || 0) + ' line(s) · network ' + (capture.network?.count || 0) + ' line(s) · ' + capture.manifestPath);
@@ -1576,7 +1576,6 @@ function qualityCheckWithFallback(check) {
 }
 function canonicalQualityText(value) {
 	return String(value || '')
-		.replace(/Sprint Proposal has at least one approved (?:row|change) and stable (?:row|change) ids\./gi, 'Decision loop output approves one exact Change revision and digest.')
 		.replace(/Approved rows\b/g, 'Decisions')
 		.replace(/approved rows\b/g, 'Decisions')
 		.replace(/Approved changes\b/g, 'Decisions')

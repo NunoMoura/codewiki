@@ -19,7 +19,7 @@ function fakePreviewControl() {
 			profileDigest: digest,
 			traceIds: ["TRACE-preview"],
 			changeIds: ["CHG-preview"],
-			sprintIds: ["SPR-preview"],
+			workGraphDeltaIds: ["SPR-preview"],
 			workUnitIds: ["WU-preview"],
 			viewports: ["desktop"],
 			state: "ready",

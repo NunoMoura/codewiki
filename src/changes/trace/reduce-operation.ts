@@ -4,7 +4,6 @@ import {
 	type ChangeOperationKind,
 	type ChangeOperationPayload,
 	type OperationId,
-	type PlanningEpochRecord,
 } from "./contracts.ts";
 import {
 	assertValidCanonicalChangeOperation,
@@ -22,13 +21,12 @@ import {
 	type ContradictionProjection,
 	type IntegrationAttemptProjection,
 	type LoopAttemptProjection,
-	type PlanningEpochBindingProjection,
 	type RelationshipProjection,
 	type WorkUnitClaimProjection,
 } from "./state.ts";
 import { canonicalJsonDigest } from "../../utils/canonical-json.ts";
 import { throwProtocolFailure } from "./errors.ts";
-import { compareText, sameText } from "./order.ts";
+import { compareText } from "./order.ts";
 
 export type ReductionErrorCode =
 	| "CHANGE_ALREADY_EXISTS"
@@ -43,9 +41,7 @@ export type ReductionErrorCode =
 	| "REFERENCE_NOT_FOUND"
 	| "BINDING_MISMATCH";
 
-export interface ChangeOperationReductionContext {
-	readonly planningEpochs: readonly PlanningEpochRecord[];
-}
+export interface ChangeOperationReductionContext {}
 
 type OperationReducer = (
 	state: ChangeWorkState,
@@ -81,7 +77,6 @@ const OPERATION_REDUCERS: Readonly<Record<ChangeOperationKind, OperationReducer>
 		"check.result_recorded": reduceCheckResultRecorded,
 		"loop.exit_report_recorded": reduceExitReportRecorded,
 		"runtime.route_recorded": reduceRuntimeRouteRecorded,
-		"planning.epoch_bound": reducePlanningEpochBound,
 		"work_unit_claim.acquired": reduceWorkUnitClaimAcquired,
 		"work_unit_claim.released": reduceWorkUnitClaimReleased,
 		"work_unit_claim.takeover_recorded": reduceWorkUnitClaimTakeover,
@@ -616,53 +611,6 @@ function reduceLoopAttemptEnded(
 	return canonicalStateValue({...state, loopAttempts});
 }
 
-function reducePlanningEpochBound(
-	state: ChangeWorkState,
-	operation: CanonicalChangeOperation,
-	context: ChangeOperationReductionContext,
-): ChangeWorkState {
-	const payload = payloadOf(operation, "planning.epoch_bound");
-	const epoch = context.planningEpochs.find(
-		(record) => record.operationId === payload.planningEpochId,
-	);
-	if (!epoch) {
-		invalid("REFERENCE_NOT_FOUND", operation, `Planning epoch ${payload.planningEpochId} is absent.`);
-	}
-	const participant = epoch.body.participants.find(
-		(entry) => entry.changeId === state.changeId,
-	);
-	if (!participant || participant.revisionId !== payload.participantRevisionId) {
-		invalid("BINDING_MISMATCH", operation, "Planning participant revision does not match.");
-	}
-	if (
-		epoch.body.planningCandidateId !== payload.planningCandidateId ||
-		epoch.body.exitReportId !== payload.exitReportId
-	) {
-		invalid("BINDING_MISMATCH", operation, "Planning Candidate or Exit Report does not match.");
-	}
-	const expectedWorkUnits = epoch.body.workUnits
-		.flatMap((workUnit) =>
-			workUnit.owningChange.changeId === state.changeId ||
-			workUnit.contributingChanges.some((entry) => entry.changeId === state.changeId)
-				? [workUnit.id]
-				: [],
-		)
-		.sort(compareText);
-	if (!sameText(payload.workUnitIds, expectedWorkUnits)) {
-		invalid("BINDING_MISMATCH", operation, "Planning Work Unit bindings do not match.");
-	}
-	const binding: PlanningEpochBindingProjection = {
-		operationId: operation.operationId,
-		planningEpochId: payload.planningEpochId,
-		participantRevisionId: payload.participantRevisionId,
-		workUnitIds: payload.workUnitIds,
-	};
-	return canonicalStateValue({
-		...state,
-		planningEpochBindings: [...state.planningEpochBindings, binding],
-	});
-}
-
 function reduceWorkUnitClaimAcquired(
 	state: ChangeWorkState,
 	operation: CanonicalChangeOperation,
@@ -738,7 +686,7 @@ function activeWorkUnitClaimProjection(
 	operation: CanonicalChangeOperation,
 	payload: Pick<
 		ChangeOperationPayload<"work_unit_claim.acquired">,
-		| "planningEpochId"
+		| "workGraphDeltaId"
 		| "workUnitId"
 		| "assignmentAttemptId"
 		| "workerId"
@@ -747,7 +695,7 @@ function activeWorkUnitClaimProjection(
 ): WorkUnitClaimProjection {
 	return {
 		operationId: operation.operationId,
-		planningEpochId: payload.planningEpochId,
+		workGraphDeltaId: payload.workGraphDeltaId,
 		workUnitId: payload.workUnitId,
 		assignmentAttemptId: payload.assignmentAttemptId,
 		workerId: payload.workerId,
@@ -760,21 +708,9 @@ function activeWorkUnitClaimProjection(
 function assertWorkUnitClaimAdmission(
 	state: ChangeWorkState,
 	operation: CanonicalChangeOperation,
-	context: ChangeOperationReductionContext,
+	_context: ChangeOperationReductionContext,
 ): void {
 	const payload = workUnitClaimPayload(operation);
-	const binding = state.planningEpochBindings.find(
-		(entry) => entry.planningEpochId === payload.planningEpochId,
-	);
-	if (!binding || !binding.workUnitIds.includes(payload.workUnitId)) {
-		invalid("BINDING_MISMATCH", operation, "Work Unit is not bound to this Change.");
-	}
-	const epoch = context.planningEpochs.find(
-		(record) => record.operationId === payload.planningEpochId,
-	);
-	if (!epoch?.body.safeExecutionFrontier.includes(payload.workUnitId)) {
-		invalid("INVALID_PRECONDITION", operation, "Work Unit is not on the safe frontier.");
-	}
 	if (
 		state.workUnitClaims.some(
 			(entry) => entry.workUnitId === payload.workUnitId && entry.status === "active",
@@ -791,7 +727,7 @@ function reduceAssignmentDispatched(
 	const payload = payloadOf(operation, "assignment.dispatched");
 	const claim = activeWorkUnitClaim(state, payload.claimOperationId, operation);
 	for (const field of [
-		"planningEpochId",
+		"workGraphDeltaId",
 		"workUnitId",
 		"assignmentAttemptId",
 		"workerId",
@@ -804,7 +740,7 @@ function reduceAssignmentDispatched(
 	const assignment: AssignmentProjection = {
 		operationId: operation.operationId,
 		claimOperationId: payload.claimOperationId,
-		planningEpochId: payload.planningEpochId,
+		workGraphDeltaId: payload.workGraphDeltaId,
 		workUnitId: payload.workUnitId,
 		assignmentAttemptId: payload.assignmentAttemptId,
 		workerId: payload.workerId,

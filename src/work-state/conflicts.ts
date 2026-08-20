@@ -48,9 +48,6 @@ function planningWorkUnitsForConflicts(
 							...(text(item.owningChangeId)
 								? [`change:${text(item.owningChangeId)}`]
 								: []),
-							...stringList(item.contributingChangeIds).map(
-								(changeId) => `change:${changeId}`,
-							),
 						]),
 						outcome: text(item.outcome),
 						technicalRequirements: stringList(item.technicalRequirements),

@@ -27,7 +27,7 @@ import {
 	type WorkStateRealizationStatus,
 	type WorkStateMergeProof,
 	type WorkStatePushProof,
-	type WorkStateSprint,
+	type WorkStateGraphDelta,
 	type WorkStateWorkUnit,
 } from "./types.ts";
 
@@ -42,29 +42,21 @@ interface TraceGroup {
 	events: TraceEvent[];
 }
 
-interface PlanningEpochObservation {
-	participantChangeIds: Set<string>;
-	observedChangeIds: Set<string>;
-	sprintIds: Set<string>;
-}
-
 export function buildWorkState(input: BuildWorkStateInput): WorkState {
 	const groups = traceGroups(input.records);
 	const changeRecords = changeRecordsById(groups);
 	const approvals = approvalsByChangeId(groups, changeRecords);
-	const sprintMap = new Map<string, WorkStateSprint>();
+	const graphDeltaMap = new Map<string, WorkStateGraphDelta>();
 	const workUnitMap = new Map<string, WorkStateWorkUnit>();
 	const assignmentMap = new Map<string, WorkStateAssignment>();
 	const blockers: WorkStateBlocker[] = [];
-	const planningEpochs = new Map<string, PlanningEpochObservation>();
 
 	for (const group of groups.values()) {
 		projectPlanningGroup({
 			group,
-			sprintMap,
+			graphDeltaMap,
 			workUnitMap,
 			blockers,
-			planningEpochs,
 		});
 	}
 	for (const group of groups.values()) {
@@ -78,11 +70,10 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 		projectEventBlockers(group, blockers);
 	}
 	applyAssignmentRefs(workUnitMap, assignmentMap);
-	applyPlanningEpochIntegrity(planningEpochs, sprintMap, blockers);
 
-	const sprints = [...sprintMap.values()]
-		.map((sprint) => finalizedSprint(sprint, workUnitMap, blockers))
-		.sort((left, right) => left.id.localeCompare(right.id));
+	const workGraphDeltas = [...graphDeltaMap.values()].sort((left, right) =>
+		left.id.localeCompare(right.id),
+	);
 	const workUnits = [...workUnitMap.values()].sort((left, right) =>
 		left.id.localeCompare(right.id),
 	);
@@ -94,7 +85,7 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 			changeView({
 				record,
 				approval: approvals.get(record.change.id),
-				sprints,
+				workGraphDeltas,
 				workUnits,
 				assignments,
 				blockers,
@@ -112,11 +103,12 @@ export function buildWorkState(input: BuildWorkStateInput): WorkState {
 		schemaVersion: WORK_STATE_SCHEMA_VERSION,
 		...(input.generatedAt ? { generatedAt: input.generatedAt } : {}),
 		changeIds: changes.map((change) => change.id),
-		sprintIds: sprints.map((sprint) => sprint.id),
+		workGraphDigest: graphDigest(workGraphDeltas, workUnits),
+		workGraphDeltaIds: workGraphDeltas.map((delta) => delta.id),
 		workUnitIds: workUnits.map((item) => item.id),
 		assignmentIds: assignments.map((assignment) => assignment.id),
 		changes,
-		sprints,
+		workGraphDeltas,
 		workUnits,
 		assignments,
 		blockers: sortedBlockers,
@@ -238,133 +230,81 @@ function approvalStatus(record: ChangeRecord): WorkStateApproval["status"] {
 
 function projectPlanningGroup(input: {
 	group: TraceGroup;
-	sprintMap: Map<string, WorkStateSprint>;
+	graphDeltaMap: Map<string, WorkStateGraphDelta>;
 	workUnitMap: Map<string, WorkStateWorkUnit>;
 	blockers: WorkStateBlocker[];
-	planningEpochs: Map<string, PlanningEpochObservation>;
 }): void {
 	const planningEvents = input.group.events.filter(
 		(event) => event.loop === "planning" && eventExitStatus(event) === "exit",
 	);
-	if (planningEvents.length === 0) return;
 	for (const event of planningEvents) {
 		const output = objectValue(event.data?.output);
 		if (!output) continue;
-		const epochId = text(output.planningEpochId);
-		const participatingChanges = unique([
-			...objectList(output.participantChanges)
-				.map((participant) => text(participant.changeId))
-				.filter((id): id is string => id !== undefined),
-			...(input.group.head.changeId ? [input.group.head.changeId] : []),
-		]);
-		const sprints = objectList(output.sprints);
-		const sprintIds = sprints
-			.map((plan) => text(plan.id))
-			.filter((id): id is string => id !== undefined);
-		for (const plan of sprints) {
-			const sprintId = text(plan.id);
-			if (!sprintId) continue;
-			const planParticipants = unique([
-				...stringList(plan.participatingChangeIds),
-				...participatingChanges,
-			]);
-			mergeSprint(input.sprintMap, {
-				id: sprintId,
-				source: "planning",
-				...(epochId ? { planningEpochId: epochId } : {}),
-				...(text(plan.digest) ? { digest: text(plan.digest) } : {}),
-				goal: text(plan.goal) || text(plan.summary) || input.group.head.title,
-				participatingChangeIds: planParticipants,
-				workUnitIds: stringList(plan.workUnitIds),
-				dependencyIds: stringList(plan.dependsOn),
-				integrationRefs: stringList(plan.integrationRefs),
-				uiPreviewTargets: projectedUiPreviewTargets(plan.uiPreviewTargets),
-				complete: false,
-				blockers: [],
+		const workGraphDeltaId = text(output.workGraphDeltaId);
+		const change = objectValue(output.change);
+		const owningChangeId = text(change?.changeId) || input.group.head.changeId;
+		const digest = text(output.digest);
+		if (!workGraphDeltaId || !owningChangeId || !digest) continue;
+		const items = objectList(output.workUnits);
+		const workUnitIds: string[] = [];
+		for (const item of items) {
+			const id = projectWorkUnit({
+				item, event, workGraphDeltaId, owningChangeId,
+				workUnitMap: input.workUnitMap, blockers: input.blockers,
 			});
+			if (id) workUnitIds.push(id);
 		}
-		for (const item of objectList(output.workUnits)) {
-			projectWorkUnit({
-				item,
-				event,
-				epochId,
-				sprintIds,
-				participatingChanges,
-				sprintMap: input.sprintMap,
-				workUnitMap: input.workUnitMap,
-				blockers: input.blockers,
-			});
-		}
-		if (epochId) {
-			const observation = input.planningEpochs.get(epochId) || {
-				participantChangeIds: new Set<string>(),
-				observedChangeIds: new Set<string>(),
-				sprintIds: new Set<string>(),
-			};
-			for (const changeId of participatingChanges)
-				observation.participantChangeIds.add(changeId);
-			if (input.group.head.changeId)
-				observation.observedChangeIds.add(input.group.head.changeId);
-			for (const sprintId of sprintIds) observation.sprintIds.add(sprintId);
-			input.planningEpochs.set(epochId, observation);
-		}
+		input.graphDeltaMap.set(workGraphDeltaId, {
+			id: workGraphDeltaId,
+			digest,
+			owningChangeId,
+			planningEventId: event.id,
+			workUnitIds: unique(workUnitIds),
+			acceptanceCoverage: objectList(output.acceptanceCoverage).flatMap((entry) => {
+				const acceptanceRequirement = text(entry.acceptanceRequirement);
+				return acceptanceRequirement
+					? [{acceptanceRequirement, workUnitIds: stringList(entry.workUnitIds)}]
+					: [];
+			}),
+			integrationRequirements: stringList(output.integrationRequirements),
+			uiPreviewTargets: projectedUiPreviewTargets(output.uiPreviewTargets),
+		});
 	}
 }
 
 function projectWorkUnit(input: {
 	item: Record<string, unknown>;
 	event: TraceEvent;
-	epochId?: string;
-	sprintIds: string[];
-	participatingChanges: string[];
-	sprintMap: Map<string, WorkStateSprint>;
+	workGraphDeltaId: string;
+	owningChangeId: string;
 	workUnitMap: Map<string, WorkStateWorkUnit>;
 	blockers: WorkStateBlocker[];
-}): void {
+}): string | undefined {
 	const id = text(input.item.id);
-	if (!id) return;
-	const explicitSprintId = text(input.item.sprintId);
-	const sprintId =
-		explicitSprintId || input.sprintIds[0] || input.event.traceId;
-	const owningChangeId =
-		text(input.item.owningChangeId) ||
-		(input.participatingChanges.length === 1
-			? input.participatingChanges[0]
-			: undefined);
-	const contributesToChangeIds = unique([
-		...stringList(input.item.contributingChangeIds),
-	]).filter((changeId) => changeId !== owningChangeId);
+	if (!id) return undefined;
+	const owningChangeId = text(input.item.owningChangeId) || input.owningChangeId;
 	const projected: WorkStateWorkUnit = {
 		id,
-		sprintId,
-		...(owningChangeId ? { owningChangeId } : {}),
-		contributesToChangeIds,
-		title: text(input.item.title) || text(input.item.summary) || id,
+		workGraphDeltaId: input.workGraphDeltaId,
+		owningChangeId,
+		title: text(input.item.title) || id,
 		planningEventId: input.event.id,
-		...(input.epochId ? { planningEpochId: input.epochId } : {}),
 		dependsOn: stringList(input.item.dependsOn),
 		componentRefs: stringList(input.item.componentRefs),
 		pathScopes: stringList(input.item.pathScopes),
 		acceptanceCriterionIds: objectList(input.item.acceptanceCriteria)
 			.map((criterion) => text(criterion.id))
-			.filter(
-				(criterionId): criterionId is string => criterionId !== undefined,
-			),
+			.filter((criterionId): criterionId is string => criterionId !== undefined),
 		assignmentIds: [],
 		implemented: false,
 		blockers: [],
 	};
 	const existing = input.workUnitMap.get(id);
-	if (
-		existing &&
-		(existing.sprintId !== projected.sprintId ||
-			existing.owningChangeId !== projected.owningChangeId)
-	) {
+	if (existing && (existing.workGraphDeltaId !== projected.workGraphDeltaId || existing.owningChangeId !== projected.owningChangeId)) {
 		const blocker: WorkStateBlocker = {
 			id: `work-unit-conflict:${id}`,
-			message: `Work Unit ${id} has conflicting Sprint or owning Change facts.`,
-			...(owningChangeId ? { changeId: owningChangeId } : {}),
-			sprintId,
+			message: `Work Unit ${id} has conflicting graph-delta or owning Change facts.`,
+			changeId: owningChangeId,
 			workUnitId: id,
 			refs: unique([existing.planningEventId, input.event.id]),
 		};
@@ -372,8 +312,7 @@ function projectWorkUnit(input: {
 		projected.blockers.push(blocker.message);
 	}
 	input.workUnitMap.set(id, mergeWorkUnit(existing, projected));
-	const sprint = input.sprintMap.get(sprintId);
-	if (sprint) sprint.workUnitIds = unique([...sprint.workUnitIds, id]);
+	return id;
 }
 
 function projectAssignments(
@@ -659,72 +598,21 @@ function applyAssignmentRefs(
 	}
 }
 
-function applyPlanningEpochIntegrity(
-	epochs: Map<string, PlanningEpochObservation>,
-	sprintMap: Map<string, WorkStateSprint>,
-	blockers: WorkStateBlocker[],
-): void {
-	for (const [epochId, epoch] of epochs) {
-		const missing = [...epoch.participantChangeIds].filter(
-			(changeId) => !epoch.observedChangeIds.has(changeId),
-		);
-		if (missing.length === 0) continue;
-		for (const sprintId of epoch.sprintIds) {
-			const sprint = sprintMap.get(sprintId);
-			if (!sprint) continue;
-			const message = `Planning epoch ${epochId} is missing Change Trace append(s): ${missing.join(", ")}.`;
-			sprint.blockers = unique([...sprint.blockers, message]);
-			blockers.push({
-				id: `planning-epoch-incomplete:${epochId}:${sprintId}`,
-				message,
-				sprintId,
-				refs: [epochId, ...missing],
-			});
-		}
-	}
-}
-
-function finalizedSprint(
-	sprint: WorkStateSprint,
-	workUnitMap: Map<string, WorkStateWorkUnit>,
-	blockers: WorkStateBlocker[],
-): WorkStateSprint {
-	const items = sprint.workUnitIds.flatMap((id) => {
-		const item = workUnitMap.get(id);
-		return item ? [item] : [];
-	});
-	return {
-		...sprint,
-		participatingChangeIds: unique(sprint.participatingChangeIds),
-		workUnitIds: unique(sprint.workUnitIds),
-		dependencyIds: unique(sprint.dependencyIds),
-		integrationRefs: unique(sprint.integrationRefs),
-		complete: items.length > 0 && items.every((item) => item.implemented),
-		blockers: unique([
-			...sprint.blockers,
-			...blockers.flatMap((blocker) =>
-				blocker.sprintId === sprint.id ? [blocker.message] : [],
-			),
-		]),
-	};
-}
-
 function changeView(input: {
 	record: ChangeRecord;
 	approval: WorkStateApproval | undefined;
-	sprints: WorkStateSprint[];
+	workGraphDeltas: WorkStateGraphDelta[];
 	workUnits: WorkStateWorkUnit[];
 	assignments: WorkStateAssignment[];
 	blockers: WorkStateBlocker[];
 	group?: TraceGroup;
 }): WorkStateChange {
 	const id = input.record.change.id;
-	const sprintIds = input.sprints.flatMap((sprint) =>
-		sprint.participatingChangeIds.includes(id) ? [sprint.id] : [],
+	const workGraphDeltaIds = input.workGraphDeltas.flatMap((delta) =>
+		delta.owningChangeId === id ? [delta.id] : [],
 	);
 	const workUnitIds = input.workUnits.flatMap((item) =>
-		item.owningChangeId === id || item.contributesToChangeIds.includes(id)
-			? [item.id]
+		item.owningChangeId === id ? [item.id]
 			: [],
 	);
 	const assignmentIds = input.assignments.flatMap((assignment) =>
@@ -735,7 +623,6 @@ function changeView(input: {
 	);
 	const changeBlockers = input.blockers.flatMap((blocker) =>
 		blocker.changeId === id ||
-		(blocker.sprintId && sprintIds.includes(blocker.sprintId)) ||
 		(blocker.workUnitId && workUnitIds.includes(blocker.workUnitId))
 			? [blocker.message]
 			: [],
@@ -744,7 +631,7 @@ function changeView(input: {
 		input.approval || approvalFromChangeRecord(input.record, undefined);
 	const planningStatus = changePlanningStatus(
 		approval,
-		sprintIds,
+		workGraphDeltaIds,
 		changeBlockers,
 	);
 	const realizationStatus = changeRealizationStatus(
@@ -766,7 +653,7 @@ function changeView(input: {
 		planningStatus,
 		realizationStatus,
 		outcomeStatus,
-		sprintIds: unique(sprintIds),
+		workGraphDeltaIds: unique(workGraphDeltaIds),
 		workUnitIds: unique(workUnitIds),
 		assignmentIds: unique(assignmentIds),
 		blockers: unique(changeBlockers),
@@ -794,19 +681,11 @@ function changeView(input: {
 
 function changePlanningStatus(
 	approval: WorkStateApproval,
-	sprintIds: string[],
-	blockers: string[],
+	workGraphDeltaIds: string[],
+	_blockers: string[],
 ): WorkStatePlanningStatus {
-	if (
-		blockers.some(
-			(message) =>
-				message.includes("Planning epoch") && message.includes("missing"),
-		)
-	) {
-		return "incomplete_commit";
-	}
 	if (approval.status !== "approved") return "unplanned";
-	return sprintIds.length > 0 ? "planned" : "unplanned";
+	return workGraphDeltaIds.length > 0 ? "planned" : "unplanned";
 }
 
 function changeRealizationStatus(
@@ -853,44 +732,14 @@ function nextActionForChange(
 	if (approval.status === "pending") return "Continue Decision review.";
 	if (approval.status !== "approved") return undefined;
 	if (planningStatus === "incomplete_commit")
-		return "Repair incomplete Planning epoch append.";
+		return "Repair incomplete Planning graph-delta append.";
 	if (planningStatus !== "planned")
-		return "Include approved Change in Planning horizon.";
+		return "Plan approved Change against current Work Graph.";
 	if (realizationStatus === "blocked") return "Resolve implementation blocker.";
 	if (realizationStatus !== "realized")
 		return "Execute and validate ready Work Units.";
 	if (outcomeStatus === "pending") return "Record outcome disposition.";
 	return undefined;
-}
-
-function mergeSprint(
-	map: Map<string, WorkStateSprint>,
-	next: WorkStateSprint,
-): void {
-	const current = map.get(next.id);
-	if (!current) {
-		map.set(next.id, next);
-		return;
-	}
-	map.set(next.id, {
-		...current,
-		...next,
-		participatingChangeIds: unique([
-			...current.participatingChangeIds,
-			...next.participatingChangeIds,
-		]),
-		workUnitIds: unique([...current.workUnitIds, ...next.workUnitIds]),
-		dependencyIds: unique([...current.dependencyIds, ...next.dependencyIds]),
-		integrationRefs: unique([
-			...current.integrationRefs,
-			...next.integrationRefs,
-		]),
-		uiPreviewTargets: uniquePreviewTargets([
-			...current.uiPreviewTargets,
-			...next.uiPreviewTargets,
-		]),
-		blockers: unique([...current.blockers, ...next.blockers]),
-	});
 }
 
 function mergeWorkUnit(
@@ -901,10 +750,6 @@ function mergeWorkUnit(
 	return {
 		...current,
 		...next,
-		contributesToChangeIds: unique([
-			...current.contributesToChangeIds,
-			...next.contributesToChangeIds,
-		]),
 		dependsOn: unique([...current.dependsOn, ...next.dependsOn]),
 		componentRefs: unique([...current.componentRefs, ...next.componentRefs]),
 		pathScopes: unique([...current.pathScopes, ...next.pathScopes]),
@@ -941,6 +786,15 @@ function workUnitIdsFromRef(ref: string): string[] {
 	return [ref];
 }
 
+function graphDigest(
+	deltas: WorkStateGraphDelta[],
+	workUnits: WorkStateWorkUnit[],
+): string {
+	return `sha256:${createHash("sha256")
+		.update(stableJson({deltas, workUnits}))
+		.digest("hex")}`;
+}
+
 function workStateDigest(value: Omit<WorkState, "snapshotDigest">): string {
 	const digestInput = Object.fromEntries(
 		Object.entries(value).filter(([key]) => key !== "generatedAt"),
@@ -973,7 +827,7 @@ function projectedUiPreviewTargets(value: unknown): UiPreviewTargetBinding[] {
 				profileId: text(target.profileId),
 				profileDigest: text(target.profileDigest),
 				workUnitIds: stringList(target.workUnitIds),
-				contributingChangeIds: stringList(target.contributingChangeIds),
+				changeIds: stringList(target.changeIds),
 				required:
 					typeof target.required === "boolean" ? target.required : undefined,
 				activation: text(target.activation),
@@ -983,19 +837,6 @@ function projectedUiPreviewTargets(value: unknown): UiPreviewTargetBinding[] {
 		.filter(
 			(target) => uiPreviewTargetBindingValidationIssues(target).length === 0,
 		);
-}
-
-function uniquePreviewTargets(
-	targets: UiPreviewTargetBinding[],
-): UiPreviewTargetBinding[] {
-	return [
-		...new Map(
-			targets.map((target) => [
-				`${target.targetId}\0${target.targetDigest}`,
-				target,
-			]),
-		).values(),
-	].sort((left, right) => left.targetId.localeCompare(right.targetId));
 }
 
 function objectValue(value: unknown): Record<string, unknown> | undefined {

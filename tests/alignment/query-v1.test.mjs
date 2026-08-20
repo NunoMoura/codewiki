@@ -73,11 +73,6 @@ describe("bounded Alignment Graph queries", () => {
 		assert.equal(graph.coverage.sourceOwnershipCount, 4);
 		const edgeTypes = new Set(graph.edges.map((edge) => edge.type));
 		for (const type of [
-			"requirement_requires_evidence_obligation",
-			"requirement_requires_check",
-			"work_unit_scoped_to_source",
-			"work_unit_scoped_to_knowledge",
-			"work_unit_scoped_to_component",
 			"knowledge_ref_resolves_to",
 			"references",
 			"constrains",
@@ -166,26 +161,14 @@ describe("bounded Alignment Graph queries", () => {
 			{
 				...common,
 				family: "work_unit_readiness",
-				planningEpochId: journey.epoch.operationId,
-				workUnitId: journey.epoch.body.workUnits[0].id,
+				workUnitId: "WU-not-yet-canonical",
 				depth: 4,
 			},
 			"fresh",
 		);
-		assert.equal(readiness.rootFound, true);
+		assert.equal(readiness.rootFound, false);
 		assert.equal(readiness.stale, false);
-		assert.equal(
-			readiness.facts.some((fact) => fact.type === "epoch_safe_execution_frontier"),
-			true,
-		);
-		assert.equal(
-			readiness.facts.some((fact) => fact.type === "requirement_requires_check"),
-			true,
-		);
-		assert.equal(
-			readiness.facts.some((fact) => fact.type === "work_unit_has_stable_ref"),
-			true,
-		);
+		assert.deepEqual(readiness.facts, []);
 
 		const assurance = queryAlignmentGraph(
 			graph,

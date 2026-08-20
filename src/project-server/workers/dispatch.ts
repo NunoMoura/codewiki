@@ -516,15 +516,17 @@ export class ImplementationWorkerDispatcher {
 			if (!item?.implemented || integrationAlreadyProven(worker, records)) {
 				return [];
 			}
-			const sprint = workState.sprints.find(
-				(candidate) => candidate.id === item.sprintId,
+			const graphDelta = workState.workGraphDeltas.find(
+				(candidate) => candidate.id === item.workGraphDeltaId,
 			);
 			const acceptanceEvent = implementationAcceptanceEvent(
 				records,
 				assignment.traceId,
 				assignment.workUnitId,
 			);
-			return sprint && acceptanceEvent ? [{ worker, sprint, acceptanceEvent }] : [];
+			return graphDelta && acceptanceEvent
+				? [{ worker, graphDelta, acceptanceEvent }]
+				: [];
 		});
 		if (candidates.length > 0 && !this.options.worktreeRunner) {
 			return {
@@ -532,15 +534,15 @@ export class ImplementationWorkerDispatcher {
 				blockers: ["implementation_integration_runner_unavailable"],
 			};
 		}
-		const jobIds = candidates.map(({ worker, sprint, acceptanceEvent }) => {
+		const jobIds = candidates.map(({ worker, graphDelta, acceptanceEvent }) => {
 			const input: Omit<ImplementationWorkerIntegrationInput, "coordinator"> = {
 				repoRoot: this.options.repoRoot,
 				reactor: this.options.reactor,
 				packet: worker.packet,
 				report: worker.report,
 				acceptanceEvent,
-				sprintId: sprint.id,
-				targetRefs: [...sprint.integrationRefs],
+				workGraphDeltaId: graphDelta.id,
+				targetRefs: [...graphDelta.integrationRequirements],
 				createdAt,
 				runner: this.options.worktreeRunner as WorktreeCommandRunner,
 				beforeAppend: this.options.beforeAppend,

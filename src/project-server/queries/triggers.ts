@@ -79,9 +79,6 @@ function triggerProjections(records: TraceRecord[]): TriggerProjection[] {
 							...(text(item.owningChangeId)
 								? [`change:${text(item.owningChangeId)}`]
 								: []),
-							...stringList(item.contributingChangeIds).map(
-								(changeId) => `change:${changeId}`,
-							),
 						]),
 						pathScopes: stringList(item.pathScopes),
 						trigger,

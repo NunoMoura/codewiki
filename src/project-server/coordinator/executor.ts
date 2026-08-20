@@ -33,7 +33,6 @@ import {
 import type {
 	WorkStateAssignment,
 	WorkStateChange,
-	WorkStateSprint,
 	WorkStateWorkUnit,
 } from "../../work-state/types.ts";
 import {
@@ -75,14 +74,14 @@ export interface ProjectServerDecisionInvocation {
 export interface ProjectServerPlanningInvocation {
 	loop: "planning";
 	observedWorkStateDigest: string;
-	changes: WorkStateChange[];
+	observedWorkGraphDigest: string;
+	change: WorkStateChange;
 }
 
 export interface ProjectServerImplementationInvocation {
 	loop: "implementation";
 	observedWorkStateDigest: string;
-	sprint: WorkStateSprint;
-	workUnits: WorkStateWorkUnit[];
+	workUnit: WorkStateWorkUnit;
 	assignments: WorkStateAssignment[];
 	workerReports: ImplementationWorkerReportInput[];
 }
@@ -109,7 +108,7 @@ export interface ProjectServerLoopExecutionPorts {
 	) => Promise<RunWikiDecideResult>;
 	planning?: (
 		input: RunWikiPlanInput,
-		selectedChangeIds: string[],
+		selectedChangeId: string,
 	) => Promise<RunWikiPlanResult>;
 	implementation?: (
 		input: RunWikiImplementInput,
@@ -436,31 +435,27 @@ async function executeSelectedSemanticWork(input: {
 	if (selection.loop === "planning") {
 		if (!executionPorts.planning) throw missingExecutionPort("planning");
 		if (!adapters.planning) throw missingAdapter("planning");
-		const changes = selection.planningHorizon.map((entry) =>
-			requiredChange(observation, entry.changeId),
-		);
+		const change = requiredChange(observation, selection.change.changeId);
 		const candidate = parsePlanningCandidateContent(
 			await adapters.planning({
 				loop: "planning",
 				observedWorkStateDigest: observation.workState.snapshotDigest,
-				changes,
+				observedWorkGraphDigest: observation.workState.workGraphDigest,
+				change,
 			}),
-		);
-		const expectedChangeIds = selection.planningHorizon.map(
-			(entry) => entry.changeId,
 		);
 		const coreInput: RunWikiPlanInput = {
 			...runtimePlanningContent(candidate),
 			...requiredPlanningContext(context),
 			repoRoot,
 			expectedWorkStateDigest: observation.workState.snapshotDigest,
-			expectedChangeIds,
+			expectedChangeId: selection.change.changeId,
 			runtimeJobId,
 			mode: "preview",
 		};
 		const preview = await executionPorts.planning(
 			coreInput,
-			expectedChangeIds,
+			selection.change.changeId,
 		);
 		if (mode === "preview" || preview.report.exit.status !== "exit") {
 			return { loop: "planning", result: preview };
@@ -472,14 +467,12 @@ async function executeSelectedSemanticWork(input: {
 				{
 					...coreInput,
 					mode: "append",
-					expectedBytesByChangeId: Object.fromEntries(
-						selection.planningHorizon.map((entry) => [
-							entry.changeId,
-							requiredTraceBytes(observation, entry.traceId),
-						]),
+					expectedBytes: requiredTraceBytes(
+						observation,
+						selection.change.traceId,
 					),
 				},
-				expectedChangeIds,
+				selection.change.changeId,
 			),
 		};
 	}
@@ -487,20 +480,17 @@ async function executeSelectedSemanticWork(input: {
 		throw missingExecutionPort("implementation");
 	}
 	if (!adapters.implementation) throw missingAdapter("implementation");
-	const sprint = observation.workState.sprints.find(
-		(candidate) => candidate.id === selection.sprintId,
+	const workUnit = observation.workState.workUnits.find(
+		(candidate) => candidate.id === selection.workUnitId,
 	);
-	if (!sprint)
-		throw new Error(`Project Server Sprint ${selection.sprintId} was not found.`);
-	const selectedIds = new Set(selection.workUnitIds);
-	const workUnits = observation.workState.workUnits.filter((item) =>
-		selectedIds.has(item.id),
-	);
-	const assignments = observation.workState.assignments.filter((assignment) =>
-		selectedIds.has(assignment.workUnitId),
+	if (!workUnit) {
+		throw new Error(`Project Server Work Unit ${selection.workUnitId} was not found.`);
+	}
+	const assignments = observation.workState.assignments.filter(
+		(assignment) => assignment.workUnitId === selection.workUnitId,
 	);
 	const selectedWorkerReports = runtimeSelectedWorkerReports(
-		selection.workUnitIds,
+		[selection.workUnitId],
 		assignments,
 		implementationWorkerReports,
 	);
@@ -508,8 +498,7 @@ async function executeSelectedSemanticWork(input: {
 		await adapters.implementation({
 			loop: "implementation",
 			observedWorkStateDigest: observation.workState.snapshotDigest,
-			sprint,
-			workUnits,
+			workUnit,
 			assignments,
 			workerReports: selectedWorkerReports,
 		}),
@@ -537,15 +526,7 @@ async function executeSelectedSemanticWork(input: {
 }
 
 function runtimePlanningContent(candidate: PlanningCandidateContent) {
-	return {
-		...candidate,
-		workUnits: candidate.workUnits.map(
-			({ acceptanceRequirements, ...workUnit }) => ({
-				...workUnit,
-				acceptanceCriteria: acceptanceRequirements,
-			}),
-		),
-	};
+	return candidate;
 }
 
 function runtimeImplementationEvidence(
@@ -669,7 +650,7 @@ function invalidateOutcomeTraces(
 function outcomeTraceRefs(outcome: ProjectServerSemanticOutcome): string[] {
 	if (outcome.loop === "decision") return [outcome.result.traceId];
 	if (outcome.loop === "implementation") return [outcome.result.traceId];
-	return outcome.result.report.participantChanges.map((entry) => entry.traceId);
+	return [outcome.result.report.change.traceId];
 }
 
 function isCasConflict(error: unknown): boolean {

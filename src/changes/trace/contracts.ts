@@ -11,13 +11,7 @@ import {
 
 export const CHANGE_TRACE_PROTOCOL = Object.freeze({
 	id: "codewiki.change-trace",
-	version: "4.0.0",
-	canonicalJson: "codewiki.canonical-json/1.0.0",
-} as const);
-
-export const PLANNING_EPOCH_PROTOCOL = Object.freeze({
-	id: "codewiki.planning-epoch",
-	version: "2.0.0",
+	version: "5.0.0",
 	canonicalJson: "codewiki.canonical-json/1.0.0",
 } as const);
 
@@ -58,7 +52,6 @@ export const CHANGE_OPERATION_KINDS = [
 	"check.result_recorded",
 	"loop.exit_report_recorded",
 	"runtime.route_recorded",
-	"planning.epoch_bound",
 	"work_unit_claim.acquired",
 	"work_unit_claim.released",
 	"work_unit_claim.takeover_recorded",
@@ -77,22 +70,11 @@ export const CHANGE_OPERATION_KINDS = [
 	"outcome.observation_recorded",
 ] as const;
 
-export const PROJECT_OPERATION_KINDS = ["planning.epoch_recorded"] as const;
 export type ChangeOperationKind = (typeof CHANGE_OPERATION_KINDS)[number];
-export type ProjectOperationKind = (typeof PROJECT_OPERATION_KINDS)[number];
-export type ChangeTraceOperationKind = ChangeOperationKind | ProjectOperationKind;
-
-const planningEpochBindingIndex = CHANGE_OPERATION_KINDS.indexOf(
-	"planning.epoch_bound",
-);
+export type ChangeTraceOperationKind = ChangeOperationKind;
 export const CHANGE_TRACE_OPERATION_CATALOG: readonly ChangeTraceOperationKind[] =
-	Object.freeze([
-		...CHANGE_OPERATION_KINDS.slice(0, planningEpochBindingIndex),
-		...PROJECT_OPERATION_KINDS,
-		...CHANGE_OPERATION_KINDS.slice(planningEpochBindingIndex),
-	]);
+	Object.freeze([...CHANGE_OPERATION_KINDS]);
 export type OperationId = Sha256Digest;
-export type PlanningEpochId = Sha256Digest;
 export type StateCommitManifestId = Sha256Digest;
 export type ArchiveManifestId = Sha256Digest;
 export type ChangeRevisionId = Sha256Digest;
@@ -104,7 +86,6 @@ export type AuthorityCapability =
 	| "change.feedback"
 	| "change_claim.manage"
 	| "loop.record"
-	| "planning.bind"
 	| "work_unit_claim.manage"
 	| "assignment.manage"
 	| "integration.record"
@@ -744,19 +725,9 @@ const runtimeRouteRecordedPayloadSchema = Type.Object(
 	},
 	{ additionalProperties: false },
 );
-const planningEpochBoundPayloadSchema = Type.Object(
-	{
-		planningEpochId: digestSchema,
-		participantRevisionId: digestSchema,
-		planningCandidateId: idSchema,
-		exitReportId: idSchema,
-		workUnitIds: idListSchema,
-	},
-	{ additionalProperties: false },
-);
 const workUnitClaimAcquiredPayloadSchema = Type.Object(
 	{
-		planningEpochId: digestSchema,
+		workGraphDeltaId: digestSchema,
 		workUnitId: idSchema,
 		assignmentAttemptId: idSchema,
 		workerId: idSchema,
@@ -771,7 +742,7 @@ const workUnitClaimAcquiredPayloadSchema = Type.Object(
 const workUnitClaimTakeoverPayloadSchema = Type.Object(
 	{
 		priorClaimOperationId: digestSchema,
-		planningEpochId: digestSchema,
+		workGraphDeltaId: digestSchema,
 		workUnitId: idSchema,
 		assignmentAttemptId: idSchema,
 		workerId: idSchema,
@@ -787,7 +758,7 @@ const workUnitClaimTakeoverPayloadSchema = Type.Object(
 const assignmentDispatchedPayloadSchema = Type.Object(
 	{
 		claimOperationId: digestSchema,
-		planningEpochId: digestSchema,
+		workGraphDeltaId: digestSchema,
 		workUnitId: idSchema,
 		assignmentAttemptId: idSchema,
 		workerId: idSchema,
@@ -965,7 +936,6 @@ export const changeOperationPayloadSchemas = Object.freeze({
 	"check.result_recorded": checkResultRecordedPayloadSchema,
 	"loop.exit_report_recorded": loopExitReportRecordedPayloadSchema,
 	"runtime.route_recorded": runtimeRouteRecordedPayloadSchema,
-	"planning.epoch_bound": planningEpochBoundPayloadSchema,
 	"work_unit_claim.acquired": workUnitClaimAcquiredPayloadSchema,
 	"work_unit_claim.released": claimReleasedPayloadSchema,
 	"work_unit_claim.takeover_recorded": workUnitClaimTakeoverPayloadSchema,
@@ -1037,157 +1007,6 @@ export const changeOperationBodySchema = Type.Object(
 
 export const canonicalChangeOperationSchema = Type.Object(
 	{operationId: digestSchema, body: changeOperationBodySchema},
-	{ additionalProperties: false },
-);
-
-export const planningAcceptanceRequirementSchema = Type.Object(
-	{
-		id: idSchema,
-		statement: requiredTextSchema,
-		evidenceObligationIds: idListSchema,
-		checkIds: idListSchema,
-	},
-	{ additionalProperties: false },
-);
-export const planningScopeSchema = Type.Object(
-	{
-		sourcePaths: refListSchema,
-		knowledgeRefs: refListSchema,
-		componentRefs: refListSchema,
-	},
-	{ additionalProperties: false },
-);
-export const planningWorkbenchSchema = Type.Object(
-	{
-		profileId: idSchema,
-		toolIds: idListSchema,
-		skillIds: idListSchema,
-		contextRefs: refListSchema,
-		budgetDigest: digestSchema,
-	},
-	{ additionalProperties: false },
-);
-export const planningIntegrationSchema = Type.Object(
-	{
-		targetRef: refSchema,
-		requiredCheckIds: idListSchema,
-		rollbackStrategy: requiredTextSchema,
-		reviewRequired: Type.Boolean(),
-	},
-	{ additionalProperties: false },
-);
-export const planningSprintSchema = Type.Object(
-	{
-		id: idSchema,
-		goal: requiredTextSchema,
-		participantChangeIds: Type.Array(changeIdSchema, { minItems: 1, maxItems: 256 }),
-		workUnitIds: Type.Array(idSchema, { minItems: 1, maxItems: 512 }),
-		dependsOnSprintIds: idListSchema,
-		integrationBoundary: requiredTextSchema,
-	},
-	{ additionalProperties: false },
-);
-export const planningWorkUnitSchema = Type.Object(
-	{
-		id: idSchema,
-		sprintId: idSchema,
-		title: shortTextSchema,
-		outcome: requiredTextSchema,
-		owningChange: changeBindingSchema,
-		contributingChanges: Type.Array(changeBindingSchema, { maxItems: 256 }),
-		dependsOnWorkUnitIds: idListSchema,
-		acceptanceRequirements: Type.Array(planningAcceptanceRequirementSchema, {
-			minItems: 1,
-			maxItems: 256,
-		}),
-		scope: planningScopeSchema,
-		workbench: planningWorkbenchSchema,
-		integration: planningIntegrationSchema,
-	},
-	{ additionalProperties: false },
-);
-export const activeWorkDispositionSchema = Type.Object(
-	{
-		workUnitId: idSchema,
-		disposition: Type.Union([
-			Type.Literal("preserve"),
-			Type.Literal("pause"),
-			Type.Literal("migrate"),
-			Type.Literal("cancel"),
-			Type.Literal("block"),
-			Type.Literal("route_back"),
-		]),
-		activeAssignmentOperationId: Type.Optional(digestSchema),
-		replacementWorkUnitId: Type.Optional(idSchema),
-		reason: requiredTextSchema,
-	},
-	{ additionalProperties: false },
-);
-
-export interface PlanningEpochBody {
-	readonly protocol: typeof PLANNING_EPOCH_PROTOCOL;
-	readonly kind: "planning.epoch_recorded";
-	readonly kindVersion: "1.0.0";
-	readonly recordedAt: string;
-	readonly baseSnapshot: BaseSnapshot & {readonly workStateDigest: Sha256Digest};
-	readonly authorityBinding: AuthorityBinding;
-	readonly planningCandidateId: string;
-	readonly exitReportId: string;
-	readonly participants: readonly ChangeBinding[];
-	readonly sprints: readonly Static<typeof planningSprintSchema>[];
-	readonly workUnits: readonly Static<typeof planningWorkUnitSchema>[];
-	readonly activeWorkDispositions: readonly Static<
-		typeof activeWorkDispositionSchema
-	>[];
-	readonly safeExecutionFrontier: readonly string[];
-	readonly globalWorkUnitGraphDigest: Sha256Digest;
-}
-
-export interface PlanningEpochRecord {
-	readonly operationId: PlanningEpochId;
-	readonly body: PlanningEpochBody;
-}
-
-export const planningEpochBodySchema = Type.Object(
-	{
-		protocol: Type.Object(
-			{
-				id: Type.Literal(PLANNING_EPOCH_PROTOCOL.id),
-				version: Type.Literal(PLANNING_EPOCH_PROTOCOL.version),
-				canonicalJson: Type.Literal(PLANNING_EPOCH_PROTOCOL.canonicalJson),
-			},
-			{ additionalProperties: false },
-		),
-		kind: Type.Literal("planning.epoch_recorded"),
-		kindVersion: Type.Literal("1.0.0"),
-		recordedAt: timestampSchema,
-		baseSnapshot: Type.Object(
-			{
-				remoteStateHead: nullableGitObjectIdSchema,
-				sourceHead: gitObjectIdSchema,
-				knowledgeDigest: digestSchema,
-				configDigest: digestSchema,
-				policyDigest: digestSchema,
-				workStateDigest: digestSchema,
-			},
-			{ additionalProperties: false },
-		),
-		authorityBinding: authorityBindingSchema,
-		planningCandidateId: idSchema,
-		exitReportId: idSchema,
-		participants: Type.Array(changeBindingSchema, { minItems: 1, maxItems: 256 }),
-		sprints: Type.Array(planningSprintSchema, { minItems: 1, maxItems: 256 }),
-		workUnits: Type.Array(planningWorkUnitSchema, { minItems: 1, maxItems: 2_048 }),
-		activeWorkDispositions: Type.Array(activeWorkDispositionSchema, {
-			maxItems: 2_048,
-		}),
-		safeExecutionFrontier: idListSchema,
-		globalWorkUnitGraphDigest: digestSchema,
-	},
-	{ additionalProperties: false },
-);
-export const planningEpochRecordSchema = Type.Object(
-	{operationId: digestSchema, body: planningEpochBodySchema},
 	{ additionalProperties: false },
 );
 
@@ -1337,7 +1156,6 @@ export type AuthorityEvaluator = (
 
 export type CanonicalProtocolDocument =
 	| CanonicalChangeOperation
-	| PlanningEpochRecord
 	| StateCommitManifest
 	| ArchiveManifest;
 

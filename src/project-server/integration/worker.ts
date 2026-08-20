@@ -49,7 +49,7 @@ export interface ImplementationWorkerIntegrationInput {
 	packet: ImplementationWorkerDispatchPacket;
 	report: ImplementationWorkerReport;
 	acceptanceEvent: TraceEvent;
-	sprintId: string;
+	workGraphDeltaId: string;
 	targetRefs: string[];
 	createdAt: string;
 	runner: WorktreeCommandRunner;
@@ -657,7 +657,7 @@ function integrationEvent(
 			schemaVersion: INTEGRATION_SCHEMA_VERSION,
 			runtimeJobId: identity.jobId,
 			traceId: assignment.traceId,
-			sprintId: input.sprintId,
+			workGraphDeltaId: input.workGraphDeltaId,
 			workUnitId: assignment.workUnitId,
 			claimId: assignment.claimId,
 			assignmentId: assignment.assignmentId,
@@ -697,7 +697,7 @@ function integrationIdentity(
 			stableJson({
 				repoRoot: resolve(input.repoRoot),
 				traceId: assignment.traceId,
-				sprintId: input.sprintId,
+				workGraphDeltaId: input.workGraphDeltaId,
 				workUnitId: assignment.workUnitId,
 				claimId: assignment.claimId,
 				assignmentId: assignment.assignmentId,
@@ -766,8 +766,8 @@ function assertIntegrationInput(
 	) {
 		throw new Error("Implementation integration requires exact worktree isolation.");
 	}
-	if (!input.sprintId.trim() || !input.createdAt.trim()) {
-		throw new Error("Implementation integration Sprint and observation time are required.");
+	if (!input.workGraphDeltaId.trim() || !input.createdAt.trim()) {
+		throw new Error("Implementation integration Work Graph delta and observation time are required.");
 	}
 	if (!Array.isArray(input.targetRefs) || input.targetRefs.length > 64) {
 		throw new Error("Implementation integration target refs are invalid.");
