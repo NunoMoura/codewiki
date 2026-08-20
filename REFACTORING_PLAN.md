@@ -298,12 +298,13 @@ Success: no rolling-planning, horizon, participant, or canonical Sprint-plan com
 
 ### Slice 3 — Decision active-Change compatibility
 
-- Add exact active-portfolio and accepted Work Graph projection to Decision Candidate evaluation inputs.
-- Add structured compatibility relationships and complete coverage.
-- Add default `active_change_compatibility` Model Check and deterministic overlap/accounting Check.
-- Bind affected Results to Candidate, portfolio, relationship, graph, pack, route, and configuration identity.
-- Require active-portfolio expected-head CAS during confirmation.
-- Test concurrent conflicting Decision Candidates so only one stale-free confirmation can commit.
+- [x] Add exact active-portfolio and accepted Work Graph projection to Decision Candidate evaluation inputs.
+- [x] Add structured compatibility relationships and complete coverage.
+- [x] Add default `active_change_compatibility` Model Check and deterministic overlap/accounting Check.
+- [x] Bind affected Results to Candidate, portfolio, relationship, graph, pack, route, and configuration identity.
+- [x] Require active-portfolio expected-head CAS during confirmation.
+- [x] Test concurrent conflicting Decision Candidates so only one stale-free confirmation can commit.
+- [x] Commit one green Decision active-portfolio checkpoint.
 
 Success: unresolved semantic contradiction cannot pass or race through stale confirmation; dependencies and resource contention remain outside Decision authority.
 

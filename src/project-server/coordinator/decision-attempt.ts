@@ -17,6 +17,11 @@ import {
 	type ProjectAuthoritySnapshot,
 	type TeamSnapshot,
 } from "../../changes/trace/synchronization.ts";
+import {
+	assertDecisionActivePortfolioBinding,
+	bindDecisionActivePortfolio,
+	type DecisionActivePortfolioBinding,
+} from "../../loops/decision/active-change-portfolio.ts";
 import type {DecisionCandidateProposal} from "../../loops/decision/candidate-proposal.ts";
 import {
 	assertProducerSkillReceipt,
@@ -46,7 +51,7 @@ import {assertTypeboxSchema} from "../../utils/json.ts";
 
 export const DECISION_CANDIDATE_PRODUCTION_PROTOCOL = Object.freeze({
 	id: "codewiki.decision-candidate-production",
-	version: "1.0.0",
+	version: "2.0.0",
 } as const);
 
 export interface NativeDecisionCandidateProductionRequest {
@@ -58,6 +63,7 @@ export interface NativeDecisionCandidateProductionRequest {
 	readonly workStateDigest: Sha256Digest;
 	readonly revision: ChangeRevision;
 	readonly relationships: ChangeWorkState["relationships"];
+	readonly activePortfolio: DecisionActivePortfolioBinding;
 }
 
 export function assertNativeDecisionCandidateProductionRequest(
@@ -74,6 +80,7 @@ export function assertNativeDecisionCandidateProductionRequest(
 			"workStateDigest",
 			"revision",
 			"relationships",
+			"activePortfolio",
 		],
 		label: "Native Decision candidate production request",
 	});
@@ -115,6 +122,7 @@ export function assertNativeDecisionCandidateProductionRequest(
 	for (const relationship of request.relationships) {
 		assertProductionRelationship(relationship);
 	}
+	assertDecisionActivePortfolioBinding(request.activePortfolio);
 }
 
 export interface NativeDecisionCandidateProducer {
@@ -255,6 +263,7 @@ export function createNativeDecisionAttemptExecutor(
 				attemptOperationId: input.attemptOperationId,
 				expectedTeamSnapshotDigest: current.teamSnapshot.snapshotDigest,
 				expectedWorkStateDigest: current.state.workStateDigest,
+				expectedActivePortfolioDigest: candidate.content.activePortfolio.digest,
 				recordedAt: (options.now ?? (() => new Date().toISOString()))(),
 				candidate,
 				packSnapshot: gateRun.packSnapshot,
@@ -337,6 +346,10 @@ function candidateProductionRequest(input: {
 		workStateDigest: input.current.state.workStateDigest,
 		revision,
 		relationships: input.current.change.relationships,
+		activePortfolio: bindDecisionActivePortfolio({
+			state: input.current.state,
+			subjectChangeId: input.current.change.changeId,
+		}),
 	});
 	assertNativeDecisionCandidateProductionRequest(request);
 	return request;

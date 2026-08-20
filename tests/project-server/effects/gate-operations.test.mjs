@@ -499,6 +499,28 @@ describe("native Decision canonical operation continuation", () => {
 				selected.workState,
 				change.changeId,
 			);
+			await assert.rejects(
+				commitNativeDecisionOperationSequence({
+					repoRoot: fixture.cloneB,
+					remote: "origin",
+					repositoryIdentity,
+					currentProject: () => project,
+					replayPolicy: allowAllReplayPolicy,
+					authorityBinding: authorityBinding(),
+					changeId: change.changeId,
+					attemptOperationId: started.operation.operationId,
+					expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
+					expectedWorkStateDigest: selected.workState.workStateDigest,
+					expectedActivePortfolioDigest: digest("0"),
+					recordedAt: "2026-07-30T15:07:00.000Z",
+					candidate: artifacts.candidate,
+					packSnapshot: artifacts.packSnapshot,
+					evidenceRecords: [],
+					report: artifacts.report,
+					transition: artifacts.transition,
+				}),
+				/compatibility Checks must be rerun/,
+			);
 			const receipt = await commitNativeDecisionOperationSequence({
 				repoRoot: fixture.cloneB,
 				remote: "origin",
@@ -510,6 +532,8 @@ describe("native Decision canonical operation continuation", () => {
 				attemptOperationId: started.operation.operationId,
 				expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
 				expectedWorkStateDigest: selected.workState.workStateDigest,
+				expectedActivePortfolioDigest:
+					artifacts.candidate.content.activePortfolio.digest,
 				recordedAt: "2026-07-30T15:07:00.000Z",
 				candidate: artifacts.candidate,
 				packSnapshot: artifacts.packSnapshot,
@@ -543,6 +567,8 @@ describe("native Decision canonical operation continuation", () => {
 					attemptOperationId: started.operation.operationId,
 					expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
 					expectedWorkStateDigest: selected.workState.workStateDigest,
+					expectedActivePortfolioDigest:
+						artifacts.candidate.content.activePortfolio.digest,
 					recordedAt: "2026-07-30T15:07:00.000Z",
 					candidate: artifacts.candidate,
 					packSnapshot: artifacts.packSnapshot,

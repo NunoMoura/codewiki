@@ -11,6 +11,7 @@ import {
 } from "../../checks/protocol.ts";
 import {
 	createCheckPackSnapshot,
+	packagedChecks,
 	type CheckPackSnapshot,
 } from "../../checks/packs/contracts.ts";
 import {checkSubjectFromCandidate} from "../../checks/identity.ts";
@@ -23,6 +24,7 @@ import type {
 import {createGateReport} from "../../checks/results.ts";
 import type {CheckResultCache} from "../../checks/cache.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
+import {ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID} from "../../loops/decision/active-change-portfolio.ts";
 import type {DecisionCandidate} from "../../loops/decision/candidate.ts";
 import {
 	admitReviewEvidence,
@@ -133,13 +135,28 @@ export function createDecisionGate(input: CreateDecisionGateInput = {}): Readonl
 		async run(runInput: RunDecisionGateInput): Promise<DecisionGateRun> {
 			assertRunInput(runInput);
 			const subject = checkSubjectFromCandidate(runInput.candidate);
-			if (input.stoppedReason) {
+			const requiredCompatibilityCheck = packagedChecks(packSnapshot).find(
+				(check) => check.checkId === ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID,
+			);
+			const compatibilityStopReason =
+				runInput.candidate.content.activePortfolio.changes.length > 0 &&
+				(!requiredCompatibilityCheck ||
+					requiredCompatibilityCheck.definition.implementation.kind !== "model")
+					? {
+							code: "malformed_check" as const,
+							message:
+								"Decision active portfolio requires active_change_compatibility as a Model Check.",
+							checkId: ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID,
+						}
+					: undefined;
+			const stoppedReason = input.stoppedReason ?? compatibilityStopReason;
+			if (stoppedReason) {
 				const report = createGateReport({
 					snapshot: packSnapshot,
 					subjectDigest: subject.digest,
 					results: [],
 					executions: [],
-					stoppedReason: input.stoppedReason,
+					stoppedReason,
 				});
 				return Object.freeze({
 					candidate: runInput.candidate,

@@ -214,6 +214,10 @@ function starterFiles(
 		.map((boundary) => boundary.path);
 	return {
 		[WIKI_CONFIG_PATH]: configJson(project),
+		".codewiki/check-packs/decision/default/active_change_compatibility/check.json":
+			activeChangeCompatibilityDefinition(),
+		".codewiki/check-packs/decision/default/active_change_compatibility/CHECK.md":
+			activeChangeCompatibilityInstructions(),
 		".codewiki/kb/lexicon.md": nativeDocument(
 			{
 				okf_version: "0.2",
@@ -280,6 +284,54 @@ function starterFiles(
 
 function configJson(project: string): string {
 	return `${JSON.stringify(resolveWikiConfig({ project }), null, "\t")}\n`;
+}
+
+function activeChangeCompatibilityDefinition(): string {
+	return `${JSON.stringify(
+		{
+			schemaVersion: "1.0.0",
+			id: "active_change_compatibility",
+			version: "1.0.0",
+			description:
+				"Checks one Decision Candidate against every accepted nonterminal Change.",
+			requirement:
+				"The exact Candidate must have complete active-portfolio coverage and no unresolved semantic contradiction, duplicate Change, or improper supersession.",
+			implementation: {
+				kind: "model",
+				route: "decision-compatibility",
+				profile: "decision-compatibility",
+				maximumTokens: 4096,
+			},
+			inputs: [
+				{
+					source: "subject",
+					refs: [],
+					required: true,
+					maximumBytes: 1_048_576,
+				},
+			],
+			measurement: {kind: "binary"},
+			failure: {
+				code: "active_change_incompatible",
+				message: "Decision Candidate is incompatible with the active Change portfolio.",
+				remediation: [
+					"Resolve the contradiction, duplication, or supersession relationship and submit a new Candidate.",
+				],
+			},
+			limits: {
+				timeoutMs: 120_000,
+				maximumAttempts: 1,
+				maximumInputBytes: 4_194_304,
+				maximumOutputBytes: 65_536,
+			},
+		},
+		null,
+		2,
+	)}\n`;
+}
+
+function activeChangeCompatibilityInstructions(): string {
+	return `# Requirement\n\nEvaluate only the supplied Decision Candidate. Verify that \`activePortfolio.coverage\` is \`complete\`, expected and compared Change IDs match exactly, and every listed accepted revision was considered. Judge only unresolved semantic contradiction, duplicate Change, or improper supersession.\n\n# Pass\n\nPass when coverage and identity bindings are exact and no unresolved semantic contradiction, duplication, or improper supersession exists. Shared targets or overlapping scope alone do not fail this Check.\n\n# Fail\n\nFail when any compared accepted revision exposes an unresolved semantic contradiction, duplicate Change, or improper supersession. Do not fail for scheduling, resource contention, dependency ordering, or patch conflicts; those belong to later stages. Stop rather than infer omitted portfolio state when coverage or identity is incomplete.\n\n# Feedback\n\nIdentify the conflicting Change revision and the exact contradiction, duplication, or improper supersession. For incomplete coverage or identity drift, identify the mismatched field and require a fresh evaluation.\n`;
 }
 
 function nativeDocument(

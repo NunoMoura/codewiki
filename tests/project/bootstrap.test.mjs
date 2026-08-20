@@ -10,6 +10,7 @@ import {
 import { tmpdir } from "node:os";
 import { join, relative } from "node:path";
 import { describe, it } from "node:test";
+import {loadCheckPackSnapshot} from "../../src/checks/packs/loader.ts";
 import { bootstrapCodewiki } from "../../src/project/bootstrap.ts";
 import { loadWikiConfigFile } from "../../src/project/config-file.ts";
 import { parseOkfDocument } from "../../src/knowledge/okf-frontmatter.ts";
@@ -163,9 +164,22 @@ describe("project bootstrap", () => {
 					await readdir(
 						join(root, ".codewiki", "check-packs", stage, "default"),
 					),
-					[],
+					stage === "decision" ? ["active_change_compatibility"] : [],
 				);
 			}
+			const decisionPack = await loadCheckPackSnapshot({
+				repoRoot: root,
+				stage: "decision",
+			});
+			assert.equal(decisionPack.checkCount, 1);
+			assert.equal(
+				decisionPack.packs[0].checks[0].checkId,
+				"active_change_compatibility",
+			);
+			assert.equal(
+				decisionPack.packs[0].checks[0].definition.implementation.kind,
+				"model",
+			);
 
 			const files = await collectFiles(root);
 			const markdown = files

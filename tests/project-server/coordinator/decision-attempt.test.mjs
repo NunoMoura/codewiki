@@ -192,6 +192,7 @@ it("executes and recovers one authenticated native Decision attempt without rein
 
 		assert.equal(producerCalls, 1);
 		assert.deepEqual(Object.keys(producerRequest).sort(), [
+			"activePortfolio",
 			"attemptOperationId",
 			"changeId",
 			"changeRevisionId",
@@ -218,6 +219,9 @@ it("executes and recovers one authenticated native Decision attempt without rein
 			producerRequest.workStateDigest,
 			selected.workState.workStateDigest,
 		);
+		assert.equal(producerRequest.activePortfolio.coverage, "complete");
+		assert.deepEqual(producerRequest.activePortfolio.expectedChangeIds, []);
+		assert.deepEqual(producerRequest.activePortfolio.comparedChangeIds, []);
 		assert.equal(result.attemptOperationId, attempt.operationId);
 		assert.equal(result.status, "passed");
 		assert.match(result.candidateId, /^candidate:decision:/);

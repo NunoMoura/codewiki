@@ -16,9 +16,13 @@ import {
 	createPiSdkProjectServerSemanticAdapters,
 	validatePiSdkReadOnlyToolCall,
 } from "../../../src/runtime/pi/sdk-semantic-session.ts";
+import {bindDecisionActivePortfolio} from "../../../src/loops/decision/active-change-portfolio.ts";
 import {DECISION_CANDIDATE_PRODUCTION_PROTOCOL} from "../../../src/project-server/coordinator/decision-attempt.ts";
 import {digest} from "../../helpers/change-trace-v1.mjs";
-import {nativeDecisionRevision} from "../../helpers/native-decision.mjs";
+import {
+	nativeDecisionRevision,
+	nativeDecisionState,
+} from "../../helpers/native-decision.mjs";
 
 function decisionInvocation(extra = {}) {
 	return {
@@ -44,16 +48,19 @@ function planningInvocation() {
 }
 
 function nativeDecisionProductionRequest() {
-	const revision = nativeDecisionRevision();
+	const changeId = "CHG-sdk-native-decision";
+	const revision = nativeDecisionRevision({changeId});
+	const state = nativeDecisionState([{changeId, revision}]);
 	return {
 		protocolId: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.id,
 		protocolVersion: DECISION_CANDIDATE_PRODUCTION_PROTOCOL.version,
 		attemptOperationId: digest("a"),
-		changeId: "CHG-sdk-native-decision",
+		changeId,
 		changeRevisionId: revision.revisionId,
 		workStateDigest: digest("b"),
 		revision,
 		relationships: [],
+		activePortfolio: bindDecisionActivePortfolio({state, subjectChangeId: changeId}),
 	};
 }
 

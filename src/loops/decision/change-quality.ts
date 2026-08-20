@@ -210,8 +210,8 @@ const STANDARD_DEFINITIONS: StandardDefinition[] = [
 		},
 	),
 	standard(
-		"active_change_overlap_accounted",
-		"Active overlapping Changes are linked or ordered.",
+		"active_change_overlap_observed",
+		"Active overlap is reported without treating overlap alone as contradiction.",
 		overlapQuality,
 	),
 ];
@@ -333,19 +333,7 @@ function overlapQuality(input: EvaluateChangeDecisionInput) {
 			targetRefs.has(ref),
 		);
 	});
-	const unlinked = overlapping.filter(
-		(candidate) =>
-			!input.record.links.some(
-				(link) => link.targetChangeId === candidate.id,
-			) &&
-			!candidate.record.links.some((link) => link.targetChangeId === change.id),
-	);
-	return unlinked.length === 0
-		? met(overlapping.map((entry) => `change:${entry.id}`))
-		: unmet(
-				`Overlapping active Changes need explicit links: ${unlinked.map((entry) => entry.id).join(", ")}.`,
-				unlinked.map((entry) => `change:${entry.id}`),
-			);
+	return met(overlapping.map((entry) => `change:${entry.id}`));
 }
 
 function standard(

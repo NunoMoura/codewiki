@@ -1,8 +1,4 @@
-import type {
-	BaseSnapshot,
-	ChangeRevisionContent,
-	OperationId,
-} from "../../changes/trace/contracts.ts";
+import type {BaseSnapshot} from "../../changes/trace/contracts.ts";
 import {
 	changeById,
 	type ChangeWorkState,
@@ -16,26 +12,18 @@ import {
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 import {
+	bindDecisionActivePortfolio,
+	type DecisionActivePortfolioBinding,
+	type DecisionRelationshipBinding,
+	type DecisionSemanticRevision,
+} from "./active-change-portfolio.ts";
+import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
 	type DecisionDisposition,
 } from "./candidate-proposal.ts";
 
-const DECISION_CANDIDATE_SCHEMA_VERSION = "2.0.0" as const;
-
-export interface DecisionSemanticRevision extends ChangeRevisionContent {
-	readonly ordinal: number;
-	readonly revisionId: Sha256Digest;
-}
-
-export interface DecisionRelationshipBinding {
-	readonly operationId: OperationId;
-	readonly relationshipId: Sha256Digest;
-	readonly type: string;
-	readonly sourceRevisionId: Sha256Digest;
-	readonly targetChangeId: string;
-	readonly targetRevisionId: Sha256Digest;
-}
+const DECISION_CANDIDATE_SCHEMA_VERSION = "3.0.0" as const;
 
 export interface DecisionOverlapBinding {
 	readonly changeId: string;
@@ -52,6 +40,7 @@ export type DecisionCandidateContent = CanonicalJsonValue & {
 	readonly revision: DecisionSemanticRevision;
 	readonly relationships: readonly DecisionRelationshipBinding[];
 	readonly activeOverlaps: readonly DecisionOverlapBinding[];
+	readonly activePortfolio: DecisionActivePortfolioBinding;
 };
 
 export type DecisionCandidate = LoopCandidate<
@@ -103,6 +92,10 @@ function materializeDecisionCandidateContent(input: {
 	if (ordinal < 1) {
 		throw new Error("Decision Candidate current revision is absent from revision history.");
 	}
+	const activePortfolio = bindDecisionActivePortfolio({
+		state: input.state,
+		subjectChangeId: input.change.changeId,
+	});
 	return toCanonicalJsonValue({
 		changeId: input.change.changeId,
 		disposition: input.proposal.disposition,
@@ -116,7 +109,9 @@ function materializeDecisionCandidateContent(input: {
 		activeOverlaps: activeOverlapBindings({
 			change: input.change,
 			state: input.state,
+			activePortfolio,
 		}),
+		activePortfolio,
 	}) as unknown as DecisionCandidateContent;
 }
 
@@ -191,32 +186,32 @@ function relationshipBinding(
 function activeOverlapBindings(input: {
 	readonly change: ChangeWorkState;
 	readonly state: ProjectWorkState;
+	readonly activePortfolio: DecisionActivePortfolioBinding;
 }): DecisionOverlapBinding[] {
 	const {change, state} = input;
 	const currentRevision = change.currentRevision;
 	if (!currentRevision) return [];
 	const targetRefs = new Set(currentRevision.content.classification.targetRefs);
-	return state.changes
-		.flatMap((candidate) => {
-			if (
-				candidate.changeId === change.changeId ||
-				candidate.withdrawn ||
-				!candidate.currentRevision
-			) {
-				return [];
-			}
-			const sharedTargetRefs = candidate.currentRevision.content.classification.targetRefs
+	return input.activePortfolio.changes
+		.flatMap((activeChange) => {
+			const candidate = state.changes.find(
+				(changeState) => changeState.changeId === activeChange.changeId,
+			);
+			if (!candidate) return [];
+			const sharedTargetRefs = activeChange.revision.classification.targetRefs
 				.filter((ref) => targetRefs.has(ref))
 				.sort(compareText);
 			if (sharedTargetRefs.length === 0) return [];
 			const accountingRelationshipIds = relationshipIdsBetween({
 				left: change,
+				leftRevisionId: currentRevision.revisionId,
 				right: candidate,
+				rightRevisionId: activeChange.revision.revisionId,
 			});
 			return [
 				{
 					changeId: candidate.changeId,
-					changeRevisionId: candidate.currentRevision.revisionId,
+					changeRevisionId: activeChange.revision.revisionId,
 					sharedTargetRefs,
 					accountingRelationshipIds,
 					accountedByRelationship: accountingRelationshipIds.length > 0,
@@ -228,7 +223,9 @@ function activeOverlapBindings(input: {
 
 function relationshipIdsBetween(input: {
 	readonly left: ChangeWorkState;
+	readonly leftRevisionId: Sha256Digest;
 	readonly right: ChangeWorkState;
+	readonly rightRevisionId: Sha256Digest;
 }): Sha256Digest[] {
 	const {left, right} = input;
 	return sortedUnique([
@@ -236,14 +233,18 @@ function relationshipIdsBetween(input: {
 			.filter(
 				(relationship) =>
 					!relationship.supersededByOperationId &&
-					relationship.targetChangeId === right.changeId,
+					relationship.sourceRevisionId === input.leftRevisionId &&
+					relationship.targetChangeId === right.changeId &&
+					relationship.targetRevisionId === input.rightRevisionId,
 			)
 			.map((relationship) => relationship.relationshipId),
 		...right.relationships
 			.filter(
 				(relationship) =>
 					!relationship.supersededByOperationId &&
-					relationship.targetChangeId === left.changeId,
+					relationship.sourceRevisionId === input.rightRevisionId &&
+					relationship.targetChangeId === left.changeId &&
+					relationship.targetRevisionId === input.leftRevisionId,
 			)
 			.map((relationship) => relationship.relationshipId),
 	]);
