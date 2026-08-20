@@ -295,7 +295,7 @@ function activeChangeCompatibilityDefinition(): string {
 			description:
 				"Checks one Decision Candidate against every accepted nonterminal Change.",
 			requirement:
-				"The exact Candidate must have complete active-portfolio coverage and no unresolved semantic contradiction, duplicate Change, or improper supersession.",
+				"The exact Candidate must have complete accepted active Changes coverage and no unresolved semantic contradiction, duplicate Change, or improper supersession.",
 			implementation: {
 				kind: "model",
 				route: "decision-compatibility",
@@ -313,7 +313,7 @@ function activeChangeCompatibilityDefinition(): string {
 			measurement: {kind: "binary"},
 			failure: {
 				code: "active_change_incompatible",
-				message: "Decision Candidate is incompatible with the active Change portfolio.",
+				message: "Decision Candidate is incompatible with the accepted active Changes.",
 				remediation: [
 					"Resolve the contradiction, duplication, or supersession relationship and submit a new Candidate.",
 				],
@@ -331,7 +331,7 @@ function activeChangeCompatibilityDefinition(): string {
 }
 
 function activeChangeCompatibilityInstructions(): string {
-	return `# Requirement\n\nEvaluate only the supplied Decision Candidate. Verify that \`activePortfolio.coverage\` is \`complete\`, expected and compared Change IDs match exactly, and every listed accepted revision was considered. Judge only unresolved semantic contradiction, duplicate Change, or improper supersession.\n\n# Pass\n\nPass when coverage and identity bindings are exact and no unresolved semantic contradiction, duplication, or improper supersession exists. Shared targets or overlapping scope alone do not fail this Check.\n\n# Fail\n\nFail when any compared accepted revision exposes an unresolved semantic contradiction, duplicate Change, or improper supersession. Do not fail for scheduling, resource contention, dependency ordering, or patch conflicts; those belong to later stages. Stop rather than infer omitted portfolio state when coverage or identity is incomplete.\n\n# Feedback\n\nIdentify the conflicting Change revision and the exact contradiction, duplication, or improper supersession. For incomplete coverage or identity drift, identify the mismatched field and require a fresh evaluation.\n`;
+	return `# Requirement\n\nEvaluate only the supplied Decision Candidate. Verify that \`acceptedActiveChanges.coverage\` is \`complete\`, expected and compared Change IDs match exactly, and every listed accepted revision was considered. Judge only unresolved semantic contradiction, duplicate Change, or improper supersession.\n\n# Pass\n\nPass when coverage and identity bindings are exact and no unresolved semantic contradiction, duplication, or improper supersession exists. Shared targets or overlapping scope alone do not fail this Check.\n\n# Fail\n\nFail when any compared accepted revision exposes an unresolved semantic contradiction, duplicate Change, or improper supersession. Do not fail for scheduling, resource contention, dependency ordering, or patch conflicts; those belong to later stages. Stop rather than infer omitted accepted Change state when coverage or identity is incomplete.\n\n# Feedback\n\nIdentify the conflicting Change revision and the exact contradiction, duplication, or improper supersession. For incomplete coverage or identity drift, identify the mismatched field and require a fresh evaluation.\n`;
 }
 
 function nativeDocument(

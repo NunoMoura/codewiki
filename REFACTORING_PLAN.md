@@ -43,7 +43,7 @@ Decision, Planning, Implementation, and Review produce Candidates. Checks indepe
 
 ### Decision
 
-Decision evaluates one exact proposed Change against accepted state and the accepted active-Change portfolio. The required invariant is no unresolved semantic contradiction, not no overlap.
+Decision evaluates one exact proposed Change against accepted state and the accepted active Changes. The required invariant is no unresolved semantic contradiction, not no overlap.
 
 The default Decision policy includes an `active_change_compatibility` Model Check over:
 
@@ -52,11 +52,11 @@ The default Decision policy includes an `active_change_compatibility` Model Chec
 - explicit `depends_on`, `coordinated_with`, `duplicates`, `supersedes`, and conflict relationships;
 - the accepted Work Graph projection;
 - complete comparison coverage;
-- exact active-portfolio and WorkState digests.
+- exact accepted active Changes and WorkState digests.
 
 Existing deterministic target-overlap accounting remains. The model Check adds semantic comparison and cannot replace explicit relationships, CAS, Planning graph validation, or integration proof. Incomplete coverage stops the Gate.
 
-A passed Decision Gate grants no semantic authority. An authorized actor confirms the unchanged Candidate and Gate digest against current active-portfolio and WorkState heads. Project Server applies confirmation by expected-head CAS. If another Change was accepted after evaluation, affected Results become stale.
+A passed Decision Gate grants no semantic authority. An authorized actor confirms the unchanged Candidate and Gate digest against current accepted active Changes and WorkState heads. Project Server applies confirmation by expected-head CAS. If another Change was accepted after evaluation, affected Results become stale.
 
 Conflict ownership is layered:
 
@@ -69,7 +69,7 @@ Conflict ownership is layered:
 
 ### Planning
 
-Planning operates on one ratified Change. It produces one immutable Change-scoped Work Graph delta, not a replacement portfolio plan.
+Planning operates on one ratified Change. It produces one immutable Change-scoped Work Graph delta, not a whole-project replacement plan.
 
 A Planning Candidate contains:
 
@@ -89,7 +89,7 @@ Project Server owns the canonical global Work Graph as the union of accepted Cha
 
 Changing accepted decomposition requires an explicit Planning amendment owned by that Change. Shared foundational work should normally become its own Change with dependency edges rather than a multi-owned Work Unit.
 
-Delete rolling portfolio Planning, planning horizons, Sprints as canonical execution plans, participant-Change epochs, active-work disposition rewrites, and the project-scoped planner Session. Optional future portfolio optimization is advisory and may propose explicit traced amendments; it never silently replaces the graph.
+Delete rolling multi-Change Planning, planning horizons, Sprints as canonical execution plans, participant-Change epochs, active-work disposition rewrites, and the project-scoped planner Session. Optional future cross-Change optimization is advisory and may propose explicit traced amendments; it never silently replaces the graph.
 
 ### Work Unit Implementation
 
@@ -132,7 +132,7 @@ Only a fresh passed Review Gate plus separate current authority permits protecte
 ### Project Server owns
 
 - Actor, project, delegation, authorization, and confirmation;
-- accepted active-Change portfolio and semantic relationships;
+- accepted active Changes and semantic relationships;
 - Change Trace and canonical WorkState;
 - Project Material Generation construction and authorization;
 - Gate Evaluation Package construction;
@@ -263,7 +263,7 @@ DSH receives no provider credentials and ideally no raw network. Runtime supplie
 ### Slice 1 — Ratified Knowledge and clean-cut audit
 
 - [x] Replace rolling Planning intent with one Change-scoped Work Graph delta.
-- [x] Ratify Decision active-portfolio compatibility and CAS admission.
+- [x] Ratify Decision accepted active Changes compatibility and CAS admission.
 - [x] Ratify Work Unit-granular Implementation and same stage-wide Implementation policy.
 - [x] Ratify private Change integration lineage and aggregate Review.
 - [x] Ratify Change-scoped Planning and Work Unit-scoped Session continuity.
@@ -288,7 +288,7 @@ Success: no active executable or Knowledge `Work Item` spelling or parser surviv
 Create a new exhaustive HEAD-anchored deletion manifest after Slice 2A commit.
 
 - [x] Delete `src/changes/trace/rolling-planning.ts` and rolling epoch contracts, reducers, views, active-work dispositions, planning horizons, participant-Change semantics, Sprint execution-plan ownership, and obsolete tests.
-- [x] Replace portfolio Planning Candidate schemas with one Change-scoped graph-delta schema.
+- [x] Replace multi-Change Planning Candidate schemas with one Change-scoped graph-delta schema.
 - [x] Remove contributing ownership fields; enforce exactly one owning Change per Work Unit.
 - [x] Preserve cross-Change dependencies through explicit graph edges.
 - [x] Update exports, package smoke, fixtures, and canonical protocol versions where bytes change.
@@ -298,13 +298,13 @@ Success: no rolling-planning, horizon, participant, or canonical Sprint-plan com
 
 ### Slice 3 — Decision active-Change compatibility
 
-- [x] Add exact active-portfolio and accepted Work Graph projection to Decision Candidate evaluation inputs.
+- [x] Add exact accepted active Changes and accepted Work Graph projection to Decision Candidate evaluation inputs.
 - [x] Add structured compatibility relationships and complete coverage.
 - [x] Add default `active_change_compatibility` Model Check and deterministic overlap/accounting Check.
-- [x] Bind affected Results to Candidate, portfolio, relationship, graph, pack, route, and configuration identity.
-- [x] Require active-portfolio expected-head CAS during confirmation.
+- [x] Bind affected Results to Candidate, accepted active Changes, relationship, graph, pack, route, and configuration identity.
+- [x] Require accepted active Changes expected-head CAS during confirmation.
 - [x] Test concurrent conflicting Decision Candidates so only one stale-free confirmation can commit.
-- [x] Commit one green Decision active-portfolio checkpoint.
+- [x] Commit one green Decision accepted active Changes checkpoint.
 
 Success: unresolved semantic contradiction cannot pass or race through stale confirmation; dependencies and resource contention remain outside Decision authority.
 

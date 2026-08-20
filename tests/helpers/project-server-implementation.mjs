@@ -9,7 +9,7 @@ import { traceFilePath } from "../../src/changes/trace/schema.ts";
 import { buildProjectWorkState } from "../../src/work-state/project.ts";
 import { acceptedChangeFixture } from "./accepted-change.mjs";
 
-export async function seedProjectServerImplementationPortfolio(root, specs) {
+export async function seedProjectServerImplementationChanges(root, specs) {
 	const records = specs.map((spec, index) =>
 		createChangeRecord(
 			acceptedChangeFixture({
@@ -21,13 +21,13 @@ export async function seedProjectServerImplementationPortfolio(root, specs) {
 	await new ChangeTraceStore({ repoRoot: root }).write({
 		expectedHead: null,
 		records,
-		message: "Persist implementation portfolio",
+		message: "Persist implementation Changes",
 		actor: "user:maintainer",
 		createdAt: "2026-06-12T00:00:00.000Z",
 	});
 	for (const [index, record] of records.entries()) {
 		await approveChange(root, record, {
-			ref: `confirmation:portfolio:${record.change.id}`,
+			ref: `confirmation:changes:${record.change.id}`,
 			occurredAt: `2026-06-12T00:00:0${index + 1}.000Z`,
 		});
 	}
@@ -42,7 +42,7 @@ export async function seedProjectServerImplementationPortfolio(root, specs) {
 				acceptance: `${spec.workUnitId} evidence passes.`,
 				pathScopes: spec.pathScopes,
 				verification: spec.verification,
-				integrationRequirements: ["integration:runtime-portfolio-fixture"],
+				integrationRequirements: ["integration:runtime-change-fixture"],
 				createdAt: "2026-06-12T00:00:03.000Z",
 			}),
 		);

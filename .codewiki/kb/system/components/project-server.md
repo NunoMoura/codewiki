@@ -43,7 +43,7 @@ Client Sessions use digest-only credential bindings, bounded lifetimes, rotation
 
 ## Project authority
 
-Project Server owns Actor and delegation binding, semantic idempotency, identity, admission, time, digests, freshness, expected-head compare-and-swap, provenance, canonical mutation, Stage Producer attempts, the accepted active-Change portfolio, canonical global Work Graph, scheduling, Claims, Assignments, Implementation Workers, private Change integration lineages, persistence, synchronization, recovery, transitions, and effects. It authorizes the accountable Actor, not the Client or executor.
+Project Server owns Actor and delegation binding, semantic idempotency, identity, admission, time, digests, freshness, expected-head compare-and-swap, provenance, canonical mutation, Stage Producer attempts, derivation of accepted active Changes, canonical global Work Graph, scheduling, Claims, Assignments, Implementation Workers, private Change integration lineages, persistence, synchronization, recovery, transitions, and effects. It authorizes the accountable Actor, not the Client or executor.
 
 Git owns content-addressed artifact history. A commit, branch, pull request, author, trailer, note, or provider status may identify Evidence or part of an immutable subject; none is a lifecycle transition by itself. External Git state is captured without changing accepted head and receives no inherited execution proof. Divergence pauses guarded effects; Project Server never silently adopts, overwrites, discards, or certifies it.
 
@@ -52,7 +52,7 @@ Project Server invokes exactly four Stage Loops under `src/loops/**`: Decision, 
 Project Server applies one fixed authority model with Work Unit-granular Implementation:
 
 ```text
-Decision approve passed + authorized exact-Candidate confirmation + portfolio CAS -> Planning
+Decision approve passed + authorized exact-Candidate confirmation + `acceptedActiveChanges` digest CAS -> Planning
 Decision reject | defer | withdraw passed + confirmation                         -> typed terminal/deferred state
 Decision failed                                                                  -> Decision
 Planning delta passed + Work Graph CAS                                            -> Implementation
@@ -67,7 +67,7 @@ Review failed: meaning defect                                                   
 Any Gate stopped                                                                  -> preserve state and stop attempt
 ```
 
-Gate pass means the exact Candidate meets current Checks; it is not semantic acceptance, integration, or delivery. Decision disposition is applied only after an authorized Actor confirms the exact passed Candidate and Gate digest against current WorkState and active-portfolio head. A passing Planning Candidate is applied only as a Change-scoped Work Graph delta. A passing Work Unit Candidate advances only that unit; deterministic completion of all required integrated units advances the Change. Checks, Runtime Plugins, Runs, and model-authored workflows cannot alter lifecycle transitions or perform effects.
+Gate pass means the exact Candidate meets current Checks; it is not semantic acceptance, integration, or delivery. Decision disposition is applied only after an authorized Actor confirms the exact passed Candidate and Gate digest against current WorkState head and `acceptedActiveChanges` digest. A passing Planning Candidate is applied only as a Change-scoped Work Graph delta. A passing Work Unit Candidate advances only that unit; deterministic completion of all required integrated units advances the Change. Checks, Runtime Plugins, Runs, and model-authored workflows cannot alter lifecycle transitions or perform effects.
 
 ## Runtime ownership
 

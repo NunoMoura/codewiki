@@ -24,7 +24,7 @@ import type {
 import {createGateReport} from "../../checks/results.ts";
 import type {CheckResultCache} from "../../checks/cache.ts";
 import type {EvidenceRecord} from "../../evidence/contracts.ts";
-import {ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID} from "../../loops/decision/active-change-portfolio.ts";
+import {ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID} from "../../loops/decision/accepted-active-changes.ts";
 import type {DecisionCandidate} from "../../loops/decision/candidate.ts";
 import {
 	admitReviewEvidence,
@@ -139,13 +139,13 @@ export function createDecisionGate(input: CreateDecisionGateInput = {}): Readonl
 				(check) => check.checkId === ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID,
 			);
 			const compatibilityStopReason =
-				runInput.candidate.content.activePortfolio.changes.length > 0 &&
+				runInput.candidate.content.acceptedActiveChanges.changes.length > 0 &&
 				(!requiredCompatibilityCheck ||
 					requiredCompatibilityCheck.definition.implementation.kind !== "model")
 					? {
 							code: "malformed_check" as const,
 							message:
-								"Decision active portfolio requires active_change_compatibility as a Model Check.",
+								"When accepted active Changes exist, Decision requires active_change_compatibility as a Model Check.",
 							checkId: ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID,
 						}
 					: undefined;

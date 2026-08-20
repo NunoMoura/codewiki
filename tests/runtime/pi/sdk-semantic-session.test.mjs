@@ -16,7 +16,7 @@ import {
 	createPiSdkProjectServerSemanticAdapters,
 	validatePiSdkReadOnlyToolCall,
 } from "../../../src/runtime/pi/sdk-semantic-session.ts";
-import {bindDecisionActivePortfolio} from "../../../src/loops/decision/active-change-portfolio.ts";
+import {bindDecisionAcceptedActiveChanges} from "../../../src/loops/decision/accepted-active-changes.ts";
 import {DECISION_CANDIDATE_PRODUCTION_PROTOCOL} from "../../../src/project-server/coordinator/decision-attempt.ts";
 import {digest} from "../../helpers/change-trace-v1.mjs";
 import {
@@ -60,7 +60,7 @@ function nativeDecisionProductionRequest() {
 		workStateDigest: digest("b"),
 		revision,
 		relationships: [],
-		activePortfolio: bindDecisionActivePortfolio({state, subjectChangeId: changeId}),
+		acceptedActiveChanges: bindDecisionAcceptedActiveChanges({state, subjectChangeId: changeId}),
 	};
 }
 

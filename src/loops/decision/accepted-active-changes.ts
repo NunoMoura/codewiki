@@ -14,7 +14,7 @@ import {
 	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
-export const ACTIVE_CHANGE_PORTFOLIO_SCHEMA_VERSION = "1.0.0" as const;
+export const ACCEPTED_ACTIVE_CHANGES_SCHEMA_VERSION = "1.0.0" as const;
 export const ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID =
 	"active_change_compatibility" as const;
 
@@ -38,8 +38,8 @@ export interface DecisionActiveChangeBinding {
 	readonly relationships: readonly DecisionRelationshipBinding[];
 }
 
-export interface DecisionActivePortfolioBinding {
-	readonly schemaVersion: typeof ACTIVE_CHANGE_PORTFOLIO_SCHEMA_VERSION;
+export interface DecisionAcceptedActiveChangesBinding {
+	readonly schemaVersion: typeof ACCEPTED_ACTIVE_CHANGES_SCHEMA_VERSION;
 	readonly requiredCheckId: typeof ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID;
 	readonly digest: Sha256Digest;
 	readonly workGraphDigest: Sha256Digest;
@@ -49,10 +49,10 @@ export interface DecisionActivePortfolioBinding {
 	readonly changes: readonly DecisionActiveChangeBinding[];
 }
 
-export function bindDecisionActivePortfolio(input: {
+export function bindDecisionAcceptedActiveChanges(input: {
 	readonly state: ProjectWorkState;
 	readonly subjectChangeId: string;
-}): DecisionActivePortfolioBinding {
+}): DecisionAcceptedActiveChangesBinding {
 	const changes = input.state.changes
 		.flatMap((change) => {
 			if (change.changeId === input.subjectChangeId) return [];
@@ -70,7 +70,7 @@ export function bindDecisionActivePortfolio(input: {
 	const expectedChangeIds = changes.map((change) => change.changeId);
 	const workGraphDigest = acceptedWorkGraphDigest(input.state);
 	const content = toCanonicalJsonValue({
-		schemaVersion: ACTIVE_CHANGE_PORTFOLIO_SCHEMA_VERSION,
+		schemaVersion: ACCEPTED_ACTIVE_CHANGES_SCHEMA_VERSION,
 		requiredCheckId: ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID,
 		workGraphDigest,
 		expectedChangeIds,
@@ -79,27 +79,27 @@ export function bindDecisionActivePortfolio(input: {
 		changes,
 	});
 	return Object.freeze({
-		...(content as unknown as Omit<DecisionActivePortfolioBinding, "digest">),
+		...(content as unknown as Omit<DecisionAcceptedActiveChangesBinding, "digest">),
 		digest: canonicalJsonDigest(content),
 	});
 }
 
-export function assertDecisionActivePortfolioBinding(
+export function assertDecisionAcceptedActiveChangesBinding(
 	value: unknown,
-): asserts value is DecisionActivePortfolioBinding {
+): asserts value is DecisionAcceptedActiveChangesBinding {
 	if (!value || typeof value !== "object") {
-		throw new Error("Decision active portfolio binding must be an object.");
+		throw new Error("Decision accepted active Changes binding must be an object.");
 	}
-	const binding = value as DecisionActivePortfolioBinding;
+	const binding = value as DecisionAcceptedActiveChangesBinding;
 	if (
-		binding.schemaVersion !== ACTIVE_CHANGE_PORTFOLIO_SCHEMA_VERSION ||
+		binding.schemaVersion !== ACCEPTED_ACTIVE_CHANGES_SCHEMA_VERSION ||
 		binding.requiredCheckId !== ACTIVE_CHANGE_COMPATIBILITY_CHECK_ID ||
 		binding.coverage !== "complete" ||
 		!Array.isArray(binding.changes) ||
 		!Array.isArray(binding.expectedChangeIds) ||
 		!Array.isArray(binding.comparedChangeIds)
 	) {
-		throw new Error("Decision active portfolio coverage is incomplete.");
+		throw new Error("Decision accepted active Changes coverage is incomplete.");
 	}
 	const changeIds = binding.changes.map((change) => change.changeId);
 	if (
@@ -108,7 +108,7 @@ export function assertDecisionActivePortfolioBinding(
 		new Set(changeIds).size !== changeIds.length ||
 		changeIds.some((changeId, index) => index > 0 && changeIds[index - 1] >= changeId)
 	) {
-		throw new Error("Decision active portfolio comparison coverage is incomplete.");
+		throw new Error("Decision accepted active Changes comparison coverage is incomplete.");
 	}
 	const content = toCanonicalJsonValue({
 		schemaVersion: binding.schemaVersion,
@@ -120,7 +120,7 @@ export function assertDecisionActivePortfolioBinding(
 		changes: binding.changes,
 	});
 	if (canonicalJsonDigest(content) !== binding.digest) {
-		throw new Error("Decision active portfolio digest is invalid.");
+		throw new Error("Decision accepted active Changes digest is invalid.");
 	}
 }
 
@@ -167,7 +167,7 @@ function acceptedWorkGraphDigest(state: ProjectWorkState): Sha256Digest {
 		)
 		.sort(compareText);
 	return canonicalJsonDigest({
-		schemaVersion: ACTIVE_CHANGE_PORTFOLIO_SCHEMA_VERSION,
+		schemaVersion: ACCEPTED_ACTIVE_CHANGES_SCHEMA_VERSION,
 		workGraphDeltaIds,
 	});
 }

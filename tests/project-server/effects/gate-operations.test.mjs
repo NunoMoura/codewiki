@@ -511,7 +511,7 @@ describe("native Decision canonical operation continuation", () => {
 					attemptOperationId: started.operation.operationId,
 					expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
 					expectedWorkStateDigest: selected.workState.workStateDigest,
-					expectedActivePortfolioDigest: digest("0"),
+					expectedAcceptedActiveChangesDigest: digest("0"),
 					recordedAt: "2026-07-30T15:07:00.000Z",
 					candidate: artifacts.candidate,
 					packSnapshot: artifacts.packSnapshot,
@@ -532,8 +532,8 @@ describe("native Decision canonical operation continuation", () => {
 				attemptOperationId: started.operation.operationId,
 				expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
 				expectedWorkStateDigest: selected.workState.workStateDigest,
-				expectedActivePortfolioDigest:
-					artifacts.candidate.content.activePortfolio.digest,
+				expectedAcceptedActiveChangesDigest:
+					artifacts.candidate.content.acceptedActiveChanges.digest,
 				recordedAt: "2026-07-30T15:07:00.000Z",
 				candidate: artifacts.candidate,
 				packSnapshot: artifacts.packSnapshot,
@@ -567,8 +567,8 @@ describe("native Decision canonical operation continuation", () => {
 					attemptOperationId: started.operation.operationId,
 					expectedTeamSnapshotDigest: selected.teamSnapshot.snapshotDigest,
 					expectedWorkStateDigest: selected.workState.workStateDigest,
-					expectedActivePortfolioDigest:
-						artifacts.candidate.content.activePortfolio.digest,
+					expectedAcceptedActiveChangesDigest:
+						artifacts.candidate.content.acceptedActiveChanges.digest,
 					recordedAt: "2026-07-30T15:07:00.000Z",
 					candidate: artifacts.candidate,
 					packSnapshot: artifacts.packSnapshot,

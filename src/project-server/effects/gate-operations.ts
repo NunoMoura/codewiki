@@ -40,7 +40,7 @@ import {
 	toCanonicalJsonValue,
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
-import {bindDecisionActivePortfolio} from "../../loops/decision/active-change-portfolio.ts";
+import {bindDecisionAcceptedActiveChanges} from "../../loops/decision/accepted-active-changes.ts";
 import {
 	createDecisionCandidate,
 	type DecisionCandidate,
@@ -633,7 +633,7 @@ export interface CommitNativeDecisionOperationSequenceInput {
 	readonly attemptOperationId: OperationId;
 	readonly expectedTeamSnapshotDigest: Sha256Digest;
 	readonly expectedWorkStateDigest: Sha256Digest;
-	readonly expectedActivePortfolioDigest: Sha256Digest;
+	readonly expectedAcceptedActiveChangesDigest: Sha256Digest;
 	readonly recordedAt: string;
 	readonly candidate: DecisionCandidate;
 	readonly packSnapshot: CheckPackSnapshot;
@@ -819,13 +819,13 @@ export async function commitNativeDecisionOperationSequence(
 	) {
 		throw new Error("Native Decision team snapshot is stale and must be rerun.");
 	}
-	const activePortfolio = bindDecisionActivePortfolio({
+	const acceptedActiveChanges = bindDecisionAcceptedActiveChanges({
 		state: observation.workState,
 		subjectChangeId: input.changeId,
 	});
-	if (activePortfolio.digest !== input.expectedActivePortfolioDigest) {
+	if (acceptedActiveChanges.digest !== input.expectedAcceptedActiveChangesDigest) {
 		throw new Error(
-			"Native Decision active portfolio is stale; compatibility Checks must be rerun.",
+			"Accepted active Changes changed; Native Decision compatibility Checks must be rerun.",
 		);
 	}
 	if (

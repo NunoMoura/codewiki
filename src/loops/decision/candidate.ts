@@ -12,18 +12,18 @@ import {
 	type Sha256Digest,
 } from "../../utils/canonical-json.ts";
 import {
-	bindDecisionActivePortfolio,
-	type DecisionActivePortfolioBinding,
+	bindDecisionAcceptedActiveChanges,
+	type DecisionAcceptedActiveChangesBinding,
 	type DecisionRelationshipBinding,
 	type DecisionSemanticRevision,
-} from "./active-change-portfolio.ts";
+} from "./accepted-active-changes.ts";
 import {
 	parseDecisionCandidateProposal,
 	type DecisionCandidateProposal,
 	type DecisionDisposition,
 } from "./candidate-proposal.ts";
 
-const DECISION_CANDIDATE_SCHEMA_VERSION = "3.0.0" as const;
+const DECISION_CANDIDATE_SCHEMA_VERSION = "4.0.0" as const;
 
 export interface DecisionOverlapBinding {
 	readonly changeId: string;
@@ -40,7 +40,7 @@ export type DecisionCandidateContent = CanonicalJsonValue & {
 	readonly revision: DecisionSemanticRevision;
 	readonly relationships: readonly DecisionRelationshipBinding[];
 	readonly activeOverlaps: readonly DecisionOverlapBinding[];
-	readonly activePortfolio: DecisionActivePortfolioBinding;
+	readonly acceptedActiveChanges: DecisionAcceptedActiveChangesBinding;
 };
 
 export type DecisionCandidate = LoopCandidate<
@@ -92,7 +92,7 @@ function materializeDecisionCandidateContent(input: {
 	if (ordinal < 1) {
 		throw new Error("Decision Candidate current revision is absent from revision history.");
 	}
-	const activePortfolio = bindDecisionActivePortfolio({
+	const acceptedActiveChanges = bindDecisionAcceptedActiveChanges({
 		state: input.state,
 		subjectChangeId: input.change.changeId,
 	});
@@ -109,9 +109,9 @@ function materializeDecisionCandidateContent(input: {
 		activeOverlaps: activeOverlapBindings({
 			change: input.change,
 			state: input.state,
-			activePortfolio,
+			acceptedActiveChanges,
 		}),
-		activePortfolio,
+		acceptedActiveChanges,
 	}) as unknown as DecisionCandidateContent;
 }
 
@@ -186,13 +186,13 @@ function relationshipBinding(
 function activeOverlapBindings(input: {
 	readonly change: ChangeWorkState;
 	readonly state: ProjectWorkState;
-	readonly activePortfolio: DecisionActivePortfolioBinding;
+	readonly acceptedActiveChanges: DecisionAcceptedActiveChangesBinding;
 }): DecisionOverlapBinding[] {
 	const {change, state} = input;
 	const currentRevision = change.currentRevision;
 	if (!currentRevision) return [];
 	const targetRefs = new Set(currentRevision.content.classification.targetRefs);
-	return input.activePortfolio.changes
+	return input.acceptedActiveChanges.changes
 		.flatMap((activeChange) => {
 			const candidate = state.changes.find(
 				(changeState) => changeState.changeId === activeChange.changeId,

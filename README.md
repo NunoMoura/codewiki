@@ -12,7 +12,7 @@ It turns accepted user intent into an accountable transition of project Knowledg
 
 Where `K` is accepted Knowledge, `G` is exact Git state, `P` is delivery state, and Evidence includes exact Check Results, Gate Reports, authority, Integration proof, and observations.
 
-> **A Change is accountable intent and a durable dossier. Project Server owns generic portfolio control; Decision, Planning, Implementation, and Review own Loop meaning.**
+> **A Change is accountable intent and a durable dossier. Project Server owns the canonical Work Graph and operational scheduling; Decision, Planning, Implementation, and Review own Loop meaning.**
 
 CodeWiki does not guarantee unknowable semantic perfection. It provides bounded process integrity: accepted-intent provenance, exact subject identity, independent checking, deterministic Gate reduction, guarded progression, exact Git/delivery proof, and explicit uncertainty.
 
@@ -67,7 +67,7 @@ Project Server
 
 A producer DSH Agent Session may span several separately bounded Runs, but every Candidate has exactly one producing Run. DSH AgentLoop owns model/tool continuation and compaction mechanics; it is not a CodeWiki Stage Loop.
 
-- **Decision** evaluates one exact Change revision, active-portfolio compatibility, and `approve | reject | defer | withdraw`.
+- **Decision** evaluates one exact Change revision, accepted active Changes compatibility, and `approve | reject | defer | withdraw`.
 - **Planning** creates one immutable Change-scoped Work Graph delta without replacing a global plan.
 - **Implementation** independently realizes and gates each accepted Work Unit through an isolated Assignment-bound Workbench under one shared stage-wide policy.
 - **Review** judges the exact aggregate integrated Change lineage and complete Change outcome.

@@ -3,8 +3,8 @@ import {describe, it} from "node:test";
 
 import {createNextChangeOperation} from "../../../src/changes/trace/index.ts";
 import {
-	assertDecisionActivePortfolioBinding,
-} from "../../../src/loops/decision/active-change-portfolio.ts";
+	assertDecisionAcceptedActiveChangesBinding,
+} from "../../../src/loops/decision/accepted-active-changes.ts";
 import {createDecisionCandidate} from "../../../src/loops/decision/candidate.ts";
 import {createNativeDecisionOperationSequence} from "../../../src/project-server/effects/gate-operations.ts";
 import {createDecisionGate} from "../../../src/project-server/lifecycle/gates.ts";
@@ -35,14 +35,14 @@ function startDecisionAttempt(state, changeId, marker) {
 		kind: "loop.attempt_started",
 		baseSnapshot: baseSnapshotFor(state),
 		authorityBinding: authorityBinding({
-			authenticationEvidenceId: `auth:active-portfolio-${marker}`,
+			authenticationEvidenceId: `auth:accepted-active-changes-${marker}`,
 		}),
 		recordedAt: `2026-08-02T10:00:0${marker}.000Z`,
 		payload: {
 			loop: "decision",
 			changeRevisionId: change.currentRevision.revisionId,
 			loopProtocolDigest: digest(`${marker}`),
-			routeId: "decision-active-portfolio-v1",
+			routeId: "decision-accepted-active-changes-v1",
 			privateAttemptDigest: digest(`${marker + 1}`),
 		},
 	});
@@ -78,11 +78,11 @@ async function runCompatibilityGate(decisionCandidate, changeId) {
 					route: "decision-compatibility",
 				},
 				execute({invocation}) {
-					const portfolio = invocation.subject.content.activePortfolio;
-					assert.equal(portfolio.requiredCheckId, "active_change_compatibility");
+					const acceptedChanges = invocation.subject.content.acceptedActiveChanges;
+					assert.equal(acceptedChanges.requiredCheckId, "active_change_compatibility");
 					assert.deepEqual(
-						portfolio.comparedChangeIds,
-						portfolio.expectedChangeIds,
+						acceptedChanges.comparedChangeIds,
+						acceptedChanges.expectedChangeIds,
 					);
 					return checkOutput(invocation);
 				},
@@ -130,7 +130,7 @@ function candidate(state, changeId) {
 	});
 }
 
-describe("Decision active-Change portfolio binding", () => {
+describe("Decision accepted active Changes binding", () => {
 	it("covers every accepted nonterminal Change at its exact accepted revision", async () => {
 		const subjectRevision = nativeDecisionRevision({
 			changeId: "CHG-subject",
@@ -155,23 +155,23 @@ describe("Decision active-Change portfolio binding", () => {
 		state = await acceptDecision(state, "CHG-unrelated", 2);
 
 		const decisionCandidate = candidate(state, "CHG-subject");
-		const portfolio = decisionCandidate.content.activePortfolio;
-		assert.equal(portfolio.schemaVersion, "1.0.0");
-		assert.equal(portfolio.requiredCheckId, "active_change_compatibility");
-		assert.equal(portfolio.coverage, "complete");
-		assert.deepEqual(portfolio.expectedChangeIds, [
+		const acceptedChanges = decisionCandidate.content.acceptedActiveChanges;
+		assert.equal(acceptedChanges.schemaVersion, "1.0.0");
+		assert.equal(acceptedChanges.requiredCheckId, "active_change_compatibility");
+		assert.equal(acceptedChanges.coverage, "complete");
+		assert.deepEqual(acceptedChanges.expectedChangeIds, [
 			"CHG-accepted",
 			"CHG-unrelated",
 		]);
-		assert.deepEqual(portfolio.comparedChangeIds, portfolio.expectedChangeIds);
-		assert.equal(portfolio.changes.length, 2);
-		assert.equal(portfolio.changes[0].changeId, "CHG-accepted");
+		assert.deepEqual(acceptedChanges.comparedChangeIds, acceptedChanges.expectedChangeIds);
+		assert.equal(acceptedChanges.changes.length, 2);
+		assert.equal(acceptedChanges.changes[0].changeId, "CHG-accepted");
 		assert.equal(
-			portfolio.changes[0].revision.revisionId,
+			acceptedChanges.changes[0].revision.revisionId,
 			acceptedRevision.revisionId,
 		);
 		assert.equal(
-			portfolio.changes[1].revision.revisionId,
+			acceptedChanges.changes[1].revision.revisionId,
 			unrelatedRevision.revisionId,
 		);
 		assert.deepEqual(
@@ -180,8 +180,8 @@ describe("Decision active-Change portfolio binding", () => {
 		);
 		assert.throws(
 			() =>
-				assertDecisionActivePortfolioBinding({
-					...portfolio,
+				assertDecisionAcceptedActiveChangesBinding({
+					...acceptedChanges,
 					comparedChangeIds: ["CHG-accepted"],
 				}),
 			/incomplete/,
@@ -208,7 +208,7 @@ describe("Decision active-Change portfolio binding", () => {
 		);
 	});
 
-	it("invalidates a passed Candidate when another Change joins the active portfolio", async () => {
+	it("invalidates a passed Candidate when another Change joins the accepted active Changes", async () => {
 		const state = nativeDecisionState([
 			{changeId: "CHG-subject", revision: nativeDecisionRevision({changeId: "CHG-subject"})},
 			{changeId: "CHG-first", revision: nativeDecisionRevision({changeId: "CHG-first"})},
@@ -233,10 +233,10 @@ describe("Decision active-Change portfolio binding", () => {
 		const currentCandidate = candidate(secondAccepted, "CHG-subject");
 
 		assert.notEqual(
-			staleCandidate.content.activePortfolio.digest,
-			currentCandidate.content.activePortfolio.digest,
+			staleCandidate.content.acceptedActiveChanges.digest,
+			currentCandidate.content.acceptedActiveChanges.digest,
 		);
-		assert.deepEqual(currentCandidate.content.activePortfolio.expectedChangeIds, [
+		assert.deepEqual(currentCandidate.content.acceptedActiveChanges.expectedChangeIds, [
 			"CHG-first",
 			"CHG-second",
 		]);
